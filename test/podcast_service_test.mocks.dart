@@ -39,20 +39,17 @@ class MockNotificationsService extends _i1.Mock
   @override
   _i3.Future<void> notify({required String? message, String? uri}) =>
       (super.noSuchMethod(
-            Invocation.method(#notify, [], {#message: message, #uri: uri}),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+        Invocation.method(#notify, [], {#message: message, #uri: uri}),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i3.Future<void> dispose() =>
-      (super.noSuchMethod(
-            Invocation.method(#dispose, []),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+  _i3.Future<void> dispose() => (super.noSuchMethod(
+        Invocation.method(#dispose, []),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 }
 
 /// A class which mocks [SettingsService].
@@ -64,12 +61,10 @@ class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
   }
 
   @override
-  _i3.Stream<bool> get propertiesChanged =>
-      (super.noSuchMethod(
-            Invocation.getter(#propertiesChanged),
-            returnValue: _i3.Stream<bool>.empty(),
-          )
-          as _i3.Stream<bool>);
+  _i3.Stream<bool> get propertiesChanged => (super.noSuchMethod(
+        Invocation.getter(#propertiesChanged),
+        returnValue: _i3.Stream<bool>.empty(),
+      ) as _i3.Stream<bool>);
 
   @override
   int get themeIndex =>
@@ -82,307 +77,239 @@ class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
           as int);
 
   @override
-  bool get neverShowFailedImports =>
-      (super.noSuchMethod(
-            Invocation.getter(#neverShowFailedImports),
-            returnValue: false,
-          )
-          as bool);
+  bool get neverShowFailedImports => (super.noSuchMethod(
+        Invocation.getter(#neverShowFailedImports),
+        returnValue: false,
+      ) as bool);
 
   @override
-  bool get enableLastFmScrobbling =>
-      (super.noSuchMethod(
-            Invocation.getter(#enableLastFmScrobbling),
-            returnValue: false,
-          )
-          as bool);
+  bool get enableLastFmScrobbling => (super.noSuchMethod(
+        Invocation.getter(#enableLastFmScrobbling),
+        returnValue: false,
+      ) as bool);
 
   @override
-  bool get enableListenBrainzScrobbling =>
-      (super.noSuchMethod(
-            Invocation.getter(#enableListenBrainzScrobbling),
-            returnValue: false,
-          )
-          as bool);
+  bool get enableListenBrainzScrobbling => (super.noSuchMethod(
+        Invocation.getter(#enableListenBrainzScrobbling),
+        returnValue: false,
+      ) as bool);
 
   @override
-  bool get enableDiscordRPC =>
-      (super.noSuchMethod(
-            Invocation.getter(#enableDiscordRPC),
-            returnValue: false,
-          )
-          as bool);
+  bool get enableDiscordRPC => (super.noSuchMethod(
+        Invocation.getter(#enableDiscordRPC),
+        returnValue: false,
+      ) as bool);
 
   @override
-  bool get useMoreAnimations =>
-      (super.noSuchMethod(
-            Invocation.getter(#useMoreAnimations),
-            returnValue: false,
-          )
-          as bool);
+  bool get useMoreAnimations => (super.noSuchMethod(
+        Invocation.getter(#useMoreAnimations),
+        returnValue: false,
+      ) as bool);
 
   @override
-  bool get notifyDataSafeMode =>
-      (super.noSuchMethod(
-            Invocation.getter(#notifyDataSafeMode),
-            returnValue: false,
-          )
-          as bool);
+  bool get notifyDataSafeMode => (super.noSuchMethod(
+        Invocation.getter(#notifyDataSafeMode),
+        returnValue: false,
+      ) as bool);
 
   @override
-  bool get usePodcastIndex =>
-      (super.noSuchMethod(
-            Invocation.getter(#usePodcastIndex),
-            returnValue: false,
-          )
-          as bool);
+  bool get usePodcastIndex => (super.noSuchMethod(
+        Invocation.getter(#usePodcastIndex),
+        returnValue: false,
+      ) as bool);
 
   @override
-  String get forcedUpdateThreshold =>
-      (super.noSuchMethod(
-            Invocation.getter(#forcedUpdateThreshold),
-            returnValue: _i5.dummyValue<String>(
-              this,
-              Invocation.getter(#forcedUpdateThreshold),
-            ),
-          )
-          as String);
+  String get forcedUpdateThreshold => (super.noSuchMethod(
+        Invocation.getter(#forcedUpdateThreshold),
+        returnValue: _i5.dummyValue<String>(
+          this,
+          Invocation.getter(#forcedUpdateThreshold),
+        ),
+      ) as String);
 
   @override
-  bool get showPositionDuration =>
-      (super.noSuchMethod(
-            Invocation.getter(#showPositionDuration),
-            returnValue: false,
-          )
-          as bool);
+  bool get showPositionDuration => (super.noSuchMethod(
+        Invocation.getter(#showPositionDuration),
+        returnValue: false,
+      ) as bool);
 
   @override
-  List<String> get externalPlaylists =>
-      (super.noSuchMethod(
-            Invocation.getter(#externalPlaylists),
-            returnValue: <String>[],
-          )
-          as List<String>);
+  _i6.CloseBtnAction get closeBtnActionIndex => (super.noSuchMethod(
+        Invocation.getter(#closeBtnActionIndex),
+        returnValue: _i6.CloseBtnAction.alwaysAsk,
+      ) as _i6.CloseBtnAction);
 
   @override
-  _i6.CloseBtnAction get closeBtnActionIndex =>
-      (super.noSuchMethod(
-            Invocation.getter(#closeBtnActionIndex),
-            returnValue: _i6.CloseBtnAction.alwaysAsk,
-          )
-          as _i6.CloseBtnAction);
-
-  @override
-  bool notify(bool? saved) =>
-      (super.noSuchMethod(
-            Invocation.method(#notify, [saved]),
-            returnValue: false,
-          )
-          as bool);
+  bool notify(bool? saved) => (super.noSuchMethod(
+        Invocation.method(#notify, [saved]),
+        returnValue: false,
+      ) as bool);
 
   @override
   void setThemeIndex(int? value) => super.noSuchMethod(
-    Invocation.method(#setThemeIndex, [value]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#setThemeIndex, [value]),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void setLocalAudioIndex(int? value) => super.noSuchMethod(
-    Invocation.method(#setLocalAudioIndex, [value]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#setLocalAudioIndex, [value]),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void setNeverShowFailedImports(bool? value) => super.noSuchMethod(
-    Invocation.method(#setNeverShowFailedImports, [value]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#setNeverShowFailedImports, [value]),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void setEnableLastFmScrobbling(bool? value) => super.noSuchMethod(
-    Invocation.method(#setEnableLastFmScrobbling, [value]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#setEnableLastFmScrobbling, [value]),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void setLastFmApiKey(String? value) => super.noSuchMethod(
-    Invocation.method(#setLastFmApiKey, [value]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#setLastFmApiKey, [value]),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void setLastFmSecret(String? value) => super.noSuchMethod(
-    Invocation.method(#setLastFmSecret, [value]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#setLastFmSecret, [value]),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void setLastFmSessionKey(String? value) => super.noSuchMethod(
-    Invocation.method(#setLastFmSessionKey, [value]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#setLastFmSessionKey, [value]),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void setLastFmUsername(String? value) => super.noSuchMethod(
-    Invocation.method(#setLastFmUsername, [value]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#setLastFmUsername, [value]),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void setEnableListenBrainzScrobbling(bool? value) => super.noSuchMethod(
-    Invocation.method(#setEnableListenBrainzScrobbling, [value]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#setEnableListenBrainzScrobbling, [value]),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void setListenBrainzApiKey(String? value) => super.noSuchMethod(
-    Invocation.method(#setListenBrainzApiKey, [value]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#setListenBrainzApiKey, [value]),
+        returnValueForMissingStub: null,
+      );
 
   @override
-  _i3.Future<bool> setEnableDiscordRPC(bool? value) =>
-      (super.noSuchMethod(
-            Invocation.method(#setEnableDiscordRPC, [value]),
-            returnValue: _i3.Future<bool>.value(false),
-          )
-          as _i3.Future<bool>);
+  _i3.Future<bool> setEnableDiscordRPC(bool? value) => (super.noSuchMethod(
+        Invocation.method(#setEnableDiscordRPC, [value]),
+        returnValue: _i3.Future<bool>.value(false),
+      ) as _i3.Future<bool>);
 
   @override
   void setUseMoreAnimations(bool? value) => super.noSuchMethod(
-    Invocation.method(#setUseMoreAnimations, [value]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#setUseMoreAnimations, [value]),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void setNotifyDataSafeMode(bool? value) => super.noSuchMethod(
-    Invocation.method(#setNotifyDataSafeMode, [value]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#setNotifyDataSafeMode, [value]),
+        returnValueForMissingStub: null,
+      );
 
   @override
-  bool recentPatchNotesDisposed(String? version) =>
-      (super.noSuchMethod(
-            Invocation.method(#recentPatchNotesDisposed, [version]),
-            returnValue: false,
-          )
-          as bool);
+  bool recentPatchNotesDisposed(String? version) => (super.noSuchMethod(
+        Invocation.method(#recentPatchNotesDisposed, [version]),
+        returnValue: false,
+      ) as bool);
 
   @override
-  _i3.Future<void> disposePatchNotes(String? version) =>
-      (super.noSuchMethod(
-            Invocation.method(#disposePatchNotes, [version]),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+  _i3.Future<void> disposePatchNotes(String? version) => (super.noSuchMethod(
+        Invocation.method(#disposePatchNotes, [version]),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i3.Future<void> setUsePodcastIndex(bool? value) =>
-      (super.noSuchMethod(
-            Invocation.method(#setUsePodcastIndex, [value]),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+  _i3.Future<void> setUsePodcastIndex(bool? value) => (super.noSuchMethod(
+        Invocation.method(#setUsePodcastIndex, [value]),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
   void setPodcastIndexApiKey(String? value) => super.noSuchMethod(
-    Invocation.method(#setPodcastIndexApiKey, [value]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#setPodcastIndexApiKey, [value]),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void setPodcastIndexApiSecret(String? value) => super.noSuchMethod(
-    Invocation.method(#setPodcastIndexApiSecret, [value]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#setPodcastIndexApiSecret, [value]),
+        returnValueForMissingStub: null,
+      );
 
   @override
-  _i3.Future<void> setDirectory(String? directory) =>
-      (super.noSuchMethod(
-            Invocation.method(#setDirectory, [directory]),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+  _i3.Future<void> setDirectory(String? directory) => (super.noSuchMethod(
+        Invocation.method(#setDirectory, [directory]),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
   _i3.Future<void> setDownloadsCustomDir(String? directory) =>
       (super.noSuchMethod(
-            Invocation.method(#setDownloadsCustomDir, [directory]),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+        Invocation.method(#setDownloadsCustomDir, [directory]),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  bool getBackupSaved(String? version) =>
-      (super.noSuchMethod(
-            Invocation.method(#getBackupSaved, [version]),
-            returnValue: false,
-          )
-          as bool);
+  bool getBackupSaved(String? version) => (super.noSuchMethod(
+        Invocation.method(#getBackupSaved, [version]),
+        returnValue: false,
+      ) as bool);
 
   @override
   _i3.Future<void> setBackupSaved(String? version, bool? value) =>
       (super.noSuchMethod(
-            Invocation.method(#setBackupSaved, [version, value]),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+        Invocation.method(#setBackupSaved, [version, value]),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i3.Future<void> setShowPositionDuration(bool? value) =>
-      (super.noSuchMethod(
-            Invocation.method(#setShowPositionDuration, [value]),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
-
-  @override
-  void setExternalPlaylists(List<String>? value) => super.noSuchMethod(
-    Invocation.method(#setExternalPlaylists, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void addExternalPlaylist(String? value) => super.noSuchMethod(
-    Invocation.method(#addExternalPlaylist, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void removeExternalPlaylist(String? value) => super.noSuchMethod(
-    Invocation.method(#removeExternalPlaylist, [value]),
-    returnValueForMissingStub: null,
-  );
+  _i3.Future<void> setShowPositionDuration(bool? value) => (super.noSuchMethod(
+        Invocation.method(#setShowPositionDuration, [value]),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
   void setCloseBtnActionIndex(_i6.CloseBtnAction? value) => super.noSuchMethod(
-    Invocation.method(#setCloseBtnActionIndex, [value]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#setCloseBtnActionIndex, [value]),
+        returnValueForMissingStub: null,
+      );
 
   @override
-  _i3.Future<void> wipeAllSettings() =>
-      (super.noSuchMethod(
-            Invocation.method(#wipeAllSettings, []),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+  _i3.Future<void> wipeAllSettings() => (super.noSuchMethod(
+        Invocation.method(#wipeAllSettings, []),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i3.Future<void> dispose() =>
-      (super.noSuchMethod(
-            Invocation.method(#dispose, []),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+  _i3.Future<void> dispose() => (super.noSuchMethod(
+        Invocation.method(#dispose, []),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 }
 
 /// A class which mocks [LibraryService].
@@ -394,92 +321,105 @@ class MockLibraryService extends _i1.Mock implements _i7.LibraryService {
   }
 
   @override
-  _i3.Stream<bool> get propertiesChanged =>
-      (super.noSuchMethod(
-            Invocation.getter(#propertiesChanged),
-            returnValue: _i3.Stream<bool>.empty(),
-          )
-          as _i3.Stream<bool>);
+  _i3.Stream<bool> get propertiesChanged => (super.noSuchMethod(
+        Invocation.getter(#propertiesChanged),
+        returnValue: _i3.Stream<bool>.empty(),
+      ) as _i3.Stream<bool>);
 
   @override
-  List<String> get favoriteAudios =>
-      (super.noSuchMethod(
-            Invocation.getter(#favoriteAudios),
-            returnValue: <String>[],
-          )
-          as List<String>);
+  List<_i8.Audio> get likedAudios => (super.noSuchMethod(
+        Invocation.getter(#likedAudios),
+        returnValue: <_i8.Audio>[],
+      ) as List<_i8.Audio>);
 
   @override
-  List<String> get starredStations =>
-      (super.noSuchMethod(
-            Invocation.getter(#starredStations),
-            returnValue: <String>[],
-          )
-          as List<String>);
-
-  @override
-  int get starredStationsLength =>
-      (super.noSuchMethod(
-            Invocation.getter(#starredStationsLength),
-            returnValue: 0,
-          )
+  int get likedAudiosLength =>
+      (super.noSuchMethod(Invocation.getter(#likedAudiosLength), returnValue: 0)
           as int);
 
   @override
-  Set<String> get favRadioTags =>
-      (super.noSuchMethod(
-            Invocation.getter(#favRadioTags),
-            returnValue: <String>{},
-          )
-          as Set<String>);
+  List<String> get starredStations => (super.noSuchMethod(
+        Invocation.getter(#starredStations),
+        returnValue: <String>[],
+      ) as List<String>);
 
   @override
-  Set<String> get favCountryCodes =>
-      (super.noSuchMethod(
-            Invocation.getter(#favCountryCodes),
-            returnValue: <String>{},
-          )
-          as Set<String>);
+  int get starredStationsLength => (super.noSuchMethod(
+        Invocation.getter(#starredStationsLength),
+        returnValue: 0,
+      ) as int);
 
   @override
-  Set<String> get favLanguageCodes =>
-      (super.noSuchMethod(
-            Invocation.getter(#favLanguageCodes),
-            returnValue: <String>{},
-          )
-          as Set<String>);
+  Set<String> get favRadioTags => (super.noSuchMethod(
+        Invocation.getter(#favRadioTags),
+        returnValue: <String>{},
+      ) as Set<String>);
 
   @override
-  List<String> get playlistIDs =>
-      (super.noSuchMethod(
-            Invocation.getter(#playlistIDs),
-            returnValue: <String>[],
-          )
-          as List<String>);
+  Set<String> get favCountryCodes => (super.noSuchMethod(
+        Invocation.getter(#favCountryCodes),
+        returnValue: <String>{},
+      ) as Set<String>);
 
   @override
-  Map<String, String> get downloads =>
-      (super.noSuchMethod(
-            Invocation.getter(#downloads),
-            returnValue: <String, String>{},
-          )
-          as Map<String, String>);
+  Set<String> get favLanguageCodes => (super.noSuchMethod(
+        Invocation.getter(#favLanguageCodes),
+        returnValue: <String>{},
+      ) as Set<String>);
 
   @override
-  int get feedsWithDownloadsLength =>
-      (super.noSuchMethod(
-            Invocation.getter(#feedsWithDownloadsLength),
-            returnValue: 0,
-          )
-          as int);
+  List<String> get playlistIDs => (super.noSuchMethod(
+        Invocation.getter(#playlistIDs),
+        returnValue: <String>[],
+      ) as List<String>);
 
   @override
-  Map<String, List<_i8.Audio>> get podcasts =>
-      (super.noSuchMethod(
-            Invocation.getter(#podcasts),
-            returnValue: <String, List<_i8.Audio>>{},
-          )
-          as Map<String, List<_i8.Audio>>);
+  Map<String, List<_i8.Audio>> get playlists => (super.noSuchMethod(
+        Invocation.getter(#playlists),
+        returnValue: <String, List<_i8.Audio>>{},
+      ) as Map<String, List<_i8.Audio>>);
+
+  @override
+  List<String> get externalPlaylistIDs => (super.noSuchMethod(
+        Invocation.getter(#externalPlaylistIDs),
+        returnValue: <String>[],
+      ) as List<String>);
+
+  @override
+  List<_i8.Audio> get externalPlaylistAudios => (super.noSuchMethod(
+        Invocation.getter(#externalPlaylistAudios),
+        returnValue: <_i8.Audio>[],
+      ) as List<_i8.Audio>);
+
+  @override
+  List<_i8.Audio> get playlistsAudios => (super.noSuchMethod(
+        Invocation.getter(#playlistsAudios),
+        returnValue: <_i8.Audio>[],
+      ) as List<_i8.Audio>);
+
+  @override
+  Map<String, String> get downloads => (super.noSuchMethod(
+        Invocation.getter(#downloads),
+        returnValue: <String, String>{},
+      ) as Map<String, String>);
+
+  @override
+  int get feedsWithDownloadsLength => (super.noSuchMethod(
+        Invocation.getter(#feedsWithDownloadsLength),
+        returnValue: 0,
+      ) as int);
+
+  @override
+  List<String> get podcastFeedUrls => (super.noSuchMethod(
+        Invocation.getter(#podcastFeedUrls),
+        returnValue: <String>[],
+      ) as List<String>);
+
+  @override
+  Map<String, List<_i8.Audio>> get podcasts => (super.noSuchMethod(
+        Invocation.getter(#podcasts),
+        returnValue: <String, List<_i8.Audio>>{},
+      ) as Map<String, List<_i8.Audio>>);
 
   @override
   int get podcastsLength =>
@@ -487,179 +427,162 @@ class MockLibraryService extends _i1.Mock implements _i7.LibraryService {
           as int);
 
   @override
-  int get podcastUpdatesLength =>
-      (super.noSuchMethod(
-            Invocation.getter(#podcastUpdatesLength),
-            returnValue: 0,
-          )
-          as int);
+  List<String> get favoriteAlbums => (super.noSuchMethod(
+        Invocation.getter(#favoriteAlbums),
+        returnValue: <String>[],
+      ) as List<String>);
 
   @override
-  List<String> get favoriteAlbums =>
-      (super.noSuchMethod(
-            Invocation.getter(#favoriteAlbums),
-            returnValue: <String>[],
-          )
-          as List<String>);
-
-  @override
-  bool isFavoriteAudio(String? id) =>
-      (super.noSuchMethod(
-            Invocation.method(#isFavoriteAudio, [id]),
-            returnValue: false,
-          )
-          as bool);
-
-  @override
-  void addFavoriteAudios(List<String?>? ids, {bool? clear = false}) =>
-      super.noSuchMethod(
-        Invocation.method(#addFavoriteAudios, [ids], {#clear: clear}),
+  void addLikedAudio(_i8.Audio? audio) => super.noSuchMethod(
+        Invocation.method(#addLikedAudio, [audio]),
         returnValueForMissingStub: null,
       );
 
   @override
-  void removeFavoriteAudios(List<String?>? ids) => super.noSuchMethod(
-    Invocation.method(#removeFavoriteAudios, [ids]),
-    returnValueForMissingStub: null,
-  );
+  void addLikedAudios(List<_i8.Audio>? audios) => super.noSuchMethod(
+        Invocation.method(#addLikedAudios, [audios]),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  bool isLiked(_i8.Audio? audio) => (super.noSuchMethod(
+        Invocation.method(#isLiked, [audio]),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  bool isLikedAudios(List<_i8.Audio>? audios) => (super.noSuchMethod(
+        Invocation.method(#isLikedAudios, [audios]),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  void removeLikedAudio(_i8.Audio? audio, [bool? notify = true]) =>
+      super.noSuchMethod(
+        Invocation.method(#removeLikedAudio, [audio, notify]),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void removeLikedAudios(List<_i8.Audio>? audios) => super.noSuchMethod(
+        Invocation.method(#removeLikedAudios, [audios]),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void addStarredStation(String? uuid) => super.noSuchMethod(
-    Invocation.method(#addStarredStation, [uuid]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#addStarredStation, [uuid]),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void addStarredStations(List<String?>? uuids) => super.noSuchMethod(
-    Invocation.method(#addStarredStations, [uuids]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#addStarredStations, [uuids]),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void removeStarredStation(String? uuid) => super.noSuchMethod(
-    Invocation.method(#removeStarredStation, [uuid]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#removeStarredStation, [uuid]),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void unStarAllStations() => super.noSuchMethod(
-    Invocation.method(#unStarAllStations, []),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#unStarAllStations, []),
+        returnValueForMissingStub: null,
+      );
 
   @override
-  bool isStarredStation(String? uuid) =>
-      (super.noSuchMethod(
-            Invocation.method(#isStarredStation, [uuid]),
-            returnValue: false,
-          )
-          as bool);
+  bool isStarredStation(String? uuid) => (super.noSuchMethod(
+        Invocation.method(#isStarredStation, [uuid]),
+        returnValue: false,
+      ) as bool);
 
   @override
-  bool isFavTag(String? value) =>
-      (super.noSuchMethod(
-            Invocation.method(#isFavTag, [value]),
-            returnValue: false,
-          )
-          as bool);
+  bool isFavTag(String? value) => (super.noSuchMethod(
+        Invocation.method(#isFavTag, [value]),
+        returnValue: false,
+      ) as bool);
 
   @override
   void addFavRadioTag(String? name) => super.noSuchMethod(
-    Invocation.method(#addFavRadioTag, [name]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#addFavRadioTag, [name]),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void removeFavRadioTag(String? name) => super.noSuchMethod(
-    Invocation.method(#removeFavRadioTag, [name]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#removeFavRadioTag, [name]),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void setLastCountryCode(String? value) => super.noSuchMethod(
-    Invocation.method(#setLastCountryCode, [value]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#setLastCountryCode, [value]),
+        returnValueForMissingStub: null,
+      );
 
   @override
-  bool isFavCountry(String? value) =>
-      (super.noSuchMethod(
-            Invocation.method(#isFavCountry, [value]),
-            returnValue: false,
-          )
-          as bool);
+  bool isFavCountry(String? value) => (super.noSuchMethod(
+        Invocation.method(#isFavCountry, [value]),
+        returnValue: false,
+      ) as bool);
 
   @override
   void addFavCountryCode(String? name) => super.noSuchMethod(
-    Invocation.method(#addFavCountryCode, [name]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#addFavCountryCode, [name]),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void removeFavCountryCode(String? name) => super.noSuchMethod(
-    Invocation.method(#removeFavCountryCode, [name]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#removeFavCountryCode, [name]),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void setLastLanguageCode(String? value) => super.noSuchMethod(
-    Invocation.method(#setLastLanguageCode, [value]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#setLastLanguageCode, [value]),
+        returnValueForMissingStub: null,
+      );
 
   @override
-  bool isFavLanguage(String? value) =>
-      (super.noSuchMethod(
-            Invocation.method(#isFavLanguage, [value]),
-            returnValue: false,
-          )
-          as bool);
+  bool isFavLanguage(String? value) => (super.noSuchMethod(
+        Invocation.method(#isFavLanguage, [value]),
+        returnValue: false,
+      ) as bool);
 
   @override
   void addFavLanguageCode(String? name) => super.noSuchMethod(
-    Invocation.method(#addFavLanguageCode, [name]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#addFavLanguageCode, [name]),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void removeFavLanguageCode(String? name) => super.noSuchMethod(
-    Invocation.method(#removeFavLanguageCode, [name]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#removeFavLanguageCode, [name]),
+        returnValueForMissingStub: null,
+      );
 
   @override
-  List<String> getPlaylistById(String? id) =>
-      (super.noSuchMethod(
-            Invocation.method(#getPlaylistById, [id]),
-            returnValue: <String>[],
-          )
-          as List<String>);
+  List<_i8.Audio>? getPlaylistById(String? id) =>
+      (super.noSuchMethod(Invocation.method(#getPlaylistById, [id]))
+          as List<_i8.Audio>?);
 
   @override
-  bool isPlaylistSaved(String? id) =>
-      (super.noSuchMethod(
-            Invocation.method(#isPlaylistSaved, [id]),
-            returnValue: false,
-          )
-          as bool);
+  bool isPlaylistSaved(String? id) => (super.noSuchMethod(
+        Invocation.method(#isPlaylistSaved, [id]),
+        returnValue: false,
+      ) as bool);
 
   @override
   _i3.Future<void> addPlaylist(String? id, List<_i8.Audio>? audios) =>
       (super.noSuchMethod(
-            Invocation.method(#addPlaylist, [id, audios]),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
-
-  @override
-  _i3.Future<void> removePlaylist(String? id) =>
-      (super.noSuchMethod(
-            Invocation.method(#removePlaylist, [id]),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+        Invocation.method(#addPlaylist, [id, audios]),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
   _i3.Future<void> addPlaylists({
@@ -667,23 +590,36 @@ class MockLibraryService extends _i1.Mock implements _i7.LibraryService {
     required bool? external,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(#addPlaylists, [], {
-              #playlists: playlists,
-              #external: external,
-            }),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+        Invocation.method(#addPlaylists, [], {
+          #playlists: playlists,
+          #external: external,
+        }),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i3.Future<void> updatePlaylist(String? id, List<_i8.Audio>? audios) =>
+  _i3.Future<void> updatePlaylist({
+    required String? id,
+    required List<_i8.Audio>? audios,
+    bool? external = false,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#updatePlaylist, [id, audios]),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+        Invocation.method(#updatePlaylist, [], {
+          #id: id,
+          #audios: audios,
+          #external: external,
+        }),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+
+  @override
+  _i3.Future<void> removePlaylist(String? id) => (super.noSuchMethod(
+        Invocation.method(#removePlaylist, [id]),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
   void updatePlaylistName(String? oldName, String? newName) =>
@@ -697,75 +633,84 @@ class MockLibraryService extends _i1.Mock implements _i7.LibraryService {
     required int? oldIndex,
     required int? newIndex,
     required String? id,
-  }) => super.noSuchMethod(
-    Invocation.method(#moveAudioInPlaylist, [], {
-      #oldIndex: oldIndex,
-      #newIndex: newIndex,
-      #id: id,
-    }),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void updateAudiosInPlaylist({
-    required String? id,
-    required List<_i8.Audio>? audios,
-  }) => super.noSuchMethod(
-    Invocation.method(#updateAudiosInPlaylist, [], {#id: id, #audios: audios}),
-    returnValueForMissingStub: null,
-  );
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(#moveAudioInPlaylist, [], {
+          #oldIndex: oldIndex,
+          #newIndex: newIndex,
+          #id: id,
+        }),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void addAudiosToPlaylist({
     required String? id,
     required List<_i8.Audio>? audios,
-  }) => super.noSuchMethod(
-    Invocation.method(#addAudiosToPlaylist, [], {#id: id, #audios: audios}),
-    returnValueForMissingStub: null,
-  );
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(#addAudiosToPlaylist, [], {#id: id, #audios: audios}),
+        returnValueForMissingStub: null,
+      );
 
   @override
-  _i3.Future<void> removeAudiosFromPlaylist({
+  void removeAudiosFromPlaylist({
     required String? id,
     required List<_i8.Audio>? audios,
   }) =>
-      (super.noSuchMethod(
-            Invocation.method(#removeAudiosFromPlaylist, [], {
-              #id: id,
-              #audios: audios,
-            }),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+      super.noSuchMethod(
+        Invocation.method(#removeAudiosFromPlaylist, [], {
+          #id: id,
+          #audios: audios,
+        }),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void clearPlaylist(String? id) => super.noSuchMethod(
-    Invocation.method(#clearPlaylist, [id]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#clearPlaylist, [id]),
+        returnValueForMissingStub: null,
+      );
 
   @override
-  bool feedHasDownloads(String? feedUrl) =>
-      (super.noSuchMethod(
-            Invocation.method(#feedHasDownloads, [feedUrl]),
-            returnValue: false,
-          )
-          as bool);
+  void addExternalPlaylistID(String? value) => super.noSuchMethod(
+        Invocation.method(#addExternalPlaylistID, [value]),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void removeExternalPlaylistID(String? value) => super.noSuchMethod(
+        Invocation.method(#removeExternalPlaylistID, [value]),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void updateExternalPlaylistID(String? oldName, String? newName) =>
+      super.noSuchMethod(
+        Invocation.method(#updateExternalPlaylistID, [oldName, newName]),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  bool feedHasDownloads(String? feedUrl) => (super.noSuchMethod(
+        Invocation.method(#feedHasDownloads, [feedUrl]),
+        returnValue: false,
+      ) as bool);
 
   @override
   void addDownload({
     required String? url,
     required String? path,
     required String? feedUrl,
-  }) => super.noSuchMethod(
-    Invocation.method(#addDownload, [], {
-      #url: url,
-      #path: path,
-      #feedUrl: feedUrl,
-    }),
-    returnValueForMissingStub: null,
-  );
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(#addDownload, [], {
+          #url: url,
+          #path: path,
+          #feedUrl: feedUrl,
+        }),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void removeDownload({required String? url, required String? feedUrl}) =>
@@ -776,17 +721,15 @@ class MockLibraryService extends _i1.Mock implements _i7.LibraryService {
 
   @override
   void removeAllDownloads() => super.noSuchMethod(
-    Invocation.method(#removeAllDownloads, []),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#removeAllDownloads, []),
+        returnValueForMissingStub: null,
+      );
 
   @override
-  bool isPodcastSubscribed(String? feedUrl) =>
-      (super.noSuchMethod(
-            Invocation.method(#isPodcastSubscribed, [feedUrl]),
-            returnValue: false,
-          )
-          as bool);
+  bool isPodcastSubscribed(String? feedUrl) => (super.noSuchMethod(
+        Invocation.method(#isPodcastSubscribed, [feedUrl]),
+        returnValue: false,
+      ) as bool);
 
   @override
   void addPodcast(String? feedUrl, List<_i8.Audio>? audios) =>
@@ -805,30 +748,26 @@ class MockLibraryService extends _i1.Mock implements _i7.LibraryService {
   @override
   _i3.Future<void> updatePodcast(String? feedUrl, List<_i8.Audio>? audios) =>
       (super.noSuchMethod(
-            Invocation.method(#updatePodcast, [feedUrl, audios]),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+        Invocation.method(#updatePodcast, [feedUrl, audios]),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
   _i3.Future<void> updatePodcasts(
     List<({List<_i8.Audio> audios, String feedUrl})>? podcasts,
   ) =>
       (super.noSuchMethod(
-            Invocation.method(#updatePodcasts, [podcasts]),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+        Invocation.method(#updatePodcasts, [podcasts]),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  bool showPodcastAscending(String? feedUrl) =>
-      (super.noSuchMethod(
-            Invocation.method(#showPodcastAscending, [feedUrl]),
-            returnValue: false,
-          )
-          as bool);
+  bool showPodcastAscending(String? feedUrl) => (super.noSuchMethod(
+        Invocation.method(#showPodcastAscending, [feedUrl]),
+        returnValue: false,
+      ) as bool);
 
   @override
   _i3.Future<void> reorderPodcast({
@@ -836,51 +775,44 @@ class MockLibraryService extends _i1.Mock implements _i7.LibraryService {
     required bool? ascending,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(#reorderPodcast, [], {
-              #feedUrl: feedUrl,
-              #ascending: ascending,
-            }),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+        Invocation.method(#reorderPodcast, [], {
+          #feedUrl: feedUrl,
+          #ascending: ascending,
+        }),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  bool podcastUpdateAvailable(String? feedUrl) =>
-      (super.noSuchMethod(
-            Invocation.method(#podcastUpdateAvailable, [feedUrl]),
-            returnValue: false,
-          )
-          as bool);
+  bool podcastUpdateAvailable(String? feedUrl) => (super.noSuchMethod(
+        Invocation.method(#podcastUpdateAvailable, [feedUrl]),
+        returnValue: false,
+      ) as bool);
 
   @override
   void removePodcastUpdate(String? feedUrl) => super.noSuchMethod(
-    Invocation.method(#removePodcastUpdate, [feedUrl]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#removePodcastUpdate, [feedUrl]),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void removePodcast(String? feedUrl) => super.noSuchMethod(
-    Invocation.method(#removePodcast, [feedUrl]),
-    returnValueForMissingStub: null,
-  );
+        Invocation.method(#removePodcast, [feedUrl]),
+        returnValueForMissingStub: null,
+      );
 
   @override
-  _i3.Future<void> removeAllPodcasts() =>
-      (super.noSuchMethod(
-            Invocation.method(#removeAllPodcasts, []),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+  _i3.Future<void> removeAllPodcasts() => (super.noSuchMethod(
+        Invocation.method(#removeAllPodcasts, []),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  bool isFavoriteAlbum(String? id) =>
-      (super.noSuchMethod(
-            Invocation.method(#isFavoriteAlbum, [id]),
-            returnValue: false,
-          )
-          as bool);
+  bool isFavoriteAlbum(String? id) => (super.noSuchMethod(
+        Invocation.method(#isFavoriteAlbum, [id]),
+        returnValue: false,
+      ) as bool);
 
   @override
   void addFavoriteAlbum(String? id, {required dynamic Function()? onFail}) =>
@@ -897,45 +829,35 @@ class MockLibraryService extends _i1.Mock implements _i7.LibraryService {
       );
 
   @override
-  bool notify(bool? saved) =>
-      (super.noSuchMethod(
-            Invocation.method(#notify, [saved]),
-            returnValue: false,
-          )
-          as bool);
+  bool notify(bool? saved) => (super.noSuchMethod(
+        Invocation.method(#notify, [saved]),
+        returnValue: false,
+      ) as bool);
 
   @override
-  _i3.Future<void> init() =>
-      (super.noSuchMethod(
-            Invocation.method(#init, []),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+  _i3.Future<void> init() => (super.noSuchMethod(
+        Invocation.method(#init, []),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i3.Future<void> setSelectedPageId(String? value) =>
-      (super.noSuchMethod(
-            Invocation.method(#setSelectedPageId, [value]),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+  _i3.Future<void> setSelectedPageId(String? value) => (super.noSuchMethod(
+        Invocation.method(#setSelectedPageId, [value]),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i3.Future<void> dispose() =>
-      (super.noSuchMethod(
-            Invocation.method(#dispose, []),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+  _i3.Future<void> dispose() => (super.noSuchMethod(
+        Invocation.method(#dispose, []),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  bool isPageInLibrary(String? pageId) =>
-      (super.noSuchMethod(
-            Invocation.method(#isPageInLibrary, [pageId]),
-            returnValue: false,
-          )
-          as bool);
+  bool isPageInLibrary(String? pageId) => (super.noSuchMethod(
+        Invocation.method(#isPageInLibrary, [pageId]),
+        returnValue: false,
+      ) as bool);
 }
