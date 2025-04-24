@@ -150,7 +150,6 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
   // Podcasts
   //
 
-  Map<String, List<Audio>> get podcasts => _service.podcasts;
   List<String> get podcastFeedUrls => _service.podcastFeedUrls;
   List<Audio>? getPodcast(String? feedUrl) => _service.podcasts[feedUrl];
   int get podcastsLength => _service.podcasts.length;
