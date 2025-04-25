@@ -15,6 +15,7 @@ import 'package:window_manager/window_manager.dart';
 
 import 'app/app_model.dart';
 import 'app/connectivity_model.dart';
+import 'app/view/routing_manager.dart';
 import 'app/window_size_to_settings_listener.dart';
 import 'app_config.dart';
 import 'custom_content/custom_content_model.dart';
@@ -273,11 +274,17 @@ void registerDependencies({required List<String> args}) async {
     )
     ..registerSingletonWithDependencies<LibraryModel>(
       () => LibraryModel(
-        service: di<LibraryService>(),
+        libraryService: di<LibraryService>(),
         localAudioService: di<LocalAudioService>(),
       ),
       dispose: (s) => s.dispose(),
       dependsOn: [LibraryService, LocalAudioService, LocalAudioService],
+    )
+    ..registerSingletonWithDependencies<RoutingManager>(
+      () => RoutingManager(
+        libraryService: di<LibraryService>(),
+      ),
+      dependsOn: [LibraryService],
     )
     ..registerSingletonWithDependencies<LocalAudioModel>(
       () => LocalAudioModel(
@@ -288,10 +295,7 @@ void registerDependencies({required List<String> args}) async {
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton<PodcastModel>(
-      () => PodcastModel(
-        podcastService: di<PodcastService>(),
-        libraryService: di<LibraryService>(),
-      ),
+      () => PodcastModel(podcastService: di<PodcastService>()),
       dispose: (s) => s.dispose(),
     )
     ..registerSingletonWithDependencies<RadioModel>(

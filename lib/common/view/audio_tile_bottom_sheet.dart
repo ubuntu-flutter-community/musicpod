@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../app/view/routing_manager.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -46,6 +47,7 @@ class AudioTileBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final libraryModel = di<LibraryModel>();
+    final routingManager = di<RoutingManager>();
     return BottomSheet(
       enableDrag: false,
       onClosing: () {},
@@ -194,7 +196,7 @@ class AudioTileBottomSheet extends StatelessWidget {
                           onTap: () {
                             final artistId = audios.firstOrNull?.artist;
                             if (artistId != null) {
-                              libraryModel.push(
+                              routingManager.push(
                                 pageId: artistId,
                                 builder: (c) => ArtistPage(pageId: artistId),
                               );
@@ -215,7 +217,7 @@ class AudioTileBottomSheet extends StatelessWidget {
                               final albumAudios =
                                   di<LocalAudioModel>().findAlbum(albumId);
                               if (albumAudios != null) {
-                                libraryModel.push(
+                                routingManager.push(
                                   pageId: albumId,
                                   builder: (context) => AlbumPage(id: albumId),
                                 );

@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/connectivity_model.dart';
+import '../../app/view/routing_manager.dart';
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/audio_tile.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/offline_page.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../radio/radio_model.dart';
 import '../../radio/view/radio_reconnect_button.dart';
@@ -76,7 +76,7 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
             selected: currentAudio == station,
             pageId: station.uuid!,
             audio: station,
-            onTitleTap: () => di<LibraryModel>().push(
+            onTitleTap: () => di<RoutingManager>().push(
               pageId: station.uuid!,
               builder: (context) => StationPage(uuid: station.uuid!),
             ),

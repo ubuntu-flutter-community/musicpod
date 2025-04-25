@@ -9,10 +9,10 @@ import '../../app_config.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/theme.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../settings/settings_model.dart';
 import 'create_master_items.dart';
 import 'mobile_page.dart';
+import 'routing_manager.dart';
 
 class MobileMusicPodApp extends StatelessWidget with WatchItMixin {
   const MobileMusicPodApp({super.key, this.accent});
@@ -23,21 +23,16 @@ class MobileMusicPodApp extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final themeIndex = watchPropertyValue((SettingsModel m) => m.themeIndex);
     final phoenix = phoenixTheme(color: accent ?? Colors.greenAccent);
-
-    final libraryModel = watchIt<LibraryModel>();
-    final masterItems = createMasterItems();
-    watchPropertyValue((LibraryModel m) => m.playlistsLength);
-    watchPropertyValue((LibraryModel m) => m.starredStationsLength);
-    watchPropertyValue((LibraryModel m) => m.favoriteAlbumsLength);
-    watchPropertyValue((LibraryModel m) => m.podcastsLength);
+    final routingManager = di<RoutingManager>();
 
     return MaterialApp(
-      navigatorKey: libraryModel.masterNavigatorKey,
-      navigatorObservers: [libraryModel],
+      navigatorKey: routingManager.masterNavigatorKey,
+      navigatorObservers: [routingManager],
       initialRoute: AppConfig.isMobilePlatform
-          ? (libraryModel.selectedPageId ?? PageIDs.homePage)
+          ? (routingManager.selectedPageId ?? PageIDs.homePage)
           : null,
       onGenerateRoute: (settings) {
+        final masterItems = getAllMasterItems();
         final page = (masterItems.firstWhereOrNull(
                   (e) => e.pageId == settings.name,
                 ) ??
@@ -46,6 +41,7 @@ class MobileMusicPodApp extends StatelessWidget with WatchItMixin {
 
         return PageRouteBuilder(
           settings: settings,
+          maintainState: false,
           pageBuilder: (_, __, ___) => MobilePage(page: page),
         );
       },

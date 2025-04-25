@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:radio_browser_api/radio_browser_api.dart' hide State;
 import 'package:watch_it/watch_it.dart';
 
+import '../../app/view/routing_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/adaptive_container.dart';
@@ -9,7 +10,6 @@ import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import '../local_audio_model.dart';
@@ -50,7 +50,7 @@ class _GenrePageState extends State<GenrePage> {
             IconButton(
               tooltip: context.l10n.searchForRadioStationsWithGenreName,
               onPressed: () {
-                di<LibraryModel>().push(pageId: PageIDs.searchPage);
+                di<RoutingManager>().push(pageId: PageIDs.searchPage);
                 di<SearchModel>()
                   ..setTag(
                     Tag(name: widget.genre.toLowerCase(), stationCount: 1),

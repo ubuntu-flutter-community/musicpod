@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/connectivity_model.dart';
+import '../../app/view/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
@@ -19,7 +20,6 @@ import '../../common/view/sliver_audio_page_control_panel.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import '../radio_model.dart';
@@ -67,7 +67,7 @@ class _StationPageState extends State<StationPage> {
             padding: appBarSingleActionSpacing,
             child: SearchButton(
               onPressed: () {
-                di<LibraryModel>().push(pageId: PageIDs.searchPage);
+                di<RoutingManager>().push(pageId: PageIDs.searchPage);
                 final searchModel = di<SearchModel>();
                 if (searchModel.audioType != AudioType.radio) {
                   searchModel

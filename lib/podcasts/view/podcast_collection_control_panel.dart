@@ -140,7 +140,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
                       content: Text(context.l10n.removeAllPodcastsDescription),
                       confirmLabel: context.l10n.ok,
                       cancelLabel: context.l10n.cancel,
-                      onConfirm: () => model.removeAllPodcasts(),
+                      onConfirm: () => di<LibraryModel>().removeAllPodcasts(),
                     ),
                   ),
         ),

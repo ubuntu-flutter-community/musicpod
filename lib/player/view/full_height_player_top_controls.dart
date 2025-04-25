@@ -3,6 +3,7 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../app/app_model.dart';
 import '../../app/connectivity_model.dart';
+import '../../app/view/routing_manager.dart';
 import '../../app_config.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
@@ -14,7 +15,6 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import 'playback_rate_button.dart';
@@ -73,7 +73,7 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
                 di<SearchModel>()
                   ..setSearchQuery('')
                   ..setAudioType(audio?.audioType);
-                di<LibraryModel>().push(pageId: PageIDs.searchPage);
+                di<RoutingManager>().push(pageId: PageIDs.searchPage);
               },
             ),
           if (audio?.audioType != AudioType.podcast)

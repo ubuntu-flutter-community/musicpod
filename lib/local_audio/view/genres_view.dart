@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app/view/routing_manager.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/round_image_container.dart';
 import '../../common/view/sliver_fill_remaining_progress.dart';
 import '../../common/view/ui_constants.dart';
-import '../../library/library_model.dart';
 import 'genre_page.dart';
 
 class GenresView extends StatelessWidget {
@@ -39,7 +39,7 @@ class GenresView extends StatelessWidget {
         final text = genres!.elementAt(index);
         return YaruSelectableContainer(
           selected: false,
-          onTap: () => di<LibraryModel>().push(
+          onTap: () => di<RoutingManager>().push(
             builder: (_) => GenrePage(
               genre: text,
             ),

@@ -2,13 +2,14 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
 import 'package:watch_it/watch_it.dart';
+
+import '../../app/view/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/audio_page_header_html_description.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../search/search_model.dart';
 import '../../settings/settings_model.dart';
 import '../podcast_model.dart';
@@ -57,7 +58,7 @@ class PodcastPageHeader extends StatelessWidget {
     required String text,
   }) async {
     await di<PodcastModel>().init(updateMessage: l10n.updateAvailable);
-    di<LibraryModel>().push(pageId: PageIDs.searchPage);
+    di<RoutingManager>().push(pageId: PageIDs.searchPage);
     di<SearchModel>()
       ..setAudioType(AudioType.podcast)
       ..setSearchQuery(text)
@@ -78,7 +79,7 @@ class PodcastPageHeader extends StatelessWidget {
           e.id.toLowerCase() == text.toLowerCase() ||
           e.name.toLowerCase() == text.toLowerCase(),
     );
-    di<LibraryModel>().push(pageId: PageIDs.searchPage);
+    di<RoutingManager>().push(pageId: PageIDs.searchPage);
     if (genreOrNull != null) {
       di<SearchModel>()
         ..setAudioType(AudioType.podcast)

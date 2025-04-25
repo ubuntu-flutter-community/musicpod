@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/app_model.dart';
+import '../../app/view/routing_manager.dart';
 import '../../common/page_ids.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason>
     showAddedToPlaylistSnackBar({
   required BuildContext context,
-  required LibraryModel libraryModel,
   required String id,
 }) {
   ScaffoldMessenger.of(context).clearSnackBars();
@@ -26,7 +25,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason>
           if (appModel.fullWindowMode == true) {
             appModel.setFullWindowMode(false);
           }
-          libraryModel.push(pageId: id);
+          di<RoutingManager>().push(pageId: id);
         },
         label: context.l10n.open,
       ),

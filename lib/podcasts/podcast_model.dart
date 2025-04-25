@@ -5,22 +5,14 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
 import '../l10n/l10n.dart';
-import '../library/library_service.dart';
 import 'podcast_service.dart';
 
 class PodcastModel extends SafeChangeNotifier {
   PodcastModel({
     required PodcastService podcastService,
-    required LibraryService libraryService,
-  })  : _podcastService = podcastService,
-        _libraryService = libraryService {
-    _librarySubscription =
-        _libraryService.propertiesChanged.listen((_) => notifyListeners());
-  }
+  }) : _podcastService = podcastService;
 
   final PodcastService _podcastService;
-  final LibraryService _libraryService;
-  StreamSubscription<bool>? _librarySubscription;
 
   Future<void> init({
     required String updateMessage,
@@ -110,14 +102,6 @@ class PodcastModel extends SafeChangeNotifier {
     String? feedUrl,
   }) =>
       _podcastService.findEpisodes(item: item, feedUrl: feedUrl);
-
-  Future<void> removeAllPodcasts() async => _libraryService.removeAllPodcasts();
-
-  @override
-  Future<void> dispose() async {
-    super.dispose();
-    await _librarySubscription?.cancel();
-  }
 }
 
 enum PodcastEpisodeFilter {

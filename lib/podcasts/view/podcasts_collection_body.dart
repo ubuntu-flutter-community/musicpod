@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/connectivity_model.dart';
+import '../../app/view/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
@@ -82,7 +83,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                   ),
                   ImportantButton(
                     onPressed: () {
-                      di<LibraryModel>().push(pageId: PageIDs.searchPage);
+                      di<RoutingManager>().push(pageId: PageIDs.searchPage);
                       di<SearchModel>()
                         ..setAudioType(AudioType.podcast)
                         ..setSearchQuery(null)
@@ -184,7 +185,8 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                                 feedUrl!,
                               ),
                             ),
-                        onTap: () => libraryModel.push(pageId: feedUrl!),
+                        onTap: () =>
+                            di<RoutingManager>().push(pageId: feedUrl!),
                       );
                     },
                   ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app/view/routing_manager.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/round_image_container.dart';
@@ -9,7 +10,6 @@ import '../../common/view/ui_constants.dart';
 import '../../custom_content/view/custom_playlists_section.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../playlists/view/playlist_page.dart';
 
 class PlaylistsView extends StatelessWidget {
@@ -58,7 +58,7 @@ class PlaylistsView extends StatelessWidget {
                     ),
                   ),
                 )
-              : di<LibraryModel>().push(
+              : di<RoutingManager>().push(
                   builder: (_) => PlaylistPage(
                     pageId: id,
                   ),

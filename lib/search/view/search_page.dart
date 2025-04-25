@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../app/view/routing_manager.dart';
 import '../../app_config.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/adaptive_container.dart';
@@ -13,7 +14,6 @@ import '../../common/view/search_button.dart';
 import '../../common/view/sliver_filter_app_bar.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
-import '../../library/library_model.dart';
 import '../search_model.dart';
 import 'search_page_input.dart';
 import 'sliver_local_search_results.dart';
@@ -44,7 +44,7 @@ class SearchPage extends StatelessWidget with WatchItMixin {
             ),
             child: SearchButton(
               active: true,
-              onPressed: () => di<LibraryModel>().pop(),
+              onPressed: () => di<RoutingManager>().pop(),
               icon: loading
                   ? SizedBox.square(
                       dimension: AppConfig.yaruStyled ? 18 : 25,

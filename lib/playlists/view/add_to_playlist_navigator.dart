@@ -124,7 +124,6 @@ class _PlaylistTile extends StatelessWidget {
         Navigator.of(context, rootNavigator: true).maybePop();
         showAddedToPlaylistSnackBar(
           context: context,
-          libraryModel: libraryModel,
           id: playlistId,
         );
       },
@@ -203,7 +202,6 @@ class _NewViewState extends State<_NewView> {
                       );
                       showAddedToPlaylistSnackBar(
                         context: context,
-                        libraryModel: libraryModel,
                         id: _controller.text,
                       );
                     },

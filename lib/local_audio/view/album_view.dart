@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../app/view/routing_manager.dart';
 import '../../app_config.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
@@ -108,7 +109,7 @@ class AlbumCard extends StatelessWidget {
           background: fallback,
           onTap: albumAudios == null
               ? null
-              : () => di<LibraryModel>().push(
+              : () => di<RoutingManager>().push(
                     builder: (context) => AlbumPage(id: id),
                     pageId: id,
                   ),

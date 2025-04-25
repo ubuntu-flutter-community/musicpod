@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../../app/app_model.dart';
+import '../../../app/view/routing_manager.dart';
 import '../../../common/data/audio_type.dart';
 import '../../../common/page_ids.dart';
 import '../../../common/view/icons.dart';
 import '../../../common/view/modals.dart';
 import '../../../extensions/build_context_x.dart';
 import '../../../l10n/l10n.dart';
-import '../../../library/library_model.dart';
 import '../../../radio/radio_model.dart';
 import '../../player_model.dart';
 import 'queue_body.dart';
@@ -53,8 +53,8 @@ class QueueButton extends StatelessWidget with WatchItMixin {
           if (di<PlayerModel>().audio?.audioType == AudioType.radio) {
             di<RadioModel>()
                 .setRadioCollectionView(RadioCollectionView.history);
-            if (di<LibraryModel>().selectedPageId != PageIDs.radio) {
-              di<LibraryModel>().push(pageId: PageIDs.radio);
+            if (di<RoutingManager>().selectedPageId != PageIDs.radio) {
+              di<RoutingManager>().push(pageId: PageIDs.radio);
             }
           } else {
             showModal(

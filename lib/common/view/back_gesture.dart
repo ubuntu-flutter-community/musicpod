@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../app/view/routing_manager.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../../library/library_model.dart';
 import 'icons.dart';
 
 const double _kButtonSize = 50;
@@ -87,13 +87,13 @@ class _BackGestureState extends State<BackGesture>
       });
     });
     if (_currentExtent > (_kMaxExtent / 2)) {
-      di<LibraryModel>().pop();
+      di<RoutingManager>().pop();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final canPop = watchPropertyValue((LibraryModel m) => m.canPop);
+    final canPop = watchPropertyValue((RoutingManager m) => m.canPop);
     return LayoutBuilder(
       builder: (context, constraints) {
         return GestureDetector(

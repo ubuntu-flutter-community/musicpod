@@ -18,11 +18,14 @@ class LocalAudioModel extends SafeChangeNotifier {
         _settingsService = settingsService {
     _audiosChangedSub ??=
         _localAudioService.audiosChanged.listen((_) => notifyListeners());
+    _settingsChangedSub ??=
+        _settingsService.propertiesChanged.listen((_) => notifyListeners());
   }
 
   final LocalAudioService _localAudioService;
   final SettingsService _settingsService;
   StreamSubscription<bool>? _audiosChangedSub;
+  StreamSubscription<bool>? _settingsChangedSub;
   FileWatcher? get fileWatcher => _localAudioService.fileWatcher;
 
   void changeMetadata(
@@ -55,13 +58,8 @@ class LocalAudioModel extends SafeChangeNotifier {
       );
 
   int get localAudioindex => _settingsService.localAudioIndex;
-  set localAudioindex(int value) {
-    if (value == localAudioindex) return;
-    // Note: we do not listen to the local audio index change on purpose, we just pump it into the sink
-    // and load it fresh in init
-    _settingsService.setLocalAudioIndex(value);
-    notifyListeners();
-  }
+  void setLocalAudioindex(int value) =>
+      _settingsService.setLocalAudioIndex(value);
 
   bool _allowReorder = false;
   bool get allowReorder => _allowReorder;
@@ -127,6 +125,7 @@ class LocalAudioModel extends SafeChangeNotifier {
   @override
   Future<void> dispose() async {
     await _audiosChangedSub?.cancel();
+    await _settingsChangedSub?.cancel();
     super.dispose();
   }
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../app/view/routing_manager.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/snackbars.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../podcasts/podcast_model.dart';
 import '../../podcasts/view/lazy_podcast_page.dart';
 
@@ -69,7 +69,7 @@ class _CustomPodcastSectionState extends State<CustomPodcastSection> {
                                   content: Text(context.l10n.noPodcastFound),
                                 );
                               } else {
-                                di<LibraryModel>().push(
+                                di<RoutingManager>().push(
                                   pageId: _urlController.text,
                                   builder: (context) => LazyPodcastPage(
                                     imageUrl: v.firstOrNull?.imageUrl,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../app/view/routing_manager.dart';
 import '../../app_config.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/copy_clipboard_content.dart';
@@ -13,7 +14,6 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../online_art_model.dart';
@@ -97,7 +97,7 @@ class RadioHistoryTile extends StatelessWidget {
                 : () async {
                     di<SearchModel>().radioNameSearch(icyName).then((v) {
                       if (v?.firstOrNull?.stationUUID != null) {
-                        di<LibraryModel>().push(
+                        di<RoutingManager>().push(
                           builder: (_) => StationPage(
                             uuid: Audio.fromStation(v.first).uuid!,
                           ),

@@ -38,7 +38,6 @@ class LikeIcon extends StatelessWidget with WatchItMixin {
           libraryModel.addLikedAudio(audio!);
           showAddedToPlaylistSnackBar(
             context: context,
-            libraryModel: libraryModel,
             id: PageIDs.likedAudios,
           );
         }

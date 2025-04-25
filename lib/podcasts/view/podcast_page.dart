@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../app/view/routing_manager.dart';
 import '../../app_config.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
@@ -114,7 +115,7 @@ class _PodcastPageState extends State<PodcastPage> {
             padding: appBarSingleActionSpacing,
             child: SearchButton(
               onPressed: () {
-                di<LibraryModel>().push(pageId: PageIDs.searchPage);
+                di<RoutingManager>().push(pageId: PageIDs.searchPage);
                 di<SearchModel>()
                   ..setAudioType(AudioType.podcast)
                   ..setSearchType(SearchType.podcastTitle);

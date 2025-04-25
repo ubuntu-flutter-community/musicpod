@@ -3,6 +3,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../app/view/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/audio_tile_option_button.dart';
@@ -66,7 +67,7 @@ class _AlbumPageState extends State<AlbumPage> {
     );
   }
 
-  void onArtistTap(String text) => di<LibraryModel>().push(
+  void onArtistTap(String text) => di<RoutingManager>().push(
         builder: (_) => ArtistPage(pageId: text),
         pageId: text,
       );

@@ -37,7 +37,7 @@ class SettingsService {
       _preferences.getInt(SPKeys.localAudioIndex) ??
       LocalAudioView.albums.index;
   void setLocalAudioIndex(int value) =>
-      _preferences.setInt(SPKeys.localAudioIndex, value);
+      _preferences.setInt(SPKeys.localAudioIndex, value).then(notify);
 
   bool get neverShowFailedImports =>
       _preferences.getBool(SPKeys.neverShowImportFails) ?? false;
