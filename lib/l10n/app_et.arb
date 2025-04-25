@@ -1356,5 +1356,15 @@
   "pictures": "Pildid",
   "@pictures": {},
   "localPictureTypeOther": "Muu",
-  "@localPictureTypeOther": {}
+  "@localPictureTypeOther": {},
+  "localPictureTypepublisherStudioLogotype": "Väljaandja või stuudio logo",
+  "@localPictureTypepublisherStudioLogotype": {},
+  "cantPinEmptyAlbum": "Sa ei saa tõsta esile albumeid, mille metateave on puudu!",
+  "@cantPinEmptyAlbum": {},
+  "cantUnpinEmptyAlbum": "Sa ei saa esiletõstmisest eemaldada albumeid ilma puuduva metateabeta!",
+  "@cantUnpinEmptyAlbum": {},
+  "path": "Asukoht",
+  "@path": {},
+  "albumNotFound": "Seda albumit kas pole olemas või sa oled eemaldanud välise esitusloendi ((M3U/PLS faili), kust ta oli laaditud.",
+  "@albumNotFound": {}
 }
