@@ -14,6 +14,30 @@ import '../../library/library_model.dart';
 import '../../local_audio/local_audio_model.dart';
 import '../../player/player_model.dart';
 import '../../radio/radio_model.dart';
+import 'master_item.dart';
+import 'routing_manager.dart';
+
+class MasterTileWithPageId extends StatelessWidget {
+  const MasterTileWithPageId({
+    super.key,
+    required this.item,
+    required this.selectedPageId,
+  });
+
+  final MasterItem item;
+  final String? selectedPageId;
+
+  @override
+  Widget build(BuildContext context) => MasterTile(
+        key: ValueKey(item.pageId),
+        onTap: () => di<RoutingManager>().push(pageId: item.pageId),
+        pageId: item.pageId,
+        leading: item.iconBuilder?.call(selectedPageId == item.pageId),
+        title: item.titleBuilder(context),
+        subtitle: item.subtitleBuilder?.call(context),
+        selected: selectedPageId == item.pageId,
+      );
+}
 
 class MasterTile extends StatelessWidget {
   const MasterTile({
@@ -58,10 +82,13 @@ class MasterTile extends StatelessWidget {
       tile = yaruMasterTile;
     }
 
-    return _PlayAbleMasterTile(
-      selected: selected,
-      pageId: pageId,
-      tile: tile,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: kSmallestSpace),
+      child: _PlayAbleMasterTile(
+        selected: selected,
+        pageId: pageId,
+        tile: tile,
+      ),
     );
   }
 }
@@ -175,7 +202,7 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
     );
   }
 
-  Future<List<Audio>?> getAudiosById(String pageId) async {
+  Future<List<Audio>?>? getAudiosById(String pageId) async {
     final libraryModel = di<LibraryModel>();
 
     if (libraryModel.isStarredStation(pageId)) {

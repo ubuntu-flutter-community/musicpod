@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../app/view/routing_manager.dart';
 import '../common/data/audio_type.dart';
 import '../common/page_ids.dart';
 import '../common/view/adaptive_container.dart';
@@ -45,7 +46,8 @@ class HomePage extends StatelessWidget with WatchItMixin {
             selectedIcon: Icon(Iconz.settingsFilled),
             icon: Icon(Iconz.settings),
             tooltip: l10n.settings,
-            onPressed: () => di<LibraryModel>().push(pageId: PageIDs.settings),
+            onPressed: () =>
+                di<RoutingManager>().push(pageId: PageIDs.settings),
           ),
           const SizedBox(
             width: kSmallestSpace,
@@ -70,7 +72,7 @@ class HomePage extends StatelessWidget with WatchItMixin {
                     ),
                     trailing: Icon(Iconz.goNext),
                     onTap: () {
-                      di<LibraryModel>().push(pageId: PageIDs.searchPage);
+                      di<RoutingManager>().push(pageId: PageIDs.searchPage);
                       di<SearchModel>()
                         ..setAudioType(AudioType.podcast)
                         ..setSearchType(SearchType.podcastTitle)
@@ -95,7 +97,7 @@ class HomePage extends StatelessWidget with WatchItMixin {
                       '${l10n.radio} ${l10n.charts} ${country ?? ''}',
                     ),
                     onTap: () {
-                      di<LibraryModel>().push(pageId: PageIDs.searchPage);
+                      di<RoutingManager>().push(pageId: PageIDs.searchPage);
                       di<SearchModel>()
                         ..setAudioType(AudioType.radio)
                         ..setSearchType(SearchType.radioCountry)
@@ -117,9 +119,9 @@ class HomePage extends StatelessWidget with WatchItMixin {
                     title: Text(l10n.playlists),
                     trailing: Icon(Iconz.goNext),
                     onTap: () {
-                      di<LocalAudioModel>().localAudioindex =
-                          LocalAudioView.playlists.index;
-                      di<LibraryModel>().push(pageId: PageIDs.localAudio);
+                      di<LocalAudioModel>()
+                          .setLocalAudioindex(LocalAudioView.playlists.index);
+                      di<RoutingManager>().push(pageId: PageIDs.localAudio);
                     },
                   ),
                 ),

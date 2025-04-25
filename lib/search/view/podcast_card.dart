@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../app/view/routing_manager.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
-import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../podcasts/podcast_model.dart';
 import '../../podcasts/view/lazy_podcast_page.dart';
@@ -18,8 +18,6 @@ class PodcastCard extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final libraryModel = di<LibraryModel>();
-
     final feedUrl = item.feedUrl;
 
     return AudioCard(
@@ -43,7 +41,7 @@ class PodcastCard extends StatelessWidget with WatchItMixin {
               ),
       onTap: feedUrl == null
           ? null
-          : () => libraryModel.push(
+          : () => di<RoutingManager>().push(
                 builder: (_) => LazyPodcastPage(
                   podcastItem: item,
                 ),

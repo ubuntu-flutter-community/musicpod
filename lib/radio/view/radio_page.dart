@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/connectivity_model.dart';
+import '../../app/view/routing_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/header_bar.dart';
@@ -9,7 +10,6 @@ import '../../common/view/offline_page.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import 'radio_lib_page.dart';
@@ -32,7 +32,7 @@ class RadioPage extends StatelessWidget with WatchItMixin {
               child: SearchButton(
                 active: false,
                 onPressed: () {
-                  di<LibraryModel>().push(pageId: PageIDs.searchPage);
+                  di<RoutingManager>().push(pageId: PageIDs.searchPage);
                   final searchModel = di<SearchModel>();
                   if (searchModel.audioType != AudioType.radio) {
                     searchModel

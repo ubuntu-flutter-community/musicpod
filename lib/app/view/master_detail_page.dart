@@ -11,16 +11,16 @@ import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../library/library_model.dart';
 import 'create_master_items.dart';
 import 'master_panel.dart';
+import 'routing_manager.dart';
 
 class MasterDetailPage extends StatelessWidget {
   const MasterDetailPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final libraryModel = di<LibraryModel>();
+    final routingManager = di<RoutingManager>();
 
     final drawer = Drawer(
       width: kMasterDetailSideBarWidth,
@@ -55,12 +55,12 @@ class MasterDetailPage extends StatelessWidget {
           if (context.showMasterPanel) const VerticalDivider(),
           Expanded(
             child: Navigator(
-              initialRoute: libraryModel.selectedPageId ?? PageIDs.searchPage,
+              initialRoute: routingManager.selectedPageId ?? PageIDs.searchPage,
               onDidRemovePage: (page) {},
-              key: libraryModel.masterNavigatorKey,
-              observers: [libraryModel],
+              key: routingManager.masterNavigatorKey,
+              observers: [routingManager],
               onGenerateRoute: (settings) {
-                final masterItems = createMasterItems();
+                final masterItems = getAllMasterItems();
                 final page = (masterItems.firstWhereOrNull(
                           (e) => e.pageId == settings.name,
                         ) ??
@@ -69,6 +69,7 @@ class MasterDetailPage extends StatelessWidget {
 
                 return PageRouteBuilder(
                   settings: settings,
+                  maintainState: PageIDs.permanent.contains(settings.name),
                   pageBuilder: (_, __, ___) => BackGesture(child: page),
                   transitionsBuilder: (_, a, __, c) =>
                       FadeTransition(opacity: a, child: c),

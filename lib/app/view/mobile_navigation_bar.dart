@@ -7,7 +7,7 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
+import 'routing_manager.dart';
 
 class MobileNavigationBar extends StatelessWidget with WatchItMixin {
   const MobileNavigationBar({super.key});
@@ -17,7 +17,7 @@ class MobileNavigationBar extends StatelessWidget with WatchItMixin {
     final l10n = context.l10n;
 
     final selectedPageId =
-        watchPropertyValue((LibraryModel m) => m.selectedPageId);
+        watchPropertyValue((RoutingManager m) => m.selectedPageId);
 
     return Padding(
       padding: context.isAndroidGestureNavigationEnabled
@@ -37,7 +37,7 @@ class MobileNavigationBar extends StatelessWidget with WatchItMixin {
                 icon: Icon(Iconz.home),
                 tooltip: l10n.home,
                 onPressed: () =>
-                    di<LibraryModel>().push(pageId: PageIDs.homePage),
+                    di<RoutingManager>().push(pageId: PageIDs.homePage),
               ),
               IconButton(
                 isSelected: selectedPageId == PageIDs.localAudio,
@@ -45,14 +45,15 @@ class MobileNavigationBar extends StatelessWidget with WatchItMixin {
                 icon: Icon(Iconz.localAudio),
                 tooltip: l10n.local,
                 onPressed: () =>
-                    di<LibraryModel>().push(pageId: PageIDs.localAudio),
+                    di<RoutingManager>().push(pageId: PageIDs.localAudio),
               ),
               IconButton(
                 isSelected: selectedPageId == PageIDs.radio,
                 selectedIcon: Icon(Iconz.radioFilled),
                 icon: Icon(Iconz.radio),
                 tooltip: l10n.radio,
-                onPressed: () => di<LibraryModel>().push(pageId: PageIDs.radio),
+                onPressed: () =>
+                    di<RoutingManager>().push(pageId: PageIDs.radio),
               ),
               IconButton(
                 isSelected: selectedPageId == PageIDs.podcasts,
@@ -60,7 +61,7 @@ class MobileNavigationBar extends StatelessWidget with WatchItMixin {
                 icon: Icon(Iconz.podcast),
                 tooltip: l10n.podcasts,
                 onPressed: () =>
-                    di<LibraryModel>().push(pageId: PageIDs.podcasts),
+                    di<RoutingManager>().push(pageId: PageIDs.podcasts),
               ),
             ],
           ),

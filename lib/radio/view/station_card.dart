@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../app/view/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
@@ -9,7 +10,6 @@ import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
-import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../radio_model.dart';
 import 'station_page.dart';
@@ -60,7 +60,7 @@ class _StationCardState extends State<StationCard> {
                   ).then((_) => di<RadioModel>().clickStation(station)),
           onTap: station.uuid == null
               ? null
-              : () => di<LibraryModel>().push(
+              : () => di<RoutingManager>().push(
                     builder: (_) => StationPage(uuid: widget.uuid),
                     pageId: widget.uuid,
                   ),

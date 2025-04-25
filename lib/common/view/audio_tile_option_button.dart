@@ -66,7 +66,8 @@ class AudioTileOptionButton extends StatelessWidget {
       itemBuilder: (context) {
         final currentAudioType = di<PlayerModel>().audio?.audioType;
         return [
-          if (audios.none((e) => e.audioType == AudioType.radio))
+          if (audios.length > 1 &&
+              audios.none((e) => e.audioType == AudioType.radio))
             PopupMenuItem(
               onTap: () {
                 if (di<PlayerModel>().audio?.audioType == AudioType.radio) {

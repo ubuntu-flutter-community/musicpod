@@ -6,6 +6,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
 import '../../app/connectivity_model.dart';
+import '../../app/view/routing_manager.dart';
 import '../../app_config.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/progress.dart';
@@ -15,7 +16,6 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import 'about_page.dart';
 
 class AboutSection extends StatelessWidget with WatchItMixin {
@@ -101,7 +101,7 @@ class _AboutTileState extends State<_AboutTile> {
                 ),
       trailing: OutlinedButton(
         onPressed: () => AppConfig.isMobilePlatform
-            ? di<LibraryModel>().push(
+            ? di<RoutingManager>().push(
                 pageId: 'about',
                 builder: (p0) => const AboutPage(),
               )
@@ -123,7 +123,7 @@ class _LicenseTile extends StatelessWidget {
       ),
       trailing: OutlinedButton(
         onPressed: () => AppConfig.isMobilePlatform
-            ? di<LibraryModel>().push(
+            ? di<RoutingManager>().push(
                 pageId: 'licenses',
                 builder: (p0) => const LicensePage(),
               )

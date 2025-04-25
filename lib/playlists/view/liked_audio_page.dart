@@ -2,6 +2,7 @@ import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../app/view/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/audio_page_type.dart';
@@ -41,12 +42,10 @@ class _LikedAudioPageState extends State<LikedAudioPage> {
     });
 
     return SliverAudioPage(
-      onPageLabelTab: (text) {
-        di<LibraryModel>().push(
-          builder: (_) => ArtistPage(pageId: text),
-          pageId: text,
-        );
-      },
+      onPageLabelTab: (text) => di<RoutingManager>().push(
+        builder: (_) => ArtistPage(pageId: text),
+        pageId: text,
+      ),
       noSearchResultMessage: Text(context.l10n.likedSongsSubtitle),
       noSearchResultIcons: const AnimatedEmoji(AnimatedEmojis.twoHearts),
       audios: _likedAudios,

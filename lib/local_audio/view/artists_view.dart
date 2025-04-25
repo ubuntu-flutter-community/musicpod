@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app/view/routing_manager.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/round_image_container.dart';
 import '../../common/view/sliver_fill_remaining_progress.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
-import '../../library/library_model.dart';
 import 'artist_page.dart';
 import 'artist_round_image_container.dart';
 
@@ -45,7 +45,7 @@ class ArtistsView extends StatelessWidget {
 
         return YaruSelectableContainer(
           selected: false,
-          onTap: () => di<LibraryModel>().push(
+          onTap: () => di<RoutingManager>().push(
             builder: (_) => ArtistPage(pageId: artistName),
             pageId: artistName,
           ),
@@ -103,12 +103,10 @@ class AlbumArtistsView extends StatelessWidget {
 
         return YaruSelectableContainer(
           selected: false,
-          onTap: () {
-            di<LibraryModel>().push(
-              builder: (_) => ArtistPage(pageId: artist),
-              pageId: artist,
-            );
-          },
+          onTap: () => di<RoutingManager>().push(
+            builder: (_) => ArtistPage(pageId: artist),
+            pageId: artist,
+          ),
           borderRadius: BorderRadius.circular(300),
           child: Stack(
             alignment: Alignment.center,

@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../app/view/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
@@ -19,7 +20,6 @@ import '../../common/view/sliver_audio_tile_list.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import '../local_audio_model.dart';
@@ -69,13 +69,13 @@ class _ArtistPageState extends State<ArtistPage> {
       final id = audios!.first.albumId;
       if (id == null) return;
 
-      di<LibraryModel>().push(
+      di<RoutingManager>().push(
         builder: (_) => AlbumPage(id: id),
         pageId: id,
       );
     }
 
-    void onSubTitleTab(String text) => di<LibraryModel>().push(
+    void onSubTitleTab(String text) => di<RoutingManager>().push(
           builder: (context) => GenrePage(genre: text),
           pageId: text,
         );
@@ -88,7 +88,7 @@ class _ArtistPageState extends State<ArtistPage> {
             padding: appBarSingleActionSpacing,
             child: SearchButton(
               onPressed: () {
-                di<LibraryModel>().push(pageId: PageIDs.searchPage);
+                di<RoutingManager>().push(pageId: PageIDs.searchPage);
                 final searchmodel = di<SearchModel>();
                 searchmodel
                   ..setAudioType(AudioType.local)

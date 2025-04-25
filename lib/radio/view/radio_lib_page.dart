@@ -6,6 +6,7 @@ import 'package:radio_browser_api/radio_browser_api.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app/view/routing_manager.dart';
 import '../../app_config.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
@@ -238,7 +239,7 @@ class TagGrid extends StatelessWidget with WatchItMixin {
               ),
               bottom: AudioCardBottom(text: tag),
               onTap: () {
-                di<LibraryModel>().push(pageId: PageIDs.searchPage);
+                di<RoutingManager>().push(pageId: PageIDs.searchPage);
                 di<SearchModel>()
                   ..setTag(Tag(name: tag.toLowerCase(), stationCount: 1))
                   ..setAudioType(AudioType.radio)

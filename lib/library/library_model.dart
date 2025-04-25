@@ -1,21 +1,16 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-import '../app/view/mobile_page.dart';
-import '../app_config.dart';
 import '../common/data/audio.dart';
-import '../common/logging.dart';
-import '../common/view/back_gesture.dart';
 import '../local_audio/local_audio_service.dart';
 import 'library_service.dart';
 
-class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
+class LibraryModel extends SafeChangeNotifier {
   LibraryModel({
-    required LibraryService service,
+    required LibraryService libraryService,
     required LocalAudioService localAudioService,
-  })  : _service = service,
+  })  : _service = libraryService,
         _localAudioService = localAudioService {
     _propertiesChangedSub ??=
         _service.propertiesChanged.listen((_) => notifyListeners());
@@ -99,17 +94,13 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
     required bool external,
   }) async {
     if (external) {
-      _addLocalAudiosFromPlaylists(playlists);
+      playlists.map(
+        (e) => _localAudioService.addAudios(
+          e.audios.where((e) => e.isLocal).toList(),
+        ),
+      );
     }
     return _service.addPlaylists(playlists: playlists, external: external);
-  }
-
-  void _addLocalAudiosFromPlaylists(
-    List<({List<Audio> audios, String id})> playlists,
-  ) {
-    for (var playlist in playlists) {
-      _localAudioService.addAudios(playlist.audios);
-    }
   }
 
   Future<void> updatePlaylist({
@@ -181,6 +172,8 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
   bool showPodcastAscending(String feedUrl) =>
       _service.showPodcastAscending(feedUrl);
 
+  Future<void> removeAllPodcasts() async => _service.removeAllPodcasts();
+
   //
   // Albums
   //
@@ -195,117 +188,4 @@ class LibraryModel extends SafeChangeNotifier implements NavigatorObserver {
 
   void removeFavoriteAlbum(String id, {required Function() onFail}) =>
       _service.removeFavoriteAlbum(id, onFail: onFail);
-
-  //
-  // Navigation inside the Library
-  //
-
-  String? get selectedPageId => _service.selectedPageId;
-  void _setSelectedPageId(String pageId) => _service.setSelectedPageId(pageId);
-
-  Future<void> push({
-    required String pageId,
-    Widget Function(BuildContext)? builder,
-    bool maintainState = false,
-    bool replace = false,
-  }) async {
-    final inLibrary = isPageInLibrary(pageId);
-    assert(inLibrary || builder != null);
-    if (inLibrary) {
-      if (replace) {
-        await _masterNavigatorKey.currentState?.pushReplacementNamed(pageId);
-      } else {
-        await _masterNavigatorKey.currentState?.pushNamed(pageId);
-      }
-    } else if (builder != null) {
-      final materialPageRoute = MaterialPageRoute(
-        settings: RouteSettings(
-          name: pageId,
-        ),
-        builder: (context) => AppConfig.isMobilePlatform
-            ? MobilePage(page: builder(context))
-            : BackGesture(child: builder(context)),
-      );
-
-      if (replace) {
-        await _masterNavigatorKey.currentState?.pushReplacement(
-          materialPageRoute,
-        );
-      } else {
-        await _masterNavigatorKey.currentState?.push(
-          materialPageRoute,
-        );
-      }
-    }
-  }
-
-  void pop() => _masterNavigatorKey.currentState?.maybePop();
-
-  bool get canPop => _masterNavigatorKey.currentState?.canPop() == true;
-
-  @override
-  void didPop(Route route, Route? previousRoute) {
-    final pageId = previousRoute?.settings.name;
-
-    printMessageInDebugMode(
-      'didPop: ${route.settings.name}, previousPageId: ${previousRoute?.settings.name}',
-    );
-    if (pageId == null) return;
-    _setSelectedPageId(pageId);
-  }
-
-  @override
-  void didPush(Route route, Route? previousRoute) {
-    final pageId = route.settings.name;
-    printMessageInDebugMode(
-      'didPush: $pageId, previousPageId: ${previousRoute?.settings.name}',
-    );
-    if (pageId == null) return;
-    _setSelectedPageId(pageId);
-  }
-
-  @override
-  void didRemove(Route route, Route? previousRoute) {
-    final pageId = route.settings.name;
-    printMessageInDebugMode(
-      'didRemove: $pageId, previousPageId: ${previousRoute?.settings.name}',
-    );
-    if (pageId == null) return;
-    _setSelectedPageId(pageId);
-  }
-
-  @override
-  void didReplace({Route? newRoute, Route? oldRoute}) {
-    printMessageInDebugMode(
-      'didReplace: ${oldRoute?.settings.name}, newPageId: ${newRoute?.settings.name}',
-    );
-    final pageId = newRoute?.settings.name;
-    if (pageId == null) return;
-    _setSelectedPageId(pageId);
-  }
-
-  @override
-  void didStartUserGesture(Route route, Route? previousRoute) {
-    printMessageInDebugMode(
-      'didStartUserGesture: ${route.settings.name}, previousPageId: ${previousRoute?.settings.name}',
-    );
-  }
-
-  @override
-  void didStopUserGesture() {
-    printMessageInDebugMode('didStopUserGesture');
-  }
-
-  @override
-  void didChangeTop(Route topRoute, Route? previousTopRoute) {
-    printMessageInDebugMode('didChangeTop');
-  }
-
-  // Note: Navigator.initState ensures assert(observer.navigator == null);
-  // Afterwards the Navigator itself!!! sets the navigator of its observers...
-  @override
-  NavigatorState? get navigator => null;
-  final GlobalKey<NavigatorState> _masterNavigatorKey =
-      GlobalKey<NavigatorState>();
-  GlobalKey<NavigatorState> get masterNavigatorKey => _masterNavigatorKey;
 }

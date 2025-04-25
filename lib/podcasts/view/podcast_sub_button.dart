@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../app/view/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
@@ -46,7 +47,7 @@ class PodcastSubButton extends StatelessWidget with WatchItMixin {
           : () {
               if (subscribed) {
                 libraryModel.removePodcast(pageId);
-                libraryModel.pop();
+                di<RoutingManager>().pop();
               } else if (audios.isNotEmpty) {
                 libraryModel.addPodcast(pageId, audios);
               }

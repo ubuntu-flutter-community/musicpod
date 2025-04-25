@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../app/view/routing_manager.dart';
 import '../../app_config.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import 'settings_dialog.dart';
 import 'settings_tile.dart';
 
@@ -34,7 +34,7 @@ class SettingsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void onPressed() => AppConfig.isMobilePlatform
-        ? di<LibraryModel>().push(pageId: PageIDs.settings)
+        ? di<RoutingManager>().push(pageId: PageIDs.settings)
         : showDialog(
             context: context,
             builder: (context) => const SettingsDialog(),

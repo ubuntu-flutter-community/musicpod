@@ -2,11 +2,11 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../app/view/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/tapable_text.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../../library/library_model.dart';
 import '../../local_audio/view/genre_page.dart';
 
 class PlaylistGenreBar extends StatelessWidget {
@@ -42,12 +42,10 @@ class PlaylistGenreBar extends StatelessWidget {
                     style: style,
                     wrapInFlexible: false,
                     text: e,
-                    onTap: () {
-                      di<LibraryModel>().push(
-                        builder: (context) => GenrePage(genre: e),
-                        pageId: e,
-                      );
-                    },
+                    onTap: () => di<RoutingManager>().push(
+                      builder: (context) => GenrePage(genre: e),
+                      pageId: e,
+                    ),
                   ),
                   if (i != genres.length - 1) const Text(' · '),
                 ],

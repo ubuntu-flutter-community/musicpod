@@ -3,13 +3,13 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/app_model.dart';
+import '../../app/view/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/copy_clipboard_content.dart';
 import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../../library/library_model.dart';
 import '../../local_audio/local_audio_model.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
@@ -40,7 +40,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
         watchPropertyValue((SettingsModel m) => m.showPositionDuration);
 
     final appModel = di<AppModel>();
-    final libraryModel = di<LibraryModel>();
+    final routingManager = di<RoutingManager>();
     final localAudioModel = di<LocalAudioModel>();
     final playerModel = di<PlayerModel>();
     final podcastModel = di<PodcastModel>();
@@ -70,7 +70,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
                     audio: audio,
                     text: icyTitle,
                     context: context,
-                    libraryModel: libraryModel,
+                    routingManager: routingManager,
                     playerModel: playerModel,
                     localAudioModel: localAudioModel,
                     appModel: appModel,
@@ -98,7 +98,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
               ? null
               : () => _onArtistTap(
                     audio: audio,
-                    libraryModel: libraryModel,
+                    routingManager: routingManager,
                     localAudioModel: localAudioModel,
                     appModel: appModel,
                     podcastModel: podcastModel,
@@ -186,7 +186,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     String? text,
     required BuildContext context,
     required PlayerModel playerModel,
-    required LibraryModel libraryModel,
+    required RoutingManager routingManager,
     required LocalAudioModel localAudioModel,
     required AppModel appModel,
   }) {
@@ -204,7 +204,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
         _onLocalAudioTitleTap(
           audio: audio!,
           appModel: appModel,
-          libraryModel: libraryModel,
+          routingManager: routingManager,
           localAudioModel: localAudioModel,
         );
         return;
@@ -227,12 +227,12 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
   void _onLocalAudioTitleTap({
     required Audio audio,
     required AppModel appModel,
-    required LibraryModel libraryModel,
+    required RoutingManager routingManager,
     required LocalAudioModel localAudioModel,
   }) {
     if (audio.albumId == null) return;
     appModel.setFullWindowMode(false);
-    libraryModel.push(
+    routingManager.push(
       builder: (_) => AlbumPage(id: audio.albumId!),
       pageId: audio.albumId!,
     );
@@ -242,7 +242,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     required Audio audio,
     required PodcastModel podcastModel,
     required LocalAudioModel localAudioModel,
-    required LibraryModel libraryModel,
+    required RoutingManager routingManager,
     required AppModel appModel,
   }) {
     switch (audio.audioType) {
@@ -250,19 +250,19 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
         _onLocalAudioArtistTap(
           audio: audio,
           appModel: appModel,
-          libraryModel: libraryModel,
+          libraryModel: routingManager,
           localAudioModel: localAudioModel,
         );
         return;
       case AudioType.radio:
-        _onRadioArtistTap(audio: audio, libraryModel: libraryModel);
+        _onRadioArtistTap(audio: audio, routingManager: routingManager);
         return;
       case AudioType.podcast:
         if (audio.website != null &&
-            libraryModel.selectedPageId != audio.website) {
+            routingManager.selectedPageId != audio.website) {
           final feedUrl = audio.website!;
 
-          libraryModel.push(
+          routingManager.push(
             pageId: feedUrl,
             builder: (_) => LazyPodcastPage(
               feedUrl: feedUrl,
@@ -278,14 +278,14 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
 
   void _onRadioArtistTap({
     required Audio audio,
-    required LibraryModel libraryModel,
+    required RoutingManager routingManager,
   }) {
     if (audio.url == null ||
         audio.uuid == null ||
-        libraryModel.selectedPageId == audio.uuid) {
+        routingManager.selectedPageId == audio.uuid) {
       return;
     }
-    libraryModel.push(
+    routingManager.push(
       builder: (_) => StationPage(uuid: audio.uuid!),
       pageId: audio.uuid!,
     );
@@ -295,7 +295,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     required Audio audio,
     required LocalAudioModel localAudioModel,
     required AppModel appModel,
-    required LibraryModel libraryModel,
+    required RoutingManager libraryModel,
   }) {
     final artistId = audio.artist;
     if (artistId == null) return;

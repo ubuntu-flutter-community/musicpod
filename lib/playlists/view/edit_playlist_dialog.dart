@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../app/view/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/confirm.dart';
@@ -47,6 +48,7 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
   @override
   Widget build(BuildContext context) {
     final libraryModel = di<LibraryModel>();
+    final routingManager = di<RoutingManager>();
     final l10n = context.l10n;
     return ConfirmationDialog(
       scrollable: true,
@@ -94,9 +96,9 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
                       if (context.mounted && Navigator.of(context).canPop()) {
                         Navigator.of(context).pop();
                       }
-                      di<LocalAudioModel>().localAudioindex =
-                          LocalAudioView.playlists.index;
-                      libraryModel.push(
+                      di<LocalAudioModel>()
+                          .setLocalAudioindex(LocalAudioView.playlists.index);
+                      routingManager.push(
                         pageId: PageIDs.localAudio,
                         replace: true,
                       );
@@ -115,13 +117,13 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
       confirmEnabled:
           watchPropertyValue((CustomContentModel m) => !m.processing),
       onConfirm: () {
-        di<LocalAudioModel>().localAudioindex = LocalAudioView.playlists.index;
-        libraryModel
-          ..push(pageId: PageIDs.localAudio)
-          ..updatePlaylistName(
-            widget.playlistName!,
-            _controller.text,
-          );
+        di<LocalAudioModel>()
+            .setLocalAudioindex(LocalAudioView.playlists.index);
+        routingManager.push(pageId: PageIDs.localAudio);
+        libraryModel.updatePlaylistName(
+          widget.playlistName!,
+          _controller.text,
+        );
         Navigator.of(context).maybePop();
       },
     );

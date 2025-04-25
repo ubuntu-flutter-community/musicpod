@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../app/view/routing_manager.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
@@ -17,6 +18,8 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final libraryModel = di<LibraryModel>();
+    final routingManager = di<RoutingManager>();
+
     final customContentModel = di<CustomContentModel>();
     final playlistName =
         watchPropertyValue((CustomContentModel m) => m.playlistName);
@@ -84,7 +87,7 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
                     await libraryModel.addPlaylist(playlistName!, []);
                     await Future.delayed(
                       const Duration(milliseconds: 200),
-                      () => libraryModel.push(
+                      () => routingManager.push(
                         pageId: customContentModel.playlistName!,
                       ),
                     );
@@ -92,7 +95,7 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
                     await libraryModel.addPlaylists(playlists, external: true);
                     await Future.delayed(
                       const Duration(milliseconds: 200),
-                      () => libraryModel.push(
+                      () => routingManager.push(
                         pageId: playlists.first.id,
                       ),
                     );

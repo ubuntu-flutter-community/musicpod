@@ -29,9 +29,8 @@ class LocalAudioControlPanel extends StatelessWidget with WatchItMixin {
         isSelected: LocalAudioView.values
             .map((e) => e == LocalAudioView.values[index])
             .toList(),
-        onSelected: audios == null
-            ? null
-            : (index) => di<LocalAudioModel>().localAudioindex = index,
+        onSelected:
+            audios == null ? null : di<LocalAudioModel>().setLocalAudioindex,
       ),
     );
   }

@@ -5,10 +5,10 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
+import '../../app/view/routing_manager.dart';
 import '../../app_config.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../settings/settings_model.dart';
 import '../data/close_btn_action.dart';
 import 'global_keys.dart';
@@ -47,7 +47,6 @@ class HeaderBar extends StatelessWidget
     final useSidebarButton =
         AppConfig.isMobilePlatform ? false : includeSidebarButton;
     final useBackButton = AppConfig.isMobilePlatform ? true : includeBackButton;
-    final canPop = watchPropertyValue((LibraryModel m) => m.canPop);
 
     Widget? leading;
 
@@ -56,7 +55,7 @@ class HeaderBar extends StatelessWidget
         masterScaffoldKey.currentState?.isDrawerOpen == false) {
       leading = const SidebarButton();
     } else {
-      if (useBackButton && canPop) {
+      if (useBackButton && di<RoutingManager>().canPop) {
         leading = const NavBackButton();
       } else {
         leading = AppConfig.isMobilePlatform

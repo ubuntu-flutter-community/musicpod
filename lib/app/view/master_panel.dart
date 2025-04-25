@@ -9,6 +9,7 @@ import '../../library/library_model.dart';
 import '../../settings/view/settings_action.dart';
 import 'create_master_items.dart';
 import 'master_tile.dart';
+import 'routing_manager.dart';
 
 class MasterPanel extends StatelessWidget {
   const MasterPanel({super.key});
@@ -33,35 +34,110 @@ class MasterPanel extends StatelessWidget {
       );
 }
 
-class MasterList extends StatelessWidget with WatchItMixin {
+class MasterList extends StatelessWidget {
   const MasterList({super.key});
+
+  @override
+  Widget build(BuildContext context) => const CustomScrollView(
+        slivers: [
+          PermanentPageList(),
+          PlaylistList(),
+          PodcastList(),
+          AlbumsList(),
+          StationsList(),
+        ],
+      );
+}
+
+class PermanentPageList extends StatelessWidget with WatchItMixin {
+  const PermanentPageList({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final masterItems = permanentMasterItems;
+    final selectedPageId =
+        watchPropertyValue((RoutingManager m) => m.selectedPageId);
+    return SliverList.builder(
+      itemCount: masterItems.length,
+      itemBuilder: (context, index) => MasterTileWithPageId(
+        item: masterItems.elementAt(index),
+        selectedPageId: selectedPageId,
+      ),
+    );
+  }
+}
+
+class PlaylistList extends StatelessWidget with WatchItMixin {
+  const PlaylistList({super.key});
 
   @override
   Widget build(BuildContext context) {
     watchPropertyValue((LibraryModel m) => m.playlistsLength);
-    watchPropertyValue((LibraryModel m) => m.starredStationsLength);
-    watchPropertyValue((LibraryModel m) => m.favoriteAlbumsLength);
-    watchPropertyValue((LibraryModel m) => m.podcastsLength);
+    final masterItems = createPlaylistMasterItems();
     final selectedPageId =
-        watchPropertyValue((LibraryModel m) => m.selectedPageId);
-    final masterItems = createMasterItems();
-    final libraryModel = di<LibraryModel>();
-    return ListView.separated(
+        watchPropertyValue((RoutingManager m) => m.selectedPageId);
+    return SliverList.builder(
       itemCount: masterItems.length,
-      itemBuilder: (context, index) {
-        final item = masterItems.elementAt(index);
-        return MasterTile(
-          key: ValueKey(item.pageId),
-          onTap: () => libraryModel.push(pageId: item.pageId),
-          pageId: item.pageId,
-          leading: item.iconBuilder?.call(selectedPageId == item.pageId),
-          title: item.titleBuilder(context),
-          subtitle: item.subtitleBuilder?.call(context),
-          selected: selectedPageId == item.pageId,
-        );
-      },
-      separatorBuilder: (_, __) => const SizedBox(
-        height: 5,
+      itemBuilder: (context, index) => MasterTileWithPageId(
+        item: masterItems.elementAt(index),
+        selectedPageId: selectedPageId,
+      ),
+    );
+  }
+}
+
+class PodcastList extends StatelessWidget with WatchItMixin {
+  const PodcastList({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    watchPropertyValue((LibraryModel m) => m.podcastsLength);
+    final masterItems = createPodcastMasterItems();
+    final selectedPageId =
+        watchPropertyValue((RoutingManager m) => m.selectedPageId);
+    return SliverList.builder(
+      itemCount: masterItems.length,
+      itemBuilder: (context, index) => MasterTileWithPageId(
+        item: masterItems.elementAt(index),
+        selectedPageId: selectedPageId,
+      ),
+    );
+  }
+}
+
+class StationsList extends StatelessWidget with WatchItMixin {
+  const StationsList({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    watchPropertyValue((LibraryModel m) => m.starredStationsLength);
+    final masterItems = createStarredStationsMasterItems();
+    final selectedPageId =
+        watchPropertyValue((RoutingManager m) => m.selectedPageId);
+    return SliverList.builder(
+      itemCount: masterItems.length,
+      itemBuilder: (context, index) => MasterTileWithPageId(
+        item: masterItems.elementAt(index),
+        selectedPageId: selectedPageId,
+      ),
+    );
+  }
+}
+
+class AlbumsList extends StatelessWidget with WatchItMixin {
+  const AlbumsList({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    watchPropertyValue((LibraryModel m) => m.favoriteAlbumsLength);
+    final masterItems = createFavoriteAlbumsMasterItems();
+    final selectedPageId =
+        watchPropertyValue((RoutingManager m) => m.selectedPageId);
+    return SliverList.builder(
+      itemCount: masterItems.length,
+      itemBuilder: (context, index) => MasterTileWithPageId(
+        item: masterItems.elementAt(index),
+        selectedPageId: selectedPageId,
       ),
     );
   }
