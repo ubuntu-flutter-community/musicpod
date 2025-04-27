@@ -185,9 +185,13 @@ void registerDependencies({required List<String> args}) async {
         final localAudioService = LocalAudioService(
           settingsService: di<SettingsService>(),
           localCoverService: di<LocalCoverService>(),
-          libraryService: di<LibraryService>(),
         );
         await localAudioService.init();
+        final additionalAudios = di<LibraryService>().externalPlaylistAudios;
+        if (additionalAudios.isNotEmpty) {
+          localAudioService
+              .addAudios(additionalAudios.where((e) => e.isLocal).toList());
+        }
 
         return localAudioService;
       },
@@ -273,12 +277,9 @@ void registerDependencies({required List<String> args}) async {
       dispose: (s) => s.dispose(),
     )
     ..registerSingletonWithDependencies<LibraryModel>(
-      () => LibraryModel(
-        libraryService: di<LibraryService>(),
-        localAudioService: di<LocalAudioService>(),
-      ),
+      () => LibraryModel(libraryService: di<LibraryService>()),
       dispose: (s) => s.dispose(),
-      dependsOn: [LibraryService, LocalAudioService, LocalAudioService],
+      dependsOn: [LibraryService],
     )
     ..registerSingletonWithDependencies<RoutingManager>(
       () => RoutingManager(

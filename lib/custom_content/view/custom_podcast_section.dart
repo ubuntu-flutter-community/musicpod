@@ -54,7 +54,8 @@ class _CustomPodcastSectionState extends State<CustomPodcastSection> {
               ListenableBuilder(
                 listenable: _urlController,
                 builder: (context, _) => ImportantButton(
-                  onPressed: _urlController.text.isEmpty
+                  onPressed: _urlController.text.isEmpty ||
+                          !_urlController.text.startsWith('http')
                       ? null
                       : () {
                           di<PodcastModel>()

@@ -122,6 +122,9 @@ class LocalAudioModel extends SafeChangeNotifier {
         newDirectory: directory,
       );
 
+  void addAudios(List<Audio> newAudios, {bool clear = false}) =>
+      _localAudioService.addAudios(newAudios, clear: clear);
+
   @override
   Future<void> dispose() async {
     await _audiosChangedSub?.cancel();

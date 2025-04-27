@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
+import 'package:yaru/yaru.dart';
 
+import '../../app/view/routing_manager.dart';
+import '../../common/data/audio_type.dart';
+import '../../common/page_ids.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/snackbars.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../radio/radio_service.dart';
+import '../../search/search_model.dart';
 
 class CustomStationSection extends StatefulWidget {
   const CustomStationSection({super.key});
@@ -17,25 +22,23 @@ class CustomStationSection extends StatefulWidget {
 
 class _AddStationDialogState extends State<CustomStationSection> {
   late TextEditingController _urlController;
-  late TextEditingController _nameController;
 
   @override
   void initState() {
     super.initState();
     _urlController = TextEditingController();
-    _nameController = TextEditingController();
   }
 
   @override
   void dispose() {
     _urlController.dispose();
-    _nameController.dispose();
 
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -47,12 +50,27 @@ class _AddStationDialogState extends State<CustomStationSection> {
         const SizedBox(
           height: kLargestSpace,
         ),
-        TextField(
-          controller: _nameController,
-          decoration: InputDecoration(label: Text(context.l10n.station)),
-        ),
-        const SizedBox(
-          height: kLargestSpace,
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: kLargestSpace),
+          child: YaruInfoBox(
+            yaruInfoType: YaruInfoType.warning,
+            trailing: TextButton(
+              style: TextButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(kYaruButtonRadius),
+                ),
+                foregroundColor: YaruInfoType.warning.getColor(context),
+              ),
+              onPressed: () {
+                di<SearchModel>().setAudioType(AudioType.radio);
+                di<RoutingManager>().push(pageId: PageIDs.searchPage);
+              },
+              child: Text(l10n.search),
+            ),
+            subtitle: Text(
+              l10n.customStationWarning,
+            ),
+          ),
         ),
         Align(
           alignment: Alignment.bottomRight,
@@ -61,26 +79,28 @@ class _AddStationDialogState extends State<CustomStationSection> {
             runSpacing: 10,
             children: [
               ListenableBuilder(
-                listenable: _nameController,
+                listenable: _urlController,
                 builder: (context, _) => ListenableBuilder(
                   listenable: _urlController,
                   builder: (context, _) => ImportantButton(
                     onPressed: _urlController.text.isEmpty ||
-                            _nameController.text.isEmpty
+                            !_urlController.text.startsWith('http')
                         ? null
                         : () {
                             di<RadioService>()
-                                .getStationsByUrl(_urlController.text)
+                                .getStationByUrl(_urlController.text)
                                 .then(
                               (v) {
                                 if (v?.stationUUID == null) {
                                   if (context.mounted) {
                                     showSnackBar(
                                       context: context,
-                                      content:
-                                          Text(context.l10n.noStationFound),
+                                      content: Text(
+                                        context.l10n.noStationFound,
+                                      ),
                                     );
                                   }
+
                                   return;
                                 } else {
                                   di<LibraryModel>()
@@ -88,11 +108,9 @@ class _AddStationDialogState extends State<CustomStationSection> {
                                 }
                               },
                             );
-
-                            Navigator.pop(context);
                           },
                     child: Text(
-                      context.l10n.add,
+                      context.l10n.search,
                     ),
                   ),
                 ),

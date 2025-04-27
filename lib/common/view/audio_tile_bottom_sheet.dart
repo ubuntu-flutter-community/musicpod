@@ -16,11 +16,11 @@ import '../data/audio_type.dart';
 import '../page_ids.dart';
 import 'audio_tile_image.dart';
 import 'icons.dart';
-import 'like_all_icon.dart';
-import 'like_icon.dart';
+import 'like_all_icon_button.dart';
 import 'meta_data_dialog.dart';
 import 'snackbars.dart';
 import 'spaced_divider.dart';
+import 'stared_station_icon_button.dart';
 import 'stream_provider_share_button.dart';
 import 'theme.dart';
 import 'ui_constants.dart';
@@ -72,10 +72,10 @@ class AudioTileBottomSheet extends StatelessWidget {
                     : null,
                 trailing: audios.isNotEmpty
                     ? switch (audios.first.audioType) {
-                        AudioType.radio => RadioLikeIcon(
+                        AudioType.radio => StaredStationIconButton(
                             audio: audios.first,
                           ),
-                        AudioType.local => LikeAllIcon(
+                        AudioType.local => LikeAllIconButton(
                             audios: audios,
                           ),
                         _ => null,

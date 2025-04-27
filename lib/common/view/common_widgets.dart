@@ -42,19 +42,26 @@ class ImportantButton extends StatelessWidget {
     super.key,
     required this.onPressed,
     required this.child,
+    this.style,
   });
 
   final void Function()? onPressed;
   final Widget child;
+  final ButtonStyle? style;
 
   @override
   Widget build(BuildContext context) {
     return AppConfig.yaruStyled
         ? ElevatedButton(
+            style: style,
             onPressed: onPressed,
             child: child,
           )
-        : FilledButton(onPressed: onPressed, child: child);
+        : FilledButton(
+            style: style,
+            onPressed: onPressed,
+            child: child,
+          );
   }
 }
 

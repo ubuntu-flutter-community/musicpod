@@ -216,23 +216,28 @@ class LibraryService {
 
   Future<void> addPlaylist(String id, List<Audio> audios) async {
     if (!_playlists.containsKey(id)) {
-      _playlists.putIfAbsent(id, () => audios);
+      _playlists.putIfAbsent(
+        id,
+        () => audios.where((e) => e.isLocal).toList(),
+      );
       await writeAudioMap(map: _playlists, fileName: FileNames.playlists)
           .then((_) => _propertiesChangedController.add(true));
     }
   }
 
-  Future<void> addPlaylists({
+  Future<void> addExternalPlaylists({
     required List<({String id, List<Audio> audios})> playlists,
-    required bool external,
   }) async {
     if (playlists.isEmpty) return;
     for (var playlist in playlists) {
-      if (!_playlists.containsKey(playlist.id)) {
-        _playlists.putIfAbsent(playlist.id, () => playlist.audios);
-        if (external) {
-          addExternalPlaylistID(playlist.id);
-        }
+      if (!_playlists.containsKey(playlist.id) &&
+          playlist.audios.any((e) => e.isLocal)) {
+        _playlists.putIfAbsent(
+          playlist.id,
+          () => playlist.audios.where((e) => e.isLocal).toList(),
+        );
+
+        addExternalPlaylistID(playlist.id);
       }
     }
     await writeAudioMap(map: _playlists, fileName: FileNames.playlists)
@@ -252,7 +257,7 @@ class LibraryService {
           .then((_) {
         _playlists.update(
           id,
-          (value) => audios,
+          (value) => audios.where((e) => e.isLocal || e.isPodcast).toList(),
         );
         _propertiesChangedController.add(true);
       });
@@ -325,7 +330,7 @@ class LibraryService {
     if (playlist == null) return;
 
     for (var audio in audios) {
-      if (!playlist.contains(audio)) {
+      if (audio.isLocal && !playlist.contains(audio)) {
         playlist.add(audio);
       }
     }
