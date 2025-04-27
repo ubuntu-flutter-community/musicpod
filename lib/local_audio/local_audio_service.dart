@@ -11,39 +11,19 @@ import '../common/logging.dart';
 import '../common/view/audio_filter.dart';
 import '../extensions/media_file_x.dart';
 import '../extensions/string_x.dart';
-import '../library/library_service.dart';
 import '../settings/settings_service.dart';
 import 'local_cover_service.dart';
-
-class LocalSearchResult {
-  const LocalSearchResult({
-    required this.titles,
-    required this.artists,
-    required this.albums,
-    required this.genres,
-    required this.playlists,
-  });
-
-  final List<Audio>? titles;
-  final List<String>? artists;
-
-  final List<String>? albums;
-  final List<String>? genres;
-  final List<String>? playlists;
-}
+import 'local_search_result.dart';
 
 class LocalAudioService {
   final SettingsService? _settingsService;
   final LocalCoverService _localCoverService;
-  final LibraryService? _libraryService;
 
   LocalAudioService({
     required LocalCoverService localCoverService,
     SettingsService? settingsService,
-    LibraryService? libraryService,
   })  : _settingsService = settingsService,
-        _localCoverService = localCoverService,
-        _libraryService = libraryService;
+        _localCoverService = localCoverService;
 
   List<Audio>? _audios;
   List<Audio>? get audios => _audios;
@@ -283,22 +263,14 @@ class LocalAudioService {
 
     addAudios(
       result.audios,
-      forceInit: forceInit,
+      clear: forceInit,
     );
-
-    final additionalAudios = _libraryService?.externalPlaylistAudios;
-    if (_libraryService != null && additionalAudios!.isNotEmpty) {
-      addAudios(
-        additionalAudios.where((e) => e.isLocal).toList(),
-        forceInit: forceInit,
-      );
-    }
   }
 
   Future<void> dispose() async => _audiosController.close();
 
-  void addAudios(List<Audio> newAudios, {bool forceInit = false}) {
-    if (forceInit) {
+  void addAudios(List<Audio> newAudios, {bool clear = false}) {
+    if (clear) {
       _audios = null;
       _audiosController.add(true);
     }

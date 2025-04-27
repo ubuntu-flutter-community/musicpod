@@ -4,7 +4,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../common/view/icons.dart';
 import '../../l10n/l10n.dart';
-import '../../local_audio/local_audio_service.dart';
+import '../../local_audio/local_search_result.dart';
 import '../search_model.dart';
 import '../search_type.dart';
 

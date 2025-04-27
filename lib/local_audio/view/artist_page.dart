@@ -13,7 +13,7 @@ import '../../common/view/audio_tile_option_button.dart';
 import '../../common/view/avatar_play_button.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
-import '../../common/view/like_all_icon.dart';
+import '../../common/view/like_all_icon_button.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/sliver_audio_page_control_panel.dart';
 import '../../common/view/sliver_audio_tile_list.dart';
@@ -196,7 +196,7 @@ class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
             onPressed: () => setUseGridView(false),
           ),
           AvatarPlayButton(audios: audios, pageId: pageId),
-          LikeAllIcon(audios: audios),
+          LikeAllIconButton(audios: audios),
           AudioTileOptionButton(
             audios: audios,
             playlistId: pageId,

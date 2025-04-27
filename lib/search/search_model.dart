@@ -13,6 +13,7 @@ import '../common/view/languages.dart';
 import '../extensions/string_x.dart';
 import '../library/library_service.dart';
 import '../local_audio/local_audio_service.dart';
+import '../local_audio/local_search_result.dart';
 import '../podcasts/podcast_service.dart';
 import '../radio/radio_service.dart';
 import 'search_type.dart';

@@ -1,3 +1,4 @@
+import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -85,7 +86,10 @@ class _StationPageState extends State<StationPage> {
         future: _future,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return const NoSearchResultPage();
+            return NoSearchResultPage(
+              icon: const AnimatedEmoji(AnimatedEmojis.skull),
+              message: Text(context.l10n.stationNotFound),
+            );
           }
 
           if (!snapshot.hasData) {

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:m3u_parser_nullsafe/m3u_parser_nullsafe.dart';
@@ -121,7 +122,7 @@ class CustomContentModel extends SafeChangeNotifier {
   }) {
     final m3uAsString = StringBuffer();
     m3uAsString.writeln('#EXTM3U');
-    for (var audio in audios) {
+    for (var audio in audios.where((e) => e.isLocal)) {
       if (audio.url != null) {
         m3uAsString.writeln('#EXTINF:-1, ${audio.artist} - ${audio.title}');
         m3uAsString.writeln(audio.url);
@@ -308,7 +309,9 @@ Future<List<Audio>> _parseM3uPlaylist(String path) async {
       );
     } else if (e.link.isNotEmpty) {
       final file = File(e.link.replaceAll('file://', ''));
-      audios.add(Audio.local(file));
+      if (file.existsSync() && file.isPlayable) {
+        audios.add(Audio.local(file));
+      }
     }
   }
 

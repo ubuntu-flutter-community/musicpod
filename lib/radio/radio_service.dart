@@ -69,24 +69,6 @@ class RadioService {
     return hosts;
   }
 
-  Future<Station?> getStationsByUrl(String url) async {
-    if (_radioBrowserApi == null) {
-      await init();
-      if (connectedHost == null) {
-        return null;
-      }
-    }
-
-    try {
-      final response = await _radioBrowserApi!.getStationsByUrl(url: url);
-      return response.items.firstOrNull;
-    } on Exception catch (e) {
-      printMessageInDebugMode(e);
-    }
-
-    return null;
-  }
-
   final Map<String, Station> _cache = {};
   Future<Station?> getStationByUUID(String uuid) async {
     if (_cache.containsKey(uuid)) {
@@ -107,6 +89,48 @@ class RadioService {
       }
       final station = response.items.first;
       _cache[uuid] = station;
+      return station;
+    } on Exception catch (e) {
+      printMessageInDebugMode(e);
+    }
+
+    return null;
+  }
+
+  Future<Station?> getStationByUrl(String url) async {
+    if (_radioBrowserApi == null) {
+      await init();
+      if (connectedHost == null) {
+        return null;
+      }
+    }
+    try {
+      final response = await _radioBrowserApi!.getStationsByUrl(url: url);
+      final station = response.items.firstOrNull;
+      if (station != null) {
+        _cache[station.stationUUID] = station;
+      }
+      return station;
+    } on Exception catch (e) {
+      printMessageInDebugMode(e);
+    }
+
+    return null;
+  }
+
+  Future<Station?> getStationByName(String name) async {
+    if (_radioBrowserApi == null) {
+      await init();
+      if (connectedHost == null) {
+        return null;
+      }
+    }
+    try {
+      final response = await _radioBrowserApi!.getStationsByName(name: name);
+      final station = response.items.firstOrNull;
+      if (station != null) {
+        _cache[station.stationUUID] = station;
+      }
       return station;
     } on Exception catch (e) {
       printMessageInDebugMode(e);

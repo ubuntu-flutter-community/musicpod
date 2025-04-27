@@ -8,9 +8,10 @@ import '../../app_config.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/icons.dart';
-import '../../common/view/like_icon.dart';
+import '../../common/view/like_icon_button.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/share_button.dart';
+import '../../common/view/stared_station_icon_button.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -78,11 +79,11 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
             ),
           if (audio?.audioType != AudioType.podcast)
             switch (audio?.audioType) {
-              AudioType.local => LikeIcon(
+              AudioType.local => LikeIconButton(
                   audio: audio,
                   color: iconColor,
                 ),
-              AudioType.radio => RadioLikeIcon(
+              AudioType.radio => StaredStationIconButton(
                   audio: audio,
                   color: iconColor,
                 ),

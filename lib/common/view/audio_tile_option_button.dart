@@ -64,31 +64,33 @@ class AudioTileOptionButton extends StatelessWidget {
       padding: EdgeInsets.zero,
       enabled: audios.isNotEmpty && playlistId.isNotEmpty,
       itemBuilder: (context) {
-        final currentAudioType = di<PlayerModel>().audio?.audioType;
+        final playerModel = di<PlayerModel>();
+        final currentAudio = playerModel.audio;
+        final currentlyLocalPlaying =
+            currentAudio != null && currentAudio.isLocal;
         return [
-          if (audios.length > 1 &&
-              audios.none((e) => e.audioType == AudioType.radio))
+          if (audios.none((e) => e.isRadio) && audios.none((e) => e.isPodcast))
             PopupMenuItem(
               onTap: () {
-                if (di<PlayerModel>().audio?.audioType == AudioType.radio) {
-                  di<PlayerModel>()
-                      .startPlaylist(audios: audios, listName: playlistId);
-                } else {
-                  di<PlayerModel>().insertIntoQueue(audios);
+                if (currentlyLocalPlaying) {
+                  playerModel.insertIntoQueue(audios);
                   showSnackBar(
                     context: context,
                     content: Text(
                       '${l10n.addedTo} ${l10n.queue}: $searchTerm',
                     ),
                   );
+                } else {
+                  playerModel.startPlaylist(
+                    audios: audios,
+                    listName: playlistId,
+                  );
                 }
               },
               child: YaruTile(
                 leading: Icon(Iconz.insertIntoQueue),
                 title: Text(
-                  currentAudioType == AudioType.radio
-                      ? l10n.playAll
-                      : l10n.playNext,
+                  currentlyLocalPlaying ? l10n.playNext : l10n.playAll,
                 ),
               ),
             ),

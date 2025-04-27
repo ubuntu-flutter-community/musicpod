@@ -5,8 +5,8 @@ import '../../library/library_model.dart';
 import '../data/audio.dart';
 import 'animated_like_icon.dart';
 
-class LikeAllIcon extends StatelessWidget with WatchItMixin {
-  const LikeAllIcon({super.key, required this.audios});
+class LikeAllIconButton extends StatelessWidget with WatchItMixin {
+  const LikeAllIconButton({super.key, required this.audios});
 
   final List<Audio> audios;
 

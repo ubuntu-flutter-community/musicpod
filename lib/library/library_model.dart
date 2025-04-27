@@ -3,21 +3,17 @@ import 'dart:async';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
-import '../local_audio/local_audio_service.dart';
 import 'library_service.dart';
 
 class LibraryModel extends SafeChangeNotifier {
   LibraryModel({
     required LibraryService libraryService,
-    required LocalAudioService localAudioService,
-  })  : _service = libraryService,
-        _localAudioService = localAudioService {
+  }) : _service = libraryService {
     _propertiesChangedSub ??=
         _service.propertiesChanged.listen((_) => notifyListeners());
   }
 
   final LibraryService _service;
-  final LocalAudioService _localAudioService;
   StreamSubscription<bool>? _propertiesChangedSub;
 
   @override
@@ -85,23 +81,15 @@ class LibraryModel extends SafeChangeNotifier {
   int get playlistsLength => playlistIDs.length;
   List<Audio>? getPlaylistById(String id) => _service.getPlaylistById(id);
   List<String> get externalPlaylists => _service.externalPlaylistIDs;
+  List<Audio> get externalPlaylistAudios => _service.externalPlaylistAudios;
 
   bool isPlaylistSaved(String? id) => _service.isPlaylistSaved(id);
   Future<void> addPlaylist(String name, List<Audio> audios) async =>
       _service.addPlaylist(name, audios);
-  Future<void> addPlaylists(
-    List<({String id, List<Audio> audios})> playlists, {
-    required bool external,
-  }) async {
-    if (external) {
-      playlists.map(
-        (e) => _localAudioService.addAudios(
-          e.audios.where((e) => e.isLocal).toList(),
-        ),
-      );
-    }
-    return _service.addPlaylists(playlists: playlists, external: external);
-  }
+  Future<void> addExternalPlaylists(
+    List<({String id, List<Audio> audios})> playlists,
+  ) async =>
+      _service.addExternalPlaylists(playlists: playlists);
 
   Future<void> updatePlaylist({
     required String id,

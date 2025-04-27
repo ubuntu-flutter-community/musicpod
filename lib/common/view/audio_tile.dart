@@ -13,7 +13,8 @@ import '../data/audio_type.dart';
 import 'audio_page_type.dart';
 import 'audio_tile_image.dart';
 import 'audio_tile_option_button.dart';
-import 'like_icon.dart';
+import 'like_icon_button.dart';
+import 'stared_station_icon_button.dart';
 import 'tapable_text.dart';
 import 'theme.dart';
 import 'ui_constants.dart';
@@ -229,11 +230,11 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
           Opacity(
             opacity: hovered || selected || liked || starred ? 1 : 0,
             child: switch (audio.audioType) {
-              AudioType.radio => RadioLikeIcon(
+              AudioType.radio => StaredStationIconButton(
                   audio: audio,
                   color: selected && isPlayerPlaying ? selectedColor : null,
                 ),
-              AudioType.local => LikeIcon(
+              AudioType.local => LikeIconButton(
                   audio: audio,
                   color: selected && isPlayerPlaying ? selectedColor : null,
                 ),

@@ -3,7 +3,6 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../../common/data/audio.dart';
-import '../../../common/data/audio_type.dart';
 import '../../../common/view/icons.dart';
 import '../../../common/view/ui_constants.dart';
 import '../../../extensions/build_context_x.dart';
@@ -111,25 +110,24 @@ class _QueueBodyState extends State<QueueBody> {
             spacing: kMediumSpace,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextButton(
+              TextButton.icon(
                 style: TextButton.styleFrom(
                   foregroundColor: colorScheme.onSurface,
                 ),
-                onPressed: queue.isEmpty
+                onPressed: queue.where((e) => e.isLocal).isEmpty
                     ? null
                     : () {
                         di<LibraryModel>().addPlaylist(
                           '${l10n.queue} ${DateTime.now()}',
-                          List.from(
-                            queue.where((e) => e.audioType == AudioType.local),
-                          ),
+                          List.from(queue.where((e) => e.isLocal)),
                         );
                         if (widget.shownInDialog &&
                             Navigator.of(context).canPop()) {
                           Navigator.of(context).pop();
                         }
                       },
-                child: Text(l10n.createNewPlaylist),
+                label: Text(l10n.createNewPlaylist),
+                icon: Icon(Iconz.playlist),
               ),
               IconButton(
                 icon: Icon(
