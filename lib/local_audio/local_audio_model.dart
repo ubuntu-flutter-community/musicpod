@@ -120,6 +120,7 @@ class LocalAudioModel extends SafeChangeNotifier {
 
   bool get importing => _localAudioService.audios == null;
 
+  bool _firstPlaylistCheck = true;
   Future<void> init({bool forceInit = false, String? directory}) async {
     await _localAudioService.init(
       forceInit: forceInit,
@@ -127,9 +128,9 @@ class LocalAudioModel extends SafeChangeNotifier {
     );
 
     final additionalAudios = _libraryService.externalPlaylistAudios;
-    if ((_localAudioService.audios == null || forceInit) &&
-        additionalAudios.isNotEmpty) {
+    if ((_firstPlaylistCheck || forceInit) && additionalAudios.isNotEmpty) {
       addAudios(additionalAudios.where((e) => e.isLocal).toList());
+      _firstPlaylistCheck = false;
     }
   }
 
