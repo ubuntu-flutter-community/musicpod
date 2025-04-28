@@ -34,13 +34,22 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
   @override
   void initState() {
     super.initState();
+    checkFailedImports();
+  }
+
+  void checkFailedImports() {
     final failedImports = di<LocalAudioModel>().failedImports;
-    if (mounted && failedImports?.isNotEmpty == true) {
-      showFailedImportsSnackBar(
-        failedImports: failedImports!,
-        context: context,
-        message: context.l10n.failedToReadMetadata,
-      );
+    if (failedImports?.isNotEmpty == true) {
+      // 将这部分推迟到下一帧执行，确保 context 已完全关联
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          showFailedImportsSnackBar(
+            failedImports: failedImports!,
+            context: context,
+            message: context.l10n.failedToReadMetadata,
+          );
+        }
+      });
     }
   }
 
