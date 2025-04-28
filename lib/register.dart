@@ -64,31 +64,33 @@ void registerDependencies({required List<String> args}) async {
   di
     ..registerSingletonAsync<SharedPreferences>(() async {
       final prefs = await SharedPreferences.getInstance();
-      final wm = WindowManager.instance;
-      wm.addListener(
-        WindowSizeToSettingsListener(
-          onFullscreen: (v) => prefs.setBool(SPKeys.windowFullscreen, v),
-          onMaximize: (v) => prefs.setBool(SPKeys.windowMaximized, v),
-          onResize: (v) =>
-              prefs.setInt(SPKeys.windowHeight, v.height.toInt()).then(
-                    (_) => prefs.setInt(SPKeys.windowWidth, v.width.toInt()),
-                  ),
-        ),
-      );
-
-      if (prefs.getBool(SPKeys.windowFullscreen) ?? false) {
-        WindowManager.instance.setFullScreen(true);
-      } else if (prefs.getBool(SPKeys.windowMaximized) ?? false) {
-        WindowManager.instance.maximize();
-      } else {
-        final height = prefs.getInt(SPKeys.windowHeight) ?? 820;
-        final width = prefs.getInt(SPKeys.windowWidth) ?? 950;
-        WindowManager.instance.setSize(
-          Size(
-            width.toDouble(),
-            height.toDouble(),
+      if (!AppConfig.isMobilePlatform) {
+        final wm = WindowManager.instance;
+        wm.addListener(
+          WindowSizeToSettingsListener(
+            onFullscreen: (v) => prefs.setBool(SPKeys.windowFullscreen, v),
+            onMaximize: (v) => prefs.setBool(SPKeys.windowMaximized, v),
+            onResize: (v) =>
+                prefs.setInt(SPKeys.windowHeight, v.height.toInt()).then(
+                      (_) => prefs.setInt(SPKeys.windowWidth, v.width.toInt()),
+                    ),
           ),
         );
+
+        if (prefs.getBool(SPKeys.windowFullscreen) ?? false) {
+          WindowManager.instance.setFullScreen(true);
+        } else if (prefs.getBool(SPKeys.windowMaximized) ?? false) {
+          WindowManager.instance.maximize();
+        } else {
+          final height = prefs.getInt(SPKeys.windowHeight) ?? 820;
+          final width = prefs.getInt(SPKeys.windowWidth) ?? 950;
+          WindowManager.instance.setSize(
+            Size(
+              width.toDouble(),
+              height.toDouble(),
+            ),
+          );
+        }
       }
 
       return prefs;

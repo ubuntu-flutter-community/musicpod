@@ -51,7 +51,8 @@ class RadioLibPage extends StatelessWidget with WatchItMixin {
           child: Row(
             spacing: kSmallestSpace,
             children: [
-              const SizedBox(width: 2 * kLargestSpace),
+              if (!AppConfig.isMobilePlatform)
+                const SizedBox(width: 2 * kLargestSpace),
               Expanded(
                 child: Center(
                   child: Padding(
@@ -83,55 +84,58 @@ class RadioLibPage extends StatelessWidget with WatchItMixin {
                   ),
                 ),
               ),
-              IconButton(
-                tooltip: l10n.exportStarredStationsToOpmlFile,
-                icon: Icon(
-                  Iconz.export,
-                  semanticLabel: l10n.exportStarredStationsToOpmlFile,
+              if (!AppConfig.isMobilePlatform) ...[
+                IconButton(
+                  tooltip: l10n.exportStarredStationsToOpmlFile,
+                  icon: Icon(
+                    Iconz.export,
+                    semanticLabel: l10n.exportStarredStationsToOpmlFile,
+                  ),
+                  onPressed: processing
+                      ? null
+                      : () => di<CustomContentModel>()
+                          .exportStarredStationsToOpmlFile(),
                 ),
-                onPressed: processing
-                    ? null
-                    : () => di<CustomContentModel>()
-                        .exportStarredStationsToOpmlFile(),
-              ),
-              IconButton(
-                tooltip: l10n.importStarredStationsFromOpmlFile,
-                icon: Icon(
-                  Iconz.import,
-                  semanticLabel: l10n.importStarredStationsFromOpmlFile,
+                IconButton(
+                  tooltip: l10n.importStarredStationsFromOpmlFile,
+                  icon: Icon(
+                    Iconz.import,
+                    semanticLabel: l10n.importStarredStationsFromOpmlFile,
+                  ),
+                  onPressed: processing
+                      ? null
+                      : () => di<CustomContentModel>()
+                          .importStarredStationsFromOpmlFile(),
                 ),
-                onPressed: processing
-                    ? null
-                    : () => di<CustomContentModel>()
-                        .importStarredStationsFromOpmlFile(),
-              ),
-              IconButton(
-                icon: Icon(
-                  Iconz.remove,
-                  semanticLabel: l10n.removeAllStarredStations,
-                ),
-                tooltip: context.l10n.removeAllStarredStations,
-                onPressed: processing
-                    ? null
-                    : () => showDialog(
-                          context: context,
-                          builder: (context) {
-                            return ConfirmationDialog(
-                              showCloseIcon: false,
-                              title: Text(l10n.removeAllStarredStationsConfirm),
-                              content: SizedBox(
-                                width: 350,
-                                child: Text(
-                                  l10n.removeAllStarredStationsDescription,
+                IconButton(
+                  icon: Icon(
+                    Iconz.remove,
+                    semanticLabel: l10n.removeAllStarredStations,
+                  ),
+                  tooltip: context.l10n.removeAllStarredStations,
+                  onPressed: processing
+                      ? null
+                      : () => showDialog(
+                            context: context,
+                            builder: (context) {
+                              return ConfirmationDialog(
+                                showCloseIcon: false,
+                                title:
+                                    Text(l10n.removeAllStarredStationsConfirm),
+                                content: SizedBox(
+                                  width: 350,
+                                  child: Text(
+                                    l10n.removeAllStarredStationsDescription,
+                                  ),
                                 ),
-                              ),
-                              onConfirm: () =>
-                                  di<LibraryModel>().unStarAllStations(),
-                            );
-                          },
-                        ),
-              ),
-              const SizedBox(width: kMediumSpace),
+                                onConfirm: () =>
+                                    di<LibraryModel>().unStarAllStations(),
+                              );
+                            },
+                          ),
+                ),
+                const SizedBox(width: kMediumSpace),
+              ],
             ],
           ),
         ),
