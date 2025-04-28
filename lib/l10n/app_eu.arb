@@ -1364,5 +1364,11 @@
   "localPictureTypeBandOrchestra": "Banda/Orkestra",
   "@localPictureTypeBandOrchestra": {},
   "pictures": "Irudiak",
-  "@pictures": {}
+  "@pictures": {},
+  "customStationWarning": "Emandako URLa irrati-arakatzailearen zerbitzarian egon behar da, bestela ez da zure liburutegian gehituko! Ahal dela, bilatu irrati funtzioan eta gehitu izar botoiarekin zure liburutegian!",
+  "@customStationWarning": {},
+  "stationNotFound": "Irrati hau ez da existitzen edo radiobrowser zerbitzaritik kendu da.",
+  "@stationNotFound": {},
+  "onlyLocalAudioForPlaylists": "Tokiko audioa bakarrik onartzen da erreprodukzio-zerrenden inportazioetarako! Bilatu itzazu irrati funtzioan eta gehitu itzazu izar botoiarekin zure liburutegira!",
+  "@onlyLocalAudioForPlaylists": {}
 }
