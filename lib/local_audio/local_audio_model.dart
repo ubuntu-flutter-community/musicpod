@@ -7,6 +7,7 @@ import 'package:watcher/watcher.dart';
 
 import '../common/data/audio.dart';
 import '../common/view/audio_filter.dart';
+import '../library/library_service.dart';
 import '../settings/settings_service.dart';
 import 'local_audio_service.dart';
 
@@ -14,8 +15,10 @@ class LocalAudioModel extends SafeChangeNotifier {
   LocalAudioModel({
     required LocalAudioService localAudioService,
     required SettingsService settingsService,
+    required LibraryService libraryService,
   })  : _localAudioService = localAudioService,
-        _settingsService = settingsService {
+        _settingsService = settingsService,
+        _libraryService = libraryService {
     _audiosChangedSub ??=
         _localAudioService.audiosChanged.listen((_) => notifyListeners());
     _settingsChangedSub ??=
@@ -23,6 +26,7 @@ class LocalAudioModel extends SafeChangeNotifier {
   }
 
   final LocalAudioService _localAudioService;
+  final LibraryService _libraryService;
   final SettingsService _settingsService;
   StreamSubscription<bool>? _audiosChangedSub;
   StreamSubscription<bool>? _settingsChangedSub;
@@ -116,11 +120,19 @@ class LocalAudioModel extends SafeChangeNotifier {
 
   bool get importing => _localAudioService.audios == null;
 
-  Future<void> init({bool forceInit = false, String? directory}) async =>
-      _localAudioService.init(
-        forceInit: forceInit,
-        newDirectory: directory,
-      );
+  bool _firstPlaylistCheck = true;
+  Future<void> init({bool forceInit = false, String? directory}) async {
+    await _localAudioService.init(
+      forceInit: forceInit,
+      newDirectory: directory,
+    );
+
+    final additionalAudios = _libraryService.externalPlaylistAudios;
+    if ((_firstPlaylistCheck || forceInit) && additionalAudios.isNotEmpty) {
+      addAudios(additionalAudios.where((e) => e.isLocal).toList());
+      _firstPlaylistCheck = false;
+    }
+  }
 
   void addAudios(List<Audio> newAudios, {bool clear = false}) =>
       _localAudioService.addAudios(newAudios, clear: clear);

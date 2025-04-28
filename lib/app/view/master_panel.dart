@@ -73,7 +73,7 @@ class PlaylistList extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     watchPropertyValue((LibraryModel m) => m.playlistsLength);
-    final masterItems = createPlaylistMasterItems();
+    final masterItems = createPlaylistMasterItems(di<LibraryModel>());
     final selectedPageId =
         watchPropertyValue((RoutingManager m) => m.selectedPageId);
     return SliverList.builder(
@@ -92,7 +92,7 @@ class PodcastList extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     watchPropertyValue((LibraryModel m) => m.podcastsLength);
-    final masterItems = createPodcastMasterItems();
+    final masterItems = createPodcastMasterItems(di<LibraryModel>());
     final selectedPageId =
         watchPropertyValue((RoutingManager m) => m.selectedPageId);
     return SliverList.builder(
@@ -111,7 +111,7 @@ class StationsList extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     watchPropertyValue((LibraryModel m) => m.starredStationsLength);
-    final masterItems = createStarredStationsMasterItems();
+    final masterItems = createStarredStationsMasterItems(di<LibraryModel>());
     final selectedPageId =
         watchPropertyValue((RoutingManager m) => m.selectedPageId);
     return SliverList.builder(
@@ -130,7 +130,7 @@ class AlbumsList extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     watchPropertyValue((LibraryModel m) => m.favoriteAlbumsLength);
-    final masterItems = createFavoriteAlbumsMasterItems();
+    final masterItems = createFavoriteAlbumsMasterItems(di<LibraryModel>());
     final selectedPageId =
         watchPropertyValue((RoutingManager m) => m.selectedPageId);
     return SliverList.builder(
