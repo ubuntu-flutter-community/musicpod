@@ -170,10 +170,10 @@ class GradientAppWrapper extends StatelessWidget {
         ? [
             colors.first, 
             Color.fromARGB(
-              colors.first.alpha, // 使用原始属性，避免类型转换问题
-              colors.first.red, 
-              colors.first.green, 
-              (colors.first.blue + 50) % 256,
+              colors.first.a.toInt(), // 使用原始属性，避免类型转换问题
+              colors.first.r.toInt(), 
+              colors.first.g.toInt(), 
+              (colors.first.b.toInt() + 50) % 256,
             ),
           ] 
         : colors;

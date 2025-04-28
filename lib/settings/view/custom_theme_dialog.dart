@@ -44,12 +44,12 @@ class _CustomThemeDialogState extends State<CustomThemeDialog> {
       ),
       actions: [
         TextButton(
-          child: const Text('取消'),
           onPressed: () => Navigator.of(context).pop(),
+          child: const Text('取消'),
         ),
         TextButton(
-          child: const Text('保存'),
           onPressed: _saveTheme,
+          child: const Text('保存'),
         ),
       ],
     );

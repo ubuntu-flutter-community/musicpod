@@ -10,7 +10,6 @@ extension ThemeModeX on ThemeMode {
       ThemeMode.system => l10n.system,
       ThemeMode.dark => l10n.dark,
       ThemeMode.light => l10n.light,
-      _ => 'Custom'
     };
   }
       
@@ -19,7 +18,6 @@ extension ThemeModeX on ThemeMode {
       ThemeMode.system => CustomThemeMode.system,
       ThemeMode.dark => CustomThemeMode.dark,
       ThemeMode.light => CustomThemeMode.light,
-      _ => CustomThemeMode.custom
     };
   }
 

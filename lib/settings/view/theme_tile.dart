@@ -198,10 +198,10 @@ class CustomThemeTile extends StatelessWidget with WatchItMixin {
             ),
           ),
         ),
-        Positioned(
+        const Positioned(
           right: 8,
           top: 5,
-          child: Row(
+          child: const Row(
             mainAxisSize: MainAxisSize.min,
             children: const [
               Icon(
