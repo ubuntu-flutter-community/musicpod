@@ -3,6 +3,7 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/connectivity_model.dart';
+import '../../app_config.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/offline_page.dart';
@@ -34,7 +35,8 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
     return Row(
       spacing: kSmallestSpace,
       children: [
-        const SizedBox(width: 4 * kLargestSpace),
+        if (!AppConfig.isMobilePlatform)
+          const SizedBox(width: 4 * kLargestSpace),
         Expanded(
           child: Center(
             child: YaruChoiceChipBar(
@@ -101,50 +103,53 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
             ),
           ),
         ),
-        IconButton(
-          icon: Icon(
-            Iconz.export,
-            semanticLabel: context.l10n.exportPodcastsToOpmlFile,
+        if (!AppConfig.isMobilePlatform) ...[
+          IconButton(
+            icon: Icon(
+              Iconz.export,
+              semanticLabel: context.l10n.exportPodcastsToOpmlFile,
+            ),
+            tooltip: context.l10n.exportPodcastsToOpmlFile,
+            onPressed: processing || checkingForUpdates
+                ? null
+                : () => di<CustomContentModel>().exportPodcastsToOpmlFile(),
           ),
-          tooltip: context.l10n.exportPodcastsToOpmlFile,
-          onPressed: processing || checkingForUpdates
-              ? null
-              : () => di<CustomContentModel>().exportPodcastsToOpmlFile(),
-        ),
-        IconButton(
-          icon: Icon(
-            Iconz.import,
-            semanticLabel: context.l10n.importPodcastsFromOpmlFile,
+          IconButton(
+            icon: Icon(
+              Iconz.import,
+              semanticLabel: context.l10n.importPodcastsFromOpmlFile,
+            ),
+            tooltip: context.l10n.importPodcastsFromOpmlFile,
+            onPressed: processing || checkingForUpdates
+                ? null
+                : () => di<CustomContentModel>().importPodcastsFromOpmlFile(),
           ),
-          tooltip: context.l10n.importPodcastsFromOpmlFile,
-          onPressed: processing || checkingForUpdates
-              ? null
-              : () => di<CustomContentModel>().importPodcastsFromOpmlFile(),
-        ),
-        IconButton(
-          icon: processing || checkingForUpdates
-              ? const SizedBox.square(
-                  dimension: 20,
-                  child: Progress(
-                    strokeWidth: 2,
-                  ),
-                )
-              : Icon(Iconz.remove),
-          tooltip: context.l10n.podcasts,
-          onPressed: processing || checkingForUpdates
-              ? null
-              : () => showDialog(
-                    context: context,
-                    builder: (_) => ConfirmationDialog(
-                      title: Text(context.l10n.removeAllPodcastsConfirm),
-                      content: Text(context.l10n.removeAllPodcastsDescription),
-                      confirmLabel: context.l10n.ok,
-                      cancelLabel: context.l10n.cancel,
-                      onConfirm: () => di<LibraryModel>().removeAllPodcasts(),
+          IconButton(
+            icon: processing || checkingForUpdates
+                ? const SizedBox.square(
+                    dimension: 20,
+                    child: Progress(
+                      strokeWidth: 2,
                     ),
-                  ),
-        ),
-        const SizedBox(width: kSmallestSpace),
+                  )
+                : Icon(Iconz.remove),
+            tooltip: context.l10n.podcasts,
+            onPressed: processing || checkingForUpdates
+                ? null
+                : () => showDialog(
+                      context: context,
+                      builder: (_) => ConfirmationDialog(
+                        title: Text(context.l10n.removeAllPodcastsConfirm),
+                        content:
+                            Text(context.l10n.removeAllPodcastsDescription),
+                        confirmLabel: context.l10n.ok,
+                        cancelLabel: context.l10n.cancel,
+                        onConfirm: () => di<LibraryModel>().removeAllPodcasts(),
+                      ),
+                    ),
+          ),
+          const SizedBox(width: kSmallestSpace),
+        ],
       ],
     );
   }
