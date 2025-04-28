@@ -1366,5 +1366,11 @@
   "path": "Asukoht",
   "@path": {},
   "albumNotFound": "Seda albumit kas pole olemas või sa oled eemaldanud välise esitusloendi ((M3U/PLS faili), kust ta oli laaditud.",
-  "@albumNotFound": {}
+  "@albumNotFound": {},
+  "onlyLocalAudioForPlaylists": "Esitusloendite importimisel on toetatud vaid kohalikud helifailid! Palun otsi neid raadiojaaamade otsinguvaatest ja märgistades tärnikesega lisa kohalikku muusikakogusse!",
+  "@onlyLocalAudioForPlaylists": {},
+  "stationNotFound": "Seda jaama kas pole olemas või on ta raadiojaamade andmebaasist eemaldatud.",
+  "@stationNotFound": {},
+  "customStationWarning": "See võrguaadress peaks leiduma raadiojaamade otsinguserveris, vastasel juhul ta ei saa lisatud sinu muusikakogusse! Parim oleks, kui otsid neid raadiojaaamade otsinguvaatest ja märgistades tärnikesega lisad kohalikku muusikakogusse!",
+  "@customStationWarning": {}
 }
