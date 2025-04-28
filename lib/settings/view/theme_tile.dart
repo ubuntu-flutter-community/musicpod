@@ -203,7 +203,7 @@ class CustomThemeTile extends StatelessWidget with WatchItMixin {
           top: 5,
           child: Row(
             mainAxisSize: MainAxisSize.min,
-            children: [
+            children: const [
               Icon(
                 YaruIcons.window_minimize,
                 color: Colors.black,

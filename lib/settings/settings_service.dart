@@ -185,7 +185,7 @@ class SettingsService {
 
   // 保存自定义主题颜色列表
   void setCustomThemeColors(List<Color> colors) {
-    final colorValues = colors.map((e) => e.value).toList();
+    final colorValues = colors.map((e) => e.toARGB32()).toList();
     _preferences.setString(_customThemeColors, jsonEncode(colorValues)).then(notify);
   }
 

@@ -6,7 +6,6 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app_config.dart';
-import '../../extensions/theme_mode_x.dart';
 import '../../l10n/l10n.dart';
 import '../../settings/settings_model.dart';
 import '../../common/view/gradient_background.dart';
@@ -51,22 +50,21 @@ class DesktopMusicPodApp extends StatelessWidget with WatchItMixin {
           seedColor: primaryColor,
           brightness: Brightness.light,
           // 使用更轻的背景色以便渐变更明显
-          background: Colors.white,
           surface: Colors.white,
-          surfaceVariant: Colors.white.withOpacity(0.9),
+          surfaceContainerHighest: Colors.white.withValues(alpha: 230),
         ),
         // 自定义组件样式
         appBarTheme: AppBarTheme(
           backgroundColor: useGradient && customColors.length > 1
-              ? customColors.first.withOpacity(0.8)
-              : primaryColor.withOpacity(0.8),
+              ? customColors.first.withValues(alpha: 204)
+              : primaryColor.withValues(alpha: 204),
           elevation: 0,
         ),
         scaffoldBackgroundColor: Colors.white, // 设置为白色让渐变更明显
         cardTheme: CardTheme(
           color: Colors.white,
           elevation: 4,
-          shadowColor: primaryColor.withOpacity(0.3),
+          shadowColor: primaryColor.withValues(alpha: 77),
         ),
         // 设置按钮颜色
         elevatedButtonTheme: ElevatedButtonThemeData(

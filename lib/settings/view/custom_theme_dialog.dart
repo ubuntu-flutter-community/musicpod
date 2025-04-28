@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import '../../common/view/ui_constants.dart';
-import '../../extensions/build_context_x.dart';
 import '../settings_model.dart';
 
-/// 自定义主题配置对话框
 class CustomThemeDialog extends StatefulWidget {
   const CustomThemeDialog({super.key});
 
@@ -18,7 +15,7 @@ class CustomThemeDialog extends StatefulWidget {
 class _CustomThemeDialogState extends State<CustomThemeDialog> {
   late List<Color> selectedColors;
   late bool useGradient;
-  final maxColors = 5; // 最多支持5个颜色
+  final maxColors = 5;
 
   @override
   void initState() {
@@ -156,7 +153,6 @@ class _CustomThemeDialogState extends State<CustomThemeDialog> {
     );
   }
 
-  // 显示颜色选择器
   void _pickColor(int index) {
     showDialog(
       context: context,
@@ -193,24 +189,22 @@ class _CustomThemeDialogState extends State<CustomThemeDialog> {
     );
   }
 
-  // 移除颜色
   void _removeColor(int index) {
     setState(() {
       selectedColors.removeAt(index);
     });
   }
 
-  // 添加新颜色
   void _addNewColor() {
     if (selectedColors.length < maxColors) {
       setState(() {
         // 添加一个与最后一个颜色相似但稍微不同的颜色
         final lastColor = selectedColors.last;
         final newColor = Color.fromARGB(
-          lastColor.alpha,
-          (lastColor.red + 25) % 256,
-          (lastColor.green + 25) % 256,
-          (lastColor.blue + 25) % 256,
+          lastColor.alpha, // 使用原始的 alpha 属性
+          (lastColor.red + 25) % 256, // 使用原始的 red 属性
+          (lastColor.green + 25) % 256, // 使用原始的 green 属性
+          (lastColor.blue + 25) % 256, // 使用原始的 blue 属性
         );
         selectedColors.add(newColor);
       });
@@ -289,7 +283,7 @@ class _CustomThemeDialogState extends State<CustomThemeDialog> {
     });
   }
 
-  // 保存主题设置
+
   void _saveTheme() {
     final model = di<SettingsModel>();
     
@@ -298,10 +292,10 @@ class _CustomThemeDialogState extends State<CustomThemeDialog> {
       // 添加一个派生的第二个颜色
       final color = selectedColors.first;
       final secondColor = Color.fromARGB(
-        color.alpha,
-        (color.red + 40) % 256,
-        (color.green + 40) % 256,
-        (color.blue + 40) % 256,
+        color.alpha, // 使用原始的 alpha 属性
+        (color.red + 40) % 256, // 使用原始的 red 属性
+        (color.green + 40) % 256, // 使用原始的 green 属性
+        (color.blue + 40) % 256, // 使用原始的 blue 属性
       );
       selectedColors.add(secondColor);
     }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../settings/settings_model.dart';
 import 'gradient_background.dart';
@@ -65,7 +64,7 @@ class CustomGradientScaffold extends StatelessWidget with WatchItMixin {
         appBar: appBar,
         // 单色背景时也添加微弱的颜色
         backgroundColor: customColors.isNotEmpty 
-            ? customColors.first.withOpacity(0.05)
+            ? customColors.first.withValues(alpha: 13) // 0.05 * 255 = 13，使用 withValues 替代 withOpacity
             : null,
         body: body,
         floatingActionButton: floatingActionButton,

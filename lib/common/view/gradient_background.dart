@@ -163,7 +163,11 @@ class GradientAppWrapper extends StatelessWidget {
     
     // 渐变颜色列表，确保至少有两种颜色
     final gradientColors = colors.length < 2 
-        ? [colors.first, colors.first.withBlue((colors.first.blue + 50) % 256)] 
+        ? [colors.first, Color.fromARGB(
+            colors.first.alpha, 
+            colors.first.red, 
+            colors.first.green, 
+            (colors.first.blue + 50) % 256)]
         : colors;
     
     return Stack(
