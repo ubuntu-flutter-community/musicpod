@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/view/ui_constants.dart';
+import '../settings_model.dart';
 
 class ThemeTile extends StatelessWidget {
   const ThemeTile(this.themeMode, {super.key});
@@ -142,4 +144,85 @@ class _CustomClipPathLight extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+}
+
+// 自定义主题预览组件
+class CustomThemeTile extends StatelessWidget with WatchItMixin {
+  const CustomThemeTile({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = watchPropertyValue((SettingsModel m) => m.customThemeColors);
+    final useGradient = watchPropertyValue((SettingsModel m) => m.useGradientTheme);
+    
+    const height = 100.0;
+    const width = 150.0;
+    final borderRadius = BorderRadius.circular(12);
+    
+    // 自定义容器
+    final customContainer = Container(
+      decoration: BoxDecoration(
+        borderRadius: borderRadius,
+        gradient: useGradient && colors.length > 1
+            ? LinearGradient(
+                colors: colors,
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              )
+            : null,
+        color: useGradient && colors.length > 1 ? null : colors.first,
+      ),
+    );
+    
+    final titleBar = Container(
+      height: kLargestSpace,
+      decoration: BoxDecoration(
+        color: Colors.black.withValues(alpha: 0.1),
+        borderRadius: const BorderRadius.only(
+          topRight: Radius.circular(10),
+          topLeft: Radius.circular(10),
+        ),
+      ),
+    );
+    
+    return Stack(
+      alignment: Alignment.topRight,
+      children: [
+        Card(
+          elevation: 5,
+          child: SizedBox(
+            height: height,
+            width: width,
+            child: Stack(
+              children: [customContainer, titleBar],
+            ),
+          ),
+        ),
+        Positioned(
+          right: 8,
+          top: 5,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                YaruIcons.window_minimize,
+                color: Colors.black,
+                size: 15,
+              ),
+              Icon(
+                YaruIcons.window_maximize,
+                size: 15,
+                color: Colors.black,
+              ),
+              Icon(
+                YaruIcons.window_close,
+                size: 15,
+                color: Colors.black,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 }

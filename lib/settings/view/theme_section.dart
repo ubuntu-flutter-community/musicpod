@@ -9,6 +9,7 @@ import '../../extensions/theme_mode_x.dart';
 import '../../l10n/l10n.dart';
 import '../settings_model.dart';
 import 'theme_tile.dart';
+import 'custom_theme_dialog.dart';
 
 class ThemeSection extends StatelessWidget with WatchItMixin {
   const ThemeSection({super.key});
@@ -18,6 +19,7 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
     final model = di<SettingsModel>();
     final l10n = context.l10n;
     final themeIndex = watchPropertyValue((SettingsModel m) => m.themeIndex);
+    final customModes = [ThemeMode.system, ThemeMode.dark, ThemeMode.light, ThemeMode.light]; // 第四个作为自定义主题
 
     return YaruSection(
       margin: const EdgeInsets.only(
@@ -35,7 +37,7 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
               child: Wrap(
                 spacing: kLargestSpace,
                 children: [
-                  for (var i = 0; i < ThemeMode.values.length; ++i)
+                  for (var i = 0; i < customModes.length; ++i)
                     Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -43,14 +45,19 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
                           padding: const EdgeInsets.all(1),
                           borderRadius: BorderRadius.circular(15),
                           selected: themeIndex == i,
-                          onTap: () => model.setThemeIndex(i),
+                          onTap: () => i == 3 
+                              ? _showCustomThemeDialog(context, model)
+                              : model.setThemeIndex(i),
                           selectionColor: context.theme.colorScheme.primary,
-                          child: ThemeTile(ThemeMode.values[i]),
+                          child: i == 3
+                              ? const CustomThemeTile() // 自定义主题预览
+                              : ThemeTile(customModes[i]),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child:
-                              Text(ThemeMode.values[i].localize(context.l10n)),
+                          child: i == 3
+                              ? const Text('自定义') // 可以根据需要替换为本地化字符串
+                              : Text(customModes[i].localize(context.l10n)),
                         ),
                       ],
                     ),
@@ -70,6 +77,14 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
           ),
         ],
       ),
+    );
+  }
+
+  void _showCustomThemeDialog(BuildContext context, SettingsModel model) {
+    model.setThemeIndex(3); // 设置为自定义主题索引
+    showDialog(
+      context: context,
+      builder: (context) => const CustomThemeDialog(),
     );
   }
 }

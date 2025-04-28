@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:github/github.dart';
 import 'package:path/path.dart' as p;
 import 'package:safe_change_notifier/safe_change_notifier.dart';
+import 'package:flutter/material.dart';
 
 import '../../external_path/external_path_service.dart';
 import '../common/data/close_btn_action.dart';
@@ -100,6 +101,14 @@ class SettingsModel extends SafeChangeNotifier {
 
   int get themeIndex => _service.themeIndex;
   void setThemeIndex(int value) => _service.setThemeIndex(value);
+
+  // 自定义主题颜色列表
+  List<Color> get customThemeColors => _service.customThemeColors;
+  void setCustomThemeColors(List<Color> colors) => _service.setCustomThemeColors(colors);
+
+  // 自定义主题是否使用渐变
+  bool get useGradientTheme => _service.useGradientTheme;
+  void setUseGradientTheme(bool value) => _service.setUseGradientTheme(value);
 
   String? get podcastIndexApiKey => _service.podcastIndexApiKey;
   void setPodcastIndexApiKey(String value) =>

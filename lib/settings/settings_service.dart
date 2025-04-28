@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/material.dart';
 
 import '../app_config.dart';
 import '../common/data/close_btn_action.dart';
@@ -161,4 +163,43 @@ class SettingsService {
   }
 
   Future<void> dispose() async => _propertiesChangedController.close();
+
+  // 新增 SPKeys
+  static const _customThemeColors = 'customThemeColors';
+  static const _useGradientTheme = 'useGradientTheme';
+  static const _gradientOpacity = 'gradientOpacity';
+
+  // 自定义主题颜色列表，默认返回蓝色作为基础颜色
+  List<Color> get customThemeColors {
+    final colorsJson = _preferences.getString(_customThemeColors);
+    if (colorsJson == null) {
+      return [Colors.blue.shade500];
+    }
+    try {
+      final List<dynamic> colorsList = jsonDecode(colorsJson);
+      return colorsList.map((e) => Color(e as int)).toList();
+    } catch (e) {
+      return [Colors.blue.shade500];
+    }
+  }
+
+  // 保存自定义主题颜色列表
+  void setCustomThemeColors(List<Color> colors) {
+    final colorValues = colors.map((e) => e.value).toList();
+    _preferences.setString(_customThemeColors, jsonEncode(colorValues)).then(notify);
+  }
+
+  // 是否使用渐变主题
+  bool get useGradientTheme => _preferences.getBool(_useGradientTheme) ?? false;
+  void setUseGradientTheme(bool value) {
+    _preferences.setBool(_useGradientTheme, value).then(notify);
+  }
+  
+  // 渐变效果的透明度/强度 (0.0 - 1.0)
+  double get gradientOpacity => _preferences.getDouble(_gradientOpacity) ?? 0.25;
+  void setGradientOpacity(double value) {
+    // 限制在合理范围内
+    final opacity = value.clamp(0.05, 0.8);
+    _preferences.setDouble(_gradientOpacity, opacity).then(notify);
+  }
 }
