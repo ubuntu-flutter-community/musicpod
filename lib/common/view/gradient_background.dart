@@ -39,8 +39,9 @@ class GradientBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     // 如果只有一种颜色，则使用单色背景
     if (colors.length == 1) {
+      final alpha = (opacity * 255).toInt(); // 转换为int
       return ColoredBox(
-        color: colors.first.withOpacity(opacity),
+        color: colors.first.withAlpha(alpha), // 使用withAlpha替代withValues和withOpacity
         child: child,
       );
     }
@@ -49,7 +50,10 @@ class GradientBackground extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: colors.map((e) => e.withOpacity(opacity)).toList(),
+          colors: colors.map((e) {
+            final alpha = (opacity * 255).toInt(); // 转换为int
+            return e.withAlpha(alpha); // 使用withAlpha替代withValues和withOpacity
+          }).toList(),
           begin: begin,
           end: end,
         ),
@@ -163,11 +167,15 @@ class GradientAppWrapper extends StatelessWidget {
     
     // 渐变颜色列表，确保至少有两种颜色
     final gradientColors = colors.length < 2 
-        ? [colors.first, Color.fromARGB(
-            colors.first.alpha, 
-            colors.first.red, 
-            colors.first.green, 
-            (colors.first.blue + 50) % 256)]
+        ? [
+            colors.first, 
+            Color.fromARGB(
+              colors.first.alpha, // 使用原始属性，避免类型转换问题
+              colors.first.red, 
+              colors.first.green, 
+              (colors.first.blue + 50) % 256,
+            ),
+          ] 
         : colors;
     
     return Stack(
@@ -177,7 +185,10 @@ class GradientAppWrapper extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: gradientColors.map((e) => e.withOpacity(opacity)).toList(),
+                colors: gradientColors.map((e) {
+                  final alpha = (opacity * 255).toInt(); // 转换为int
+                  return e.withAlpha(alpha); // 使用withAlpha替代withValues和withOpacity
+                }).toList(),
                 begin: begin,
                 end: end,
               ),

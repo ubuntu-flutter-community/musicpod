@@ -177,7 +177,7 @@ class CustomThemeTile extends StatelessWidget with WatchItMixin {
     final titleBar = Container(
       height: kLargestSpace,
       decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.1),
+        color: Colors.black.withValues(alpha: 0.1 * 255),
         borderRadius: const BorderRadius.only(
           topRight: Radius.circular(10),
           topLeft: Radius.circular(10),

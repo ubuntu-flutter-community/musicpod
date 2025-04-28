@@ -198,13 +198,12 @@ class _CustomThemeDialogState extends State<CustomThemeDialog> {
   void _addNewColor() {
     if (selectedColors.length < maxColors) {
       setState(() {
-        // 添加一个与最后一个颜色相似但稍微不同的颜色
         final lastColor = selectedColors.last;
         final newColor = Color.fromARGB(
-          lastColor.alpha, // 使用原始的 alpha 属性
-          (lastColor.red + 25) % 256, // 使用原始的 red 属性
-          (lastColor.green + 25) % 256, // 使用原始的 green 属性
-          (lastColor.blue + 25) % 256, // 使用原始的 blue 属性
+          lastColor.a.toInt(), // 使用.a，并转换为int
+          (lastColor.r.toInt() + 25) % 256, // 使用.r，并转换为int
+          (lastColor.g.toInt() + 25) % 256, // 使用.g，并转换为int
+          (lastColor.b.toInt() + 25) % 256, // 使用.b，并转换为int
         );
         selectedColors.add(newColor);
       });
@@ -292,10 +291,10 @@ class _CustomThemeDialogState extends State<CustomThemeDialog> {
       // 添加一个派生的第二个颜色
       final color = selectedColors.first;
       final secondColor = Color.fromARGB(
-        color.alpha, // 使用原始的 alpha 属性
-        (color.red + 40) % 256, // 使用原始的 red 属性
-        (color.green + 40) % 256, // 使用原始的 green 属性
-        (color.blue + 40) % 256, // 使用原始的 blue 属性
+        color.a.toInt(), // 使用.a，并转换为int
+        (color.r.toInt() + 40) % 256, // 使用.r，并转换为int
+        (color.g.toInt() + 40) % 256, // 使用.g，并转换为int
+        (color.b.toInt() + 40) % 256, // 使用.b，并转换为int
       );
       selectedColors.add(secondColor);
     }

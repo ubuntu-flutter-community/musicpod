@@ -5,19 +5,23 @@ import '../l10n/l10n.dart';
 enum CustomThemeMode { system, dark, light, custom }
 
 extension ThemeModeX on ThemeMode {
-  String localize(AppLocalizations l10n) => switch (this) {
-        ThemeMode.system => l10n.system,
-        ThemeMode.dark => l10n.dark,
-        ThemeMode.light => l10n.light,
-        _ => 'Custom'
-      };
+  String localize(AppLocalizations l10n) {
+    return switch (this) {
+      ThemeMode.system => l10n.system,
+      ThemeMode.dark => l10n.dark,
+      ThemeMode.light => l10n.light,
+      _ => 'Custom'
+    };
+  }
       
-  CustomThemeMode toCustomMode() => switch (this) {
-        ThemeMode.system => CustomThemeMode.system,
-        ThemeMode.dark => CustomThemeMode.dark,
-        ThemeMode.light => CustomThemeMode.light,
-        _ => CustomThemeMode.custom
-      };
+  CustomThemeMode toCustomMode() {
+    return switch (this) {
+      ThemeMode.system => CustomThemeMode.system,
+      ThemeMode.dark => CustomThemeMode.dark,
+      ThemeMode.light => CustomThemeMode.light,
+      _ => CustomThemeMode.custom
+    };
+  }
 
   String get stringRepresentation => switch (this) {
     ThemeMode.system => '自动',
