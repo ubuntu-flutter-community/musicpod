@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.11.1](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.11.0...v2.11.1) (2025-04-28)
+
+
+### Bug Fixes
+
+* initialize the local audio service lazily & no file watcher for windows ([#1236](https://github.com/ubuntu-flutter-community/musicpod/issues/1236)) ([dcf9c41](https://github.com/ubuntu-flutter-community/musicpod/commit/dcf9c41cdfd6e20e1594b85778225cc453d43d44))
+
 ## [2.11.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.10.1...v2.11.0) (2025-04-28)
 
 
