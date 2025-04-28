@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.11.2](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.11.1...v2.11.2) (2025-04-28)
+
+
+### Bug Fixes
+
+* add macos bookmark entitlements ([#1238](https://github.com/ubuntu-flutter-community/musicpod/issues/1238)) ([2bf5b0d](https://github.com/ubuntu-flutter-community/musicpod/commit/2bf5b0d44944f2fe9cded7e49f629c18dee5d150))
+
 ## [2.11.1](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.11.0...v2.11.1) (2025-04-28)
 
 
