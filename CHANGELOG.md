@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.11.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.10.1...v2.11.0) (2025-04-28)
+
+
+### Features
+
+* rework library to be fully ID based and add local audio metadata writer UI ([#1227](https://github.com/ubuntu-flutter-community/musicpod/issues/1227)) ([c075d9b](https://github.com/ubuntu-flutter-community/musicpod/commit/c075d9b6b28833f0c36314cfbff63eaf511fbc31))
+* show podcast pages immediately, then load the episodes ([#1226](https://github.com/ubuntu-flutter-community/musicpod/issues/1226)) ([be71b08](https://github.com/ubuntu-flutter-community/musicpod/commit/be71b08eb176aa0a7a85af8d1514ea523ada8ee8))
+* Translated using Weblate (Estonian) ([#1223](https://github.com/ubuntu-flutter-community/musicpod/issues/1223)) ([132a0c1](https://github.com/ubuntu-flutter-community/musicpod/commit/132a0c15dac9d133fe8e0dc2bafb38593c424b75))
+* Translations update from Hosted Weblate ([#1225](https://github.com/ubuntu-flutter-community/musicpod/issues/1225)) ([0d790d1](https://github.com/ubuntu-flutter-community/musicpod/commit/0d790d1c84047a35908c942e20c30d8c20b09ef7))
+
+
+### Bug Fixes
+
+* MusicPod not loading .opus files after the last update ([#1232](https://github.com/ubuntu-flutter-community/musicpod/issues/1232)) ([3765e8f](https://github.com/ubuntu-flutter-community/musicpod/commit/3765e8fe8697726017560c59b934c78dcf3dbe1b)), closes [#1220](https://github.com/ubuntu-flutter-community/musicpod/issues/1220)
+* only support local files for playlists ([#1233](https://github.com/ubuntu-flutter-community/musicpod/issues/1233)) ([c785647](https://github.com/ubuntu-flutter-community/musicpod/commit/c7856475d4843f142461085d4157f1cb740f45c8))
+
 ## [2.10.1](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.10.0...v2.10.1) (2025-04-12)
 
 
