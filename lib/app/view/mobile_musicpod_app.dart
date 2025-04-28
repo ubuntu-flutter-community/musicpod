@@ -8,7 +8,9 @@ import 'package:watch_it/watch_it.dart';
 import '../../app_config.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/theme.dart';
+import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
+import '../../library/library_model.dart';
 import '../../settings/settings_model.dart';
 import 'create_master_items.dart';
 import 'mobile_page.dart';
@@ -22,7 +24,7 @@ class MobileMusicPodApp extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final themeIndex = watchPropertyValue((SettingsModel m) => m.themeIndex);
-    final phoenix = phoenixTheme(color: accent ?? Colors.greenAccent);
+    final phoenix = phoenixTheme(color: accent ?? kMusicPodDefaultColor);
     final routingManager = di<RoutingManager>();
 
     return MaterialApp(
@@ -32,7 +34,7 @@ class MobileMusicPodApp extends StatelessWidget with WatchItMixin {
           ? (routingManager.selectedPageId ?? PageIDs.homePage)
           : null,
       onGenerateRoute: (settings) {
-        final masterItems = getAllMasterItems();
+        final masterItems = getAllMasterItems(di<LibraryModel>());
         final page = (masterItems.firstWhereOrNull(
                   (e) => e.pageId == settings.name,
                 ) ??

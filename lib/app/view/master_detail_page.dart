@@ -11,6 +11,7 @@ import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../library/library_model.dart';
 import 'create_master_items.dart';
 import 'master_panel.dart';
 import 'routing_manager.dart';
@@ -60,7 +61,7 @@ class MasterDetailPage extends StatelessWidget {
               key: routingManager.masterNavigatorKey,
               observers: [routingManager],
               onGenerateRoute: (settings) {
-                final masterItems = getAllMasterItems();
+                final masterItems = getAllMasterItems(di<LibraryModel>());
                 final page = (masterItems.firstWhereOrNull(
                           (e) => e.pageId == settings.name,
                         ) ??
