@@ -23,7 +23,7 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
       ThemeMode.system,
       ThemeMode.dark,
       ThemeMode.light,
-      ThemeMode.light
+      ThemeMode.light,
     ]; // 第四个作为自定义主题
 
     return YaruSection(
