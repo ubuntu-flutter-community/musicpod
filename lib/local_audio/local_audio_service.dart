@@ -255,7 +255,8 @@ class LocalAudioService {
     final result = await compute(_readAudiosFromDirectory, dir);
     _failedImports = result.failedImports;
 
-    if (dir != null &&
+    if (!Platform.isWindows &&
+        dir != null &&
         Directory(dir).existsSync() &&
         (_fileWatcher == null || _fileWatcher!.path != dir)) {
       _fileWatcher = FileWatcher(dir);

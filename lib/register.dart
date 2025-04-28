@@ -188,12 +188,6 @@ void registerDependencies({required List<String> args}) async {
           settingsService: di<SettingsService>(),
           localCoverService: di<LocalCoverService>(),
         );
-        await localAudioService.init();
-        final additionalAudios = di<LibraryService>().externalPlaylistAudios;
-        if (additionalAudios.isNotEmpty) {
-          localAudioService
-              .addAudios(additionalAudios.where((e) => e.isLocal).toList());
-        }
 
         return localAudioService;
       },
@@ -293,8 +287,9 @@ void registerDependencies({required List<String> args}) async {
       () => LocalAudioModel(
         localAudioService: di<LocalAudioService>(),
         settingsService: di<SettingsService>(),
+        libraryService: di<LibraryService>(),
       ),
-      dependsOn: [SettingsService, LocalAudioService],
+      dependsOn: [SettingsService, LocalAudioService, LibraryService],
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton<PodcastModel>(
