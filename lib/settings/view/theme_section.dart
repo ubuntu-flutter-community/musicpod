@@ -19,7 +19,12 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
     final model = di<SettingsModel>();
     final l10n = context.l10n;
     final themeIndex = watchPropertyValue((SettingsModel m) => m.themeIndex);
-    final customModes = [ThemeMode.system, ThemeMode.dark, ThemeMode.light, ThemeMode.light]; // 第四个作为自定义主题
+    final customModes = [
+      ThemeMode.system,
+      ThemeMode.dark,
+      ThemeMode.light,
+      ThemeMode.light
+    ]; // 第四个作为自定义主题
 
     return YaruSection(
       margin: const EdgeInsets.only(
@@ -45,7 +50,7 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
                           padding: const EdgeInsets.all(1),
                           borderRadius: BorderRadius.circular(15),
                           selected: themeIndex == i,
-                          onTap: () => i == 3 
+                          onTap: () => i == 3
                               ? _showCustomThemeDialog(context, model)
                               : model.setThemeIndex(i),
                           selectionColor: context.theme.colorScheme.primary,

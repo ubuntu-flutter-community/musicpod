@@ -69,7 +69,8 @@ class _CustomThemeDialogState extends State<CustomThemeDialog> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: selectedColors.length + (selectedColors.length < maxColors ? 1 : 0),
+              itemCount: selectedColors.length +
+                  (selectedColors.length < maxColors ? 1 : 0),
               itemBuilder: (context, index) {
                 if (index < selectedColors.length) {
                   // 已有颜色项
@@ -105,7 +106,8 @@ class _CustomThemeDialogState extends State<CustomThemeDialog> {
         title: Text('颜色 ${index + 1}'),
         trailing: IconButton(
           icon: const Icon(Icons.delete),
-          onPressed: selectedColors.length > 1 ? () => _removeColor(index) : null,
+          onPressed:
+              selectedColors.length > 1 ? () => _removeColor(index) : null,
         ),
       ),
     );
@@ -282,10 +284,9 @@ class _CustomThemeDialogState extends State<CustomThemeDialog> {
     });
   }
 
-
   void _saveTheme() {
     final model = di<SettingsModel>();
-    
+
     // 如果启用渐变但只有一个颜色，自动添加第二个颜色
     if (useGradient && selectedColors.length < 2) {
       // 添加一个派生的第二个颜色
@@ -298,10 +299,10 @@ class _CustomThemeDialogState extends State<CustomThemeDialog> {
       );
       selectedColors.add(secondColor);
     }
-    
+
     model.setCustomThemeColors(selectedColors);
     model.setUseGradientTheme(useGradient);
-    
+
     Navigator.of(context).pop();
   }
-} 
+}

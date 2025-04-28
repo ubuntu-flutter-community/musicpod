@@ -12,7 +12,7 @@ extension ThemeModeX on ThemeMode {
       ThemeMode.light => l10n.light,
     };
   }
-      
+
   CustomThemeMode toCustomMode() {
     return switch (this) {
       ThemeMode.system => CustomThemeMode.system,
@@ -22,16 +22,16 @@ extension ThemeModeX on ThemeMode {
   }
 
   String get stringRepresentation => switch (this) {
-    ThemeMode.system => '自动',
-    ThemeMode.light => '亮色',
-    ThemeMode.dark => '暗色',
-  };
+        ThemeMode.system => '自动',
+        ThemeMode.light => '亮色',
+        ThemeMode.dark => '暗色',
+      };
 
   IconData get icon => switch (this) {
-    ThemeMode.system => Icons.brightness_auto,
-    ThemeMode.light => Icons.brightness_high,
-    ThemeMode.dark => Icons.brightness_2,
-  };
+        ThemeMode.system => Icons.brightness_auto,
+        ThemeMode.light => Icons.brightness_high,
+        ThemeMode.dark => Icons.brightness_2,
+      };
 }
 
 // 自定义枚举转换为ThemeMode

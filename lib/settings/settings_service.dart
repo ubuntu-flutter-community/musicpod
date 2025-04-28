@@ -186,7 +186,9 @@ class SettingsService {
   // 保存自定义主题颜色列表
   void setCustomThemeColors(List<Color> colors) {
     final colorValues = colors.map((e) => e.toARGB32()).toList();
-    _preferences.setString(_customThemeColors, jsonEncode(colorValues)).then(notify);
+    _preferences
+        .setString(_customThemeColors, jsonEncode(colorValues))
+        .then(notify);
   }
 
   // 是否使用渐变主题
@@ -194,9 +196,10 @@ class SettingsService {
   void setUseGradientTheme(bool value) {
     _preferences.setBool(_useGradientTheme, value).then(notify);
   }
-  
+
   // 渐变效果的透明度/强度 (0.0 - 1.0)
-  double get gradientOpacity => _preferences.getDouble(_gradientOpacity) ?? 0.25;
+  double get gradientOpacity =>
+      _preferences.getDouble(_gradientOpacity) ?? 0.25;
   void setGradientOpacity(double value) {
     // 限制在合理范围内
     final opacity = value.clamp(0.05, 0.8);

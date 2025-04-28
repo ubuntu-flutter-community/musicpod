@@ -21,19 +21,19 @@ class CustomGradientScaffold extends StatelessWidget with WatchItMixin {
 
   /// 页面内容
   final Widget body;
-  
+
   /// 应用栏
   final PreferredSizeWidget? appBar;
-  
+
   /// 浮动操作按钮
   final Widget? floatingActionButton;
-  
+
   /// 抽屉菜单
   final Widget? drawer;
-  
+
   /// 右侧抽屉
   final Widget? endDrawer;
-  
+
   /// 底部导航栏
   final Widget? bottomNavigationBar;
 
@@ -41,7 +41,7 @@ class CustomGradientScaffold extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final themeIndex = watchPropertyValue((SettingsModel m) => m.themeIndex);
     final isCustomTheme = themeIndex == 3; // 索引3表示自定义主题
-    
+
     // 如果不是自定义主题，直接使用普通Scaffold
     if (!isCustomTheme) {
       return Scaffold(
@@ -53,18 +53,21 @@ class CustomGradientScaffold extends StatelessWidget with WatchItMixin {
         bottomNavigationBar: bottomNavigationBar,
       );
     }
-    
+
     // 获取自定义主题设置
-    final customColors = watchPropertyValue((SettingsModel m) => m.customThemeColors);
-    final useGradient = watchPropertyValue((SettingsModel m) => m.useGradientTheme);
-    
+    final customColors =
+        watchPropertyValue((SettingsModel m) => m.customThemeColors);
+    final useGradient =
+        watchPropertyValue((SettingsModel m) => m.useGradientTheme);
+
     // 如果自定义主题没有启用渐变效果或颜色不足，使用普通Scaffold
     if (!useGradient || customColors.length < 2) {
       return Scaffold(
         appBar: appBar,
         // 单色背景时也添加微弱的颜色
-        backgroundColor: customColors.isNotEmpty 
-            ? customColors.first.withValues(alpha: 13) // 0.05 * 255 = 13，使用 withValues 替代 withOpacity
+        backgroundColor: customColors.isNotEmpty
+            ? customColors.first.withValues(
+                alpha: 13) // 0.05 * 255 = 13，使用 withValues 替代 withOpacity
             : null,
         body: body,
         floatingActionButton: floatingActionButton,
@@ -73,7 +76,7 @@ class CustomGradientScaffold extends StatelessWidget with WatchItMixin {
         bottomNavigationBar: bottomNavigationBar,
       );
     }
-    
+
     // 使用带渐变效果的Scaffold
     return GradientScaffold(
       colors: customColors,
@@ -86,4 +89,4 @@ class CustomGradientScaffold extends StatelessWidget with WatchItMixin {
       opacity: 0.12,
     );
   }
-} 
+}

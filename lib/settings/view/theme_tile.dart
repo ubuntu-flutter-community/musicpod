@@ -150,12 +150,13 @@ class CustomThemeTile extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final colors = watchPropertyValue((SettingsModel m) => m.customThemeColors);
-    final useGradient = watchPropertyValue((SettingsModel m) => m.useGradientTheme);
-    
+    final useGradient =
+        watchPropertyValue((SettingsModel m) => m.useGradientTheme);
+
     const height = 100.0;
     const width = 150.0;
     final borderRadius = BorderRadius.circular(12);
-    
+
     // 自定义容器
     final customContainer = Container(
       decoration: BoxDecoration(
@@ -170,7 +171,7 @@ class CustomThemeTile extends StatelessWidget with WatchItMixin {
         color: useGradient && colors.length > 1 ? null : colors.first,
       ),
     );
-    
+
     final titleBar = Container(
       height: kLargestSpace,
       decoration: BoxDecoration(
@@ -181,7 +182,7 @@ class CustomThemeTile extends StatelessWidget with WatchItMixin {
         ),
       ),
     );
-    
+
     return Stack(
       alignment: Alignment.topRight,
       children: [

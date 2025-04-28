@@ -104,7 +104,8 @@ class SettingsModel extends SafeChangeNotifier {
 
   // 自定义主题颜色列表
   List<Color> get customThemeColors => _service.customThemeColors;
-  void setCustomThemeColors(List<Color> colors) => _service.setCustomThemeColors(colors);
+  void setCustomThemeColors(List<Color> colors) =>
+      _service.setCustomThemeColors(colors);
 
   // 自定义主题是否使用渐变
   bool get useGradientTheme => _service.useGradientTheme;

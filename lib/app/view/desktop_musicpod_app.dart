@@ -32,17 +32,19 @@ class DesktopMusicPodApp extends StatelessWidget with WatchItMixin {
     final themeIndex = watchPropertyValue((SettingsModel m) => m.themeIndex);
     final color = accent ?? const Color(0xFFed3c63);
     final phoenix = phoenixTheme(color: color);
-    
+
     // 读取自定义主题设置
     final isCustomTheme = themeIndex == 3; // 索引3表示自定义主题
-    final customColors = watchPropertyValue((SettingsModel m) => m.customThemeColors);
-    final useGradient = watchPropertyValue((SettingsModel m) => m.useGradientTheme);
-    
+    final customColors =
+        watchPropertyValue((SettingsModel m) => m.customThemeColors);
+    final useGradient =
+        watchPropertyValue((SettingsModel m) => m.useGradientTheme);
+
     // 创建自定义主题
     ThemeData? customLightTheme;
     if (isCustomTheme && customColors.isNotEmpty) {
       final primaryColor = customColors.first;
-      
+
       // 创建更明显的自定义主题
       customLightTheme = ThemeData(
         useMaterial3: true,

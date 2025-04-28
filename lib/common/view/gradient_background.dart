@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 /// 渐变背景组件
-/// 
+///
 /// 为应用添加渐变背景效果，可应用于任何组件
 class GradientBackground extends StatelessWidget {
   /// 创建一个渐变背景
-  /// 
+  ///
   /// [colors] 渐变使用的颜色列表，至少需要2种颜色
   /// [child] 子组件
   /// [begin] 渐变开始位置
@@ -22,16 +22,16 @@ class GradientBackground extends StatelessWidget {
 
   /// 渐变颜色列表
   final List<Color> colors;
-  
+
   /// 子组件
   final Widget child;
-  
+
   /// 渐变开始位置
   final AlignmentGeometry begin;
-  
+
   /// 渐变结束位置
   final AlignmentGeometry end;
-  
+
   /// 渐变透明度
   final double opacity;
 
@@ -41,11 +41,12 @@ class GradientBackground extends StatelessWidget {
     if (colors.length == 1) {
       final alpha = (opacity * 255).toInt(); // 转换为int
       return ColoredBox(
-        color: colors.first.withAlpha(alpha), // 使用withAlpha替代withValues和withOpacity
+        color: colors.first
+            .withAlpha(alpha), // 使用withAlpha替代withValues和withOpacity
         child: child,
       );
     }
-    
+
     // 否则使用渐变背景
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -82,31 +83,31 @@ class GradientScaffold extends StatelessWidget {
 
   /// 渐变颜色列表
   final List<Color> colors;
-  
+
   /// 页面内容
   final Widget body;
-  
+
   /// 应用栏
   final PreferredSizeWidget? appBar;
-  
+
   /// 浮动操作按钮
   final Widget? floatingActionButton;
-  
+
   /// 抽屉菜单
   final Widget? drawer;
-  
+
   /// 右侧抽屉
   final Widget? endDrawer;
-  
+
   /// 底部导航栏
   final Widget? bottomNavigationBar;
-  
+
   /// 渐变开始位置
   final AlignmentGeometry begin;
-  
+
   /// 渐变结束位置
   final AlignmentGeometry end;
-  
+
   /// 渐变透明度
   final double opacity;
 
@@ -135,7 +136,7 @@ class GradientScaffold extends StatelessWidget {
 /// 为整个应用添加渐变背景的包装器
 class GradientAppWrapper extends StatelessWidget {
   /// 创建一个可以为整个应用添加渐变背景的包装器
-  /// 
+  ///
   /// 这个组件会保持应用原有的结构，只在顶层添加一个渐变层
   const GradientAppWrapper({
     super.key,
@@ -148,36 +149,36 @@ class GradientAppWrapper extends StatelessWidget {
 
   /// 渐变颜色列表
   final List<Color> colors;
-  
+
   /// 子应用
   final Widget child;
-  
+
   /// 渐变开始位置
   final AlignmentGeometry begin;
-  
+
   /// 渐变结束位置
   final AlignmentGeometry end;
-  
+
   /// 渐变透明度
   final double opacity;
 
   @override
   Widget build(BuildContext context) {
     // 使用Stack布局，在底层放置渐变背景，顶层放置应用内容
-    
+
     // 渐变颜色列表，确保至少有两种颜色
-    final gradientColors = colors.length < 2 
+    final gradientColors = colors.length < 2
         ? [
-            colors.first, 
+            colors.first,
             Color.fromARGB(
               colors.first.a.toInt(), // 使用原始属性，避免类型转换问题
-              colors.first.r.toInt(), 
-              colors.first.g.toInt(), 
+              colors.first.r.toInt(),
+              colors.first.g.toInt(),
               (colors.first.b.toInt() + 50) % 256,
             ),
-          ] 
+          ]
         : colors;
-    
+
     return Stack(
       children: [
         // 渐变背景层
@@ -187,7 +188,8 @@ class GradientAppWrapper extends StatelessWidget {
               gradient: LinearGradient(
                 colors: gradientColors.map((e) {
                   final alpha = (opacity * 255).toInt(); // 转换为int
-                  return e.withAlpha(alpha); // 使用withAlpha替代withValues和withOpacity
+                  return e
+                      .withAlpha(alpha); // 使用withAlpha替代withValues和withOpacity
                 }).toList(),
                 begin: begin,
                 end: end,
@@ -200,4 +202,4 @@ class GradientAppWrapper extends StatelessWidget {
       ],
     );
   }
-} 
+}
