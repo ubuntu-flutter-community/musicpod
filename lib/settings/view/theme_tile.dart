@@ -78,7 +78,7 @@ class ThemeTile extends StatelessWidget {
                       )),
           ),
         ),
-        Positioned(
+        const Positioned(
           right: 8,
           top: 5,
           child: Row(
@@ -86,21 +86,18 @@ class ThemeTile extends StatelessWidget {
             children: [
               Icon(
                 YaruIcons.window_minimize,
-                color:
-                    themeMode == ThemeMode.dark ? Colors.white : Colors.black,
+                color: Colors.black,
                 size: 15,
               ),
               Icon(
                 YaruIcons.window_maximize,
                 size: 15,
-                color:
-                    themeMode == ThemeMode.dark ? Colors.white : Colors.black,
+                color: Colors.black,
               ),
               Icon(
                 YaruIcons.window_close,
                 size: 15,
-                color:
-                    themeMode == ThemeMode.dark ? Colors.white : Colors.black,
+                color: Colors.black,
               ),
             ],
           ),
@@ -201,9 +198,9 @@ class CustomThemeTile extends StatelessWidget with WatchItMixin {
         const Positioned(
           right: 8,
           top: 5,
-          child: const Row(
+          child: Row(
             mainAxisSize: MainAxisSize.min,
-            children: const [
+            children: [
               Icon(
                 YaruIcons.window_minimize,
                 color: Colors.black,
