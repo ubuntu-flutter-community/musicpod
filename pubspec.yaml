@@ -31,6 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_cache_manager: ^3.4.1
+  flutter_colorpicker: ^1.1.0
   flutter_discord_rpc: ^1.0.0
   flutter_html: ^3.0.0-beta.2
   flutter_localizations:
