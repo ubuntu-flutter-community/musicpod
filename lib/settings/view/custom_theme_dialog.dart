@@ -292,8 +292,23 @@ class _CustomThemeDialogState extends State<CustomThemeDialog> {
   // 保存主题设置
   void _saveTheme() {
     final model = di<SettingsModel>();
+    
+    // 如果启用渐变但只有一个颜色，自动添加第二个颜色
+    if (useGradient && selectedColors.length < 2) {
+      // 添加一个派生的第二个颜色
+      final color = selectedColors.first;
+      final secondColor = Color.fromARGB(
+        color.alpha,
+        (color.red + 40) % 256,
+        (color.green + 40) % 256,
+        (color.blue + 40) % 256,
+      );
+      selectedColors.add(secondColor);
+    }
+    
     model.setCustomThemeColors(selectedColors);
     model.setUseGradientTheme(useGradient);
+    
     Navigator.of(context).pop();
   }
 } 

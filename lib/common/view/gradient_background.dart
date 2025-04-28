@@ -139,7 +139,7 @@ class GradientAppWrapper extends StatelessWidget {
     required this.child,
     this.begin = Alignment.topLeft,
     this.end = Alignment.bottomRight,
-    this.opacity = 0.08,
+    this.opacity = 0.15,
   });
 
   /// 渐变颜色列表
@@ -160,6 +160,12 @@ class GradientAppWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // 使用Stack布局，在底层放置渐变背景，顶层放置应用内容
+    
+    // 渐变颜色列表，确保至少有两种颜色
+    final gradientColors = colors.length < 2 
+        ? [colors.first, colors.first.withBlue((colors.first.blue + 50) % 256)] 
+        : colors;
+    
     return Stack(
       children: [
         // 渐变背景层
@@ -167,7 +173,7 @@ class GradientAppWrapper extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: colors.map((e) => e.withOpacity(opacity)).toList(),
+                colors: gradientColors.map((e) => e.withOpacity(opacity)).toList(),
                 begin: begin,
                 end: end,
               ),

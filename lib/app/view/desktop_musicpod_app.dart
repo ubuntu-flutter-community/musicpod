@@ -112,7 +112,7 @@ class DesktopMusicPodApp extends StatelessWidget with WatchItMixin {
         if (isCustomTheme && useGradient && customColors.length > 1) {
           return GradientAppWrapper(
             colors: customColors,
-            opacity: 0.25, // 增加透明度使渐变更明显
+            opacity: 0.35, // 增加透明度使渐变更明显
             child: child!,
           );
         }
