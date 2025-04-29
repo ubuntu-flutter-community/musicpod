@@ -124,8 +124,7 @@ class _ArtistPageState extends State<ArtistPage> {
                         title: widget.pageId,
                         image: ArtistRoundImageContainer(
                           artist: widget.pageId,
-                          height: kMaxAudioPageHeaderHeight,
-                          width: kMaxAudioPageHeaderHeight,
+                          dimension: kMaxAudioPageHeaderHeight,
                         ),
                         subTitleWidget: GenreBar(audios: artistAudios),
                         label: context.l10n.artist,

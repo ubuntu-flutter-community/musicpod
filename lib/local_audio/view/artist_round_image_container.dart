@@ -10,12 +10,11 @@ class ArtistRoundImageContainer extends StatefulWidget {
   const ArtistRoundImageContainer({
     super.key,
     required this.artist,
-    this.height,
-    this.width,
+    this.dimension,
   });
 
   final String artist;
-  final double? height, width;
+  final double? dimension;
 
   @override
   State<ArtistRoundImageContainer> createState() =>
@@ -54,8 +53,7 @@ class _ArtistRoundImageContainerState extends State<ArtistRoundImageContainer> {
                         path: e.path!,
                         fallback: const CoverBackground(),
                         fit: BoxFit.cover,
-                        height: widget.height,
-                        width: widget.width,
+                        dimension: widget.dimension,
                       ),
                     )
                     .toList(),
