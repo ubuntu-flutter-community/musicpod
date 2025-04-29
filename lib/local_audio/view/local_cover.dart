@@ -68,7 +68,7 @@ class _LocalCoverState extends State<LocalCover> {
             _cover!,
             fit: fit,
             height: widget.dimension ?? widget.height,
-            width: widget.width,
+            width: widget.dimension ?? widget.width,
             filterQuality: medium,
           )
         : FutureBuilder(
@@ -85,7 +85,7 @@ class _LocalCoverState extends State<LocalCover> {
                   snapshot.data!,
                   fit: fit,
                   height: widget.dimension ?? widget.height,
-                  width: widget.width,
+                  width: widget.dimension ?? widget.width,
                   filterQuality: medium,
                 );
               }

@@ -86,20 +86,26 @@ class LocalAudioModel extends SafeChangeNotifier {
   List<String>? get allGenres => _localAudioService.allGenres;
   List<String>? get allAlbumIDs => _localAudioService.allAlbumIDs;
 
-  List<Audio>? findAlbum(
+  String? findAlbumId({required String artist, required String album}) =>
+      _localAudioService.findAlbumId(artist: artist, album: album);
+
+  Future<List<Audio>?> findAlbum(
     String albumId, [
     AudioFilter audioFilter = AudioFilter.trackNumber,
   ]) =>
       _localAudioService.findAlbum(albumId, audioFilter);
 
-  List<Audio>? findTitlesOfArtist(
+  Future<String?> findCoverPath(String albumId) async =>
+      _localAudioService.findCoverPath(albumId);
+
+  Future<List<Audio>?> findTitlesOfArtist(
     String artist, [
     AudioFilter audioFilter = AudioFilter.album,
-  ]) =>
+  ]) async =>
       _localAudioService.findTitlesOfArtist(artist, audioFilter);
 
-  List<String>? findArtistsOfGenre(String genre) =>
-      _localAudioService.findArtistsOfGenre(genre);
+  Future<List<String>?> findAlbumsIDOfGenre(String genre) async =>
+      _localAudioService.findAlbumIDsOfGenre(genre);
 
   Set<Uint8List>? findLocalCovers({
     required List<Audio> audios,
@@ -135,7 +141,7 @@ class LocalAudioModel extends SafeChangeNotifier {
   }
 
   void addAudios(List<Audio> newAudios, {bool clear = false}) =>
-      _localAudioService.addAudios(newAudios, clear: clear);
+      _localAudioService.addAudiosAndBuildCollection(newAudios, clear: clear);
 
   @override
   Future<void> dispose() async {

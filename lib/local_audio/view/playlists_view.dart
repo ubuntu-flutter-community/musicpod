@@ -6,6 +6,7 @@ import '../../app/view/routing_manager.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/round_image_container.dart';
+import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../custom_content/view/custom_playlists_section.dart';
 import '../../extensions/build_context_x.dart';
@@ -98,6 +99,10 @@ class PlaylistsView extends StatelessWidget {
               if (id != PageIDs.customContent && id != PageIDs.likedAudios)
                 ArtistVignette(
                   text: id,
+                  backgroundColor: Colors.transparent,
+                  textColor: contrastColor(
+                    getAlphabetColor(id).scale(saturation: -0.2),
+                  ),
                 ),
             ],
           ),

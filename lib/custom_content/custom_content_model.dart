@@ -97,13 +97,18 @@ class CustomContentModel extends SafeChangeNotifier {
       _libraryService.playlistIDs.isNotEmpty ||
       _libraryService.favoriteAlbums.isNotEmpty;
   Future<bool> exportPlaylistsAndPinnedAlbumsToM3Us() async {
+    final albums = <({String id, List<Audio> audios})>[];
+    for (var e in _libraryService.favoriteAlbums) {
+      albums.add(
+        (id: e, audios: await _localAudioService.findAlbum(e) ?? []),
+      );
+    }
+
     final List<({String id, List<Audio> audios})> list = [
       ..._libraryService.playlistIDs.map(
         (e) => (id: e, audios: _libraryService.getPlaylistById(e) ?? []),
       ),
-      ..._libraryService.favoriteAlbums.map(
-        (e) => (id: e, audios: _localAudioService.findAlbum(e) ?? []),
-      ),
+      ...albums,
     ];
 
     final path = await _externalPathService.getPathOfDirectory();

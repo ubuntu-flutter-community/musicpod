@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/view/routing_manager.dart';
-import '../../common/data/audio.dart';
-import '../../common/view/tapable_text.dart';
+import '../data/audio.dart';
+import 'tapable_text.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../local_audio/view/genre_page.dart';
 
-class PlaylistGenreBar extends StatelessWidget {
-  const PlaylistGenreBar({
+class GenreBar extends StatelessWidget {
+  const GenreBar({
     super.key,
     required this.audios,
   });

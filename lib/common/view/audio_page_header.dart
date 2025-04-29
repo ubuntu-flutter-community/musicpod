@@ -12,6 +12,7 @@ class AudioPageHeader extends StatelessWidget {
     this.image,
     this.label,
     this.subTitle,
+    this.subTitleWidget,
     this.imageRadius,
     this.onSubTitleTab,
     this.onLabelTab,
@@ -24,6 +25,7 @@ class AudioPageHeader extends StatelessWidget {
   final Widget? image;
   final String? label;
   final String? subTitle;
+  final Widget? subTitleWidget;
   final void Function(String text)? onSubTitleTab;
   final void Function(String text)? onLabelTab;
 
@@ -75,7 +77,9 @@ class AudioPageHeader extends StatelessWidget {
               label: label,
               subTitle: subTitle,
               onSubTitleTab: onSubTitleTab,
-            ),
+            )
+          else if (subTitleWidget != null)
+            subTitleWidget!,
           if (description != null)
             Padding(
               padding: const EdgeInsets.only(top: 10),

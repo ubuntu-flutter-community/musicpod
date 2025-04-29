@@ -22,29 +22,33 @@ class SearchTypeFilterBar extends StatelessWidget with WatchItMixin {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
-      child: YaruChoiceChipBar(
-        goNextIcon: Icon(Iconz.goNext),
-        goPreviousIcon: Icon(Iconz.goBack),
-        style: YaruChoiceChipBarStyle.stack,
-        clearOnSelect: false,
-        selectedFirst: false,
-        onSelected: (i) {
-          searchModel.setSearchType(searchTypes.elementAt(i));
-          searchModel.search(manualFilter: true);
-        },
-        labels: searchTypes
-            .map(
-              (e) => Text(
-                getChipText(
-                  searchType: e,
-                  context: context,
-                  localSearchResult: localSearchResult,
-                  searchQuery: searchQuery,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: YaruChoiceChipBar(
+          showCheckMarks: false,
+          goNextIcon: Icon(Iconz.goNext),
+          goPreviousIcon: Icon(Iconz.goBack),
+          style: YaruChoiceChipBarStyle.wrap,
+          clearOnSelect: false,
+          selectedFirst: false,
+          onSelected: (i) {
+            searchModel.setSearchType(searchTypes.elementAt(i));
+            searchModel.search(manualFilter: true);
+          },
+          labels: searchTypes
+              .map(
+                (e) => Text(
+                  getChipText(
+                    searchType: e,
+                    context: context,
+                    localSearchResult: localSearchResult,
+                    searchQuery: searchQuery,
+                  ),
                 ),
-              ),
-            )
-            .toList(),
-        isSelected: searchTypes.map((e) => e == searchType).toList(),
+              )
+              .toList(),
+          isSelected: searchTypes.map((e) => e == searchType).toList(),
+        ),
       ),
     );
   }

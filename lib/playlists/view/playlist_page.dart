@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 import 'package:watch_it/watch_it.dart';
@@ -14,6 +13,7 @@ import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/audio_tile.dart';
+import '../../common/view/genre_bar.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/sliver_audio_page_control_panel.dart';
@@ -23,14 +23,12 @@ import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../local_audio/local_audio_model.dart';
-import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../local_audio/view/failed_import_snackbar.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import 'playlist_control_panel.dart';
-import 'playlist_genre_bar.dart';
 import 'playlist_header_image.dart';
 
 class PlaylistPage extends StatelessWidget with WatchItMixin {
@@ -41,9 +39,6 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-
-    final model = di<LocalAudioModel>();
-    final libraryModel = di<LibraryModel>();
 
     // This is needed to be notified about both size changes and also reordering
     watchPropertyValue(
@@ -62,7 +57,8 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
         Future.delayed(
           const Duration(milliseconds: 300),
         ).then(
-          (_) => libraryModel.updatePlaylist(id: pageId, audios: playlist),
+          (_) =>
+              di<LibraryModel>().updatePlaylist(id: pageId, audios: playlist),
         );
       },
       onPerformDrop: (e) async {
@@ -129,18 +125,6 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
           ],
         ),
         body: _PlaylistPageBody(
-          onAlbumTap: (text) {
-            final albumAudios = model.findAlbum(text);
-            if (albumAudios?.firstOrNull == null) return;
-            final id = albumAudios!.first.albumId;
-            if (id == null) return;
-            di<RoutingManager>().push(
-              builder: (_) {
-                return AlbumPage(id: id);
-              },
-              pageId: id,
-            );
-          },
           onArtistTap: (text) => di<RoutingManager>().push(
             builder: (_) => ArtistPage(pageId: text),
             pageId: text,
@@ -162,7 +146,6 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
     required this.pageId,
     required this.audios,
     this.image,
-    this.onAlbumTap,
     this.onArtistTap,
   });
 
@@ -170,7 +153,6 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
   final List<Audio> audios;
   final Widget? image;
 
-  final void Function(String text)? onAlbumTap;
   final void Function(String text)? onArtistTap;
 
   @override
@@ -191,7 +173,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
       label: di<LibraryModel>().externalPlaylists.contains(pageId)
           ? '${l10n.playlist} (${l10n.external})'
           : l10n.playlist,
-      description: PlaylistGenreBar(audios: audios),
+      description: GenreBar(audios: audios),
     );
 
     return LayoutBuilder(

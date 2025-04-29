@@ -10,6 +10,7 @@ import '../../common/view/copy_clipboard_content.dart';
 import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
+import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_model.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
@@ -202,6 +203,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     switch (audio?.audioType) {
       case AudioType.local:
         _onLocalAudioTitleTap(
+          context: context,
           audio: audio!,
           appModel: appModel,
           routingManager: routingManager,
@@ -225,12 +227,20 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
   }
 
   void _onLocalAudioTitleTap({
+    required BuildContext context,
     required Audio audio,
     required AppModel appModel,
     required RoutingManager routingManager,
     required LocalAudioModel localAudioModel,
   }) {
-    if (audio.albumId == null) return;
+    if (audio.albumId == null) {
+      showSnackBar(
+        context: context,
+        content: Text(context.l10n.albumNotFound),
+      );
+      return;
+    }
+
     appModel.setFullWindowMode(false);
     routingManager.push(
       builder: (_) => AlbumPage(id: audio.albumId!),

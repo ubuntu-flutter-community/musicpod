@@ -10,12 +10,11 @@ class ArtistRoundImageContainer extends StatefulWidget {
   const ArtistRoundImageContainer({
     super.key,
     required this.artist,
-    this.height,
-    this.width,
+    this.dimension,
   });
 
   final String artist;
-  final double? height, width;
+  final double? dimension;
 
   @override
   State<ArtistRoundImageContainer> createState() =>
@@ -23,37 +22,45 @@ class ArtistRoundImageContainer extends StatefulWidget {
 }
 
 class _ArtistRoundImageContainerState extends State<ArtistRoundImageContainer> {
-  late List<Audio> artistAudios;
+  late Future<List<Audio>?> _artistAudios;
 
   @override
   void initState() {
     super.initState();
-    artistAudios =
-        di<LocalAudioModel>().findTitlesOfArtist(widget.artist) ?? [];
+    _artistAudios = di<LocalAudioModel>().findTitlesOfArtist(widget.artist);
   }
 
   @override
   Widget build(BuildContext context) {
-    return RoundImageContainer(
-      images: artistAudios.isEmpty
-          ? []
-          : di<LocalAudioModel>()
-              .findUniqueAlbumAudios(artistAudios)
-              .where(
-                (e) => e.albumId != null && e.path != null,
-              )
-              .map(
-                (e) => LocalCover(
-                  albumId: e.albumId!,
-                  path: e.path!,
-                  fallback: const CoverBackground(),
-                  fit: BoxFit.cover,
-                  height: widget.height,
-                  width: widget.width,
-                ),
-              )
-              .toList(),
-      fallBackText: widget.artist,
+    return FutureBuilder(
+      future: _artistAudios,
+      builder: (context, snapshot) {
+        final artistAudios = snapshot.data ?? [];
+        return AnimatedOpacity(
+          duration: const Duration(milliseconds: 300),
+          opacity: artistAudios.isEmpty ? 0 : 1,
+          child: RoundImageContainer(
+            images: artistAudios.isEmpty
+                ? []
+                : di<LocalAudioModel>()
+                    .findUniqueAlbumAudios(artistAudios)
+                    .where(
+                      (e) => e.albumId != null && e.path != null,
+                    )
+                    .map(
+                      (e) => LocalCover(
+                        albumId: e.albumId!,
+                        path: e.path!,
+                        fallback: const CoverBackground(),
+                        fit: BoxFit.cover,
+                        dimension: widget.dimension,
+                      ),
+                    )
+                    .toList(),
+            fallBackText: widget.artist,
+          ),
+        );
+      },
     );
   }
 }
