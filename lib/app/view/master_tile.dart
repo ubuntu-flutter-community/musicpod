@@ -212,6 +212,6 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
 
     return libraryModel.getPodcast(pageId) ??
         libraryModel.getPlaylistById(pageId) ??
-        di<LocalAudioModel>().findAlbum(pageId);
+        (await di<LocalAudioModel>().findAlbum(pageId));
   }
 }

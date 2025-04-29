@@ -100,10 +100,28 @@ class LocalAudioService {
     }
   }
 
-  List<Audio>? findAlbum(
+  String? findAlbumId({required String artist, required String album}) =>
+      (_allAlbumIDs ?? [])
+          .firstWhereOrNull((e) => e == Audio.createAlbumId(artist, album));
+
+  final Map<String, List<Audio>?> _albumCache = {};
+  Future<List<Audio>?> findAlbum(
+    String albumId, [
+    AudioFilter audioFilter = AudioFilter.trackNumber,
+  ]) async {
+    await init();
+    return _findAlbum(albumId);
+  }
+
+  List<Audio>? _findAlbum(
     String albumId, [
     AudioFilter audioFilter = AudioFilter.trackNumber,
   ]) {
+    final maybe = _albumCache[albumId];
+    if (maybe != null) {
+      return maybe;
+    }
+
     final album = audios?.where(
       (a) => a.albumId != null && a.albumId == albumId,
     );
@@ -118,18 +136,39 @@ class LocalAudioService {
       albumList = splitByDiscs(albumList).toList();
     }
 
-    return albumList;
+    final list = albumList;
+    _albumCache[albumId] = list;
+    return list;
   }
 
-  List<Audio>? findTitlesOfArtist(
+  final Map<String, String?> _coverPathCache = {};
+  Future<String?> findCoverPath(String albumId) async {
+    final maybe = _coverPathCache[albumId];
+    if (maybe != null) {
+      return maybe;
+    }
+
+    final albumAudios = await findAlbum(albumId);
+    _coverPathCache[albumId] =
+        albumAudios?.firstWhereOrNull((e) => e.path != null)?.path;
+    return _coverPathCache[albumId];
+  }
+
+  final Map<String, List<Audio>?> _titlesOfArtistCache = {};
+  Future<List<Audio>?> findTitlesOfArtist(
     String artist, [
     AudioFilter audioFilter = AudioFilter.album,
-  ]) {
-    final album = audios?.where(
+  ]) async {
+    await init();
+    final maybe = _titlesOfArtistCache[artist];
+    if (maybe != null) {
+      return maybe;
+    }
+    final artistTitles = audios?.where(
       (a) => a.artist != null && a.artist == artist,
     );
 
-    var artistList = album?.toList();
+    var artistList = artistTitles?.toList();
     if (artistList != null) {
       sortListByAudioFilter(
         audioFilter: audioFilter,
@@ -137,22 +176,35 @@ class LocalAudioService {
       );
       artistList = splitByDiscs(artistList).toList();
     }
-    return artistList != null ? List.from(artistList) : null;
+    final list = artistList != null ? List<Audio>.from(artistList) : null;
+
+    _titlesOfArtistCache[artist] = list;
+
+    return list;
   }
 
-  List<String>? findArtistsOfGenre(String genre) {
+  final Map<String, List<String>?> _albumIDsOfGenreCache = {};
+  Future<List<String>?> findAlbumIDsOfGenre(String genre) async {
+    await init();
     if (_audios == null) return null;
-    final artistsOfGenre = <String>[];
+    final maybe = _albumIDsOfGenreCache[genre];
+    if (maybe != null) {
+      return maybe;
+    }
+
+    final albumIDsOfGenre = <String>[];
 
     for (var artistAudio in _audios!) {
       if (artistAudio.genre?.trim().isNotEmpty == true &&
           artistAudio.genre == genre &&
-          artistsOfGenre.none((e) => e == artistAudio.artist)) {
-        artistsOfGenre.add(artistAudio.artist!);
+          albumIDsOfGenre.none((e) => e == artistAudio.albumId)) {
+        albumIDsOfGenre.add(artistAudio.albumId!);
       }
     }
 
-    return artistsOfGenre;
+    _albumIDsOfGenreCache[genre] = albumIDsOfGenre;
+
+    return albumIDsOfGenre;
   }
 
   Set<Uint8List>? findLocalCovers({
@@ -262,7 +314,7 @@ class LocalAudioService {
       _fileWatcher = FileWatcher(dir);
     }
 
-    addAudios(
+    addAudiosAndBuildCollection(
       result.audios,
       clear: forceInit,
     );
@@ -270,8 +322,15 @@ class LocalAudioService {
 
   Future<void> dispose() async => _audiosController.close();
 
-  void addAudios(List<Audio> newAudios, {bool clear = false}) {
+  void addAudiosAndBuildCollection(
+    List<Audio> newAudios, {
+    bool clear = false,
+  }) {
     if (clear) {
+      _albumCache.clear();
+      _titlesOfArtistCache.clear();
+      _albumIDsOfGenreCache.clear();
+      _coverPathCache.clear();
       _audios = null;
       _audiosController.add(true);
     }
@@ -286,10 +345,6 @@ class LocalAudioService {
       _audios = set.toList();
     }
 
-    _buildLocalLibrary();
-  }
-
-  void _buildLocalLibrary() {
     _sortAllTitles();
     _findAllArtists();
     findAllAlbumIDs();

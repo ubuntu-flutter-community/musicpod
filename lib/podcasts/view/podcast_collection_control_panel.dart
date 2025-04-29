@@ -40,6 +40,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
         Expanded(
           child: Center(
             child: YaruChoiceChipBar(
+              showCheckMarks: false,
               goNextIcon: Icon(Iconz.goNext),
               goPreviousIcon: Icon(Iconz.goBack),
               style: YaruChoiceChipBarStyle.wrap,

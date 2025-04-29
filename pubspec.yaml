@@ -90,7 +90,7 @@ dependencies:
   yaru:
     git:
       url: https://github.com/ubuntu/yaru.dart
-      ref: 7fbf081ae7de2602d9f1f142a02ff625a423e4db
+      ref: b75bb6e2b3c30126b17d73a67577ad43f5c65d7c
   yaru_window: ^0.2.1+1
   yaru_window_linux: ^0.2.0+1
 

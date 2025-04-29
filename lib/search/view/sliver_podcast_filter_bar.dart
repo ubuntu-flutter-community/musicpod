@@ -27,6 +27,7 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: YaruChoiceChipBar(
+        showCheckMarks: false,
         goNextIcon: Icon(Iconz.goNext),
         goPreviousIcon: Icon(Iconz.goBack),
         style: YaruChoiceChipBarStyle.stack,

@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -75,7 +74,7 @@ class AlbumsView extends StatelessWidget with WatchItMixin {
   }
 }
 
-class AlbumCard extends StatelessWidget {
+class AlbumCard extends StatefulWidget {
   const AlbumCard({
     super.key,
     required this.id,
@@ -86,41 +85,56 @@ class AlbumCard extends StatelessWidget {
   final bool pinned;
 
   @override
-  Widget build(BuildContext context) {
-    final playerModel = di<PlayerModel>();
-    final albumAudios = di<LocalAudioModel>().findAlbum(id);
-    const fallback = CoverBackground();
+  State<AlbumCard> createState() => _AlbumCardState();
+}
 
-    final path = albumAudios?.firstWhereOrNull((e) => e.path != null)?.path;
+class _AlbumCardState extends State<AlbumCard> {
+  late Future<String?> _pathFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _pathFuture = di<LocalAudioModel>().findCoverPath(widget.id);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    const fallback = CoverBackground();
 
     return Stack(
       alignment: Alignment.center,
       children: [
-        AudioCard(
-          bottom: AudioCardBottom(text: id.albumOfId),
-          image: path != null
-              ? LocalCover(
-                  dimension: audioCardDimension,
-                  albumId: id,
-                  path: path,
-                  fallback: fallback,
-                )
-              : const CoverBackground(),
-          background: fallback,
-          onTap: albumAudios == null
-              ? null
-              : () => di<RoutingManager>().push(
-                    builder: (context) => AlbumPage(id: id),
-                    pageId: id,
-                  ),
-          onPlay: albumAudios == null || albumAudios.isEmpty
-              ? null
-              : () => playerModel.startPlaylist(
-                    audios: albumAudios,
-                    listName: id,
-                  ),
+        FutureBuilder(
+          future: _pathFuture,
+          builder: (context, snapshot) {
+            final path = snapshot.data;
+            return AudioCard(
+              bottom: AudioCardBottom(text: widget.id.albumOfId),
+              image: AnimatedOpacity(
+                opacity: path == null ? 0 : 1,
+                duration: const Duration(milliseconds: 300),
+                child: path != null
+                    ? LocalCover(
+                        dimension: audioCardDimension,
+                        albumId: widget.id,
+                        path: path,
+                        fallback: fallback,
+                      )
+                    : null,
+              ),
+              background: fallback,
+              onTap: () => di<RoutingManager>().push(
+                builder: (context) => AlbumPage(id: widget.id),
+                pageId: widget.id,
+              ),
+              onPlay: () async => di<PlayerModel>().startPlaylist(
+                audios: await di<LocalAudioModel>().findAlbum(widget.id) ?? [],
+                listName: widget.id,
+              ),
+            );
+          },
         ),
-        if (pinned)
+        if (widget.pinned)
           Positioned(
             left: AppConfig.isMobilePlatform ? 6 : 5,
             bottom:
@@ -128,7 +142,7 @@ class AlbumCard extends StatelessWidget {
             child: AudioCardVignette(
               iconData: Iconz.pinFilled,
               onTap: () => di<LibraryModel>().removeFavoriteAlbum(
-                id,
+                widget.id,
                 onFail: () => showSnackBar(
                   context: context,
                   content: Text(context.l10n.cantUnpinEmptyAlbum),
