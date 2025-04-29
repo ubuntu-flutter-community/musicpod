@@ -13,7 +13,7 @@ import '../../l10n/l10n.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import '../local_audio_model.dart';
-import 'artists_view.dart';
+import 'album_view.dart';
 
 class GenrePage extends StatefulWidget {
   const GenrePage({required this.genre, super.key});
@@ -25,16 +25,14 @@ class GenrePage extends StatefulWidget {
 }
 
 class _GenrePageState extends State<GenrePage> {
-  List<String>? artistAudiosWithGenre;
+  late Future<List<String>?> _albumIDsOfGenre;
 
   @override
   void initState() {
     super.initState();
     if (context.mounted) {
-      setState(
-        () => artistAudiosWithGenre =
-            di<LocalAudioModel>().findArtistsOfGenre(widget.genre),
-      );
+      _albumIDsOfGenre =
+          di<LocalAudioModel>().findAlbumsIDOfGenre(widget.genre);
     }
   }
 
@@ -77,8 +75,11 @@ class _GenrePageState extends State<GenrePage> {
                     .copyWith(
                   bottom: bottomPlayerPageGap,
                 ),
-                sliver: ArtistsView(
-                  artists: artistAudiosWithGenre,
+                sliver: FutureBuilder(
+                  future: _albumIDsOfGenre,
+                  builder: (context, snapshot) => AlbumsView(
+                    albumIDs: snapshot.data,
+                  ),
                 ),
               ),
             ],

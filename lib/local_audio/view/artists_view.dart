@@ -57,9 +57,8 @@ class ArtistsView extends StatelessWidget {
                 width: double.infinity,
                 height: double.infinity,
                 child: ArtistRoundImageContainer(
+                  key: ValueKey(artistName),
                   artist: artistName,
-                  height: audioCardDimension,
-                  width: audioCardDimension,
                 ),
               ),
               ArtistVignette(text: text),

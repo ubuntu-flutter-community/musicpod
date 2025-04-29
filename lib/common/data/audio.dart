@@ -408,11 +408,14 @@ class Audio {
     final artistName = artist;
     return albumName == null && artistName == null
         ? null
-        : '${artistName ?? ''}$albumIdSplitter${albumName ?? ''}'.replaceAll(
-            albumIdReplacement,
-            albumIdReplacer,
-          );
+        : createAlbumId(artistName, albumName);
   }
+
+  static String createAlbumId(String? artistName, String? albumName) =>
+      '${artistName ?? ''}$albumIdSplitter${albumName ?? ''}'.replaceAll(
+        albumIdReplacement,
+        albumIdReplacer,
+      );
 
   // Note this assumes that no artist or no album includes ___ on their own =)
   static const String albumIdSplitter =

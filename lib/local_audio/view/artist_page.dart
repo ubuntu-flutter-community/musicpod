@@ -14,12 +14,15 @@ import '../../common/view/avatar_play_button.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/like_all_icon_button.dart';
+import '../../common/view/progress.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/sliver_audio_page_control_panel.dart';
 import '../../common/view/sliver_audio_tile_list.dart';
+import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
+import '../../common/view/genre_bar.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import '../local_audio_model.dart';
@@ -41,33 +44,31 @@ class ArtistPage extends StatefulWidget with WatchItStatefulWidgetMixin {
 }
 
 class _ArtistPageState extends State<ArtistPage> {
-  late List<Audio> artistAudios;
+  late Future<List<Audio>?> _artistAudios;
 
   @override
   void initState() {
     super.initState();
-    artistAudios =
-        di<LocalAudioModel>().findTitlesOfArtist(widget.pageId) ?? [];
+    _artistAudios = di<LocalAudioModel>().findTitlesOfArtist(widget.pageId);
   }
 
   @override
   Widget build(BuildContext context) {
     final model = di<LocalAudioModel>();
 
-    final albumIDs = model.findAllAlbumIDs(artist: widget.pageId, clean: false);
-
-    if (albumIDs == null) {
-      return const SizedBox.shrink();
-    }
-
     final useGridView =
         watchPropertyValue((LocalAudioModel m) => m.useArtistGridView);
 
-    void onAlbumTap(text) {
-      final audios = model.findAlbum(text);
-      if (audios?.firstOrNull == null) return;
-      final id = audios!.first.albumId;
-      if (id == null) return;
+    void onAlbumTap(String text) {
+      final id = model.findAlbumId(artist: widget.pageId, album: text);
+
+      if (id == null) {
+        showSnackBar(
+          context: context,
+          content: Text(context.l10n.nothingFound),
+        );
+        return;
+      }
 
       di<RoutingManager>().push(
         builder: (_) => AlbumPage(id: id),
@@ -99,63 +100,77 @@ class _ArtistPageState extends State<ArtistPage> {
           ),
         ],
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return CustomScrollView(
-            slivers: [
-              SliverPadding(
-                padding: getAdaptiveHorizontalPadding(
-                  constraints: constraints,
-                  min: 40,
-                ),
-                sliver: SliverToBoxAdapter(
-                  child: AudioPageHeader(
-                    imageRadius: BorderRadius.circular(10000),
-                    title: widget.pageId,
-                    image: ArtistRoundImageContainer(
-                      artist: widget.pageId,
-                      height: kMaxAudioPageHeaderHeight,
-                      width: kMaxAudioPageHeaderHeight,
+      body: FutureBuilder(
+        future: _artistAudios,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: Progress());
+          }
+
+          final artistAudios = snapshot.data!;
+
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              return CustomScrollView(
+                slivers: [
+                  SliverPadding(
+                    padding: getAdaptiveHorizontalPadding(
+                      constraints: constraints,
+                      min: 40,
                     ),
-                    subTitle: artistAudios.firstOrNull?.genre,
-                    label: context.l10n.artist,
-                    onLabelTab: onAlbumTap,
-                    onSubTitleTab: onSubTitleTab,
+                    sliver: SliverToBoxAdapter(
+                      child: AudioPageHeader(
+                        imageRadius: BorderRadius.circular(10000),
+                        title: widget.pageId,
+                        image: ArtistRoundImageContainer(
+                          artist: widget.pageId,
+                          height: kMaxAudioPageHeaderHeight,
+                          width: kMaxAudioPageHeaderHeight,
+                        ),
+                        subTitleWidget: GenreBar(audios: artistAudios),
+                        label: context.l10n.artist,
+                        onLabelTab: onAlbumTap,
+                        onSubTitleTab: onSubTitleTab,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              SliverAudioPageControlPanel(
-                controlPanel: _ArtistPageControlPanel(
-                  pageId: widget.pageId,
-                  audios: artistAudios,
-                ),
-              ),
-              if (useGridView)
-                SliverPadding(
-                  padding:
-                      getAdaptiveHorizontalPadding(constraints: constraints)
-                          .copyWith(
-                    bottom: bottomPlayerPageGap,
+                  SliverAudioPageControlPanel(
+                    controlPanel: _ArtistPageControlPanel(
+                      pageId: widget.pageId,
+                      audios: artistAudios,
+                    ),
                   ),
-                  sliver: AlbumsView(
-                    albumIDs: albumIDs,
-                  ),
-                )
-              else
-                SliverPadding(
-                  padding:
-                      getAdaptiveHorizontalPadding(constraints: constraints)
-                          .copyWith(
-                    bottom: bottomPlayerPageGap,
-                  ),
-                  sliver: SliverAudioTileList(
-                    audios: artistAudios,
-                    pageId: widget.pageId,
-                    audioPageType: AudioPageType.artist,
-                    onSubTitleTab: onAlbumTap,
-                  ),
-                ),
-            ],
+                  if (useGridView)
+                    SliverPadding(
+                      padding:
+                          getAdaptiveHorizontalPadding(constraints: constraints)
+                              .copyWith(
+                        bottom: bottomPlayerPageGap,
+                      ),
+                      sliver: AlbumsView(
+                        albumIDs: model.findAllAlbumIDs(
+                          artist: widget.pageId,
+                          clean: false,
+                        ),
+                      ),
+                    )
+                  else
+                    SliverPadding(
+                      padding:
+                          getAdaptiveHorizontalPadding(constraints: constraints)
+                              .copyWith(
+                        bottom: bottomPlayerPageGap,
+                      ),
+                      sliver: SliverAudioTileList(
+                        audios: artistAudios,
+                        pageId: widget.pageId,
+                        audioPageType: AudioPageType.artist,
+                        onSubTitleTab: onAlbumTap,
+                      ),
+                    ),
+                ],
+              );
+            },
           );
         },
       ),

@@ -6,6 +6,7 @@ import '../../app/view/routing_manager.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/round_image_container.dart';
 import '../../common/view/sliver_fill_remaining_progress.dart';
+import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import 'genre_page.dart';
 
@@ -37,6 +38,8 @@ class GenresView extends StatelessWidget {
       gridDelegate: kDiskGridDelegate,
       itemBuilder: (context, index) {
         final text = genres!.elementAt(index);
+        final color = getAlphabetColor(text).scale(saturation: -0.2);
+        final textColor = contrastColor(color);
         return YaruSelectableContainer(
           selected: false,
           onTap: () => di<RoutingManager>().push(
@@ -55,9 +58,14 @@ class GenresView extends StatelessWidget {
                 child: RoundImageContainer(
                   images: [],
                   fallBackText: text,
+                  backgroundColor: color,
                 ),
               ),
-              ArtistVignette(text: text),
+              ArtistVignette(
+                text: text,
+                backgroundColor: Colors.transparent,
+                textColor: textColor,
+              ),
             ],
           ),
         );

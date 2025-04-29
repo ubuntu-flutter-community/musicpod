@@ -9,7 +9,9 @@ import '../../common/view/audio_page_type.dart';
 import '../../common/view/audio_tile_option_button.dart';
 import '../../common/view/avatar_play_button.dart';
 import '../../common/view/cover_background.dart';
+import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
+import '../../common/view/progress.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/sliver_audio_page.dart';
 import '../../common/view/snackbars.dart';
@@ -35,7 +37,7 @@ class AlbumPage extends StatefulWidget with WatchItStatefulWidgetMixin {
 }
 
 class _AlbumPageState extends State<AlbumPage> {
-  late List<Audio> album;
+  late Future<List<Audio>?> _album;
 
   @override
   void initState() {
@@ -43,27 +45,43 @@ class _AlbumPageState extends State<AlbumPage> {
     getAlbum();
   }
 
-  void getAlbum() => album = di<LocalAudioModel>().findAlbum(widget.id) ?? [];
+  void getAlbum() => _album = di<LocalAudioModel>().findAlbum(widget.id);
 
   @override
   Widget build(BuildContext context) {
     watchPropertyValue((LocalAudioModel m) {
-      setState(() => getAlbum());
+      getAlbum();
       return m.audios.hashCode;
     });
 
-    return SliverAudioPage(
-      pageId: widget.id,
-      audioPageType: AudioPageType.album,
-      audios: album,
-      image: AlbumPageImage(audio: album.firstOrNull),
-      noSearchResultIcons: const AnimatedEmoji(AnimatedEmojis.bubbles),
-      noSearchResultMessage: Text(context.l10n.albumNotFound),
-      pageTitle: album.firstWhereOrNull((e) => e.album != null)?.album,
-      pageSubTitle: album.firstWhereOrNull((e) => e.artist != null)?.artist,
-      onPageSubTitleTab: onArtistTap,
-      onPageLabelTab: onArtistTap,
-      controlPanel: AlbumPageControlButton(album: album, id: widget.id),
+    return FutureBuilder(
+      future: _album,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Scaffold(
+            appBar: HeaderBar(adaptive: true),
+            body: Center(
+              child: Progress(),
+            ),
+          );
+        }
+
+        final album = snapshot.data!;
+
+        return SliverAudioPage(
+          pageId: widget.id,
+          audioPageType: AudioPageType.album,
+          audios: album,
+          image: AlbumPageImage(audio: album.firstOrNull),
+          noSearchResultIcons: const AnimatedEmoji(AnimatedEmojis.bubbles),
+          noSearchResultMessage: Text(context.l10n.albumNotFound),
+          pageTitle: album.firstWhereOrNull((e) => e.album != null)?.album,
+          pageSubTitle: album.firstWhereOrNull((e) => e.artist != null)?.artist,
+          onPageSubTitleTab: onArtistTap,
+          onPageLabelTab: onArtistTap,
+          controlPanel: AlbumPageControlButton(album: album, id: widget.id),
+        );
+      },
     );
   }
 
@@ -83,12 +101,12 @@ class AlbumPageSideBarIcon extends StatefulWidget {
 }
 
 class _AlbumPageSideBarIconState extends State<AlbumPageSideBarIcon> {
-  Audio? audio;
+  late Future<String?> _future;
 
   @override
   void initState() {
     super.initState();
-    audio = di<LocalAudioModel>().findAlbum(widget.albumId)?.firstOrNull;
+    _future = di<LocalAudioModel>().findCoverPath(widget.albumId);
   }
 
   @override
@@ -100,16 +118,22 @@ class _AlbumPageSideBarIconState extends State<AlbumPageSideBarIcon> {
       ),
     );
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(5),
-      child: audio == null || audio?.canHaveLocalCover == false
-          ? fallBack
-          : LocalCover(
-              albumId: audio!.albumId!,
-              path: audio!.path!,
-              fallback: fallBack,
-              dimension: sideBarImageSize,
-            ),
+    return FutureBuilder(
+      future: _future,
+      builder: (context, snapshot) {
+        final path = snapshot.data;
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(5),
+          child: path == null
+              ? fallBack
+              : LocalCover(
+                  albumId: widget.albumId,
+                  path: path,
+                  fallback: fallBack,
+                  dimension: sideBarImageSize,
+                ),
+        );
+      },
     );
   }
 }

@@ -57,29 +57,34 @@ class RadioLibPage extends StatelessWidget with WatchItMixin {
                 child: Center(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5),
-                    child: YaruChoiceChipBar(
-                      goNextIcon: Icon(Iconz.goNext),
-                      goPreviousIcon: Icon(Iconz.goBack),
-                      selectedFirst: false,
-                      clearOnSelect: false,
-                      onSelected: (index) => radioModel.setRadioCollectionView(
-                        RadioCollectionView.values[index],
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: YaruChoiceChipBar(
+                        showCheckMarks: false,
+                        goNextIcon: Icon(Iconz.goNext),
+                        goPreviousIcon: Icon(Iconz.goBack),
+                        selectedFirst: false,
+                        clearOnSelect: false,
+                        onSelected: (index) =>
+                            radioModel.setRadioCollectionView(
+                          RadioCollectionView.values[index],
+                        ),
+                        style: YaruChoiceChipBarStyle.wrap,
+                        labels: [
+                          Text(
+                            context.l10n.station,
+                          ),
+                          Text(
+                            context.l10n.tags,
+                          ),
+                          Text(
+                            context.l10n.hearingHistory,
+                          ),
+                        ],
+                        isSelected: RadioCollectionView.values
+                            .map((e) => e == radioCollectionView)
+                            .toList(),
                       ),
-                      style: YaruChoiceChipBarStyle.wrap,
-                      labels: [
-                        Text(
-                          context.l10n.station,
-                        ),
-                        Text(
-                          context.l10n.tags,
-                        ),
-                        Text(
-                          context.l10n.hearingHistory,
-                        ),
-                      ],
-                      isSelected: RadioCollectionView.values
-                          .map((e) => e == radioCollectionView)
-                          .toList(),
                     ),
                   ),
                 ),
