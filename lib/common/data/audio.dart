@@ -307,6 +307,10 @@ class Audio {
       printMessageInDebugMode(error);
       onError?.call(file.path);
       audio = Audio._localWithoutMetadata(path: file.path);
+    } catch (error) {
+      printMessageInDebugMode(error);
+      onError?.call(file.path);
+      audio = Audio._localWithoutMetadata(path: file.path);
     }
     return audio;
   }
