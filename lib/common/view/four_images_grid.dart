@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'theme.dart';
+
 class FourImagesGrid extends StatelessWidget {
   const FourImagesGrid({
     super.key,
@@ -9,34 +11,32 @@ class FourImagesGrid extends StatelessWidget {
   final List<Widget> images;
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: Row(
-            children: [
-              Expanded(
-                child: images.elementAt(0),
+  Widget build(BuildContext context) => Column(
+        children: space(
+          heightGap: 0,
+          expandAll: true,
+          children: [
+            Row(
+              children: space(
+                widthGap: 0,
+                expandAll: true,
+                children: [
+                  images.elementAt(0),
+                  images.elementAt(1),
+                ],
               ),
-              Expanded(
-                child: images.elementAt(1),
+            ),
+            Row(
+              children: space(
+                widthGap: 0,
+                expandAll: true,
+                children: [
+                  images.elementAt(2),
+                  images.elementAt(3),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-        Expanded(
-          child: Row(
-            children: [
-              Expanded(
-                child: images.elementAt(2),
-              ),
-              Expanded(
-                child: images.elementAt(3),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
+      );
 }

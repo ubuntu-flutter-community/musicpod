@@ -39,16 +39,16 @@ class ArtistsView extends StatelessWidget {
       gridDelegate: kDiskGridDelegate,
       itemBuilder: (context, index) {
         final artistName = artists!.elementAt(index);
-
-        final text = artists!.elementAt(index);
+        final radius = BorderRadius.circular(300);
 
         return YaruSelectableContainer(
+          key: ValueKey(artistName),
           selected: false,
           onTap: () => di<RoutingManager>().push(
             builder: (_) => ArtistPage(pageId: artistName),
             pageId: artistName,
           ),
-          borderRadius: BorderRadius.circular(300),
+          borderRadius: radius,
           child: Stack(
             alignment: Alignment.center,
             children: [
@@ -61,7 +61,7 @@ class ArtistsView extends StatelessWidget {
                   artist: artistName,
                 ),
               ),
-              ArtistVignette(text: text),
+              ArtistVignette(text: artistName),
             ],
           ),
         );
