@@ -1367,5 +1367,11 @@
   "localPictureTypeBrightColouredFish": "Pesce di colore brillante",
   "@localPictureTypeBrightColouredFish": {},
   "albumNotFound": "Questo album non esiste o hai rimosso la playlist esterna (file M3U/PLS) da cui è stato caricato.",
-  "@albumNotFound": {}
+  "@albumNotFound": {},
+  "stationNotFound": "Questa stazione non esiste o è stata rimossa dal server radiobrowser.",
+  "@stationNotFound": {},
+  "customStationWarning": "L'URL fornito deve esistere nel server radiobrowser, altrimenti non verrà aggiunto alla libreria! Idealmente cercali nella funzione radio e aggiungili alla libreria con il pulsante stella!",
+  "@customStationWarning": {},
+  "onlyLocalAudioForPlaylists": "Per le importazioni playlist è supportato solo gli audio locali ! Cercalo nella funzione radio e aggiungili alla libreria con il pulsante stella!",
+  "@onlyLocalAudioForPlaylists": {}
 }
