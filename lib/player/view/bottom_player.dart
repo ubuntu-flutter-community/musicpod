@@ -76,19 +76,18 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                         playerPosition: PlayerPosition.bottom,
                       ),
                     ),
-                    if (!smallWindow)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: switch (audio?.audioType) {
-                          AudioType.local => LikeIconButton(
-                              audio: audio,
-                              color: theme.colorScheme.onSurface,
-                            ),
-                          AudioType.radio =>
-                            StaredStationIconButton(audio: audio),
-                          _ => const SizedBox.shrink(),
-                        },
-                      ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: switch (audio?.audioType) {
+                        AudioType.local => LikeIconButton(
+                            audio: audio,
+                            color: theme.colorScheme.onSurface,
+                          ),
+                        AudioType.radio =>
+                          StaredStationIconButton(audio: audio),
+                        _ => const SizedBox.shrink(),
+                      },
+                    ),
                   ],
                 ),
               ),

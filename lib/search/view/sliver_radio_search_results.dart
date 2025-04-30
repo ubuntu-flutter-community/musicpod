@@ -70,7 +70,7 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
           padding: const EdgeInsets.only(bottom: 5),
           child: AudioTile(
             key: ValueKey(station.uuid),
-            showLeading: true,
+            allowLeadingImage: true,
             audioPageType: AudioPageType.radioSearch,
             isPlayerPlaying: playing,
             selected: currentAudio == station,

@@ -24,7 +24,7 @@ class RoundImageContainer extends StatelessWidget {
       offset: const Offset(0, 0),
       spreadRadius: 1,
       blurRadius: 1,
-      color: theme.shadowColor.withValues(alpha: 0.4),
+      color: theme.shadowColor.withValues(alpha: 0.9),
     );
     final color = backgroundColor ??
         getAlphabetColor(fallBackText).scale(saturation: -0.2);
@@ -38,39 +38,28 @@ class RoundImageContainer extends StatelessWidget {
       end: Alignment.bottomRight,
     );
 
-    if (images.length == 1) {
-      return images.first;
-    }
-
-    if (images.isNotEmpty) {
-      if (images.length >= 4) {
-        return Container(
-          decoration: BoxDecoration(
-            boxShadow: [boxShadow],
-            gradient: linearGradient,
-          ),
-          child: FourImagesGrid(
-            images: images,
-          ),
-        );
-      } else if (images.length >= 2) {
-        return Stack(
-          children: [
-            images.first,
-            YaruClip.diagonal(
-              position: YaruDiagonalClip.bottomLeft,
-              child: images.elementAt(1),
-            ),
-          ],
-        );
-      }
-    }
-
     return Container(
       decoration: BoxDecoration(
         gradient: linearGradient,
         boxShadow: [boxShadow],
+        shape: BoxShape.circle,
       ),
+      child: switch (images.length) {
+        0 => null,
+        1 => images.first,
+        2 || 3 => Stack(
+            children: [
+              images.first,
+              YaruClip.diagonal(
+                position: YaruDiagonalClip.bottomLeft,
+                child: images.elementAt(1),
+              ),
+            ],
+          ),
+        _ => FourImagesGrid(
+            images: images.take(4).toList(),
+          ),
+      },
     );
   }
 }

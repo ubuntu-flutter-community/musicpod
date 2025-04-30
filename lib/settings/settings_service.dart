@@ -47,6 +47,12 @@ class SettingsService {
     _preferences.setBool(SPKeys.neverShowImportFails, value).then(notify);
   }
 
+  bool get groupAlbumsOnlyByAlbumName =>
+      _preferences.getBool(SPKeys.groupAlbumsOnlyByAlbumName) ?? false;
+  void setGroupAlbumsOnlyByAlbumName(bool value) => _preferences
+      .setBool(SPKeys.groupAlbumsOnlyByAlbumName, value)
+      .then(notify);
+
   bool get enableLastFmScrobbling =>
       _preferences.getBool(SPKeys.enableLastFm) ?? false;
   String? get lastFmApiKey => _preferences.getString(SPKeys.lastFmApiKey);

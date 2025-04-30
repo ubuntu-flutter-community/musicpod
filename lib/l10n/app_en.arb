@@ -709,5 +709,8 @@
     "albumNotFound": "This album does not exist or you have removed the external playlist (M3U/PLS file) where it has been loaded from.",
     "stationNotFound": "This station does not exist or it has been removed from the radiobrowser server.",
     "onlyLocalAudioForPlaylists": "Only local audio is supported for playlist imports! Please search for them in the radio feature and add them with the star button to your library!",
-    "customStationWarning": "The provided URL must exist on the radiobrowser server, otherwise it will not be added to you library! Ideally search for them in the radio feature and add them with the star button to your library!"
+    "customStationWarning": "The provided URL must exist on the radiobrowser server, otherwise it will not be added to you library! Ideally search for them in the radio feature and add them with the star button to your library!",
+    "disc": "Disc",
+    "groupAlbumsOnlyByAlbumName": "Group albums only by album name",
+    "groupAlbumsOnlyByAlbumNameDescription": "This will group albums only by album name and not by artist name + album name, which assumes that the album name is unique inside your library!"
 }

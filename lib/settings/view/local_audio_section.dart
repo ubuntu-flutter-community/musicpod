@@ -14,16 +14,20 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final directory =
         watchPropertyValue((SettingsModel m) => m.directory ?? '');
 
+    final groupAlbumsOnlyByAlbumName = watchPropertyValue(
+      (SettingsModel m) => m.groupAlbumsOnlyByAlbumName,
+    );
     return YaruSection(
-      headline: Text(context.l10n.localAudio),
+      headline: Text(l10n.localAudio),
       margin: const EdgeInsets.symmetric(horizontal: kLargestSpace),
       child: Column(
         children: [
           YaruTile(
-            title: Text(context.l10n.musicCollectionLocation),
+            title: Text(l10n.musicCollectionLocation),
             subtitle: Text(directory),
             trailing: ImportantButton(
               onPressed: () async {
@@ -37,10 +41,32 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
                 }
               },
               child: Text(
-                context.l10n.select,
+                l10n.select,
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
               ),
+            ),
+          ),
+          YaruTile(
+            title: Text(l10n.groupAlbumsOnlyByAlbumName),
+            subtitle: groupAlbumsOnlyByAlbumName
+                ? Padding(
+                    padding: const EdgeInsets.only(
+                      top: kSmallestSpace,
+                      right: kSmallestSpace,
+                    ),
+                    child: YaruInfoBox(
+                      yaruInfoType: YaruInfoType.warning,
+                      subtitle:
+                          Text(l10n.groupAlbumsOnlyByAlbumNameDescription),
+                    ),
+                  )
+                : null,
+            trailing: CommonSwitch(
+              value: groupAlbumsOnlyByAlbumName,
+              onChanged: (value) {
+                di<SettingsModel>().setGroupAlbumsOnlyByAlbumName(value);
+              },
             ),
           ),
         ],

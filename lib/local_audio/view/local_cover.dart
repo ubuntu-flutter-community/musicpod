@@ -75,8 +75,10 @@ class _LocalCoverState extends State<LocalCover> {
             future: _future,
             builder: (context, snapshot) {
               if (!snapshot.hasData || snapshot.hasError) {
-                return Container(
+                return SizedBox(
                   key: ValueKey('${widget.albumId}1'),
+                  height: widget.dimension ?? widget.height,
+                  width: widget.dimension ?? widget.width,
                   child: widget.fallback,
                 );
               } else {

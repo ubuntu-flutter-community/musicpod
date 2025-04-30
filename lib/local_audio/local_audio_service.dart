@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
+import 'package:synchronized/synchronized.dart';
 import 'package:watcher/watcher.dart';
 
 import '../common/data/audio.dart';
@@ -78,18 +79,25 @@ class LocalAudioService {
     String? artist,
     bool clean = true,
   }) {
+    final groupAlbumsOnlyByAlbumName =
+        _settingsService?.groupAlbumsOnlyByAlbumName ?? false;
+
     final theAudios = artist == null || artist.isEmpty
         ? audios
         : audios?.where((e) => e.artist == artist);
     if (theAudios == null) return null;
     final albumsResult = <String>[];
     for (var a in theAudios) {
-      if (a.albumId != null && albumsResult.none((e) => e == a.albumId)) {
-        albumsResult.add(a.albumId!);
+      final idToUse = groupAlbumsOnlyByAlbumName ? a.album : a.albumId;
+
+      if (idToUse != null && albumsResult.none((e) => e == idToUse)) {
+        albumsResult.add(idToUse);
       }
     }
     albumsResult.sort(
-      (a, b) => compareNatural(a.albumOfId, b.albumOfId),
+      (a, b) => groupAlbumsOnlyByAlbumName
+          ? compareNatural(a, b)
+          : compareNatural(a.albumOfId, b.albumOfId),
     );
 
     if (clean) {
@@ -123,7 +131,12 @@ class LocalAudioService {
     }
 
     final album = audios?.where(
-      (a) => a.albumId != null && a.albumId == albumId,
+      (a) {
+        if (_settingsService?.groupAlbumsOnlyByAlbumName ?? false) {
+          return a.album != null && a.album == albumId.albumOfId;
+        }
+        return a.albumId != null && a.albumId == albumId;
+      },
     );
 
     var albumList = album?.toList();
@@ -296,27 +309,35 @@ class LocalAudioService {
   FileWatcher? _fileWatcher;
   FileWatcher? get fileWatcher => _fileWatcher;
 
+  final Lock _lock = Lock();
   Future<void> init({String? newDirectory, bool forceInit = false}) async {
-    if (forceInit == false && _audios?.isNotEmpty == true) return;
+    await _lock.synchronized(
+      () async {
+        if (forceInit == false && (_audios != null && _audios!.isNotEmpty)) {
+          return;
+        }
 
-    if (newDirectory != null && newDirectory != _settingsService?.directory) {
-      await _settingsService?.setDirectory(newDirectory);
-    }
-    final dir = newDirectory ?? _settingsService?.directory;
+        if (newDirectory != null &&
+            newDirectory != _settingsService?.directory) {
+          await _settingsService?.setDirectory(newDirectory);
+        }
+        final dir = newDirectory ?? _settingsService?.directory;
 
-    final result = await compute(_readAudiosFromDirectory, dir);
-    _failedImports = result.failedImports;
+        final result = await compute(_readAudiosFromDirectory, dir);
+        _failedImports = result.failedImports;
 
-    if (!Platform.isWindows &&
-        dir != null &&
-        Directory(dir).existsSync() &&
-        (_fileWatcher == null || _fileWatcher!.path != dir)) {
-      _fileWatcher = FileWatcher(dir);
-    }
+        if (!Platform.isWindows &&
+            dir != null &&
+            Directory(dir).existsSync() &&
+            (_fileWatcher == null || _fileWatcher!.path != dir)) {
+          _fileWatcher = FileWatcher(dir);
+        }
 
-    addAudiosAndBuildCollection(
-      result.audios,
-      clear: forceInit,
+        addAudiosAndBuildCollection(
+          result.audios,
+          clear: forceInit,
+        );
+      },
     );
   }
 
