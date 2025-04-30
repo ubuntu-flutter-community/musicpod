@@ -213,7 +213,8 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 5),
                         child: AudioTile(
-                          showLeading: audios.length < kShowLeadingThreshold,
+                          allowLeadingImage:
+                              audios.length < kShowLeadingThreshold,
                           onSubTitleTap: onArtistTap,
                           key: ValueKey(audio.path ?? audio.url),
                           isPlayerPlaying: isPlaying,
