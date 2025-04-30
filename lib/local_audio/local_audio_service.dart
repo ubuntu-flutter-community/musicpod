@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
+import 'package:synchronized/synchronized.dart';
 import 'package:watcher/watcher.dart';
 
 import '../common/data/audio.dart';
@@ -296,27 +297,35 @@ class LocalAudioService {
   FileWatcher? _fileWatcher;
   FileWatcher? get fileWatcher => _fileWatcher;
 
+  final Lock _lock = Lock();
   Future<void> init({String? newDirectory, bool forceInit = false}) async {
-    if (forceInit == false && _audios?.isNotEmpty == true) return;
+    await _lock.synchronized(
+      () async {
+        if (forceInit == false && (_audios != null && _audios!.isNotEmpty)) {
+          return;
+        }
 
-    if (newDirectory != null && newDirectory != _settingsService?.directory) {
-      await _settingsService?.setDirectory(newDirectory);
-    }
-    final dir = newDirectory ?? _settingsService?.directory;
+        if (newDirectory != null &&
+            newDirectory != _settingsService?.directory) {
+          await _settingsService?.setDirectory(newDirectory);
+        }
+        final dir = newDirectory ?? _settingsService?.directory;
 
-    final result = await compute(_readAudiosFromDirectory, dir);
-    _failedImports = result.failedImports;
+        final result = await compute(_readAudiosFromDirectory, dir);
+        _failedImports = result.failedImports;
 
-    if (!Platform.isWindows &&
-        dir != null &&
-        Directory(dir).existsSync() &&
-        (_fileWatcher == null || _fileWatcher!.path != dir)) {
-      _fileWatcher = FileWatcher(dir);
-    }
+        if (!Platform.isWindows &&
+            dir != null &&
+            Directory(dir).existsSync() &&
+            (_fileWatcher == null || _fileWatcher!.path != dir)) {
+          _fileWatcher = FileWatcher(dir);
+        }
 
-    addAudiosAndBuildCollection(
-      result.audios,
-      clear: forceInit,
+        addAudiosAndBuildCollection(
+          result.audios,
+          clear: forceInit,
+        );
+      },
     );
   }
 
