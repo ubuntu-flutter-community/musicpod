@@ -1,6 +1,7 @@
-import '../../extensions/build_context_x.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
+
+import '../../extensions/build_context_x.dart';
 
 class FallBackHeaderImage extends StatelessWidget {
   const FallBackHeaderImage({
@@ -14,7 +15,7 @@ class FallBackHeaderImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final baseColor = color ?? context.t.colorScheme.primary;
+    final baseColor = color ?? context.theme.colorScheme.primary;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(6),
@@ -22,8 +23,8 @@ class FallBackHeaderImage extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            baseColor.scale(lightness: 0.1).withOpacity(0.4),
-            baseColor.scale(lightness: 0.6).withOpacity(0.4),
+            baseColor.scale(lightness: 0.1).withValues(alpha: 0.4),
+            baseColor.scale(lightness: 0.6).withValues(alpha: 0.4),
           ],
         ),
       ),

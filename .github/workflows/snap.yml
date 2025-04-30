@@ -1,0 +1,46 @@
+name: Create Snap Package
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build_and_release_linux_snap_edge_amd64:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 5
+      - run: echo ${{ vars.FORCED_UPDATE_THRESHOLD }} > forced_update.txt
+      - uses: snapcore/action-build@v1
+        with:
+          snapcraft-channel: edge
+        id: build
+      - uses: snapcore/action-publish@v1
+        if: steps.build.outcome == 'success'
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
+        with:
+          snap: ${{ steps.build.outputs.snap }}
+          release: edge
+
+  build_and_release_linux_snap_edge_arm64:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 5
+      - run: echo ${{ vars.FORCED_UPDATE_THRESHOLD }} > forced_update.txt
+      - uses: snapcore/action-build@v1
+        with:
+          snapcraft-channel: edge
+        id: build
+      - uses: snapcore/action-publish@v1
+        if: steps.build.outcome == 'success'
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
+        with:
+          snap: ${{ steps.build.outputs.snap }}
+          release: edge

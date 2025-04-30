@@ -1,490 +1,492 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../extensions/build_context_x.dart';
-import 'theme.dart';
+import '../../app_config.dart';
 
 class Iconz {
-  static final Iconz _instance = Iconz._internal();
-  factory Iconz() => _instance;
+  static IconData get home => AppConfig.yaruStyled
+      ? YaruIcons.home
+      : AppConfig.appleStyled
+          ? CupertinoIcons.home
+          : Icons.home_outlined;
+  static IconData get homeFilled => AppConfig.yaruStyled
+      ? YaruIcons.home_filled
+      : AppConfig.appleStyled
+          ? CupertinoIcons.home
+          : Icons.home_filled;
 
-  Iconz._internal();
+  static IconData get image => AppConfig.yaruStyled
+      ? YaruIcons.image
+      : AppConfig.appleStyled
+          ? CupertinoIcons.photo
+          : Icons.image_not_supported;
 
-  IconData get menu {
-    return yaruStyled
+  static IconData get warning => AppConfig.yaruStyled
+      ? YaruIcons.warning_filled
+      : AppConfig.appleStyled
+          ? CupertinoIcons.exclamationmark_triangle_fill
+          : Icons.warning_rounded;
+
+  static IconData get menu {
+    return AppConfig.yaruStyled
         ? YaruIcons.menu
-        : appleStyled
+        : AppConfig.appleStyled
             ? CupertinoIcons.bars
-            : Icons.menu;
+            : Icons.menu_rounded;
   }
 
-  IconData get updateAvailable {
-    return yaruStyled
+  static IconData get export => AppConfig.yaruStyled
+      ? YaruIcons.arrow_down_outlined
+      : AppConfig.appleStyled
+          ? CupertinoIcons.arrow_down
+          : Icons.arrow_downward;
+
+  static IconData get import => AppConfig.yaruStyled
+      ? YaruIcons.arrow_up_outlined
+      : AppConfig.appleStyled
+          ? CupertinoIcons.arrow_up
+          : Icons.arrow_upward;
+
+  static IconData get materialSidebar => Icons.menu_rounded;
+
+  static IconData get sidebar {
+    return AppConfig.yaruStyled
+        ? YaruIcons.sidebar
+        : AppConfig.appleStyled
+            ? CupertinoIcons.sidebar_left
+            : materialSidebar;
+  }
+
+  static IconData get updateAvailable {
+    return AppConfig.yaruStyled
         ? YaruIcons.update_available
-        : appleStyled
+        : AppConfig.appleStyled
             ? CupertinoIcons.arrow_up_circle
-            : Icons.arrow_circle_up;
+            : Icons.arrow_circle_up_rounded;
   }
 
-  IconData get remove {
-    return yaruStyled
-        ? YaruIcons.minus
-        : appleStyled
-            ? CupertinoIcons.minus
-            : Icons.remove;
+  static IconData get remove {
+    return AppConfig.yaruStyled
+        ? YaruIcons.trash
+        : AppConfig.appleStyled
+            ? CupertinoIcons.trash
+            : Icons.delete_outline_rounded;
   }
 
-  IconData get check => yaruStyled
+  static IconData get check => AppConfig.yaruStyled
       ? YaruIcons.checkmark
-      : appleStyled
+      : AppConfig.appleStyled
           ? CupertinoIcons.check_mark
-          : Icons.check;
-  IconData get musicNote => yaruStyled
+          : Icons.check_rounded;
+  static IconData get musicNote => AppConfig.yaruStyled
       ? YaruIcons.music_note
-      : appleStyled
+      : AppConfig.appleStyled
           ? CupertinoIcons.double_music_note
-          : Icons.music_note;
-  IconData get external => yaruStyled
+          : Icons.music_note_rounded;
+  static IconData get artist => AppConfig.yaruStyled
+      ? YaruIcons.music_artist
+      : AppConfig.appleStyled
+          ? CupertinoIcons.music_albums
+          : Icons.interpreter_mode_outlined;
+  static IconData get album => AppConfig.yaruStyled
+      ? YaruIcons.disk
+      : AppConfig.appleStyled
+          ? CupertinoIcons.music_albums
+          : Icons.album_rounded;
+  static IconData get external => AppConfig.yaruStyled
       ? YaruIcons.external_link
-      : appleStyled
+      : AppConfig.appleStyled
           ? CupertinoIcons.link
-          : Icons.link;
-  IconData get starFilled => yaruStyled
+          : Icons.link_rounded;
+  static IconData get starFilled => AppConfig.yaruStyled
       ? YaruIcons.star_filled
-      : appleStyled
+      : AppConfig.appleStyled
           ? CupertinoIcons.star_fill
-          : Icons.star;
-  IconData get star => yaruStyled
+          : Icons.star_rounded;
+  static IconData get star => AppConfig.yaruStyled
       ? YaruIcons.star
-      : appleStyled
+      : AppConfig.appleStyled
           ? CupertinoIcons.star
-          : Icons.star_outline;
-  IconData get offline => yaruStyled
+          : Icons.star_outline_rounded;
+  static IconData get offline => AppConfig.yaruStyled
       ? YaruIcons.network_offline
-      : appleStyled
+      : AppConfig.appleStyled
           ? CupertinoIcons.wifi_slash
-          : Icons.offline_bolt;
-  IconData get cloud => yaruStyled
+          : Icons.offline_bolt_rounded;
+  static IconData get cloud => AppConfig.yaruStyled
       ? YaruIcons.cloud
-      : appleStyled
+      : AppConfig.appleStyled
           ? CupertinoIcons.cloud
           : Icons.cloud_outlined;
-  IconData get pause => yaruStyled
+  static IconData get pause => AppConfig.yaruStyled
       ? YaruIcons.media_pause
-      : appleStyled
+      : AppConfig.appleStyled
           ? CupertinoIcons.pause
-          : Icons.pause;
-  IconData get play => yaruStyled
+          : Icons.pause_rounded;
+
+  static IconData get playFilled => AppConfig.yaruStyled
       ? YaruIcons.media_play
-      : appleStyled
-          ? CupertinoIcons.play
-          : Icons.play_arrow_outlined;
-  IconData get playFilled => yaruStyled
-      ? YaruIcons.media_play
-      : appleStyled
+      : AppConfig.appleStyled
           ? CupertinoIcons.play_fill
-          : Icons.play_arrow;
-  IconData get download => yaruStyled
+          : Icons.play_arrow_rounded;
+  static IconData get upload => AppConfig.yaruStyled
+      ? YaruIcons.arrow_up_outlined
+      : AppConfig.appleStyled
+          ? CupertinoIcons.up_arrow
+          : Icons.download_outlined;
+  static IconData get download => AppConfig.yaruStyled
       ? YaruIcons.download
-      : appleStyled
+      : AppConfig.appleStyled
           ? CupertinoIcons.down_arrow
           : Icons.download_outlined;
-  IconData get downloadFilled => yaruStyled
+  static IconData get downloadFilled => AppConfig.yaruStyled
       ? YaruIcons.download_filled
-      : appleStyled
+      : AppConfig.appleStyled
           ? CupertinoIcons.down_arrow
-          : Icons.download;
-  IconData get podcast => yaruStyled
+          : Icons.download_rounded;
+  static IconData get podcast => AppConfig.yaruStyled
       ? YaruIcons.podcast
-      : appleStyled
+      : AppConfig.appleStyled
           ? CupertinoIcons.mic
           : Icons.podcasts_outlined;
-  IconData get podcastFilled => yaruStyled
+  static IconData get podcastFilled => AppConfig.yaruStyled
       ? YaruIcons.podcast_filled
-      : appleStyled
+      : AppConfig.appleStyled
           ? CupertinoIcons.mic_fill
-          : Icons.podcasts;
-  IconData get radio => yaruStyled
+          : Icons.podcasts_rounded;
+  static IconData get radio => AppConfig.yaruStyled
       ? YaruIcons.radio
-      : appleStyled
+      : AppConfig.appleStyled
           ? CupertinoIcons.antenna_radiowaves_left_right
           : Icons.radio_outlined;
-  IconData get radioFilled => yaruStyled
+  static IconData get radioFilled => AppConfig.yaruStyled
       ? YaruIcons.radio_filled
-      : appleStyled
+      : AppConfig.appleStyled
           ? CupertinoIcons.antenna_radiowaves_left_right
-          : Icons.radio;
-  IconData get localAudio {
-    if (appleStyled) {
-      if (isMobile) {
+          : Icons.radio_rounded;
+
+  static IconData get localAudio {
+    if (AppConfig.appleStyled) {
+      if (AppConfig.isMobilePlatform) {
         return CupertinoIcons.device_phone_portrait;
       }
       return CupertinoIcons.device_laptop;
     }
-    return yaruStyled
+    return AppConfig.yaruStyled
         ? YaruIcons.drive_harddisk
-        : isMobile
-            ? Icons.sd_storage_outlined
-            : Icons.computer;
+        : AppConfig.isMobilePlatform
+            ? Icons.phone_android_outlined
+            : Icons.computer_rounded;
   }
 
-  IconData get copy {
-    return yaruStyled
+  static IconData get localAudioFilled {
+    if (AppConfig.appleStyled) {
+      if (AppConfig.isMobilePlatform) {
+        return CupertinoIcons.device_phone_portrait;
+      }
+      return CupertinoIcons.device_laptop;
+    }
+    return AppConfig.yaruStyled
+        ? YaruIcons.drive_harddisk_filled
+        : AppConfig.isMobilePlatform
+            ? Icons.phone_android_rounded
+            : Icons.computer_rounded;
+  }
+
+  static IconData get copy {
+    return AppConfig.yaruStyled
         ? YaruIcons.copy
-        : appleStyled
+        : AppConfig.appleStyled
             ? CupertinoIcons.doc_on_clipboard
-            : Icons.copy;
+            : Icons.copy_rounded;
   }
 
-  IconData get explore {
-    return yaruStyled
+  static IconData get explore {
+    return AppConfig.yaruStyled
         ? YaruIcons.compass
-        : appleStyled
+        : AppConfig.appleStyled
             ? CupertinoIcons.compass
-            : Icons.explore;
+            : Icons.explore_rounded;
   }
 
-  IconData get drag {
-    if (appleStyled) {
+  static IconData get drag {
+    if (AppConfig.appleStyled) {
       return CupertinoIcons.move;
     }
-    if (yaruStyled) {
+    if (AppConfig.yaruStyled) {
       return YaruIcons.drag_handle;
     }
     return Icons.drag_handle_rounded;
   }
 
-  IconData get localAudioFilled {
-    if (appleStyled) {
-      if (isMobile) {
-        return CupertinoIcons.device_phone_portrait;
-      }
-      return CupertinoIcons.device_laptop;
-    }
-    return yaruStyled
-        ? YaruIcons.drive_harddisk_filled
-        : isMobile
-            ? Icons.sd_storage
-            : Icons.computer;
-  }
-
-  IconData get settings => yaruStyled
+  static IconData get settings => AppConfig.yaruStyled
       ? YaruIcons.settings
-      : appleStyled
+      : AppConfig.appleStyled
+          ? CupertinoIcons.settings
+          : Icons.settings_outlined;
+
+  static IconData get settingsFilled => AppConfig.yaruStyled
+      ? YaruIcons.settings_filled
+      : AppConfig.appleStyled
           ? CupertinoIcons.settings
           : Icons.settings;
 
-  IconData get addToLibrary => yaruStyled
-      ? YaruIcons.bell
-      : appleStyled
-          ? CupertinoIcons.bell
-          : Icons.notifications_outlined;
-  IconData get removeFromLibrary => yaruStyled
-      ? YaruIcons.bell_filled
-      : appleStyled
-          ? CupertinoIcons.bell_fill
-          : Icons.notifications;
-  IconData get refresh => yaruStyled
-      ? YaruIcons.refresh
-      : appleStyled
-          ? CupertinoIcons.refresh
-          : Icons.refresh;
-  IconData get speakerLowFilled => yaruStyled
-      ? YaruIcons.speaker_low_filled
-      : appleStyled
-          ? CupertinoIcons.volume_off
-          : Icons.volume_down;
-  IconData get speakerMediumFilled => yaruStyled
-      ? YaruIcons.speaker_medium_filled
-      : appleStyled
-          ? CupertinoIcons.volume_down
-          : Icons.volume_down;
-  IconData get speakerHighFilled => yaruStyled
-      ? YaruIcons.speaker_high_filled
-      : appleStyled
-          ? CupertinoIcons.volume_up
-          : Icons.volume_up;
-  IconData get speakerMutedFilled => yaruStyled
-      ? YaruIcons.speaker_muted_filled
-      : appleStyled
-          ? CupertinoIcons.volume_off
-          : Icons.volume_off;
-  IconData get fullWindowExit => yaruStyled
-      ? YaruIcons.arrow_down
-      : appleStyled
-          ? CupertinoIcons.arrow_down
-          : Icons.arrow_downward;
-  IconData get fullWindow => yaruStyled
-      ? YaruIcons.arrow_up
-      : appleStyled
-          ? CupertinoIcons.arrow_up
-          : Icons.arrow_upward;
-  IconData get fullScreenExit => yaruStyled
-      ? YaruIcons.fullscreen_exit
-      : appleStyled
-          ? CupertinoIcons.fullscreen_exit
-          : Icons.fullscreen_exit;
-  IconData get fullScreen => yaruStyled
-      ? YaruIcons.fullscreen
-      : appleStyled
-          ? CupertinoIcons.fullscreen
-          : Icons.fullscreen;
-  IconData get repeatSingle => yaruStyled
-      ? YaruIcons.repeat_single
-      : appleStyled
-          ? CupertinoIcons.repeat_1
-          : Icons.repeat_one;
-  IconData get shuffle => yaruStyled
-      ? YaruIcons.shuffle
-      : appleStyled
-          ? CupertinoIcons.shuffle
-          : Icons.shuffle;
-  IconData get levelMiddle => yaruStyled
-      ? YaruIcons.meter_middle
-      : appleStyled
-          ? CupertinoIcons.speedometer
-          : Icons.speed;
-  IconData get levelHigh => yaruStyled
-      ? YaruIcons.meter_three_quarter
-      : appleStyled
-          ? CupertinoIcons.speedometer
-          : Icons.speed;
-  IconData get levelLow => yaruStyled
-      ? YaruIcons.meter_quarter
-      : appleStyled
-          ? CupertinoIcons.speedometer
-          : Icons.speed;
-  IconData get skipBackward => yaruStyled
-      ? YaruIcons.skip_backward
-      : appleStyled
-          ? CupertinoIcons.backward_end
-          : Icons.skip_previous;
-  IconData get skipForward => yaruStyled
-      ? YaruIcons.skip_forward
-      : appleStyled
-          ? CupertinoIcons.forward_end
-          : Icons.skip_next;
-  IconData get goBack => yaruStyled
-      ? YaruIcons.go_previous
-      : appleStyled
-          ? CupertinoIcons.back
-          : Icons.arrow_back;
-  IconData get goNext => yaruStyled
-      ? YaruIcons.go_next
-      : appleStyled
-          ? CupertinoIcons.forward
-          : Icons.arrow_forward;
-  IconData get forward30 => yaruStyled
-      ? YaruIcons.redo
-      : appleStyled
-          ? CupertinoIcons.goforward_30
-          : Icons.forward_30;
-  IconData get backward10 => yaruStyled
-      ? YaruIcons.undo
-      : appleStyled
-          ? CupertinoIcons.gobackward_10
-          : Icons.replay_10;
-  IconData get goUp => yaruStyled
-      ? YaruIcons.go_up
-      : appleStyled
-          ? CupertinoIcons.up_arrow
-          : Icons.arrow_upward;
-  IconData get share => yaruStyled
-      ? YaruIcons.share
-      : appleStyled
-          ? CupertinoIcons.share
-          : Icons.share;
-  IconData get startPlayList => yaruStyled
-      ? YaruIcons.playlist_play
-      : appleStyled
-          ? CupertinoIcons.play_circle
-          : Icons.playlist_play;
-  IconData get playlist => yaruStyled
-      ? YaruIcons.playlist
-      : appleStyled
-          ? CupertinoIcons.music_note_list
-          : Icons.list;
-  IconData get pen => yaruStyled
-      ? YaruIcons.pen
-      : appleStyled
-          ? CupertinoIcons.pen
-          : Icons.edit;
-  IconData get pin => yaruStyled
-      ? YaruIcons.pin
-      : appleStyled
-          ? CupertinoIcons.pin
-          : Icons.push_pin_outlined;
-  IconData get pinFilled => yaruStyled
-      ? YaruIcons.pin
-      : appleStyled
-          ? CupertinoIcons.pin_fill
-          : Icons.push_pin;
-  IconData get heart => yaruStyled
-      ? YaruIcons.heart
-      : appleStyled
-          ? CupertinoIcons.heart
-          : Icons.favorite_outline;
-  IconData get heartFilled => yaruStyled
-      ? YaruIcons.heart_filled
-      : appleStyled
-          ? CupertinoIcons.heart_fill
-          : Icons.favorite;
-  IconData get globe => yaruStyled
-      ? YaruIcons.globe
-      : appleStyled
-          ? CupertinoIcons.globe
-          : Icons.link;
-  IconData get imageMissing => yaruStyled
-      ? YaruIcons.image_missing
-      : appleStyled
-          ? CupertinoIcons.question_diamond
-          : Icons.image_not_supported_outlined;
-  IconData get imageMissingFilled => yaruStyled
-      ? YaruIcons.image_missing_filled
-      : appleStyled
-          ? CupertinoIcons.question_diamond_fill
-          : Icons.image_not_supported;
-  IconData get plus => yaruStyled
+  static IconData get addToLibrary => AppConfig.yaruStyled
       ? YaruIcons.plus
-      : appleStyled
+      : AppConfig.appleStyled
           ? CupertinoIcons.plus
           : Icons.add;
-  IconData get search => yaruStyled
+  static IconData get removeFromLibrary => AppConfig.yaruStyled
+      ? YaruIcons.checkmark
+      : AppConfig.appleStyled
+          ? CupertinoIcons.check_mark
+          : Icons.check;
+  static IconData get refresh => AppConfig.yaruStyled
+      ? YaruIcons.refresh
+      : AppConfig.appleStyled
+          ? CupertinoIcons.refresh
+          : Icons.refresh_rounded;
+  static IconData get replay => AppConfig.yaruStyled
+      ? YaruIcons.revert
+      : AppConfig.appleStyled
+          ? CupertinoIcons.arrow_counterclockwise_circle
+          : Icons.undo;
+  static IconData get speakerLowFilled => AppConfig.yaruStyled
+      ? YaruIcons.speaker_low_filled
+      : AppConfig.appleStyled
+          ? CupertinoIcons.volume_off
+          : Icons.volume_down_rounded;
+  static IconData get speakerMediumFilled => AppConfig.yaruStyled
+      ? YaruIcons.speaker_medium_filled
+      : AppConfig.appleStyled
+          ? CupertinoIcons.volume_down
+          : Icons.volume_down_rounded;
+  static IconData get speakerHighFilled => AppConfig.yaruStyled
+      ? YaruIcons.speaker_high_filled
+      : AppConfig.appleStyled
+          ? CupertinoIcons.volume_up
+          : Icons.volume_up_rounded;
+  static IconData get speakerMutedFilled => AppConfig.yaruStyled
+      ? YaruIcons.speaker_muted_filled
+      : AppConfig.appleStyled
+          ? CupertinoIcons.volume_off
+          : Icons.volume_off_rounded;
+  static IconData get fullWindowExit => AppConfig.yaruStyled
+      ? YaruIcons.arrow_down
+      : AppConfig.appleStyled
+          ? CupertinoIcons.arrow_down
+          : Icons.arrow_downward_rounded;
+  static IconData get fullWindow => AppConfig.yaruStyled
+      ? YaruIcons.arrow_up
+      : AppConfig.appleStyled
+          ? CupertinoIcons.arrow_up
+          : Icons.arrow_upward_rounded;
+  static IconData get fullScreenExit => AppConfig.yaruStyled
+      ? YaruIcons.fullscreen_exit
+      : AppConfig.appleStyled
+          ? CupertinoIcons.fullscreen_exit
+          : Icons.fullscreen_exit_rounded;
+  static IconData get fullScreen => AppConfig.yaruStyled
+      ? YaruIcons.fullscreen
+      : AppConfig.appleStyled
+          ? CupertinoIcons.fullscreen
+          : Icons.fullscreen_rounded;
+  static IconData get repeatSingle => AppConfig.yaruStyled
+      ? YaruIcons.repeat_single
+      : AppConfig.appleStyled
+          ? CupertinoIcons.repeat_1
+          : Icons.repeat_one_rounded;
+  static IconData get shuffle => AppConfig.yaruStyled
+      ? YaruIcons.shuffle
+      : AppConfig.appleStyled
+          ? CupertinoIcons.shuffle
+          : Icons.shuffle_rounded;
+  static IconData get levelMiddle => AppConfig.yaruStyled
+      ? YaruIcons.meter_middle
+      : AppConfig.appleStyled
+          ? CupertinoIcons.speedometer
+          : Icons.speed_rounded;
+  static IconData get levelHigh => AppConfig.yaruStyled
+      ? YaruIcons.meter_three_quarter
+      : AppConfig.appleStyled
+          ? CupertinoIcons.speedometer
+          : Icons.speed_rounded;
+  static IconData get levelLow => AppConfig.yaruStyled
+      ? YaruIcons.meter_quarter
+      : AppConfig.appleStyled
+          ? CupertinoIcons.speedometer
+          : Icons.speed_rounded;
+  static IconData get skipBackward => AppConfig.yaruStyled
+      ? YaruIcons.skip_backward
+      : AppConfig.appleStyled
+          ? CupertinoIcons.backward_end
+          : Icons.skip_previous_rounded;
+  static IconData get skipForward => AppConfig.yaruStyled
+      ? YaruIcons.skip_forward
+      : AppConfig.appleStyled
+          ? CupertinoIcons.forward_end
+          : Icons.skip_next_rounded;
+  static IconData get goBack => AppConfig.yaruStyled
+      ? YaruIcons.go_previous
+      : AppConfig.appleStyled
+          ? CupertinoIcons.back
+          : Icons.arrow_back_rounded;
+  static IconData get goNext => AppConfig.yaruStyled
+      ? YaruIcons.go_next
+      : AppConfig.appleStyled
+          ? CupertinoIcons.forward
+          : Icons.arrow_forward_rounded;
+  static IconData get forward30 => AppConfig.yaruStyled
+      ? YaruIcons.redo
+      : AppConfig.appleStyled
+          ? CupertinoIcons.goforward_30
+          : Icons.forward_30_rounded;
+  static IconData get backward10 => AppConfig.yaruStyled
+      ? YaruIcons.undo
+      : AppConfig.appleStyled
+          ? CupertinoIcons.gobackward_10
+          : Icons.replay_10_rounded;
+  static IconData get goUp => AppConfig.yaruStyled
+      ? YaruIcons.go_up
+      : AppConfig.appleStyled
+          ? CupertinoIcons.up_arrow
+          : Icons.arrow_upward_rounded;
+  static IconData get share => AppConfig.yaruStyled
+      ? YaruIcons.share
+      : AppConfig.appleStyled
+          ? CupertinoIcons.share
+          : Icons.share;
+  static IconData get startPlayList => AppConfig.yaruStyled
+      ? YaruIcons.playlist_play
+      : AppConfig.appleStyled
+          ? CupertinoIcons.play_circle
+          : Icons.playlist_play_rounded;
+  static IconData get playlist => AppConfig.yaruStyled
+      ? YaruIcons.playlist
+      : AppConfig.appleStyled
+          ? CupertinoIcons.music_note_list
+          : Icons.list_rounded;
+  static IconData get pen => AppConfig.yaruStyled
+      ? YaruIcons.pen
+      : AppConfig.appleStyled
+          ? CupertinoIcons.pen
+          : Icons.edit_rounded;
+  static IconData get pin => AppConfig.yaruStyled
+      ? YaruIcons.pin
+      : AppConfig.appleStyled
+          ? CupertinoIcons.pin
+          : Icons.push_pin_outlined;
+  static IconData get pinFilled => AppConfig.yaruStyled
+      ? YaruIcons.pin
+      : AppConfig.appleStyled
+          ? CupertinoIcons.pin_fill
+          : Icons.push_pin_rounded;
+  static IconData get heart => AppConfig.yaruStyled
+      ? YaruIcons.heart
+      : AppConfig.appleStyled
+          ? CupertinoIcons.heart
+          : Icons.favorite_outline_rounded;
+  static IconData get heartFilled => AppConfig.yaruStyled
+      ? YaruIcons.heart_filled
+      : AppConfig.appleStyled
+          ? CupertinoIcons.heart_fill
+          : Icons.favorite_rounded;
+  static IconData get globe => AppConfig.yaruStyled
+      ? YaruIcons.globe
+      : AppConfig.appleStyled
+          ? CupertinoIcons.globe
+          : Icons.language;
+  static IconData get imageMissing => AppConfig.yaruStyled
+      ? YaruIcons.image_missing
+      : AppConfig.appleStyled
+          ? CupertinoIcons.question_diamond
+          : Icons.image_not_supported_outlined;
+  static IconData get imageMissingFilled => AppConfig.yaruStyled
+      ? YaruIcons.image_missing_filled
+      : AppConfig.appleStyled
+          ? CupertinoIcons.question_diamond_fill
+          : Icons.image_not_supported_rounded;
+  static IconData get plus => AppConfig.yaruStyled
+      ? YaruIcons.plus
+      : AppConfig.appleStyled
+          ? CupertinoIcons.plus
+          : Icons.add_rounded;
+  static IconData get search => AppConfig.yaruStyled
       ? YaruIcons.search
-      : appleStyled
+      : AppConfig.appleStyled
           ? CupertinoIcons.search
-          : Icons.search;
-  IconData? get clear => yaruStyled
+          : Icons.search_rounded;
+  IconData? get clear => AppConfig.yaruStyled
       ? YaruIcons.edit_clear
-      : appleStyled
+      : AppConfig.appleStyled
           ? CupertinoIcons.clear
-          : Icons.clear;
-  IconData get viewMore => yaruStyled
-      ? YaruIcons.view_more_horizontal
-      : appleStyled
-          ? CupertinoIcons.ellipsis
-          : Icons.more_horiz;
-  IconData? get close => yaruStyled
+          : Icons.clear_rounded;
+  static IconData get viewMore => AppConfig.yaruStyled
+      ? YaruIcons.view_more
+      : AppConfig.appleStyled
+          ? CupertinoIcons.ellipsis_vertical
+          : Icons.more_vert_rounded;
+  static IconData get close => AppConfig.yaruStyled
       ? YaruIcons.window_close
-      : appleStyled
+      : AppConfig.appleStyled
           ? CupertinoIcons.clear
-          : Icons.clear;
-  IconData get list => yaruStyled
+          : Icons.clear_rounded;
+  static IconData get list => AppConfig.yaruStyled
       ? YaruIcons.unordered_list
-      : appleStyled
+      : AppConfig.appleStyled
           ? CupertinoIcons.list_bullet
-          : Icons.list;
-  IconData get grid => yaruStyled
+          : Icons.list_rounded;
+  static IconData get grid => AppConfig.yaruStyled
       ? YaruIcons.app_grid
-      : appleStyled
+      : AppConfig.appleStyled
           ? CupertinoIcons.square_grid_3x2_fill
-          : Icons.grid_on;
-  IconData get reorder => yaruStyled
+          : Icons.grid_on_rounded;
+  static IconData get move => AppConfig.yaruStyled
       ? YaruIcons.ordered_list
-      : appleStyled
-          ? CupertinoIcons.arrow_up_down
+      : AppConfig.appleStyled
+          ? CupertinoIcons.move
           : Icons.move_down_rounded;
-  IconData get info => yaruStyled
+  static IconData get materialAscending => Icons.sort_rounded;
+  static IconData get ascending => AppConfig.yaruStyled
+      ? YaruIcons.sort_ascending
+      : AppConfig.appleStyled
+          ? CupertinoIcons.sort_up
+          : materialAscending;
+  static IconData get descending => AppConfig.yaruStyled
+      ? YaruIcons.sort_descending
+      : AppConfig.appleStyled
+          ? CupertinoIcons.sort_down
+          : Icons.sort_rounded;
+  static IconData get info => AppConfig.yaruStyled
       ? YaruIcons.information
-      : appleStyled
+      : AppConfig.appleStyled
           ? CupertinoIcons.info
-          : Icons.info;
-  IconData get clearAll => yaruStyled
+          : Icons.info_rounded;
+  static IconData get clearAll => AppConfig.yaruStyled
       ? YaruIcons.edit_clear_all
-      : appleStyled
+      : AppConfig.appleStyled
           ? CupertinoIcons.paintbrush
-          : Icons.cleaning_services;
+          : Icons.cleaning_services_rounded;
 
-  IconData get insertIntoQueue => yaruStyled
-      ? YaruIcons.music_queue
-      : appleStyled
-          ? CupertinoIcons.plus_app
-          : Icons.queue;
-
-  Widget getAnimatedStar(bool isStarred, [Color? color]) {
-    if (yaruStyled) {
-      return YaruAnimatedVectorIcon(
-        isStarred ? YaruAnimatedIcons.star_filled : YaruAnimatedIcons.star,
-        initialProgress: 1.0,
-        color: color,
-        size: iconSize,
-      );
-    } else {
-      return isStarred
-          ? Icon(
-              Iconz().starFilled,
-              size: iconSize,
-              color: isStarred ? color : null,
-            )
-          : Icon(
-              Iconz().star,
-              size: iconSize,
-              color: isStarred ? color : null,
-            );
-    }
-  }
-
-  Widget getAnimatedHeartIcon({required bool liked, Color? color}) {
-    if (yaruStyled) {
-      return YaruAnimatedVectorIcon(
-        liked ? YaruAnimatedIcons.heart_filled : YaruAnimatedIcons.heart,
-        initialProgress: 1.0,
-        color: color,
-        size: iconSize,
-      );
-    } else {
-      return Icon(
-        liked ? Icons.favorite : Icons.favorite_outline,
-        color: color,
-      );
-    }
-  }
-}
-
-double get sideBarImageSize => 38;
-
-double get iconSize => yaruStyled ? kYaruIconSize : 24;
-
-IconData getIconForTag(String tag) {
-  final tagsToIcons = <String, IconData>{
-    'metal': TablerIcons.guitar_pick,
-    'pop': TablerIcons.diamond,
-  };
-
-  return tagsToIcons[tag] ??
-      (yaruStyled
-          ? YaruIcons.music_note
-          : appleStyled
-              ? CupertinoIcons.double_music_note
-              : Icons.music_note);
-}
-
-class DisconnectedServerIcon extends StatelessWidget {
-  const DisconnectedServerIcon({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = context.t;
-
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Icon(
-          Iconz().cloud,
-          color: theme.disabledColor,
-        ),
-        Positioned(
-          bottom: -2,
-          right: -2,
-          child: Icon(
-            Iconz().close,
-            color: theme.colorScheme.error,
-            size: 16,
-          ),
-        ),
-      ],
-    );
-  }
+  static IconData get insertIntoQueue => AppConfig.yaruStyled
+      ? YaruIcons.playlist_play
+      : AppConfig.appleStyled
+          ? CupertinoIcons.play_circle
+          : Icons.playlist_add;
+  static IconData get sleep => AppConfig.yaruStyled
+      ? YaruIcons.clear_night
+      : AppConfig.appleStyled
+          ? CupertinoIcons.moon
+          : Icons.mode_night_rounded;
+  static IconData get markAllRead => AppConfig.yaruStyled
+      ? YaruIcons.ok_filled
+      : AppConfig.appleStyled
+          ? CupertinoIcons.check_mark_circled_solid
+          : Icons.check_circle;
+  static IconData get radioHistory => AppConfig.yaruStyled
+      ? YaruIcons.music_history
+      : AppConfig.appleStyled
+          ? CupertinoIcons.clock
+          : Icons.history_rounded;
 }

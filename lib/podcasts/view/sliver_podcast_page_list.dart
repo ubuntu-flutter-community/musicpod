@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../app/connectivity_model.dart';
 import '../../common/data/audio.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
@@ -13,7 +14,7 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
     required this.pageId,
   });
 
-  final Set<Audio> audios;
+  final List<Audio> audios;
   final String pageId;
 
   @override
@@ -22,7 +23,7 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
     final libraryModel = di<LibraryModel>();
     final isPlayerPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
     final selectedAudio = watchPropertyValue((PlayerModel m) => m.audio);
-    final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
+    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
 
     return SliverList(
       delegate: SliverChildBuilderDelegate(
@@ -32,6 +33,9 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
 
           return PodcastAudioTile(
             key: ValueKey(episode.path ?? episode.url),
+            audio: episode,
+            isOnline: isOnline,
+            isPlayerPlaying: isPlayerPlaying,
             addPodcast: episode.website == null
                 ? null
                 : () => libraryModel.addPodcast(
@@ -40,20 +44,12 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
                     ),
             removeUpdate: () => libraryModel.removePodcastUpdate(pageId),
             isExpanded: episode == selectedAudio,
-            audio: episode,
-            isPlayerPlaying: isPlayerPlaying,
             selected: episode == selectedAudio,
-            pause: playerModel.pause,
-            resume: playerModel.resume,
             startPlaylist: () => playerModel.startPlaylist(
               audios: audios,
               listName: pageId,
               index: index,
             ),
-            lastPosition: playerModel.getLastPosition(episode.url),
-            safeLastPosition: playerModel.safeLastPosition,
-            isOnline: isOnline,
-            insertIntoQueue: () => playerModel.insertIntoQueue(episode),
           );
         },
       ),

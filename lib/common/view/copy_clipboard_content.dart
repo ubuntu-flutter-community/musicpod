@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
@@ -30,9 +31,9 @@ class _CopyClipboardContentState extends State<CopyClipboardContent> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final textColor =
-        theme.snackBarTheme.contentTextStyle?.color?.withOpacity(0.8);
+        theme.snackBarTheme.contentTextStyle?.color?.withValues(alpha: 0.8);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Row(
@@ -58,7 +59,9 @@ class _CopyClipboardContentState extends State<CopyClipboardContent> {
           ),
           if (widget.showActions)
             StreamProviderRow(
-              iconColor: theme.snackBarTheme.actionTextColor,
+              iconColor: theme.snackBarTheme.backgroundColor != null
+                  ? contrastColor(theme.snackBarTheme.backgroundColor!)
+                  : theme.colorScheme.primary,
               onSearch: widget.onSearch,
               text: widget.text,
             ),

@@ -3,93 +3,220 @@ import 'dart:async';
 import 'package:basic_utils/basic_utils.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 
-import '../constants.dart';
+import '../common/logging.dart';
 
 class RadioService {
-  RadioBrowserApi? _radioBrowserApi;
+  static const _kRadioBrowserBaseUrl = 'all.api.radio-browser.info';
 
-  Future<String?> init() async {
-    if (_radioBrowserApi?.host != null && _tags?.isNotEmpty == true) {
-      return _radioBrowserApi?.host;
+  RadioBrowserApi? _radioBrowserApi;
+  final _propertiesChangedController = StreamController<bool>.broadcast();
+  Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
+  String? get connectedHost =>
+      _tags == null || _tags!.isEmpty ? null : _radioBrowserApi?.host;
+
+  Future<void> init() async {
+    if (connectedHost != null && _tags?.isNotEmpty == true) {
+      _propertiesChangedController.add(true);
+      return;
     }
 
-    final hosts = await _findHosts();
+    List<String>? hosts;
+    try {
+      hosts = await _findHosts().timeout(
+        const Duration(seconds: 5),
+      );
+    } on TimeoutException catch (_) {
+      printMessageInDebugMode('Timeout while trying to find a host.');
+      return;
+    } on Exception catch (e) {
+      printMessageInDebugMode(e);
+      return;
+    }
     for (var host in hosts) {
       try {
         _radioBrowserApi = RadioBrowserApi.fromHost(host);
-        _tags = await loadTags();
-        if (_radioBrowserApi?.host != null && _tags?.isNotEmpty == true) {
-          return _radioBrowserApi?.host;
+        _tags = await _loadTags();
+        if (connectedHost != null && _tags?.isNotEmpty == true) {
+          _propertiesChangedController.add(true);
+          return;
         }
-      } on Exception catch (_) {}
+      } on Exception catch (e) {
+        printMessageInDebugMode(e);
+      }
     }
-
-    return null;
   }
 
   Future<List<String>> _findHosts() async {
     final hosts = <String>[];
     try {
       final records = await DnsUtils.lookupRecord(
-        kRadioBrowserBaseUrl,
+        _kRadioBrowserBaseUrl,
         RRecordType.A,
       );
-      if (records?.isNotEmpty == false) {
+      if (records == null || records.isEmpty) {
         return [];
       }
 
-      for (RRecord record in records ?? <RRecord>[]) {
+      for (RRecord record in records) {
         final reverse = await DnsUtils.reverseDns(record.data);
         for (RRecord r in reverse ?? <RRecord>[]) {
           hosts.add(r.data.replaceAll('info.', 'info'));
         }
       }
-    } on Exception catch (_) {}
+    } on Exception catch (e) {
+      printMessageInDebugMode(e);
+    }
     return hosts;
   }
 
-  Future<List<Station>?> getStations({
+  final Map<String, Station> _cache = {};
+  Future<Station?> getStationByUUID(String uuid) async {
+    if (_cache.containsKey(uuid)) {
+      return _cache[uuid];
+    }
+
+    if (_radioBrowserApi == null) {
+      await init();
+      if (connectedHost == null) {
+        return null;
+      }
+    }
+
+    try {
+      final response = await _radioBrowserApi!.getStationsByUUID(uuids: [uuid]);
+      if (response.items.isEmpty) {
+        return null;
+      }
+      final station = response.items.first;
+      _cache[uuid] = station;
+      return station;
+    } on Exception catch (e) {
+      printMessageInDebugMode(e);
+    }
+
+    return null;
+  }
+
+  Future<Station?> getStationByUrl(String url) async {
+    if (_radioBrowserApi == null) {
+      await init();
+      if (connectedHost == null) {
+        return null;
+      }
+    }
+    try {
+      final response = await _radioBrowserApi!.getStationsByUrl(url: url);
+      final station = response.items.firstOrNull;
+      if (station != null) {
+        _cache[station.stationUUID] = station;
+      }
+      return station;
+    } on Exception catch (e) {
+      printMessageInDebugMode(e);
+    }
+
+    return null;
+  }
+
+  Future<Station?> getStationByName(String name) async {
+    if (_radioBrowserApi == null) {
+      await init();
+      if (connectedHost == null) {
+        return null;
+      }
+    }
+    try {
+      final response = await _radioBrowserApi!.getStationsByName(name: name);
+      final station = response.items.firstOrNull;
+      if (station != null) {
+        _cache[station.stationUUID] = station;
+      }
+      return station;
+    } on Exception catch (e) {
+      printMessageInDebugMode(e);
+    }
+
+    return null;
+  }
+
+  RadioBrowserListResponse<Station>? _response;
+  String? _uuid;
+  String? _country;
+  String? _name;
+  String? _state;
+  String? _tag;
+  String? _language;
+  int? _limit;
+  Future<List<Station>?> search({
+    String? uuid,
     String? country,
     String? name,
     String? state,
     String? tag,
     String? language,
-    int limit = 100,
+    required int limit,
   }) async {
     if (_radioBrowserApi == null) {
-      return [];
+      await init();
+      if (connectedHost == null) {
+        return [];
+      }
     }
 
-    RadioBrowserListResponse<Station>? response;
+    if (_response?.items != null &&
+        _uuid == uuid &&
+        _country == country &&
+        _name == name &&
+        _state == state &&
+        _tag == tag &&
+        _language == language &&
+        _limit == limit) {
+      return _response?.items;
+    }
+
     final parameters = InputParameters(
       hidebroken: true,
       order: 'stationcount',
-      limit: limit,
+      limit: limit > 300 ? 300 : limit,
     );
     try {
+      if (uuid != null) {
+        _response = await _radioBrowserApi!.getStationsByUUID(uuids: [uuid]);
+      }
       if (name?.isEmpty == false) {
-        response = await _radioBrowserApi!
+        _response = await _radioBrowserApi!
             .getStationsByName(name: name!, parameters: parameters);
       } else if (country?.isEmpty == false) {
-        response = await _radioBrowserApi!
+        _response = await _radioBrowserApi!
             .getStationsByCountry(country: country!, parameters: parameters);
       } else if (tag?.isEmpty == false) {
-        response = await _radioBrowserApi!
+        _response = await _radioBrowserApi!
             .getStationsByTag(tag: tag!, parameters: parameters);
       } else if (state?.isEmpty == false) {
-        response = await _radioBrowserApi!
+        _response = await _radioBrowserApi!
             .getStationsByState(state: state!, parameters: parameters);
       } else if (language?.isEmpty == false) {
-        response = await _radioBrowserApi!
+        _response = await _radioBrowserApi!
             .getStationsByLanguage(language: language!, parameters: parameters);
       }
-    } on Exception catch (_) {}
-    return response?.items ?? [];
+    } on Exception catch (e) {
+      printMessageInDebugMode(e);
+    }
+
+    _uuid = uuid;
+    _country = country;
+    _name = name;
+    _state = state;
+    _tag = tag;
+    _language = language;
+    _limit = limit;
+
+    return _response?.items ?? [];
   }
 
   List<Tag>? _tags;
   List<Tag>? get tags => _tags;
-  Future<List<Tag>?> loadTags({
+  Future<List<Tag>?>? _loadTags({
     String? filter,
     int? limit,
   }) async {
@@ -98,29 +225,37 @@ class RadioService {
     RadioBrowserListResponse<Tag>? response;
 
     try {
-      response = await _radioBrowserApi!.getTags(
-        filter: filter,
-        parameters: InputParameters(
-          hidebroken: true,
-          limit: limit ?? 5000,
-          order: 'stationcount',
-          reverse: true,
-        ),
-      );
+      response = await _radioBrowserApi!
+          .getTags(
+            filter: filter,
+            parameters: InputParameters(
+              hidebroken: true,
+              limit: limit ?? 5000,
+              order: 'stationcount',
+              reverse: true,
+            ),
+          )
+          .timeout(const Duration(seconds: 3));
       _tags = response.items;
-    } on Exception catch (_) {}
+    } on TimeoutException catch (_) {
+      printMessageInDebugMode(
+        'Timeout while trying to load tags from ${_radioBrowserApi?.host}.',
+      );
+      return null;
+    } on Exception catch (e) {
+      printMessageInDebugMode(e);
+    }
     return _tags;
   }
 
   Future<void> clickStation(String uuid) async {
     try {
       await _radioBrowserApi?.clickStation(uuid: uuid);
-    } on Exception catch (_) {}
+      printMessageInDebugMode('Station clicked: $uuid');
+    } on Exception catch (e) {
+      printMessageInDebugMode(e);
+    }
   }
 
-  Future<List<State>?> loadStates(String country) async {
-    if (_radioBrowserApi == null) return null;
-    final response = await _radioBrowserApi!.getStates(country: country);
-    return response.items;
-  }
+  Future<void> dispose() async => _propertiesChangedController.close();
 }

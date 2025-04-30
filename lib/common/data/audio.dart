@@ -4,10 +4,15 @@ import 'dart:io';
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
+import 'package:path/path.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 
+import '../../app_config.dart';
+import '../../extensions/media_file_x.dart';
 import '../../extensions/string_x.dart';
+import '../logging.dart';
+import 'audio_type.dart';
 import 'genres.dart';
 
 class Audio {
@@ -23,7 +28,7 @@ class Audio {
   /// The url of the image if remote.
   final String? imageUrl;
 
-  /// The description of the audio file or stream.
+  /// The description of the audio file or stream, for radio stations this is the UUID
   final String? description;
 
   /// Website link or feed url in case of podcasts.
@@ -35,13 +40,13 @@ class Audio {
   /// The duration of the audio file or stream. It can be null if was not set
   final double? durationMs;
 
-  /// The artist(s) of the audio file or stream.
+  /// The artist(s) of the audio file or stream, for radio stations this is the language.
   final String? artist;
 
-  /// The album of the audio file or stream.
+  /// The album of the audio file or stream, for radio stations these are the tags.
   final String? album;
 
-  /// The album artist(s) of the audio file or stream.
+  /// The album artist(s) of the audio file or stream, for radio stations this is the codec.
   final String? albumArtist;
 
   /// The track number of the audio file or stream.
@@ -68,7 +73,7 @@ class Audio {
   /// The image data. Only for local audio.
   final Uint8List? pictureData;
 
-  /// The file size of the audio file.
+  /// The file size of the audio file, for radio stations this is the stream quality in kbps.
   final int? fileSize;
 
   /// Optional art that can belong to a parent element.
@@ -259,28 +264,68 @@ class Audio {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Audio &&
-        ((other.url != null && other.url == url) ||
-            (other.path != null && other.path == path));
+    if (other is Audio) {
+      if (other.audioType != null &&
+          other.audioType == AudioType.radio &&
+          audioType == AudioType.radio) {
+        return other.uuid == uuid;
+      }
+
+      return (other.url != null && other.url == url) ||
+          (other.path != null && other.path == path);
+    }
+
+    return false;
   }
 
   @override
-  int get hashCode {
-    return path.hashCode ^ url.hashCode;
+  int get hashCode => path.hashCode ^ url.hashCode ^ uuid.hashCode;
+
+  /// Be sure that the file exists and is playable before calling this method!
+  factory Audio.local(
+    File file, {
+    bool getImage = false,
+    Function(String path)? onError,
+    Function(String path)? onParseError,
+  }) {
+    if (!file.existsSync() || !file.isPlayable) {
+      onError?.call(file.path);
+      throw Exception(
+        'Audio creation aborted! File does not exist or is not playable',
+      );
+    }
+
+    Audio audio;
+    try {
+      final metadata = readMetadata(file, getImage: getImage);
+      audio = Audio._fromMetadata(metadata);
+    } on MetadataParserException catch (error) {
+      printMessageInDebugMode(error);
+      onParseError?.call(file.path);
+      audio = Audio._localWithoutMetadata(path: file.path);
+    } on Exception catch (error) {
+      printMessageInDebugMode(error);
+      onError?.call(file.path);
+      audio = Audio._localWithoutMetadata(path: file.path);
+    } catch (error) {
+      printMessageInDebugMode(error);
+      onError?.call(file.path);
+      audio = Audio._localWithoutMetadata(path: file.path);
+    }
+    return audio;
   }
 
-  factory Audio.fromMetadata({
-    required String path,
-    required AudioMetadata data,
-  }) {
-    final fileName = File(path).uri.pathSegments.lastOrNull;
-    final genre = data.genres.firstOrNull?.startsWith('(') == true &&
-            data.genres.firstOrNull?.endsWith(')') == true
-        ? tagGenres[data.genres.firstOrNull
+  factory Audio._fromMetadata(AudioMetadata data) {
+    final path = data.file.path;
+    final fileName = data.file.uri.pathSegments.lastOrNull;
+    final genre = data.genres.isEmpty
+        ? null
+        : data.genres.firstOrNull?.startsWith('(') == true &&
+                data.genres.firstOrNull?.endsWith(')') == true
+            ? tagGenres[data.genres.firstOrNull
                 ?.replaceAll('(', '')
                 .replaceAll(')', '')]
-            ?.everyWordCapitalized
-        : data.genres.firstOrNull;
+            : data.genres.firstOrNull;
 
     return Audio(
       path: path,
@@ -288,12 +333,13 @@ class Audio {
       artist: data.artist,
       title: (data.title?.isNotEmpty == true ? data.title : fileName) ?? path,
       album: data.album,
+      // TODO(#339): wait for fix
       albumArtist: data.artist,
       discNumber: data.discNumber,
       discTotal: data.totalDisc,
       durationMs: data.duration?.inMilliseconds.toDouble(),
       // fileSize: data.,
-      genre: genre,
+      genre: genre?.everyWordCapitalized,
       pictureData:
           data.pictures.firstWhereOrNull((e) => e.bytes.isNotEmpty)?.bytes,
       pictureMimeType: data.pictures.firstOrNull?.mimetype,
@@ -302,16 +348,39 @@ class Audio {
     );
   }
 
+  factory Audio._localWithoutMetadata({required String path}) => Audio(
+        path: path,
+        title: basenameWithoutExtension(path),
+        album: 'Unknown',
+        artist: 'Unknown',
+        albumArtist: 'Unknown',
+        genre: 'Unknown',
+        audioType: AudioType.local,
+      );
+
+  String? get uuid => description;
+  String get language => artist ?? '';
+  int get clicks => discTotal ?? 0;
+  int get bitRate => fileSize ?? 0;
+  List<String>? get tags => album?.isNotEmpty == false
+      ? null
+      : <String>[
+          for (final tag in album?.split(',') ?? <String>[]) tag,
+        ];
+
   factory Audio.fromStation(Station station) {
     return Audio(
       url: station.urlResolved,
-      title: station.name,
-      artist: station.language ?? station.name,
+      title: station.name.trim(),
+      artist: station.language,
       album: station.tags ?? '',
       audioType: AudioType.radio,
       imageUrl: station.favicon,
       website: station.homepage,
       description: station.stationUUID,
+      fileSize: station.bitrate,
+      albumArtist: station.codec,
+      discTotal: station.clickCount,
     );
   }
 
@@ -341,15 +410,30 @@ class Audio {
   String? get albumId {
     final albumName = album;
     final artistName = artist;
-    final id = albumName == null && artistName == null
+    return albumName == null && artistName == null
         ? null
-        : '${artistName ?? ''}:${albumName ?? ''}';
-    return id;
+        : createAlbumId(artistName, albumName);
   }
-}
 
-enum AudioType {
-  local,
-  radio,
-  podcast;
+  static String createAlbumId(String? artistName, String? albumName) =>
+      '${artistName ?? ''}$albumIdSplitter${albumName ?? ''}'.replaceAll(
+        albumIdReplacement,
+        albumIdReplacer,
+      );
+
+  // Note this assumes that no artist or no album includes ___ on their own =)
+  static const String albumIdSplitter =
+      '$albumIdReplacer${AppConfig.appId}$albumIdReplacer';
+  static const String albumIdReplacer = '___';
+  static const String albumIdReplacement = ' ';
+
+  bool get canHaveLocalCover =>
+      albumId != null &&
+      albumId!.isNotEmpty &&
+      path != null &&
+      audioType == AudioType.local;
+
+  bool get isLocal => audioType == AudioType.local;
+  bool get isPodcast => audioType == AudioType.podcast;
+  bool get isRadio => audioType == AudioType.radio;
 }

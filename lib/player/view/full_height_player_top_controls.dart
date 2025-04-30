@@ -1,22 +1,27 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/constants.dart';
 
 import '../../app/app_model.dart';
+import '../../app/connectivity_model.dart';
+import '../../app/view/routing_manager.dart';
+import '../../app_config.dart';
+import '../../common/data/audio_type.dart';
+import '../../common/page_ids.dart';
 import '../../common/view/icons.dart';
+import '../../common/view/like_icon_button.dart';
+import '../../common/view/search_button.dart';
 import '../../common/view/share_button.dart';
+import '../../common/view/stared_station_icon_button.dart';
+import '../../common/view/theme.dart';
+import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-
-import '../../common/data/audio.dart';
-import '../../constants.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
+import '../../search/search_model.dart';
 import 'playback_rate_button.dart';
-import 'player_like_icon.dart';
+import 'player_pause_timer_button.dart';
 import 'player_view.dart';
-import 'queue_button.dart';
+import 'queue/queue_button.dart';
 import 'volume_popup.dart';
 
 class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
@@ -25,41 +30,73 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
     required this.iconColor,
     required this.playerPosition,
     this.padding,
+    this.showQueueButton = true,
   });
 
   final Color iconColor;
   final PlayerPosition playerPosition;
   final EdgeInsetsGeometry? padding;
+  final bool showQueueButton;
 
   @override
   Widget build(BuildContext context) {
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
-    final showQueueButton = watchPropertyValue(
-      (PlayerModel m) =>
-          m.queue.length > 1 || audio?.audioType == AudioType.local,
-    );
-    final playerToTheRight = context.m.size.width > kSideBarThreshHold;
+
+    final playerToTheRight = context.mediaQuerySize.width > kSideBarThreshHold;
     final fullScreen = watchPropertyValue((AppModel m) => m.fullWindowMode);
     final appModel = di<AppModel>();
-    final isOnline = watchPropertyValue((PlayerModel m) => m.isOnline);
+    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     final active = audio?.path != null || isOnline;
 
+    Future<void> onFullHeightButtonPressed() async {
+      await appModel.setFullWindowMode(
+        playerPosition == PlayerPosition.fullWindow ? false : true,
+      );
+
+      di<PlayerModel>().bottomPlayerHeight = bottomPlayerDefaultHeight;
+
+      appModel.setShowWindowControls(
+        (fullScreen == true && playerToTheRight) ? false : true,
+      );
+    }
+
     return Padding(
-      padding: padding ??
-          EdgeInsets.only(
-            right: kYaruPagePadding,
-            top: Platform.isMacOS ? 0 : kYaruPagePadding,
-          ),
+      padding: padding ?? playerTopControlsPadding,
       child: Wrap(
         alignment: WrapAlignment.end,
         spacing: 5.0,
         children: [
-          if (audio?.audioType != AudioType.podcast)
-            PlayerLikeIcon(
-              audio: audio,
-              color: iconColor,
+          if (playerPosition == PlayerPosition.fullWindow)
+            SearchButton(
+              iconColor: iconColor,
+              onPressed: () async {
+                await onFullHeightButtonPressed();
+                di<SearchModel>()
+                  ..setSearchQuery('')
+                  ..setAudioType(audio?.audioType);
+                di<RoutingManager>().push(pageId: PageIDs.searchPage);
+              },
             ),
-          if (showQueueButton) QueueButton(color: iconColor),
+          if (audio?.audioType != AudioType.podcast)
+            switch (audio?.audioType) {
+              AudioType.local => LikeIconButton(
+                  audio: audio,
+                  color: iconColor,
+                ),
+              AudioType.radio => StaredStationIconButton(
+                  audio: audio,
+                  color: iconColor,
+                ),
+              _ => const SizedBox.shrink(),
+            },
+          if (showQueueButton)
+            QueueButton(
+              color: iconColor,
+              onTap: () => di<AppModel>().setOrToggleQueueOverlay(),
+            ),
+          PlayerPauseTimerButton(
+            iconColor: iconColor,
+          ),
           ShareButton(
             audio: audio,
             active: active,
@@ -70,26 +107,18 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
               active: active,
               color: iconColor,
             ),
-          VolumeSliderPopup(color: iconColor),
+          if (!AppConfig.isMobilePlatform) VolumeSliderPopup(color: iconColor),
           IconButton(
             tooltip: playerPosition == PlayerPosition.fullWindow
                 ? context.l10n.leaveFullWindow
                 : context.l10n.fullWindow,
             icon: Icon(
               playerPosition == PlayerPosition.fullWindow
-                  ? Iconz().fullWindowExit
-                  : Iconz().fullWindow,
+                  ? Iconz.fullWindowExit
+                  : Iconz.fullWindow,
               color: iconColor,
             ),
-            onPressed: () {
-              appModel.setFullWindowMode(
-                playerPosition == PlayerPosition.fullWindow ? false : true,
-              );
-
-              appModel.setShowWindowControls(
-                (fullScreen == true && playerToTheRight) ? false : true,
-              );
-            },
+            onPressed: onFullHeightButtonPressed,
           ),
         ],
       ),

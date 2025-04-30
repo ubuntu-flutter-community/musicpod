@@ -45,7 +45,7 @@ class ShareButton extends StatelessWidget {
               );
             },
       icon: Icon(
-        Iconz().share,
+        Iconz.share,
         color: color,
         size: iconSize,
       ),

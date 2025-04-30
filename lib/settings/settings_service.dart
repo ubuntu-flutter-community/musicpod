@@ -1,217 +1,164 @@
 import 'dart:async';
+import 'dart:io';
 
-import 'package:flutter/foundation.dart';
-import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../constants.dart';
-import '../patch_notes/patch_notes.dart';
+import '../app_config.dart';
+import '../common/data/close_btn_action.dart';
+import '../common/file_names.dart';
+import '../extensions/shared_preferences_x.dart';
+import '../local_audio/local_audio_view.dart';
 import '../persistence_utils.dart';
 
 class SettingsService {
-  SettingsService({required this.allowManualUpdates});
+  SettingsService({
+    required String? downloadsDefaultDir,
+    required SharedPreferences sharedPreferences,
+    required String forcedUpdateThreshold,
+  })  : _preferences = sharedPreferences,
+        _downloadsDefaultDir = downloadsDefaultDir,
+        _forcedUpdateThreshold = forcedUpdateThreshold;
 
-  final bool allowManualUpdates;
-
-  String? _appName;
-  String? get appName => _appName;
-  String? _packageName;
-  String? get packageName => _packageName;
-  String? _version;
-  String? get version => _version;
-  String? _buildNumber;
-  String? get buildNumber => _buildNumber;
-
-  Future<void> _initPackageInfo() async {
-    final packageInfo = await PackageInfo.fromPlatform();
-    _appName = packageInfo.appName;
-    _packageName = packageInfo.packageName;
-    _version = packageInfo.version;
-    _buildNumber = packageInfo.buildNumber;
+  final String? _downloadsDefaultDir;
+  final SharedPreferences _preferences;
+  final _propertiesChangedController = StreamController<bool>.broadcast();
+  Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
+  bool notify(bool saved) {
+    if (saved) _propertiesChangedController.add(true);
+    return saved;
   }
 
-  final _themeIndexController = StreamController<bool>.broadcast();
-  Stream<bool> get themeIndexChanged => _themeIndexController.stream;
-  int _themeIndex = 0;
-  int get themeIndex => _themeIndex;
+  int get themeIndex => _preferences.getInt(SPKeys.themeIndex) ?? 0;
   void setThemeIndex(int value) {
-    if (value == _themeIndex) return;
-    writeSetting(kThemeIndex, value.toString()).then((_) {
-      _themeIndex = value;
-      _themeIndexController.add(true);
-    });
+    _preferences.setInt(SPKeys.themeIndex, value).then(notify);
   }
 
-  Future<void> _initThemeIndex() async {
-    final themeIndexStringOrNull = await readSetting(kThemeIndex);
-    if (themeIndexStringOrNull != null) {
-      final themeParse = int.tryParse(themeIndexStringOrNull);
-      if (themeParse != null) {
-        _themeIndex = themeParse;
-      }
-    }
-  }
+  int get localAudioIndex =>
+      _preferences.getInt(SPKeys.localAudioIndex) ??
+      LocalAudioView.albums.index;
+  void setLocalAudioIndex(int value) =>
+      _preferences.setInt(SPKeys.localAudioIndex, value).then(notify);
 
-  bool _neverShowFailedImports = false;
-  bool get neverShowFailedImports => _neverShowFailedImports;
-  final _neverShowFailedImportsController = StreamController<bool>.broadcast();
-  Stream<bool> get neverShowFailedImportsChanged =>
-      _neverShowFailedImportsController.stream;
+  bool get neverShowFailedImports =>
+      _preferences.getBool(SPKeys.neverShowImportFails) ?? false;
   void setNeverShowFailedImports(bool value) {
-    writeSetting(
-      kNeverShowImportFails,
-      value.toString(),
-    ).then((_) {
-      _neverShowFailedImports = value;
-      _neverShowFailedImportsController.add(true);
-    });
+    _preferences.setBool(SPKeys.neverShowImportFails, value).then(notify);
   }
 
-  Future<void> _initNeverShowImports() async {
-    final neverShowImportsOrNull = await readSetting(kNeverShowImportFails);
-    _neverShowFailedImports = neverShowImportsOrNull == null
-        ? false
-        : bool.parse(neverShowImportsOrNull);
+  bool get enableLastFmScrobbling =>
+      _preferences.getBool(SPKeys.enableLastFm) ?? false;
+  String? get lastFmApiKey => _preferences.getString(SPKeys.lastFmApiKey);
+  String? get lastFmSecret => _preferences.getString(SPKeys.lastFmSecret);
+  String? get lastFmSessionKey =>
+      _preferences.getString(SPKeys.lastFmSessionKey);
+  String? get lastFmUsername => _preferences.getString(SPKeys.lastFmUsername);
+  void setEnableLastFmScrobbling(bool value) =>
+      _preferences.setBool(SPKeys.enableLastFm, value).then(notify);
+
+  void setLastFmApiKey(String value) =>
+      _preferences.setString(SPKeys.lastFmApiKey, value).then(notify);
+
+  void setLastFmSecret(String value) =>
+      _preferences.setString(SPKeys.lastFmSecret, value).then(notify);
+
+  void setLastFmSessionKey(String value) =>
+      _preferences.setString(SPKeys.lastFmSessionKey, value).then(notify);
+
+  void setLastFmUsername(String value) =>
+      _preferences.setString(SPKeys.lastFmUsername, value).then(notify);
+
+  bool get enableListenBrainzScrobbling =>
+      _preferences.getBool(SPKeys.enableListenBrainz) ?? false;
+  String? get listenBrainzApiKey =>
+      _preferences.getString(SPKeys.listenBrainzApiKey);
+  void setEnableListenBrainzScrobbling(bool value) =>
+      _preferences.setBool(SPKeys.enableListenBrainz, value).then(notify);
+  void setListenBrainzApiKey(String value) =>
+      _preferences.setString(SPKeys.listenBrainzApiKey, value).then(notify);
+
+  bool get enableDiscordRPC =>
+      (_preferences.getBool(SPKeys.enableDiscord) ?? false) &&
+      AppConfig.allowDiscordRPC;
+  Future<bool> setEnableDiscordRPC(bool value) async =>
+      notify(await _preferences.setBool(SPKeys.enableDiscord, value));
+
+  bool get useMoreAnimations =>
+      _preferences.getBool(SPKeys.useMoreAnimations) ?? !Platform.isLinux;
+  void setUseMoreAnimations(bool value) =>
+      _preferences.setBool(SPKeys.useMoreAnimations, value).then(notify);
+
+  bool get notifyDataSafeMode =>
+      _preferences.getBool(SPKeys.notifyDataSafeMode) ?? true;
+  void setNotifyDataSafeMode(bool value) =>
+      _preferences.setBool(SPKeys.notifyDataSafeMode, value).then(notify);
+
+  bool recentPatchNotesDisposed(String version) =>
+      _preferences.getString(SPKeys.patchNotesDisposed) == version;
+
+  Future<void> disposePatchNotes(String version) async =>
+      _preferences.setString(SPKeys.patchNotesDisposed, version).then(notify);
+
+  bool get usePodcastIndex =>
+      _preferences.getBool(SPKeys.usePodcastIndex) ?? false;
+  Future<void> setUsePodcastIndex(bool value) async =>
+      _preferences.setBool(SPKeys.usePodcastIndex, value).then(notify);
+
+  String? get podcastIndexApiKey =>
+      _preferences.getString(SPKeys.podcastIndexApiKey);
+  void setPodcastIndexApiKey(String value) =>
+      _preferences.setString(SPKeys.podcastIndexApiKey, value).then(notify);
+
+  String? get podcastIndexApiSecret =>
+      _preferences.getString(SPKeys.podcastIndexApiSecret);
+  void setPodcastIndexApiSecret(String value) =>
+      _preferences.setString(SPKeys.podcastIndexApiSecret, value).then(notify);
+
+  String? get directory =>
+      _preferences.getString(SPKeys.directory) ?? getMusicDefaultDir();
+  Future<void> setDirectory(String directory) async =>
+      _preferences.setString(SPKeys.directory, directory).then(notify);
+
+  String? get downloadsDir =>
+      _preferences.getString(SPKeys.downloads) ?? _downloadsDefaultDir;
+  Future<void> setDownloadsCustomDir(String directory) async =>
+      _preferences.setString(SPKeys.downloads, directory).then(notify);
+
+  final String _forcedUpdateThreshold;
+  String get forcedUpdateThreshold => _forcedUpdateThreshold;
+
+  bool getBackupSaved(String version) =>
+      _preferences.getBool(SPKeys.backupSaved + version) ?? false;
+
+  Future<void> setBackupSaved(String version, bool value) async =>
+      _preferences.setBool(SPKeys.backupSaved + version, value).then(notify);
+
+  bool get showPositionDuration =>
+      _preferences.getBool(SPKeys.showPositionDuration) ?? false;
+  Future<void> setShowPositionDuration(bool value) async =>
+      _preferences.setBool(SPKeys.showPositionDuration, value).then(notify);
+
+  CloseBtnAction get closeBtnActionIndex =>
+      _preferences.getString(SPKeys.closeBtnAction) == null
+          ? CloseBtnAction.alwaysAsk
+          : CloseBtnAction.values.firstWhere(
+              (element) =>
+                  element.toString() ==
+                  _preferences.getString(SPKeys.closeBtnAction),
+              orElse: () => CloseBtnAction.alwaysAsk,
+            );
+  void setCloseBtnActionIndex(CloseBtnAction value) {
+    _preferences
+        .setString(SPKeys.closeBtnAction, value.toString())
+        .then(notify);
   }
 
-  final _recentPatchNotesDisposedController =
-      StreamController<bool>.broadcast();
-  Stream<bool> get recentPatchNotesDisposedChanged =>
-      _recentPatchNotesDisposedController.stream;
-  bool _recentPatchNotesDisposed = false;
-  bool get recentPatchNotesDisposed => _recentPatchNotesDisposed;
-  Future<void> disposePatchNotes() async {
-    await writeSetting(kPatchNotesDisposed, kRecentPatchNotesDisposed)
-        .then((_) {
-      _recentPatchNotesDisposed = true;
-      _recentPatchNotesDisposedController.add(true);
-    });
+  Future<void> wipeAllSettings() async {
+    await Future.wait([
+      for (final name in FileNames.all) wipeCustomSettings(filename: name),
+      _preferences.clear(),
+    ]);
+    exit(0);
   }
 
-  Future<void> _initRecentPatchNotesDisposed() async {
-    String? value = await readSetting(kPatchNotesDisposed);
-    if (value == kRecentPatchNotesDisposed) {
-      _recentPatchNotesDisposed = true;
-    }
-  }
-
-  final _usePodcastIndexController = StreamController<bool>.broadcast();
-  Stream<bool> get usePodcastIndexChanged => _usePodcastIndexController.stream;
-  bool _usePodcastIndex = false;
-  bool get usePodcastIndex => _usePodcastIndex;
-  Future<void> setUsePodcastIndex(bool value) async {
-    return writeSetting(kUsePodcastIndex, value.toString()).then((_) {
-      _usePodcastIndex = value;
-      _usePodcastIndexController.add(true);
-    });
-  }
-
-  Future<void> _initUsePodcastIndex() async {
-    final usePodcastIndexOrNull = await readSetting(kUsePodcastIndex);
-    _usePodcastIndex = usePodcastIndexOrNull == null
-        ? false
-        : bool.tryParse(usePodcastIndexOrNull) ?? false;
-  }
-
-  final _podcastIndexApiKeyController = StreamController<bool>.broadcast();
-  Stream<bool> get podcastIndexApiKeyChanged =>
-      _podcastIndexApiKeyController.stream;
-  String? _podcastIndexApiKey;
-  String? get podcastIndexApiKey => _podcastIndexApiKey;
-  void setPodcastIndexApiKey(String value) {
-    writeSetting(kPodcastIndexApiKey, value).then((_) {
-      _podcastIndexApiKey = value;
-      _podcastIndexApiKeyController.add(true);
-    });
-  }
-
-  Future<void> _initPodcastIndexApiKey() async {
-    String? value = await readSetting(kPodcastIndexApiKey);
-    if (value != null) {
-      _podcastIndexApiKey = value;
-    }
-  }
-
-  final _podcastIndexApiSecretController = StreamController<bool>.broadcast();
-  Stream<bool> get podcastIndexApiSecretChanged =>
-      _podcastIndexApiSecretController.stream;
-  String? _podcastIndexApiSecret;
-  String? get podcastIndexApiSecret => _podcastIndexApiSecret;
-  void setPodcastIndexApiSecret(String value) {
-    writeSetting(kPodcastIndexApiSecret, value).then((_) {
-      _podcastIndexApiSecret = value;
-      _podcastIndexApiSecretController.add(true);
-    });
-  }
-
-  Future<void> _initPodcastIndexApiSecret() async {
-    String? value = await readSetting(kPodcastIndexApiSecret);
-    if (value != null) {
-      _podcastIndexApiSecret = value;
-    }
-  }
-
-  final _directoryController = StreamController<bool>.broadcast();
-  Stream<bool> get directoryChanged => _directoryController.stream;
-  String? _directory;
-  String? get directory => _directory;
-  Future<void> setDirectory(String directory) async {
-    await writeSetting(kDirectoryProperty, directory).then((_) {
-      _directory = directory;
-      _directoryController.add(true);
-    });
-  }
-
-  Future<void> _initDirectory(String? testDir) async {
-    String? value = testDir;
-    value ??= await readSetting(kDirectoryProperty);
-    value ??= await getMusicDir();
-    if (value != null) {
-      _directory = value;
-    }
-  }
-
-  final _useArtistGridViewController = StreamController<bool>.broadcast();
-  Stream<bool> get useArtistGridViewChanged =>
-      _useArtistGridViewController.stream;
-  bool _useArtistGridView = false;
-  bool get useArtistGridView => _useArtistGridView;
-  void setUseArtistGridView(bool value) {
-    writeSetting(kUseArtistGridView, value.toString()).then((_) {
-      _useArtistGridView = value;
-      _useArtistGridViewController.add(true);
-    });
-  }
-
-  Future<void> _initUseArtistGridView() async {
-    final useArtistGridViewOrNull = await readSetting(kUseArtistGridView);
-    _useArtistGridView = useArtistGridViewOrNull == null
-        ? false
-        : (bool.tryParse(useArtistGridViewOrNull) ?? false);
-  }
-
-  Future<void> init({@visibleForTesting String? testDir}) async {
-    await _initPackageInfo();
-    await _initSettings(testDir);
-  }
-
-  Future<void> _initSettings(String? testDir) async {
-    await _initThemeIndex();
-    await _initDirectory(testDir);
-    await _initUsePodcastIndex();
-    await _initPodcastIndexApiKey();
-    await _initPodcastIndexApiSecret();
-    await _initRecentPatchNotesDisposed();
-    await _initNeverShowImports();
-    await _initUseArtistGridView();
-  }
-
-  Future<void> dispose() async {
-    await _themeIndexController.close();
-    await _recentPatchNotesDisposedController.close();
-    await _neverShowFailedImportsController.close();
-    await _directoryController.close();
-    await _podcastIndexApiSecretController.close();
-    await _usePodcastIndexController.close();
-    await _podcastIndexApiKeyController.close();
-  }
+  Future<void> dispose() async => _propertiesChangedController.close();
 }

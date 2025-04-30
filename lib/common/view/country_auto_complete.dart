@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:podcast_search/podcast_search.dart';
-import 'package:yaru/constants.dart';
 
-import '../../constants.dart';
+import '../../app_config.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/string_x.dart';
-import '../../extensions/theme_data_x.dart';
+import '../../extensions/country_x.dart';
 import '../../l10n/l10n.dart';
 import 'icons.dart';
 import 'theme.dart';
@@ -29,6 +27,8 @@ class CountryAutoComplete extends StatelessWidget {
     this.border,
     this.fillColor,
     this.contentPadding,
+    this.suffixIcon,
+    this.autofocus = false,
   });
 
   final void Function(Country? country)? onSelected;
@@ -45,24 +45,24 @@ class CountryAutoComplete extends StatelessWidget {
   final OutlineInputBorder? border;
   final Color? fillColor;
   final EdgeInsets? contentPadding;
+  final Widget? suffixIcon;
+  final bool autofocus;
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
 
     return SizedBox(
-      height: height ?? (yaruStyled ? kYaruTitleBarItemHeight : 38),
+      height: height ?? inputHeight,
       width: width,
       child: LayoutBuilder(
         builder: (_, constraints) {
           return Autocomplete<Country>(
             key: ValueKey(value?.name),
             initialValue: TextEditingValue(
-              text: value?.name.camelToSentence.everyWordCapitalized ??
-                  context.l10n.all,
+              text: value?.localize(context.l10n) ?? context.l10n.all,
             ),
-            displayStringForOption: (option) =>
-                option.name.camelToSentence.everyWordCapitalized,
+            displayStringForOption: (option) => option.localize(context.l10n),
             fieldViewBuilder: (
               context,
               textEditingController,
@@ -72,6 +72,7 @@ class CountryAutoComplete extends StatelessWidget {
               final hintText =
                   '${context.l10n.search}: ${context.l10n.country}';
               return TextField(
+                autofocus: autofocus,
                 maxLines: 1,
                 onTap: () {
                   textEditingController.selection = TextSelection(
@@ -79,16 +80,12 @@ class CountryAutoComplete extends StatelessWidget {
                     extentOffset: textEditingController.value.text.length,
                   );
                 },
-                style:
-                    style ?? (yaruStyled ? theme.textTheme.bodyMedium : null),
-                strutStyle: yaruStyled
-                    ? const StrutStyle(
-                        leading: 0.2,
-                      )
-                    : null,
-                textAlignVertical: yaruStyled ? TextAlignVertical.center : null,
-                cursorWidth: yaruStyled ? 1 : 2.0,
-                decoration: yaruStyled
+                style: style ??
+                    (AppConfig.yaruStyled ? theme.textTheme.bodyMedium : null),
+                textAlignVertical:
+                    AppConfig.yaruStyled ? TextAlignVertical.center : null,
+                cursorWidth: AppConfig.yaruStyled ? 1 : 2.0,
+                decoration: AppConfig.yaruStyled
                     ? createYaruDecoration(
                         theme: theme,
                         style: style,
@@ -96,6 +93,7 @@ class CountryAutoComplete extends StatelessWidget {
                         contentPadding: contentPadding,
                         hintText: hintText,
                         border: border,
+                        suffixIcon: suffixIcon,
                       )
                     : createMaterialDecoration(
                         colorScheme: theme.colorScheme,
@@ -106,6 +104,7 @@ class CountryAutoComplete extends StatelessWidget {
                         fillColor: fillColor,
                         contentPadding: contentPadding,
                         hintText: hintText,
+                        suffixIcon: suffixIcon,
                       ),
                 controller: textEditingController,
                 focusNode: focusNode,
@@ -118,15 +117,13 @@ class CountryAutoComplete extends StatelessWidget {
               return Align(
                 alignment: Alignment.topLeft,
                 child: SizedBox(
-                  width: width ?? kSearchBarWidth,
+                  width: width ?? searchBarWidth,
                   height:
                       (options.length * 50) > 400 ? 400 : options.length * 50,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(6),
                     child: Material(
-                      color: theme.isLight
-                          ? theme.colorScheme.surface
-                          : theme.colorScheme.surfaceVariant,
+                      color: theme.popupMenuTheme.color,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(6),
                         side: BorderSide(
@@ -178,10 +175,16 @@ class CountryAutoComplete extends StatelessWidget {
               if (textEditingValue.text.isEmpty) {
                 return countries ?? [];
               }
+
               return countries?.where(
-                    (e) => e.name
-                        .toLowerCase()
-                        .contains(textEditingValue.text.toLowerCase()),
+                    (e) =>
+                        e
+                            .localize(context.l10n)
+                            .toLowerCase()
+                            .contains(textEditingValue.text.toLowerCase()) ||
+                        e.name
+                            .toLowerCase()
+                            .contains(textEditingValue.text.toLowerCase()),
                   ) ??
                   [];
             },
@@ -228,9 +231,9 @@ class _CountryTile extends StatelessWidget {
       tileColor: highlight ? theme.focusColor : null,
       onTap: () => onSelected(t),
       title: Tooltip(
-        message: t.name.camelToSentence.everyWordCapitalized,
+        message: t.localize(context.l10n),
         child: Text(
-          t.name.camelToSentence.everyWordCapitalized,
+          t.localize(context.l10n),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
@@ -240,7 +243,7 @@ class _CountryTile extends StatelessWidget {
           favs?.contains(t.code) == false ? addFav(t) : removeFav(t);
         },
         icon: Icon(
-          favs?.contains(t.code) == true ? Iconz().starFilled : Iconz().star,
+          favs?.contains(t.code) == true ? Iconz.starFilled : Iconz.star,
         ),
       ),
     );

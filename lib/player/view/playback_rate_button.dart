@@ -17,16 +17,16 @@ class PlaybackRateButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final rate = watchPropertyValue((PlayerModel m) => m.rate);
     final setRate = di<PlayerModel>().setRate;
 
     return PopupMenuButton(
       icon: Icon(
         switch (rate) {
-          2.0 => Iconz().levelHigh,
-          1.5 => Iconz().levelMiddle,
-          _ => Iconz().levelLow
+          2.0 => Iconz.levelHigh,
+          1.5 => Iconz.levelMiddle,
+          _ => Iconz.levelLow
         },
         color: !active
             ? theme.disabledColor
@@ -35,16 +35,14 @@ class PlaybackRateButton extends StatelessWidget with WatchItMixin {
                 : (color ?? theme.colorScheme.onSurface)),
       ),
       initialValue: rate,
-      itemBuilder: (context) {
-        return rateValues
-            .map(
-              (e) => PopupMenuItem(
-                onTap: () => setRate(e),
-                child: Text('x$e'),
-              ),
-            )
-            .toList();
-      },
+      itemBuilder: (context) => PlayerModel.rateValues
+          .map(
+            (e) => PopupMenuItem(
+              onTap: () => setRate(e),
+              child: Text('x$e'),
+            ),
+          )
+          .toList(),
     );
   }
 }

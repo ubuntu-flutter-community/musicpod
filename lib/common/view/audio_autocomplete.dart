@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:yaru/constants.dart';
 
-import '../../constants.dart';
+import '../../app_config.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
@@ -23,13 +23,14 @@ class AudioAutoComplete extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
+    final colorScheme = context.colorScheme;
     final fallBackTextStyle = theme.textTheme.bodyMedium?.copyWith(
       fontWeight: FontWeight.w500,
     );
 
     return SizedBox(
-      height: yaruStyled ? kYaruTitleBarItemHeight : 38,
+      height: AppConfig.yaruStyled ? kYaruTitleBarItemHeight : 38,
       child: LayoutBuilder(
         builder: (_, constraints) {
           return Autocomplete<Audio>(
@@ -52,21 +53,22 @@ class AudioAutoComplete extends StatelessWidget {
                     extentOffset: textEditingController.value.text.length,
                   );
                 },
-                style: yaruStyled ? theme.textTheme.bodyMedium : null,
-                strutStyle: yaruStyled
+                style: AppConfig.yaruStyled ? theme.textTheme.bodyMedium : null,
+                strutStyle: AppConfig.yaruStyled
                     ? const StrutStyle(
                         leading: 0.2,
                       )
                     : null,
-                textAlignVertical: yaruStyled ? TextAlignVertical.center : null,
-                cursorWidth: yaruStyled ? 1 : 2.0,
-                decoration: yaruStyled
+                textAlignVertical:
+                    AppConfig.yaruStyled ? TextAlignVertical.center : null,
+                cursorWidth: AppConfig.yaruStyled ? 1 : 2.0,
+                decoration: AppConfig.yaruStyled
                     ? createYaruDecoration(
                         theme: theme,
                         hintText: hintText,
                       )
                     : createMaterialDecoration(
-                        colorScheme: theme.colorScheme,
+                        colorScheme: colorScheme,
                         hintText: hintText,
                       ),
                 controller: textEditingController,
@@ -82,15 +84,15 @@ class AudioAutoComplete extends StatelessWidget {
               return Align(
                 alignment: Alignment.topLeft,
                 child: SizedBox(
-                  width: kSearchBarWidth,
+                  width: searchBarWidth,
                   height:
                       (options.length * 50) > 400 ? 400 : options.length * 50,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(6),
                     child: Material(
                       color: theme.isLight
-                          ? theme.colorScheme.surface
-                          : theme.colorScheme.surfaceVariant,
+                          ? colorScheme.surface
+                          : colorScheme.surfaceContainerHighest,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(6),
                         side: BorderSide(

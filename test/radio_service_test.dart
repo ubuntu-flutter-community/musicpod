@@ -10,7 +10,8 @@ Future<void> main() async {
   final service = RadioService();
   String? host;
   setUp(() async {
-    host = await service.init();
+    await service.init();
+    host = service.connectedHost;
   });
 
   group('radio tests', () {
@@ -23,31 +24,47 @@ Future<void> main() async {
     });
 
     test('find6forty', () async {
-      final result = await service.getStations(name: '6forty');
+      final result = await service.search(
+        name: '6forty',
+        limit: 10,
+      );
       expect(result?.isNotEmpty, true);
       expect(result?.any((e) => e.name.contains('6forty')), true);
-      expect(result?.any((e) => e.url == sixFortyStation.url), true);
+      expect(
+        result?.any((e) => e.urlResolved == sixFortyStation.url),
+        true,
+      );
     });
 
     test('findByName', () async {
-      final result = await service.getStations(name: 'WDR');
+      final result = await service.search(
+        name: 'WDR',
+        limit: 10,
+      );
       expect(result?.isNotEmpty, true);
       expect(result?.any((e) => e.name.toLowerCase().contains('wdr')), true);
     });
 
     test('findByCountry', () async {
-      final result = await service.getStations(country: 'Germany');
+      final result = await service.search(
+        country: 'Germany',
+        limit: 10,
+      );
       expect(result?.isNotEmpty, true);
     });
 
     test('findByTag', () async {
-      final result = await service.getStations(tag: 'metal');
+      final result = await service.search(
+        tag: 'metal',
+        limit: 10,
+      );
       expect(result?.isNotEmpty, true);
     });
 
     test('findByState', () async {
-      final result = await service.getStations(
+      final result = await service.search(
         state: 'nordrhein',
+        limit: 10,
       );
       expect(result?.isNotEmpty, true);
     });

@@ -6,6 +6,7 @@ import 'package:watch_it/watch_it.dart';
 import '../../app/app_model.dart';
 import '../../l10n/l10n.dart';
 import 'icons.dart';
+import 'ui_constants.dart';
 
 class StreamProviderShareButton extends StatelessWidget {
   const StreamProviderShareButton({
@@ -14,12 +15,14 @@ class StreamProviderShareButton extends StatelessWidget {
     required this.text,
     required this.streamProvider,
     this.color,
+    this.tile = false,
   });
 
   final void Function()? onSearch;
   final String? text;
   final StreamProvider streamProvider;
   final Color? color;
+  final bool tile;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +45,24 @@ class StreamProviderShareButton extends StatelessWidget {
     final clearedText =
         text?.replaceAll(RegExp(r"[:/?#\[\]@!$&'()*+,;=%]"), ' ') ?? '';
 
-    String address = buildAddress(clearedText);
+    String address = buildAddress(clearedText.trim());
+
+    if (tile) {
+      return ListTile(
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: kLargestSpace,
+          vertical: kSmallestSpace,
+        ),
+        minLeadingWidth: 2 * kLargestSpace,
+        leading: Icon(iconData),
+        title: Text('$tooltip ${context.l10n.search}'),
+        onTap: () => launchUrl(
+          Uri.parse(
+            address,
+          ),
+        ),
+      );
+    }
 
     return IconButton(
       tooltip: onSearch != null
@@ -57,7 +77,7 @@ class StreamProviderShareButton extends StatelessWidget {
       icon: Padding(
         padding: const EdgeInsets.only(bottom: 2),
         child: Icon(
-          onSearch != null ? Iconz().globe : iconData,
+          onSearch != null ? Iconz.globe : iconData,
           color: color,
         ),
       ),

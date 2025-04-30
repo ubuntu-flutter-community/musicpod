@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../data/audio.dart';
+import 'adaptive_container.dart';
 import 'audio_card.dart';
 import 'audio_card_bottom.dart';
-import 'common_widgets.dart';
+import 'theme.dart';
 
 class LoadingGrid extends StatelessWidget {
   const LoadingGrid({
@@ -15,18 +16,44 @@ class LoadingGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return GridView(
+          gridDelegate: audioCardGridDelegate,
+          padding: getAdaptiveHorizontalPadding(constraints: constraints),
+          children: List.generate(limit, (index) => const Audio())
+              .map(
+                (e) => const AudioCard(
+                  color: Colors.transparent,
+                  showBorder: false,
+                  bottom: AudioCardBottom(),
+                ),
+              )
+              .toList(),
+        );
+      },
+    );
+  }
+}
+
+class SliverLoadingGrid extends StatelessWidget {
+  const SliverLoadingGrid({
+    super.key,
+    required this.limit,
+  });
+
+  final int limit;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverGrid.builder(
+      itemCount: limit,
       gridDelegate: audioCardGridDelegate,
-      padding: gridPadding,
-      children: List.generate(limit, (index) => const Audio())
-          .map(
-            (e) => const AudioCard(
-              color: Colors.transparent,
-              showBorder: false,
-              bottom: AudioCardBottom(),
-            ),
-          )
-          .toList(),
+      itemBuilder: (context, index) => const AudioCard(
+        color: Colors.transparent,
+        showBorder: false,
+        bottom: AudioCardBottom(),
+      ),
     );
   }
 }

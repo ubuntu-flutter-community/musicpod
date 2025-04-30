@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 
 import '../data/audio.dart';
-import 'package:intl/intl.dart';
 
 enum AudioFilter {
   trackNumber,
@@ -11,20 +10,6 @@ enum AudioFilter {
   genre,
   year,
   diskNumber;
-}
-
-int _compareStrings(String a, String b) {
-  final r = RegExp('\\d+');
-  final f = NumberFormat('0' * 16);
-  final aNew = a.replaceAllMapped(
-    r,
-    (match) => f.format(int.tryParse(match[0] ?? '0') ?? 0),
-  );
-  final bNew = b.replaceAllMapped(
-    r,
-    (match) => f.format(int.tryParse(match[0] ?? '0') ?? 0),
-  );
-  return aNew.compareTo(bNew);
 }
 
 Iterable<Audio> splitByDiscs(
@@ -56,8 +41,8 @@ void sortListByAudioFilter({
       audios.sort((a, b) {
         if (a.artist != null && b.artist != null) {
           return descending
-              ? _compareStrings(b.artist!, a.artist!)
-              : _compareStrings(a.artist!, b.artist!);
+              ? compareNatural(b.artist!, a.artist!)
+              : compareNatural(a.artist!, b.artist!);
         }
         return 0;
       });
@@ -65,8 +50,8 @@ void sortListByAudioFilter({
       audios.sort((a, b) {
         if (a.title != null && b.title != null) {
           return descending
-              ? _compareStrings(b.title!, a.title!)
-              : _compareStrings(a.title!, b.title!);
+              ? compareNatural(b.title!, a.title!)
+              : compareNatural(a.title!, b.title!);
         }
         return 0;
       });
@@ -83,8 +68,8 @@ void sortListByAudioFilter({
       audios.sort((a, b) {
         if (a.album != null && b.album != null) {
           final albumComp = descending
-              ? _compareStrings(b.album!, a.album!)
-              : _compareStrings(a.album!, b.album!);
+              ? compareNatural(b.album!, a.album!)
+              : compareNatural(a.album!, b.album!);
           if (albumComp == 0 &&
               a.trackNumber != null &&
               b.trackNumber != null) {
@@ -111,8 +96,8 @@ void sortListByAudioFilter({
       audios.sort((a, b) {
         if (a.genre != null && b.genre != null) {
           return descending
-              ? _compareStrings(b.genre!, a.genre!)
-              : _compareStrings(a.genre!, b.genre!);
+              ? compareNatural(b.genre!, a.genre!)
+              : compareNatural(a.genre!, b.genre!);
         }
         return 0;
       });

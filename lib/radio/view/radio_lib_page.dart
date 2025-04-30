@@ -1,25 +1,33 @@
 import 'package:animated_emoji/animated_emoji.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
+import 'package:radio_browser_api/radio_browser_api.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app/view/routing_manager.dart';
+import '../../app_config.dart';
+import '../../common/data/audio_type.dart';
+import '../../common/page_ids.dart';
+import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
-import '../../common/view/common_widgets.dart';
-import '../../common/view/global_keys.dart';
+import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/no_search_result_page.dart';
+import '../../common/view/progress.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
+import '../../common/view/ui_constants.dart';
+import '../../custom_content/custom_content_model.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../player/player_model.dart';
+import '../../search/search_model.dart';
 import '../radio_model.dart';
 import 'open_radio_discover_page_button.dart';
 import 'radio_history_list.dart';
-import 'radio_search.dart';
-import 'radio_search_page.dart';
 import 'station_card.dart';
 
 class RadioLibPage extends StatelessWidget with WatchItMixin {
@@ -27,47 +35,125 @@ class RadioLibPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final l10n = context.l10n;
     final radioCollectionView =
         watchPropertyValue((RadioModel m) => m.radioCollectionView);
     final radioModel = di<RadioModel>();
+    final processing =
+        watchPropertyValue((CustomContentModel m) => m.processing);
 
     return Column(
       children: [
-        Row(
-          children: [
-            const SizedBox(
-              width: kYaruPagePadding,
-            ),
-            YaruChoiceChipBar(
-              chipBackgroundColor: chipColor(theme),
-              selectedChipBackgroundColor: chipSelectionColor(theme, false),
-              borderColor: chipBorder(theme, false),
-              selectedFirst: false,
-              clearOnSelect: false,
-              onSelected: (index) => radioModel
-                  .setRadioCollectionView(RadioCollectionView.values[index]),
-              yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
-              labels: [
-                Text(context.l10n.station),
-                Text(context.l10n.tags),
-                Text(context.l10n.hearingHistory),
+        Container(
+          alignment: Alignment.center,
+          margin: filterPanelPadding,
+          height: context.theme.appBarTheme.toolbarHeight,
+          child: Row(
+            spacing: kSmallestSpace,
+            children: [
+              if (!AppConfig.isMobilePlatform)
+                const SizedBox(width: 2 * kLargestSpace),
+              Expanded(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: YaruChoiceChipBar(
+                        showCheckMarks: false,
+                        goNextIcon: Icon(Iconz.goNext),
+                        goPreviousIcon: Icon(Iconz.goBack),
+                        selectedFirst: false,
+                        clearOnSelect: false,
+                        onSelected: (index) =>
+                            radioModel.setRadioCollectionView(
+                          RadioCollectionView.values[index],
+                        ),
+                        style: YaruChoiceChipBarStyle.wrap,
+                        labels: [
+                          Text(
+                            context.l10n.station,
+                          ),
+                          Text(
+                            context.l10n.tags,
+                          ),
+                          Text(
+                            context.l10n.hearingHistory,
+                          ),
+                        ],
+                        isSelected: RadioCollectionView.values
+                            .map((e) => e == radioCollectionView)
+                            .toList(),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              if (!AppConfig.isMobilePlatform) ...[
+                IconButton(
+                  tooltip: l10n.exportStarredStationsToOpmlFile,
+                  icon: Icon(
+                    Iconz.export,
+                    semanticLabel: l10n.exportStarredStationsToOpmlFile,
+                  ),
+                  onPressed: processing
+                      ? null
+                      : () => di<CustomContentModel>()
+                          .exportStarredStationsToOpmlFile(),
+                ),
+                IconButton(
+                  tooltip: l10n.importStarredStationsFromOpmlFile,
+                  icon: Icon(
+                    Iconz.import,
+                    semanticLabel: l10n.importStarredStationsFromOpmlFile,
+                  ),
+                  onPressed: processing
+                      ? null
+                      : () => di<CustomContentModel>()
+                          .importStarredStationsFromOpmlFile(),
+                ),
+                IconButton(
+                  icon: Icon(
+                    Iconz.remove,
+                    semanticLabel: l10n.removeAllStarredStations,
+                  ),
+                  tooltip: context.l10n.removeAllStarredStations,
+                  onPressed: processing
+                      ? null
+                      : () => showDialog(
+                            context: context,
+                            builder: (context) {
+                              return ConfirmationDialog(
+                                showCloseIcon: false,
+                                title:
+                                    Text(l10n.removeAllStarredStationsConfirm),
+                                content: SizedBox(
+                                  width: 350,
+                                  child: Text(
+                                    l10n.removeAllStarredStationsDescription,
+                                  ),
+                                ),
+                                onConfirm: () =>
+                                    di<LibraryModel>().unStarAllStations(),
+                              );
+                            },
+                          ),
+                ),
+                const SizedBox(width: kMediumSpace),
               ],
-              isSelected: RadioCollectionView.values
-                  .map((e) => e == radioCollectionView)
-                  .toList(),
-            ),
-          ],
-        ),
-        const SizedBox(
-          height: 15,
+            ],
+          ),
         ),
         Expanded(
-          child: switch (radioCollectionView) {
-            RadioCollectionView.stations => const StationGrid(),
-            RadioCollectionView.tags => const TagGrid(),
-            RadioCollectionView.history => const RadioHistoryList(),
-          },
+          child: processing
+              ? const Center(
+                  child: Progress(),
+                )
+              : switch (radioCollectionView) {
+                  RadioCollectionView.stations => const StationGrid(),
+                  RadioCollectionView.tags => const TagGrid(),
+                  RadioCollectionView.history => const RadioHistoryList(),
+                },
         ),
       ],
     );
@@ -84,8 +170,6 @@ class StationGrid extends StatelessWidget with WatchItMixin {
     final stations = watchPropertyValue((LibraryModel m) => m.starredStations);
     final length =
         watchPropertyValue((LibraryModel m) => m.starredStationsLength);
-    final libraryModel = di<LibraryModel>();
-    final playerModel = di<PlayerModel>();
 
     if (length == 0) {
       return NoSearchResultPage(
@@ -93,27 +177,25 @@ class StationGrid extends StatelessWidget with WatchItMixin {
           children: [
             Text(context.l10n.noStarredStations),
             const SizedBox(
-              height: kYaruPagePadding,
+              height: kLargestSpace,
             ),
-            const OpenRadioDiscoverPageButton(),
+            const OpenRadioSearchButton(),
           ],
         ),
-        icons: const AnimatedEmoji(AnimatedEmojis.glowingStar),
+        icon: const AnimatedEmoji(AnimatedEmojis.glowingStar),
       );
     }
 
-    return GridView.builder(
-      padding: gridPadding,
-      gridDelegate: audioCardGridDelegate,
-      itemCount: length,
-      itemBuilder: (context, index) {
-        final station = stations.entries.elementAt(index).value.firstOrNull;
-        return StationCard(
-          station: station,
-          startPlaylist: playerModel.startPlaylist,
-          isStarredStation: libraryModel.isStarredStation,
-          unstarStation: libraryModel.unStarStation,
-          starStation: libraryModel.addStarredStation,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return GridView.builder(
+          padding: getAdaptiveHorizontalPadding(constraints: constraints),
+          gridDelegate: audioCardGridDelegate,
+          itemCount: length,
+          itemBuilder: (context, index) {
+            final uuid = stations.elementAt(index);
+            return StationCard(uuid: uuid);
+          },
         );
       },
     );
@@ -137,46 +219,59 @@ class TagGrid extends StatelessWidget with WatchItMixin {
           children: [
             Text(context.l10n.noStarredTags),
             const SizedBox(
-              height: kYaruPagePadding,
+              height: kLargestSpace,
             ),
-            const OpenRadioDiscoverPageButton(),
+            const OpenRadioSearchButton(),
           ],
         ),
-        icons: const AnimatedEmoji(AnimatedEmojis.glowingStar),
+        icon: const AnimatedEmoji(AnimatedEmojis.glowingStar),
       );
     }
 
-    return GridView.builder(
-      padding: gridPadding,
-      gridDelegate: audioCardGridDelegate,
-      itemCount: favTagsLength,
-      itemBuilder: (context, index) {
-        final tag = favTags.elementAt(index);
-        return AudioCard(
-          image: SideBarFallBackImage(
-            color: getAlphabetColor(tag),
-            width: double.infinity,
-            height: double.infinity,
-            child: Icon(
-              getIconForTag(tag),
-              size: 65,
-            ),
-          ),
-          bottom: AudioCardBottom(text: tag),
-          onTap: () {
-            navigatorKey.currentState?.push(
-              MaterialPageRoute(
-                builder: (context) {
-                  return RadioSearchPage(
-                    searchQuery: tag,
-                    radioSearch: RadioSearch.tag,
-                  );
-                },
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return GridView.builder(
+          padding: getAdaptiveHorizontalPadding(constraints: constraints),
+          gridDelegate: audioCardGridDelegate,
+          itemCount: favTagsLength,
+          itemBuilder: (context, index) {
+            final tag = favTags.elementAt(index);
+            return AudioCard(
+              image: SideBarFallBackImage(
+                color: getAlphabetColor(tag),
+                width: double.infinity,
+                height: double.infinity,
+                child: Icon(
+                  getIconForTag(tag),
+                  size: 65,
+                ),
               ),
+              bottom: AudioCardBottom(text: tag),
+              onTap: () {
+                di<RoutingManager>().push(pageId: PageIDs.searchPage);
+                di<SearchModel>()
+                  ..setTag(Tag(name: tag.toLowerCase(), stationCount: 1))
+                  ..setAudioType(AudioType.radio)
+                  ..search();
+              },
             );
           },
         );
       },
     );
+  }
+
+  IconData getIconForTag(String tag) {
+    final tagsToIcons = <String, IconData>{
+      'metal': TablerIcons.guitar_pick,
+      'pop': TablerIcons.diamond,
+    };
+
+    return tagsToIcons[tag] ??
+        (AppConfig.yaruStyled
+            ? YaruIcons.music_note
+            : AppConfig.appleStyled
+                ? CupertinoIcons.double_music_note
+                : Icons.music_note);
   }
 }

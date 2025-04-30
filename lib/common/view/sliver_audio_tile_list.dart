@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../library/library_model.dart';
+import 'ui_constants.dart';
 import '../../player/player_model.dart';
 import '../data/audio.dart';
 import 'audio_page_type.dart';
@@ -12,53 +12,50 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
     super.key,
     required this.audios,
     required this.pageId,
-    this.padding,
     this.onSubTitleTab,
     required this.audioPageType,
+    this.selectedColor,
   });
 
-  final Set<Audio> audios;
+  final List<Audio> audios;
   final String pageId;
   final AudioPageType audioPageType;
   final void Function(String text)? onSubTitleTab;
-  final EdgeInsetsGeometry? padding;
+  final Color? selectedColor;
 
   @override
   Widget build(BuildContext context) {
-    final libraryModel = di<LibraryModel>();
-    watchPropertyValue((LibraryModel m) => m.likedAudios.length);
     final playerModel = di<PlayerModel>();
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
     final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
+    final showLeading = audios.length < kShowLeadingThreshold;
 
-    return SliverPadding(
-      padding: padding ?? EdgeInsets.zero,
-      sliver: SliverList(
-        delegate: SliverChildBuilderDelegate(
-          childCount: audios.length,
-          (context, index) {
-            final audio = audios.elementAt(index);
-            final audioSelected = currentAudio == audio;
-            return AudioTile(
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        childCount: audios.length,
+        (context, index) {
+          final audio = audios.elementAt(index);
+          final audioSelected = currentAudio == audio;
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 5),
+            child: AudioTile(
+              showLeading: showLeading,
               key: ValueKey(audio.path ?? audio.url),
               audioPageType: audioPageType,
               onSubTitleTap: onSubTitleTab,
               isPlayerPlaying: isPlaying,
-              pause: playerModel.pause,
-              startPlaylist: () => playerModel.startPlaylist(
+              onTap: () => playerModel.startPlaylist(
                 audios: audios,
                 listName: pageId,
                 index: index,
               ),
-              resume: playerModel.resume,
               selected: audioSelected,
               audio: audio,
-              insertIntoQueue: playerModel.insertIntoQueue,
               pageId: pageId,
-              libraryModel: libraryModel,
-            );
-          },
-        ),
+              selectedColor: selectedColor,
+            ),
+          );
+        },
       ),
     );
   }

@@ -34,8 +34,8 @@ class PlayButton extends StatelessWidget with WatchItMixin {
               }
             },
       icon: Icon(
-        isPlaying ? Iconz().pause : Iconz().playFilled,
-        color: iconColor ?? context.t.colorScheme.onSurface,
+        isPlaying ? Iconz.pause : Iconz.playFilled,
+        color: iconColor ?? context.theme.colorScheme.onSurface,
       ),
     );
   }

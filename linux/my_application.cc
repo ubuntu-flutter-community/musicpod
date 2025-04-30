@@ -1,7 +1,9 @@
 #include "my_application.h"
 
 #include <flutter_linux/flutter_linux.h>
-#include <handy.h>
+#ifdef GDK_WINDOWING_X11
+#include <gdk/gdkx.h>
+#endif
 
 #include "flutter/generated_plugin_registrant.h"
 
@@ -17,17 +19,36 @@ static void my_application_activate(GApplication* application) {
   MyApplication* self = MY_APPLICATION(application);
 
   GList* windows = gtk_application_get_windows(GTK_APPLICATION(application));
-  if (windows) {
-    gtk_window_present(GTK_WINDOW(windows->data));
-    return;
+    if (windows) {
+      gtk_window_present(GTK_WINDOW(windows->data));
+      return;
   }
-  GtkWindow* window = GTK_WINDOW(hdy_application_window_new());
-  gtk_window_set_application(window, GTK_APPLICATION(application));
 
-  GtkBox* box = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
-  gtk_widget_show(GTK_WIDGET(box));
-  gtk_container_add(GTK_CONTAINER(window), GTK_WIDGET(box));
+  GtkWindow* window =
+      GTK_WINDOW(gtk_application_window_new(GTK_APPLICATION(application)));
 
+  // Use a header bar when running in GNOME as this is the common style used
+  // by applications and is the setup most users will be using (e.g. Ubuntu
+  // desktop).
+  // If running on X and not using GNOME then just use a traditional title bar
+  // in case the window manager does more exotic layout, e.g. tiling.
+  // If running on Wayland assume the header bar will work (may need changing
+  // if future cases occur).
+  gboolean use_header_bar = TRUE;
+#ifdef GDK_WINDOWING_X11
+  GdkScreen* screen = gtk_window_get_screen(window);
+  if (GDK_IS_X11_SCREEN(screen)) {
+    const gchar* wm_name = gdk_x11_screen_get_window_manager_name(screen);
+    if (g_strcmp0(wm_name, "GNOME Shell") != 0) {
+      use_header_bar = FALSE;
+    }
+  }
+#endif
+  if (use_header_bar) {
+
+  } else {
+    gtk_window_set_title(window, "MusicPod");
+  }
   GdkGeometry geometry_min;
   geometry_min.min_width = 500;
   geometry_min.min_height = 700;
@@ -35,11 +56,10 @@ static void my_application_activate(GApplication* application) {
   gtk_window_set_default_size(window, 950, 820);
 
   g_autoptr(FlDartProject) project = fl_dart_project_new();
-  fl_dart_project_set_dart_entrypoint_arguments(
-      project, self->dart_entrypoint_arguments);
+  fl_dart_project_set_dart_entrypoint_arguments(project, self->dart_entrypoint_arguments);
 
   FlView* view = fl_view_new(project);
-  gtk_box_pack_end(GTK_BOX(box), GTK_WIDGET(view), true, true, 0);
+  gtk_container_add(GTK_CONTAINER(window), GTK_WIDGET(view));
 
   fl_register_plugins(FL_PLUGIN_REGISTRY(view));
 
@@ -48,18 +68,41 @@ static void my_application_activate(GApplication* application) {
   gtk_widget_grab_focus(GTK_WIDGET(view));
 }
 
-static gint my_application_command_line(GApplication *application, GApplicationCommandLine *command_line) {
-  MyApplication *self = MY_APPLICATION(application);
-  gchar **arguments = g_application_command_line_get_arguments(command_line, nullptr);
-  self->dart_entrypoint_arguments = g_strdupv(arguments + 1);
+// Implements GApplication::local_command_line.
+static gboolean my_application_local_command_line(GApplication* application, gchar*** arguments, int* exit_status) {
+  MyApplication* self = MY_APPLICATION(application);
+  // Strip out the first argument as it is the binary name.
+  self->dart_entrypoint_arguments = g_strdupv(*arguments + 1);
 
   g_autoptr(GError) error = nullptr;
   if (!g_application_register(application, nullptr, &error)) {
-    g_warning("Failed to register: %s", error->message);
-    return 1;
+     g_warning("Failed to register: %s", error->message);
+     *exit_status = 1;
+     return TRUE;
   }
+
   g_application_activate(application);
-  return 0;
+  *exit_status = 0;
+
+  return FALSE;
+}
+
+// Implements GApplication::startup.
+static void my_application_startup(GApplication* application) {
+  //MyApplication* self = MY_APPLICATION(object);
+
+  // Perform any actions required at application startup.
+
+  G_APPLICATION_CLASS(my_application_parent_class)->startup(application);
+}
+
+// Implements GApplication::shutdown.
+static void my_application_shutdown(GApplication* application) {
+  //MyApplication* self = MY_APPLICATION(object);
+
+  // Perform any actions required at application shutdown.
+
+  G_APPLICATION_CLASS(my_application_parent_class)->shutdown(application);
 }
 
 // Implements GObject::dispose.
@@ -71,7 +114,9 @@ static void my_application_dispose(GObject* object) {
 
 static void my_application_class_init(MyApplicationClass* klass) {
   G_APPLICATION_CLASS(klass)->activate = my_application_activate;
-  G_APPLICATION_CLASS(klass)->command_line = my_application_command_line;
+  G_APPLICATION_CLASS(klass)->local_command_line = my_application_local_command_line;
+  G_APPLICATION_CLASS(klass)->startup = my_application_startup;
+  G_APPLICATION_CLASS(klass)->shutdown = my_application_shutdown;
   G_OBJECT_CLASS(klass)->dispose = my_application_dispose;
 }
 

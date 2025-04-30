@@ -3,7 +3,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
-import 'common_widgets.dart';
+import 'drop_down_arrow.dart';
 
 class LimitPopup extends StatelessWidget {
   const LimitPopup({
@@ -23,7 +23,7 @@ class LimitPopup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
 
     final fallBackTextStyle =
         theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500);

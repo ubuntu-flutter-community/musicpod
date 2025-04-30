@@ -1,215 +1,85 @@
+import 'dart:io';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
-import '../../common/view/common_widgets.dart';
+import '../../app_config.dart';
+import '../../common/page_ids.dart';
+import '../../common/view/back_gesture.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
-import '../../common/view/master_tile.dart';
-import '../../common/view/side_bar_fall_back_image.dart';
-import '../../common/view/theme.dart';
-import '../../constants.dart';
+import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../local_audio/view/album_page.dart';
-import '../../local_audio/view/local_audio_page.dart';
-import '../../playlists/view/liked_audio_page.dart';
-import '../../playlists/view/playlist_page.dart';
-import '../../podcasts/view/podcast_page.dart';
-import '../../podcasts/view/podcasts_page.dart';
-import '../../radio/view/radio_page.dart';
-import '../../radio/view/radio_page_icon.dart';
-import '../../radio/view/station_page.dart';
-import '../../radio/view/station_page_icon.dart';
-import '../../settings/view/settings_tile.dart';
+import 'create_master_items.dart';
+import 'master_panel.dart';
+import 'routing_manager.dart';
 
-class MasterDetailPage extends StatelessWidget with WatchItMixin {
+class MasterDetailPage extends StatelessWidget {
   const MasterDetailPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final libraryModel = watchIt<LibraryModel>();
-    final masterItems = _createMasterItems(libraryModel: libraryModel);
+    final routingManager = di<RoutingManager>();
+
+    final drawer = Drawer(
+      width: kMasterDetailSideBarWidth,
+      child: Stack(
+        children: [
+          const MasterPanel(),
+          Positioned(
+            left: Platform.isMacOS ? 5 : null,
+            top: 5,
+            right: Platform.isMacOS ? null : 5,
+            child: IconButton(
+              onPressed: Platform.isMacOS
+                  ? masterScaffoldKey.currentState?.closeEndDrawer
+                  : masterScaffoldKey.currentState?.closeDrawer,
+              icon: Icon(
+                Iconz.close,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: YaruMasterDetailTheme(
-        data: YaruMasterDetailTheme.of(context).copyWith(
-          sideBarColor: getSideBarColor(context.t),
-        ),
-        child: YaruMasterDetailPage(
-          navigatorKey: navigatorKey,
-          onSelected: (value) => libraryModel.setIndex(value ?? 0),
-          appBar: HeaderBar(
-            includeBackButton: false,
-            backgroundColor: getSideBarColor(context.t),
-            style: YaruTitleBarStyle.undecorated,
-            adaptive: false,
-            title: const Text('MusicPod'),
-          ),
-          layoutDelegate: const YaruMasterFixedPaneDelegate(
-            paneWidth: kMasterDetailSideBarWidth,
-          ),
-          breakpoint: kMasterDetailBreakPoint,
-          controller: YaruPageController(
-            length: libraryModel.totalListAmount,
-            initialIndex: libraryModel.index ?? 0,
-          ),
-          tileBuilder: (context, index, selected, availableWidth) {
-            final item = masterItems[index];
+      resizeToAvoidBottomInset: AppConfig.isMobilePlatform ? false : null,
+      key: masterScaffoldKey,
+      endDrawer: Platform.isMacOS ? drawer : null,
+      drawer: Platform.isMacOS ? null : drawer,
+      body: Row(
+        children: [
+          if (context.showMasterPanel) const MasterPanel(),
+          if (context.showMasterPanel) const VerticalDivider(),
+          Expanded(
+            child: Navigator(
+              initialRoute: routingManager.selectedPageId ?? PageIDs.searchPage,
+              onDidRemovePage: (page) {},
+              key: routingManager.masterNavigatorKey,
+              observers: [routingManager],
+              onGenerateRoute: (settings) {
+                final masterItems = getAllMasterItems(di<LibraryModel>());
+                final page = (masterItems.firstWhereOrNull(
+                          (e) => e.pageId == settings.name,
+                        ) ??
+                        masterItems.elementAt(0))
+                    .pageBuilder(context);
 
-            return MasterTile(
-              pageId: item.pageId,
-              libraryModel: libraryModel,
-              selected: selected,
-              title: item.titleBuilder(context),
-              subtitle: item.subtitleBuilder?.call(context),
-              leading: item.iconBuilder?.call(
-                context,
-                selected,
-              ),
-            );
-          },
-          pageBuilder: (context, index) =>
-              masterItems[index].pageBuilder(context),
-          bottomBar: const SettingsTile(),
-        ),
+                return PageRouteBuilder(
+                  settings: settings,
+                  maintainState: PageIDs.permanent.contains(settings.name),
+                  pageBuilder: (_, __, ___) => BackGesture(child: page),
+                  transitionsBuilder: (_, a, __, c) =>
+                      FadeTransition(opacity: a, child: c),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
-
-  List<_MasterItem> _createMasterItems({required LibraryModel libraryModel}) {
-    return [
-      _MasterItem(
-        titleBuilder: (context) => Text(context.l10n.localAudio),
-        pageBuilder: (context) => const LocalAudioPage(),
-        iconBuilder: (context, selected) => LocalAudioPageIcon(
-          selected: selected,
-        ),
-        pageId: kLocalAudioPageId,
-      ),
-      _MasterItem(
-        titleBuilder: (context) => Text(context.l10n.radio),
-        pageBuilder: (context) => const RadioPage(),
-        iconBuilder: (context, selected) => RadioPageIcon(
-          selected: selected,
-        ),
-        pageId: kRadioPageId,
-      ),
-      _MasterItem(
-        titleBuilder: (context) => Text(context.l10n.podcasts),
-        pageBuilder: (context) => const PodcastsPage(),
-        iconBuilder: (context, selected) => PodcastsPageIcon(
-          selected: selected,
-        ),
-        pageId: kPodcastsPageId,
-      ),
-      _MasterItem(
-        iconBuilder: (context, selected) => Icon(Iconz().plus),
-        titleBuilder: (context) => Text(context.l10n.add),
-        pageBuilder: (context) => const SizedBox.shrink(),
-        pageId: kNewPlaylistPageId,
-      ),
-      _MasterItem(
-        titleBuilder: (context) => Text(context.l10n.likedSongs),
-        pageId: kLikedAudiosPageId,
-        pageBuilder: (context) => const LikedAudioPage(),
-        subtitleBuilder: (context) => Text(context.l10n.playlist),
-        iconBuilder: (context, selected) =>
-            LikedAudioPage.createIcon(context: context, selected: selected),
-      ),
-      for (final playlist in libraryModel.playlists.entries)
-        _MasterItem(
-          titleBuilder: (context) => Text(playlist.key),
-          subtitleBuilder: (context) => Text(context.l10n.playlist),
-          pageId: playlist.key,
-          pageBuilder: (context) => PlaylistPage(playlist: playlist),
-          iconBuilder: (context, selected) => SideBarFallBackImage(
-            color: getAlphabetColor(playlist.key),
-            child: Icon(
-              Iconz().playlist,
-            ),
-          ),
-        ),
-      for (final podcast in libraryModel.podcasts.entries)
-        _MasterItem(
-          titleBuilder: (context) => PodcastPageTitle(
-            feedUrl: podcast.key,
-            title: podcast.value.firstOrNull?.album ??
-                podcast.value.firstOrNull?.title ??
-                podcast.value.firstOrNull.toString(),
-          ),
-          subtitleBuilder: (context) => Text(
-            podcast.value.firstOrNull?.artist ?? context.l10n.podcast,
-          ),
-          pageId: podcast.key,
-          pageBuilder: (context) => PodcastPage(
-            pageId: podcast.key,
-            title: podcast.value.firstOrNull?.album ??
-                podcast.value.firstOrNull?.title ??
-                podcast.value.firstOrNull.toString(),
-            audios: podcast.value,
-            imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
-                podcast.value.firstOrNull?.imageUrl,
-          ),
-          iconBuilder: (context, selected) => PodcastPageSideBarIcon(
-            imageUrl: podcast.value.firstOrNull?.albumArtUrl ??
-                podcast.value.firstOrNull?.imageUrl,
-          ),
-        ),
-      for (final album in libraryModel.pinnedAlbums.entries)
-        _MasterItem(
-          titleBuilder: (context) => Text(
-            album.value.firstOrNull?.album ?? album.key,
-          ),
-          subtitleBuilder: (context) =>
-              Text(album.value.firstOrNull?.artist ?? context.l10n.album),
-          pageId: album.key,
-          pageBuilder: (context) => AlbumPage(
-            album: album.value,
-            id: album.key,
-          ),
-          iconBuilder: (context, selected) => AlbumPageSideBarIcon(
-            picture: album.value.firstOrNull?.pictureData,
-            album: album.value.firstWhereOrNull((e) => e.album != null)?.album,
-          ),
-        ),
-      for (final station in libraryModel.starredStations.entries
-          .where((e) => e.value.isNotEmpty))
-        _MasterItem(
-          titleBuilder: (context) =>
-              Text(station.value.first.title ?? station.key),
-          subtitleBuilder: (context) {
-            return Text(context.l10n.station);
-          },
-          pageId: station.key,
-          pageBuilder: (context) => StationPage(
-            station: station.value.first,
-          ),
-          iconBuilder: (context, selected) => StationPageIcon(
-            imageUrl: station.value.first.imageUrl,
-            fallBackColor: getAlphabetColor(station.value.first.title ?? 'a'),
-            selected: selected,
-          ),
-        ),
-    ];
-  }
-}
-
-class _MasterItem {
-  _MasterItem({
-    required this.titleBuilder,
-    this.subtitleBuilder,
-    required this.pageBuilder,
-    this.iconBuilder,
-    required this.pageId,
-  });
-
-  final WidgetBuilder titleBuilder;
-  final WidgetBuilder? subtitleBuilder;
-  final WidgetBuilder pageBuilder;
-  final Widget Function(BuildContext context, bool selected)? iconBuilder;
-  final String pageId;
 }

@@ -1,3 +1,5 @@
+import '../common/data/audio.dart';
+
 extension StringExtension on String {
   String get capitalized {
     return isEmpty
@@ -19,16 +21,30 @@ extension StringExtension on String {
   ({String? songName, String? artist}) get splitByDash {
     String? songName;
     String? artist;
-    final split = this.split(' - ');
+    var split = this.split(' - ');
     if (split.isNotEmpty) {
       artist = split.elementAtOrNull(0);
       songName = split.elementAtOrNull(1);
       if (split.length == 3 && songName != null) {
         songName = songName + (split.elementAtOrNull(2) ?? '');
       }
+    } else {
+      split = this.split('-');
+      if (split.isNotEmpty) {
+        artist = split.elementAtOrNull(0);
+        songName = split.elementAtOrNull(1);
+        if (split.length == 3 && songName != null) {
+          songName = songName + (split.elementAtOrNull(2) ?? '');
+        }
+      }
     }
     return (songName: songName, artist: artist);
   }
+
+  String get albumOfId => (split(Audio.albumIdSplitter).lastOrNull ?? '')
+      .replaceAll(Audio.albumIdReplacer, Audio.albumIdReplacement);
+  String get artistOfId => (split(Audio.albumIdSplitter).firstOrNull ?? '')
+      .replaceAll(Audio.albumIdReplacer, Audio.albumIdReplacement);
 }
 
 extension NullableStringX on String? {

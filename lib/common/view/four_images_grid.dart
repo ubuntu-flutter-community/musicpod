@@ -1,83 +1,42 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
+
+import 'theme.dart';
 
 class FourImagesGrid extends StatelessWidget {
   const FourImagesGrid({
     super.key,
     required this.images,
-    this.fit = BoxFit.cover,
   });
 
-  final Set<Uint8List> images;
-  final BoxFit fit;
+  final List<Widget> images;
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: Row(
-            children: [
-              Expanded(
-                child: _Image(
-                  bytes: images.elementAt(0),
-                  fit: fit,
-                ),
+  Widget build(BuildContext context) => Column(
+        children: space(
+          heightGap: 0,
+          expandAll: true,
+          children: [
+            Row(
+              children: space(
+                widthGap: 0,
+                expandAll: true,
+                children: [
+                  images.elementAt(0),
+                  images.elementAt(1),
+                ],
               ),
-              Expanded(
-                child: _Image(
-                  bytes: images.elementAt(1),
-                  fit: fit,
-                ),
+            ),
+            Row(
+              children: space(
+                widthGap: 0,
+                expandAll: true,
+                children: [
+                  images.elementAt(2),
+                  images.elementAt(3),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-        Expanded(
-          child: Row(
-            children: [
-              Expanded(
-                child: _Image(
-                  bytes: images.elementAt(2),
-                  fit: fit,
-                ),
-              ),
-              Expanded(
-                child: _Image(
-                  bytes: images.elementAt(3),
-                  fit: fit,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _Image extends StatelessWidget {
-  final Uint8List bytes;
-
-  const _Image({
-    required this.bytes,
-    required this.fit,
-  });
-
-  final BoxFit fit;
-
-  @override
-  Widget build(BuildContext context) {
-    const quality = FilterQuality.medium;
-    const height = double.infinity;
-    const width = double.infinity;
-    return Image.memory(
-      bytes,
-      height: height,
-      width: width,
-      fit: fit,
-      filterQuality: quality,
-    );
-  }
+      );
 }

@@ -1,93 +1,47 @@
 import 'package:flutter/material.dart';
-import 'package:yaru/yaru.dart';
 
-import '../../constants.dart';
-import '../../extensions/build_context_x.dart';
-import '../../extensions/theme_data_x.dart';
+import '../../local_audio/view/local_cover.dart';
 import '../data/audio.dart';
-import 'icons.dart';
+import 'audio_fall_back_icon.dart';
 import 'safe_network_image.dart';
-import 'theme.dart';
 
 class AudioTileImage extends StatelessWidget {
   const AudioTileImage({
     super.key,
     this.audio,
     required this.size,
+    this.fallback,
   });
   final Audio? audio;
   final double size;
+  final Widget? fallback;
 
   @override
   Widget build(BuildContext context) {
-    final iconSize = size / (1.65);
-    final theme = context.t;
-    IconData iconData;
-    if (audio?.audioType == AudioType.radio) {
-      iconData = Iconz().radio;
-    } else if (audio?.audioType == AudioType.podcast) {
-      iconData = Iconz().podcast;
-    } else {
-      iconData = Iconz().musicNote;
-    }
+    final fallbackIcon = AudioFallBackIcon(audio: audio, iconSize: size / 1.65);
     Widget image;
-    if (audio?.pictureData != null) {
-      image = Image.memory(
-        filterQuality: FilterQuality.medium,
+    if (audio?.canHaveLocalCover == true) {
+      image = LocalCover(
+        albumId: audio!.albumId!,
+        path: audio!.path!,
         fit: BoxFit.cover,
-        audio!.pictureData!,
-        height: size,
+        dimension: size,
+        fallback: fallbackIcon,
       );
     } else {
-      if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
-        image = SafeNetworkImage(
-          url: audio?.imageUrl ?? audio?.albumArtUrl,
-          height: size,
-          fit: BoxFit.cover,
-        );
-      } else {
-        image = Center(
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.bottomLeft,
-                end: Alignment.topRight,
-                colors: [
-                  getAlphabetColor(
-                    audio?.title ?? audio?.album ?? 'a',
-                  ).scale(
-                    lightness: theme.isLight ? 0 : -0.4,
-                    saturation: -0.5,
-                  ),
-                  getAlphabetColor(
-                    audio?.title ?? audio?.album ?? 'a',
-                  ).scale(
-                    lightness: theme.isLight ? -0.1 : -0.2,
-                    saturation: -0.5,
-                  ),
-                ],
-              ),
-            ),
-            width: size,
-            height: size,
-            child: Icon(
-              iconData,
-              size: iconSize,
-              color: contrastColor(
-                getAlphabetColor(
-                  audio?.title ?? audio?.album ?? 'a',
-                ),
-              ),
-            ),
-          ),
-        );
-      }
+      image = SafeNetworkImage(
+        url: audio?.imageUrl ?? audio?.albumArtUrl,
+        height: size,
+        fit: BoxFit.cover,
+        fallBackIcon: fallbackIcon,
+        errorIcon: fallbackIcon,
+      );
     }
 
     return SizedBox.square(
-      dimension: kAudioTrackWidth,
+      dimension: size,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(5),
+        borderRadius: BorderRadius.circular(size / 6),
         child: image,
       ),
     );

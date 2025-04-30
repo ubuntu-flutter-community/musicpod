@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:phoenix_theme/phoenix_theme.dart';
+import 'package:phoenix_theme/phoenix_theme.dart' hide CustomTrackShape;
 import 'package:watch_it/watch_it.dart';
 
 import '../../common/view/icons.dart';
@@ -19,23 +19,23 @@ class VolumeSliderPopup extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final playerModel = di<PlayerModel>();
     final volume = watchPropertyValue((PlayerModel m) => m.volume);
     final setVolume = playerModel.setVolume;
     IconData iconData;
     if (volume != null && volume <= 0) {
-      iconData = Iconz().speakerMutedFilled;
+      iconData = Iconz.speakerMutedFilled;
     } else if (volume != null && volume <= 20) {
-      iconData = Iconz().speakerLowFilled;
+      iconData = Iconz.speakerLowFilled;
     } else if (volume != null && volume <= 50 && volume > 20) {
-      iconData = Iconz().speakerMediumFilled;
+      iconData = Iconz.speakerMediumFilled;
     } else {
-      iconData = Iconz().speakerHighFilled;
+      iconData = Iconz.speakerHighFilled;
     }
     return PopupMenuButton(
       color: theme.isLight
-          ? theme.colorScheme.background.scale(lightness: -0.04)
+          ? theme.colorScheme.surface.scale(lightness: -0.04)
           : null,
       iconColor: color ?? theme.colorScheme.onSurface,
       padding: EdgeInsets.zero,

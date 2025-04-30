@@ -1,172 +1,81 @@
 import 'dart:io';
 
-import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:collection/collection.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:file_selector/file_selector.dart';
-import 'package:gtk/gtk.dart';
-import 'package:m3u_parser_nullsafe/m3u_parser_nullsafe.dart';
-import 'package:pls/pls.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-import '../common/data/audio.dart';
-import '../player/player_service.dart';
+import '../app_config.dart';
 
 class ExternalPathService {
-  final GtkApplicationNotifier? _gtkNotifier;
-  final PlayerService _playerService;
-
-  ExternalPathService({
-    GtkApplicationNotifier? gtkNotifier,
-    required PlayerService playerService,
-  })  : _gtkNotifier = gtkNotifier,
-        _playerService = playerService;
-
-  void init() {
-    if (_gtkNotifier != null) {
-      _gtkNotifier!.addCommandLineListener(
-        (args) => _playPath(
-          _gtkNotifier?.commandLine?.firstOrNull,
-        ),
-      );
-      _playPath(_gtkNotifier?.commandLine?.firstOrNull);
-    }
-  }
-
-  void _playPath([
-    String? path,
-  ]) {
-    if (path == null) {
-      return;
-    }
-    try {
-      readMetadata(File(path), getImage: true).then(
-        (data) => _playerService.startPlaylist(
-          listName: path,
-          audios: {Audio.fromMetadata(path: path, data: data)},
-        ),
-      );
-    } catch (_) {
-      // TODO: instead of disallowing certain file types
-      // process via error stream if something went wrong
-    }
-  }
-
-  void dispose() {
-    _gtkNotifier?.dispose();
-  }
-
-  void playOpenedFile() {
-    if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
-      try {
-        openFile().then((xfile) {
-          if (xfile?.path == null) return;
-          readMetadata(File(xfile!.path), getImage: true).then(
-            (metadata) => _playerService.startPlaylist(
-              listName: xfile.path,
-              audios: {Audio.fromMetadata(path: xfile.path, data: metadata)},
-            ),
-          );
-        });
-      } on Exception catch (_) {}
-    }
-  }
-
-  Future<(String?, Set<Audio>?)> loadPlaylistFromFile() async {
-    Set<Audio>? audios;
-    String? path;
-
-    if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
-      try {
-        final xfile = await openFile();
-        path = xfile?.path;
-        if (path == null) return (null, null);
-
-        if (path.endsWith('.m3u')) {
-          audios = await _parseM3uPlaylist(path);
-        } else if (path.endsWith('.pls')) {
-          audios = await _parsePlsPlaylist(path);
-        }
-      } on Exception catch (_) {}
-    }
-    return (path, audios);
-  }
-
-  Future<Set<Audio>> _parseM3uPlaylist(String path) async {
-    final audios = <Audio>{};
-    final playlist = await M3uList.loadFromFile(path);
-
-    for (var e in playlist.items) {
-      String? songName;
-      String? artist;
-      var split = e.title.split(' - ');
-      if (split.isNotEmpty) {
-        artist = split.elementAtOrNull(0);
-        songName = split.elementAtOrNull(1);
-      }
-
-      if (e.link.startsWith('file://')) {
-        audios.add(
-          Audio.fromMetadata(
-            path: path,
-            data: await readMetadata(
-              File(e.link.replaceAll('file://', '')),
-              getImage: true,
-            ),
-          ),
-        );
-      } else if (e.link.startsWith('http')) {
-        audios.add(
-          Audio(
-            title: songName ?? e.title,
-            artist: artist,
-            url: e.link,
-            audioType: AudioType.radio,
-          ),
-        );
-      }
-    }
-
-    return audios;
-  }
-
-  Future<Set<Audio>> _parsePlsPlaylist(String path) async {
-    final audios = <Audio>{};
-    final playlist = PlsPlaylist.parse(File(path).readAsStringSync());
-
-    for (var e in playlist.entries) {
-      String? songName;
-      String? artist;
-      var split = e.title?.split(' - ');
-      if (split?.isNotEmpty == true) {
-        artist = split?.elementAtOrNull(0);
-        songName = split?.elementAtOrNull(1);
-      }
-
-      if (e.file?.startsWith('http') == true) {
-        audios.add(
-          Audio(
-            title: songName ?? e.title,
-            artist: artist,
-            url: e.file,
-            audioType: AudioType.radio,
-          ),
-        );
-      } else if (e.file?.isNotEmpty == true) {
-        audios.add(
-          Audio.fromMetadata(
-            path: e.file!,
-            data: await readMetadata(File(e.file!), getImage: true),
-          ),
-        );
-      }
-    }
-
-    return audios;
-  }
+  const ExternalPathService();
 
   Future<String?> getPathOfDirectory() async {
+    if (AppConfig.isMobilePlatform && await _androidPermissionsGranted()) {
+      return FilePicker.platform.getDirectoryPath();
+    }
+
     if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
       return getDirectoryPath();
     }
     return null;
+  }
+
+  Future<String?> getPathOfFile() async {
+    if (AppConfig.isMobilePlatform && await _androidPermissionsGranted()) {
+      return (await FilePicker.platform.pickFiles(allowMultiple: false))
+          ?.files
+          .firstOrNull
+          ?.path;
+    }
+
+    if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
+      return (await openFile())?.path;
+    }
+    return null;
+  }
+
+  Future<List<String>> getPathsOfFiles() async {
+    if (AppConfig.isMobilePlatform && await _androidPermissionsGranted()) {
+      final filePickerResult =
+          await FilePicker.platform.pickFiles(allowMultiple: true);
+
+      if (filePickerResult == null) {
+        return [];
+      }
+
+      return filePickerResult.files
+          .map((e) => XFile(e.path!))
+          .map((e) => e.path)
+          .toList();
+    } else if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
+      return (await openFiles()).map((e) => e.path).toList();
+    }
+    return [];
+  }
+
+  Future<bool> _androidPermissionsGranted() async {
+    final mediaLibraryIsGranted = (await Permission.mediaLibrary
+            .onDeniedCallback(() {})
+            .onGrantedCallback(() {})
+            .onPermanentlyDeniedCallback(() {})
+            .onRestrictedCallback(() {})
+            .onLimitedCallback(() {})
+            .onProvisionalCallback(() {})
+            .request())
+        .isGranted;
+
+    final manageExternalStorageIsGranted = (await Permission
+            .manageExternalStorage
+            .onDeniedCallback(() {})
+            .onGrantedCallback(() {})
+            .onPermanentlyDeniedCallback(() {})
+            .onRestrictedCallback(() {})
+            .onLimitedCallback(() {})
+            .onProvisionalCallback(() {})
+            .request())
+        .isGranted;
+
+    return mediaLibraryIsGranted && manageExternalStorageIsGranted;
   }
 }

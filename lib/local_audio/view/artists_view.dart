@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../common/data/audio.dart';
-import '../../common/view/common_widgets.dart';
+import '../../app/view/routing_manager.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/round_image_container.dart';
-import '../../constants.dart';
-import '../../l10n/l10n.dart';
-import '../local_audio_model.dart';
+import '../../common/view/sliver_fill_remaining_progress.dart';
+import '../../common/view/ui_constants.dart';
 import 'artist_page.dart';
+import 'artist_round_image_container.dart';
 
 class ArtistsView extends StatelessWidget {
   const ArtistsView({
@@ -19,69 +18,54 @@ class ArtistsView extends StatelessWidget {
     this.noResultIcon,
   });
 
-  final Set<Audio>? artists;
+  final List<String>? artists;
   final Widget? noResultMessage, noResultIcon;
 
   @override
   Widget build(BuildContext context) {
     if (artists == null) {
-      return const Center(
-        child: Progress(),
-      );
+      return const SliverFillRemainingProgress();
     }
 
     if (artists!.isEmpty) {
-      return NoSearchResultPage(
-        icons: noResultIcon,
+      return SliverNoSearchResultPage(
+        icon: noResultIcon,
         message: noResultMessage,
       );
     }
-    final model = di<LocalAudioModel>();
 
-    return Padding(
-      padding: const EdgeInsets.only(top: 15),
-      child: GridView.builder(
-        itemCount: artists!.length,
-        padding: gridPadding,
-        gridDelegate: kDiskGridDelegate,
-        itemBuilder: (context, index) {
-          final artistAudios = model.findArtist(
-            artists!.elementAt(index),
-          );
-          final images = model.findImages(artistAudios ?? {});
+    return SliverGrid.builder(
+      itemCount: artists!.length,
+      gridDelegate: kDiskGridDelegate,
+      itemBuilder: (context, index) {
+        final artistName = artists!.elementAt(index);
+        final radius = BorderRadius.circular(300);
 
-          final text = artists!.elementAt(index).artist ?? context.l10n.unknown;
-
-          return YaruSelectableContainer(
-            selected: false,
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) {
-                  return ArtistPage(
-                    images: images,
-                    artistAudios: artistAudios,
-                  );
-                },
-              ),
-            ),
-            borderRadius: BorderRadius.circular(300),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  height: double.infinity,
-                  child: RoundImageContainer(
-                    images: images,
-                    fallBackText: text,
-                  ),
+        return YaruSelectableContainer(
+          key: ValueKey(artistName),
+          selected: false,
+          onTap: () => di<RoutingManager>().push(
+            builder: (_) => ArtistPage(pageId: artistName),
+            pageId: artistName,
+          ),
+          borderRadius: radius,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              SizedBox(
+                width: double.infinity,
+                height: double.infinity,
+                child: ArtistRoundImageContainer(
+                  dimension: double.infinity,
+                  key: ValueKey(artistName),
+                  artist: artistName,
                 ),
-                ArtistVignette(text: text),
-              ],
-            ),
-          );
-        },
-      ),
+              ),
+              ArtistVignette(text: artistName),
+            ],
+          ),
+        );
+      },
     );
   }
 }

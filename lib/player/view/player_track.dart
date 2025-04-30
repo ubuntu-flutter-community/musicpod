@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../common/data/audio.dart';
-import '../../common/view/common_widgets.dart';
+import '../../app_config.dart';
+import '../../common/data/audio_type.dart';
 import '../../common/view/custom_track_shape.dart';
-import '../../common/view/theme.dart';
+import '../../common/view/progress.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';
 import '../player_model.dart';
@@ -20,7 +20,7 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
 
     final mainColor = theme.colorScheme.onSurface;
 
@@ -70,9 +70,11 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
                 : const EdgeInsets.only(left: 7, right: 7, top: 3),
             child: LinearProgress(
               value: null,
-              trackHeight: yaruStyled && !bottomPlayer ? 5.0 : 4.0,
-              color: mainColor.withOpacity(0.8),
-              backgroundColor: mainColor.withOpacity(0.4),
+              trackHeight: AppConfig.yaruStyled && !bottomPlayer
+                  ? 5.0
+                  : (AppConfig.isMobilePlatform ? 2.0 : 4.0),
+              color: mainColor.withValues(alpha: 0.8),
+              backgroundColor: mainColor.withValues(alpha: 0.4),
             ),
           )
         : Padding(
@@ -88,11 +90,13 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
                   overlayShape: thumbShape,
                   minThumbSeparation: 0,
                   trackShape: trackShape as SliderTrackShape,
-                  trackHeight: bottomPlayer ? 4.0 : 4.0,
-                  inactiveTrackColor: mainColor.withOpacity(0.2),
-                  activeTrackColor: mainColor.withOpacity(0.85),
+                  trackHeight: bottomPlayer
+                      ? (AppConfig.isMobilePlatform ? 2.0 : 4.0)
+                      : 4.0,
+                  inactiveTrackColor: mainColor.withValues(alpha: 0.2),
+                  activeTrackColor: mainColor.withValues(alpha: 0.85),
                   overlayColor: mainColor,
-                  secondaryActiveTrackColor: mainColor.withOpacity(0.25),
+                  secondaryActiveTrackColor: mainColor.withValues(alpha: 0.25),
                 ),
                 child: RepaintBoundary(
                   child: Slider(
@@ -156,6 +160,69 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
           ],
         ),
       ],
+    );
+  }
+}
+
+class PlayerSimpleTrack extends StatelessWidget with WatchItMixin {
+  const PlayerSimpleTrack({
+    super.key,
+    this.active = true,
+  });
+
+  final bool active;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = context.theme;
+    final position = watchPropertyValue((PlayerModel m) => m.position);
+    final duration = watchPropertyValue((PlayerModel m) => m.duration);
+    final textStyle =
+        TextStyle(fontSize: 10, color: !active ? theme.disabledColor : null);
+
+    final positionWidth =
+        (position?.inHours != null && position!.inHours > 0) ? 48.0 : 35.0;
+    final durationWidth =
+        (duration?.inHours != null && duration!.inHours > 0) ? 48.0 : 35.0;
+
+    const slashWidth = 5.0;
+
+    const height = 13.0;
+
+    return SizedBox(
+      width: positionWidth + durationWidth + slashWidth,
+      height: height,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          RepaintBoundary(
+            child: SizedBox(
+              width: positionWidth,
+              height: height,
+              child: Text(
+                (position ?? Duration.zero).formattedTime,
+                style: textStyle,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: height,
+            width: slashWidth,
+            child: Text('/', style: textStyle),
+          ),
+          RepaintBoundary(
+            child: SizedBox(
+              width: durationWidth,
+              height: height,
+              child: Text(
+                (duration ?? Duration.zero).formattedTime,
+                style: textStyle,
+                textAlign: TextAlign.end,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

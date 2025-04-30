@@ -1,73 +1,99 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:radio_browser_api/radio_browser_api.dart';
 import 'package:watch_it/watch_it.dart';
+import 'package:yaru/yaru.dart';
 
-import '../../app/app_model.dart';
-import '../../common/view/tapable_text.dart';
+import '../../app/view/routing_manager.dart';
 import '../../common/data/audio.dart';
-import '../../common/view/global_keys.dart';
-import '../../library/library_model.dart';
-import '../radio_model.dart';
-import 'radio_search.dart';
-import 'radio_search_page.dart';
+import '../../common/data/audio_type.dart';
+import '../../common/page_ids.dart';
+import '../../common/view/tapable_text.dart';
+import '../../extensions/build_context_x.dart';
+import '../../extensions/theme_data_x.dart';
+import '../../l10n/l10n.dart';
+import '../../search/search_model.dart';
+import '../../search/search_type.dart';
 
 class RadioPageTagBar extends StatelessWidget {
-  const RadioPageTagBar({super.key, required this.station});
+  const RadioPageTagBar({super.key, required this.station, this.onTap});
 
   final Audio station;
+  final Function(String value)? onTap;
 
   @override
   Widget build(BuildContext context) {
-    final tags = station.album?.isNotEmpty == false
-        ? null
-        : <String>[
-            for (final tag in station.album?.split(',') ?? <String>[]) tag,
-          ];
+    final style = context.theme.pageHeaderDescription;
+    final tags = station.tags;
     if (tags == null || tags.isEmpty) return const SizedBox.shrink();
 
-    final radioModel = di<RadioModel>();
-    final libraryModel = di<LibraryModel>();
-    final appModel = di<AppModel>();
-
-    return SingleChildScrollView(
-      padding: const EdgeInsets.only(top: 5, left: 2),
+    final childOrFullBar = SingleChildScrollView(
       child: Wrap(
-        spacing: 5,
-        runSpacing: 5,
-        children: tags
-            .mapIndexed(
-              (i, e) => Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TapAbleText(
-                    wrapInFlexible: false,
-                    onTap: () {
-                      radioModel
-                          .init(
-                            countryCode: appModel.countryCode,
-                            index: libraryModel.radioindex,
-                          )
-                          .then(
-                            (_) => navigatorKey.currentState?.push(
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return RadioSearchPage(
-                                    radioSearch: RadioSearch.tag,
-                                    searchQuery: e,
-                                  );
-                                },
-                              ),
-                            ),
-                          );
-                    },
-                    text: e,
-                  ),
-                  if (i != tags.length - 1) const Text(','),
-                ],
-              ),
-            )
-            .toList(),
+        alignment: WrapAlignment.center,
+        runAlignment: WrapAlignment.center,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: tapAbleTags(
+          context: context,
+          tags: tags,
+          style: style,
+          onTap: onTap,
+        ),
       ),
     );
+
+    if (tags.length > 20) {
+      return YaruExpandable(
+        expandIconPadding: const EdgeInsets.only(left: 10),
+        header: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: Tooltip(
+            message: context.l10n.radioTagDisclaimerSubTitle,
+            child: Text(
+              '${context.l10n.radioTagDisclaimerTitle} ${context.l10n.radioTagDisclaimerSubTitle} ',
+              style: style,
+              textAlign: TextAlign.justify,
+              maxLines: 2,
+            ),
+          ),
+        ),
+        child: childOrFullBar,
+      );
+    }
+
+    return childOrFullBar;
+  }
+
+  List<Widget> tapAbleTags({
+    required BuildContext context,
+    required List<String> tags,
+    required TextStyle? style,
+    int? limit,
+    Function(String value)? onTap,
+  }) {
+    return tags
+        .take(limit ?? tags.length)
+        .mapIndexed(
+          (i, e) => Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TapAbleText(
+                style: style,
+                wrapInFlexible: false,
+                onTap: () {
+                  onTap?.call(e);
+                  di<RoutingManager>().push(pageId: PageIDs.searchPage);
+                  di<SearchModel>()
+                    ..setTag(Tag(name: e, stationCount: 1))
+                    ..setAudioType(AudioType.radio)
+                    ..setSearchType(SearchType.radioTag)
+                    ..search();
+                },
+                text: e.length > 20 ? e.substring(0, 19) : e,
+              ),
+              if (i != tags.length - 1) const Text(' · '),
+            ],
+          ),
+        )
+        .toList();
   }
 }

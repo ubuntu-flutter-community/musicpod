@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../app_config.dart';
 import '../../common/view/icons.dart';
-import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../player_model.dart';
 
@@ -19,11 +19,11 @@ class SeekButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final playerModel = di<PlayerModel>();
 
     final icon = Icon(
-      forward ? Iconz().forward30 : Iconz().backward10,
+      forward ? Iconz.forward30 : Iconz.backward10,
       color: iconColor,
     );
     return IconButton(
@@ -32,7 +32,7 @@ class SeekButton extends StatelessWidget {
       onPressed: () async {
         playerModel.seekInSeconds(forward ? 30 : -10);
       },
-      icon: yaruStyled
+      icon: AppConfig.yaruStyled
           ? Stack(
               alignment: Alignment.center,
               children: [
@@ -42,7 +42,7 @@ class SeekButton extends StatelessWidget {
                   right: 5,
                   child: Text(
                     forward ? '30' : '10',
-                    style: context.t.textTheme.labelSmall?.copyWith(
+                    style: context.theme.textTheme.labelSmall?.copyWith(
                       fontSize: 7,
                       color: iconColor,
                     ),

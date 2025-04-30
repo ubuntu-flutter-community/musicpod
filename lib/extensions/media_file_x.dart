@@ -2,39 +2,42 @@ import 'dart:io';
 
 import 'package:mime/mime.dart';
 
-/// TODO: either guarantee that downloads are saved with the correct extension or manage to detect files without file extensions via magic bytes
+final _resolver = MimeTypeResolver();
 
 extension MediaFileX on File {
-  bool get isValidMedia => path.isValidPath;
-}
-
-extension MediaFileSystemEntityX on FileSystemEntity {
-  bool get isValidMedia => path.isValidPath;
+  bool get isPlayable => path.isPlayable;
 }
 
 extension _ValidPathX on String {
-  /// | Bytes | extension | Description |
-  /// |:--|:--|:--|
-  /// |`49 44 33`| `.mp3` |MP3 file with an ID3v2 container|
-  /// |`FF FB / FF F3 / FF F2`|`.mp3`|MPEG-1 Layer 3 file without an ID3 tag or with an ID3v1 tag (which is appended at the end of the file)|
-  /// |`4F 67 67 53`| `.ogg`, `.oga`, `.ogv` | Ogg, an open source media container format |
-  /// |`66 4C 61 43`| `.flac` | Free Lossless Audio Codec |
-  /// |`66 74 79 70 69 73 6F 6D`| `mp4`| 	ISO Base Media file (MPEG-4)|
-  /// |`66 74 79 70 4D 53 4E 56`| `mp4`| 	MPEG-4 video file|
-  bool get isValidPath {
-    final mime = lookupMimeType(this);
-    return mime?.startsWith('audio') == true ||
-        mime?.startsWith('video') == true ||
-        _validMediaExtensions.any((e) => endsWith(e));
+  bool get isPlayable {
+    for (var v in _SpecialMimeTypes.values) {
+      _resolver
+        ..addExtension(v.extension, v.mimeType)
+        ..addMagicNumber(v.headerBytes, v.mimeType);
+    }
+
+    final mime = _resolver.lookup(this);
+
+    return (mime?.contains('audio') ?? false) ||
+        (mime?.contains('video') ?? false);
   }
 }
 
-const _validMediaExtensions = [
-  '.mp3',
-  '.flac',
-  '.mp4',
-  '.opus',
-  '.ogg',
-  '.m4a',
-  '.aac',
-];
+enum _SpecialMimeTypes {
+  opusAudio;
+
+  String get mimeType => switch (this) { opusAudio => 'audio/opus' };
+
+  String get extension => switch (this) {
+        opusAudio => 'opus',
+      };
+
+  List<int> get headerBytes => switch (this) {
+        opusAudio => [
+            0x4F, // O
+            0x67, // g
+            0x67, // g
+            0x53, // S
+          ],
+      };
+}

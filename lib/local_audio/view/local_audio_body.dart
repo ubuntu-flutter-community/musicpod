@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../common/data/audio.dart';
+import '../local_audio_view.dart';
 import 'album_view.dart';
 import 'artists_view.dart';
 import 'genres_view.dart';
-import 'local_audio_view.dart';
+import 'playlists_view.dart';
 import 'titles_view.dart';
 
 class LocalAudioBody extends StatelessWidget {
@@ -13,44 +14,46 @@ class LocalAudioBody extends StatelessWidget {
     required this.localAudioView,
     required this.titles,
     required this.artists,
-    required this.albums,
+    required this.albumIDs,
     required this.genres,
+    required this.playlists,
     this.noResultMessage,
     this.noResultIcon,
   });
 
   final LocalAudioView localAudioView;
-  final Set<Audio>? titles;
-  final Set<Audio>? artists;
-  final Set<Audio>? albums;
-  final Set<Audio>? genres;
+  final List<Audio>? titles;
+  final List<String>? artists;
+
+  final List<String>? albumIDs;
+  final List<String>? genres;
+  final List<String>? playlists;
   final Widget? noResultMessage, noResultIcon;
 
   @override
-  Widget build(BuildContext context) {
-    return switch (localAudioView) {
-      LocalAudioView.titles => TitlesView(
-          classicTiles: false,
-          audios: titles,
-          noResultMessage: noResultMessage,
-          noResultIcon: noResultIcon,
-        ),
-      LocalAudioView.artists => ArtistsView(
-          artists: artists,
-          noResultMessage: noResultMessage,
-          noResultIcon: noResultIcon,
-        ),
-      LocalAudioView.albums => AlbumsView(
-          sliver: false,
-          albums: albums,
-          noResultMessage: noResultMessage,
-          noResultIcon: noResultIcon,
-        ),
-      LocalAudioView.genres => GenresView(
-          genres: genres,
-          noResultMessage: noResultMessage,
-          noResultIcon: noResultIcon,
-        ),
-    };
-  }
+  Widget build(BuildContext context) => switch (localAudioView) {
+        LocalAudioView.titles => TitlesView(
+            audios: titles,
+            noResultMessage: noResultMessage,
+            noResultIcon: noResultIcon,
+          ),
+        LocalAudioView.artists => ArtistsView(
+            artists: artists,
+            noResultMessage: noResultMessage,
+            noResultIcon: noResultIcon,
+          ),
+        LocalAudioView.albums => AlbumsView(
+            albumIDs: albumIDs,
+            noResultMessage: noResultMessage,
+            noResultIcon: noResultIcon,
+          ),
+        LocalAudioView.genres => GenresView(
+            genres: genres,
+            noResultMessage: noResultMessage,
+            noResultIcon: noResultIcon,
+          ),
+        LocalAudioView.playlists => PlaylistsView(
+            playlists: playlists ?? [],
+          )
+      };
 }

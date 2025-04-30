@@ -1,50 +1,92 @@
+import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
+
+import '../../app/connectivity_model.dart';
+import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
+import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
+import '../radio_model.dart';
 
-import 'package:flutter/material.dart';
-
-class StationPageIcon extends StatelessWidget {
+class StationPageIcon extends StatefulWidget with WatchItStatefulWidgetMixin {
   const StationPageIcon({
     super.key,
-    this.imageUrl,
+    required this.uuid,
     required this.selected,
-    required this.fallBackColor,
   });
 
-  final String? imageUrl;
+  final String uuid;
   final bool selected;
-  final Color fallBackColor;
+
+  @override
+  State<StationPageIcon> createState() => _StationPageIconState();
+}
+
+class _StationPageIconState extends State<StationPageIcon> {
+  late Future<Audio?> _future;
+  late Color fallBackColor;
+
+  @override
+  void initState() {
+    super.initState();
+    fallBackColor = getAlphabetColor(widget.uuid);
+    setFuture();
+  }
+
+  void setFuture() => _future = di<RadioModel>().getStationByUUID(widget.uuid);
 
   @override
   Widget build(BuildContext context) {
+    watchPropertyValue((ConnectivityModel m) {
+      setFuture();
+      return m.isOnline;
+    });
     return ClipRRect(
       borderRadius: BorderRadius.circular(6),
       child: Container(
-        color: context.t.cardColor,
+        color: context.theme.cardColor,
         height: sideBarImageSize,
         width: sideBarImageSize,
-        child: SafeNetworkImage(
-          fallBackIcon: SideBarFallBackImage(
-            color: fallBackColor,
-            child: selected
-                ? Icon(Iconz().starFilled)
-                : Icon(
-                    Iconz().star,
-                  ),
-          ),
-          errorIcon: SideBarFallBackImage(
-            color: fallBackColor,
-            child: selected
-                ? Icon(Iconz().imageMissingFilled)
-                : Icon(
-                    Iconz().imageMissing,
-                  ),
-          ),
-          fit: BoxFit.fitHeight,
-          url: imageUrl,
-          filterQuality: FilterQuality.medium,
+        child: FutureBuilder(
+          future: _future,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData || snapshot.hasError) {
+              return SideBarFallBackImage(
+                color: fallBackColor,
+                child: widget.selected
+                    ? Icon(Iconz.starFilled)
+                    : Icon(
+                        Iconz.star,
+                      ),
+              );
+            }
+
+            final station = snapshot.data!;
+
+            return SafeNetworkImage(
+              fallBackIcon: SideBarFallBackImage(
+                color: fallBackColor,
+                child: widget.selected
+                    ? Icon(Iconz.starFilled)
+                    : Icon(
+                        Iconz.star,
+                      ),
+              ),
+              errorIcon: SideBarFallBackImage(
+                color: fallBackColor,
+                child: widget.selected
+                    ? Icon(Iconz.starFilled)
+                    : Icon(
+                        Iconz.star,
+                      ),
+              ),
+              fit: BoxFit.fitHeight,
+              url: station.imageUrl,
+              filterQuality: FilterQuality.medium,
+            );
+          },
         ),
       ),
     );

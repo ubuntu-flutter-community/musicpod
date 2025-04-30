@@ -1,229 +1,175 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
+import '../../app/view/routing_manager.dart';
+import '../../app_config.dart';
 import '../../common/data/audio.dart';
+import '../../common/data/audio_type.dart';
+import '../../common/page_ids.dart';
 import '../../common/view/adaptive_container.dart';
-import '../../common/view/audio_page_header.dart';
-import '../../common/view/avatar_play_button.dart';
-import '../../common/view/common_widgets.dart';
-import '../../common/view/explore_online_popup.dart';
-import '../../common/view/icons.dart';
-import '../../common/view/safe_network_image.dart';
-import '../../common/view/side_bar_fall_back_image.dart';
+import '../../common/view/audio_filter.dart';
+import '../../common/view/header_bar.dart';
+import '../../common/view/search_button.dart';
 import '../../common/view/sliver_audio_page_control_panel.dart';
-import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
+import '../../common/view/theme.dart';
+import '../../common/view/ui_constants.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
+import '../../search/search_model.dart';
+import '../../search/search_type.dart';
 import '../podcast_model.dart';
+import 'podcast_page_control_panel.dart';
+import 'podcast_page_header.dart';
 import 'sliver_podcast_page_list.dart';
+import 'sliver_podcast_page_search_field.dart';
 
-class PodcastPage extends StatelessWidget with WatchItMixin {
+class PodcastPage extends StatefulWidget with WatchItStatefulWidgetMixin {
   const PodcastPage({
     super.key,
     this.imageUrl,
-    required this.pageId,
-    this.audios,
+    required this.feedUrl,
+    this.preFetchedEpisodes,
     required this.title,
   });
 
   final String? imageUrl;
-  final String pageId;
-  final String title;
-  final Set<Audio>? audios;
 
-  @override
-  Widget build(BuildContext context) {
-    final theme = context.t;
-
-    watchPropertyValue((PlayerModel m) => m.lastPositions?.length);
-    watchPropertyValue((LibraryModel m) => m.downloadsLength);
-    final libraryModel = di<LibraryModel>();
-    final audiosWithDownloads = audios
-            ?.map((e) => e.copyWith(path: libraryModel.getDownload(e.url)))
-            .toSet() ??
-        {};
-
-    Future<void> onTap(text) async {
-      final podcastModel = di<PodcastModel>();
-      Navigator.of(context).maybePop();
-      podcastModel.setSearchActive(true);
-      podcastModel.setSearchQuery(text);
-      await podcastModel.search(searchQuery: text);
-      di<LibraryModel>().setIndex(2);
-    }
-
-    return YaruDetailPage(
-      appBar: HeaderBar(
-        adaptive: true,
-        title: Text(title),
-      ),
-      body: AdaptiveContainer(
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: AudioPageHeader(
-                image: imageUrl == null
-                    ? null
-                    : SafeNetworkImage(
-                        fallBackIcon: Icon(
-                          Iconz().podcast,
-                          size: 80,
-                          color: theme.hintColor,
-                        ),
-                        errorIcon: Icon(
-                          Iconz().podcast,
-                          size: 80,
-                          color: theme.hintColor,
-                        ),
-                        url: imageUrl,
-                        fit: BoxFit.fitHeight,
-                        filterQuality: FilterQuality.medium,
-                      ),
-                label:
-                    audios?.firstWhereOrNull((e) => e.genre != null)?.genre ??
-                        context.l10n.podcast,
-                subTitle: audios?.firstOrNull?.artist,
-                description: audios?.firstOrNull?.albumArtist,
-                title: title,
-                onLabelTab: onTap,
-                onSubTitleTab: onTap,
-              ),
-            ),
-            SliverAudioPageControlPanel(
-              controlPanel: _PodcastPageControlPanel(
-                audios: audiosWithDownloads,
-                pageId: pageId,
-                title: title,
-              ),
-            ),
-            SliverPodcastPageList(audios: audiosWithDownloads, pageId: pageId),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
-  const _PodcastPageControlPanel({
-    required this.audios,
-    required this.pageId,
-    required this.title,
-  });
-
-  final Set<Audio> audios;
-  final String pageId;
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = context.t;
-    final libraryModel = di<LibraryModel>();
-
-    final subscribed = libraryModel.podcastSubscribed(pageId);
-
-    watchPropertyValue((PlayerModel m) => m.lastPositions?.length);
-    watchPropertyValue((LibraryModel m) => m.downloadsLength);
-
-    final checkingForUpdates =
-        watchPropertyValue((PodcastModel m) => m.checkingForUpdates);
-    return Row(
-      mainAxisAlignment: context.smallWindow
-          ? MainAxisAlignment.center
-          : MainAxisAlignment.start,
-      children: [
-        AvatarPlayButton(audios: audios, pageId: pageId),
-        const SizedBox(
-          width: 10,
-        ),
-        IconButton(
-          tooltip: subscribed
-              ? context.l10n.removeFromCollection
-              : context.l10n.addToCollection,
-          icon: checkingForUpdates
-              ? const SideBarProgress()
-              : Icon(
-                  subscribed ? Iconz().removeFromLibrary : Iconz().addToLibrary,
-                  color: subscribed
-                      ? theme.colorScheme.primary
-                      : theme.colorScheme.onSurface,
-                ),
-          onPressed: checkingForUpdates
-              ? null
-              : () {
-                  if (subscribed) {
-                    libraryModel.removePodcast(pageId);
-                  } else if (audios.isNotEmpty) {
-                    libraryModel.addPodcast(pageId, audios);
-                  }
-                },
-        ),
-        ExploreOnlinePopup(text: title),
-      ],
-    );
-  }
-}
-
-class PodcastPageTitle extends StatelessWidget with WatchItMixin {
-  const PodcastPageTitle({
-    super.key,
-    required this.feedUrl,
-    required this.title,
-  });
-
+  /// The feedUrl
   final String feedUrl;
   final String title;
+  final List<Audio>? preFetchedEpisodes;
 
   @override
-  Widget build(BuildContext context) {
-    watchPropertyValue((LibraryModel m) => m.podcastUpdatesLength);
-    final visible = di<LibraryModel>().podcastUpdateAvailable(feedUrl);
-    return Badge(
-      backgroundColor: context.t.colorScheme.primary,
-      isLabelVisible: visible,
-      alignment: Alignment.centerRight,
-      child: Padding(
-        padding: EdgeInsets.only(right: visible ? 10 : 0),
-        child: Text(title),
-      ),
-    );
-  }
+  State<PodcastPage> createState() => _PodcastPageState();
 }
 
-class PodcastPageSideBarIcon extends StatelessWidget {
-  const PodcastPageSideBarIcon({super.key, this.imageUrl});
+class _PodcastPageState extends State<PodcastPage> {
+  @override
+  void initState() {
+    super.initState();
+    final libraryModel = di<LibraryModel>();
+    if (!libraryModel.isPodcastSubscribed(widget.feedUrl)) return;
 
-  final String? imageUrl;
+    final episodes =
+        widget.preFetchedEpisodes ?? libraryModel.getPodcast(widget.feedUrl);
+
+    if (episodes == null || episodes.isEmpty) return;
+
+    Future.delayed(const Duration(milliseconds: 500)).then(
+      (_) {
+        final episodesWithDownloads = episodes
+            .map((e) => e.copyWith(path: libraryModel.getDownload(e.url)))
+            .toList();
+        di<PodcastModel>().update(
+          oldPodcasts: {
+            widget.feedUrl: episodesWithDownloads,
+          },
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (imageUrl == null) {
-      return SideBarFallBackImage(
-        child: Icon(Iconz().podcast),
+    final episodes = widget.preFetchedEpisodes ??
+        watchPropertyValue((LibraryModel m) => m.getPodcast(widget.feedUrl));
+    watchPropertyValue((PlayerModel m) => m.lastPositions?.length);
+    watchPropertyValue((LibraryModel m) => m.downloadsLength);
+    final showSearch =
+        watchPropertyValue((PodcastModel m) => m.getShowSearch(widget.feedUrl));
+    final searchQuery = watchPropertyValue(
+      (PodcastModel m) => m.getSearchQuery(widget.feedUrl),
+    );
+
+    final libraryModel = di<LibraryModel>();
+    if (watchPropertyValue(
+      (LibraryModel m) => m.showPodcastAscending(widget.feedUrl),
+    )) {
+      sortListByAudioFilter(
+        audioFilter: AudioFilter.year,
+        audios: episodes ?? [],
       );
     }
+    final filter = watchPropertyValue((PodcastModel m) => m.filter);
+    final episodesWithDownloads = (episodes ?? [])
+        .map((e) => e.copyWith(path: libraryModel.getDownload(e.url)))
+        .where((e) => e.title != null && e.description != null)
+        .where(
+          (e) => (searchQuery == null || searchQuery.trim().isEmpty)
+              ? true
+              : switch (filter) {
+                  PodcastEpisodeFilter.title =>
+                    e.title!.toLowerCase().contains(searchQuery.toLowerCase()),
+                  PodcastEpisodeFilter.description => e.description!
+                      .toLowerCase()
+                      .contains(searchQuery.toLowerCase())
+                },
+        )
+        .toList();
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(5),
-      child: SizedBox(
-        width: sideBarImageSize,
-        height: sideBarImageSize,
-        child: SafeNetworkImage(
-          url: imageUrl,
-          fit: BoxFit.fitHeight,
-          filterQuality: FilterQuality.medium,
-          fallBackIcon: Icon(
-            Iconz().podcast,
-            size: sideBarImageSize,
+    return Scaffold(
+      appBar: HeaderBar(
+        adaptive: true,
+        actions: [
+          Padding(
+            padding: appBarSingleActionSpacing,
+            child: SearchButton(
+              onPressed: () {
+                di<RoutingManager>().push(pageId: PageIDs.searchPage);
+                di<SearchModel>()
+                  ..setAudioType(AudioType.podcast)
+                  ..setSearchType(SearchType.podcastTitle);
+              },
+            ),
           ),
-          errorIcon: Icon(
-            Iconz().podcast,
-            size: sideBarImageSize,
-          ),
-        ),
+        ],
+      ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return RefreshIndicator(
+            onRefresh: () async => di<PodcastModel>().update(
+              oldPodcasts: {widget.feedUrl: episodesWithDownloads},
+            ),
+            child: CustomScrollView(
+              slivers: [
+                SliverPadding(
+                  padding: getAdaptiveHorizontalPadding(
+                    constraints: constraints,
+                    min: 40,
+                  ),
+                  sliver: SliverToBoxAdapter(
+                    child: PodcastPageHeader(
+                      title: widget.title,
+                      imageUrl: widget.imageUrl,
+                      episodes: episodes,
+                    ),
+                  ),
+                ),
+                SliverAudioPageControlPanel(
+                  controlPanel: PodcastPageControlPanel(
+                    feedUrl: widget.feedUrl,
+                    audios: episodesWithDownloads,
+                    title: widget.title,
+                  ),
+                ),
+                if (showSearch)
+                  SliverPodcastPageSearchField(
+                    feedUrl: widget.feedUrl,
+                  ),
+                SliverPadding(
+                  padding: getAdaptiveHorizontalPadding(
+                    min: AppConfig.isMobilePlatform ? 0 : 15,
+                    constraints: constraints,
+                  ).copyWith(bottom: bottomPlayerPageGap ?? kLargestSpace),
+                  sliver: SliverPodcastPageList(
+                    audios: episodesWithDownloads,
+                    pageId: widget.feedUrl,
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

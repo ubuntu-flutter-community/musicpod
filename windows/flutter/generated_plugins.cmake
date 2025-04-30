@@ -8,16 +8,17 @@ list(APPEND FLUTTER_PLUGIN_LIST
   irondash_engine_context
   media_kit_libs_windows_video
   media_kit_video
-  screen_brightness_windows
-  screen_retriever
+  permission_handler_windows
+  screen_retriever_windows
   super_native_extensions
   system_theme
   url_launcher_windows
+  volume_controller
   window_manager
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
-  media_kit_native_event_loop
+  flutter_discord_rpc
   smtc_windows
 )
 

@@ -1,209 +1,200 @@
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
+import '../../app/connectivity_model.dart';
+import '../../app/view/routing_manager.dart';
 import '../../common/data/audio.dart';
+import '../../common/data/audio_type.dart';
+import '../../common/page_ids.dart';
+import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/common_widgets.dart';
-import '../../common/view/global_keys.dart';
+import '../../common/view/confirm.dart';
 import '../../common/view/loading_grid.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/offline_page.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
-import '../../constants.dart';
+import '../../custom_content/custom_content_model.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
+import '../../search/search_model.dart';
 import '../podcast_model.dart';
-import 'podcast_page.dart';
+import 'podcast_collection_control_panel.dart';
 
 class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
   const PodcastsCollectionBody({
     super.key,
-    required this.isOnline,
-    required this.loading,
   });
-
-  final bool isOnline;
-  final bool loading;
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
-    final subs = watchPropertyValue((LibraryModel m) => m.podcasts);
-    watchPropertyValue((LibraryModel m) => m.podcastUpdatesLength);
-    final playerModel = di<PlayerModel>();
+    final theme = context.theme;
+    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
+    if (!isOnline) return const OfflineBody();
+
+    final checkingForUpdates =
+        watchPropertyValue((PodcastModel m) => m.checkingForUpdates);
+    final processing =
+        watchPropertyValue((CustomContentModel m) => m.processing);
+    final subs = watchPropertyValue((LibraryModel m) => m.podcastFeedUrls);
     final libraryModel = di<LibraryModel>();
-    final podcastUpdateAvailable = libraryModel.podcastUpdateAvailable;
-    final feedHasDownload = libraryModel.feedHasDownload;
     final updatesLength =
         watchPropertyValue((LibraryModel m) => m.podcastUpdatesLength);
-    final model = di<PodcastModel>();
     final updatesOnly = watchPropertyValue((PodcastModel m) => m.updatesOnly);
     final downloadsOnly =
         watchPropertyValue((PodcastModel m) => m.downloadsOnly);
     final subsLength = watchPropertyValue((LibraryModel m) => m.podcastsLength);
     final feedsWithDownloadLength =
         watchPropertyValue((LibraryModel m) => m.feedsWithDownloadsLength);
-    final setUpdatesOnly = model.setUpdatesOnly;
-    final setDownloadsOnly = model.setDownloadsOnly;
-    final removeUpdate = libraryModel.removePodcastUpdate;
 
     final itemCount = updatesOnly
         ? updatesLength
         : (downloadsOnly ? feedsWithDownloadLength : subsLength);
 
-    return subsLength == 0
-        ? NoSearchResultPage(
-            icons: const AnimatedEmoji(AnimatedEmojis.faceInClouds),
-            message: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(context.l10n.noPodcastSubsFound),
-                const SizedBox(
-                  height: 10,
-                ),
-                ImportantButton(
-                  onPressed: () => model.setSearchActive(true),
-                  child: Text(context.l10n.discover),
-                ),
-              ],
-            ),
-          )
-        : Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5),
+          child: Container(
+            alignment: Alignment.center,
+            height: context.theme.appBarTheme.toolbarHeight,
+            margin: filterPanelPadding,
+            child: const PodcastCollectionControlPanel(),
+          ),
+        ),
+        if (checkingForUpdates)
+          Expanded(child: LoadingGrid(limit: subsLength))
+        else if (subsLength == 0)
+          Expanded(
+            child: NoSearchResultPage(
+              icon: const AnimatedEmoji(AnimatedEmojis.faceInClouds),
+              message: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
+                  Text(context.l10n.noPodcastSubsFound),
                   const SizedBox(
-                    width: kYaruPagePadding,
+                    height: 10,
                   ),
-                  YaruChoiceChipBar(
-                    chipBackgroundColor: chipColor(theme),
-                    selectedChipBackgroundColor:
-                        chipSelectionColor(theme, loading),
-                    borderColor: chipBorder(theme, loading),
-                    yaruChoiceChipBarStyle: YaruChoiceChipBarStyle.wrap,
-                    clearOnSelect: false,
-                    selectedFirst: false,
-                    labels: [
-                      Text(context.l10n.newEpisodes),
-                      Text(
-                        context.l10n.downloadsOnly,
-                      ),
-                    ],
-                    isSelected: [
-                      updatesOnly,
-                      downloadsOnly,
-                    ],
-                    onSelected: loading
-                        ? null
-                        : (index) {
-                            if (index == 0) {
-                              if (updatesOnly) {
-                                setUpdatesOnly(false);
-                              } else {
-                                model.update(context.l10n.newEpisodeAvailable);
-
-                                setUpdatesOnly(true);
-                                setDownloadsOnly(false);
-                              }
-                            } else {
-                              if (downloadsOnly) {
-                                setDownloadsOnly(false);
-                              } else {
-                                setDownloadsOnly(true);
-                                setUpdatesOnly(false);
-                              }
-                            }
-                          },
+                  ImportantButton(
+                    onPressed: () {
+                      di<RoutingManager>().push(pageId: PageIDs.searchPage);
+                      di<SearchModel>()
+                        ..setAudioType(AudioType.podcast)
+                        ..setSearchQuery(null)
+                        ..search();
+                    },
+                    child: Text(context.l10n.discover),
                   ),
                 ],
               ),
-              const SizedBox(
-                height: 15,
-              ),
-              Expanded(
-                child: loading
-                    ? LoadingGrid(limit: subsLength)
-                    : GridView.builder(
-                        padding: gridPadding,
-                        itemCount: itemCount,
-                        gridDelegate: audioCardGridDelegate,
-                        itemBuilder: (context, index) {
-                          final MapEntry<String, Set<Audio>> podcast;
-                          if (updatesOnly) {
-                            podcast = subs.entries
-                                .where((e) => podcastUpdateAvailable(e.key))
-                                .elementAt(index);
-                          } else if (downloadsOnly) {
-                            podcast = subs.entries
-                                .where((e) => feedHasDownload(e.key))
-                                .elementAt(index);
-                          } else {
-                            podcast = subs.entries.elementAt(index);
-                          }
-
-                          final artworkUrl600 =
-                              podcast.value.firstOrNull?.albumArtUrl ??
-                                  podcast.value.firstOrNull?.imageUrl;
-                          final image = SafeNetworkImage(
-                            url: artworkUrl600,
-                            fit: BoxFit.cover,
-                            height: kAudioCardDimension,
-                            width: kAudioCardDimension,
-                          );
-
-                          return AudioCard(
-                            image: image,
-                            bottom: AudioCardBottom(
-                              style: podcastUpdateAvailable(podcast.key)
-                                  ? theme.textTheme.bodyMedium?.copyWith(
-                                        color: theme.colorScheme.primary,
-                                        fontWeight: FontWeight.bold,
-                                      ) ??
-                                      TextStyle(
-                                        color: theme.colorScheme.primary,
-                                        fontWeight: FontWeight.bold,
-                                      )
-                                  : null,
-                              text: podcast.value.firstOrNull?.album ??
-                                  podcast.value.firstOrNull?.title ??
-                                  podcast.value.firstOrNull.toString(),
+            ),
+          )
+        else
+          Expanded(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    if (checkingForUpdates || processing) return;
+                    if (subsLength > 10) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => ConfirmationDialog(
+                          title: Text(context.l10n.checkForUpdates),
+                          confirmLabel: context.l10n.checkForUpdates,
+                          content: Text(
+                            context.l10n.checkForUpdatesConfirm(
+                              subsLength.toString(),
                             ),
-                            onPlay: () => playerModel
-                                .startPlaylist(
-                                  audios: podcast.value,
-                                  listName: podcast.key,
-                                )
-                                .then((_) => removeUpdate(podcast.key)),
-                            onTap: () => navigatorKey.currentState?.push(
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  if (!isOnline) return const OfflinePage();
+                          ),
+                          onConfirm: () => di<PodcastModel>().update(
+                            updateMessage: context.l10n.newEpisodeAvailable,
+                          ),
+                        ),
+                      );
+                    } else {
+                      di<PodcastModel>().update(
+                        updateMessage: context.l10n.newEpisodeAvailable,
+                      );
+                    }
+                  },
+                  child: GridView.builder(
+                    padding: getAdaptiveHorizontalPadding(
+                      constraints: constraints,
+                    ),
+                    itemCount: itemCount,
+                    gridDelegate: audioCardGridDelegate,
+                    itemBuilder: (context, index) {
+                      final List<Audio>? episodes;
+                      final String? feedUrl;
+                      if (updatesOnly) {
+                        feedUrl = subs
+                            .where(
+                              (e) => libraryModel.podcastUpdateAvailable(e),
+                            )
+                            .elementAtOrNull(index);
+                      } else if (downloadsOnly) {
+                        feedUrl = subs
+                            .where((e) => libraryModel.feedHasDownload(e))
+                            .elementAtOrNull(index);
+                      } else {
+                        feedUrl = subs.elementAtOrNull(index);
+                      }
 
-                                  return PodcastPage(
-                                    pageId: podcast.key,
-                                    title: podcast.value.firstOrNull?.album ??
-                                        podcast.value.firstOrNull?.title ??
-                                        podcast.value.firstOrNull.toString(),
-                                    audios: podcast.value,
-                                    imageUrl: podcast
-                                            .value.firstOrNull?.albumArtUrl ??
-                                        podcast.value.firstOrNull?.imageUrl,
-                                  );
-                                },
+                      episodes = libraryModel.getPodcast(feedUrl);
+
+                      if (feedUrl == null || episodes == null) {
+                        return const SizedBox.shrink();
+                      }
+                      final first = episodes.firstOrNull;
+
+                      return AudioCard(
+                        image: SafeNetworkImage(
+                          url: first?.albumArtUrl ?? first?.imageUrl,
+                          fit: BoxFit.cover,
+                          height: audioCardDimension,
+                          width: audioCardDimension,
+                        ),
+                        bottom: AudioCardBottom(
+                          style: libraryModel.podcastUpdateAvailable(feedUrl)
+                              ? theme.textTheme.bodyMedium?.copyWith(
+                                    color: theme.colorScheme.primary,
+                                    fontWeight: FontWeight.bold,
+                                  ) ??
+                                  TextStyle(
+                                    color: theme.colorScheme.primary,
+                                    fontWeight: FontWeight.bold,
+                                  )
+                              : null,
+                          text:
+                              first?.album ?? first?.title ?? first.toString(),
+                        ),
+                        onPlay: () => di<PlayerModel>()
+                            .startPlaylist(
+                              audios: episodes!,
+                              listName: feedUrl!,
+                            )
+                            .then(
+                              (_) => libraryModel.removePodcastUpdate(
+                                feedUrl!,
                               ),
                             ),
-                          );
-                        },
-                      ),
-              ),
-            ],
-          );
+                        onTap: () =>
+                            di<RoutingManager>().push(pageId: feedUrl!),
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+      ],
+    );
   }
 }

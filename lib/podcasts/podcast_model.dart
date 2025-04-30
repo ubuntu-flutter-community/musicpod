@@ -1,146 +1,37 @@
 import 'dart:async';
 
-import 'package:collection/collection.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-import '../common/data/podcast_genre.dart';
-import '../common/view/languages.dart';
-import '../library/library_service.dart';
+import '../common/data/audio.dart';
+import '../l10n/l10n.dart';
 import 'podcast_service.dart';
 
 class PodcastModel extends SafeChangeNotifier {
   PodcastModel({
     required PodcastService podcastService,
-    required LibraryService libraryService,
-  })  : _podcastService = podcastService,
-        _libraryService = libraryService;
+  }) : _podcastService = podcastService;
 
   final PodcastService _podcastService;
-  final LibraryService _libraryService;
 
-  StreamSubscription<bool>? _searchChangedSub;
-
-  SearchResult? get searchResult => _podcastService.searchResult;
-
-  bool? _searchActive;
-  bool? get searchActive => _searchActive;
-  void setSearchActive(bool value) {
-    if (value == _searchActive) return;
-    _searchActive = value;
-    notifyListeners();
-  }
-
-  String? _searchQuery;
-  String? get searchQuery => _searchQuery;
-  void setSearchQuery(String? value) {
-    if (value == null || value == _searchQuery) return;
-    _searchQuery = value;
-    notifyListeners();
-  }
-
-  Country? _country;
-  Country? get country => _country;
-  void setCountry(Country? value) {
-    if (value == _country) return;
-    _country = value;
-    notifyListeners();
-  }
-
-  SimpleLanguage? _language;
-  SimpleLanguage? get language => _language;
-  void setLanguage(SimpleLanguage? value) {
-    if (value == _language) return;
-    _language = value;
-    notifyListeners();
-  }
-
-  PodcastGenre _podcastGenre = PodcastGenre.all;
-  PodcastGenre get podcastGenre => _podcastGenre;
-  void setPodcastGenre(PodcastGenre value) {
-    if (value == _podcastGenre) return;
-    _podcastGenre = value;
-    notifyListeners();
-  }
-
-  List<PodcastGenre> get sortedGenres {
-    final notSelected =
-        PodcastGenre.values.where((g) => g != podcastGenre).toList();
-
-    return [podcastGenre, ...notSelected];
-  }
-
-  List<Country> get sortedCountries {
-    if (_country == null) return Country.values;
-    final notSelected =
-        Country.values.where((c) => c != _country).toList().sorted(
-              (a, b) => a.name.compareTo(b.name),
-            );
-    final list = <Country>[_country!, ...notSelected];
-
-    return list;
-  }
-
-  int _limit = 20;
-  int get limit => _limit;
-  void setLimit(int? value) {
-    if (value == null || value == _limit) return;
-    _limit = value;
-    notifyListeners();
-  }
-
-  String? _selectedFeedUrl;
-  String? get selectedFeedUrl => _selectedFeedUrl;
-  void setSelectedFeedUrl(String? value) {
-    if (value == _selectedFeedUrl) return;
-    _selectedFeedUrl = value;
-    notifyListeners();
-  }
-
-  var _firstUpdateChecked = false;
   Future<void> init({
-    String? countryCode,
     required String updateMessage,
     bool forceInit = false,
+    Function({required String message})? notify,
   }) async {
     await _podcastService.init(forceInit: forceInit);
-
-    _searchActive ??= _libraryService.podcasts.isEmpty;
-
-    _country ??= Country.values.firstWhereOrNull(
-      (c) => c.code == (_libraryService.lastCountryCode ?? countryCode),
-    );
-
-    _language ??= Languages.defaultLanguages.firstWhereOrNull(
-      (c) => c.isoCode == _libraryService.lastLanguageCode,
-    );
-
-    _searchChangedSub ??= _podcastService.searchChanged.listen((_) {
-      notifyListeners();
-    });
-
-    if (forceInit ||
-        _podcastService.searchResult == null ||
-        _podcastService.searchResult?.items.isEmpty == true) {
-      search();
-    }
-
-    if (_firstUpdateChecked == false) {
-      update(updateMessage);
-    }
-    _firstUpdateChecked = true;
-
     notifyListeners();
   }
 
-  void update(String updateMessage) {
+  void update({
+    String? updateMessage,
+    // Note: because the podcasts can be modified to include downloads
+    // this needs a map and not only the feedurl
+    Map<String, List<Audio>>? oldPodcasts,
+  }) {
     _setCheckingForUpdates(true);
     _podcastService
-        .updatePodcasts(
-          oldPodcasts: _libraryService.podcasts,
-          updatePodcast: _libraryService.updatePodcast,
-          updateMessage: updateMessage,
-        )
+        .updatePodcasts(updateMessage: updateMessage, oldPodcasts: oldPodcasts)
         .then((_) => _setCheckingForUpdates(false));
   }
 
@@ -168,21 +59,57 @@ class PodcastModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  @override
-  void dispose() {
-    _searchChangedSub?.cancel();
-    super.dispose();
+  final Map<String, bool> _showSearch = {};
+
+  void toggleShowSearch({required String feedUrl}) {
+    _showSearch[feedUrl] = !(_showSearch[feedUrl] ?? false);
+    if (_showSearch[feedUrl] != true) {
+      _searchQuery[feedUrl] = null;
+    }
+    notifyListeners();
   }
 
-  Future<SearchResult?> search({
-    String? searchQuery,
-  }) async {
-    return _podcastService.search(
-      searchQuery: searchQuery,
-      country: _podcastService.searchWithPodcastIndex ? null : _country,
-      podcastGenre: podcastGenre,
-      limit: limit,
-      language: _podcastService.searchWithPodcastIndex ? _language : null,
-    );
+  bool getShowSearch(String? feedUrl) =>
+      feedUrl == null ? false : _showSearch[feedUrl] ?? false;
+
+  final Map<String, String?> _searchQuery = {};
+  void setSearchQuery({required String feedUrl, required String value}) {
+    if (value == _searchQuery[feedUrl]) return;
+    _searchQuery[feedUrl] = value;
+    notifyListeners();
   }
+
+  PodcastEpisodeFilter _filter = PodcastEpisodeFilter.title;
+  PodcastEpisodeFilter get filter => _filter;
+  void setFilter() {
+    _filter = switch (_filter) {
+      PodcastEpisodeFilter.title => PodcastEpisodeFilter.description,
+      PodcastEpisodeFilter.description => PodcastEpisodeFilter.title,
+    };
+    notifyListeners();
+  }
+
+  set filter(PodcastEpisodeFilter value) {
+    if (_filter == value) return;
+    _filter = value;
+    notifyListeners();
+  }
+
+  String? getSearchQuery(String? feedUrl) => _searchQuery[feedUrl];
+
+  Future<List<Audio>> findEpisodes({
+    Item? item,
+    String? feedUrl,
+  }) =>
+      _podcastService.findEpisodes(item: item, feedUrl: feedUrl);
+}
+
+enum PodcastEpisodeFilter {
+  title,
+  description;
+
+  String localize(AppLocalizations l10n) => switch (this) {
+        title => l10n.title,
+        description => l10n.description,
+      };
 }

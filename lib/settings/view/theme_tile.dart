@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../common/view/ui_constants.dart';
+
 class ThemeTile extends StatelessWidget {
   const ThemeTile(this.themeMode, {super.key});
 
@@ -24,11 +26,11 @@ class ThemeTile extends StatelessWidget {
       ),
     );
     var titleBar = Container(
-      height: 20,
+      height: kLargestSpace,
       decoration: BoxDecoration(
         color: themeMode == ThemeMode.dark
-            ? Colors.white.withOpacity(0.05)
-            : Colors.black.withOpacity(0.1),
+            ? Colors.white.withValues(alpha: 0.05)
+            : Colors.black.withValues(alpha: 0.1),
         borderRadius: const BorderRadius.only(
           topRight: Radius.circular(10),
           topLeft: Radius.circular(10),

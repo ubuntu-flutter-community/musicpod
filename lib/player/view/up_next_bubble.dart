@@ -26,7 +26,7 @@ class UpNextBubble extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final setUpNextExpanded = di<PlayerModel>().setUpNextExpanded;
     final isUpNextExpanded =
         watchPropertyValue((PlayerModel m) => m.isUpNextExpanded);

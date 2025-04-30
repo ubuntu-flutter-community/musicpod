@@ -4,14 +4,13 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../common/view/common_widgets.dart';
+import '../../app/app_model.dart';
+import '../../app/connectivity_model.dart';
+import '../../app_config.dart';
 import '../../common/view/icons.dart';
-import '../../common/view/theme.dart';
-import '../../constants.dart';
+import '../../common/view/progress.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
-import '../../player/player_model.dart';
-import '../settings_model.dart';
 import 'settings_dialog.dart';
 
 class SettingsTile extends StatelessWidget {
@@ -21,7 +20,8 @@ class SettingsTile extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget? trailing;
     // To not show any progress for Snap/Flatpak
-    if (di<PlayerModel>().isOnline && di<SettingsModel>().allowManualUpdate) {
+    if (di<ConnectivityModel>().isOnline == true &&
+        di<AppModel>().allowManualUpdate) {
       trailing = const _UpdateButton();
     }
 
@@ -30,7 +30,7 @@ class SettingsTile extends StatelessWidget {
       child: Stack(
         children: [
           YaruMasterTile(
-            leading: Icon(Iconz().settings),
+            leading: Icon(Iconz.settings),
             title: Text(context.l10n.settings),
             onTap: () => showDialog(
               context: context,
@@ -49,10 +49,10 @@ class _UpdateButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    return switch (watchPropertyValue((SettingsModel m) => m.updateAvailable)) {
+    return switch (watchPropertyValue((AppModel m) => m.updateAvailable)) {
       null => Center(
           child: SizedBox.square(
-            dimension: yaruStyled ? kYaruTitleBarItemHeight : 40,
+            dimension: AppConfig.yaruStyled ? kYaruTitleBarItemHeight : 40,
             child: const Progress(
               padding: EdgeInsets.all(10),
             ),
@@ -64,16 +64,16 @@ class _UpdateButton extends StatelessWidget with WatchItMixin {
           onPressed: () => launchUrl(
             Uri.parse(
               p.join(
-                kRepoUrl,
+                AppConfig.repoUrl,
                 'releases',
                 'tag',
-                di<SettingsModel>().onlineVersion,
+                di<AppModel>().onlineVersion,
               ),
             ),
           ),
           icon: Icon(
-            Iconz().updateAvailable,
-            color: context.t.colorScheme.success,
+            Iconz.updateAvailable,
+            color: context.theme.colorScheme.success,
           ),
         ),
     };

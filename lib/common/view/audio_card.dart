@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
-import 'common_widgets.dart';
 import 'icons.dart';
 import 'theme.dart';
 
@@ -40,7 +38,7 @@ class _AudioCardState extends State<AudioCard> {
   bool _hovered = false;
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final light = theme.isLight;
 
     return Column(
@@ -75,20 +73,13 @@ class _AudioCardState extends State<AudioCard> {
                   Positioned(
                     bottom: 10,
                     right: 10,
-                    child: CircleAvatar(
-                      radius: avatarIconSize,
-                      backgroundColor: theme.colorScheme.primary,
-                      child: IconButton(
-                        onPressed: widget.onPlay,
-                        icon: Padding(
-                          padding: appleStyled
-                              ? const EdgeInsets.only(left: 3)
-                              : EdgeInsets.zero,
-                          child: Icon(
-                            Iconz().playFilled,
-                            color: contrastColor(theme.colorScheme.primary),
-                          ),
-                        ),
+                    child: FloatingActionButton.small(
+                      onPressed: widget.onPlay,
+                      elevation: 0.5,
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        Iconz.playFilled,
+                        color: Colors.black,
                       ),
                     ),
                   ),
@@ -129,17 +120,17 @@ class _AudioCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final light = theme.isLight;
 
     return SizedBox(
-      height: height ?? kAudioCardDimension,
-      width: width ?? kAudioCardDimension,
+      height: height ?? audioCardDimension,
+      width: width ?? audioCardDimension,
       child: InkWell(
         onTap: onTap,
         onHover: onHover,
         borderRadius: BorderRadius.circular(12),
-        hoverColor: theme.colorScheme.onSurface.withOpacity(0.1),
+        hoverColor: theme.colorScheme.onSurface.withValues(alpha: 0.1),
         child: Container(
           margin: const EdgeInsets.all(4),
           decoration: BoxDecoration(
@@ -149,8 +140,8 @@ class _AudioCard extends StatelessWidget {
                 ? Border.all(
                     width: 1,
                     color: light
-                        ? theme.colorScheme.onSurface.withOpacity(0.05)
-                        : Colors.white.withOpacity(0.005),
+                        ? theme.colorScheme.onSurface.withValues(alpha: 0.05)
+                        : Colors.white.withValues(alpha: 0.005),
                   )
                 : null,
           ),

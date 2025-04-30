@@ -1,131 +1,156 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../common/data/audio.dart';
+import '../../app/view/routing_manager.dart';
+import '../../app_config.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
-import '../../common/view/common_widgets.dart';
+import '../../common/view/audio_card_vignette.dart';
+import '../../common/view/cover_background.dart';
+import '../../common/view/icons.dart';
 import '../../common/view/no_search_result_page.dart';
-import '../../constants.dart';
+import '../../common/view/sliver_fill_remaining_progress.dart';
+import '../../common/view/snackbars.dart';
+import '../../common/view/theme.dart';
+import '../../common/view/ui_constants.dart';
+import '../../extensions/string_x.dart';
+import '../../l10n/l10n.dart';
+import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../local_audio_model.dart';
 import 'album_page.dart';
+import 'local_cover.dart';
 
-class AlbumsView extends StatelessWidget {
+class AlbumsView extends StatelessWidget with WatchItMixin {
   const AlbumsView({
     super.key,
-    required this.albums,
+    required this.albumIDs,
     this.noResultMessage,
     this.noResultIcon,
-    required this.sliver,
   });
 
-  final Set<Audio>? albums;
+  final List<String>? albumIDs;
   final Widget? noResultMessage, noResultIcon;
-  final bool sliver;
 
   @override
   Widget build(BuildContext context) {
-    if (sliver) {
-      if (albums == null) {
-        return const SliverToBoxAdapter(
-          child: Center(
-            child: Progress(),
-          ),
-        );
-      }
+    if (albumIDs == null) {
+      return const SliverFillRemainingProgress();
+    }
 
-      if (albums!.isEmpty) {
-        return SliverToBoxAdapter(
-          child: NoSearchResultPage(
-            icons: noResultIcon,
-            message: noResultMessage,
-          ),
-        );
-      }
-
-      return SliverPadding(
-        padding: gridPadding,
-        sliver: SliverGrid.builder(
-          itemCount: albums!.length,
-          gridDelegate: audioCardGridDelegate,
-          itemBuilder: itemBuilder,
-        ),
-      );
-    } else {
-      if (albums == null) {
-        return const Center(
-          child: Progress(),
-        );
-      }
-
-      if (albums!.isEmpty) {
-        return NoSearchResultPage(
-          icons: noResultIcon,
-          message: noResultMessage,
-        );
-      }
-
-      return Padding(
-        padding: const EdgeInsets.only(top: 15),
-        child: GridView.builder(
-          padding: gridPadding,
-          itemCount: albums!.length,
-          gridDelegate: audioCardGridDelegate,
-          itemBuilder: itemBuilder,
-        ),
+    if (albumIDs!.isEmpty) {
+      return SliverNoSearchResultPage(
+        icon: noResultIcon,
+        message: noResultMessage,
       );
     }
+
+    watchPropertyValue((LibraryModel m) => m.favoriteAlbums.hashCode);
+
+    final pinnedAlbumsAlbumKeys = di<LibraryModel>().favoriteAlbums;
+    pinnedAlbumsAlbumKeys.sort((a, b) => a.albumOfId.compareTo(b.albumOfId));
+
+    final pinned =
+        albumIDs?.where((e) => pinnedAlbumsAlbumKeys.contains(e)) ?? [];
+    final notPinned =
+        albumIDs?.where((e) => !pinnedAlbumsAlbumKeys.contains(e)) ?? [];
+    final sortedAlbums = [
+      ...pinned,
+      ...notPinned,
+    ];
+
+    return SliverGrid.builder(
+      itemCount: sortedAlbums.length,
+      gridDelegate: audioCardGridDelegate,
+      itemBuilder: (context, index) {
+        final albumID = sortedAlbums.elementAt(index);
+        return AlbumCard(
+          key: ValueKey(albumID),
+          id: albumID,
+          pinned: pinned.contains(albumID),
+        );
+      },
+    );
+  }
+}
+
+class AlbumCard extends StatefulWidget {
+  const AlbumCard({
+    super.key,
+    required this.id,
+    required this.pinned,
+  });
+
+  final String id;
+  final bool pinned;
+
+  @override
+  State<AlbumCard> createState() => _AlbumCardState();
+}
+
+class _AlbumCardState extends State<AlbumCard> {
+  late Future<String?> _pathFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _pathFuture = di<LocalAudioModel>().findCoverPath(widget.id);
   }
 
-  Widget itemBuilder(context, index) {
-    final playerModel = di<PlayerModel>();
-    final model = di<LocalAudioModel>();
-    final audio = albums!.elementAt(index);
-    String? id = audio.albumId;
-    final albumAudios = model.findAlbum(audio);
+  @override
+  Widget build(BuildContext context) {
+    const fallback = CoverBackground();
 
-    final image = audio.pictureData == null
-        ? null
-        : Image.memory(
-            audio.pictureData!,
-            fit: BoxFit.fitHeight,
-            height: kAudioCardDimension,
-            filterQuality: FilterQuality.medium,
-          );
-
-    final fallback = Image.asset(
-      'assets/images/media-optical.png',
-      height: kAudioCardDimension,
-      width: kAudioCardDimension,
-    );
-
-    return AudioCard(
-      bottom: AudioCardBottom(
-        text: audio.album?.isNotEmpty == false
-            ? context.l10n.unknown
-            : audio.album ?? '',
-      ),
-      image: image ?? fallback,
-      background: fallback,
-      onTap: id == null || albumAudios == null
-          ? null
-          : () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return AlbumPage(
-                      id: id,
-                      album: albumAudios,
-                    );
-                  },
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        FutureBuilder(
+          future: _pathFuture,
+          builder: (context, snapshot) {
+            final path = snapshot.data;
+            return AudioCard(
+              bottom: AudioCardBottom(text: widget.id.albumOfId),
+              image: AnimatedOpacity(
+                opacity: path == null ? 0 : 1,
+                duration: const Duration(milliseconds: 300),
+                child: path != null
+                    ? LocalCover(
+                        dimension: audioCardDimension,
+                        albumId: widget.id,
+                        path: path,
+                        fallback: fallback,
+                      )
+                    : null,
+              ),
+              background: fallback,
+              onTap: () => di<RoutingManager>().push(
+                builder: (context) => AlbumPage(id: widget.id),
+                pageId: widget.id,
+              ),
+              onPlay: () async => di<PlayerModel>().startPlaylist(
+                audios: await di<LocalAudioModel>().findAlbum(widget.id) ?? [],
+                listName: widget.id,
+              ),
+            );
+          },
+        ),
+        if (widget.pinned)
+          Positioned(
+            left: AppConfig.isMobilePlatform ? 6 : 5,
+            bottom:
+                kAudioCardBottomHeight + (AppConfig.isMobilePlatform ? 25 : 13),
+            child: AudioCardVignette(
+              iconData: Iconz.pinFilled,
+              onTap: () => di<LibraryModel>().removeFavoriteAlbum(
+                widget.id,
+                onFail: () => showSnackBar(
+                  context: context,
+                  content: Text(context.l10n.cantUnpinEmptyAlbum),
                 ),
               ),
-      onPlay: albumAudios == null || albumAudios.isEmpty || id == null
-          ? null
-          : () => playerModel.startPlaylist(
-                audios: albumAudios,
-                listName: id,
-              ),
+            ),
+          ),
+      ],
     );
   }
 }

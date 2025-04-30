@@ -5,14 +5,15 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:xdg_directories/xdg_directories.dart';
 
-import 'constants.dart';
 import 'common/data/audio.dart';
+import 'common/logging.dart';
+import 'app_config.dart';
 
 String? _workingDir;
 Future<String> getWorkingDir() async {
   if (_workingDir != null) return Future.value(_workingDir!);
   if (Platform.isLinux) {
-    final workingDir = p.join(configHome.path, kAppName);
+    final workingDir = p.join(configHome.path, AppConfig.appName);
     if (!Directory(workingDir).existsSync()) {
       await Directory(workingDir).create();
     }
@@ -20,7 +21,7 @@ Future<String> getWorkingDir() async {
     return workingDir;
   } else if (Platform.isMacOS || Platform.isIOS) {
     final libDirPath = (await getLibraryDirectory()).path;
-    final workingDirPath = p.join(libDirPath, kAppName);
+    final workingDirPath = p.join(libDirPath, AppConfig.appName);
     if (!Directory(workingDirPath).existsSync()) {
       await Directory(workingDirPath).create();
     }
@@ -28,7 +29,7 @@ Future<String> getWorkingDir() async {
     return workingDirPath;
   } else {
     final docDirPath = (await getApplicationSupportDirectory()).path;
-    final workingDirPath = p.join(docDirPath, kAppName);
+    final workingDirPath = p.join(docDirPath, AppConfig.appName);
     if (!Directory(workingDirPath).existsSync()) {
       Directory(workingDirPath).createSync();
     }
@@ -37,36 +38,34 @@ Future<String> getWorkingDir() async {
   }
 }
 
-Future<String?> getMusicDir() async {
-  if (Platform.isLinux) {
-    return getUserDirectory('MUSIC')?.path;
-  }
-  return null;
-}
+String? getMusicDefaultDir() =>
+    Platform.isLinux ? getUserDirectory('MUSIC')?.path : null;
 
-Future<String?> getDownloadsDir() async {
+Future<String?> getDownloadsDefaultDir() async {
   String? path;
   if (Platform.isLinux) {
     path = getUserDirectory('DOWNLOAD')?.path;
   } else if (Platform.isMacOS || Platform.isIOS || Platform.isWindows) {
     path = (await getDownloadsDirectory())?.path;
+  } else if (Platform.isAndroid) {
+    final androidDir = Directory('/storage/emulated/0/Download');
+    if (androidDir.existsSync()) {
+      path = androidDir.path;
+    }
   }
   if (path != null) {
-    return p.join(path, kAppName);
+    return p.join(path, AppConfig.appName);
   }
   return null;
 }
 
-Future<void> writeAppState(String key, dynamic value) async =>
-    writeSetting(key, value, kAppStateFileName);
-
-Future<void> writeSetting(
-  String? key,
-  dynamic value, [
-  String filename = kSettingsFileName,
-]) async {
+Future<void> writeCustomSetting({
+  required String? key,
+  required dynamic value,
+  required String filename,
+}) async {
   if (key == null || value == null) return;
-  final oldSettings = await getSettings(filename);
+  final oldSettings = await getCustomSettings(filename);
   if (oldSettings.containsKey(key)) {
     oldSettings.update(key, (v) => value);
   } else {
@@ -79,26 +78,89 @@ Future<void> writeSetting(
   final file = File(p.join(workingDir, filename));
 
   if (!file.existsSync()) {
-    file.create();
+    file.createSync();
   }
 
   await file.writeAsString(jsonStr);
 }
 
-Future<dynamic> readAppState(String key) => readSetting(key, kAppStateFileName);
+Future<void> writeCustomSettings({
+  required List<MapEntry<String, dynamic>> entries,
+  required String filename,
+}) async {
+  if (entries.isEmpty) return;
+  final oldSettings = await getCustomSettings(filename);
 
-Future<dynamic> readSetting(
-  dynamic key, [
-  String filename = kSettingsFileName,
-]) async {
+  for (var entry in entries) {
+    if (oldSettings.containsKey(entry.key)) {
+      oldSettings.update(entry.key, (v) => entry.value);
+    } else {
+      oldSettings.putIfAbsent(entry.key, () => entry.value);
+    }
+  }
+
+  final jsonStr = jsonEncode(oldSettings);
+  final workingDir = await getWorkingDir();
+  final file = File(p.join(workingDir, filename));
+
+  if (!file.existsSync()) {
+    await file.create();
+  }
+
+  await file.writeAsString(jsonStr);
+}
+
+Future<void> removeCustomSetting({
+  required String key,
+  required String filename,
+}) async {
+  final oldSettings = await getCustomSettings(filename);
+  if (oldSettings.containsKey(key)) {
+    oldSettings.remove(key);
+    final jsonStr = jsonEncode(oldSettings);
+
+    final workingDir = await getWorkingDir();
+
+    final file = File(p.join(workingDir, filename));
+
+    if (!file.existsSync()) {
+      await file.create();
+    }
+    await file.writeAsString(jsonStr);
+  }
+}
+
+Future<void> removeCustomSettings({
+  required List<String> keys,
+  required String filename,
+}) async {
+  final oldSettings = await getCustomSettings(filename);
+  for (var key in keys) {
+    if (oldSettings.containsKey(key)) {
+      oldSettings.remove(key);
+    }
+  }
+
+  final jsonStr = jsonEncode(oldSettings);
+  final workingDir = await getWorkingDir();
+  final file = File(p.join(workingDir, filename));
+
+  if (!file.existsSync()) {
+    await file.create();
+  }
+  await file.writeAsString(jsonStr);
+}
+
+Future<dynamic> readCustomSetting({
+  required dynamic key,
+  required String filename,
+}) async {
   if (key == null) return null;
-  final oldSettings = await getSettings(filename);
+  final oldSettings = await getCustomSettings(filename);
   return oldSettings[key];
 }
 
-Future<Map<String, String>> getSettings([
-  String filename = kSettingsFileName,
-]) async {
+Future<Map<String, String>> getCustomSettings(String filename) async {
   final workingDir = await getWorkingDir();
 
   final file = File(p.join(workingDir, filename));
@@ -121,6 +183,16 @@ Future<Map<String, String>> getSettings([
   }
 }
 
+Future<void> wipeCustomSettings({required String filename}) async {
+  final workingDir = await getWorkingDir();
+
+  final file = File(p.join(workingDir, filename));
+
+  if (file.existsSync()) {
+    await file.delete();
+  }
+}
+
 Future<void> writeStringIterable({
   required Iterable<String> iterable,
   required String filename,
@@ -128,7 +200,7 @@ Future<void> writeStringIterable({
   final workingDir = await getWorkingDir();
   final file = File('$workingDir/$filename');
   if (!file.existsSync()) {
-    file.create();
+    await file.create();
   }
   await file.writeAsString(iterable.join('\n'));
 }
@@ -146,7 +218,10 @@ Future<Iterable<String>?> readStringIterable({
   return content;
 }
 
-Future<void> writeAudioMap(Map<String, Set<Audio>> map, String fileName) async {
+Future<void> writeAudioMap({
+  required Map<String, List<Audio>> map,
+  required String fileName,
+}) async {
   final dynamicMap = map.map(
     (key, value) => MapEntry<String, List<dynamic>>(
       key,
@@ -171,7 +246,7 @@ Future<void> writeJsonToFile(Map<String, dynamic> json, String fileName) async {
   await file.writeAsString(jsonStr);
 }
 
-Future<Map<String, Set<Audio>>> readAudioMap(String fileName) async {
+Future<Map<String, List<Audio>>> readAudioMap(String fileName) async {
   final workingDir = await getWorkingDir();
 
   try {
@@ -183,9 +258,9 @@ Future<Map<String, Set<Audio>>> readAudioMap(String fileName) async {
       final map = jsonDecode(jsonStr) as Map<String, dynamic>;
 
       final m = map.map(
-        (key, value) => MapEntry<String, Set<Audio>>(
+        (key, value) => MapEntry<String, List<Audio>>(
           key,
-          Set.from(
+          List.from(
             (value as List<dynamic>).map((e) => Audio.fromMap(e)),
           ),
         ),
@@ -193,10 +268,11 @@ Future<Map<String, Set<Audio>>> readAudioMap(String fileName) async {
 
       return m;
     } else {
-      return <String, Set<Audio>>{};
+      return <String, List<Audio>>{};
     }
-  } on Exception catch (_) {
-    return <String, Set<Audio>>{};
+  } on Exception catch (e) {
+    printMessageInDebugMode(e);
+    return <String, List<Audio>>{};
   }
 }
 
@@ -222,7 +298,8 @@ Future<Map<String, String>> readStringMap(String fileName) async {
     } else {
       return <String, String>{};
     }
-  } on Exception catch (_) {
+  } on Exception catch (e) {
+    printMessageInDebugMode(e);
     return <String, String>{};
   }
 }

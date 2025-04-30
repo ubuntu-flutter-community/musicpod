@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app_config.dart';
 import '../../common/data/audio.dart';
-import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/share_button.dart';
 import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
+import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';
 import '../../extensions/int_x.dart';
 import '../../l10n/l10n.dart';
-import 'avatar_with_progress.dart';
+import '../../player/player_model.dart';
 import 'download_button.dart';
-
-const _kGap = 20.0;
+import 'podcast_tile_play_button.dart';
 
 class PodcastAudioTile extends StatelessWidget {
   const PodcastAudioTile({
@@ -24,30 +25,21 @@ class PodcastAudioTile extends StatelessWidget {
     required this.audio,
     required this.isPlayerPlaying,
     required this.selected,
-    required this.pause,
-    required this.resume,
     required this.startPlaylist,
-    required this.lastPosition,
     this.isExpanded = false,
     this.removeUpdate,
-    required this.safeLastPosition,
     this.isOnline = true,
     required this.addPodcast,
-    required this.insertIntoQueue,
   });
 
   final Audio audio;
   final bool isPlayerPlaying;
   final bool selected;
-  final void Function() pause;
-  final Future<void> Function() resume;
+
   final void Function()? startPlaylist;
   final void Function()? removeUpdate;
-  final Future<void> Function() safeLastPosition;
   final void Function()? addPodcast;
-  final void Function() insertIntoQueue;
 
-  final Duration? lastPosition;
   final bool isExpanded;
   final bool isOnline;
 
@@ -63,39 +55,28 @@ class PodcastAudioTile extends StatelessWidget {
         : context.l10n.unknown;
     final label = '$date, ${context.l10n.duration}: $duration';
 
+    final playerModel = di<PlayerModel>();
+
     return YaruExpandable(
       isExpanded: isExpanded,
-      expandIconPadding: const EdgeInsets.only(
-        right: kYaruPagePadding,
-        bottom: 15,
-      ),
+      expandIconPadding: const EdgeInsets.only(right: 5, bottom: 15),
       gapHeight: 0,
       header: MouseRegion(
         cursor: SystemMouseCursors.click,
         child: Padding(
-          padding: const EdgeInsets.only(
-            top: 15,
-            bottom: 10,
-            left: kYaruPagePadding,
-          ),
+          padding: const EdgeInsets.only(top: 15, bottom: 10, left: 10),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              AvatarWithProgress(
+              PodcastTilePlayButton(
                 selected: selected,
-                lastPosition: lastPosition,
                 audio: audio,
                 isPlayerPlaying: isPlayerPlaying,
-                pause: pause,
-                resume: resume,
-                safeLastPosition: safeLastPosition,
                 startPlaylist: startPlaylist,
                 removeUpdate: removeUpdate,
               ),
-              const SizedBox(
-                width: _kGap,
-              ),
+              SizedBox(width: AppConfig.isMobilePlatform ? 15 : 25),
               Expanded(
                 child: _Center(
                   selected: selected,
@@ -111,10 +92,12 @@ class PodcastAudioTile extends StatelessWidget {
       child: Align(
         alignment: Alignment.centerLeft,
         child: Padding(
-          padding: EdgeInsets.only(
-            left: _kGap + podcastProgressSize + 15,
-            right: 60,
-          ),
+          padding: AppConfig.isMobilePlatform
+              ? const EdgeInsets.symmetric(horizontal: 10)
+              : EdgeInsets.only(
+                  left: (smallAvatarButtonRadius * 2) + 30,
+                  right: 60,
+                ),
           child: Column(
             children: [
               _Description(
@@ -123,31 +106,46 @@ class PodcastAudioTile extends StatelessWidget {
               ),
               Align(
                 alignment: Alignment.centerLeft,
-                child: Wrap(
-                  spacing: 5,
-                  children: [
-                    DownloadButton(
-                      audio: audio,
-                      addPodcast: addPodcast,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: Row(
+                    children: space(
+                      children: [
+                        DownloadButton(
+                          audio: audio,
+                          addPodcast: addPodcast,
+                        ),
+                        ShareButton(
+                          active: true,
+                          audio: audio,
+                        ),
+                        IconButton(
+                          tooltip: context.l10n.insertIntoQueue,
+                          onPressed: () {
+                            final text =
+                                '${audio.title != null ? '${audio.album} - ' : ''}${audio.title ?? ''}';
+                            playerModel.insertIntoQueue([audio]);
+                            showSnackBar(
+                              context: context,
+                              content:
+                                  Text(context.l10n.insertedIntoQueue(text)),
+                            );
+                          },
+                          icon: Icon(Iconz.insertIntoQueue),
+                        ),
+                        IconButton(
+                          tooltip: context.l10n.replayEpisode,
+                          onPressed: audio.url == null
+                              ? null
+                              : () => playerModel
+                                ..removeLastPosition(audio.url!)
+                                ..setPosition(Duration.zero)
+                                ..seek(),
+                          icon: Icon(Iconz.replay),
+                        ),
+                      ],
                     ),
-                    ShareButton(
-                      active: true,
-                      audio: audio,
-                    ),
-                    IconButton(
-                      tooltip: context.l10n.insertIntoQueue,
-                      onPressed: () {
-                        final text =
-                            '${audio.title != null ? '${audio.album} - ' : ''}${audio.title ?? ''}';
-                        insertIntoQueue();
-                        showSnackBar(
-                          context: context,
-                          content: Text(context.l10n.insertedIntoQueue(text)),
-                        );
-                      },
-                      icon: Icon(Iconz().insertIntoQueue),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ],
@@ -173,7 +171,7 @@ class _Center extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     final textStyle = TextStyle(
       color: theme.colorScheme.onSurface,
       fontWeight: selected ? FontWeight.w500 : FontWeight.w400,
@@ -219,7 +217,7 @@ class _Description extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
     return InkWell(
       borderRadius: BorderRadius.circular(8),
       onTap: () {
@@ -227,21 +225,17 @@ class _Description extends StatelessWidget {
           context: context,
           builder: (c) {
             return SimpleDialog(
-              titlePadding: yaruStyled
-                  ? EdgeInsets.zero
-                  : const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
-              title: yaruStyled
-                  ? YaruDialogTitleBar(
-                      backgroundColor: theme.dialogBackgroundColor,
-                      border: BorderSide.none,
-                      title: Text(title ?? ''),
-                    )
-                  : Text(title ?? ''),
+              titlePadding: EdgeInsets.zero,
+              title: YaruDialogTitleBar(
+                backgroundColor: theme.dialogTheme.backgroundColor,
+                border: BorderSide.none,
+                title: Text(title ?? ''),
+              ),
               contentPadding: EdgeInsets.only(
-                top: yaruStyled ? 0 : 20,
-                left: 20,
-                right: 20,
-                bottom: 20,
+                top: AppConfig.yaruStyled ? 0 : kLargestSpace,
+                left: kLargestSpace,
+                right: kLargestSpace,
+                bottom: kLargestSpace,
               ),
               children: [
                 SizedBox(
@@ -258,7 +252,7 @@ class _Description extends StatelessWidget {
         );
       },
       child: _createHtml(
-        color: theme.colorScheme.onSurface.scale(lightness: -0.2),
+        color: theme.colorScheme.onSurface,
         maxLines: 5,
         paddings: HtmlPaddings.all(5),
       ),

@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/app_model.dart';
-import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../player_model.dart';
 import 'bottom_player.dart';
 import 'full_height_player.dart';
 
 class PlayerView extends StatefulWidget with WatchItStatefulWidgetMixin {
-  const PlayerView({super.key, required this.mode});
+  const PlayerView({super.key, required this.position});
 
-  final PlayerPosition mode;
+  final PlayerPosition position;
 
   @override
   State<PlayerView> createState() => _PlayerViewState();
@@ -21,11 +19,10 @@ class _PlayerViewState extends State<PlayerView> {
   @override
   void initState() {
     super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
       di<AppModel>().setShowWindowControls(
-        widget.mode != PlayerPosition.sideBar,
+        widget.position != PlayerPosition.sideBar,
       );
     });
   }
@@ -37,25 +34,23 @@ class _PlayerViewState extends State<PlayerView> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
       di<AppModel>().setShowWindowControls(
-        widget.mode != PlayerPosition.sideBar,
+        widget.position != PlayerPosition.sideBar,
       );
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
-    final c = watchPropertyValue((PlayerModel m) => m.color);
-    final color = getPlayerBg(c, theme.cardColor);
+    final theme = context.theme;
 
     Widget player;
-    if (widget.mode != PlayerPosition.bottom) {
+    if (widget.position != PlayerPosition.bottom) {
       player = Row(
         children: [
-          if (widget.mode == PlayerPosition.sideBar)
+          if (widget.position == PlayerPosition.sideBar)
             const Material(child: VerticalDivider()),
           Expanded(
-            child: FullHeightPlayer(playerPosition: widget.mode),
+            child: FullHeightPlayer(playerPosition: widget.position),
           ),
         ],
       );
@@ -66,7 +61,7 @@ class _PlayerViewState extends State<PlayerView> {
     // VERY important to reduce CPU usage
     return RepaintBoundary(
       child: Material(
-        color: color,
+        color: theme.cardColor,
         child: player,
       ),
     );

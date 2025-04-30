@@ -2,168 +2,63 @@ import 'dart:async';
 
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-import '../constants.dart';
 import '../common/data/audio.dart';
 import 'library_service.dart';
 
-const kFixedListAmount = 5; // local, radio, podcasts, newplaylist, favs
-
 class LibraryModel extends SafeChangeNotifier {
-  LibraryModel(this._service);
+  LibraryModel({
+    required LibraryService libraryService,
+  }) : _service = libraryService {
+    _propertiesChangedSub ??=
+        _service.propertiesChanged.listen((_) => notifyListeners());
+  }
 
   final LibraryService _service;
-  StreamSubscription<bool>? _likedAudiosSub;
-  StreamSubscription<bool>? _playlistsSub;
-  StreamSubscription<bool>? _albumsSub;
-  StreamSubscription<bool>? _podcastsSub;
-  StreamSubscription<bool>? _stationsSub;
-  StreamSubscription<bool>? _localAudioIndexSub;
-  StreamSubscription<bool>? _podcastIndexSub;
-  StreamSubscription<bool>? _radioIndexSub;
-  StreamSubscription<bool>? _updatesChangedSub;
-  StreamSubscription<bool>? _favTagsSub;
-  StreamSubscription<bool>? _favCountriesSub;
-  StreamSubscription<bool>? _favLanguageCodeFavsSub;
-  StreamSubscription<bool>? _lastFavSub;
-  StreamSubscription<bool>? _lastCountryCodeSub;
-  StreamSubscription<bool>? _downloadsSub;
-
-  Future<bool> init() async {
-    await _service.init();
-    if (totalListAmount - 1 >= _service.appIndex) {
-      _index = _service.appIndex;
-    }
-
-    _localAudioIndexSub ??=
-        _service.localAudioIndexChanged.listen((_) => notifyListeners());
-    _radioIndexSub ??=
-        _service.radioIndexChanged.listen((_) => notifyListeners());
-    _podcastIndexSub ??=
-        _service.podcastIndexChanged.listen((_) => notifyListeners());
-    _likedAudiosSub ??=
-        _service.likedAudiosChanged.listen((event) => notifyListeners());
-    _playlistsSub ??=
-        _service.playlistsChanged.listen((event) => notifyListeners());
-    _albumsSub = _service.albumsChanged.listen((event) => notifyListeners());
-    _podcastsSub ??=
-        _service.podcastsChanged.listen((event) => notifyListeners());
-    _stationsSub ??=
-        _service.starredStationsChanged.listen((event) => notifyListeners());
-    _updatesChangedSub ??=
-        _service.updatesChanged.listen((_) => notifyListeners());
-    _favTagsSub ??= _service.favTagsChanged.listen((_) => notifyListeners());
-    _favCountriesSub ??=
-        _service.favCountriesChanged.listen((_) => notifyListeners());
-    _favLanguageCodeFavsSub ??=
-        _service.favLanguagesChanged.listen((_) => notifyListeners());
-    _lastFavSub ??=
-        _service.lastFavRadioTagChanged.listen((_) => notifyListeners());
-    _downloadsSub ??=
-        _service.downloadsChanged.listen((_) => notifyListeners());
-    _lastCountryCodeSub ??=
-        _service.lastCountryCodeChanged.listen((_) => notifyListeners());
-
-    notifyListeners();
-    return true;
-  }
+  StreamSubscription<bool>? _propertiesChangedSub;
 
   @override
   Future<void> dispose() async {
-    await _localAudioIndexSub?.cancel();
-    await _radioIndexSub?.cancel();
-    await _podcastIndexSub?.cancel();
-    await _likedAudiosSub?.cancel();
-    await _playlistsSub?.cancel();
-    await _albumsSub?.cancel();
-    await _podcastsSub?.cancel();
-    await _stationsSub?.cancel();
-    await _updatesChangedSub?.cancel();
-    await _favTagsSub?.cancel();
-    await _favCountriesSub?.cancel();
-    await _favLanguageCodeFavsSub?.cancel();
-    await _lastFavSub?.cancel();
-    await _downloadsSub?.cancel();
-    await _lastCountryCodeSub?.cancel();
+    await _propertiesChangedSub?.cancel();
     super.dispose();
   }
 
-  int get totalListAmount {
-    return starredStationsLength +
-        podcastsLength +
-        playlistsLength +
-        pinnedAlbumsLength +
-        kFixedListAmount;
-  }
-
-  Set<Audio>? getAudiosById(String pageId) {
-    if (pageId == kLikedAudiosPageId) {
-      return likedAudios;
-    } else {
-      return playlists[pageId] ??
-          pinnedAlbums[pageId] ??
-          podcasts[pageId] ??
-          starredStations[pageId];
-    }
-  }
+  bool isPageInLibrary(String? pageId) => _service.isPageInLibrary(pageId);
 
   //
   // Liked Audios
   //
-  Set<Audio> get likedAudios => _service.likedAudios;
-
-  void addLikedAudio(Audio audio, [bool notify = true]) =>
-      _service.addLikedAudio(audio, notify);
-
-  void addLikedAudios(Set<Audio> audios) => _service.addLikedAudios(audios);
-
-  bool liked(Audio? audio) => audio == null ? false : _service.liked(audio);
-
+  int get likedAudiosLength => _service.likedAudiosLength;
+  List<Audio> get likedAudios => _service.likedAudios;
+  void addLikedAudio(Audio audio) => _service.addLikedAudio(audio);
+  void addLikedAudios(List<Audio> audios) => _service.addLikedAudios(audios);
+  void removeLikedAudios(List<Audio> audios) =>
+      _service.removeLikedAudios(audios);
+  bool isLikedAudio(Audio? audio) =>
+      audio == null ? false : _service.isLiked(audio);
+  bool isLikedAudios(List<Audio> audios) => _service.isLikedAudios(audios);
   void removeLikedAudio(Audio audio, [bool notify = true]) =>
       _service.removeLikedAudio(audio, notify);
-
-  void removeLikedAudios(Set<Audio> audios) =>
-      _service.removeLikedAudios(audios);
 
   //
   // Starred stations
   //
 
-  Map<String, Set<Audio>> get starredStations => _service.starredStations;
+  List<String> get starredStations => _service.starredStations;
   int get starredStationsLength => _service.starredStations.length;
-  void addStarredStation(String url, Set<Audio> audios) =>
-      _service.addStarredStation(url, audios);
+  void addStarredStation(String uuid) => _service.addStarredStation(uuid);
+  void unStarStation(String uuid) => _service.removeStarredStation(uuid);
+  void unStarAllStations() => _service.unStarAllStations();
 
-  void unStarStation(String url) {
-    final stationIndex = indexOfStation(url);
-    if (stationIndex == index) {
-      setIndex(_service.appIndex - 1);
-    }
-    _service.unStarStation(url);
-  }
+  bool isStarredStation(String? uuid) =>
+      uuid?.isNotEmpty == false ? false : _service.isStarredStation(uuid);
 
-  int? indexOfStation(String? id) {
-    final station = starredStations[id];
-    if (station == null) return null;
-    final allStations = starredStations.entries.map((e) => e.value).toList();
-    return kFixedListAmount +
-        playlistsLength +
-        podcastsLength +
-        pinnedAlbumsLength +
-        allStations.indexOf(station);
-  }
-
-  bool isStarredStation(String? url) =>
-      url?.isNotEmpty == false ? false : _service.isStarredStation(url);
-
-  String? get lastRadioTag => _service.lastRadioTag;
-  void setLastRadioTag(String? value) => _service.setLastRadioTag(value);
   void addFavRadioTag(String value) => _service.addFavRadioTag(value);
   void removeRadioFavTag(String value) => _service.removeFavRadioTag(value);
   Set<String> get favRadioTags => _service.favRadioTags;
   int get favRadioTagsLength => _service.favRadioTags.length;
 
   String? get lastCountryCode => _service.lastCountryCode;
-  void setLastCountryCode(String? value) => _service.setLastCountryCode(value);
+  void setLastCountryCode(String value) => _service.setLastCountryCode(value);
   void addFavCountryCode(String value) => _service.addFavCountryCode(value);
   void removeFavCountryCode(String value) =>
       _service.removeFavCountryCode(value);
@@ -171,7 +66,7 @@ class LibraryModel extends SafeChangeNotifier {
   int get favCountriesLength => _service.favCountryCodes.length;
 
   String? get lastLanguageCode => _service.lastLanguageCode;
-  void setLastLanguage(String? value) => _service.setLastLanguageCode(value);
+  void setLastLanguage(String value) => _service.setLastLanguageCode(value);
   void addFavLanguageCode(String value) => _service.addFavLanguageCode(value);
   void removeFavLanguageCode(String value) =>
       _service.removeFavLanguageCode(value);
@@ -182,156 +77,103 @@ class LibraryModel extends SafeChangeNotifier {
   // Playlists
   //
 
-  Map<String, Set<Audio>> get playlists => _service.playlists;
-  int get playlistsLength => playlists.length;
-  List<Audio> getPlaylistAt(int index) =>
-      playlists.entries.elementAt(index).value.toList();
-  Set<Audio>? getPlaylistById(String id) => _service.playlists[id];
+  List<String> get playlistIDs => _service.playlistIDs;
+  int get playlistsLength => playlistIDs.length;
+  List<Audio>? getPlaylistById(String id) => _service.getPlaylistById(id);
+  List<String> get externalPlaylists => _service.externalPlaylistIDs;
+  List<Audio> get externalPlaylistAudios => _service.externalPlaylistAudios;
 
-  bool isPlaylistSaved(String? name) => playlists.containsKey(name);
-
-  void addPlaylist(String name, Set<Audio> audios) =>
+  bool isPlaylistSaved(String? id) => _service.isPlaylistSaved(id);
+  Future<void> addPlaylist(String name, List<Audio> audios) async =>
       _service.addPlaylist(name, audios);
+  Future<void> addExternalPlaylists(
+    List<({String id, List<Audio> audios})> playlists,
+  ) async =>
+      _service.addExternalPlaylists(playlists: playlists);
 
-  Future<void> updatePlaylist(String id, Set<Audio> audios) async =>
-      _service.updatePlaylist(id, audios);
-
-  void removePlaylist(String id) {
-    final playlistIndex = getIndexOfPlaylist(id);
-    if (index == playlistIndex) {
-      setIndex(_service.appIndex - 1);
-    }
-    _service.removePlaylist(id);
-  }
-
-  int? getIndexOfPlaylist(String id) {
-    if (id == kLikedAudiosPageId) return 4;
-    final playlist = getPlaylistById(id);
-    if (playlist == null) return null;
-    final allPlaylists = playlists.entries.map((e) => e.value).toList();
-    return kFixedListAmount + allPlaylists.indexOf(playlist);
-  }
+  Future<void> updatePlaylist({
+    required String id,
+    required List<Audio> audios,
+    bool external = false,
+  }) async =>
+      _service.updatePlaylist(id: id, audios: audios, external: external);
+  Future<void> removePlaylist(String id) => _service.removePlaylist(id);
 
   void updatePlaylistName(String oldName, String newName) =>
       _service.updatePlaylistName(oldName, newName);
-
-  void addAudioToPlaylist(String playlist, Audio audio) =>
-      _service.addAudioToPlaylist(playlist, audio);
-
-  void removeAudioFromPlaylist(String playlist, Audio audio) =>
-      _service.removeAudioFromPlaylist(playlist, audio);
+  void addAudiosToPlaylist({
+    required String id,
+    required List<Audio> audios,
+  }) =>
+      _service.addAudiosToPlaylist(id: id, audios: audios);
+  Future<void> removeAudiosFromPlaylist({
+    required String id,
+    required List<Audio> audios,
+  }) async =>
+      _service.removeAudiosFromPlaylist(id: id, audios: audios);
 
   void clearPlaylist(String id) => _service.clearPlaylist(id);
-
-  List<String> getPlaylistNames() =>
-      playlists.entries.map((e) => e.key).toList();
-
   void moveAudioInPlaylist({
     required int oldIndex,
     required int newIndex,
     required String id,
-  }) =>
-      _service.moveAudioInPlaylist(
-        oldIndex: oldIndex,
-        newIndex: newIndex,
-        id: id,
-      );
+  }) {
+    _service.moveAudioInPlaylist(
+      oldIndex: oldIndex,
+      newIndex: newIndex,
+      id: id,
+    );
+  }
 
+  //
   // Podcasts
+  //
 
-  Map<String, Set<Audio>> get podcasts => _service.podcasts;
-  int get podcastsLength => podcasts.length;
-  void addPodcast(String feedUrl, Set<Audio> audios) =>
+  List<String> get podcastFeedUrls => _service.podcastFeedUrls;
+  List<Audio>? getPodcast(String? feedUrl) => _service.podcasts[feedUrl];
+  int get podcastsLength => _service.podcasts.length;
+  void addPodcast(String feedUrl, List<Audio> audios) =>
       _service.addPodcast(feedUrl, audios);
-  void updatePodcast(String feedUrl, Set<Audio> audios) =>
-      _service.updatePodcast(feedUrl, audios);
+  void removePodcast(String feedUrl) => _service.removePodcast(feedUrl);
 
-  void removePodcast(String feedUrl) {
-    final podcastIndex = indexOfPodcast(feedUrl);
-    if (podcastIndex == index) {
-      setIndex(_service.appIndex - 1);
-    }
-    _service.removePodcast(feedUrl);
-  }
-
-  int? indexOfPodcast(String? id) {
-    final podcast = podcasts[id];
-    if (podcast == null) return null;
-    final allPodcasts = podcasts.entries.map((e) => e.value).toList();
-    return kFixedListAmount + playlistsLength + allPodcasts.indexOf(podcast);
-  }
-
-  bool podcastSubscribed(String? feedUrl) =>
-      feedUrl == null ? false : podcasts.containsKey(feedUrl);
-
+  bool isPodcastSubscribed(String? feedUrl) =>
+      feedUrl == null ? false : _service.podcasts.containsKey(feedUrl);
   bool podcastUpdateAvailable(String feedUrl) =>
       _service.podcastUpdateAvailable(feedUrl);
-
   int? get podcastUpdatesLength => _service.podcastUpdatesLength;
-
   void removePodcastUpdate(String feedUrl) =>
       _service.removePodcastUpdate(feedUrl);
 
   int get downloadsLength => _service.downloads.length;
-
   String? getDownload(String? url) =>
       url == null ? null : _service.downloads[url];
-
   bool feedHasDownload(String? feedUrl) =>
       feedUrl == null ? false : _service.feedHasDownloads(feedUrl);
-
   int get feedsWithDownloadsLength => _service.feedsWithDownloadsLength;
+
+  Future<void> reorderPodcast({
+    required String feedUrl,
+    required bool ascending,
+  }) =>
+      _service.reorderPodcast(feedUrl: feedUrl, ascending: ascending);
+
+  bool showPodcastAscending(String feedUrl) =>
+      _service.showPodcastAscending(feedUrl);
+
+  Future<void> removeAllPodcasts() async => _service.removeAllPodcasts();
 
   //
   // Albums
   //
 
-  Map<String, Set<Audio>> get pinnedAlbums => _service.pinnedAlbums;
-  int get pinnedAlbumsLength => pinnedAlbums.length;
-  List<Audio> getAlbumAt(int index) =>
-      pinnedAlbums.entries.elementAt(index).value.toList();
-  bool isPinnedAlbum(String name) => pinnedAlbums.containsKey(name);
+  List<String> get favoriteAlbums => _service.favoriteAlbums;
+  int get favoriteAlbumsLength => _service.favoriteAlbums.length;
 
-  void addPinnedAlbum(String name, Set<Audio> audios) =>
-      _service.addPinnedAlbum(name, audios);
+  bool isFavoriteAlbum(String id) => _service.isFavoriteAlbum(id);
 
-  void removePinnedAlbum(String name) {
-    final albumIndex = indexOfAlbum(name);
-    if (albumIndex == index) {
-      setIndex(_service.appIndex - 1);
-    }
-    _service.removePinnedAlbum(name);
-  }
+  void addFavoriteAlbum(String id, {required Function() onFail}) =>
+      _service.addFavoriteAlbum(id, onFail: onFail);
 
-  int? indexOfAlbum(String? id) {
-    if (id == null) return null;
-    final album = pinnedAlbums[id];
-    if (album == null) return null;
-    final allAlbums = pinnedAlbums.entries.map((e) => e.value).toList();
-    return kFixedListAmount +
-        playlistsLength +
-        podcastsLength +
-        allAlbums.indexOf(album);
-  }
-
-  int? _index;
-  int? get index => _index;
-  void setIndex(int? value) {
-    if (value == null || value == _index) return;
-    _index = value;
-    _service.setAppIndex(value);
-    notifyListeners();
-  }
-
-  int? get localAudioindex => _service.localAudioIndex;
-  void setLocalAudioindex(int? value) {
-    if (value == null || value == _service.localAudioIndex) return;
-    _service.setLocalAudioIndex(value);
-  }
-
-  int get radioindex => _service.radioIndex;
-  void setRadioIndex(int value) => _service.setRadioIndex(value);
-
-  int get podcastIndex => _service.podcastIndex;
-  void setPodcastIndex(int value) => _service.setPodcastIndex(value);
+  void removeFavoriteAlbum(String id, {required Function() onFail}) =>
+      _service.removeFavoriteAlbum(id, onFail: onFail);
 }

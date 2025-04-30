@@ -1,13 +1,11 @@
-// ignore_for_file: avoid_print
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:musicpod/common/data/audio.dart';
 import 'package:musicpod/common/data/podcast_genre.dart';
+import 'package:musicpod/library/library_service.dart';
 import 'package:musicpod/notifications/notifications_service.dart';
 import 'package:musicpod/podcasts/podcast_service.dart';
-import 'package:musicpod/podcasts/podcast_utils.dart';
 import 'package:musicpod/settings/settings_service.dart';
 import 'package:podcast_search/podcast_search.dart';
 
@@ -22,10 +20,11 @@ const Audio episodeOneAudio = Audio(
       'Introduction to Flying High with Flutter - Flying High with Flutter #1',
 );
 
-@GenerateMocks([NotificationsService, SettingsService])
+@GenerateMocks([NotificationsService, SettingsService, LibraryService])
 Future<void> main() async {
   final mockNotificationsService = MockNotificationsService();
   final mockSettingsService = MockSettingsService();
+  final mockLibraryService = MockLibraryService();
 
   when(mockSettingsService.usePodcastIndex)
       .thenAnswer((realInvocation) => false);
@@ -33,6 +32,7 @@ Future<void> main() async {
   final service = PodcastService(
     notificationsService: mockNotificationsService,
     settingsService: mockSettingsService,
+    libraryService: mockLibraryService,
   );
   await service.init();
 
@@ -40,9 +40,9 @@ Future<void> main() async {
     final result =
         await service.search(searchQuery: 'Flying High with Flutter');
     final feedUrl = result?.items.first.feedUrl;
-    Set<Audio>? episodes;
+    List<Audio>? episodes;
     if (feedUrl != null) {
-      episodes = await findEpisodes(feedUrl: feedUrl);
+      episodes = await service.findEpisodes(feedUrl: feedUrl);
     }
 
     expect(episodes?.last.url == episodeOneAudio.url, true);

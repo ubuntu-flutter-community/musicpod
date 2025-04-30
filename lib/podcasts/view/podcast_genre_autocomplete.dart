@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:yaru/constants.dart';
 
+import '../../app_config.dart';
 import '../../common/data/podcast_genre.dart';
 import '../../common/view/theme.dart';
-import '../../constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
 
 class PodcastGenreAutoComplete extends StatelessWidget {
@@ -46,10 +44,10 @@ class PodcastGenreAutoComplete extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
+    final theme = context.theme;
 
     return SizedBox(
-      height: height ?? (yaruStyled ? kYaruTitleBarItemHeight : 38),
+      height: height ?? inputHeight,
       width: width,
       child: LayoutBuilder(
         builder: (_, constraints) {
@@ -73,16 +71,17 @@ class PodcastGenreAutoComplete extends StatelessWidget {
                     extentOffset: textEditingController.value.text.length,
                   );
                 },
-                style:
-                    style ?? (yaruStyled ? theme.textTheme.bodyMedium : null),
-                strutStyle: yaruStyled
+                style: style ??
+                    (AppConfig.yaruStyled ? theme.textTheme.bodyMedium : null),
+                strutStyle: AppConfig.yaruStyled
                     ? const StrutStyle(
                         leading: 0.2,
                       )
                     : null,
-                textAlignVertical: yaruStyled ? TextAlignVertical.center : null,
-                cursorWidth: yaruStyled ? 1 : 2.0,
-                decoration: yaruStyled
+                textAlignVertical:
+                    AppConfig.yaruStyled ? TextAlignVertical.center : null,
+                cursorWidth: AppConfig.yaruStyled ? 1 : 2.0,
+                decoration: AppConfig.yaruStyled
                     ? createYaruDecoration(
                         theme: theme,
                         style: style,
@@ -110,15 +109,13 @@ class PodcastGenreAutoComplete extends StatelessWidget {
               return Align(
                 alignment: Alignment.topLeft,
                 child: SizedBox(
-                  width: width ?? kSearchBarWidth,
+                  width: width ?? searchBarWidth,
                   height:
                       (options.length * 50) > 400 ? 400 : options.length * 50,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(6),
                     child: Material(
-                      color: theme.isLight
-                          ? theme.colorScheme.surface
-                          : theme.colorScheme.surfaceVariant,
+                      color: theme.popupMenuTheme.color,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(6),
                         side: BorderSide(
@@ -226,7 +223,7 @@ class _PodcastGenreTile extends StatelessWidget {
       //     favs?.contains(t.id) == false ? addFav(t) : removeFav(t);
       //   },
       //   icon: Icon(
-      //     favs?.contains(t.id) == true ? Iconz().starFilled : Iconz().star,
+      //     favs?.contains(t.id) == true ? Iconz.starFilled : Iconz.star,
       //   ),
       // ),
     );

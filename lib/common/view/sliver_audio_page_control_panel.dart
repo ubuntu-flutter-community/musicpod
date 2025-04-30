@@ -1,48 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:yaru/constants.dart';
 
 import '../../extensions/build_context_x.dart';
-import '../../extensions/theme_data_x.dart';
+import 'sliver_app_bar_bottom_space.dart';
+import 'ui_constants.dart';
 
 class SliverAudioPageControlPanel extends StatelessWidget {
-  const SliverAudioPageControlPanel({super.key, required this.controlPanel});
+  const SliverAudioPageControlPanel({
+    super.key,
+    required this.controlPanel,
+    this.onStretchTrigger,
+    this.backgroundColor,
+  });
 
   final Widget controlPanel;
+  final Future<void> Function()? onStretchTrigger;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.t;
-    final wrappedInContainer = context.wideWindow;
-    final smallWindow = context.smallWindow;
-
-    final color =
-        wrappedInContainer ? theme.scaffoldBackgroundColor : theme.containerBg;
-
-    return SliverAppBar(
-      shape: const RoundedRectangleBorder(side: BorderSide.none),
-      elevation: 0,
-      backgroundColor: color,
-      automaticallyImplyLeading: false,
-      pinned: true,
-      centerTitle: smallWindow,
-      titleSpacing: 0,
-      title: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: kYaruPagePadding),
-        child: controlPanel,
+    return SliverPadding(
+      padding: const EdgeInsets.only(bottom: 10),
+      sliver: SliverAppBar(
+        shape: const RoundedRectangleBorder(side: BorderSide.none),
+        elevation: 0,
+        backgroundColor:
+            backgroundColor ?? context.theme.scaffoldBackgroundColor,
+        automaticallyImplyLeading: false,
+        pinned: true,
+        centerTitle: true,
+        titleSpacing: 0,
+        title: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: kLargestSpace),
+          child: controlPanel,
+        ),
+        bottom: const SliverAppBarBottomSpace(),
+        onStretchTrigger: onStretchTrigger,
       ),
-      bottom: const _Space(),
     );
   }
-}
-
-class _Space extends StatelessWidget implements PreferredSizeWidget {
-  const _Space();
-
-  @override
-  Widget build(BuildContext context) {
-    return const SizedBox();
-  }
-
-  @override
-  Size get preferredSize => const Size(0, 10);
 }

@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:github/github.dart';
+import 'package:path/path.dart' as p;
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../external_path/external_path_service.dart';
-import '../constants.dart';
+import '../common/data/close_btn_action.dart';
 import 'settings_service.dart';
 
 class SettingsModel extends SafeChangeNotifier {
@@ -13,40 +15,84 @@ class SettingsModel extends SafeChangeNotifier {
     required ExternalPathService externalPathService,
     required GitHub gitHub,
   })  : _service = service,
-        _externalPathService = externalPathService,
-        _gitHub = gitHub;
+        _externalPathService = externalPathService {
+    _propertiesChangedSub ??=
+        _service.propertiesChanged.listen((_) => notifyListeners());
+  }
 
   final SettingsService _service;
   final ExternalPathService _externalPathService;
-  final GitHub _gitHub;
 
-  StreamSubscription<bool>? _usePodcastIndexChangedSub;
-  StreamSubscription<bool>? _podcastIndexApiKeyChangedSub;
-  StreamSubscription<bool>? _podcastIndexApiSecretChangedSub;
-  StreamSubscription<bool>? _neverShowFailedImportsSub;
-  StreamSubscription<bool>? _directoryChangedSub;
-  StreamSubscription<bool>? _themeIndexChangedSub;
-  StreamSubscription<bool>? _recentPatchNotesDisposedChangedSub;
-  StreamSubscription<bool>? _useArtistGridViewChangedSub;
+  StreamSubscription<bool>? _propertiesChangedSub;
 
-  bool get allowManualUpdate => _service.allowManualUpdates;
-  String? get appName => _service.appName;
-  String? get packageName => _service.packageName;
-  String? get version => _service.version;
-  String? get buildNumber => _service.buildNumber;
   String? get directory => _service.directory;
-  Future<void> setDirectory(String? value) async {
-    if (value != null) {
-      await _service.setDirectory(value);
+  Future<void> setDirectory(String value) async => _service.setDirectory(value);
+
+  String? get downloadsDir => _service.downloadsDir;
+  Future<void> setDownloadsCustomDir({
+    required Function() onSuccess,
+    required Function(String e) onFail,
+  }) async {
+    String? dirError;
+    String? directoryPath;
+
+    try {
+      directoryPath = await _externalPathService.getPathOfDirectory();
+      if (directoryPath == null) return;
+      final maybeDir = Directory(directoryPath);
+      if (!maybeDir.existsSync()) return;
+      maybeDir.statSync();
+      File(p.join(directoryPath, 'test'))
+        ..createSync()
+        ..deleteSync();
+    } catch (e) {
+      dirError = e.toString();
+    }
+
+    if (dirError != null) {
+      onFail(dirError);
+    } else {
+      if (directoryPath != null) {
+        await _service.setDownloadsCustomDir(directoryPath);
+        onSuccess();
+      }
     }
   }
-
-  bool get recentPatchNotesDisposed => _service.recentPatchNotesDisposed;
-  Future<void> disposePatchNotes() async => _service.disposePatchNotes();
 
   bool get neverShowFailedImports => _service.neverShowFailedImports;
   void setNeverShowFailedImports(bool value) =>
       _service.setNeverShowFailedImports(value);
+
+  bool get enableDiscordRPC => _service.enableDiscordRPC;
+  Future<bool> setEnableDiscordRPC(bool value) =>
+      _service.setEnableDiscordRPC(value);
+
+  bool get enableLastFmScrobbling => _service.enableLastFmScrobbling;
+  String? get lastFmApiKey => _service.lastFmApiKey;
+  String? get lastFmSecret => _service.lastFmSecret;
+  String? get lastFmSessionKey => _service.lastFmSessionKey;
+  String? get lastFmUsername => _service.lastFmUsername;
+  void setEnableLastFmScrobbling(bool value) =>
+      _service.setEnableLastFmScrobbling(value);
+  void setLastFmApiKey(String value) => _service.setLastFmApiKey(value);
+  void setLastFmSecret(String value) => _service.setLastFmSecret(value);
+  void setLastFmSessionKey(String value) => _service.setLastFmSessionKey(value);
+  void setLastFmUsername(String value) => _service.setLastFmUsername(value);
+
+  bool get enableListenBrainzScrobbling =>
+      _service.enableListenBrainzScrobbling;
+  String? get listenBrainzApiKey => _service.listenBrainzApiKey;
+  void setEnableListenBrainzScrobbling(bool value) =>
+      _service.setEnableListenBrainzScrobbling(value);
+  void setListenBrainzApiKey(String value) =>
+      _service.setListenBrainzApiKey(value);
+
+  bool get useMoreAnimations => _service.useMoreAnimations;
+  void setUseMoreAnimations(bool value) => _service.setUseMoreAnimations(value);
+
+  bool get notifyDataSafeMode => _service.notifyDataSafeMode;
+  void setNotifyDataSafeMode(bool value) =>
+      _service.setNotifyDataSafeMode(value);
 
   bool get usePodcastIndex => _service.usePodcastIndex;
   Future<void> setUsePodcastIndex(bool value) async =>
@@ -63,91 +109,19 @@ class SettingsModel extends SafeChangeNotifier {
   void setPodcastIndexApiSecret(String value) async =>
       _service.setPodcastIndexApiSecret(value);
 
-  void playOpenedFile() => _externalPathService.playOpenedFile();
+  CloseBtnAction get closeBtnActionIndex => _service.closeBtnActionIndex;
+  void setCloseBtnActionIndex(CloseBtnAction value) =>
+      _service.setCloseBtnActionIndex(value);
 
-  Future<String?> getPathOfDirectory() async =>
-      _externalPathService.getPathOfDirectory();
+  bool get showPositionDuration => _service.showPositionDuration;
+  Future<void> setShowPositionDuration(bool value) async =>
+      _service.setShowPositionDuration(value);
 
-  bool get useArtistGridView => _service.useArtistGridView;
-  void setUseArtistGridView(bool value) => _service.setUseArtistGridView(value);
-
-  void init() {
-    _themeIndexChangedSub ??=
-        _service.themeIndexChanged.listen((_) => notifyListeners());
-    _usePodcastIndexChangedSub ??=
-        _service.usePodcastIndexChanged.listen((_) => notifyListeners());
-    _podcastIndexApiKeyChangedSub ??=
-        _service.podcastIndexApiKeyChanged.listen((_) => notifyListeners());
-    _podcastIndexApiSecretChangedSub ??=
-        _service.podcastIndexApiSecretChanged.listen((_) => notifyListeners());
-    _neverShowFailedImportsSub ??=
-        _service.neverShowFailedImportsChanged.listen((_) => notifyListeners());
-    _directoryChangedSub ??=
-        _service.directoryChanged.listen((_) => notifyListeners());
-    _useArtistGridViewChangedSub ??=
-        _service.useArtistGridViewChanged.listen((_) => notifyListeners());
-    _recentPatchNotesDisposedChangedSub ??= _service
-        .recentPatchNotesDisposedChanged
-        .listen((_) => notifyListeners());
-  }
+  Future<void> wipeAllSettings() async => _service.wipeAllSettings();
 
   @override
   Future<void> dispose() async {
-    await _themeIndexChangedSub?.cancel();
-    await _usePodcastIndexChangedSub?.cancel();
-    await _podcastIndexApiKeyChangedSub?.cancel();
-    await _podcastIndexApiSecretChangedSub?.cancel();
-    await _neverShowFailedImportsSub?.cancel();
-    await _directoryChangedSub?.cancel();
-    await _recentPatchNotesDisposedChangedSub?.cancel();
-    await _useArtistGridViewChangedSub?.cancel();
+    await _propertiesChangedSub?.cancel();
     super.dispose();
-  }
-
-  Future<String?> getOnlineVersion() async {
-    final release = await _gitHub.repositories
-        .listReleases(RepositorySlug.full(kGitHubShortLink))
-        .toList();
-    return release.firstOrNull?.tagName;
-  }
-
-  Future<List<Contributor>> getContributors() async {
-    return _gitHub.repositories
-        .listContributors(
-          RepositorySlug.full(kGitHubShortLink),
-        )
-        .where((c) => c.type == 'User')
-        .toList();
-  }
-
-  bool? _updateAvailable;
-  bool? get updateAvailable => _updateAvailable;
-  String? _onlineVersion;
-  String? get onlineVersion => _onlineVersion;
-  Future<void> checkForUpdate(bool isOnline) async {
-    _updateAvailable == null;
-    notifyListeners();
-
-    if (!_service.allowManualUpdates || !isOnline) {
-      _updateAvailable = false;
-      notifyListeners();
-      return Future.value();
-    }
-    _onlineVersion = await getOnlineVersion();
-    final onlineVersion = getExtendedVersionNumber(_onlineVersion) ?? 0;
-    final currentVersion = getExtendedVersionNumber(version) ?? 0;
-    if (onlineVersion > currentVersion) {
-      _updateAvailable = true;
-    } else {
-      _updateAvailable = false;
-    }
-    notifyListeners();
-  }
-
-  int? getExtendedVersionNumber(String? version) {
-    if (version == null) return null;
-    List versionCells = version.split('.');
-    versionCells = versionCells.map((i) => int.parse(i)).toList();
-    return versionCells[0] * 100000 + versionCells[1] * 1000 + versionCells[2];
   }
 }

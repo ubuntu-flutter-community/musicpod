@@ -5,12 +5,11 @@ import 'package:file/file.dart' hide FileSystem;
 import 'package:file/local.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-// ignore: implementation_imports
-import 'package:flutter_cache_manager/src/storage/file_system/file_system.dart';
 import 'package:path/path.dart' as p;
 import 'package:xdg_directories/xdg_directories.dart';
 
 import '../../extensions/build_context_x.dart';
+import '../logging.dart';
 import 'icons.dart';
 
 class SafeNetworkImage extends StatelessWidget {
@@ -23,6 +22,7 @@ class SafeNetworkImage extends StatelessWidget {
     this.errorIcon,
     this.height,
     this.width,
+    this.httpHeaders,
   });
 
   final String? url;
@@ -32,14 +32,15 @@ class SafeNetworkImage extends StatelessWidget {
   final Widget? errorIcon;
   final double? height;
   final double? width;
+  final Map<String, String>? httpHeaders;
 
   @override
   Widget build(BuildContext context) {
     final fallBack = Center(
       child: fallBackIcon ??
           Icon(
-            Iconz().musicNote,
-            size: 70,
+            Iconz.musicNote,
+            size: height != null ? height! * 0.7 : null,
           ),
     );
 
@@ -48,9 +49,9 @@ class SafeNetworkImage extends StatelessWidget {
     final errorWidget = Center(
       child: errorIcon ??
           Icon(
-            Iconz().imageMissing,
-            size: 70,
-            color: context.t.hintColor,
+            Iconz.imageMissing,
+            size: height != null ? height! * 0.7 : null,
+            color: context.theme.hintColor,
           ),
     );
 
@@ -66,6 +67,7 @@ class SafeNetworkImage extends StatelessWidget {
           width: width,
         ),
         errorWidget: (context, url, _) => errorWidget,
+        errorListener: (e) => printMessageInDebugMode(e.toString()),
       );
     } on Exception {
       return fallBack;
