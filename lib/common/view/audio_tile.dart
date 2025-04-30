@@ -29,7 +29,7 @@ class AudioTile extends StatefulWidget with WatchItStatefulWidgetMixin {
     this.onSubTitleTap,
     this.onTap,
     required this.audioPageType,
-    required this.showLeading,
+    required this.allowLeadingImage,
     this.selectedColor,
     this.onTitleTap,
     this.showDuration = true,
@@ -46,7 +46,7 @@ class AudioTile extends StatefulWidget with WatchItStatefulWidgetMixin {
   final void Function()? onTap;
   final void Function()? onTitleTap;
   final void Function(String text)? onSubTitleTap;
-  final bool showLeading,
+  final bool allowLeadingImage,
       showDuration,
       alwaysShowOptionButton,
       neverShowLikeIcon;
@@ -64,6 +64,8 @@ class _AudioTileState extends State<AudioTile> {
     final theme = context.theme;
     final l10n = context.l10n;
     final playerModel = di<PlayerModel>();
+    final slimTile = widget.audioPageType == AudioPageType.allTitlesView ||
+        widget.audioPageType == AudioPageType.album;
 
     final selectedColor = widget.selectedColor ?? theme.contrastyPrimary;
     final color =
@@ -81,14 +83,14 @@ class _AudioTileState extends State<AudioTile> {
       AudioPageType.album => _AlbumTileLead(
           trackNumber: widget.audio.trackNumber,
           color: color,
-          dimension: dimension,
+          dimension: dimension / 2,
         ),
-      _ => !widget.showLeading
-          ? null
-          : AudioTileImage(
+      _ => widget.allowLeadingImage
+          ? AudioTileImage(
               size: dimension,
               audio: widget.audio,
-            ),
+            )
+          : null,
     };
 
     const titleOverflow = TextOverflow.ellipsis;
@@ -110,13 +112,18 @@ class _AudioTileState extends State<AudioTile> {
             ),
     );
 
-    final subtitle = TapAbleText(
-      wrapInFlexible: widget.audioPageType == AudioPageType.allTitlesView,
-      text: subTitle,
-      onTap: widget.onSubTitleTap == null
-          ? null
-          : () => widget.onSubTitleTap?.call(subTitle),
-    );
+    final subtitle = widget.audioPageType == AudioPageType.album &&
+            widget.audio.discNumber != null &&
+            widget.audio.discTotal != null &&
+            widget.audio.discTotal! > 1
+        ? Text('${l10n.disc} ${widget.audio.discNumber}')
+        : TapAbleText(
+            wrapInFlexible: slimTile,
+            text: subTitle,
+            onTap: widget.onSubTitleTap == null
+                ? null
+                : () => widget.onSubTitleTap?.call(subTitle),
+          );
 
     final listTile = ListTile(
       key: ObjectKey(widget.audio),
@@ -129,7 +136,7 @@ class _AudioTileState extends State<AudioTile> {
       selectedTileColor: theme.colorScheme.onSurface.withValues(alpha: 0.05),
       contentPadding: audioTilePadding.copyWith(
         left: widget.audioPageType == AudioPageType.album ? 10 : null,
-        right: widget.audioPageType == AudioPageType.allTitlesView ? 0 : null,
+        right: slimTile ? 0 : null,
       ),
       onTap: () {
         if (widget.selected) {
@@ -142,9 +149,10 @@ class _AudioTileState extends State<AudioTile> {
           widget.onTap?.call();
         }
       },
-      title: widget.audioPageType != AudioPageType.allTitlesView
+      title: !slimTile
           ? title
           : Row(
+              spacing: kMediumSpace,
               children: [
                 Expanded(
                   flex: 4,
@@ -163,7 +171,7 @@ class _AudioTileState extends State<AudioTile> {
                   ),
               ],
             ),
-      subtitle: widget.audioPageType == AudioPageType.allTitlesView
+      subtitle: slimTile
           ? null
           : Row(
               mainAxisSize: MainAxisSize.min,
