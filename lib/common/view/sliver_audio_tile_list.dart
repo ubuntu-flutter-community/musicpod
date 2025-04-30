@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../extensions/build_context_x.dart';
 import 'ui_constants.dart';
 import '../../player/player_model.dart';
 import '../data/audio.dart';
@@ -25,6 +26,7 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
+    final width = context.mediaQuerySize.width;
     final playerModel = di<PlayerModel>();
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
     final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
@@ -40,6 +42,9 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
           return Padding(
             padding: const EdgeInsets.only(bottom: 5),
             child: AudioTile(
+              showDuration: width > 900,
+              alwaysShowOptionButton: width > 1300,
+              neverShowLikeIcon: width < 600,
               showLeading: showLeading,
               key: ValueKey(audio.path ?? audio.url),
               audioPageType: audioPageType,

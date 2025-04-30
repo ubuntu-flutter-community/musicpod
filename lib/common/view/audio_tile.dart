@@ -32,6 +32,9 @@ class AudioTile extends StatefulWidget with WatchItStatefulWidgetMixin {
     required this.showLeading,
     this.selectedColor,
     this.onTitleTap,
+    this.showDuration = true,
+    this.alwaysShowOptionButton = true,
+    this.neverShowLikeIcon = false,
   });
 
   final String pageId;
@@ -43,7 +46,10 @@ class AudioTile extends StatefulWidget with WatchItStatefulWidgetMixin {
   final void Function()? onTap;
   final void Function()? onTitleTap;
   final void Function(String text)? onSubTitleTap;
-  final bool showLeading;
+  final bool showLeading,
+      showDuration,
+      alwaysShowOptionButton,
+      neverShowLikeIcon;
   final Color? selectedColor;
 
   @override
@@ -111,6 +117,7 @@ class _AudioTileState extends State<AudioTile> {
           ? null
           : () => widget.onSubTitleTap?.call(subTitle),
     );
+
     final listTile = ListTile(
       key: ObjectKey(widget.audio),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -122,6 +129,7 @@ class _AudioTileState extends State<AudioTile> {
       selectedTileColor: theme.colorScheme.onSurface.withValues(alpha: 0.05),
       contentPadding: audioTilePadding.copyWith(
         left: widget.audioPageType == AudioPageType.album ? 10 : null,
+        right: widget.audioPageType == AudioPageType.allTitlesView ? 0 : null,
       ),
       onTap: () {
         if (widget.selected) {
@@ -139,19 +147,20 @@ class _AudioTileState extends State<AudioTile> {
           : Row(
               children: [
                 Expanded(
-                  flex: 3,
+                  flex: 4,
                   child: title,
                 ),
                 Expanded(
-                  flex: 2,
+                  flex: 3,
                   child: subtitle,
                 ),
-                Expanded(
-                  child: _AudioTileDuration(
-                    splitter: '',
-                    audio: widget.audio,
+                if (widget.showDuration)
+                  Expanded(
+                    child: _AudioTileDuration(
+                      splitter: '',
+                      audio: widget.audio,
+                    ),
                   ),
-                ),
               ],
             ),
       subtitle: widget.audioPageType == AudioPageType.allTitlesView
@@ -162,11 +171,12 @@ class _AudioTileState extends State<AudioTile> {
                 Flexible(
                   child: subtitle,
                 ),
-                Flexible(
-                  child: _AudioTileDuration(
-                    audio: widget.audio,
+                if (widget.showDuration)
+                  Flexible(
+                    child: _AudioTileDuration(
+                      audio: widget.audio,
+                    ),
                   ),
-                ),
               ],
             ),
       trailing: AudioTileTrail(
@@ -177,8 +187,8 @@ class _AudioTileState extends State<AudioTile> {
         pageId: widget.pageId,
         audioPageType: widget.audioPageType,
         selectedColor: selectedColor,
-        showLikeIcon: !AppConfig.isMobilePlatform,
-        alwaysShowOptionButton: AppConfig.isMobilePlatform,
+        showLikeIcon: !widget.neverShowLikeIcon,
+        alwaysShowOptionButton: widget.alwaysShowOptionButton,
       ),
     );
 
@@ -230,25 +240,9 @@ class AudioTileTrail extends StatelessWidget with WatchItMixin {
       (LibraryModel m) => m.isStarredStation(audio.uuid),
     );
     return Row(
+      spacing: kSmallestSpace,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Opacity(
-          opacity: alwaysShowOptionButton || hovered || selected ? 1 : 0,
-          child: AudioTileOptionButton(
-            title: Text(audio.title ?? ''),
-            subTitle: Text(audio.artist ?? ''),
-            selected: selected && isPlayerPlaying,
-            playlistId: pageId,
-            audios: [audio],
-            searchTerm: '${audio.artist ?? ''} - ${audio.title ?? ''}',
-            allowRemove: (audioPageType == AudioPageType.playlist ||
-                    audioPageType == AudioPageType.likedAudio) &&
-                audio.audioType != AudioType.radio,
-          ),
-        ),
-        const SizedBox(
-          width: 5,
-        ),
         if (showLikeIcon)
           Opacity(
             opacity: hovered || selected || liked || starred ? 1 : 0,
@@ -266,6 +260,20 @@ class AudioTileTrail extends StatelessWidget with WatchItMixin {
                 ),
             },
           ),
+        Opacity(
+          opacity: alwaysShowOptionButton || hovered || selected ? 1 : 0,
+          child: AudioTileOptionButton(
+            title: Text(audio.title ?? ''),
+            subTitle: Text(audio.artist ?? ''),
+            selected: selected && isPlayerPlaying,
+            playlistId: pageId,
+            audios: [audio],
+            searchTerm: '${audio.artist ?? ''} - ${audio.title ?? ''}',
+            allowRemove: (audioPageType == AudioPageType.playlist ||
+                    audioPageType == AudioPageType.likedAudio) &&
+                audio.audioType != AudioType.radio,
+          ),
+        ),
       ],
     );
   }
