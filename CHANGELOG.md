@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.11.4](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.11.3...v2.11.4) (2025-04-30)
+
+
+### Bug Fixes
+
+* albums are split if the songs in it have different artists ([#1253](https://github.com/ubuntu-flutter-community/musicpod/issues/1253)) ([cf7a9a4](https://github.com/ubuntu-flutter-community/musicpod/commit/cf7a9a4039d4743ede0afd69d412c3974272c11e)), closes [#1249](https://github.com/ubuntu-flutter-community/musicpod/issues/1249)
+* bring back data focused, single line titles view audio tiles ([#1248](https://github.com/ubuntu-flutter-community/musicpod/issues/1248)) ([dec5c57](https://github.com/ubuntu-flutter-community/musicpod/commit/dec5c57b485f8479b3c01aa1942fe1e67f903758))
+* don't insert assets behind every artist image ([#1246](https://github.com/ubuntu-flutter-community/musicpod/issues/1246)) ([4208281](https://github.com/ubuntu-flutter-community/musicpod/commit/42082812856bfb9cc31f3132ef63d5c191ae54bb))
+* use slim tiles also for albums and show disc number if present ([#1252](https://github.com/ubuntu-flutter-community/musicpod/issues/1252)) ([fb46769](https://github.com/ubuntu-flutter-community/musicpod/commit/fb4676916affe0548b63fa77558666dfedace1a7))
+
 ## [2.11.3](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.11.2...v2.11.3) (2025-04-29)
 
 
