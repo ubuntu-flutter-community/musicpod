@@ -88,6 +88,29 @@ class _AudioTileState extends State<AudioTile> {
     const titleOverflow = TextOverflow.ellipsis;
     const titleMaxLines = 1;
 
+    final title = Padding(
+      padding: const EdgeInsets.only(right: kLargestSpace),
+      child: widget.onTitleTap == null
+          ? Text(
+              widget.audio.title ?? l10n.unknown,
+              overflow: titleOverflow,
+              maxLines: titleMaxLines,
+            )
+          : TapAbleText(
+              onTap: widget.onTitleTap,
+              text: widget.audio.title ?? l10n.unknown,
+              overflow: titleOverflow,
+              maxLines: titleMaxLines,
+            ),
+    );
+
+    final subtitle = TapAbleText(
+      wrapInFlexible: widget.audioPageType == AudioPageType.allTitlesView,
+      text: subTitle,
+      onTap: widget.onSubTitleTap == null
+          ? null
+          : () => widget.onSubTitleTap?.call(subTitle),
+    );
     final listTile = ListTile(
       key: ObjectKey(widget.audio),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -111,41 +134,42 @@ class _AudioTileState extends State<AudioTile> {
           widget.onTap?.call();
         }
       },
-      title: Padding(
-        padding: const EdgeInsets.only(right: kLargestSpace),
-        child: widget.onTitleTap == null
-            ? Text(
-                widget.audio.title ?? l10n.unknown,
-                overflow: titleOverflow,
-                maxLines: titleMaxLines,
-              )
-            : TapAbleText(
-                onTap: widget.onTitleTap,
-                text: widget.audio.title ?? l10n.unknown,
-                overflow: titleOverflow,
-                maxLines: titleMaxLines,
-              ),
-      ),
-      subtitle: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Flexible(
-            child: TapAbleText(
-              wrapInFlexible: false,
-              text: subTitle,
-              onTap: widget.onSubTitleTap == null
-                  ? null
-                  : () => widget.onSubTitleTap?.call(subTitle),
+      title: widget.audioPageType != AudioPageType.allTitlesView
+          ? title
+          : Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: title,
+                ),
+                Expanded(
+                  flex: 2,
+                  child: subtitle,
+                ),
+                Expanded(
+                  child: _AudioTileDuration(
+                    splitter: '',
+                    audio: widget.audio,
+                  ),
+                ),
+              ],
             ),
-          ),
-          Flexible(
-            child: _AudioTileDuration(
-              audio: widget.audio,
+      subtitle: widget.audioPageType == AudioPageType.allTitlesView
+          ? null
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  child: subtitle,
+                ),
+                Flexible(
+                  child: _AudioTileDuration(
+                    audio: widget.audio,
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-      trailing: _AudioTileTrail(
+      trailing: AudioTileTrail(
         hovered: _hovered,
         audio: widget.audio,
         selected: widget.selected,
@@ -153,7 +177,6 @@ class _AudioTileState extends State<AudioTile> {
         pageId: widget.pageId,
         audioPageType: widget.audioPageType,
         selectedColor: selectedColor,
-        showDuration: !AppConfig.isMobilePlatform,
         showLikeIcon: !AppConfig.isMobilePlatform,
         alwaysShowOptionButton: AppConfig.isMobilePlatform,
       ),
@@ -176,8 +199,9 @@ class _AudioTileState extends State<AudioTile> {
       '${audio.albumArtist?.isNotEmpty == true ? '${audio.albumArtist}' : ''}${audio.bitRate > 0 ? ' • ${audio.fileSize} kbps' : ''}${audio.clicks > 0 ? ' • ${audio.clicks} ${l10n.clicks}' : ''}${audio.language.trim().isNotEmpty ? ' • ${audio.language}' : ''}';
 }
 
-class _AudioTileTrail extends StatelessWidget with WatchItMixin {
-  const _AudioTileTrail({
+class AudioTileTrail extends StatelessWidget with WatchItMixin {
+  const AudioTileTrail({
+    super.key,
     required this.audio,
     required this.selected,
     required this.isPlayerPlaying,
@@ -186,7 +210,6 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
     required this.hovered,
     required this.selectedColor,
     required this.showLikeIcon,
-    required this.showDuration,
     required this.alwaysShowOptionButton,
   });
 
@@ -197,7 +220,7 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
   final AudioPageType audioPageType;
   final bool hovered;
   final Color selectedColor;
-  final bool showLikeIcon, showDuration;
+  final bool showLikeIcon;
   final bool alwaysShowOptionButton;
 
   @override
@@ -251,16 +274,19 @@ class _AudioTileTrail extends StatelessWidget with WatchItMixin {
 class _AudioTileDuration extends StatelessWidget {
   const _AudioTileDuration({
     required this.audio,
+    this.splitter = ' · ',
   });
 
   final Audio audio;
+  final String splitter;
 
   @override
   Widget build(BuildContext context) {
     return Text(
       audio.audioType != AudioType.radio && audio.durationMs != null
-          ? ' · ${Duration(milliseconds: audio.durationMs!.toInt()).formattedTime}'
+          ? '$splitter${Duration(milliseconds: audio.durationMs!.toInt()).formattedTime}'
           : '',
+      overflow: TextOverflow.ellipsis,
     );
   }
 }

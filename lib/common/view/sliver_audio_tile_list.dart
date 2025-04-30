@@ -28,7 +28,8 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
     final playerModel = di<PlayerModel>();
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
     final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
-    final showLeading = audios.length < kShowLeadingThreshold;
+    final showLeading = audios.length < kShowLeadingThreshold &&
+        audioPageType != AudioPageType.allTitlesView;
 
     return SliverList(
       delegate: SliverChildBuilderDelegate(
