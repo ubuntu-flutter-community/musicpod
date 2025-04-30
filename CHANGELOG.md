@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.11.3](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.11.2...v2.11.3) (2025-04-29)
+
+
+### Bug Fixes
+
+* improve local library caching ([#1241](https://github.com/ubuntu-flutter-community/musicpod/issues/1241)) ([934a515](https://github.com/ubuntu-flutter-community/musicpod/commit/934a51522c05064e228ff7fd87e57c71288b31a1))
+
 ## [2.11.2](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.11.1...v2.11.2) (2025-04-28)
 
 
