@@ -1365,5 +1365,11 @@
   "localPictureTypeBrightColouredFish": "Jasne sfarbené ryby",
   "@localPictureTypeBrightColouredFish": {},
   "localPictureTypebandArtistLogotype": "Logo kapely/interpreta",
-  "@localPictureTypebandArtistLogotype": {}
+  "@localPictureTypebandArtistLogotype": {},
+  "stationNotFound": "Táto stanica neexistuje alebo bola odstránená z rádioprehliadačového servera.",
+  "@stationNotFound": {},
+  "onlyLocalAudioForPlaylists": "Pre import playlistu je podporované iba lokálne audio! Vyhľadajte ho prosím vo funkcii rádia a pridajte pomocou tlačidla hviezdičky do svojej knižnice!",
+  "@onlyLocalAudioForPlaylists": {},
+  "customStationWarning": "Zadaná adresa URL musí existovať na serveri rádioprehliadača, inak nebude pridaná do vašej knižnice! Najvhodnejšie je ju vyhľadať vo funkcii rádia a pridať pomocou tlačidla hviezdičky do svojej knižnice!",
+  "@customStationWarning": {}
 }
