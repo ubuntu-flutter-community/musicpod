@@ -79,18 +79,25 @@ class LocalAudioService {
     String? artist,
     bool clean = true,
   }) {
+    final groupAlbumsOnlyByAlbumName =
+        _settingsService?.groupAlbumsOnlyByAlbumName ?? false;
+
     final theAudios = artist == null || artist.isEmpty
         ? audios
         : audios?.where((e) => e.artist == artist);
     if (theAudios == null) return null;
     final albumsResult = <String>[];
     for (var a in theAudios) {
-      if (a.albumId != null && albumsResult.none((e) => e == a.albumId)) {
-        albumsResult.add(a.albumId!);
+      final idToUse = groupAlbumsOnlyByAlbumName ? a.album : a.albumId;
+
+      if (idToUse != null && albumsResult.none((e) => e == idToUse)) {
+        albumsResult.add(idToUse);
       }
     }
     albumsResult.sort(
-      (a, b) => compareNatural(a.albumOfId, b.albumOfId),
+      (a, b) => groupAlbumsOnlyByAlbumName
+          ? compareNatural(a, b)
+          : compareNatural(a.albumOfId, b.albumOfId),
     );
 
     if (clean) {
@@ -124,7 +131,12 @@ class LocalAudioService {
     }
 
     final album = audios?.where(
-      (a) => a.albumId != null && a.albumId == albumId,
+      (a) {
+        if (_settingsService?.groupAlbumsOnlyByAlbumName ?? false) {
+          return a.album != null && a.album == albumId.albumOfId;
+        }
+        return a.albumId != null && a.albumId == albumId;
+      },
     );
 
     var albumList = album?.toList();

@@ -67,6 +67,10 @@ class SettingsModel extends SafeChangeNotifier {
   Future<bool> setEnableDiscordRPC(bool value) =>
       _service.setEnableDiscordRPC(value);
 
+  bool get groupAlbumsOnlyByAlbumName => _service.groupAlbumsOnlyByAlbumName;
+  void setGroupAlbumsOnlyByAlbumName(bool value) =>
+      _service.setGroupAlbumsOnlyByAlbumName(value);
+
   bool get enableLastFmScrobbling => _service.enableLastFmScrobbling;
   String? get lastFmApiKey => _service.lastFmApiKey;
   String? get lastFmSecret => _service.lastFmSecret;

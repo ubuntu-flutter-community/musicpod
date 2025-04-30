@@ -425,7 +425,8 @@ class PlayerService {
     int? index,
   }) async {
     if (audios.isEmpty) return;
-    if (listName == _queue.name &&
+    if (audios.length == _queue.audios.length &&
+        listName == _queue.name &&
         index != null &&
         audios.elementAtOrNull(index) != null) {
       _setAudio(audios.elementAtOrNull(index)!);
@@ -495,8 +496,6 @@ class PlayerService {
   // Last Positions used when the app re-opens and for podcasts
   //
 
-  // TODO: #1217 migrate to shared preferences but add a migration routine from the old file so users do not
-  // lose their progress
   Map<String, Duration> _lastPositions = {};
   Map<String, Duration> get lastPositions => _lastPositions;
   Future<void> addLastPosition(String key, Duration lastPosition) async {
