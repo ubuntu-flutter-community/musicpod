@@ -1370,5 +1370,11 @@
   "stationNotFound": "Irrati hau ez da existitzen edo radiobrowser zerbitzaritik kendu da.",
   "@stationNotFound": {},
   "onlyLocalAudioForPlaylists": "Tokiko audioa bakarrik onartzen da erreprodukzio-zerrenden inportazioetarako! Bilatu itzazu irrati funtzioan eta gehitu itzazu izar botoiarekin zure liburutegira!",
-  "@onlyLocalAudioForPlaylists": {}
+  "@onlyLocalAudioForPlaylists": {},
+  "disc": "Diskoa",
+  "@disc": {},
+  "groupAlbumsOnlyByAlbumName": "Taldekatu albumak albumaren izenaren arabera bakarrik",
+  "@groupAlbumsOnlyByAlbumName": {},
+  "groupAlbumsOnlyByAlbumNameDescription": "Honek albumak albumaren izenaren arabera bakarrik taldekatuko ditu, eta ez artistaren izenaren eta albumaren izenaren arabera, hau da, albumaren izena bakarra dela suposatzen du zure liburutegian!",
+  "@groupAlbumsOnlyByAlbumNameDescription": {}
 }
