@@ -64,8 +64,8 @@ class RoundImageContainer extends StatelessWidget {
   }
 }
 
-class ArtistVignette extends StatelessWidget {
-  const ArtistVignette({
+class RoundImageContainerVignette extends StatelessWidget {
+  const RoundImageContainerVignette({
     super.key,
     required this.text,
     this.backgroundColor = Colors.black,

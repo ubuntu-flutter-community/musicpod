@@ -4,12 +4,13 @@ import 'package:yaru/theme.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/round_image_container.dart';
+import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../local_audio_model.dart';
 import 'local_cover.dart';
 
-class ArtistRoundImageContainer extends StatefulWidget {
-  const ArtistRoundImageContainer({
+class ArtistImage extends StatefulWidget {
+  const ArtistImage({
     super.key,
     required this.artist,
     this.dimension,
@@ -19,11 +20,10 @@ class ArtistRoundImageContainer extends StatefulWidget {
   final double? dimension;
 
   @override
-  State<ArtistRoundImageContainer> createState() =>
-      _ArtistRoundImageContainerState();
+  State<ArtistImage> createState() => _ArtistImageState();
 }
 
-class _ArtistRoundImageContainerState extends State<ArtistRoundImageContainer> {
+class _ArtistImageState extends State<ArtistImage> {
   late Future<List<Audio>?> _artistAudios;
 
   @override
@@ -42,7 +42,9 @@ class _ArtistRoundImageContainerState extends State<ArtistRoundImageContainer> {
           duration: const Duration(milliseconds: 300),
           opacity: artistAudios.isEmpty ? 0 : 1,
           child: RoundImageContainer(
-            backgroundColor: context.theme.cardTheme.color,
+            backgroundColor: artistAudios.isEmpty
+                ? getAlphabetColor(widget.artist).scale(saturation: -0.6)
+                : Colors.transparent,
             images: artistAudios.isEmpty
                 ? []
                 : di<LocalAudioModel>()
