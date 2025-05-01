@@ -1373,5 +1373,11 @@
   "customStationWarning": "L'URL fornito deve esistere nel server radiobrowser, altrimenti non verrà aggiunto alla libreria! Idealmente cercali nella funzione radio e aggiungili alla libreria con il pulsante stella!",
   "@customStationWarning": {},
   "onlyLocalAudioForPlaylists": "Per le importazioni playlist è supportato solo gli audio locali ! Cercalo nella funzione radio e aggiungili alla libreria con il pulsante stella!",
-  "@onlyLocalAudioForPlaylists": {}
+  "@onlyLocalAudioForPlaylists": {},
+  "disc": "Disco",
+  "@disc": {},
+  "groupAlbumsOnlyByAlbumName": "Raggruppa album solo per nome album",
+  "@groupAlbumsOnlyByAlbumName": {},
+  "groupAlbumsOnlyByAlbumNameDescription": "Questo raggrupperà gli album solo con il nome dell'album e non con il nome dell'artista + nome dell'album, che presuppone che il nome dell'album sia univoco all'interno della libreria!",
+  "@groupAlbumsOnlyByAlbumNameDescription": {}
 }
