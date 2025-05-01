@@ -8,6 +8,7 @@ import 'package:yaru/yaru.dart';
 import '../../app_config.dart';
 import '../../l10n/l10n.dart';
 import '../../settings/settings_model.dart';
+import '../../common/view/gradient_background.dart';
 
 import 'back_button_wrapper.dart';
 import 'desktop_home_page.dart';
