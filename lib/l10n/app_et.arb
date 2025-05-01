@@ -1372,5 +1372,11 @@
   "stationNotFound": "Seda jaama kas pole olemas või on ta raadiojaamade andmebaasist eemaldatud.",
   "@stationNotFound": {},
   "customStationWarning": "See võrguaadress peaks leiduma raadiojaamade otsinguserveris, vastasel juhul ta ei saa lisatud sinu muusikakogusse! Parim oleks, kui otsid neid raadiojaaamade otsinguvaatest ja märgistades tärnikesega lisad kohalikku muusikakogusse!",
-  "@customStationWarning": {}
+  "@customStationWarning": {},
+  "disc": "Plaat",
+  "@disc": {},
+  "groupAlbumsOnlyByAlbumName": "Rühmita albumeid vaid albumi nime alusel",
+  "@groupAlbumsOnlyByAlbumName": {},
+  "groupAlbumsOnlyByAlbumNameDescription": "Selle eelistusega rühmitatakse albumid vaid albumi nime alusel, ega arvestata esitaja+albumi nimi kombinatsiooni. See tähendab, et albumi nimed peavad sinu muusikakogus olema unikaalsed!",
+  "@groupAlbumsOnlyByAlbumNameDescription": {}
 }
