@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName      "MusicPod"
-#define SourceFolder    "C:\Users\wut\Projects\musicpod\build\windows\x64\runner\Release"
+#define SourceFolder    "..\build\windows\x64\runner\Release"
 #define MyAppExeName   "musicpod.exe"
 #define MyAppVersion    GetStringFileInfo(SourceFolder + '\' + MyAppExeName,"FileVersion")
 #define MyAppPublisher "feichtmeier.org"
@@ -39,11 +39,11 @@ WizardStyle=modern
 
 DefaultDirName={autopf}\{#MyAppName}
 DisableProgramGroupPage=yes
-LicenseFile=C:\Users\wut\Projects\musicpod\LICENSE
+LicenseFile="..\LICENSE"
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 OutputBaseFilename=musicpod
-SetupIconFile=C:\Users\wut\Projects\musicpod\windows\runner\resources\app_icon.ico
+SetupIconFile=runner\resources\app_icon.ico
 Compression=lzma
 SolidCompression=yes
 
@@ -80,88 +80,7 @@ Name: "ukrainian";           MessagesFile: "compiler:Languages\Ukrainian.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "{#SourceFolder}\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-console-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-console-l1-2-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-datetime-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-debug-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-errorhandling-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-fibers-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-file-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-file-l1-2-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-file-l2-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-handle-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-heap-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-interlocked-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-libraryloader-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-localization-l1-2-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-memory-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-namedpipe-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-processenvironment-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-processthreads-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-processthreads-l1-1-1.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-profile-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-rtlsupport-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-string-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-synch-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-synch-l1-2-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-sysinfo-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-timezone-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-core-util-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-crt-conio-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-crt-convert-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-crt-environment-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-crt-filesystem-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-crt-heap-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-crt-locale-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-crt-math-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-crt-multibyte-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-crt-private-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-crt-process-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-crt-runtime-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-crt-stdio-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-crt-string-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-crt-time-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-crt-utility-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-downlevel-kernel32-l2-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\api-ms-win-eventing-provider-l1-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\concrt140.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\connectivity_plus_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\d3dcompiler_47.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\file_selector_windows_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\flutter_discord_rpc.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\flutter_windows.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\irondash_engine_context_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\libc++.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\libEGL.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\libGLESv2.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\libmpv-2.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\media_kit_libs_windows_video_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\media_kit_video_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\msvcp140.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\msvcp140_1.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\msvcp140_2.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\msvcp140_atomic_wait.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\msvcp140_codecvt_ids.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\permission_handler_windows_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\screen_retriever_windows_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\smtc_windows.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\super_native_extensions.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\super_native_extensions_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\system_theme_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\ucrtbase.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\ucrtbased.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\url_launcher_windows_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\vccorlib140.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\vccorlib140d.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\vcruntime140.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\vcruntime140_1.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\vcruntime140_1d.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\vcruntime140d.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\vk_swiftshader.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\vulkan-1.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\window_manager_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceFolder}\zlib.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#SourceFolder}\*"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourceFolder}\data\*"; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 

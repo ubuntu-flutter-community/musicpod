@@ -7,8 +7,8 @@ import '../../common/view/no_search_result_page.dart';
 import '../../common/view/round_image_container.dart';
 import '../../common/view/sliver_fill_remaining_progress.dart';
 import '../../common/view/ui_constants.dart';
+import 'artist_image.dart';
 import 'artist_page.dart';
-import 'artist_round_image_container.dart';
 
 class ArtistsView extends StatelessWidget {
   const ArtistsView({
@@ -55,13 +55,12 @@ class ArtistsView extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 height: double.infinity,
-                child: ArtistRoundImageContainer(
+                child: ArtistImage(
                   dimension: double.infinity,
-                  key: ValueKey(artistName),
                   artist: artistName,
                 ),
               ),
-              ArtistVignette(text: artistName),
+              RoundImageContainerVignette(text: artistName),
             ],
           ),
         );
