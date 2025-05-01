@@ -61,7 +61,7 @@ class GenresView extends StatelessWidget {
                   backgroundColor: color,
                 ),
               ),
-              ArtistVignette(
+              RoundImageContainerVignette(
                 text: text,
                 backgroundColor: Colors.transparent,
                 textColor: textColor,

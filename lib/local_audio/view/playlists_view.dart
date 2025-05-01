@@ -97,7 +97,7 @@ class PlaylistsView extends StatelessWidget {
                           ),
               ),
               if (id != PageIDs.customContent && id != PageIDs.likedAudios)
-                ArtistVignette(
+                RoundImageContainerVignette(
                   text: id,
                   backgroundColor: Colors.transparent,
                   textColor: contrastColor(

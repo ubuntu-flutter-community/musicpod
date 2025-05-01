@@ -11,6 +11,7 @@ import '../../common/view/audio_page_header.dart';
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/audio_tile_option_button.dart';
 import '../../common/view/avatar_play_button.dart';
+import '../../common/view/genre_bar.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/like_all_icon_button.dart';
@@ -22,13 +23,12 @@ import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
-import '../../common/view/genre_bar.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import '../local_audio_model.dart';
 import 'album_page.dart';
 import 'album_view.dart';
-import 'artist_round_image_container.dart';
+import 'artist_image.dart';
 import 'genre_page.dart';
 
 class ArtistPage extends StatefulWidget with WatchItStatefulWidgetMixin {
@@ -122,7 +122,7 @@ class _ArtistPageState extends State<ArtistPage> {
                       child: AudioPageHeader(
                         imageRadius: BorderRadius.circular(10000),
                         title: widget.pageId,
-                        image: ArtistRoundImageContainer(
+                        image: ArtistImage(
                           artist: widget.pageId,
                           dimension: kMaxAudioPageHeaderHeight,
                         ),

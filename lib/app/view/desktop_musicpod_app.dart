@@ -8,6 +8,7 @@ import 'package:yaru/yaru.dart';
 import '../../app_config.dart';
 import '../../l10n/l10n.dart';
 import '../../settings/settings_model.dart';
+import 'back_button_wrapper.dart';
 import 'desktop_home_page.dart';
 
 class DesktopMusicPodApp extends StatelessWidget with WatchItMixin {
@@ -48,7 +49,7 @@ class DesktopMusicPodApp extends StatelessWidget with WatchItMixin {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: supportedLocales,
       onGenerateTitle: (context) => AppConfig.appTitle,
-      home: const DesktopHomePage(),
+      home: const MouseBackButtonWrapper(child: DesktopHomePage()),
       scrollBehavior: const MaterialScrollBehavior().copyWith(
         dragDevices: {
           PointerDeviceKind.mouse,
