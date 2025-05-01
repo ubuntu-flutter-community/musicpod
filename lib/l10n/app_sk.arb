@@ -1371,5 +1371,11 @@
   "onlyLocalAudioForPlaylists": "Pre import playlistu je podporované iba lokálne audio! Vyhľadajte ho prosím vo funkcii rádia a pridajte pomocou tlačidla hviezdičky do svojej knižnice!",
   "@onlyLocalAudioForPlaylists": {},
   "customStationWarning": "Zadaná adresa URL musí existovať na serveri rádioprehliadača, inak nebude pridaná do vašej knižnice! Najvhodnejšie je ju vyhľadať vo funkcii rádia a pridať pomocou tlačidla hviezdičky do svojej knižnice!",
-  "@customStationWarning": {}
+  "@customStationWarning": {},
+  "disc": "Disk",
+  "@disc": {},
+  "groupAlbumsOnlyByAlbumName": "Zoskupiť albumy iba podľa názvu albumu",
+  "@groupAlbumsOnlyByAlbumName": {},
+  "groupAlbumsOnlyByAlbumNameDescription": "Toto zoskupí albumy iba podľa názvu albumu a nie podľa kombinácie meno interpreta + názov albumu, pričom sa predpokladá, že názov albumu je v rámci vašej knižnice jedinečný!",
+  "@groupAlbumsOnlyByAlbumNameDescription": {}
 }
