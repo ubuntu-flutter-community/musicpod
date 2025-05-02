@@ -1,5 +1,7 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
+import 'package:yaru/yaru.dart';
 
 import '../../common/data/audio_type.dart';
 import '../../common/view/modals.dart';
@@ -16,63 +18,61 @@ class AudioTypeFilterButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => switch (_mode) {
         OverlayMode.bottomSheet => const AudioTypeFilterBottomSheetButton(),
-        OverlayMode.popup => const AudioTypeFilterPopover()
+        OverlayMode.popup => const AudioTypeFilterSwitcher()
       };
 }
 
-class AudioTypeFilterPopover extends StatelessWidget with WatchItMixin {
-  const AudioTypeFilterPopover({super.key});
+class AudioTypeFilterSwitcher extends StatelessWidget with WatchItMixin {
+  const AudioTypeFilterSwitcher({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final theme = context.theme;
     final searchModel = di<SearchModel>();
     final audioType = watchPropertyValue((SearchModel m) => m.audioType);
 
-    final shape =
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(100));
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
-      child: DecoratedBox(
-        decoration: ShapeDecoration(
-          shape: shape,
-        ),
-        child: Material(
-          color: Colors.transparent,
-          shape: shape,
-          clipBehavior: Clip.antiAlias,
-          child: PopupMenuButton<AudioType>(
-            initialValue: audioType,
-            onSelected: (v) async {
-              searchModel
-                ..setAudioType(v)
-                ..search(clear: true);
-            },
-            itemBuilder: (context) => AudioType.values
-                .map(
-                  (e) => PopupMenuItem<AudioType>(
-                    value: e,
-                    child: Text(
-                      e.localize(
-                        context.l10n,
-                      ),
-                    ),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: AudioType.values
+          .mapIndexed(
+            (i, e) => IconButton(
+              style: IconButton.styleFrom(
+                backgroundColor:
+                    audioType == e ? theme.chipTheme.selectedColor : null,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topRight: i == AudioType.values.length - 1
+                        ? const Radius.circular(100)
+                        : Radius.zero,
+                    bottomRight: i == AudioType.values.length - 1
+                        ? const Radius.circular(100)
+                        : Radius.zero,
                   ),
-                )
-                .toList(),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Text(
-                audioType.localize(context.l10n),
-                style: context.theme.textTheme.labelSmall?.copyWith(
-                  color: context.theme.colorScheme.primary,
-                  fontWeight: FontWeight.bold,
                 ),
-                overflow: TextOverflow.ellipsis,
+              ),
+              isSelected: audioType == e,
+              tooltip: e.localize(l10n),
+              padding: EdgeInsets.zero,
+              onPressed: () {
+                searchModel
+                  ..setAudioType(e)
+                  ..search(clear: true);
+              },
+              icon: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: Icon(
+                  e.iconData,
+                  size: 20,
+                  color: audioType == e
+                      ? Colors.white
+                      : theme.colorScheme.onSurface.scale(alpha: -0.3),
+                  semanticLabel: e.localize(l10n),
+                ),
               ),
             ),
-          ),
-        ),
-      ),
+          )
+          .toList(),
     );
   }
 }

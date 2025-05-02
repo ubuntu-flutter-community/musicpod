@@ -14,6 +14,12 @@ enum AudioType {
         podcast => l10n.podcast,
       };
 
+  String localizeShort(AppLocalizations l10n) => switch (this) {
+        local => l10n.local,
+        radio => l10n.radio,
+        podcast => l10n.podcast,
+      };
+
   String localizedBackupName(AppLocalizations l10n) => switch (this) {
         local => l10n.pinnedAlbumsAndPlaylists,
         radio => l10n.starredStations,

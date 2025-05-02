@@ -24,14 +24,26 @@ class PodcastSearchInputPrefix extends StatelessWidget with WatchItMixin {
     final usePodcastIndex =
         watchPropertyValue((SettingsModel m) => m.usePodcastIndex);
     final l10n = context.l10n;
+    final tooltip = usePodcastIndex ? l10n.language : l10n.country;
     return IconButton(
-      tooltip: usePodcastIndex ? l10n.language : l10n.country,
+      style: IconButton.styleFrom(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(100),
+            bottomLeft: Radius.circular(100),
+          ),
+        ),
+      ),
+      tooltip: tooltip,
       onPressed: () => showModal(
         mode: ModalMode.platformModalMode,
         context: context,
         content: LocationFilterDialog(mode: ModalMode.platformModalMode),
       ),
-      icon: Icon(Iconz.globe),
+      icon: Icon(
+        Iconz.globe,
+        semanticLabel: tooltip,
+      ),
     );
   }
 }
