@@ -723,5 +723,5 @@
     "selectColorShade": "Select color shade",
     "selectColorAndItsShades": "Select color and its shades",
     "selectIconThemeTitle": "Select icon theme",
-    "selectIconThemeDescription": "Chose an icon theme for the application. The default theme depends on your operating system. Requires a restart of the application."
+    "selectIconThemeDescription": "Chose an icon theme for the application. The default theme depends on your operating system. This reloads the application!"
 }

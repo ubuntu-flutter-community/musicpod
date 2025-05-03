@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app/view/musicpod.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
@@ -81,26 +82,38 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
           YaruTile(
             title: Text(l10n.selectIconThemeTitle),
             subtitle: Text(l10n.selectIconThemeDescription),
-            trailing: DropdownButton(
+            trailing: Material(
               borderRadius: BorderRadius.circular(8),
-              underline: const SizedBox(),
-              icon: Icon(Iconz.dropdown),
-              items: IconSet.values
-                  .map(
-                    (IconSet iconSet) => DropdownMenuItem(
-                      value: iconSet.index,
-                      child: Text(iconSet.name),
-                    ),
-                  )
-                  .toList(),
-              value: watchPropertyValue(
-                (SettingsModel m) => m.iconSetIndex,
+              color: context.colorScheme.primary.withAlpha(20),
+              child: DropdownButton(
+                isDense: true,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: kMediumSpace,
+                  vertical: kMediumSpace,
+                ),
+                borderRadius: BorderRadius.circular(8),
+                underline: const SizedBox(),
+                icon: Icon(Iconz.dropdown),
+                items: IconSet.values
+                    .map(
+                      (IconSet iconSet) => DropdownMenuItem(
+                        value: iconSet.index,
+                        child: Text(
+                          iconSet.name,
+                        ),
+                      ),
+                    )
+                    .toList(),
+                value: watchPropertyValue(
+                  (SettingsModel m) => m.iconSetIndex,
+                ),
+                onChanged: (int? value) {
+                  if (value != null) {
+                    di<SettingsModel>().setIconSetIndex(value);
+                    appRestartNotifier.value = UniqueKey();
+                  }
+                },
               ),
-              onChanged: (int? value) {
-                if (value != null) {
-                  di<SettingsModel>().setIconSetIndex(value);
-                }
-              },
             ),
           ),
           YaruTile(

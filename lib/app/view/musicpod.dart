@@ -7,6 +7,8 @@ import '../../player/player_service.dart';
 import 'app.dart';
 import 'splash_screen.dart';
 
+final ValueNotifier<UniqueKey> appRestartNotifier = ValueNotifier(UniqueKey());
+
 class MusicPod extends StatefulWidget {
   const MusicPod({super.key});
 
@@ -28,16 +30,22 @@ class _MusicPodState extends State<MusicPod> {
   }
 
   @override
-  Widget build(BuildContext context) => FutureBuilder(
-        future: _allReady,
-        builder: (context, snapshot) => snapshot.hasData
-            ? isLinux
-                ? GtkApplication(
-                    onCommandLine: (args) =>
-                        di<PlayerService>().playPath(args.firstOrNull),
-                    child: const YaruMusicPodApp(),
-                  )
-                : const MaterialMusicPodApp()
-            : const SplashScreen(),
+  Widget build(BuildContext context) => ValueListenableBuilder(
+        valueListenable: appRestartNotifier,
+        builder: (context, key, child) {
+          return FutureBuilder(
+            key: key,
+            future: _allReady,
+            builder: (context, snapshot) => snapshot.hasData
+                ? isLinux
+                    ? GtkApplication(
+                        onCommandLine: (args) =>
+                            di<PlayerService>().playPath(args.firstOrNull),
+                        child: const YaruMusicPodApp(),
+                      )
+                    : const MaterialMusicPodApp()
+                : const SplashScreen(),
+          );
+        },
       );
 }
