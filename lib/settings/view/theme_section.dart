@@ -126,9 +126,11 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
           ),
           if (useCustomThemeColor)
             YaruTile(
-              title: Text(l10n.customThemeColor),
-              subtitle: Text(l10n.customThemeColorDescription),
-              trailing: YaruColorDisk(
+              title: const Text(''),
+              subtitle: const Text(''),
+              trailing: ElevatedButton.icon(
+                icon: Icon(Iconz.color),
+                label: Text(l10n.selectColor),
                 onPressed: () => ColorPicker(
                   color: color,
                   onColorChanged: (Color color) =>
@@ -179,8 +181,6 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
                     maxWidth: 320,
                   ),
                 ),
-                color: color,
-                selected: false,
               ),
             ),
           YaruTile(

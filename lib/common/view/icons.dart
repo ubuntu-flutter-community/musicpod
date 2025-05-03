@@ -17,6 +17,12 @@ class Iconz {
           ? CupertinoIcons.chevron_down
           : Icons.arrow_drop_down_rounded;
 
+  static IconData get color => yaru
+      ? YaruIcons.color_select
+      : cupertino
+          ? CupertinoIcons.color_filter
+          : Icons.color_lens_rounded;
+
   static IconData get home => yaru
       ? YaruIcons.home
       : cupertino
