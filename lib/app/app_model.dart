@@ -7,6 +7,7 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 import '../app_config.dart';
 import '../common/view/snackbars.dart';
 import '../expose/expose_service.dart';
+import '../extensions/taget_platform_x.dart';
 import '../settings/settings_service.dart';
 import 'view/discord_connect_content.dart';
 
@@ -75,7 +76,7 @@ class AppModel extends SafeChangeNotifier {
     if (value == null || value == _fullWindowMode) return;
     _fullWindowMode = value;
 
-    if (AppConfig.isMobilePlatform) {
+    if (isMobile) {
       if (_fullWindowMode == true) {
         await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
       } else {

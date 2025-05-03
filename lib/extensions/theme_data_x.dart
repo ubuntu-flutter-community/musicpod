@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app_config.dart';
-
 extension ThemeDataX on ThemeData {
   bool get isLight => brightness == Brightness.light;
   Color get contrastyPrimary =>
@@ -21,11 +19,4 @@ extension ThemeDataX on ThemeData {
 
   TextStyle? get pageHeaderSubtitleStyle =>
       textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w500);
-
-  Color get containerBg => colorScheme.surface.scale(
-        lightness: isLight
-            ? (AppConfig.yaruStyled ? -0.03 : -0.02)
-            : (AppConfig.yaruStyled ? 0.01 : 0.02),
-        saturation: -0.5,
-      );
 }

@@ -29,7 +29,7 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
           YaruTile(
             title: Text(l10n.musicCollectionLocation),
             subtitle: Text(directory),
-            trailing: ImportantButton(
+            trailing: ElevatedButton(
               onPressed: () async {
                 final directoryPath =
                     await di<ExternalPathService>().getPathOfDirectory();

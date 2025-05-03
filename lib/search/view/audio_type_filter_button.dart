@@ -8,6 +8,7 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
+import '../../settings/settings_model.dart';
 import '../search_model.dart';
 
 class AudioTypeFilterButton extends StatelessWidget {
@@ -32,6 +33,9 @@ class AudioTypeFilterSwitcher extends StatelessWidget with WatchItMixin {
     final theme = context.theme;
     final searchModel = di<SearchModel>();
     final audioType = watchPropertyValue((SearchModel m) => m.audioType);
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final searchBarBorderRadius = getSearchBarBorderRadius(useYaruTheme);
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -40,7 +44,11 @@ class AudioTypeFilterSwitcher extends StatelessWidget with WatchItMixin {
           final selected = audioType == e;
           return IconButton(
             style: IconButton.styleFrom(
-              backgroundColor: audioFilterBackgroundColor(theme, selected),
+              backgroundColor: audioFilterBackgroundColor(
+                theme: theme,
+                selected: selected,
+                useYaruTheme: useYaruTheme,
+              ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
                   topRight: i == AudioType.values.length - 1
@@ -63,7 +71,11 @@ class AudioTypeFilterSwitcher extends StatelessWidget with WatchItMixin {
               child: Icon(
                 e.iconData,
                 size: 20,
-                color: audioFilterForegroundColor(theme, selected),
+                color: audioFilterForegroundColor(
+                  theme: theme,
+                  selected: selected,
+                  useYaruTheme: useYaruTheme,
+                ),
                 semanticLabel: e.localize(l10n),
               ),
             ),

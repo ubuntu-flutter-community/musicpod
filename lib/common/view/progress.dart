@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app_config.dart';
 import '../../extensions/build_context_x.dart';
-import 'theme.dart';
+import '../../settings/settings_model.dart';
 
 class SideBarProgress extends StatelessWidget {
   const SideBarProgress({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox.square(
-      dimension: AppConfig.yaruStyled ? 18 : iconSize,
-      child: const Progress(
-        strokeWidth: 2,
-      ),
-    );
-  }
+  Widget build(BuildContext context) => SizedBox.square(
+        dimension: context.theme.iconTheme.size ?? 24.0,
+        child: const Progress(
+          strokeWidth: 2,
+        ),
+      );
 }
 
-class Progress extends StatelessWidget {
+class Progress extends StatelessWidget with WatchItMixin {
   const Progress({
     super.key,
     this.value,
@@ -45,7 +43,9 @@ class Progress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppConfig.yaruStyled
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    return useYaruTheme
         ? YaruCircularProgressIndicator(
             strokeWidth: strokeWidth,
             value: value,
@@ -67,7 +67,7 @@ class Progress extends StatelessWidget {
   }
 }
 
-class LinearProgress extends StatelessWidget {
+class LinearProgress extends StatelessWidget with WatchItMixin {
   const LinearProgress({
     super.key,
     this.color,
@@ -82,7 +82,9 @@ class LinearProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppConfig.yaruStyled
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    return useYaruTheme
         ? YaruLinearProgressIndicator(
             value: value,
             strokeWidth: trackHeight,

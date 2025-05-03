@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app_config.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
@@ -31,7 +30,7 @@ class SettingsPage extends StatelessWidget {
         AboutSection(),
       ],
     );
-    if (AppConfig.isMobilePlatform) {
+    if (isMobile) {
       return Scaffold(
         appBar: HeaderBar(
           adaptive: false,

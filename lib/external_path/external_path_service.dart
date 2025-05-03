@@ -5,13 +5,13 @@ import 'package:file_picker/file_picker.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../app_config.dart';
+import '../extensions/taget_platform_x.dart';
 
 class ExternalPathService {
   const ExternalPathService();
 
   Future<String?> getPathOfDirectory() async {
-    if (AppConfig.isMobilePlatform && await _androidPermissionsGranted()) {
+    if (isMobile && await _androidPermissionsGranted()) {
       return FilePicker.platform.getDirectoryPath();
     }
 
@@ -22,7 +22,7 @@ class ExternalPathService {
   }
 
   Future<String?> getPathOfFile() async {
-    if (AppConfig.isMobilePlatform && await _androidPermissionsGranted()) {
+    if (isMobile && await _androidPermissionsGranted()) {
       return (await FilePicker.platform.pickFiles(allowMultiple: false))
           ?.files
           .firstOrNull
@@ -36,7 +36,7 @@ class ExternalPathService {
   }
 
   Future<List<String>> getPathsOfFiles() async {
-    if (AppConfig.isMobilePlatform && await _androidPermissionsGranted()) {
+    if (isMobile && await _androidPermissionsGranted()) {
       final filePickerResult =
           await FilePicker.platform.pickFiles(allowMultiple: true);
 

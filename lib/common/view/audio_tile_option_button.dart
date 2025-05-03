@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app_config.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -47,7 +46,7 @@ class AudioTileOptionButton extends StatelessWidget {
     final l10n = context.l10n;
     final libraryModel = di<LibraryModel>();
 
-    if (AppConfig.isMobilePlatform) {
+    if (isMobile) {
       return AudioTileBottomSheetButton(
         audios: audios,
         allowRemove: allowRemove,

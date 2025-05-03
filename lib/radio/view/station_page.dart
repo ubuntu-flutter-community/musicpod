@@ -23,6 +23,7 @@ import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
+import '../../settings/settings_model.dart';
 import '../radio_model.dart';
 import 'radio_history_list.dart';
 import 'radio_page_copy_histoy_button.dart';
@@ -59,6 +60,10 @@ class _StationPageState extends State<StationPage> {
       return m.isOnline;
     });
     if (!isOnline) return const OfflinePage();
+
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final radioHistoryListPadding = getRadioHistoryListPadding(useYaruTheme);
 
     return Scaffold(
       appBar: HeaderBar(

@@ -4,13 +4,13 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../app_config.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/back_gesture.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/taget_platform_x.dart';
 import '../../library/library_model.dart';
 import 'create_master_items.dart';
 import 'master_panel.dart';
@@ -46,7 +46,7 @@ class MasterDetailPage extends StatelessWidget {
     );
 
     return Scaffold(
-      resizeToAvoidBottomInset: AppConfig.isMobilePlatform ? false : null,
+      resizeToAvoidBottomInset: isMobile ? false : null,
       key: masterScaffoldKey,
       endDrawer: Platform.isMacOS ? drawer : null,
       drawer: Platform.isMacOS ? null : drawer,

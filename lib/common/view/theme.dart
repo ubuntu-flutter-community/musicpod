@@ -3,16 +3,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app_config.dart';
 import 'icons.dart';
 import 'ui_constants.dart';
 
-ThemeData? yaruDarkWithTweaks(YaruThemeData yaru) {
-  return yaru.darkTheme?.copyWith(
+ThemeData? yaruDarkWithTweaks(ThemeData? darkTheme) {
+  return darkTheme?.copyWith(
     actionIconTheme: ActionIconThemeData(
       backButtonIconBuilder: (context) => Icon(Iconz.goBack),
     ),
-    scaffoldBackgroundColor: yaru.darkTheme?.scaffoldBackgroundColor.scale(
+    scaffoldBackgroundColor: darkTheme.scaffoldBackgroundColor.scale(
       lightness: -0.35,
     ),
     dividerColor: yaruFixDarkDividerColor,
@@ -21,22 +20,22 @@ ThemeData? yaruDarkWithTweaks(YaruThemeData yaru) {
       space: 1.0,
       thickness: 0.0,
     ),
-    cardColor: yaru.darkTheme?.cardColor.scale(
+    cardColor: darkTheme.cardColor.scale(
       lightness: -0.2,
     ),
-    iconButtonTheme: iconButtonTheme(yaru.darkTheme),
+    iconButtonTheme: iconButtonTheme(darkTheme),
   );
 }
 
-ThemeData? yaruLightWithTweaks(YaruThemeData yaru) {
-  return yaru.theme?.copyWith(
+ThemeData? yaruLightWithTweaks(ThemeData? theme) {
+  return theme?.copyWith(
     actionIconTheme: ActionIconThemeData(
       backButtonIconBuilder: (context) => Icon(Iconz.goBack),
     ),
-    cardColor: yaru.theme?.dividerColor.scale(
+    cardColor: theme.dividerColor.scale(
       lightness: -0.01,
     ),
-    iconButtonTheme: iconButtonTheme(yaru.theme),
+    iconButtonTheme: iconButtonTheme(theme),
   );
 }
 
@@ -106,22 +105,32 @@ Color getAlphabetColor(String text, [Color fallBackColor = Colors.black]) {
 }
 
 double get searchBarWidth =>
-    AppConfig.isMobilePlatform ? kMobileSearchBarWidth : kDesktopSearchBarWidth;
+    isMobile ? kMobileSearchBarWidth : kDesktopSearchBarWidth;
 
-double get searchBarBorderRadius =>
-    AppConfig.yaruStyled ? kYaruButtonRadius : 100;
+double getSearchBarBorderRadius(bool useYaruTheme) =>
+    useYaruTheme ? kYaruButtonRadius : 100;
 
-Color? audioFilterBackgroundColor(ThemeData theme, bool selected) => selected
-    ? AppConfig.yaruStyled
-        ? theme.colorScheme.onSurface.withValues(alpha: 0.15)
-        : (theme.chipTheme.selectedColor ?? theme.colorScheme.primary)
-    : null;
+Color? audioFilterBackgroundColor({
+  required ThemeData theme,
+  required bool selected,
+  required bool useYaruTheme,
+}) =>
+    selected
+        ? useYaruTheme
+            ? theme.colorScheme.onSurface.withValues(alpha: 0.15)
+            : (theme.chipTheme.selectedColor ?? theme.colorScheme.primary)
+        : null;
 
-Color? audioFilterForegroundColor(ThemeData theme, bool selected) => selected
-    ? theme.colorScheme.isDark
-        ? Colors.white
-        : Colors.black
-    : theme.colorScheme.onSurface.scale(alpha: AppConfig.yaruStyled ? 1 : -0.3);
+Color? audioFilterForegroundColor({
+  required ThemeData theme,
+  required bool selected,
+  required bool useYaruTheme,
+}) =>
+    selected
+        ? theme.colorScheme.isDark
+            ? Colors.white
+            : Colors.black
+        : theme.colorScheme.onSurface.scale(alpha: useYaruTheme ? 1 : -0.3);
 
 InputDecoration createMaterialDecoration({
   required ColorScheme colorScheme,
@@ -139,7 +148,7 @@ InputDecoration createMaterialDecoration({
       OutlineInputBorder(
         borderRadius: BorderRadius.circular(100),
         borderSide: BorderSide(
-          width: AppConfig.isMobilePlatform ? 2 : 1,
+          width: isMobile ? 2 : 1,
           color: colorScheme.outline,
         ),
       );
@@ -147,13 +156,12 @@ InputDecoration createMaterialDecoration({
     prefixIcon: prefixIcon,
     suffixIcon: suffixIcon,
     suffixIconConstraints: BoxConstraints(
-      maxHeight:
-          AppConfig.isMobilePlatform ? kToolbarHeight : kYaruTitleBarItemHeight,
+      maxHeight: isMobile ? kToolbarHeight : kYaruTitleBarItemHeight,
     ),
     hintText: hintText,
     fillColor: fillColor,
     filled: filled,
-    contentPadding: AppConfig.isMobilePlatform
+    contentPadding: isMobile
         ? const EdgeInsets.only(top: 16, bottom: 0, left: 15, right: 15)
         : contentPadding ??
             const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
@@ -163,15 +171,15 @@ InputDecoration createMaterialDecoration({
     focusedBorder: outlineInputBorder.copyWith(
       borderSide: BorderSide(
         color: colorScheme.primary,
-        width: AppConfig.isMobilePlatform ? 2 : 1,
+        width: isMobile ? 2 : 1,
       ),
     ),
     disabledBorder: outlineInputBorder,
     focusedErrorBorder: outlineInputBorder,
-    helperStyle: AppConfig.isMobilePlatform ? null : style,
-    hintStyle: AppConfig.isMobilePlatform ? null : style,
-    labelStyle: AppConfig.isMobilePlatform ? null : style,
-    isDense: AppConfig.isMobilePlatform ? false : isDense,
+    helperStyle: isMobile ? null : style,
+    hintStyle: isMobile ? null : style,
+    labelStyle: isMobile ? null : style,
+    isDense: isMobile ? false : isDense,
   );
 }
 
@@ -221,71 +229,52 @@ InputDecoration createYaruDecoration({
   );
 }
 
-double get iconSize => AppConfig.yaruStyled
-    ? kYaruIconSize
-    : AppConfig.isMobilePlatform
-        ? 24.0
-        : kLargestSpace;
-
 double get sideBarImageSize => 38;
 
-double get likeButtonWidth => AppConfig.yaruStyled ? 62 : 70;
+double getLikeButtonWidth(bool useYaruTheme) => useYaruTheme ? 62 : 70;
 
 double get progressStrokeWidth => 3.0;
 
-double get smallAvatarButtonRadius =>
-    (AppConfig.yaruStyled
+double getSmallAvatarButtonRadius(bool useYaruTheme) =>
+    (useYaruTheme
         ? kYaruTitleBarItemHeight
-        : AppConfig.isMobilePlatform
+        : isMobile
             ? 42
             : 38) /
     2;
 
-double get bigAvatarButtonRadius => AppConfig.yaruStyled
+double getBigAvatarButtonRadius(bool useYaruTheme) => useYaruTheme
     ? 22
-    : AppConfig.isMobilePlatform
+    : isMobile
         ? 26
         : 23;
 
 EdgeInsets get filterPanelPadding =>
-    EdgeInsets.only(top: AppConfig.isMobilePlatform ? 10 : 0, bottom: 10);
+    EdgeInsets.only(top: isMobile ? 10 : 0, bottom: 10);
 
-EdgeInsets get bigPlayButtonPadding =>
-    EdgeInsets.symmetric(horizontal: AppConfig.yaruStyled ? 2.5 : 5);
+EdgeInsets getBigPlayButtonPadding(bool useYaruTheme) =>
+    EdgeInsets.symmetric(horizontal: useYaruTheme ? 2.5 : 5);
 
-FontWeight get smallTextFontWeight =>
-    AppConfig.yaruStyled ? FontWeight.w100 : FontWeight.w400;
-
-FontWeight get mediumTextWeight =>
-    AppConfig.yaruStyled ? FontWeight.w400 : FontWeight.w400;
-
-FontWeight get largeTextWeight =>
-    AppConfig.yaruStyled ? FontWeight.w200 : FontWeight.w300;
-
-double get chipHeight => AppConfig.isMobilePlatform ? 40 : 34.0;
+double get chipHeight => isMobile ? 40 : 34.0;
 
 EdgeInsets get audioTilePadding => kAudioTilePadding;
 
-SliverGridDelegate get audioCardGridDelegate => AppConfig.isMobilePlatform
-    ? kMobileAudioCardGridDelegate
-    : kAudioCardGridDelegate;
+SliverGridDelegate get audioCardGridDelegate =>
+    isMobile ? kMobileAudioCardGridDelegate : kAudioCardGridDelegate;
 
 EdgeInsets get appBarSingleActionSpacing => Platform.isMacOS
     ? const EdgeInsets.only(right: 5, left: 5)
     : EdgeInsets.only(
         right: 10,
-        left: AppConfig.isMobilePlatform ? 0 : kLargestSpace,
+        left: isMobile ? 0 : kLargestSpace,
       );
 
-EdgeInsetsGeometry get radioHistoryListPadding =>
-    EdgeInsets.only(left: AppConfig.yaruStyled ? 0 : 5);
+EdgeInsetsGeometry getRadioHistoryListPadding(bool useYaruTheme) =>
+    EdgeInsets.only(left: useYaruTheme ? 0 : 5);
 
-EdgeInsets get mainPageIconPadding =>
-    AppConfig.yaruStyled || AppConfig.appleStyled
-        ? kMainPageIconPadding
-        : EdgeInsets.zero;
+EdgeInsets get mainPageIconPadding => kMainPageIconPadding;
 
-EdgeInsets get countryPillPadding => AppConfig.yaruStyled
+EdgeInsets getCountryPillPadding(bool useYaruTheme) => useYaruTheme
     ? const EdgeInsets.only(
         bottom: 9,
         top: 9,
@@ -294,21 +283,19 @@ EdgeInsets get countryPillPadding => AppConfig.yaruStyled
       )
     : const EdgeInsets.only(top: 11, bottom: 11, left: 15, right: 15);
 
-double get inputHeight => AppConfig.isMobilePlatform
+double getInputHeight(bool useYaruTheme) => isMobile
     ? 40
-    : AppConfig.yaruStyled
+    : useYaruTheme
         ? kYaruTitleBarItemHeight
         : 36;
 
-double get audioCardDimension =>
-    kAudioCardDimension - (AppConfig.isMobilePlatform ? 15 : 0);
+double get audioCardDimension => kAudioCardDimension - (isMobile ? 15 : 0);
 
-double get bottomPlayerDefaultHeight =>
-    AppConfig.isMobilePlatform ? 76.0 : 90.0;
+double get bottomPlayerDefaultHeight => isMobile ? 76.0 : 90.0;
 
 double get navigationBarHeight => bottomPlayerDefaultHeight;
 
-double? get bottomPlayerPageGap => AppConfig.isMobilePlatform
+double? get bottomPlayerPageGap => isMobile
     ? bottomPlayerDefaultHeight + navigationBarHeight + kLargestSpace
     : null;
 
@@ -316,7 +303,7 @@ EdgeInsets get playerTopControlsPadding => EdgeInsets.only(
       right: kLargestSpace,
       top: Platform.isMacOS
           ? 0
-          : AppConfig.isMobilePlatform
+          : isMobile
               ? 2 * kLargestSpace
               : kLargestSpace,
     );

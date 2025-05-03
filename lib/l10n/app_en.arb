@@ -712,5 +712,15 @@
     "customStationWarning": "The provided URL must exist on the radiobrowser server, otherwise it will not be added to you library! Ideally search for them in the radio feature and add them with the star button to your library!",
     "disc": "Disc",
     "groupAlbumsOnlyByAlbumName": "Group albums only by album name",
-    "groupAlbumsOnlyByAlbumNameDescription": "This will group albums only by album name and not by artist name + album name, which assumes that the album name is unique inside your library!"
+    "groupAlbumsOnlyByAlbumNameDescription": "This will group albums only by album name and not by artist name + album name, which assumes that the album name is unique inside your library!",
+    "useYaruThemeTitle": "Use Yaru theme",
+    "useYaruThemeDescription": "This will use the Yaru theme for the application. This is the default theme for Ubuntu.",
+    "customThemeColor": "Custom theme color",
+    "useCustomThemeColorTitle": "Use custom accent color",
+    "useCustomThemeColorDescription": "This will let you chose a custom accent color for the current theme.",
+    "selectColor": "Select color",
+    "selectColorShade": "Select color shade",
+    "selectColorAndItsShades": "Select color and its shades",
+    "selectIconThemeTitle": "Select icon theme",
+    "selectIconThemeDescription": "Chose an icon theme for the application. The default theme depends on your operating system. This reloads the application!"
 }

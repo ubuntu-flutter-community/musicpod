@@ -6,7 +6,6 @@ import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
 import '../../app/view/routing_manager.dart';
-import '../../app_config.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../settings/settings_model.dart';
@@ -14,7 +13,6 @@ import '../data/close_btn_action.dart';
 import 'global_keys.dart';
 import 'icons.dart';
 import 'nav_back_button.dart';
-import 'theme.dart';
 
 class HeaderBar extends StatelessWidget
     with WatchItMixin
@@ -44,9 +42,8 @@ class HeaderBar extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    final useSidebarButton =
-        AppConfig.isMobilePlatform ? false : includeSidebarButton;
-    final useBackButton = AppConfig.isMobilePlatform ? true : includeBackButton;
+    final useSidebarButton = isMobile ? false : includeSidebarButton;
+    final useBackButton = isMobile ? true : includeBackButton;
 
     Widget? leading;
 
@@ -58,7 +55,7 @@ class HeaderBar extends StatelessWidget
       if (useBackButton && di<RoutingManager>().canPop) {
         leading = const NavBackButton();
       } else {
-        leading = AppConfig.isMobilePlatform
+        leading = isMobile
             ? const SizedBox(
                 width: 60,
               )
@@ -66,7 +63,7 @@ class HeaderBar extends StatelessWidget
       }
     }
 
-    if (AppConfig.isMobilePlatform) {
+    if (isMobile) {
       return AppBar(
         backgroundColor: backgroundColor,
         titleSpacing: titleSpacing,
@@ -115,7 +112,7 @@ class HeaderBar extends StatelessWidget
   @override
   Size get preferredSize => Size(
         0,
-        AppConfig.isMobilePlatform
+        isMobile
             ? (style == YaruTitleBarStyle.hidden ? 0 : kYaruTitleBarHeight)
             : kToolbarHeight,
       );
@@ -196,6 +193,7 @@ class SidebarButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final iconSize = context.theme.iconTheme.size ?? 24.0;
     return Center(
       child: IconButton(
         onPressed: () {

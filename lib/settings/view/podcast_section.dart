@@ -151,7 +151,7 @@ class _DownloadsTileState extends State<_DownloadsTile> {
       subtitle: Text(
         _error ?? watchPropertyValue((SettingsModel m) => m.downloadsDir ?? ''),
       ),
-      trailing: ImportantButton(
+      trailing: ElevatedButton(
         onPressed: () {
           showDialog(
             context: context,

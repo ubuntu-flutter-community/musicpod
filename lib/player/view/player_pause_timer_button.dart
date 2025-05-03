@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app_config.dart';
-import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/modals.dart';
 import '../../common/view/snackbars.dart';
@@ -25,9 +23,7 @@ class PlayerPauseTimerButton extends StatelessWidget {
         onPressed: () => showModal(
           context: context,
           mode: ModalMode.platformModalMode,
-          content: AppConfig.isMobilePlatform
-              ? const _BottomSheet()
-              : const _Dialog(),
+          content: isMobile ? const _BottomSheet() : const _Dialog(),
         ),
         icon: Icon(
           Iconz.sleep,
@@ -62,7 +58,7 @@ class _DialogState extends State<_Dialog> {
           onPressed: Navigator.of(context).pop,
           child: Text(context.l10n.cancel),
         ),
-        ImportantButton(
+        ElevatedButton(
           onPressed: () {
             final duration = Duration(
               hours: _timeOfDay.hour - TimeOfDay.now().hour,
@@ -131,7 +127,7 @@ class _BottomSheetState extends State<_BottomSheet> {
                               onPressed: Navigator.of(context).pop,
                               child: Text(context.l10n.cancel),
                             ),
-                            ImportantButton(
+                            ElevatedButton(
                               onPressed: () {
                                 final duration = Duration(
                                   hours: _timeOfDay.hour - TimeOfDay.now().hour,

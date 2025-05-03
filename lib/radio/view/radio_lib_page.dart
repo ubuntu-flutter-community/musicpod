@@ -1,13 +1,10 @@
 import 'package:animated_emoji/animated_emoji.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/view/routing_manager.dart';
-import '../../app_config.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/adaptive_container.dart';
@@ -51,8 +48,7 @@ class RadioLibPage extends StatelessWidget with WatchItMixin {
           child: Row(
             spacing: kSmallestSpace,
             children: [
-              if (!AppConfig.isMobilePlatform)
-                const SizedBox(width: 2 * kLargestSpace),
+              if (!isMobile) const SizedBox(width: 2 * kLargestSpace),
               Expanded(
                 child: Center(
                   child: Padding(
@@ -89,7 +85,7 @@ class RadioLibPage extends StatelessWidget with WatchItMixin {
                   ),
                 ),
               ),
-              if (!AppConfig.isMobilePlatform) ...[
+              if (!isMobile) ...[
                 IconButton(
                   tooltip: l10n.exportStarredStationsToOpmlFile,
                   icon: Icon(
@@ -242,7 +238,7 @@ class TagGrid extends StatelessWidget with WatchItMixin {
                 width: double.infinity,
                 height: double.infinity,
                 child: Icon(
-                  getIconForTag(tag),
+                  Iconz.musicNote,
                   size: 65,
                 ),
               ),
@@ -259,19 +255,5 @@ class TagGrid extends StatelessWidget with WatchItMixin {
         );
       },
     );
-  }
-
-  IconData getIconForTag(String tag) {
-    final tagsToIcons = <String, IconData>{
-      'metal': TablerIcons.guitar_pick,
-      'pop': TablerIcons.diamond,
-    };
-
-    return tagsToIcons[tag] ??
-        (AppConfig.yaruStyled
-            ? YaruIcons.music_note
-            : AppConfig.appleStyled
-                ? CupertinoIcons.double_music_note
-                : Icons.music_note);
   }
 }

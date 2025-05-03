@@ -42,4 +42,8 @@ extension SPKeys on SharedPreferences {
   static const playlistIDs = 'playlistIDs';
   static const selectedPage = 'selectedPageId';
   static const groupAlbumsOnlyByAlbumName = 'groupAlbumsOnlyByAlbumName';
+  static const useYaruTheme = 'useYaruTheme';
+  static const customThemeColor = 'customThemeColor';
+  static const useCustomThemeColor = 'useCustomThemeColor';
+  static const iconSetIndex = 'iconSetIndex';
 }

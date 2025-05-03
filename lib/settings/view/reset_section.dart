@@ -3,11 +3,10 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
-import '../../custom_content/view/backup_dialog.dart';
-import '../../common/view/common_widgets.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
+import '../../custom_content/view/backup_dialog.dart';
 import '../../l10n/l10n.dart';
 import '../settings_model.dart';
 
@@ -33,7 +32,7 @@ class ResetSection extends StatelessWidget {
               width: 300,
               child: Text(l10n.exportYourDataDescription),
             ),
-            trailing: ImportantButton(
+            trailing: ElevatedButton(
               onPressed: () => showDialog(
                 barrierDismissible: false,
                 context: context,
@@ -50,7 +49,7 @@ class ResetSection extends StatelessWidget {
           YaruTile(
             leading: Icon(Iconz.remove),
             title: Text(l10n.resetAllSettings),
-            trailing: ImportantButton(
+            trailing: ElevatedButton(
               onPressed: () => showDialog(
                 barrierDismissible: false,
                 context: context,

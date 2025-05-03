@@ -3,8 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../app_config.dart';
-import 'theme.dart';
+import '../../extensions/build_context_x.dart';
 
 class ActiveAudioSignalIndicator extends StatefulWidget {
   final Color? color;
@@ -58,11 +57,10 @@ class _ActiveAudioSignalIndicatorState extends State<ActiveAudioSignalIndicator>
 
   @override
   Widget build(BuildContext context) {
+    final iconSize = context.theme.iconTheme.size ?? 24.0;
     return RepaintBoundary(
       child: Padding(
-        padding: AppConfig.yaruStyled || AppConfig.appleStyled
-            ? const EdgeInsets.only(left: 3, right: 1)
-            : const EdgeInsets.only(left: 5),
+        padding: const EdgeInsets.only(left: 4),
         child: SizedBox(
           width: iconSize - 2,
           height: iconSize,

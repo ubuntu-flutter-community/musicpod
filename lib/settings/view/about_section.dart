@@ -16,6 +16,7 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
+import '../settings_model.dart';
 import 'about_page.dart';
 
 class AboutSection extends StatelessWidget with WatchItMixin {
@@ -63,6 +64,8 @@ class _AboutTileState extends State<_AboutTile> {
         watchPropertyValue((AppModel m) => m.updateAvailable);
     final onlineVersion = watchPropertyValue((AppModel m) => m.onlineVersion);
     final currentVersion = watchPropertyValue((AppModel m) => m.version);
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
 
     return YaruTile(
       title: !di<ConnectivityModel>().isOnline == true ||
@@ -71,8 +74,7 @@ class _AboutTileState extends State<_AboutTile> {
           : updateAvailable == null
               ? Center(
                   child: SizedBox.square(
-                    dimension:
-                        AppConfig.yaruStyled ? kYaruTitleBarItemHeight : 40,
+                    dimension: useYaruTheme ? kYaruTitleBarItemHeight : 40,
                     child: const Progress(
                       padding: EdgeInsets.all(10),
                     ),
@@ -100,7 +102,7 @@ class _AboutTileState extends State<_AboutTile> {
                   ),
                 ),
       trailing: OutlinedButton(
-        onPressed: () => AppConfig.isMobilePlatform
+        onPressed: () => isMobile
             ? di<RoutingManager>().push(
                 pageId: 'about',
                 builder: (p0) => const AboutPage(),
@@ -122,7 +124,7 @@ class _LicenseTile extends StatelessWidget {
         text: '${context.l10n.license}: GPL3',
       ),
       trailing: OutlinedButton(
-        onPressed: () => AppConfig.isMobilePlatform
+        onPressed: () => isMobile
             ? di<RoutingManager>().push(
                 pageId: 'licenses',
                 builder: (p0) => const LicensePage(),

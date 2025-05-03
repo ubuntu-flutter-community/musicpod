@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/view/routing_manager.dart';
-import '../../app_config.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/audio_card_vignette.dart';
@@ -14,6 +13,7 @@ import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/string_x.dart';
+import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
@@ -136,9 +136,8 @@ class _AlbumCardState extends State<AlbumCard> {
         ),
         if (widget.pinned)
           Positioned(
-            left: AppConfig.isMobilePlatform ? 6 : 5,
-            bottom:
-                kAudioCardBottomHeight + (AppConfig.isMobilePlatform ? 25 : 13),
+            left: isMobile ? 6 : 5,
+            bottom: kAudioCardBottomHeight + (isMobile ? 25 : 13),
             child: AudioCardVignette(
               iconData: Iconz.pinFilled,
               onTap: () => di<LibraryModel>().removeFavoriteAlbum(

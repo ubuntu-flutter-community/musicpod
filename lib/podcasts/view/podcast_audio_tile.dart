@@ -4,7 +4,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app_config.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/share_button.dart';
@@ -16,10 +15,11 @@ import '../../extensions/duration_x.dart';
 import '../../extensions/int_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
+import '../../settings/settings_model.dart';
 import 'download_button.dart';
 import 'podcast_tile_play_button.dart';
 
-class PodcastAudioTile extends StatelessWidget {
+class PodcastAudioTile extends StatelessWidget with WatchItMixin {
   const PodcastAudioTile({
     super.key,
     required this.audio,
@@ -56,6 +56,9 @@ class PodcastAudioTile extends StatelessWidget {
     final label = '$date, ${context.l10n.duration}: $duration';
 
     final playerModel = di<PlayerModel>();
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    var smallAvatarButtonRadius = getSmallAvatarButtonRadius(useYaruTheme);
 
     return YaruExpandable(
       isExpanded: isExpanded,
@@ -76,7 +79,7 @@ class PodcastAudioTile extends StatelessWidget {
                 startPlaylist: startPlaylist,
                 removeUpdate: removeUpdate,
               ),
-              SizedBox(width: AppConfig.isMobilePlatform ? 15 : 25),
+              SizedBox(width: isMobile ? 15 : 25),
               Expanded(
                 child: _Center(
                   selected: selected,
@@ -92,7 +95,7 @@ class PodcastAudioTile extends StatelessWidget {
       child: Align(
         alignment: Alignment.centerLeft,
         child: Padding(
-          padding: AppConfig.isMobilePlatform
+          padding: isMobile
               ? const EdgeInsets.symmetric(horizontal: 10)
               : EdgeInsets.only(
                   left: (smallAvatarButtonRadius * 2) + 30,
@@ -206,7 +209,7 @@ class _Center extends StatelessWidget {
   }
 }
 
-class _Description extends StatelessWidget {
+class _Description extends StatelessWidget with WatchItMixin {
   const _Description({
     required this.description,
     required this.title,
@@ -217,6 +220,8 @@ class _Description extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
     final theme = context.theme;
     return InkWell(
       borderRadius: BorderRadius.circular(8),
@@ -232,7 +237,7 @@ class _Description extends StatelessWidget {
                 title: Text(title ?? ''),
               ),
               contentPadding: EdgeInsets.only(
-                top: AppConfig.yaruStyled ? 0 : kLargestSpace,
+                top: useYaruTheme ? 0 : kLargestSpace,
                 left: kLargestSpace,
                 right: kLargestSpace,
                 bottom: kLargestSpace,

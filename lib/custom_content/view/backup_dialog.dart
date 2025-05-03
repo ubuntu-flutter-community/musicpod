@@ -107,7 +107,7 @@ class BackupDialog extends StatelessWidget with WatchItMixin {
                         AudioType.local => _Section(
                             children: [
                               YaruTile(
-                                title: ImportantButton(
+                                title: ElevatedButton(
                                   onPressed: () {
                                     di<CustomContentModel>()
                                         .exportPlaylistsAndPinnedAlbumsToM3Us()
@@ -126,7 +126,7 @@ class BackupDialog extends StatelessWidget with WatchItMixin {
                         AudioType.podcast => _Section(
                             children: [
                               YaruTile(
-                                title: ImportantButton(
+                                title: ElevatedButton(
                                   child: Text(l10n.exportPodcastsToOpmlFile),
                                   onPressed: () => di<CustomContentModel>()
                                       .exportPodcastsToOpmlFile()
@@ -140,7 +140,7 @@ class BackupDialog extends StatelessWidget with WatchItMixin {
                         AudioType.radio => _Section(
                             children: [
                               YaruTile(
-                                title: ImportantButton(
+                                title: ElevatedButton(
                                   onPressed: () => di<CustomContentModel>()
                                       .exportStarredStationsToOpmlFile()
                                       .then(

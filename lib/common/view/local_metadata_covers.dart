@@ -13,7 +13,6 @@ import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_model.dart';
 import '../../local_audio/view/local_cover.dart';
 import '../data/audio.dart';
-import 'drop_down_arrow.dart';
 import 'icons.dart';
 import 'meta_data_dialog.dart';
 import 'ui_constants.dart';
@@ -106,7 +105,7 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
                                       20,
                                     ),
                                     isDense: true,
-                                    icon: const DropDownArrow(),
+                                    icon: Icon(Iconz.dropdown),
                                     underline: const SizedBox.shrink(),
                                     value: picture.pictureType,
                                     items: PictureType.values

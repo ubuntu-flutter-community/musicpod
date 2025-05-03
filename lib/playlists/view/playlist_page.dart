@@ -183,7 +183,6 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
             SliverPadding(
               padding: getAdaptiveHorizontalPadding(
                 constraints: constraints,
-                min: 40,
               ),
               sliver: SliverToBoxAdapter(
                 child: audioPageHeader,
@@ -248,7 +247,6 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
               SliverPadding(
                 padding: getAdaptiveHorizontalPadding(
                   constraints: constraints,
-                  min: 40,
                 ).copyWith(
                   bottom: bottomPlayerPageGap,
                 ),
