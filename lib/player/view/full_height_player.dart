@@ -3,11 +3,11 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../app/app_model.dart';
 import '../../app/connectivity_model.dart';
-import '../../app_config.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/taget_platform_x.dart';
 import '../../player/player_model.dart';
 import '../../radio/view/radio_history_list.dart';
 import 'blurred_full_height_player_image.dart';
@@ -72,8 +72,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
               child: queueOrHistory,
             )
           else ...[
-            if (!AppConfig.isMobilePlatform || context.isPortrait)
-              const FullHeightPlayerImage(),
+            if (!isMobile || context.isPortrait) const FullHeightPlayerImage(),
             const SizedBox(
               height: kLargestSpace,
             ),
@@ -123,7 +122,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
               showQueueButton: !playerWithSidePanel,
             ),
           ),
-          if (AppConfig.isMobilePlatform)
+          if (isMobile)
             const Positioned(
               bottom: 2 * kLargestSpace,
               child: QueueButton.text(),
@@ -147,7 +146,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
 
     final fullHeightPlayer = Column(
       children: [
-        if (!AppConfig.isMobilePlatform) headerBar,
+        if (!isMobile) headerBar,
         Expanded(child: body),
       ],
     );

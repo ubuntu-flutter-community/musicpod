@@ -10,7 +10,6 @@ import '../../common/page_ids.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
-import '../../common/view/common_widgets.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/loading_grid.dart';
 import '../../common/view/no_search_result_page.dart';
@@ -81,7 +80,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                   const SizedBox(
                     height: 10,
                   ),
-                  ImportantButton(
+                  ElevatedButton(
                     onPressed: () {
                       di<RoutingManager>().push(pageId: PageIDs.searchPage);
                       di<SearchModel>()

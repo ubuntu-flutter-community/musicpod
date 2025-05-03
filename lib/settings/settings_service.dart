@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../app_config.dart';
 import '../common/data/close_btn_action.dart';
 import '../common/file_names.dart';
 import '../extensions/shared_preferences_x.dart';
+import '../extensions/taget_platform_x.dart';
 import '../local_audio/local_audio_view.dart';
 import '../persistence_utils.dart';
 
@@ -31,6 +33,23 @@ class SettingsService {
   int get themeIndex => _preferences.getInt(SPKeys.themeIndex) ?? 0;
   void setThemeIndex(int value) {
     _preferences.setInt(SPKeys.themeIndex, value).then(notify);
+  }
+
+  bool get useYaruTheme =>
+      _preferences.getBool(SPKeys.useYaruTheme) ??
+      defaultTargetPlatform.isLinux;
+  void setUseYaruTheme(bool value) =>
+      _preferences.setBool(SPKeys.useYaruTheme, value).then(notify);
+
+  bool get useCustomThemeColor =>
+      _preferences.getBool(SPKeys.useCustomThemeColor) ?? false;
+  void setUseCustomThemeColor(bool value) =>
+      _preferences.setBool(SPKeys.useCustomThemeColor, value).then(notify);
+
+  int? get customThemeColor => _preferences.getInt(SPKeys.customThemeColor);
+  void setCustomThemeColor(int? value) {
+    if (value == null) return;
+    _preferences.setInt(SPKeys.customThemeColor, value).then(notify);
   }
 
   int get localAudioIndex =>

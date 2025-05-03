@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gtk/gtk.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../app_config.dart';
+import '../../extensions/taget_platform_x.dart';
 import '../../player/player_service.dart';
 import 'app.dart';
 import 'splash_screen.dart';
@@ -31,7 +31,7 @@ class _MusicPodState extends State<MusicPod> {
   Widget build(BuildContext context) => FutureBuilder(
         future: _allReady,
         builder: (context, snapshot) => snapshot.hasData
-            ? AppConfig.isGtkApp
+            ? isLinux
                 ? GtkApplication(
                     onCommandLine: (args) =>
                         di<PlayerService>().playPath(args.firstOrNull),

@@ -4,7 +4,6 @@ import 'package:watch_it/watch_it.dart';
 import '../../app/app_model.dart';
 import '../../app/connectivity_model.dart';
 import '../../app/view/routing_manager.dart';
-import '../../app_config.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/icons.dart';
@@ -15,6 +14,7 @@ import '../../common/view/stared_station_icon_button.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
@@ -107,7 +107,7 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
               active: active,
               color: iconColor,
             ),
-          if (!AppConfig.isMobilePlatform) VolumeSliderPopup(color: iconColor),
+          if (!isMobile) VolumeSliderPopup(color: iconColor),
           IconButton(
             tooltip: playerPosition == PlayerPosition.fullWindow
                 ? context.l10n.leaveFullWindow

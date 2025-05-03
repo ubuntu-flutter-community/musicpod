@@ -3,7 +3,6 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/connectivity_model.dart';
-import '../../app_config.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/offline_page.dart';
@@ -35,8 +34,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
     return Row(
       spacing: kSmallestSpace,
       children: [
-        if (!AppConfig.isMobilePlatform)
-          const SizedBox(width: 4 * kLargestSpace),
+        if (!isMobile) const SizedBox(width: 4 * kLargestSpace),
         Expanded(
           child: Center(
             child: YaruChoiceChipBar(
@@ -104,7 +102,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
             ),
           ),
         ),
-        if (!AppConfig.isMobilePlatform) ...[
+        if (!isMobile) ...[
           IconButton(
             icon: Icon(
               Iconz.export,

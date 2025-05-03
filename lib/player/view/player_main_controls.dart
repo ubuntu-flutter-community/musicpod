@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/connectivity_model.dart';
-import '../../app_config.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/taget_platform_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
 import '../../radio/view/next_station_button.dart';
+import '../../settings/settings_model.dart';
 import '../player_model.dart';
 import 'play_button.dart';
 import 'repeat_button.dart';
@@ -49,9 +50,12 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
       active: active,
     );
 
-    final radius = AppConfig.isMobilePlatform
-        ? bigAvatarButtonRadius
-        : smallAvatarButtonRadius;
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+
+    final radius = isMobile
+        ? getBigAvatarButtonRadius(useYaruTheme)
+        : getSmallAvatarButtonRadius(useYaruTheme);
     final playButton = avatarPlayButton
         ? CircleAvatar(
             radius: radius,

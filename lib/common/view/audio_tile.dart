@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../app_config.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';
 import '../../extensions/theme_data_x.dart';
@@ -199,8 +198,6 @@ class _AudioTileState extends State<AudioTile> {
         alwaysShowOptionButton: widget.alwaysShowOptionButton,
       ),
     );
-
-    if (AppConfig.isMobilePlatform) return listTile;
 
     return MouseRegion(
       key: ObjectKey(widget.audio),

@@ -1,3 +1,4 @@
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
@@ -15,10 +16,20 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.theme;
     final model = di<SettingsModel>();
     final l10n = context.l10n;
     final themeIndex = watchPropertyValue((SettingsModel m) => m.themeIndex);
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final useCustomThemeColor =
+        watchPropertyValue((SettingsModel m) => m.useCustomThemeColor);
+    final customThemeColor =
+        watchPropertyValue((SettingsModel m) => m.customThemeColor);
 
+    final color = customThemeColor == null
+        ? kMusicPodDefaultColor
+        : Color(customThemeColor);
     return YaruSection(
       margin: const EdgeInsets.only(
         left: kLargestSpace,
@@ -58,6 +69,81 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
               ),
             ),
           ),
+          YaruTile(
+            title: Text(l10n.useYaruThemeTitle),
+            subtitle: Text(l10n.useYaruThemeDescription),
+            trailing: CommonSwitch(
+              onChanged: model.setUseYaruTheme,
+              value: useYaruTheme,
+            ),
+          ),
+          YaruTile(
+            title: Text(l10n.useCustomThemeColorTitle),
+            subtitle: Text(l10n.useCustomThemeColorDescription),
+            trailing: CommonSwitch(
+              onChanged: model.setUseCustomThemeColor,
+              value: useCustomThemeColor,
+            ),
+          ),
+          if (useCustomThemeColor)
+            YaruTile(
+              title: Text(l10n.customThemeColor),
+              subtitle: Text(l10n.customThemeColorDescription),
+              trailing: YaruColorDisk(
+                onPressed: () => ColorPicker(
+                  color: color,
+                  onColorChanged: (Color color) =>
+                      di<SettingsModel>().setCustomThemeColor(color.toARGB32()),
+                  width: 40,
+                  height: 40,
+                  borderRadius: 4,
+                  spacing: 5,
+                  runSpacing: 5,
+                  wheelDiameter: 155,
+                  heading: Text(
+                    l10n.selectColor,
+                    style: theme.textTheme.titleMedium,
+                  ),
+                  subheading: Text(
+                    l10n.selectColorShade,
+                    style: theme.textTheme.titleMedium,
+                  ),
+                  wheelSubheading: Text(
+                    l10n.selectColorAndItsShades,
+                    style: theme.textTheme.titleMedium,
+                  ),
+                  showMaterialName: true,
+                  showColorName: true,
+                  showColorCode: true,
+                  copyPasteBehavior: const ColorPickerCopyPasteBehavior(
+                    longPressMenu: true,
+                  ),
+                  materialNameTextStyle: theme.textTheme.bodySmall,
+                  colorNameTextStyle: theme.textTheme.bodySmall,
+                  colorCodeTextStyle: theme.textTheme.bodyMedium,
+                  colorCodePrefixStyle: theme.textTheme.bodySmall,
+                  selectedPickerTypeColor: theme.colorScheme.primary,
+                  pickersEnabled: const <ColorPickerType, bool>{
+                    ColorPickerType.both: false,
+                    ColorPickerType.primary: true,
+                    ColorPickerType.accent: true,
+                    ColorPickerType.bw: false,
+                    ColorPickerType.custom: true,
+                    ColorPickerType.wheel: true,
+                  },
+                ).showPickerDialog(
+                  context,
+                  actionsPadding: const EdgeInsets.all(16),
+                  constraints: const BoxConstraints(
+                    minHeight: 480,
+                    minWidth: 300,
+                    maxWidth: 320,
+                  ),
+                ),
+                color: color,
+                selected: false,
+              ),
+            ),
           YaruTile(
             title: Text(l10n.showPositionDurationTitle),
             subtitle: Text(l10n.showPositionDurationDescription),

@@ -6,7 +6,6 @@ import 'package:yaru/yaru.dart';
 import '../../app/view/routing_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
-import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
@@ -40,7 +39,7 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
             autofocus: true,
             decoration: InputDecoration(
               label: Text(l10n.name),
-              suffixIcon: ImportantButton(
+              suffixIcon: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
@@ -143,7 +142,7 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
             spacing: 10,
             runSpacing: 10,
             children: [
-              ImportantButton(
+              ElevatedButton(
                 onPressed: playlists.isNotEmpty &&
                         playlists.any((e) => e.audios.any((e) => e.isLocal))
                     ? () async {

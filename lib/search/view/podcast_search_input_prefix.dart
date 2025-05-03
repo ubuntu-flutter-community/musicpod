@@ -133,10 +133,14 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
     final theWidth = width ?? 250.0;
     final height = chipHeight;
 
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final countryPillPadding = getCountryPillPadding(useYaruTheme);
+
     return usePodcastIndex
         ? LanguageAutoComplete(
             autofocus: true,
-            contentPadding: countryPillPadding,
+            contentPadding: getCountryPillPadding(useYaruTheme),
             filled: language != null,
             isDense: true,
             width: theWidth,

@@ -8,6 +8,7 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../player_model.dart';
 import 'full_height_player_top_controls.dart';
@@ -58,7 +59,7 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
       seekBarMargin: const EdgeInsets.all(kLargestSpace),
       topButtonBarMargin: EdgeInsets.only(
         right: kLargestSpace,
-        top: AppConfig.isMobilePlatform ? 2 * kLargestSpace : 0,
+        top: isMobile ? 2 * kLargestSpace : 0,
       ),
       topButtonBar: [
         const Spacer(),
@@ -111,7 +112,7 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
         ],
       ),
       child: Padding(
-        padding: context.isPortrait && AppConfig.isMobilePlatform
+        padding: context.isPortrait && isMobile
             ? const EdgeInsets.only(bottom: 40)
             : EdgeInsets.zero,
         child: RepaintBoundary(

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app_config.dart';
+import '../../settings/settings_model.dart';
 
-class CommonSwitch extends StatelessWidget {
+class CommonSwitch extends StatelessWidget with WatchItMixin {
   const CommonSwitch({super.key, required this.value, this.onChanged});
 
   final bool value;
@@ -11,7 +12,9 @@ class CommonSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppConfig.yaruStyled
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    return useYaruTheme
         ? YaruSwitch(
             value: value,
             onChanged: onChanged,
@@ -20,7 +23,7 @@ class CommonSwitch extends StatelessWidget {
   }
 }
 
-class CommonCheckBox extends StatelessWidget {
+class CommonCheckBox extends StatelessWidget with WatchItMixin {
   const CommonCheckBox({super.key, required this.value, this.onChanged});
 
   final bool value;
@@ -28,67 +31,13 @@ class CommonCheckBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppConfig.yaruStyled
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    return useYaruTheme
         ? YaruCheckbox(
             value: value,
             onChanged: onChanged,
           )
         : Checkbox(value: value, onChanged: onChanged);
-  }
-}
-
-class ImportantButton extends StatelessWidget {
-  const ImportantButton({
-    super.key,
-    required this.onPressed,
-    required this.child,
-    this.style,
-  });
-
-  final void Function()? onPressed;
-  final Widget child;
-  final ButtonStyle? style;
-
-  @override
-  Widget build(BuildContext context) {
-    return AppConfig.yaruStyled
-        ? ElevatedButton(
-            style: style,
-            onPressed: onPressed,
-            child: child,
-          )
-        : FilledButton(
-            style: style,
-            onPressed: onPressed,
-            child: child,
-          );
-  }
-}
-
-class ImportantButtonWithIcon extends StatelessWidget {
-  const ImportantButtonWithIcon({
-    super.key,
-    required this.onPressed,
-    required this.icon,
-    required this.label,
-  });
-
-  final void Function()? onPressed;
-  final Widget icon;
-  final Widget label;
-
-  @override
-  Widget build(BuildContext context) {
-    return AppConfig.yaruStyled
-        ? ElevatedButton.icon(
-            onPressed: onPressed,
-            icon: icon,
-            label: label,
-          )
-        : FilledButton.icon(
-            onPressed: onPressed,
-            icon: icon,
-            label: label,
-          );
   }
 }

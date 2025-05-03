@@ -23,6 +23,7 @@ import 'expose/expose_service.dart';
 import 'expose/lastfm_service.dart';
 import 'expose/listenbrainz_service.dart';
 import 'extensions/shared_preferences_x.dart';
+import 'extensions/taget_platform_x.dart';
 import 'external_path/external_path_service.dart';
 import 'library/library_model.dart';
 import 'library/library_service.dart';
@@ -64,7 +65,7 @@ void registerDependencies({required List<String> args}) async {
   di
     ..registerSingletonAsync<SharedPreferences>(() async {
       final prefs = await SharedPreferences.getInstance();
-      if (!AppConfig.isMobilePlatform) {
+      if (!isMobile) {
         final wm = WindowManager.instance;
         wm.addListener(
           WindowSizeToSettingsListener(

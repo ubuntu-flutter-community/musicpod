@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/view/routing_manager.dart';
-import '../../app_config.dart';
 import '../../common/page_ids.dart';
-import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
+import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import 'settings_dialog.dart';
 import 'settings_tile.dart';
@@ -33,7 +32,7 @@ class SettingsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void onPressed() => AppConfig.isMobilePlatform
+    void onPressed() => isMobile
         ? di<RoutingManager>().push(pageId: PageIDs.settings)
         : showDialog(
             context: context,
@@ -45,7 +44,7 @@ class SettingsButton extends StatelessWidget {
           onPressed: onPressed,
           icon: Icon(Iconz.settings),
         ),
-      _SettingsButtonMode.important => ImportantButton(
+      _SettingsButtonMode.important => ElevatedButton(
           onPressed: onPressed,
           child: Text(context.l10n.settings),
         ),

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
-import 'theme.dart';
 
 class NoSearchResultPage extends StatelessWidget {
   const NoSearchResultPage({super.key, this.message, this.icon});
@@ -15,7 +14,6 @@ class NoSearchResultPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.theme;
     final style = theme.textTheme.headlineSmall?.copyWith(
-      fontWeight: largeTextWeight,
       color: theme.colorScheme.onSurface,
     );
 
@@ -31,7 +29,7 @@ class NoSearchResultPage extends StatelessWidget {
           child: DefaultTextStyle(
             style: style ??
                 TextStyle(
-                  fontWeight: largeTextWeight,
+                  fontWeight: FontWeight.w400,
                   color: theme.colorScheme.onSurface,
                 ),
             textAlign: TextAlign.center,

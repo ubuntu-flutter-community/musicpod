@@ -3,7 +3,6 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../app/app_model.dart';
 import '../../app/connectivity_model.dart';
-import '../../app_config.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/like_icon_button.dart';
@@ -11,6 +10,7 @@ import '../../common/view/stared_station_icon_button.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import 'blurred_full_height_player_image.dart';
@@ -104,8 +104,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                     children: [
                       if (audio?.audioType == AudioType.podcast)
                         PlaybackRateButton(active: active),
-                      if (!AppConfig.isMobilePlatform)
-                        const VolumeSliderPopup(),
+                      if (!isMobile) const VolumeSliderPopup(),
                       const PlayerPauseTimerButton(),
                       const QueueButton(
                         isSelected: false,
@@ -135,8 +134,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
     final player = SizedBox(
       height: watchPropertyValue((PlayerModel m) => m.bottomPlayerHeight),
       child: Column(
-        children: (AppConfig.isMobilePlatform ? children.reversed : children)
-            .toList(),
+        children: (isMobile ? children.reversed : children).toList(),
       ),
     );
 
@@ -146,7 +144,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
 
     return Stack(
       children: [
-        if (!AppConfig.isMobilePlatform)
+        if (!isMobile)
           BlurredFullHeightPlayerImage(
             size: Size(
               context.mediaQuerySize.width,

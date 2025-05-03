@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../app_config.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/audio_signal_indicator.dart';
 import '../../common/view/icons.dart';
@@ -30,9 +29,7 @@ class MainPageIcon extends StatelessWidget with WatchItMixin {
 
     if (currentAudioType == audioType && isPlaying) {
       if (useMoreAnimations) {
-        return ActiveAudioSignalIndicator(
-          thickness: AppConfig.yaruStyled || AppConfig.appleStyled ? 1 : 2,
-        );
+        return const ActiveAudioSignalIndicator(thickness: 2);
       } else {
         return Padding(
           padding: mainPageIconPadding,

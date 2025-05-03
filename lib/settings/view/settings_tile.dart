@@ -11,6 +11,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
+import '../settings_model.dart';
 import 'settings_dialog.dart';
 
 class SettingsTile extends StatelessWidget {
@@ -49,10 +50,14 @@ class _UpdateButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    return switch (watchPropertyValue((AppModel m) => m.updateAvailable)) {
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final updateAvailable =
+        watchPropertyValue((AppModel m) => m.updateAvailable);
+    return switch (updateAvailable) {
       null => Center(
           child: SizedBox.square(
-            dimension: AppConfig.yaruStyled ? kYaruTitleBarItemHeight : 40,
+            dimension: useYaruTheme ? kYaruTitleBarItemHeight : 40,
             child: const Progress(
               padding: EdgeInsets.all(10),
             ),

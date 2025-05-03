@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../app_config.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/icons.dart';
@@ -8,6 +7,7 @@ import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
 import '../../custom_content/view/custom_content_page.dart';
 import '../../extensions/string_x.dart';
+import '../../extensions/taget_platform_x.dart';
 import '../../home/home_page.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -64,7 +64,7 @@ Iterable<MasterItem> permanentMasterItems = [
         MainPageIcon(audioType: AudioType.podcast, selected: selected),
     pageId: PageIDs.podcasts,
   ),
-  if (AppConfig.isMobilePlatform)
+  if (isMobile)
     MasterItem(
       titleBuilder: (context) => Text(context.l10n.settings),
       iconBuilder: (selected) =>
@@ -72,7 +72,7 @@ Iterable<MasterItem> permanentMasterItems = [
       pageBuilder: (_) => const SettingsPage(),
       pageId: PageIDs.settings,
     ),
-  if (AppConfig.isMobilePlatform)
+  if (isMobile)
     MasterItem(
       titleBuilder: (context) => Text(context.l10n.home),
       iconBuilder: (selected) => Icon(selected ? Iconz.homeFilled : Iconz.home),
