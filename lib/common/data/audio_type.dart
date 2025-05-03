@@ -14,10 +14,22 @@ enum AudioType {
         podcast => l10n.podcast,
       };
 
+  String localizeShort(AppLocalizations l10n) => switch (this) {
+        local => l10n.local,
+        radio => l10n.radio,
+        podcast => l10n.podcast,
+      };
+
   String localizedBackupName(AppLocalizations l10n) => switch (this) {
         local => l10n.pinnedAlbumsAndPlaylists,
         radio => l10n.starredStations,
         podcast => l10n.podcastSubscriptions,
+      };
+
+  String localizedSearchHint(AppLocalizations l10n) => switch (this) {
+        local => '${l10n.search}: ${l10n.local}',
+        radio => '${l10n.search}: ${l10n.station}',
+        podcast => '${l10n.search}: ${l10n.podcast}',
       };
 
   IconData get iconData => switch (this) {
