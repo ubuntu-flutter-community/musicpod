@@ -93,7 +93,13 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
                 ),
                 borderRadius: BorderRadius.circular(8),
                 underline: const SizedBox(),
-                icon: Icon(Iconz.dropdown),
+                icon: Padding(
+                  padding: const EdgeInsets.only(left: kMediumSpace),
+                  child: Icon(
+                    Iconz.dropdown,
+                    size: theme.iconTheme.size,
+                  ),
+                ),
                 items: IconSet.values
                     .map(
                       (IconSet iconSet) => DropdownMenuItem(

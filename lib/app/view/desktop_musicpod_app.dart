@@ -6,6 +6,7 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app_config.dart';
+import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../../settings/settings_model.dart';
@@ -43,11 +44,11 @@ class DesktopMusicPodApp extends StatelessWidget with WatchItMixin {
       highContrastDarkTheme: highContrastDarkTheme,
       theme: lightTheme ??
           (useYaruTheme
-              ? createYaruLightTheme(primaryColor: color)
+              ? yaruDarkWithTweaks(createYaruLightTheme(primaryColor: color))
               : phoenix.lightTheme),
       darkTheme: darkTheme ??
           (useYaruTheme
-              ? createYaruDarkTheme(primaryColor: color)
+              ? yaruDarkWithTweaks(createYaruDarkTheme(primaryColor: color))
               : phoenix.darkTheme),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: supportedLocales,
