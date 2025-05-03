@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../common/data/audio_type.dart';
 import '../../common/view/modals.dart';
@@ -41,7 +40,7 @@ class AudioTypeFilterSwitcher extends StatelessWidget with WatchItMixin {
           final selected = audioType == e;
           return IconButton(
             style: IconButton.styleFrom(
-              backgroundColor: selected ? theme.chipTheme.selectedColor : null,
+              backgroundColor: audioFilterBackgroundColor(theme, selected),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
                   topRight: i == AudioType.values.length - 1
@@ -64,11 +63,7 @@ class AudioTypeFilterSwitcher extends StatelessWidget with WatchItMixin {
               child: Icon(
                 e.iconData,
                 size: 20,
-                color: selected
-                    ? theme.colorScheme.isLight
-                        ? Colors.black
-                        : Colors.white
-                    : theme.colorScheme.onSurface.scale(alpha: -0.3),
+                color: audioFilterForegroundColor(theme, selected),
                 semanticLabel: e.localize(l10n),
               ),
             ),

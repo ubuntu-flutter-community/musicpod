@@ -111,6 +111,18 @@ double get searchBarWidth =>
 double get searchBarBorderRadius =>
     AppConfig.yaruStyled ? kYaruButtonRadius : 100;
 
+Color? audioFilterBackgroundColor(ThemeData theme, bool selected) => selected
+    ? AppConfig.yaruStyled
+        ? theme.colorScheme.onSurface.withValues(alpha: 0.15)
+        : (theme.chipTheme.selectedColor ?? theme.colorScheme.primary)
+    : null;
+
+Color? audioFilterForegroundColor(ThemeData theme, bool selected) => selected
+    ? theme.colorScheme.isDark
+        ? Colors.white
+        : Colors.black
+    : theme.colorScheme.onSurface.scale(alpha: AppConfig.yaruStyled ? 1 : -0.3);
+
 InputDecoration createMaterialDecoration({
   required ColorScheme colorScheme,
   TextStyle? style,
