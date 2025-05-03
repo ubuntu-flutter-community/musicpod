@@ -6,7 +6,7 @@ import '../../extensions/build_context_x.dart';
 import '../../settings/settings_model.dart';
 import 'icons.dart';
 
-class AnimatedStar extends StatelessWidget {
+class AnimatedStar extends StatelessWidget with WatchItMixin {
   const AnimatedStar({
     super.key,
     required this.isStarred,
