@@ -18,6 +18,9 @@ class YaruMusicPodApp extends StatelessWidget with WatchItMixin {
     final customThemeColor = watchPropertyValue(
       (SettingsModel m) => m.customThemeColor,
     );
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+
     return YaruTheme(
       builder: (context, yaru, child) {
         final yaruLightFlavor = useCustomThemeColor && customThemeColor != null
@@ -26,11 +29,16 @@ class YaruMusicPodApp extends StatelessWidget with WatchItMixin {
         final yaruDarkFlavor = useCustomThemeColor && customThemeColor != null
             ? createYaruDarkTheme(primaryColor: Color(customThemeColor))
             : yaru.darkTheme;
+
         return DesktopMusicPodApp(
           highContrastTheme: yaruHighContrastLight,
           highContrastDarkTheme: yaruHighContrastDark,
-          lightTheme: yaruLightWithTweaks(yaruLightFlavor),
-          darkTheme: yaruDarkWithTweaks(yaruDarkFlavor),
+          accent: customThemeColor != null && useCustomThemeColor
+              ? Color(customThemeColor)
+              : yaru.theme?.colorScheme.primary,
+          lightTheme:
+              useYaruTheme ? yaruLightWithTweaks(yaruLightFlavor) : null,
+          darkTheme: useYaruTheme ? yaruDarkWithTweaks(yaruDarkFlavor) : null,
         );
       },
     );
