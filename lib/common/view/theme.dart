@@ -108,6 +108,9 @@ Color getAlphabetColor(String text, [Color fallBackColor = Colors.black]) {
 double get searchBarWidth =>
     AppConfig.isMobilePlatform ? kMobileSearchBarWidth : kDesktopSearchBarWidth;
 
+double get searchBarBorderRadius =>
+    AppConfig.yaruStyled ? kYaruButtonRadius : 100;
+
 InputDecoration createMaterialDecoration({
   required ColorScheme colorScheme,
   TextStyle? style,

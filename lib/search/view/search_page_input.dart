@@ -37,7 +37,7 @@ class SearchPageInput extends StatelessWidget with WatchItMixin {
         _ => SearchInput(
             autoFocus: !AppConfig.isMobilePlatform,
             text: searchQuery,
-            hintText: context.l10n.search,
+            hintText: audioType.localizedSearchHint(context.l10n),
             onChanged: (v) async {
               searchModel.setSearchQuery(v);
               if (v.isEmpty) {

@@ -26,6 +26,12 @@ enum AudioType {
         podcast => l10n.podcastSubscriptions,
       };
 
+  String localizedSearchHint(AppLocalizations l10n) => switch (this) {
+        local => '${l10n.search}: ${l10n.local}',
+        radio => '${l10n.search}: ${l10n.station}',
+        podcast => '${l10n.search}: ${l10n.podcast}',
+      };
+
   IconData get iconData => switch (this) {
         local => Iconz.musicNote,
         radio => Iconz.radio,
