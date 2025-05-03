@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/view/routing_manager.dart';
-import '../../app_config.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
@@ -158,7 +157,6 @@ class _PodcastPageState extends State<PodcastPage> {
                   ),
                 SliverPadding(
                   padding: getAdaptiveHorizontalPadding(
-                    min: AppConfig.isMobilePlatform ? 0 : 15,
                     constraints: constraints,
                   ).copyWith(bottom: bottomPlayerPageGap ?? kLargestSpace),
                   sliver: SliverPodcastPageList(

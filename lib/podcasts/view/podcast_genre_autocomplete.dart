@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:watch_it/watch_it.dart';
 
-import '../../app_config.dart';
 import '../../common/data/podcast_genre.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
+import '../../settings/settings_model.dart';
 
-class PodcastGenreAutoComplete extends StatelessWidget {
+class PodcastGenreAutoComplete extends StatelessWidget with WatchItMixin {
   const PodcastGenreAutoComplete({
     super.key,
     this.onSelected,
@@ -45,9 +46,11 @@ class PodcastGenreAutoComplete extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
 
     return SizedBox(
-      height: height ?? inputHeight,
+      height: height ?? getInputHeight(useYaruTheme),
       width: width,
       child: LayoutBuilder(
         builder: (_, constraints) {
@@ -71,17 +74,17 @@ class PodcastGenreAutoComplete extends StatelessWidget {
                     extentOffset: textEditingController.value.text.length,
                   );
                 },
-                style: style ??
-                    (AppConfig.yaruStyled ? theme.textTheme.bodyMedium : null),
-                strutStyle: AppConfig.yaruStyled
+                style:
+                    style ?? (useYaruTheme ? theme.textTheme.bodyMedium : null),
+                strutStyle: useYaruTheme
                     ? const StrutStyle(
                         leading: 0.2,
                       )
                     : null,
                 textAlignVertical:
-                    AppConfig.yaruStyled ? TextAlignVertical.center : null,
-                cursorWidth: AppConfig.yaruStyled ? 1 : 2.0,
-                decoration: AppConfig.yaruStyled
+                    useYaruTheme ? TextAlignVertical.center : null,
+                cursorWidth: useYaruTheme ? 1 : 2.0,
+                decoration: useYaruTheme
                     ? createYaruDecoration(
                         theme: theme,
                         style: style,

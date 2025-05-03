@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../app_config.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/custom_track_shape.dart';
 import '../../common/view/progress.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';
+import '../../extensions/taget_platform_x.dart';
+import '../../settings/settings_model.dart';
 import '../player_model.dart';
 
 class PlayerTrack extends StatelessWidget with WatchItMixin {
@@ -21,6 +22,8 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
 
     final mainColor = theme.colorScheme.onSurface;
 
@@ -70,9 +73,8 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
                 : const EdgeInsets.only(left: 7, right: 7, top: 3),
             child: LinearProgress(
               value: null,
-              trackHeight: AppConfig.yaruStyled && !bottomPlayer
-                  ? 5.0
-                  : (AppConfig.isMobilePlatform ? 2.0 : 4.0),
+              trackHeight:
+                  useYaruTheme && !bottomPlayer ? 5.0 : (isMobile ? 2.0 : 4.0),
               color: mainColor.withValues(alpha: 0.8),
               backgroundColor: mainColor.withValues(alpha: 0.4),
             ),
@@ -90,9 +92,7 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
                   overlayShape: thumbShape,
                   minThumbSeparation: 0,
                   trackShape: trackShape as SliderTrackShape,
-                  trackHeight: bottomPlayer
-                      ? (AppConfig.isMobilePlatform ? 2.0 : 4.0)
-                      : 4.0,
+                  trackHeight: bottomPlayer ? (isMobile ? 2.0 : 4.0) : 4.0,
                   inactiveTrackColor: mainColor.withValues(alpha: 0.2),
                   activeTrackColor: mainColor.withValues(alpha: 0.85),
                   overlayColor: mainColor,

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:podcast_search/podcast_search.dart';
+import 'package:watch_it/watch_it.dart';
 
-import '../../app_config.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/country_x.dart';
 import '../../l10n/l10n.dart';
+import '../../settings/settings_model.dart';
 import 'icons.dart';
 import 'theme.dart';
 
-class CountryAutoComplete extends StatelessWidget {
+class CountryAutoComplete extends StatelessWidget with WatchItMixin {
   const CountryAutoComplete({
     super.key,
     this.onSelected,
@@ -51,6 +52,9 @@ class CountryAutoComplete extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final inputHeight = getInputHeight(useYaruTheme);
 
     return SizedBox(
       height: height ?? inputHeight,
@@ -80,12 +84,12 @@ class CountryAutoComplete extends StatelessWidget {
                     extentOffset: textEditingController.value.text.length,
                   );
                 },
-                style: style ??
-                    (AppConfig.yaruStyled ? theme.textTheme.bodyMedium : null),
+                style:
+                    style ?? (useYaruTheme ? theme.textTheme.bodyMedium : null),
                 textAlignVertical:
-                    AppConfig.yaruStyled ? TextAlignVertical.center : null,
-                cursorWidth: AppConfig.yaruStyled ? 1 : 2.0,
-                decoration: AppConfig.yaruStyled
+                    useYaruTheme ? TextAlignVertical.center : null,
+                cursorWidth: useYaruTheme ? 1 : 2.0,
+                decoration: useYaruTheme
                     ? createYaruDecoration(
                         theme: theme,
                         style: style,

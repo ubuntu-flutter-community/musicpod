@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/view/routing_manager.dart';
-import '../../common/view/common_widgets.dart';
 import '../../common/view/snackbars.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
@@ -53,7 +52,7 @@ class _CustomPodcastSectionState extends State<CustomPodcastSection> {
             children: [
               ListenableBuilder(
                 listenable: _urlController,
-                builder: (context, _) => ImportantButton(
+                builder: (context, _) => ElevatedButton(
                   onPressed: _urlController.text.isEmpty ||
                           !_urlController.text.startsWith('http')
                       ? null

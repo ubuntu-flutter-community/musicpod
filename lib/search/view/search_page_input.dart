@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../app_config.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/data/podcast_genre.dart';
 import '../../common/view/country_auto_complete.dart';
@@ -10,9 +9,11 @@ import '../../common/view/language_autocomplete.dart';
 import '../../common/view/modals.dart';
 import '../../common/view/search_input.dart';
 import '../../common/view/theme.dart';
+import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../radio/view/tag_auto_complete.dart';
+import '../../settings/settings_model.dart';
 import '../search_model.dart';
 import '../search_type.dart';
 import 'audio_type_filter_button.dart';
@@ -27,15 +28,18 @@ class SearchPageInput extends StatelessWidget with WatchItMixin {
     final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
     final searchType = watchPropertyValue((SearchModel m) => m.searchType);
     final audioType = watchPropertyValue((SearchModel m) => m.audioType);
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+
     return SizedBox(
       width: searchBarWidth,
-      height: inputHeight,
+      height: getInputHeight(useYaruTheme),
       child: switch (searchType) {
         SearchType.radioCountry => const CountryAutoCompleteWithSuffix(),
         SearchType.radioTag => const TagAutoCompleteWithSuffix(),
         SearchType.radioLanguage => const LanguageAutoCompleteWithSuffix(),
         _ => SearchInput(
-            autoFocus: !AppConfig.isMobilePlatform,
+            autoFocus: !isMobile,
             text: searchQuery,
             hintText: audioType.localizedSearchHint(context.l10n),
             onChanged: (v) async {

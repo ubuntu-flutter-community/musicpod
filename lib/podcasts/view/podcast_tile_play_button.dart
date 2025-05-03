@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../app_config.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../player/player_model.dart';
+import '../../settings/settings_model.dart';
 import 'podcast_tile_progress.dart';
 
-class PodcastTilePlayButton extends StatelessWidget {
+class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
   const PodcastTilePlayButton({
     super.key,
     required this.selected,
@@ -30,6 +30,9 @@ class PodcastTilePlayButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final playerModel = di<PlayerModel>();
     final theme = context.theme;
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    var smallAvatarButtonRadius = getSmallAvatarButtonRadius(useYaruTheme);
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -53,7 +56,7 @@ class PodcastTilePlayButton extends StatelessWidget {
                       Iconz.pause,
                     )
                   : Padding(
-                      padding: AppConfig.appleStyled
+                      padding: Iconz.useAppleIcons
                           ? const EdgeInsets.only(left: 3)
                           : EdgeInsets.zero,
                       child: Icon(Iconz.playFilled),

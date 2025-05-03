@@ -1,10 +1,12 @@
-import '../../app_config.dart';
-import 'icons.dart';
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
-import 'theme.dart';
 
-class AnimatedStar extends StatelessWidget {
+import '../../extensions/build_context_x.dart';
+import '../../settings/settings_model.dart';
+import 'icons.dart';
+
+class AnimatedStar extends StatelessWidget with WatchItMixin {
   const AnimatedStar({
     super.key,
     required this.isStarred,
@@ -16,7 +18,10 @@ class AnimatedStar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (AppConfig.yaruStyled) {
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final iconSize = context.theme.iconTheme.size ?? 24.0;
+    if (useYaruTheme) {
       return YaruAnimatedVectorIcon(
         isStarred ? YaruAnimatedIcons.star_filled : YaruAnimatedIcons.star,
         initialProgress: 1.0,
@@ -39,7 +44,7 @@ class AnimatedStar extends StatelessWidget {
   }
 }
 
-class AnimatedHeart extends StatelessWidget {
+class AnimatedHeart extends StatelessWidget with WatchItMixin {
   const AnimatedHeart({
     super.key,
     required this.liked,
@@ -51,12 +56,14 @@ class AnimatedHeart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (AppConfig.yaruStyled) {
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    if (useYaruTheme) {
       return YaruAnimatedVectorIcon(
         liked ? YaruAnimatedIcons.heart_filled : YaruAnimatedIcons.heart,
         initialProgress: 1.0,
         color: color,
-        size: iconSize,
+        size: context.theme.iconTheme.size ?? 24.0,
       );
     } else {
       return Icon(

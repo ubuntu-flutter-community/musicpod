@@ -5,7 +5,6 @@ import 'package:flutter/rendering.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/view/routing_manager.dart';
-import '../../app_config.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/header_bar.dart';
@@ -14,6 +13,8 @@ import '../../common/view/search_button.dart';
 import '../../common/view/sliver_filter_app_bar.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
+import '../../extensions/taget_platform_x.dart';
+import '../../settings/settings_model.dart';
 import '../search_model.dart';
 import 'search_page_input.dart';
 import 'sliver_local_search_results.dart';
@@ -29,12 +30,14 @@ class SearchPage extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final audioType = watchPropertyValue((SearchModel m) => m.audioType);
     final loading = watchPropertyValue((SearchModel m) => m.loading);
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
 
     return Scaffold(
       appBar: HeaderBar(
         adaptive: true,
         title: Padding(
-          padding: EdgeInsets.only(left: AppConfig.isMobilePlatform ? 5 : 0),
+          padding: EdgeInsets.only(left: isMobile ? 5 : 0),
           child: const SearchPageInput(),
         ),
         actions: [
@@ -47,7 +50,7 @@ class SearchPage extends StatelessWidget with WatchItMixin {
               onPressed: () => di<RoutingManager>().pop(),
               icon: loading
                   ? SizedBox.square(
-                      dimension: AppConfig.yaruStyled ? 18 : 25,
+                      dimension: useYaruTheme ? 18 : 25,
                       child: const Progress(
                         strokeWidth: 2,
                       ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/view/routing_manager.dart';
-import '../../app_config.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/copy_clipboard_content.dart';
 import '../../common/view/icons.dart';
@@ -16,13 +15,14 @@ import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
+import '../../settings/settings_model.dart';
 import '../online_art_model.dart';
 import 'radio_history_tile_image.dart';
 import 'station_page.dart';
 
 enum _RadioHistoryTileVariant { regular, simple }
 
-class RadioHistoryTile extends StatelessWidget {
+class RadioHistoryTile extends StatelessWidget with WatchItMixin {
   const RadioHistoryTile({
     super.key,
     required this.icyTitle,
@@ -45,6 +45,8 @@ class RadioHistoryTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final icyName = di<PlayerModel>().getMetadata(icyTitle)?.icyName;
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
     return switch (_variant) {
       _RadioHistoryTileVariant.simple => _SimpleRadioHistoryTile(
           key: ValueKey(icyTitle),
@@ -58,8 +60,8 @@ class RadioHistoryTile extends StatelessWidget {
           contentPadding: const EdgeInsets.symmetric(horizontal: kLargestSpace),
           leading: RadioHistoryTileImage(
             key: ValueKey(icyTitle),
-            height: AppConfig.yaruStyled ? 34 : 40,
-            width: AppConfig.yaruStyled ? 34 : 40,
+            height: useYaruTheme ? 34 : 40,
+            width: useYaruTheme ? 34 : 40,
             icyTitle: icyTitle,
           ),
           trailing: IconButton(

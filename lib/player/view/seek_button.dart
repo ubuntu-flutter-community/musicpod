@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../app_config.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
+import '../../settings/settings_model.dart';
 import '../player_model.dart';
 
-class SeekButton extends StatelessWidget {
+class SeekButton extends StatelessWidget with WatchItMixin {
   const SeekButton({
     super.key,
     required this.active,
@@ -21,6 +21,8 @@ class SeekButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.theme;
     final playerModel = di<PlayerModel>();
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
 
     final icon = Icon(
       forward ? Iconz.forward30 : Iconz.backward10,
@@ -32,7 +34,7 @@ class SeekButton extends StatelessWidget {
       onPressed: () async {
         playerModel.seekInSeconds(forward ? 30 : -10);
       },
-      icon: AppConfig.yaruStyled
+      icon: useYaruTheme
           ? Stack(
               alignment: Alignment.center,
               children: [

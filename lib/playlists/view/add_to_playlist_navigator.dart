@@ -3,7 +3,6 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/page_ids.dart';
-import '../../common/view/common_widgets.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
@@ -193,7 +192,7 @@ class _NewViewState extends State<_NewView> {
                       context.l10n.cancel,
                     ),
                   ),
-                  ImportantButton(
+                  ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                       libraryModel.addPlaylist(

@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 
-import '../../app_config.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/taget_platform_x.dart';
+import '../../settings/settings_model.dart';
 import 'theme.dart';
 
-class SearchInput extends StatefulWidget {
+class SearchInput extends StatefulWidget with WatchItStatefulWidgetMixin {
   const SearchInput({
     super.key,
     this.text,
@@ -57,9 +59,11 @@ class _SearchInputState extends State<SearchInput> {
 
   @override
   Widget build(BuildContext context) {
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
     final theme = context.theme;
     return SizedBox(
-      height: AppConfig.yaruStyled || AppConfig.isMobilePlatform ? null : 38,
+      height: useYaruTheme || isMobile ? null : 38,
       child: TextField(
         onTap: () {
           _controller.selection = TextSelection(
@@ -72,8 +76,8 @@ class _SearchInputState extends State<SearchInput> {
         autofocus: widget.autoFocus,
         onSubmitted: _onSearchChanged,
         onChanged: _onSearchChanged,
-        style: AppConfig.yaruStyled ? theme.textTheme.bodyMedium : null,
-        decoration: AppConfig.yaruStyled
+        style: useYaruTheme ? theme.textTheme.bodyMedium : null,
+        decoration: useYaruTheme
             ? createYaruDecoration(
                 theme: theme,
                 hintText: widget.hintText,

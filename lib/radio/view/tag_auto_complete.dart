@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:radio_browser_api/radio_browser_api.dart' hide State;
+import 'package:watch_it/watch_it.dart';
 
-import '../../app_config.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
+import '../../settings/settings_model.dart';
 
-class TagAutoComplete extends StatelessWidget {
+class TagAutoComplete extends StatelessWidget with WatchItMixin {
   const TagAutoComplete({
     super.key,
     this.onSelected,
@@ -38,6 +39,8 @@ class TagAutoComplete extends StatelessWidget {
     final fallBackTextStyle = theme.textTheme.bodyMedium?.copyWith(
       fontWeight: FontWeight.w500,
     );
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
 
     return LayoutBuilder(
       builder: (_, constraints) {
@@ -62,11 +65,10 @@ class TagAutoComplete extends StatelessWidget {
                   extentOffset: textEditingController.value.text.length,
                 );
               },
-              style: AppConfig.yaruStyled ? theme.textTheme.bodyMedium : null,
-              textAlignVertical:
-                  AppConfig.yaruStyled ? TextAlignVertical.center : null,
-              cursorWidth: AppConfig.yaruStyled ? 1 : 2.0,
-              decoration: AppConfig.yaruStyled
+              style: useYaruTheme ? theme.textTheme.bodyMedium : null,
+              textAlignVertical: useYaruTheme ? TextAlignVertical.center : null,
+              cursorWidth: useYaruTheme ? 1 : 2.0,
+              decoration: useYaruTheme
                   ? createYaruDecoration(
                       theme: theme,
                       hintText: hintText,

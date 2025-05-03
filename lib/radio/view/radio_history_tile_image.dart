@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../app_config.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/modals.dart';
 import '../../common/view/mpv_metadata_dialog.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/ui_constants.dart';
+import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../online_art_model.dart';
@@ -44,7 +44,7 @@ class RadioHistoryTileImage extends StatelessWidget with WatchItMixin {
             showModal(
               mode: ModalMode.platformModalMode,
               context: context,
-              content: AppConfig.isMobilePlatform
+              content: isMobile
                   ? MpvMetadataDialog.bottomSheet(
                       image: imageUrl,
                       mpvMetaData: metadata,

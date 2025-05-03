@@ -105,6 +105,16 @@ class SettingsModel extends SafeChangeNotifier {
   int get themeIndex => _service.themeIndex;
   void setThemeIndex(int value) => _service.setThemeIndex(value);
 
+  bool get useYaruTheme => _service.useYaruTheme;
+  void setUseYaruTheme(bool value) => _service.setUseYaruTheme(value);
+
+  int? get customThemeColor => _service.customThemeColor;
+  void setCustomThemeColor(int? value) => _service.setCustomThemeColor(value);
+
+  bool get useCustomThemeColor => _service.useCustomThemeColor;
+  void setUseCustomThemeColor(bool value) =>
+      _service.setUseCustomThemeColor(value);
+
   String? get podcastIndexApiKey => _service.podcastIndexApiKey;
   void setPodcastIndexApiKey(String value) =>
       _service.setPodcastIndexApiKey(value);

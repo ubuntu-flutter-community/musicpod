@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/constants.dart';
 
-import '../../app_config.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
+import '../../settings/settings_model.dart';
 import '../data/audio.dart';
 import 'theme.dart';
 
-class AudioAutoComplete extends StatelessWidget {
+class AudioAutoComplete extends StatelessWidget with WatchItMixin {
   const AudioAutoComplete({
     super.key,
     this.onSelected,
@@ -28,9 +29,11 @@ class AudioAutoComplete extends StatelessWidget {
     final fallBackTextStyle = theme.textTheme.bodyMedium?.copyWith(
       fontWeight: FontWeight.w500,
     );
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
 
     return SizedBox(
-      height: AppConfig.yaruStyled ? kYaruTitleBarItemHeight : 38,
+      height: useYaruTheme ? kYaruTitleBarItemHeight : 38,
       child: LayoutBuilder(
         builder: (_, constraints) {
           return Autocomplete<Audio>(
@@ -53,16 +56,16 @@ class AudioAutoComplete extends StatelessWidget {
                     extentOffset: textEditingController.value.text.length,
                   );
                 },
-                style: AppConfig.yaruStyled ? theme.textTheme.bodyMedium : null,
-                strutStyle: AppConfig.yaruStyled
+                style: useYaruTheme ? theme.textTheme.bodyMedium : null,
+                strutStyle: useYaruTheme
                     ? const StrutStyle(
                         leading: 0.2,
                       )
                     : null,
                 textAlignVertical:
-                    AppConfig.yaruStyled ? TextAlignVertical.center : null,
-                cursorWidth: AppConfig.yaruStyled ? 1 : 2.0,
-                decoration: AppConfig.yaruStyled
+                    useYaruTheme ? TextAlignVertical.center : null,
+                cursorWidth: useYaruTheme ? 1 : 2.0,
+                decoration: useYaruTheme
                     ? createYaruDecoration(
                         theme: theme,
                         hintText: hintText,

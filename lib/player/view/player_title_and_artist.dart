@@ -8,7 +8,6 @@ import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/copy_clipboard_content.dart';
 import '../../common/view/snackbars.dart';
-import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_model.dart';
@@ -145,7 +144,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
 
   TextStyle _fullHeightTitleTextStyle(ThemeData theme) {
     return TextStyle(
-      fontWeight: largeTextWeight,
+      fontWeight: FontWeight.normal,
       fontSize: 26,
       color: theme.colorScheme.onSurface,
     );
@@ -153,7 +152,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
 
   TextStyle _fullHeightArtistTextStyle(ThemeData theme) {
     return TextStyle(
-      fontWeight: smallTextFontWeight,
+      fontWeight: FontWeight.normal,
       fontSize: 20,
       color: theme.colorScheme.onSurface,
     );
@@ -164,8 +163,8 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
         fontSize: 14,
       );
 
-  TextStyle _bottomArtistTextStyle() => TextStyle(
-        fontWeight: smallTextFontWeight,
+  TextStyle _bottomArtistTextStyle() => const TextStyle(
+        fontWeight: FontWeight.normal,
         fontSize: 12,
       );
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/view/routing_manager.dart';
-import '../../app_config.dart';
+import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
@@ -85,7 +85,7 @@ class SliverAudioPage extends StatelessWidget {
         builder: (context, constraints) {
           final padding = getAdaptiveHorizontalPadding(
             constraints: constraints,
-            min: AppConfig.isMobilePlatform ? 5 : 15,
+            min: isMobile ? 5 : 15,
           );
 
           return CustomScrollView(

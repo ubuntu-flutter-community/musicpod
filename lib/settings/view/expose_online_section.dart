@@ -176,7 +176,7 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
                           }
                         },
                       ),
-                      ImportantButton(
+                      ElevatedButton(
                         onPressed: () {
                           di<SettingsModel>()
                             ..setLastFmApiKey(
@@ -254,7 +254,7 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
                         ],
                       ),
                     ),
-                    ImportantButton(
+                    ElevatedButton(
                       onPressed: () {
                         di<SettingsModel>().setListenBrainzApiKey(
                           _listenBrainzApiKeyController.text,

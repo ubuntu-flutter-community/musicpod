@@ -10,7 +10,7 @@ const kTinyButtonSize = 30.0;
 
 const kTinyButtonIconSize = 13.0;
 
-const kDesktopSearchBarWidth = 345.0;
+const kDesktopSearchBarWidth = 335.0;
 
 const kMobileSearchBarWidth = 270.0;
 

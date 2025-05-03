@@ -5,6 +5,7 @@ import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../../radio/radio_model.dart';
+import '../../settings/settings_model.dart';
 import '../data/audio.dart';
 import '../data/audio_type.dart';
 import 'icons.dart';
@@ -33,6 +34,10 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
             (pageIsQueue && playerModel.queue.length == audios.length)
         ? Iconz.pause
         : Iconz.playFilled;
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final bigAvatarButtonRadius = getBigAvatarButtonRadius(useYaruTheme);
+    final bigPlayButtonPadding = getBigPlayButtonPadding(useYaruTheme);
 
     return Padding(
       padding: bigPlayButtonPadding,

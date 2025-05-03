@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:watcher/watcher.dart';
 
-import '../../app_config.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/ui_constants.dart';
 import '../../custom_content/view/backup_dialog.dart';
@@ -110,7 +109,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
               child: Column(
                 children: [
                   const Expanded(child: MasterDetailPage()),
-                  if (!playerToTheRight || AppConfig.isMobilePlatform)
+                  if (!playerToTheRight)
                     const PlayerView(position: PlayerPosition.bottom),
                 ],
               ),

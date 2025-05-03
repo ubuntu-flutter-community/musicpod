@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app_config.dart';
 import '../../extensions/build_context_x.dart';
 
 class LicensesPage extends StatelessWidget {
@@ -9,7 +8,7 @@ class LicensesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (AppConfig.isMobilePlatform) {
+    if (isMobile) {
       return const LicensePage();
     }
 

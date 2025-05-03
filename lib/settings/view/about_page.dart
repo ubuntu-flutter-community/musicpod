@@ -178,7 +178,7 @@ class _AboutPageState extends State<AboutPage> {
 
     final title = Text('${context.l10n.about} ${AppConfig.appTitle}');
 
-    if (AppConfig.isMobilePlatform) {
+    if (isMobile) {
       return Scaffold(
         appBar: HeaderBar(
           adaptive: false,
