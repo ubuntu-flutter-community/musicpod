@@ -3,7 +3,7 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/data/close_btn_action.dart';
-import '../../common/view/drop_down_arrow.dart';
+import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../settings_model.dart';
@@ -32,7 +32,7 @@ class CloseActionSection extends StatelessWidget with WatchItMixin {
           YaruTile(
             title: Text(context.l10n.whenCloseBtnClicked),
             trailing: YaruPopupMenuButton<CloseBtnAction>(
-              icon: const DropDownArrow(),
+              icon: Icon(Iconz.dropdown),
               initialValue: closeBtnAction,
               child: Text(closeBtnAction.localize(context.l10n)),
               onSelected: (value) {

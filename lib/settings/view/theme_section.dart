@@ -4,6 +4,7 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/view/common_widgets.dart';
+import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_mode_x.dart';
@@ -75,6 +76,31 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
             trailing: CommonSwitch(
               onChanged: model.setUseYaruTheme,
               value: useYaruTheme,
+            ),
+          ),
+          YaruTile(
+            title: Text(l10n.selectIconThemeTitle),
+            subtitle: Text(l10n.selectIconThemeDescription),
+            trailing: DropdownButton(
+              borderRadius: BorderRadius.circular(8),
+              underline: const SizedBox(),
+              icon: Icon(Iconz.dropdown),
+              items: IconSet.values
+                  .map(
+                    (IconSet iconSet) => DropdownMenuItem(
+                      value: iconSet.index,
+                      child: Text(iconSet.name),
+                    ),
+                  )
+                  .toList(),
+              value: watchPropertyValue(
+                (SettingsModel m) => m.iconSetIndex,
+              ),
+              onChanged: (int? value) {
+                if (value != null) {
+                  di<SettingsModel>().setIconSetIndex(value);
+                }
+              },
             ),
           ),
           YaruTile(

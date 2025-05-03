@@ -56,7 +56,7 @@ class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
                       Iconz.pause,
                     )
                   : Padding(
-                      padding: Iconz.useAppleIcons
+                      padding: Iconz.cupertino
                           ? const EdgeInsets.only(left: 3)
                           : EdgeInsets.zero,
                       child: Icon(Iconz.playFilled),

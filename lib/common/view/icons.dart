@@ -1,181 +1,191 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart' hide isMobile;
 
 import '../../extensions/taget_platform_x.dart';
+import '../../settings/settings_service.dart';
 
 class Iconz {
-  static bool get useAppleIcons => isMacOS || isIOS;
+  static int get _iconSetIndex => di<SettingsService>().iconSetIndex;
+  static bool get cupertino => _iconSetIndex == IconSet.cupertino.index;
+  static bool get yaru => _iconSetIndex == IconSet.yaru.index;
 
-  static IconData get home => isLinux
+  static IconData get dropdown => yaru
+      ? YaruIcons.pan_down
+      : cupertino
+          ? CupertinoIcons.chevron_down
+          : Icons.arrow_drop_down_rounded;
+
+  static IconData get home => yaru
       ? YaruIcons.home
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.home
           : Icons.home_outlined;
-  static IconData get homeFilled => isLinux
+  static IconData get homeFilled => yaru
       ? YaruIcons.home_filled
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.home
           : Icons.home_filled;
 
-  static IconData get image => isLinux
+  static IconData get image => yaru
       ? YaruIcons.image
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.photo
           : Icons.image_not_supported;
 
-  static IconData get warning => isLinux
+  static IconData get warning => yaru
       ? YaruIcons.warning_filled
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.exclamationmark_triangle_fill
           : Icons.warning_rounded;
 
   static IconData get menu {
-    return isLinux
+    return yaru
         ? YaruIcons.menu
-        : useAppleIcons
+        : cupertino
             ? CupertinoIcons.bars
             : Icons.menu_rounded;
   }
 
-  static IconData get export => isLinux
+  static IconData get export => yaru
       ? YaruIcons.arrow_down_outlined
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.arrow_down
           : Icons.arrow_downward;
 
-  static IconData get import => isLinux
+  static IconData get import => yaru
       ? YaruIcons.arrow_up_outlined
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.arrow_up
           : Icons.arrow_upward;
 
   static IconData get materialSidebar => Icons.menu_rounded;
 
   static IconData get sidebar {
-    return isLinux
+    return yaru
         ? YaruIcons.sidebar
-        : useAppleIcons
+        : cupertino
             ? CupertinoIcons.sidebar_left
             : materialSidebar;
   }
 
   static IconData get updateAvailable {
-    return isLinux
+    return yaru
         ? YaruIcons.update_available
-        : useAppleIcons
+        : cupertino
             ? CupertinoIcons.arrow_up_circle
             : Icons.arrow_circle_up_rounded;
   }
 
   static IconData get remove {
-    return isLinux
+    return yaru
         ? YaruIcons.trash
-        : useAppleIcons
+        : cupertino
             ? CupertinoIcons.trash
             : Icons.delete_outline_rounded;
   }
 
-  static IconData get check => isLinux
+  static IconData get check => yaru
       ? YaruIcons.checkmark
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.check_mark
           : Icons.check_rounded;
-  static IconData get musicNote => isLinux
+  static IconData get musicNote => yaru
       ? YaruIcons.music_note
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.double_music_note
           : Icons.music_note_rounded;
-  static IconData get artist => isLinux
+  static IconData get artist => yaru
       ? YaruIcons.music_artist
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.music_albums
           : Icons.interpreter_mode_outlined;
-  static IconData get album => isLinux
+  static IconData get album => yaru
       ? YaruIcons.disk
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.music_albums
           : Icons.album_rounded;
-  static IconData get external => isLinux
+  static IconData get external => yaru
       ? YaruIcons.external_link
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.link
           : Icons.link_rounded;
-  static IconData get starFilled => isLinux
+  static IconData get starFilled => yaru
       ? YaruIcons.star_filled
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.star_fill
           : Icons.star_rounded;
-  static IconData get star => isLinux
+  static IconData get star => yaru
       ? YaruIcons.star
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.star
           : Icons.star_outline_rounded;
-  static IconData get offline => isLinux
+  static IconData get offline => yaru
       ? YaruIcons.network_offline
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.wifi_slash
           : Icons.offline_bolt_rounded;
-  static IconData get cloud => isLinux
+  static IconData get cloud => yaru
       ? YaruIcons.cloud
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.cloud
           : Icons.cloud_outlined;
-  static IconData get pause => isLinux
+  static IconData get pause => yaru
       ? YaruIcons.media_pause
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.pause
           : Icons.pause_rounded;
 
-  static IconData get playFilled => isLinux
+  static IconData get playFilled => yaru
       ? YaruIcons.media_play
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.play_fill
           : Icons.play_arrow_rounded;
-  static IconData get upload => isLinux
+  static IconData get upload => yaru
       ? YaruIcons.arrow_up_outlined
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.up_arrow
           : Icons.download_outlined;
-  static IconData get download => isLinux
+  static IconData get download => yaru
       ? YaruIcons.download
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.down_arrow
           : Icons.download_outlined;
-  static IconData get downloadFilled => isLinux
+  static IconData get downloadFilled => yaru
       ? YaruIcons.download_filled
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.down_arrow
           : Icons.download_rounded;
-  static IconData get podcast => isLinux
+  static IconData get podcast => yaru
       ? YaruIcons.podcast
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.mic
           : Icons.podcasts_outlined;
-  static IconData get podcastFilled => isLinux
+  static IconData get podcastFilled => yaru
       ? YaruIcons.podcast_filled
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.mic_fill
           : Icons.podcasts_rounded;
-  static IconData get radio => isLinux
+  static IconData get radio => yaru
       ? YaruIcons.radio
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.antenna_radiowaves_left_right
           : Icons.radio_outlined;
-  static IconData get radioFilled => isLinux
+  static IconData get radioFilled => yaru
       ? YaruIcons.radio_filled
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.antenna_radiowaves_left_right
           : Icons.radio_rounded;
 
   static IconData get localAudio {
-    if (useAppleIcons) {
+    if (cupertino) {
       if (isMobile) {
         return CupertinoIcons.device_phone_portrait;
       }
       return CupertinoIcons.device_laptop;
     }
-    return isLinux
+    return yaru
         ? YaruIcons.drive_harddisk
         : isMobile
             ? Icons.phone_android_outlined
@@ -183,13 +193,13 @@ class Iconz {
   }
 
   static IconData get localAudioFilled {
-    if (useAppleIcons) {
+    if (cupertino) {
       if (isMobile) {
         return CupertinoIcons.device_phone_portrait;
       }
       return CupertinoIcons.device_laptop;
     }
-    return isLinux
+    return yaru
         ? YaruIcons.drive_harddisk_filled
         : isMobile
             ? Icons.phone_android_rounded
@@ -197,298 +207,310 @@ class Iconz {
   }
 
   static IconData get copy {
-    return isLinux
+    return yaru
         ? YaruIcons.copy
-        : useAppleIcons
+        : cupertino
             ? CupertinoIcons.doc_on_clipboard
             : Icons.copy_rounded;
   }
 
   static IconData get explore {
-    return isLinux
+    return yaru
         ? YaruIcons.compass
-        : useAppleIcons
+        : cupertino
             ? CupertinoIcons.compass
             : Icons.explore_rounded;
   }
 
   static IconData get drag {
-    if (useAppleIcons) {
+    if (cupertino) {
       return CupertinoIcons.move;
     }
-    if (isLinux) {
+    if (yaru) {
       return YaruIcons.drag_handle;
     }
     return Icons.drag_handle_rounded;
   }
 
-  static IconData get settings => isLinux
+  static IconData get settings => yaru
       ? YaruIcons.settings
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.settings
           : Icons.settings_outlined;
 
-  static IconData get settingsFilled => isLinux
+  static IconData get settingsFilled => yaru
       ? YaruIcons.settings_filled
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.settings
           : Icons.settings;
 
-  static IconData get addToLibrary => isLinux
+  static IconData get addToLibrary => yaru
       ? YaruIcons.plus
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.plus
           : Icons.add;
-  static IconData get removeFromLibrary => isLinux
+  static IconData get removeFromLibrary => yaru
       ? YaruIcons.checkmark
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.check_mark
           : Icons.check;
-  static IconData get refresh => isLinux
+  static IconData get refresh => yaru
       ? YaruIcons.refresh
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.refresh
           : Icons.refresh_rounded;
-  static IconData get replay => isLinux
+  static IconData get replay => yaru
       ? YaruIcons.revert
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.arrow_counterclockwise_circle
           : Icons.undo;
-  static IconData get speakerLowFilled => isLinux
+  static IconData get speakerLowFilled => yaru
       ? YaruIcons.speaker_low_filled
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.volume_off
           : Icons.volume_down_rounded;
-  static IconData get speakerMediumFilled => isLinux
+  static IconData get speakerMediumFilled => yaru
       ? YaruIcons.speaker_medium_filled
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.volume_down
           : Icons.volume_down_rounded;
-  static IconData get speakerHighFilled => isLinux
+  static IconData get speakerHighFilled => yaru
       ? YaruIcons.speaker_high_filled
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.volume_up
           : Icons.volume_up_rounded;
-  static IconData get speakerMutedFilled => isLinux
+  static IconData get speakerMutedFilled => yaru
       ? YaruIcons.speaker_muted_filled
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.volume_off
           : Icons.volume_off_rounded;
-  static IconData get fullWindowExit => isLinux
+  static IconData get fullWindowExit => yaru
       ? YaruIcons.arrow_down
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.arrow_down
           : Icons.arrow_downward_rounded;
-  static IconData get fullWindow => isLinux
+  static IconData get fullWindow => yaru
       ? YaruIcons.arrow_up
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.arrow_up
           : Icons.arrow_upward_rounded;
-  static IconData get fullScreenExit => isLinux
+  static IconData get fullScreenExit => yaru
       ? YaruIcons.fullscreen_exit
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.fullscreen_exit
           : Icons.fullscreen_exit_rounded;
-  static IconData get fullScreen => isLinux
+  static IconData get fullScreen => yaru
       ? YaruIcons.fullscreen
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.fullscreen
           : Icons.fullscreen_rounded;
-  static IconData get repeatSingle => isLinux
+  static IconData get repeatSingle => yaru
       ? YaruIcons.repeat_single
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.repeat_1
           : Icons.repeat_one_rounded;
-  static IconData get shuffle => isLinux
+  static IconData get shuffle => yaru
       ? YaruIcons.shuffle
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.shuffle
           : Icons.shuffle_rounded;
-  static IconData get levelMiddle => isLinux
+  static IconData get levelMiddle => yaru
       ? YaruIcons.meter_middle
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.speedometer
           : Icons.speed_rounded;
-  static IconData get levelHigh => isLinux
+  static IconData get levelHigh => yaru
       ? YaruIcons.meter_three_quarter
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.speedometer
           : Icons.speed_rounded;
-  static IconData get levelLow => isLinux
+  static IconData get levelLow => yaru
       ? YaruIcons.meter_quarter
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.speedometer
           : Icons.speed_rounded;
-  static IconData get skipBackward => isLinux
+  static IconData get skipBackward => yaru
       ? YaruIcons.skip_backward
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.backward_end
           : Icons.skip_previous_rounded;
-  static IconData get skipForward => isLinux
+  static IconData get skipForward => yaru
       ? YaruIcons.skip_forward
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.forward_end
           : Icons.skip_next_rounded;
-  static IconData get goBack => isLinux
+  static IconData get goBack => yaru
       ? YaruIcons.go_previous
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.back
           : Icons.arrow_back_rounded;
-  static IconData get goNext => isLinux
+  static IconData get goNext => yaru
       ? YaruIcons.go_next
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.forward
           : Icons.arrow_forward_rounded;
-  static IconData get forward30 => isLinux
+  static IconData get forward30 => yaru
       ? YaruIcons.redo
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.goforward_30
           : Icons.forward_30_rounded;
-  static IconData get backward10 => isLinux
+  static IconData get backward10 => yaru
       ? YaruIcons.undo
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.gobackward_10
           : Icons.replay_10_rounded;
-  static IconData get goUp => isLinux
+  static IconData get goUp => yaru
       ? YaruIcons.go_up
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.up_arrow
           : Icons.arrow_upward_rounded;
-  static IconData get share => isLinux
+  static IconData get share => yaru
       ? YaruIcons.share
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.share
           : Icons.share;
-  static IconData get startPlayList => isLinux
+  static IconData get startPlayList => yaru
       ? YaruIcons.playlist_play
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.play_circle
           : Icons.playlist_play_rounded;
-  static IconData get playlist => isLinux
+  static IconData get playlist => yaru
       ? YaruIcons.playlist
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.music_note_list
           : Icons.list_rounded;
-  static IconData get pen => isLinux
+  static IconData get pen => yaru
       ? YaruIcons.pen
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.pen
           : Icons.edit_rounded;
-  static IconData get pin => isLinux
+  static IconData get pin => yaru
       ? YaruIcons.pin
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.pin
           : Icons.push_pin_outlined;
-  static IconData get pinFilled => isLinux
+  static IconData get pinFilled => yaru
       ? YaruIcons.pin
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.pin_fill
           : Icons.push_pin_rounded;
-  static IconData get heart => isLinux
+  static IconData get heart => yaru
       ? YaruIcons.heart
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.heart
           : Icons.favorite_outline_rounded;
-  static IconData get heartFilled => isLinux
+  static IconData get heartFilled => yaru
       ? YaruIcons.heart_filled
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.heart_fill
           : Icons.favorite_rounded;
-  static IconData get globe => isLinux
+  static IconData get globe => yaru
       ? YaruIcons.globe
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.globe
           : Icons.language;
-  static IconData get imageMissing => isLinux
+  static IconData get imageMissing => yaru
       ? YaruIcons.image_missing
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.question_diamond
           : Icons.image_not_supported_outlined;
-  static IconData get imageMissingFilled => isLinux
+  static IconData get imageMissingFilled => yaru
       ? YaruIcons.image_missing_filled
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.question_diamond_fill
           : Icons.image_not_supported_rounded;
-  static IconData get plus => isLinux
+  static IconData get plus => yaru
       ? YaruIcons.plus
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.plus
           : Icons.add_rounded;
-  static IconData get search => isLinux
+  static IconData get search => yaru
       ? YaruIcons.search
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.search
           : Icons.search_rounded;
-  IconData? get clear => isLinux
+  IconData? get clear => yaru
       ? YaruIcons.edit_clear
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.clear
           : Icons.clear_rounded;
-  static IconData get viewMore => isLinux
+  static IconData get viewMore => yaru
       ? YaruIcons.view_more
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.ellipsis_vertical
           : Icons.more_vert_rounded;
-  static IconData get close => isLinux
+  static IconData get close => yaru
       ? YaruIcons.window_close
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.clear
           : Icons.clear_rounded;
-  static IconData get list => isLinux
+  static IconData get list => yaru
       ? YaruIcons.unordered_list
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.list_bullet
           : Icons.list_rounded;
-  static IconData get grid => isLinux
+  static IconData get grid => yaru
       ? YaruIcons.app_grid
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.square_grid_3x2_fill
           : Icons.grid_on_rounded;
-  static IconData get move => isLinux
+  static IconData get move => yaru
       ? YaruIcons.ordered_list
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.move
           : Icons.move_down_rounded;
   static IconData get materialAscending => Icons.sort_rounded;
-  static IconData get ascending => isLinux
+  static IconData get ascending => yaru
       ? YaruIcons.sort_ascending
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.sort_up
           : materialAscending;
-  static IconData get descending => isLinux
+  static IconData get descending => yaru
       ? YaruIcons.sort_descending
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.sort_down
           : Icons.sort_rounded;
-  static IconData get info => isLinux
+  static IconData get info => yaru
       ? YaruIcons.information
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.info
           : Icons.info_rounded;
-  static IconData get clearAll => isLinux
+  static IconData get clearAll => yaru
       ? YaruIcons.edit_clear_all
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.paintbrush
           : Icons.cleaning_services_rounded;
 
-  static IconData get insertIntoQueue => isLinux
+  static IconData get insertIntoQueue => yaru
       ? YaruIcons.playlist_play
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.play_circle
           : Icons.playlist_add;
-  static IconData get sleep => isLinux
+  static IconData get sleep => yaru
       ? YaruIcons.clear_night
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.moon
           : Icons.mode_night_rounded;
-  static IconData get markAllRead => isLinux
+  static IconData get markAllRead => yaru
       ? YaruIcons.ok_filled
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.check_mark_circled_solid
           : Icons.check_circle;
-  static IconData get radioHistory => isLinux
+  static IconData get radioHistory => yaru
       ? YaruIcons.music_history
-      : useAppleIcons
+      : cupertino
           ? CupertinoIcons.clock
           : Icons.history_rounded;
+}
+
+enum IconSet {
+  yaru,
+  cupertino,
+  material;
+
+  static int get platformDefaultIndex {
+    if (isLinux) return yaru.index;
+    if (isMacOS || isIOS) return cupertino.index;
+    return material.index;
+  }
 }

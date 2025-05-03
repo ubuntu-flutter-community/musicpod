@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../app_config.dart';
 import '../common/data/close_btn_action.dart';
 import '../common/file_names.dart';
+import '../common/view/icons.dart';
 import '../extensions/shared_preferences_x.dart';
 import '../extensions/taget_platform_x.dart';
 import '../local_audio/local_audio_view.dart';
@@ -51,6 +52,11 @@ class SettingsService {
     if (value == null) return;
     _preferences.setInt(SPKeys.customThemeColor, value).then(notify);
   }
+
+  int get iconSetIndex =>
+      _preferences.getInt(SPKeys.iconSetIndex) ?? IconSet.platformDefaultIndex;
+  void setIconSetIndex(int value) =>
+      _preferences.setInt(SPKeys.iconSetIndex, value).then(notify);
 
   int get localAudioIndex =>
       _preferences.getInt(SPKeys.localAudioIndex) ??
