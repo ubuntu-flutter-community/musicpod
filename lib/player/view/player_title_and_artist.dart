@@ -45,6 +45,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     final playerModel = di<PlayerModel>();
     final podcastModel = di<PodcastModel>();
 
+    final hoverColor = theme.colorScheme.primary.withValues(alpha: 0.3);
     return Column(
       mainAxisSize: switch (playerPosition) {
         PlayerPosition.bottom => MainAxisSize.max,
@@ -59,61 +60,77 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
         _ => CrossAxisAlignment.center,
       },
       children: [
-        InkWell(
+        Material(
+          color: Colors.transparent,
           borderRadius: switch (playerPosition) {
             PlayerPosition.bottom => BorderRadius.circular(4),
             _ => BorderRadius.circular(10),
           },
-          onTap: audio == null
-              ? null
-              : () => _onTitleTap(
-                    audio: audio,
-                    text: icyTitle,
-                    context: context,
-                    routingManager: routingManager,
-                    playerModel: playerModel,
-                    localAudioModel: localAudioModel,
-                    appModel: appModel,
-                  ),
-          child: Tooltip(
-            message: _title(audio: audio, icyTitle: icyTitle),
-            child: Text(
-              _title(audio: audio, icyTitle: icyTitle),
-              style: switch (playerPosition) {
-                PlayerPosition.bottom => _bottomTitleTextStyle(),
-                _ => _fullHeightTitleTextStyle(theme)
-              },
-              textAlign: _textAlign(),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+          child: InkWell(
+            hoverColor: hoverColor,
+            borderRadius: switch (playerPosition) {
+              PlayerPosition.bottom => BorderRadius.circular(4),
+              _ => BorderRadius.circular(10),
+            },
+            onTap: audio == null
+                ? null
+                : () => _onTitleTap(
+                      audio: audio,
+                      text: icyTitle,
+                      context: context,
+                      routingManager: routingManager,
+                      playerModel: playerModel,
+                      localAudioModel: localAudioModel,
+                      appModel: appModel,
+                    ),
+            child: Tooltip(
+              message: _title(audio: audio, icyTitle: icyTitle),
+              child: Text(
+                _title(audio: audio, icyTitle: icyTitle),
+                style: switch (playerPosition) {
+                  PlayerPosition.bottom => _bottomTitleTextStyle(),
+                  _ => _fullHeightTitleTextStyle(theme)
+                },
+                textAlign: _textAlign(),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ),
         ),
-        InkWell(
+        Material(
           borderRadius: switch (playerPosition) {
             PlayerPosition.bottom => BorderRadius.circular(4),
             _ => BorderRadius.circular(8),
           },
-          onTap: audio == null
-              ? null
-              : () => _onArtistTap(
-                    audio: audio,
-                    routingManager: routingManager,
-                    localAudioModel: localAudioModel,
-                    appModel: appModel,
-                    podcastModel: podcastModel,
-                  ),
-          child: Tooltip(
-            message: _subTitle(audio),
-            child: Text(
-              _subTitle(audio),
-              style: switch (playerPosition) {
-                PlayerPosition.bottom => _bottomArtistTextStyle(),
-                _ => _fullHeightArtistTextStyle(theme)
-              },
-              textAlign: _textAlign(),
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
+          color: Colors.transparent,
+          child: InkWell(
+            hoverColor: hoverColor,
+            borderRadius: switch (playerPosition) {
+              PlayerPosition.bottom => BorderRadius.circular(4),
+              _ => BorderRadius.circular(8),
+            },
+            onTap: audio == null
+                ? null
+                : () => _onArtistTap(
+                      audio: audio,
+                      routingManager: routingManager,
+                      localAudioModel: localAudioModel,
+                      appModel: appModel,
+                      podcastModel: podcastModel,
+                    ),
+            child: Tooltip(
+              message: _subTitle(audio),
+              child: Text(
+                _subTitle(audio),
+                style: switch (playerPosition) {
+                  PlayerPosition.bottom => _bottomArtistTextStyle(),
+                  _ => _fullHeightArtistTextStyle(theme)
+                },
+                textAlign: _textAlign(),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
             ),
           ),
         ),
