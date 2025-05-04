@@ -41,7 +41,7 @@ class RadioModel extends SafeChangeNotifier {
   }
 
   Future<Audio?> getStationByUUID(String pageId) async {
-    var stationByUUID = await _radioService.getStationByUUID(pageId);
+    final stationByUUID = await _radioService.getStationByUUID(pageId);
 
     if (stationByUUID == null) {
       return null;

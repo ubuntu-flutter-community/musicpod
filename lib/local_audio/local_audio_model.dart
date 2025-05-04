@@ -95,9 +95,13 @@ class LocalAudioModel extends SafeChangeNotifier {
   ]) =>
       _localAudioService.findAlbum(albumId, audioFilter);
 
+  String? getCachedCoverPath(String albumId) =>
+      _localAudioService.getCachedCoverPath(albumId);
   Future<String?> findCoverPath(String albumId) async =>
       _localAudioService.findCoverPath(albumId);
 
+  List<Audio>? getCachedTitlesOfArtist(String artist) =>
+      _localAudioService.getCachedTitlesOfArtist(artist);
   Future<List<Audio>?> findTitlesOfArtist(
     String artist, [
     AudioFilter audioFilter = AudioFilter.album,

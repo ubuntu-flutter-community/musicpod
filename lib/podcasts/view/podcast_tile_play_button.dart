@@ -32,7 +32,7 @@ class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
     final theme = context.theme;
     final useYaruTheme =
         watchPropertyValue((SettingsModel m) => m.useYaruTheme);
-    var smallAvatarButtonRadius = getSmallAvatarButtonRadius(useYaruTheme);
+    final smallAvatarButtonRadius = getSmallAvatarButtonRadius(useYaruTheme);
     return Stack(
       alignment: Alignment.center,
       children: [

@@ -237,7 +237,7 @@ class SearchModel extends SafeChangeNotifier {
     _setFindingSimilarStation = true;
 
     Audio? match;
-    Station? maybe = await _findSimilarStation(station);
+    final Station? maybe = await _findSimilarStation(station);
     if (maybe != null) {
       match = Audio.fromStation(maybe);
     } else {

@@ -281,7 +281,7 @@ class PlayerService {
       }
       if (audio == null) return;
 
-      Media? media = audio!.path != null
+      final Media? media = audio!.path != null
           ? Media('file://${audio!.path!}')
           : (audio!.url != null)
               ? Media(audio!.url!)
@@ -666,7 +666,7 @@ class PlayerService {
         File(audio!.path!).existsSync()) {
       final maybeData = _localCoverService.get(audio.albumId);
       if (maybeData != null) {
-        File newFile = await _safeTempCover(maybeData);
+        final File newFile = await _safeTempCover(maybeData);
 
         return Uri.file(newFile.path, windows: Platform.isWindows);
       } else {
@@ -675,7 +675,7 @@ class PlayerService {
           path: audio.path!,
         );
         if (newData != null) {
-          File newFile = await _safeTempCover(newData);
+          final File newFile = await _safeTempCover(newData);
 
           return Uri.file(newFile.path, windows: Platform.isWindows);
         }

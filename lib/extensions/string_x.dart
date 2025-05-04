@@ -54,7 +54,7 @@ extension NullableStringX on String? {
     int hours = 0;
     int minutes = 0;
     int micros;
-    List<String> parts = durationAsString.split(':');
+    final List<String> parts = durationAsString.split(':');
     if (parts.length > 2) {
       hours = int.parse(parts[parts.length - 3]);
     }

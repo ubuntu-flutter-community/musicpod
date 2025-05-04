@@ -48,7 +48,7 @@ class QueueButton extends StatelessWidget with WatchItMixin {
           )
         : const QueueDialog();
 
-    void Function() onPressed = onTap ??
+    final void Function() onPressed = onTap ??
         () {
           if (di<PlayerModel>().audio?.audioType == AudioType.radio) {
             di<RadioModel>()

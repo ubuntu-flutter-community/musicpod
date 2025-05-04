@@ -206,7 +206,7 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
     final libraryModel = di<LibraryModel>();
 
     if (libraryModel.isStarredStation(pageId)) {
-      var audio = await di<RadioModel>().getStationByUUID(pageId);
+      final audio = await di<RadioModel>().getStationByUUID(pageId);
       return audio == null ? [] : [audio];
     }
 

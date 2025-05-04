@@ -20,7 +20,7 @@ class GenreBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final style = context.theme.pageHeaderDescription;
-    Set<String> genres = {};
+    final Set<String> genres = {};
     for (var e in audios) {
       final g = e.genre?.trim();
       if (g?.isNotEmpty == true) {

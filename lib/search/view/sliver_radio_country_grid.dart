@@ -43,7 +43,7 @@ class _SliverRadioCountryGridState extends State<SliverRadioCountryGrid> {
       );
     }
 
-    Iterable<Audio>? radioSearchResult = watchPropertyValue(
+    final Iterable<Audio>? radioSearchResult = watchPropertyValue(
       (SearchModel m) => m.radioCountryChartsPeak?.map(Audio.fromStation),
     );
 

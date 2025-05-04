@@ -58,7 +58,7 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
     final playerModel = di<PlayerModel>();
     final useYaruTheme =
         watchPropertyValue((SettingsModel m) => m.useYaruTheme);
-    var smallAvatarButtonRadius = getSmallAvatarButtonRadius(useYaruTheme);
+    final smallAvatarButtonRadius = getSmallAvatarButtonRadius(useYaruTheme);
 
     return YaruExpandable(
       isExpanded: isExpanded,

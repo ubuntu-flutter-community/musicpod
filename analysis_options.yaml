@@ -20,3 +20,4 @@ linter:
     unnecessary_await_in_return: true
     unnecessary_late: true
     unnecessary_breaks: true
+    prefer_final_locals: true
