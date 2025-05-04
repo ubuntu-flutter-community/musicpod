@@ -12,20 +12,20 @@ class ThemeTile extends StatelessWidget {
   Widget build(BuildContext context) {
     const height = 100.0;
     const width = 150.0;
-    var borderRadius2 = BorderRadius.circular(12);
-    var lightContainer = Container(
+    final borderRadius2 = BorderRadius.circular(12);
+    final lightContainer = Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: borderRadius2,
       ),
     );
-    var darkContainer = Container(
+    final darkContainer = Container(
       decoration: BoxDecoration(
         color: YaruColors.coolGrey,
         borderRadius: borderRadius2,
       ),
     );
-    var titleBar = Container(
+    final titleBar = Container(
       height: kLargestSpace,
       decoration: BoxDecoration(
         color: themeMode == ThemeMode.dark
@@ -116,7 +116,7 @@ class _CustomClipPathDark extends CustomClipper<Path> {
 
   @override
   Path getClip(Size size) {
-    Path path = Path();
+    final path = Path();
     path.lineTo(0, width);
     path.lineTo(width, height);
     return path;
@@ -134,7 +134,7 @@ class _CustomClipPathLight extends CustomClipper<Path> {
 
   @override
   Path getClip(Size size) {
-    Path path = Path();
+    final path = Path();
     path.lineTo(width, 0);
     path.lineTo(width, height);
     return path;

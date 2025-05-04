@@ -38,7 +38,7 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
     final duration = watchPropertyValue((PlayerModel m) => m.duration);
     final seek = playerModel.seek;
 
-    bool sliderActive = active &&
+    final sliderActive = active &&
         (duration != null &&
             position != null &&
             duration.inSeconds > position.inSeconds);

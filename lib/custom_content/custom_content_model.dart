@@ -55,7 +55,7 @@ class CustomContentModel extends SafeChangeNotifier {
   Future<List<({List<Audio> audios, String id})>> loadPlaylists({
     List<XFile>? files,
   }) async {
-    List<({List<Audio> audios, String id})> lists = [];
+    final List<({List<Audio> audios, String id})> lists = [];
 
     try {
       final paths = files?.map((e) => e.path) ??

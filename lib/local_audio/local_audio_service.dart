@@ -112,6 +112,14 @@ class LocalAudioService {
       (_allAlbumIDs ?? [])
           .firstWhereOrNull((e) => e == Audio.createAlbumId(artist, album));
 
+  List<Audio>? getCachedAlbum(String albumId) {
+    final maybe = _albumCache[albumId];
+    if (maybe != null) {
+      return maybe;
+    }
+    return null;
+  }
+
   final Map<String, List<Audio>?> _albumCache = {};
   Future<List<Audio>?> findAlbum(
     String albumId, [
@@ -154,6 +162,14 @@ class LocalAudioService {
     return list;
   }
 
+  String? getCachedCoverPath(String albumId) {
+    final maybe = _coverPathCache[albumId];
+    if (maybe != null) {
+      return maybe;
+    }
+    return null;
+  }
+
   final Map<String, String?> _coverPathCache = {};
   Future<String?> findCoverPath(String albumId) async {
     final maybe = _coverPathCache[albumId];
@@ -168,6 +184,14 @@ class LocalAudioService {
   }
 
   final Map<String, List<Audio>?> _titlesOfArtistCache = {};
+  List<Audio>? getCachedTitlesOfArtist(String artist) {
+    final maybe = _titlesOfArtistCache[artist];
+    if (maybe != null) {
+      return maybe;
+    }
+    return null;
+  }
+
   Future<List<Audio>?> findTitlesOfArtist(
     String artist, [
     AudioFilter audioFilter = AudioFilter.album,
@@ -194,6 +218,14 @@ class LocalAudioService {
     _titlesOfArtistCache[artist] = list;
 
     return list;
+  }
+
+  List<String>? getCachedAlbumIDsOfGenre(String genre) {
+    final maybe = _albumIDsOfGenreCache[genre];
+    if (maybe != null) {
+      return maybe;
+    }
+    return null;
   }
 
   final Map<String, List<String>?> _albumIDsOfGenreCache = {};
@@ -226,10 +258,10 @@ class LocalAudioService {
   }) {
     final images = <Uint8List>{};
 
-    List<Audio> albumAudios = findUniqueAlbumAudios(audios);
+    final List<Audio> albumAudios = findUniqueAlbumAudios(audios);
 
     for (var audio in albumAudios) {
-      var uint8list = _localCoverService.get(audio.albumId);
+      final uint8list = _localCoverService.get(audio.albumId);
       if (uint8list != null && images.length < limit) {
         images.add(uint8list);
       }
@@ -442,8 +474,8 @@ class LocalAudioService {
 }
 
 FutureOr<ImportResult> _readAudiosFromDirectory(String? directory) async {
-  List<Audio> newAudios = [];
-  List<String> failedImports = [];
+  final List<Audio> newAudios = [];
+  final List<String> failedImports = [];
 
   if (directory != null && Directory(directory).existsSync()) {
     final files = (await Directory(directory)

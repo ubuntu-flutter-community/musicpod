@@ -62,7 +62,7 @@ class _LocalCoverState extends State<LocalCover> {
     final fit = widget.fit ?? BoxFit.fitHeight;
     const medium = FilterQuality.medium;
 
-    Widget child = _cover != null
+    final child = _cover != null
         ? Image.memory(
             key: ValueKey(widget.albumId),
             _cover!,

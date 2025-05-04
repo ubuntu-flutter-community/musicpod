@@ -16,7 +16,7 @@ class SettingsDialog extends StatelessWidget {
       key: settingsNavigatorKey,
       initialRoute: '/settings',
       onGenerateRoute: (settings) {
-        Widget page = switch (settings.name) {
+        final page = switch (settings.name) {
           '/about' => const AboutPage(),
           '/licenses' => const LicensesPage(),
           _ => const SettingsPage()

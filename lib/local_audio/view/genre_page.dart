@@ -30,14 +30,14 @@ class _GenrePageState extends State<GenrePage> {
   @override
   void initState() {
     super.initState();
-    if (context.mounted) {
-      _albumIDsOfGenre =
-          di<LocalAudioModel>().findAlbumsIDOfGenre(widget.genre);
-    }
+    _albumIDsOfGenre = di<LocalAudioModel>().findAlbumsIDOfGenre(widget.genre);
   }
 
   @override
   Widget build(BuildContext context) {
+    final cachedAlbumIDsOfGenre =
+        di<LocalAudioModel>().getCachedAlbumIDsOfGenre(widget.genre);
+
     return Scaffold(
       appBar: HeaderBar(
         adaptive: true,
@@ -75,12 +75,14 @@ class _GenrePageState extends State<GenrePage> {
                     .copyWith(
                   bottom: bottomPlayerPageGap,
                 ),
-                sliver: FutureBuilder(
-                  future: _albumIDsOfGenre,
-                  builder: (context, snapshot) => AlbumsView(
-                    albumIDs: snapshot.data,
-                  ),
-                ),
+                sliver: cachedAlbumIDsOfGenre != null
+                    ? AlbumsView(albumIDs: cachedAlbumIDsOfGenre)
+                    : FutureBuilder(
+                        future: _albumIDsOfGenre,
+                        builder: (context, snapshot) => AlbumsView(
+                          albumIDs: snapshot.data,
+                        ),
+                      ),
               ),
             ],
           );
