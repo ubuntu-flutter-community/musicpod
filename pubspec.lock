@@ -1883,8 +1883,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: b75bb6e2b3c30126b17d73a67577ad43f5c65d7c
-      resolved-ref: b75bb6e2b3c30126b17d73a67577ad43f5c65d7c
+      ref: "19b30535046519dd2393ebc20731b94cd300d943"
+      resolved-ref: "19b30535046519dd2393ebc20731b94cd300d943"
       url: "https://github.com/ubuntu/yaru.dart"
     source: git
     version: "7.0.0"
