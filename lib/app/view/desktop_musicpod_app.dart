@@ -44,7 +44,7 @@ class DesktopMusicPodApp extends StatelessWidget with WatchItMixin {
       highContrastDarkTheme: highContrastDarkTheme,
       theme: lightTheme ??
           (useYaruTheme
-              ? yaruDarkWithTweaks(createYaruLightTheme(primaryColor: color))
+              ? yaruLightWithTweaks(createYaruLightTheme(primaryColor: color))
               : phoenix.lightTheme),
       darkTheme: darkTheme ??
           (useYaruTheme
