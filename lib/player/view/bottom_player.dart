@@ -5,8 +5,6 @@ import '../../app/app_model.dart';
 import '../../app/connectivity_model.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
-import '../../common/view/like_icon_button.dart';
-import '../../common/view/stared_station_icon_button.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -15,6 +13,7 @@ import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import 'blurred_full_height_player_image.dart';
 import 'bottom_player_image.dart';
+import 'bottom_player_like_and_star_button.dart';
 import 'play_button.dart';
 import 'playback_rate_button.dart';
 import 'player_main_controls.dart';
@@ -41,7 +40,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
 
     final active = audio?.path != null || isOnline;
 
-    final children = [
+    final trackAndPlayer = [
       PlayerTrack(
         active: active,
         bottomPlayer: true,
@@ -76,18 +75,11 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                         playerPosition: PlayerPosition.bottom,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: switch (audio?.audioType) {
-                        AudioType.local => LikeIconButton(
-                            audio: audio,
-                            color: theme.colorScheme.onSurface,
-                          ),
-                        AudioType.radio =>
-                          StaredStationIconButton(audio: audio),
-                        _ => const SizedBox.shrink(),
-                      },
+                    const SizedBox(
+                      width: 10,
                     ),
+                    if (!smallWindow)
+                      BottomPlayerLikeAndStarButton(audio: audio),
                   ],
                 ),
               ),
@@ -120,8 +112,11 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                     ],
                   ),
                 )
-              else
+              else ...[
+                BottomPlayerLikeAndStarButton(audio: audio),
+                const SizedBox(width: 10),
                 PlayButton(active: active),
+              ],
               const SizedBox(
                 width: 10,
               ),
@@ -134,7 +129,8 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
     final player = SizedBox(
       height: watchPropertyValue((PlayerModel m) => m.bottomPlayerHeight),
       child: Column(
-        children: (isMobile ? children.reversed : children).toList(),
+        children:
+            (isMobile ? trackAndPlayer.reversed : trackAndPlayer).toList(),
       ),
     );
 

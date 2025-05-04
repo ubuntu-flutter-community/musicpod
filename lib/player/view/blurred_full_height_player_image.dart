@@ -23,7 +23,7 @@ class BlurredFullHeightPlayerImage extends StatelessWidget {
         width: size.width,
         height: size.height,
         child: Blur(
-          blur: 35,
+          blur: 90,
           colorOpacity: theme.isLight ? 0.6 : 0.7,
           blurColor:
               theme.isLight ? Colors.white : theme.scaffoldBackgroundColor,
