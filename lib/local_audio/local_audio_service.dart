@@ -112,6 +112,14 @@ class LocalAudioService {
       (_allAlbumIDs ?? [])
           .firstWhereOrNull((e) => e == Audio.createAlbumId(artist, album));
 
+  List<Audio>? getCachedAlbum(String albumId) {
+    final maybe = _albumCache[albumId];
+    if (maybe != null) {
+      return maybe;
+    }
+    return null;
+  }
+
   final Map<String, List<Audio>?> _albumCache = {};
   Future<List<Audio>?> findAlbum(
     String albumId, [
@@ -210,6 +218,14 @@ class LocalAudioService {
     _titlesOfArtistCache[artist] = list;
 
     return list;
+  }
+
+  List<String>? getCachedAlbumIDsOfGenre(String genre) {
+    final maybe = _albumIDsOfGenreCache[genre];
+    if (maybe != null) {
+      return maybe;
+    }
+    return null;
   }
 
   final Map<String, List<String>?> _albumIDsOfGenreCache = {};

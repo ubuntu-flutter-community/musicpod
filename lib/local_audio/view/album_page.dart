@@ -49,10 +49,24 @@ class _AlbumPageState extends State<AlbumPage> {
 
   @override
   Widget build(BuildContext context) {
-    watchPropertyValue((LocalAudioModel m) {
-      getAlbum();
-      return m.audios.hashCode;
-    });
+    final localAudioModel = di<LocalAudioModel>();
+    final cachedAlbum = localAudioModel.getCachedAlbum(widget.id);
+    if (cachedAlbum != null) {
+      return SliverAudioPage(
+        pageId: widget.id,
+        audioPageType: AudioPageType.album,
+        audios: cachedAlbum,
+        image: AlbumPageImage(audio: cachedAlbum.firstOrNull),
+        noSearchResultIcons: const AnimatedEmoji(AnimatedEmojis.bubbles),
+        noSearchResultMessage: Text(context.l10n.albumNotFound),
+        pageTitle: cachedAlbum.firstWhereOrNull((e) => e.album != null)?.album,
+        pageSubTitle:
+            cachedAlbum.firstWhereOrNull((e) => e.artist != null)?.artist,
+        onPageSubTitleTab: onArtistTap,
+        onPageLabelTab: onArtistTap,
+        controlPanel: AlbumPageControlButton(album: cachedAlbum, id: widget.id),
+      );
+    }
 
     return FutureBuilder(
       future: _album,

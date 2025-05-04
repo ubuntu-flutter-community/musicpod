@@ -89,6 +89,8 @@ class LocalAudioModel extends SafeChangeNotifier {
   String? findAlbumId({required String artist, required String album}) =>
       _localAudioService.findAlbumId(artist: artist, album: album);
 
+  List<Audio>? getCachedAlbum(String albumId) =>
+      _localAudioService.getCachedAlbum(albumId);
   Future<List<Audio>?> findAlbum(
     String albumId, [
     AudioFilter audioFilter = AudioFilter.trackNumber,
@@ -108,6 +110,8 @@ class LocalAudioModel extends SafeChangeNotifier {
   ]) async =>
       _localAudioService.findTitlesOfArtist(artist, audioFilter);
 
+  List<String>? getCachedAlbumIDsOfGenre(String albumId) =>
+      _localAudioService.getCachedAlbumIDsOfGenre(albumId);
   Future<List<String>?> findAlbumsIDOfGenre(String genre) async =>
       _localAudioService.findAlbumIDsOfGenre(genre);
 
