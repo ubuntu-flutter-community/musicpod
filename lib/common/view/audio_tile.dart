@@ -34,6 +34,7 @@ class AudioTile extends StatefulWidget with WatchItStatefulWidgetMixin {
     this.showDuration = true,
     this.alwaysShowOptionButton = true,
     this.neverShowLikeIcon = false,
+    this.showSlimTileSubtitle = true,
   });
 
   final String pageId;
@@ -48,7 +49,8 @@ class AudioTile extends StatefulWidget with WatchItStatefulWidgetMixin {
   final bool allowLeadingImage,
       showDuration,
       alwaysShowOptionButton,
-      neverShowLikeIcon;
+      neverShowLikeIcon,
+      showSlimTileSubtitle;
   final Color? selectedColor;
 
   @override
@@ -115,8 +117,9 @@ class _AudioTileState extends State<AudioTile> {
             widget.audio.discNumber != null &&
             widget.audio.discTotal != null &&
             widget.audio.discTotal! > 1
-        ? Text('${l10n.disc} ${widget.audio.discNumber}')
+        ? Text('${l10n.disc} ${widget.audio.discNumber}', maxLines: 1)
         : TapAbleText(
+            maxLines: 1,
             wrapInFlexible: slimTile,
             text: subTitle,
             onTap: widget.onSubTitleTap == null
@@ -157,10 +160,11 @@ class _AudioTileState extends State<AudioTile> {
                   flex: 4,
                   child: title,
                 ),
-                Expanded(
-                  flex: 3,
-                  child: subtitle,
-                ),
+                if (widget.showSlimTileSubtitle)
+                  Expanded(
+                    flex: 3,
+                    child: subtitle,
+                  ),
                 if (widget.showDuration)
                   Expanded(
                     child: _AudioTileDuration(
