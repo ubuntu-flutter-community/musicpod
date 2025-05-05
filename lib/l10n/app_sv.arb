@@ -1371,5 +1371,11 @@
   "onlyLocalAudioForPlaylists": "Endast lokalt ljud stöds för import av spellistor! Sök efter dem i radiofunktionen och lägg till dem i ditt bibliotek med stjärnknappen!",
   "@onlyLocalAudioForPlaylists": {},
   "customStationWarning": "Den angivna URL:en måste finnas på Radiobrowser-servern, annars kommer den inte att läggas till i ditt bibliotek! Sök helst efter dem i radiofunktionen och lägg till dem i ditt bibliotek med stjärnknappen!",
-  "@customStationWarning": {}
+  "@customStationWarning": {},
+  "disc": "Skiva",
+  "@disc": {},
+  "groupAlbumsOnlyByAlbumNameDescription": "Detta grupperar album endast efter albumnamn och inte efter artistnamn + albumnamn, vilket förutsätter att albumnamnet är unikt i ditt bibliotek!",
+  "@groupAlbumsOnlyByAlbumNameDescription": {},
+  "groupAlbumsOnlyByAlbumName": "Gruppera album endast efter albumnamn",
+  "@groupAlbumsOnlyByAlbumName": {}
 }
