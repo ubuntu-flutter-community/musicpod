@@ -4,6 +4,7 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/no_search_result_page.dart';
+import '../../common/view/progress.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../podcast_model.dart';
@@ -54,12 +55,11 @@ class _LazyPodcastPageState extends State<LazyPodcastPage> {
               snapshot.data?.first.albumArtUrl ??
               snapshot.data?.first.imageUrl;
 
-          if (snapshot.connectionState == ConnectionState.waiting ||
-              snapshot.data == null) {
+          if (!snapshot.hasData) {
             return LazyPodcastLoadingPage(
               title: title,
               imageUrl: imageUrl,
-              child: const Center(child: CircularProgressIndicator()),
+              child: const Center(child: Progress()),
             );
           }
 
