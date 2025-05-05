@@ -1,6 +1,9 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:window_manager/window_manager.dart';
+
+import '../extensions/taget_platform_x.dart';
 
 class WindowSizeToSettingsListener implements WindowListener {
   WindowSizeToSettingsListener({
@@ -14,6 +17,8 @@ class WindowSizeToSettingsListener implements WindowListener {
   final Future<void> Function(Size value) _onResize;
   final Future<void> Function(bool value) _onMaximize;
   final Future<void> Function(bool value) _onFullscreen;
+
+  Timer? _debounce;
 
   @override
   void onWindowBlur() {}
@@ -48,11 +53,24 @@ class WindowSizeToSettingsListener implements WindowListener {
   @override
   void onWindowMoved() {}
 
+  // Note: linux does not have window resized, so we need to use window resize
+  // and debounce it
   @override
-  void onWindowResize() {}
+  void onWindowResize() {
+    if (isLinux) {
+      if (_debounce?.isActive ?? false) _debounce?.cancel();
+      _debounce = Timer(const Duration(milliseconds: 500), () {
+        WindowManager.instance.getSize().then(_onResize);
+      });
+    }
+  }
 
   @override
-  void onWindowResized() => WindowManager.instance.getSize().then(_onResize);
+  void onWindowResized() {
+    if (isMacOS || isWindows) {
+      WindowManager.instance.getSize().then(_onResize);
+    }
+  }
 
   @override
   void onWindowRestore() {}
