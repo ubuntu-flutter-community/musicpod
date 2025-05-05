@@ -105,7 +105,7 @@ class Iconz {
   static IconData get artist => yaru
       ? YaruIcons.music_artist
       : cupertino
-          ? CupertinoIcons.music_albums
+          ? CupertinoIcons.music_house
           : Icons.interpreter_mode_outlined;
   static IconData get album => yaru
       ? YaruIcons.disk

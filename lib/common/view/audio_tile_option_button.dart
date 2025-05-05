@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app/view/routing_manager.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
+import '../../local_audio/local_audio_model.dart';
+import '../../local_audio/view/album_page.dart';
+import '../../local_audio/view/artist_page.dart';
 import '../../player/player_model.dart';
 import '../../playlists/view/add_to_playlist_dialog.dart';
 import '../data/audio.dart';
@@ -122,6 +126,42 @@ class AudioTileOptionButton extends StatelessWidget {
                 ),
               ),
             ),
+          if (audios.none((e) => e.audioType != AudioType.local)) ...[
+            PopupMenuItem(
+              onTap: () {
+                final artistId = audios.firstOrNull?.artist;
+                if (artistId != null) {
+                  di<RoutingManager>().push(
+                    pageId: artistId,
+                    builder: (c) => ArtistPage(pageId: artistId),
+                  );
+                }
+              },
+              child: YaruTile(
+                leading: Icon(Iconz.artist),
+                title: Text(l10n.showArtistPage),
+              ),
+            ),
+            PopupMenuItem(
+              onTap: () async {
+                final albumId = audios.firstOrNull?.albumId;
+                if (albumId != null) {
+                  final albumAudios =
+                      await di<LocalAudioModel>().findAlbum(albumId);
+                  if (albumAudios != null) {
+                    di<RoutingManager>().push(
+                      pageId: albumId,
+                      builder: (context) => AlbumPage(id: albumId),
+                    );
+                  }
+                }
+              },
+              child: YaruTile(
+                leading: Icon(Iconz.album),
+                title: Text(l10n.showAlbumPage),
+              ),
+            ),
+          ],
           if (audios.none(
                 (e) => e.audioType == AudioType.podcast,
               ) &&
