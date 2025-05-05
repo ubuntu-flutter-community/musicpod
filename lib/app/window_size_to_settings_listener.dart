@@ -49,10 +49,10 @@ class WindowSizeToSettingsListener implements WindowListener {
   void onWindowMoved() {}
 
   @override
-  void onWindowResize() => WindowManager.instance.getSize().then(_onResize);
+  void onWindowResize() {}
 
   @override
-  void onWindowResized() {}
+  void onWindowResized() => WindowManager.instance.getSize().then(_onResize);
 
   @override
   void onWindowRestore() {}
