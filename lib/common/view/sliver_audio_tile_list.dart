@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../extensions/build_context_x.dart';
-import 'ui_constants.dart';
 import '../../player/player_model.dart';
 import '../data/audio.dart';
 import 'audio_page_type.dart';
 import 'audio_tile.dart';
+import 'ui_constants.dart';
 
 class SliverAudioTileList extends StatelessWidget with WatchItMixin {
   const SliverAudioTileList({
@@ -26,9 +26,13 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final width = context.mediaQuerySize.width;
+    final mqSize = context.mediaQuerySize.width;
+    final playerToTheRight = mqSize > kSideBarThreshHold;
+    final width = playerToTheRight ? mqSize - kSideBarPlayerWidth : mqSize;
+
     final playerModel = di<PlayerModel>();
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
+
     final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
     final allowLeadingImage = audios.length < kShowLeadingThreshold &&
         audioPageType != AudioPageType.allTitlesView;
@@ -44,10 +48,8 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
             return Padding(
               padding: const EdgeInsets.only(bottom: kSmallestSpace),
               child: AudioTile(
-                showDuration: width > 900,
-                alwaysShowOptionButton: width > 1300,
-                neverShowLikeIcon: width < 600,
-                showSlimTileSubtitle: width > 600,
+                showDuration: width > 1200,
+                showSlimTileSubtitle: width > 900,
                 allowLeadingImage: allowLeadingImage,
                 key: ValueKey(audio.path ?? audio.url),
                 audioPageType: audioPageType,

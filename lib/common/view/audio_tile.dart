@@ -32,8 +32,6 @@ class AudioTile extends StatefulWidget with WatchItStatefulWidgetMixin {
     this.selectedColor,
     this.onTitleTap,
     this.showDuration = true,
-    this.alwaysShowOptionButton = true,
-    this.neverShowLikeIcon = false,
     this.showSlimTileSubtitle = true,
   });
 
@@ -46,11 +44,7 @@ class AudioTile extends StatefulWidget with WatchItStatefulWidgetMixin {
   final void Function()? onTap;
   final void Function()? onTitleTap;
   final void Function(String text)? onSubTitleTap;
-  final bool allowLeadingImage,
-      showDuration,
-      alwaysShowOptionButton,
-      neverShowLikeIcon,
-      showSlimTileSubtitle;
+  final bool allowLeadingImage, showDuration, showSlimTileSubtitle;
   final Color? selectedColor;
 
   @override
@@ -113,10 +107,12 @@ class _AudioTileState extends State<AudioTile> {
             ),
     );
 
-    final subtitle = widget.audioPageType == AudioPageType.album &&
+    final useDiscNumberAsSubTitle =
+        widget.audioPageType == AudioPageType.album &&
             widget.audio.discNumber != null &&
             widget.audio.discTotal != null &&
-            widget.audio.discTotal! > 1
+            widget.audio.discTotal! > 1;
+    final subtitle = useDiscNumberAsSubTitle
         ? Text('${l10n.disc} ${widget.audio.discNumber}', maxLines: 1)
         : TapAbleText(
             maxLines: 1,
@@ -198,8 +194,6 @@ class _AudioTileState extends State<AudioTile> {
         pageId: widget.pageId,
         audioPageType: widget.audioPageType,
         selectedColor: selectedColor,
-        showLikeIcon: !widget.neverShowLikeIcon,
-        alwaysShowOptionButton: widget.alwaysShowOptionButton,
       ),
     );
 
@@ -228,8 +222,6 @@ class AudioTileTrail extends StatelessWidget with WatchItMixin {
     required this.audioPageType,
     required this.hovered,
     required this.selectedColor,
-    required this.showLikeIcon,
-    required this.alwaysShowOptionButton,
   });
 
   final Audio audio;
@@ -239,8 +231,6 @@ class AudioTileTrail extends StatelessWidget with WatchItMixin {
   final AudioPageType audioPageType;
   final bool hovered;
   final Color selectedColor;
-  final bool showLikeIcon;
-  final bool alwaysShowOptionButton;
 
   @override
   Widget build(BuildContext context) {
@@ -252,36 +242,32 @@ class AudioTileTrail extends StatelessWidget with WatchItMixin {
       spacing: kSmallestSpace,
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (showLikeIcon)
-          Opacity(
-            opacity: hovered || selected || liked || starred ? 1 : 0,
-            child: switch (audio.audioType) {
-              AudioType.radio => StaredStationIconButton(
-                  audio: audio,
-                  color: selected && isPlayerPlaying ? selectedColor : null,
-                ),
-              AudioType.local => LikeIconButton(
-                  audio: audio,
-                  color: selected && isPlayerPlaying ? selectedColor : null,
-                ),
-              _ => SizedBox.square(
-                  dimension: context.theme.buttonTheme.height,
-                ),
-            },
-          ),
         Opacity(
-          opacity: alwaysShowOptionButton || hovered || selected ? 1 : 0,
-          child: AudioTileOptionButton(
-            title: Text(audio.title ?? ''),
-            subTitle: Text(audio.artist ?? ''),
-            selected: selected && isPlayerPlaying,
-            playlistId: pageId,
-            audios: [audio],
-            searchTerm: '${audio.artist ?? ''} - ${audio.title ?? ''}',
-            allowRemove: (audioPageType == AudioPageType.playlist ||
-                    audioPageType == AudioPageType.likedAudio) &&
-                audio.audioType != AudioType.radio,
-          ),
+          opacity: hovered || selected || liked || starred ? 1 : 0,
+          child: switch (audio.audioType) {
+            AudioType.radio => StaredStationIconButton(
+                audio: audio,
+                color: selected && isPlayerPlaying ? selectedColor : null,
+              ),
+            AudioType.local => LikeIconButton(
+                audio: audio,
+                color: selected && isPlayerPlaying ? selectedColor : null,
+              ),
+            _ => SizedBox.square(
+                dimension: context.theme.buttonTheme.height,
+              ),
+          },
+        ),
+        AudioTileOptionButton(
+          title: Text(audio.title ?? ''),
+          subTitle: Text(audio.artist ?? ''),
+          selected: selected && isPlayerPlaying,
+          playlistId: pageId,
+          audios: [audio],
+          searchTerm: '${audio.artist ?? ''} - ${audio.title ?? ''}',
+          allowRemove: (audioPageType == AudioPageType.playlist ||
+                  audioPageType == AudioPageType.likedAudio) &&
+              audio.audioType != AudioType.radio,
         ),
       ],
     );

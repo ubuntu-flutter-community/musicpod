@@ -3,6 +3,7 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
+import '../../extensions/taget_platform_x.dart';
 import '../../settings/settings_model.dart';
 
 class SideBarProgress extends StatelessWidget {
@@ -45,7 +46,7 @@ class Progress extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final useYaruTheme =
         watchPropertyValue((SettingsModel m) => m.useYaruTheme);
-    return useYaruTheme
+    return useYaruTheme && isLinux
         ? YaruCircularProgressIndicator(
             strokeWidth: strokeWidth,
             value: value,
@@ -54,10 +55,9 @@ class Progress extends StatelessWidget with WatchItMixin {
           )
         : Padding(
             padding: padding ?? const EdgeInsets.all(4),
-            child: CircularProgressIndicator(
+            child: CircularProgressIndicator.adaptive(
               strokeWidth: strokeWidth,
               value: value,
-              color: color,
               backgroundColor: value == null
                   ? null
                   : (backgroundColor ??

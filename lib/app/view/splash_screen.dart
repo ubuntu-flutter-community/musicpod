@@ -40,9 +40,9 @@ class SplashScreen extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(20),
-                      child: isMobile
+                      child: isLinux
                           ? const YaruCircularProgressIndicator()
-                          : const CircularProgressIndicator(),
+                          : const CircularProgressIndicator.adaptive(),
                     ),
                   ],
                 ),
