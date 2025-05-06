@@ -19,13 +19,13 @@ class MouseAndKeyboardCommandWrapper extends StatelessWidget {
   Widget build(BuildContext context) => Shortcuts(
         shortcuts: <LogicalKeySet, Intent>{
           LogicalKeySet(LogicalKeyboardKey.keyF, LogicalKeyboardKey.meta):
-              const SearchIntent(),
+              const _SearchIntent(),
           LogicalKeySet(LogicalKeyboardKey.keyF, LogicalKeyboardKey.control):
-              const SearchIntent(),
+              const _SearchIntent(),
         },
         child: Actions(
           actions: <Type, Action<Intent>>{
-            SearchIntent: CallbackAction<SearchIntent>(
+            _SearchIntent: CallbackAction<_SearchIntent>(
               onInvoke: (intent) {
                 final currentPageId = di<RoutingManager>().selectedPageId;
                 final searchModel = di<SearchModel>();
@@ -61,8 +61,8 @@ class MouseAndKeyboardCommandWrapper extends StatelessWidget {
       );
 }
 
-class SearchIntent extends Intent {
-  const SearchIntent();
+class _SearchIntent extends Intent {
+  const _SearchIntent();
 }
 
 class _MouseBackButtonRecognizer extends BaseTapGestureRecognizer {
