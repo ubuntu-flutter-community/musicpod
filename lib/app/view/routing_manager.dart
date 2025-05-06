@@ -40,6 +40,9 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
   }) async {
     final inLibrary = isPageInLibrary(pageId);
     assert(inLibrary || builder != null);
+    if (selectedPageId == pageId && !replace) {
+      return;
+    }
     if (inLibrary) {
       if (replace) {
         await _masterNavigatorKey.currentState?.pushReplacementNamed(pageId);

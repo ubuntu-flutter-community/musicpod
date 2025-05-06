@@ -126,10 +126,8 @@ class _AlbumPageSideBarIconState extends State<AlbumPageSideBarIcon> {
   @override
   Widget build(BuildContext context) {
     final fallBack = SideBarFallBackImage(
-      child: Icon(
-        Iconz.startPlayList,
-        color: getAlphabetColor(widget.albumId),
-      ),
+      color: getAlphabetColor(widget.albumId),
+      child: Icon(Iconz.startPlayList),
     );
 
     return FutureBuilder(
