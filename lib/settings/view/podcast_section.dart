@@ -196,7 +196,6 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
                       ),
                     ),
           ),
-          const SizedBox(width: kSmallestSpace),
         ],
       ),
     );

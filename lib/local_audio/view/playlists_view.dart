@@ -39,7 +39,7 @@ class PlaylistsView extends StatelessWidget {
       gridDelegate: kDiskGridDelegate,
       itemBuilder: (context, index) {
         final id = lists.elementAt(index);
-        return YaruSelectableContainer(
+        final yaruSelectableContainer = YaruSelectableContainer(
           selected: false,
           onTap: () => id == PageIDs.customContent
               ? showDialog(
@@ -107,6 +107,19 @@ class PlaylistsView extends StatelessWidget {
             ],
           ),
         );
+
+        if (id == PageIDs.customContent || id == PageIDs.likedAudios) {
+          return Tooltip(
+            message: id == PageIDs.customContent
+                ? context.l10n.createNewPlaylist
+                : id == PageIDs.likedAudios
+                    ? context.l10n.likedSongs
+                    : id,
+            child: yaruSelectableContainer,
+          );
+        }
+
+        return yaruSelectableContainer;
       },
     );
   }
