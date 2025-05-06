@@ -10,8 +10,8 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../../settings/settings_model.dart';
-import 'back_button_wrapper.dart';
 import 'desktop_home_page.dart';
+import 'mouse_and_keyboard_command_wrapper.dart';
 
 class DesktopMusicPodApp extends StatelessWidget with WatchItMixin {
   const DesktopMusicPodApp({
@@ -53,7 +53,7 @@ class DesktopMusicPodApp extends StatelessWidget with WatchItMixin {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: supportedLocales,
       onGenerateTitle: (context) => AppConfig.appTitle,
-      home: const MouseBackButtonWrapper(child: DesktopHomePage()),
+      home: const MouseAndKeyboardCommandWrapper(child: DesktopHomePage()),
       scrollBehavior: const MaterialScrollBehavior().copyWith(
         dragDevices: {
           PointerDeviceKind.mouse,
