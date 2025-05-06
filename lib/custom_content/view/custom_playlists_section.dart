@@ -30,6 +30,23 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
         watchPropertyValue((CustomContentModel m) => m.playlistName);
     watchPropertyValue((CustomContentModel m) => m.playlists.length);
     final playlists = di<CustomContentModel>().playlists;
+    final onPressed = (playlistName?.isNotEmpty ?? false)
+        ? () async {
+            if (shownInDialog && Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            }
+
+            await libraryModel.addPlaylist(playlistName!, []);
+            await Future.delayed(
+              const Duration(milliseconds: 200),
+              () => routingManager.push(
+                pageId: customContentModel.playlistName!,
+              ),
+            );
+
+            customContentModel.reset();
+          }
+        : null;
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -37,6 +54,7 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
           padding: const EdgeInsets.only(bottom: 10),
           child: TextField(
             autofocus: true,
+            onSubmitted: (_) => onPressed?.call(),
             decoration: InputDecoration(
               label: Text(l10n.name),
               suffixIcon: ElevatedButton(
@@ -48,23 +66,7 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
                     ),
                   ),
                 ),
-                onPressed: (playlistName?.isNotEmpty ?? false)
-                    ? () async {
-                        if (shownInDialog && Navigator.of(context).canPop()) {
-                          Navigator.of(context).pop();
-                        }
-
-                        await libraryModel.addPlaylist(playlistName!, []);
-                        await Future.delayed(
-                          const Duration(milliseconds: 200),
-                          () => routingManager.push(
-                            pageId: customContentModel.playlistName!,
-                          ),
-                        );
-
-                        customContentModel.reset();
-                      }
-                    : null,
+                onPressed: onPressed,
                 child: Text(
                   l10n.add,
                 ),

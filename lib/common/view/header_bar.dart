@@ -47,12 +47,14 @@ class HeaderBar extends StatelessWidget
 
     Widget? leading;
 
+    final canPop = watchPropertyValue((RoutingManager m) => m.canPop);
+
     if (useSidebarButton &&
         !context.showMasterPanel &&
         masterScaffoldKey.currentState?.isDrawerOpen == false) {
       leading = const SidebarButton();
     } else {
-      if (useBackButton && di<RoutingManager>().canPop) {
+      if (useBackButton && canPop) {
         leading = const NavBackButton();
       } else {
         leading = isMobile

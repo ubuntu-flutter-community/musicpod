@@ -11,7 +11,11 @@ class NavBackButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    void onTap() => di<RoutingManager>().pop();
+    void onTap() {
+      di<SettingsModel>().scrollIndex = 0;
+      di<RoutingManager>().pop();
+    }
+
     final useYaruTheme =
         watchPropertyValue((SettingsModel m) => m.useYaruTheme);
 

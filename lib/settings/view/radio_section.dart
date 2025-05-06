@@ -74,7 +74,6 @@ class RadioSection extends StatelessWidget with WatchItMixin {
                             ),
                           ),
                 ),
-                const SizedBox(width: kMediumSpace),
               ],
             ),
           ),
