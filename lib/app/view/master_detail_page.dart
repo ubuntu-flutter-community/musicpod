@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../common/page_ids.dart';
-import '../../common/view/back_gesture.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
@@ -68,12 +67,10 @@ class MasterDetailPage extends StatelessWidget {
                         masterItems.elementAt(0))
                     .pageBuilder(context);
 
-                return PageRouteBuilder(
+                return MaterialPageRoute(
                   settings: settings,
                   maintainState: PageIDs.permanent.contains(settings.name),
-                  pageBuilder: (_, __, ___) => BackGesture(child: page),
-                  transitionsBuilder: (_, a, __, c) =>
-                      FadeTransition(opacity: a, child: c),
+                  builder: (context) => page,
                 );
               },
             ),

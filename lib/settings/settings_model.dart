@@ -23,6 +23,13 @@ class SettingsModel extends SafeChangeNotifier {
   final SettingsService _service;
   final ExternalPathService _externalPathService;
 
+  int _scrollIndex = 0;
+  int get scrollIndex => _scrollIndex;
+  set scrollIndex(int value) {
+    _scrollIndex = value;
+    notifyListeners();
+  }
+
   StreamSubscription<bool>? _propertiesChangedSub;
 
   String? get directory => _service.directory;

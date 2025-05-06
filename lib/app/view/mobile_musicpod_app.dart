@@ -41,10 +41,10 @@ class MobileMusicPodApp extends StatelessWidget with WatchItMixin {
                 masterItems.elementAt(0))
             .pageBuilder(context);
 
-        return PageRouteBuilder(
+        return MaterialPageRoute(
           settings: settings,
           maintainState: false,
-          pageBuilder: (_, __, ___) => MobilePage(page: page),
+          builder: (context) => MobilePage(page: page),
         );
       },
       debugShowCheckedModeBanner: false,

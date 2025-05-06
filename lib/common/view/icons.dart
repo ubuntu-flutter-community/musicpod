@@ -105,12 +105,12 @@ class Iconz {
   static IconData get artist => yaru
       ? YaruIcons.music_artist
       : cupertino
-          ? CupertinoIcons.music_house
+          ? CupertinoIcons.music_albums
           : Icons.interpreter_mode_outlined;
   static IconData get album => yaru
       ? YaruIcons.disk
       : cupertino
-          ? CupertinoIcons.music_albums
+          ? CupertinoIcons.circle
           : Icons.album_rounded;
   static IconData get external => yaru
       ? YaruIcons.external_link

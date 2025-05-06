@@ -64,14 +64,13 @@ Iterable<MasterItem> permanentMasterItems = [
         MainPageIcon(audioType: AudioType.podcast, selected: selected),
     pageId: PageIDs.podcasts,
   ),
-  if (isMobile)
-    MasterItem(
-      titleBuilder: (context) => Text(context.l10n.settings),
-      iconBuilder: (selected) =>
-          Icon(selected ? Iconz.settingsFilled : Iconz.settings),
-      pageBuilder: (_) => const SettingsPage(),
-      pageId: PageIDs.settings,
-    ),
+  MasterItem(
+    titleBuilder: (context) => Text(context.l10n.settings),
+    iconBuilder: (selected) =>
+        Icon(selected ? Iconz.settingsFilled : Iconz.settings),
+    pageBuilder: (_) => const SettingsPage(),
+    pageId: PageIDs.settings,
+  ),
   if (isMobile)
     MasterItem(
       titleBuilder: (context) => Text(context.l10n.home),

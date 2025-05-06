@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide AboutDialog, LicensePage;
 import 'package:path/path.dart' as p;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:watch_it/watch_it.dart';
@@ -6,9 +6,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
 import '../../app/connectivity_model.dart';
-import '../../app/view/routing_manager.dart';
 import '../../app_config.dart';
-import '../../common/view/global_keys.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/snackbars.dart';
 import '../../common/view/tapable_text.dart';
@@ -18,6 +16,7 @@ import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
 import '../settings_model.dart';
 import 'about_page.dart';
+import 'licenses_dialog.dart';
 
 class AboutSection extends StatelessWidget with WatchItMixin {
   const AboutSection({super.key});
@@ -102,12 +101,10 @@ class _AboutTileState extends State<_AboutTile> {
                   ),
                 ),
       trailing: OutlinedButton(
-        onPressed: () => isMobile
-            ? di<RoutingManager>().push(
-                pageId: 'about',
-                builder: (p0) => const AboutPage(),
-              )
-            : settingsNavigatorKey.currentState?.pushNamed('/about'),
+        onPressed: () => showDialog(
+          context: context,
+          builder: (context) => const AboutDialog(),
+        ),
         child: Text(context.l10n.contributors),
       ),
     );
@@ -124,12 +121,10 @@ class _LicenseTile extends StatelessWidget {
         text: '${context.l10n.license}: GPL3',
       ),
       trailing: OutlinedButton(
-        onPressed: () => isMobile
-            ? di<RoutingManager>().push(
-                pageId: 'licenses',
-                builder: (p0) => const LicensePage(),
-              )
-            : settingsNavigatorKey.currentState?.pushNamed('/licenses'),
+        onPressed: () => showDialog(
+          context: context,
+          builder: (context) => const LicensesDialog(),
+        ),
         child: Text(context.l10n.dependencies),
       ),
       enabled: true,

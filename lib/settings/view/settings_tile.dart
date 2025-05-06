@@ -6,15 +6,16 @@ import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
 import '../../app/connectivity_model.dart';
+import '../../app/view/routing_manager.dart';
 import '../../app_config.dart';
+import '../../common/page_ids.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../settings_model.dart';
-import 'settings_dialog.dart';
 
-class SettingsTile extends StatelessWidget {
+class SettingsTile extends StatelessWidget with WatchItMixin {
   const SettingsTile({super.key});
 
   @override
@@ -26,16 +27,19 @@ class SettingsTile extends StatelessWidget {
       trailing = const _UpdateButton();
     }
 
+    final selectedPageId =
+        watchPropertyValue((RoutingManager m) => m.selectedPageId);
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Stack(
         children: [
           YaruMasterTile(
+            selected: selectedPageId == PageIDs.settings,
             leading: Icon(Iconz.settings),
             title: Text(context.l10n.settings),
-            onTap: () => showDialog(
-              context: context,
-              builder: (_) => const SettingsDialog(),
+            onTap: () => di<RoutingManager>().push(
+              pageId: PageIDs.settings,
             ),
           ),
           if (trailing != null) Positioned(right: 15, child: trailing),

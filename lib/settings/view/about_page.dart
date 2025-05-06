@@ -6,7 +6,6 @@ import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
 import '../../app_config.dart';
-import '../../common/view/header_bar.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/tapable_text.dart';
@@ -16,14 +15,33 @@ import '../../l10n/l10n.dart';
 
 const _kTileSize = 50.0;
 
-class AboutPage extends StatefulWidget with WatchItStatefulWidgetMixin {
-  const AboutPage({super.key});
+class AboutDialog extends StatelessWidget {
+  const AboutDialog({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      titlePadding: EdgeInsets.zero,
+      contentPadding: EdgeInsets.zero,
+      title: YaruDialogTitleBar(
+        border: BorderSide.none,
+        backgroundColor: context.theme.dialogTheme.backgroundColor,
+        title: Text(context.l10n.contributors),
+      ),
+      backgroundColor: context.theme.dialogTheme.backgroundColor,
+      content: const SizedBox(height: 800, width: 600, child: _AboutPage()),
+    );
+  }
+}
+
+class _AboutPage extends StatefulWidget with WatchItStatefulWidgetMixin {
+  const _AboutPage();
 
   @override
   State<StatefulWidget> createState() => _AboutPageState();
 }
 
-class _AboutPageState extends State<AboutPage> {
+class _AboutPageState extends State<_AboutPage> {
   late Future<List<Contributor>> _contributors;
 
   @override
@@ -41,175 +59,145 @@ class _AboutPageState extends State<AboutPage> {
         ?.copyWith(color: Colors.lightBlue, overflow: TextOverflow.visible);
     const maxLines = 3;
 
-    final body = Padding(
-      padding: const EdgeInsets.all(kLargestSpace),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TapAbleText(
-            text:
-                'MusicPod is made by Frederik Feichtmeier. If you like MusicPod, please sponsor me!',
-            onTap: () => launchUrl(Uri.parse(AppConfig.sponsorLink)),
-            style: linkStyle,
-            maxLines: maxLines,
-          ),
-          const SizedBox(
-            height: kLargestSpace,
-          ),
-          TapAbleText(
-            onTap: () => launchUrl(Uri.parse('https://ko-fi.com/amugofjava')),
-            text:
-                'MusicPod uses Podcast Search to find podcasts which is made by Ben Hills, please sponsor him!',
-            style: linkStyle,
-            maxLines: maxLines,
-          ),
-          const SizedBox(
-            height: kLargestSpace,
-          ),
-          TapAbleText(
-            onTap: () => launchUrl(
-              Uri.parse('https://github.com/sponsors/alexmercerind'),
-            ),
-            text:
-                'MusicPod uses MediaKit to play Media which is made by Hitesh Kumar Saini, please sponsor him!',
-            style: linkStyle,
-            maxLines: maxLines,
-          ),
-          const SizedBox(
-            height: kLargestSpace,
-          ),
-          TapAbleText(
-            onTap: () => launchUrl(Uri.parse('https://github.com/kenvandine')),
-            text:
-                'MusicPod Snap packaging is made by Ken VanDine, please sponsor him!',
-            style: linkStyle,
-            maxLines: maxLines,
-          ),
-          const SizedBox(
-            height: kLargestSpace,
-          ),
-          TapAbleText(
-            onTap: () => launchUrl(
-              Uri.parse(
-                'https://github.com/sponsors/ClementBeal',
+    return Column(
+      children: [
+        Expanded(
+          child: CustomScrollView(
+            slivers: [
+              ...[
+                TapAbleText(
+                  text:
+                      'MusicPod is made by Frederik Feichtmeier. If you like MusicPod, please sponsor me!',
+                  onTap: () => launchUrl(Uri.parse(AppConfig.sponsorLink)),
+                  style: linkStyle,
+                  maxLines: maxLines,
+                ),
+                TapAbleText(
+                  onTap: () =>
+                      launchUrl(Uri.parse('https://ko-fi.com/amugofjava')),
+                  text:
+                      'MusicPod uses Podcast Search to find podcasts which is made by Ben Hills, please sponsor him!',
+                  style: linkStyle,
+                  maxLines: maxLines,
+                ),
+                TapAbleText(
+                  onTap: () => launchUrl(
+                    Uri.parse('https://github.com/sponsors/alexmercerind'),
+                  ),
+                  text:
+                      'MusicPod uses MediaKit to play Media which is made by Hitesh Kumar Saini, please sponsor him!',
+                  style: linkStyle,
+                  maxLines: maxLines,
+                ),
+                TapAbleText(
+                  onTap: () =>
+                      launchUrl(Uri.parse('https://github.com/kenvandine')),
+                  text:
+                      'MusicPod Snap packaging is made by Ken VanDine, please sponsor him!',
+                  style: linkStyle,
+                  maxLines: maxLines,
+                ),
+                TapAbleText(
+                  onTap: () => launchUrl(
+                    Uri.parse(
+                      'https://github.com/sponsors/ClementBeal',
+                    ),
+                  ),
+                  text:
+                      'MusicPod metadata reading is enabled by Clement Beal, please sponsor him!',
+                  style: linkStyle,
+                  maxLines: maxLines,
+                ),
+                Text(
+                  context.l10n.contributors,
+                  style: theme.textTheme.bodyLarge,
+                ),
+              ].map(
+                (e) => SliverPadding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: kLargestSpace,
+                    vertical: kSmallestSpace,
+                  ),
+                  sliver: SliverToBoxAdapter(child: e),
+                ),
               ),
-            ),
-            text:
-                'MusicPod metadata reading is enabled by Clement Beal, please sponsor him!',
-            style: linkStyle,
-            maxLines: maxLines,
-          ),
-          const SizedBox(
-            height: 2 * kLargestSpace,
-          ),
-          Text(
-            context.l10n.contributors,
-            style: theme.textTheme.bodyLarge,
-          ),
-          Expanded(
-            child: FutureBuilder<List<Contributor>>(
-              future: _contributors,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return SizedBox(
-                    height: 300,
-                    child: GridView.builder(
-                      padding: const EdgeInsets.only(
-                        bottom: kLargestSpace,
-                        top: 10,
+              FutureBuilder<List<Contributor>>(
+                future: _contributors,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return SliverPadding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: kLargestSpace,
+                        vertical: kSmallestSpace,
                       ),
-                      gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: _kTileSize,
-                        mainAxisSpacing: 5,
-                        crossAxisSpacing: 5,
-                      ),
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        final e = snapshot.data!.elementAt(index);
-                        return Tooltip(
-                          message: e.login,
-                          child: YaruBanner(
-                            padding: EdgeInsets.zero,
-                            onTap: e.htmlUrl == null
-                                ? null
-                                : () => launchUrl(Uri.parse(e.htmlUrl!)),
-                            child: SizedBox.square(
-                              dimension: _kTileSize,
-                              child: ClipRRect(
-                                borderRadius: const BorderRadius.all(radius),
-                                child: SafeNetworkImage(
-                                  fit: BoxFit.cover,
-                                  url: e.avatarUrl,
-                                  fallBackIcon: const YaruPlaceholderIcon(
-                                    borderRadius:
-                                        BorderRadiusDirectional.vertical(
-                                      top: radius,
-                                      bottom: radius,
+                      sliver: SliverGrid.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: _kTileSize,
+                          mainAxisSpacing: 5,
+                          crossAxisSpacing: 5,
+                        ),
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          final e = snapshot.data!.elementAt(index);
+                          return Tooltip(
+                            message: e.login,
+                            child: YaruBanner(
+                              padding: EdgeInsets.zero,
+                              onTap: e.htmlUrl == null
+                                  ? null
+                                  : () => launchUrl(Uri.parse(e.htmlUrl!)),
+                              child: SizedBox.square(
+                                dimension: _kTileSize,
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.all(radius),
+                                  child: SafeNetworkImage(
+                                    fit: BoxFit.cover,
+                                    url: e.avatarUrl,
+                                    fallBackIcon: const YaruPlaceholderIcon(
+                                      borderRadius:
+                                          BorderRadiusDirectional.vertical(
+                                        top: radius,
+                                        bottom: radius,
+                                      ),
+                                      size: Size.square(_kTileSize),
                                     ),
-                                    size: Size.square(_kTileSize),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                } else {
-                  return const Center(
-                    child: Progress(),
-                  );
-                }
-              },
-            ),
+                          );
+                        },
+                      ),
+                    );
+                  } else {
+                    return const SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: Center(
+                        child: Progress(),
+                      ),
+                    );
+                  }
+                },
+              ),
+            ],
           ),
-          TapAbleText(
+        ),
+        Padding(
+          padding: const EdgeInsets.only(
+            left: kLargestSpace,
+            right: kLargestSpace,
+            bottom: kMediumSpace,
+          ),
+          child: TapAbleText(
             style: linkStyle,
             onTap: () => launchUrl(Uri.parse(AppConfig.repoUrl)),
             text:
                 'Copyright by Frederik Feichtmeier 2023 and onwards - all rights reserved.',
             maxLines: maxLines,
           ),
-        ],
-      ),
-    );
-
-    final title = Text('${context.l10n.about} ${AppConfig.appTitle}');
-
-    if (isMobile) {
-      return Scaffold(
-        appBar: HeaderBar(
-          adaptive: false,
-          title: title,
         ),
-        body: body,
-      );
-    }
-
-    return Container(
-      decoration: BoxDecoration(
-        color: context.theme.dialogTheme.backgroundColor,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          YaruDialogTitleBar(
-            border: BorderSide.none,
-            backgroundColor: context.theme.dialogTheme.backgroundColor,
-            title: title,
-            leading: YaruBackButton(
-              style: YaruBackButtonStyle.rounded,
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ),
-          Expanded(
-            child: body,
-          ),
-        ],
-      ),
+      ],
     );
   }
 }
