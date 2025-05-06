@@ -126,7 +126,8 @@ class AudioTileOptionButton extends StatelessWidget {
                 ),
               ),
             ),
-          if (audios.none((e) => e.audioType != AudioType.local)) ...[
+          if (audios.length == 1 &&
+              audios.none((e) => e.audioType != AudioType.local)) ...[
             PopupMenuItem(
               onTap: () {
                 final artistId = audios.firstOrNull?.artist;

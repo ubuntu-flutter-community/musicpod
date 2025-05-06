@@ -3,15 +3,15 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../app/view/routing_manager.dart';
+import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
-import 'icons.dart';
+import 'routing_manager.dart';
 
 const double _kButtonSize = 50;
 const double _kMaxExtent = 400;
 
-class BackGesture extends StatefulWidget with WatchItStatefulWidgetMixin {
+class BackGesture extends StatefulWidget {
   final Widget child;
 
   const BackGesture({
@@ -93,7 +93,6 @@ class _BackGestureState extends State<BackGesture>
 
   @override
   Widget build(BuildContext context) {
-    final canPop = watchPropertyValue((RoutingManager m) => m.canPop);
     return LayoutBuilder(
       builder: (context, constraints) {
         return GestureDetector(
@@ -104,7 +103,7 @@ class _BackGestureState extends State<BackGesture>
           child: Stack(
             children: <Widget>[
               widget.child,
-              if (canPop)
+              if (di<RoutingManager>().canPop)
                 AnimatedBuilder(
                   animation: _swipeBackController,
                   builder: (context, child) {

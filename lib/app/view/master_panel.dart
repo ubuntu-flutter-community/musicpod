@@ -1,8 +1,10 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app_config.dart';
+import '../../common/page_ids.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/ui_constants.dart';
 import '../../library/library_model.dart';
@@ -54,7 +56,8 @@ class PermanentPageList extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final masterItems = permanentMasterItems;
+    final masterItems =
+        permanentMasterItems.whereNot((e) => e.pageId == PageIDs.settings);
     final selectedPageId =
         watchPropertyValue((RoutingManager m) => m.selectedPageId);
     return SliverList.builder(

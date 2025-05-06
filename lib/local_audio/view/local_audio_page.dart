@@ -109,7 +109,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                             const SizedBox(
                               height: kLargestSpace,
                             ),
-                            const SettingsButton.important(),
+                            const SettingsButton.important(scrollIndex: 2),
                           ],
                         ),
                       )

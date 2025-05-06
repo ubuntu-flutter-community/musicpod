@@ -60,11 +60,7 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
 
     return YaruSection(
       headline: Text(l10n.exposeOnlineHeadline),
-      margin: const EdgeInsets.only(
-        top: kLargestSpace,
-        right: kLargestSpace,
-        left: kLargestSpace,
-      ),
+      margin: const EdgeInsets.symmetric(horizontal: kLargestSpace),
       child: Column(
         children: [
           YaruTile(

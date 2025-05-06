@@ -45,6 +45,7 @@ import 'radio/radio_service.dart';
 import 'search/search_model.dart';
 import 'settings/settings_model.dart';
 import 'settings/settings_service.dart';
+import 'settings/view/licenses_dialog.dart';
 
 /// Registers all Services, ViewModels and external dependencies
 void registerDependencies({required List<String> args}) async {
@@ -340,5 +341,6 @@ void registerDependencies({required List<String> args}) async {
         LocalAudioService,
       ],
       dispose: (s) => s.dispose(),
-    );
+    )
+    ..registerLazySingleton(() => LicenseStore());
 }

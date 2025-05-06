@@ -10,7 +10,6 @@ import '../../common/page_ids.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
-import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
@@ -22,6 +21,7 @@ import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../search/search_model.dart';
+import '../../settings/view/settings_action.dart';
 import '../radio_model.dart';
 import 'open_radio_discover_page_button.dart';
 import 'radio_history_list.dart';
@@ -32,7 +32,6 @@ class RadioLibPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
     final radioCollectionView =
         watchPropertyValue((RadioModel m) => m.radioCollectionView);
     final radioModel = di<RadioModel>();
@@ -48,7 +47,7 @@ class RadioLibPage extends StatelessWidget with WatchItMixin {
           child: Row(
             spacing: kSmallestSpace,
             children: [
-              if (!isMobile) const SizedBox(width: 2 * kLargestSpace),
+              const SizedBox(width: kSmallestSpace + 2 * kLargestSpace),
               Expanded(
                 child: Center(
                   child: Padding(
@@ -85,58 +84,8 @@ class RadioLibPage extends StatelessWidget with WatchItMixin {
                   ),
                 ),
               ),
-              if (!isMobile) ...[
-                IconButton(
-                  tooltip: l10n.exportStarredStationsToOpmlFile,
-                  icon: Icon(
-                    Iconz.export,
-                    semanticLabel: l10n.exportStarredStationsToOpmlFile,
-                  ),
-                  onPressed: processing
-                      ? null
-                      : () => di<CustomContentModel>()
-                          .exportStarredStationsToOpmlFile(),
-                ),
-                IconButton(
-                  tooltip: l10n.importStarredStationsFromOpmlFile,
-                  icon: Icon(
-                    Iconz.import,
-                    semanticLabel: l10n.importStarredStationsFromOpmlFile,
-                  ),
-                  onPressed: processing
-                      ? null
-                      : () => di<CustomContentModel>()
-                          .importStarredStationsFromOpmlFile(),
-                ),
-                IconButton(
-                  icon: Icon(
-                    Iconz.remove,
-                    semanticLabel: l10n.removeAllStarredStations,
-                  ),
-                  tooltip: context.l10n.removeAllStarredStations,
-                  onPressed: processing
-                      ? null
-                      : () => showDialog(
-                            context: context,
-                            builder: (context) {
-                              return ConfirmationDialog(
-                                showCloseIcon: false,
-                                title:
-                                    Text(l10n.removeAllStarredStationsConfirm),
-                                content: SizedBox(
-                                  width: 350,
-                                  child: Text(
-                                    l10n.removeAllStarredStationsDescription,
-                                  ),
-                                ),
-                                onConfirm: () =>
-                                    di<LibraryModel>().unStarAllStations(),
-                              );
-                            },
-                          ),
-                ),
-                const SizedBox(width: kMediumSpace),
-              ],
+              const SettingsButton.icon(scrollIndex: 3),
+              const SizedBox(width: kSmallestSpace),
             ],
           ),
         ),

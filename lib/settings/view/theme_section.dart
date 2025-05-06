@@ -32,6 +32,9 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
     final color = customThemeColor == null
         ? kMusicPodDefaultColor
         : Color(customThemeColor);
+    final iconSetIndex = watchPropertyValue(
+      (SettingsModel m) => m.iconSetIndex,
+    );
     return YaruSection(
       margin: const EdgeInsets.only(
         left: kLargestSpace,
@@ -82,44 +85,27 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
           YaruTile(
             title: Text(l10n.selectIconThemeTitle),
             subtitle: Text(l10n.selectIconThemeDescription),
-            trailing: Material(
-              borderRadius: BorderRadius.circular(8),
-              color: context.colorScheme.primary.withAlpha(20),
-              child: DropdownButton(
-                isDense: true,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: kMediumSpace,
-                  vertical: kMediumSpace,
-                ),
-                borderRadius: BorderRadius.circular(8),
-                underline: const SizedBox(),
-                icon: Padding(
-                  padding: const EdgeInsets.only(left: kMediumSpace),
-                  child: Icon(
-                    Iconz.dropdown,
-                    size: theme.iconTheme.size,
-                  ),
-                ),
-                items: IconSet.values
-                    .map(
-                      (IconSet iconSet) => DropdownMenuItem(
-                        value: iconSet.index,
-                        child: Text(
-                          iconSet.name,
-                        ),
+            trailing: YaruPopupMenuButton(
+              itemBuilder: (p0) => IconSet.values
+                  .map(
+                    (IconSet iconSet) => PopupMenuItem(
+                      value: iconSet.index,
+                      child: Text(
+                        iconSet.name,
                       ),
-                    )
-                    .toList(),
-                value: watchPropertyValue(
-                  (SettingsModel m) => m.iconSetIndex,
-                ),
-                onChanged: (int? value) {
-                  if (value != null) {
-                    di<SettingsModel>().setIconSetIndex(value);
-                    appRestartNotifier.value = UniqueKey();
-                  }
-                },
-              ),
+                    ),
+                  )
+                  .toList(),
+              initialValue: iconSetIndex,
+              onSelected: (int? value) {
+                if (value != null) {
+                  di<SettingsModel>().setIconSetIndex(value);
+                  di<SettingsModel>().scrollIndex = 0;
+                  appRestartNotifier.value = UniqueKey();
+                }
+              },
+              icon: Icon(Iconz.dropdown),
+              child: Text(IconSet.values[iconSetIndex].name),
             ),
           ),
           YaruTile(

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../common/logging.dart';
-import '../../common/view/back_gesture.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../library/library_service.dart';
 import 'mobile_page.dart';
@@ -35,7 +34,7 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
 
   Future<void> push({
     required String pageId,
-    Widget Function(BuildContext)? builder,
+    Widget Function(BuildContext context)? builder,
     bool maintainState = false,
     bool replace = false,
   }) async {
@@ -53,9 +52,8 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
         settings: RouteSettings(
           name: pageId,
         ),
-        builder: (context) => isMobile
-            ? MobilePage(page: builder(context))
-            : BackGesture(child: builder(context)),
+        builder: (context) =>
+            isMobile ? MobilePage(page: builder(context)) : builder(context),
       );
 
       if (replace) {
