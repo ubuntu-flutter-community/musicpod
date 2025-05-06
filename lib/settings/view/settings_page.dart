@@ -58,38 +58,33 @@ class _SettingsPageState extends State<SettingsPage> {
           ],
         ),
         body: LayoutBuilder(
-          builder: (context, constraints) {
-            return Padding(
-              padding: getAdaptiveHorizontalPadding(
-                constraints: constraints,
-                limit: 700,
-                min: 0,
-              ),
-              child: ListView(
-                controller: _scrollController,
-                padding: EdgeInsets.only(bottom: bottomPlayerPageGap ?? 0),
-                children: const [
-                  ThemeSection(),
-                  PodcastSection(),
-                  LocalAudioSection(),
-                  RadioSection(),
-                  ExposeOnlineSection(),
-                  ResourceSection(),
-                  ResetSection(),
-                  AboutSection(),
-                ]
-                    .mapIndexed(
-                      (i, e) => AutoScrollTag(
-                        key: ValueKey(i),
-                        controller: _scrollController,
-                        index: i,
-                        child: e,
-                      ),
-                    )
-                    .toList(),
-              ),
-            );
-          },
+          builder: (context, constraints) => ListView(
+            controller: _scrollController,
+            padding: getAdaptiveHorizontalPadding(
+              constraints: constraints,
+              limit: 600,
+              min: 0,
+            ),
+            children: const [
+              ThemeSection(),
+              PodcastSection(),
+              LocalAudioSection(),
+              RadioSection(),
+              ExposeOnlineSection(),
+              ResourceSection(),
+              ResetSection(),
+              AboutSection(),
+            ]
+                .mapIndexed(
+                  (i, e) => AutoScrollTag(
+                    key: ValueKey(i),
+                    controller: _scrollController,
+                    index: i,
+                    child: e,
+                  ),
+                )
+                .toList(),
+          ),
         ),
       );
 }
