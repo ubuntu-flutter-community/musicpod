@@ -38,8 +38,6 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-
     // This is needed to be notified about both size changes and also reordering
     watchPropertyValue(
       (LibraryModel m) => m.getPlaylistById(pageId)?.length,
@@ -76,12 +74,11 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
                     onError: (path) => showFailedImportsSnackBar(
                       failedImports: [path],
                       context: context,
-                      message: l10n.failedToImport,
+                      failedToImport: true,
                     ),
                     onParseError: (path) => showFailedImportsSnackBar(
                       failedImports: [path],
                       context: context,
-                      message: l10n.failedToReadMetadata,
                     ),
                   ),
                 );
@@ -90,7 +87,7 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
                 showFailedImportsSnackBar(
                   failedImports: [value.toString()],
                   context: context,
-                  message: l10n.failedToImport,
+                  failedToImport: true,
                 );
               }
             },

@@ -9,7 +9,6 @@ import '../../app_config.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
-import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../settings/settings_model.dart';
@@ -31,8 +30,7 @@ class MobileMusicPodApp extends StatelessWidget with WatchItMixin {
     return MaterialApp(
       navigatorKey: routingManager.masterNavigatorKey,
       navigatorObservers: [routingManager],
-      initialRoute:
-          isMobile ? (routingManager.selectedPageId ?? PageIDs.homePage) : null,
+      initialRoute: routingManager.selectedPageId ?? PageIDs.homePage,
       onGenerateRoute: (settings) {
         final masterItems = getAllMasterItems(di<LibraryModel>());
         final page = (masterItems.firstWhereOrNull(

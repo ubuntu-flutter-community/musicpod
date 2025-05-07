@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart' hide isMobile;
+import 'package:yaru/yaru.dart';
 
 import '../../extensions/taget_platform_x.dart';
 import '../../settings/settings_service.dart';

@@ -7,6 +7,7 @@ import 'package:yaru/yaru.dart';
 import '../../app/app_model.dart';
 import '../../app/view/routing_manager.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../settings/settings_model.dart';
 import '../data/close_btn_action.dart';
@@ -70,10 +71,10 @@ class HeaderBar extends StatelessWidget
         backgroundColor: backgroundColor,
         titleSpacing: titleSpacing,
         centerTitle: true,
-        leading: leading,
         title: title ?? const Text(''),
         actions: actions,
         foregroundColor: foregroundColor,
+        automaticallyImplyLeading: includeBackButton,
       );
     }
 

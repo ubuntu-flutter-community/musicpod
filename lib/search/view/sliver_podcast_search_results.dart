@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/connectivity_model.dart';
-import '../../common/view/loading_grid.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/offline_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
+import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../../podcasts/podcast_model.dart';
 import '../search_model.dart';
@@ -89,12 +89,7 @@ class SliverPodcastSearchCountryChartsResults extends StatefulWidget
     with WatchItStatefulWidgetMixin {
   const SliverPodcastSearchCountryChartsResults({
     super.key,
-    this.take,
-    this.expand = true,
   });
-
-  final int? take;
-  final bool expand;
 
   @override
   State<SliverPodcastSearchCountryChartsResults> createState() =>
@@ -110,61 +105,35 @@ class _SliverPodcastSearchCountryChartsResultsState
         .init(
           updateMessage: context.l10n.newEpisodeAvailable,
         )
-        .then((_) => di<SearchModel>().fetchPodcastChartsPeak());
+        .then(
+          (_) => di<SearchModel>().fetchPodcastChartsPeak(),
+        );
   }
 
   @override
   Widget build(BuildContext context) {
-    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
-
-    if (!isOnline) {
-      return const SliverFillRemaining(
-        hasScrollBody: false,
-        child: OfflineBody(),
-      );
-    }
-
     final loading = watchPropertyValue((SearchModel m) => m.loading);
 
     final results = watchPropertyValue(
       (SearchModel m) => m.podcastChartsPeak?.items,
     );
-    final searchResultItems =
-        widget.take != null ? results?.take(widget.take!) : results;
 
-    if (!widget.expand) {
-      if (searchResultItems == null) {
-        return SliverLoadingGrid(limit: widget.take ?? 100);
-      } else if (searchResultItems.isEmpty) {
-        return const SliverNoSearchResultPage(
-          expand: false,
-        );
-      }
+    if (results == null || loading) {
+      return const Center(child: Progress());
+    } else if (results.isEmpty) {
+      return const NoSearchResultPage();
     }
 
-    if (searchResultItems == null || searchResultItems.isEmpty) {
-      return SliverNoSearchResultPage(
-        expand: widget.expand,
-        icon: loading
-            ? const SizedBox.shrink()
-            : searchResultItems == null
-                ? const AnimatedEmoji(AnimatedEmojis.drum)
-                : const AnimatedEmoji(AnimatedEmojis.babyChick),
-        message: loading
-            ? const Progress()
-            : Text(
-                searchResultItems == null
-                    ? context.l10n.search
-                    : context.l10n.noPodcastFound,
-              ),
-      );
-    }
-
-    return SliverGrid.builder(
-      itemCount: searchResultItems.length,
-      gridDelegate: audioCardGridDelegate,
-      itemBuilder: (context, index) => PodcastCard(
-        item: searchResultItems.elementAt(index),
+    return SizedBox(
+      height: kAudioCardDimension + kAudioCardBottomHeight,
+      child: ListView.separated(
+        itemCount: results.length,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) => PodcastCard(
+          item: results.elementAt(index),
+        ),
+        separatorBuilder: (context, index) =>
+            const SizedBox(width: kMediumSpace),
       ),
     );
   }

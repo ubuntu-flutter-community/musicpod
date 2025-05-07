@@ -32,7 +32,7 @@ class MasterTileWithPageId extends StatelessWidget {
         key: ValueKey(item.pageId),
         onTap: () => di<RoutingManager>().push(pageId: item.pageId),
         pageId: item.pageId,
-        leading: item.iconBuilder?.call(selectedPageId == item.pageId),
+        leading: item.iconBuilder(selectedPageId == item.pageId),
         title: item.titleBuilder(context),
         subtitle: item.subtitleBuilder?.call(context),
         selected: selectedPageId == item.pageId,

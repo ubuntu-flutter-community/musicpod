@@ -11,14 +11,16 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason>?
     showFailedImportsSnackBar({
   required List<String> failedImports,
   required BuildContext context,
-  required String message,
+  bool failedToImport = false,
 }) {
+  if (context.mounted == false) return null;
   final settingsModel = di<SettingsModel>();
+  final l10n = context.l10n;
   if (settingsModel.neverShowFailedImports) return null;
   return showSnackBar(
     context: context,
     content: _Content(
-      message: message,
+      message: failedToImport ? l10n.failedToImport : l10n.failedToReadMetadata,
       failedImports: failedImports,
       onNeverShowFailedImports: () =>
           settingsModel.setNeverShowFailedImports(true),

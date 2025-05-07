@@ -3,6 +3,7 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';
+import '../../extensions/taget_platform_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -242,22 +243,24 @@ class AudioTileTrail extends StatelessWidget with WatchItMixin {
       spacing: kSmallestSpace,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Opacity(
-          opacity: hovered || selected || liked || starred ? 1 : 0,
-          child: switch (audio.audioType) {
-            AudioType.radio => StaredStationIconButton(
-                audio: audio,
-                color: selected && isPlayerPlaying ? selectedColor : null,
-              ),
-            AudioType.local => LikeIconButton(
-                audio: audio,
-                color: selected && isPlayerPlaying ? selectedColor : null,
-              ),
-            _ => SizedBox.square(
-                dimension: context.theme.buttonTheme.height,
-              ),
-          },
-        ),
+        // TODO: check if a mouse is connected instead of checking the platform
+        if (!isMobile)
+          Opacity(
+            opacity: hovered || selected || liked || starred ? 1 : 0,
+            child: switch (audio.audioType) {
+              AudioType.radio => StaredStationIconButton(
+                  audio: audio,
+                  color: selected && isPlayerPlaying ? selectedColor : null,
+                ),
+              AudioType.local => LikeIconButton(
+                  audio: audio,
+                  color: selected && isPlayerPlaying ? selectedColor : null,
+                ),
+              _ => SizedBox.square(
+                  dimension: context.theme.buttonTheme.height,
+                ),
+            },
+          ),
         AudioTileOptionButton(
           title: Text(audio.title ?? ''),
           subTitle: Text(audio.artist ?? ''),

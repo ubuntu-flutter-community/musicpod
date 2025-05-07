@@ -612,7 +612,8 @@ class PlayerService {
   Future<void> _initAudioService() async {
     _audioHandler = await AudioService.init(
       config: AudioServiceConfig(
-        androidNotificationOngoing: true,
+        androidNotificationOngoing: false,
+        androidStopForegroundOnPause: false,
         androidNotificationChannelName: AppConfig.appName,
         androidNotificationChannelId:
             Platform.isAndroid ? AppConfig.androidChannelId : null,

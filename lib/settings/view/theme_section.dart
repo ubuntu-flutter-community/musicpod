@@ -8,6 +8,7 @@ import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/taget_platform_x.dart';
 import '../../extensions/theme_mode_x.dart';
 import '../../l10n/l10n.dart';
 import '../settings_model.dart';
@@ -74,40 +75,42 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
               ),
             ),
           ),
-          YaruTile(
-            title: Text(l10n.useYaruThemeTitle),
-            subtitle: Text(l10n.useYaruThemeDescription),
-            trailing: CommonSwitch(
-              onChanged: model.setUseYaruTheme,
-              value: useYaruTheme,
+          if (!isMobile) ...[
+            YaruTile(
+              title: Text(l10n.useYaruThemeTitle),
+              subtitle: Text(l10n.useYaruThemeDescription),
+              trailing: CommonSwitch(
+                onChanged: model.setUseYaruTheme,
+                value: useYaruTheme,
+              ),
             ),
-          ),
-          YaruTile(
-            title: Text(l10n.selectIconThemeTitle),
-            subtitle: Text(l10n.selectIconThemeDescription),
-            trailing: YaruPopupMenuButton(
-              itemBuilder: (p0) => IconSet.values
-                  .map(
-                    (IconSet iconSet) => PopupMenuItem(
-                      value: iconSet.index,
-                      child: Text(
-                        iconSet.name,
+            YaruTile(
+              title: Text(l10n.selectIconThemeTitle),
+              subtitle: Text(l10n.selectIconThemeDescription),
+              trailing: YaruPopupMenuButton(
+                itemBuilder: (p0) => IconSet.values
+                    .map(
+                      (IconSet iconSet) => PopupMenuItem(
+                        value: iconSet.index,
+                        child: Text(
+                          iconSet.name,
+                        ),
                       ),
-                    ),
-                  )
-                  .toList(),
-              initialValue: iconSetIndex,
-              onSelected: (int? value) {
-                if (value != null) {
-                  di<SettingsModel>().setIconSetIndex(value);
-                  di<SettingsModel>().scrollIndex = 0;
-                  appRestartNotifier.value = UniqueKey();
-                }
-              },
-              icon: Icon(Iconz.dropdown),
-              child: Text(IconSet.values[iconSetIndex].name),
+                    )
+                    .toList(),
+                initialValue: iconSetIndex,
+                onSelected: (int? value) {
+                  if (value != null) {
+                    di<SettingsModel>().setIconSetIndex(value);
+                    di<SettingsModel>().scrollIndex = 0;
+                    appRestartNotifier.value = UniqueKey();
+                  }
+                },
+                icon: Icon(Iconz.dropdown),
+                child: Text(IconSet.values[iconSetIndex].name),
+              ),
             ),
-          ),
+          ],
           YaruTile(
             title: Text(l10n.useCustomThemeColorTitle),
             subtitle: Text(l10n.useCustomThemeColorDescription),
