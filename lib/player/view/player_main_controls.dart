@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../app/app_model.dart';
 import '../../app/connectivity_model.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
+import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../extensions/theme_data_x.dart';
@@ -139,4 +141,66 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
           width: 5,
         ),
       );
+}
+
+class PlayerCompactControls extends StatelessWidget with WatchItMixin {
+  const PlayerCompactControls({
+    super.key,
+    this.iconColor,
+    this.avatarColor,
+    this.mainAxisAlignment = MainAxisAlignment.center,
+    this.mainAxisSize = MainAxisSize.max,
+  });
+
+  final Color? iconColor, avatarColor;
+  final MainAxisAlignment mainAxisAlignment;
+  final MainAxisSize mainAxisSize;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = context.theme;
+    final audio = watchPropertyValue((PlayerModel m) => m.audio);
+
+    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
+    final active = audio?.path != null || isOnline;
+
+    final rawPlayButton = PlayButton(
+      iconColor: iconColor ?? (theme.isLight ? Colors.white : Colors.black),
+      active: active,
+    );
+
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+
+    final radius = isMobile
+        ? getBigAvatarButtonRadius(useYaruTheme)
+        : getSmallAvatarButtonRadius(useYaruTheme);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        vertical: 20,
+      ),
+      child: Row(
+        spacing: kMediumSpace,
+        mainAxisSize: mainAxisSize,
+        mainAxisAlignment: mainAxisAlignment,
+        children: [
+          ShuffleButton(active: active),
+          CircleAvatar(
+            radius: radius,
+            backgroundColor:
+                avatarColor ?? (theme.isLight ? Colors.black : Colors.white),
+            child: SizedBox.square(
+              dimension: 2 * radius,
+              child: rawPlayButton,
+            ),
+          ),
+          IconButton(
+            onPressed: () => di<AppModel>().setFullWindowMode(true),
+            icon: Icon(Iconz.fullScreen),
+          ),
+        ],
+      ),
+    );
+  }
 }

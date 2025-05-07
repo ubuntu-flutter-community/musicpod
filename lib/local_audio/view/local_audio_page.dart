@@ -42,7 +42,6 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
           showFailedImportsSnackBar(
             failedImports: failedImports,
             context: context,
-            message: context.l10n.failedToReadMetadata,
           );
         }
       });

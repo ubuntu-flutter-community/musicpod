@@ -28,6 +28,8 @@ class MouseAndKeyboardCommandWrapper extends StatelessWidget {
               const _SettingsIntent(),
           LogicalKeySet(LogicalKeyboardKey.meta, LogicalKeyboardKey.backspace):
               const _BackIntent(),
+          LogicalKeySet(LogicalKeyboardKey.alt, LogicalKeyboardKey.backspace):
+              const _BackIntent(),
         },
         child: Actions(
           actions: <Type, Action<Intent>>{

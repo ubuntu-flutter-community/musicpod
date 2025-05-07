@@ -344,7 +344,7 @@ class SearchModel extends SafeChangeNotifier {
 
   List<Station>? _radioCountryChartsPeak;
   List<Station>? get radioCountryChartsPeak => _radioCountryChartsPeak;
-  Future<void> radioCountrySearch({int limit = 3}) async {
+  Future<void> radioCountrySearch({int limit = 10}) async {
     _radioCountryChartsPeak =
         await _radioService.search(country: _country?.name, limit: limit);
     notifyListeners();
@@ -352,7 +352,7 @@ class SearchModel extends SafeChangeNotifier {
 
   SearchResult? _podcastChartsPeak;
   SearchResult? get podcastChartsPeak => _podcastChartsPeak;
-  Future<void> fetchPodcastChartsPeak({int limit = 3}) async {
+  Future<void> fetchPodcastChartsPeak({int limit = 10}) async {
     _podcastChartsPeak =
         await _podcastService.search(country: _country, limit: limit);
     notifyListeners();

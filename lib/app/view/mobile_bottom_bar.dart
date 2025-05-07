@@ -6,7 +6,7 @@ import '../../player/view/bottom_player.dart';
 import '../app_model.dart';
 import 'mobile_navigation_bar.dart';
 
-class MobileBottomBar extends StatelessWidget with WatchItMixin {
+class MobileBottomBar extends StatelessWidget {
   const MobileBottomBar({super.key});
 
   @override

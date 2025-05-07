@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:phoenix_theme/phoenix_theme.dart';
-import 'package:yaru/yaru.dart' hide isMobile;
+import 'package:yaru/yaru.dart';
 
 import '../../common/view/ui_constants.dart';
 import '../../extensions/taget_platform_x.dart';

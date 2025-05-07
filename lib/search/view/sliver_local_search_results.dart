@@ -30,7 +30,6 @@ class _SliverLocalSearchResultState extends State<SliverLocalSearchResult> {
       showFailedImportsSnackBar(
         failedImports: failedImports!,
         context: context,
-        message: context.l10n.failedToReadMetadata,
       );
     }
   }

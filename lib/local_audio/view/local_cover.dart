@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../l10n/l10n.dart';
 import '../local_cover_model.dart';
 import 'failed_import_snackbar.dart';
 
@@ -38,6 +37,7 @@ class _LocalCoverState extends State<LocalCover> {
   @override
   void initState() {
     super.initState();
+
     final localCoverModel = di<LocalCoverModel>();
     _cover = localCoverModel.get(widget.albumId);
     _future = _cover != null
@@ -45,20 +45,19 @@ class _LocalCoverState extends State<LocalCover> {
         : localCoverModel.getCover(
             albumId: widget.albumId,
             path: widget.path,
-            onError: () => showFailedImportsSnackBar(
-              failedImports: [widget.path],
-              context: context,
-              message: context.l10n.failedToReadMetadata,
-            ),
+            onError: () => WidgetsBinding.instance.addPostFrameCallback((_) {
+              showFailedImportsSnackBar(
+                failedImports: [widget.path],
+                context: context,
+              );
+            }),
           );
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_cover == null) {
-      watchPropertyValue((LocalCoverModel m) => m.storeLength);
-      _cover = di<LocalCoverModel>().get(widget.albumId);
-    }
+    watchPropertyValue((LocalCoverModel m) => m.storeLength);
+    _cover ??= di<LocalCoverModel>().get(widget.albumId);
     final fit = widget.fit ?? BoxFit.fitHeight;
     const medium = FilterQuality.medium;
 
