@@ -116,7 +116,6 @@ class MasterRail extends StatelessWidget with WatchItMixin {
         watchPropertyValue((RoutingManager m) => m.selectedPageId);
 
     final destinations = permanentMasterItems
-        .take(6)
         .map(
           (e) => NavigationRailDestination(
             icon: e.iconBuilder(false),

@@ -72,13 +72,6 @@ Iterable<MasterItem> permanentMasterItems = [
     pageId: PageIDs.podcasts,
   ),
   MasterItem(
-    titleBuilder: (context) => Text(context.l10n.settings),
-    iconBuilder: (selected) =>
-        Icon(selected ? Iconz.settingsFilled : Iconz.settings),
-    pageBuilder: (_) => const SettingsPage(),
-    pageId: PageIDs.settings,
-  ),
-  MasterItem(
     iconBuilder: (selected) => Icon(Iconz.plus),
     titleBuilder: (context) => Text(context.l10n.add),
     pageBuilder: (_) => const CustomContentPage(),
@@ -90,6 +83,13 @@ Iterable<MasterItem> permanentMasterItems = [
     pageBuilder: (_) => const LikedAudioPage(),
     subtitleBuilder: (context) => Text(context.l10n.playlist),
     iconBuilder: (selected) => LikedAudioPageIcon(selected: selected),
+  ),
+  MasterItem(
+    titleBuilder: (context) => Text(context.l10n.settings),
+    iconBuilder: (selected) =>
+        Icon(selected ? Iconz.settingsFilled : Iconz.settings),
+    pageBuilder: (_) => const SettingsPage(),
+    pageId: PageIDs.settings,
   ),
 ];
 
