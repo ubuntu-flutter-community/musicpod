@@ -73,6 +73,10 @@ class CountryAutoComplete extends StatelessWidget with WatchItMixin {
               focusNode,
               onFieldSubmitted,
             ) {
+              textEditingController.selection = TextSelection(
+                baseOffset: 0,
+                extentOffset: textEditingController.value.text.length,
+              );
               final hintText =
                   '${context.l10n.search}: ${context.l10n.country}';
               return TextField(
@@ -226,7 +230,7 @@ class _CountryTile extends StatelessWidget {
     return ListTile(
       contentPadding: const EdgeInsets.only(
         left: 10,
-        right: 5,
+        right: 0,
       ),
       titleTextStyle: fallBackTextStyle?.copyWith(
         fontWeight: FontWeight.normal,
@@ -243,6 +247,11 @@ class _CountryTile extends StatelessWidget {
         ),
       ),
       trailing: IconButton(
+        style: IconButton.styleFrom(
+          padding: EdgeInsets.zero,
+          iconSize: 20,
+          shape: const RoundedRectangleBorder(),
+        ),
         onPressed: () {
           favs?.contains(t.code) == false ? addFav(t) : removeFav(t);
         },

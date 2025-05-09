@@ -6,18 +6,6 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../settings/settings_model.dart';
 
-class SideBarProgress extends StatelessWidget {
-  const SideBarProgress({super.key});
-
-  @override
-  Widget build(BuildContext context) => SizedBox.square(
-        dimension: context.theme.iconTheme.size ?? 24.0,
-        child: const Progress(
-          strokeWidth: 2,
-        ),
-      );
-}
-
 class Progress extends StatelessWidget with WatchItMixin {
   const Progress({
     super.key,

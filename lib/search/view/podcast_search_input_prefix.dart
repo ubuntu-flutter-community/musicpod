@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:watch_it/watch_it.dart';
+import 'package:yaru/constants.dart';
 
 import '../../common/view/country_auto_complete.dart';
 import '../../common/view/icons.dart';
@@ -25,12 +26,15 @@ class PodcastSearchInputPrefix extends StatelessWidget with WatchItMixin {
         watchPropertyValue((SettingsModel m) => m.usePodcastIndex);
     final l10n = context.l10n;
     final tooltip = usePodcastIndex ? l10n.language : l10n.country;
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final radius = Radius.circular(useYaruTheme ? kYaruButtonRadius : 100);
     return IconButton(
       style: IconButton.styleFrom(
-        shape: const RoundedRectangleBorder(
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(100),
-            bottomLeft: Radius.circular(100),
+            topLeft: radius,
+            bottomLeft: radius,
           ),
         ),
       ),

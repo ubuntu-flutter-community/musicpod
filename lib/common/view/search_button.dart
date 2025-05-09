@@ -3,6 +3,7 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../app/view/routing_manager.dart';
 import '../../extensions/build_context_x.dart';
+import '../../l10n/l10n.dart';
 import '../page_ids.dart';
 import 'icons.dart';
 
@@ -26,7 +27,9 @@ class SearchButton extends StatelessWidget {
         () => di<RoutingManager>().push(pageId: PageIDs.searchPage);
     final iconSize = context.theme.iconTheme.size ?? 24.0;
 
+    final label = context.l10n.search;
     return IconButton(
+      tooltip: label,
       isSelected: active,
       onPressed: onTap,
       selectedIcon: icon ??
@@ -34,12 +37,14 @@ class SearchButton extends StatelessWidget {
             Iconz.search,
             color: iconColor ?? context.theme.colorScheme.onSurface,
             size: iconSize,
+            semanticLabel: label,
           ),
       icon: icon ??
           Icon(
             Iconz.search,
             size: iconSize,
             color: iconColor,
+            semanticLabel: label,
           ),
     );
   }

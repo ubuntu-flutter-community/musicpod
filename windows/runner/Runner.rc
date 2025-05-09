@@ -93,7 +93,7 @@ BEGIN
             VALUE "FileDescription", "musicpod" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "musicpod" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2023 org.feichtmeier. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2023 - 2025 org.feichtmeier. All rights reserved." "\0"
             VALUE "OriginalFilename", "musicpod.exe" "\0"
             VALUE "ProductName", "musicpod" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"

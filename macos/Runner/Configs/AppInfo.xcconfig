@@ -11,4 +11,4 @@ PRODUCT_NAME = musicpod
 PRODUCT_BUNDLE_IDENTIFIER = org.feichtmeier.musicpod
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2023 Frederik Feichtmeier. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2023 - 2025 Frederik Feichtmeier. All rights reserved.

@@ -36,7 +36,12 @@ class PodcastSubButton extends StatelessWidget with WatchItMixin {
           ? context.l10n.removeFromCollection
           : context.l10n.addToCollection,
       icon: checkingForUpdates
-          ? const SideBarProgress()
+          ? SizedBox.square(
+              dimension: context.theme.iconTheme.size ?? 24.0,
+              child: const Progress(
+                strokeWidth: 2,
+              ),
+            )
           : Icon(
               subscribed ? Iconz.removeFromLibrary : Iconz.addToLibrary,
               color:
