@@ -9,6 +9,7 @@ import '../../common/view/language_autocomplete.dart';
 import '../../common/view/modals.dart';
 import '../../common/view/search_input.dart';
 import '../../common/view/theme.dart';
+import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -34,28 +35,35 @@ class SearchPageInput extends StatelessWidget with WatchItMixin {
     return SizedBox(
       width: searchBarWidth,
       height: getInputHeight(useYaruTheme),
-      child: switch (searchType) {
-        SearchType.radioCountry => const CountryAutoCompleteWithSuffix(),
-        SearchType.radioTag => const TagAutoCompleteWithSuffix(),
-        SearchType.radioLanguage => const LanguageAutoCompleteWithSuffix(),
-        _ => SearchInput(
-            autoFocus: !isMobile,
-            text: searchQuery,
-            hintText: audioType.localizedSearchHint(context.l10n),
-            onChanged: (v) async {
-              searchModel.setSearchQuery(v);
-              if (v.isEmpty) {
-                searchModel.setPodcastGenre(PodcastGenre.all);
-              }
-              await searchModel.search();
-            },
-            suffixIcon:
-                AudioTypeFilterButton(mode: OverlayMode.platformModalMode),
-            prefixIcon: audioType == AudioType.podcast
-                ? const PodcastSearchInputPrefix()
-                : null,
+      child: Theme(
+        data: context.theme.copyWith(
+          listTileTheme: context.theme.listTileTheme.copyWith(
+            shape: const RoundedRectangleBorder(),
           ),
-      },
+        ),
+        child: switch (searchType) {
+          SearchType.radioCountry => const CountryAutoCompleteWithSuffix(),
+          SearchType.radioTag => const TagAutoCompleteWithSuffix(),
+          SearchType.radioLanguage => const LanguageAutoCompleteWithSuffix(),
+          _ => SearchInput(
+              autoFocus: !isMobile,
+              text: searchQuery,
+              hintText: audioType.localizedSearchHint(context.l10n),
+              onChanged: (v) async {
+                searchModel.setSearchQuery(v);
+                if (v.isEmpty) {
+                  searchModel.setPodcastGenre(PodcastGenre.all);
+                }
+                await searchModel.search();
+              },
+              suffixIcon:
+                  AudioTypeFilterButton(mode: OverlayMode.platformModalMode),
+              prefixIcon: audioType == AudioType.podcast
+                  ? const PodcastSearchInputPrefix()
+                  : null,
+            ),
+        },
+      ),
     );
   }
 }

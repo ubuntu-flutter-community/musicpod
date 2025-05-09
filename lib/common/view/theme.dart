@@ -9,6 +9,8 @@ import 'ui_constants.dart';
 
 ThemeData? yaruDarkWithTweaks(ThemeData? darkTheme) {
   return darkTheme?.copyWith(
+    textTheme:
+        isLinux ? null : createTextTheme(darkTheme.colorScheme.onSurface),
     actionIconTheme: ActionIconThemeData(
       backButtonIconBuilder: (context) => Icon(Iconz.goBack),
     ),
@@ -30,6 +32,7 @@ ThemeData? yaruDarkWithTweaks(ThemeData? darkTheme) {
 
 ThemeData? yaruLightWithTweaks(ThemeData? theme) {
   return theme?.copyWith(
+    textTheme: isLinux ? null : createTextTheme(theme.colorScheme.onSurface),
     actionIconTheme: ActionIconThemeData(
       backButtonIconBuilder: (context) => Icon(Iconz.goBack),
     ),
@@ -204,10 +207,7 @@ InputDecoration createYaruDecoration({
 
   return InputDecoration(
     prefixIcon: prefixIcon,
-    suffixIcon: Center(
-      widthFactor: 1,
-      child: suffixIcon,
-    ),
+    suffixIcon: suffixIcon,
     hintText: hintText,
     filled: true,
     fillColor: fillColor ?? fill,
@@ -341,3 +341,95 @@ List<Widget> space({
         )
         .skip(1)
         .toList();
+
+TextTheme createTextTheme(Color textColor) {
+  return TextTheme(
+    displayLarge: _TextStyle(
+      fontSize: 96,
+      fontWeight: FontWeight.w300,
+      textColor: textColor,
+    ),
+    displayMedium: _TextStyle(
+      fontSize: 60,
+      fontWeight: FontWeight.w300,
+      textColor: textColor,
+    ),
+    displaySmall: _TextStyle(
+      fontSize: 48,
+      fontWeight: FontWeight.normal,
+      textColor: textColor,
+    ),
+    headlineLarge: _TextStyle(
+      fontSize: 40,
+      fontWeight: FontWeight.normal,
+      textColor: textColor,
+    ),
+    headlineMedium: _TextStyle(
+      fontSize: 34,
+      fontWeight: FontWeight.normal,
+      textColor: textColor,
+    ),
+    headlineSmall: _TextStyle(
+      fontSize: 24,
+      fontWeight: FontWeight.normal,
+      textColor: textColor,
+    ),
+    titleLarge: _TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.w500,
+      textColor: textColor,
+    ),
+    titleMedium: _TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      textColor: textColor,
+    ),
+    titleSmall: _TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+      textColor: textColor,
+    ),
+    bodyLarge: _TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      textColor: textColor,
+    ),
+    bodyMedium: _TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.normal,
+      textColor: textColor,
+    ),
+    bodySmall: _TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.normal,
+      textColor: textColor,
+    ),
+    labelLarge: _TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+      textColor: textColor,
+    ),
+    labelMedium: _TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.normal,
+      textColor: textColor,
+    ),
+    labelSmall: _TextStyle(
+      fontSize: 10,
+      fontWeight: FontWeight.normal,
+      textColor: textColor,
+    ),
+  );
+}
+
+class _TextStyle extends TextStyle {
+  const _TextStyle({
+    super.fontSize,
+    super.fontWeight,
+    required this.textColor,
+  }) : super(
+          fontFamily: 'CupertinoSystemText',
+          color: textColor,
+        );
+  final Color textColor;
+}

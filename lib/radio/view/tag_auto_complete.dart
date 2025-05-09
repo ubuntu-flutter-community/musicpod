@@ -189,7 +189,7 @@ class _TagTile extends StatelessWidget {
     return ListTile(
       contentPadding: const EdgeInsets.only(
         left: 10,
-        right: 5,
+        right: 0,
       ),
       titleTextStyle: fallBackTextStyle?.copyWith(
         fontWeight: FontWeight.normal,
@@ -199,6 +199,11 @@ class _TagTile extends StatelessWidget {
       onTap: () => onSelected(t),
       title: Text(t.name),
       trailing: IconButton(
+        style: IconButton.styleFrom(
+          padding: EdgeInsets.zero,
+          iconSize: 20,
+          shape: const RoundedRectangleBorder(),
+        ),
         onPressed: () {
           favs?.contains(t.name) == false ? addFav(t) : removeFav(t);
         },

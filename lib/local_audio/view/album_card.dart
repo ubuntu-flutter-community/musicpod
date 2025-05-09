@@ -61,10 +61,8 @@ class _AlbumCardState extends State<AlbumCard> {
       children: [
         FutureBuilder(
           future: _pathFuture,
-          builder: (context, snapshot) {
-            final path = snapshot.data;
-            return _AlbumCard(path: path, id: widget.id);
-          },
+          builder: (context, snapshot) =>
+              _AlbumCard(path: snapshot.data, id: widget.id),
         ),
         if (widget.pinned)
           Positioned(

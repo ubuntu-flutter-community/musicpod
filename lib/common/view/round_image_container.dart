@@ -11,11 +11,13 @@ class RoundImageContainer extends StatelessWidget {
     required this.images,
     required this.fallBackText,
     this.backgroundColor,
+    this.dimension,
   });
 
   final List<Widget> images;
   final String fallBackText;
   final Color? backgroundColor;
+  final double? dimension;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +41,8 @@ class RoundImageContainer extends StatelessWidget {
     );
 
     return Container(
+      width: dimension,
+      height: dimension,
       decoration: BoxDecoration(
         gradient: linearGradient,
         boxShadow: [boxShadow],

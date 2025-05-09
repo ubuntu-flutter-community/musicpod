@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/theme.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/round_image_container.dart';
-import '../../common/view/theme.dart';
-import '../../extensions/build_context_x.dart';
 import '../local_audio_model.dart';
 import 'local_cover.dart';
 
@@ -40,28 +37,22 @@ class _ArtistImageState extends State<ArtistImage> {
   Widget build(BuildContext context) {
     final model = di<LocalAudioModel>();
 
-    if (model.getCachedTitlesOfArtist(widget.artist) != null) {
+    final cachedTitlesOfArtist = model.getCachedTitlesOfArtist(widget.artist);
+    if (cachedTitlesOfArtist != null) {
       return _ArtistImage(
         artist: widget.artist,
-        artistAudios: model.getCachedTitlesOfArtist(widget.artist)!,
+        artistAudios: cachedTitlesOfArtist,
         dimension: widget.dimension,
       );
     }
 
     return FutureBuilder(
       future: _artistAudios,
-      builder: (context, snapshot) {
-        final artistAudios = snapshot.data ?? [];
-        return AnimatedOpacity(
-          duration: const Duration(milliseconds: 300),
-          opacity: artistAudios.isEmpty ? 0 : 1,
-          child: _ArtistImage(
-            artistAudios: artistAudios,
-            dimension: widget.dimension,
-            artist: widget.artist,
-          ),
-        );
-      },
+      builder: (context, snapshot) => _ArtistImage(
+        artistAudios: snapshot.data ?? [],
+        dimension: widget.dimension,
+        artist: widget.artist,
+      ),
     );
   }
 }
@@ -79,9 +70,8 @@ class _ArtistImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RoundImageContainer(
-      backgroundColor: artistAudios.isEmpty
-          ? getAlphabetColor(artist).scale(saturation: -0.6)
-          : Colors.transparent,
+      dimension: dimension,
+      backgroundColor: Colors.black,
       images: artistAudios.isEmpty
           ? []
           : di<LocalAudioModel>()
@@ -93,11 +83,7 @@ class _ArtistImage extends StatelessWidget {
                 (e) => LocalCover(
                   albumId: e.albumId!,
                   path: e.path!,
-                  fallback: ColoredBox(
-                    color: context.colorScheme.onSurface.scale(
-                      lightness: -0.99,
-                    ),
-                  ),
+                  fallback: const ColoredBox(color: Colors.black),
                   fit: BoxFit.cover,
                   dimension: dimension,
                 ),

@@ -40,8 +40,7 @@ class LazyPodcastLoadingPage extends StatelessWidget {
               title: '',
             ),
           ),
-          SliverFillRemaining(
-            hasScrollBody: false,
+          SliverToBoxAdapter(
             child: child,
           ),
         ],

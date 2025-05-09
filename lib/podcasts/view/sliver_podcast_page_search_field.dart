@@ -80,7 +80,7 @@ class _SliverPodcastPageSearchFieldState
                   ),
                   onPressed: () => di<PodcastModel>()
                       .toggleShowSearch(feedUrl: widget.feedUrl),
-                  icon: Icon(Iconz.search),
+                  icon: Icon(Iconz.search, semanticLabel: context.l10n.search),
                 ),
               ),
               onChanged: (v) => di<PodcastModel>()
