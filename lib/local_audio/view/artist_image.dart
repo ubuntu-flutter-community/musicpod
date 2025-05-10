@@ -3,6 +3,7 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/round_image_container.dart';
+import '../../extensions/build_context_x.dart';
 import '../local_audio_model.dart';
 import 'local_cover.dart';
 
@@ -69,9 +70,10 @@ class _ArtistImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.theme;
     return RoundImageContainer(
       dimension: dimension,
-      backgroundColor: Colors.black,
+      backgroundColor: theme.cardColor,
       images: artistAudios.isEmpty
           ? []
           : di<LocalAudioModel>()
@@ -83,7 +85,7 @@ class _ArtistImage extends StatelessWidget {
                 (e) => LocalCover(
                   albumId: e.albumId!,
                   path: e.path!,
-                  fallback: const ColoredBox(color: Colors.black),
+                  fallback: ColoredBox(color: theme.cardColor),
                   fit: BoxFit.cover,
                   dimension: dimension,
                 ),
