@@ -451,18 +451,16 @@ class PlayerService {
   String? get remoteImageUrl => _remoteImageUrl;
   Future<void> _setRemoteImageUrl(String? url) async {
     _remoteImageUrl = url;
-    await _setRemoteColor(url);
+    // await _setRemoteColor(url);
 
     _propertiesChangedController.add(true);
   }
 
-  Future<void> _setRemoteColor(String? url) async {
+  Future<void> setRemoteColorFromImageProvider(ImageProvider provider) async {
     try {
-      if (url != null) {
-        final colorScheme =
-            await ColorScheme.fromImageProvider(provider: NetworkImage(url));
-        _setColor(colorScheme.primary);
-      }
+      final colorScheme =
+          await ColorScheme.fromImageProvider(provider: provider);
+      _setColor(colorScheme.primary);
     } on Exception catch (e) {
       printMessageInDebugMode(e);
     }

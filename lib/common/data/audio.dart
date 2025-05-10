@@ -11,6 +11,7 @@ import 'package:radio_browser_api/radio_browser_api.dart';
 import '../../app_config.dart';
 import '../../extensions/media_file_x.dart';
 import '../../extensions/string_x.dart';
+import '../../extensions/taget_platform_x.dart';
 import '../logging.dart';
 import 'audio_type.dart';
 import 'genres.dart';
@@ -415,11 +416,19 @@ class Audio {
         : createAlbumId(artistName, albumName);
   }
 
-  static String createAlbumId(String? artistName, String? albumName) =>
-      '${artistName ?? ''}$albumIdSplitter${albumName ?? ''}'.replaceAll(
-        albumIdReplacement,
-        albumIdReplacer,
-      );
+  static String createAlbumId(String? artistName, String? albumName) {
+    final id =
+        '${artistName ?? ''}$albumIdSplitter${albumName ?? ''}'.replaceAll(
+      albumIdReplacement,
+      albumIdReplacer,
+    );
+
+    if (isMobile) {
+      return id.replaceAll(':', '');
+    }
+
+    return id;
+  }
 
   // Note this assumes that no artist or no album includes ___ on their own =)
   static const String albumIdSplitter =

@@ -156,7 +156,8 @@ class SettingsService {
       _preferences.setBool(SPKeys.useMoreAnimations, value).then(notify);
 
   bool get saveWindowSize =>
-      _preferences.getBool(SPKeys.saveWindowSize) ?? true;
+      _preferences.getBool(SPKeys.saveWindowSize) ??
+      AppConfig.windowManagerImplemented;
   void setSaveWindowSize(bool value) =>
       _preferences.setBool(SPKeys.saveWindowSize, value).then(notify);
 

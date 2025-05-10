@@ -53,8 +53,6 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
         playerPosition == PlayerPosition.fullWindow ? false : true,
       );
 
-      di<PlayerModel>().bottomPlayerHeight = bottomPlayerDefaultHeight;
-
       appModel.setShowWindowControls(
         (fullScreen == true && playerToTheRight) ? false : true,
       );
@@ -89,7 +87,7 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
                 ),
               _ => const SizedBox.shrink(),
             },
-          if (showQueueButton)
+          if (!isMobile && showQueueButton)
             QueueButton(
               color: iconColor,
               onTap: () => di<AppModel>().setOrToggleQueueOverlay(),

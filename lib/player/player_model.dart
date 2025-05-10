@@ -1,12 +1,11 @@
 import 'dart:async';
-import 'dart:ui';
 
+import 'package:flutter/widgets.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
 import '../common/data/mpv_meta_data.dart';
-import '../common/view/theme.dart';
 import '../radio/online_art_service.dart';
 import 'player_service.dart';
 
@@ -40,6 +39,8 @@ class PlayerModel extends SafeChangeNotifier {
   Audio? get audio => _playerService.audio;
 
   Color? get color => _playerService.color;
+  Future<void> setRemoteColorFromImageProvider(ImageProvider imageProvider) =>
+      _playerService.setRemoteColorFromImageProvider(imageProvider);
 
   bool? get isVideo => _playerService.isVideo;
 
@@ -155,16 +156,6 @@ class PlayerModel extends SafeChangeNotifier {
   }
 
   void setTimer(Duration duration) => _playerService.setPauseTimer(duration);
-
-  double _bottomPlayerHeight = bottomPlayerDefaultHeight;
-  double get bottomPlayerHeight => _bottomPlayerHeight;
-  set bottomPlayerHeight(double value) {
-    if (value == _bottomPlayerHeight || value < bottomPlayerDefaultHeight) {
-      return;
-    }
-    _bottomPlayerHeight = value;
-    notifyListeners();
-  }
 
   void setDataSafeMode(bool value) => _playerService.setDataSafeMode(value);
   bool get dataSafeMode => _playerService.dataSafeMode;

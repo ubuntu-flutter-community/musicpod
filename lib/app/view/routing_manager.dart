@@ -50,12 +50,12 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
         await _masterNavigatorKey.currentState?.pushNamed(pageId);
       }
     } else if (builder != null) {
-      final materialPageRoute = MaterialPageRoute(
+      final materialPageRoute = PageRouteBuilder(
         maintainState: maintainState,
         settings: RouteSettings(
           name: pageId,
         ),
-        builder: (context) =>
+        pageBuilder: (context, __, ___) =>
             isMobile ? MobilePage(page: builder(context)) : builder(context),
       );
 

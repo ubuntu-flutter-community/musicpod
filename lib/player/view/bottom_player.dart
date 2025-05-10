@@ -127,7 +127,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
     ];
 
     final player = SizedBox(
-      height: watchPropertyValue((PlayerModel m) => m.bottomPlayerHeight),
+      height: bottomPlayerDefaultHeight,
       child: Column(
         children:
             (isMobile ? trackAndPlayer.reversed : trackAndPlayer).toList(),
@@ -144,7 +144,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
           PlayerColor(
             size: Size(
               context.mediaQuerySize.width,
-              watchPropertyValue((PlayerModel m) => m.bottomPlayerHeight),
+              bottomPlayerDefaultHeight,
             ),
           ),
         player,

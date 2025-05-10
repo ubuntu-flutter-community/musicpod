@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../extensions/build_context_x.dart';
+import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../../radio/radio_model.dart';
@@ -36,13 +37,17 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
         : Iconz.playFilled;
     final useYaruTheme =
         watchPropertyValue((SettingsModel m) => m.useYaruTheme);
-    final bigAvatarButtonRadius = getBigAvatarButtonRadius(useYaruTheme);
+    final bigAvatarButtonRadius = useYaruTheme
+        ? 22
+        : isMobile
+            ? 26
+            : 23;
     final bigPlayButtonPadding = getBigPlayButtonPadding(useYaruTheme);
 
     return Padding(
       padding: bigPlayButtonPadding,
       child: CircleAvatar(
-        radius: bigAvatarButtonRadius,
+        radius: bigAvatarButtonRadius.toDouble(),
         backgroundColor: theme.colorScheme.inverseSurface.withAlpha(
           disabled ? 50 : 255,
         ),

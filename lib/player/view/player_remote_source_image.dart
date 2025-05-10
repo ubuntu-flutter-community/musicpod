@@ -30,6 +30,8 @@ class PlayerRemoteSourceImage extends StatelessWidget with WatchItMixin {
       height: height,
       width: width,
       child: SafeNetworkImage(
+        onImageLoaded: (v) =>
+            di<PlayerModel>().setRemoteColorFromImageProvider(v),
         url: watchPropertyValue((PlayerModel m) => m.remoteImageUrl),
         filterQuality: FilterQuality.medium,
         fit: fit ?? BoxFit.scaleDown,

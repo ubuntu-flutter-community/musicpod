@@ -7,7 +7,6 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../app_config.dart';
 import '../../common/page_ids.dart';
-import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -24,6 +23,7 @@ class MobileMusicPodApp extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final themeIndex = watchPropertyValue((SettingsModel m) => m.themeIndex);
+
     final phoenix = phoenixTheme(color: accent ?? kMusicPodDefaultColor);
     final routingManager = di<RoutingManager>();
 
@@ -39,19 +39,23 @@ class MobileMusicPodApp extends StatelessWidget with WatchItMixin {
                 masterItems.elementAt(0))
             .pageBuilder(context);
 
-        return MaterialPageRoute(
+        return PageRouteBuilder(
           settings: settings,
           maintainState: false,
-          builder: (context) => MobilePage(page: page),
+          pageBuilder: (_, __, ___) => MobilePage(page: page),
         );
       },
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.values[themeIndex],
-      theme: phoenix.lightTheme.copyWith(
-        navigationBarTheme: navigationBarTheme(theme: phoenix.lightTheme),
-      ),
+      theme: phoenix.lightTheme,
       darkTheme: phoenix.darkTheme.copyWith(
-        navigationBarTheme: navigationBarTheme(theme: phoenix.darkTheme),
+        appBarTheme: phoenix.darkTheme.appBarTheme.copyWith(
+          backgroundColor: Colors.black,
+        ),
+        colorScheme: phoenix.darkTheme.colorScheme.copyWith(
+          surface: Colors.black,
+        ),
+        scaffoldBackgroundColor: Colors.black,
       ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: supportedLocales,
