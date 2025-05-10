@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
@@ -94,14 +92,14 @@ class HeaderBar extends StatelessWidget
       child: YaruWindowTitleBar(
         titleSpacing: titleSpacing,
         actions: [
-          if ((!context.showMasterPanel && Platform.isMacOS) && leading != null)
+          if ((!context.showMasterPanel && isMacOS) && leading != null)
             Padding(
               padding: const EdgeInsets.only(left: 10),
               child: leading,
             ),
           ...?actions,
         ],
-        leading: !context.showMasterPanel && Platform.isMacOS ? null : leading,
+        leading: !context.showMasterPanel && isMacOS ? null : leading,
         title: title ?? const Text(''),
         border: BorderSide.none,
         backgroundColor:
@@ -200,7 +198,7 @@ class SidebarButton extends StatelessWidget {
     return Center(
       child: IconButton(
         onPressed: () {
-          if (Platform.isMacOS) {
+          if (isMacOS) {
             masterScaffoldKey.currentState?.openEndDrawer();
           } else {
             masterScaffoldKey.currentState?.openDrawer();

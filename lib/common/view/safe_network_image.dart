@@ -9,6 +9,7 @@ import 'package:path/path.dart' as p;
 import 'package:xdg_directories/xdg_directories.dart';
 
 import '../../extensions/build_context_x.dart';
+import '../../extensions/taget_platform_x.dart';
 import '../logging.dart';
 import 'icons.dart';
 
@@ -57,7 +58,7 @@ class SafeNetworkImage extends StatelessWidget {
 
     try {
       return CachedNetworkImage(
-        cacheManager: Platform.isLinux ? XdgCacheManager() : null,
+        cacheManager: isLinux ? XdgCacheManager() : null,
         imageUrl: url!,
         imageBuilder: (context, imageProvider) => Image(
           image: imageProvider,

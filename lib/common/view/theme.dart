@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
@@ -263,7 +261,7 @@ EdgeInsets get audioTilePadding => kAudioTilePadding;
 SliverGridDelegate get audioCardGridDelegate =>
     isMobile ? kMobileAudioCardGridDelegate : kAudioCardGridDelegate;
 
-EdgeInsets get appBarSingleActionSpacing => Platform.isMacOS
+EdgeInsets get appBarSingleActionSpacing => isMacOS
     ? const EdgeInsets.only(right: 5, left: 5)
     : EdgeInsets.only(
         right: 10,
@@ -302,7 +300,7 @@ double? get bottomPlayerPageGap => isMobile
 
 EdgeInsets get playerTopControlsPadding => EdgeInsets.only(
       right: kLargestSpace,
-      top: Platform.isMacOS
+      top: isMacOS
           ? 0
           : isMobile
               ? 2 * kLargestSpace

@@ -11,6 +11,7 @@ extension TagetPlatformX on TargetPlatform {
   bool get isMobile => isIOS || isAndroid || isFuchsia;
 }
 
+bool get isDesktop => defaultTargetPlatform.isDesktop;
 bool get isMobile => defaultTargetPlatform.isMobile;
 bool get isLinux => defaultTargetPlatform.isLinux;
 bool get isMacOS => defaultTargetPlatform.isMacOS;

@@ -5,21 +5,22 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:xdg_directories/xdg_directories.dart';
 
+import 'app_config.dart';
 import 'common/data/audio.dart';
 import 'common/logging.dart';
-import 'app_config.dart';
+import 'extensions/taget_platform_x.dart';
 
 String? _workingDir;
 Future<String> getWorkingDir() async {
   if (_workingDir != null) return Future.value(_workingDir!);
-  if (Platform.isLinux) {
+  if (isLinux) {
     final workingDir = p.join(configHome.path, AppConfig.appName);
     if (!Directory(workingDir).existsSync()) {
       await Directory(workingDir).create();
     }
     _workingDir = workingDir;
     return workingDir;
-  } else if (Platform.isMacOS || Platform.isIOS) {
+  } else if (isMacOS || isIOS) {
     final libDirPath = (await getLibraryDirectory()).path;
     final workingDirPath = p.join(libDirPath, AppConfig.appName);
     if (!Directory(workingDirPath).existsSync()) {
@@ -39,15 +40,15 @@ Future<String> getWorkingDir() async {
 }
 
 String? getMusicDefaultDir() =>
-    Platform.isLinux ? getUserDirectory('MUSIC')?.path : null;
+    isLinux ? getUserDirectory('MUSIC')?.path : null;
 
 Future<String?> getDownloadsDefaultDir() async {
   String? path;
-  if (Platform.isLinux) {
+  if (isLinux) {
     path = getUserDirectory('DOWNLOAD')?.path;
-  } else if (Platform.isMacOS || Platform.isIOS || Platform.isWindows) {
+  } else if (isMacOS || isIOS || isWindows) {
     path = (await getDownloadsDirectory())?.path;
-  } else if (Platform.isAndroid) {
+  } else if (isAndroid) {
     final androidDir = Directory('/storage/emulated/0/Download');
     if (androidDir.existsSync()) {
       path = androidDir.path;

@@ -1,6 +1,3 @@
-import 'dart:io';
-import 'dart:ui';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:dio/dio.dart';
@@ -16,13 +13,11 @@ import 'package:window_manager/window_manager.dart';
 import 'app/app_model.dart';
 import 'app/connectivity_model.dart';
 import 'app/view/routing_manager.dart';
-import 'app/window_size_to_settings_listener.dart';
 import 'app_config.dart';
 import 'custom_content/custom_content_model.dart';
 import 'expose/expose_service.dart';
 import 'expose/lastfm_service.dart';
 import 'expose/listenbrainz_service.dart';
-import 'extensions/shared_preferences_x.dart';
 import 'extensions/taget_platform_x.dart';
 import 'external_path/external_path_service.dart';
 import 'library/library_model.dart';
@@ -62,44 +57,16 @@ void registerDependencies({required List<String> args}) async {
     );
   }
 
-  // TODO: try to register window manager inside get_it
+  if (AppConfig.windowManagerImplemented) {
+    di.registerSingletonAsync<WindowManager>(() async {
+      final wm = WindowManager.instance;
+      await wm.ensureInitialized();
+      return wm;
+    });
+  }
+
   di
-    ..registerSingletonAsync<SharedPreferences>(() async {
-      final prefs = await SharedPreferences.getInstance();
-      if (!isMobile) {
-        final wm = WindowManager.instance;
-        wm.addListener(
-          WindowSizeToSettingsListener(
-            onFullscreen: (v) => prefs.setBool(SPKeys.windowFullscreen, v),
-            onMaximize: (v) => prefs.setBool(SPKeys.windowMaximized, v),
-            onResize: (v) async {
-              if (prefs.getBool(SPKeys.saveWindowSize) ?? false) {
-                prefs.setInt(SPKeys.windowHeight, v.height.toInt()).then(
-                      (_) => prefs.setInt(SPKeys.windowWidth, v.width.toInt()),
-                    );
-              }
-            },
-          ),
-        );
-
-        if (prefs.getBool(SPKeys.windowFullscreen) ?? false) {
-          WindowManager.instance.setFullScreen(true);
-        } else if (prefs.getBool(SPKeys.windowMaximized) ?? false) {
-          WindowManager.instance.maximize();
-        } else {
-          final height = prefs.getInt(SPKeys.windowHeight) ?? 820;
-          final width = prefs.getInt(SPKeys.windowWidth) ?? 950;
-          WindowManager.instance.setSize(
-            Size(
-              width.toDouble(),
-              height.toDouble(),
-            ),
-          );
-        }
-      }
-
-      return prefs;
-    })
+    ..registerSingletonAsync<SharedPreferences>(SharedPreferences.getInstance)
     ..registerSingletonAsync<PackageInfo>(PackageInfo.fromPlatform)
     ..registerLazySingleton<Dio>(
       () => Dio(),
@@ -119,12 +86,17 @@ void registerDependencies({required List<String> args}) async {
           defaultValue: '2.11.0',
         );
         return SettingsService(
+          windowManager:
+              AppConfig.windowManagerImplemented ? di<WindowManager>() : null,
           forcedUpdateThreshold: forcedUpdateThreshold,
           sharedPreferences: di<SharedPreferences>(),
           downloadsDefaultDir: downloadsDefaultDir,
         );
       },
-      dependsOn: [SharedPreferences],
+      dependsOn: [
+        SharedPreferences,
+        if (AppConfig.windowManagerImplemented) WindowManager,
+      ],
       dispose: (s) async => s.dispose(),
     )
     ..registerSingletonWithDependencies(
@@ -200,8 +172,7 @@ void registerDependencies({required List<String> args}) async {
       dispose: (s) async => s.dispose(),
     )
     ..registerLazySingleton<NotificationsService>(
-      () =>
-          NotificationsService(Platform.isLinux ? NotificationsClient() : null),
+      () => NotificationsService(isLinux ? NotificationsClient() : null),
       dispose: (s) async => s.dispose(),
     )
     ..registerSingletonWithDependencies<PodcastService>(
@@ -267,7 +238,7 @@ void registerDependencies({required List<String> args}) async {
           gitHub: di<GitHub>(),
           settingsService: di<SettingsService>(),
           exposeService: di<ExposeService>(),
-          allowManualUpdates: Platform.isLinux ? false : true,
+          allowManualUpdates: isLinux ? false : true,
         );
         await appModel.checkForUpdate(
           isOnline: di<ConnectivityModel>().isOnline == true,

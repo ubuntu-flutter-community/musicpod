@@ -12,6 +12,7 @@ import '../common/logging.dart';
 import '../common/view/audio_filter.dart';
 import '../extensions/media_file_x.dart';
 import '../extensions/string_x.dart';
+import '../extensions/taget_platform_x.dart';
 import '../settings/settings_service.dart';
 import 'local_cover_service.dart';
 import 'local_search_result.dart';
@@ -358,7 +359,7 @@ class LocalAudioService {
         final result = await compute(_readAudiosFromDirectory, dir);
         _failedImports = result.failedImports;
 
-        if (!Platform.isWindows &&
+        if (!isWindows &&
             dir != null &&
             Directory(dir).existsSync() &&
             (_fileWatcher == null || _fileWatcher!.path != dir)) {

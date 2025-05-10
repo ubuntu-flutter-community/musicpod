@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:file_selector/file_selector.dart';
@@ -15,7 +13,7 @@ class ExternalPathService {
       return FilePicker.platform.getDirectoryPath();
     }
 
-    if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
+    if (isMacOS || isLinux || isWindows) {
       return getDirectoryPath();
     }
     return null;
@@ -29,7 +27,7 @@ class ExternalPathService {
           ?.path;
     }
 
-    if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
+    if (isMacOS || isLinux || isWindows) {
       return (await openFile())?.path;
     }
     return null;
@@ -48,7 +46,7 @@ class ExternalPathService {
           .map((e) => XFile(e.path!))
           .map((e) => e.path)
           .toList();
-    } else if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
+    } else if (isMacOS || isLinux || isWindows) {
       return (await openFiles()).map((e) => e.path).toList();
     }
     return [];
