@@ -72,10 +72,13 @@ void registerDependencies({required List<String> args}) async {
           WindowSizeToSettingsListener(
             onFullscreen: (v) => prefs.setBool(SPKeys.windowFullscreen, v),
             onMaximize: (v) => prefs.setBool(SPKeys.windowMaximized, v),
-            onResize: (v) =>
+            onResize: (v) async {
+              if (prefs.getBool(SPKeys.saveWindowSize) ?? false) {
                 prefs.setInt(SPKeys.windowHeight, v.height.toInt()).then(
                       (_) => prefs.setInt(SPKeys.windowWidth, v.width.toInt()),
-                    ),
+                    );
+              }
+            },
           ),
         );
 
