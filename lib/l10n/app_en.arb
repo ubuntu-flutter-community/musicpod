@@ -722,5 +722,7 @@
     "selectColorShade": "Select color shade",
     "selectColorAndItsShades": "Select color and its shades",
     "selectIconThemeTitle": "Select icon theme",
-    "selectIconThemeDescription": "Chose an icon theme for the application. The default theme depends on your operating system. This reloads the application!"
+    "selectIconThemeDescription": "Chose an icon theme for the application. The default theme depends on your operating system. This reloads the application!",
+    "saveWindowSizeTitle": "Save window size",
+    "saveWindowSizeDescription": "This will save the window size and position of the application."
 }

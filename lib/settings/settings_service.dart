@@ -118,6 +118,11 @@ class SettingsService {
   void setUseMoreAnimations(bool value) =>
       _preferences.setBool(SPKeys.useMoreAnimations, value).then(notify);
 
+  bool get saveWindowSize =>
+      _preferences.getBool(SPKeys.saveWindowSize) ?? true;
+  void setSaveWindowSize(bool value) =>
+      _preferences.setBool(SPKeys.saveWindowSize, value).then(notify);
+
   bool get notifyDataSafeMode =>
       _preferences.getBool(SPKeys.notifyDataSafeMode) ?? true;
   void setNotifyDataSafeMode(bool value) =>

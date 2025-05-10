@@ -46,4 +46,5 @@ extension SPKeys on SharedPreferences {
   static const customThemeColor = 'customThemeColor';
   static const useCustomThemeColor = 'useCustomThemeColor';
   static const iconSetIndex = 'iconSetIndex';
+  static const saveWindowSize = 'saveWindowSize';
 }

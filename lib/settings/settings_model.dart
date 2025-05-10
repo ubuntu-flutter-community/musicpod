@@ -101,6 +101,9 @@ class SettingsModel extends SafeChangeNotifier {
   bool get useMoreAnimations => _service.useMoreAnimations;
   void setUseMoreAnimations(bool value) => _service.setUseMoreAnimations(value);
 
+  bool get saveWindowSize => _service.saveWindowSize;
+  void setSaveWindowSize(bool value) => _service.setSaveWindowSize(value);
+
   bool get notifyDataSafeMode => _service.notifyDataSafeMode;
   void setNotifyDataSafeMode(bool value) =>
       _service.setNotifyDataSafeMode(value);

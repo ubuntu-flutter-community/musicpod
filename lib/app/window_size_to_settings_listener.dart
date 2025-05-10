@@ -59,7 +59,7 @@ class WindowSizeToSettingsListener implements WindowListener {
   void onWindowResize() {
     if (isLinux) {
       if (_debounce?.isActive ?? false) _debounce?.cancel();
-      _debounce = Timer(const Duration(milliseconds: 500), () {
+      _debounce = Timer(const Duration(seconds: 5), () {
         WindowManager.instance.getSize().then(_onResize);
       });
     }
