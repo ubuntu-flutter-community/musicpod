@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:html/parser.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/view/routing_manager.dart';
@@ -9,6 +8,7 @@ import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/audio_page_header_html_description.dart';
+import '../../extensions/string_x.dart';
 import '../../l10n/l10n.dart';
 import '../../search/search_model.dart';
 import '../../settings/settings_model.dart';
@@ -41,7 +41,7 @@ class PodcastPageHeader extends StatelessWidget {
               description: episodes!.firstOrNull!.albumArtist!,
               title: title,
             ),
-      title: HtmlParser(title).parseFragment().text ?? title,
+      title: title.unEscapeHtml ?? title,
       onLabelTab: (text) => _onGenreTap(
         l10n: l10n,
         text: text,

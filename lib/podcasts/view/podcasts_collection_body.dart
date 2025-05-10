@@ -18,6 +18,7 @@ import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
 import '../../custom_content/custom_content_model.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/string_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
@@ -171,8 +172,9 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                                     fontWeight: FontWeight.bold,
                                   )
                               : null,
-                          text:
-                              first?.album ?? first?.title ?? first.toString(),
+                          text: first?.album?.unEscapeHtml ??
+                              first?.title ??
+                              first.toString(),
                         ),
                         onPlay: () => di<PlayerModel>()
                             .startPlaylist(
