@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:audio_service/audio_service.dart';
+import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
 import 'package:media_kit/media_kit.dart' hide PlayerState;
 import 'package:media_kit_video/media_kit_video.dart';
@@ -171,6 +172,7 @@ class PlayerService {
     _audio = value;
     _propertiesChangedController.add(true);
     _setMpvMetaData(null);
+    _setLocalColor(_audio!);
   }
 
   bool? _isVideo;
@@ -446,9 +448,52 @@ class PlayerService {
 
   String? _remoteImageUrl;
   String? get remoteImageUrl => _remoteImageUrl;
-  void _setRemoteImageUrl(String? url) {
+  Future<void> _setRemoteImageUrl(String? url) async {
     _remoteImageUrl = url;
+    await _setRemoteColor(url);
+
     _propertiesChangedController.add(true);
+  }
+
+  Future<void> _setRemoteColor(String? url) async {
+    try {
+      if (url != null) {
+        final colorScheme =
+            await ColorScheme.fromImageProvider(provider: NetworkImage(url));
+        _setColor(colorScheme.primary);
+      }
+    } on Exception catch (e) {
+      printMessageInDebugMode(e);
+    }
+  }
+
+  Color? _color;
+  Color? get color => _color;
+  void _setColor(Color? value) {
+    if (value == _color) return;
+    _color = value;
+    _propertiesChangedController.add(true);
+  }
+
+  Future<void> _setLocalColor(Audio audio) async {
+    try {
+      if (audio.canHaveLocalCover) {
+        var maybeData = _localCoverService.get(audio.albumId);
+        maybeData ??= await _localCoverService.getCover(
+          albumId: audio.albumId!,
+          path: audio.path!,
+        );
+
+        if (maybeData != null) {
+          final colorScheme = await ColorScheme.fromImageProvider(
+            provider: MemoryImage(maybeData),
+          );
+          _setColor(colorScheme.primary);
+        }
+      }
+    } on Exception catch (e) {
+      printMessageInDebugMode(e);
+    }
   }
 
   Future<void> _setPlayerState() async {

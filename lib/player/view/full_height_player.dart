@@ -10,10 +10,10 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../player/player_model.dart';
 import '../../radio/view/radio_history_list.dart';
-import 'blurred_full_height_player_image.dart';
 import 'full_height_player_image.dart';
 import 'full_height_player_top_controls.dart';
 import 'full_height_video_player.dart';
+import 'player_color.dart';
 import 'player_main_controls.dart';
 import 'player_title_and_artist.dart';
 import 'player_track.dart';
@@ -156,7 +156,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
     }
 
     return Stack(
-      children: [BlurredFullHeightPlayerImage(size: size), fullHeightPlayer],
+      children: [PlayerColor(size: size), fullHeightPlayer],
     );
   }
 }
