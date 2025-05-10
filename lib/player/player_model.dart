@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
@@ -37,6 +38,8 @@ class PlayerModel extends SafeChangeNotifier {
   MpvMetaData? get mpvMetaData => _playerService.mpvMetaData;
 
   Audio? get audio => _playerService.audio;
+
+  Color? get color => _playerService.color;
 
   bool? get isVideo => _playerService.isVideo;
 

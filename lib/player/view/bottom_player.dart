@@ -11,11 +11,11 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
-import 'blurred_full_height_player_image.dart';
 import 'bottom_player_image.dart';
 import 'bottom_player_like_and_star_button.dart';
 import 'play_button.dart';
 import 'playback_rate_button.dart';
+import 'player_color.dart';
 import 'player_main_controls.dart';
 import 'player_pause_timer_button.dart';
 import 'player_title_and_artist.dart';
@@ -141,7 +141,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
     return Stack(
       children: [
         if (!isMobile)
-          BlurredFullHeightPlayerImage(
+          PlayerColor(
             size: Size(
               context.mediaQuerySize.width,
               watchPropertyValue((PlayerModel m) => m.bottomPlayerHeight),
