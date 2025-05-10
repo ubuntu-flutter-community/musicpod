@@ -172,8 +172,9 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                                     fontWeight: FontWeight.bold,
                                   )
                               : null,
-                          text:
-                              first?.album?.unEscapeHtml ?? first?.title ?? first.toString(),
+                          text: first?.album?.unEscapeHtml ??
+                              first?.title ??
+                              first.toString(),
                         ),
                         onPlay: () => di<PlayerModel>()
                             .startPlaylist(
