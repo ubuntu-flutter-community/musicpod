@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:phoenix_theme/phoenix_theme.dart';
 import 'package:yaru/yaru.dart';
@@ -12,10 +11,10 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-        theme: defaultTargetPlatform.isLinux
+        theme: isLinux
             ? yaruLight
             : phoenixTheme(color: kMusicPodDefaultColor).lightTheme,
-        darkTheme: defaultTargetPlatform.isLinux
+        darkTheme: isLinux
             ? yaruDark
             : phoenixTheme(color: kMusicPodDefaultColor).darkTheme,
         title: '',

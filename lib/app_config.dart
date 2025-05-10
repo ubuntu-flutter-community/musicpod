@@ -1,6 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
+
+import 'extensions/taget_platform_x.dart';
 
 class AppConfig {
   static const appName = 'musicpod';
@@ -15,10 +15,11 @@ class AppConfig {
   static const gitHubShortLink = 'ubuntu-flutter-community/musicpod';
   static const fallbackThumbnailUrl =
       'https://raw.githubusercontent.com/ubuntu-flutter-community/musicpod/main/snap/gui/musicpod.png';
-  static bool allowDiscordRPC = (kDebugMode && !Platform.isAndroid) ||
-      Platform.isWindows ||
+  static bool allowDiscordRPC = (kDebugMode && !isMobile) ||
+      isWindows ||
       const bool.fromEnvironment('ALLOW_DISCORD_RPC');
+  static bool windowManagerImplemented = isDesktop;
 
 // TODO(#1022): fix linux video fullscreen
-  static bool get allowVideoFullScreen => !Platform.isLinux;
+  static bool allowVideoFullScreen = !isLinux;
 }

@@ -1,6 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+
+import '../../extensions/taget_platform_x.dart';
 
 Future<void> showModal({
   required BuildContext context,
@@ -35,9 +35,7 @@ enum ModalMode {
   bottomSheet;
 
   static ModalMode get platformModalMode =>
-      Platform.isAndroid || Platform.isIOS || Platform.isFuchsia
-          ? ModalMode.bottomSheet
-          : ModalMode.dialog;
+      isMobile ? ModalMode.bottomSheet : ModalMode.dialog;
 }
 
 enum OverlayMode {
@@ -45,7 +43,5 @@ enum OverlayMode {
   bottomSheet;
 
   static OverlayMode get platformModalMode =>
-      Platform.isAndroid || Platform.isIOS || Platform.isFuchsia
-          ? OverlayMode.bottomSheet
-          : OverlayMode.popup;
+      isMobile ? OverlayMode.bottomSheet : OverlayMode.popup;
 }

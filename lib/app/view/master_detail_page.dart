@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
@@ -28,11 +26,11 @@ class MasterDetailPage extends StatelessWidget {
         children: [
           const MasterPanel(),
           Positioned(
-            left: Platform.isMacOS ? 5 : null,
+            left: isMacOS ? 5 : null,
             top: 5,
-            right: Platform.isMacOS ? null : 5,
+            right: isMacOS ? null : 5,
             child: IconButton(
-              onPressed: Platform.isMacOS
+              onPressed: isMacOS
                   ? masterScaffoldKey.currentState?.closeEndDrawer
                   : masterScaffoldKey.currentState?.closeDrawer,
               icon: Icon(
@@ -47,8 +45,8 @@ class MasterDetailPage extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: isMobile ? false : null,
       key: masterScaffoldKey,
-      endDrawer: Platform.isMacOS ? drawer : null,
-      drawer: Platform.isMacOS ? null : drawer,
+      endDrawer: isMacOS ? drawer : null,
+      drawer: isMacOS ? null : drawer,
       body: Row(
         children: [
           if (context.showMasterPanel) const MasterPanel(),

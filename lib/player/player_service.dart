@@ -20,6 +20,7 @@ import '../common/logging.dart';
 import '../expose/expose_service.dart';
 import '../extensions/media_file_x.dart';
 import '../extensions/string_x.dart';
+import '../extensions/taget_platform_x.dart';
 import '../local_audio/local_cover_service.dart';
 import '../persistence_utils.dart';
 import '../radio/online_art_service.dart';
@@ -604,7 +605,7 @@ class PlayerService {
   }
 
   Future<void> _initMediaControl() async {
-    if (Platform.isWindows) {
+    if (isWindows) {
       await _initSmtc();
     } else {
       await _initAudioService();
@@ -661,7 +662,7 @@ class PlayerService {
         androidStopForegroundOnPause: false,
         androidNotificationChannelName: AppConfig.appName,
         androidNotificationChannelId:
-            Platform.isAndroid ? AppConfig.androidChannelId : null,
+            isAndroid ? AppConfig.androidChannelId : null,
         androidNotificationChannelDescription: 'MusicPod Media Controls',
       ),
       builder: () {
@@ -714,7 +715,7 @@ class PlayerService {
       if (maybeData != null) {
         final File newFile = await _safeTempCover(maybeData);
 
-        return Uri.file(newFile.path, windows: Platform.isWindows);
+        return Uri.file(newFile.path, windows: isWindows);
       } else {
         final newData = await _localCoverService.getCover(
           albumId: audio.albumId!,
@@ -723,7 +724,7 @@ class PlayerService {
         if (newData != null) {
           final File newFile = await _safeTempCover(newData);
 
-          return Uri.file(newFile.path, windows: Platform.isWindows);
+          return Uri.file(newFile.path, windows: isWindows);
         }
       }
     }
@@ -767,8 +768,8 @@ class PlayerService {
     final showSkipControls =
         _queue.audios.isNotEmpty && _audio?.audioType != AudioType.radio;
 
-    final showSeekControls = _audio?.audioType == AudioType.podcast &&
-        (Platform.isMacOS || Platform.isAndroid);
+    final showSeekControls =
+        _audio?.audioType == AudioType.podcast && (isMacOS || isAndroid);
 
     return [
       if (showSeekControls)

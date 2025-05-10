@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:watch_it/watch_it.dart';
@@ -43,7 +41,7 @@ class SearchPage extends StatelessWidget with WatchItMixin {
         actions: [
           Padding(
             padding: appBarSingleActionSpacing.copyWith(
-              left: Platform.isMacOS ? 5 : kLargestSpace,
+              left: isMacOS ? 5 : kLargestSpace,
             ),
             child: SearchButton(
               active: true,
