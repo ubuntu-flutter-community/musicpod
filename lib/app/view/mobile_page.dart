@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../player/player_model.dart';
@@ -51,6 +50,9 @@ class MobilePage extends StatelessWidget with WatchItMixin {
         resizeToAvoidBottomInset: false,
         extendBody: true,
         extendBodyBehindAppBar: true,
+        bottomNavigationBar: (!context.showMasterPanel && !fullWindowMode)
+            ? const Hero(tag: 'bottomPlayer', child: MobileBottomBar())
+            : null,
         body: Row(
           children: [
             if (context.showMasterPanel && !fullWindowMode) ...[
@@ -74,26 +76,23 @@ class MobilePage extends StatelessWidget with WatchItMixin {
                     Material(
                       color: context.theme.scaffoldBackgroundColor,
                       child: GestureDetector(
+                        onHorizontalDragEnd: (details) {
+                          if (details.primaryVelocity != null) {
+                            if (details.primaryVelocity! < -150) {
+                              di<PlayerModel>().playNext();
+                            } else if (details.primaryVelocity! > 150) {
+                              di<PlayerModel>().playPrevious();
+                            }
+                          }
+                        },
                         onVerticalDragEnd: (details) {
                           if (details.primaryVelocity != null &&
                               details.primaryVelocity! > 150) {
                             di<AppModel>().setFullWindowMode(false);
                           }
-                          di<PlayerModel>().bottomPlayerHeight =
-                              bottomPlayerDefaultHeight;
                         },
                         child: const FullHeightPlayer(
                           playerPosition: PlayerPosition.fullWindow,
-                        ),
-                      ),
-                    )
-                  else if (!context.showMasterPanel)
-                    const Positioned(
-                      bottom: 0,
-                      child: Hero(
-                        tag: 'bottomPlayer',
-                        child: Material(
-                          child: MobileBottomBar(),
                         ),
                       ),
                     ),
@@ -162,7 +161,10 @@ class MasterRail extends StatelessWidget with WatchItMixin {
               },
             ),
           ),
-          const Material(child: PlayerCompactControls()),
+          const Material(
+            color: Colors.transparent,
+            child: PlayerCompactControls(),
+          ),
         ],
       ),
     );

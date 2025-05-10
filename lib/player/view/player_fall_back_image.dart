@@ -13,18 +13,20 @@ class PlayerFallBackImage extends StatelessWidget {
     required this.height,
     required this.width,
     this.noIcon = false,
+    this.color,
   });
 
   final Audio? audio;
   final double height;
   final double width;
   final bool noIcon;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
     final iconSize = width * 0.7;
     final theme = context.theme;
-    final color = theme.primaryColor;
+    final color = this.color ?? theme.primaryColor;
     return Center(
       child: Container(
         decoration: BoxDecoration(

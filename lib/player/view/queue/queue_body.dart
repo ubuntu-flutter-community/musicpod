@@ -127,7 +127,12 @@ class _QueueBodyState extends State<QueueBody> {
                         }
                       },
                 label: Text(l10n.createNewPlaylist),
-                icon: Icon(Iconz.playlist),
+                icon: Icon(
+                  Iconz.playlist,
+                  color: queue.where((e) => e.isLocal).isEmpty
+                      ? theme.disabledColor
+                      : widget.selectedColor,
+                ),
               ),
               IconButton(
                 icon: Icon(
@@ -142,6 +147,9 @@ class _QueueBodyState extends State<QueueBody> {
                     : () => di<PlayerModel>().clearQueue(),
               ),
             ],
+          ),
+          const SizedBox(
+            height: kLargestSpace,
           ),
         ],
       ),

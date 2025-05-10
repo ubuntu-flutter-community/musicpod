@@ -65,10 +65,10 @@ class MasterDetailPage extends StatelessWidget {
                         masterItems.elementAt(0))
                     .pageBuilder(context);
 
-                return MaterialPageRoute(
+                return PageRouteBuilder(
                   settings: settings,
                   maintainState: PageIDs.permanent.contains(settings.name),
-                  builder: (context) => page,
+                  pageBuilder: (context, _, __) => page,
                 );
               },
             ),

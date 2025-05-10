@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app_config.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
@@ -53,7 +54,9 @@ class ResourceSection extends StatelessWidget with WatchItMixin {
             title: Text(l10n.saveWindowSizeTitle),
             subtitle: Text(l10n.saveWindowSizeDescription),
             trailing: CommonSwitch(
-              onChanged: di<SettingsModel>().setSaveWindowSize,
+              onChanged: AppConfig.windowManagerImplemented
+                  ? di<SettingsModel>().setSaveWindowSize
+                  : null,
               value: watchPropertyValue((SettingsModel m) => m.saveWindowSize),
             ),
           ),

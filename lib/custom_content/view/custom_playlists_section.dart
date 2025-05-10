@@ -52,27 +52,33 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 10),
-          child: TextField(
-            autofocus: true,
-            onSubmitted: (_) => onPressed?.call(),
-            decoration: InputDecoration(
-              label: Text(l10n.name),
-              suffixIcon: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(kYaruButtonRadius),
-                      bottomRight: Radius.circular(kYaruButtonRadius),
+          child: SizedBox(
+            height: 45,
+            child: TextField(
+              autofocus: true,
+              onSubmitted: (_) => onPressed?.call(),
+              decoration: InputDecoration(
+                label: Text(l10n.name),
+                suffixIcon: SizedBox(
+                  height: 45,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(kYaruButtonRadius),
+                          bottomRight: Radius.circular(kYaruButtonRadius),
+                        ),
+                      ),
+                    ),
+                    onPressed: onPressed,
+                    child: Text(
+                      l10n.add,
                     ),
                   ),
                 ),
-                onPressed: onPressed,
-                child: Text(
-                  l10n.add,
-                ),
               ),
+              onChanged: di<CustomContentModel>().setPlaylistName,
             ),
-            onChanged: di<CustomContentModel>().setPlaylistName,
           ),
         ),
         Row(

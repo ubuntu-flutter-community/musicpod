@@ -34,6 +34,7 @@ class AudioTile extends StatefulWidget with WatchItStatefulWidgetMixin {
     this.onTitleTap,
     this.showDuration = true,
     this.showSlimTileSubtitle = true,
+    this.showSecondLineSubTitle = false,
   });
 
   final String pageId;
@@ -45,7 +46,10 @@ class AudioTile extends StatefulWidget with WatchItStatefulWidgetMixin {
   final void Function()? onTap;
   final void Function()? onTitleTap;
   final void Function(String text)? onSubTitleTap;
-  final bool allowLeadingImage, showDuration, showSlimTileSubtitle;
+  final bool allowLeadingImage,
+      showDuration,
+      showSlimTileSubtitle,
+      showSecondLineSubTitle;
   final Color? selectedColor;
 
   @override
@@ -148,9 +152,8 @@ class _AudioTileState extends State<AudioTile> {
           widget.onTap?.call();
         }
       },
-      title: !slimTile
-          ? title
-          : Row(
+      title: slimTile
+          ? Row(
               spacing: kMediumSpace,
               children: [
                 Expanded(
@@ -170,9 +173,12 @@ class _AudioTileState extends State<AudioTile> {
                     ),
                   ),
               ],
-            ),
+            )
+          : title,
       subtitle: slimTile
-          ? null
+          ? widget.showSecondLineSubTitle
+              ? subtitle
+              : null
           : Row(
               mainAxisSize: MainAxisSize.min,
               children: [

@@ -46,7 +46,7 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
     Widget image;
     if (audio?.canHaveLocalCover == true) {
       image = LocalCover(
-        key: ValueKey(audio!.path),
+        key: ValueKey(audio!.albumId!),
         albumId: audio.albumId!,
         path: audio.path!,
         width: theWidth,

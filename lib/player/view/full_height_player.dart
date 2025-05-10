@@ -72,7 +72,11 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
               child: queueOrHistory,
             )
           else ...[
-            if (!isMobile || context.isPortrait) const FullHeightPlayerImage(),
+            if (!isMobile || context.isPortrait)
+              const Hero(
+                tag: 'FullHeightPlayerImageInPortrait',
+                child: FullHeightPlayerImage(),
+              ),
             const SizedBox(
               height: kLargestSpace,
             ),
@@ -94,7 +98,10 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
               height: kLargestSpace,
             ),
           ],
-          PlayerMainControls(active: active),
+          SizedBox(
+            width: playerWithSidePanel ? 400 : 320,
+            child: PlayerMainControls(active: active),
+          ),
         ],
       );
 
@@ -111,7 +118,23 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
                       queueOrHistory,
                     ],
                   )
-                : column,
+                : isMobile && !context.isPortrait
+                    ? Row(
+                        spacing: kLargestSpace,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Hero(
+                            tag: 'FullHeightPlayerImageInLandscape',
+                            child: FullHeightPlayerImage(
+                              height: 200,
+                              width: 200,
+                            ),
+                          ),
+                          SizedBox(width: 400, child: column),
+                        ],
+                      )
+                    : column,
           ),
           Positioned(
             top: 0,

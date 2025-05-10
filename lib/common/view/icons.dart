@@ -32,7 +32,7 @@ class Iconz {
       ? YaruIcons.home_filled
       : cupertino
           ? CupertinoIcons.home
-          : Icons.home_filled;
+          : Icons.home_rounded;
 
   static IconData get image => yaru
       ? YaruIcons.image

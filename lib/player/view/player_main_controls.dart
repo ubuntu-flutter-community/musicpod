@@ -25,14 +25,14 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
     required this.active,
     this.iconColor,
     this.avatarColor,
-    this.mainAxisAlignment = MainAxisAlignment.center,
+    this.mainAxisAlignment,
     this.mainAxisSize = MainAxisSize.max,
     this.avatarPlayButton = true,
   });
 
   final bool active;
   final Color? iconColor, avatarColor;
-  final MainAxisAlignment mainAxisAlignment;
+  final MainAxisAlignment? mainAxisAlignment;
   final MainAxisSize mainAxisSize;
   final bool avatarPlayButton;
 
@@ -55,9 +55,7 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
     final useYaruTheme =
         watchPropertyValue((SettingsModel m) => m.useYaruTheme);
 
-    final radius = isMobile
-        ? getBigAvatarButtonRadius(useYaruTheme)
-        : getSmallAvatarButtonRadius(useYaruTheme);
+    final radius = getBigAvatarButtonRadius(useYaruTheme);
     final playButton = avatarPlayButton
         ? CircleAvatar(
             radius: radius,
@@ -88,7 +86,6 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
           ),
         _ => const SizedBox.shrink()
       },
-      _flex,
       if (showSkipButtons)
         IconButton(
           tooltip: context.l10n.back,
@@ -99,9 +96,7 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
             color: defaultColor,
           ),
         ),
-      _flex,
       playButton,
-      _flex,
       if (showSkipButtons)
         IconButton(
           tooltip: context.l10n.next,
@@ -114,7 +109,6 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
             color: defaultColor,
           ),
         ),
-      _flex,
       switch (audio?.audioType) {
         AudioType.local => RepeatButton(
             active: active,
@@ -131,16 +125,12 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
 
     return Row(
       mainAxisSize: mainAxisSize,
-      mainAxisAlignment: mainAxisAlignment,
+      mainAxisAlignment: mainAxisAlignment ??
+          (isMobile ? MainAxisAlignment.spaceEvenly : MainAxisAlignment.center),
+      spacing: isMobile ? kSmallestSpace : kMediumSpace,
       children: children,
     );
   }
-
-  Flexible get _flex => const Flexible(
-        child: SizedBox(
-          width: 5,
-        ),
-      );
 }
 
 class PlayerCompactControls extends StatelessWidget with WatchItMixin {
@@ -172,9 +162,7 @@ class PlayerCompactControls extends StatelessWidget with WatchItMixin {
     final useYaruTheme =
         watchPropertyValue((SettingsModel m) => m.useYaruTheme);
 
-    final radius = isMobile
-        ? getBigAvatarButtonRadius(useYaruTheme)
-        : getSmallAvatarButtonRadius(useYaruTheme);
+    final radius = getSmallAvatarButtonRadius(useYaruTheme);
 
     return Padding(
       padding: const EdgeInsets.symmetric(

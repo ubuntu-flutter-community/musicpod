@@ -72,7 +72,7 @@ class RoundImageContainerVignette extends StatelessWidget {
   const RoundImageContainerVignette({
     super.key,
     required this.text,
-    this.backgroundColor = Colors.black,
+    this.backgroundColor = const Color.fromARGB(255, 28, 28, 28),
     this.textColor = Colors.white,
   });
 

@@ -63,6 +63,14 @@ class MobileNavigationBar extends StatelessWidget with WatchItMixin {
                 onPressed: () =>
                     di<RoutingManager>().push(pageId: PageIDs.podcasts),
               ),
+              IconButton(
+                isSelected: selectedPageId == PageIDs.settings,
+                selectedIcon: Icon(Iconz.settingsFilled),
+                icon: Icon(Iconz.settings),
+                tooltip: l10n.settings,
+                onPressed: () =>
+                    di<RoutingManager>().push(pageId: PageIDs.settings),
+              ),
             ],
           ),
         ),

@@ -64,7 +64,7 @@ class _SettingsPageState extends State<SettingsPage> {
               constraints: constraints,
               limit: 600,
               min: 0,
-            ),
+            ).copyWith(bottom: bottomPlayerDefaultHeight),
             children: const [
               ThemeSection(),
               PodcastSection(),

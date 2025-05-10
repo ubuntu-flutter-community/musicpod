@@ -11,6 +11,7 @@ import '../common/view/icons.dart';
 import '../common/view/search_button.dart';
 import '../common/view/theme.dart';
 import '../common/view/ui_constants.dart';
+import '../extensions/build_context_x.dart';
 import '../extensions/country_x.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
@@ -45,13 +46,6 @@ class HomePage extends StatelessWidget with WatchItMixin {
         adaptive: false,
         actions: [
           const SearchButton(),
-          IconButton(
-            selectedIcon: Icon(Iconz.settingsFilled),
-            icon: Icon(Iconz.settings),
-            tooltip: l10n.settings,
-            onPressed: () =>
-                di<RoutingManager>().push(pageId: PageIDs.settings),
-          ),
           const SizedBox(
             width: kSmallestSpace,
           ),
@@ -62,17 +56,18 @@ class HomePage extends StatelessWidget with WatchItMixin {
           final padding = getAdaptiveHorizontalPadding(
             constraints: constraints,
           );
+          final textStyle = context.textTheme.bodyLarge;
           return CustomScrollView(
             slivers: [
               if (isOnline) ...[
                 SliverPadding(
-                  padding: padding,
+                  padding: padding.copyWith(top: kMediumSpace),
                   sliver: SliverToBoxAdapter(
                     child: ListTile(
                       contentPadding: textPadding,
                       title: Text(
                         '${l10n.podcast} ${l10n.charts} ${country ?? ''}',
-                        // style: style,
+                        style: textStyle,
                       ),
                       trailing: Icon(Iconz.goNext),
                       onTap: () {
@@ -98,6 +93,7 @@ class HomePage extends StatelessWidget with WatchItMixin {
                       contentPadding: textPadding,
                       title: Text(
                         '${l10n.radio} ${l10n.charts} ${country ?? ''}',
+                        style: textStyle,
                       ),
                       onTap: () {
                         di<RoutingManager>().push(pageId: PageIDs.searchPage);
@@ -120,7 +116,10 @@ class HomePage extends StatelessWidget with WatchItMixin {
                   sliver: SliverToBoxAdapter(
                     child: ListTile(
                       contentPadding: textPadding,
-                      title: Text(l10n.playlists),
+                      title: Text(
+                        l10n.playlists,
+                        style: textStyle,
+                      ),
                       trailing: Icon(Iconz.goNext),
                       onTap: () {
                         di<LocalAudioModel>()

@@ -38,7 +38,11 @@ class AudioPageHeader extends StatelessWidget {
     final radius = imageRadius ?? BorderRadius.circular(10);
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: kLargestSpace),
+      padding: const EdgeInsets.only(
+        bottom: kLargestSpace,
+        left: kLargestSpace,
+        right: kLargestSpace,
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [

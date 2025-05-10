@@ -238,14 +238,14 @@ double getSmallAvatarButtonRadius(bool useYaruTheme) =>
     (useYaruTheme
         ? kYaruTitleBarItemHeight
         : isMobile
-            ? 42
+            ? 50
             : 38) /
     2;
 
 double getBigAvatarButtonRadius(bool useYaruTheme) => useYaruTheme
     ? 22
     : isMobile
-        ? 26
+        ? 35
         : 23;
 
 EdgeInsets get filterPanelPadding =>
