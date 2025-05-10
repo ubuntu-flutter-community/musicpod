@@ -848,7 +848,7 @@ class PlayerService {
       return;
     }
     final newData = MpvMetaData.fromJson(data);
-    final parsedIcyTitle = HtmlParser(newData.icyTitle).parseFragment().text;
+    final parsedIcyTitle = newData.icyTitle.unEscapeHtml;
     if (parsedIcyTitle == null || parsedIcyTitle == _mpvMetaData?.icyTitle) {
       return;
     }

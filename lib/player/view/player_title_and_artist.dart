@@ -9,6 +9,7 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/copy_clipboard_content.dart';
 import '../../common/view/snackbars.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/string_x.dart';
 import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_model.dart';
 import '../../local_audio/view/album_page.dart';
@@ -186,7 +187,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
       );
 
   String _subTitle(Audio? audio) => (switch (audio?.audioType) {
-            AudioType.podcast => audio?.album,
+            AudioType.podcast => audio?.album?.unEscapeHtml,
             AudioType.radio => audio?.title,
             _ => audio?.artist
           } ??

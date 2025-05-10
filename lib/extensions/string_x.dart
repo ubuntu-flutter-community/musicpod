@@ -1,3 +1,4 @@
+import 'package:html/parser.dart';
 import '../common/data/audio.dart';
 
 extension StringExtension on String {
@@ -64,4 +65,6 @@ extension NullableStringX on String? {
     micros = (double.parse(parts[parts.length - 1]) * 1000000).round();
     return Duration(hours: hours, minutes: minutes, microseconds: micros);
   }
+
+  String? get unEscapeHtml => HtmlParser(this).parseFragment().text ?? this;
 }
