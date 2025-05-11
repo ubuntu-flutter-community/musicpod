@@ -32,15 +32,13 @@ class AlbumsView extends StatelessWidget with WatchItMixin {
       );
     }
 
-    watchPropertyValue((LibraryModel m) => m.favoriteAlbums.hashCode);
+    watchPropertyValue((LibraryModel m) => m.favoriteAlbumsLength);
+    final favoriteAlbumIDs = di<LibraryModel>().favoriteAlbums;
+    favoriteAlbumIDs.sort((a, b) => a.albumOfId.compareTo(b.albumOfId));
 
-    final pinnedAlbumsAlbumKeys = di<LibraryModel>().favoriteAlbums;
-    pinnedAlbumsAlbumKeys.sort((a, b) => a.albumOfId.compareTo(b.albumOfId));
-
-    final pinned =
-        albumIDs?.where((e) => pinnedAlbumsAlbumKeys.contains(e)) ?? [];
+    final pinned = albumIDs?.where((e) => favoriteAlbumIDs.contains(e)) ?? [];
     final notPinned =
-        albumIDs?.where((e) => !pinnedAlbumsAlbumKeys.contains(e)) ?? [];
+        albumIDs?.where((e) => !favoriteAlbumIDs.contains(e)) ?? [];
     final sortedAlbums = [
       ...pinned,
       ...notPinned,
@@ -54,7 +52,6 @@ class AlbumsView extends StatelessWidget with WatchItMixin {
         return AlbumCard(
           key: ValueKey(albumID),
           id: albumID,
-          pinned: pinned.contains(albumID),
         );
       },
     );

@@ -6,30 +6,30 @@ import '../../extensions/theme_data_x.dart';
 import '../player_model.dart';
 
 class PlayerColor extends StatelessWidget with WatchItMixin {
-  const PlayerColor({super.key, required this.size});
+  const PlayerColor({super.key, required this.size, required this.alpha});
 
   final Size size;
+  final double alpha;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final color =
-        watchPropertyValue((PlayerModel m) => m.color?.withValues(alpha: 0.3));
+    final baseColor = watchPropertyValue((PlayerModel m) => m.color);
 
-    return Opacity(
-      opacity: theme.isLight ? 0.7 : 0.9,
-      child: Container(
-        width: size.width,
-        height: size.height,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              (color ?? theme.cardColor).withValues(alpha: 0.05),
-              color ?? theme.cardColor,
-            ],
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-          ),
+    final color =
+        baseColor?.withValues(alpha: alpha * (theme.isLight ? 0.7 : 0.9)) ??
+            theme.cardColor;
+    return Container(
+      width: size.width,
+      height: size.height,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            color.withValues(alpha: 0.02),
+            color,
+          ],
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
         ),
       ),
     );

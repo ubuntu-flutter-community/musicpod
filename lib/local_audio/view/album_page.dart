@@ -14,15 +14,14 @@ import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/sliver_audio_page.dart';
-import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../local_audio_model.dart';
 import 'artist_page.dart';
 import 'local_cover.dart';
+import 'pin_album_button.dart';
 
 class AlbumPage extends StatefulWidget with WatchItStatefulWidgetMixin {
   const AlbumPage({
@@ -64,7 +63,7 @@ class _AlbumPageState extends State<AlbumPage> {
             cachedAlbum.firstWhereOrNull((e) => e.artist != null)?.artist,
         onPageSubTitleTab: onArtistTap,
         onPageLabelTab: onArtistTap,
-        controlPanel: AlbumPageControlButton(album: cachedAlbum, id: widget.id),
+        controlPanel: AlbumPageControlPanel(album: cachedAlbum, id: widget.id),
       );
     }
 
@@ -93,7 +92,7 @@ class _AlbumPageState extends State<AlbumPage> {
           pageSubTitle: album.firstWhereOrNull((e) => e.artist != null)?.artist,
           onPageSubTitleTab: onArtistTap,
           onPageLabelTab: onArtistTap,
-          controlPanel: AlbumPageControlButton(album: album, id: widget.id),
+          controlPanel: AlbumPageControlPanel(album: album, id: widget.id),
         );
       },
     );
@@ -191,8 +190,8 @@ class AlbumPageImage extends StatelessWidget {
   }
 }
 
-class AlbumPageControlButton extends StatelessWidget with WatchItMixin {
-  const AlbumPageControlButton({
+class AlbumPageControlPanel extends StatelessWidget {
+  const AlbumPageControlPanel({
     super.key,
     required this.id,
     required this.album,
@@ -203,45 +202,12 @@ class AlbumPageControlButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final libraryModel = di<LibraryModel>();
-    final pinnedAlbum =
-        watchPropertyValue((LibraryModel m) => m.isFavoriteAlbum(id));
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: space(
         children: [
-          IconButton(
-            tooltip:
-                pinnedAlbum ? context.l10n.unPinAlbum : context.l10n.pinAlbum,
-            isSelected: pinnedAlbum,
-            icon: Icon(
-              pinnedAlbum ? Iconz.pinFilled : Iconz.pin,
-            ),
-            onPressed: () {
-              if (pinnedAlbum) {
-                libraryModel.removeFavoriteAlbum(
-                  id,
-                  onFail: () {
-                    showSnackBar(
-                      context: context,
-                      content: Text(context.l10n.cantUnpinEmptyAlbum),
-                    );
-                  },
-                );
-              } else {
-                libraryModel.addFavoriteAlbum(
-                  id,
-                  onFail: () {
-                    showSnackBar(
-                      context: context,
-                      content: Text(context.l10n.cantPinEmptyAlbum),
-                    );
-                  },
-                );
-              }
-            },
-          ),
+          PinAlbumButton(albumId: id),
           AvatarPlayButton(audios: album, pageId: id),
           AudioTileOptionButton(
             audios: album,

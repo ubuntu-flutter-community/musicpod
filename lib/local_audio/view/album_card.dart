@@ -19,15 +19,10 @@ import '../local_audio_model.dart';
 import 'album_page.dart';
 import 'local_cover.dart';
 
-class AlbumCard extends StatefulWidget {
-  const AlbumCard({
-    super.key,
-    required this.id,
-    required this.pinned,
-  });
+class AlbumCard extends StatefulWidget with WatchItStatefulWidgetMixin {
+  const AlbumCard({super.key, required this.id});
 
   final String id;
-  final bool pinned;
 
   @override
   State<AlbumCard> createState() => _AlbumCardState();
@@ -50,21 +45,24 @@ class _AlbumCardState extends State<AlbumCard> {
   Widget build(BuildContext context) {
     final model = di<LocalAudioModel>();
     final cachedCoverPath = model.getCachedCoverPath(widget.id);
-    if (cachedCoverPath != null) {
-      return _AlbumCard(
-        id: widget.id,
-        path: cachedCoverPath,
-      );
-    }
+    final pinned =
+        watchPropertyValue((LibraryModel m) => m.isFavoriteAlbum(widget.id));
+
     return Stack(
       alignment: Alignment.center,
       children: [
-        FutureBuilder(
-          future: _pathFuture,
-          builder: (context, snapshot) =>
-              _AlbumCard(path: snapshot.data, id: widget.id),
-        ),
-        if (widget.pinned)
+        if (cachedCoverPath != null)
+          _AlbumCard(
+            id: widget.id,
+            path: cachedCoverPath,
+          )
+        else
+          FutureBuilder(
+            future: _pathFuture,
+            builder: (context, snapshot) =>
+                _AlbumCard(path: snapshot.data, id: widget.id),
+          ),
+        if (pinned)
           Positioned(
             left: isMobile ? 6 : 5,
             bottom: kAudioCardBottomHeight + (isMobile ? 25 : 13),

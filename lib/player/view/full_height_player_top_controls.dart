@@ -16,6 +16,7 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
+import '../../local_audio/view/pin_album_button.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import 'playback_rate_button.dart';
@@ -75,6 +76,8 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
                 di<RoutingManager>().push(pageId: PageIDs.searchPage);
               },
             ),
+          if (audio?.audioType == AudioType.local && audio?.albumId != null)
+            PinAlbumButton(albumId: audio!.albumId!),
           if (audio?.audioType != AudioType.podcast)
             switch (audio?.audioType) {
               AudioType.local => LikeIconButton(

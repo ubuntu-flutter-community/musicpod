@@ -80,7 +80,7 @@ class SliverRadioHistoryList extends StatelessWidget with WatchItMixin {
     this.emptyMessage,
     this.padding,
     this.emptyIcon,
-    required this.allowNavigation,
+    this.allowNavigation = true,
   });
 
   final String? filter;
