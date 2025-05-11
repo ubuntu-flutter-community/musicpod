@@ -45,15 +45,7 @@ class _PlayerViewState extends State<PlayerView> {
 
     Widget player;
     if (widget.position != PlayerPosition.bottom) {
-      player = Row(
-        children: [
-          if (widget.position == PlayerPosition.sideBar)
-            const Material(child: VerticalDivider()),
-          Expanded(
-            child: FullHeightPlayer(playerPosition: widget.position),
-          ),
-        ],
-      );
+      player = FullHeightPlayer(playerPosition: widget.position);
     } else {
       player = const BottomPlayer();
     }

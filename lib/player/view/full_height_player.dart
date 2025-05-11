@@ -179,7 +179,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
     }
 
     return Stack(
-      children: [PlayerColor(size: size), fullHeightPlayer],
+      children: [PlayerColor(alpha: 0.4, size: size), fullHeightPlayer],
     );
   }
 }

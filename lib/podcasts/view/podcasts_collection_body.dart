@@ -155,6 +155,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                       final first = episodes.firstOrNull;
 
                       return AudioCard(
+                        key: ValueKey(feedUrl),
                         image: SafeNetworkImage(
                           url: first?.albumArtUrl ?? first?.imageUrl,
                           fit: BoxFit.cover,
