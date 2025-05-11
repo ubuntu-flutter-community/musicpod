@@ -8,6 +8,7 @@ import 'package:media_kit/media_kit.dart' hide PlayerState;
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:path/path.dart' as p;
 import 'package:smtc_windows/smtc_windows.dart';
+import 'package:yaru/yaru.dart';
 
 import '../app_config.dart';
 import '../common/data/audio.dart';
@@ -450,16 +451,18 @@ class PlayerService {
   String? get remoteImageUrl => _remoteImageUrl;
   Future<void> _setRemoteImageUrl(String? url) async {
     _remoteImageUrl = url;
-    // await _setRemoteColor(url);
-
     _propertiesChangedController.add(true);
   }
 
   Future<void> setRemoteColorFromImageProvider(ImageProvider provider) async {
     try {
-      final colorScheme =
-          await ColorScheme.fromImageProvider(provider: provider);
-      _setColor(colorScheme.primary);
+      final colorScheme = await ColorScheme.fromImageProvider(
+        provider: provider,
+        contrastLevel: 1,
+        brightness: Brightness.dark,
+        dynamicSchemeVariant: DynamicSchemeVariant.content,
+      );
+      _setColor(colorScheme.primary.scale(saturation: 1));
     } on Exception catch (e) {
       printMessageInDebugMode(e);
     }

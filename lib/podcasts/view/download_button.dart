@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
+import 'package:yaru/constants.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/taget_platform_x.dart';
+import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../settings/settings_model.dart';
@@ -32,18 +35,32 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
     final download = watchPropertyValue(
       (LibraryModel m) => m.getDownload(audio?.url) != null,
     );
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
     final downloadsDir =
         watchPropertyValue((SettingsModel m) => m.downloadsDir);
+
+    final radius = (useYaruTheme
+            ? kYaruTitleBarItemHeight
+            : isMobile
+                ? 40
+                : 35) /
+        2;
 
     return Stack(
       alignment: Alignment.center,
       children: [
-        Progress(
-          padding: EdgeInsets.zero,
-          value: value == null || value == 1.0 ? 0 : value,
-          backgroundColor: Colors.transparent,
+        SizedBox.square(
+          dimension: (radius * 2) - 3,
+          child: Progress(
+            adaptive: false,
+            padding: EdgeInsets.zero,
+            value: value == null || value == 1.0 ? 0 : value,
+            backgroundColor: Colors.transparent,
+          ),
         ),
         IconButton(
+          isSelected: download,
           tooltip: audio?.path != null
               ? context.l10n.removeDownloadEpisode
               : context.l10n.downloadEpisode,
@@ -68,9 +85,8 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
                   }
                 },
           iconSize: iconSize,
-          color: download
-              ? theme.colorScheme.primary
-              : theme.colorScheme.onSurface,
+          color:
+              download ? theme.contrastyPrimary : theme.colorScheme.onSurface,
         ),
       ],
     );

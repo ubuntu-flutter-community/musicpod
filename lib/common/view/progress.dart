@@ -18,6 +18,7 @@ class Progress extends StatelessWidget with WatchItMixin {
     this.strokeCap,
     this.strokeWidth = 3.0,
     this.padding,
+    this.adaptive = true,
   });
 
   final double? value;
@@ -29,6 +30,7 @@ class Progress extends StatelessWidget with WatchItMixin {
   final String? semanticsValue;
   final StrokeCap? strokeCap;
   final EdgeInsetsGeometry? padding;
+  final bool adaptive;
 
   @override
   Widget build(BuildContext context) {
@@ -43,14 +45,25 @@ class Progress extends StatelessWidget with WatchItMixin {
           )
         : Padding(
             padding: padding ?? const EdgeInsets.all(4),
-            child: CircularProgressIndicator.adaptive(
-              strokeWidth: strokeWidth,
-              value: value,
-              backgroundColor: value == null
-                  ? null
-                  : (backgroundColor ??
-                      context.theme.colorScheme.primary.withValues(alpha: 0.3)),
-            ),
+            child: adaptive
+                ? CircularProgressIndicator.adaptive(
+                    strokeWidth: strokeWidth,
+                    value: value,
+                    backgroundColor: value == null
+                        ? null
+                        : (backgroundColor ??
+                            context.theme.colorScheme.primary
+                                .withValues(alpha: 0.3)),
+                  )
+                : CircularProgressIndicator(
+                    strokeWidth: strokeWidth,
+                    value: value,
+                    backgroundColor: value == null
+                        ? null
+                        : (backgroundColor ??
+                            context.theme.colorScheme.primary
+                                .withValues(alpha: 0.3)),
+                  ),
           );
   }
 }

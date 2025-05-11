@@ -39,52 +39,58 @@ class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
                 ? 40
                 : 38) /
         2;
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        PodcastTileProgress(
-          selected: selected,
-          lastPosition: playerModel.getLastPosition(audio.url),
-          duration: audio.durationMs == null
-              ? null
-              : Duration(milliseconds: audio.durationMs!.toInt()),
-        ),
-        CircleAvatar(
-          radius: radius,
-          backgroundColor: selected
-              ? theme.colorScheme.primary.withValues(alpha: 0.08)
-              : theme.colorScheme.onSurface.withValues(alpha: 0.09),
-          child: SizedBox.square(
-            dimension: radius * 2,
-            child: IconButton(
-              icon: (isPlayerPlaying && selected)
-                  ? Icon(
-                      Iconz.pause,
-                    )
-                  : Padding(
-                      padding: Iconz.cupertino
-                          ? const EdgeInsets.only(left: 3)
-                          : EdgeInsets.zero,
-                      child: Icon(Iconz.playFilled),
-                    ),
-              onPressed: () {
-                if (selected) {
-                  if (isPlayerPlaying) {
-                    playerModel.pause();
-                  } else {
-                    playerModel.resume();
-                  }
-                } else {
-                  playerModel.safeLastPosition().then((value) {
-                    startPlaylist?.call();
-                    removeUpdate?.call();
-                  });
-                }
-              },
+    return SizedBox.square(
+      dimension: radius * 2,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          SizedBox.square(
+            dimension: (radius * 2) - 3,
+            child: PodcastTileProgress(
+              selected: selected,
+              lastPosition: playerModel.getLastPosition(audio.url),
+              duration: audio.durationMs == null
+                  ? null
+                  : Duration(milliseconds: audio.durationMs!.toInt()),
             ),
           ),
-        ),
-      ],
+          CircleAvatar(
+            radius: radius,
+            backgroundColor: selected
+                ? theme.colorScheme.primary.withValues(alpha: 0.08)
+                : theme.colorScheme.onSurface.withValues(alpha: 0.09),
+            child: SizedBox.square(
+              dimension: radius * 2,
+              child: IconButton(
+                icon: (isPlayerPlaying && selected)
+                    ? Icon(
+                        Iconz.pause,
+                      )
+                    : Padding(
+                        padding: Iconz.cupertino
+                            ? const EdgeInsets.only(left: 3)
+                            : EdgeInsets.zero,
+                        child: Icon(Iconz.playFilled),
+                      ),
+                onPressed: () {
+                  if (selected) {
+                    if (isPlayerPlaying) {
+                      playerModel.pause();
+                    } else {
+                      playerModel.resume();
+                    }
+                  } else {
+                    playerModel.safeLastPosition().then((value) {
+                      startPlaylist?.call();
+                      removeUpdate?.call();
+                    });
+                  }
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

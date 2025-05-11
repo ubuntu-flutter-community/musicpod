@@ -64,63 +64,6 @@ class _AboutPageState extends State<_AboutPage> {
         Expanded(
           child: CustomScrollView(
             slivers: [
-              ...[
-                TapAbleText(
-                  text:
-                      'MusicPod is made by Frederik Feichtmeier. If you like MusicPod, please sponsor me!',
-                  onTap: () => launchUrl(Uri.parse(AppConfig.sponsorLink)),
-                  style: linkStyle,
-                  maxLines: maxLines,
-                ),
-                TapAbleText(
-                  onTap: () =>
-                      launchUrl(Uri.parse('https://ko-fi.com/amugofjava')),
-                  text:
-                      'MusicPod uses Podcast Search to find podcasts which is made by Ben Hills, please sponsor him!',
-                  style: linkStyle,
-                  maxLines: maxLines,
-                ),
-                TapAbleText(
-                  onTap: () => launchUrl(
-                    Uri.parse('https://github.com/sponsors/alexmercerind'),
-                  ),
-                  text:
-                      'MusicPod uses MediaKit to play Media which is made by Hitesh Kumar Saini, please sponsor him!',
-                  style: linkStyle,
-                  maxLines: maxLines,
-                ),
-                TapAbleText(
-                  onTap: () =>
-                      launchUrl(Uri.parse('https://github.com/kenvandine')),
-                  text:
-                      'MusicPod Snap packaging is made by Ken VanDine, please sponsor him!',
-                  style: linkStyle,
-                  maxLines: maxLines,
-                ),
-                TapAbleText(
-                  onTap: () => launchUrl(
-                    Uri.parse(
-                      'https://github.com/sponsors/ClementBeal',
-                    ),
-                  ),
-                  text:
-                      'MusicPod metadata reading is enabled by Clement Beal, please sponsor him!',
-                  style: linkStyle,
-                  maxLines: maxLines,
-                ),
-                Text(
-                  context.l10n.contributors,
-                  style: theme.textTheme.bodyLarge,
-                ),
-              ].map(
-                (e) => SliverPadding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: kLargestSpace,
-                    vertical: kSmallestSpace,
-                  ),
-                  sliver: SliverToBoxAdapter(child: e),
-                ),
-              ),
               FutureBuilder<List<Contributor>>(
                 future: _contributors,
                 builder: (context, snapshot) {
@@ -179,6 +122,59 @@ class _AboutPageState extends State<_AboutPage> {
                     );
                   }
                 },
+              ),
+              ...[
+                TapAbleText(
+                  text:
+                      'MusicPod is made by Frederik Feichtmeier. If you like MusicPod, please sponsor me!',
+                  onTap: () => launchUrl(Uri.parse(AppConfig.sponsorLink)),
+                  style: linkStyle,
+                  maxLines: maxLines,
+                ),
+                TapAbleText(
+                  onTap: () =>
+                      launchUrl(Uri.parse('https://ko-fi.com/amugofjava')),
+                  text:
+                      'MusicPod uses Podcast Search to find podcasts which is made by Ben Hills, please sponsor him!',
+                  style: linkStyle,
+                  maxLines: maxLines,
+                ),
+                TapAbleText(
+                  onTap: () => launchUrl(
+                    Uri.parse('https://github.com/sponsors/alexmercerind'),
+                  ),
+                  text:
+                      'MusicPod uses MediaKit to play Media which is made by Hitesh Kumar Saini, please sponsor him!',
+                  style: linkStyle,
+                  maxLines: maxLines,
+                ),
+                TapAbleText(
+                  onTap: () =>
+                      launchUrl(Uri.parse('https://github.com/kenvandine')),
+                  text:
+                      'MusicPod Snap packaging is made by Ken VanDine, please sponsor him!',
+                  style: linkStyle,
+                  maxLines: maxLines,
+                ),
+                TapAbleText(
+                  onTap: () => launchUrl(
+                    Uri.parse(
+                      'https://github.com/sponsors/ClementBeal',
+                    ),
+                  ),
+                  text:
+                      'MusicPod metadata reading is enabled by Clement Beal, please sponsor him!',
+                  style: linkStyle,
+                  maxLines: maxLines,
+                ),
+              ].map(
+                (e) => SliverPadding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: kLargestSpace,
+                    vertical: kSmallestSpace,
+                  ),
+                  sliver: SliverToBoxAdapter(child: e),
+                ),
               ),
             ],
           ),

@@ -7,6 +7,7 @@ import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../custom_content/view/backup_dialog.dart';
+import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../settings_model.dart';
 
@@ -16,6 +17,7 @@ class ResetSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final theme = context.theme;
     return YaruSection(
       margin: const EdgeInsets.only(
         left: kLargestSpace,
@@ -50,13 +52,19 @@ class ResetSection extends StatelessWidget {
             leading: Icon(Iconz.remove),
             title: Text(l10n.resetAllSettings),
             trailing: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: theme.colorScheme.error,
+              ),
               onPressed: () => showDialog(
                 barrierDismissible: false,
                 context: context,
                 builder: (context) => const WipeConfirmDialog(),
               ),
               child: Text(
-                l10n.resetAllSettings,
+                l10n.reset,
+                style: TextStyle(
+                  color: theme.colorScheme.onError,
+                ),
               ),
             ),
           ),
