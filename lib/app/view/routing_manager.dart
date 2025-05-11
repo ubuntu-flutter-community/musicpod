@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../common/logging.dart';
+import '../../common/page_ids.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../library/library_service.dart';
 import 'mobile_page.dart';
@@ -44,7 +45,7 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
       return;
     }
     if (inLibrary) {
-      if (replace) {
+      if (replace || PageIDs.replacers.contains(pageId)) {
         await _masterNavigatorKey.currentState?.pushReplacementNamed(pageId);
       } else {
         await _masterNavigatorKey.currentState?.pushNamed(pageId);
@@ -71,9 +72,18 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
     }
   }
 
-  void pop() => _masterNavigatorKey.currentState?.maybePop();
+  void pop() {
+    if (!PageIDs.replacers.contains(selectedPageId)) {
+      _masterNavigatorKey.currentState?.maybePop();
+    } else {
+      _masterNavigatorKey.currentState
+          ?.popUntil((route) => route.settings.name == selectedPageId);
+    }
+  }
 
-  bool get canPop => _masterNavigatorKey.currentState?.canPop() == true;
+  bool get canPop => PageIDs.replacers.contains(selectedPageId)
+      ? false
+      : _masterNavigatorKey.currentState?.canPop() == true;
 
   @override
   void didPop(Route route, Route? previousRoute) {

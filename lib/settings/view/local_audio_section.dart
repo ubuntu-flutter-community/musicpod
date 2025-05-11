@@ -49,19 +49,6 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
           ),
           YaruTile(
             title: Text(l10n.groupAlbumsOnlyByAlbumName),
-            subtitle: groupAlbumsOnlyByAlbumName
-                ? Padding(
-                    padding: const EdgeInsets.only(
-                      top: kSmallestSpace,
-                      right: kSmallestSpace,
-                    ),
-                    child: YaruInfoBox(
-                      yaruInfoType: YaruInfoType.warning,
-                      subtitle:
-                          Text(l10n.groupAlbumsOnlyByAlbumNameDescription),
-                    ),
-                  )
-                : null,
             trailing: CommonSwitch(
               value: groupAlbumsOnlyByAlbumName,
               onChanged: (value) {
@@ -69,6 +56,17 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
               },
             ),
           ),
+          if (groupAlbumsOnlyByAlbumName)
+            Padding(
+              padding: const EdgeInsets.only(
+                top: kSmallestSpace,
+                right: kSmallestSpace,
+              ),
+              child: YaruInfoBox(
+                yaruInfoType: YaruInfoType.warning,
+                subtitle: Text(l10n.groupAlbumsOnlyByAlbumNameDescription),
+              ),
+            ),
         ],
       ),
     );

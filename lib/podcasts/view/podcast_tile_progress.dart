@@ -36,6 +36,7 @@ class PodcastTileProgress extends StatelessWidget with WatchItMixin {
 
     return RepaintBoundary(
       child: Progress(
+        adaptive: false,
         padding: EdgeInsets.zero,
         color: selected
             ? theme.colorScheme.primary.withValues(alpha: 0.9)

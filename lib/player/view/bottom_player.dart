@@ -142,7 +142,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
       children: [
         if (!isMobile)
           PlayerColor(
-            alpha: 0.3,
+            alpha: 0.2,
             size: Size(
               context.mediaQuerySize.width,
               bottomPlayerDefaultHeight,
