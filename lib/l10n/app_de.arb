@@ -1395,5 +1395,19 @@
   "useYaruThemeDescription": "Damit wird das Yaru-Thema für die Anwendung verwendet. Dies ist das Standardthema für Ubuntu.",
   "@useYaruThemeDescription": {},
   "selectColorAndItsShades": "Farbe und ihre Schattierungen auswählen",
-  "@selectColorAndItsShades": {}
+  "@selectColorAndItsShades": {},
+  "useCustomThemeColorDescription": "Das lässt dich eine benutzerdefinierte Akzentfarbe für das aktuelle Design auswählen.",
+  "@useCustomThemeColorDescription": {},
+  "reset": "Zurücksetzen",
+  "@reset": {},
+  "groupAlbumsOnlyByAlbumNameDescription": "Dies gruppiert Alben nur nach Albumname und nicht nach Künstlername + Albumname, was voraussetzt, dass der Albumname innerhalb deiner Bibliothek eindeutig ist!",
+  "@groupAlbumsOnlyByAlbumNameDescription": {},
+  "selectIconThemeDescription": "Wähle ein Icon-Theme für die Anwendung. Das Standard-Theme hängt von deinem Betriebssystem ab. Dies lädt die Anwendung neu!",
+  "@selectIconThemeDescription": {},
+  "disc": "CD",
+  "@disc": {},
+  "saveWindowSizeTitle": "Fenstergröße speichern",
+  "@saveWindowSizeTitle": {},
+  "saveWindowSizeDescription": "Dadurch wird die Fenstergröße und die Position der Anwendung gespeichert.",
+  "@saveWindowSizeDescription": {}
 }
