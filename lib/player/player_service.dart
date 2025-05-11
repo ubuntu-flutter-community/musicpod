@@ -456,12 +456,8 @@ class PlayerService {
 
   Future<void> setRemoteColorFromImageProvider(ImageProvider provider) async {
     try {
-      final colorScheme = await ColorScheme.fromImageProvider(
-        provider: provider,
-        contrastLevel: 1,
-        brightness: Brightness.dark,
-        dynamicSchemeVariant: DynamicSchemeVariant.content,
-      );
+      final colorScheme =
+          await ColorScheme.fromImageProvider(provider: provider);
       _setColor(colorScheme.primary.scale(saturation: 1));
     } on Exception catch (e) {
       printMessageInDebugMode(e);
