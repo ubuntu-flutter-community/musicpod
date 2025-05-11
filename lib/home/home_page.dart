@@ -45,9 +45,9 @@ class HomePage extends StatelessWidget with WatchItMixin {
         title: Text(l10n.home),
         adaptive: false,
         actions: [
-          const SearchButton(),
-          const SizedBox(
-            width: kSmallestSpace,
+          Padding(
+            padding: appBarSingleActionSpacing,
+            child: const SearchButton(),
           ),
         ],
       ),

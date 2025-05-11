@@ -86,7 +86,7 @@ class _LazyPodcastPageState extends State<LazyPodcastPage> {
 
           return PodcastPage(
             imageUrl: imageUrl,
-            preFetchedEpisodes: episodes,
+            episodes: episodes,
             feedUrl: feedUrl,
             title: title,
           );

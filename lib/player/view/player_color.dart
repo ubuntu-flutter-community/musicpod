@@ -14,11 +14,12 @@ class PlayerColor extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final baseColor = watchPropertyValue((PlayerModel m) => m.color);
+    final baseColor =
+        watchPropertyValue((PlayerModel m) => m.color?.withValues(alpha: 0.3));
 
     final color = baseColor ?? theme.cardColor;
     return Opacity(
-      opacity: alpha * (theme.isLight ? 0.8 : 0.9),
+      opacity: alpha * (theme.isLight ? 0.7 : 0.8),
       child: Container(
         width: size.width,
         height: size.height,

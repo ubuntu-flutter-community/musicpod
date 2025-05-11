@@ -27,16 +27,15 @@ class PodcastPage extends StatefulWidget with WatchItStatefulWidgetMixin {
     super.key,
     this.imageUrl,
     required this.feedUrl,
-    this.preFetchedEpisodes,
+    required this.episodes,
     required this.title,
   });
 
   final String? imageUrl;
 
-  /// The feedUrl
   final String feedUrl;
   final String title;
-  final List<Audio>? preFetchedEpisodes;
+  final List<Audio> episodes;
 
   @override
   State<PodcastPage> createState() => _PodcastPageState();
@@ -49,14 +48,11 @@ class _PodcastPageState extends State<PodcastPage> {
     final libraryModel = di<LibraryModel>();
     if (!libraryModel.isPodcastSubscribed(widget.feedUrl)) return;
 
-    final episodes =
-        widget.preFetchedEpisodes ?? libraryModel.getPodcast(widget.feedUrl);
-
-    if (episodes == null || episodes.isEmpty) return;
+    if (widget.episodes.isEmpty) return;
 
     Future.delayed(const Duration(milliseconds: 500)).then(
       (_) {
-        final episodesWithDownloads = episodes
+        final episodesWithDownloads = widget.episodes
             .map((e) => e.copyWith(path: libraryModel.getDownload(e.url)))
             .toList();
         di<PodcastModel>().update(
@@ -70,8 +66,14 @@ class _PodcastPageState extends State<PodcastPage> {
 
   @override
   Widget build(BuildContext context) {
-    final episodes = widget.preFetchedEpisodes ??
-        watchPropertyValue((LibraryModel m) => m.getPodcast(widget.feedUrl));
+    watchPropertyValue(
+      (LibraryModel m) => m.getPodcast(widget.feedUrl)?.length,
+    );
+    watchPropertyValue(
+      (LibraryModel m) => m.getPodcast(widget.feedUrl)?.hashCode,
+    );
+    final episodes =
+        di<LibraryModel>().getPodcast(widget.feedUrl) ?? widget.episodes;
     watchPropertyValue((PlayerModel m) => m.lastPositions?.length);
     watchPropertyValue((LibraryModel m) => m.downloadsLength);
     final showSearch =
@@ -86,11 +88,11 @@ class _PodcastPageState extends State<PodcastPage> {
     )) {
       sortListByAudioFilter(
         audioFilter: AudioFilter.year,
-        audios: episodes ?? [],
+        audios: episodes,
       );
     }
     final filter = watchPropertyValue((PodcastModel m) => m.filter);
-    final episodesWithDownloads = (episodes ?? [])
+    final episodesWithDownloads = episodes
         .map((e) => e.copyWith(path: libraryModel.getDownload(e.url)))
         .where((e) => e.title != null && e.description != null)
         .where(
