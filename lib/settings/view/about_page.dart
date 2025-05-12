@@ -123,57 +123,61 @@ class _AboutPageState extends State<_AboutPage> {
                   }
                 },
               ),
-              ...[
-                TapAbleText(
-                  text:
-                      'MusicPod is made by Frederik Feichtmeier. If you like MusicPod, please sponsor me!',
-                  onTap: () => launchUrl(Uri.parse(AppConfig.sponsorLink)),
-                  style: linkStyle,
-                  maxLines: maxLines,
+              SliverPadding(
+                padding: const EdgeInsets.only(
+                  left: kLargestSpace,
+                  right: kLargestSpace,
+                  top: kLargestSpace,
+                  bottom: kSmallestSpace,
                 ),
-                TapAbleText(
-                  onTap: () =>
-                      launchUrl(Uri.parse('https://ko-fi.com/amugofjava')),
-                  text:
-                      'MusicPod uses Podcast Search to find podcasts which is made by Ben Hills, please sponsor him!',
-                  style: linkStyle,
-                  maxLines: maxLines,
-                ),
-                TapAbleText(
-                  onTap: () => launchUrl(
-                    Uri.parse('https://github.com/sponsors/alexmercerind'),
+                sliver: SliverToBoxAdapter(
+                  child: Text(
+                    'Sponsor us to keep this project alive!',
+                    style: theme.textTheme.titleLarge,
                   ),
-                  text:
-                      'MusicPod uses MediaKit to play Media which is made by Hitesh Kumar Saini, please sponsor him!',
-                  style: linkStyle,
-                  maxLines: maxLines,
                 ),
-                TapAbleText(
-                  onTap: () =>
-                      launchUrl(Uri.parse('https://github.com/kenvandine')),
-                  text:
-                      'MusicPod Snap packaging is made by Ken VanDine, please sponsor him!',
-                  style: linkStyle,
-                  maxLines: maxLines,
-                ),
-                TapAbleText(
-                  onTap: () => launchUrl(
-                    Uri.parse(
-                      'https://github.com/sponsors/ClementBeal',
+              ),
+              ..._sponsor.entries.map(
+                (e) => SliverPadding(
+                  padding: const EdgeInsets.only(
+                    left: kLargestSpace + kMediumSpace,
+                    right: kLargestSpace,
+                    top: kSmallestSpace,
+                    bottom: kSmallestSpace,
+                  ),
+                  sliver: SliverToBoxAdapter(
+                    child: Row(
+                      spacing: kMediumSpace,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: kSmallestSpace,
+                          height: kSmallestSpace,
+                          decoration: BoxDecoration(
+                            color: context.theme.colorScheme.onSurface,
+                            borderRadius:
+                                BorderRadius.circular(kYaruButtonRadius),
+                          ),
+                        ),
+                        Flexible(
+                          child: TapAbleText(
+                            wrapInFlexible: false,
+                            text: e.key,
+                            onTap: e.value == null
+                                ? null
+                                : () {
+                                    final maybe = Uri.tryParse(e.value!);
+                                    if (maybe != null) {
+                                      launchUrl(maybe);
+                                    }
+                                  },
+                            style: linkStyle,
+                            maxLines: maxLines,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  text:
-                      'MusicPod metadata reading is enabled by Clement Beal, please sponsor him!',
-                  style: linkStyle,
-                  maxLines: maxLines,
-                ),
-              ].map(
-                (e) => SliverPadding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: kLargestSpace,
-                    vertical: kSmallestSpace,
-                  ),
-                  sliver: SliverToBoxAdapter(child: e),
                 ),
               ),
             ],
@@ -189,7 +193,7 @@ class _AboutPageState extends State<_AboutPage> {
             style: linkStyle,
             onTap: () => launchUrl(Uri.parse(AppConfig.repoUrl)),
             text:
-                'Copyright by Frederik Feichtmeier 2023 and onwards - all rights reserved.',
+                'Copyright by Frederik Feichtmeier 2023-2025 - all rights reserved.',
             maxLines: maxLines,
           ),
         ),
@@ -197,3 +201,18 @@ class _AboutPageState extends State<_AboutPage> {
     );
   }
 }
+
+const _sponsor = <String, String?>{
+  'Frederik Feichtmeier (MusicPod Creator/Designer)': AppConfig.sponsorLink,
+  'Benn Hills (Dart Podcast Search)': 'https://ko-fi.com/amugofjava',
+  'Clement Beal (Dart metadata reader)':
+      'https://github.com/sponsors/ClementBeal',
+  'Tomás Sasovsky (Dart implementation of radiobrowser-api) ':
+      'https://github.com/tomassasovsky',
+  'Stuart Jaggers (App Icon)': 'https://github.com/ubuntujaggers',
+  'Hitesh Kumar Saini (MediaKit Dart MPV)':
+      'https://github.com/sponsors/alexmercerind',
+  'ThomasBurkhart (watch_it state management and get_it)':
+      'https://github.com/sponsors/escamoteur',
+  'Ken VanDine (snap packaging)': 'https://github.com/kenvandine',
+};

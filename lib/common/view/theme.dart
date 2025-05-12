@@ -248,11 +248,27 @@ double getBigAvatarButtonRadius(bool useYaruTheme) => useYaruTheme
         ? 35
         : 23;
 
+ButtonStyle translucentIconButtonStyle(ColorScheme colorScheme) =>
+    IconButton.styleFrom(
+      shape: const CircleBorder(),
+      backgroundColor: colorScheme.outline.withAlpha(80),
+      foregroundColor: colorScheme.onSurface,
+      hoverColor: colorScheme.primary.withAlpha(80),
+      focusColor: colorScheme.primary.withAlpha(80),
+    );
+
+ButtonStyle tonedIconButtonStyle(ColorScheme colorScheme) =>
+    IconButton.styleFrom(
+      shape: const CircleBorder(),
+      backgroundColor: colorScheme.outline
+          .scale(lightness: colorScheme.isLight ? 0.4 : -0.1),
+      foregroundColor: colorScheme.primary,
+      hoverColor: colorScheme.primary.withAlpha(80),
+      focusColor: colorScheme.primary.withAlpha(80),
+    );
+
 EdgeInsets get filterPanelPadding =>
     EdgeInsets.only(top: isMobile ? 10 : 0, bottom: 10);
-
-EdgeInsets getBigPlayButtonPadding(bool useYaruTheme) =>
-    EdgeInsets.symmetric(horizontal: useYaruTheme ? 2.5 : 5);
 
 double get chipHeight => isMobile ? 40 : 34.0;
 

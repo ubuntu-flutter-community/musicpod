@@ -50,6 +50,17 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
     final rawPlayButton = PlayButton(
       iconColor: iconColor ?? (theme.isLight ? Colors.white : Colors.black),
       active: active,
+      buttonStyle: avatarPlayButton
+          ? IconButton.styleFrom(
+              shape: const CircleBorder(),
+              backgroundColor:
+                  avatarColor ?? (theme.isLight ? Colors.black : Colors.white),
+              foregroundColor:
+                  iconColor ?? (theme.isLight ? Colors.white : Colors.black),
+              hoverColor: theme.colorScheme.primary.withValues(alpha: 0.5),
+              focusColor: theme.colorScheme.primary.withValues(alpha: 0.5),
+            )
+          : null,
     );
 
     final useYaruTheme =
@@ -57,14 +68,9 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
 
     final radius = getBigAvatarButtonRadius(useYaruTheme);
     final playButton = avatarPlayButton
-        ? CircleAvatar(
-            radius: radius,
-            backgroundColor:
-                avatarColor ?? (theme.isLight ? Colors.black : Colors.white),
-            child: SizedBox.square(
-              dimension: 2 * radius,
-              child: rawPlayButton,
-            ),
+        ? SizedBox.square(
+            dimension: 2 * radius,
+            child: rawPlayButton,
           )
         : rawPlayButton;
 
