@@ -1397,5 +1397,11 @@
   "selectColorShade": "Vybrať odtieň farby",
   "@selectColorShade": {},
   "useCustomThemeColorDescription": "Toto vám umožní vybrať si vlastnú zvýrazňujúcu farbu pre aktuálnu tému.",
-  "@useCustomThemeColorDescription": {}
+  "@useCustomThemeColorDescription": {},
+  "reset": "Obnoviť",
+  "@reset": {},
+  "saveWindowSizeDescription": "Aplikácia si zapamätá veľkosť a polohu okna, aby zostali rovnaké pri ďalšom otvorení.",
+  "@saveWindowSizeDescription": {},
+  "saveWindowSizeTitle": "Uložiť veľkosť okna",
+  "@saveWindowSizeTitle": {}
 }
