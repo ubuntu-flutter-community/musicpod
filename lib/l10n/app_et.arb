@@ -1398,5 +1398,11 @@
   "selectIconThemeDescription": "Vali rakenduse ikooniteema. Vaikimis teema sõltub sinu aervuti või seadme operatsioonisüsteemist. Selle eelistuse muutmine käivitab rakenduse uuesti!",
   "@selectIconThemeDescription": {},
   "useYaruThemeDescription": "Selle valikuga kasutad rakenduse jaoks Yaru kujundust, mis on Ubuntu vaikimisi kujundus.",
-  "@useYaruThemeDescription": {}
+  "@useYaruThemeDescription": {},
+  "reset": "Lähtesta",
+  "@reset": {},
+  "saveWindowSizeTitle": "Salvesta akna mõõdud",
+  "@saveWindowSizeTitle": {},
+  "saveWindowSizeDescription": "Sellega salvestuvad akna mõõdud ja asukoht.",
+  "@saveWindowSizeDescription": {}
 }
