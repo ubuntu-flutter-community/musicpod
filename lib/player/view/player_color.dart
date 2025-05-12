@@ -5,35 +5,37 @@ import 'package:yaru/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../player_model.dart';
+import 'player_view.dart';
 
 class PlayerColor extends StatelessWidget with WatchItMixin {
-  const PlayerColor({super.key, required this.size, required this.alpha});
+  const PlayerColor({
+    super.key,
+    required this.size,
+    required this.alpha,
+    required this.position,
+  });
 
   final Size size;
   final double alpha;
+  final PlayerPosition position;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
     final baseColor =
-        watchPropertyValue((PlayerModel m) => m.color?.withValues(alpha: 0.3));
+        watchPropertyValue((PlayerModel m) => m.color?.withValues(alpha: 0.4));
 
-    final color = baseColor ??
-        theme.cardColor.scale(lightness: theme.isLight ? -0.2 : 0.2);
+    final color = (baseColor ?? theme.cardColor).scale(
+      lightness: theme.isLight ? -0.1 : 0.2,
+      saturation: theme.isLight ? 0.9 : 0.5,
+    );
     return Opacity(
-      opacity: alpha * (theme.isLight ? 0.7 : 0.8),
+      opacity: alpha * 0.8,
       child: Container(
         width: size.width,
         height: size.height,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              color.withValues(alpha: 0.02),
-              color,
-            ],
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-          ),
+          gradient: position.getGradient(color),
         ),
       ),
     );

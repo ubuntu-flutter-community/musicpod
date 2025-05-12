@@ -63,5 +63,29 @@ class _PlayerViewState extends State<PlayerView> {
 enum PlayerPosition {
   bottom,
   sideBar,
-  fullWindow,
+  fullWindow;
+
+  LinearGradient getGradient(Color color) {
+    final colors = [
+      color,
+      color.withValues(alpha: 0.01),
+    ];
+    return switch (this) {
+      PlayerPosition.bottom => LinearGradient(
+          colors: colors,
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+      PlayerPosition.sideBar => LinearGradient(
+          colors: colors,
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+        ),
+      PlayerPosition.fullWindow => LinearGradient(
+          colors: colors,
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        )
+    };
+  }
 }
