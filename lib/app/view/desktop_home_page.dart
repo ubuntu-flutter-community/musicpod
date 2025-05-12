@@ -61,7 +61,8 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
   @override
   Widget build(BuildContext context) {
     final playerToTheRight = context.mediaQuerySize.width > kSideBarThreshHold;
-    final isFullScreen = watchPropertyValue((AppModel m) => m.fullWindowMode);
+    final isInFullWindowMode =
+        watchPropertyValue((AppModel m) => m.fullWindowMode);
     final isVideo = watchPropertyValue((PlayerModel m) => m.isVideo == true);
 
     registerStreamHandler(
@@ -121,7 +122,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
               ),
           ],
         ),
-        if (isFullScreen == true)
+        if (isInFullWindowMode == true)
           Scaffold(
             backgroundColor: isVideo ? Colors.black : null,
             body: const PlayerView(position: PlayerPosition.fullWindow),

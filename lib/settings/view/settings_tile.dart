@@ -9,6 +9,7 @@ import '../../app/connectivity_model.dart';
 import '../../app/view/routing_manager.dart';
 import '../../app_config.dart';
 import '../../common/page_ids.dart';
+import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
 import '../../extensions/build_context_x.dart';
@@ -38,9 +39,15 @@ class SettingsTile extends StatelessWidget with WatchItMixin {
             selected: selectedPageId == PageIDs.settings,
             leading: Icon(Iconz.settings),
             title: Text(context.l10n.settings),
-            onTap: () => di<RoutingManager>().push(
-              pageId: PageIDs.settings,
-            ),
+            onTap: () {
+              masterScaffoldKey.currentState
+                ?..closeEndDrawer()
+                ..closeDrawer();
+
+              di<RoutingManager>().push(
+                pageId: PageIDs.settings,
+              );
+            },
           ),
           if (trailing != null) Positioned(right: 15, child: trailing),
         ],
