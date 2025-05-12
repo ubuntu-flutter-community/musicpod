@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
+import 'package:yaru/theme.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
@@ -17,7 +18,8 @@ class PlayerColor extends StatelessWidget with WatchItMixin {
     final baseColor =
         watchPropertyValue((PlayerModel m) => m.color?.withValues(alpha: 0.3));
 
-    final color = baseColor ?? theme.cardColor;
+    final color = baseColor ??
+        theme.cardColor.scale(lightness: theme.isLight ? -0.2 : 0.2);
     return Opacity(
       opacity: alpha * (theme.isLight ? 0.7 : 0.8),
       child: Container(

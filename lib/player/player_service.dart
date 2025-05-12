@@ -165,6 +165,9 @@ class PlayerService {
   Audio? get audio => _audio;
   void _setAudio(Audio value) async {
     if (value == _audio) return;
+    if (_color != null && value.audioType != AudioType.local) {
+      _setColor(null);
+    }
     if (value.audioType != _audio?.audioType) {
       _shuffle = false;
       _repeatSingle = false;
@@ -450,6 +453,9 @@ class PlayerService {
   String? _remoteImageUrl;
   String? get remoteImageUrl => _remoteImageUrl;
   Future<void> _setRemoteImageUrl(String? url) async {
+    if (_color != null) {
+      _setColor(null);
+    }
     _remoteImageUrl = url;
     _propertiesChangedController.add(true);
   }

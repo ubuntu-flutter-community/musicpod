@@ -11,10 +11,12 @@ class PlayButton extends StatelessWidget with WatchItMixin {
     super.key,
     required this.active,
     this.iconColor,
+    this.buttonStyle,
   });
 
   final bool active;
   final Color? iconColor;
+  final ButtonStyle? buttonStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +24,10 @@ class PlayButton extends StatelessWidget with WatchItMixin {
     final pause = playerModel.pause;
     final playOrPause = playerModel.playOrPause;
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
+    final tooltip = isPlaying ? context.l10n.pause : context.l10n.play;
     return IconButton(
-      tooltip: isPlaying ? context.l10n.pause : context.l10n.play,
+      style: buttonStyle,
+      tooltip: tooltip,
       onPressed: !active
           ? null
           : () {
@@ -36,6 +40,7 @@ class PlayButton extends StatelessWidget with WatchItMixin {
       icon: Icon(
         isPlaying ? Iconz.pause : Iconz.playFilled,
         color: iconColor ?? context.theme.colorScheme.onSurface,
+        semanticLabel: tooltip,
       ),
     );
   }

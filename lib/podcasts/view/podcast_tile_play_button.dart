@@ -4,8 +4,10 @@ import 'package:yaru/constants.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
+import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
+import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../../settings/settings_model.dart';
 import 'podcast_tile_progress.dart';
@@ -30,7 +32,6 @@ class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final playerModel = di<PlayerModel>();
-    final theme = context.theme;
     final useYaruTheme =
         watchPropertyValue((SettingsModel m) => m.useYaruTheme);
     final radius = (useYaruTheme
@@ -39,6 +40,19 @@ class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
                 ? 40
                 : 38) /
         2;
+
+    String label;
+    final l10n = context.l10n;
+    if (selected) {
+      if (isPlayerPlaying) {
+        label = l10n.pause;
+      } else {
+        label = l10n.play;
+      }
+    } else {
+      label = l10n.playAll;
+    }
+
     return SizedBox.square(
       dimension: radius * 2,
       child: Stack(
@@ -54,39 +68,38 @@ class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
                   : Duration(milliseconds: audio.durationMs!.toInt()),
             ),
           ),
-          CircleAvatar(
-            radius: radius,
-            backgroundColor: selected
-                ? theme.colorScheme.primary.withValues(alpha: 0.08)
-                : theme.colorScheme.onSurface.withValues(alpha: 0.09),
-            child: SizedBox.square(
-              dimension: radius * 2,
-              child: IconButton(
-                icon: (isPlayerPlaying && selected)
-                    ? Icon(
-                        Iconz.pause,
-                      )
-                    : Padding(
-                        padding: Iconz.cupertino
-                            ? const EdgeInsets.only(left: 3)
-                            : EdgeInsets.zero,
-                        child: Icon(Iconz.playFilled),
+          SizedBox.square(
+            dimension: radius * 2,
+            child: IconButton.filled(
+              style: translucentIconButtonStyle(context.colorScheme),
+              icon: (isPlayerPlaying && selected)
+                  ? Icon(
+                      Iconz.pause,
+                      semanticLabel: label,
+                    )
+                  : Padding(
+                      padding: Iconz.cupertino
+                          ? const EdgeInsets.only(left: 3)
+                          : EdgeInsets.zero,
+                      child: Icon(
+                        Iconz.playFilled,
+                        semanticLabel: label,
                       ),
-                onPressed: () {
-                  if (selected) {
-                    if (isPlayerPlaying) {
-                      playerModel.pause();
-                    } else {
-                      playerModel.resume();
-                    }
+                    ),
+              onPressed: () {
+                if (selected) {
+                  if (isPlayerPlaying) {
+                    playerModel.pause();
                   } else {
-                    playerModel.safeLastPosition().then((value) {
-                      startPlaylist?.call();
-                      removeUpdate?.call();
-                    });
+                    playerModel.resume();
                   }
-                },
-              ),
+                } else {
+                  playerModel.safeLastPosition().then((value) {
+                    startPlaylist?.call();
+                    removeUpdate?.call();
+                  });
+                }
+              },
             ),
           ),
         ],

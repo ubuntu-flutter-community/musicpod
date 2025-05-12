@@ -6,6 +6,7 @@ import 'package:watch_it/watch_it.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
 import '../../search/search_model.dart';
+import '../app_model.dart';
 import 'back_gesture.dart';
 import 'routing_manager.dart';
 
@@ -36,9 +37,17 @@ class MouseAndKeyboardCommandWrapper extends StatelessWidget {
             _SearchIntent: CallbackAction<_SearchIntent>(
               onInvoke: (intent) {
                 final currentPageId = di<RoutingManager>().selectedPageId;
+
                 if (currentPageId == PageIDs.searchPage) {
-                  di<RoutingManager>().pop();
+                  if (di<AppModel>().fullWindowMode ?? false) {
+                    di<AppModel>().setFullWindowMode(false);
+                  } else {
+                    di<RoutingManager>().pop();
+                  }
                 } else {
+                  if (di<AppModel>().fullWindowMode ?? false) {
+                    di<AppModel>().setFullWindowMode(false);
+                  }
                   di<SearchModel>().setAudioType(
                     switch (currentPageId) {
                       PageIDs.localAudio => AudioType.local,
@@ -48,17 +57,24 @@ class MouseAndKeyboardCommandWrapper extends StatelessWidget {
                   );
                   di<RoutingManager>().push(pageId: PageIDs.searchPage);
                 }
+
                 return null;
               },
             ),
             _SettingsIntent: CallbackAction<_SettingsIntent>(
               onInvoke: (intent) {
+                if (di<AppModel>().fullWindowMode ?? false) {
+                  di<AppModel>().setFullWindowMode(false);
+                }
                 di<RoutingManager>().push(pageId: PageIDs.settings);
                 return null;
               },
             ),
             _BackIntent: CallbackAction<_BackIntent>(
               onInvoke: (intent) {
+                if (di<AppModel>().fullWindowMode ?? false) {
+                  di<AppModel>().setFullWindowMode(false);
+                }
                 di<RoutingManager>().pop();
                 return null;
               },

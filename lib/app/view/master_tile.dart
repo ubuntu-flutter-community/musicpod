@@ -8,6 +8,7 @@ import '../../common/page_ids.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/spaced_divider.dart';
+import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../library/library_model.dart';
@@ -166,9 +167,10 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
             Positioned(
               right: 25,
               top: 12,
-              child: CircleAvatar(
-                radius: kTinyButtonSize / 2,
+              child: SizedBox.square(
+                dimension: kTinyButtonSize,
                 child: IconButton(
+                  style: tonedIconButtonStyle(context.colorScheme),
                   onPressed: () async {
                     final audios = await getAudiosById(widget.pageId);
                     if (audios?.firstOrNull?.audioType == AudioType.radio) {

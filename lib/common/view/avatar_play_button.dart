@@ -10,7 +10,7 @@ import '../../settings/settings_model.dart';
 import '../data/audio.dart';
 import '../data/audio_type.dart';
 import 'icons.dart';
-import 'theme.dart';
+import 'ui_constants.dart';
 
 class AvatarPlayButton extends StatelessWidget with WatchItMixin {
   const AvatarPlayButton({
@@ -42,17 +42,21 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
         : isMobile
             ? 26
             : 23;
-    final bigPlayButtonPadding = getBigPlayButtonPadding(useYaruTheme);
 
+    final label = context.l10n.playAll;
     return Padding(
-      padding: bigPlayButtonPadding,
-      child: CircleAvatar(
-        radius: bigAvatarButtonRadius.toDouble(),
-        backgroundColor: theme.colorScheme.inverseSurface.withAlpha(
-          disabled ? 50 : 255,
-        ),
+      padding: const EdgeInsets.symmetric(horizontal: kSmallestSpace),
+      child: SizedBox.square(
+        dimension: bigAvatarButtonRadius * 2,
         child: IconButton(
-          tooltip: context.l10n.playAll,
+          style: IconButton.styleFrom(
+            shape: const CircleBorder(),
+            backgroundColor: theme.colorScheme.inverseSurface,
+            foregroundColor: theme.colorScheme.onInverseSurface,
+            hoverColor: theme.colorScheme.primary.withValues(alpha: 0.5),
+            focusColor: theme.colorScheme.primary.withValues(alpha: 0.5),
+          ),
+          tooltip: label,
           onPressed: disabled
               ? null
               : () {
@@ -84,6 +88,7 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
           icon: Icon(
             iconData,
             color: disabled ? null : theme.colorScheme.onInverseSurface,
+            semanticLabel: label,
           ),
         ),
       ),
