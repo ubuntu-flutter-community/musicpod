@@ -38,7 +38,7 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
 
     final fallBackImage = PlayerFallBackImage(
       noIcon: emptyFallBack,
-      audio: audio,
+      audioType: audio?.audioType,
       height: theHeight,
       width: theWidth,
     );
