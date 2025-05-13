@@ -1396,5 +1396,11 @@
   "useYaruThemeTitle": "Yaru gaia erabili",
   "@useYaruThemeTitle": {},
   "selectIconThemeDescription": "Aukeratu aplikaziorako ikono-gai bat. Gai lehenetsia zure sistema eragilearen araberakoa da. Honek aplikazioa berriro kargatzen du!",
-  "@selectIconThemeDescription": {}
+  "@selectIconThemeDescription": {},
+  "reset": "Berrasieratu",
+  "@reset": {},
+  "saveWindowSizeTitle": "Gorde leihoaren tamaina",
+  "@saveWindowSizeTitle": {},
+  "saveWindowSizeDescription": "Honek aplikazioaren leihoaren tamaina eta posizioa gordeko ditu.",
+  "@saveWindowSizeDescription": {}
 }
