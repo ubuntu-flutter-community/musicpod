@@ -1,5 +1,38 @@
 # Changelog
 
+## [2.12.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.11.4...v2.12.0) (2025-05-13)
+
+
+### Features
+
+* improve hotkeys in fullwindowmode and make play and pin buttons accessible ([#1294](https://github.com/ubuntu-flutter-community/musicpod/issues/1294)) ([7c7bbe7](https://github.com/ubuntu-flutter-community/musicpod/commit/7c7bbe7ade77b53b16138ccd30689e3b5af8975d))
+* improved mobile layouts and theming ([#1286](https://github.com/ubuntu-flutter-community/musicpod/issues/1286)) ([3d8f773](https://github.com/ubuntu-flutter-community/musicpod/commit/3d8f7736e15ff130c8a0525456f1125863a12f74))
+* let users switch between themes and icon themes and select a custom theme color ([#1265](https://github.com/ubuntu-flutter-community/musicpod/issues/1265)) ([a5f95ad](https://github.com/ubuntu-flutter-community/musicpod/commit/a5f95ad75602912171b897a89789e5d67f98a045))
+* navigate back with the back mouse button in windows and macos ([#1257](https://github.com/ubuntu-flutter-community/musicpod/issues/1257)) ([3cb2c48](https://github.com/ubuntu-flutter-community/musicpod/commit/3cb2c4895b6ddbbf43da0a8d47271080822ddcaa)), closes [#1256](https://github.com/ubuntu-flutter-community/musicpod/issues/1256)
+* rework settings with hotkey and auto scroll to sections and [@jpnurmi](https://github.com/jpnurmi) license dialog ([#1277](https://github.com/ubuntu-flutter-community/musicpod/issues/1277)) ([64efb48](https://github.com/ubuntu-flutter-community/musicpod/commit/64efb48604c7e7833b5c716d2a976259fe952455)), closes [#1254](https://github.com/ubuntu-flutter-community/musicpod/issues/1254)
+* search with cmd/ctrl + F ([#1276](https://github.com/ubuntu-flutter-community/musicpod/issues/1276)) ([ae1f9d0](https://github.com/ubuntu-flutter-community/musicpod/commit/ae1f9d0701592a3b21edeb9f6aa2a446d7f70e1a)), closes [#1142](https://github.com/ubuntu-flutter-community/musicpod/issues/1142)
+* show more options in desktop options buttons ([#1274](https://github.com/ubuntu-flutter-community/musicpod/issues/1274)) ([051fed0](https://github.com/ubuntu-flutter-community/musicpod/commit/051fed028f2cdc16cae6fd20b9fb9d4dc50ae408))
+* Translated using Weblate (Basque) ([#1296](https://github.com/ubuntu-flutter-community/musicpod/issues/1296)) ([11bc08b](https://github.com/ubuntu-flutter-community/musicpod/commit/11bc08ba2dd884559d2e8ef8c285541d315e95e3))
+* Translated using Weblate (German) ([#1291](https://github.com/ubuntu-flutter-community/musicpod/issues/1291)) ([93aae2c](https://github.com/ubuntu-flutter-community/musicpod/commit/93aae2c1a2a7c2d7a906a627848f9b2a8ed2890a))
+* Translations update from Hosted Weblate ([#1263](https://github.com/ubuntu-flutter-community/musicpod/issues/1263)) ([ce63e04](https://github.com/ubuntu-flutter-community/musicpod/commit/ce63e04e7c740d1027980f78348d1201b74a8a05))
+* Translations update from Hosted Weblate ([#1292](https://github.com/ubuntu-flutter-community/musicpod/issues/1292)) ([eb5f0f9](https://github.com/ubuntu-flutter-community/musicpod/commit/eb5f0f940234fb5f3ea38879b1bb8e33a25d7d84))
+* Translations update from Hosted Weblate ([#1293](https://github.com/ubuntu-flutter-community/musicpod/issues/1293)) ([75e6a57](https://github.com/ubuntu-flutter-community/musicpod/commit/75e6a57b9bca541fdd84cdc4b179ceee6d2a69da))
+
+
+### Bug Fixes
+
+* ambersand in podcast title shown as `&amp` ([#1287](https://github.com/ubuntu-flutter-community/musicpod/issues/1287)) ([8bb7ca1](https://github.com/ubuntu-flutter-community/musicpod/commit/8bb7ca1e248a869f7af9b7f6de9804c8ff1a25a0))
+* do not push to the same pageId twice in a row ([#1278](https://github.com/ubuntu-flutter-community/musicpod/issues/1278)) ([f446ec1](https://github.com/ubuntu-flutter-community/musicpod/commit/f446ec1ab6533d7fa6e8b62b1d2650ac086c0ec4))
+* increase cache usage ([#1268](https://github.com/ubuntu-flutter-community/musicpod/issues/1268)) ([cf54688](https://github.com/ubuntu-flutter-community/musicpod/commit/cf546884b922fd3dadbffe2a5f86d24beb0b227e))
+* load accent color on windows ([#1275](https://github.com/ubuntu-flutter-community/musicpod/issues/1275)) ([48771e4](https://github.com/ubuntu-flutter-community/musicpod/commit/48771e41764b11ce63af4973fb708aca41ae6481))
+* mobile improvements for portrait layout ([#1280](https://github.com/ubuntu-flutter-community/musicpod/issues/1280)) ([94ede2b](https://github.com/ubuntu-flutter-community/musicpod/commit/94ede2b0c6fa0acb433cbecad4aa386705c16a4d))
+* mobile like button position, test more blur ([#1267](https://github.com/ubuntu-flutter-community/musicpod/issues/1267)) ([df1ebde](https://github.com/ubuntu-flutter-community/musicpod/commit/df1ebdef8c47f2c0c11b6965ea69bfe517e1a4c1))
+* one more audio tile break, player title hover color ([#1269](https://github.com/ubuntu-flutter-community/musicpod/issues/1269)) ([abc25ad](https://github.com/ubuntu-flutter-community/musicpod/commit/abc25ad9a75b63882fe06ac73e3346dc5b07f1c2))
+* only safe window resize when resize is done ([#1271](https://github.com/ubuntu-flutter-community/musicpod/issues/1271)) ([be51106](https://github.com/ubuntu-flutter-community/musicpod/commit/be51106b9525d08bbe8887c391e1689caa66b972))
+* shorten audiotype switcher clicks for desktop ([#1264](https://github.com/ubuntu-flutter-community/musicpod/issues/1264)) ([17ebca3](https://github.com/ubuntu-flutter-community/musicpod/commit/17ebca351ba3e4c3499e8cfbbc5c0f808d4c8fe7))
+* theme and color fixes ([#1282](https://github.com/ubuntu-flutter-community/musicpod/issues/1282)) ([389422f](https://github.com/ubuntu-flutter-community/musicpod/commit/389422f5417218bbe5d7b7dbad4c449d8c8c32e1))
+* use color gradient instead of blur ([#1283](https://github.com/ubuntu-flutter-community/musicpod/issues/1283)) ([c661975](https://github.com/ubuntu-flutter-community/musicpod/commit/c6619754da808783f6271062dff6b78a0b622836))
+
 ## [2.11.4](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.11.3...v2.11.4) (2025-04-30)
 
 
