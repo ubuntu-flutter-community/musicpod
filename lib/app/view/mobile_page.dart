@@ -2,6 +2,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../common/page_ids.dart';
+import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../player/player_model.dart';
@@ -117,9 +119,13 @@ class MasterRail extends StatelessWidget with WatchItMixin {
     final destinations = permanentMasterItems
         .map(
           (e) => NavigationRailDestination(
-            icon: e.iconBuilder(false),
+            icon: e.pageId == PageIDs.likedAudios
+                ? Icon(Iconz.heart)
+                : e.iconBuilder(false),
             label: e.titleBuilder(context),
-            selectedIcon: e.iconBuilder(true),
+            selectedIcon: e.pageId == PageIDs.likedAudios
+                ? Icon(Iconz.heartFilled)
+                : e.iconBuilder(true),
             padding: const EdgeInsets.symmetric(vertical: kSmallestSpace),
           ),
         )

@@ -25,10 +25,9 @@ class PlayerColor extends StatelessWidget with WatchItMixin {
     final baseColor =
         watchPropertyValue((PlayerModel m) => m.color?.withValues(alpha: 0.4));
 
-    final color = (baseColor ?? theme.cardColor).scale(
-      lightness: theme.isLight ? -0.1 : 0.2,
-      saturation: theme.isLight ? 0.9 : 0.5,
-    );
+    final color = baseColor?.scale(lightness: theme.isLight ? -0.1 : 0.2) ??
+        theme.scaffoldBackgroundColor;
+
     return Opacity(
       opacity: alpha * 0.8,
       child: Container(

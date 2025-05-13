@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phoenix_theme/phoenix_theme.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../common/view/safe_network_image.dart';
@@ -26,7 +27,9 @@ class PlayerRemoteSourceImage extends StatelessWidget with WatchItMixin {
     final theme = context.theme;
 
     return Container(
-      color: theme.cardColor,
+      color: theme.cardColor.scale(
+        lightness: theme.isLight ? -0.15 : 0.3,
+      ),
       height: height,
       width: width,
       child: SafeNetworkImage(

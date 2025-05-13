@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../common/data/audio.dart';
+import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
@@ -9,24 +9,24 @@ import '../../extensions/theme_data_x.dart';
 class PlayerFallBackImage extends StatelessWidget {
   const PlayerFallBackImage({
     super.key,
-    this.audio,
+    this.audioType,
     required this.height,
     required this.width,
     this.noIcon = false,
-    this.color,
   });
 
-  final Audio? audio;
+  final AudioType? audioType;
   final double height;
   final double width;
   final bool noIcon;
-  final Color? color;
 
   @override
   Widget build(BuildContext context) {
     final iconSize = width * 0.7;
     final theme = context.theme;
-    final color = this.color ?? theme.primaryColor;
+    final color = theme.cardColor.scale(
+      lightness: theme.isLight ? -0.15 : 0.3,
+    );
     return Center(
       child: Container(
         decoration: BoxDecoration(
@@ -50,7 +50,7 @@ class PlayerFallBackImage extends StatelessWidget {
         child: noIcon
             ? null
             : Icon(
-                audio?.audioType?.iconData ?? Iconz.musicNote,
+                audioType?.iconData ?? Iconz.musicNote,
                 size: iconSize,
                 color: contrastColor(color),
               ),

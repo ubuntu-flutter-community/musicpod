@@ -52,7 +52,7 @@ class BottomPlayerImage extends StatelessWidget with WatchItMixin {
     Widget child;
 
     final fallBackImage = PlayerFallBackImage(
-      audio: audio,
+      audioType: audio?.audioType,
       height: size,
       width: size,
     );

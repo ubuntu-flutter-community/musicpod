@@ -13,21 +13,19 @@ class MobileBottomBar extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final color = watchPropertyValue(
-      (PlayerModel m) {
-        final theme = context.theme;
-        return Color.alphaBlend(
-          m.color?.withAlpha(theme.isLight ? 20 : 40) ??
-              theme.scaffoldBackgroundColor,
-          context.theme.scaffoldBackgroundColor,
-        );
-      },
-    );
+    final theme = context.theme;
+    final color = watchPropertyValue((PlayerModel m) => m.color);
+
     return SizedBox(
       width: context.mediaQuerySize.width,
       child: RepaintBoundary(
         child: Material(
-          color: color,
+          color: color == null
+              ? theme.cardColor
+              : Color.alphaBlend(
+                  color.withAlpha(theme.isLight ? 20 : 40),
+                  theme.scaffoldBackgroundColor,
+                ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
