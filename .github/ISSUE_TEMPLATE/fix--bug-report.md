@@ -1,8 +1,9 @@
 ---
-name: 'fix: bug report'
+name: 'fix: REPLACE_THIS_TEXT'
 about: Create a report to help us improve
-title: ''
+title: 'fix: REPLACE_THIS_TEXT'
 labels: ''
+type: 'Bug'
 assignees: ''
 
 ---

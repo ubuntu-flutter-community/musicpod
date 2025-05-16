@@ -1,9 +1,10 @@
 ---
-name: 'feat: request'
+name: 'feat: REPLACE_THIS_TEXT'
 about: Suggest an idea for this project
-title: ''
+title: 'feat: REPLACE_THIS_TEXT'
 labels: ''
 assignees: ''
+type: 'Feature'
 
 ---
 

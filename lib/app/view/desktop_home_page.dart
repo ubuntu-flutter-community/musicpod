@@ -62,7 +62,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
   Widget build(BuildContext context) {
     final playerToTheRight = context.mediaQuerySize.width > kSideBarThreshHold;
     final isInFullWindowMode =
-        watchPropertyValue((AppModel m) => m.fullWindowMode);
+        watchPropertyValue((AppModel m) => m.fullWindowMode ?? false);
     final isVideo = watchPropertyValue((PlayerModel m) => m.isVideo == true);
 
     registerStreamHandler(
@@ -104,23 +104,30 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
     return Stack(
       alignment: Alignment.center,
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: Column(
-                children: [
-                  const Expanded(child: MasterDetailPage()),
-                  if (!playerToTheRight)
-                    const PlayerView(position: PlayerPosition.bottom),
-                ],
+        ExcludeFocus(
+          excluding: isInFullWindowMode == true,
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  children: [
+                    const Expanded(child: MasterDetailPage()),
+                    if (!playerToTheRight)
+                      const PlayerView(position: PlayerPosition.bottom),
+                  ],
+                ),
               ),
-            ),
-            if (playerToTheRight)
-              const SizedBox(
-                width: kSideBarPlayerWidth,
-                child: PlayerView(position: PlayerPosition.sideBar),
-              ),
-          ],
+              if (playerToTheRight)
+                AnimatedOpacity(
+                  opacity: playerToTheRight ? 1 : 0,
+                  duration: const Duration(milliseconds: 300),
+                  child: const SizedBox(
+                    width: kSideBarPlayerWidth,
+                    child: PlayerView(position: PlayerPosition.sideBar),
+                  ),
+                ),
+            ],
+          ),
         ),
         if (isInFullWindowMode == true)
           Scaffold(
