@@ -87,6 +87,10 @@ class _AudioTileState extends State<AudioTile> {
         ),
       _ => widget.allowLeadingImage
           ? AudioTileImage(
+              key: switch (widget.audio.audioType) {
+                AudioType.radio => ValueKey(widget.audio.uuid),
+                _ => null,
+              },
               size: dimension,
               audio: widget.audio,
             )
