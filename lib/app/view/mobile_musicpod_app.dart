@@ -4,9 +4,11 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:phoenix_theme/phoenix_theme.dart';
 import 'package:watch_it/watch_it.dart';
+import 'package:yaru/yaru.dart';
 
 import '../../app_config.dart';
 import '../../common/page_ids.dart';
+import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -23,6 +25,8 @@ class MobileMusicPodApp extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final themeIndex = watchPropertyValue((SettingsModel m) => m.themeIndex);
+    final useYaruTheme =
+        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
 
     final phoenix = phoenixTheme(color: accent ?? kMusicPodDefaultColor);
     final routingManager = di<RoutingManager>();
@@ -47,8 +51,13 @@ class MobileMusicPodApp extends StatelessWidget with WatchItMixin {
       },
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.values[themeIndex],
-      theme: phoenix.lightTheme,
-      darkTheme: phoenix.darkTheme.copyWith(
+      theme: (useYaruTheme && accent != null
+          ? yaruLightWithTweaks(createYaruLightTheme(primaryColor: accent!))
+          : phoenix.lightTheme),
+      darkTheme: (useYaruTheme && accent != null
+              ? yaruDarkWithTweaks(createYaruDarkTheme(primaryColor: accent!))
+              : phoenix.darkTheme)
+          ?.copyWith(
         appBarTheme: phoenix.darkTheme.appBarTheme.copyWith(
           backgroundColor: Colors.black,
         ),

@@ -7,9 +7,10 @@ import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 
 class NextStationButton extends StatelessWidget with WatchItMixin {
-  const NextStationButton({super.key, this.iconColor});
+  const NextStationButton({super.key, this.iconColor, required this.active});
 
   final Color? iconColor;
+  final bool active;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class NextStationButton extends StatelessWidget with WatchItMixin {
 
     return IconButton(
       tooltip: context.l10n.searchSimilarStation,
-      onPressed: findingSimilarStation || audio == null
+      onPressed: !active || findingSimilarStation || audio == null
           ? null
           : () {
               di<SearchModel>().nextSimilarStation(audio).then(

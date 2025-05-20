@@ -100,3 +100,5 @@ const kAudioHeaderDescriptionWidth = 400.0;
 const kShowLeadingThreshold = 1500;
 
 const kMusicPodDefaultColor = Color(0xFFed3c63);
+
+const kMobileScaffoldBackgroundColor = Color.fromARGB(255, 14, 14, 14);
