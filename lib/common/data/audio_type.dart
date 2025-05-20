@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../l10n/l10n.dart';
+import '../../l10n/app_localizations.dart';
 import '../view/icons.dart';
 
 enum AudioType {

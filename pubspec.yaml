@@ -6,7 +6,7 @@ publish_to: "none"
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
-  flutter: ">=3.29.2"
+  flutter: ">=3.32.0"
 
 dependencies:
   animated_emoji: ^3.1.0
@@ -41,7 +41,7 @@ dependencies:
   gtk: ^2.1.0
   handy_window: ^0.4.0
   html: ^0.15.4
-  intl: ^0.19.0
+  intl: ^0.20.2
   lastfm: ^0.0.6
   listenbrainz_dart: ^0.0.4
   m3u_parser_nullsafe: ^1.0.3
@@ -64,11 +64,11 @@ dependencies:
   palette_generator: ^0.3.3+3
   path: ^1.9.0
   path_provider: ^2.1.2
-  permission_handler: ^11.3.1
+  permission_handler: ^12.0.0+1
   phoenix_theme:
     git:
       url: https://github.com/ubuntu-flutter-community/phoenix_theme
-      ref: e357331e9acffc5c82627df8107e47a452ee16b9
+      ref: 7d22aba2841e522bf4c140e60e4a60f33c8f5aa6
   pls: ^1.1.0
   podcast_search: ^0.7.3
   radio_browser_api: ^2.0.0
@@ -90,7 +90,7 @@ dependencies:
   yaru:
     git:
       url: https://github.com/ubuntu/yaru.dart
-      ref: 9902d7230d0d3be31317eb0558114f28afc861ce
+      ref: 1d569297c70a90980d54e34104e5db7c3a68c32e
   yaru_window: ^0.2.1+1
   yaru_window_linux: ^0.2.0+1
 
@@ -121,6 +121,7 @@ flutter:
     - CHANGELOG.md
 
 dependency_overrides:
+  intl: ^0.20.2
   media_kit:
     git:
       url: https://github.com/media-kit/media-kit

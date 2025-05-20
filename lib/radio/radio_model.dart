@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
-import '../l10n/l10n.dart';
+import '../l10n/app_localizations.dart';
 import 'radio_service.dart';
 
 class RadioModel extends SafeChangeNotifier {

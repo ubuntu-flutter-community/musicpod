@@ -8,6 +8,7 @@ import 'package:yaru/yaru.dart';
 import '../../app_config.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
+import '../../l10n/app_localizations.dart';
 import '../../l10n/l10n.dart';
 import '../../settings/settings_model.dart';
 import 'desktop_home_page.dart';

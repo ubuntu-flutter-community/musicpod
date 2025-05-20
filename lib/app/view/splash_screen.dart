@@ -4,6 +4,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../common/view/ui_constants.dart';
 import '../../extensions/taget_platform_x.dart';
+import '../../l10n/app_localizations.dart';
 import '../../l10n/l10n.dart';
 
 class SplashScreen extends StatelessWidget {

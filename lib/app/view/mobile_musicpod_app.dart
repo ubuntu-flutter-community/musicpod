@@ -10,6 +10,7 @@ import '../../app_config.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
+import '../../l10n/app_localizations.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../settings/settings_model.dart';

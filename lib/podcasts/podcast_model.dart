@@ -4,7 +4,7 @@ import 'package:podcast_search/podcast_search.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
-import '../l10n/l10n.dart';
+import '../l10n/app_localizations.dart';
 import 'podcast_service.dart';
 
 class PodcastModel extends SafeChangeNotifier {

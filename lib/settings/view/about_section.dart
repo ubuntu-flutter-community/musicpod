@@ -62,11 +62,15 @@ class _AboutTileState extends State<_AboutTile> {
     final updateAvailable =
         watchPropertyValue((AppModel m) => m.updateAvailable);
     final onlineVersion = watchPropertyValue((AppModel m) => m.onlineVersion);
+    final downloads = watchPropertyValue((AppModel m) => m.downloads);
     final currentVersion = watchPropertyValue((AppModel m) => m.version);
     final useYaruTheme =
         watchPropertyValue((SettingsModel m) => m.useYaruTheme);
 
     return YaruTile(
+      subtitle: Text(
+        context.l10n.downloadsOfLatestRelease(downloads.toString()),
+      ),
       title: !di<ConnectivityModel>().isOnline == true ||
               !appModel.allowManualUpdate
           ? Text(di<AppModel>().version)

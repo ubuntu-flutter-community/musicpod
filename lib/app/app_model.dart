@@ -131,6 +131,32 @@ class AppModel extends SafeChangeNotifier {
       _updateAvailable = false;
     }
     notifyListeners();
+    await fetchNumberOfDownloads();
+  }
+
+  int? _downloads;
+  int? get downloads => _downloads;
+  void setDownloads(int? value) {
+    _downloads = value;
+    notifyListeners();
+  }
+
+  Future<void> fetchNumberOfDownloads() async {
+    if (_latestRelease != null) {
+      final assets = await _gitHub.repositories
+          .listReleaseAssets(
+            RepositorySlug.full(AppConfig.gitHubShortLink),
+            _latestRelease!,
+          )
+          .toList();
+      setDownloads(
+        assets.fold<int>(
+          0,
+          (previousValue, element) =>
+              previousValue + (element.downloadCount ?? 0),
+        ),
+      );
+    }
   }
 
   bool get wasBackupSaved => _settingsService.getBackupSaved(version);
@@ -184,11 +210,13 @@ class AppModel extends SafeChangeNotifier {
     return versionCells[0] * 100000 + versionCells[1] * 1000 + versionCells[2];
   }
 
+  Release? _latestRelease;
   Future<String?> getOnlineVersion() async {
     final release = await _gitHub.repositories
         .listReleases(RepositorySlug.full(AppConfig.gitHubShortLink))
         .toList();
-    return release.firstOrNull?.tagName;
+    _latestRelease = release.firstOrNull;
+    return _latestRelease?.tagName;
   }
 
   Future<List<Contributor>> getContributors() async {

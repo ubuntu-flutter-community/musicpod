@@ -1,6 +1,6 @@
 import 'package:podcast_search/podcast_search.dart';
 
-import '../l10n/l10n.dart';
+import '../l10n/app_localizations.dart';
 
 extension CountryX on Country {
   String localize(AppLocalizations l10n) => switch (this) {
