@@ -10,10 +10,7 @@ import '../podcast_model.dart';
 
 class SliverPodcastPageSearchField extends StatefulWidget
     with WatchItStatefulWidgetMixin {
-  const SliverPodcastPageSearchField({
-    super.key,
-    required this.feedUrl,
-  });
+  const SliverPodcastPageSearchField({super.key, required this.feedUrl});
 
   final String feedUrl;
 
@@ -52,9 +49,7 @@ class _SliverPodcastPageSearchFieldState
         titleSpacing: 0,
         bottom: const SliverAppBarBottomSpace(),
         title: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: kLargestSpace,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: kLargestSpace),
           child: SizedBox(
             width: 300,
             child: TextField(
@@ -64,9 +59,7 @@ class _SliverPodcastPageSearchFieldState
                 label: Text(l10n.search),
                 prefix: InkWell(
                   onTap: di<PodcastModel>().setFilter,
-                  child: Text(
-                    '$filter: ',
-                  ),
+                  child: Text('$filter: '),
                 ),
                 suffixIcon: IconButton(
                   isSelected: true,
@@ -78,13 +71,16 @@ class _SliverPodcastPageSearchFieldState
                       ),
                     ),
                   ),
-                  onPressed: () => di<PodcastModel>()
-                      .toggleShowSearch(feedUrl: widget.feedUrl),
+                  onPressed: () => di<PodcastModel>().toggleShowSearch(
+                    feedUrl: widget.feedUrl,
+                  ),
                   icon: Icon(Iconz.search, semanticLabel: context.l10n.search),
                 ),
               ),
-              onChanged: (v) => di<PodcastModel>()
-                  .setSearchQuery(feedUrl: widget.feedUrl, value: v),
+              onChanged: (v) => di<PodcastModel>().setSearchQuery(
+                feedUrl: widget.feedUrl,
+                value: v,
+              ),
             ),
           ),
         ),

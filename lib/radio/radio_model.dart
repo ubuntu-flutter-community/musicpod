@@ -11,9 +11,10 @@ class RadioModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _propertiesChangedSub;
 
   RadioModel({required RadioService radioService})
-      : _radioService = radioService {
-    _propertiesChangedSub ??=
-        _radioService.propertiesChanged.listen((_) => notifyListeners());
+    : _radioService = radioService {
+    _propertiesChangedSub ??= _radioService.propertiesChanged.listen(
+      (_) => notifyListeners(),
+    );
   }
 
   Future<void> clickStation(Audio? station) async {

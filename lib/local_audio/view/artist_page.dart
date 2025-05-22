@@ -32,10 +32,7 @@ import 'artist_image.dart';
 import 'genre_page.dart';
 
 class ArtistPage extends StatefulWidget with WatchItStatefulWidgetMixin {
-  const ArtistPage({
-    super.key,
-    required this.pageId,
-  });
+  const ArtistPage({super.key, required this.pageId});
 
   final String pageId;
 
@@ -56,8 +53,9 @@ class _ArtistPageState extends State<ArtistPage> {
   Widget build(BuildContext context) {
     final model = di<LocalAudioModel>();
 
-    final useGridView =
-        watchPropertyValue((LocalAudioModel m) => m.useArtistGridView);
+    final useGridView = watchPropertyValue(
+      (LocalAudioModel m) => m.useArtistGridView,
+    );
 
     void onAlbumTap(String text) {
       final id = model.findAlbumId(artist: widget.pageId, album: text);
@@ -77,9 +75,9 @@ class _ArtistPageState extends State<ArtistPage> {
     }
 
     void onSubTitleTab(String text) => di<RoutingManager>().push(
-          builder: (context) => GenrePage(genre: text),
-          pageId: text,
-        );
+      builder: (context) => GenrePage(genre: text),
+      pageId: text,
+    );
 
     return Scaffold(
       appBar: HeaderBar(
@@ -141,11 +139,9 @@ class _ArtistPageState extends State<ArtistPage> {
                   ),
                   if (useGridView)
                     SliverPadding(
-                      padding:
-                          getAdaptiveHorizontalPadding(constraints: constraints)
-                              .copyWith(
-                        bottom: bottomPlayerPageGap,
-                      ),
+                      padding: getAdaptiveHorizontalPadding(
+                        constraints: constraints,
+                      ).copyWith(bottom: bottomPlayerPageGap),
                       sliver: AlbumsView(
                         albumIDs: model.findAllAlbumIDs(
                           artist: widget.pageId,
@@ -155,11 +151,9 @@ class _ArtistPageState extends State<ArtistPage> {
                     )
                   else
                     SliverPadding(
-                      padding:
-                          getAdaptiveHorizontalPadding(constraints: constraints)
-                              .copyWith(
-                        bottom: bottomPlayerPageGap,
-                      ),
+                      padding: getAdaptiveHorizontalPadding(
+                        constraints: constraints,
+                      ).copyWith(bottom: bottomPlayerPageGap),
                       sliver: SliverAudioTileList(
                         audios: artistAudios,
                         pageId: widget.pageId,
@@ -178,34 +172,28 @@ class _ArtistPageState extends State<ArtistPage> {
 }
 
 class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
-  const _ArtistPageControlPanel({
-    required this.audios,
-    required this.pageId,
-  });
+  const _ArtistPageControlPanel({required this.audios, required this.pageId});
 
   final List<Audio> audios;
   final String pageId;
 
   @override
   Widget build(BuildContext context) {
-    final useGridView =
-        watchPropertyValue((LocalAudioModel m) => m.useArtistGridView);
+    final useGridView = watchPropertyValue(
+      (LocalAudioModel m) => m.useArtistGridView,
+    );
     final setUseGridView = di<LocalAudioModel>().setUseArtistGridView;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: space(
         children: [
           IconButton(
-            icon: Icon(
-              Iconz.grid,
-            ),
+            icon: Icon(Iconz.grid),
             isSelected: useGridView,
             onPressed: () => setUseGridView(true),
           ),
           IconButton(
-            icon: Icon(
-              Iconz.list,
-            ),
+            icon: Icon(Iconz.list),
             isSelected: !useGridView,
             onPressed: () => setUseGridView(false),
           ),

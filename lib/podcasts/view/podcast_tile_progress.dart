@@ -22,12 +22,14 @@ class PodcastTileProgress extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final theme = context.theme;
 
-    final pos = (selected
+    final pos =
+        (selected
             ? watchPropertyValue((PlayerModel m) => m.position)
             : lastPosition) ??
         const Duration(seconds: 0);
 
-    final dur = (selected
+    final dur =
+        (selected
             ? watchPropertyValue((PlayerModel m) => m.duration)
             : duration) ??
         const Duration(seconds: 1);

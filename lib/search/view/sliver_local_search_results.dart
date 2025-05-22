@@ -46,25 +46,28 @@ class _SliverLocalSearchResultState extends State<SliverLocalSearchResult> {
       },
     );
 
-    final titles =
-        watchPropertyValue((SearchModel m) => m.localSearchResult?.titles);
-    final artists =
-        watchPropertyValue((SearchModel m) => m.localSearchResult?.artists);
-    final albums =
-        watchPropertyValue((SearchModel m) => m.localSearchResult?.albums);
-    final genresResult =
-        watchPropertyValue((SearchModel m) => m.localSearchResult?.genres);
-    final playlistsResult =
-        watchPropertyValue((SearchModel m) => m.localSearchResult?.playlists);
+    final titles = watchPropertyValue(
+      (SearchModel m) => m.localSearchResult?.titles,
+    );
+    final artists = watchPropertyValue(
+      (SearchModel m) => m.localSearchResult?.artists,
+    );
+    final albums = watchPropertyValue(
+      (SearchModel m) => m.localSearchResult?.albums,
+    );
+    final genresResult = watchPropertyValue(
+      (SearchModel m) => m.localSearchResult?.genres,
+    );
+    final playlistsResult = watchPropertyValue(
+      (SearchModel m) => m.localSearchResult?.playlists,
+    );
 
     final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
 
     if (searchQuery == null || searchQuery.isEmpty == true) {
       return SliverNoSearchResultPage(
         icon: const AnimatedEmoji(AnimatedEmojis.drum),
-        message: Text(
-          context.l10n.search,
-        ),
+        message: Text(context.l10n.search),
       );
     }
 

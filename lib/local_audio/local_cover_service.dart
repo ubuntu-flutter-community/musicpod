@@ -50,10 +50,7 @@ class LocalCoverService {
 
       if (bytesFromMetadata == null) return null;
 
-      final cover = _put(
-        albumId: albumId,
-        data: bytesFromMetadata,
-      );
+      final cover = _put(albumId: albumId, data: bytesFromMetadata);
       if (cover != null) {
         _propertiesChangedController.add(true);
       }
@@ -91,8 +88,7 @@ class LocalCoverService {
   bool _maybeImageInFolderExists({
     required File file,
     required String suffix,
-  }) =>
-      Directory(p.join(file.parent.path, suffix)).existsSync();
+  }) => Directory(p.join(file.parent.path, suffix)).existsSync();
 
   Uint8List? _put({required String albumId, Uint8List? data}) {
     return _store.containsKey(albumId)

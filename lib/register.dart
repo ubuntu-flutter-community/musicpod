@@ -68,14 +68,9 @@ void registerDependencies({required List<String> args}) async {
   di
     ..registerSingletonAsync<SharedPreferences>(SharedPreferences.getInstance)
     ..registerSingletonAsync<PackageInfo>(PackageInfo.fromPlatform)
-    ..registerLazySingleton<Dio>(
-      () => Dio(),
-      dispose: (s) => s.close(),
-    )
+    ..registerLazySingleton<Dio>(() => Dio(), dispose: (s) => s.close())
     ..registerLazySingleton<OnlineArtService>(
-      () => OnlineArtService(
-        dio: di<Dio>(),
-      ),
+      () => OnlineArtService(dio: di<Dio>()),
       dispose: (s) => s.dispose(),
     )
     ..registerSingletonAsync<SettingsService>(
@@ -86,8 +81,9 @@ void registerDependencies({required List<String> args}) async {
           defaultValue: '2.11.0',
         );
         return SettingsService(
-          windowManager:
-              AppConfig.windowManagerImplemented ? di<WindowManager>() : null,
+          windowManager: AppConfig.windowManagerImplemented
+              ? di<WindowManager>()
+              : null,
           forcedUpdateThreshold: forcedUpdateThreshold,
           sharedPreferences: di<SharedPreferences>(),
           downloadsDefaultDir: downloadsDefaultDir,
@@ -100,15 +96,11 @@ void registerDependencies({required List<String> args}) async {
       dispose: (s) async => s.dispose(),
     )
     ..registerSingletonWithDependencies(
-      () => LastfmService(
-        settingsService: di<SettingsService>(),
-      ),
+      () => LastfmService(settingsService: di<SettingsService>()),
       dependsOn: [SettingsService],
     )
     ..registerSingletonWithDependencies(
-      () => ListenBrainzService(
-        settingsService: di<SettingsService>(),
-      ),
+      () => ListenBrainzService(settingsService: di<SettingsService>()),
       dependsOn: [SettingsService],
     )
     ..registerSingletonAsync<ExposeService>(
@@ -132,8 +124,9 @@ void registerDependencies({required List<String> args}) async {
           onlineArtService: di<OnlineArtService>(),
           controller: VideoController(
             Player(
-              configuration:
-                  const PlayerConfiguration(title: AppConfig.appTitle),
+              configuration: const PlayerConfiguration(
+                title: AppConfig.appTitle,
+              ),
             ),
           ),
           exposeService: di<ExposeService>(),
@@ -145,9 +138,7 @@ void registerDependencies({required List<String> args}) async {
       dependsOn: [ExposeService],
       dispose: (s) async => s.dispose(),
     )
-    ..registerSingleton<ExternalPathService>(
-      const ExternalPathService(),
-    )
+    ..registerSingleton<ExternalPathService>(const ExternalPathService())
     ..registerSingletonAsync<LibraryService>(
       () async {
         final libraryService = LibraryService(
@@ -184,26 +175,20 @@ void registerDependencies({required List<String> args}) async {
       dependsOn: [SettingsService, LibraryService],
     )
     ..registerLazySingleton<Connectivity>(() => Connectivity())
-    ..registerSingletonAsync<RadioService>(
-      () async {
-        final s = RadioService();
-        await s.init();
-        return s;
-      },
-      dispose: (s) => s.dispose(),
-    )
+    ..registerSingletonAsync<RadioService>(() async {
+      final s = RadioService();
+      await s.init();
+      return s;
+    }, dispose: (s) => s.dispose())
     ..registerLazySingleton<GitHub>(() => GitHub())
-    ..registerSingletonAsync<ConnectivityModel>(
-      () async {
-        final connectivityModel = ConnectivityModel(
-          playerService: di<PlayerService>(),
-          connectivity: di<Connectivity>(),
-        );
-        await connectivityModel.init();
-        return connectivityModel;
-      },
-      dependsOn: [PlayerService],
-    )
+    ..registerSingletonAsync<ConnectivityModel>(() async {
+      final connectivityModel = ConnectivityModel(
+        playerService: di<PlayerService>(),
+        connectivity: di<Connectivity>(),
+      );
+      await connectivityModel.init();
+      return connectivityModel;
+    }, dependsOn: [PlayerService])
     ..registerSingletonWithDependencies<SettingsModel>(
       () => SettingsModel(
         service: di<SettingsService>(),
@@ -226,9 +211,7 @@ void registerDependencies({required List<String> args}) async {
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton<OnlineArtModel>(
-      () => OnlineArtModel(
-        onlineArtService: di<OnlineArtService>(),
-      ),
+      () => OnlineArtModel(onlineArtService: di<OnlineArtService>()),
       dispose: (s) => s.dispose(),
     )
     ..registerSingletonAsync<AppModel>(
@@ -254,9 +237,7 @@ void registerDependencies({required List<String> args}) async {
       dependsOn: [LibraryService],
     )
     ..registerSingletonWithDependencies<RoutingManager>(
-      () => RoutingManager(
-        libraryService: di<LibraryService>(),
-      ),
+      () => RoutingManager(libraryService: di<LibraryService>()),
       dependsOn: [LibraryService],
     )
     ..registerSingletonWithDependencies<LocalAudioModel>(
@@ -273,9 +254,7 @@ void registerDependencies({required List<String> args}) async {
       dispose: (s) => s.dispose(),
     )
     ..registerSingletonWithDependencies<RadioModel>(
-      () => RadioModel(
-        radioService: di<RadioService>(),
-      ),
+      () => RadioModel(radioService: di<RadioService>()),
       dependsOn: [RadioService],
       dispose: (s) => s.dispose(),
     )
@@ -295,11 +274,7 @@ void registerDependencies({required List<String> args}) async {
         libraryService: di<LibraryService>(),
         localAudioService: di<LocalAudioService>(),
       ),
-      dependsOn: [
-        RadioService,
-        LibraryService,
-        LocalAudioService,
-      ],
+      dependsOn: [RadioService, LibraryService, LocalAudioService],
     )
     ..registerSingletonWithDependencies<CustomContentModel>(
       () => CustomContentModel(

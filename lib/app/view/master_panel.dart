@@ -18,22 +18,22 @@ class MasterPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => const SizedBox(
-        width: kMasterDetailSideBarWidth,
-        child: Column(
-          children: [
-            HeaderBar(
-              includeBackButton: false,
-              includeSidebarButton: false,
-              backgroundColor: Colors.transparent,
-              style: YaruTitleBarStyle.undecorated,
-              adaptive: false,
-              title: Text(AppConfig.appTitle),
-            ),
-            Expanded(child: MasterList()),
-            SettingsButton.tile(),
-          ],
+    width: kMasterDetailSideBarWidth,
+    child: Column(
+      children: [
+        HeaderBar(
+          includeBackButton: false,
+          includeSidebarButton: false,
+          backgroundColor: Colors.transparent,
+          style: YaruTitleBarStyle.undecorated,
+          adaptive: false,
+          title: Text(AppConfig.appTitle),
         ),
-      );
+        Expanded(child: MasterList()),
+        SettingsButton.tile(),
+      ],
+    ),
+  );
 }
 
 class MasterList extends StatelessWidget {
@@ -41,14 +41,14 @@ class MasterList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => const CustomScrollView(
-        slivers: [
-          PermanentPageList(),
-          PlaylistList(),
-          PodcastList(),
-          AlbumsList(),
-          StationsList(),
-        ],
-      );
+    slivers: [
+      PermanentPageList(),
+      PlaylistList(),
+      PodcastList(),
+      AlbumsList(),
+      StationsList(),
+    ],
+  );
 }
 
 class PermanentPageList extends StatelessWidget with WatchItMixin {
@@ -56,10 +56,12 @@ class PermanentPageList extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final masterItems =
-        permanentMasterItems.whereNot((e) => e.pageId == PageIDs.settings);
-    final selectedPageId =
-        watchPropertyValue((RoutingManager m) => m.selectedPageId);
+    final masterItems = permanentMasterItems.whereNot(
+      (e) => e.pageId == PageIDs.settings,
+    );
+    final selectedPageId = watchPropertyValue(
+      (RoutingManager m) => m.selectedPageId,
+    );
     return SliverList.builder(
       itemCount: masterItems.length,
       itemBuilder: (context, index) => MasterTileWithPageId(
@@ -77,8 +79,9 @@ class PlaylistList extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     watchPropertyValue((LibraryModel m) => m.playlistsLength);
     final masterItems = createPlaylistMasterItems(di<LibraryModel>());
-    final selectedPageId =
-        watchPropertyValue((RoutingManager m) => m.selectedPageId);
+    final selectedPageId = watchPropertyValue(
+      (RoutingManager m) => m.selectedPageId,
+    );
     return SliverList.builder(
       itemCount: masterItems.length,
       itemBuilder: (context, index) => MasterTileWithPageId(
@@ -96,8 +99,9 @@ class PodcastList extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     watchPropertyValue((LibraryModel m) => m.podcastsLength);
     final masterItems = createPodcastMasterItems(di<LibraryModel>());
-    final selectedPageId =
-        watchPropertyValue((RoutingManager m) => m.selectedPageId);
+    final selectedPageId = watchPropertyValue(
+      (RoutingManager m) => m.selectedPageId,
+    );
     return SliverList.builder(
       itemCount: masterItems.length,
       itemBuilder: (context, index) => MasterTileWithPageId(
@@ -115,8 +119,9 @@ class StationsList extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     watchPropertyValue((LibraryModel m) => m.starredStationsLength);
     final masterItems = createStarredStationsMasterItems(di<LibraryModel>());
-    final selectedPageId =
-        watchPropertyValue((RoutingManager m) => m.selectedPageId);
+    final selectedPageId = watchPropertyValue(
+      (RoutingManager m) => m.selectedPageId,
+    );
     return SliverList.builder(
       itemCount: masterItems.length,
       itemBuilder: (context, index) => MasterTileWithPageId(
@@ -134,8 +139,9 @@ class AlbumsList extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     watchPropertyValue((LibraryModel m) => m.favoriteAlbumsLength);
     final masterItems = createFavoriteAlbumsMasterItems(di<LibraryModel>());
-    final selectedPageId =
-        watchPropertyValue((RoutingManager m) => m.selectedPageId);
+    final selectedPageId = watchPropertyValue(
+      (RoutingManager m) => m.selectedPageId,
+    );
     return SliverList.builder(
       itemCount: masterItems.length,
       itemBuilder: (context, index) => MasterTileWithPageId(

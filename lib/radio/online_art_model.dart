@@ -5,11 +5,11 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'online_art_service.dart';
 
 class OnlineArtModel extends SafeChangeNotifier {
-  OnlineArtModel({
-    required OnlineArtService onlineArtService,
-  }) : _onlineArtService = onlineArtService {
-    _propertiesChangedSub ??=
-        _onlineArtService.propertiesChanged.listen((_) => notifyListeners());
+  OnlineArtModel({required OnlineArtService onlineArtService})
+    : _onlineArtService = onlineArtService {
+    _propertiesChangedSub ??= _onlineArtService.propertiesChanged.listen(
+      (_) => notifyListeners(),
+    );
   }
 
   final OnlineArtService _onlineArtService;

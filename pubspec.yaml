@@ -5,7 +5,7 @@ version: 2.12.0+1338
 publish_to: "none"
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ">=3.8.0 <4.0.0"
   flutter: ">=3.32.0"
 
 dependencies:
@@ -134,4 +134,3 @@ dependency_overrides:
     git:
       url: https://github.com/media-kit/media-kit
       path: media_kit_video
-

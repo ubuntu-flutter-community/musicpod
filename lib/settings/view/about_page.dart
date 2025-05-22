@@ -55,8 +55,10 @@ class _AboutPageState extends State<_AboutPage> {
     final theme = context.theme;
     const radius = Radius.circular(8);
 
-    final linkStyle = theme.textTheme.bodyLarge
-        ?.copyWith(color: Colors.lightBlue, overflow: TextOverflow.visible);
+    final linkStyle = theme.textTheme.bodyLarge?.copyWith(
+      color: Colors.lightBlue,
+      overflow: TextOverflow.visible,
+    );
     const maxLines = 3;
 
     return Column(
@@ -76,10 +78,10 @@ class _AboutPageState extends State<_AboutPage> {
                       sliver: SliverGrid.builder(
                         gridDelegate:
                             const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: _kTileSize,
-                          mainAxisSpacing: 5,
-                          crossAxisSpacing: 5,
-                        ),
+                              maxCrossAxisExtent: _kTileSize,
+                              mainAxisSpacing: 5,
+                              crossAxisSpacing: 5,
+                            ),
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
                           final e = snapshot.data!.elementAt(index);
@@ -100,9 +102,9 @@ class _AboutPageState extends State<_AboutPage> {
                                     fallBackIcon: const YaruPlaceholderIcon(
                                       borderRadius:
                                           BorderRadiusDirectional.vertical(
-                                        top: radius,
-                                        bottom: radius,
-                                      ),
+                                            top: radius,
+                                            bottom: radius,
+                                          ),
                                       size: Size.square(_kTileSize),
                                     ),
                                   ),
@@ -116,9 +118,7 @@ class _AboutPageState extends State<_AboutPage> {
                   } else {
                     return const SliverFillRemaining(
                       hasScrollBody: false,
-                      child: Center(
-                        child: Progress(),
-                      ),
+                      child: Center(child: Progress()),
                     );
                   }
                 },
@@ -155,8 +155,9 @@ class _AboutPageState extends State<_AboutPage> {
                           height: kSmallestSpace,
                           decoration: BoxDecoration(
                             color: context.theme.colorScheme.onSurface,
-                            borderRadius:
-                                BorderRadius.circular(kYaruButtonRadius),
+                            borderRadius: BorderRadius.circular(
+                              kYaruButtonRadius,
+                            ),
                           ),
                         ),
                         Flexible(

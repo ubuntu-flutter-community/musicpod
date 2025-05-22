@@ -28,14 +28,12 @@ class RoundImageContainer extends StatelessWidget {
       blurRadius: 1,
       color: theme.shadowColor.withValues(alpha: 0.9),
     );
-    final color = backgroundColor ??
+    final color =
+        backgroundColor ??
         getAlphabetColor(fallBackText).scale(saturation: -0.2);
 
     final linearGradient = LinearGradient(
-      colors: [
-        color,
-        color.scale(saturation: -0.6),
-      ],
+      colors: [color, color.scale(saturation: -0.6)],
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     );
@@ -52,17 +50,15 @@ class RoundImageContainer extends StatelessWidget {
         0 => null,
         1 => images.first,
         2 || 3 => Stack(
-            children: [
-              images.first,
-              YaruClip.diagonal(
-                position: YaruDiagonalClip.bottomLeft,
-                child: images.elementAt(1),
-              ),
-            ],
-          ),
-        _ => FourImagesGrid(
-            images: images.take(4).toList(),
-          ),
+          children: [
+            images.first,
+            YaruClip.diagonal(
+              position: YaruDiagonalClip.bottomLeft,
+              child: images.elementAt(1),
+            ),
+          ],
+        ),
+        _ => FourImagesGrid(images: images.take(4).toList()),
       },
     );
   }

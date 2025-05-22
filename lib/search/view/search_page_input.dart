@@ -29,8 +29,9 @@ class SearchPageInput extends StatelessWidget with WatchItMixin {
     final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
     final searchType = watchPropertyValue((SearchModel m) => m.searchType);
     final audioType = watchPropertyValue((SearchModel m) => m.audioType);
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
 
     return SizedBox(
       width: searchBarWidth,
@@ -46,22 +47,23 @@ class SearchPageInput extends StatelessWidget with WatchItMixin {
           SearchType.radioTag => const TagAutoCompleteWithSuffix(),
           SearchType.radioLanguage => const LanguageAutoCompleteWithSuffix(),
           _ => SearchInput(
-              autoFocus: !isMobile,
-              text: searchQuery,
-              hintText: audioType.localizedSearchHint(context.l10n),
-              onChanged: (v) async {
-                searchModel.setSearchQuery(v);
-                if (v.isEmpty) {
-                  searchModel.setPodcastGenre(PodcastGenre.all);
-                }
-                await searchModel.search();
-              },
-              suffixIcon:
-                  AudioTypeFilterButton(mode: OverlayMode.platformModalMode),
-              prefixIcon: audioType == AudioType.podcast
-                  ? const PodcastSearchInputPrefix()
-                  : null,
+            autoFocus: !isMobile,
+            text: searchQuery,
+            hintText: audioType.localizedSearchHint(context.l10n),
+            onChanged: (v) async {
+              searchModel.setSearchQuery(v);
+              if (v.isEmpty) {
+                searchModel.setPodcastGenre(PodcastGenre.all);
+              }
+              await searchModel.search();
+            },
+            suffixIcon: AudioTypeFilterButton(
+              mode: OverlayMode.platformModalMode,
             ),
+            prefixIcon: audioType == AudioType.podcast
+                ? const PodcastSearchInputPrefix()
+                : null,
+          ),
         },
       ),
     );
@@ -77,20 +79,19 @@ class CountryAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
     final searchModel = di<SearchModel>();
     final country = watchPropertyValue((SearchModel m) => m.country);
     watchPropertyValue((LibraryModel m) => m.favCountriesLength);
-    final favCountryCodes =
-        watchPropertyValue((LibraryModel m) => m.favCountryCodes);
+    final favCountryCodes = watchPropertyValue(
+      (LibraryModel m) => m.favCountryCodes,
+    );
 
     return CountryAutoComplete(
       suffixIcon: AudioTypeFilterButton(mode: OverlayMode.platformModalMode),
       countries: [
         ...[
           ...Country.values,
-        ].where(
-          (e) => libraryModel.favCountryCodes.contains(e.code) == true,
-        ),
-        ...[...Country.values].where(
-          (e) => libraryModel.favCountryCodes.contains(e.code) == false,
-        ),
+        ].where((e) => libraryModel.favCountryCodes.contains(e.code) == true),
+        ...[
+          ...Country.values,
+        ].where((e) => libraryModel.favCountryCodes.contains(e.code) == false),
       ]..remove(Country.none),
       onSelected: (c) async {
         searchModel.setCountry(c);
@@ -141,12 +142,10 @@ class TagAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
       tags: [
         ...[
           ...?model.tags,
-        ].where(
-          (e) => libraryModel.favRadioTags.contains(e.name) == true,
-        ),
-        ...[...?model.tags].where(
-          (e) => libraryModel.favRadioTags.contains(e.name) == false,
-        ),
+        ].where((e) => libraryModel.favRadioTags.contains(e.name) == true),
+        ...[
+          ...?model.tags,
+        ].where((e) => libraryModel.favRadioTags.contains(e.name) == false),
       ],
     );
   }
@@ -161,8 +160,9 @@ class LanguageAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
     final model = di<SearchModel>();
     final language = watchPropertyValue((SearchModel m) => m.language);
     watchPropertyValue((LibraryModel m) => m.favLanguagesLength);
-    final favLanguageCodes =
-        watchPropertyValue((LibraryModel m) => m.favLanguageCodes);
+    final favLanguageCodes = watchPropertyValue(
+      (LibraryModel m) => m.favLanguageCodes,
+    );
     return LanguageAutoComplete(
       suffixIcon: AudioTypeFilterButton(mode: OverlayMode.platformModalMode),
       value: language,

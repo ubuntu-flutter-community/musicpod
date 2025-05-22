@@ -24,10 +24,7 @@ import 'local_cover.dart';
 import 'pin_album_button.dart';
 
 class AlbumPage extends StatefulWidget with WatchItStatefulWidgetMixin {
-  const AlbumPage({
-    super.key,
-    required this.id,
-  });
+  const AlbumPage({super.key, required this.id});
 
   final String id;
 
@@ -59,8 +56,9 @@ class _AlbumPageState extends State<AlbumPage> {
         noSearchResultIcons: const AnimatedEmoji(AnimatedEmojis.bubbles),
         noSearchResultMessage: Text(context.l10n.albumNotFound),
         pageTitle: cachedAlbum.firstWhereOrNull((e) => e.album != null)?.album,
-        pageSubTitle:
-            cachedAlbum.firstWhereOrNull((e) => e.artist != null)?.artist,
+        pageSubTitle: cachedAlbum
+            .firstWhereOrNull((e) => e.artist != null)
+            ?.artist,
         onPageSubTitleTab: onArtistTap,
         onPageLabelTab: onArtistTap,
         controlPanel: AlbumPageControlPanel(album: cachedAlbum, id: widget.id),
@@ -73,9 +71,7 @@ class _AlbumPageState extends State<AlbumPage> {
         if (!snapshot.hasData) {
           return const Scaffold(
             appBar: HeaderBar(adaptive: true),
-            body: Center(
-              child: Progress(),
-            ),
+            body: Center(child: Progress()),
           );
         }
 
@@ -99,9 +95,9 @@ class _AlbumPageState extends State<AlbumPage> {
   }
 
   void onArtistTap(String text) => di<RoutingManager>().push(
-        builder: (_) => ArtistPage(pageId: text),
-        pageId: text,
-      );
+    builder: (_) => ArtistPage(pageId: text),
+    pageId: text,
+  );
 }
 
 class AlbumPageSideBarIcon extends StatefulWidget {
@@ -150,10 +146,7 @@ class _AlbumPageSideBarIconState extends State<AlbumPageSideBarIcon> {
 }
 
 class AlbumPageImage extends StatelessWidget {
-  const AlbumPageImage({
-    super.key,
-    required this.audio,
-  });
+  const AlbumPageImage({super.key, required this.audio});
 
   final Audio? audio;
 
@@ -181,9 +174,7 @@ class AlbumPageImage extends StatelessWidget {
                     dimension: kMaxAudioPageHeaderHeight,
                   ),
                 )
-              : const CoverBackground(
-                  dimension: kMaxAudioPageHeaderHeight,
-                ),
+              : const CoverBackground(dimension: kMaxAudioPageHeaderHeight),
         ),
       ],
     );

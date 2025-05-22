@@ -34,10 +34,10 @@ class PlayerService {
     required OnlineArtService onlineArtService,
     required ExposeService exposeService,
     required LocalCoverService localCoverService,
-  })  : _controller = controller,
-        _onlineArtService = onlineArtService,
-        _exposeService = exposeService,
-        _localCoverService = localCoverService;
+  }) : _controller = controller,
+       _onlineArtService = onlineArtService,
+       _exposeService = exposeService,
+       _localCoverService = localCoverService;
 
   // External dependencies
   final OnlineArtService _onlineArtService;
@@ -255,9 +255,7 @@ class PlayerService {
     } else if (_oldQueue != null &&
         _oldQueue?.name != null &&
         _oldQueue!.name == _queue.name) {
-      setQueue(
-        (audios: List.from(_oldQueue!.audios), name: _oldQueue!.name),
-      );
+      setQueue((audios: List.from(_oldQueue!.audios), name: _oldQueue!.name));
     }
     _estimateNext();
     _propertiesChangedController.add(true);
@@ -290,15 +288,17 @@ class PlayerService {
       final Media? media = audio!.path != null
           ? Media('file://${audio!.path!}')
           : (audio!.url != null)
-              ? Media(audio!.url!)
-              : null;
+          ? Media(audio!.url!)
+          : null;
       if (media == null) return;
       _player.open(media).then((_) {
         _player.state.tracks;
       });
       if (newPosition != null && _audio!.audioType != AudioType.radio) {
         final tempVol = _volume;
-        _player.setVolume(0).then(
+        _player
+            .setVolume(0)
+            .then(
               (_) => Future.delayed(const Duration(seconds: 3)).then(
                 (_) => _player
                     .seek(newPosition)
@@ -462,8 +462,9 @@ class PlayerService {
 
   Future<void> setRemoteColorFromImageProvider(ImageProvider provider) async {
     try {
-      final colorScheme =
-          await ColorScheme.fromImageProvider(provider: provider);
+      final colorScheme = await ColorScheme.fromImageProvider(
+        provider: provider,
+      );
       _setColor(colorScheme.primary.scale(saturation: 1));
     } on Exception catch (e) {
       printMessageInDebugMode(e);
@@ -663,8 +664,9 @@ class PlayerService {
         androidNotificationOngoing: false,
         androidStopForegroundOnPause: false,
         androidNotificationChannelName: AppConfig.appName,
-        androidNotificationChannelId:
-            isAndroid ? AppConfig.androidChannelId : null,
+        androidNotificationChannelId: isAndroid
+            ? AppConfig.androidChannelId
+            : null,
         androidNotificationChannelDescription: 'MusicPod Media Controls',
       ),
       builder: () {
@@ -696,8 +698,9 @@ class PlayerService {
 
   void _setMediaControlDuration(Duration? duration) {
     if (_audioHandler == null || _audioHandler!.mediaItem.value == null) return;
-    _audioHandler!.mediaItem
-        .add(_audioHandler!.mediaItem.value!.copyWith(duration: duration));
+    _audioHandler!.mediaItem.add(
+      _audioHandler!.mediaItem.value!.copyWith(duration: duration),
+    );
   }
 
   Future<void> _setMediaControlsMetaData({required Audio audio}) async {
@@ -708,9 +711,7 @@ class PlayerService {
 
   Future<Uri?> _createMediaControlsArtUri({Audio? audio}) async {
     if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
-      return Uri.tryParse(
-        audio?.imageUrl ?? audio!.albumArtUrl!,
-      );
+      return Uri.tryParse(audio?.imageUrl ?? audio!.albumArtUrl!);
     } else if (audio?.canHaveLocalCover == true &&
         File(audio!.path!).existsSync()) {
       final maybeData = _localCoverService.get(audio.albumId);
@@ -743,8 +744,10 @@ class PlayerService {
       Directory(imagesDir).deleteSync(recursive: true);
     }
     Directory(imagesDir).createSync();
-    final now =
-        DateTime.now().toUtc().toString().replaceAll(RegExp(r'[^0-9]'), '');
+    final now = DateTime.now().toUtc().toString().replaceAll(
+      RegExp(r'[^0-9]'),
+      '',
+    );
     final file = File(p.join(imagesDir, '$now.png'));
     final newFile = await file.writeAsBytes(maybeData);
     return newFile;
@@ -812,8 +815,8 @@ class PlayerService {
         thumbnail: audio.audioType == AudioType.local
             ? AppConfig.fallbackThumbnailUrl
             : artUri == null
-                ? null
-                : '$artUri',
+            ? null
+            : '$artUri',
       ),
     );
   }
@@ -881,12 +884,12 @@ class PlayerService {
       albumArt = await _onlineArtService.fetchAlbumArt(parsedIcyTitle);
     }
 
-    final mergedAudio =
-        (_audio ?? const Audio(audioType: AudioType.radio)).copyWith(
-      imageUrl: albumArt,
-      title: songInfo.songName,
-      artist: songInfo.artist,
-    );
+    final mergedAudio = (_audio ?? const Audio(audioType: AudioType.radio))
+        .copyWith(
+          imageUrl: albumArt,
+          title: songInfo.songName,
+          artist: songInfo.artist,
+        );
     await _setMediaControlsMetaData(audio: mergedAudio);
     _setRemoteImageUrl(albumArt ?? _audio?.imageUrl ?? _audio?.albumArtUrl);
 
@@ -904,10 +907,7 @@ class PlayerService {
     required String icyTitle,
     required MpvMetaData mpvMetaData,
   }) {
-    _radioHistory.putIfAbsent(
-      icyTitle,
-      () => mpvMetaData,
-    );
+    _radioHistory.putIfAbsent(icyTitle, () => mpvMetaData);
   }
 
   Future<void> _writePlayerState() async {
@@ -944,9 +944,7 @@ class PlayerService {
     }
   }
 
-  void playPath([
-    String? path,
-  ]) {
+  void playPath([String? path]) {
     if (path == null) {
       return;
     }

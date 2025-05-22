@@ -24,9 +24,7 @@ class PlayerFallBackImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final iconSize = width * 0.7;
     final theme = context.theme;
-    final color = theme.cardColor.scale(
-      lightness: theme.isLight ? -0.15 : 0.3,
-    );
+    final color = theme.cardColor.scale(lightness: theme.isLight ? -0.15 : 0.3);
     return Center(
       child: Container(
         decoration: BoxDecoration(

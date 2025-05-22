@@ -12,13 +12,11 @@ class CommonSwitch extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
     return useYaruTheme
-        ? YaruSwitch(
-            value: value,
-            onChanged: onChanged,
-          )
+        ? YaruSwitch(value: value, onChanged: onChanged)
         : Switch(value: value, onChanged: onChanged);
   }
 }
@@ -31,13 +29,11 @@ class CommonCheckBox extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
     return useYaruTheme
-        ? YaruCheckbox(
-            value: value,
-            onChanged: onChanged,
-          )
+        ? YaruCheckbox(value: value, onChanged: onChanged)
         : Checkbox(value: value, onChanged: onChanged);
   }
 }

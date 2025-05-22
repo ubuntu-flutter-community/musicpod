@@ -6,10 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 class PodcastPageTitle extends StatefulWidget with WatchItStatefulWidgetMixin {
-  const PodcastPageTitle({
-    super.key,
-    required this.feedUrl,
-  });
+  const PodcastPageTitle({super.key, required this.feedUrl});
 
   final String feedUrl;
 
@@ -24,7 +21,8 @@ class _PodcastPageTitleState extends State<PodcastPageTitle> {
   void initState() {
     super.initState();
     final podcast = di<LibraryModel>().getPodcast(widget.feedUrl);
-    title = podcast?.firstOrNull?.album ??
+    title =
+        podcast?.firstOrNull?.album ??
         podcast?.firstOrNull?.title ??
         podcast?.firstOrNull.toString() ??
         context.l10n.podcasts;

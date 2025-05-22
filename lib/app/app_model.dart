@@ -18,14 +18,17 @@ class AppModel extends SafeChangeNotifier {
     required GitHub gitHub,
     required bool allowManualUpdates,
     required ExposeService exposeService,
-  })  : _countryCode = WidgetsBinding
-            .instance.platformDispatcher.locale.countryCode
-            ?.toLowerCase(),
-        _gitHub = gitHub,
-        _allowManualUpdates = allowManualUpdates,
-        _settingsService = settingsService,
-        _packageInfo = packageInfo,
-        _exposeService = exposeService;
+  }) : _countryCode = WidgetsBinding
+           .instance
+           .platformDispatcher
+           .locale
+           .countryCode
+           ?.toLowerCase(),
+       _gitHub = gitHub,
+       _allowManualUpdates = allowManualUpdates,
+       _settingsService = settingsService,
+       _packageInfo = packageInfo,
+       _exposeService = exposeService;
 
   final ExposeService _exposeService;
   Stream<String?> get errorStream => _exposeService.discordErrorStream;
@@ -41,10 +44,7 @@ class AppModel extends SafeChangeNotifier {
     required String apiKey,
     required String apiSecret,
   }) async =>
-      _exposeService.authorizeLastFm(
-        apiKey: apiKey,
-        apiSecret: apiSecret,
-      );
+      _exposeService.authorizeLastFm(apiKey: apiKey, apiSecret: apiSecret);
 
   void initListenBrains() => _exposeService.initListenBrains();
 
@@ -84,9 +84,7 @@ class AppModel extends SafeChangeNotifier {
           SystemUiMode.manual,
           overlays: SystemUiOverlay.values,
         );
-        await SystemChrome.setPreferredOrientations(
-          [],
-        );
+        await SystemChrome.setPreferredOrientations([]);
       }
     }
 
@@ -117,12 +115,10 @@ class AppModel extends SafeChangeNotifier {
       notifyListeners();
       return Future.value();
     }
-    _onlineVersion = await getOnlineVersion().onError(
-      (error, stackTrace) {
-        onError?.call(error.toString());
-        return null;
-      },
-    );
+    _onlineVersion = await getOnlineVersion().onError((error, stackTrace) {
+      onError?.call(error.toString());
+      return null;
+    });
     final onlineVersion = getExtendedVersionNumber(_onlineVersion) ?? 0;
     final currentVersion = getExtendedVersionNumber(version) ?? 0;
     if (onlineVersion > currentVersion) {
@@ -221,9 +217,7 @@ class AppModel extends SafeChangeNotifier {
 
   Future<List<Contributor>> getContributors() async {
     final list = await _gitHub.repositories
-        .listContributors(
-          RepositorySlug.full(AppConfig.gitHubShortLink),
-        )
+        .listContributors(RepositorySlug.full(AppConfig.gitHubShortLink))
         .where((c) => c.type == 'User')
         .toList();
     return [

@@ -26,11 +26,9 @@ class AudioFallBackIcon extends StatelessWidget {
     final theme = context.theme;
     final light = theme.isLight;
     final fallBackColor = theme.primaryColor;
-    final gradientColor = color ??
-        getAlphabetColor(
-          audio?.title ?? audio?.album ?? '',
-          fallBackColor,
-        );
+    final gradientColor =
+        color ??
+        getAlphabetColor(audio?.title ?? audio?.album ?? '', fallBackColor);
     return Container(
       height: dimension ?? double.infinity,
       width: dimension ?? double.infinity,

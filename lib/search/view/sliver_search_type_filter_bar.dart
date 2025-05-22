@@ -16,8 +16,9 @@ class SearchTypeFilterBar extends StatelessWidget with WatchItMixin {
     final searchModel = di<SearchModel>();
     final searchType = watchPropertyValue((SearchModel m) => m.searchType);
     final searchTypes = watchPropertyValue((SearchModel m) => m.searchTypes);
-    final localSearchResult =
-        watchPropertyValue((SearchModel m) => m.localSearchResult);
+    final localSearchResult = watchPropertyValue(
+      (SearchModel m) => m.localSearchResult,
+    );
     final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
 
     return Padding(
@@ -60,18 +61,13 @@ class SearchTypeFilterBar extends StatelessWidget with WatchItMixin {
     required String? searchQuery,
   }) =>
       '${searchType.localize(context.l10n)}${searchQuery == null || searchQuery.isEmpty ? '' : switch (searchType) {
-          SearchType.localTitle =>
-            ' (${localSearchResult?.titles?.length ?? '0'})',
-          SearchType.localAlbum =>
-            ' (${localSearchResult?.albums?.length ?? '0'})',
-          SearchType.localArtist =>
-            ' (${localSearchResult?.artists?.length ?? '0'})',
-          // SearchType.localAlbumArtist =>
-          //   ' (${localSearchResult?.albumArtists?.length ?? '0'})',
-          SearchType.localGenreName =>
-            ' (${localSearchResult?.genres?.length ?? '0'})',
-          SearchType.localPlaylists =>
-            ' (${localSearchResult?.playlists?.length ?? '0'})',
-          _ => ''
-        }}';
+              SearchType.localTitle => ' (${localSearchResult?.titles?.length ?? '0'})',
+              SearchType.localAlbum => ' (${localSearchResult?.albums?.length ?? '0'})',
+              SearchType.localArtist => ' (${localSearchResult?.artists?.length ?? '0'})',
+              // SearchType.localAlbumArtist =>
+              //   ' (${localSearchResult?.albumArtists?.length ?? '0'})',
+              SearchType.localGenreName => ' (${localSearchResult?.genres?.length ?? '0'})',
+              SearchType.localPlaylists => ' (${localSearchResult?.playlists?.length ?? '0'})',
+              _ => '',
+            }}';
 }

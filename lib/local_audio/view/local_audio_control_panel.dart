@@ -17,9 +17,7 @@ class LocalAudioControlPanel extends StatelessWidget with WatchItMixin {
     final audios = watchPropertyValue((LocalAudioModel m) => m.audios);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: kSmallestSpace,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: kSmallestSpace),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: YaruChoiceChipBar(
@@ -36,8 +34,9 @@ class LocalAudioControlPanel extends StatelessWidget with WatchItMixin {
           isSelected: LocalAudioView.values
               .map((e) => e == LocalAudioView.values[index])
               .toList(),
-          onSelected:
-              audios == null ? null : di<LocalAudioModel>().setLocalAudioindex,
+          onSelected: audios == null
+              ? null
+              : di<LocalAudioModel>().setLocalAudioindex,
         ),
       ),
     );

@@ -40,17 +40,16 @@ class SafeNetworkImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final fallBack = Center(
-      child: fallBackIcon ??
-          Icon(
-            Iconz.musicNote,
-            size: height != null ? height! * 0.7 : null,
-          ),
+      child:
+          fallBackIcon ??
+          Icon(Iconz.musicNote, size: height != null ? height! * 0.7 : null),
     );
 
     if (url == null) return fallBack;
 
     final errorWidget = Center(
-      child: errorIcon ??
+      child:
+          errorIcon ??
           Icon(
             Iconz.imageMissing,
             size: height != null ? height! * 0.7 : null,

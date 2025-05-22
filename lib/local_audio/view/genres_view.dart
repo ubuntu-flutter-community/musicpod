@@ -43,9 +43,7 @@ class GenresView extends StatelessWidget {
         return YaruSelectableContainer(
           selected: false,
           onTap: () => di<RoutingManager>().push(
-            builder: (_) => GenrePage(
-              genre: text,
-            ),
+            builder: (_) => GenrePage(genre: text),
             pageId: text,
           ),
           borderRadius: BorderRadius.circular(300),

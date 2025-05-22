@@ -15,11 +15,13 @@ class MobileNavigationBar extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
-    final selectedPageId =
-        watchPropertyValue((RoutingManager m) => m.selectedPageId);
+    final selectedPageId = watchPropertyValue(
+      (RoutingManager m) => m.selectedPageId,
+    );
 
     final sizedBox = SizedBox(
-      height: navigationBarHeight -
+      height:
+          navigationBarHeight -
           (context.isAndroidGestureNavigationEnabled ? 0 : 15),
       child: Padding(
         padding: context.isAndroidGestureNavigationEnabled
@@ -38,8 +40,10 @@ class MobileNavigationBar extends StatelessWidget with WatchItMixin {
             ),
             IconButton(
               isSelected: selectedPageId == PageIDs.localAudio,
-              selectedIcon:
-                  Icon(Iconz.localAudioFilled, semanticLabel: l10n.local),
+              selectedIcon: Icon(
+                Iconz.localAudioFilled,
+                semanticLabel: l10n.local,
+              ),
               icon: Icon(Iconz.localAudio, semanticLabel: l10n.local),
               tooltip: l10n.local,
               onPressed: () =>
@@ -54,8 +58,10 @@ class MobileNavigationBar extends StatelessWidget with WatchItMixin {
             ),
             IconButton(
               isSelected: selectedPageId == PageIDs.podcasts,
-              selectedIcon:
-                  Icon(Iconz.podcastFilled, semanticLabel: l10n.podcasts),
+              selectedIcon: Icon(
+                Iconz.podcastFilled,
+                semanticLabel: l10n.podcasts,
+              ),
               icon: Icon(Iconz.podcast, semanticLabel: l10n.podcasts),
               tooltip: l10n.podcasts,
               onPressed: () =>
@@ -63,8 +69,10 @@ class MobileNavigationBar extends StatelessWidget with WatchItMixin {
             ),
             IconButton(
               isSelected: selectedPageId == PageIDs.settings,
-              selectedIcon:
-                  Icon(Iconz.settingsFilled, semanticLabel: l10n.settings),
+              selectedIcon: Icon(
+                Iconz.settingsFilled,
+                semanticLabel: l10n.settings,
+              ),
               icon: Icon(Iconz.settings, semanticLabel: l10n.settings),
               tooltip: l10n.settings,
               onPressed: () =>

@@ -23,10 +23,7 @@ Future<void> showModal({
       );
 
     case ModalMode.dialog:
-      showDialog(
-        context: context,
-        builder: builder,
-      );
+      showDialog(context: context, builder: builder);
   }
 }
 

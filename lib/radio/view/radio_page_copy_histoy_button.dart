@@ -16,9 +16,7 @@ class RadioPageCopyHistoryButton extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     watchPropertyValue(
-      (PlayerModel m) => m.getRadioHistoryLength(
-        filter: station.title,
-      ),
+      (PlayerModel m) => m.getRadioHistoryLength(filter: station.title),
     );
     final text = di<PlayerModel>().getRadioHistoryList(filter: station.title);
     return IconButton(
@@ -29,10 +27,7 @@ class RadioPageCopyHistoryButton extends StatelessWidget with WatchItMixin {
               showSnackBar(
                 context: context,
                 content: SingleChildScrollView(
-                  child: CopyClipboardContent(
-                    text: text,
-                    showActions: false,
-                  ),
+                  child: CopyClipboardContent(text: text, showActions: false),
                 ),
               );
             },

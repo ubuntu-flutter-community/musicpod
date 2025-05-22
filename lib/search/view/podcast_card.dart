@@ -22,9 +22,7 @@ class PodcastCard extends StatelessWidget with WatchItMixin {
 
     return AudioCard(
       key: ValueKey(feedUrl),
-      bottom: AudioCardBottom(
-        text: item.collectionName ?? item.trackName,
-      ),
+      bottom: AudioCardBottom(text: item.collectionName ?? item.trackName),
       image: SafeNetworkImage(
         url: item.artworkUrl600 ?? item.artworkUrl,
         fit: BoxFit.cover,
@@ -33,20 +31,20 @@ class PodcastCard extends StatelessWidget with WatchItMixin {
       ),
       onPlay: feedUrl == null
           ? null
-          : () => di<PodcastModel>().findEpisodes(item: item).then(
-                (audios) => di<PlayerModel>().startPlaylist(
-                  listName: feedUrl,
-                  audios: audios,
+          : () => di<PodcastModel>()
+                .findEpisodes(item: item)
+                .then(
+                  (audios) => di<PlayerModel>().startPlaylist(
+                    listName: feedUrl,
+                    audios: audios,
+                  ),
                 ),
-              ),
       onTap: feedUrl == null
           ? null
           : () => di<RoutingManager>().push(
-                builder: (_) => LazyPodcastPage(
-                  podcastItem: item,
-                ),
-                pageId: feedUrl,
-              ),
+              builder: (_) => LazyPodcastPage(podcastItem: item),
+              pageId: feedUrl,
+            ),
     );
   }
 }

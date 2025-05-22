@@ -28,40 +28,36 @@ Future<void> main() async {
   LocalAudioService? service;
   final localCoverService = MockLocalCoverService();
 
-  setUpAll(
-    () async {
-      service = LocalAudioService(localCoverService: localCoverService);
-      await service?.init(newDirectory: Directory.current.path);
-    },
-  );
+  setUpAll(() async {
+    service = LocalAudioService(localCoverService: localCoverService);
+    await service?.init(newDirectory: Directory.current.path);
+  });
 
   group('test metadata', () {
     test('testTestMp3', () {
       final audios = service?.audios;
       expect(audios?.isNotEmpty, true);
 
-      final testTestMp3 =
-          audios?.firstWhereOrNull((e) => e.path?.contains('test.mp3') == true);
+      final testTestMp3 = audios?.firstWhereOrNull(
+        (e) => e.path?.contains('test.mp3') == true,
+      );
       expect(testTestMp3?.title, testMp3.title);
       expect(testTestMp3?.artist, testMp3.artist);
       expect(testTestMp3?.album, testMp3.album);
       expect(testTestMp3?.genre, testMp3.genre);
     });
 
-    test(
-      'testTestOgg',
-      () {
-        final audios = service?.audios;
-        expect(audios?.isNotEmpty, true);
+    test('testTestOgg', () {
+      final audios = service?.audios;
+      expect(audios?.isNotEmpty, true);
 
-        final coldStones = audios?.firstWhereOrNull(
-          (e) => e.path?.contains('Backslash Zero') == true,
-        );
-        expect(coldStones?.title, testOgg.title);
-        expect(coldStones?.artist, testOgg.artist);
-        expect(coldStones?.album, testOgg.album);
-        expect(coldStones?.genre, testOgg.genre);
-      },
-    );
+      final coldStones = audios?.firstWhereOrNull(
+        (e) => e.path?.contains('Backslash Zero') == true,
+      );
+      expect(coldStones?.title, testOgg.title);
+      expect(coldStones?.artist, testOgg.artist);
+      expect(coldStones?.album, testOgg.album);
+      expect(coldStones?.genre, testOgg.genre);
+    });
   });
 }

@@ -15,10 +15,7 @@ import 'podcast_card.dart';
 
 class SliverPodcastSearchResults extends StatefulWidget
     with WatchItStatefulWidgetMixin {
-  const SliverPodcastSearchResults({
-    super.key,
-    this.take,
-  });
+  const SliverPodcastSearchResults({super.key, this.take});
 
   final int? take;
 
@@ -33,9 +30,7 @@ class _SliverPodcastSearchResultsState
   void didChangeDependencies() {
     super.didChangeDependencies();
     di<PodcastModel>()
-        .init(
-          updateMessage: context.l10n.newEpisodeAvailable,
-        )
+        .init(updateMessage: context.l10n.newEpisodeAvailable)
         .then((_) => di<SearchModel>().search());
   }
 
@@ -55,16 +50,17 @@ class _SliverPodcastSearchResultsState
     final results = watchPropertyValue(
       (SearchModel m) => m.podcastSearchResult?.items,
     );
-    final searchResultItems =
-        widget.take != null ? results?.take(widget.take!) : results;
+    final searchResultItems = widget.take != null
+        ? results?.take(widget.take!)
+        : results;
 
     if (searchResultItems == null || searchResultItems.isEmpty) {
       return SliverNoSearchResultPage(
         icon: loading
             ? const SizedBox.shrink()
             : searchResultItems == null
-                ? const AnimatedEmoji(AnimatedEmojis.drum)
-                : const AnimatedEmoji(AnimatedEmojis.babyChick),
+            ? const AnimatedEmoji(AnimatedEmojis.drum)
+            : const AnimatedEmoji(AnimatedEmojis.babyChick),
         message: loading
             ? const Progress()
             : Text(
@@ -78,18 +74,15 @@ class _SliverPodcastSearchResultsState
     return SliverGrid.builder(
       itemCount: searchResultItems.length,
       gridDelegate: audioCardGridDelegate,
-      itemBuilder: (context, index) => PodcastCard(
-        item: searchResultItems.elementAt(index),
-      ),
+      itemBuilder: (context, index) =>
+          PodcastCard(item: searchResultItems.elementAt(index)),
     );
   }
 }
 
 class SliverPodcastSearchCountryChartsResults extends StatefulWidget
     with WatchItStatefulWidgetMixin {
-  const SliverPodcastSearchCountryChartsResults({
-    super.key,
-  });
+  const SliverPodcastSearchCountryChartsResults({super.key});
 
   @override
   State<SliverPodcastSearchCountryChartsResults> createState() =>
@@ -102,12 +95,8 @@ class _SliverPodcastSearchCountryChartsResultsState
   void didChangeDependencies() {
     super.didChangeDependencies();
     di<PodcastModel>()
-        .init(
-          updateMessage: context.l10n.newEpisodeAvailable,
-        )
-        .then(
-          (_) => di<SearchModel>().fetchPodcastChartsPeak(),
-        );
+        .init(updateMessage: context.l10n.newEpisodeAvailable)
+        .then((_) => di<SearchModel>().fetchPodcastChartsPeak());
   }
 
   @override
@@ -129,9 +118,8 @@ class _SliverPodcastSearchCountryChartsResultsState
       child: ListView.separated(
         itemCount: results.length,
         scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) => PodcastCard(
-          item: results.elementAt(index),
-        ),
+        itemBuilder: (context, index) =>
+            PodcastCard(item: results.elementAt(index)),
         separatorBuilder: (context, index) =>
             const SizedBox(width: kMediumSpace),
       ),

@@ -33,8 +33,9 @@ class DesktopMusicPodApp extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final themeIndex = watchPropertyValue((SettingsModel m) => m.themeIndex);
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
     final color = accent ?? kMusicPodDefaultColor;
     final phoenix = phoenixTheme(color: color);
 
@@ -43,11 +44,13 @@ class DesktopMusicPodApp extends StatelessWidget with WatchItMixin {
       themeMode: ThemeMode.values[themeIndex],
       highContrastTheme: highContrastTheme,
       highContrastDarkTheme: highContrastDarkTheme,
-      theme: lightTheme ??
+      theme:
+          lightTheme ??
           (useYaruTheme
               ? yaruLightWithTweaks(createYaruLightTheme(primaryColor: color))
               : phoenix.lightTheme),
-      darkTheme: darkTheme ??
+      darkTheme:
+          darkTheme ??
           (useYaruTheme
               ? yaruDarkWithTweaks(createYaruDarkTheme(primaryColor: color))
               : phoenix.darkTheme),

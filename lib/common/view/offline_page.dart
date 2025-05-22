@@ -24,10 +24,7 @@ class OfflinePage extends StatelessWidget {
 }
 
 class OfflineBody extends StatelessWidget {
-  const OfflineBody({
-    super.key,
-    this.action,
-  });
+  const OfflineBody({super.key, this.action});
 
   final Widget? action;
 

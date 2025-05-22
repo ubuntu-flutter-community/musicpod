@@ -7,12 +7,7 @@ import '../../extensions/theme_data_x.dart';
 import 'theme.dart';
 
 class AudioCardBottom extends StatelessWidget {
-  const AudioCardBottom({
-    super.key,
-    this.text,
-    this.maxLines = 1,
-    this.style,
-  });
+  const AudioCardBottom({super.key, this.text, this.maxLines = 1, this.style});
 
   final String? text;
   final int maxLines;
@@ -30,10 +25,7 @@ class AudioCardBottom extends StatelessWidget {
         child: Container(
           width: audioCardDimension,
           margin: const EdgeInsets.all(1),
-          padding: const EdgeInsets.symmetric(
-            vertical: 5,
-            horizontal: 5,
-          ),
+          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
           child: text == null
               ? ClipRRect(
                   borderRadius: BorderRadius.circular(5),
@@ -45,18 +37,18 @@ class AudioCardBottom extends StatelessWidget {
                       highlightColor: light
                           ? theme.cardColor.scale(lightness: -0.1)
                           : theme.cardColor.scale(lightness: 0.05),
-                      child: Container(
-                        color: theme.cardColor,
-                      ),
+                      child: Container(color: theme.cardColor),
                     ),
                   ),
                 )
               : Text(
                   text ?? '',
-                  style: style ??
+                  style:
+                      style ??
                       theme.textTheme.bodyMedium?.copyWith(
-                        color:
-                            theme.colorScheme.onSurface.withValues(alpha: 0.9),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.9,
+                        ),
                       ),
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,

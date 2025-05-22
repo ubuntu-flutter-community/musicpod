@@ -52,10 +52,7 @@ class _PlayerViewState extends State<PlayerView> {
 
     // VERY important to reduce CPU usage
     return RepaintBoundary(
-      child: Material(
-        color: theme.cardColor,
-        child: player,
-      ),
+      child: Material(color: theme.cardColor, child: player),
     );
   }
 }
@@ -66,26 +63,23 @@ enum PlayerPosition {
   fullWindow;
 
   LinearGradient getGradient(Color color) {
-    final colors = [
-      color,
-      color.withValues(alpha: 0.01),
-    ];
+    final colors = [color, color.withValues(alpha: 0.01)];
     return switch (this) {
       PlayerPosition.bottom => LinearGradient(
-          colors: colors,
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-        ),
+        colors: colors,
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+      ),
       PlayerPosition.sideBar => LinearGradient(
-          colors: colors,
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-        ),
+        colors: colors,
+        begin: Alignment.topRight,
+        end: Alignment.bottomLeft,
+      ),
       PlayerPosition.fullWindow => LinearGradient(
-          colors: colors,
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        )
+        colors: colors,
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+      ),
     };
   }
 }

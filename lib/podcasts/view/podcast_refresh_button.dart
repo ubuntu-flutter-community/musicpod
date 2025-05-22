@@ -7,10 +7,7 @@ import '../../library/library_model.dart';
 import '../podcast_model.dart';
 
 class PodcastRefreshButton extends StatelessWidget {
-  const PodcastRefreshButton({
-    super.key,
-    required this.pageId,
-  });
+  const PodcastRefreshButton({super.key, required this.pageId});
 
   final String pageId;
 
@@ -23,11 +20,9 @@ class PodcastRefreshButton extends StatelessWidget {
       onPressed: podcast == null
           ? null
           : () => di<PodcastModel>().update(
-                oldPodcasts: {
-                  pageId: podcast,
-                },
-                updateMessage: context.l10n.newEpisodeAvailable,
-              ),
+              oldPodcasts: {pageId: podcast},
+              updateMessage: context.l10n.newEpisodeAvailable,
+            ),
       icon: Icon(Iconz.refresh),
     );
   }

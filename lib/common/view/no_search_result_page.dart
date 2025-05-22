@@ -19,15 +19,12 @@ class NoSearchResultPage extends StatelessWidget {
 
     return Center(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.only(
-          left: 50,
-          right: 50,
-          bottom: 50,
-        ),
+        padding: const EdgeInsets.only(left: 50, right: 50, bottom: 50),
         child: SizedBox(
           width: 500,
           child: DefaultTextStyle(
-            style: style ??
+            style:
+                style ??
                 TextStyle(
                   fontWeight: FontWeight.w400,
                   color: theme.colorScheme.onSurface,
@@ -37,9 +34,7 @@ class NoSearchResultPage extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 icon ?? const AnimatedEmoji(AnimatedEmojis.thinkingFace),
-                const SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
                 message ??
                     Text(
                       context.l10n.nothingFound,
@@ -72,18 +67,12 @@ class SliverNoSearchResultPage extends StatelessWidget {
     if (expand) {
       return SliverFillRemaining(
         hasScrollBody: false,
-        child: NoSearchResultPage(
-          icon: icon,
-          message: message,
-        ),
+        child: NoSearchResultPage(icon: icon, message: message),
       );
     }
 
     return SliverToBoxAdapter(
-      child: NoSearchResultPage(
-        icon: icon,
-        message: message,
-      ),
+      child: NoSearchResultPage(icon: icon, message: message),
     );
   }
 }

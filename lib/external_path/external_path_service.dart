@@ -21,10 +21,9 @@ class ExternalPathService {
 
   Future<String?> getPathOfFile() async {
     if (isMobile && await _androidPermissionsGranted()) {
-      return (await FilePicker.platform.pickFiles(allowMultiple: false))
-          ?.files
-          .firstOrNull
-          ?.path;
+      return (await FilePicker.platform.pickFiles(
+        allowMultiple: false,
+      ))?.files.firstOrNull?.path;
     }
 
     if (isMacOS || isLinux || isWindows) {
@@ -35,8 +34,9 @@ class ExternalPathService {
 
   Future<List<String>> getPathsOfFiles() async {
     if (isMobile && await _androidPermissionsGranted()) {
-      final filePickerResult =
-          await FilePicker.platform.pickFiles(allowMultiple: true);
+      final filePickerResult = await FilePicker.platform.pickFiles(
+        allowMultiple: true,
+      );
 
       if (filePickerResult == null) {
         return [];
@@ -53,26 +53,27 @@ class ExternalPathService {
   }
 
   Future<bool> _androidPermissionsGranted() async {
-    final mediaLibraryIsGranted = (await Permission.mediaLibrary
-            .onDeniedCallback(() {})
-            .onGrantedCallback(() {})
-            .onPermanentlyDeniedCallback(() {})
-            .onRestrictedCallback(() {})
-            .onLimitedCallback(() {})
-            .onProvisionalCallback(() {})
-            .request())
-        .isGranted;
+    final mediaLibraryIsGranted =
+        (await Permission.mediaLibrary
+                .onDeniedCallback(() {})
+                .onGrantedCallback(() {})
+                .onPermanentlyDeniedCallback(() {})
+                .onRestrictedCallback(() {})
+                .onLimitedCallback(() {})
+                .onProvisionalCallback(() {})
+                .request())
+            .isGranted;
 
-    final manageExternalStorageIsGranted = (await Permission
-            .manageExternalStorage
-            .onDeniedCallback(() {})
-            .onGrantedCallback(() {})
-            .onPermanentlyDeniedCallback(() {})
-            .onRestrictedCallback(() {})
-            .onLimitedCallback(() {})
-            .onProvisionalCallback(() {})
-            .request())
-        .isGranted;
+    final manageExternalStorageIsGranted =
+        (await Permission.manageExternalStorage
+                .onDeniedCallback(() {})
+                .onGrantedCallback(() {})
+                .onPermanentlyDeniedCallback(() {})
+                .onRestrictedCallback(() {})
+                .onLimitedCallback(() {})
+                .onProvisionalCallback(() {})
+                .request())
+            .isGranted;
 
     return mediaLibraryIsGranted && manageExternalStorageIsGranted;
   }

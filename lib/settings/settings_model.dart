@@ -14,10 +14,11 @@ class SettingsModel extends SafeChangeNotifier {
     required SettingsService service,
     required ExternalPathService externalPathService,
     required GitHub gitHub,
-  })  : _service = service,
-        _externalPathService = externalPathService {
-    _propertiesChangedSub ??=
-        _service.propertiesChanged.listen((_) => notifyListeners());
+  }) : _service = service,
+       _externalPathService = externalPathService {
+    _propertiesChangedSub ??= _service.propertiesChanged.listen(
+      (_) => notifyListeners(),
+    );
   }
 
   final SettingsService _service;

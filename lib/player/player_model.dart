@@ -13,10 +13,11 @@ class PlayerModel extends SafeChangeNotifier {
   PlayerModel({
     required PlayerService service,
     required OnlineArtService onlineArtService,
-  })  : _playerService = service,
-        _onlineArtService = onlineArtService {
-    _propertiesChangedSub ??=
-        _playerService.propertiesChanged.listen((_) => notifyListeners());
+  }) : _playerService = service,
+       _onlineArtService = onlineArtService {
+    _propertiesChangedSub ??= _playerService.propertiesChanged.listen(
+      (_) => notifyListeners(),
+    );
   }
 
   static const rateValues = [.75, 1.0, 1.25, 1.5, 1.75, 2.0];
@@ -57,11 +58,7 @@ class PlayerModel extends SafeChangeNotifier {
 
   Future<void> seekInSeconds(int seconds) async {
     if (position != null && position!.inSeconds + seconds >= 0) {
-      setPosition(
-        Duration(
-          seconds: position!.inSeconds + seconds,
-        ),
-      );
+      setPosition(Duration(seconds: position!.inSeconds + seconds));
       await seek();
     }
   }
@@ -102,12 +99,11 @@ class PlayerModel extends SafeChangeNotifier {
     required List<Audio> audios,
     required String listName,
     int? index,
-  }) async =>
-      _playerService.startPlaylist(
-        audios: audios,
-        listName: listName,
-        index: index,
-      );
+  }) async => _playerService.startPlaylist(
+    audios: audios,
+    listName: listName,
+    index: index,
+  );
 
   String? get remoteImageUrl => _playerService.remoteImageUrl;
 
@@ -143,16 +139,14 @@ class PlayerModel extends SafeChangeNotifier {
       (e) => filter == null
           ? true
           : e.value.icyName.contains(filter) ||
-              filter.contains(e.value.icyName),
+                filter.contains(e.value.icyName),
     );
   }
 
   String getRadioHistoryList({String? filter}) {
-    return filteredRadioHistory(filter: filter)
-        .map((e) => '${e.value.icyTitle}\n')
-        .toList()
-        .reversed
-        .join();
+    return filteredRadioHistory(
+      filter: filter,
+    ).map((e) => '${e.value.icyTitle}\n').toList().reversed.join();
   }
 
   void setTimer(Duration duration) => _playerService.setPauseTimer(duration);

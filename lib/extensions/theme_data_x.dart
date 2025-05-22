@@ -7,12 +7,12 @@ extension ThemeDataX on ThemeData {
       colorScheme.primary.scale(lightness: isLight ? -0.3 : 0.3, saturation: 1);
 
   TextStyle? get pageHeaderStyle => textTheme.headlineLarge?.copyWith(
-        fontWeight: FontWeight.w400,
-        letterSpacing: 0,
-        leadingDistribution: TextLeadingDistribution.proportional,
-        fontSize: 25,
-        color: colorScheme.onSurface.withValues(alpha: 0.9),
-      );
+    fontWeight: FontWeight.w400,
+    letterSpacing: 0,
+    leadingDistribution: TextLeadingDistribution.proportional,
+    fontSize: 25,
+    color: colorScheme.onSurface.withValues(alpha: 0.9),
+  );
 
   TextStyle? get pageHeaderDescription =>
       textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w500);

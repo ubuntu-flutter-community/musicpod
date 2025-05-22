@@ -24,8 +24,8 @@ class LocalAudioService {
   LocalAudioService({
     required LocalCoverService localCoverService,
     SettingsService? settingsService,
-  })  : _settingsService = settingsService,
-        _localCoverService = localCoverService;
+  }) : _settingsService = settingsService,
+       _localCoverService = localCoverService;
 
   List<Audio>? _audios;
   List<Audio>? get audios => _audios;
@@ -36,10 +36,7 @@ class LocalAudioService {
 
   void _sortAllTitles() {
     if (_audios == null) return;
-    sortListByAudioFilter(
-      audioFilter: AudioFilter.title,
-      audios: _audios!,
-    );
+    sortListByAudioFilter(audioFilter: AudioFilter.title, audios: _audios!);
   }
 
   List<String>? _allArtists;
@@ -63,9 +60,7 @@ class LocalAudioService {
     if (_audios == null) return;
     final genresResult = <String>[];
     for (var a in audios!) {
-      if (genresResult.none(
-            (e) => e == a.genre,
-          ) &&
+      if (genresResult.none((e) => e == a.genre) &&
           a.genre?.isNotEmpty == true) {
         genresResult.add(a.genre!);
       }
@@ -76,10 +71,7 @@ class LocalAudioService {
 
   List<String>? _allAlbumIDs;
   List<String>? get allAlbumIDs => _allAlbumIDs;
-  List<String>? findAllAlbumIDs({
-    String? artist,
-    bool clean = true,
-  }) {
+  List<String>? findAllAlbumIDs({String? artist, bool clean = true}) {
     final groupAlbumsOnlyByAlbumName =
         _settingsService?.groupAlbumsOnlyByAlbumName ?? false;
 
@@ -110,8 +102,9 @@ class LocalAudioService {
   }
 
   String? findAlbumId({required String artist, required String album}) =>
-      (_allAlbumIDs ?? [])
-          .firstWhereOrNull((e) => e == Audio.createAlbumId(artist, album));
+      (_allAlbumIDs ?? []).firstWhereOrNull(
+        (e) => e == Audio.createAlbumId(artist, album),
+      );
 
   List<Audio>? getCachedAlbum(String albumId) {
     final maybe = _albumCache[albumId];
@@ -139,21 +132,16 @@ class LocalAudioService {
       return maybe;
     }
 
-    final album = audios?.where(
-      (a) {
-        if (_settingsService?.groupAlbumsOnlyByAlbumName ?? false) {
-          return a.album != null && a.album == albumId.albumOfId;
-        }
-        return a.albumId != null && a.albumId == albumId;
-      },
-    );
+    final album = audios?.where((a) {
+      if (_settingsService?.groupAlbumsOnlyByAlbumName ?? false) {
+        return a.album != null && a.album == albumId.albumOfId;
+      }
+      return a.albumId != null && a.albumId == albumId;
+    });
 
     var albumList = album?.toList();
     if (albumList != null) {
-      sortListByAudioFilter(
-        audioFilter: audioFilter,
-        audios: albumList,
-      );
+      sortListByAudioFilter(audioFilter: audioFilter, audios: albumList);
 
       albumList = splitByDiscs(albumList).toList();
     }
@@ -179,8 +167,9 @@ class LocalAudioService {
     }
 
     final albumAudios = await findAlbum(albumId);
-    _coverPathCache[albumId] =
-        albumAudios?.firstWhereOrNull((e) => e.path != null)?.path;
+    _coverPathCache[albumId] = albumAudios
+        ?.firstWhereOrNull((e) => e.path != null)
+        ?.path;
     return _coverPathCache[albumId];
   }
 
@@ -208,10 +197,7 @@ class LocalAudioService {
 
     var artistList = artistTitles?.toList();
     if (artistList != null) {
-      sortListByAudioFilter(
-        audioFilter: audioFilter,
-        audios: artistList,
-      );
+      sortListByAudioFilter(audioFilter: audioFilter, audios: artistList);
       artistList = splitByDiscs(artistList).toList();
     }
     final list = artistList != null ? List<Audio>.from(artistList) : null;
@@ -293,8 +279,9 @@ class LocalAudioService {
       );
     }
 
-    final allAlbumsFindings = allAlbumIDs
-        ?.where((e) => e.albumOfId.toLowerCase().contains(query.toLowerCase()));
+    final allAlbumsFindings = allAlbumIDs?.where(
+      (e) => e.albumOfId.toLowerCase().contains(query.toLowerCase()),
+    );
 
     final albumsResult = <String>[];
     if (allAlbumsFindings != null) {
@@ -322,7 +309,8 @@ class LocalAudioService {
     }
 
     return LocalSearchResult(
-      titles: audios
+      titles:
+          audios
               ?.where(
                 (audio) =>
                     audio.title?.isNotEmpty == true &&
@@ -344,34 +332,28 @@ class LocalAudioService {
 
   final Lock _lock = Lock();
   Future<void> init({String? newDirectory, bool forceInit = false}) async {
-    await _lock.synchronized(
-      () async {
-        if (forceInit == false && (_audios != null && _audios!.isNotEmpty)) {
-          return;
-        }
+    await _lock.synchronized(() async {
+      if (forceInit == false && (_audios != null && _audios!.isNotEmpty)) {
+        return;
+      }
 
-        if (newDirectory != null &&
-            newDirectory != _settingsService?.directory) {
-          await _settingsService?.setDirectory(newDirectory);
-        }
-        final dir = newDirectory ?? _settingsService?.directory;
+      if (newDirectory != null && newDirectory != _settingsService?.directory) {
+        await _settingsService?.setDirectory(newDirectory);
+      }
+      final dir = newDirectory ?? _settingsService?.directory;
 
-        final result = await compute(_readAudiosFromDirectory, dir);
-        _failedImports = result.failedImports;
+      final result = await compute(_readAudiosFromDirectory, dir);
+      _failedImports = result.failedImports;
 
-        if (!isWindows &&
-            dir != null &&
-            Directory(dir).existsSync() &&
-            (_fileWatcher == null || _fileWatcher!.path != dir)) {
-          _fileWatcher = FileWatcher(dir);
-        }
+      if (!isWindows &&
+          dir != null &&
+          Directory(dir).existsSync() &&
+          (_fileWatcher == null || _fileWatcher!.path != dir)) {
+        _fileWatcher = FileWatcher(dir);
+      }
 
-        addAudiosAndBuildCollection(
-          result.audios,
-          clear: forceInit,
-        );
-      },
-    );
+      addAudiosAndBuildCollection(result.audios, clear: forceInit);
+    });
   }
 
   Future<void> dispose() async => _audiosController.close();
@@ -423,52 +405,49 @@ class LocalAudioService {
     if (audio.path != null) {
       final file = File(audio.path!);
       if (file.existsSync()) {
-        updateMetadata(
-          file,
-          (metadata) {
-            try {
-              if (title != null) {
-                metadata.setTitle(title);
-              }
-              if (artist != null) {
-                metadata.setArtist(artist);
-              }
-              if (album != null) {
-                metadata.setAlbum(album);
-              }
-              if (genre != null) {
-                metadata.setGenres([genre]);
-              }
-              if (trackNumber != null && int.tryParse(trackNumber) != null) {
-                metadata.setTrackNumber(int.tryParse(trackNumber));
-              }
-              if (year != null && int.tryParse(year) != null) {
-                metadata.setYear(DateTime(int.parse(year)));
-              }
-              if (pictures?.isNotEmpty ?? false) {
-                metadata.setPictures(pictures!);
-              }
-
-              // Not supported yet
-              // if (discNumber != null) {
-              //   metadata.setDiscNumber(discNumber);
-              // }
-              // if (discTotal != null) {
-              //   metadata.setDiscTotal(discTotal);
-              // }
-              // if (durationMs != null) {
-              //   metadata.setDuration(durationMs);
-              // }
-              // if (albumArtist != null) {
-              //   metadata.setAlbumArtist(albumArtist);
-              // }
-
-              onChange?.call();
-            } on Exception catch (e) {
-              printMessageInDebugMode(e);
+        updateMetadata(file, (metadata) {
+          try {
+            if (title != null) {
+              metadata.setTitle(title);
             }
-          },
-        );
+            if (artist != null) {
+              metadata.setArtist(artist);
+            }
+            if (album != null) {
+              metadata.setAlbum(album);
+            }
+            if (genre != null) {
+              metadata.setGenres([genre]);
+            }
+            if (trackNumber != null && int.tryParse(trackNumber) != null) {
+              metadata.setTrackNumber(int.tryParse(trackNumber));
+            }
+            if (year != null && int.tryParse(year) != null) {
+              metadata.setYear(DateTime(int.parse(year)));
+            }
+            if (pictures?.isNotEmpty ?? false) {
+              metadata.setPictures(pictures!);
+            }
+
+            // Not supported yet
+            // if (discNumber != null) {
+            //   metadata.setDiscNumber(discNumber);
+            // }
+            // if (discTotal != null) {
+            //   metadata.setDiscTotal(discTotal);
+            // }
+            // if (durationMs != null) {
+            //   metadata.setDuration(durationMs);
+            // }
+            // if (albumArtist != null) {
+            //   metadata.setAlbumArtist(albumArtist);
+            // }
+
+            onChange?.call();
+          } on Exception catch (e) {
+            printMessageInDebugMode(e);
+          }
+        });
       }
     }
   }
@@ -479,11 +458,12 @@ FutureOr<ImportResult> _readAudiosFromDirectory(String? directory) async {
   final List<String> failedImports = [];
 
   if (directory != null && Directory(directory).existsSync()) {
-    final files = (await Directory(directory)
-            .list(recursive: true, followLinks: false)
-            .handleError((e) => failedImports.add(e.toString()))
-            .toList())
-        .whereType<File>();
+    final files =
+        (await Directory(directory)
+                .list(recursive: true, followLinks: false)
+                .handleError((e) => failedImports.add(e.toString()))
+                .toList())
+            .whereType<File>();
 
     for (final e in files) {
       if (e.isPlayable) {

@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import 'theme.dart';
 
 class CoverBackground extends StatelessWidget {
-  const CoverBackground({
-    super.key,
-    this.dimension,
-  });
+  const CoverBackground({super.key, this.dimension});
 
   final double? dimension;
 

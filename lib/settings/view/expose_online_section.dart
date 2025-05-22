@@ -31,8 +31,9 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
     final model = di<SettingsModel>();
     _lastFmApiKeyController = TextEditingController(text: model.lastFmApiKey);
     _lastFmSecretController = TextEditingController(text: model.lastFmSecret);
-    _listenBrainzApiKeyController =
-        TextEditingController(text: model.listenBrainzApiKey);
+    _listenBrainzApiKeyController = TextEditingController(
+      text: model.listenBrainzApiKey,
+    );
 
     super.initState();
   }
@@ -48,11 +49,13 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
-    final discordEnabled =
-        watchPropertyValue((SettingsModel m) => m.enableDiscordRPC);
+    final discordEnabled = watchPropertyValue(
+      (SettingsModel m) => m.enableDiscordRPC,
+    );
 
-    final lastFmEnabled =
-        watchPropertyValue((SettingsModel m) => m.enableLastFmScrobbling);
+    final lastFmEnabled = watchPropertyValue(
+      (SettingsModel m) => m.enableLastFmScrobbling,
+    );
 
     final listenBrainzEnabled = watchPropertyValue(
       (SettingsModel m) => m.enableListenBrainzScrobbling,
@@ -68,9 +71,7 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
               children: space(
                 children: [
                   AppConfig.allowDiscordRPC
-                      ? const Icon(
-                          TablerIcons.brand_discord_filled,
-                        )
+                      ? const Icon(TablerIcons.brand_discord_filled)
                       : Icon(
                           TablerIcons.brand_discord_filled,
                           color: context.theme.disabledColor,
@@ -87,11 +88,13 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
             trailing: CommonSwitch(
               value: discordEnabled,
               onChanged: AppConfig.allowDiscordRPC
-                  ? (v) => di<AppModel>().connectToDiscord(v).then(
-                        (_) => di<SettingsModel>().setEnableDiscordRPC(
-                          di<AppModel>().isDiscordConnected,
-                        ),
-                      )
+                  ? (v) => di<AppModel>()
+                        .connectToDiscord(v)
+                        .then(
+                          (_) => di<SettingsModel>().setEnableDiscordRPC(
+                            di<AppModel>().isDiscordConnected,
+                          ),
+                        )
                   : null,
             ),
           ),
@@ -99,9 +102,7 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
             title: Row(
               children: space(
                 children: [
-                  const Icon(
-                    TablerIcons.brand_lastfm,
-                  ),
+                  const Icon(TablerIcons.brand_lastfm),
                   if (lastFmEnabled &&
                       watchValue((AppModel m) => m.isLastFmAuthorized))
                     Text(l10n.connectedTo),
@@ -109,11 +110,7 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
                 ],
               ),
             ),
-            subtitle: Column(
-              children: [
-                Text(l10n.exposeToLastfmSubTitle),
-              ],
-            ),
+            subtitle: Column(children: [Text(l10n.exposeToLastfmSubTitle)]),
             trailing: CommonSwitch(
               value: lastFmEnabled,
               onChanged: (v) {
@@ -175,12 +172,8 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
                       ElevatedButton(
                         onPressed: () {
                           di<SettingsModel>()
-                            ..setLastFmApiKey(
-                              _lastFmApiKeyController.text,
-                            )
-                            ..setLastFmSecret(
-                              _lastFmSecretController.text,
-                            );
+                            ..setLastFmApiKey(_lastFmApiKeyController.text)
+                            ..setLastFmSecret(_lastFmSecretController.text);
                           di<AppModel>().authorizeLastFm(
                             apiKey: _lastFmApiKeyController.text,
                             apiSecret: _lastFmSecretController.text,
@@ -242,8 +235,9 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
                             onChanged: (_) => _formkey.currentState?.validate(),
                             onFieldSubmitted: (value) async {
                               if (_formkey.currentState!.validate()) {
-                                di<SettingsModel>()
-                                    .setListenBrainzApiKey(value);
+                                di<SettingsModel>().setListenBrainzApiKey(
+                                  value,
+                                );
                               }
                             },
                           ),

@@ -5,8 +5,8 @@ class SimpleLanguage {
   final String isoCode;
 
   SimpleLanguage.fromMap(Map<String, String> map)
-      : name = map['name']!,
-        isoCode = map['isoCode']!;
+    : name = map['name']!,
+      isoCode = map['isoCode']!;
 
   /// Returns the Language matching the given ISO code from the standard list.
   factory SimpleLanguage.fromIsoCode(String isoCode) =>
@@ -409,7 +409,7 @@ class Languages {
 }
 
 final Map<String, (String country, String language, String languageTag)>
-    countryCodeToLanguage = {
+countryCodeToLanguage = {
   'af': ('afghanistan', 'dari', 'fa-af'),
   'al': ('albania', 'albanian', 'sq'),
   'dz': ('algeria', 'arabic', 'ar'),

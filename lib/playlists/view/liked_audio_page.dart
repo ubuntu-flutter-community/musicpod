@@ -58,12 +58,7 @@ class _LikedAudioPageState extends State<LikedAudioPage> {
         context.l10n.likedSongsSubtitle,
         style: context.theme.pageHeaderDescription,
       ),
-      image: FallBackHeaderImage(
-        child: Icon(
-          Iconz.heart,
-          size: 65,
-        ),
-      ),
+      image: FallBackHeaderImage(child: Icon(Iconz.heart, size: 65)),
     );
   }
 }

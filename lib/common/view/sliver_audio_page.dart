@@ -107,18 +107,12 @@ class SliverAudioPage extends StatelessWidget {
                 ),
               ),
               SliverAudioPageControlPanel(
-                controlPanel: controlPanel ??
-                    AvatarPlayButton(
-                      audios: audios ?? [],
-                      pageId: pageId,
-                    ),
+                controlPanel:
+                    controlPanel ??
+                    AvatarPlayButton(audios: audios ?? [], pageId: pageId),
               ),
               if (audios == null)
-                const SliverToBoxAdapter(
-                  child: Center(
-                    child: Progress(),
-                  ),
-                )
+                const SliverToBoxAdapter(child: Center(child: Progress()))
               else if (audios!.isEmpty)
                 SliverToBoxAdapter(
                   child: NoSearchResultPage(
@@ -128,9 +122,7 @@ class SliverAudioPage extends StatelessWidget {
                 )
               else
                 SliverPadding(
-                  padding: padding.copyWith(
-                    bottom: bottomPlayerPageGap,
-                  ),
+                  padding: padding.copyWith(bottom: bottomPlayerPageGap),
                   sliver: SliverAudioTileList(
                     audioPageType: audioPageType,
                     audios: audios!,

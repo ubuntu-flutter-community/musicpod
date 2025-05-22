@@ -8,7 +8,7 @@ import '../../l10n/l10n.dart';
 import '../../settings/settings_model.dart';
 
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason>?
-    showFailedImportsSnackBar({
+showFailedImportsSnackBar({
   required List<String> failedImports,
   required BuildContext context,
   bool failedToImport = false,
@@ -63,9 +63,7 @@ class _Content extends StatelessWidget {
             padding: const EdgeInsets.all(15),
             child: Text(
               message,
-              style: theme.textTheme.bodyLarge?.copyWith(
-                color: textColor,
-              ),
+              style: theme.textTheme.bodyLarge?.copyWith(color: textColor),
             ),
           ),
           Expanded(
@@ -75,9 +73,7 @@ class _Content extends StatelessWidget {
                 return ListTile(
                   title: Text(
                     failedImports[index],
-                    style: TextStyle(
-                      color: textColor,
-                    ),
+                    style: TextStyle(color: textColor),
                   ),
                 );
               },

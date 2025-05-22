@@ -13,15 +13,15 @@ import '../search_model.dart';
 
 class AudioTypeFilterButton extends StatelessWidget {
   const AudioTypeFilterButton({super.key, required OverlayMode mode})
-      : _mode = mode;
+    : _mode = mode;
 
   final OverlayMode _mode;
 
   @override
   Widget build(BuildContext context) => switch (_mode) {
-        OverlayMode.bottomSheet => const AudioTypeFilterBottomSheetButton(),
-        OverlayMode.popup => const AudioTypeFilterSwitcher()
-      };
+    OverlayMode.bottomSheet => const AudioTypeFilterBottomSheetButton(),
+    OverlayMode.popup => const AudioTypeFilterSwitcher(),
+  };
 }
 
 class AudioTypeFilterSwitcher extends StatelessWidget with WatchItMixin {
@@ -33,55 +33,54 @@ class AudioTypeFilterSwitcher extends StatelessWidget with WatchItMixin {
     final theme = context.theme;
     final searchModel = di<SearchModel>();
     final audioType = watchPropertyValue((SearchModel m) => m.audioType);
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
     final searchBarBorderRadius = getSearchBarBorderRadius(useYaruTheme);
 
     return Row(
       mainAxisSize: MainAxisSize.min,
-      children: AudioType.values.mapIndexed(
-        (i, e) {
-          final selected = audioType == e;
-          return IconButton(
-            style: IconButton.styleFrom(
-              backgroundColor: audioFilterBackgroundColor(
+      children: AudioType.values.mapIndexed((i, e) {
+        final selected = audioType == e;
+        return IconButton(
+          style: IconButton.styleFrom(
+            backgroundColor: audioFilterBackgroundColor(
+              theme: theme,
+              selected: selected,
+              useYaruTheme: useYaruTheme,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topRight: i == AudioType.values.length - 1
+                    ? Radius.circular(searchBarBorderRadius)
+                    : Radius.zero,
+                bottomRight: i == AudioType.values.length - 1
+                    ? Radius.circular(searchBarBorderRadius)
+                    : Radius.zero,
+              ),
+            ),
+          ),
+          isSelected: selected,
+          tooltip: e.localize(l10n),
+          padding: EdgeInsets.zero,
+          onPressed: () => searchModel
+            ..setAudioType(e)
+            ..search(clear: true),
+          icon: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: kSmallestSpace),
+            child: Icon(
+              e.iconData,
+              size: 20,
+              color: audioFilterForegroundColor(
                 theme: theme,
                 selected: selected,
                 useYaruTheme: useYaruTheme,
               ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                  topRight: i == AudioType.values.length - 1
-                      ? Radius.circular(searchBarBorderRadius)
-                      : Radius.zero,
-                  bottomRight: i == AudioType.values.length - 1
-                      ? Radius.circular(searchBarBorderRadius)
-                      : Radius.zero,
-                ),
-              ),
+              semanticLabel: e.localize(l10n),
             ),
-            isSelected: selected,
-            tooltip: e.localize(l10n),
-            padding: EdgeInsets.zero,
-            onPressed: () => searchModel
-              ..setAudioType(e)
-              ..search(clear: true),
-            icon: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kSmallestSpace),
-              child: Icon(
-                e.iconData,
-                size: 20,
-                color: audioFilterForegroundColor(
-                  theme: theme,
-                  selected: selected,
-                  useYaruTheme: useYaruTheme,
-                ),
-                semanticLabel: e.localize(l10n),
-              ),
-            ),
-          );
-        },
-      ).toList(),
+          ),
+        );
+      }).toList(),
     );
   }
 }

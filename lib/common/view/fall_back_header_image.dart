@@ -4,11 +4,7 @@ import 'package:yaru/yaru.dart';
 import '../../extensions/build_context_x.dart';
 
 class FallBackHeaderImage extends StatelessWidget {
-  const FallBackHeaderImage({
-    super.key,
-    this.color,
-    required this.child,
-  });
+  const FallBackHeaderImage({super.key, this.color, required this.child});
 
   final Color? color;
   final Widget child;

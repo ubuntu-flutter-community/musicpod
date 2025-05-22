@@ -59,8 +59,9 @@ class _SearchInputState extends State<SearchInput> {
 
   @override
   Widget build(BuildContext context) {
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
     final theme = context.theme;
     return SizedBox(
       height: useYaruTheme || isMobile ? null : 38,

@@ -14,8 +14,9 @@ class NextStationButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final findingSimilarStation =
-        watchPropertyValue((SearchModel m) => m.findingSimilarStation);
+    final findingSimilarStation = watchPropertyValue(
+      (SearchModel m) => m.findingSimilarStation,
+    );
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
 
     return IconButton(
@@ -23,15 +24,13 @@ class NextStationButton extends StatelessWidget with WatchItMixin {
       onPressed: !active || findingSimilarStation || audio == null
           ? null
           : () {
-              di<SearchModel>().nextSimilarStation(audio).then(
-                (station) {
-                  if (station == audio || audio.uuid == null) return;
-                  di<PlayerModel>().startPlaylist(
-                    audios: [station],
-                    listName: station.uuid!,
-                  );
-                },
-              );
+              di<SearchModel>().nextSimilarStation(audio).then((station) {
+                if (station == audio || audio.uuid == null) return;
+                di<PlayerModel>().startPlaylist(
+                  audios: [station],
+                  listName: station.uuid!,
+                );
+              });
             },
       icon: Icon(Iconz.explore, color: iconColor),
     );

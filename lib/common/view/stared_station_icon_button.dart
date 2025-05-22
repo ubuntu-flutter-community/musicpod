@@ -6,11 +6,7 @@ import '../data/audio.dart';
 import 'animated_like_icon.dart';
 
 class StaredStationIconButton extends StatelessWidget with WatchItMixin {
-  const StaredStationIconButton({
-    super.key,
-    required this.audio,
-    this.color,
-  });
+  const StaredStationIconButton({super.key, required this.audio, this.color});
 
   final Audio? audio;
   final Color? color;
@@ -30,9 +26,7 @@ class StaredStationIconButton extends StatelessWidget with WatchItMixin {
       onLike = () {
         isStarredStation
             ? libraryModel.unStarStation(audio!.uuid!)
-            : libraryModel.addStarredStation(
-                audio!.uuid!,
-              );
+            : libraryModel.addStarredStation(audio!.uuid!);
       };
     }
 
@@ -40,10 +34,7 @@ class StaredStationIconButton extends StatelessWidget with WatchItMixin {
       tooltip: isStarredStation
           ? context.l10n.removeFromCollection
           : context.l10n.addToCollection,
-      icon: AnimatedStar(
-        isStarred: isStarredStation,
-        color: color,
-      ),
+      icon: AnimatedStar(isStarred: isStarredStation, color: color),
       onPressed: onLike,
       color: color,
     );

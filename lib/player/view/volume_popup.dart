@@ -10,10 +10,7 @@ import '../../l10n/l10n.dart';
 import '../player_model.dart';
 
 class VolumeSliderPopup extends StatelessWidget with WatchItMixin {
-  const VolumeSliderPopup({
-    super.key,
-    this.color,
-  });
+  const VolumeSliderPopup({super.key, this.color});
 
   final Color? color;
 
@@ -40,18 +37,10 @@ class VolumeSliderPopup extends StatelessWidget with WatchItMixin {
       iconColor: color ?? theme.colorScheme.onSurface,
       padding: EdgeInsets.zero,
       tooltip: context.l10n.volume,
-      icon: Icon(
-        iconData,
-        color: color ?? theme.colorScheme.onSurface,
-      ),
+      icon: Icon(iconData, color: color ?? theme.colorScheme.onSurface),
       itemBuilder: (context) {
         return [
-          PopupMenuItem(
-            enabled: false,
-            child: _Slider(
-              setVolume: setVolume,
-            ),
-          ),
+          PopupMenuItem(enabled: false, child: _Slider(setVolume: setVolume)),
         ];
       },
     );
@@ -59,9 +48,7 @@ class VolumeSliderPopup extends StatelessWidget with WatchItMixin {
 }
 
 class _Slider extends StatelessWidget with WatchItMixin {
-  const _Slider({
-    required this.setVolume,
-  });
+  const _Slider({required this.setVolume});
 
   final Future<void> Function(double value) setVolume;
 
@@ -71,8 +58,9 @@ class _Slider extends StatelessWidget with WatchItMixin {
     return RotatedBox(
       quarterTurns: 3,
       child: SliderTheme(
-        data:
-            context.theme.sliderTheme.copyWith(trackShape: CustomTrackShape()),
+        data: context.theme.sliderTheme.copyWith(
+          trackShape: CustomTrackShape(),
+        ),
         child: Slider(
           value: volume ?? 100.0,
           onChanged: setVolume,

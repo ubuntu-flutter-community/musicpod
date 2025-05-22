@@ -26,7 +26,8 @@ class SeekButton extends StatelessWidget {
       color: iconColor,
     );
     return IconButton(
-      color: iconColor ??
+      color:
+          iconColor ??
           (active ? (theme.colorScheme.onSurface) : theme.disabledColor),
       onPressed: () async {
         playerModel.seekInSeconds(forward ? 30 : -10);

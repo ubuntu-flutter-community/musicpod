@@ -34,41 +34,42 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
 
     final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
-    final allowLeadingImage = audios.length < kShowLeadingThreshold &&
+    final allowLeadingImage =
+        audios.length < kShowLeadingThreshold &&
         audioPageType != AudioPageType.allTitlesView;
 
     return SliverPadding(
       padding: const EdgeInsets.only(bottom: kMediumSpace),
       sliver: SliverList(
-        delegate: SliverChildBuilderDelegate(
-          childCount: audios.length,
-          (context, index) {
-            final audio = audios.elementAt(index);
-            final audioSelected = currentAudio == audio;
-            return Padding(
-              padding: const EdgeInsets.only(bottom: kSmallestSpace),
-              child: AudioTile(
-                showDuration: width > 1200,
-                showSlimTileSubtitle: width >= 900,
-                showSecondLineSubTitle: width < 900,
-                allowLeadingImage: allowLeadingImage,
-                key: ValueKey(audio.path ?? audio.url),
-                audioPageType: audioPageType,
-                onSubTitleTap: onSubTitleTab,
-                isPlayerPlaying: isPlaying,
-                onTap: () => playerModel.startPlaylist(
-                  audios: audios,
-                  listName: pageId,
-                  index: index,
-                ),
-                selected: audioSelected,
-                audio: audio,
-                pageId: pageId,
-                selectedColor: selectedColor,
+        delegate: SliverChildBuilderDelegate(childCount: audios.length, (
+          context,
+          index,
+        ) {
+          final audio = audios.elementAt(index);
+          final audioSelected = currentAudio == audio;
+          return Padding(
+            padding: const EdgeInsets.only(bottom: kSmallestSpace),
+            child: AudioTile(
+              showDuration: width > 1200,
+              showSlimTileSubtitle: width >= 900,
+              showSecondLineSubTitle: width < 900,
+              allowLeadingImage: allowLeadingImage,
+              key: ValueKey(audio.path ?? audio.url),
+              audioPageType: audioPageType,
+              onSubTitleTap: onSubTitleTab,
+              isPlayerPlaying: isPlaying,
+              onTap: () => playerModel.startPlaylist(
+                audios: audios,
+                listName: pageId,
+                index: index,
               ),
-            );
-          },
-        ),
+              selected: audioSelected,
+              audio: audio,
+              pageId: pageId,
+              selectedColor: selectedColor,
+            ),
+          );
+        }),
       ),
     );
   }

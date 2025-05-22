@@ -30,14 +30,14 @@ class MasterTileWithPageId extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MasterTile(
-        key: ValueKey(item.pageId),
-        onTap: () => di<RoutingManager>().push(pageId: item.pageId),
-        pageId: item.pageId,
-        leading: item.iconBuilder(selectedPageId == item.pageId),
-        title: item.titleBuilder(context),
-        subtitle: item.subtitleBuilder?.call(context),
-        selected: selectedPageId == item.pageId,
-      );
+    key: ValueKey(item.pageId),
+    onTap: () => di<RoutingManager>().push(pageId: item.pageId),
+    pageId: item.pageId,
+    leading: item.iconBuilder(selectedPageId == item.pageId),
+    title: item.titleBuilder(context),
+    subtitle: item.subtitleBuilder?.call(context),
+    selected: selectedPageId == item.pageId,
+  );
 }
 
 class MasterTile extends StatelessWidget {
@@ -95,9 +95,7 @@ class MasterTile extends StatelessWidget {
 }
 
 class _FramedMasterTile extends StatelessWidget {
-  const _FramedMasterTile({
-    required this.tile,
-  });
+  const _FramedMasterTile({required this.tile});
 
   final Widget tile;
 
@@ -108,19 +106,9 @@ class _FramedMasterTile extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SpacedDivider(
-          top: 10,
-          bottom: 10,
-          right: 0,
-          left: 0,
-        ),
+        const SpacedDivider(top: 10, bottom: 10, right: 0, left: 0),
         tile,
-        const SpacedDivider(
-          top: 10,
-          bottom: 10,
-          right: 0,
-          left: 0,
-        ),
+        const SpacedDivider(top: 10, bottom: 10, right: 0, left: 0),
       ],
     );
   }

@@ -7,17 +7,15 @@ import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 
 class PodcastMarkDoneButton extends StatelessWidget with WatchItMixin {
-  const PodcastMarkDoneButton({
-    super.key,
-    required this.feedUrl,
-  });
+  const PodcastMarkDoneButton({super.key, required this.feedUrl});
 
   final String feedUrl;
 
   @override
   Widget build(BuildContext context) {
-    final podcast =
-        watchPropertyValue((LibraryModel m) => m.getPodcast(feedUrl));
+    final podcast = watchPropertyValue(
+      (LibraryModel m) => m.getPodcast(feedUrl),
+    );
 
     return IconButton(
       tooltip: context.l10n.markAllEpisodesAsDone,

@@ -18,8 +18,9 @@ class CloseActionSection extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final model = di<SettingsModel>();
 
-    final closeBtnAction =
-        watchPropertyValue((SettingsModel m) => m.closeBtnActionIndex);
+    final closeBtnAction = watchPropertyValue(
+      (SettingsModel m) => m.closeBtnActionIndex,
+    );
     return YaruSection(
       margin: const EdgeInsets.only(
         left: kLargestSpace,
@@ -43,8 +44,9 @@ class CloseActionSection extends StatelessWidget with WatchItMixin {
                   for (var i = 0; i < CloseBtnAction.values.length; ++i)
                     PopupMenuItem(
                       value: CloseBtnAction.values[i],
-                      child:
-                          Text(CloseBtnAction.values[i].localize(context.l10n)),
+                      child: Text(
+                        CloseBtnAction.values[i].localize(context.l10n),
+                      ),
                     ),
                 ];
               },

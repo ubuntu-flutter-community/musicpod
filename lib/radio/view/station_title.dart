@@ -7,10 +7,7 @@ import '../../l10n/l10n.dart';
 import '../radio_model.dart';
 
 class StationTitle extends StatefulWidget with WatchItStatefulWidgetMixin {
-  const StationTitle({
-    super.key,
-    required this.uuid,
-  });
+  const StationTitle({super.key, required this.uuid});
 
   final String uuid;
 

@@ -50,18 +50,14 @@ class _PodcastPageState extends State<PodcastPage> {
 
     if (widget.episodes.isEmpty) return;
 
-    Future.delayed(const Duration(milliseconds: 500)).then(
-      (_) {
-        final episodesWithDownloads = widget.episodes
-            .map((e) => e.copyWith(path: libraryModel.getDownload(e.url)))
-            .toList();
-        di<PodcastModel>().update(
-          oldPodcasts: {
-            widget.feedUrl: episodesWithDownloads,
-          },
-        );
-      },
-    );
+    Future.delayed(const Duration(milliseconds: 500)).then((_) {
+      final episodesWithDownloads = widget.episodes
+          .map((e) => e.copyWith(path: libraryModel.getDownload(e.url)))
+          .toList();
+      di<PodcastModel>().update(
+        oldPodcasts: {widget.feedUrl: episodesWithDownloads},
+      );
+    });
   }
 
   @override
@@ -76,8 +72,9 @@ class _PodcastPageState extends State<PodcastPage> {
         di<LibraryModel>().getPodcast(widget.feedUrl) ?? widget.episodes;
     watchPropertyValue((PlayerModel m) => m.lastPositions?.length);
     watchPropertyValue((LibraryModel m) => m.downloadsLength);
-    final showSearch =
-        watchPropertyValue((PodcastModel m) => m.getShowSearch(widget.feedUrl));
+    final showSearch = watchPropertyValue(
+      (PodcastModel m) => m.getShowSearch(widget.feedUrl),
+    );
     final searchQuery = watchPropertyValue(
       (PodcastModel m) => m.getSearchQuery(widget.feedUrl),
     );
@@ -86,10 +83,7 @@ class _PodcastPageState extends State<PodcastPage> {
     if (watchPropertyValue(
       (LibraryModel m) => m.showPodcastAscending(widget.feedUrl),
     )) {
-      sortListByAudioFilter(
-        audioFilter: AudioFilter.year,
-        audios: episodes,
-      );
+      sortListByAudioFilter(audioFilter: AudioFilter.year, audios: episodes);
     }
     final filter = watchPropertyValue((PodcastModel m) => m.filter);
     final episodesWithDownloads = episodes
@@ -99,11 +93,13 @@ class _PodcastPageState extends State<PodcastPage> {
           (e) => (searchQuery == null || searchQuery.trim().isEmpty)
               ? true
               : switch (filter) {
-                  PodcastEpisodeFilter.title =>
-                    e.title!.toLowerCase().contains(searchQuery.toLowerCase()),
-                  PodcastEpisodeFilter.description => e.description!
-                      .toLowerCase()
-                      .contains(searchQuery.toLowerCase())
+                  PodcastEpisodeFilter.title => e.title!.toLowerCase().contains(
+                    searchQuery.toLowerCase(),
+                  ),
+                  PodcastEpisodeFilter.description =>
+                    e.description!.toLowerCase().contains(
+                      searchQuery.toLowerCase(),
+                    ),
                 },
         )
         .toList();
@@ -154,9 +150,7 @@ class _PodcastPageState extends State<PodcastPage> {
                   ),
                 ),
                 if (showSearch)
-                  SliverPodcastPageSearchField(
-                    feedUrl: widget.feedUrl,
-                  ),
+                  SliverPodcastPageSearchField(feedUrl: widget.feedUrl),
                 SliverPadding(
                   padding: getAdaptiveHorizontalPadding(
                     constraints: constraints,

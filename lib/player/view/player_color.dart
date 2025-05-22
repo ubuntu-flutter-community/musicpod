@@ -25,14 +25,16 @@ class PlayerColor extends StatelessWidget with WatchItMixin {
     final theme = context.theme;
     final baseColor = watchPropertyValue(
       (PlayerModel m) => m.color?.withValues(
-        alpha: theme.isLight ||
+        alpha:
+            theme.isLight ||
                 theme.scaffoldBackgroundColor != kMobileScaffoldBackgroundColor
             ? 0.4
             : 1,
       ),
     );
 
-    final color = baseColor?.scale(lightness: theme.isLight ? -0.1 : 0.2) ??
+    final color =
+        baseColor?.scale(lightness: theme.isLight ? -0.1 : 0.2) ??
         theme.scaffoldBackgroundColor;
 
     return Opacity(
@@ -40,9 +42,7 @@ class PlayerColor extends StatelessWidget with WatchItMixin {
       child: Container(
         width: size.width,
         height: size.height,
-        decoration: BoxDecoration(
-          gradient: position.getGradient(color),
-        ),
+        decoration: BoxDecoration(gradient: position.getGradient(color)),
       ),
     );
   }

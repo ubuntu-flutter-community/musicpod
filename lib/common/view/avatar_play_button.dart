@@ -31,17 +31,19 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
     final pageIsQueue = watchPropertyValue(
       (PlayerModel m) => m.queueName != null && m.queueName == pageId,
     );
-    final iconData = isPlayerPlaying &&
+    final iconData =
+        isPlayerPlaying &&
             (pageIsQueue && playerModel.queue.length == audios.length)
         ? Iconz.pause
         : Iconz.playFilled;
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
     final bigAvatarButtonRadius = useYaruTheme
         ? 22
         : isMobile
-            ? 26
-            : 23;
+        ? 26
+        : 23;
 
     final label = context.l10n.playAll;
     return Padding(

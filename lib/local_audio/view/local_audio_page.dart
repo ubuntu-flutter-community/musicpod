@@ -52,8 +52,9 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
   Widget build(BuildContext context) {
     final audios = watchPropertyValue((LocalAudioModel m) => m.audios);
     final allArtists = watchPropertyValue((LocalAudioModel m) => m.allArtists);
-    final allAlbumIDs =
-        watchPropertyValue((LocalAudioModel m) => m.allAlbumIDs);
+    final allAlbumIDs = watchPropertyValue(
+      (LocalAudioModel m) => m.allAlbumIDs,
+    );
     final allGenres = watchPropertyValue((LocalAudioModel m) => m.allGenres);
     final playlists = watchPropertyValue((LibraryModel m) => m.playlistIDs);
     final index = watchPropertyValue((LocalAudioModel m) => m.localAudioindex);
@@ -88,16 +89,15 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
               SliverFilterAppBar(
                 padding: getAdaptiveHorizontalPadding(constraints: constraints)
                     .copyWith(
-                  bottom: filterPanelPadding.bottom,
-                  top: filterPanelPadding.top,
-                ),
+                      bottom: filterPanelPadding.bottom,
+                      top: filterPanelPadding.top,
+                    ),
                 title: const LocalAudioControlPanel(),
               ),
               SliverPadding(
-                padding: getAdaptiveHorizontalPadding(constraints: constraints)
-                    .copyWith(
-                  bottom: bottomPlayerPageGap,
-                ),
+                padding: getAdaptiveHorizontalPadding(
+                  constraints: constraints,
+                ).copyWith(bottom: bottomPlayerPageGap),
                 sliver: audios != null && audios.isEmpty
                     ? SliverNoSearchResultPage(
                         icon: const AnimatedEmoji(AnimatedEmojis.bird),
@@ -105,9 +105,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(context.l10n.noLocalTitlesFound),
-                            const SizedBox(
-                              height: kLargestSpace,
-                            ),
+                            const SizedBox(height: kLargestSpace),
                             const SettingsButton.important(scrollIndex: 2),
                           ],
                         ),

@@ -27,9 +27,7 @@ class PlayerRemoteSourceImage extends StatelessWidget with WatchItMixin {
     final theme = context.theme;
 
     return Container(
-      color: theme.cardColor.scale(
-        lightness: theme.isLight ? -0.15 : 0.3,
-      ),
+      color: theme.cardColor.scale(lightness: theme.isLight ? -0.15 : 0.3),
       height: height,
       width: width,
       child: SafeNetworkImage(

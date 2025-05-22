@@ -21,9 +21,9 @@ class SettingsService {
     required SharedPreferences sharedPreferences,
     required String forcedUpdateThreshold,
     required WindowManager? windowManager,
-  })  : _preferences = sharedPreferences,
-        _downloadsDefaultDir = downloadsDefaultDir,
-        _forcedUpdateThreshold = forcedUpdateThreshold {
+  }) : _preferences = sharedPreferences,
+       _downloadsDefaultDir = downloadsDefaultDir,
+       _forcedUpdateThreshold = forcedUpdateThreshold {
     if (windowManager != null) {
       final wm = windowManager;
       final ps = _preferences;
@@ -36,9 +36,9 @@ class SettingsService {
           onMaximize: (v) => ps.setBool(SPKeys.windowMaximized, v),
           onResize: (v) async {
             if (ps.getBool(SPKeys.saveWindowSize) ?? false) {
-              ps.setInt(SPKeys.windowHeight, v.height.toInt()).then(
-                    (_) => ps.setInt(SPKeys.windowWidth, v.width.toInt()),
-                  );
+              ps
+                  .setInt(SPKeys.windowHeight, v.height.toInt())
+                  .then((_) => ps.setInt(SPKeys.windowWidth, v.width.toInt()));
             }
           },
         ),
@@ -51,12 +51,7 @@ class SettingsService {
       } else {
         final height = ps.getInt(SPKeys.windowHeight) ?? 820;
         final width = ps.getInt(SPKeys.windowWidth) ?? 950;
-        wm.setSize(
-          Size(
-            width.toDouble(),
-            height.toDouble(),
-          ),
-        );
+        wm.setSize(Size(width.toDouble(), height.toDouble()));
       }
     }
   }
@@ -213,13 +208,13 @@ class SettingsService {
 
   CloseBtnAction get closeBtnActionIndex =>
       _preferences.getString(SPKeys.closeBtnAction) == null
-          ? CloseBtnAction.alwaysAsk
-          : CloseBtnAction.values.firstWhere(
-              (element) =>
-                  element.toString() ==
-                  _preferences.getString(SPKeys.closeBtnAction),
-              orElse: () => CloseBtnAction.alwaysAsk,
-            );
+      ? CloseBtnAction.alwaysAsk
+      : CloseBtnAction.values.firstWhere(
+          (element) =>
+              element.toString() ==
+              _preferences.getString(SPKeys.closeBtnAction),
+          orElse: () => CloseBtnAction.alwaysAsk,
+        );
   void setCloseBtnActionIndex(CloseBtnAction value) {
     _preferences
         .setString(SPKeys.closeBtnAction, value.toString())

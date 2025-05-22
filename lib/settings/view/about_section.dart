@@ -27,9 +27,7 @@ class AboutSection extends StatelessWidget with WatchItMixin {
     return YaruSection(
       headline: Text(text),
       margin: const EdgeInsets.all(kLargestSpace),
-      child: const Column(
-        children: [_AboutTile(), _LicenseTile()],
-      ),
+      child: const Column(children: [_AboutTile(), _LicenseTile()]),
     );
   }
 }
@@ -59,51 +57,48 @@ class _AboutTileState extends State<_AboutTile> {
   Widget build(BuildContext context) {
     final theme = context.theme;
     final appModel = di<AppModel>();
-    final updateAvailable =
-        watchPropertyValue((AppModel m) => m.updateAvailable);
+    final updateAvailable = watchPropertyValue(
+      (AppModel m) => m.updateAvailable,
+    );
     final onlineVersion = watchPropertyValue((AppModel m) => m.onlineVersion);
     final downloads = watchPropertyValue((AppModel m) => m.downloads);
     final currentVersion = watchPropertyValue((AppModel m) => m.version);
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
 
     return YaruTile(
       subtitle: Text(
         context.l10n.downloadsOfLatestRelease(downloads.toString()),
       ),
-      title: !di<ConnectivityModel>().isOnline == true ||
+      title:
+          !di<ConnectivityModel>().isOnline == true ||
               !appModel.allowManualUpdate
           ? Text(di<AppModel>().version)
           : updateAvailable == null
-              ? Center(
-                  child: SizedBox.square(
-                    dimension: useYaruTheme ? kYaruTitleBarItemHeight : 40,
-                    child: const Progress(
-                      padding: EdgeInsets.all(10),
-                    ),
-                  ),
-                )
-              : TapAbleText(
-                  text: updateAvailable == true
-                      ? '${context.l10n.updateAvailable}: $onlineVersion'
-                      : currentVersion,
-                  style: updateAvailable == true
-                      ? TextStyle(
-                          color: context.theme.colorScheme.success
-                              .scale(lightness: theme.isLight ? 0 : 0.3),
-                        )
-                      : null,
-                  onTap: () => launchUrl(
-                    Uri.parse(
-                      p.join(
-                        AppConfig.repoUrl,
-                        'releases',
-                        'tag',
-                        onlineVersion,
+          ? Center(
+              child: SizedBox.square(
+                dimension: useYaruTheme ? kYaruTitleBarItemHeight : 40,
+                child: const Progress(padding: EdgeInsets.all(10)),
+              ),
+            )
+          : TapAbleText(
+              text: updateAvailable == true
+                  ? '${context.l10n.updateAvailable}: $onlineVersion'
+                  : currentVersion,
+              style: updateAvailable == true
+                  ? TextStyle(
+                      color: context.theme.colorScheme.success.scale(
+                        lightness: theme.isLight ? 0 : 0.3,
                       ),
-                    ),
-                  ),
+                    )
+                  : null,
+              onTap: () => launchUrl(
+                Uri.parse(
+                  p.join(AppConfig.repoUrl, 'releases', 'tag', onlineVersion),
                 ),
+              ),
+            ),
       trailing: OutlinedButton(
         onPressed: () => showDialog(
           context: context,
@@ -121,9 +116,7 @@ class _LicenseTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return YaruTile(
-      title: TapAbleText(
-        text: '${context.l10n.license}: GPL3',
-      ),
+      title: TapAbleText(text: '${context.l10n.license}: GPL3'),
       trailing: OutlinedButton(
         onPressed: () => showDialog(
           context: context,

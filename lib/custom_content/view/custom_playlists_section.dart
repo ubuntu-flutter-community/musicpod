@@ -26,8 +26,9 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
     final routingManager = di<RoutingManager>();
 
     final customContentModel = di<CustomContentModel>();
-    final playlistName =
-        watchPropertyValue((CustomContentModel m) => m.playlistName);
+    final playlistName = watchPropertyValue(
+      (CustomContentModel m) => m.playlistName,
+    );
     watchPropertyValue((CustomContentModel m) => m.playlists.length);
     final playlists = di<CustomContentModel>().playlists;
     final onPressed = (playlistName?.isNotEmpty ?? false)
@@ -39,9 +40,8 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
             await libraryModel.addPlaylist(playlistName!, []);
             await Future.delayed(
               const Duration(milliseconds: 200),
-              () => routingManager.push(
-                pageId: customContentModel.playlistName!,
-              ),
+              () =>
+                  routingManager.push(pageId: customContentModel.playlistName!),
             );
 
             customContentModel.reset();
@@ -71,9 +71,7 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
                       ),
                     ),
                     onPressed: onPressed,
-                    child: Text(
-                      l10n.add,
-                    ),
+                    child: Text(l10n.add),
                   ),
                 ),
               ),
@@ -97,29 +95,22 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
           },
           child: Text(l10n.loadFromFileOptional),
         ),
-        ...playlists.map(
-          (e) {
-            if (e.audios.any((e) => e.isLocal)) {
-              return ListTile(
-                title: Text(e.id),
-                subtitle: Text(
-                  '${e.audios.length} ${l10n.titles}',
-                ),
-                trailing: IconButton(
-                  tooltip: l10n.deletePlaylist,
-                  icon: Icon(
-                    Iconz.remove,
-                    semanticLabel: l10n.deletePlaylist,
-                  ),
-                  onPressed: () =>
-                      di<CustomContentModel>().removePlaylist(name: e.id),
-                ),
-              );
-            } else {
-              return const SizedBox.shrink();
-            }
-          },
-        ),
+        ...playlists.map((e) {
+          if (e.audios.any((e) => e.isLocal)) {
+            return ListTile(
+              title: Text(e.id),
+              subtitle: Text('${e.audios.length} ${l10n.titles}'),
+              trailing: IconButton(
+                tooltip: l10n.deletePlaylist,
+                icon: Icon(Iconz.remove, semanticLabel: l10n.deletePlaylist),
+                onPressed: () =>
+                    di<CustomContentModel>().removePlaylist(name: e.id),
+              ),
+            );
+          } else {
+            return const SizedBox.shrink();
+          }
+        }),
         if (playlists.isNotEmpty &&
             playlists.any((e) => e.audios.none((e) => e.isLocal)))
           Padding(
@@ -139,9 +130,7 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
                 },
                 child: Text(l10n.search),
               ),
-              subtitle: Text(
-                l10n.onlyLocalAudioForPlaylists,
-              ),
+              subtitle: Text(l10n.onlyLocalAudioForPlaylists),
             ),
           ),
         Align(
@@ -151,7 +140,8 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
             runSpacing: 10,
             children: [
               ElevatedButton(
-                onPressed: playlists.isNotEmpty &&
+                onPressed:
+                    playlists.isNotEmpty &&
                         playlists.any((e) => e.audios.any((e) => e.isLocal))
                     ? () async {
                         if (shownInDialog && Navigator.of(context).canPop()) {
@@ -164,17 +154,13 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
                         );
                         await Future.delayed(
                           const Duration(milliseconds: 200),
-                          () => routingManager.push(
-                            pageId: playlists.first.id,
-                          ),
+                          () => routingManager.push(pageId: playlists.first.id),
                         );
 
                         customContentModel.reset();
                       }
                     : null,
-                child: Text(
-                  l10n.add,
-                ),
+                child: Text(l10n.add),
               ),
             ],
           ),

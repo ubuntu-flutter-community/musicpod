@@ -35,8 +35,9 @@ class HomePage extends StatelessWidget with WatchItMixin {
       left: kSmallestSpace,
     );
 
-    final country =
-        watchPropertyValue((SearchModel m) => m.country?.localize(l10n));
+    final country = watchPropertyValue(
+      (SearchModel m) => m.country?.localize(l10n),
+    );
 
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
 
@@ -108,22 +109,21 @@ class HomePage extends StatelessWidget with WatchItMixin {
                 ),
                 SliverPadding(
                   padding: padding,
-                  sliver:
-                      const SliverToBoxAdapter(child: SliverRadioCountryGrid()),
+                  sliver: const SliverToBoxAdapter(
+                    child: SliverRadioCountryGrid(),
+                  ),
                 ),
                 SliverPadding(
                   padding: padding,
                   sliver: SliverToBoxAdapter(
                     child: ListTile(
                       contentPadding: textPadding,
-                      title: Text(
-                        l10n.playlists,
-                        style: textStyle,
-                      ),
+                      title: Text(l10n.playlists, style: textStyle),
                       trailing: Icon(Iconz.goNext),
                       onTap: () {
-                        di<LocalAudioModel>()
-                            .setLocalAudioindex(LocalAudioView.playlists.index);
+                        di<LocalAudioModel>().setLocalAudioindex(
+                          LocalAudioView.playlists.index,
+                        );
                         di<RoutingManager>().push(pageId: PageIDs.localAudio);
                       },
                     ),
@@ -131,9 +131,7 @@ class HomePage extends StatelessWidget with WatchItMixin {
                 ),
               ],
               SliverPadding(
-                padding: padding.copyWith(
-                  bottom: bottomPlayerPageGap,
-                ),
+                padding: padding.copyWith(bottom: bottomPlayerPageGap),
                 sliver: PlaylistsView(playlists: playlists),
               ),
             ],

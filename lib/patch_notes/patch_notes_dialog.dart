@@ -42,9 +42,7 @@ class _PatchNotesDialogState extends State<PatchNotesDialog> {
                 },
                 data: snapshot.data!,
               )
-            : const Center(
-                child: Progress(),
-              ),
+            : const Center(child: Progress()),
       ),
       actionsPadding: const EdgeInsets.all(20),
       actions: [

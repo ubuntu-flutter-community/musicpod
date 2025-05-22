@@ -39,20 +39,14 @@ class AlbumsView extends StatelessWidget with WatchItMixin {
     final pinned = albumIDs?.where((e) => favoriteAlbumIDs.contains(e)) ?? [];
     final notPinned =
         albumIDs?.where((e) => !favoriteAlbumIDs.contains(e)) ?? [];
-    final sortedAlbums = [
-      ...pinned,
-      ...notPinned,
-    ];
+    final sortedAlbums = [...pinned, ...notPinned];
 
     return SliverGrid.builder(
       itemCount: sortedAlbums.length,
       gridDelegate: audioCardGridDelegate,
       itemBuilder: (context, index) {
         final albumID = sortedAlbums.elementAt(index);
-        return AlbumCard(
-          key: ValueKey(albumID),
-          id: albumID,
-        );
+        return AlbumCard(key: ValueKey(albumID), id: albumID);
       },
     );
   }

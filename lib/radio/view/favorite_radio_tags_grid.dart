@@ -22,8 +22,9 @@ class FavoriteRadioTagsGrid extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final favTagsLength =
-        watchPropertyValue((LibraryModel m) => m.favRadioTags.length);
+    final favTagsLength = watchPropertyValue(
+      (LibraryModel m) => m.favRadioTags.length,
+    );
     final favTags = watchPropertyValue((LibraryModel m) => m.favRadioTags);
 
     if (favTagsLength == 0) {
@@ -31,9 +32,7 @@ class FavoriteRadioTagsGrid extends StatelessWidget with WatchItMixin {
         message: Column(
           children: [
             Text(context.l10n.noStarredTags),
-            const SizedBox(
-              height: kLargestSpace,
-            ),
+            const SizedBox(height: kLargestSpace),
             const OpenRadioSearchButton(),
           ],
         ),

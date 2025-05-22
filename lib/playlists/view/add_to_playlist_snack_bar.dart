@@ -7,7 +7,7 @@ import '../../common/page_ids.dart';
 import '../../l10n/l10n.dart';
 
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason>
-    showAddedToPlaylistSnackBar({
+showAddedToPlaylistSnackBar({
   required BuildContext context,
   required String id,
 }) {

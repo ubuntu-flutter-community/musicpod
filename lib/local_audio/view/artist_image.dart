@@ -8,11 +8,7 @@ import '../local_audio_model.dart';
 import 'local_cover.dart';
 
 class ArtistImage extends StatefulWidget {
-  const ArtistImage({
-    super.key,
-    required this.artist,
-    this.dimension,
-  });
+  const ArtistImage({super.key, required this.artist, this.dimension});
 
   final String artist;
   final double? dimension;
@@ -77,20 +73,18 @@ class _ArtistImage extends StatelessWidget {
       images: artistAudios.isEmpty
           ? []
           : di<LocalAudioModel>()
-              .findUniqueAlbumAudios(artistAudios)
-              .where(
-                (e) => e.albumId != null && e.path != null,
-              )
-              .map(
-                (e) => LocalCover(
-                  albumId: e.albumId!,
-                  path: e.path!,
-                  fallback: ColoredBox(color: theme.cardColor),
-                  fit: BoxFit.cover,
-                  dimension: dimension,
-                ),
-              )
-              .toList(),
+                .findUniqueAlbumAudios(artistAudios)
+                .where((e) => e.albumId != null && e.path != null)
+                .map(
+                  (e) => LocalCover(
+                    albumId: e.albumId!,
+                    path: e.path!,
+                    fallback: ColoredBox(color: theme.cardColor),
+                    fit: BoxFit.cover,
+                    dimension: dimension,
+                  ),
+                )
+                .toList(),
       fallBackText: artist,
     );
   }

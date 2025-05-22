@@ -9,11 +9,7 @@ import '../page_ids.dart';
 import 'animated_like_icon.dart';
 
 class LikeIconButton extends StatelessWidget with WatchItMixin {
-  const LikeIconButton({
-    super.key,
-    required this.audio,
-    this.color,
-  });
+  const LikeIconButton({super.key, required this.audio, this.color});
 
   final Audio? audio;
 
@@ -48,10 +44,7 @@ class LikeIconButton extends StatelessWidget with WatchItMixin {
       tooltip: liked
           ? context.l10n.removeFromFavorites
           : context.l10n.addToFavorites,
-      icon: AnimatedHeart(
-        liked: liked,
-        color: color,
-      ),
+      icon: AnimatedHeart(liked: liked, color: color),
       onPressed: onLike,
       color: color,
     );

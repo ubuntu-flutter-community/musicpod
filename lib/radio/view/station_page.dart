@@ -31,10 +31,7 @@ import 'radio_page_star_button.dart';
 import 'radio_page_tag_bar.dart';
 
 class StationPage extends StatefulWidget with WatchItStatefulWidgetMixin {
-  const StationPage({
-    super.key,
-    required this.uuid,
-  });
+  const StationPage({super.key, required this.uuid});
 
   final String uuid;
 
@@ -61,8 +58,9 @@ class _StationPageState extends State<StationPage> {
     });
     if (!isOnline) return const OfflinePage();
 
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
     final radioHistoryListPadding = getRadioHistoryListPadding(useYaruTheme);
 
     return Scaffold(
@@ -98,9 +96,7 @@ class _StationPageState extends State<StationPage> {
           }
 
           if (!snapshot.hasData) {
-            return const Center(
-              child: Progress(),
-            );
+            return const Center(child: Progress());
           }
 
           final station = snapshot.data!;
@@ -124,9 +120,7 @@ class _StationPageState extends State<StationPage> {
                             '${context.l10n.station} · ${station.fileSize ?? ''} kbps',
                         description: SizedBox(
                           width: kAudioHeaderDescriptionWidth,
-                          child: RadioPageTagBar(
-                            station: station,
-                          ),
+                          child: RadioPageTagBar(station: station),
                         ),
                         image: SafeNetworkImage(
                           fallBackIcon: AudioFallBackIcon(
@@ -146,16 +140,12 @@ class _StationPageState extends State<StationPage> {
                     ),
                   ),
                   SliverAudioPageControlPanel(
-                    controlPanel: _StationPageControlPanel(
-                      station: station,
-                    ),
+                    controlPanel: _StationPageControlPanel(station: station),
                   ),
                   SliverPadding(
-                    padding:
-                        getAdaptiveHorizontalPadding(constraints: constraints)
-                            .copyWith(
-                      bottom: bottomPlayerPageGap,
-                    ),
+                    padding: getAdaptiveHorizontalPadding(
+                      constraints: constraints,
+                    ).copyWith(bottom: bottomPlayerPageGap),
                     sliver: SliverRadioHistoryList(
                       filter: station.title,
                       emptyMessage: const SizedBox.shrink(),
@@ -188,10 +178,7 @@ class _StationPageControlPanel extends StatelessWidget {
         children: [
           RadioPageStarButton(station: station),
           if (station.description != null)
-            AvatarPlayButton(
-              audios: [station],
-              pageId: station.description!,
-            ),
+            AvatarPlayButton(audios: [station], pageId: station.description!),
           RadioPageCopyHistoryButton(station: station),
         ],
       ),

@@ -29,8 +29,9 @@ class ResourceSection extends StatelessWidget with WatchItMixin {
             subtitle: Text(l10n.useMoreAnimationsDescription),
             trailing: CommonSwitch(
               onChanged: di<SettingsModel>().setUseMoreAnimations,
-              value:
-                  watchPropertyValue((SettingsModel m) => m.useMoreAnimations),
+              value: watchPropertyValue(
+                (SettingsModel m) => m.useMoreAnimations,
+              ),
             ),
           ),
           YaruTile(
@@ -46,8 +47,9 @@ class ResourceSection extends StatelessWidget with WatchItMixin {
             subtitle: Text(l10n.notifyMeAboutDataSafeModeDescription),
             trailing: CommonSwitch(
               onChanged: di<SettingsModel>().setNotifyDataSafeMode,
-              value:
-                  watchPropertyValue((SettingsModel m) => m.notifyDataSafeMode),
+              value: watchPropertyValue(
+                (SettingsModel m) => m.notifyDataSafeMode,
+              ),
             ),
           ),
           YaruTile(

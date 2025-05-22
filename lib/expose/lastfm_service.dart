@@ -9,7 +9,7 @@ import '../settings/settings_service.dart';
 
 class LastfmService {
   LastfmService({required SettingsService settingsService})
-      : _settingsService = settingsService {
+    : _settingsService = settingsService {
     init();
   }
 
@@ -76,9 +76,7 @@ class LastfmService {
     _settingsService.setLastFmSecret(apiSecret);
 
     final lastfmua = LastFMUnauthorized(apiKey, apiSecret);
-    launchUrl(
-      Uri.parse(await lastfmua.authorizeDesktop()),
-    );
+    launchUrl(Uri.parse(await lastfmua.authorizeDesktop()));
 
     const maxWaitDuration = Duration(minutes: 2); // Customize as needed
     final startTime = DateTime.now();

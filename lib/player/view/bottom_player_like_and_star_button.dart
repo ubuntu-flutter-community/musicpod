@@ -7,10 +7,7 @@ import '../../common/view/stared_station_icon_button.dart';
 import '../../extensions/build_context_x.dart';
 
 class BottomPlayerLikeAndStarButton extends StatelessWidget {
-  const BottomPlayerLikeAndStarButton({
-    super.key,
-    required this.audio,
-  });
+  const BottomPlayerLikeAndStarButton({super.key, required this.audio});
 
   final Audio? audio;
 
@@ -19,9 +16,9 @@ class BottomPlayerLikeAndStarButton extends StatelessWidget {
     final theme = context.theme;
     return switch (audio?.audioType) {
       AudioType.local => LikeIconButton(
-          audio: audio,
-          color: theme.colorScheme.onSurface,
-        ),
+        audio: audio,
+        color: theme.colorScheme.onSurface,
+      ),
       AudioType.radio => StaredStationIconButton(audio: audio),
       _ => const SizedBox.shrink(),
     };

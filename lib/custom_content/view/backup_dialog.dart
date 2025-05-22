@@ -24,15 +24,11 @@ class BackupDialog extends StatelessWidget with WatchItMixin {
     final confirmEnabled = watchPropertyValue(
       (AppModel m) => m.radioBackup && m.localAudioBackup && m.podcastBackup,
     );
-    final radioBackup = watchPropertyValue(
-      (AppModel m) => m.radioBackup,
-    );
+    final radioBackup = watchPropertyValue((AppModel m) => m.radioBackup);
     final localAudioBackup = watchPropertyValue(
       (AppModel m) => m.localAudioBackup,
     );
-    final podcastBackup = watchPropertyValue(
-      (AppModel m) => m.podcastBackup,
-    );
+    final podcastBackup = watchPropertyValue((AppModel m) => m.podcastBackup);
 
     return ConfirmationDialog(
       showCancel: false,
@@ -89,12 +85,15 @@ class BackupDialog extends StatelessWidget with WatchItMixin {
                               AudioType.radio => radioBackup,
                             },
                             onChanged: (v) => switch (e) {
-                              AudioType.podcast =>
-                                appModel.setPodcastBackup(v ?? false),
-                              AudioType.local =>
-                                appModel.setLocalAudioBackup(v ?? false),
-                              AudioType.radio =>
-                                appModel.setRadioBackup(v ?? false),
+                              AudioType.podcast => appModel.setPodcastBackup(
+                                v ?? false,
+                              ),
+                              AudioType.local => appModel.setLocalAudioBackup(
+                                v ?? false,
+                              ),
+                              AudioType.radio => appModel.setRadioBackup(
+                                v ?? false,
+                              ),
                             },
                           ),
                         ],
@@ -105,54 +104,49 @@ class BackupDialog extends StatelessWidget with WatchItMixin {
                     .map(
                       (e) => switch (e) {
                         AudioType.local => _Section(
-                            children: [
-                              YaruTile(
-                                title: ElevatedButton(
-                                  onPressed: () {
-                                    di<CustomContentModel>()
-                                        .exportPlaylistsAndPinnedAlbumsToM3Us()
-                                        .then(
-                                          (v) =>
-                                              appModel.setLocalAudioBackup(v),
-                                        );
-                                  },
-                                  child: Text(
-                                    l10n.exportPlaylistsAndAlbumsToM3UFiles,
-                                  ),
+                          children: [
+                            YaruTile(
+                              title: ElevatedButton(
+                                onPressed: () {
+                                  di<CustomContentModel>()
+                                      .exportPlaylistsAndPinnedAlbumsToM3Us()
+                                      .then(
+                                        (v) => appModel.setLocalAudioBackup(v),
+                                      );
+                                },
+                                child: Text(
+                                  l10n.exportPlaylistsAndAlbumsToM3UFiles,
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
+                        ),
                         AudioType.podcast => _Section(
-                            children: [
-                              YaruTile(
-                                title: ElevatedButton(
-                                  child: Text(l10n.exportPodcastsToOpmlFile),
-                                  onPressed: () => di<CustomContentModel>()
-                                      .exportPodcastsToOpmlFile()
-                                      .then(
-                                        (v) => appModel.setPodcastBackup(v),
-                                      ),
-                                ),
+                          children: [
+                            YaruTile(
+                              title: ElevatedButton(
+                                child: Text(l10n.exportPodcastsToOpmlFile),
+                                onPressed: () => di<CustomContentModel>()
+                                    .exportPodcastsToOpmlFile()
+                                    .then((v) => appModel.setPodcastBackup(v)),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
+                        ),
                         AudioType.radio => _Section(
-                            children: [
-                              YaruTile(
-                                title: ElevatedButton(
-                                  onPressed: () => di<CustomContentModel>()
-                                      .exportStarredStationsToOpmlFile()
-                                      .then(
-                                        (v) => appModel.setRadioBackup(v),
-                                      ),
-                                  child: Text(
-                                    l10n.exportStarredStationsToOpmlFile,
-                                  ),
+                          children: [
+                            YaruTile(
+                              title: ElevatedButton(
+                                onPressed: () => di<CustomContentModel>()
+                                    .exportStarredStationsToOpmlFile()
+                                    .then((v) => appModel.setRadioBackup(v)),
+                                child: Text(
+                                  l10n.exportStarredStationsToOpmlFile,
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
+                        ),
                       },
                     )
                     .toList(),
@@ -166,9 +160,7 @@ class BackupDialog extends StatelessWidget with WatchItMixin {
 }
 
 class _Section extends StatelessWidget {
-  const _Section({
-    required this.children,
-  });
+  const _Section({required this.children});
 
   final List<Widget> children;
 

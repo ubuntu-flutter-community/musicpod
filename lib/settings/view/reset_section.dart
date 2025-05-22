@@ -43,9 +43,7 @@ class ResetSection extends StatelessWidget {
                   return const BackupDialog(breakingChange: false);
                 },
               ),
-              child: Text(
-                l10n.export,
-              ),
+              child: Text(l10n.export),
             ),
           ),
           YaruTile(
@@ -62,9 +60,7 @@ class ResetSection extends StatelessWidget {
               ),
               child: Text(
                 l10n.reset,
-                style: TextStyle(
-                  color: theme.colorScheme.onError,
-                ),
+                style: TextStyle(color: theme.colorScheme.onError),
               ),
             ),
           ),
@@ -75,9 +71,7 @@ class ResetSection extends StatelessWidget {
 }
 
 class WipeConfirmDialog extends StatelessWidget {
-  const WipeConfirmDialog({
-    super.key,
-  });
+  const WipeConfirmDialog({super.key});
 
   @override
   Widget build(BuildContext context) {

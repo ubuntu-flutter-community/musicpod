@@ -57,13 +57,15 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
     final label = '$date, ${context.l10n.duration}: $duration';
 
     final playerModel = di<PlayerModel>();
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
-    final radius = (useYaruTheme
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
+    final radius =
+        (useYaruTheme
             ? kYaruTitleBarItemHeight
             : isMobile
-                ? 42
-                : 38) /
+            ? 42
+            : 38) /
         2;
 
     return YaruExpandable(
@@ -103,16 +105,10 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
         child: Padding(
           padding: isMobile
               ? const EdgeInsets.symmetric(horizontal: 10)
-              : EdgeInsets.only(
-                  left: (radius * 2) + 30,
-                  right: 60,
-                ),
+              : EdgeInsets.only(left: (radius * 2) + 30, right: 60),
           child: Column(
             children: [
-              _Description(
-                description: audio.description,
-                title: audio.title,
-              ),
+              _Description(description: audio.description, title: audio.title),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
@@ -120,14 +116,8 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
                   child: Row(
                     children: space(
                       children: [
-                        DownloadButton(
-                          audio: audio,
-                          addPodcast: addPodcast,
-                        ),
-                        ShareButton(
-                          active: true,
-                          audio: audio,
-                        ),
+                        DownloadButton(audio: audio, addPodcast: addPodcast),
+                        ShareButton(active: true, audio: audio),
                         IconButton(
                           tooltip: context.l10n.insertIntoQueue,
                           onPressed: () {
@@ -136,8 +126,9 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
                             playerModel.insertIntoQueue([audio]);
                             showSnackBar(
                               context: context,
-                              content:
-                                  Text(context.l10n.insertedIntoQueue(text)),
+                              content: Text(
+                                context.l10n.insertedIntoQueue(text),
+                              ),
                             );
                           },
                           icon: Icon(Iconz.insertIntoQueue),
@@ -147,9 +138,9 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
                           onPressed: audio.url == null
                               ? null
                               : () => playerModel
-                                ..removeLastPosition(audio.url!)
-                                ..setPosition(Duration.zero)
-                                ..seek(),
+                                  ..removeLastPosition(audio.url!)
+                                  ..setPosition(Duration.zero)
+                                  ..seek(),
                           icon: Icon(Iconz.replay),
                         ),
                       ],
@@ -201,12 +192,7 @@ class _Center extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Flexible(
-                child: Text(
-                  label,
-                  style: theme.textTheme.labelMedium,
-                ),
-              ),
+              Flexible(child: Text(label, style: theme.textTheme.labelMedium)),
             ],
           ),
         ),
@@ -216,18 +202,16 @@ class _Center extends StatelessWidget {
 }
 
 class _Description extends StatelessWidget with WatchItMixin {
-  const _Description({
-    required this.description,
-    required this.title,
-  });
+  const _Description({required this.description, required this.title});
 
   final String? description;
   final String? title;
 
   @override
   Widget build(BuildContext context) {
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
     final theme = context.theme;
     return InkWell(
       borderRadius: BorderRadius.circular(8),

@@ -12,23 +12,14 @@ import 'icons.dart';
 import 'ui_constants.dart';
 
 class LocalMetadataTile extends StatefulWidget with WatchItStatefulWidgetMixin {
-  const LocalMetadataTile.title({
-    super.key,
-    required this.audio,
-    this.pageId,
-  }) : type = LocalMetadataTileType.title;
+  const LocalMetadataTile.title({super.key, required this.audio, this.pageId})
+    : type = LocalMetadataTileType.title;
 
-  const LocalMetadataTile.album({
-    super.key,
-    required this.audio,
-    this.pageId,
-  }) : type = LocalMetadataTileType.album;
+  const LocalMetadataTile.album({super.key, required this.audio, this.pageId})
+    : type = LocalMetadataTileType.album;
 
-  const LocalMetadataTile.artist({
-    super.key,
-    required this.audio,
-    this.pageId,
-  }) : type = LocalMetadataTileType.artist;
+  const LocalMetadataTile.artist({super.key, required this.audio, this.pageId})
+    : type = LocalMetadataTileType.artist;
 
   const LocalMetadataTile.trackNumber({
     super.key,
@@ -48,11 +39,8 @@ class LocalMetadataTile extends StatefulWidget with WatchItStatefulWidgetMixin {
     this.pageId,
   }) : type = LocalMetadataTileType.totalDisks;
 
-  const LocalMetadataTile.genre({
-    super.key,
-    required this.audio,
-    this.pageId,
-  }) : type = LocalMetadataTileType.genre;
+  const LocalMetadataTile.genre({super.key, required this.audio, this.pageId})
+    : type = LocalMetadataTileType.genre;
 
   final LocalMetadataTileType type;
   final Audio audio;
@@ -74,15 +62,18 @@ class _LocalMetadataTileState extends State<LocalMetadataTile> {
         LocalMetadataTileType.title => widget.audio.title ?? '',
         LocalMetadataTileType.album => widget.audio.album ?? '',
         LocalMetadataTileType.artist => widget.audio.artist ?? '',
-        LocalMetadataTileType.trackNumber => widget.audio.trackNumber == null
-            ? ''
-            : widget.audio.trackNumber.toString(),
-        LocalMetadataTileType.diskNumber => widget.audio.discNumber == null
-            ? ''
-            : widget.audio.discNumber.toString(),
-        LocalMetadataTileType.totalDisks => widget.audio.discTotal == null
-            ? ''
-            : widget.audio.discTotal.toString(),
+        LocalMetadataTileType.trackNumber =>
+          widget.audio.trackNumber == null
+              ? ''
+              : widget.audio.trackNumber.toString(),
+        LocalMetadataTileType.diskNumber =>
+          widget.audio.discNumber == null
+              ? ''
+              : widget.audio.discNumber.toString(),
+        LocalMetadataTileType.totalDisks =>
+          widget.audio.discTotal == null
+              ? ''
+              : widget.audio.discTotal.toString(),
         LocalMetadataTileType.genre => widget.audio.genre.toString(),
       },
     );
@@ -98,9 +89,7 @@ class _LocalMetadataTileState extends State<LocalMetadataTile> {
   Widget build(BuildContext context) {
     watchPropertyValue((LocalAudioModel m) => m.audios.hashCode);
     return ListTile(
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: kLargestSpace,
-      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: kLargestSpace),
       subtitle: TextField(
         controller: _controller,
         onSubmitted: onSubmitted,
@@ -113,7 +102,8 @@ class _LocalMetadataTileState extends State<LocalMetadataTile> {
           suffixIcon: ListenableBuilder(
             listenable: _controller,
             builder: (context, child) {
-              final wasChanged = _controller.text.isNotEmpty &&
+              final wasChanged =
+                  _controller.text.isNotEmpty &&
                   _controller.text !=
                       switch (widget.type) {
                         LocalMetadataTileType.title => widget.audio.title,
@@ -137,10 +127,7 @@ class _LocalMetadataTileState extends State<LocalMetadataTile> {
                   ),
                 ),
                 icon: wasChangedLocally
-                    ? Icon(
-                        Iconz.download,
-                        color: context.colorScheme.primary,
-                      )
+                    ? Icon(Iconz.download, color: context.colorScheme.primary)
                     : YaruAnimatedVectorIcon(
                         key: ValueKey(wasChangedLocally),
                         YaruAnimatedIcons.ok_filled,
@@ -171,40 +158,40 @@ class _LocalMetadataTileState extends State<LocalMetadataTile> {
 
     return switch (widget.type) {
       LocalMetadataTileType.title => model.changeMetadata(
-          widget.audio,
-          title: text,
-          onChange: onChange,
-        ),
+        widget.audio,
+        title: text,
+        onChange: onChange,
+      ),
       LocalMetadataTileType.album => model.changeMetadata(
-          widget.audio,
-          album: text,
-          onChange: onChange,
-        ),
+        widget.audio,
+        album: text,
+        onChange: onChange,
+      ),
       LocalMetadataTileType.artist => model.changeMetadata(
-          widget.audio,
-          artist: text,
-          onChange: onChange,
-        ),
+        widget.audio,
+        artist: text,
+        onChange: onChange,
+      ),
       LocalMetadataTileType.trackNumber => model.changeMetadata(
-          widget.audio,
-          trackNumber: text,
-          onChange: onChange,
-        ),
+        widget.audio,
+        trackNumber: text,
+        onChange: onChange,
+      ),
       LocalMetadataTileType.diskNumber => model.changeMetadata(
-          widget.audio,
-          discNumber: text,
-          onChange: onChange,
-        ),
+        widget.audio,
+        discNumber: text,
+        onChange: onChange,
+      ),
       LocalMetadataTileType.totalDisks => model.changeMetadata(
-          widget.audio,
-          discTotal: text,
-          onChange: onChange,
-        ),
+        widget.audio,
+        discTotal: text,
+        onChange: onChange,
+      ),
       LocalMetadataTileType.genre => model.changeMetadata(
-          widget.audio,
-          genre: text,
-          onChange: onChange,
-        ),
+        widget.audio,
+        genre: text,
+        onChange: onChange,
+      ),
     };
   }
 }
@@ -219,12 +206,12 @@ enum LocalMetadataTileType {
   genre;
 
   String localize(AppLocalizations l10n) => switch (this) {
-        title => l10n.title,
-        album => l10n.album,
-        artist => l10n.artist,
-        trackNumber => l10n.trackNumber,
-        diskNumber => l10n.diskNumber,
-        totalDisks => l10n.totalDisks,
-        genre => l10n.genre,
-      };
+    title => l10n.title,
+    album => l10n.album,
+    artist => l10n.artist,
+    trackNumber => l10n.trackNumber,
+    diskNumber => l10n.diskNumber,
+    totalDisks => l10n.totalDisks,
+    genre => l10n.genre,
+  };
 }

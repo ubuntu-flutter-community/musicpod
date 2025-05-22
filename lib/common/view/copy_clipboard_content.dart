@@ -32,8 +32,9 @@ class _CopyClipboardContentState extends State<CopyClipboardContent> {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final textColor =
-        theme.snackBarTheme.contentTextStyle?.color?.withValues(alpha: 0.8);
+    final textColor = theme.snackBarTheme.contentTextStyle?.color?.withValues(
+      alpha: 0.8,
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Row(
@@ -46,9 +47,7 @@ class _CopyClipboardContentState extends State<CopyClipboardContent> {
               children: [
                 Text(
                   context.l10n.copiedToClipBoard,
-                  style: TextStyle(
-                    color: textColor,
-                  ),
+                  style: TextStyle(color: textColor),
                 ),
                 Text(
                   widget.text,

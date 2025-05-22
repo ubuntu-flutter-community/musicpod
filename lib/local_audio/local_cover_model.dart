@@ -4,11 +4,11 @@ import 'dart:typed_data';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 class LocalCoverModel extends SafeChangeNotifier {
-  LocalCoverModel({
-    required LocalCoverService localCoverService,
-  }) : _localCoverService = localCoverService {
-    _propertiesChangedSub ??=
-        _localCoverService.propertiesChanged.listen((_) => notifyListeners());
+  LocalCoverModel({required LocalCoverService localCoverService})
+    : _localCoverService = localCoverService {
+    _propertiesChangedSub ??= _localCoverService.propertiesChanged.listen(
+      (_) => notifyListeners(),
+    );
   }
 
   final LocalCoverService _localCoverService;
@@ -21,12 +21,11 @@ class LocalCoverModel extends SafeChangeNotifier {
     required String albumId,
     required String path,
     required Function() onError,
-  }) async =>
-      _localCoverService.getCover(
-        albumId: albumId,
-        path: path,
-        onError: onError,
-      );
+  }) async => _localCoverService.getCover(
+    albumId: albumId,
+    path: path,
+    onError: onError,
+  );
 
   @override
   Future<void> dispose() async {

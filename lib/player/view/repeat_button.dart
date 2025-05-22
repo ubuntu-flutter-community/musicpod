@@ -6,11 +6,7 @@ import '../../l10n/l10n.dart';
 import '../player_model.dart';
 
 class RepeatButton extends StatelessWidget with WatchItMixin {
-  const RepeatButton({
-    super.key,
-    required this.active,
-    this.iconColor,
-  });
+  const RepeatButton({super.key, required this.active, this.iconColor});
 
   final bool active;
   final Color? iconColor;

@@ -24,10 +24,12 @@ class PodcastSubButton extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final libraryModel = di<LibraryModel>();
 
-    final subscribed =
-        watchPropertyValue((LibraryModel m) => m.isPodcastSubscribed(pageId));
-    final checkingForUpdates =
-        watchPropertyValue((PodcastModel m) => m.checkingForUpdates);
+    final subscribed = watchPropertyValue(
+      (LibraryModel m) => m.isPodcastSubscribed(pageId),
+    );
+    final checkingForUpdates = watchPropertyValue(
+      (PodcastModel m) => m.checkingForUpdates,
+    );
 
     final disabled = checkingForUpdates || pageId.isEmpty;
     return IconButton(
@@ -38,14 +40,13 @@ class PodcastSubButton extends StatelessWidget with WatchItMixin {
       icon: checkingForUpdates
           ? SizedBox.square(
               dimension: context.theme.iconTheme.size ?? 24.0,
-              child: const Progress(
-                strokeWidth: 2,
-              ),
+              child: const Progress(strokeWidth: 2),
             )
           : Icon(
               subscribed ? Iconz.removeFromLibrary : Iconz.addToLibrary,
-              color:
-                  subscribed || disabled ? null : context.colorScheme.primary,
+              color: subscribed || disabled
+                  ? null
+                  : context.colorScheme.primary,
             ),
       onPressed: disabled
           ? null

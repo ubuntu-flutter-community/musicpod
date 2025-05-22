@@ -11,11 +11,7 @@ import '../../../library/library_model.dart';
 import '../../player_model.dart';
 
 class QueueBody extends StatefulWidget with WatchItStatefulWidgetMixin {
-  const QueueBody({
-    super.key,
-    this.selectedColor,
-    this.shownInDialog = false,
-  });
+  const QueueBody({super.key, this.selectedColor, this.shownInDialog = false});
 
   final Color? selectedColor;
   final bool shownInDialog;
@@ -77,10 +73,7 @@ class _QueueBodyState extends State<QueueBody> {
           Expanded(
             child: ReorderableListView.builder(
               scrollController: _controller,
-              padding: const EdgeInsets.only(
-                left: 25,
-                right: 25,
-              ),
+              padding: const EdgeInsets.only(left: 25, right: 25),
               buildDefaultDragHandles: false,
               proxyDecorator: (child, index, animation) => Material(
                 color: colorScheme.onSurface.withValues(alpha: 0.1),
@@ -135,12 +128,10 @@ class _QueueBodyState extends State<QueueBody> {
                 ),
               ),
               IconButton(
-                icon: Icon(
-                  Iconz.clearAll,
-                  semanticLabel: l10n.clearQueue,
-                ),
+                icon: Icon(Iconz.clearAll, semanticLabel: l10n.clearQueue),
                 tooltip: l10n.clearQueue,
-                onPressed: queue.isEmpty ||
+                onPressed:
+                    queue.isEmpty ||
                         di<PlayerModel>().queueName == null ||
                         di<PlayerModel>().audio == null
                     ? null
@@ -148,9 +139,7 @@ class _QueueBodyState extends State<QueueBody> {
               ),
             ],
           ),
-          const SizedBox(
-            height: kLargestSpace,
-          ),
+          const SizedBox(height: kLargestSpace),
         ],
       ),
     );
@@ -197,17 +186,18 @@ class _QueueTileState extends State<_QueueTile> {
           onEnter: (e) => setState(() => _hovered = true),
           onExit: (e) => setState(() => _hovered = false),
           child: ListTile(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(6),
+            ),
             onTap: widget.queueName == null
                 ? null
                 : () => di<PlayerModel>()
-                  ..setShuffle(false)
-                  ..startPlaylist(
-                    listName: widget.queueName!,
-                    audios: widget.queue,
-                    index: widget.queue.indexOf(widget.audio),
-                  ),
+                    ..setShuffle(false)
+                    ..startPlaylist(
+                      listName: widget.queueName!,
+                      audios: widget.queue,
+                      index: widget.queue.indexOf(widget.audio),
+                    ),
             hoverColor: context.colorScheme.onSurface.withValues(alpha: 0.3),
             leading: Visibility(
               visible: widget.selected,
@@ -230,10 +220,7 @@ class _QueueTileState extends State<_QueueTile> {
                     ),
                   )
                 else
-                  Visibility(
-                    visible: widget.selected,
-                    child: const Text('<'),
-                  ),
+                  Visibility(visible: widget.selected, child: const Text('<')),
               ],
             ),
           ),

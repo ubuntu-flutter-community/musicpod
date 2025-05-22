@@ -33,9 +33,7 @@ class MasterDetailPage extends StatelessWidget {
               onPressed: isMacOS
                   ? masterScaffoldKey.currentState?.closeEndDrawer
                   : masterScaffoldKey.currentState?.closeDrawer,
-              icon: Icon(
-                Iconz.close,
-              ),
+              icon: Icon(Iconz.close),
             ),
           ),
         ],
@@ -59,11 +57,12 @@ class MasterDetailPage extends StatelessWidget {
               observers: [routingManager],
               onGenerateRoute: (settings) {
                 final masterItems = getAllMasterItems(di<LibraryModel>());
-                final page = (masterItems.firstWhereOrNull(
-                          (e) => e.pageId == settings.name,
-                        ) ??
-                        masterItems.elementAt(0))
-                    .pageBuilder(context);
+                final page =
+                    (masterItems.firstWhereOrNull(
+                              (e) => e.pageId == settings.name,
+                            ) ??
+                            masterItems.elementAt(0))
+                        .pageBuilder(context);
 
                 return PageRouteBuilder(
                   settings: settings,

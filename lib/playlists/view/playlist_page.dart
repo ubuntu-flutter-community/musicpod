@@ -39,12 +39,8 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     // This is needed to be notified about both size changes and also reordering
-    watchPropertyValue(
-      (LibraryModel m) => m.getPlaylistById(pageId)?.length,
-    );
-    watchPropertyValue(
-      (LibraryModel m) => m.getPlaylistById(pageId)?.hashCode,
-    );
+    watchPropertyValue((LibraryModel m) => m.getPlaylistById(pageId)?.length);
+    watchPropertyValue((LibraryModel m) => m.getPlaylistById(pageId)?.hashCode);
 
     final playlist = di<LibraryModel>().getPlaylistById(pageId) ?? [];
 
@@ -52,47 +48,41 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
       formats: Formats.standardFormats,
       hitTestBehavior: HitTestBehavior.opaque,
       onDropEnded: (e) async {
-        Future.delayed(
-          const Duration(milliseconds: 300),
-        ).then(
+        Future.delayed(const Duration(milliseconds: 300)).then(
           (_) =>
               di<LibraryModel>().updatePlaylist(id: pageId, audios: playlist),
         );
       },
       onPerformDrop: (e) async {
         for (var item in e.session.items.take(100)) {
-          item.dataReader?.getValue(
-            Formats.fileUri,
-            (value) async {
-              if (value == null) return;
-              try {
-                final file = File.fromUri(value);
-                playlist.add(
-                  Audio.local(
-                    file,
-                    getImage: true,
-                    onError: (path) => showFailedImportsSnackBar(
-                      failedImports: [path],
-                      context: context,
-                      failedToImport: true,
-                    ),
-                    onParseError: (path) => showFailedImportsSnackBar(
-                      failedImports: [path],
-                      context: context,
-                    ),
+          item.dataReader?.getValue(Formats.fileUri, (value) async {
+            if (value == null) return;
+            try {
+              final file = File.fromUri(value);
+              playlist.add(
+                Audio.local(
+                  file,
+                  getImage: true,
+                  onError: (path) => showFailedImportsSnackBar(
+                    failedImports: [path],
+                    context: context,
+                    failedToImport: true,
                   ),
-                );
-              } on Exception catch (e) {
-                printMessageInDebugMode(e);
-                showFailedImportsSnackBar(
-                  failedImports: [value.toString()],
-                  context: context,
-                  failedToImport: true,
-                );
-              }
-            },
-            onError: (_) {},
-          );
+                  onParseError: (path) => showFailedImportsSnackBar(
+                    failedImports: [path],
+                    context: context,
+                  ),
+                ),
+              );
+            } on Exception catch (e) {
+              printMessageInDebugMode(e);
+              showFailedImportsSnackBar(
+                failedImports: [value.toString()],
+                context: context,
+                failedToImport: true,
+              );
+            }
+          }, onError: (_) {});
         }
       },
       onDropOver: (event) {
@@ -126,10 +116,7 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
             builder: (_) => ArtistPage(pageId: text),
             pageId: text,
           ),
-          image: PlaylistHeaderImage(
-            playlist: playlist,
-            pageId: pageId,
-          ),
+          image: PlaylistHeaderImage(playlist: playlist, pageId: pageId),
           audios: playlist,
           pageId: pageId,
         ),
@@ -155,8 +142,9 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final allowReorder =
-        watchPropertyValue((LocalAudioModel m) => m.allowReorder);
+    final allowReorder = watchPropertyValue(
+      (LocalAudioModel m) => m.allowReorder,
+    );
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
     final libraryModel = di<LibraryModel>();
     final playerModel = di<PlayerModel>();
@@ -178,25 +166,21 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
         return CustomScrollView(
           slivers: [
             SliverPadding(
-              padding: getAdaptiveHorizontalPadding(
-                constraints: constraints,
-              ),
-              sliver: SliverToBoxAdapter(
-                child: audioPageHeader,
-              ),
+              padding: getAdaptiveHorizontalPadding(constraints: constraints),
+              sliver: SliverToBoxAdapter(child: audioPageHeader),
             ),
             SliverAudioPageControlPanel(
-              controlPanel:
-                  PlaylistControlPanel(pageId: pageId, audios: audios),
+              controlPanel: PlaylistControlPanel(
+                pageId: pageId,
+                audios: audios,
+              ),
             ),
             if (allowReorder)
               SliverPadding(
                 padding: getAdaptiveHorizontalPadding(
                   constraints: constraints,
                   min: 40,
-                ).copyWith(
-                  bottom: bottomPlayerPageGap,
-                ),
+                ).copyWith(bottom: bottomPlayerPageGap),
                 sliver: SliverReorderableList(
                   itemCount: audios.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -244,9 +228,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
               SliverPadding(
                 padding: getAdaptiveHorizontalPadding(
                   constraints: constraints,
-                ).copyWith(
-                  bottom: bottomPlayerPageGap,
-                ),
+                ).copyWith(bottom: bottomPlayerPageGap),
                 sliver: SliverAudioTileList(
                   audios: audios,
                   pageId: pageId,

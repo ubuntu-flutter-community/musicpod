@@ -6,11 +6,7 @@ import '../../l10n/l10n.dart';
 import '../player_model.dart';
 
 class ShuffleButton extends StatelessWidget with WatchItMixin {
-  const ShuffleButton({
-    super.key,
-    required this.active,
-    this.iconColor,
-  });
+  const ShuffleButton({super.key, required this.active, this.iconColor});
 
   final bool active;
   final Color? iconColor;
@@ -23,9 +19,7 @@ class ShuffleButton extends StatelessWidget with WatchItMixin {
       isSelected: shuffle,
       tooltip: context.l10n.shuffle,
       color: iconColor,
-      icon: Icon(
-        Iconz.shuffle,
-      ),
+      icon: Icon(Iconz.shuffle),
       onPressed: !active ? null : () => di<PlayerModel>().setShuffle(!shuffle),
     );
   }
