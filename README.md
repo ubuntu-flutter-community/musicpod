@@ -84,7 +84,7 @@ If you want to contribute code, please create an issue first.
 - for Linux desktop builds: `sudo apt install libmpv-dev mpv`
 - [install rust](https://www.rust-lang.org/tools/install) (for some dependencies)
 - [install flutter](https://docs.flutter.dev/get-started/install)
-  - though I honestly suggest to replace the normal installation flutter with [FVM](https://fvm.app/) (this does not replace the native dependencies ofc!)
+  - I suggest to install the flutter *sdk* with [FVM](https://fvm.app/) (this does not replace the native dependencies ofc!)
 - required for android builds: [install android-studio](https://developer.android.com/studio)
 - required for macos builds: [install xcode](https://developer.apple.com/xcode/)
 - as a good IDE for all builds: [install vcode](https://code.visualstudio.com/)
