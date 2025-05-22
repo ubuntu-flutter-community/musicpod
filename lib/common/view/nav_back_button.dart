@@ -16,8 +16,9 @@ class NavBackButton extends StatelessWidget with WatchItMixin {
       di<RoutingManager>().pop();
     }
 
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
 
     if (useYaruTheme) {
       return YaruBackButton(
@@ -26,10 +27,6 @@ class NavBackButton extends StatelessWidget with WatchItMixin {
         icon: Icon(Iconz.goBack),
       );
     }
-    return Center(
-      child: BackButton(
-        onPressed: onTap,
-      ),
-    );
+    return Center(child: BackButton(onPressed: onTap));
   }
 }

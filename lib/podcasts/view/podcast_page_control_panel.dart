@@ -33,14 +33,8 @@ class PodcastPageControlPanel extends StatelessWidget {
         children: [
           if (width > 700) PodcastReplayButton(feedUrl: feedUrl),
           PodcastMarkDoneButton(feedUrl: feedUrl),
-          PodcastSubButton(
-            audios: audios,
-            pageId: feedUrl,
-          ),
-          AvatarPlayButton(
-            audios: audios,
-            pageId: feedUrl,
-          ),
+          PodcastSubButton(audios: audios, pageId: feedUrl),
+          AvatarPlayButton(audios: audios, pageId: feedUrl),
           PodcastPageSearchButton(feedUrl: feedUrl),
           PodcastReorderButton(feedUrl: feedUrl),
           if (width > 700)
@@ -51,9 +45,7 @@ class PodcastPageControlPanel extends StatelessWidget {
               selected: false,
               searchTerm: title,
               title: Text(title),
-              subTitle: Text(
-                audios.firstOrNull?.artist ?? '',
-              ),
+              subTitle: Text(audios.firstOrNull?.artist ?? ''),
             ),
         ],
       ),

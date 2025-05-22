@@ -7,8 +7,9 @@ import 'ui_constants.dart';
 
 ThemeData? yaruDarkWithTweaks(ThemeData? darkTheme) {
   return darkTheme?.copyWith(
-    textTheme:
-        isLinux ? null : createTextTheme(darkTheme.colorScheme.onSurface),
+    textTheme: isLinux
+        ? null
+        : createTextTheme(darkTheme.colorScheme.onSurface),
     actionIconTheme: ActionIconThemeData(
       backButtonIconBuilder: (context) => Icon(Iconz.goBack),
     ),
@@ -21,9 +22,7 @@ ThemeData? yaruDarkWithTweaks(ThemeData? darkTheme) {
       space: 1.0,
       thickness: 0.0,
     ),
-    cardColor: darkTheme.cardColor.scale(
-      lightness: -0.2,
-    ),
+    cardColor: darkTheme.cardColor.scale(lightness: -0.2),
     iconButtonTheme: iconButtonTheme(darkTheme),
   );
 }
@@ -34,9 +33,7 @@ ThemeData? yaruLightWithTweaks(ThemeData? theme) {
     actionIconTheme: ActionIconThemeData(
       backButtonIconBuilder: (context) => Icon(Iconz.goBack),
     ),
-    cardColor: theme.dividerColor.scale(
-      lightness: -0.01,
-    ),
+    cardColor: theme.dividerColor.scale(lightness: -0.01),
     iconButtonTheme: iconButtonTheme(theme),
   );
 }
@@ -116,23 +113,21 @@ Color? audioFilterBackgroundColor({
   required ThemeData theme,
   required bool selected,
   required bool useYaruTheme,
-}) =>
-    selected
-        ? useYaruTheme
-            ? theme.colorScheme.onSurface.withValues(alpha: 0.15)
-            : (theme.chipTheme.selectedColor ?? theme.colorScheme.primary)
-        : null;
+}) => selected
+    ? useYaruTheme
+          ? theme.colorScheme.onSurface.withValues(alpha: 0.15)
+          : (theme.chipTheme.selectedColor ?? theme.colorScheme.primary)
+    : null;
 
 Color? audioFilterForegroundColor({
   required ThemeData theme,
   required bool selected,
   required bool useYaruTheme,
-}) =>
-    selected
-        ? theme.colorScheme.isDark
-            ? Colors.white
-            : Colors.black
-        : theme.colorScheme.onSurface.scale(alpha: useYaruTheme ? 1 : -0.3);
+}) => selected
+    ? theme.colorScheme.isDark
+          ? Colors.white
+          : Colors.black
+    : theme.colorScheme.onSurface.scale(alpha: useYaruTheme ? 1 : -0.3);
 
 InputDecoration createMaterialDecoration({
   required ColorScheme colorScheme,
@@ -146,7 +141,8 @@ InputDecoration createMaterialDecoration({
   Widget? suffixIcon,
   Widget? prefixIcon,
 }) {
-  final outlineInputBorder = border ??
+  final outlineInputBorder =
+      border ??
       OutlineInputBorder(
         borderRadius: BorderRadius.circular(100),
         borderSide: BorderSide(
@@ -166,7 +162,7 @@ InputDecoration createMaterialDecoration({
     contentPadding: isMobile
         ? const EdgeInsets.only(top: 16, bottom: 0, left: 15, right: 15)
         : contentPadding ??
-            const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
+              const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
     border: outlineInputBorder,
     errorBorder: outlineInputBorder,
     enabledBorder: outlineInputBorder,
@@ -197,11 +193,8 @@ InputDecoration createYaruDecoration({
 }) {
   final fill = theme.inputDecorationTheme.fillColor;
 
-  final textStyle = style ??
-      const TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeight.normal,
-      );
+  final textStyle =
+      style ?? const TextStyle(fontSize: 14, fontWeight: FontWeight.normal);
 
   return InputDecoration(
     prefixIcon: prefixIcon,
@@ -217,11 +210,9 @@ InputDecoration createYaruDecoration({
     disabledBorder: border,
     focusedErrorBorder: border,
     isDense: true,
-    contentPadding: contentPadding ??
-        const EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 10.5,
-        ),
+    contentPadding:
+        contentPadding ??
+        const EdgeInsets.symmetric(horizontal: 15, vertical: 10.5),
     helperStyle: textStyle,
     hintStyle: textStyle,
     labelStyle: textStyle,
@@ -238,15 +229,15 @@ double getSmallAvatarButtonRadius(bool useYaruTheme) =>
     (useYaruTheme
         ? kYaruTitleBarItemHeight
         : isMobile
-            ? 50
-            : 38) /
+        ? 50
+        : 38) /
     2;
 
 double getBigAvatarButtonRadius(bool useYaruTheme) => useYaruTheme
     ? 22
     : isMobile
-        ? 35
-        : 23;
+    ? 35
+    : 23;
 
 ButtonStyle translucentIconButtonStyle(ColorScheme colorScheme) =>
     IconButton.styleFrom(
@@ -260,8 +251,9 @@ ButtonStyle translucentIconButtonStyle(ColorScheme colorScheme) =>
 ButtonStyle tonedIconButtonStyle(ColorScheme colorScheme) =>
     IconButton.styleFrom(
       shape: const CircleBorder(),
-      backgroundColor: colorScheme.outline
-          .scale(lightness: colorScheme.isLight ? 0.4 : -0.1),
+      backgroundColor: colorScheme.outline.scale(
+        lightness: colorScheme.isLight ? 0.4 : -0.1,
+      ),
       foregroundColor: colorScheme.primary,
       hoverColor: colorScheme.primary.withAlpha(80),
       focusColor: colorScheme.primary.withAlpha(80),
@@ -279,10 +271,7 @@ SliverGridDelegate get audioCardGridDelegate =>
 
 EdgeInsets get appBarSingleActionSpacing => isMacOS
     ? const EdgeInsets.only(right: 5, left: 5)
-    : EdgeInsets.only(
-        right: 10,
-        left: isMobile ? 0 : kLargestSpace,
-      );
+    : EdgeInsets.only(right: 10, left: isMobile ? 0 : kLargestSpace);
 
 EdgeInsetsGeometry getRadioHistoryListPadding(bool useYaruTheme) =>
     EdgeInsets.only(left: useYaruTheme ? 0 : 5);
@@ -290,19 +279,14 @@ EdgeInsetsGeometry getRadioHistoryListPadding(bool useYaruTheme) =>
 EdgeInsets get mainPageIconPadding => kMainPageIconPadding;
 
 EdgeInsets getCountryPillPadding(bool useYaruTheme) => useYaruTheme
-    ? const EdgeInsets.only(
-        bottom: 9,
-        top: 9,
-        right: 15,
-        left: 15,
-      )
+    ? const EdgeInsets.only(bottom: 9, top: 9, right: 15, left: 15)
     : const EdgeInsets.only(top: 11, bottom: 11, left: 15, right: 15);
 
 double getInputHeight(bool useYaruTheme) => isMobile
     ? 40
     : useYaruTheme
-        ? kYaruTitleBarItemHeight
-        : 36;
+    ? kYaruTitleBarItemHeight
+    : 36;
 
 double get audioCardDimension => kAudioCardDimension - (isMobile ? 15 : 0);
 
@@ -315,21 +299,18 @@ double? get bottomPlayerPageGap => isMobile
     : null;
 
 EdgeInsets get playerTopControlsPadding => EdgeInsets.only(
-      right: kLargestSpace,
-      top: isMacOS
-          ? 0
-          : isMobile
-              ? 2 * kLargestSpace
-              : kLargestSpace,
-    );
+  right: kLargestSpace,
+  top: isMacOS
+      ? 0
+      : isMobile
+      ? 2 * kLargestSpace
+      : kLargestSpace,
+);
 
 NavigationBarThemeData navigationBarTheme({required ThemeData theme}) =>
     theme.navigationBarTheme.copyWith(
       iconTheme: WidgetStatePropertyAll(
-        theme.iconTheme.copyWith(
-          size: 18,
-          applyTextScaling: true,
-        ),
+        theme.iconTheme.copyWith(size: 18, applyTextScaling: true),
       ),
     );
 
@@ -338,23 +319,17 @@ List<Widget> space({
   double heightGap = kSmallestSpace,
   required Iterable<Widget> children,
   bool expandAll = false,
-}) =>
-    children
-        .expand(
-          (item) sync* {
-            yield SizedBox(
-              width: widthGap,
-              height: heightGap,
-            );
-            if (expandAll) {
-              yield Expanded(child: item);
-            } else {
-              yield item;
-            }
-          },
-        )
-        .skip(1)
-        .toList();
+}) => children
+    .expand((item) sync* {
+      yield SizedBox(width: widthGap, height: heightGap);
+      if (expandAll) {
+        yield Expanded(child: item);
+      } else {
+        yield item;
+      }
+    })
+    .skip(1)
+    .toList();
 
 TextTheme createTextTheme(Color textColor) {
   return TextTheme(
@@ -437,13 +412,7 @@ TextTheme createTextTheme(Color textColor) {
 }
 
 class _TextStyle extends TextStyle {
-  const _TextStyle({
-    super.fontSize,
-    super.fontWeight,
-    required this.textColor,
-  }) : super(
-          fontFamily: 'CupertinoSystemText',
-          color: textColor,
-        );
+  const _TextStyle({super.fontSize, super.fontWeight, required this.textColor})
+    : super(fontFamily: 'CupertinoSystemText', color: textColor);
   final Color textColor;
 }

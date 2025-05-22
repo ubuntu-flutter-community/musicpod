@@ -4,5 +4,5 @@ enum AudioPageType {
   likedAudio,
   playlist,
   album,
-  radioSearch;
+  radioSearch,
 }

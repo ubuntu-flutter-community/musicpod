@@ -29,17 +29,19 @@ class OnlineArtService {
 
   Future<String?> fetchAlbumArt(String icyTitle) async {
     _errorController.add(null);
-    final albumArtUrl = get(icyTitle) ??
+    final albumArtUrl =
+        get(icyTitle) ??
         put(
           key: icyTitle,
-          url: await compute(
-            _fetchAlbumArt,
-            _ComputeCapsule(icyTitle: icyTitle, dio: _dio),
-          ).onError((e, s) {
-            printMessageInDebugMode(e.toString());
-            _errorController.add('$e : $s');
-            return null;
-          }),
+          url:
+              await compute(
+                _fetchAlbumArt,
+                _ComputeCapsule(icyTitle: icyTitle, dio: _dio),
+              ).onError((e, s) {
+                printMessageInDebugMode(e.toString());
+                _errorController.add('$e : $s');
+                return null;
+              }),
         );
     _propertiesChangedController.add(true);
 
@@ -88,8 +90,9 @@ Future<String?> _fetchAlbumArt(_ComputeCapsule capsule) async {
 
     final firstRecording = recordings.firstOrNull;
 
-    final releaseId =
-        firstRecording == null ? null : firstRecording?['releases']?[0]?['id'];
+    final releaseId = firstRecording == null
+        ? null
+        : firstRecording?['releases']?[0]?['id'];
 
     if (releaseId == null) {
       printMessageInDebugMode('${capsule.icyTitle}: No release found}');
@@ -144,12 +147,14 @@ Future<String?> _fetchAlbumArtUrlFromReleaseId({
     final imagesMaps = response.data['images'] as List;
 
     if (imagesMaps.isNotEmpty == true) {
-      final imageMap = imagesMaps
-          .firstWhereOrNull((e) => (e['front'] as bool?) == true || e != null);
+      final imageMap = imagesMaps.firstWhereOrNull(
+        (e) => (e['front'] as bool?) == true || e != null,
+      );
 
       final thumbnail = imageMap?['thumbnails'] as Map?;
 
-      final url = thumbnail?['large'] as String? ??
+      final url =
+          thumbnail?['large'] as String? ??
           thumbnail?['small'] as String? ??
           thumbnail?['500'] as String? ??
           thumbnail?['1200'] as String? ??

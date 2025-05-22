@@ -26,10 +26,10 @@ class SearchModel extends SafeChangeNotifier {
     required PodcastService podcastService,
     required LibraryService libraryService,
     required LocalAudioService localAudioService,
-  })  : _radioService = radioService,
-        _podcastService = podcastService,
-        _libraryService = libraryService,
-        _localAudioService = localAudioService {
+  }) : _radioService = radioService,
+       _podcastService = podcastService,
+       _libraryService = libraryService,
+       _localAudioService = localAudioService {
     init();
   }
 
@@ -154,10 +154,8 @@ class SearchModel extends SafeChangeNotifier {
       genres: search?.genres,
       playlists: (query != null && query.isNotEmpty)
           ? _libraryService.playlistIDs
-              .where(
-                (e) => e.toLowerCase().contains(query.toLowerCase()),
-              )
-              .toList()
+                .where((e) => e.toLowerCase().contains(query.toLowerCase()))
+                .toList()
           : null,
     );
   }
@@ -189,18 +187,20 @@ class SearchModel extends SafeChangeNotifier {
     Station? maybe;
     int tries = audio.tags!.length;
     do {
-      maybe = (await _radioService.search(
-        limit: 500,
-        tag: searchTags.elementAt(Random().nextInt(searchTags.length)),
-      ))
-          ?.where(
-            (e) => _areTagsSimilar(
-              stationTags: searchTags,
-              otherTags: (Audio.fromStation(e).tags ?? [])
-                  .where((e) => noNumbers.hasMatch(e)),
-            ),
-          )
-          .lastWhereOrNull((e) => e.stationUUID != audio.uuid);
+      maybe =
+          (await _radioService.search(
+                limit: 500,
+                tag: searchTags.elementAt(Random().nextInt(searchTags.length)),
+              ))
+              ?.where(
+                (e) => _areTagsSimilar(
+                  stationTags: searchTags,
+                  otherTags: (Audio.fromStation(e).tags ?? []).where(
+                    (e) => noNumbers.hasMatch(e),
+                  ),
+                ),
+              )
+              .lastWhereOrNull((e) => e.stationUUID != audio.uuid);
 
       tries--;
     } while (tries > 0 && (maybe == null || audio == Audio.fromStation(maybe)));
@@ -249,10 +249,7 @@ class SearchModel extends SafeChangeNotifier {
     return match;
   }
 
-  Future<void> search({
-    bool clear = false,
-    bool manualFilter = false,
-  }) async {
+  Future<void> search({bool clear = false, bool manualFilter = false}) async {
     _loading = true;
 
     if (clear) {
@@ -267,75 +264,78 @@ class SearchModel extends SafeChangeNotifier {
     }
 
     return switch (_searchType) {
-      SearchType.radioName => await radioNameSearch(_searchQuery)
-          .then(
-            (v) => setRadioSearchResult(
-              _searchQuery == null || _searchQuery!.isEmpty
-                  ? null
-                  : v?.map((e) => Audio.fromStation(e)).toList(),
-            ),
-          )
-          .then((_) => _loading = false),
-      SearchType.radioTag => await _radioService
-          .search(tag: _tag?.name, limit: _radioLimit)
-          .then(
-            (v) => setRadioSearchResult(
-              v?.map((e) => Audio.fromStation(e)).toList(),
-            ),
-          )
-          .then((_) => _loading = false),
-      SearchType.radioCountry => await _radioService
-          .search(country: _country?.name.camelToSentence, limit: _radioLimit)
-          .then(
-            (v) => setRadioSearchResult(
-              v?.map((e) => Audio.fromStation(e)).toList(),
-            ),
-          )
-          .then((_) => _loading = false),
-      SearchType.radioLanguage => await _radioService
-          .search(
-            language: _language?.name.toLowerCase(),
-            limit: _radioLimit,
-          )
-          .then(
-            (v) => setRadioSearchResult(
-              v?.map((e) => Audio.fromStation(e)).toList(),
-            ),
-          )
-          .then((_) => _loading = false),
-      SearchType.podcastTitle => await _podcastService
-          .search(
-            searchQuery: _searchQuery,
-            limit: _podcastLimit,
-            country: _country,
-            language: _language,
-            podcastGenre: _podcastGenre,
-          )
-          .then((v) => setPodcastSearchResult(v))
-          .then((_) => _loading = false),
-      _ => await localSearch(_searchQuery).then((v) {
-          setLocalSearchResult(v);
+      SearchType.radioName =>
+        await radioNameSearch(_searchQuery)
+            .then(
+              (v) => setRadioSearchResult(
+                _searchQuery == null || _searchQuery!.isEmpty
+                    ? null
+                    : v?.map((e) => Audio.fromStation(e)).toList(),
+              ),
+            )
+            .then((_) => _loading = false),
+      SearchType.radioTag =>
+        await _radioService
+            .search(tag: _tag?.name, limit: _radioLimit)
+            .then(
+              (v) => setRadioSearchResult(
+                v?.map((e) => Audio.fromStation(e)).toList(),
+              ),
+            )
+            .then((_) => _loading = false),
+      SearchType.radioCountry =>
+        await _radioService
+            .search(country: _country?.name.camelToSentence, limit: _radioLimit)
+            .then(
+              (v) => setRadioSearchResult(
+                v?.map((e) => Audio.fromStation(e)).toList(),
+              ),
+            )
+            .then((_) => _loading = false),
+      SearchType.radioLanguage =>
+        await _radioService
+            .search(language: _language?.name.toLowerCase(), limit: _radioLimit)
+            .then(
+              (v) => setRadioSearchResult(
+                v?.map((e) => Audio.fromStation(e)).toList(),
+              ),
+            )
+            .then((_) => _loading = false),
+      SearchType.podcastTitle =>
+        await _podcastService
+            .search(
+              searchQuery: _searchQuery,
+              limit: _podcastLimit,
+              country: _country,
+              language: _language,
+              podcastGenre: _podcastGenre,
+            )
+            .then((v) => setPodcastSearchResult(v))
+            .then((_) => _loading = false),
+      _ =>
+        await localSearch(_searchQuery)
+            .then((v) {
+              setLocalSearchResult(v);
 
-          if (!manualFilter) {
-            if (localSearchResult?.titles?.isNotEmpty == true) {
-              setSearchType(SearchType.localTitle);
-            } else if (localSearchResult?.albums?.isNotEmpty == true) {
-              setSearchType(SearchType.localAlbum);
-            } else if (localSearchResult?.artists?.isNotEmpty == true) {
-              setSearchType(SearchType.localArtist);
-            }
-            // else if (localSearchResult?.albumArtists?.isNotEmpty == true) {
-            //   setSearchType(SearchType.localAlbumArtist);
-            // }
-            else if (localSearchResult?.genres?.isNotEmpty == true) {
-              setSearchType(SearchType.localGenreName);
-            } else if (localSearchResult?.playlists?.isNotEmpty == true) {
-              setSearchType(SearchType.localPlaylists);
-            }
-          }
-        }).then(
-          (_) => _loading = false,
-        ),
+              if (!manualFilter) {
+                if (localSearchResult?.titles?.isNotEmpty == true) {
+                  setSearchType(SearchType.localTitle);
+                } else if (localSearchResult?.albums?.isNotEmpty == true) {
+                  setSearchType(SearchType.localAlbum);
+                } else if (localSearchResult?.artists?.isNotEmpty == true) {
+                  setSearchType(SearchType.localArtist);
+                }
+                // else if (localSearchResult?.albumArtists?.isNotEmpty == true) {
+                //   setSearchType(SearchType.localAlbumArtist);
+                // }
+                else if (localSearchResult?.genres?.isNotEmpty == true) {
+                  setSearchType(SearchType.localGenreName);
+                } else if (localSearchResult?.playlists?.isNotEmpty == true) {
+                  setSearchType(SearchType.localPlaylists);
+                }
+              }
+            })
+            .then((_) => _loading = false),
     };
   }
 
@@ -345,16 +345,20 @@ class SearchModel extends SafeChangeNotifier {
   List<Station>? _radioCountryChartsPeak;
   List<Station>? get radioCountryChartsPeak => _radioCountryChartsPeak;
   Future<void> radioCountrySearch({int limit = 10}) async {
-    _radioCountryChartsPeak =
-        await _radioService.search(country: _country?.name, limit: limit);
+    _radioCountryChartsPeak = await _radioService.search(
+      country: _country?.name,
+      limit: limit,
+    );
     notifyListeners();
   }
 
   SearchResult? _podcastChartsPeak;
   SearchResult? get podcastChartsPeak => _podcastChartsPeak;
   Future<void> fetchPodcastChartsPeak({int limit = 10}) async {
-    _podcastChartsPeak =
-        await _podcastService.search(country: _country, limit: limit);
+    _podcastChartsPeak = await _podcastService.search(
+      country: _country,
+      limit: limit,
+    );
     notifyListeners();
   }
 }

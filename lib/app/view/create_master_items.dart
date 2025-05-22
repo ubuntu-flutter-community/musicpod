@@ -29,12 +29,12 @@ import 'main_page_icon.dart';
 import 'master_item.dart';
 
 Iterable<MasterItem> getAllMasterItems(LibraryModel libraryModel) => [
-      ...permanentMasterItems,
-      ...createPlaylistMasterItems(libraryModel),
-      ...createPodcastMasterItems(libraryModel),
-      ...createFavoriteAlbumsMasterItems(libraryModel),
-      ...createStarredStationsMasterItems(libraryModel),
-    ];
+  ...permanentMasterItems,
+  ...createPlaylistMasterItems(libraryModel),
+  ...createPodcastMasterItems(libraryModel),
+  ...createFavoriteAlbumsMasterItems(libraryModel),
+  ...createStarredStationsMasterItems(libraryModel),
+];
 
 Iterable<MasterItem> permanentMasterItems = [
   MasterItem(
@@ -109,41 +109,32 @@ Iterable<MasterItem> createPlaylistMasterItems(LibraryModel libraryModel) =>
 
 Iterable<MasterItem> createStarredStationsMasterItems(
   LibraryModel libraryModel,
-) =>
-    libraryModel.starredStations.map(
-      (uuid) => MasterItem(
-        titleBuilder: (_) => StationTitle(uuid: uuid),
-        subtitleBuilder: (context) => Text(context.l10n.station),
-        pageId: uuid,
-        pageBuilder: (_) => StationPage(uuid: uuid),
-        iconBuilder: (selected) => StationPageIcon(
-          uuid: uuid,
-          selected: selected,
-        ),
-      ),
-    );
+) => libraryModel.starredStations.map(
+  (uuid) => MasterItem(
+    titleBuilder: (_) => StationTitle(uuid: uuid),
+    subtitleBuilder: (context) => Text(context.l10n.station),
+    pageId: uuid,
+    pageBuilder: (_) => StationPage(uuid: uuid),
+    iconBuilder: (selected) => StationPageIcon(uuid: uuid, selected: selected),
+  ),
+);
 
 Iterable<MasterItem> createFavoriteAlbumsMasterItems(
   LibraryModel libraryModel,
-) =>
-    libraryModel.favoriteAlbums.map(
-      (id) => MasterItem(
-        titleBuilder: (context) => Text(id.albumOfId),
-        subtitleBuilder: (context) => Text(id.artistOfId),
-        pageId: id,
-        pageBuilder: (_) => AlbumPage(id: id),
-        iconBuilder: (selected) => AlbumPageSideBarIcon(
-          albumId: id,
-        ),
-      ),
-    );
+) => libraryModel.favoriteAlbums.map(
+  (id) => MasterItem(
+    titleBuilder: (context) => Text(id.albumOfId),
+    subtitleBuilder: (context) => Text(id.artistOfId),
+    pageId: id,
+    pageBuilder: (_) => AlbumPage(id: id),
+    iconBuilder: (selected) => AlbumPageSideBarIcon(albumId: id),
+  ),
+);
 
 Iterable<MasterItem> createPodcastMasterItems(LibraryModel libraryModel) =>
     libraryModel.podcastFeedUrls.map(
       (feedUrl) => MasterItem(
-        titleBuilder: (_) => PodcastPageTitle(
-          feedUrl: feedUrl,
-        ),
+        titleBuilder: (_) => PodcastPageTitle(feedUrl: feedUrl),
         subtitleBuilder: (_) => PodcastPageSubTitle(feedUrl: feedUrl),
         pageId: feedUrl,
         pageBuilder: (_) => LazyPodcastPage(feedUrl: feedUrl),

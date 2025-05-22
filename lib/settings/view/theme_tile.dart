@@ -68,12 +68,8 @@ class ThemeTile extends StatelessWidget {
                     ],
                   )
                 : (themeMode == ThemeMode.light
-                    ? Stack(
-                        children: [lightContainer, titleBar],
-                      )
-                    : Stack(
-                        children: [darkContainer, titleBar],
-                      )),
+                      ? Stack(children: [lightContainer, titleBar])
+                      : Stack(children: [darkContainer, titleBar])),
           ),
         ),
         Positioned(
@@ -84,21 +80,24 @@ class ThemeTile extends StatelessWidget {
             children: [
               Icon(
                 YaruIcons.window_minimize,
-                color:
-                    themeMode == ThemeMode.dark ? Colors.white : Colors.black,
+                color: themeMode == ThemeMode.dark
+                    ? Colors.white
+                    : Colors.black,
                 size: 15,
               ),
               Icon(
                 YaruIcons.window_maximize,
                 size: 15,
-                color:
-                    themeMode == ThemeMode.dark ? Colors.white : Colors.black,
+                color: themeMode == ThemeMode.dark
+                    ? Colors.white
+                    : Colors.black,
               ),
               Icon(
                 YaruIcons.window_close,
                 size: 15,
-                color:
-                    themeMode == ThemeMode.dark ? Colors.white : Colors.black,
+                color: themeMode == ThemeMode.dark
+                    ? Colors.white
+                    : Colors.black,
               ),
             ],
           ),

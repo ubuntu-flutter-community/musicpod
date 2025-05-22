@@ -5,11 +5,7 @@ import '../../extensions/build_context_x.dart';
 import 'icons.dart';
 
 class AnimatedStar extends StatelessWidget {
-  const AnimatedStar({
-    super.key,
-    required this.isStarred,
-    this.color,
-  });
+  const AnimatedStar({super.key, required this.isStarred, this.color});
 
   final bool isStarred;
   final Color? color;
@@ -34,11 +30,7 @@ class AnimatedStar extends StatelessWidget {
 }
 
 class AnimatedHeart extends StatelessWidget {
-  const AnimatedHeart({
-    super.key,
-    required this.liked,
-    this.color,
-  });
+  const AnimatedHeart({super.key, required this.liked, this.color});
 
   final bool liked;
   final Color? color;

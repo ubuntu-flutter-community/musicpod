@@ -28,8 +28,9 @@ class SettingsTile extends StatelessWidget with WatchItMixin {
       trailing = const _UpdateButton();
     }
 
-    final selectedPageId =
-        watchPropertyValue((RoutingManager m) => m.selectedPageId);
+    final selectedPageId = watchPropertyValue(
+      (RoutingManager m) => m.selectedPageId,
+    );
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -44,9 +45,7 @@ class SettingsTile extends StatelessWidget with WatchItMixin {
                 ?..closeEndDrawer()
                 ..closeDrawer();
 
-              di<RoutingManager>().push(
-                pageId: PageIDs.settings,
-              );
+              di<RoutingManager>().push(pageId: PageIDs.settings);
             },
           ),
           if (trailing != null) Positioned(right: 15, child: trailing),
@@ -61,37 +60,37 @@ class _UpdateButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
-    final updateAvailable =
-        watchPropertyValue((AppModel m) => m.updateAvailable);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
+    final updateAvailable = watchPropertyValue(
+      (AppModel m) => m.updateAvailable,
+    );
     return switch (updateAvailable) {
       null => Center(
-          child: SizedBox.square(
-            dimension: useYaruTheme ? kYaruTitleBarItemHeight : 40,
-            child: const Progress(
-              padding: EdgeInsets.all(10),
-            ),
-          ),
+        child: SizedBox.square(
+          dimension: useYaruTheme ? kYaruTitleBarItemHeight : 40,
+          child: const Progress(padding: EdgeInsets.all(10)),
         ),
+      ),
       false => const SizedBox.shrink(),
       true => IconButton(
-          tooltip: context.l10n.updateAvailable,
-          onPressed: () => launchUrl(
-            Uri.parse(
-              p.join(
-                AppConfig.repoUrl,
-                'releases',
-                'tag',
-                di<AppModel>().onlineVersion,
-              ),
+        tooltip: context.l10n.updateAvailable,
+        onPressed: () => launchUrl(
+          Uri.parse(
+            p.join(
+              AppConfig.repoUrl,
+              'releases',
+              'tag',
+              di<AppModel>().onlineVersion,
             ),
           ),
-          icon: Icon(
-            Iconz.updateAvailable,
-            color: context.theme.colorScheme.success,
-          ),
         ),
+        icon: Icon(
+          Iconz.updateAvailable,
+          color: context.theme.colorScheme.success,
+        ),
+      ),
     };
   }
 }

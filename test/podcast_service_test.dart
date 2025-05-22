@@ -26,8 +26,9 @@ Future<void> main() async {
   final mockSettingsService = MockSettingsService();
   final mockLibraryService = MockLibraryService();
 
-  when(mockSettingsService.usePodcastIndex)
-      .thenAnswer((realInvocation) => false);
+  when(
+    mockSettingsService.usePodcastIndex,
+  ).thenAnswer((realInvocation) => false);
 
   final service = PodcastService(
     notificationsService: mockNotificationsService,
@@ -37,8 +38,9 @@ Future<void> main() async {
   await service.init();
 
   test('searchByQuery', () async {
-    final result =
-        await service.search(searchQuery: 'Flying High with Flutter');
+    final result = await service.search(
+      searchQuery: 'Flying High with Flutter',
+    );
     final feedUrl = result?.items.first.feedUrl;
     List<Audio>? episodes;
     if (feedUrl != null) {
@@ -56,9 +58,6 @@ Future<void> main() async {
       country: Country.germany,
       podcastGenre: PodcastGenre.fiction,
     );
-    expect(
-      result?.items.isNotEmpty,
-      true,
-    );
+    expect(result?.items.isNotEmpty, true);
   });
 }

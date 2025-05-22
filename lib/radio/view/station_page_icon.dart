@@ -57,9 +57,7 @@ class _StationPageIconState extends State<StationPageIcon> {
                 color: fallBackColor,
                 child: widget.selected
                     ? Icon(Iconz.starFilled)
-                    : Icon(
-                        Iconz.star,
-                      ),
+                    : Icon(Iconz.star),
               );
             }
 
@@ -70,17 +68,13 @@ class _StationPageIconState extends State<StationPageIcon> {
                 color: fallBackColor,
                 child: widget.selected
                     ? Icon(Iconz.starFilled)
-                    : Icon(
-                        Iconz.star,
-                      ),
+                    : Icon(Iconz.star),
               ),
               errorIcon: SideBarFallBackImage(
                 color: fallBackColor,
                 child: widget.selected
                     ? Icon(Iconz.starFilled)
-                    : Icon(
-                        Iconz.star,
-                      ),
+                    : Icon(Iconz.star),
               ),
               fit: BoxFit.fitHeight,
               url: station.imageUrl,

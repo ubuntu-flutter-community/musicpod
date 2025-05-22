@@ -53,16 +53,12 @@ class PlaylistsView extends StatelessWidget {
                     ),
                     content: const SizedBox.square(
                       dimension: 450,
-                      child: CustomPlaylistsSection(
-                        shownInDialog: true,
-                      ),
+                      child: CustomPlaylistsSection(shownInDialog: true),
                     ),
                   ),
                 )
               : di<RoutingManager>().push(
-                  builder: (_) => PlaylistPage(
-                    pageId: id,
-                  ),
+                  builder: (_) => PlaylistPage(pageId: id),
                   pageId: id,
                 ),
           borderRadius: BorderRadius.circular(300),
@@ -83,18 +79,16 @@ class PlaylistsView extends StatelessWidget {
                         child: Icon(Iconz.plus),
                       )
                     : id == PageIDs.likedAudios
-                        ? Container(
-                            decoration: BoxDecoration(
-                              color: context.colorScheme.primary
-                                  .withValues(alpha: 0.3),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(Iconz.heart),
-                          )
-                        : RoundImageContainer(
-                            images: [],
-                            fallBackText: id,
+                    ? Container(
+                        decoration: BoxDecoration(
+                          color: context.colorScheme.primary.withValues(
+                            alpha: 0.3,
                           ),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(Iconz.heart),
+                      )
+                    : RoundImageContainer(images: [], fallBackText: id),
               ),
               if (id != PageIDs.customContent && id != PageIDs.likedAudios)
                 RoundImageContainerVignette(
@@ -113,8 +107,8 @@ class PlaylistsView extends StatelessWidget {
             message: id == PageIDs.customContent
                 ? context.l10n.createNewPlaylist
                 : id == PageIDs.likedAudios
-                    ? context.l10n.likedSongs
-                    : id,
+                ? context.l10n.likedSongs
+                : id,
             child: yaruSelectableContainer,
           );
         }

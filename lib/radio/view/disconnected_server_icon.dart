@@ -12,18 +12,11 @@ class DisconnectedServerIcon extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        Icon(
-          Iconz.cloud,
-          color: theme.disabledColor,
-        ),
+        Icon(Iconz.cloud, color: theme.disabledColor),
         Positioned(
           bottom: -2,
           right: -2,
-          child: Icon(
-            Iconz.close,
-            color: theme.colorScheme.error,
-            size: 16,
-          ),
+          child: Icon(Iconz.close, color: theme.colorScheme.error, size: 16),
         ),
       ],
     );

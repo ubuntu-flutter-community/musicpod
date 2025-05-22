@@ -23,7 +23,8 @@ class SearchButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final onTap = onPressed ??
+    final onTap =
+        onPressed ??
         () => di<RoutingManager>().push(pageId: PageIDs.searchPage);
     final iconSize = context.theme.iconTheme.size ?? 24.0;
 
@@ -32,14 +33,16 @@ class SearchButton extends StatelessWidget {
       tooltip: label,
       isSelected: active,
       onPressed: onTap,
-      selectedIcon: icon ??
+      selectedIcon:
+          icon ??
           Icon(
             Iconz.search,
             color: iconColor ?? context.theme.colorScheme.onSurface,
             size: iconSize,
             semanticLabel: label,
           ),
-      icon: icon ??
+      icon:
+          icon ??
           Icon(
             Iconz.search,
             size: iconSize,

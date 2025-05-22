@@ -99,7 +99,8 @@ class _ActiveAudioSignalPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     for (int i = 0; i < animations.length; i++) {
-      final double dx = (size.width - thickness * animations.length) /
+      final double dx =
+          (size.width - thickness * animations.length) /
               (animations.length - 1) *
               i +
           thickness / 2;
@@ -143,8 +144,9 @@ class AudioSignalIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final values =
-        _kBarsStartOffsets.map((e) => _transform(progress.value, e)).toList();
+    final values = _kBarsStartOffsets
+        .map((e) => _transform(progress.value, e))
+        .toList();
 
     return RepaintBoundary(
       child: SizedBox.square(

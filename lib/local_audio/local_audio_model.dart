@@ -16,13 +16,15 @@ class LocalAudioModel extends SafeChangeNotifier {
     required LocalAudioService localAudioService,
     required SettingsService settingsService,
     required LibraryService libraryService,
-  })  : _localAudioService = localAudioService,
-        _settingsService = settingsService,
-        _libraryService = libraryService {
-    _audiosChangedSub ??=
-        _localAudioService.audiosChanged.listen((_) => notifyListeners());
-    _settingsChangedSub ??=
-        _settingsService.propertiesChanged.listen((_) => notifyListeners());
+  }) : _localAudioService = localAudioService,
+       _settingsService = settingsService,
+       _libraryService = libraryService {
+    _audiosChangedSub ??= _localAudioService.audiosChanged.listen(
+      (_) => notifyListeners(),
+    );
+    _settingsChangedSub ??= _settingsService.propertiesChanged.listen(
+      (_) => notifyListeners(),
+    );
   }
 
   final LocalAudioService _localAudioService;
@@ -45,21 +47,20 @@ class LocalAudioModel extends SafeChangeNotifier {
     String? durationMs,
     String? year,
     List<Picture>? pictures,
-  }) =>
-      _localAudioService.changeMetadata(
-        audio,
-        onChange: onChange,
-        title: title,
-        artist: artist,
-        album: album,
-        genre: genre,
-        discTotal: discTotal,
-        discNumber: discNumber,
-        trackNumber: trackNumber,
-        durationMs: durationMs,
-        year: year,
-        pictures: pictures,
-      );
+  }) => _localAudioService.changeMetadata(
+    audio,
+    onChange: onChange,
+    title: title,
+    artist: artist,
+    album: album,
+    genre: genre,
+    discTotal: discTotal,
+    discNumber: discNumber,
+    trackNumber: trackNumber,
+    durationMs: durationMs,
+    year: year,
+    pictures: pictures,
+  );
 
   int get localAudioindex => _settingsService.localAudioIndex;
   void setLocalAudioindex(int value) =>
@@ -94,8 +95,7 @@ class LocalAudioModel extends SafeChangeNotifier {
   Future<List<Audio>?> findAlbum(
     String albumId, [
     AudioFilter audioFilter = AudioFilter.trackNumber,
-  ]) =>
-      _localAudioService.findAlbum(albumId, audioFilter);
+  ]) => _localAudioService.findAlbum(albumId, audioFilter);
 
   String? getCachedCoverPath(String albumId) =>
       _localAudioService.getCachedCoverPath(albumId);
@@ -107,8 +107,7 @@ class LocalAudioModel extends SafeChangeNotifier {
   Future<List<Audio>?> findTitlesOfArtist(
     String artist, [
     AudioFilter audioFilter = AudioFilter.album,
-  ]) async =>
-      _localAudioService.findTitlesOfArtist(artist, audioFilter);
+  ]) async => _localAudioService.findTitlesOfArtist(artist, audioFilter);
 
   List<String>? getCachedAlbumIDsOfGenre(String albumId) =>
       _localAudioService.getCachedAlbumIDsOfGenre(albumId);
@@ -118,18 +117,14 @@ class LocalAudioModel extends SafeChangeNotifier {
   Set<Uint8List>? findLocalCovers({
     required List<Audio> audios,
     int limit = 4,
-  }) =>
-      _localAudioService.findLocalCovers(audios: audios, limit: limit);
+  }) => _localAudioService.findLocalCovers(audios: audios, limit: limit);
 
   List<Audio> findUniqueAlbumAudios(List<Audio> audios) =>
       _localAudioService.findUniqueAlbumAudios(audios);
 
   List<String>? get failedImports => _localAudioService.failedImports;
 
-  List<String>? findAllAlbumIDs({
-    String? artist,
-    bool clean = true,
-  }) =>
+  List<String>? findAllAlbumIDs({String? artist, bool clean = true}) =>
       _localAudioService.findAllAlbumIDs(artist: artist, clean: clean);
 
   bool get importing => _localAudioService.audios == null;

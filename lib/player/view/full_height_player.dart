@@ -22,10 +22,7 @@ import 'queue/queue_body.dart';
 import 'queue/queue_button.dart';
 
 class FullHeightPlayer extends StatelessWidget with WatchItMixin {
-  const FullHeightPlayer({
-    super.key,
-    required this.playerPosition,
-  });
+  const FullHeightPlayer({super.key, required this.playerPosition});
 
   final PlayerPosition playerPosition;
 
@@ -39,26 +36,21 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
     final active = audio?.path != null || isOnline;
     final iconColor = isVideo ? Colors.white : theme.colorScheme.onSurface;
     final showQueue = watchPropertyValue((AppModel m) => m.showQueueOverlay);
-    final playerWithSidePanel = playerPosition == PlayerPosition.fullWindow &&
+    final playerWithSidePanel =
+        playerPosition == PlayerPosition.fullWindow &&
         context.mediaQuerySize.width > 1000;
 
     final Widget body;
     if (isVideo) {
-      body = FullHeightVideoPlayer(
-        playerPosition: playerPosition,
-      );
+      body = FullHeightVideoPlayer(playerPosition: playerPosition);
     } else {
       final queueOrHistory = audio?.audioType == AudioType.radio
           ? const SizedBox(
               width: 400,
               height: 500,
-              child: RadioHistoryList(
-                simpleList: true,
-              ),
+              child: RadioHistoryList(simpleList: true),
             )
-          : QueueBody(
-              selectedColor: theme.colorScheme.onSurface,
-            );
+          : QueueBody(selectedColor: theme.colorScheme.onSurface);
       final column = Column(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
@@ -77,26 +69,18 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
                 tag: 'FullHeightPlayerImageInPortrait',
                 child: FullHeightPlayerImage(),
               ),
-            const SizedBox(
-              height: kLargestSpace,
-            ),
+            const SizedBox(height: kLargestSpace),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: PlayerTitleAndArtist(
-                playerPosition: playerPosition,
-              ),
+              child: PlayerTitleAndArtist(playerPosition: playerPosition),
             ),
-            const SizedBox(
-              height: kLargestSpace,
-            ),
+            const SizedBox(height: kLargestSpace),
             SizedBox(
               height: kLargestSpace,
               width: playerWithSidePanel ? 400 : 350,
               child: const PlayerTrack(),
             ),
-            const SizedBox(
-              height: kLargestSpace,
-            ),
+            const SizedBox(height: kLargestSpace),
           ],
           SizedBox(
             width: playerWithSidePanel ? 400 : 320,
@@ -119,22 +103,19 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
                     ],
                   )
                 : isMobile && !context.isPortrait
-                    ? Row(
-                        spacing: kLargestSpace,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Hero(
-                            tag: 'FullHeightPlayerImageInLandscape',
-                            child: FullHeightPlayerImage(
-                              height: 200,
-                              width: 200,
-                            ),
-                          ),
-                          SizedBox(width: 400, child: column),
-                        ],
-                      )
-                    : column,
+                ? Row(
+                    spacing: kLargestSpace,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Hero(
+                        tag: 'FullHeightPlayerImageInLandscape',
+                        child: FullHeightPlayerImage(height: 200, width: 200),
+                      ),
+                      SizedBox(width: 400, child: column),
+                    ],
+                  )
+                : column,
           ),
           Positioned(
             top: 0,
@@ -158,11 +139,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
       adaptive: false,
       includeBackButton: false,
       includeSidebarButton: false,
-      title: const Text(
-        '',
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
+      title: const Text('', maxLines: 1, overflow: TextOverflow.ellipsis),
       foregroundColor: isVideo == true ? Colors.white : null,
       backgroundColor: isVideo == true ? Colors.black : Colors.transparent,
     );
@@ -180,11 +157,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
 
     return Stack(
       children: [
-        PlayerColor(
-          alpha: 0.4,
-          size: size,
-          position: playerPosition,
-        ),
+        PlayerColor(alpha: 0.4, size: size, position: playerPosition),
         fullHeightPlayer,
       ],
     );

@@ -47,34 +47,35 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: HeaderBar(
-          adaptive: true,
-          title: Text(context.l10n.settings),
-          actions: [
-            Padding(
-              padding: appBarSingleActionSpacing,
-              child: const SearchButton(),
-            ),
-          ],
+    appBar: HeaderBar(
+      adaptive: true,
+      title: Text(context.l10n.settings),
+      actions: [
+        Padding(
+          padding: appBarSingleActionSpacing,
+          child: const SearchButton(),
         ),
-        body: LayoutBuilder(
-          builder: (context, constraints) => ListView(
-            controller: _scrollController,
-            padding: getAdaptiveHorizontalPadding(
-              constraints: constraints,
-              limit: 600,
-              min: 0,
-            ).copyWith(bottom: bottomPlayerPageGap),
-            children: const [
-              ThemeSection(),
-              PodcastSection(),
-              LocalAudioSection(),
-              RadioSection(),
-              ExposeOnlineSection(),
-              ResourceSection(),
-              ResetSection(),
-              AboutSection(),
-            ]
+      ],
+    ),
+    body: LayoutBuilder(
+      builder: (context, constraints) => ListView(
+        controller: _scrollController,
+        padding: getAdaptiveHorizontalPadding(
+          constraints: constraints,
+          limit: 600,
+          min: 0,
+        ).copyWith(bottom: bottomPlayerPageGap),
+        children:
+            const [
+                  ThemeSection(),
+                  PodcastSection(),
+                  LocalAudioSection(),
+                  RadioSection(),
+                  ExposeOnlineSection(),
+                  ResourceSection(),
+                  ResetSection(),
+                  AboutSection(),
+                ]
                 .mapIndexed(
                   (i, e) => AutoScrollTag(
                     key: ValueKey(i),
@@ -84,7 +85,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 )
                 .toList(),
-          ),
-        ),
-      );
+      ),
+    ),
+  );
 }

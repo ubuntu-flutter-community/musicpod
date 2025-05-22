@@ -11,24 +11,21 @@ import 'open_radio_discover_page_button.dart';
 import 'station_card.dart';
 
 class StarredStationsGrid extends StatelessWidget with WatchItMixin {
-  const StarredStationsGrid({
-    super.key,
-  });
+  const StarredStationsGrid({super.key});
 
   @override
   Widget build(BuildContext context) {
     final stations = watchPropertyValue((LibraryModel m) => m.starredStations);
-    final length =
-        watchPropertyValue((LibraryModel m) => m.starredStationsLength);
+    final length = watchPropertyValue(
+      (LibraryModel m) => m.starredStationsLength,
+    );
 
     if (length == 0) {
       return SliverNoSearchResultPage(
         message: Column(
           children: [
             Text(context.l10n.noStarredStations),
-            const SizedBox(
-              height: kLargestSpace,
-            ),
+            const SizedBox(height: kLargestSpace),
             const OpenRadioSearchButton(),
           ],
         ),

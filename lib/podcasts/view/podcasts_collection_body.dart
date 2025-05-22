@@ -27,9 +27,7 @@ import '../podcast_model.dart';
 import 'podcast_collection_control_panel.dart';
 
 class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
-  const PodcastsCollectionBody({
-    super.key,
-  });
+  const PodcastsCollectionBody({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,20 +35,25 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     if (!isOnline) return const OfflineBody();
 
-    final checkingForUpdates =
-        watchPropertyValue((PodcastModel m) => m.checkingForUpdates);
-    final processing =
-        watchPropertyValue((CustomContentModel m) => m.processing);
+    final checkingForUpdates = watchPropertyValue(
+      (PodcastModel m) => m.checkingForUpdates,
+    );
+    final processing = watchPropertyValue(
+      (CustomContentModel m) => m.processing,
+    );
     final subs = watchPropertyValue((LibraryModel m) => m.podcastFeedUrls);
     final libraryModel = di<LibraryModel>();
-    final updatesLength =
-        watchPropertyValue((LibraryModel m) => m.podcastUpdatesLength);
+    final updatesLength = watchPropertyValue(
+      (LibraryModel m) => m.podcastUpdatesLength,
+    );
     final updatesOnly = watchPropertyValue((PodcastModel m) => m.updatesOnly);
-    final downloadsOnly =
-        watchPropertyValue((PodcastModel m) => m.downloadsOnly);
+    final downloadsOnly = watchPropertyValue(
+      (PodcastModel m) => m.downloadsOnly,
+    );
     final subsLength = watchPropertyValue((LibraryModel m) => m.podcastsLength);
-    final feedsWithDownloadLength =
-        watchPropertyValue((LibraryModel m) => m.feedsWithDownloadsLength);
+    final feedsWithDownloadLength = watchPropertyValue(
+      (LibraryModel m) => m.feedsWithDownloadsLength,
+    );
 
     final itemCount = updatesOnly
         ? updatesLength
@@ -78,9 +81,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(context.l10n.noPodcastSubsFound),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: () {
                       di<RoutingManager>().push(pageId: PageIDs.searchPage);
@@ -165,15 +166,16 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                         bottom: AudioCardBottom(
                           style: libraryModel.podcastUpdateAvailable(feedUrl)
                               ? theme.textTheme.bodyMedium?.copyWith(
-                                    color: theme.colorScheme.primary,
-                                    fontWeight: FontWeight.bold,
-                                  ) ??
-                                  TextStyle(
-                                    color: theme.colorScheme.primary,
-                                    fontWeight: FontWeight.bold,
-                                  )
+                                      color: theme.colorScheme.primary,
+                                      fontWeight: FontWeight.bold,
+                                    ) ??
+                                    TextStyle(
+                                      color: theme.colorScheme.primary,
+                                      fontWeight: FontWeight.bold,
+                                    )
                               : null,
-                          text: first?.album?.unEscapeHtml ??
+                          text:
+                              first?.album?.unEscapeHtml ??
                               first?.title ??
                               first.toString(),
                         ),
@@ -183,9 +185,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                               listName: feedUrl!,
                             )
                             .then(
-                              (_) => libraryModel.removePodcastUpdate(
-                                feedUrl!,
-                              ),
+                              (_) => libraryModel.removePodcastUpdate(feedUrl!),
                             ),
                         onTap: () =>
                             di<RoutingManager>().push(pageId: feedUrl!),

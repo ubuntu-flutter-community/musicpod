@@ -20,17 +20,14 @@ class PlayerPauseTimerButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => IconButton(
-        tooltip: context.l10n.schedulePlaybackStopTimer,
-        onPressed: () => showModal(
-          context: context,
-          mode: ModalMode.platformModalMode,
-          content: isMobile ? const _BottomSheet() : const _Dialog(),
-        ),
-        icon: Icon(
-          Iconz.sleep,
-          color: iconColor,
-        ),
-      );
+    tooltip: context.l10n.schedulePlaybackStopTimer,
+    onPressed: () => showModal(
+      context: context,
+      mode: ModalMode.platformModalMode,
+      content: isMobile ? const _BottomSheet() : const _Dialog(),
+    ),
+    icon: Icon(Iconz.sleep, color: iconColor),
+  );
 }
 
 class _Dialog extends StatefulWidget {
@@ -132,7 +129,8 @@ class _BottomSheetState extends State<_BottomSheet> {
                               onPressed: () {
                                 final duration = Duration(
                                   hours: _timeOfDay.hour - TimeOfDay.now().hour,
-                                  minutes: _timeOfDay.minute -
+                                  minutes:
+                                      _timeOfDay.minute -
                                       TimeOfDay.now().minute,
                                 );
                                 di<PlayerModel>().setTimer(duration);

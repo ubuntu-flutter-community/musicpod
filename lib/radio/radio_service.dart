@@ -22,9 +22,7 @@ class RadioService {
 
     List<String>? hosts;
     try {
-      hosts = await _findHosts().timeout(
-        const Duration(seconds: 5),
-      );
+      hosts = await _findHosts().timeout(const Duration(seconds: 5));
     } on TimeoutException catch (_) {
       printMessageInDebugMode('Timeout while trying to find a host.');
       return;
@@ -184,20 +182,30 @@ class RadioService {
         _response = await _radioBrowserApi!.getStationsByUUID(uuids: [uuid]);
       }
       if (name?.isEmpty == false) {
-        _response = await _radioBrowserApi!
-            .getStationsByName(name: name!, parameters: parameters);
+        _response = await _radioBrowserApi!.getStationsByName(
+          name: name!,
+          parameters: parameters,
+        );
       } else if (country?.isEmpty == false) {
-        _response = await _radioBrowserApi!
-            .getStationsByCountry(country: country!, parameters: parameters);
+        _response = await _radioBrowserApi!.getStationsByCountry(
+          country: country!,
+          parameters: parameters,
+        );
       } else if (tag?.isEmpty == false) {
-        _response = await _radioBrowserApi!
-            .getStationsByTag(tag: tag!, parameters: parameters);
+        _response = await _radioBrowserApi!.getStationsByTag(
+          tag: tag!,
+          parameters: parameters,
+        );
       } else if (state?.isEmpty == false) {
-        _response = await _radioBrowserApi!
-            .getStationsByState(state: state!, parameters: parameters);
+        _response = await _radioBrowserApi!.getStationsByState(
+          state: state!,
+          parameters: parameters,
+        );
       } else if (language?.isEmpty == false) {
-        _response = await _radioBrowserApi!
-            .getStationsByLanguage(language: language!, parameters: parameters);
+        _response = await _radioBrowserApi!.getStationsByLanguage(
+          language: language!,
+          parameters: parameters,
+        );
       }
     } on Exception catch (e) {
       printMessageInDebugMode(e);
@@ -216,10 +224,7 @@ class RadioService {
 
   List<Tag>? _tags;
   List<Tag>? get tags => _tags;
-  Future<List<Tag>?>? _loadTags({
-    String? filter,
-    int? limit,
-  }) async {
+  Future<List<Tag>?>? _loadTags({String? filter, int? limit}) async {
     if (_radioBrowserApi == null) return null;
     if (_tags?.isNotEmpty == true) return _tags;
     RadioBrowserListResponse<Tag>? response;

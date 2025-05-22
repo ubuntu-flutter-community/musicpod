@@ -18,9 +18,7 @@ class PinAlbumButton extends StatelessWidget with WatchItMixin {
       key: ValueKey(pinnedAlbum),
       tooltip: pinnedAlbum ? context.l10n.unPinAlbum : context.l10n.pinAlbum,
       isSelected: pinnedAlbum,
-      icon: Icon(
-        pinnedAlbum ? Iconz.pinFilled : Iconz.pin,
-      ),
+      icon: Icon(pinnedAlbum ? Iconz.pinFilled : Iconz.pin),
       onPressed: () {
         if (pinnedAlbum) {
           di<LibraryModel>().removeFavoriteAlbum(

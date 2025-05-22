@@ -29,22 +29,26 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final theme = context.theme;
     final model = di<DownloadModel>();
-    final value =
-        watchPropertyValue((DownloadModel m) => m.getValue(audio?.url));
+    final value = watchPropertyValue(
+      (DownloadModel m) => m.getValue(audio?.url),
+    );
 
     final download = watchPropertyValue(
       (LibraryModel m) => m.getDownload(audio?.url) != null,
     );
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
-    final downloadsDir =
-        watchPropertyValue((SettingsModel m) => m.downloadsDir);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
+    final downloadsDir = watchPropertyValue(
+      (SettingsModel m) => m.downloadsDir,
+    );
 
-    final radius = (useYaruTheme
+    final radius =
+        (useYaruTheme
             ? kYaruTitleBarItemHeight
             : isMobile
-                ? 40
-                : 35) /
+            ? 40
+            : 35) /
         2;
 
     return Stack(
@@ -76,17 +80,20 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
                   } else {
                     addPodcast?.call();
                     model.startDownload(
-                      finishedMessage:
-                          context.l10n.downloadFinished(audio?.title ?? ''),
-                      canceledMessage:
-                          context.l10n.downloadCancelled(audio?.title ?? ''),
+                      finishedMessage: context.l10n.downloadFinished(
+                        audio?.title ?? '',
+                      ),
+                      canceledMessage: context.l10n.downloadCancelled(
+                        audio?.title ?? '',
+                      ),
                       audio: audio,
                     );
                   }
                 },
           iconSize: iconSize,
-          color:
-              download ? theme.contrastyPrimary : theme.colorScheme.onSurface,
+          color: download
+              ? theme.contrastyPrimary
+              : theme.colorScheme.onSurface,
         ),
       ],
     );

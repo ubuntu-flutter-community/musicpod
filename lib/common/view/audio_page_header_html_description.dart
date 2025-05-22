@@ -53,9 +53,7 @@ class AudioPageHeaderHtmlDescription extends StatelessWidget {
                 textOverflow: TextOverflow.ellipsis,
                 maxLines: 4,
                 textAlign: TextAlign.center,
-                fontSize: FontSize(
-                  descriptionStyle?.fontSize ?? 10,
-                ),
+                fontSize: FontSize(descriptionStyle?.fontSize ?? 10),
                 fontWeight: descriptionStyle?.fontWeight,
                 fontFamily: descriptionStyle?.fontFamily,
               ),
@@ -104,9 +102,7 @@ class _HtmlDialog extends StatelessWidget {
                 textOverflow: TextOverflow.ellipsis,
                 maxLines: 400,
                 textAlign: TextAlign.center,
-                fontSize: FontSize(
-                  descriptionStyle?.fontSize ?? 10,
-                ),
+                fontSize: FontSize(descriptionStyle?.fontSize ?? 10),
                 fontWeight: descriptionStyle?.fontWeight,
                 fontFamily: descriptionStyle?.fontFamily,
               ),

@@ -78,9 +78,7 @@ class ConfirmationDialog extends StatelessWidget {
                         }
                       }
                     : null,
-                child: Text(
-                  confirmLabel ?? l10n.ok,
-                ),
+                child: Text(confirmLabel ?? l10n.ok),
               ),
             ],
           ),

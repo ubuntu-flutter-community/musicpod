@@ -8,10 +8,7 @@ import '../../library/library_model.dart';
 import '../../local_audio/local_audio_model.dart';
 
 class PlaylistAddAudiosDialog extends StatelessWidget with WatchItMixin {
-  const PlaylistAddAudiosDialog({
-    super.key,
-    required this.playlistId,
-  });
+  const PlaylistAddAudiosDialog({super.key, required this.playlistId});
 
   final String playlistId;
 
@@ -22,9 +19,7 @@ class PlaylistAddAudiosDialog extends StatelessWidget with WatchItMixin {
     return SimpleDialog(
       titlePadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(50),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
       children: [
         Padding(
           padding: const EdgeInsets.all(kLargestSpace),
@@ -32,9 +27,7 @@ class PlaylistAddAudiosDialog extends StatelessWidget with WatchItMixin {
             // height: 50,
             width: 300,
             child: audios == null
-                ? const Center(
-                    child: Progress(),
-                  )
+                ? const Center(child: Progress())
                 : AudioAutoComplete(
                     audios: audios,
                     onSelected: (value) {

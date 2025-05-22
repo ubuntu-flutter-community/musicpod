@@ -56,11 +56,7 @@ class HeaderBar extends StatelessWidget
       if (useBackButton && canPop) {
         leading = const NavBackButton();
       } else {
-        leading = isMobile
-            ? const SizedBox(
-                width: 60,
-              )
-            : null;
+        leading = isMobile ? const SizedBox(width: 60) : null;
       }
     }
 
@@ -85,18 +81,15 @@ class HeaderBar extends StatelessWidget
 
     return Theme(
       data: context.theme.copyWith(
-        appBarTheme: AppBarTheme.of(context).copyWith(
-          scrolledUnderElevation: 0,
-        ),
+        appBarTheme: AppBarTheme.of(
+          context,
+        ).copyWith(scrolledUnderElevation: 0),
       ),
       child: YaruWindowTitleBar(
         titleSpacing: titleSpacing,
         actions: [
           if ((!context.showMasterPanel && isMacOS) && leading != null)
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: leading,
-            ),
+            Padding(padding: const EdgeInsets.only(left: 10), child: leading),
           ...?actions,
         ],
         leading: !context.showMasterPanel && isMacOS ? null : leading,
@@ -112,11 +105,11 @@ class HeaderBar extends StatelessWidget
 
   @override
   Size get preferredSize => Size(
-        0,
-        isMobile
-            ? (style == YaruTitleBarStyle.hidden ? 0 : kYaruTitleBarHeight)
-            : kToolbarHeight,
-      );
+    0,
+    isMobile
+        ? (style == YaruTitleBarStyle.hidden ? 0 : kYaruTitleBarHeight)
+        : kToolbarHeight,
+  );
 }
 
 class CloseWindowActionConfirmDialog extends StatefulWidget {
@@ -143,15 +136,9 @@ class _CloseWindowActionConfirmDialogState
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(
-            Icons.error,
-            color: Colors.red,
-            size: 50,
-          ),
+          const Icon(Icons.error, color: Colors.red, size: 50),
           const SizedBox(height: 12),
-          Text(
-            context.l10n.confirmCloseOrHideTip,
-          ),
+          Text(context.l10n.confirmCloseOrHideTip),
           CheckboxListTile(
             title: Text(context.l10n.doNotAskAgain),
             value: rememberChoice,
@@ -206,10 +193,7 @@ class SidebarButton extends StatelessWidget {
         },
         icon: Iconz.sidebar == Iconz.materialSidebar
             ? Transform.flip(flipX: true, child: Icon(Iconz.materialSidebar))
-            : Icon(
-                Iconz.sidebar,
-                size: iconSize,
-              ),
+            : Icon(Iconz.sidebar, size: iconSize),
       ),
     );
   }

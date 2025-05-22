@@ -15,19 +15,11 @@ import 'queue_body.dart';
 import 'queue_dialog.dart';
 
 class QueueButton extends StatelessWidget with WatchItMixin {
-  const QueueButton({
-    super.key,
-    this.color,
-    this.isSelected,
-    this.onTap,
-  }) : _mode = _QueueButtonMode.icon;
+  const QueueButton({super.key, this.color, this.isSelected, this.onTap})
+    : _mode = _QueueButtonMode.icon;
 
-  const QueueButton.text({
-    super.key,
-    this.color,
-    this.isSelected,
-    this.onTap,
-  }) : _mode = _QueueButtonMode.text;
+  const QueueButton.text({super.key, this.color, this.isSelected, this.onTap})
+    : _mode = _QueueButtonMode.text;
 
   final Color? color;
   final bool? isSelected;
@@ -43,16 +35,16 @@ class QueueButton extends StatelessWidget with WatchItMixin {
     );
 
     final content = ModalMode.platformModalMode == ModalMode.bottomSheet
-        ? QueueBody(
-            selectedColor: theme.colorScheme.onSurface,
-          )
+        ? QueueBody(selectedColor: theme.colorScheme.onSurface)
         : const QueueDialog();
 
-    final void Function() onPressed = onTap ??
+    final void Function() onPressed =
+        onTap ??
         () {
           if (di<PlayerModel>().audio?.audioType == AudioType.radio) {
-            di<RadioModel>()
-                .setRadioCollectionView(RadioCollectionView.history);
+            di<RadioModel>().setRadioCollectionView(
+              RadioCollectionView.history,
+            );
             if (di<RoutingManager>().selectedPageId != PageIDs.radio) {
               di<RoutingManager>().push(pageId: PageIDs.radio);
             }
@@ -69,31 +61,29 @@ class QueueButton extends StatelessWidget with WatchItMixin {
 
     return switch (_mode) {
       _QueueButtonMode.icon => IconButton(
-          isSelected: isSelected ??
-              watchPropertyValue((AppModel m) => m.showQueueOverlay),
+        isSelected:
+            isSelected ??
+            watchPropertyValue((AppModel m) => m.showQueueOverlay),
+        color: color ?? theme.colorScheme.onSurface,
+        padding: EdgeInsets.zero,
+        tooltip: radio ? context.l10n.hearingHistory : context.l10n.queue,
+        icon: Icon(
+          radio ? Iconz.radioHistory : Iconz.playlist,
           color: color ?? theme.colorScheme.onSurface,
-          padding: EdgeInsets.zero,
-          tooltip: radio ? context.l10n.hearingHistory : context.l10n.queue,
-          icon: Icon(
-            radio ? Iconz.radioHistory : Iconz.playlist,
-            color: color ?? theme.colorScheme.onSurface,
-          ),
-          onPressed: onPressed,
         ),
+        onPressed: onPressed,
+      ),
       _QueueButtonMode.text => TextButton(
-          onPressed: onPressed,
-          child: Text(
-            radio ? context.l10n.hearingHistory : context.l10n.queue,
-            style: context.textTheme.bodyLarge?.copyWith(
-              color: context.colorScheme.onSurface,
-            ),
+        onPressed: onPressed,
+        child: Text(
+          radio ? context.l10n.hearingHistory : context.l10n.queue,
+          style: context.textTheme.bodyLarge?.copyWith(
+            color: context.colorScheme.onSurface,
           ),
-        )
+        ),
+      ),
     };
   }
 }
 
-enum _QueueButtonMode {
-  icon,
-  text;
-}
+enum _QueueButtonMode { icon, text }

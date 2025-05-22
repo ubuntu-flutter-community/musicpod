@@ -76,9 +76,7 @@ class MpvMetadataDialog extends StatelessWidget {
           right: 8,
           top: _mode == ModalMode.dialog ? 8 : 4,
         ),
-        child: StreamProviderRow(
-          text: mpvMetaData.icyTitle,
-        ),
+        child: StreamProviderRow(text: mpvMetaData.icyTitle),
       ),
       ...mpvMetaData
           .toMap()
@@ -100,18 +98,16 @@ class MpvMetadataDialog extends StatelessWidget {
 
     return switch (_mode) {
       ModalMode.dialog => SimpleDialog(
-          titlePadding: EdgeInsets.zero,
-          contentPadding: const EdgeInsets.only(bottom: 10),
-          children: children,
-        ),
+        titlePadding: EdgeInsets.zero,
+        contentPadding: const EdgeInsets.only(bottom: 10),
+        children: children,
+      ),
       ModalMode.bottomSheet => BottomSheet(
-          enableDrag: false,
-          onClosing: () {},
-          builder: (context) => SizedBox(
-            height: 800,
-            child: Column(children: children),
-          ),
-        )
+        enableDrag: false,
+        onClosing: () {},
+        builder: (context) =>
+            SizedBox(height: 800, child: Column(children: children)),
+      ),
     };
   }
 }

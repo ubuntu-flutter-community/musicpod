@@ -36,9 +36,9 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
       );
     }
 
-    final radioSearchResult =
-        watchPropertyValue((SearchModel m) => m.radioSearchResult)
-            ?.where((e) => e.uuid != null);
+    final radioSearchResult = watchPropertyValue(
+      (SearchModel m) => m.radioSearchResult,
+    )?.where((e) => e.uuid != null);
 
     final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
     final searchType = watchPropertyValue((SearchModel m) => m.searchType);
@@ -48,8 +48,9 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
         (searchQuery?.isEmpty == true && radioSearchResult.isEmpty == true)) {
       return SliverNoSearchResultPage(
         icon: const AnimatedEmoji(AnimatedEmojis.drum),
-        message:
-            Text('${context.l10n.search} ${searchType.localize(context.l10n)}'),
+        message: Text(
+          '${context.l10n.search} ${searchType.localize(context.l10n)}',
+        ),
       );
     }
     if (radioSearchResult.isEmpty && !loading) {
@@ -81,10 +82,9 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
               builder: (context) => StationPage(uuid: station.uuid!),
             ),
             onTap: () {
-              di<PlayerModel>().startPlaylist(
-                audios: [station],
-                listName: station.uuid!,
-              ).then((_) => di<RadioModel>().clickStation(station));
+              di<PlayerModel>()
+                  .startPlaylist(audios: [station], listName: station.uuid!)
+                  .then((_) => di<RadioModel>().clickStation(station));
             },
           ),
         );

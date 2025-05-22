@@ -28,8 +28,9 @@ class SearchPage extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final audioType = watchPropertyValue((SearchModel m) => m.audioType);
     final loading = watchPropertyValue((SearchModel m) => m.loading);
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
 
     return Scaffold(
       appBar: HeaderBar(
@@ -49,9 +50,7 @@ class SearchPage extends StatelessWidget with WatchItMixin {
               icon: loading
                   ? SizedBox.square(
                       dimension: useYaruTheme ? 18 : 25,
-                      child: const Progress(
-                        strokeWidth: 2,
-                      ),
+                      child: const Progress(strokeWidth: 2),
                     )
                   : null,
             ),
@@ -91,14 +90,16 @@ class SearchPage extends StatelessWidget with WatchItMixin {
               slivers: [
                 SliverFilterAppBar(
                   padding:
-                      getAdaptiveHorizontalPadding(constraints: constraints)
-                          .copyWith(
-                    bottom: filterPanelPadding.bottom,
-                    top: filterPanelPadding.top,
-                  ),
+                      getAdaptiveHorizontalPadding(
+                        constraints: constraints,
+                      ).copyWith(
+                        bottom: filterPanelPadding.bottom,
+                        top: filterPanelPadding.top,
+                      ),
                   onStretchTrigger: () async {
-                    WidgetsBinding.instance
-                        .addPostFrameCallback((timeStamp) async {
+                    WidgetsBinding.instance.addPostFrameCallback((
+                      timeStamp,
+                    ) async {
                       if (context.mounted) {
                         return di<SearchModel>().search();
                       }
@@ -110,11 +111,9 @@ class SearchPage extends StatelessWidget with WatchItMixin {
                   },
                 ),
                 SliverPadding(
-                  padding:
-                      getAdaptiveHorizontalPadding(constraints: constraints)
-                          .copyWith(
-                    bottom: bottomPlayerPageGap,
-                  ),
+                  padding: getAdaptiveHorizontalPadding(
+                    constraints: constraints,
+                  ).copyWith(bottom: bottomPlayerPageGap),
                   sliver: switch (audioType) {
                     AudioType.radio => const SliverRadioSearchResults(),
                     AudioType.podcast => const SliverPodcastSearchResults(),

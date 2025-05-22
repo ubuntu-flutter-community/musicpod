@@ -18,10 +18,7 @@ import 'mobile_bottom_bar.dart';
 import 'routing_manager.dart';
 
 class MobilePage extends StatelessWidget with WatchItMixin {
-  const MobilePage({
-    super.key,
-    required this.page,
-  });
+  const MobilePage({super.key, required this.page});
 
   final Widget page;
 
@@ -58,15 +55,10 @@ class MobilePage extends StatelessWidget with WatchItMixin {
         body: Row(
           children: [
             if (context.showMasterPanel && !fullWindowMode) ...[
-              const Hero(
-                tag: 'masterPanel',
-                child: MasterRail(),
-              ),
+              const Hero(tag: 'masterPanel', child: MasterRail()),
               const Hero(
                 tag: 'masterPanelDivider',
-                child: Material(
-                  child: VerticalDivider(),
-                ),
+                child: Material(child: VerticalDivider()),
               ),
             ],
             Expanded(
@@ -113,8 +105,9 @@ class MasterRail extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final selectedPageId =
-        watchPropertyValue((RoutingManager m) => m.selectedPageId);
+    final selectedPageId = watchPropertyValue(
+      (RoutingManager m) => m.selectedPageId,
+    );
 
     final destinations = permanentMasterItems
         .map(
@@ -157,9 +150,9 @@ class MasterRail extends StatelessWidget with WatchItMixin {
                         destinations: destinations,
                         selectedIndex: selectedItem == null
                             ? 0
-                            : permanentMasterItems
-                                .toList()
-                                .indexOf(selectedItem),
+                            : permanentMasterItems.toList().indexOf(
+                                selectedItem,
+                              ),
                       ),
                     ),
                   ),

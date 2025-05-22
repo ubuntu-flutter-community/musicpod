@@ -17,8 +17,8 @@ class ConnectivityModel extends SafeChangeNotifier {
   ConnectivityModel({
     required PlayerService playerService,
     required Connectivity connectivity,
-  })  : _connectivity = connectivity,
-        _playerService = playerService;
+  }) : _connectivity = connectivity,
+       _playerService = playerService;
 
   final PlayerService _playerService;
   final Connectivity _connectivity;
@@ -77,16 +77,10 @@ void onConnectivityChangedHandler(
 
   if (!dataSafeMode && di<Connectivity>().isNotWifiNorEthernet(res.data)) {
     di<PlayerModel>().setDataSafeMode(true);
-    showSnackBar(
-      context: context,
-      content: Text(l10n.dataSafeModeEnabled),
-    );
+    showSnackBar(context: context, content: Text(l10n.dataSafeModeEnabled));
   } else if (dataSafeMode &&
       !di<Connectivity>().isNotWifiNorEthernet(res.data)) {
     di<PlayerModel>().setDataSafeMode(false);
-    showSnackBar(
-      context: context,
-      content: Text(l10n.dataSafeModeDisabled),
-    );
+    showSnackBar(context: context, content: Text(l10n.dataSafeModeDisabled));
   }
 }

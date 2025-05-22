@@ -26,33 +26,30 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
 
     return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        childCount: audios.length,
-        (context, index) {
-          final episode = audios.elementAt(index);
+      delegate: SliverChildBuilderDelegate(childCount: audios.length, (
+        context,
+        index,
+      ) {
+        final episode = audios.elementAt(index);
 
-          return PodcastAudioTile(
-            key: ValueKey(episode.path ?? episode.url),
-            audio: episode,
-            isOnline: isOnline,
-            isPlayerPlaying: isPlayerPlaying,
-            addPodcast: episode.website == null
-                ? null
-                : () => libraryModel.addPodcast(
-                      episode.website!,
-                      audios,
-                    ),
-            removeUpdate: () => libraryModel.removePodcastUpdate(pageId),
-            isExpanded: episode == selectedAudio,
-            selected: episode == selectedAudio,
-            startPlaylist: () => playerModel.startPlaylist(
-              audios: audios,
-              listName: pageId,
-              index: index,
-            ),
-          );
-        },
-      ),
+        return PodcastAudioTile(
+          key: ValueKey(episode.path ?? episode.url),
+          audio: episode,
+          isOnline: isOnline,
+          isPlayerPlaying: isPlayerPlaying,
+          addPodcast: episode.website == null
+              ? null
+              : () => libraryModel.addPodcast(episode.website!, audios),
+          removeUpdate: () => libraryModel.removePodcastUpdate(pageId),
+          isExpanded: episode == selectedAudio,
+          selected: episode == selectedAudio,
+          startPlaylist: () => playerModel.startPlaylist(
+            audios: audios,
+            listName: pageId,
+            index: index,
+          ),
+        );
+      }),
     );
   }
 }

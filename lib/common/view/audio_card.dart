@@ -64,9 +64,7 @@ class _AudioCardState extends State<AudioCard> {
                     highlightColor: light
                         ? theme.cardColor.scale(lightness: -0.01)
                         : theme.cardColor.scale(lightness: 0.01),
-                    child: Container(
-                      color: theme.cardColor,
-                    ),
+                    child: Container(color: theme.cardColor),
                   ),
                 if (widget.image != null) widget.image!,
                 if (_hovered && widget.onPlay != null)
@@ -77,10 +75,7 @@ class _AudioCardState extends State<AudioCard> {
                       onPressed: widget.onPlay,
                       elevation: 0.5,
                       backgroundColor: Colors.white,
-                      child: Icon(
-                        Iconz.playFilled,
-                        color: Colors.black,
-                      ),
+                      child: Icon(Iconz.playFilled, color: Colors.black),
                     ),
                   ),
               ],

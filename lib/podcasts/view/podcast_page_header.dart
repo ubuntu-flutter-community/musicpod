@@ -9,6 +9,7 @@ import '../../common/page_ids.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/audio_page_header_html_description.dart';
 import '../../extensions/string_x.dart';
+import '../../l10n/app_localizations.dart';
 import '../../l10n/l10n.dart';
 import '../../search/search_model.dart';
 import '../../settings/settings_model.dart';
@@ -32,7 +33,8 @@ class PodcastPageHeader extends StatelessWidget {
     final l10n = context.l10n;
     return AudioPageHeader(
       image: PodcastPageImage(imageUrl: imageUrl),
-      label: (episodes ?? []).firstWhereOrNull((e) => e.genre != null)?.genre ??
+      label:
+          (episodes ?? []).firstWhereOrNull((e) => e.genre != null)?.genre ??
           l10n.podcast,
       subTitle: episodes?.firstOrNull?.artist,
       description: episodes?.firstOrNull?.albumArtist == null
@@ -42,14 +44,8 @@ class PodcastPageHeader extends StatelessWidget {
               title: title,
             ),
       title: title.unEscapeHtml ?? title,
-      onLabelTab: (text) => _onGenreTap(
-        l10n: l10n,
-        text: text,
-      ),
-      onSubTitleTab: (text) => _onArtistTap(
-        l10n: l10n,
-        text: text,
-      ),
+      onLabelTab: (text) => _onGenreTap(l10n: l10n, text: text),
+      onSubTitleTab: (text) => _onArtistTap(l10n: l10n, text: text),
     );
   }
 
@@ -70,8 +66,9 @@ class PodcastPageHeader extends StatelessWidget {
     required String text,
   }) async {
     await di<PodcastModel>().init(updateMessage: l10n.updateAvailable);
-    final genres =
-        di<SearchModel>().getPodcastGenres(di<SettingsModel>().usePodcastIndex);
+    final genres = di<SearchModel>().getPodcastGenres(
+      di<SettingsModel>().usePodcastIndex,
+    );
 
     final genreOrNull = genres.firstWhereOrNull(
       (e) =>

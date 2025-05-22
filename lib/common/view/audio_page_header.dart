@@ -61,10 +61,7 @@ class AudioPageHeader extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: ClipRRect(
-                  borderRadius: radius,
-                  child: image!,
-                ),
+                child: ClipRRect(borderRadius: radius, child: image!),
               ),
             ),
           Padding(
@@ -122,20 +119,13 @@ class _AudioPageHeaderSubTitle extends StatelessWidget {
             onTap: onLabelTab == null || label == null
                 ? null
                 : () => onLabelTab?.call(label!),
-            child: Text(
-              label ?? context.l10n.album,
-              style: style,
-              maxLines: 1,
-            ),
+            child: Text(label ?? context.l10n.album, style: style, maxLines: 1),
           ),
         ),
         if (subTitle?.isNotEmpty == true)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: Text(
-              '·',
-              style: style,
-            ),
+            child: Text('·', style: style),
           ),
         if (subTitle?.isNotEmpty == true)
           Flexible(

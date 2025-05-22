@@ -45,17 +45,15 @@ class _AlbumCardState extends State<AlbumCard> {
   Widget build(BuildContext context) {
     final model = di<LocalAudioModel>();
     final cachedCoverPath = model.getCachedCoverPath(widget.id);
-    final pinned =
-        watchPropertyValue((LibraryModel m) => m.isFavoriteAlbum(widget.id));
+    final pinned = watchPropertyValue(
+      (LibraryModel m) => m.isFavoriteAlbum(widget.id),
+    );
 
     return Stack(
       alignment: Alignment.center,
       children: [
         if (cachedCoverPath != null)
-          _AlbumCard(
-            id: widget.id,
-            path: cachedCoverPath,
-          )
+          _AlbumCard(id: widget.id, path: cachedCoverPath)
         else
           FutureBuilder(
             future: _pathFuture,
@@ -83,10 +81,7 @@ class _AlbumCardState extends State<AlbumCard> {
 }
 
 class _AlbumCard extends StatelessWidget {
-  const _AlbumCard({
-    required this.path,
-    required this.id,
-  });
+  const _AlbumCard({required this.path, required this.id});
 
   final String id;
   final String? path;

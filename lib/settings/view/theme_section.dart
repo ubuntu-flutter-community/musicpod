@@ -23,12 +23,15 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
     final model = di<SettingsModel>();
     final l10n = context.l10n;
     final themeIndex = watchPropertyValue((SettingsModel m) => m.themeIndex);
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
-    final useCustomThemeColor =
-        watchPropertyValue((SettingsModel m) => m.useCustomThemeColor);
-    final customThemeColor =
-        watchPropertyValue((SettingsModel m) => m.customThemeColor);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
+    final useCustomThemeColor = watchPropertyValue(
+      (SettingsModel m) => m.useCustomThemeColor,
+    );
+    final customThemeColor = watchPropertyValue(
+      (SettingsModel m) => m.customThemeColor,
+    );
 
     final color = customThemeColor == null
         ? kMusicPodDefaultColor
@@ -66,8 +69,9 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child:
-                              Text(ThemeMode.values[i].localize(context.l10n)),
+                          child: Text(
+                            ThemeMode.values[i].localize(context.l10n),
+                          ),
                         ),
                       ],
                     ),
@@ -92,9 +96,7 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
                     .map(
                       (IconSet iconSet) => PopupMenuItem(
                         value: iconSet.index,
-                        child: Text(
-                          iconSet.name,
-                        ),
+                        child: Text(iconSet.name),
                       ),
                     )
                     .toList(),
@@ -126,56 +128,57 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
               trailing: ElevatedButton.icon(
                 icon: Icon(Iconz.color),
                 label: Text(l10n.selectColor),
-                onPressed: () => ColorPicker(
-                  color: color,
-                  onColorChanged: (Color color) =>
-                      di<SettingsModel>().setCustomThemeColor(color.toARGB32()),
-                  width: 40,
-                  height: 40,
-                  borderRadius: 4,
-                  spacing: 5,
-                  runSpacing: 5,
-                  wheelDiameter: 155,
-                  heading: Text(
-                    l10n.selectColor,
-                    style: theme.textTheme.titleMedium,
-                  ),
-                  subheading: Text(
-                    l10n.selectColorShade,
-                    style: theme.textTheme.titleMedium,
-                  ),
-                  wheelSubheading: Text(
-                    l10n.selectColorAndItsShades,
-                    style: theme.textTheme.titleMedium,
-                  ),
-                  showMaterialName: true,
-                  showColorName: true,
-                  showColorCode: true,
-                  copyPasteBehavior: const ColorPickerCopyPasteBehavior(
-                    longPressMenu: true,
-                  ),
-                  materialNameTextStyle: theme.textTheme.bodySmall,
-                  colorNameTextStyle: theme.textTheme.bodySmall,
-                  colorCodeTextStyle: theme.textTheme.bodyMedium,
-                  colorCodePrefixStyle: theme.textTheme.bodySmall,
-                  selectedPickerTypeColor: theme.colorScheme.primary,
-                  pickersEnabled: const <ColorPickerType, bool>{
-                    ColorPickerType.both: false,
-                    ColorPickerType.primary: true,
-                    ColorPickerType.accent: true,
-                    ColorPickerType.bw: false,
-                    ColorPickerType.custom: true,
-                    ColorPickerType.wheel: true,
-                  },
-                ).showPickerDialog(
-                  context,
-                  actionsPadding: const EdgeInsets.all(16),
-                  constraints: const BoxConstraints(
-                    minHeight: 480,
-                    minWidth: 300,
-                    maxWidth: 320,
-                  ),
-                ),
+                onPressed: () =>
+                    ColorPicker(
+                      color: color,
+                      onColorChanged: (Color color) => di<SettingsModel>()
+                          .setCustomThemeColor(color.toARGB32()),
+                      width: 40,
+                      height: 40,
+                      borderRadius: 4,
+                      spacing: 5,
+                      runSpacing: 5,
+                      wheelDiameter: 155,
+                      heading: Text(
+                        l10n.selectColor,
+                        style: theme.textTheme.titleMedium,
+                      ),
+                      subheading: Text(
+                        l10n.selectColorShade,
+                        style: theme.textTheme.titleMedium,
+                      ),
+                      wheelSubheading: Text(
+                        l10n.selectColorAndItsShades,
+                        style: theme.textTheme.titleMedium,
+                      ),
+                      showMaterialName: true,
+                      showColorName: true,
+                      showColorCode: true,
+                      copyPasteBehavior: const ColorPickerCopyPasteBehavior(
+                        longPressMenu: true,
+                      ),
+                      materialNameTextStyle: theme.textTheme.bodySmall,
+                      colorNameTextStyle: theme.textTheme.bodySmall,
+                      colorCodeTextStyle: theme.textTheme.bodyMedium,
+                      colorCodePrefixStyle: theme.textTheme.bodySmall,
+                      selectedPickerTypeColor: theme.colorScheme.primary,
+                      pickersEnabled: const <ColorPickerType, bool>{
+                        ColorPickerType.both: false,
+                        ColorPickerType.primary: true,
+                        ColorPickerType.accent: true,
+                        ColorPickerType.bw: false,
+                        ColorPickerType.custom: true,
+                        ColorPickerType.wheel: true,
+                      },
+                    ).showPickerDialog(
+                      context,
+                      actionsPadding: const EdgeInsets.all(16),
+                      constraints: const BoxConstraints(
+                        minHeight: 480,
+                        minWidth: 300,
+                        maxWidth: 320,
+                      ),
+                    ),
               ),
             ),
           YaruTile(

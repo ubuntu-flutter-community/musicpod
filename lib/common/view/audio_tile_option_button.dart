@@ -80,9 +80,7 @@ class AudioTileOptionButton extends StatelessWidget {
                   playerModel.insertIntoQueue(audios);
                   showSnackBar(
                     context: context,
-                    content: Text(
-                      '${l10n.addedTo} ${l10n.queue}: $searchTerm',
-                    ),
+                    content: Text('${l10n.addedTo} ${l10n.queue}: $searchTerm'),
                   );
                 } else {
                   playerModel.startPlaylist(
@@ -122,9 +120,7 @@ class AudioTileOptionButton extends StatelessWidget {
               ),
               child: YaruTile(
                 leading: Icon(Iconz.plus),
-                title: Text(
-                  '${l10n.addToPlaylist} ...',
-                ),
+                title: Text('${l10n.addToPlaylist} ...'),
               ),
             ),
           if (audios.length == 1 &&
@@ -148,8 +144,9 @@ class AudioTileOptionButton extends StatelessWidget {
               onTap: () async {
                 final albumId = audios.firstOrNull?.albumId;
                 if (albumId != null) {
-                  final albumAudios =
-                      await di<LocalAudioModel>().findAlbum(albumId);
+                  final albumAudios = await di<LocalAudioModel>().findAlbum(
+                    albumId,
+                  );
                   if (albumAudios != null) {
                     di<RoutingManager>().push(
                       pageId: albumId,
@@ -164,9 +161,7 @@ class AudioTileOptionButton extends StatelessWidget {
               ),
             ),
           ],
-          if (audios.none(
-                (e) => e.audioType == AudioType.podcast,
-              ) &&
+          if (audios.none((e) => e.audioType == AudioType.podcast) &&
               audios.length == 1)
             PopupMenuItem(
               onTap: () => showDialog(
@@ -178,9 +173,7 @@ class AudioTileOptionButton extends StatelessWidget {
               ),
               child: YaruTile(
                 leading: Icon(Iconz.info),
-                title: Text(
-                  '${l10n.showMetaData} ...',
-                ),
+                title: Text('${l10n.showMetaData} ...'),
               ),
             ),
           if (audios.none((e) => e.audioType == AudioType.radio))
@@ -188,8 +181,9 @@ class AudioTileOptionButton extends StatelessWidget {
               enabled: false,
               padding: EdgeInsets.zero,
               child: Theme(
-                data:
-                    theme.copyWith(disabledColor: theme.colorScheme.onSurface),
+                data: theme.copyWith(
+                  disabledColor: theme.colorScheme.onSurface,
+                ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 13),
                   child: StreamProviderRow(
@@ -230,21 +224,21 @@ class AudioTileBottomSheetButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => IconButton(
-        tooltip: context.l10n.moreOptions,
-        onPressed: playlistId.isEmpty
-            ? null
-            : () => showModal(
-                  mode: ModalMode.platformModalMode,
-                  context: context,
-                  content: AudioTileBottomSheet(
-                    searchTerm: searchTerm,
-                    title: title,
-                    subTitle: subTitle,
-                    audios: audios,
-                    allowRemove: allowRemove,
-                    playlistId: playlistId,
-                  ),
-                ),
-        icon: icon ?? Icon(Iconz.viewMore),
-      );
+    tooltip: context.l10n.moreOptions,
+    onPressed: playlistId.isEmpty
+        ? null
+        : () => showModal(
+            mode: ModalMode.platformModalMode,
+            context: context,
+            content: AudioTileBottomSheet(
+              searchTerm: searchTerm,
+              title: title,
+              subTitle: subTitle,
+              audios: audios,
+              allowRemove: allowRemove,
+              playlistId: playlistId,
+            ),
+          ),
+    icon: icon ?? Icon(Iconz.viewMore),
+  );
 }

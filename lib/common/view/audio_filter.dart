@@ -2,19 +2,9 @@ import 'package:collection/collection.dart';
 
 import '../data/audio.dart';
 
-enum AudioFilter {
-  trackNumber,
-  title,
-  artist,
-  album,
-  genre,
-  year,
-  diskNumber;
-}
+enum AudioFilter { trackNumber, title, artist, album, genre, year, diskNumber }
 
-Iterable<Audio> splitByDiscs(
-  Iterable<Audio> audios,
-) {
+Iterable<Audio> splitByDiscs(Iterable<Audio> audios) {
   final discNumbers = <int>{};
   for (var a in audios) {
     if (a.discNumber != null) {

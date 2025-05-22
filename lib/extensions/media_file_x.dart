@@ -26,18 +26,20 @@ extension _ValidPathX on String {
 enum _SpecialMimeTypes {
   opusAudio;
 
-  String get mimeType => switch (this) { opusAudio => 'audio/opus' };
+  String get mimeType => switch (this) {
+    opusAudio => 'audio/opus',
+  };
 
   String get extension => switch (this) {
-        opusAudio => 'opus',
-      };
+    opusAudio => 'opus',
+  };
 
   List<int> get headerBytes => switch (this) {
-        opusAudio => [
-            0x4F, // O
-            0x67, // g
-            0x67, // g
-            0x53, // S
-          ],
-      };
+    opusAudio => [
+      0x4F, // O
+      0x67, // g
+      0x67, // g
+      0x53, // S
+    ],
+  };
 }

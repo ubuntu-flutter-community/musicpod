@@ -14,10 +14,7 @@ const double _kMaxExtent = 400;
 class BackGesture extends StatefulWidget {
   final Widget child;
 
-  const BackGesture({
-    super.key,
-    required this.child,
-  });
+  const BackGesture({super.key, required this.child});
 
   @override
   State<BackGesture> createState() => _BackGestureState();
@@ -34,12 +31,14 @@ class _BackGestureState extends State<BackGesture>
   @override
   void initState() {
     super.initState();
-    _swipeBackController = AnimationController(
-      duration: const Duration(milliseconds: 500),
-      vsync: this,
-    )..addListener(() {
-        _xPosition -= (_xPosition + _kButtonSize) * _swipeBackController.value;
-      });
+    _swipeBackController =
+        AnimationController(
+          duration: const Duration(milliseconds: 500),
+          vsync: this,
+        )..addListener(() {
+          _xPosition -=
+              (_xPosition + _kButtonSize) * _swipeBackController.value;
+        });
   }
 
   @override
@@ -123,8 +122,9 @@ class _BackGestureState extends State<BackGesture>
                                   ? Colors.grey[100]
                                   : Colors.grey[900],
                               shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.circular(_kButtonSize),
+                                borderRadius: BorderRadius.circular(
+                                  _kButtonSize,
+                                ),
                               ),
                             ),
                             child: Icon(Iconz.goBack),

@@ -31,21 +31,21 @@ class _MusicPodState extends State<MusicPod> {
 
   @override
   Widget build(BuildContext context) => ValueListenableBuilder(
-        valueListenable: appRestartNotifier,
-        builder: (context, key, child) {
-          return FutureBuilder(
-            key: key,
-            future: _allReady,
-            builder: (context, snapshot) => snapshot.hasData
-                ? isLinux
-                    ? GtkApplication(
-                        onCommandLine: (args) =>
-                            di<PlayerService>().playPath(args.firstOrNull),
-                        child: const YaruMusicPodApp(),
-                      )
-                    : const MaterialMusicPodApp()
-                : const SplashScreen(),
-          );
-        },
+    valueListenable: appRestartNotifier,
+    builder: (context, key, child) {
+      return FutureBuilder(
+        key: key,
+        future: _allReady,
+        builder: (context, snapshot) => snapshot.hasData
+            ? isLinux
+                  ? GtkApplication(
+                      onCommandLine: (args) =>
+                          di<PlayerService>().playPath(args.firstOrNull),
+                      child: const YaruMusicPodApp(),
+                    )
+                  : const MaterialMusicPodApp()
+            : const SplashScreen(),
       );
+    },
+  );
 }

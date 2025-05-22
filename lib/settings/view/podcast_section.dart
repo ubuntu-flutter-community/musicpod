@@ -51,12 +51,15 @@ class _PodcastSectionState extends State<PodcastSection> {
     final theme = context.theme;
     final l10n = context.l10n;
     final model = di<SettingsModel>();
-    final usePodcastIndex =
-        watchPropertyValue((SettingsModel m) => m.usePodcastIndex);
-    final podcastIndexApiKey =
-        watchPropertyValue((SettingsModel m) => m.podcastIndexApiKey);
-    final podcastIndexApiSecret =
-        watchPropertyValue((SettingsModel m) => m.podcastIndexApiSecret);
+    final usePodcastIndex = watchPropertyValue(
+      (SettingsModel m) => m.usePodcastIndex,
+    );
+    final podcastIndexApiKey = watchPropertyValue(
+      (SettingsModel m) => m.podcastIndexApiKey,
+    );
+    final podcastIndexApiSecret = watchPropertyValue(
+      (SettingsModel m) => m.podcastIndexApiSecret,
+    );
 
     return YaruSection(
       margin: const EdgeInsets.all(kLargestSpace),
@@ -143,11 +146,13 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
-    final checkingForUpdates =
-        watchPropertyValue((PodcastModel m) => m.checkingForUpdates);
+    final checkingForUpdates = watchPropertyValue(
+      (PodcastModel m) => m.checkingForUpdates,
+    );
 
-    final processing =
-        watchPropertyValue((CustomContentModel m) => m.processing);
+    final processing = watchPropertyValue(
+      (CustomContentModel m) => m.processing,
+    );
     return YaruTile(
       title: Text(l10n.podcastSubscriptions),
       trailing: Row(
@@ -176,25 +181,22 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
             icon: processing || checkingForUpdates
                 ? const SizedBox.square(
                     dimension: 20,
-                    child: Progress(
-                      strokeWidth: 2,
-                    ),
+                    child: Progress(strokeWidth: 2),
                   )
                 : Icon(Iconz.remove),
             tooltip: context.l10n.podcasts,
             onPressed: processing || checkingForUpdates
                 ? null
                 : () => showDialog(
-                      context: context,
-                      builder: (_) => ConfirmationDialog(
-                        title: Text(context.l10n.removeAllPodcastsConfirm),
-                        content:
-                            Text(context.l10n.removeAllPodcastsDescription),
-                        confirmLabel: context.l10n.ok,
-                        cancelLabel: context.l10n.cancel,
-                        onConfirm: () => di<LibraryModel>().removeAllPodcasts(),
-                      ),
+                    context: context,
+                    builder: (_) => ConfirmationDialog(
+                      title: Text(context.l10n.removeAllPodcastsConfirm),
+                      content: Text(context.l10n.removeAllPodcastsDescription),
+                      confirmLabel: context.l10n.ok,
+                      cancelLabel: context.l10n.cancel,
+                      onConfirm: () => di<LibraryModel>().removeAllPodcasts(),
                     ),
+                  ),
           ),
         ],
       ),

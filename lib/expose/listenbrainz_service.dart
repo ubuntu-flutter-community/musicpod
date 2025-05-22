@@ -5,7 +5,7 @@ import '../settings/settings_service.dart';
 
 class ListenBrainzService {
   ListenBrainzService({required SettingsService settingsService})
-      : _settingsService = settingsService {
+    : _settingsService = settingsService {
     init();
   }
 
@@ -27,10 +27,7 @@ class ListenBrainzService {
       if (_listenBrainz != null &&
           _settingsService.enableListenBrainzScrobbling) {
         final track = Track(title: title, artist: artist);
-        await _listenBrainz!.submitSingle(
-          track,
-          DateTime.now(),
-        );
+        await _listenBrainz!.submitSingle(track, DateTime.now());
         await _listenBrainz!.submitPlayingNow(track);
       }
     } on Exception catch (e) {

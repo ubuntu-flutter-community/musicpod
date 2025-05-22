@@ -18,11 +18,7 @@ class CustomContentPage extends StatelessWidget {
       appBar: HeaderBar(
         title: Text(l10n.customContentTitle),
         adaptive: true,
-        actions: [
-          const SizedBox(
-            width: 10,
-          ),
-        ],
+        actions: [const SizedBox(width: 10)],
       ),
       body: Padding(
         padding: const EdgeInsets.all(kLargestSpace),
@@ -50,18 +46,19 @@ class CustomContentPage extends StatelessWidget {
                       Text(context.l10n.station),
                       Text(context.l10n.podcast),
                     ],
-                    children: const [
-                      CustomPlaylistsSection(),
-                      CustomStationSection(),
-                      CustomPodcastSection(),
-                    ]
-                        .map(
-                          (e) => Padding(
-                            padding: const EdgeInsets.all(kLargestSpace),
-                            child: e,
-                          ),
-                        )
-                        .toList(),
+                    children:
+                        const [
+                              CustomPlaylistsSection(),
+                              CustomStationSection(),
+                              CustomPodcastSection(),
+                            ]
+                            .map(
+                              (e) => Padding(
+                                padding: const EdgeInsets.all(kLargestSpace),
+                                child: e,
+                              ),
+                            )
+                            .toList(),
                   ),
                 ),
               ],

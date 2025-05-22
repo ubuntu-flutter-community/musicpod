@@ -16,8 +16,9 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
     final searchModel = di<SearchModel>();
 
     final podcastGenre = watchPropertyValue((SearchModel m) => m.podcastGenre);
-    final usePodcastIndex =
-        watchPropertyValue((SettingsModel m) => m.usePodcastIndex);
+    final usePodcastIndex = watchPropertyValue(
+      (SettingsModel m) => m.usePodcastIndex,
+    );
     final genres = watchPropertyValue(
       (SearchModel m) => m.getPodcastGenres(usePodcastIndex),
     );
@@ -31,13 +32,7 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
         goNextIcon: Icon(Iconz.goNext),
         goPreviousIcon: Icon(Iconz.goBack),
         style: YaruChoiceChipBarStyle.stack,
-        labels: genres
-            .map(
-              (e) => Text(
-                e.localize(context.l10n),
-              ),
-            )
-            .toList(),
+        labels: genres.map((e) => Text(e.localize(context.l10n))).toList(),
         isSelected: genres.map((e) => e == podcastGenre).toList(),
         onSelected: (i) {
           searchModel.setSearchQuery(null);

@@ -8,27 +8,17 @@ import '../../l10n/l10n.dart';
 import '../settings_model.dart';
 import 'settings_tile.dart';
 
-enum _SettingsButtonMode {
-  icon,
-  important,
-  tile;
-}
+enum _SettingsButtonMode { icon, important, tile }
 
 class SettingsButton extends StatelessWidget {
-  const SettingsButton.icon({
-    super.key,
-    this.scrollIndex = 0,
-  }) : _mode = _SettingsButtonMode.icon;
+  const SettingsButton.icon({super.key, this.scrollIndex = 0})
+    : _mode = _SettingsButtonMode.icon;
 
-  const SettingsButton.important({
-    super.key,
-    this.scrollIndex = 0,
-  }) : _mode = _SettingsButtonMode.important;
+  const SettingsButton.important({super.key, this.scrollIndex = 0})
+    : _mode = _SettingsButtonMode.important;
 
-  const SettingsButton.tile({
-    super.key,
-    this.scrollIndex = 0,
-  }) : _mode = _SettingsButtonMode.tile;
+  const SettingsButton.tile({super.key, this.scrollIndex = 0})
+    : _mode = _SettingsButtonMode.tile;
 
   final _SettingsButtonMode _mode;
   final int scrollIndex;
@@ -43,14 +33,14 @@ class SettingsButton extends StatelessWidget {
 
     return switch (_mode) {
       _SettingsButtonMode.icon => IconButton(
-          tooltip: l10n.settings,
-          onPressed: onPressed,
-          icon: Icon(Iconz.settings, semanticLabel: l10n.settings),
-        ),
+        tooltip: l10n.settings,
+        onPressed: onPressed,
+        icon: Icon(Iconz.settings, semanticLabel: l10n.settings),
+      ),
       _SettingsButtonMode.important => ElevatedButton(
-          onPressed: onPressed,
-          child: Text(context.l10n.settings),
-        ),
+        onPressed: onPressed,
+        child: Text(context.l10n.settings),
+      ),
       _SettingsButtonMode.tile => const SettingsTile(),
     };
   }

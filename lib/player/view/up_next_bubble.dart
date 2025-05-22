@@ -8,19 +8,16 @@ import '../../player/player_model.dart';
 import '../../l10n/l10n.dart';
 
 class UpNextBubble extends StatelessWidget with WatchItMixin {
-  const UpNextBubble({
-    super.key,
-    required this.audio,
-    required this.nextAudio,
-  });
+  const UpNextBubble({super.key, required this.audio, required this.nextAudio});
 
   final Audio? audio;
   final Audio? nextAudio;
 
   String createQueueElement(Audio? audio) {
     final title = audio?.title?.isNotEmpty == true ? audio?.title! : '';
-    final artist =
-        audio?.artist?.isNotEmpty == true ? ' • ${audio?.artist}' : '';
+    final artist = audio?.artist?.isNotEmpty == true
+        ? ' • ${audio?.artist}'
+        : '';
     return '$title$artist'.trim();
   }
 
@@ -28,8 +25,9 @@ class UpNextBubble extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final theme = context.theme;
     final setUpNextExpanded = di<PlayerModel>().setUpNextExpanded;
-    final isUpNextExpanded =
-        watchPropertyValue((PlayerModel m) => m.isUpNextExpanded);
+    final isUpNextExpanded = watchPropertyValue(
+      (PlayerModel m) => m.isUpNextExpanded,
+    );
     final queue = watchPropertyValue((PlayerModel m) => m.queue);
 
     return SizedBox(
@@ -61,10 +59,7 @@ class UpNextBubble extends StatelessWidget with WatchItMixin {
                   children: [
                     for (final e in queue)
                       Padding(
-                        padding: const EdgeInsets.only(
-                          left: 10,
-                          right: 10,
-                        ),
+                        padding: const EdgeInsets.only(left: 10, right: 10),
                         child: Text(
                           createQueueElement(e),
                           style: theme.textTheme.labelMedium?.copyWith(
@@ -81,15 +76,12 @@ class UpNextBubble extends StatelessWidget with WatchItMixin {
               )
             else
               Padding(
-                padding: const EdgeInsets.only(
-                  left: 10,
-                  right: 10,
-                  bottom: 10,
-                ),
+                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
                 child: Text(
                   createQueueElement(nextAudio),
-                  style: theme.textTheme.labelMedium
-                      ?.copyWith(color: theme.colorScheme.onSurface),
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: theme.colorScheme.onSurface,
+                  ),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                 ),

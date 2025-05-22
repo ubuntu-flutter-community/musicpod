@@ -13,8 +13,9 @@ class PodcastReplayButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final podcast =
-        watchPropertyValue((LibraryModel m) => m.getPodcast(feedUrl));
+    final podcast = watchPropertyValue(
+      (LibraryModel m) => m.getPodcast(feedUrl),
+    );
     return IconButton(
       tooltip: context.l10n.replayAllEpisodes,
       onPressed: podcast == null

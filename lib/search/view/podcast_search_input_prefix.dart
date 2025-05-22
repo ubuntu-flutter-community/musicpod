@@ -16,26 +16,23 @@ import '../../settings/settings_model.dart';
 import '../search_model.dart';
 
 class PodcastSearchInputPrefix extends StatelessWidget with WatchItMixin {
-  const PodcastSearchInputPrefix({
-    super.key,
-  });
+  const PodcastSearchInputPrefix({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final usePodcastIndex =
-        watchPropertyValue((SettingsModel m) => m.usePodcastIndex);
+    final usePodcastIndex = watchPropertyValue(
+      (SettingsModel m) => m.usePodcastIndex,
+    );
     final l10n = context.l10n;
     final tooltip = usePodcastIndex ? l10n.language : l10n.country;
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
     final radius = Radius.circular(useYaruTheme ? kYaruButtonRadius : 100);
     return IconButton(
       style: IconButton.styleFrom(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: radius,
-            bottomLeft: radius,
-          ),
+          borderRadius: BorderRadius.only(topLeft: radius, bottomLeft: radius),
         ),
       ),
       tooltip: tooltip,
@@ -44,69 +41,54 @@ class PodcastSearchInputPrefix extends StatelessWidget with WatchItMixin {
         context: context,
         content: LocationFilterDialog(mode: ModalMode.platformModalMode),
       ),
-      icon: Icon(
-        Iconz.globe,
-        semanticLabel: tooltip,
-      ),
+      icon: Icon(Iconz.globe, semanticLabel: tooltip),
     );
   }
 }
 
 class LocationFilterDialog extends StatelessWidget {
-  const LocationFilterDialog({
-    super.key,
-    required ModalMode mode,
-  }) : _mode = mode;
+  const LocationFilterDialog({super.key, required ModalMode mode})
+    : _mode = mode;
 
-  const LocationFilterDialog.dialog({
-    super.key,
-  }) : _mode = ModalMode.dialog;
+  const LocationFilterDialog.dialog({super.key}) : _mode = ModalMode.dialog;
 
-  const LocationFilterDialog.bottomSheet({
-    super.key,
-  }) : _mode = ModalMode.bottomSheet;
+  const LocationFilterDialog.bottomSheet({super.key})
+    : _mode = ModalMode.bottomSheet;
 
   final ModalMode _mode;
 
   @override
   Widget build(BuildContext context) => switch (_mode) {
-        ModalMode.dialog => AlertDialog(
-            titlePadding: EdgeInsets.zero,
-            contentPadding: const EdgeInsets.all(20),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50),
-            ),
-            content: const LocationFilter(),
+    ModalMode.dialog => AlertDialog(
+      titlePadding: EdgeInsets.zero,
+      contentPadding: const EdgeInsets.all(20),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+      content: const LocationFilter(),
+    ),
+    ModalMode.bottomSheet => BottomSheet(
+      builder: (context) => Center(
+        child: Padding(
+          padding: const EdgeInsets.only(
+            bottom: 60,
+            top: kLargestSpace,
+            left: kLargestSpace,
+            right: kLargestSpace,
           ),
-        ModalMode.bottomSheet => BottomSheet(
-            builder: (context) => Center(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 60,
-                  top: kLargestSpace,
-                  left: kLargestSpace,
-                  right: kLargestSpace,
-                ),
-                child: Column(
-                  children: [
-                    LocationFilter(
-                      width: context.mediaQuerySize.width - 40,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            enableDrag: false,
-            onClosing: () {},
-          )
-      };
+          child: Column(
+            children: [
+              LocationFilter(width: context.mediaQuerySize.width - 40),
+            ],
+          ),
+        ),
+      ),
+      enableDrag: false,
+      onClosing: () {},
+    ),
+  };
 }
 
 class LocationFilter extends StatelessWidget with WatchItMixin {
-  const LocationFilter({
-    super.key,
-    this.width,
-  });
+  const LocationFilter({super.key, this.width});
 
   final double? width;
 
@@ -125,20 +107,23 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
       }
     }
 
-    final usePodcastIndex =
-        watchPropertyValue((SettingsModel m) => m.usePodcastIndex);
+    final usePodcastIndex = watchPropertyValue(
+      (SettingsModel m) => m.usePodcastIndex,
+    );
     watchPropertyValue((LibraryModel m) => m.favLanguagesLength);
     watchPropertyValue((LibraryModel m) => m.favCountriesLength);
-    final favLanguageCodes =
-        watchPropertyValue((LibraryModel m) => m.favLanguageCodes);
+    final favLanguageCodes = watchPropertyValue(
+      (LibraryModel m) => m.favLanguageCodes,
+    );
 
     final language = watchPropertyValue((SearchModel m) => m.language);
 
     final theWidth = width ?? 250.0;
     final height = chipHeight;
 
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
     final countryPillPadding = getCountryPillPadding(useYaruTheme);
 
     return usePodcastIndex
@@ -176,9 +161,7 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
             width: theWidth,
             height: height,
             countries: [
-              ...[
-                ...Country.values,
-              ].where(
+              ...[...Country.values].where(
                 (e) => libraryModel.favCountryCodes.contains(e.code) == true,
               ),
               ...[...Country.values].where(

@@ -56,22 +56,16 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: kMediumSpace,
-            ),
+            padding: const EdgeInsets.symmetric(vertical: kMediumSpace),
             child: TextField(
               autofocus: true,
               decoration: InputDecoration(
-                label: Text(
-                  context.l10n.setPlaylistNameAndAddMoreLater,
-                ),
+                label: Text(context.l10n.setPlaylistNameAndAddMoreLater),
               ),
               controller: _controller,
             ),
           ),
-          const SizedBox(
-            height: kLargestSpace,
-          ),
+          const SizedBox(height: kLargestSpace),
           Align(
             alignment: Alignment.centerLeft,
             child: Wrap(
@@ -82,11 +76,11 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
                   icon: Icon(Iconz.export),
                   onPressed:
                       widget.playlistName == null || widget.audios == null
-                          ? null
-                          : () => di<CustomContentModel>().exportPlaylistToM3u(
-                                id: widget.playlistName!,
-                                audios: widget.audios!,
-                              ),
+                      ? null
+                      : () => di<CustomContentModel>().exportPlaylistToM3u(
+                          id: widget.playlistName!,
+                          audios: widget.audios!,
+                        ),
                   label: Text(l10n.exportPlaylistToM3UFile),
                 ),
                 if (widget.playlistName != null)
@@ -96,17 +90,16 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
                       if (context.mounted && Navigator.of(context).canPop()) {
                         Navigator.of(context).pop();
                       }
-                      di<LocalAudioModel>()
-                          .setLocalAudioindex(LocalAudioView.playlists.index);
+                      di<LocalAudioModel>().setLocalAudioindex(
+                        LocalAudioView.playlists.index,
+                      );
                       routingManager.push(
                         pageId: PageIDs.localAudio,
                         replace: true,
                       );
                       libraryModel.removePlaylist(widget.playlistName!);
                     },
-                    label: Text(
-                      context.l10n.deletePlaylist,
-                    ),
+                    label: Text(context.l10n.deletePlaylist),
                   ),
               ],
             ),
@@ -114,16 +107,15 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
         ],
       ),
       confirmLabel: context.l10n.save,
-      confirmEnabled:
-          watchPropertyValue((CustomContentModel m) => !m.processing),
+      confirmEnabled: watchPropertyValue(
+        (CustomContentModel m) => !m.processing,
+      ),
       onConfirm: () {
-        di<LocalAudioModel>()
-            .setLocalAudioindex(LocalAudioView.playlists.index);
-        routingManager.push(pageId: PageIDs.localAudio);
-        libraryModel.updatePlaylistName(
-          widget.playlistName!,
-          _controller.text,
+        di<LocalAudioModel>().setLocalAudioindex(
+          LocalAudioView.playlists.index,
         );
+        routingManager.push(pageId: PageIDs.localAudio);
+        libraryModel.updatePlaylistName(widget.playlistName!, _controller.text);
         Navigator.of(context).maybePop();
       },
     );

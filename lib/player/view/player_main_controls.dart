@@ -63,44 +63,39 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
           : null,
     );
 
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
 
     final radius = getBigAvatarButtonRadius(useYaruTheme);
     final playButton = avatarPlayButton
-        ? SizedBox.square(
-            dimension: 2 * radius,
-            child: rawPlayButton,
-          )
+        ? SizedBox.square(dimension: 2 * radius, child: rawPlayButton)
         : rawPlayButton;
 
     final children = <Widget>[
       switch (audio?.audioType) {
         AudioType.local => ShuffleButton(
-            active: active,
-            iconColor: defaultColor,
-          ),
+          active: active,
+          iconColor: defaultColor,
+        ),
         AudioType.podcast => SeekButton(
-            active: active,
-            forward: false,
-            iconColor: defaultColor,
-          ),
+          active: active,
+          forward: false,
+          iconColor: defaultColor,
+        ),
         AudioType.radio => IconButton(
-            tooltip: context.l10n.skipToLivStream,
-            onPressed: active ? di<PlayerModel>().playNext : null,
-            icon: Icon(Iconz.refresh, color: defaultColor),
-          ),
-        _ => const SizedBox.shrink()
+          tooltip: context.l10n.skipToLivStream,
+          onPressed: active ? di<PlayerModel>().playNext : null,
+          icon: Icon(Iconz.refresh, color: defaultColor),
+        ),
+        _ => const SizedBox.shrink(),
       },
       if (showSkipButtons)
         IconButton(
           tooltip: context.l10n.back,
           color: defaultColor,
           onPressed: !active ? null : () => di<PlayerModel>().playPrevious(),
-          icon: Icon(
-            Iconz.skipBackward,
-            color: defaultColor,
-          ),
+          icon: Icon(Iconz.skipBackward, color: defaultColor),
         ),
       playButton,
       if (showSkipButtons)
@@ -110,31 +105,29 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
           onPressed: !active || queueLength < 2
               ? null
               : () => di<PlayerModel>().playNext(),
-          icon: Icon(
-            Iconz.skipForward,
-            color: defaultColor,
-          ),
+          icon: Icon(Iconz.skipForward, color: defaultColor),
         ),
       switch (audio?.audioType) {
         AudioType.local => RepeatButton(
-            active: active,
-            iconColor: defaultColor,
-          ),
+          active: active,
+          iconColor: defaultColor,
+        ),
         AudioType.podcast => SeekButton(
-            active: active,
-            iconColor: defaultColor,
-          ),
+          active: active,
+          iconColor: defaultColor,
+        ),
         AudioType.radio => NextStationButton(
-            iconColor: defaultColor,
-            active: active,
-          ),
+          iconColor: defaultColor,
+          active: active,
+        ),
         _ => const SizedBox.shrink(),
       },
     ];
 
     return Row(
       mainAxisSize: mainAxisSize,
-      mainAxisAlignment: mainAxisAlignment ??
+      mainAxisAlignment:
+          mainAxisAlignment ??
           (isMobile ? MainAxisAlignment.spaceEvenly : MainAxisAlignment.center),
       spacing: isMobile ? kSmallestSpace : kMediumSpace,
       children: children,
@@ -168,15 +161,14 @@ class PlayerCompactControls extends StatelessWidget with WatchItMixin {
       active: active,
     );
 
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
 
     final radius = getSmallAvatarButtonRadius(useYaruTheme);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 20,
-      ),
+      padding: const EdgeInsets.symmetric(vertical: 20),
       child: Row(
         spacing: kMediumSpace,
         mainAxisSize: mainAxisSize,
@@ -187,10 +179,7 @@ class PlayerCompactControls extends StatelessWidget with WatchItMixin {
             radius: radius,
             backgroundColor:
                 avatarColor ?? (theme.isLight ? Colors.black : Colors.white),
-            child: SizedBox.square(
-              dimension: 2 * radius,
-              child: rawPlayButton,
-            ),
+            child: SizedBox.square(dimension: 2 * radius, child: rawPlayButton),
           ),
           IconButton(
             onPressed: () => di<AppModel>().setFullWindowMode(true),

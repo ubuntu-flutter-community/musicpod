@@ -17,8 +17,9 @@ class RadioSection extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     watchPropertyValue((RadioModel m) => m.radioCollectionView);
-    final processing =
-        watchPropertyValue((CustomContentModel m) => m.processing);
+    final processing = watchPropertyValue(
+      (CustomContentModel m) => m.processing,
+    );
     return YaruSection(
       margin: const EdgeInsets.all(kLargestSpace),
       headline: Text(l10n.radio),
@@ -37,7 +38,7 @@ class RadioSection extends StatelessWidget with WatchItMixin {
                   onPressed: processing
                       ? null
                       : () => di<CustomContentModel>()
-                          .exportStarredStationsToOpmlFile(),
+                            .exportStarredStationsToOpmlFile(),
                 ),
                 IconButton(
                   tooltip: l10n.importStarredStationsFromOpmlFile,
@@ -48,7 +49,7 @@ class RadioSection extends StatelessWidget with WatchItMixin {
                   onPressed: processing
                       ? null
                       : () => di<CustomContentModel>()
-                          .importStarredStationsFromOpmlFile(),
+                            .importStarredStationsFromOpmlFile(),
                 ),
                 IconButton(
                   icon: Icon(
@@ -59,20 +60,20 @@ class RadioSection extends StatelessWidget with WatchItMixin {
                   onPressed: processing
                       ? null
                       : () => showDialog(
-                            context: context,
-                            builder: (context) => ConfirmationDialog(
-                              showCloseIcon: false,
-                              title: Text(l10n.removeAllStarredStationsConfirm),
-                              content: SizedBox(
-                                width: 350,
-                                child: Text(
-                                  l10n.removeAllStarredStationsDescription,
-                                ),
+                          context: context,
+                          builder: (context) => ConfirmationDialog(
+                            showCloseIcon: false,
+                            title: Text(l10n.removeAllStarredStationsConfirm),
+                            content: SizedBox(
+                              width: 350,
+                              child: Text(
+                                l10n.removeAllStarredStationsDescription,
                               ),
-                              onConfirm: () =>
-                                  di<LibraryModel>().unStarAllStations(),
                             ),
+                            onConfirm: () =>
+                                di<LibraryModel>().unStarAllStations(),
                           ),
+                        ),
                 ),
               ],
             ),

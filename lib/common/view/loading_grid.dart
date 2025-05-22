@@ -7,10 +7,7 @@ import 'audio_card_bottom.dart';
 import 'theme.dart';
 
 class LoadingGrid extends StatelessWidget {
-  const LoadingGrid({
-    super.key,
-    required this.limit,
-  });
+  const LoadingGrid({super.key, required this.limit});
 
   final int limit;
 
@@ -37,10 +34,7 @@ class LoadingGrid extends StatelessWidget {
 }
 
 class SliverLoadingGrid extends StatelessWidget {
-  const SliverLoadingGrid({
-    super.key,
-    required this.limit,
-  });
+  const SliverLoadingGrid({super.key, required this.limit});
 
   final int limit;
 

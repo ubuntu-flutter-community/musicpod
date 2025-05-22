@@ -171,12 +171,7 @@ Future<Map<String, String>> getCustomSettings(String filename) async {
 
     final map = jsonDecode(jsonStr) as Map<String, dynamic>;
 
-    final m = map.map(
-      (key, value) => MapEntry<String, String>(
-        key,
-        value,
-      ),
-    );
+    final m = map.map((key, value) => MapEntry<String, String>(key, value));
 
     return m;
   } else {
@@ -206,9 +201,7 @@ Future<void> writeStringIterable({
   await file.writeAsString(iterable.join('\n'));
 }
 
-Future<Iterable<String>?> readStringIterable({
-  required String filename,
-}) async {
+Future<Iterable<String>?> readStringIterable({required String filename}) async {
   final workingDir = await getWorkingDir();
   final file = File(p.join(workingDir, filename));
 
@@ -261,9 +254,7 @@ Future<Map<String, List<Audio>>> readAudioMap(String fileName) async {
       final m = map.map(
         (key, value) => MapEntry<String, List<Audio>>(
           key,
-          List.from(
-            (value as List<dynamic>).map((e) => Audio.fromMap(e)),
-          ),
+          List.from((value as List<dynamic>).map((e) => Audio.fromMap(e))),
         ),
       );
 
@@ -289,10 +280,7 @@ Future<Map<String, String>> readStringMap(String fileName) async {
       final map = jsonDecode(jsonStr) as Map<String, dynamic>;
 
       final m = map.map(
-        (key, value) => MapEntry<String, String>(
-          key,
-          value as String,
-        ),
+        (key, value) => MapEntry<String, String>(key, value as String),
       );
 
       return m;
@@ -307,10 +295,7 @@ Future<Map<String, String>> readStringMap(String fileName) async {
 
 Future<void> writeStringMap(Map<String, String> map, String fileName) async {
   final dynamicMap = map.map(
-    (key, value) => MapEntry<String, String>(
-      key,
-      value as dynamic,
-    ),
+    (key, value) => MapEntry<String, String>(key, value as dynamic),
   );
 
   final jsonStr = jsonEncode(dynamicMap);

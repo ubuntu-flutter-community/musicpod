@@ -14,17 +14,17 @@ class AddToPlaylistDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: YaruDialogTitleBar(
-          title: Text(context.l10n.addToPlaylist),
-          border: BorderSide.none,
-          backgroundColor: context.theme.dialogTheme.backgroundColor,
-        ),
-        titlePadding: EdgeInsets.zero,
-        content: SizedBox(
-          height: 200,
-          width: 400,
-          child: AddToPlaylistNavigator(audios: audios),
-        ),
-        contentPadding: const EdgeInsets.symmetric(vertical: kLargestSpace),
-      );
+    title: YaruDialogTitleBar(
+      title: Text(context.l10n.addToPlaylist),
+      border: BorderSide.none,
+      backgroundColor: context.theme.dialogTheme.backgroundColor,
+    ),
+    titlePadding: EdgeInsets.zero,
+    content: SizedBox(
+      height: 200,
+      width: 400,
+      child: AddToPlaylistNavigator(audios: audios),
+    ),
+    contentPadding: const EdgeInsets.symmetric(vertical: kLargestSpace),
+  );
 }

@@ -32,28 +32,26 @@ class LocalAudioBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => switch (localAudioView) {
-        LocalAudioView.titles => TitlesView(
-            audios: titles,
-            noResultMessage: noResultMessage,
-            noResultIcon: noResultIcon,
-          ),
-        LocalAudioView.artists => ArtistsView(
-            artists: artists,
-            noResultMessage: noResultMessage,
-            noResultIcon: noResultIcon,
-          ),
-        LocalAudioView.albums => AlbumsView(
-            albumIDs: albumIDs,
-            noResultMessage: noResultMessage,
-            noResultIcon: noResultIcon,
-          ),
-        LocalAudioView.genres => GenresView(
-            genres: genres,
-            noResultMessage: noResultMessage,
-            noResultIcon: noResultIcon,
-          ),
-        LocalAudioView.playlists => PlaylistsView(
-            playlists: playlists ?? [],
-          )
-      };
+    LocalAudioView.titles => TitlesView(
+      audios: titles,
+      noResultMessage: noResultMessage,
+      noResultIcon: noResultIcon,
+    ),
+    LocalAudioView.artists => ArtistsView(
+      artists: artists,
+      noResultMessage: noResultMessage,
+      noResultIcon: noResultIcon,
+    ),
+    LocalAudioView.albums => AlbumsView(
+      albumIDs: albumIDs,
+      noResultMessage: noResultMessage,
+      noResultIcon: noResultIcon,
+    ),
+    LocalAudioView.genres => GenresView(
+      genres: genres,
+      noResultMessage: noResultMessage,
+      noResultIcon: noResultIcon,
+    ),
+    LocalAudioView.playlists => PlaylistsView(playlists: playlists ?? []),
+  };
 }

@@ -23,10 +23,7 @@ import 'player_track.dart';
 import 'player_view.dart';
 
 class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
-  const PlayerTitleAndArtist({
-    super.key,
-    required this.playerPosition,
-  });
+  const PlayerTitleAndArtist({super.key, required this.playerPosition});
 
   final PlayerPosition playerPosition;
 
@@ -35,10 +32,12 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     final theme = context.theme;
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
 
-    final icyTitle =
-        watchPropertyValue((PlayerModel m) => m.mpvMetaData?.icyTitle);
-    final showPositionDuration =
-        watchPropertyValue((SettingsModel m) => m.showPositionDuration);
+    final icyTitle = watchPropertyValue(
+      (PlayerModel m) => m.mpvMetaData?.icyTitle,
+    );
+    final showPositionDuration = watchPropertyValue(
+      (SettingsModel m) => m.showPositionDuration,
+    );
 
     final appModel = di<AppModel>();
     final routingManager = di<RoutingManager>();
@@ -76,21 +75,21 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
             onTap: audio == null
                 ? null
                 : () => _onTitleTap(
-                      audio: audio,
-                      text: icyTitle,
-                      context: context,
-                      routingManager: routingManager,
-                      playerModel: playerModel,
-                      localAudioModel: localAudioModel,
-                      appModel: appModel,
-                    ),
+                    audio: audio,
+                    text: icyTitle,
+                    context: context,
+                    routingManager: routingManager,
+                    playerModel: playerModel,
+                    localAudioModel: localAudioModel,
+                    appModel: appModel,
+                  ),
             child: Tooltip(
               message: _title(audio: audio, icyTitle: icyTitle),
               child: Text(
                 _title(audio: audio, icyTitle: icyTitle),
                 style: switch (playerPosition) {
                   PlayerPosition.bottom => _bottomTitleTextStyle(),
-                  _ => _fullHeightTitleTextStyle(theme)
+                  _ => _fullHeightTitleTextStyle(theme),
                 },
                 textAlign: _textAlign(),
                 maxLines: 1,
@@ -114,19 +113,19 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
             onTap: audio == null
                 ? null
                 : () => _onArtistTap(
-                      audio: audio,
-                      routingManager: routingManager,
-                      localAudioModel: localAudioModel,
-                      appModel: appModel,
-                      podcastModel: podcastModel,
-                    ),
+                    audio: audio,
+                    routingManager: routingManager,
+                    localAudioModel: localAudioModel,
+                    appModel: appModel,
+                    podcastModel: podcastModel,
+                  ),
             child: Tooltip(
               message: _subTitle(audio),
               child: Text(
                 _subTitle(audio),
                 style: switch (playerPosition) {
                   PlayerPosition.bottom => _bottomArtistTextStyle(),
-                  _ => _fullHeightArtistTextStyle(theme)
+                  _ => _fullHeightArtistTextStyle(theme),
                 },
                 textAlign: _textAlign(),
                 overflow: TextOverflow.ellipsis,
@@ -176,28 +175,25 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     );
   }
 
-  TextStyle _bottomTitleTextStyle() => const TextStyle(
-        fontWeight: FontWeight.w400,
-        fontSize: 14,
-      );
+  TextStyle _bottomTitleTextStyle() =>
+      const TextStyle(fontWeight: FontWeight.w400, fontSize: 14);
 
-  TextStyle _bottomArtistTextStyle() => const TextStyle(
-        fontWeight: FontWeight.normal,
-        fontSize: 12,
-      );
+  TextStyle _bottomArtistTextStyle() =>
+      const TextStyle(fontWeight: FontWeight.normal, fontSize: 12);
 
-  String _subTitle(Audio? audio) => (switch (audio?.audioType) {
-            AudioType.podcast => audio?.album?.unEscapeHtml,
-            AudioType.radio => audio?.title,
-            _ => audio?.artist
-          } ??
-          '')
-      .trim();
+  String _subTitle(Audio? audio) =>
+      (switch (audio?.audioType) {
+                AudioType.podcast => audio?.album?.unEscapeHtml,
+                AudioType.radio => audio?.title,
+                _ => audio?.artist,
+              } ??
+              '')
+          .trim();
 
   String _title({required Audio? audio, required String? icyTitle}) =>
       icyTitle?.isNotEmpty == true && audio?.audioType == AudioType.radio
-          ? icyTitle!
-          : (audio?.title?.isNotEmpty == true ? audio!.title! : '').trim();
+      ? icyTitle!
+      : (audio?.title?.isNotEmpty == true ? audio!.title! : '').trim();
 
   void _onTitleTap({
     Audio? audio,
@@ -251,10 +247,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     required LocalAudioModel localAudioModel,
   }) {
     if (audio.albumId == null) {
-      showSnackBar(
-        context: context,
-        content: Text(context.l10n.albumNotFound),
-      );
+      showSnackBar(context: context, content: Text(context.l10n.albumNotFound));
       return;
     }
 

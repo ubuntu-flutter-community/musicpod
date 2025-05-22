@@ -23,13 +23,16 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     if (!isOnline) return const OfflineBody();
 
-    final checkingForUpdates =
-        watchPropertyValue((PodcastModel m) => m.checkingForUpdates);
+    final checkingForUpdates = watchPropertyValue(
+      (PodcastModel m) => m.checkingForUpdates,
+    );
     final updatesOnly = watchPropertyValue((PodcastModel m) => m.updatesOnly);
-    final downloadsOnly =
-        watchPropertyValue((PodcastModel m) => m.downloadsOnly);
-    final processing =
-        watchPropertyValue((CustomContentModel m) => m.processing);
+    final downloadsOnly = watchPropertyValue(
+      (PodcastModel m) => m.downloadsOnly,
+    );
+    final processing = watchPropertyValue(
+      (CustomContentModel m) => m.processing,
+    );
 
     return Row(
       spacing: kSmallestSpace,
@@ -45,17 +48,10 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
               clearOnSelect: false,
               selectedFirst: false,
               labels: [
-                Text(
-                  context.l10n.newEpisodes,
-                ),
-                Text(
-                  context.l10n.downloadsOnly,
-                ),
+                Text(context.l10n.newEpisodes),
+                Text(context.l10n.downloadsOnly),
               ],
-              isSelected: [
-                updatesOnly,
-                downloadsOnly,
-              ],
+              isSelected: [updatesOnly, downloadsOnly],
               onSelected: processing || checkingForUpdates
                   ? null
                   : (index) {
@@ -71,8 +67,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
                                 confirmLabel: context.l10n.checkForUpdates,
                                 content: Text(
                                   context.l10n.checkForUpdatesConfirm(
-                                    di<LibraryModel>()
-                                        .podcastsLength
+                                    di<LibraryModel>().podcastsLength
                                         .toString(),
                                   ),
                                 ),
@@ -102,9 +97,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
             ),
           ),
         ),
-        const SettingsButton.icon(
-          scrollIndex: 1,
-        ),
+        const SettingsButton.icon(scrollIndex: 1),
         const SizedBox(width: kSmallestSpace),
       ],
     );

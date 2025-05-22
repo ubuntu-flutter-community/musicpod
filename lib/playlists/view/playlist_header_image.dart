@@ -30,21 +30,18 @@ class PlaylistHeaderImage extends StatelessWidget with WatchItMixin {
     final width = length == 1
         ? kMaxAudioPageHeaderHeight
         : length < 10
-            ? 50.0
-            : 32.0;
+        ? 50.0
+        : 32.0;
     final height = length == 1
         ? kMaxAudioPageHeaderHeight
         : length < 10
-            ? 50.0
-            : 32.0;
+        ? 50.0
+        : 32.0;
     final radius = length == 1 ? 0.0 : width / 2;
 
     Widget image;
     if (length == 0) {
-      image = Icon(
-        Iconz.playlist,
-        size: 65,
-      );
+      image = Icon(Iconz.playlist, size: 65);
     } else {
       image = Center(
         child: Padding(
@@ -70,9 +67,6 @@ class PlaylistHeaderImage extends StatelessWidget with WatchItMixin {
       );
     }
 
-    return FallBackHeaderImage(
-      color: getAlphabetColor(pageId),
-      child: image,
-    );
+    return FallBackHeaderImage(color: getAlphabetColor(pageId), child: image);
   }
 }

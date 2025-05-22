@@ -46,9 +46,7 @@ class _AddStationDialogState extends State<CustomStationSection> {
           controller: _urlController,
           decoration: const InputDecoration(label: Text('Url')),
         ),
-        const SizedBox(
-          height: kLargestSpace,
-        ),
+        const SizedBox(height: kLargestSpace),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: kLargestSpace),
           child: YaruInfoBox(
@@ -66,9 +64,7 @@ class _AddStationDialogState extends State<CustomStationSection> {
               },
               child: Text(l10n.search),
             ),
-            subtitle: Text(
-              l10n.customStationWarning,
-            ),
+            subtitle: Text(l10n.customStationWarning),
           ),
         ),
         Align(
@@ -82,35 +78,33 @@ class _AddStationDialogState extends State<CustomStationSection> {
                 builder: (context, _) => ListenableBuilder(
                   listenable: _urlController,
                   builder: (context, _) => ElevatedButton(
-                    onPressed: _urlController.text.isEmpty ||
+                    onPressed:
+                        _urlController.text.isEmpty ||
                             !_urlController.text.startsWith('http')
                         ? null
                         : () {
                             di<RadioService>()
                                 .getStationByUrl(_urlController.text)
-                                .then(
-                              (v) {
-                                if (v?.stationUUID == null) {
-                                  if (context.mounted) {
-                                    showSnackBar(
-                                      context: context,
-                                      content: Text(
-                                        context.l10n.noStationFound,
-                                      ),
+                                .then((v) {
+                                  if (v?.stationUUID == null) {
+                                    if (context.mounted) {
+                                      showSnackBar(
+                                        context: context,
+                                        content: Text(
+                                          context.l10n.noStationFound,
+                                        ),
+                                      );
+                                    }
+
+                                    return;
+                                  } else {
+                                    di<LibraryModel>().addStarredStation(
+                                      v!.stationUUID,
                                     );
                                   }
-
-                                  return;
-                                } else {
-                                  di<LibraryModel>()
-                                      .addStarredStation(v!.stationUUID);
-                                }
-                              },
-                            );
+                                });
                           },
-                    child: Text(
-                      context.l10n.search,
-                    ),
+                    child: Text(context.l10n.search),
                   ),
                 ),
               ),

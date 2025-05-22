@@ -29,8 +29,9 @@ class AudioAutoComplete extends StatelessWidget with WatchItMixin {
     final fallBackTextStyle = theme.textTheme.bodyMedium?.copyWith(
       fontWeight: FontWeight.w500,
     );
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
 
     return SizedBox(
       height: useYaruTheme ? kYaruTitleBarItemHeight : 38,
@@ -39,57 +40,50 @@ class AudioAutoComplete extends StatelessWidget with WatchItMixin {
           return Autocomplete<Audio>(
             displayStringForOption: (option) =>
                 '${option.artist} - ${option.title}',
-            fieldViewBuilder: (
-              context,
-              textEditingController,
-              focusNode,
-              onFieldSubmitted,
-            ) {
-              final hintText =
-                  '${context.l10n.search}: ${context.l10n.localAudio}';
-              return TextField(
-                autofocus: true,
-                maxLines: 1,
-                onTap: () {
-                  textEditingController.selection = TextSelection(
-                    baseOffset: 0,
-                    extentOffset: textEditingController.value.text.length,
+            fieldViewBuilder:
+                (context, textEditingController, focusNode, onFieldSubmitted) {
+                  final hintText =
+                      '${context.l10n.search}: ${context.l10n.localAudio}';
+                  return TextField(
+                    autofocus: true,
+                    maxLines: 1,
+                    onTap: () {
+                      textEditingController.selection = TextSelection(
+                        baseOffset: 0,
+                        extentOffset: textEditingController.value.text.length,
+                      );
+                    },
+                    style: useYaruTheme ? theme.textTheme.bodyMedium : null,
+                    strutStyle: useYaruTheme
+                        ? const StrutStyle(leading: 0.2)
+                        : null,
+                    textAlignVertical: useYaruTheme
+                        ? TextAlignVertical.center
+                        : null,
+                    cursorWidth: useYaruTheme ? 1 : 2.0,
+                    decoration: useYaruTheme
+                        ? createYaruDecoration(theme: theme, hintText: hintText)
+                        : createMaterialDecoration(
+                            colorScheme: colorScheme,
+                            hintText: hintText,
+                          ),
+                    controller: textEditingController,
+                    focusNode: focusNode,
+                    onSubmitted: (String value) {
+                      onFieldSubmitted();
+                      textEditingController.clear();
+                      focusNode.requestFocus();
+                    },
                   );
                 },
-                style: useYaruTheme ? theme.textTheme.bodyMedium : null,
-                strutStyle: useYaruTheme
-                    ? const StrutStyle(
-                        leading: 0.2,
-                      )
-                    : null,
-                textAlignVertical:
-                    useYaruTheme ? TextAlignVertical.center : null,
-                cursorWidth: useYaruTheme ? 1 : 2.0,
-                decoration: useYaruTheme
-                    ? createYaruDecoration(
-                        theme: theme,
-                        hintText: hintText,
-                      )
-                    : createMaterialDecoration(
-                        colorScheme: colorScheme,
-                        hintText: hintText,
-                      ),
-                controller: textEditingController,
-                focusNode: focusNode,
-                onSubmitted: (String value) {
-                  onFieldSubmitted();
-                  textEditingController.clear();
-                  focusNode.requestFocus();
-                },
-              );
-            },
             optionsViewBuilder: (context, onSelected, options) {
               return Align(
                 alignment: Alignment.topLeft,
                 child: SizedBox(
                   width: searchBarWidth,
-                  height:
-                      (options.length * 50) > 400 ? 400 : options.length * 50,
+                  height: (options.length * 50) > 400
+                      ? 400
+                      : options.length * 50,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(6),
                     child: Material(
@@ -98,10 +92,7 @@ class AudioAutoComplete extends StatelessWidget with WatchItMixin {
                           : colorScheme.surfaceContainerHighest,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(6),
-                        side: BorderSide(
-                          color: theme.dividerColor,
-                          width: 1,
-                        ),
+                        side: BorderSide(color: theme.dividerColor, width: 1),
                       ),
                       elevation: 1,
                       child: ListView.builder(
@@ -110,13 +101,12 @@ class AudioAutoComplete extends StatelessWidget with WatchItMixin {
                           return Builder(
                             builder: (BuildContext context) {
                               final bool highlight =
-                                  AutocompleteHighlightedOption.of(
-                                        context,
-                                      ) ==
-                                      index;
+                                  AutocompleteHighlightedOption.of(context) ==
+                                  index;
                               if (highlight) {
-                                SchedulerBinding.instance
-                                    .addPostFrameCallback((Duration timeStamp) {
+                                SchedulerBinding.instance.addPostFrameCallback((
+                                  Duration timeStamp,
+                                ) {
                                   Scrollable.ensureVisible(
                                     context,
                                     alignment: 0.5,
@@ -145,9 +135,9 @@ class AudioAutoComplete extends StatelessWidget with WatchItMixin {
                 return audios ?? [];
               }
               return audios?.where(
-                    (a) => '${a.artist} ${a.title}'
-                        .toLowerCase()
-                        .contains(textEditingValue.text.toLowerCase()),
+                    (a) => '${a.artist} ${a.title}'.toLowerCase().contains(
+                      textEditingValue.text.toLowerCase(),
+                    ),
                   ) ??
                   [];
             },
@@ -177,10 +167,7 @@ class _AudioTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: const EdgeInsets.only(
-        left: 10,
-        right: 5,
-      ),
+      contentPadding: const EdgeInsets.only(left: 10, right: 5),
       titleTextStyle: fallBackTextStyle?.copyWith(
         fontWeight: FontWeight.normal,
       ),

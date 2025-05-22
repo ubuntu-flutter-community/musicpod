@@ -10,6 +10,7 @@ import '../../app_config.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
+import '../../l10n/app_localizations.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../settings/settings_model.dart';
@@ -25,8 +26,9 @@ class MobileMusicPodApp extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final themeIndex = watchPropertyValue((SettingsModel m) => m.themeIndex);
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
 
     final phoenix = phoenixTheme(color: accent ?? kMusicPodDefaultColor);
     final routingManager = di<RoutingManager>();
@@ -37,11 +39,10 @@ class MobileMusicPodApp extends StatelessWidget with WatchItMixin {
       initialRoute: routingManager.selectedPageId ?? PageIDs.homePage,
       onGenerateRoute: (settings) {
         final masterItems = getAllMasterItems(di<LibraryModel>());
-        final page = (masterItems.firstWhereOrNull(
-                  (e) => e.pageId == settings.name,
-                ) ??
-                masterItems.elementAt(0))
-            .pageBuilder(context);
+        final page =
+            (masterItems.firstWhereOrNull((e) => e.pageId == settings.name) ??
+                    masterItems.elementAt(0))
+                .pageBuilder(context);
 
         return PageRouteBuilder(
           settings: settings,
@@ -54,18 +55,21 @@ class MobileMusicPodApp extends StatelessWidget with WatchItMixin {
       theme: (useYaruTheme && accent != null
           ? yaruLightWithTweaks(createYaruLightTheme(primaryColor: accent!))
           : phoenix.lightTheme),
-      darkTheme: (useYaruTheme && accent != null
-              ? yaruDarkWithTweaks(createYaruDarkTheme(primaryColor: accent!))
-              : phoenix.darkTheme)
-          ?.copyWith(
-        appBarTheme: phoenix.darkTheme.appBarTheme.copyWith(
-          backgroundColor: Colors.black,
-        ),
-        colorScheme: phoenix.darkTheme.colorScheme.copyWith(
-          surface: Colors.black,
-        ),
-        scaffoldBackgroundColor: Colors.black,
-      ),
+      darkTheme:
+          (useYaruTheme && accent != null
+                  ? yaruDarkWithTweaks(
+                      createYaruDarkTheme(primaryColor: accent!),
+                    )
+                  : phoenix.darkTheme)
+              ?.copyWith(
+                appBarTheme: phoenix.darkTheme.appBarTheme.copyWith(
+                  backgroundColor: Colors.black,
+                ),
+                colorScheme: phoenix.darkTheme.colorScheme.copyWith(
+                  surface: Colors.black,
+                ),
+                scaffoldBackgroundColor: Colors.black,
+              ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: supportedLocales,
       onGenerateTitle: (context) => AppConfig.appTitle,

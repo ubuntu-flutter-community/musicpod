@@ -73,11 +73,9 @@ class AudioTileBottomSheet extends StatelessWidget {
                 trailing: audios.isNotEmpty
                     ? switch (audios.first.audioType) {
                         AudioType.radio => StaredStationIconButton(
-                            audio: audios.first,
-                          ),
-                        AudioType.local => LikeAllIconButton(
-                            audios: audios,
-                          ),
+                          audio: audios.first,
+                        ),
+                        AudioType.local => LikeAllIconButton(audios: audios),
                         _ => null,
                       }
                     : null,
@@ -163,9 +161,9 @@ class AudioTileBottomSheet extends StatelessWidget {
                                     context: context,
                                     builder: (context) =>
                                         MetaDataContent.dialog(
-                                      audio: audios.first,
-                                      pageId: playlistId,
-                                    ),
+                                          audio: audios.first,
+                                          pageId: playlistId,
+                                        ),
                                   );
                                 },
                                 icon: Icon(Iconz.info),
@@ -263,10 +261,7 @@ class AudioTileBottomSheet extends StatelessWidget {
 }
 
 class _Button extends StatelessWidget {
-  const _Button({
-    required this.icon,
-    required this.onPressed,
-  });
+  const _Button({required this.icon, required this.onPressed});
 
   final Widget icon;
   final void Function() onPressed;
@@ -290,9 +285,7 @@ class _Button extends StatelessWidget {
 }
 
 class _ButtonLabel extends StatelessWidget {
-  const _ButtonLabel({
-    required this.label,
-  });
+  const _ButtonLabel({required this.label});
 
   final String label;
 

@@ -25,9 +25,7 @@ class _PodcastsPageState extends State<PodcastsPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      di<PodcastModel>().init(
-        updateMessage: context.l10n.newEpisodeAvailable,
-      );
+      di<PodcastModel>().init(updateMessage: context.l10n.newEpisodeAvailable);
     });
   }
 

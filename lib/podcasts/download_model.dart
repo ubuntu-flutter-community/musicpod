@@ -16,9 +16,9 @@ class DownloadModel extends SafeChangeNotifier {
     required LibraryService libraryService,
     required SettingsService settingsService,
     required Dio dio,
-  })  : _libraryService = libraryService,
-        _settingsService = settingsService,
-        _dio = dio;
+  }) : _libraryService = libraryService,
+       _settingsService = settingsService,
+       _dio = dio;
 
   final LibraryService _libraryService;
   final SettingsService _settingsService;

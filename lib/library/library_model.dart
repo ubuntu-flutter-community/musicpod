@@ -6,11 +6,11 @@ import '../common/data/audio.dart';
 import 'library_service.dart';
 
 class LibraryModel extends SafeChangeNotifier {
-  LibraryModel({
-    required LibraryService libraryService,
-  }) : _service = libraryService {
-    _propertiesChangedSub ??=
-        _service.propertiesChanged.listen((_) => notifyListeners());
+  LibraryModel({required LibraryService libraryService})
+    : _service = libraryService {
+    _propertiesChangedSub ??= _service.propertiesChanged.listen(
+      (_) => notifyListeners(),
+    );
   }
 
   final LibraryService _service;
@@ -88,8 +88,7 @@ class LibraryModel extends SafeChangeNotifier {
       _service.addPlaylist(name, audios);
   Future<void> addExternalPlaylists(
     List<({String id, List<Audio> audios})> playlists,
-  ) async =>
-      _service.addExternalPlaylists(playlists: playlists);
+  ) async => _service.addExternalPlaylists(playlists: playlists);
 
   Future<void> updatePlaylist({
     required String id,
@@ -101,16 +100,12 @@ class LibraryModel extends SafeChangeNotifier {
 
   void updatePlaylistName(String oldName, String newName) =>
       _service.updatePlaylistName(oldName, newName);
-  void addAudiosToPlaylist({
-    required String id,
-    required List<Audio> audios,
-  }) =>
+  void addAudiosToPlaylist({required String id, required List<Audio> audios}) =>
       _service.addAudiosToPlaylist(id: id, audios: audios);
   Future<void> removeAudiosFromPlaylist({
     required String id,
     required List<Audio> audios,
-  }) async =>
-      _service.removeAudiosFromPlaylist(id: id, audios: audios);
+  }) async => _service.removeAudiosFromPlaylist(id: id, audios: audios);
 
   void clearPlaylist(String id) => _service.clearPlaylist(id);
   void moveAudioInPlaylist({
@@ -154,8 +149,7 @@ class LibraryModel extends SafeChangeNotifier {
   Future<void> reorderPodcast({
     required String feedUrl,
     required bool ascending,
-  }) =>
-      _service.reorderPodcast(feedUrl: feedUrl, ascending: ascending);
+  }) => _service.reorderPodcast(feedUrl: feedUrl, ascending: ascending);
 
   bool showPodcastAscending(String feedUrl) =>
       _service.showPodcastAscending(feedUrl);

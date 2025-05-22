@@ -31,7 +31,7 @@ class StreamProviderShareButton extends StatelessWidget {
       StreamProvider.spotify => TablerIcons.brand_spotify,
       StreamProvider.youTubeMusic => TablerIcons.brand_youtube,
       StreamProvider.amazonMusic => TablerIcons.brand_amazon,
-      StreamProvider.amazon => TablerIcons.shopping_bag
+      StreamProvider.amazon => TablerIcons.shopping_bag,
     };
 
     final tooltip = switch (streamProvider) {
@@ -39,7 +39,7 @@ class StreamProviderShareButton extends StatelessWidget {
       StreamProvider.spotify => 'Spotify',
       StreamProvider.youTubeMusic => 'YouTube Music',
       StreamProvider.amazonMusic => 'Amazon Music',
-      StreamProvider.amazon => 'Amazon'
+      StreamProvider.amazon => 'Amazon',
     };
 
     final clearedText =
@@ -56,11 +56,7 @@ class StreamProviderShareButton extends StatelessWidget {
         minLeadingWidth: 2 * kLargestSpace,
         leading: Icon(iconData),
         title: Text('$tooltip ${context.l10n.search}'),
-        onTap: () => launchUrl(
-          Uri.parse(
-            address,
-          ),
-        ),
+        onTap: () => launchUrl(Uri.parse(address)),
       );
     }
 
@@ -68,18 +64,10 @@ class StreamProviderShareButton extends StatelessWidget {
       tooltip: onSearch != null
           ? context.l10n.search
           : '$tooltip ${context.l10n.search}',
-      onPressed: onSearch ??
-          () => launchUrl(
-                Uri.parse(
-                  address,
-                ),
-              ),
+      onPressed: onSearch ?? () => launchUrl(Uri.parse(address)),
       icon: Padding(
         padding: const EdgeInsets.only(bottom: 2),
-        child: Icon(
-          onSearch != null ? Iconz.globe : iconData,
-          color: color,
-        ),
+        child: Icon(onSearch != null ? Iconz.globe : iconData, color: color),
       ),
     );
   }
@@ -94,7 +82,7 @@ class StreamProviderShareButton extends StatelessWidget {
       StreamProvider.amazonMusic =>
         'https://music.amazon.${getAmazonSuffix()}/search/$query?filter=IsLibrary%7Cfalse&sc=none',
       StreamProvider.amazon =>
-        'https://www.amazon.${getAmazonSuffix()}/s?k=$query&i=digital-music'
+        'https://www.amazon.${getAmazonSuffix()}/s?k=$query&i=digital-music',
     };
     return address;
   }
@@ -155,20 +143,14 @@ class StreamProviderRow extends StatelessWidget {
           text: text,
           streamProvider: StreamProvider.youTubeMusic,
         ),
-        if (onSearch == null && spacing > 0)
-          SizedBox(
-            width: spacing,
-          ),
+        if (onSearch == null && spacing > 0) SizedBox(width: spacing),
         if (onSearch == null)
           StreamProviderShareButton(
             color: iconColor,
             text: text,
             streamProvider: StreamProvider.spotify,
           ),
-        if (onSearch == null && spacing > 0)
-          SizedBox(
-            width: spacing,
-          ),
+        if (onSearch == null && spacing > 0) SizedBox(width: spacing),
         if (onSearch == null)
           StreamProviderShareButton(
             color: iconColor,
@@ -192,10 +174,4 @@ class StreamProviderRow extends StatelessWidget {
   }
 }
 
-enum StreamProvider {
-  youTubeMusic,
-  spotify,
-  appleMusic,
-  amazonMusic,
-  amazon,
-}
+enum StreamProvider { youTubeMusic, spotify, appleMusic, amazonMusic, amazon }

@@ -10,10 +10,7 @@ import '../../extensions/theme_data_x.dart';
 import '../../local_audio/view/genre_page.dart';
 
 class GenreBar extends StatelessWidget {
-  const GenreBar({
-    super.key,
-    required this.audios,
-  });
+  const GenreBar({super.key, required this.audios});
 
   final List<Audio> audios;
 

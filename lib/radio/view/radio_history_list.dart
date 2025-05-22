@@ -54,14 +54,16 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin {
               return simpleList
                   ? RadioHistoryTile.simple(
                       icyTitle: e.key,
-                      selected: current?.icyTitle != null &&
+                      selected:
+                          current?.icyTitle != null &&
                           current?.icyTitle == e.value.icyTitle,
                     )
                   : Padding(
                       padding: const EdgeInsets.only(bottom: 5),
                       child: RadioHistoryTile(
                         icyTitle: e.key,
-                        selected: current?.icyTitle != null &&
+                        selected:
+                            current?.icyTitle != null &&
                             current?.icyTitle == e.value.icyTitle,
                       ),
                     );
@@ -107,21 +109,19 @@ class SliverRadioHistoryList extends StatelessWidget with WatchItMixin {
     }
 
     return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          final reversedIndex = length - index - 1;
-          final e = di<PlayerModel>()
-              .filteredRadioHistory(filter: filter)
-              .elementAt(reversedIndex);
-          return RadioHistoryTile(
-            icyTitle: e.key,
-            selected: current?.icyTitle != null &&
-                current?.icyTitle == e.value.icyTitle,
-            allowNavigation: allowNavigation,
-          );
-        },
-        childCount: length,
-      ),
+      delegate: SliverChildBuilderDelegate((context, index) {
+        final reversedIndex = length - index - 1;
+        final e = di<PlayerModel>()
+            .filteredRadioHistory(filter: filter)
+            .elementAt(reversedIndex);
+        return RadioHistoryTile(
+          icyTitle: e.key,
+          selected:
+              current?.icyTitle != null &&
+              current?.icyTitle == e.value.icyTitle,
+          allowNavigation: allowNavigation,
+        );
+      }, childCount: length),
     );
   }
 }

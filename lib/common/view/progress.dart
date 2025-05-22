@@ -34,8 +34,9 @@ class Progress extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
     return useYaruTheme && isLinux
         ? YaruCircularProgressIndicator(
             strokeWidth: strokeWidth,
@@ -52,8 +53,9 @@ class Progress extends StatelessWidget with WatchItMixin {
                     backgroundColor: value == null
                         ? null
                         : (backgroundColor ??
-                            context.theme.colorScheme.primary
-                                .withValues(alpha: 0.3)),
+                              context.theme.colorScheme.primary.withValues(
+                                alpha: 0.3,
+                              )),
                   )
                 : CircularProgressIndicator(
                     strokeWidth: strokeWidth,
@@ -61,8 +63,9 @@ class Progress extends StatelessWidget with WatchItMixin {
                     backgroundColor: value == null
                         ? null
                         : (backgroundColor ??
-                            context.theme.colorScheme.primary
-                                .withValues(alpha: 0.3)),
+                              context.theme.colorScheme.primary.withValues(
+                                alpha: 0.3,
+                              )),
                   ),
           );
   }
@@ -83,8 +86,9 @@ class LinearProgress extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
     return useYaruTheme
         ? YaruLinearProgressIndicator(
             value: value,

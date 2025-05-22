@@ -30,39 +30,38 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
     super.initState();
     final appModel = di<AppModel>();
     appModel
-        .checkForUpdate(
-      isOnline: di<ConnectivityModel>().isOnline == true,
-    )
+        .checkForUpdate(isOnline: di<ConnectivityModel>().isOnline == true)
         .then((_) {
-      if (!appModel.recentPatchNotesDisposed() && mounted) {
-        showDialog(
-          context: context,
-          builder: (_) => PatchNotesDialog(
-            onClose: () {
-              if ((di<LocalAudioModel>().audios?.isNotEmpty ?? false) &&
-                  di<LibraryModel>().playlistIDs.isNotEmpty &&
-                  di<LibraryModel>().favoriteAlbums.isNotEmpty &&
-                  di<AppModel>().isBackupScreenNeeded &&
-                  !di<AppModel>().wasBackupSaved &&
-                  mounted) {
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (context) => const BackupDialog(),
-                );
-              }
-            },
-          ),
-        );
-      }
-    });
+          if (!appModel.recentPatchNotesDisposed() && mounted) {
+            showDialog(
+              context: context,
+              builder: (_) => PatchNotesDialog(
+                onClose: () {
+                  if ((di<LocalAudioModel>().audios?.isNotEmpty ?? false) &&
+                      di<LibraryModel>().playlistIDs.isNotEmpty &&
+                      di<LibraryModel>().favoriteAlbums.isNotEmpty &&
+                      di<AppModel>().isBackupScreenNeeded &&
+                      !di<AppModel>().wasBackupSaved &&
+                      mounted) {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (context) => const BackupDialog(),
+                    );
+                  }
+                },
+              ),
+            );
+          }
+        });
   }
 
   @override
   Widget build(BuildContext context) {
     final playerToTheRight = context.mediaQuerySize.width > kSideBarThreshHold;
-    final isInFullWindowMode =
-        watchPropertyValue((AppModel m) => m.fullWindowMode ?? false);
+    final isInFullWindowMode = watchPropertyValue(
+      (AppModel m) => m.fullWindowMode ?? false,
+    );
     final isVideo = watchPropertyValue((PlayerModel m) => m.isVideo == true);
 
     registerStreamHandler(

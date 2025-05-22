@@ -8,7 +8,5 @@ EdgeInsets getAdaptiveHorizontalPadding({
   double limit = 1000,
 }) {
   final m = max((constraints.maxWidth - limit) / 2, 0).toDouble();
-  return EdgeInsets.symmetric(
-    horizontal: m > min ? m : min,
-  );
+  return EdgeInsets.symmetric(horizontal: m > min ? m : min);
 }

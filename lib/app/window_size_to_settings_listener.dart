@@ -10,9 +10,9 @@ class WindowSizeToSettingsListener implements WindowListener {
     required Future<void> Function(Size value) onResize,
     required Future<void> Function(bool value) onMaximize,
     required Future<void> Function(bool value) onFullscreen,
-  })  : _onResize = onResize,
-        _onMaximize = onMaximize,
-        _onFullscreen = onFullscreen;
+  }) : _onResize = onResize,
+       _onMaximize = onMaximize,
+       _onFullscreen = onFullscreen;
 
   final Future<void> Function(Size value) _onResize;
   final Future<void> Function(bool value) _onMaximize;

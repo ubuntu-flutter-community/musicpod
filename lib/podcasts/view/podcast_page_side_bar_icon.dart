@@ -8,10 +8,7 @@ import '../../common/view/theme.dart';
 import '../../library/library_model.dart';
 
 class PodcastPageSideBarIcon extends StatefulWidget {
-  const PodcastPageSideBarIcon({
-    super.key,
-    required this.feedUrl,
-  });
+  const PodcastPageSideBarIcon({super.key, required this.feedUrl});
 
   final String feedUrl;
 
@@ -33,9 +30,7 @@ class _PodcastPageSideBarIconState extends State<PodcastPageSideBarIcon> {
   @override
   Widget build(BuildContext context) {
     if (imageUrl == null) {
-      return SideBarFallBackImage(
-        child: Icon(Iconz.podcast),
-      );
+      return SideBarFallBackImage(child: Icon(Iconz.podcast));
     }
 
     return ClipRRect(
@@ -47,14 +42,8 @@ class _PodcastPageSideBarIconState extends State<PodcastPageSideBarIcon> {
           url: imageUrl,
           fit: BoxFit.fitHeight,
           filterQuality: FilterQuality.medium,
-          fallBackIcon: Icon(
-            Iconz.podcast,
-            size: sideBarImageSize,
-          ),
-          errorIcon: Icon(
-            Iconz.podcast,
-            size: sideBarImageSize,
-          ),
+          fallBackIcon: Icon(Iconz.podcast, size: sideBarImageSize),
+          errorIcon: Icon(Iconz.podcast, size: sideBarImageSize),
         ),
       ),
     );

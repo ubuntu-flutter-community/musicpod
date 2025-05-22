@@ -15,11 +15,12 @@ class AppConfig {
   static const gitHubShortLink = 'ubuntu-flutter-community/musicpod';
   static const fallbackThumbnailUrl =
       'https://raw.githubusercontent.com/ubuntu-flutter-community/musicpod/main/snap/gui/musicpod.png';
-  static bool allowDiscordRPC = (kDebugMode && !isMobile) ||
+  static bool allowDiscordRPC =
+      (kDebugMode && !isMobile) ||
       isWindows ||
       const bool.fromEnvironment('ALLOW_DISCORD_RPC');
   static bool windowManagerImplemented = isDesktop;
 
-// TODO(#1022): fix linux video fullscreen
+  // TODO(#1022): fix linux video fullscreen
   static bool allowVideoFullScreen = !isLinux;
 }

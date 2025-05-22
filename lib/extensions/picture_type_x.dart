@@ -1,6 +1,6 @@
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 
-import '../l10n/l10n.dart';
+import '../l10n/app_localizations.dart';
 
 extension PictureTypeX on PictureType {
   String localize(AppLocalizations l10n) {

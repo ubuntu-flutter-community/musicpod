@@ -80,14 +80,11 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
             PinAlbumButton(albumId: audio!.albumId!),
           if (audio?.audioType != AudioType.podcast)
             switch (audio?.audioType) {
-              AudioType.local => LikeIconButton(
-                  audio: audio,
-                  color: iconColor,
-                ),
+              AudioType.local => LikeIconButton(audio: audio, color: iconColor),
               AudioType.radio => StaredStationIconButton(
-                  audio: audio,
-                  color: iconColor,
-                ),
+                audio: audio,
+                color: iconColor,
+              ),
               _ => const SizedBox.shrink(),
             },
           if (!isMobile && showQueueButton)
@@ -95,19 +92,10 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
               color: iconColor,
               onTap: () => di<AppModel>().setOrToggleQueueOverlay(),
             ),
-          PlayerPauseTimerButton(
-            iconColor: iconColor,
-          ),
-          ShareButton(
-            audio: audio,
-            active: active,
-            color: iconColor,
-          ),
+          PlayerPauseTimerButton(iconColor: iconColor),
+          ShareButton(audio: audio, active: active, color: iconColor),
           if (audio?.audioType == AudioType.podcast)
-            PlaybackRateButton(
-              active: active,
-              color: iconColor,
-            ),
+            PlaybackRateButton(active: active, color: iconColor),
           if (!isMobile) VolumeSliderPopup(color: iconColor),
           IconButton(
             tooltip: playerPosition == PlayerPosition.fullWindow

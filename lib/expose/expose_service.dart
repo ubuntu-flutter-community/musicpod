@@ -13,10 +13,10 @@ class ExposeService {
     required LastfmService lastFmService,
     required ListenBrainzService listenBrainzService,
     required SettingsService settingsService,
-  })  : _discordRPC = discordRPC,
-        _lastFmService = lastFmService,
-        _listenBrainzService = listenBrainzService,
-        _settingsService = settingsService;
+  }) : _discordRPC = discordRPC,
+       _lastFmService = lastFmService,
+       _listenBrainzService = listenBrainzService,
+       _settingsService = settingsService;
 
   final FlutterDiscordRPC? _discordRPC;
   final LastfmService _lastFmService;
@@ -43,10 +43,7 @@ class ExposeService {
       imageUrl: imageUrl,
     );
 
-    await _lastFmService.exposeTitleToLastfm(
-      title: title,
-      artist: artist,
-    );
+    await _lastFmService.exposeTitleToLastfm(title: title, artist: artist);
 
     await _listenBrainzService.exposeTrackToListenBrainz(
       title: title,
@@ -70,10 +67,7 @@ class ExposeService {
       if (_discordRPC?.isConnected == true) {
         await _discordRPC?.setActivity(
           activity: RPCActivity(
-            assets: RPCAssets(
-              largeText: additionalInfo,
-              largeImage: imageUrl,
-            ),
+            assets: RPCAssets(largeText: additionalInfo, largeImage: imageUrl),
             details: title,
             state: artist,
             activityType: ActivityType.listening,
@@ -101,11 +95,7 @@ class ExposeService {
   Future<void> authorizeLastFm({
     required String apiKey,
     required String apiSecret,
-  }) =>
-      _lastFmService.authorize(
-        apiKey: apiKey,
-        apiSecret: apiSecret,
-      );
+  }) => _lastFmService.authorize(apiKey: apiKey, apiSecret: apiSecret);
 
   Future<void> dispose() async {
     await connectToDiscord(false);

@@ -7,11 +7,7 @@ import '../../l10n/l10n.dart';
 import 'theme.dart';
 
 class AudioCardVignette extends StatefulWidget {
-  const AudioCardVignette({
-    super.key,
-    this.onTap,
-    required this.iconData,
-  });
+  const AudioCardVignette({super.key, this.onTap, required this.iconData});
 
   final void Function()? onTap;
   final IconData iconData;
@@ -45,8 +41,9 @@ class _AudioCardVignetteState extends State<AudioCardVignette> {
           height: audioCardDimension / (isMobile ? 3 : 4),
           child: Icon(
             widget.iconData,
-            color:
-                _focused ? colorScheme.onPrimary : colorScheme.onInverseSurface,
+            color: _focused
+                ? colorScheme.onPrimary
+                : colorScheme.onInverseSurface,
             semanticLabel: context.l10n.unPinAlbum,
           ),
         ),

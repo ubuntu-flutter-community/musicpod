@@ -20,9 +20,9 @@ class PodcastService {
     required NotificationsService notificationsService,
     required SettingsService settingsService,
     required LibraryService libraryService,
-  })  : _notificationsService = notificationsService,
-        _settingsService = settingsService,
-        _libraryService = libraryService;
+  }) : _notificationsService = notificationsService,
+       _settingsService = settingsService,
+       _libraryService = libraryService;
 
   SearchResult? _searchResult;
   Search? _search;
@@ -30,7 +30,8 @@ class PodcastService {
   Future<void> init({bool forceInit = false}) async {
     if (_search == null || forceInit) {
       _search = Search(
-        searchProvider: _settingsService.usePodcastIndex == true &&
+        searchProvider:
+            _settingsService.usePodcastIndex == true &&
                 _settingsService.podcastIndexApiKey != null &&
                 _settingsService.podcastIndexApiSecret != null
             ? PodcastIndexProvider(
@@ -130,20 +131,18 @@ class PodcastService {
   }
 
   // TODO: stop axing the podcast information
-  Future<List<Audio>> findEpisodes({
-    Item? item,
-    String? feedUrl,
-  }) async {
+  Future<List<Audio>> findEpisodes({Item? item, String? feedUrl}) async {
     if (item?.feedUrl == null && feedUrl == null) {
-      printMessageInDebugMode(
-        'findEpisodes called without feedUrl or item',
-      );
+      printMessageInDebugMode('findEpisodes called without feedUrl or item');
       return Future.value([]);
     }
 
-    final Podcast? podcast =
-        await compute(loadPodcast, feedUrl ?? item!.feedUrl!);
-    final episodes = podcast?.episodes
+    final Podcast? podcast = await compute(
+      loadPodcast,
+      feedUrl ?? item!.feedUrl!,
+    );
+    final episodes =
+        podcast?.episodes
             .where((e) => e.contentUrl != null)
             .map(
               (e) => Audio.fromPodcast(
@@ -168,9 +167,7 @@ class PodcastService {
 
 Future<Podcast?> loadPodcast(String url) async {
   try {
-    return await Podcast.loadFeed(
-      url: url,
-    );
+    return await Podcast.loadFeed(url: url);
   } catch (e) {
     return null;
   }

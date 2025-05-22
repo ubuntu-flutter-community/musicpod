@@ -4,10 +4,7 @@ import '../../common/view/safe_network_image.dart';
 import '../../extensions/build_context_x.dart';
 
 class PodcastPageImage extends StatelessWidget {
-  const PodcastPageImage({
-    super.key,
-    required this.imageUrl,
-  });
+  const PodcastPageImage({super.key, required this.imageUrl});
 
   final String? imageUrl;
 
@@ -15,16 +12,8 @@ class PodcastPageImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.theme;
     final safeNetworkImage = SafeNetworkImage(
-      fallBackIcon: Icon(
-        Iconz.podcast,
-        size: 80,
-        color: theme.hintColor,
-      ),
-      errorIcon: Icon(
-        Iconz.podcast,
-        size: 80,
-        color: theme.hintColor,
-      ),
+      fallBackIcon: Icon(Iconz.podcast, size: 80, color: theme.hintColor),
+      errorIcon: Icon(Iconz.podcast, size: 80, color: theme.hintColor),
       url: imageUrl,
       fit: BoxFit.fitHeight,
       filterQuality: FilterQuality.medium,

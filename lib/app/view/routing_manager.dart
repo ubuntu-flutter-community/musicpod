@@ -10,11 +10,11 @@ import '../../library/library_service.dart';
 import 'mobile_page.dart';
 
 class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
-  RoutingManager({
-    required LibraryService libraryService,
-  }) : _libraryService = libraryService {
-    _propertiesChangedSub ??=
-        _libraryService.propertiesChanged.listen((_) => notifyListeners());
+  RoutingManager({required LibraryService libraryService})
+    : _libraryService = libraryService {
+    _propertiesChangedSub ??= _libraryService.propertiesChanged.listen(
+      (_) => notifyListeners(),
+    );
   }
 
   final LibraryService _libraryService;
@@ -53,9 +53,7 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
     } else if (builder != null) {
       final materialPageRoute = PageRouteBuilder(
         maintainState: maintainState,
-        settings: RouteSettings(
-          name: pageId,
-        ),
+        settings: RouteSettings(name: pageId),
         pageBuilder: (context, __, ___) =>
             isMobile ? MobilePage(page: builder(context)) : builder(context),
       );
@@ -65,9 +63,7 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
           materialPageRoute,
         );
       } else {
-        await _masterNavigatorKey.currentState?.push(
-          materialPageRoute,
-        );
+        await _masterNavigatorKey.currentState?.push(materialPageRoute);
       }
     }
   }
@@ -76,8 +72,9 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
     if (!PageIDs.replacers.contains(selectedPageId)) {
       _masterNavigatorKey.currentState?.maybePop();
     } else {
-      _masterNavigatorKey.currentState
-          ?.popUntil((route) => route.settings.name == selectedPageId);
+      _masterNavigatorKey.currentState?.popUntil(
+        (route) => route.settings.name == selectedPageId,
+      );
     }
   }
 

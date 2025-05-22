@@ -35,9 +35,7 @@ class _SliverRadioCountryGridState extends State<SliverRadioCountryGrid> {
     );
 
     if (radioSearchResult == null) {
-      return const Center(
-        child: Progress(),
-      );
+      return const Center(child: Progress());
     }
 
     if (radioSearchResult.isEmpty) {
@@ -51,9 +49,7 @@ class _SliverRadioCountryGridState extends State<SliverRadioCountryGrid> {
         itemCount: radioSearchResult.length,
         itemBuilder: (context, index) {
           final station = radioSearchResult.elementAt(index);
-          return StationCard(
-            uuid: station.uuid!,
-          );
+          return StationCard(uuid: station.uuid!);
         },
         separatorBuilder: (context, index) =>
             const SizedBox(width: kMediumSpace),

@@ -245,8 +245,9 @@ class Audio {
       year: map['year']?.toInt(),
       genre: map['genre'],
       pictureMimeType: map['pictureMimeType'],
-      pictureData:
-          map['pictureData'] != null ? base64Decode(map['pictureData']) : null,
+      pictureData: map['pictureData'] != null
+          ? base64Decode(map['pictureData'])
+          : null,
       fileSize: map['fileSize']?.toInt(),
       albumArtUrl: map['albumArtUrl'],
     );
@@ -322,11 +323,11 @@ class Audio {
     final genre = data.genres.isEmpty
         ? null
         : data.genres.firstOrNull?.startsWith('(') == true &&
-                data.genres.firstOrNull?.endsWith(')') == true
-            ? tagGenres[data.genres.firstOrNull
-                ?.replaceAll('(', '')
-                .replaceAll(')', '')]
-            : data.genres.firstOrNull;
+              data.genres.firstOrNull?.endsWith(')') == true
+        ? tagGenres[data.genres.firstOrNull
+              ?.replaceAll('(', '')
+              .replaceAll(')', '')]
+        : data.genres.firstOrNull;
 
     return Audio(
       path: path,
@@ -341,8 +342,9 @@ class Audio {
       durationMs: data.duration?.inMilliseconds.toDouble(),
       // fileSize: data.,
       genre: genre?.everyWordCapitalized,
-      pictureData:
-          data.pictures.firstWhereOrNull((e) => e.bytes.isNotEmpty)?.bytes,
+      pictureData: data.pictures
+          .firstWhereOrNull((e) => e.bytes.isNotEmpty)
+          ?.bytes,
       pictureMimeType: data.pictures.firstOrNull?.mimetype,
       trackNumber: data.trackNumber,
       year: data.year?.year,
@@ -350,14 +352,14 @@ class Audio {
   }
 
   factory Audio._localWithoutMetadata({required String path}) => Audio(
-        path: path,
-        title: basenameWithoutExtension(path),
-        album: 'Unknown',
-        artist: 'Unknown',
-        albumArtist: 'Unknown',
-        genre: 'Unknown',
-        audioType: AudioType.local,
-      );
+    path: path,
+    title: basenameWithoutExtension(path),
+    album: 'Unknown',
+    artist: 'Unknown',
+    albumArtist: 'Unknown',
+    genre: 'Unknown',
+    audioType: AudioType.local,
+  );
 
   String? get uuid => description;
   String get language => artist ?? '';
@@ -365,9 +367,7 @@ class Audio {
   int get bitRate => fileSize ?? 0;
   List<String>? get tags => album?.isNotEmpty == false
       ? null
-      : <String>[
-          for (final tag in album?.split(',') ?? <String>[]) tag,
-        ];
+      : <String>[for (final tag in album?.split(',') ?? <String>[]) tag];
 
   factory Audio.fromStation(Station station) {
     return Audio(
@@ -417,11 +417,8 @@ class Audio {
   }
 
   static String createAlbumId(String? artistName, String? albumName) {
-    final id =
-        '${artistName ?? ''}$albumIdSplitter${albumName ?? ''}'.replaceAll(
-      albumIdReplacement,
-      albumIdReplacer,
-    );
+    final id = '${artistName ?? ''}$albumIdSplitter${albumName ?? ''}'
+        .replaceAll(albumIdReplacement, albumIdReplacer);
 
     if (isMobile) {
       return id.replaceAll(':', '');

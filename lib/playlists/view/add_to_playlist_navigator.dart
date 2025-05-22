@@ -14,10 +14,7 @@ import '../../library/library_model.dart';
 import 'add_to_playlist_snack_bar.dart';
 
 class AddToPlaylistNavigator extends StatelessWidget {
-  const AddToPlaylistNavigator({
-    super.key,
-    required this.audios,
-  });
+  const AddToPlaylistNavigator({super.key, required this.audios});
 
   final List<Audio> audios;
 
@@ -114,17 +111,11 @@ class _PlaylistTile extends StatelessWidget {
         if (playlistId == PageIDs.likedAudios) {
           libraryModel.addLikedAudios(audios);
         } else {
-          libraryModel.addAudiosToPlaylist(
-            id: playlistId,
-            audios: audios,
-          );
+          libraryModel.addAudiosToPlaylist(id: playlistId, audios: audios);
         }
 
         Navigator.of(context, rootNavigator: true).maybePop();
-        showAddedToPlaylistSnackBar(
-          context: context,
-          id: playlistId,
-        );
+        showAddedToPlaylistSnackBar(context: context, id: playlistId);
       },
       leading: SideBarFallBackImage(
         color: getAlphabetColor(playlistId),
@@ -136,9 +127,7 @@ class _PlaylistTile extends StatelessWidget {
 }
 
 class _NewView extends StatefulWidget {
-  const _NewView({
-    required this.audios,
-  });
+  const _NewView({required this.audios});
 
   final List<Audio> audios;
 
@@ -174,12 +163,8 @@ class _NewViewState extends State<_NewView> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(
-              controller: _controller,
-            ),
-            const SizedBox(
-              height: kLargestSpace,
-            ),
+            TextField(controller: _controller),
+            const SizedBox(height: kLargestSpace),
             Align(
               alignment: Alignment.centerRight,
               child: Wrap(
@@ -188,25 +173,18 @@ class _NewViewState extends State<_NewView> {
                 children: [
                   OutlinedButton(
                     onPressed: () => Navigator.pop(context),
-                    child: Text(
-                      context.l10n.cancel,
-                    ),
+                    child: Text(context.l10n.cancel),
                   ),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop();
-                      libraryModel.addPlaylist(
-                        _controller.text,
-                        widget.audios,
-                      );
+                      libraryModel.addPlaylist(_controller.text, widget.audios);
                       showAddedToPlaylistSnackBar(
                         context: context,
                         id: _controller.text,
                       );
                     },
-                    child: Text(
-                      context.l10n.add,
-                    ),
+                    child: Text(context.l10n.add),
                   ),
                 ],
               ),

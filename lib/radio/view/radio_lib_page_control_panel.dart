@@ -15,8 +15,9 @@ class RadioLibPageControlPanel extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final radioCollectionView =
-        watchPropertyValue((RadioModel m) => m.radioCollectionView);
+    final radioCollectionView = watchPropertyValue(
+      (RadioModel m) => m.radioCollectionView,
+    );
     final radioModel = di<RadioModel>();
 
     return Padding(
@@ -44,15 +45,9 @@ class RadioLibPageControlPanel extends StatelessWidget with WatchItMixin {
                     ),
                     style: YaruChoiceChipBarStyle.wrap,
                     labels: [
-                      Text(
-                        context.l10n.station,
-                      ),
-                      Text(
-                        context.l10n.tags,
-                      ),
-                      Text(
-                        context.l10n.hearingHistory,
-                      ),
+                      Text(context.l10n.station),
+                      Text(context.l10n.tags),
+                      Text(context.l10n.hearingHistory),
                     ],
                     isSelected: RadioCollectionView.values
                         .map((e) => e == radioCollectionView)

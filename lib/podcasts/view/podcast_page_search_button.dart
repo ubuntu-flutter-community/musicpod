@@ -5,10 +5,7 @@ import '../../l10n/l10n.dart';
 import '../podcast_model.dart';
 
 class PodcastPageSearchButton extends StatelessWidget with WatchItMixin {
-  const PodcastPageSearchButton({
-    super.key,
-    required this.feedUrl,
-  });
+  const PodcastPageSearchButton({super.key, required this.feedUrl});
 
   final String feedUrl;
 
@@ -17,15 +14,13 @@ class PodcastPageSearchButton extends StatelessWidget with WatchItMixin {
     final search = context.l10n.search;
     return IconButton(
       tooltip: search,
-      isSelected:
-          watchPropertyValue((PodcastModel m) => m.getShowSearch(feedUrl)),
+      isSelected: watchPropertyValue(
+        (PodcastModel m) => m.getShowSearch(feedUrl),
+      ),
       onPressed: feedUrl.isEmpty
           ? null
           : () => di<PodcastModel>().toggleShowSearch(feedUrl: feedUrl),
-      icon: Icon(
-        Iconz.search,
-        semanticLabel: search,
-      ),
+      icon: Icon(Iconz.search, semanticLabel: search),
     );
   }
 }

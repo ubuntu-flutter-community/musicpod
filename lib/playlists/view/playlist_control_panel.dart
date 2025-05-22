@@ -24,8 +24,9 @@ class PlaylistControlPanel extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final allowReorder =
-        watchPropertyValue((LocalAudioModel m) => m.allowReorder);
+    final allowReorder = watchPropertyValue(
+      (LocalAudioModel m) => m.allowReorder,
+    );
     final libraryModel = di<LibraryModel>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

@@ -8,6 +8,7 @@ import 'package:yaru/yaru.dart';
 import '../../app_config.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
+import '../../l10n/app_localizations.dart';
 import '../../l10n/l10n.dart';
 import '../../settings/settings_model.dart';
 import 'desktop_home_page.dart';
@@ -32,8 +33,9 @@ class DesktopMusicPodApp extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final themeIndex = watchPropertyValue((SettingsModel m) => m.themeIndex);
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
     final color = accent ?? kMusicPodDefaultColor;
     final phoenix = phoenixTheme(color: color);
 
@@ -42,11 +44,13 @@ class DesktopMusicPodApp extends StatelessWidget with WatchItMixin {
       themeMode: ThemeMode.values[themeIndex],
       highContrastTheme: highContrastTheme,
       highContrastDarkTheme: highContrastDarkTheme,
-      theme: lightTheme ??
+      theme:
+          lightTheme ??
           (useYaruTheme
               ? yaruLightWithTweaks(createYaruLightTheme(primaryColor: color))
               : phoenix.lightTheme),
-      darkTheme: darkTheme ??
+      darkTheme:
+          darkTheme ??
           (useYaruTheme
               ? yaruDarkWithTweaks(createYaruDarkTheme(primaryColor: color))
               : phoenix.darkTheme),

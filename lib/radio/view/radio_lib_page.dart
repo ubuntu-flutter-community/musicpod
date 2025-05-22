@@ -15,19 +15,19 @@ class RadioLibPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final radioCollectionView =
-        watchPropertyValue((RadioModel m) => m.radioCollectionView);
-    final processing =
-        watchPropertyValue((CustomContentModel m) => m.processing);
+    final radioCollectionView = watchPropertyValue(
+      (RadioModel m) => m.radioCollectionView,
+    );
+    final processing = watchPropertyValue(
+      (CustomContentModel m) => m.processing,
+    );
 
     return Column(
       children: [
         const RadioLibPageControlPanel(),
         Expanded(
           child: processing
-              ? const Center(
-                  child: Progress(),
-                )
+              ? const Center(child: Progress())
               : LayoutBuilder(
                   builder: (context, constraints) {
                     return CustomScrollView(

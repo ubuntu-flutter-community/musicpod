@@ -21,11 +21,13 @@ class MainPageIcon extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final currentAudioType =
-        watchPropertyValue((PlayerModel m) => m.audio?.audioType);
+    final currentAudioType = watchPropertyValue(
+      (PlayerModel m) => m.audio?.audioType,
+    );
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
-    final useMoreAnimations =
-        watchPropertyValue((SettingsModel m) => m.useMoreAnimations);
+    final useMoreAnimations = watchPropertyValue(
+      (SettingsModel m) => m.useMoreAnimations,
+    );
 
     if (currentAudioType == audioType && isPlaying) {
       if (useMoreAnimations) {
@@ -33,10 +35,7 @@ class MainPageIcon extends StatelessWidget with WatchItMixin {
       } else {
         return Padding(
           padding: mainPageIconPadding,
-          child: Icon(
-            Iconz.playFilled,
-            color: context.colorScheme.primary,
-          ),
+          child: Icon(Iconz.playFilled, color: context.colorScheme.primary),
         );
       }
     }

@@ -41,10 +41,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
     final active = audio?.path != null || isOnline;
 
     final trackAndPlayer = [
-      PlayerTrack(
-        active: active,
-        bottomPlayer: true,
-      ),
+      PlayerTrack(active: active, bottomPlayer: true),
       InkWell(
         onTap: () => appModel.setFullWindowMode(true),
         child: Padding(
@@ -75,19 +72,14 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                         playerPosition: PlayerPosition.bottom,
                       ),
                     ),
-                    const SizedBox(
-                      width: 10,
-                    ),
+                    const SizedBox(width: 10),
                     if (!smallWindow)
                       BottomPlayerLikeAndStarButton(audio: audio),
                   ],
                 ),
               ),
               if (!smallWindow)
-                Expanded(
-                  flex: 6,
-                  child: PlayerMainControls(active: active),
-                ),
+                Expanded(flex: 6, child: PlayerMainControls(active: active)),
               if (!smallWindow)
                 Flexible(
                   flex: 4,
@@ -98,9 +90,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                         PlaybackRateButton(active: active),
                       if (!isMobile) const VolumeSliderPopup(),
                       const PlayerPauseTimerButton(),
-                      const QueueButton(
-                        isSelected: false,
-                      ),
+                      const QueueButton(isSelected: false),
                       IconButton(
                         tooltip: context.l10n.fullWindow,
                         icon: Icon(
@@ -117,9 +107,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                 const SizedBox(width: 10),
                 PlayButton(active: active),
               ],
-              const SizedBox(
-                width: 10,
-              ),
+              const SizedBox(width: 10),
             ],
           ),
         ),
@@ -129,8 +117,8 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
     final player = SizedBox(
       height: bottomPlayerDefaultHeight,
       child: Column(
-        children:
-            (isMobile ? trackAndPlayer.reversed : trackAndPlayer).toList(),
+        children: (isMobile ? trackAndPlayer.reversed : trackAndPlayer)
+            .toList(),
       ),
     );
 
@@ -144,10 +132,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
           PlayerColor(
             position: PlayerPosition.bottom,
             alpha: 0.2,
-            size: Size(
-              context.mediaQuerySize.width,
-              bottomPlayerDefaultHeight,
-            ),
+            size: Size(context.mediaQuerySize.width, bottomPlayerDefaultHeight),
           ),
         player,
       ],

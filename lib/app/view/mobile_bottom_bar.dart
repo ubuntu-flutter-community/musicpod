@@ -24,8 +24,9 @@ class MobileBottomBar extends StatelessWidget with WatchItMixin {
               ? theme.cardColor
               : Color.alphaBlend(
                   color.withAlpha(theme.isLight ? 20 : 15),
-                  theme.scaffoldBackgroundColor
-                      .scale(lightness: theme.isLight ? -0.01 : 0.05),
+                  theme.scaffoldBackgroundColor.scale(
+                    lightness: theme.isLight ? -0.01 : 0.05,
+                  ),
                 ),
           child: Column(
             mainAxisSize: MainAxisSize.min,

@@ -53,3 +53,6 @@ pinnedAlbums.json
 playlists.json
 podcasts.json
 starredStations.json
+
+# FVM Version Cache
+.fvm/

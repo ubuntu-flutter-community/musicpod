@@ -24,10 +24,10 @@ class CustomContentModel extends SafeChangeNotifier {
     required LibraryService libraryService,
     required LocalAudioService localAudioService,
     required PodcastService podcastService,
-  })  : _externalPathService = externalPathService,
-        _libraryService = libraryService,
-        _podcastService = podcastService,
-        _localAudioService = localAudioService;
+  }) : _externalPathService = externalPathService,
+       _libraryService = libraryService,
+       _podcastService = podcastService,
+       _localAudioService = localAudioService;
 
   final ExternalPathService _externalPathService;
   final LibraryService _libraryService;
@@ -41,16 +41,13 @@ class CustomContentModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  void removePlaylist({
-    required String name,
-  }) {
+  void removePlaylist({required String name}) {
     _playlists.removeWhere((e) => e.id == name);
     notifyListeners();
   }
 
-  Future<void> addPlaylists({List<XFile>? files}) async => setPlaylists(
-        [..._playlists, ...await loadPlaylists(files: files)],
-      );
+  Future<void> addPlaylists({List<XFile>? files}) async =>
+      setPlaylists([..._playlists, ...await loadPlaylists(files: files)]);
 
   Future<List<({List<Audio> audios, String id})>> loadPlaylists({
     List<XFile>? files,
@@ -58,23 +55,20 @@ class CustomContentModel extends SafeChangeNotifier {
     final List<({List<Audio> audios, String id})> lists = [];
 
     try {
-      final paths = files?.map((e) => e.path) ??
+      final paths =
+          files?.map((e) => e.path) ??
           await _externalPathService.getPathsOfFiles();
       for (var path in paths) {
         if (path.endsWith('.m3u')) {
-          lists.add(
-            (
-              id: basename(path),
-              audios: await compute(_parseM3uPlaylist, path),
-            ),
-          );
+          lists.add((
+            id: basename(path),
+            audios: await compute(_parseM3uPlaylist, path),
+          ));
         } else if (path.endsWith('.pls')) {
-          lists.add(
-            (
-              id: basename(path),
-              audios: await compute(_parsePlsPlaylist, path),
-            ),
-          );
+          lists.add((
+            id: basename(path),
+            audios: await compute(_parsePlsPlaylist, path),
+          ));
         }
       }
     } on Exception catch (e) {
@@ -99,9 +93,7 @@ class CustomContentModel extends SafeChangeNotifier {
   Future<bool> exportPlaylistsAndPinnedAlbumsToM3Us() async {
     final albums = <({String id, List<Audio> audios})>[];
     for (var e in _libraryService.favoriteAlbums) {
-      albums.add(
-        (id: e, audios: await _localAudioService.findAlbum(e) ?? []),
-      );
+      albums.add((id: e, audios: await _localAudioService.findAlbum(e) ?? []));
     }
 
     final List<({String id, List<Audio> audios})> list = [
@@ -165,8 +157,9 @@ class CustomContentModel extends SafeChangeNotifier {
       final children = category.children!.where((e) => e.xmlUrl != null);
       final podcasts = <(String feedUrl, List<Audio> audios)>[];
       for (var feed in children) {
-        final audios =
-            await _podcastService.findEpisodes(feedUrl: feed.xmlUrl!);
+        final audios = await _podcastService.findEpisodes(
+          feedUrl: feed.xmlUrl!,
+        );
         if (audios.isNotEmpty) {
           podcasts.add((feed.xmlUrl!, audios));
         }
@@ -208,10 +201,7 @@ class CustomContentModel extends SafeChangeNotifier {
 
     body.add(category.type('rss').title('Podcasts').text('Podcasts').build());
 
-    final opml = OpmlDocument(
-      head: head,
-      body: body,
-    );
+    final opml = OpmlDocument(head: head, body: body);
     final xml = opml.toXmlString(pretty: true);
     file.writeAsStringSync(xml);
     setProcessing(false);
@@ -236,19 +226,14 @@ class CustomContentModel extends SafeChangeNotifier {
     final category = OpmlOutlineBuilder();
 
     for (var station in _libraryService.starredStations) {
-      category.addChild(
-        OpmlOutlineBuilder().text(station).build(),
-      );
+      category.addChild(OpmlOutlineBuilder().text(station).build());
     }
 
     body.add(
       category.title('Starred Stations').text('Starred Stations').build(),
     );
 
-    final opml = OpmlDocument(
-      head: head,
-      body: body,
-    );
+    final opml = OpmlDocument(head: head, body: body);
     final xml = opml.toXmlString(pretty: true);
     file.writeAsStringSync(xml);
     setProcessing(false);

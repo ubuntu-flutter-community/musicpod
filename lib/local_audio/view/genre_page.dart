@@ -35,8 +35,8 @@ class _GenrePageState extends State<GenrePage> {
 
   @override
   Widget build(BuildContext context) {
-    final cachedAlbumIDsOfGenre =
-        di<LocalAudioModel>().getCachedAlbumIDsOfGenre(widget.genre);
+    final cachedAlbumIDsOfGenre = di<LocalAudioModel>()
+        .getCachedAlbumIDsOfGenre(widget.genre);
 
     return Scaffold(
       appBar: HeaderBar(
@@ -59,9 +59,7 @@ class _GenrePageState extends State<GenrePage> {
               },
               icon: Icon(Iconz.radio),
             ),
-            const SizedBox(
-              width: 5,
-            ),
+            const SizedBox(width: 5),
             Text(widget.genre),
           ],
         ),
@@ -71,17 +69,15 @@ class _GenrePageState extends State<GenrePage> {
           return CustomScrollView(
             slivers: [
               SliverPadding(
-                padding: getAdaptiveHorizontalPadding(constraints: constraints)
-                    .copyWith(
-                  bottom: bottomPlayerPageGap,
-                ),
+                padding: getAdaptiveHorizontalPadding(
+                  constraints: constraints,
+                ).copyWith(bottom: bottomPlayerPageGap),
                 sliver: cachedAlbumIDsOfGenre != null
                     ? AlbumsView(albumIDs: cachedAlbumIDsOfGenre)
                     : FutureBuilder(
                         future: _albumIDsOfGenre,
-                        builder: (context, snapshot) => AlbumsView(
-                          albumIDs: snapshot.data,
-                        ),
+                        builder: (context, snapshot) =>
+                            AlbumsView(albumIDs: snapshot.data),
                       ),
               ),
             ],

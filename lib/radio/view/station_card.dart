@@ -42,38 +42,30 @@ class _StationCardState extends State<StationCard> {
         }
 
         if (snapshot.connectionState != ConnectionState.done) {
-          return const Center(
-            child: Progress(),
-          );
+          return const Center(child: Progress());
         }
 
         final station = snapshot.data!;
 
         return AudioCard(
-          bottom:
-              AudioCardBottom(text: station.title?.replaceAll('_', '') ?? ''),
+          bottom: AudioCardBottom(
+            text: station.title?.replaceAll('_', '') ?? '',
+          ),
           onPlay: station.uuid == null
               ? null
-              : () => di<PlayerModel>().startPlaylist(
-                    audios: [station],
-                    listName: widget.uuid,
-                  ).then((_) => di<RadioModel>().clickStation(station)),
+              : () => di<PlayerModel>()
+                    .startPlaylist(audios: [station], listName: widget.uuid)
+                    .then((_) => di<RadioModel>().clickStation(station)),
           onTap: station.uuid == null
               ? null
               : () => di<RoutingManager>().push(
-                    builder: (_) => StationPage(uuid: widget.uuid),
-                    pageId: widget.uuid,
-                  ),
+                  builder: (_) => StationPage(uuid: widget.uuid),
+                  pageId: widget.uuid,
+                ),
           image: SizedBox.expand(
             child: SafeNetworkImage(
-              fallBackIcon: AudioFallBackIcon(
-                audio: station,
-                iconSize: 70,
-              ),
-              errorIcon: AudioFallBackIcon(
-                audio: station,
-                iconSize: 70,
-              ),
+              fallBackIcon: AudioFallBackIcon(audio: station, iconSize: 70),
+              errorIcon: AudioFallBackIcon(audio: station, iconSize: 70),
               url: station.imageUrl,
               fit: BoxFit.scaleDown,
               height: audioCardDimension,

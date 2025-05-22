@@ -11,9 +11,7 @@ import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 
 class LicensesDialog extends StatefulWidget with WatchItStatefulWidgetMixin {
-  const LicensesDialog({
-    super.key,
-  });
+  const LicensesDialog({super.key});
 
   @override
   State<LicensesDialog> createState() => _LicensesDialogState();
@@ -47,12 +45,11 @@ class _LicensesDialogState extends State<LicensesDialog> {
             length: packages.length,
             tileBuilder: (context, index, selected, availableWidth) =>
                 YaruMasterTile(
-              selected: selected,
-              title: Text(packages[index]),
-            ),
-            pageBuilder: (context, index) => LicenseView(
-              licenses: model.licenses(model.packages[index]),
-            ),
+                  selected: selected,
+                  title: Text(packages[index]),
+                ),
+            pageBuilder: (context, index) =>
+                LicenseView(licenses: model.licenses(model.packages[index])),
           ),
         ),
       ),
@@ -114,17 +111,13 @@ class _LicenseViewState extends State<LicenseView> {
       body: PageView.builder(
         controller: _controller,
         itemCount: widget.licenses.length,
-        itemBuilder: (context, index) => LicenseText(
-          license: widget.licenses[index],
-        ),
+        itemBuilder: (context, index) =>
+            LicenseText(license: widget.licenses[index]),
         physics: const NeverScrollableScrollPhysics(),
       ),
       bottomNavigationBar: Visibility(
         visible: widget.licenses.length > 1,
-        child: NaviBar(
-          controller: _controller,
-          length: widget.licenses.length,
-        ),
+        child: NaviBar(controller: _controller, length: widget.licenses.length),
       ),
     );
   }
@@ -178,17 +171,11 @@ class NaviBar extends StatelessWidget {
   }
 
   void _previousPage() {
-    controller.previousPage(
-      duration: kSlideDuration,
-      curve: kSlideCurve,
-    );
+    controller.previousPage(duration: kSlideDuration, curve: kSlideCurve);
   }
 
   void _nextPage() {
-    controller.nextPage(
-      duration: kSlideDuration,
-      curve: kSlideCurve,
-    );
+    controller.nextPage(duration: kSlideDuration, curve: kSlideCurve);
   }
 
   @override

@@ -11,19 +11,16 @@ import '../../settings/settings_model.dart';
 import '../player_model.dart';
 
 class PlayerTrack extends StatelessWidget with WatchItMixin {
-  const PlayerTrack({
-    super.key,
-    this.bottomPlayer = false,
-    this.active = true,
-  });
+  const PlayerTrack({super.key, this.bottomPlayer = false, this.active = true});
 
   final bool bottomPlayer, active;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
 
     final mainColor = theme.colorScheme.onSurface;
 
@@ -38,13 +35,16 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
     final duration = watchPropertyValue((PlayerModel m) => m.duration);
     final seek = playerModel.seek;
 
-    final sliderActive = active &&
+    final sliderActive =
+        active &&
         (duration != null &&
             position != null &&
             duration.inSeconds > position.inSeconds);
 
-    final textStyle =
-        TextStyle(fontSize: 12, color: !active ? theme.disabledColor : null);
+    final textStyle = TextStyle(
+      fontSize: 12,
+      color: !active ? theme.disabledColor : null,
+    );
 
     final thumbShape = RoundSliderThumbShape(
       elevation: 5,
@@ -52,7 +52,8 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
       disabledThumbRadius: bottomPlayer ? 0 : 8.0,
     );
 
-    final bufferActive = audioType != AudioType.local &&
+    final bufferActive =
+        audioType != AudioType.local &&
         active &&
         buffer != null &&
         position != null &&
@@ -61,10 +62,12 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
         buffer.inSeconds <=
             (sliderActive ? duration.inSeconds.toDouble() : 1.0);
 
-    final trackShape =
-        bottomPlayer ? const RectangularSliderTrackShape() : CustomTrackShape();
+    final trackShape = bottomPlayer
+        ? const RectangularSliderTrackShape()
+        : CustomTrackShape();
 
-    final slider = (duration?.inSeconds != null && duration!.inSeconds < 10) &&
+    final slider =
+        (duration?.inSeconds != null && duration!.inSeconds < 10) &&
             audioType == AudioType.radio &&
             isPlaying
         ? Padding(
@@ -73,8 +76,9 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
                 : const EdgeInsets.only(left: 7, right: 7, top: 3),
             child: LinearProgress(
               value: null,
-              trackHeight:
-                  useYaruTheme && !bottomPlayer ? 5.0 : (isMobile ? 2.0 : 4.0),
+              trackHeight: useYaruTheme && !bottomPlayer
+                  ? 5.0
+                  : (isMobile ? 2.0 : 4.0),
               color: mainColor.withValues(alpha: 0.8),
               backgroundColor: mainColor.withValues(alpha: 0.4),
             ),
@@ -103,8 +107,9 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
                     min: 0,
                     max: sliderActive ? duration.inSeconds.toDouble() : 1.0,
                     value: sliderActive ? position.inSeconds.toDouble() : 0,
-                    secondaryTrackValue:
-                        bufferActive ? buffer.inSeconds.toDouble() : null,
+                    secondaryTrackValue: bufferActive
+                        ? buffer.inSeconds.toDouble()
+                        : null,
                     onChanged: sliderActive
                         ? (v) async {
                             setPosition(Duration(seconds: v.toInt()));
@@ -165,10 +170,7 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
 }
 
 class PlayerSimpleTrack extends StatelessWidget with WatchItMixin {
-  const PlayerSimpleTrack({
-    super.key,
-    this.active = true,
-  });
+  const PlayerSimpleTrack({super.key, this.active = true});
 
   final bool active;
 
@@ -177,13 +179,17 @@ class PlayerSimpleTrack extends StatelessWidget with WatchItMixin {
     final theme = context.theme;
     final position = watchPropertyValue((PlayerModel m) => m.position);
     final duration = watchPropertyValue((PlayerModel m) => m.duration);
-    final textStyle =
-        TextStyle(fontSize: 10, color: !active ? theme.disabledColor : null);
+    final textStyle = TextStyle(
+      fontSize: 10,
+      color: !active ? theme.disabledColor : null,
+    );
 
-    final positionWidth =
-        (position?.inHours != null && position!.inHours > 0) ? 48.0 : 35.0;
-    final durationWidth =
-        (duration?.inHours != null && duration!.inHours > 0) ? 48.0 : 35.0;
+    final positionWidth = (position?.inHours != null && position!.inHours > 0)
+        ? 48.0
+        : 35.0;
+    final durationWidth = (duration?.inHours != null && duration!.inHours > 0)
+        ? 48.0
+        : 35.0;
 
     const slashWidth = 5.0;
 

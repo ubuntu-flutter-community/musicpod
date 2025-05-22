@@ -32,13 +32,15 @@ class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final playerModel = di<PlayerModel>();
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
-    final radius = (useYaruTheme
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
+    final radius =
+        (useYaruTheme
             ? kYaruTitleBarItemHeight
             : isMobile
-                ? 40
-                : 38) /
+            ? 40
+            : 38) /
         2;
 
     String label;
@@ -73,18 +75,12 @@ class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
             child: IconButton.filled(
               style: translucentIconButtonStyle(context.colorScheme),
               icon: (isPlayerPlaying && selected)
-                  ? Icon(
-                      Iconz.pause,
-                      semanticLabel: label,
-                    )
+                  ? Icon(Iconz.pause, semanticLabel: label)
                   : Padding(
                       padding: Iconz.cupertino
                           ? const EdgeInsets.only(left: 3)
                           : EdgeInsets.zero,
-                      child: Icon(
-                        Iconz.playFilled,
-                        semanticLabel: label,
-                      ),
+                      child: Icon(Iconz.playFilled, semanticLabel: label),
                     ),
               onPressed: () {
                 if (selected) {

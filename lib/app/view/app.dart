@@ -14,13 +14,15 @@ class YaruMusicPodApp extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final useCustomThemeColor =
-        watchPropertyValue((SettingsModel m) => m.useCustomThemeColor);
+    final useCustomThemeColor = watchPropertyValue(
+      (SettingsModel m) => m.useCustomThemeColor,
+    );
     final customThemeColor = watchPropertyValue(
       (SettingsModel m) => m.customThemeColor,
     );
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
 
     return YaruTheme(
       builder: (context, yaru, child) {
@@ -37,8 +39,9 @@ class YaruMusicPodApp extends StatelessWidget with WatchItMixin {
           accent: customThemeColor != null && useCustomThemeColor
               ? Color(customThemeColor)
               : yaru.theme?.colorScheme.primary,
-          lightTheme:
-              useYaruTheme ? yaruLightWithTweaks(yaruLightFlavor) : null,
+          lightTheme: useYaruTheme
+              ? yaruLightWithTweaks(yaruLightFlavor)
+              : null,
           darkTheme: useYaruTheme ? yaruDarkWithTweaks(yaruDarkFlavor) : null,
         );
       },
@@ -51,8 +54,9 @@ class MaterialMusicPodApp extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final useCustomThemeColor =
-        watchPropertyValue((SettingsModel m) => m.useCustomThemeColor);
+    final useCustomThemeColor = watchPropertyValue(
+      (SettingsModel m) => m.useCustomThemeColor,
+    );
     final customThemeColor = watchPropertyValue(
       (SettingsModel m) => m.customThemeColor,
     );

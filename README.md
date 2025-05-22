@@ -9,26 +9,26 @@
 
 MusicPod is a local music, radio, television and podcast player for Linux Desktop, MacOS and Windows. (Android is planed but no ETA yet when it will happen.)
 
-|OS|How to install|
-|-|-|
-|Linux|[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/musicpod) <br/> or <br/> [![](https://flathub.org/api/badge?locale=en)](https://flathub.org/apps/org.feichtmeier.Musicpod)|
-|Windows|[Release Page](https://github.com/ubuntu-flutter-community/musicpod/releases)|
-|MacOS|[Release Page](https://github.com/ubuntu-flutter-community/musicpod/releases)|
-|Android|WIP|
+| OS      | How to install                                                                                                                                                                                                                                     |
+| ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Linux   | [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/musicpod) <br/> or <br/> [![](https://flathub.org/api/badge?locale=en)](https://flathub.org/apps/org.feichtmeier.Musicpod) |
+| Windows | [Release Page](https://github.com/ubuntu-flutter-community/musicpod/releases)                                                                                                                                                                      |
+| MacOS   | [Release Page](https://github.com/ubuntu-flutter-community/musicpod/releases)                                                                                                                                                                      |
+| Android | WIP                                                                                                                                                                                                                                                |
 
 
 ## Features
 
-|Features | Dark Linux | Light Linux | Dark MacOS | Light MacOS | 
-|-|-|-|-|-|
-|Play local audio|![](.github/images/album_dark_linux.png)|![](.github/images/album_light_linux.png)|![](.github/images/album_dark_macos.png)|![](.github/images/album_light_macos.png)|
-|Find local audios sorted by [Metadata](https://github.com/ClementBeal/audio_metadata_reader) |![](.github/images/albums_dark_linux.png)|![](.github/images/albums_light_linux.png)|![](.github/images/albums_dark_macos.png)|![](.github/images/albums_light_macos.png)|
-|Play radio stations, with icytags and artwork looked up!|![](.github/images/station_dark_linux.png)|![](.github/images/station_light_linux.png)|![](.github/images/station_dark_macos.png)|![](.github/images/station_light_macos.png)|
-|Play and download podcasts, safe progress, sort episodes and more!|![](.github/images/podcast_dark_linux.png)|![](.github/images/podcast_light_linux.png)|![](.github/images/podcast_dark_macos.png)|![](.github/images/podcast_light_macos.png)|
-|Video podcast support!|![](.github/images/video_dark_linux.png)|![](.github/images/video_light_linux.png)|![](.github/images/video_dark_macos.png)|![](.github/images/video_light_macos.png)|
-|Discover podcasts, filtered as you like|![](.github/images/podcasts_dark_linux.png)|![](.github/images/podcasts_light_linux.png)|![](.github/images/podcasts_dark_macos.png)|![](.github/images/podcasts_light_macos.png)|
-|Discover radio stations, filtered as you like|![](.github/images/radio_dark_linux.png)|![](.github/images/radio_light_linux.png)|![](.github/images/radio_dark_macos.png)|![](.github/images/radio_light_macos.png)|
-|Different view modes|![](.github/images/fullheight_dark_linux.png)|![](.github/images/fullheight_light_linux.png)|![](.github/images/fullheight_dark_macos.png)|![](.github/images/fullheight_light_macos.png)|
+| Features                                                                                     | Dark Linux                                    | Light Linux                                    | Dark MacOS                                    | Light MacOS                                    |
+| -------------------------------------------------------------------------------------------- | --------------------------------------------- | ---------------------------------------------- | --------------------------------------------- | ---------------------------------------------- |
+| Play local audio                                                                             | ![](.github/images/album_dark_linux.png)      | ![](.github/images/album_light_linux.png)      | ![](.github/images/album_dark_macos.png)      | ![](.github/images/album_light_macos.png)      |
+| Find local audios sorted by [Metadata](https://github.com/ClementBeal/audio_metadata_reader) | ![](.github/images/albums_dark_linux.png)     | ![](.github/images/albums_light_linux.png)     | ![](.github/images/albums_dark_macos.png)     | ![](.github/images/albums_light_macos.png)     |
+| Play radio stations, with icytags and artwork looked up!                                     | ![](.github/images/station_dark_linux.png)    | ![](.github/images/station_light_linux.png)    | ![](.github/images/station_dark_macos.png)    | ![](.github/images/station_light_macos.png)    |
+| Play and download podcasts, safe progress, sort episodes and more!                           | ![](.github/images/podcast_dark_linux.png)    | ![](.github/images/podcast_light_linux.png)    | ![](.github/images/podcast_dark_macos.png)    | ![](.github/images/podcast_light_macos.png)    |
+| Video podcast support!                                                                       | ![](.github/images/video_dark_linux.png)      | ![](.github/images/video_light_linux.png)      | ![](.github/images/video_dark_macos.png)      | ![](.github/images/video_light_macos.png)      |
+| Discover podcasts, filtered as you like                                                      | ![](.github/images/podcasts_dark_linux.png)   | ![](.github/images/podcasts_light_linux.png)   | ![](.github/images/podcasts_dark_macos.png)   | ![](.github/images/podcasts_light_macos.png)   |
+| Discover radio stations, filtered as you like                                                | ![](.github/images/radio_dark_linux.png)      | ![](.github/images/radio_light_linux.png)      | ![](.github/images/radio_dark_macos.png)      | ![](.github/images/radio_light_macos.png)      |
+| Different view modes                                                                         | ![](.github/images/fullheight_dark_linux.png) | ![](.github/images/fullheight_light_linux.png) | ![](.github/images/fullheight_dark_macos.png) | ![](.github/images/fullheight_light_macos.png) |
 
 
 ## Credits
@@ -84,6 +84,7 @@ If you want to contribute code, please create an issue first.
 - for Linux desktop builds: `sudo apt install libmpv-dev mpv`
 - [install rust](https://www.rust-lang.org/tools/install) (for some dependencies)
 - [install flutter](https://docs.flutter.dev/get-started/install)
+  - I suggest to install the flutter *sdk* with [FVM](https://fvm.app/) (this does not replace the native dependencies ofc!)
 - required for android builds: [install android-studio](https://developer.android.com/studio)
 - required for macos builds: [install xcode](https://developer.apple.com/xcode/)
 - as a good IDE for all builds: [install vcode](https://code.visualstudio.com/)

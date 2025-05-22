@@ -725,5 +725,13 @@
     "selectIconThemeTitle": "Select icon theme",
     "selectIconThemeDescription": "Chose an icon theme for the application. The default theme depends on your operating system. This reloads the application!",
     "saveWindowSizeTitle": "Save window size",
-    "saveWindowSizeDescription": "This will save the window size and position of the application."
+    "saveWindowSizeDescription": "This will save the window size and position of the application.",
+    "downloadsOfLatestRelease": "Downloaded {latestRelease} times outside of snapstore and flathub",
+    "@downloadsOfLatestRelease": {
+        "placeholders": {
+            "latestRelease": {
+                "type": "String"
+            }
+        }
+    }
 }

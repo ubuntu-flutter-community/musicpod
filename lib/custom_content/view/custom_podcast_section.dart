@@ -41,9 +41,7 @@ class _CustomPodcastSectionState extends State<CustomPodcastSection> {
           controller: _urlController,
           decoration: InputDecoration(label: Text(context.l10n.podcastFeedUrl)),
         ),
-        const SizedBox(
-          height: kLargestSpace,
-        ),
+        const SizedBox(height: kLargestSpace),
         Align(
           alignment: Alignment.bottomRight,
           child: Wrap(
@@ -53,36 +51,31 @@ class _CustomPodcastSectionState extends State<CustomPodcastSection> {
               ListenableBuilder(
                 listenable: _urlController,
                 builder: (context, _) => ElevatedButton(
-                  onPressed: _urlController.text.isEmpty ||
+                  onPressed:
+                      _urlController.text.isEmpty ||
                           !_urlController.text.startsWith('http')
                       ? null
                       : () {
                           di<PodcastModel>()
-                              .findEpisodes(
-                            feedUrl: _urlController.text,
-                          )
-                              .then(
-                            (v) {
-                              if (v.isEmpty && context.mounted) {
-                                showSnackBar(
-                                  context: context,
-                                  content: Text(context.l10n.noPodcastFound),
-                                );
-                              } else {
-                                di<RoutingManager>().push(
-                                  pageId: _urlController.text,
-                                  builder: (context) => LazyPodcastPage(
-                                    imageUrl: v.firstOrNull?.imageUrl,
-                                    feedUrl: _urlController.text,
-                                  ),
-                                );
-                              }
-                            },
-                          );
+                              .findEpisodes(feedUrl: _urlController.text)
+                              .then((v) {
+                                if (v.isEmpty && context.mounted) {
+                                  showSnackBar(
+                                    context: context,
+                                    content: Text(context.l10n.noPodcastFound),
+                                  );
+                                } else {
+                                  di<RoutingManager>().push(
+                                    pageId: _urlController.text,
+                                    builder: (context) => LazyPodcastPage(
+                                      imageUrl: v.firstOrNull?.imageUrl,
+                                      feedUrl: _urlController.text,
+                                    ),
+                                  );
+                                }
+                              });
                         },
-                  child: Text(
-                    context.l10n.search,
-                  ),
+                  child: Text(context.l10n.search),
                 ),
               ),
             ],

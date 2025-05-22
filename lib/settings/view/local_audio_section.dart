@@ -15,8 +15,9 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final directory =
-        watchPropertyValue((SettingsModel m) => m.directory ?? '');
+    final directory = watchPropertyValue(
+      (SettingsModel m) => m.directory ?? '',
+    );
 
     final groupAlbumsOnlyByAlbumName = watchPropertyValue(
       (SettingsModel m) => m.groupAlbumsOnlyByAlbumName,
@@ -31,8 +32,8 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
             subtitle: Text(directory),
             trailing: ElevatedButton(
               onPressed: () async {
-                final directoryPath =
-                    await di<ExternalPathService>().getPathOfDirectory();
+                final directoryPath = await di<ExternalPathService>()
+                    .getPathOfDirectory();
                 if (directoryPath != null) {
                   await di<LocalAudioModel>().init(
                     forceInit: true,

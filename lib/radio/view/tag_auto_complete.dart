@@ -39,55 +39,52 @@ class TagAutoComplete extends StatelessWidget with WatchItMixin {
     final fallBackTextStyle = theme.textTheme.bodyMedium?.copyWith(
       fontWeight: FontWeight.w500,
     );
-    final useYaruTheme =
-        watchPropertyValue((SettingsModel m) => m.useYaruTheme);
+    final useYaruTheme = watchPropertyValue(
+      (SettingsModel m) => m.useYaruTheme,
+    );
 
     return LayoutBuilder(
       builder: (_, constraints) {
         return Autocomplete<Tag>(
           key: ValueKey(value?.name),
-          initialValue: TextEditingValue(
-            text: value?.name ?? '',
-          ),
+          initialValue: TextEditingValue(text: value?.name ?? ''),
           displayStringForOption: (option) => option.name,
-          fieldViewBuilder: (
-            context,
-            textEditingController,
-            focusNode,
-            onFieldSubmitted,
-          ) {
-            final hintText = '${context.l10n.search}: ${context.l10n.tags}';
-            return TextField(
-              maxLines: 1,
-              onTap: () {
-                textEditingController.selection = TextSelection(
-                  baseOffset: 0,
-                  extentOffset: textEditingController.value.text.length,
+          fieldViewBuilder:
+              (context, textEditingController, focusNode, onFieldSubmitted) {
+                final hintText = '${context.l10n.search}: ${context.l10n.tags}';
+                return TextField(
+                  maxLines: 1,
+                  onTap: () {
+                    textEditingController.selection = TextSelection(
+                      baseOffset: 0,
+                      extentOffset: textEditingController.value.text.length,
+                    );
+                  },
+                  style: useYaruTheme ? theme.textTheme.bodyMedium : null,
+                  textAlignVertical: useYaruTheme
+                      ? TextAlignVertical.center
+                      : null,
+                  cursorWidth: useYaruTheme ? 1 : 2.0,
+                  decoration: useYaruTheme
+                      ? createYaruDecoration(
+                          theme: theme,
+                          hintText: hintText,
+                          suffixIcon: suffixIcon,
+                          contentPadding: contentPadding,
+                        )
+                      : createMaterialDecoration(
+                          colorScheme: theme.colorScheme,
+                          hintText: hintText,
+                          suffixIcon: suffixIcon,
+                          contentPadding: contentPadding,
+                        ),
+                  controller: textEditingController,
+                  focusNode: focusNode,
+                  onSubmitted: (String value) {
+                    onFieldSubmitted();
+                  },
                 );
               },
-              style: useYaruTheme ? theme.textTheme.bodyMedium : null,
-              textAlignVertical: useYaruTheme ? TextAlignVertical.center : null,
-              cursorWidth: useYaruTheme ? 1 : 2.0,
-              decoration: useYaruTheme
-                  ? createYaruDecoration(
-                      theme: theme,
-                      hintText: hintText,
-                      suffixIcon: suffixIcon,
-                      contentPadding: contentPadding,
-                    )
-                  : createMaterialDecoration(
-                      colorScheme: theme.colorScheme,
-                      hintText: hintText,
-                      suffixIcon: suffixIcon,
-                      contentPadding: contentPadding,
-                    ),
-              controller: textEditingController,
-              focusNode: focusNode,
-              onSubmitted: (String value) {
-                onFieldSubmitted();
-              },
-            );
-          },
           optionsViewBuilder: (context, onSelected, options) {
             return Align(
               alignment: Alignment.topLeft,
@@ -100,10 +97,7 @@ class TagAutoComplete extends StatelessWidget with WatchItMixin {
                     color: theme.popupMenuTheme.color,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6),
-                      side: BorderSide(
-                        color: theme.dividerColor,
-                        width: 1,
-                      ),
+                      side: BorderSide(color: theme.dividerColor, width: 1),
                     ),
                     elevation: 1,
                     child: ListView.builder(
@@ -112,13 +106,12 @@ class TagAutoComplete extends StatelessWidget with WatchItMixin {
                         return Builder(
                           builder: (BuildContext context) {
                             final bool highlight =
-                                AutocompleteHighlightedOption.of(
-                                      context,
-                                    ) ==
-                                    index;
+                                AutocompleteHighlightedOption.of(context) ==
+                                index;
                             if (highlight) {
-                              SchedulerBinding.instance
-                                  .addPostFrameCallback((Duration timeStamp) {
+                              SchedulerBinding.instance.addPostFrameCallback((
+                                Duration timeStamp,
+                              ) {
                                 Scrollable.ensureVisible(
                                   context,
                                   alignment: 0.5,
@@ -150,9 +143,9 @@ class TagAutoComplete extends StatelessWidget with WatchItMixin {
               return tags ?? [];
             }
             return tags?.where(
-                  (e) => e.name
-                      .toLowerCase()
-                      .contains(textEditingValue.text.toLowerCase()),
+                  (e) => e.name.toLowerCase().contains(
+                    textEditingValue.text.toLowerCase(),
+                  ),
                 ) ??
                 [];
           },
@@ -187,10 +180,7 @@ class _TagTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: const EdgeInsets.only(
-        left: 10,
-        right: 0,
-      ),
+      contentPadding: const EdgeInsets.only(left: 10, right: 0),
       titleTextStyle: fallBackTextStyle?.copyWith(
         fontWeight: FontWeight.normal,
       ),

@@ -4,13 +4,12 @@ import 'package:podcast_search/podcast_search.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
-import '../l10n/l10n.dart';
+import '../l10n/app_localizations.dart';
 import 'podcast_service.dart';
 
 class PodcastModel extends SafeChangeNotifier {
-  PodcastModel({
-    required PodcastService podcastService,
-  }) : _podcastService = podcastService;
+  PodcastModel({required PodcastService podcastService})
+    : _podcastService = podcastService;
 
   final PodcastService _podcastService;
 
@@ -97,10 +96,7 @@ class PodcastModel extends SafeChangeNotifier {
 
   String? getSearchQuery(String? feedUrl) => _searchQuery[feedUrl];
 
-  Future<List<Audio>> findEpisodes({
-    Item? item,
-    String? feedUrl,
-  }) =>
+  Future<List<Audio>> findEpisodes({Item? item, String? feedUrl}) =>
       _podcastService.findEpisodes(item: item, feedUrl: feedUrl);
 }
 
@@ -109,7 +105,7 @@ enum PodcastEpisodeFilter {
   description;
 
   String localize(AppLocalizations l10n) => switch (this) {
-        title => l10n.title,
-        description => l10n.description,
-      };
+    title => l10n.title,
+    description => l10n.description,
+  };
 }
