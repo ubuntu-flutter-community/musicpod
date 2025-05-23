@@ -1399,5 +1399,19 @@
   "useYaruThemeDescription": "Questo userà il tema Yaru per l'applicazione. Questo è il tema predefinito per Ubuntu.",
   "@useYaruThemeDescription": {},
   "selectIconThemeDescription": "Scegli un tema icona per l'applicazione. Il tema predefinito dipende dal sistema operativo. Questo ricaricherà l'applicazione!",
-  "@selectIconThemeDescription": {}
+  "@selectIconThemeDescription": {},
+  "reset": "Ripristina",
+  "@reset": {},
+  "saveWindowSizeTitle": "Salva dimensione finestra",
+  "@saveWindowSizeTitle": {},
+  "saveWindowSizeDescription": "Ciò salverà le dimensioni e la posizione della finestra dell'applicazione.",
+  "@saveWindowSizeDescription": {},
+  "downloadsOfLatestRelease": "Scaricato {latestRelease} volte al di fuori di Snapstore e Flathub",
+  "@downloadsOfLatestRelease": {
+    "placeholders": {
+      "latestRelease": {
+        "type": "String"
+      }
+    }
+  }
 }
