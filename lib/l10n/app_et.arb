@@ -1404,5 +1404,13 @@
   "saveWindowSizeTitle": "Salvesta akna mõõdud",
   "@saveWindowSizeTitle": {},
   "saveWindowSizeDescription": "Sellega salvestuvad akna mõõdud ja asukoht.",
-  "@saveWindowSizeDescription": {}
+  "@saveWindowSizeDescription": {},
+  "downloadsOfLatestRelease": "Allalaaditud {latestRelease} korda (arvestamata Flathubi ja Snap Store'i)",
+  "@downloadsOfLatestRelease": {
+    "placeholders": {
+      "latestRelease": {
+        "type": "String"
+      }
+    }
+  }
 }

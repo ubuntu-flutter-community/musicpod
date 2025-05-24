@@ -1402,5 +1402,13 @@
   "saveWindowSizeTitle": "Gorde leihoaren tamaina",
   "@saveWindowSizeTitle": {},
   "saveWindowSizeDescription": "Honek aplikazioaren leihoaren tamaina eta posizioa gordeko ditu.",
-  "@saveWindowSizeDescription": {}
+  "@saveWindowSizeDescription": {},
+  "downloadsOfLatestRelease": "{latestRelease} aldiz deskargatu da snapstore eta flathub-etik kanpo",
+  "@downloadsOfLatestRelease": {
+    "placeholders": {
+      "latestRelease": {
+        "type": "String"
+      }
+    }
+  }
 }
