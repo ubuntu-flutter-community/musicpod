@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.13.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.12.0...v2.13.0) (2025-05-24)
+
+
+### Features
+
+* Translated using Weblate (Chinese (Simplified Han script)) ([#1310](https://github.com/ubuntu-flutter-community/musicpod/issues/1310)) ([20003ff](https://github.com/ubuntu-flutter-community/musicpod/commit/20003ffdd2970aaa82a181826042218080ac4d3c))
+* Translations update from Hosted Weblate ([#1320](https://github.com/ubuntu-flutter-community/musicpod/issues/1320)) ([84b5c00](https://github.com/ubuntu-flutter-community/musicpod/commit/84b5c0079d8aeb8526c13b509e51deb7cda33c6d))
+
 ## [2.12.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.11.4...v2.12.0) (2025-05-13)
 
 
