@@ -132,7 +132,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
           PlayerColor(
             position: PlayerPosition.bottom,
             alpha: 0.2,
-            size: Size(context.mediaQuerySize.width, bottomPlayerDefaultHeight),
+            size: Size(double.infinity, bottomPlayerDefaultHeight),
           ),
         player,
       ],

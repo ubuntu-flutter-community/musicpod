@@ -150,6 +150,11 @@ class SettingsService {
   void setUseMoreAnimations(bool value) =>
       _preferences.setBool(SPKeys.useMoreAnimations, value).then(notify);
 
+  bool get blurredPlayerBackground =>
+      _preferences.getBool(SPKeys.blurredPlayerBackground) ?? false;
+  void setBlurredPlayerBackground(bool value) =>
+      _preferences.setBool(SPKeys.blurredPlayerBackground, value).then(notify);
+
   bool get saveWindowSize =>
       _preferences.getBool(SPKeys.saveWindowSize) ??
       AppConfig.windowManagerImplemented;

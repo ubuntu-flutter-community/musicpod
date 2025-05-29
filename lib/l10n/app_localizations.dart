@@ -4242,6 +4242,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Downloaded {latestRelease} times outside of snapstore and flathub'**
   String downloadsOfLatestRelease(String latestRelease);
+
+  /// No description provided for @useBlurredPlayerBackgroundTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Use blurred player background'**
+  String get useBlurredPlayerBackgroundTitle;
+
+  /// No description provided for @useBlurredPlayerBackgroundDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'This will blur the background of the player. This might lead to lower performance on some devices.'**
+  String get useBlurredPlayerBackgroundDescription;
 }
 
 class _AppLocalizationsDelegate

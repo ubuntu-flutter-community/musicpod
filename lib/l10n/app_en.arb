@@ -733,5 +733,7 @@
                 "type": "String"
             }
         }
-    }
+    },
+    "useBlurredPlayerBackgroundTitle": "Use blurred player background",
+    "useBlurredPlayerBackgroundDescription": "This will blur the background of the player. This might lead to lower performance on some devices."
 }

@@ -116,29 +116,7 @@ class RadioService {
     return null;
   }
 
-  Future<Station?> getStationByName(String name) async {
-    if (_radioBrowserApi == null) {
-      await init();
-      if (connectedHost == null) {
-        return null;
-      }
-    }
-    try {
-      final response = await _radioBrowserApi!.getStationsByName(name: name);
-      final station = response.items.firstOrNull;
-      if (station != null) {
-        _cache[station.stationUUID] = station;
-      }
-      return station;
-    } on Exception catch (e) {
-      printMessageInDebugMode(e);
-    }
-
-    return null;
-  }
-
   RadioBrowserListResponse<Station>? _response;
-  String? _uuid;
   String? _country;
   String? _name;
   String? _state;
@@ -146,7 +124,6 @@ class RadioService {
   String? _language;
   int? _limit;
   Future<List<Station>?> search({
-    String? uuid,
     String? country,
     String? name,
     String? state,
@@ -162,7 +139,6 @@ class RadioService {
     }
 
     if (_response?.items != null &&
-        _uuid == uuid &&
         _country == country &&
         _name == name &&
         _state == state &&
@@ -178,9 +154,6 @@ class RadioService {
       limit: limit > 300 ? 300 : limit,
     );
     try {
-      if (uuid != null) {
-        _response = await _radioBrowserApi!.getStationsByUUID(uuids: [uuid]);
-      }
       if (name?.isEmpty == false) {
         _response = await _radioBrowserApi!.getStationsByName(
           name: name!,
@@ -211,7 +184,6 @@ class RadioService {
       printMessageInDebugMode(e);
     }
 
-    _uuid = uuid;
     _country = country;
     _name = name;
     _state = state;

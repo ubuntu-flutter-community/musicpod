@@ -2154,4 +2154,11 @@ class AppLocalizationsTr extends AppLocalizations {
   String downloadsOfLatestRelease(String latestRelease) {
     return 'Downloaded $latestRelease times outside of snapstore and flathub';
   }
+
+  @override
+  String get useBlurredPlayerBackgroundTitle => 'Use blurred player background';
+
+  @override
+  String get useBlurredPlayerBackgroundDescription =>
+      'This will blur the background of the player. This might lead to lower performance on some devices.';
 }

@@ -2155,6 +2155,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String downloadsOfLatestRelease(String latestRelease) {
     return 'Downloaded $latestRelease times outside of snapstore and flathub';
   }
+
+  @override
+  String get useBlurredPlayerBackgroundTitle => 'Use blurred player background';
+
+  @override
+  String get useBlurredPlayerBackgroundDescription =>
+      'This will blur the background of the player. This might lead to lower performance on some devices.';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -2286,6 +2293,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get titles => 'Títulos';
+
+  @override
+  String get description => 'Descrição';
 
   @override
   String get artist => 'Artista';
@@ -2483,6 +2493,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get queue => 'Fila';
 
   @override
+  String get clearQueue => 'Limpar fila';
+
+  @override
   String get limit => 'Limite';
 
   @override
@@ -2602,6 +2615,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
       'Marcar todos os episódios como concluídos';
 
   @override
+  String get reset => 'Redefinir';
+
+  @override
   String get resetAllSettings => 'Redefinir todas as configurações';
 
   @override
@@ -2681,7 +2697,13 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get connectedTo => 'Conectado a';
 
   @override
+  String get connectedToDiscord => 'Conectado ao Discord';
+
+  @override
   String get disconnectedFrom => 'Desconectado de';
+
+  @override
+  String get disconnectedFromDiscord => 'Desconectado do Discord';
 
   @override
   String get tryReconnect => 'Tente reconectar';
@@ -3119,6 +3141,71 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get loadFromFileOptional => 'Carregar do arquivo (opcional)';
 
   @override
+  String get exportPinnedAlbumsToM3UFiles =>
+      'Exportar álbuns fixados para arquivos M3U';
+
+  @override
+  String get exportPinnedAlbumToM3UFile =>
+      'Exportar álbuns fixados para arquivo M3U';
+
+  @override
+  String get exportPlaylistToM3UFile => 'Exportar lista de reprodução para M3U';
+
+  @override
+  String get exportPlaylistsAndAlbumsToM3UFiles =>
+      'Exportar listas de reprodução e álbuns para arquivos M3U';
+
+  @override
+  String get exportPodcastsToOpmlFile => 'Exportar podcasts para arquivo OPML';
+
+  @override
+  String get importPodcastsFromOpmlFile => 'Importar podcasts de arquivo OPML';
+
+  @override
+  String get exportStarredStationsToOpmlFile =>
+      'Exportar estações favoritas para arquivo OPML';
+
+  @override
+  String get importStarredStationsFromOpmlFile =>
+      'Importar estações favoritas de arquivo OPML';
+
+  @override
+  String get removeAllStarredStations => 'Remover todas as estações favoritas';
+
+  @override
+  String get removeAllStarredStationsConfirm =>
+      'Tem certeza de que deseja remover todas as estações favoritas?';
+
+  @override
+  String get removeAllStarredStationsDescription =>
+      'Isso removerá todas as suas estações favoritas.';
+
+  @override
+  String get removeAllPodcasts => 'Remover todos os podcasts';
+
+  @override
+  String get removeAllPodcastsConfirm =>
+      'Tem certeza de que deseja remover todos os podcasts?';
+
+  @override
+  String get removeAllPodcastsDescription =>
+      'Isso removerá todas as suas assinaturas de podcasts e o progresso.';
+
+  @override
+  String get customContentTitle => 'Adicionar conteúdo personalizado';
+
+  @override
+  String get customContentDescription =>
+      'Se você não quiser usar o recurso de busca do radiobrowser ou de podcasts, pode adicionar seu próprio conteúdo aqui, ou pode adicionar listas de reprodução vazias ou importar listas de reprodução de arquivos M3U e PLS.';
+
+  @override
+  String get setPlaylistNameAndAddMoreLater =>
+      'Defina o nome da lista de reprodução e adicione mais títulos depois';
+
+  @override
+  String get or => 'ou';
+
+  @override
   String get loadMore => 'Carregar mais';
 
   @override
@@ -3162,6 +3249,11 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get checkForUpdates => 'Verificar atualizações';
+
+  @override
+  String checkForUpdatesConfirm(Object length) {
+    return 'Tem certeza de que deseja verificar atualizações para $length podcasts?';
+  }
 
   @override
   String playbackWillStopIn(Object duration, Object timeOfDay) {
@@ -4017,4 +4109,94 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get regionZimbabwe => 'Zimbábue';
+
+  @override
+  String get failedToReadMetadata =>
+      'Falha ao ler os metadados dos seguintes arquivos de mídia:';
+
+  @override
+  String get failedToReadMetadataDescription =>
+      'Os metadados deste arquivo não puderam ser lidos. Isso geralmente é causado por um codec ausente ou por um arquivo corrompido.';
+
+  @override
+  String get breakingChangesPleaseBackupTitle =>
+      'Alterações significativas: Por favor, faça um backup!';
+
+  @override
+  String get breakingChangesPleaseBackupDescription =>
+      'A próxima versão do MusicPod terá alterações significativas. Por favor, faça backup das suas listas de reprodução, assinaturas de podcasts e álbuns fixados antes de atualizar.';
+
+  @override
+  String get breakingChangesPleaseBackupConfirmation =>
+      'Confirmo que fiz backup do meu:';
+
+  @override
+  String get pinnedAlbumsAndPlaylists =>
+      'Álbuns fixados e listas de reprodução';
+
+  @override
+  String get starredStations => 'Estações favoritas';
+
+  @override
+  String get podcastSubscriptions => 'Assinaturas de podcasts';
+
+  @override
+  String get pinnedAlbums => 'Álbuns fixados';
+
+  @override
+  String get export => 'Exportar';
+
+  @override
+  String get import => 'Importar';
+
+  @override
+  String get exportYourData => 'Exporte seus dados';
+
+  @override
+  String get exportYourDataDescription =>
+      'Exporte suas assinaturas de podcasts, estações favoritas e álbuns fixados.';
+
+  @override
+  String get localAudioWatchDialogTitle =>
+      'O diretório local de áudio foi modificado';
+
+  @override
+  String get localAudioWatchDialogDescription =>
+      'Você deseja recarregar o diretório local de áudio?';
+
+  @override
+  String get external => 'externo';
+
+  @override
+  String get externalPlaylist => 'Lista de reprodução externa';
+
+  @override
+  String get pictures => 'Imagens';
+
+  @override
+  String get localPictureTypeOther => 'Outros';
+
+  @override
+  String get localPictureTypeFileIcon32x32 => 'Ícone 32x32';
+
+  @override
+  String get localPictureTypeOtherFileIcon => 'Ícone de outro arquivo';
+
+  @override
+  String get localPictureTypeCoverFront => 'Capa frontal';
+
+  @override
+  String get localPictureTypeCoverBack => 'Capa traseira';
+
+  @override
+  String get localPictureTypeLeafletPage => 'Folheto';
+
+  @override
+  String get localPictureTypeMediaLabelCD => 'Rótulo de mídia CD';
+
+  @override
+  String get localPictureTypeLeadArtist => 'Artista principal';
+
+  @override
+  String get localPictureTypeArtistPerformer => 'Artista/Intérprete';
 }

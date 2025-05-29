@@ -452,7 +452,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get markAllEpisodesAsDone => 'Segna tutti gli episodi come completati';
 
   @override
-  String get reset => 'Reset';
+  String get reset => 'Ripristina';
 
   @override
   String get resetAllSettings => 'Ripristina tutte le impostazioni';
@@ -2143,14 +2143,21 @@ class AppLocalizationsIt extends AppLocalizations {
       'Scegli un tema icona per l\'applicazione. Il tema predefinito dipende dal sistema operativo. Questo ricaricherà l\'applicazione!';
 
   @override
-  String get saveWindowSizeTitle => 'Save window size';
+  String get saveWindowSizeTitle => 'Salva dimensione finestra';
 
   @override
   String get saveWindowSizeDescription =>
-      'This will save the window size and position of the application.';
+      'Ciò salverà le dimensioni e la posizione della finestra dell\'applicazione.';
 
   @override
   String downloadsOfLatestRelease(String latestRelease) {
-    return 'Downloaded $latestRelease times outside of snapstore and flathub';
+    return 'Scaricato $latestRelease volte al di fuori di Snapstore e Flathub';
   }
+
+  @override
+  String get useBlurredPlayerBackgroundTitle => 'Use blurred player background';
+
+  @override
+  String get useBlurredPlayerBackgroundDescription =>
+      'This will blur the background of the player. This might lead to lower performance on some devices.';
 }
