@@ -47,4 +47,5 @@ extension SPKeys on SharedPreferences {
   static const useCustomThemeColor = 'useCustomThemeColor';
   static const iconSetIndex = 'iconSetIndex';
   static const saveWindowSize = 'saveWindowSize';
+  static const blurredPlayerBackground = 'blurredPlayerBackground';
 }

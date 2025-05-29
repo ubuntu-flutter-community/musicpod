@@ -50,6 +50,11 @@ class RadioModel extends SafeChangeNotifier {
 
     return Audio.fromStation(stationByUUID);
   }
+
+  Future<Audio?> getStationByUrl(String url) async {
+    final stationByUrl = await _radioService.getStationByUrl(url);
+    return stationByUrl != null ? Audio.fromStation(stationByUrl) : null;
+  }
 }
 
 enum RadioCollectionView {

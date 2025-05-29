@@ -9,7 +9,7 @@ import '../../common/view/snackbars.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../radio/radio_service.dart';
+import '../../radio/radio_model.dart';
 import '../../search/search_model.dart';
 
 class CustomStationSection extends StatefulWidget {
@@ -83,10 +83,10 @@ class _AddStationDialogState extends State<CustomStationSection> {
                             !_urlController.text.startsWith('http')
                         ? null
                         : () {
-                            di<RadioService>()
+                            di<RadioModel>()
                                 .getStationByUrl(_urlController.text)
                                 .then((v) {
-                                  if (v?.stationUUID == null) {
+                                  if (v?.uuid == null) {
                                     if (context.mounted) {
                                       showSnackBar(
                                         context: context,
@@ -99,7 +99,7 @@ class _AddStationDialogState extends State<CustomStationSection> {
                                     return;
                                   } else {
                                     di<LibraryModel>().addStarredStation(
-                                      v!.stationUUID,
+                                      v!.uuid!,
                                     );
                                   }
                                 });
