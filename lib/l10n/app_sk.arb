@@ -1411,5 +1411,9 @@
         "type": "String"
       }
     }
-  }
+  },
+  "useBlurredPlayerBackgroundTitle": "Použiť rozmazané pozadie prehrávača",
+  "@useBlurredPlayerBackgroundTitle": {},
+  "useBlurredPlayerBackgroundDescription": "Týmto sa rozmaže pozadie prehrávača. Na niektorých zariadeniach to môže viesť k nižšiemu výkonu.",
+  "@useBlurredPlayerBackgroundDescription": {}
 }
