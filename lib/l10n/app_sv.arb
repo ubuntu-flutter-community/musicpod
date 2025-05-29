@@ -1403,5 +1403,13 @@
   "useYaruThemeDescription": "Detta kommer att använda Yaru-temat för programmet. Detta är standardtemat för Ubuntu.",
   "@useYaruThemeDescription": {},
   "useCustomThemeColorTitle": "Använd anpassad accentfärg",
-  "@useCustomThemeColorTitle": {}
+  "@useCustomThemeColorTitle": {},
+  "downloadsOfLatestRelease": "Nedladdat {latestRelease} gånger utanför snapstore och flathub",
+  "@downloadsOfLatestRelease": {
+    "placeholders": {
+      "latestRelease": {
+        "type": "String"
+      }
+    }
+  }
 }

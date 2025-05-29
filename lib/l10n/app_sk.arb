@@ -1403,5 +1403,13 @@
   "saveWindowSizeDescription": "Aplikácia si zapamätá veľkosť a polohu okna, aby zostali rovnaké pri ďalšom otvorení.",
   "@saveWindowSizeDescription": {},
   "saveWindowSizeTitle": "Uložiť veľkosť okna",
-  "@saveWindowSizeTitle": {}
+  "@saveWindowSizeTitle": {},
+  "downloadsOfLatestRelease": "Stiahnuté {latestRelease} krát mimo Snap Store a Flathub",
+  "@downloadsOfLatestRelease": {
+    "placeholders": {
+      "latestRelease": {
+        "type": "String"
+      }
+    }
+  }
 }
