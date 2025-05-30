@@ -1413,5 +1413,9 @@
         "type": "String"
       }
     }
-  }
+  },
+  "useBlurredPlayerBackgroundTitle": "Usa sfondo riproduttore sfocato",
+  "@useBlurredPlayerBackgroundTitle": {},
+  "useBlurredPlayerBackgroundDescription": "Ciò offuscerà lo sfondo del riproduttore. Ciò potrebbe portare in alcuni dispositivi a prestazioni più basse.",
+  "@useBlurredPlayerBackgroundDescription": {}
 }

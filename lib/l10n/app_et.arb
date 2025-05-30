@@ -1412,5 +1412,9 @@
         "type": "String"
       }
     }
-  }
+  },
+  "useBlurredPlayerBackgroundDescription": "Selle valikuga kuvatakse meediaesitaja taust hägusena, kuid mõnedes seadmetes võib see tekitada jõudlusprobleeme.",
+  "@useBlurredPlayerBackgroundDescription": {},
+  "useBlurredPlayerBackgroundTitle": "Kasuta meediaesitajal hägustatud tausta",
+  "@useBlurredPlayerBackgroundTitle": {}
 }
