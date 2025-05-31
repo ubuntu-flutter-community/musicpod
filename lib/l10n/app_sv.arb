@@ -1411,5 +1411,9 @@
         "type": "String"
       }
     }
-  }
+  },
+  "useBlurredPlayerBackgroundTitle": "Använd suddig bakgrund för spelaren",
+  "@useBlurredPlayerBackgroundTitle": {},
+  "useBlurredPlayerBackgroundDescription": "Detta gör spelarens bakgrund suddig. Detta kan leda till lägre prestanda på vissa enheter.",
+  "@useBlurredPlayerBackgroundDescription": {}
 }
