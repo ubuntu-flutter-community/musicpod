@@ -1403,5 +1403,17 @@
   "localPictureTypeComposer": "Compositeur",
   "@localPictureTypeComposer": {},
   "localPictureTypeBandOrchestra": "Groupe / Orchestre",
-  "@localPictureTypeBandOrchestra": {}
+  "@localPictureTypeBandOrchestra": {},
+  "useBlurredPlayerBackgroundTitle": "Flouter le fond du lecteur",
+  "@useBlurredPlayerBackgroundTitle": {},
+  "useBlurredPlayerBackgroundDescription": "Cela va flouter l'arrière-plan du lecteur. Les performances de certains appareils peuvent être affectées.",
+  "@useBlurredPlayerBackgroundDescription": {},
+  "downloadsOfLatestRelease": "Téléchargé {latestRelease} fois en dehors du snapstore et de flathub",
+  "@downloadsOfLatestRelease": {
+    "placeholders": {
+      "latestRelease": {
+        "type": "String"
+      }
+    }
+  }
 }
