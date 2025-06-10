@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../common/data/podcast_genre.dart';
-import '../../common/view/icons.dart';
+import '../../common/view/sliver_body.dart';
 import '../../l10n/l10n.dart';
 import '../../settings/settings_model.dart';
 import '../search_model.dart';
@@ -25,21 +24,14 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
 
     final setPodcastGenre = searchModel.setPodcastGenre;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
-      child: YaruChoiceChipBar(
-        showCheckMarks: false,
-        goNextIcon: Icon(Iconz.goNext),
-        goPreviousIcon: Icon(Iconz.goBack),
-        style: YaruChoiceChipBarStyle.stack,
-        labels: genres.map((e) => Text(e.localize(context.l10n))).toList(),
-        isSelected: genres.map((e) => e == podcastGenre).toList(),
-        onSelected: (i) {
-          searchModel.setSearchQuery(null);
-          setPodcastGenre(PodcastGenre.values.elementAt(i));
-          searchModel.search();
-        },
-      ),
+    return GenericControlPanel(
+      labels: genres.map((e) => Text(e.localize(context.l10n))).toList(),
+      isSelected: genres.map((e) => e == podcastGenre).toList(),
+      onSelected: (i) {
+        searchModel.setSearchQuery(null);
+        setPodcastGenre(PodcastGenre.values.elementAt(i));
+        searchModel.search();
+      },
     );
   }
 }

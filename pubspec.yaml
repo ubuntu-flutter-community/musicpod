@@ -6,7 +6,7 @@ publish_to: "none"
 
 environment:
   sdk: ">=3.8.0 <4.0.0"
-  flutter: ">=3.32.0"
+  flutter: ">=3.32.2"
 
 dependencies:
   animated_emoji: ^3.1.0
@@ -91,7 +91,7 @@ dependencies:
   yaru:
     git:
       url: https://github.com/ubuntu/yaru.dart
-      ref: 2f131c78f73807de48ce60f23ae75bd4881ad2dc
+      ref: 8103703947b001fa2abe03f0a23261d397cee1c7
   yaru_window: ^0.2.1+1
   yaru_window_linux: ^0.2.0+1
 
@@ -127,11 +127,14 @@ dependency_overrides:
     git:
       url: https://github.com/media-kit/media-kit
       path: media_kit
+      ref: c9617f570b8c0ba02857e721997f78c053a856c1
   media_kit_libs_video:
     git:
       url: https://github.com/media-kit/media-kit
       path: libs/universal/media_kit_libs_video
+      ref: c9617f570b8c0ba02857e721997f78c053a856c1
   media_kit_video:
     git:
       url: https://github.com/media-kit/media-kit
       path: media_kit_video
+      ref: c9617f570b8c0ba02857e721997f78c053a856c1

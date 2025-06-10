@@ -5,11 +5,10 @@ import 'package:watch_it/watch_it.dart';
 import '../../app/view/routing_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
-import '../../common/view/adaptive_container.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/search_button.dart';
-import '../../common/view/sliver_filter_app_bar.dart';
+import '../../common/view/sliver_body.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
@@ -82,46 +81,30 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
         ],
         title: Text(context.l10n.localAudio),
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return CustomScrollView(
-            slivers: [
-              SliverFilterAppBar(
-                padding: getAdaptiveHorizontalPadding(constraints: constraints)
-                    .copyWith(
-                      bottom: filterPanelPadding.bottom,
-                      top: filterPanelPadding.top,
-                    ),
-                title: const LocalAudioControlPanel(),
+      body: SliverBody(
+        controlPanel: const LocalAudioControlPanel(),
+        contentBuilder: (context, constraints) =>
+            audios != null && audios.isEmpty
+            ? SliverNoSearchResultPage(
+                icon: const AnimatedEmoji(AnimatedEmojis.bird),
+                message: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(context.l10n.noLocalTitlesFound),
+                    const SizedBox(height: kLargestSpace),
+                    const SettingsButton.important(scrollIndex: 2),
+                  ],
+                ),
+              )
+            : LocalAudioBody(
+                constraints: constraints,
+                localAudioView: localAudioView,
+                titles: audios,
+                albumIDs: allAlbumIDs,
+                artists: allArtists,
+                genres: allGenres,
+                playlists: playlists,
               ),
-              SliverPadding(
-                padding: getAdaptiveHorizontalPadding(
-                  constraints: constraints,
-                ).copyWith(bottom: bottomPlayerPageGap),
-                sliver: audios != null && audios.isEmpty
-                    ? SliverNoSearchResultPage(
-                        icon: const AnimatedEmoji(AnimatedEmojis.bird),
-                        message: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(context.l10n.noLocalTitlesFound),
-                            const SizedBox(height: kLargestSpace),
-                            const SettingsButton.important(scrollIndex: 2),
-                          ],
-                        ),
-                      )
-                    : LocalAudioBody(
-                        localAudioView: localAudioView,
-                        titles: audios,
-                        albumIDs: allAlbumIDs,
-                        artists: allArtists,
-                        genres: allGenres,
-                        playlists: playlists,
-                      ),
-              ),
-            ],
-          );
-        },
       ),
     );
   }

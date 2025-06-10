@@ -2157,9 +2157,10 @@ class AppLocalizationsSk extends AppLocalizations {
   }
 
   @override
-  String get useBlurredPlayerBackgroundTitle => 'Use blurred player background';
+  String get useBlurredPlayerBackgroundTitle =>
+      'Použiť rozmazané pozadie prehrávača';
 
   @override
   String get useBlurredPlayerBackgroundDescription =>
-      'This will blur the background of the player. This might lead to lower performance on some devices.';
+      'Týmto sa rozmaže pozadie prehrávača. Na niektorých zariadeniach to môže viesť k nižšiemu výkonu.';
 }

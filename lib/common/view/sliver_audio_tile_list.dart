@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../extensions/build_context_x.dart';
 import '../../player/player_model.dart';
 import '../data/audio.dart';
 import 'audio_page_type.dart';
@@ -16,6 +15,7 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
     this.onSubTitleTab,
     required this.audioPageType,
     this.selectedColor,
+    this.constraints,
   });
 
   final List<Audio> audios;
@@ -23,10 +23,11 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
   final AudioPageType audioPageType;
   final void Function(String text)? onSubTitleTab;
   final Color? selectedColor;
+  final BoxConstraints? constraints;
 
   @override
   Widget build(BuildContext context) {
-    final mqSize = context.mediaQuerySize.width;
+    final mqSize = constraints?.maxWidth ?? MediaQuery.of(context).size.width;
     final playerToTheRight = mqSize > kSideBarThreshHold;
     final width = playerToTheRight ? mqSize - kSideBarPlayerWidth : mqSize;
 
