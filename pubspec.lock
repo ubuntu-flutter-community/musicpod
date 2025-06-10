@@ -1587,26 +1587,26 @@ packages:
     dependency: transitive
     description:
       name: super_clipboard
-      sha256: "4a6ae6dfaa282ec1f2bff750976f535517ed8ca842d5deae13985eb11c00ac1f"
+      sha256: "561d49f845c75638fde034add6a785c36f1077e912663dabd08231b22adb6570"
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.24"
+    version: "0.9.0"
   super_drag_and_drop:
     dependency: "direct main"
     description:
       name: super_drag_and_drop
-      sha256: e1ea1528916a728b3d0c3007c0af1303947026011f78564279af68d8856a0205
+      sha256: "199c7c6c103a3cb5bd8118e46693713806cf6514307815ac886b8d326c066b9c"
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.24"
+    version: "0.9.0"
   super_native_extensions:
     dependency: transitive
     description:
       name: super_native_extensions
-      sha256: a433bba8186cd6b707560c42535bf284804665231c00bca86faf1aa4968b7637
+      sha256: "8613401d387a7ca321eb4a4535873749bd881421b7ccdcab6c44ebe0163cdd47"
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.24"
+    version: "0.9.0"
   synchronized:
     dependency: "direct main"
     description:

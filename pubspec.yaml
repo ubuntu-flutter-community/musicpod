@@ -79,7 +79,7 @@ dependencies:
   shared_preferences: ^2.3.1
   shimmer: ^3.0.0
   smtc_windows: ^1.0.0
-  super_drag_and_drop: ^0.8.18
+  super_drag_and_drop: ^0.9.0
   synchronized: ^3.3.1
   system_theme: ^3.0.0
   url_launcher: ^6.3.0
