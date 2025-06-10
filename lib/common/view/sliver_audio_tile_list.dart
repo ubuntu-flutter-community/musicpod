@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
+import '../../extensions/build_context_x.dart';
 import '../../player/player_model.dart';
 import '../data/audio.dart';
 import 'audio_page_type.dart';
@@ -27,7 +28,7 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final mqSize = constraints?.maxWidth ?? MediaQuery.of(context).size.width;
+    final mqSize = constraints?.maxWidth ?? context.mediaQuerySize.width;
     final playerToTheRight = mqSize > kSideBarThreshHold;
     final width = playerToTheRight ? mqSize - kSideBarPlayerWidth : mqSize;
 
