@@ -18,10 +18,12 @@ class TitlesView extends StatelessWidget with WatchItMixin {
     required this.audios,
     this.noResultMessage,
     this.noResultIcon,
+    this.constraints,
   });
 
   final List<Audio>? audios;
   final Widget? noResultMessage, noResultIcon;
+  final BoxConstraints? constraints;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +41,7 @@ class TitlesView extends StatelessWidget with WatchItMixin {
     }
 
     return SliverAudioTileList(
+      constraints: constraints,
       audios: audios!,
       audioPageType: AudioPageType.allTitlesView,
       pageId: PageIDs.localAudio,

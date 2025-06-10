@@ -587,7 +587,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get system => '系统';
 
   @override
-  String get dark => '浅色';
+  String get dark => '深色';
 
   @override
   String get podcastProvider => '播客提供商';

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:yaru/yaru.dart';
 
-import '../../common/view/icons.dart';
+import '../../common/view/common_control_panel.dart';
 import '../../l10n/l10n.dart';
 import '../../local_audio/local_search_result.dart';
 import '../search_model.dart';
@@ -21,36 +20,24 @@ class SearchTypeFilterBar extends StatelessWidget with WatchItMixin {
     );
     final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: YaruChoiceChipBar(
-          showCheckMarks: false,
-          goNextIcon: Icon(Iconz.goNext),
-          goPreviousIcon: Icon(Iconz.goBack),
-          style: YaruChoiceChipBarStyle.wrap,
-          clearOnSelect: false,
-          selectedFirst: false,
-          onSelected: (i) {
-            searchModel.setSearchType(searchTypes.elementAt(i));
-            searchModel.search(manualFilter: true);
-          },
-          labels: searchTypes
-              .map(
-                (e) => Text(
-                  getChipText(
-                    searchType: e,
-                    context: context,
-                    localSearchResult: localSearchResult,
-                    searchQuery: searchQuery,
-                  ),
-                ),
-              )
-              .toList(),
-          isSelected: searchTypes.map((e) => e == searchType).toList(),
-        ),
-      ),
+    return CommonControlPanel(
+      onSelected: (i) {
+        searchModel.setSearchType(searchTypes.elementAt(i));
+        searchModel.search(manualFilter: true);
+      },
+      labels: searchTypes
+          .map(
+            (e) => Text(
+              getChipText(
+                searchType: e,
+                context: context,
+                localSearchResult: localSearchResult,
+                searchQuery: searchQuery,
+              ),
+            ),
+          )
+          .toList(),
+      isSelected: searchTypes.map((e) => e == searchType).toList(),
     );
   }
 

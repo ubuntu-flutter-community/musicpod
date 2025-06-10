@@ -16,6 +16,7 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
     this.onSubTitleTab,
     required this.audioPageType,
     this.selectedColor,
+    this.constraints,
   });
 
   final List<Audio> audios;
@@ -23,10 +24,11 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
   final AudioPageType audioPageType;
   final void Function(String text)? onSubTitleTab;
   final Color? selectedColor;
+  final BoxConstraints? constraints;
 
   @override
   Widget build(BuildContext context) {
-    final mqSize = context.mediaQuerySize.width;
+    final mqSize = constraints?.maxWidth ?? context.mediaQuerySize.width;
     final playerToTheRight = mqSize > kSideBarThreshHold;
     final width = playerToTheRight ? mqSize - kSideBarPlayerWidth : mqSize;
 

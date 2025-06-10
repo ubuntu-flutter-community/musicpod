@@ -2155,9 +2155,10 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get useBlurredPlayerBackgroundTitle => 'Use blurred player background';
+  String get useBlurredPlayerBackgroundTitle =>
+      'Usa sfondo riproduttore sfocato';
 
   @override
   String get useBlurredPlayerBackgroundDescription =>
-      'This will blur the background of the player. This might lead to lower performance on some devices.';
+      'Ciò offuscerà lo sfondo del riproduttore. Ciò potrebbe portare in alcuni dispositivi a prestazioni più basse.';
 }

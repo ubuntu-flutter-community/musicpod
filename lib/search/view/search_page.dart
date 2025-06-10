@@ -4,11 +4,10 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../app/view/routing_manager.dart';
 import '../../common/data/audio_type.dart';
-import '../../common/view/adaptive_container.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/search_button.dart';
-import '../../common/view/sliver_filter_app_bar.dart';
+import '../../common/view/sliver_body.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/taget_platform_x.dart';
@@ -57,72 +56,48 @@ class SearchPage extends StatelessWidget with WatchItMixin {
           ),
         ],
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return NotificationListener<ScrollNotification>(
-            onNotification: (notification) {
-              if (audioType == AudioType.local) return true;
+      body: SliverBody(
+        controlPanel: switch (audioType) {
+          AudioType.podcast => const SliverPodcastFilterBar(),
+          _ => const SearchTypeFilterBar(),
+        },
+        contentBuilder: (context, constraints) => switch (audioType) {
+          AudioType.radio => const SliverRadioSearchResults(),
+          AudioType.podcast => const SliverPodcastSearchResults(),
+          AudioType.local => const SliverLocalSearchResult(),
+        },
+        onStretchTrigger: () async {
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+            if (context.mounted) {
+              return di<SearchModel>().search();
+            }
+          });
+        },
+        onNotification: (ScrollNotification notification) {
+          if (audioType == AudioType.local) return true;
 
-              if (notification is UserScrollNotification) {
-                if (notification.metrics.axisDirection == AxisDirection.down &&
-                    notification.direction == ScrollDirection.reverse &&
-                    notification.metrics.pixels >=
-                        notification.metrics.maxScrollExtent * 0.6) {
-                  di<SearchModel>()
-                    ..incrementLimit(8)
-                    ..search();
-                }
-              } else if (notification is ScrollEndNotification) {
-                final metrics = notification.metrics;
-                if (metrics.atEdge) {
-                  final isAtBottom = metrics.pixels != 0;
-                  if (isAtBottom) {
-                    di<SearchModel>()
-                      ..incrementLimit(16)
-                      ..search();
-                  }
-                }
+          if (notification is UserScrollNotification) {
+            if (notification.metrics.axisDirection == AxisDirection.down &&
+                notification.direction == ScrollDirection.reverse &&
+                notification.metrics.pixels >=
+                    notification.metrics.maxScrollExtent * 0.6) {
+              di<SearchModel>()
+                ..incrementLimit(8)
+                ..search();
+            }
+          } else if (notification is ScrollEndNotification) {
+            final metrics = notification.metrics;
+            if (metrics.atEdge) {
+              final isAtBottom = metrics.pixels != 0;
+              if (isAtBottom) {
+                di<SearchModel>()
+                  ..incrementLimit(16)
+                  ..search();
               }
+            }
+          }
 
-              return true;
-            },
-            child: CustomScrollView(
-              slivers: [
-                SliverFilterAppBar(
-                  padding:
-                      getAdaptiveHorizontalPadding(
-                        constraints: constraints,
-                      ).copyWith(
-                        bottom: filterPanelPadding.bottom,
-                        top: filterPanelPadding.top,
-                      ),
-                  onStretchTrigger: () async {
-                    WidgetsBinding.instance.addPostFrameCallback((
-                      timeStamp,
-                    ) async {
-                      if (context.mounted) {
-                        return di<SearchModel>().search();
-                      }
-                    });
-                  },
-                  title: switch (audioType) {
-                    AudioType.podcast => const SliverPodcastFilterBar(),
-                    _ => const SearchTypeFilterBar(),
-                  },
-                ),
-                SliverPadding(
-                  padding: getAdaptiveHorizontalPadding(
-                    constraints: constraints,
-                  ).copyWith(bottom: bottomPlayerPageGap),
-                  sliver: switch (audioType) {
-                    AudioType.radio => const SliverRadioSearchResults(),
-                    AudioType.podcast => const SliverPodcastSearchResults(),
-                    AudioType.local => const SliverLocalSearchResult(),
-                  },
-                ),
-              ],
-            ),
-          );
+          return true;
         },
       ),
     );

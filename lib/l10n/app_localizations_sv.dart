@@ -2152,9 +2152,10 @@ class AppLocalizationsSv extends AppLocalizations {
   }
 
   @override
-  String get useBlurredPlayerBackgroundTitle => 'Use blurred player background';
+  String get useBlurredPlayerBackgroundTitle =>
+      'Använd suddig bakgrund för spelaren';
 
   @override
   String get useBlurredPlayerBackgroundDescription =>
-      'This will blur the background of the player. This might lead to lower performance on some devices.';
+      'Detta gör spelarens bakgrund suddig. Detta kan leda till lägre prestanda på vissa enheter.';
 }

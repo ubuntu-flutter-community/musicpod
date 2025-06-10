@@ -2168,9 +2168,10 @@ class AppLocalizationsEu extends AppLocalizations {
   }
 
   @override
-  String get useBlurredPlayerBackgroundTitle => 'Use blurred player background';
+  String get useBlurredPlayerBackgroundTitle =>
+      'Erabili erreproduzitzailearen atzeko plano lausoa';
 
   @override
   String get useBlurredPlayerBackgroundDescription =>
-      'This will blur the background of the player. This might lead to lower performance on some devices.';
+      'Honek erreproduzitzailearen atzeko planoa lausotuko du. Honek errendimendua txikiagoa izan dezake gailu batzuetan.';
 }
