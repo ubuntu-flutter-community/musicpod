@@ -1410,5 +1410,9 @@
         "type": "String"
       }
     }
-  }
+  },
+  "useBlurredPlayerBackgroundDescription": "Honek erreproduzitzailearen atzeko planoa lausotuko du. Honek errendimendua txikiagoa izan dezake gailu batzuetan.",
+  "@useBlurredPlayerBackgroundDescription": {},
+  "useBlurredPlayerBackgroundTitle": "Erabili erreproduzitzailearen atzeko plano lausoa",
+  "@useBlurredPlayerBackgroundTitle": {}
 }
