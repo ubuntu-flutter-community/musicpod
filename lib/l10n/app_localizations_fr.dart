@@ -2168,13 +2168,13 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String downloadsOfLatestRelease(String latestRelease) {
-    return 'Downloaded $latestRelease times outside of snapstore and flathub';
+    return 'Téléchargé $latestRelease fois en dehors du snapstore et de flathub';
   }
 
   @override
-  String get useBlurredPlayerBackgroundTitle => 'Use blurred player background';
+  String get useBlurredPlayerBackgroundTitle => 'Flouter le fond du lecteur';
 
   @override
   String get useBlurredPlayerBackgroundDescription =>
-      'This will blur the background of the player. This might lead to lower performance on some devices.';
+      'Cela va flouter l\'arrière-plan du lecteur. Les performances de certains appareils peuvent être affectées.';
 }
