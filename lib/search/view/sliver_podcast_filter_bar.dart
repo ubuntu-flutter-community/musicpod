@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../common/data/podcast_genre.dart';
-import '../../common/view/sliver_body.dart';
+import '../../common/view/common_control_panel.dart';
 import '../../l10n/l10n.dart';
 import '../../settings/settings_model.dart';
 import '../search_model.dart';
@@ -24,7 +24,7 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
 
     final setPodcastGenre = searchModel.setPodcastGenre;
 
-    return GenericControlPanel(
+    return CommonControlPanel(
       labels: genres.map((e) => Text(e.localize(context.l10n))).toList(),
       isSelected: genres.map((e) => e == podcastGenre).toList(),
       onSelected: (i) {

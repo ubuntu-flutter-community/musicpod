@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/connectivity_model.dart';
+import '../../common/view/common_control_panel.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/offline_page.dart';
-import '../../common/view/sliver_body.dart';
 import '../../custom_content/custom_content_model.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -31,7 +31,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
       (CustomContentModel m) => m.processing,
     );
 
-    return GenericControlPanel(
+    return CommonControlPanel(
       labels: [
         Text(context.l10n.newEpisodes),
         Text(context.l10n.downloadsOnly),

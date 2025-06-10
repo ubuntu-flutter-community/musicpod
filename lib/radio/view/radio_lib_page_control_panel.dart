@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../common/view/sliver_body.dart';
+import '../../common/view/common_control_panel.dart';
 import '../../l10n/l10n.dart';
 import '../radio_model.dart';
 
@@ -15,7 +15,7 @@ class RadioLibPageControlPanel extends StatelessWidget with WatchItMixin {
     );
     final radioModel = di<RadioModel>();
 
-    return GenericControlPanel(
+    return CommonControlPanel(
       onSelected: (index) =>
           radioModel.setRadioCollectionView(RadioCollectionView.values[index]),
       labels: [

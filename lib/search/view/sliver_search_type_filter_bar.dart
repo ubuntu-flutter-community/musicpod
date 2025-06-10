@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../common/view/sliver_body.dart';
+import '../../common/view/common_control_panel.dart';
 import '../../l10n/l10n.dart';
 import '../../local_audio/local_search_result.dart';
 import '../search_model.dart';
@@ -20,7 +20,7 @@ class SearchTypeFilterBar extends StatelessWidget with WatchItMixin {
     );
     final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
 
-    return GenericControlPanel(
+    return CommonControlPanel(
       onSelected: (i) {
         searchModel.setSearchType(searchTypes.elementAt(i));
         searchModel.search(manualFilter: true);
