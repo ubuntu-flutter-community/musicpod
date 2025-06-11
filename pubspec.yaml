@@ -79,7 +79,7 @@ dependencies:
   shared_preferences: ^2.3.1
   shimmer: ^3.0.0
   smtc_windows: ^1.0.0
-  super_drag_and_drop: ^0.8.18
+  super_drag_and_drop: ^0.9.1
   synchronized: ^3.3.1
   system_theme: ^3.0.0
   url_launcher: ^6.3.0
@@ -127,14 +127,14 @@ dependency_overrides:
     git:
       url: https://github.com/media-kit/media-kit
       path: media_kit
-      ref: c9617f570b8c0ba02857e721997f78c053a856c1
+      ref: d544e1c52db47a45097a8332a862687c832359d9
   media_kit_libs_video:
     git:
       url: https://github.com/media-kit/media-kit
       path: libs/universal/media_kit_libs_video
-      ref: c9617f570b8c0ba02857e721997f78c053a856c1
+      ref: d544e1c52db47a45097a8332a862687c832359d9
   media_kit_video:
     git:
       url: https://github.com/media-kit/media-kit
       path: media_kit_video
-      ref: c9617f570b8c0ba02857e721997f78c053a856c1
+      ref: d544e1c52db47a45097a8332a862687c832359d9
