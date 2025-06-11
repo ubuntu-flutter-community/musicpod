@@ -148,6 +148,14 @@ class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
           as bool);
 
   @override
+  bool get blurredPlayerBackground =>
+      (super.noSuchMethod(
+            Invocation.getter(#blurredPlayerBackground),
+            returnValue: false,
+          )
+          as bool);
+
+  @override
   bool get saveWindowSize =>
       (super.noSuchMethod(
             Invocation.getter(#saveWindowSize),
@@ -307,6 +315,12 @@ class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
   @override
   void setUseMoreAnimations(bool? value) => super.noSuchMethod(
     Invocation.method(#setUseMoreAnimations, [value]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void setBlurredPlayerBackground(bool? value) => super.noSuchMethod(
+    Invocation.method(#setBlurredPlayerBackground, [value]),
     returnValueForMissingStub: null,
   );
 

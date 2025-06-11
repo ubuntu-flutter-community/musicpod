@@ -167,7 +167,7 @@ class PodcastService {
 
 Future<Podcast?> loadPodcast(String url) async {
   try {
-    return await Podcast.loadFeed(url: url);
+    return await Feed.loadFeed(url: url);
   } catch (e) {
     return null;
   }
