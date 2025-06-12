@@ -7,7 +7,9 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
+import '../radio_model.dart';
 import 'open_radio_discover_page_button.dart';
+import 'radio_reconnect_button.dart';
 import 'station_card.dart';
 
 class StarredStationsGrid extends StatelessWidget with WatchItMixin {
@@ -15,6 +17,13 @@ class StarredStationsGrid extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
+    if (watchPropertyValue((RadioModel m) => m.connectedHost) == null) {
+      return const SliverFillRemaining(
+        hasScrollBody: false,
+        child: Center(child: RadioReconnectButton()),
+      );
+    }
+
     final stations = watchPropertyValue((LibraryModel m) => m.starredStations);
     final length = watchPropertyValue(
       (LibraryModel m) => m.starredStationsLength,
