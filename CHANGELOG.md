@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.13.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.12.0...v2.13.0) (2025-06-12)
+
+
+### Features
+
+* bring back blur as an option, add generated l10n, fix connectivity handler ([#1324](https://github.com/ubuntu-flutter-community/musicpod/issues/1324)) ([d04834d](https://github.com/ubuntu-flutter-community/musicpod/commit/d04834d42b573d9dda6274feb1481e268a95e75a))
+* Translated using Weblate (Chinese (Simplified Han script)) ([#1310](https://github.com/ubuntu-flutter-community/musicpod/issues/1310)) ([20003ff](https://github.com/ubuntu-flutter-community/musicpod/commit/20003ffdd2970aaa82a181826042218080ac4d3c))
+* Translated using Weblate (Swedish) ([#1327](https://github.com/ubuntu-flutter-community/musicpod/issues/1327)) ([5247d62](https://github.com/ubuntu-flutter-community/musicpod/commit/5247d624757562318d601cd060ec47a69d3b7afb))
+* Translations update from Hosted Weblate ([#1320](https://github.com/ubuntu-flutter-community/musicpod/issues/1320)) ([84b5c00](https://github.com/ubuntu-flutter-community/musicpod/commit/84b5c0079d8aeb8526c13b509e51deb7cda33c6d))
+* Translations update from Hosted Weblate ([#1322](https://github.com/ubuntu-flutter-community/musicpod/issues/1322)) ([8e1a881](https://github.com/ubuntu-flutter-community/musicpod/commit/8e1a881f1454ee67ad7b9ac72603d21c07fc7beb))
+* Translations update from Hosted Weblate ([#1325](https://github.com/ubuntu-flutter-community/musicpod/issues/1325)) ([8027f61](https://github.com/ubuntu-flutter-community/musicpod/commit/8027f6103f9da6b08dc85117e6c8039154e575c9))
+* Translations update from Hosted Weblate ([#1328](https://github.com/ubuntu-flutter-community/musicpod/issues/1328)) ([358ff0f](https://github.com/ubuntu-flutter-community/musicpod/commit/358ff0ff5be2f53604a1cb3fe677a70db5ba73dd))
+
+
+### Bug Fixes
+
+* missing system color icon ([#1333](https://github.com/ubuntu-flutter-community/musicpod/issues/1333)) ([7346176](https://github.com/ubuntu-flutter-community/musicpod/commit/7346176fb369d2b55a2f2639fc01197972fe8181)), closes [#1302](https://github.com/ubuntu-flutter-community/musicpod/issues/1302)
+* unify ways of presenting chips in the app ([#1330](https://github.com/ubuntu-flutter-community/musicpod/issues/1330)) ([da2a8f6](https://github.com/ubuntu-flutter-community/musicpod/commit/da2a8f615a4011788f52f4f3858e9ed2413ac18c))
+
 ## [2.12.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.11.4...v2.12.0) (2025-05-13)
 
 
