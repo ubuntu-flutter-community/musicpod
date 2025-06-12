@@ -106,8 +106,11 @@ flutter_launcher_icons:
   ios: false
   min_sdk_android: 23
   image_path: "assets/icon.png"
-  adaptive_icon_background: "assets/icon.png"
-  adaptive_icon_foreground: "assets/icon.png"
+  adaptive_icon_foreground: "assets/monochrome.png"
+  adaptive_icon_monochrome: "assets/monochrome.png"
+  adaptive_icon_background: "#ed3c63"
+  image_path_android: "assets/flat_icon.png"
+  adaptive_icon_foreground_inset: 20
 
 flutter:
   generate: true

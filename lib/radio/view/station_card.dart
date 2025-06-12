@@ -6,8 +6,7 @@ import '../../common/data/audio.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/audio_fall_back_icon.dart';
-import '../../common/view/no_search_result_page.dart';
-import '../../common/view/progress.dart';
+import '../../common/view/icons.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
 import '../../player/player_model.dart';
@@ -37,13 +36,10 @@ class _StationCardState extends State<StationCard> {
     return FutureBuilder(
       future: _station,
       builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return const NoSearchResultPage();
-        }
+        if (snapshot.hasError)
+          return AudioCard(image: Icon(Iconz.imageMissing));
 
-        if (snapshot.connectionState != ConnectionState.done) {
-          return const Center(child: Progress());
-        }
+        if (!snapshot.hasData) return const AudioCard();
 
         final station = snapshot.data!;
 
