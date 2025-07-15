@@ -61,7 +61,6 @@ parts:
       - usr/lib/*/libmpv*
 
   flutter-git:
-    flutter-git:
     plugin: nil
     source: .
     override-build: |
