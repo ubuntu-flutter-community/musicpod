@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart' hide PlayerState;
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:path/path.dart' as p;
-import 'package:smtc_windows/smtc_windows.dart';
 import 'package:yaru/yaru.dart';
 
 import '../common/data/audio.dart';
@@ -45,7 +44,6 @@ class PlayerService {
   Player get _player => _controller.player;
 
   // Helper stream subscriptions
-  StreamSubscription<PressedButton>? _smtcSub;
   StreamSubscription<bool>? _isPlayingSub;
   StreamSubscription<Duration>? _durationSub;
   StreamSubscription<Duration>? _positionSub;
@@ -120,8 +118,6 @@ class PlayerService {
   /// All subscriptions, native media trays and the pause timer need to be closed and disposed
   Future<void> dispose() async {
     await _propertiesChangedController.close();
-    await _smtcSub?.cancel();
-
     await _isPlayingSub?.cancel();
     await _positionSub?.cancel();
     await _durationSub?.cancel();
