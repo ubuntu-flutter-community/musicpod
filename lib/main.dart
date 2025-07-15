@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:media_kit/media_kit.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:yaru/yaru.dart' show YaruWindowTitleBar;
 
@@ -18,9 +17,7 @@ Future<void> main(List<String> args) async {
     await SystemTheme.accentColor.load();
   }
 
-  MediaKit.ensureInitialized();
-
-  registerDependencies(args: args);
+  registerDependencies();
 
   runApp(const MusicPod());
 }

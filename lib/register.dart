@@ -7,6 +7,7 @@ import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:smtc_windows/smtc_windows.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -28,8 +29,10 @@ import 'local_audio/local_cover_model.dart';
 import 'local_audio/local_cover_service.dart';
 import 'notifications/notifications_service.dart';
 import 'persistence_utils.dart';
+import 'player/register_audio_service_handler.dart';
 import 'player/player_model.dart';
 import 'player/player_service.dart';
+import 'player/register_smtc_windows.dart';
 import 'podcasts/download_model.dart';
 import 'podcasts/podcast_model.dart';
 import 'podcasts/podcast_service.dart';
@@ -43,7 +46,7 @@ import 'settings/settings_service.dart';
 import 'settings/view/licenses_dialog.dart';
 
 /// Registers all Services, ViewModels and external dependencies
-void registerDependencies({required List<String> args}) async {
+void registerDependencies() {
   if (AppConfig.allowDiscordRPC) {
     di.registerSingletonAsync<FlutterDiscordRPC>(
       () async {
@@ -120,6 +123,7 @@ void registerDependencies({required List<String> args}) async {
     ..registerLazySingleton(LocalCoverService.new, dispose: (s) => s.dispose())
     ..registerSingletonAsync<PlayerService>(
       () async {
+        MediaKit.ensureInitialized();
         final playerService = PlayerService(
           onlineArtService: di<OnlineArtService>(),
           controller: VideoController(
@@ -137,7 +141,20 @@ void registerDependencies({required List<String> args}) async {
       },
       dependsOn: [ExposeService],
       dispose: (s) async => s.dispose(),
-    )
+    );
+  if (isWindows) {
+    di.registerSingletonAsync<SMTCWindows>(
+      registerSMTCWindows,
+      dependsOn: [PlayerService],
+    );
+  } else {
+    di.registerSingletonAsync<AudioServiceHandler>(
+      registerAudioServiceHandler,
+      dependsOn: [PlayerService],
+    );
+  }
+
+  di
     ..registerSingleton<ExternalPathService>(const ExternalPathService())
     ..registerSingletonAsync<LibraryService>(
       () async {

@@ -135,7 +135,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get titles => 'Названия';
 
   @override
-  String get description => 'Description';
+  String get description => 'Описание';
 
   @override
   String get artist => 'Исполнитель';
@@ -331,7 +331,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get queue => 'Очередь';
 
   @override
-  String get clearQueue => 'Clear queue';
+  String get clearQueue => 'Очистить очередь';
 
   @override
   String get limit => 'Лимит';
@@ -449,64 +449,66 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get markAllEpisodesAsDone => 'Mark all episodes as done';
+  String get markAllEpisodesAsDone => 'Пометить все эпизоды как выполненные';
 
   @override
-  String get reset => 'Reset';
+  String get reset => 'Сброс';
 
   @override
-  String get resetAllSettings => 'Reset all settings';
+  String get resetAllSettings => 'Сбросить все настройки';
 
   @override
   String get resetAllSettingsConfirm =>
-      'Are you absolutely sure to reset all settings, your podcast subscriptions, your podcast progress, your starred stations and your pinned albums?  The app will be closed after and you need to re-open it.';
+      'Вы уверены, что хотите сбросить все настройки, подписки на подкасты, прогресс прослушивания подкастов, избранные станции и закрепленные альбомы?  После этого приложение будет закрыто, и вам нужно будет запустить его заново.';
 
   @override
-  String get confirm => 'Confirm';
+  String get confirm => 'Подтвердить';
 
   @override
-  String get confirmation => 'Confirmation';
+  String get confirmation => 'Подтверждение';
 
   @override
-  String get isMaybeLowBandwidthDialogTitle => 'No WIFI/Ethernet';
+  String get isMaybeLowBandwidthDialogTitle => 'Нет Wi-Fi/Ethernet';
 
   @override
   String get isMaybeLowBandwidthDialogBody =>
-      'You are not connected to WIFI or Ethernet. Do you want to enable data safe mode?';
+      'Вы не подключены к Wi-Fi или Ethernet. Хотите включить безопасный режим передачи данных?';
 
   @override
-  String get isBackInWifiDialogTitle => 'Back in WIFI/Ethernet';
+  String get isBackInWifiDialogTitle => 'Вернуться в WIFI/Ethernet';
 
   @override
   String get isBackInWifiDialogBody =>
-      'You are connected to WIFI or Ethernet. Do you want to disable data safe mode?';
+      'Вы подключены к Wi-Fi или Ethernet. Хотите отключить безопасный режим передачи данных?';
 
   @override
-  String get enableDataSafeModeSettingTitle => 'Data safe mode';
+  String get enableDataSafeModeSettingTitle => 'Безопасный режим данных';
 
   @override
   String get dataSafeModeEnabled =>
-      'Mobile Connection: Data safe mode enabled.';
+      'Мобильное соединение: включен безопасный режим передачи данных.';
 
   @override
-  String get dataSafeModeDisabled => 'Wifi/Ethernet: Data safe mode disabled.';
+  String get dataSafeModeDisabled =>
+      'Wi-Fi/Ethernet: Безопасный режим передачи данных отключен.';
 
   @override
   String get enableDataSafeModeSettingDescription =>
-      'When active the player will not try to download artwork of titles send from radio stations.';
+      'Когда эта функция активна, плеер не будет пытаться загружать обложки альбомов, отправленные радиостанциями.';
 
   @override
-  String get stopToNotifyAboutDataSafeMode => 'Stop to notify me';
+  String get stopToNotifyAboutDataSafeMode => 'Прекратить уведомлять меня';
 
   @override
-  String get notifyMeAboutDataSafeModeTitle => 'Data safe mode notifications';
+  String get notifyMeAboutDataSafeModeTitle =>
+      'Уведомления о безопасном режиме данных';
 
   @override
   String get notifyMeAboutDataSafeModeDescription =>
-      'Notify me about data safe mode';
+      'Уведомлять меня о безопасном режиме данных';
 
   @override
-  String get resourceSectionTitle => 'Device resources';
+  String get resourceSectionTitle => 'Ресурсы устройства';
 
   @override
   String get downloadsOnly => 'Только загрузки';
@@ -532,13 +534,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get connectedTo => 'Подключено к';
 
   @override
-  String get connectedToDiscord => 'Connected to Discord';
+  String get connectedToDiscord => 'Подключено к Discord';
 
   @override
   String get disconnectedFrom => 'Отключено от';
 
   @override
-  String get disconnectedFromDiscord => 'Disconnected from Discord';
+  String get disconnectedFromDiscord => 'Отключен от Discord';
 
   @override
   String get tryReconnect => 'Попробуйте переподключиться';
@@ -977,67 +979,69 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get exportPinnedAlbumsToM3UFiles =>
-      'Export pinned albums to M3U files';
+      'Экспорт закрепленных альбомов в файлы M3U';
 
   @override
-  String get exportPinnedAlbumToM3UFile => 'Export pinned albums to M3U file';
+  String get exportPinnedAlbumToM3UFile =>
+      'Экспорт закрепленных альбомов в файл M3U';
 
   @override
-  String get exportPlaylistToM3UFile => 'Export playlist to M3U';
+  String get exportPlaylistToM3UFile => 'Экспорт плейлиста в M3U';
 
   @override
   String get exportPlaylistsAndAlbumsToM3UFiles =>
-      'Export playlists and albums to M3U files';
+      'Экспорт плейлистов и альбомов в файлы M3U';
 
   @override
-  String get exportPodcastsToOpmlFile => 'Export podcasts to OPML file';
+  String get exportPodcastsToOpmlFile => 'Экспорт подкастов в файл OPML';
 
   @override
-  String get importPodcastsFromOpmlFile => 'Import podcasts from OPML file';
+  String get importPodcastsFromOpmlFile => 'Импорт подкастов из файла OPML';
 
   @override
   String get exportStarredStationsToOpmlFile =>
-      'Export starred stations to OPML file';
+      'Экспорт отмеченных звездочкой станций в файл OPML';
 
   @override
   String get importStarredStationsFromOpmlFile =>
-      'Import starred stations from OPML file';
+      'Импорт избранных станций из файла OPML';
 
   @override
-  String get removeAllStarredStations => 'Remove all starred stations';
+  String get removeAllStarredStations =>
+      'Удалить все отмеченные звездочкой станции';
 
   @override
   String get removeAllStarredStationsConfirm =>
-      'Are you sure you want to remove all starred stations?';
+      'Вы уверены, что хотите удалить все отмеченные звездочкой станции?';
 
   @override
   String get removeAllStarredStationsDescription =>
-      'This will remove all your starred stations.';
+      'Это удалит все ваши избранные станции.';
 
   @override
-  String get removeAllPodcasts => 'Remove all podcasts';
+  String get removeAllPodcasts => 'Удалить все подкасты';
 
   @override
   String get removeAllPodcastsConfirm =>
-      'Are you sure you want to remove all podcasts?';
+      'Вы уверены, что хотите удалить все подкасты?';
 
   @override
   String get removeAllPodcastsDescription =>
-      'This will remove all your podcast subscriptions and progress.';
+      'Это удалит все ваши подписки на подкасты и прогресс.';
 
   @override
-  String get customContentTitle => 'Add custom content';
+  String get customContentTitle => 'Добавить пользовательский контент';
 
   @override
   String get customContentDescription =>
-      'If you do not want to use the radiobrowser or podcast search feature you can add your own content here, or you can add empty playlists or import playlists from M3U and PLS files.';
+      'Если вы не хотите использовать функцию поиска по радиобраузеру или подкастам, вы можете добавить сюда свой собственный контент, либо добавить пустые плейлисты или импортировать плейлисты из файлов M3U и PLS.';
 
   @override
   String get setPlaylistNameAndAddMoreLater =>
-      'Set playlist name and add more titles later';
+      'Установите название плейлиста и добавьте другие песни позже';
 
   @override
-  String get or => 'or';
+  String get or => 'или';
 
   @override
   String get loadMore => 'Загрузить еще';
@@ -1086,7 +1090,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String checkForUpdatesConfirm(Object length) {
-    return 'Are you sure you want to check for updates for $length podcasts?';
+    return 'Вы уверены, что хотите проверить наличие обновлений для $length подкастов?';
   }
 
   @override
@@ -1134,13 +1138,13 @@ class AppLocalizationsRu extends AppLocalizations {
       'Онлайн-поиск произведений искусства в настоящее время недоступен';
 
   @override
-  String get clicks => 'clicks';
+  String get clicks => 'клики';
 
   @override
-  String get theClick => 'click';
+  String get theClick => 'щелчок';
 
   @override
-  String get toClick => 'click';
+  String get toClick => 'щелчок';
 
   @override
   String get exposeOnlineHeadline =>
@@ -1229,934 +1233,937 @@ class AppLocalizationsRu extends AppLocalizations {
   String get regionArmenia => 'Армения';
 
   @override
-  String get regionAruba => 'Aruba';
+  String get regionAruba => 'Аруба';
 
   @override
-  String get regionAustralia => 'Australia';
+  String get regionAustralia => 'Австралия';
 
   @override
-  String get regionAustria => 'Austria';
+  String get regionAustria => 'Австрия';
 
   @override
-  String get regionAzerbaijan => 'Azerbaijan';
+  String get regionAzerbaijan => 'Азербайджан';
 
   @override
-  String get regionBahamas => 'Bahamas';
+  String get regionBahamas => 'Багамские Острова';
 
   @override
-  String get regionBahrain => 'Bahrain';
+  String get regionBahrain => 'Бахрейн';
 
   @override
-  String get regionBangladesh => 'Bangladesh';
+  String get regionBangladesh => 'Бангладеш';
 
   @override
-  String get regionBarbados => 'Barbados';
+  String get regionBarbados => 'Барбадос';
 
   @override
-  String get regionBelarus => 'Belarus';
+  String get regionBelarus => 'Беларусь';
 
   @override
-  String get regionBelgium => 'Belgium';
+  String get regionBelgium => 'Бельгия';
 
   @override
-  String get regionBelize => 'Belize';
+  String get regionBelize => 'Белиз';
 
   @override
-  String get regionBenin => 'Benin';
+  String get regionBenin => 'Бенин';
 
   @override
-  String get regionBermuda => 'Bermuda';
+  String get regionBermuda => 'Бермудские острова';
 
   @override
-  String get regionBhutan => 'Bhutan';
+  String get regionBhutan => 'Бутан';
 
   @override
-  String get regionBolivia => 'Bolivia';
+  String get regionBolivia => 'Боливия';
 
   @override
-  String get regionBonaire => 'Bonaire';
+  String get regionBonaire => 'Бонайре';
 
   @override
-  String get regionBosniaandherzegovina => 'Bosnia and Herzegovina';
+  String get regionBosniaandherzegovina => 'Босния и Герцеговина';
 
   @override
-  String get regionBotswana => 'Botswana';
+  String get regionBotswana => 'Ботсвана';
 
   @override
-  String get regionBouvetisland => 'Bouvet Island';
+  String get regionBouvetisland => 'Остров Буве';
 
   @override
-  String get regionBrazil => 'Brazil';
+  String get regionBrazil => 'Бразилия';
 
   @override
   String get regionBritishindianoceanterrirory =>
-      'British Indian Ocean Territory';
+      'Территория Британского Индийского океана';
 
   @override
-  String get regionBritishvirginislands => 'British Virgin Islands';
+  String get regionBritishvirginislands => 'Британские Виргинские острова';
 
   @override
-  String get regionBruneidarussalam => 'Brunei Darussalam';
+  String get regionBruneidarussalam => 'Бруней-Даруссалам';
 
   @override
-  String get regionBulgaria => 'Bulgaria';
+  String get regionBulgaria => 'Болгария';
 
   @override
-  String get regionBurkinafaso => 'Burkina Faso';
+  String get regionBurkinafaso => 'Буркина-Фасо';
 
   @override
-  String get regionBurundi => 'Burundi';
+  String get regionBurundi => 'Бурунди';
 
   @override
-  String get regionCaboverde => 'Caboverde';
+  String get regionCaboverde => 'Кабоверде';
 
   @override
-  String get regionCambodia => 'Cambodia';
+  String get regionCambodia => 'Камбоджа';
 
   @override
-  String get regionCameroon => 'Cameroon';
+  String get regionCameroon => 'Камерун';
 
   @override
-  String get regionCanada => 'Canada';
+  String get regionCanada => 'Канада';
 
   @override
-  String get regionCaymanislands => 'Cayman Islands';
+  String get regionCaymanislands => 'Каймановы острова';
 
   @override
-  String get regionCentralafricanrepublic => 'Central African Republic';
+  String get regionCentralafricanrepublic => 'Республика Центральная Африка';
 
   @override
-  String get regionChad => 'Chad';
+  String get regionChad => 'Чад';
 
   @override
-  String get regionChile => 'Chile';
+  String get regionChile => 'Чили';
 
   @override
-  String get regionChina => 'China';
+  String get regionChina => 'Китай';
 
   @override
-  String get regionChristmasisland => 'Christmas Island';
+  String get regionChristmasisland => 'Остров Рождества';
 
   @override
-  String get regionCocosislands => 'Coco Islands';
+  String get regionCocosislands => 'Кокосовые острова';
 
   @override
-  String get regionColombia => 'Colombia';
+  String get regionColombia => 'Колумбия';
 
   @override
-  String get regionComoros => 'Comoros';
+  String get regionComoros => 'Коморские Острова';
 
   @override
-  String get regionCongo => 'Congo';
+  String get regionCongo => 'Конго';
 
   @override
   String get regionCongodemocraticrepublicof =>
-      'Democratic Republic of the Congo';
+      'Демократическая Республика Конго';
 
   @override
-  String get regionCookislands => 'Cook Islands';
+  String get regionCookislands => 'Острова Кука';
 
   @override
-  String get regionCostarica => 'Costarica';
+  String get regionCostarica => 'Костарика';
 
   @override
-  String get regionCotedivoire => 'Coted Ivoire';
+  String get regionCotedivoire => 'Кот-д\'Ивуар';
 
   @override
-  String get regionCroatia => 'Croatia';
+  String get regionCroatia => 'Хорватия';
 
   @override
-  String get regionCuba => 'Cuba';
+  String get regionCuba => 'Куба';
 
   @override
-  String get regionCuracao => 'Curacao';
+  String get regionCuracao => 'Кюрасао';
 
   @override
-  String get regionCyprus => 'Cyprus';
+  String get regionCyprus => 'Кипр';
 
   @override
-  String get regionCzechia => 'Czechia';
+  String get regionCzechia => 'Чехия';
 
   @override
-  String get regionDenmark => 'Denmark';
+  String get regionDenmark => 'Дания';
 
   @override
-  String get regionDjibouti => 'Djibouti';
+  String get regionDjibouti => 'Джибути';
 
   @override
-  String get regionDominica => 'Dominica';
+  String get regionDominica => 'Доминика';
 
   @override
-  String get regionDominicanrepublic => 'Dominican Republic';
+  String get regionDominicanrepublic => 'Доминиканская Республика';
 
   @override
-  String get regionEcuador => 'Ecuador';
+  String get regionEcuador => 'Эквадор';
 
   @override
-  String get regionEgypt => 'Egypt';
+  String get regionEgypt => 'Египет';
 
   @override
-  String get regionElsalvador => 'El Salvador';
+  String get regionElsalvador => 'Сальвадор';
 
   @override
-  String get regionEquatorialguinea => 'Equatorial Guinea';
+  String get regionEquatorialguinea => 'Экваториальная Гвинея';
 
   @override
-  String get regionEritrea => 'Eritrea';
+  String get regionEritrea => 'Эритрея';
 
   @override
-  String get regionEstonia => 'Estonia';
+  String get regionEstonia => 'Эстония';
 
   @override
-  String get regionEthiopia => 'Ethiopia';
+  String get regionEthiopia => 'Эфиопия';
 
   @override
-  String get regionFalklandislands => 'Falkland Islands';
+  String get regionFalklandislands => 'Фолклендские острова';
 
   @override
-  String get regionFaroeislands => 'Faroe Islands';
+  String get regionFaroeislands => 'Фарерские острова';
 
   @override
-  String get regionFiji => 'Fiji';
+  String get regionFiji => 'Фиджи';
 
   @override
-  String get regionFinland => 'Finland';
+  String get regionFinland => 'Финляндия';
 
   @override
-  String get regionFrance => 'France';
+  String get regionFrance => 'Франция';
 
   @override
-  String get regionFrenchguiana => 'French Guiana';
+  String get regionFrenchguiana => 'Французская Гвиана';
 
   @override
-  String get regionFrenchpolynesia => 'French Polynesia';
+  String get regionFrenchpolynesia => 'Французская Полинезия';
 
   @override
-  String get regionFrenchsouthernterritories => 'French Southern Territories';
+  String get regionFrenchsouthernterritories => 'Французские Южные территории';
 
   @override
-  String get regionGabon => 'Gabon';
+  String get regionGabon => 'Габон';
 
   @override
-  String get regionGambia => 'Gambia';
+  String get regionGambia => 'Гамбия';
 
   @override
-  String get regionGeorgia => 'Georgia';
+  String get regionGeorgia => 'Грузия';
 
   @override
-  String get regionGermany => 'Germany';
+  String get regionGermany => 'Германия';
 
   @override
-  String get regionGhana => 'Ghana';
+  String get regionGhana => 'Гана';
 
   @override
-  String get regionGibraltar => 'Gibraltar';
+  String get regionGibraltar => 'Гибралтар';
 
   @override
-  String get regionGreece => 'Greece';
+  String get regionGreece => 'Греция';
 
   @override
-  String get regionGreenland => 'Greenland';
+  String get regionGreenland => 'Гренландия';
 
   @override
-  String get regionGrenada => 'Grenada';
+  String get regionGrenada => 'Гренада';
 
   @override
-  String get regionGuadeloupe => 'Guadeloupe';
+  String get regionGuadeloupe => 'Гваделупа';
 
   @override
-  String get regionGuam => 'Guam';
+  String get regionGuam => 'Гуам';
 
   @override
-  String get regionGuatemala => 'Guatemala';
+  String get regionGuatemala => 'Гватемала';
 
   @override
-  String get regionGuernsey => 'Guernsey';
+  String get regionGuernsey => 'Гернси';
 
   @override
-  String get regionGuinea => 'Guinea';
+  String get regionGuinea => 'Гвинея';
 
   @override
-  String get regionGuineabissau => 'Guinea-Bissau';
+  String get regionGuineabissau => 'Гвинея-Бисау';
 
   @override
-  String get regionGuyana => 'Guyana';
+  String get regionGuyana => 'Гайана';
 
   @override
-  String get regionHaiti => 'Hait';
+  String get regionHaiti => 'Хайт';
 
   @override
   String get regionHeardislandandmcdonaldislands =>
-      'Heard Island and McDonald Islands';
+      'Остров Херд и острова Макдоналд';
 
   @override
-  String get regionHonduras => 'Honduras';
+  String get regionHonduras => 'Гондурас';
 
   @override
-  String get regionHongkong => 'Hong Kong';
+  String get regionHongkong => 'Гонконг';
 
   @override
-  String get regionHungary => 'Hungary';
+  String get regionHungary => 'Венгрия';
 
   @override
-  String get regionIceland => 'Iceland';
+  String get regionIceland => 'Исландия';
 
   @override
-  String get regionIndia => 'India';
+  String get regionIndia => 'Индия';
 
   @override
-  String get regionIndonesia => 'Indonesia';
+  String get regionIndonesia => 'Индонезия';
 
   @override
-  String get regionIran => 'Iran';
+  String get regionIran => 'Иран';
 
   @override
-  String get regionIraq => 'Iraq';
+  String get regionIraq => 'Ирак';
 
   @override
-  String get regionIreland => 'Ireland';
+  String get regionIreland => 'Ирландия';
 
   @override
-  String get regionIsleofman => 'Isle of Man';
+  String get regionIsleofman => 'Остров Мэн';
 
   @override
-  String get regionIsrael => 'Israel';
+  String get regionIsrael => 'Израиль';
 
   @override
-  String get regionItaly => 'Italy';
+  String get regionItaly => 'Италия';
 
   @override
-  String get regionJamaica => 'Jamaica';
+  String get regionJamaica => 'Ямайка';
 
   @override
-  String get regionJapan => 'Japan';
+  String get regionJapan => 'Япония';
 
   @override
-  String get regionJersey => 'Jersey';
+  String get regionJersey => 'Нью-Йорк';
 
   @override
-  String get regionJordan => 'Jordan';
+  String get regionJordan => 'Иордания';
 
   @override
-  String get regionKazakhstan => 'Kazakhstan';
+  String get regionKazakhstan => 'Казахстан';
 
   @override
-  String get regionKenya => 'Kenya';
+  String get regionKenya => 'Кения';
 
   @override
-  String get regionKiribati => 'Kiribati';
+  String get regionKiribati => 'Кирибати';
 
   @override
-  String get regionKuwait => 'Kuwait';
+  String get regionKuwait => 'Кувейт';
 
   @override
-  String get regionKyrgyzstan => 'Kyrgyzstan';
+  String get regionKyrgyzstan => 'Кыргызстан';
 
   @override
-  String get regionLaos => 'Laos';
+  String get regionLaos => 'Лаос';
 
   @override
-  String get regionLatvia => 'Latvia';
+  String get regionLatvia => 'Латвия';
 
   @override
-  String get regionLebanon => 'Lebanon';
+  String get regionLebanon => 'Ливан';
 
   @override
-  String get regionLesotho => 'Lesotho';
+  String get regionLesotho => 'Лесото';
 
   @override
-  String get regionLiberia => 'Liberia';
+  String get regionLiberia => 'Либерия';
 
   @override
-  String get regionLibya => 'Libya';
+  String get regionLibya => 'Ливия';
 
   @override
-  String get regionLiechtenstein => 'Liettenstein';
+  String get regionLiechtenstein => 'Лихтенштейн';
 
   @override
-  String get regionLithuania => 'Lithuania';
+  String get regionLithuania => 'Литва';
 
   @override
-  String get regionLuxembourg => 'Luxembourg';
+  String get regionLuxembourg => 'Люксембург';
 
   @override
-  String get regionMacao => 'Macao';
+  String get regionMacao => 'Макао';
 
   @override
-  String get regionMacedonia => 'Macedonia';
+  String get regionMacedonia => 'Македония';
 
   @override
-  String get regionMadagascar => 'Madagascar';
+  String get regionMadagascar => 'Мадагаскар';
 
   @override
-  String get regionMalawi => 'Malawi';
+  String get regionMalawi => 'Малави';
 
   @override
-  String get regionMalaysia => 'Malaysia';
+  String get regionMalaysia => 'Малайзия';
 
   @override
-  String get regionMaldives => 'Maldives';
+  String get regionMaldives => 'Мальдивские Острова';
 
   @override
-  String get regionMali => 'Mali';
+  String get regionMali => 'Мали';
 
   @override
-  String get regionMalta => 'Malta';
+  String get regionMalta => 'Мальта';
 
   @override
-  String get regionMarshallislands => 'Marshall Islands';
+  String get regionMarshallislands => 'Маршалловы Острова';
 
   @override
-  String get regionMartinique => 'Martinique';
+  String get regionMartinique => 'Мартиника';
 
   @override
-  String get regionMauritania => 'Mauritania';
+  String get regionMauritania => 'Мавритания';
 
   @override
-  String get regionMauritius => 'Mauritius';
+  String get regionMauritius => 'Маврикий';
 
   @override
-  String get regionMayotte => 'Mayotte';
+  String get regionMayotte => 'Майотта';
 
   @override
-  String get regionMexico => 'Mexico';
+  String get regionMexico => 'Мексика';
 
   @override
-  String get regionMicronesia => 'Micronesia';
+  String get regionMicronesia => 'Микронезия';
 
   @override
-  String get regionMoldova => 'Moldova';
+  String get regionMoldova => 'Молдова';
 
   @override
-  String get regionMonaco => 'Monaco';
+  String get regionMonaco => 'Монако';
 
   @override
-  String get regionMongolia => 'Mongolia';
+  String get regionMongolia => 'Монголия';
 
   @override
-  String get regionMontenegro => 'Montenegro';
+  String get regionMontenegro => 'Черногория';
 
   @override
-  String get regionMontserrat => 'Montserrat';
+  String get regionMontserrat => 'Монтсеррат';
 
   @override
-  String get regionMorocco => 'Morocco';
+  String get regionMorocco => 'Марокко';
 
   @override
-  String get regionMozambique => 'Mozambique';
+  String get regionMozambique => 'Мозамбик';
 
   @override
-  String get regionMyanmar => 'Myanmar';
+  String get regionMyanmar => 'Мьянма';
 
   @override
-  String get regionNamibia => 'Namibia';
+  String get regionNamibia => 'Намибия';
 
   @override
-  String get regionNauru => 'Nauru';
+  String get regionNauru => 'Науру';
 
   @override
-  String get regionNepal => 'Nepal';
+  String get regionNepal => 'Непал';
 
   @override
-  String get regionNetherlands => 'Netherlands';
+  String get regionNetherlands => 'Нидерланды';
 
   @override
-  String get regionNewcaledonia => 'Newcaledonia';
+  String get regionNewcaledonia => 'Новая Каледония';
 
   @override
-  String get regionNewzealand => 'Newzealand';
+  String get regionNewzealand => 'Новая Зеландия';
 
   @override
-  String get regionNicaragua => 'Nicaragua';
+  String get regionNicaragua => 'Никарагуа';
 
   @override
-  String get regionNiger => 'Niger';
+  String get regionNiger => 'Нигер';
 
   @override
-  String get regionNigeria => 'Nigeria';
+  String get regionNigeria => 'Нигерия';
 
   @override
-  String get regionNiue => 'Niue';
+  String get regionNiue => 'Ниуэ';
 
   @override
-  String get regionNorfolkisland => 'Norfolkisland';
+  String get regionNorfolkisland => 'Остров Норфолк';
 
   @override
-  String get regionNorthkorea => 'Northkorea';
+  String get regionNorthkorea => 'Северная Корея';
 
   @override
-  String get regionNorthernmarianaislands => 'Northernmarianaislands';
+  String get regionNorthernmarianaislands => 'Северные Марианские острова';
 
   @override
-  String get regionNorway => 'Norway';
+  String get regionNorway => 'Норвегия';
 
   @override
-  String get regionOman => 'Oman';
+  String get regionOman => 'Оман';
 
   @override
-  String get regionPakistan => 'Pakistan';
+  String get regionPakistan => 'Пакистан';
 
   @override
-  String get regionPalau => 'Palau';
+  String get regionPalau => 'Палау';
 
   @override
-  String get regionPalestine => 'Palestine';
+  String get regionPalestine => 'Палестина';
 
   @override
-  String get regionPanama => 'Panama';
+  String get regionPanama => 'Панама';
 
   @override
-  String get regionPapuanewguinea => 'Papuanewguinea';
+  String get regionPapuanewguinea => 'Папуа-Новая Гвинея';
 
   @override
-  String get regionParaguay => 'Paraguay';
+  String get regionParaguay => 'Парагвай';
 
   @override
-  String get regionPeru => 'Peru';
+  String get regionPeru => 'Перу';
 
   @override
-  String get regionPhilippines => 'Philippines';
+  String get regionPhilippines => 'Филиппины';
 
   @override
-  String get regionPitcairn => 'Pitcairn';
+  String get regionPitcairn => 'Питкэрн';
 
   @override
-  String get regionPoland => 'Poland';
+  String get regionPoland => 'Польша';
 
   @override
-  String get regionPortugal => 'Portugal';
+  String get regionPortugal => 'Португалия';
 
   @override
-  String get regionPuertorico => 'Puerto Rico';
+  String get regionPuertorico => 'Пуэрто-Рико';
 
   @override
-  String get regionQatar => 'Qatar';
+  String get regionQatar => 'Катар';
 
   @override
-  String get regionReunion => 'Reunion';
+  String get regionReunion => 'Реюньон';
 
   @override
-  String get regionRomania => 'Romania';
+  String get regionRomania => 'Румыния';
 
   @override
-  String get regionRussianfederation => 'Russianfederation';
+  String get regionRussianfederation => 'Российская Федерация';
 
   @override
-  String get regionRwanda => 'Rwanda';
+  String get regionRwanda => 'Руанда';
 
   @override
-  String get regionSaintbarthelemy => 'Saintbarthelemy';
+  String get regionSaintbarthelemy => 'Сен-Бартелеми';
 
   @override
-  String get regionSainthelena => 'Sainthelena';
+  String get regionSainthelena => 'Святая Елена';
 
   @override
-  String get regionSaintkittsandnevis => 'Saintkittsandnevis';
+  String get regionSaintkittsandnevis => 'Сент-Китс и Невис';
 
   @override
-  String get regionSaintlucia => 'Saintlucia';
+  String get regionSaintlucia => 'Сент-Люсия';
 
   @override
-  String get regionSaintmartin => 'Saintmartin';
+  String get regionSaintmartin => 'Сен-Мартен';
 
   @override
-  String get regionSaintpierreandmiquelon => 'Saintpierreandmiquelon';
+  String get regionSaintpierreandmiquelon => 'Сен-Пьер и Микелон';
 
   @override
-  String get regionSaintvincentandthegrenadines =>
-      'Saintvincentandthegrenadines';
+  String get regionSaintvincentandthegrenadines => 'Сент-Винсент и Гренадины';
 
   @override
-  String get regionSamoa => 'Samoa';
+  String get regionSamoa => 'Самоа';
 
   @override
-  String get regionSanmarino => 'San Marino';
+  String get regionSanmarino => 'Сан-Марино';
 
   @override
-  String get regionSaotomeandprincipe => 'São Tomé and Príncipe';
+  String get regionSaotomeandprincipe => 'Сан-Томе и Принсипи';
 
   @override
-  String get regionSaudiarabia => 'Saudiarabia';
+  String get regionSaudiarabia => 'Саудовская Аравия';
 
   @override
-  String get regionSenegal => 'Senegal';
+  String get regionSenegal => 'Сенегал';
 
   @override
-  String get regionSerbia => 'Serbia';
+  String get regionSerbia => 'Сербия';
 
   @override
-  String get regionSeychelles => 'Seychelles';
+  String get regionSeychelles => 'Сейшельские Острова';
 
   @override
-  String get regionSierraleone => 'Sierraleone';
+  String get regionSierraleone => 'Сьерра-Леоне';
 
   @override
-  String get regionSingapore => 'Singapore';
+  String get regionSingapore => 'Сингапур';
 
   @override
-  String get regionSintmaarten => 'Sint Maarten';
+  String get regionSintmaarten => 'Синт-Мартен';
 
   @override
-  String get regionSlovakia => 'Slovakia';
+  String get regionSlovakia => 'Словакия';
 
   @override
-  String get regionSlovenia => 'Slovenia';
+  String get regionSlovenia => 'Словения';
 
   @override
-  String get regionSolomonislands => 'Solomon Islands';
+  String get regionSolomonislands => 'Соломоновы Острова';
 
   @override
-  String get regionSomalia => 'Somalia';
+  String get regionSomalia => 'Сомали';
 
   @override
-  String get regionSouthafrica => 'South Africa';
+  String get regionSouthafrica => 'Южная Африка';
 
   @override
   String get regionSouthgeorgiaandthesouthsandwichislands =>
-      'South Georgia and the South Sandwich Islands';
+      'Южная Грузия и Южные Сандвичевы острова';
 
   @override
-  String get regionSouthkorea => 'Southen Korea';
+  String get regionSouthkorea => 'Южная Корея';
 
   @override
-  String get regionSouthsudan => 'South Sudan';
+  String get regionSouthsudan => 'Южный Судан';
 
   @override
-  String get regionSpain => 'Spain';
+  String get regionSpain => 'Испания';
 
   @override
-  String get regionSrilanka => 'Srilanka';
+  String get regionSrilanka => 'Шриланка';
 
   @override
-  String get regionSudan => 'Sudan';
+  String get regionSudan => 'Судан';
 
   @override
-  String get regionSuriname => 'Suriname';
+  String get regionSuriname => 'Суринам';
 
   @override
-  String get regionSvalbardandjanmayen => 'Svalbard and Jan Mayen';
+  String get regionSvalbardandjanmayen => 'Шпицберген и Ян-Майен';
 
   @override
-  String get regionSwaziland => 'Swaziland';
+  String get regionSwaziland => 'Свазиленд';
 
   @override
-  String get regionSweden => 'Sweden';
+  String get regionSweden => 'Швеция';
 
   @override
-  String get regionSwitzerland => 'Switerland';
+  String get regionSwitzerland => 'Швейцария';
 
   @override
-  String get regionSyrianarabrepublic => 'Syrian Arab Republic';
+  String get regionSyrianarabrepublic => 'Сирийская Арабская Республика';
 
   @override
-  String get regionTaiwan => 'Taiwan';
+  String get regionTaiwan => 'Тайвань';
 
   @override
-  String get regionTajikistan => 'Tajikistan';
+  String get regionTajikistan => 'Таджикистан';
 
   @override
-  String get regionTanzania => 'Tanzania';
+  String get regionTanzania => 'Танзания';
 
   @override
-  String get regionThailand => 'Thailand';
+  String get regionThailand => 'Таиланд';
 
   @override
-  String get regionTimorleste => 'Timor-Leste';
+  String get regionTimorleste => 'Тимор-Лешти';
 
   @override
-  String get regionTogo => 'Togo';
+  String get regionTogo => 'Того';
 
   @override
-  String get regionTokelau => 'Tokelau';
+  String get regionTokelau => 'Токелау';
 
   @override
-  String get regionTonga => 'Tonga';
+  String get regionTonga => 'Тонга';
 
   @override
-  String get regionTrinidadandtobago => 'Trinidad and Tobago';
+  String get regionTrinidadandtobago => 'Тринидад и Тобаго';
 
   @override
-  String get regionTunisia => 'Tunisia';
+  String get regionTunisia => 'Тунис';
 
   @override
-  String get regionTurkey => 'Turkey';
+  String get regionTurkey => 'Турция';
 
   @override
-  String get regionTurkmenistan => 'Turkmenistan';
+  String get regionTurkmenistan => 'Туркменистан';
 
   @override
-  String get regionTurksandcaicosislands => 'Turks and Caicos Islands';
+  String get regionTurksandcaicosislands => 'Острова Теркс и Кайкос';
 
   @override
-  String get regionTuvalu => 'Tuvalu';
+  String get regionTuvalu => 'Тувалу';
 
   @override
-  String get regionUganda => 'Uganda';
+  String get regionUganda => 'Уганда';
 
   @override
-  String get regionUkraine => 'Ukraine';
+  String get regionUkraine => 'Украина';
 
   @override
-  String get regionUnitedarabemirates => 'United Arab Emirates';
+  String get regionUnitedarabemirates => 'Объединенные Арабские Эмираты';
 
   @override
-  String get regionUnitedkingdom => 'United Kingdom';
+  String get regionUnitedkingdom => 'Соединенное Королевство';
 
   @override
-  String get regionUnitedstates => 'United States';
+  String get regionUnitedstates => 'Соединенные Штаты';
 
   @override
   String get regionUnitedstatesminoroutlyingislands =>
-      'United States Minor Outlying Islands';
+      'Малые острова Соединенных Штатов';
 
   @override
-  String get regionUruguay => 'Uruguay';
+  String get regionUruguay => 'Уругвай';
 
   @override
-  String get regionUsvirginislands => 'Usvirgin Islands';
+  String get regionUsvirginislands => 'Острова Усвирин';
 
   @override
-  String get regionUzbekistan => 'Uzbekistan';
+  String get regionUzbekistan => 'Узбекистан';
 
   @override
-  String get regionVanuatu => 'Vanuatu';
+  String get regionVanuatu => 'Вануату';
 
   @override
-  String get regionVaticancity => 'Vatican City';
+  String get regionVaticancity => 'Ватикан';
 
   @override
-  String get regionVenezuela => 'Venezuela';
+  String get regionVenezuela => 'Венесуэла';
 
   @override
-  String get regionVietnam => 'Vietnam';
+  String get regionVietnam => 'Вьетнам';
 
   @override
-  String get regionWallisandfutuna => 'Wallis And Futuna';
+  String get regionWallisandfutuna => 'Уоллис и Футуна';
 
   @override
-  String get regionWesternsahara => 'Western Sahara';
+  String get regionWesternsahara => 'Западная Сахара';
 
   @override
-  String get regionYemen => 'Yemen';
+  String get regionYemen => 'Йемен';
 
   @override
-  String get regionZambia => 'Zambia';
+  String get regionZambia => 'Замбия';
 
   @override
-  String get regionZimbabwe => 'Zimbabwe';
+  String get regionZimbabwe => 'Зимбабве';
 
   @override
   String get failedToReadMetadata =>
-      'Failed to read metadata for the following media files:';
+      'Не удалось прочитать метаданные для следующих медиафайлов:';
 
   @override
   String get failedToReadMetadataDescription =>
-      'The metadata of this file could not be read. This is usually caused by a missing codec or a corrupted file.';
+      'Метаданные этого файла не могут быть прочитаны. Обычно это происходит из-за отсутствующего кодека или поврежденного файла.';
 
   @override
   String get breakingChangesPleaseBackupTitle =>
-      'Breaking changes: Please backup!';
+      'Важные изменения: пожалуйста, сделайте резервную копию!';
 
   @override
   String get breakingChangesPleaseBackupDescription =>
-      'The next version of MusicPod will have breaking changes. Please backup your playlists, podcast subscriptions and pinned albums before updating.';
+      'В следующей версии MusicPod будут внесены существенные изменения. Перед обновлением сделайте резервную копию своих плейлистов, подписок на подкасты и закрепленных альбомов.';
 
   @override
   String get breakingChangesPleaseBackupConfirmation =>
-      'I confirm that I have backed up my:';
+      'Я подтверждаю, что я сделал резервную копию:';
 
   @override
-  String get pinnedAlbumsAndPlaylists => 'Pinned albums and playlists';
+  String get pinnedAlbumsAndPlaylists => 'Закрепленные альбомы и плейлисты';
 
   @override
-  String get starredStations => 'Starred stations';
+  String get starredStations => 'Звездные станции';
 
   @override
-  String get podcastSubscriptions => 'Podcast subscriptions';
+  String get podcastSubscriptions => 'Подписки Подкастов';
 
   @override
-  String get pinnedAlbums => 'Pinned albums';
+  String get pinnedAlbums => 'Закрепленные альбомы';
 
   @override
-  String get export => 'Export';
+  String get export => 'Экспорт';
 
   @override
-  String get import => 'Import';
+  String get import => 'Импорт';
 
   @override
-  String get exportYourData => 'Export your data';
+  String get exportYourData => 'Экспорт ваших данных';
 
   @override
   String get exportYourDataDescription =>
-      'Export your podcast subscriptions, starred stations and pinned albums.';
+      'Экспортируйте свои подписки на подкасты, отмеченные звездочкой станции и закрепленные альбомы.';
 
   @override
-  String get localAudioWatchDialogTitle => 'Local audio directory was modified';
+  String get localAudioWatchDialogTitle => 'Локальный аудиокаталог был изменен';
 
   @override
   String get localAudioWatchDialogDescription =>
-      'Do you want to reload the local audio directory?';
+      'Хотите перезагрузить локальный аудиокаталог?';
 
   @override
-  String get external => 'external';
+  String get external => 'внешние';
 
   @override
-  String get externalPlaylist => 'External playlist';
+  String get externalPlaylist => 'Внешний плейлист';
 
   @override
-  String get pictures => 'Pictures';
+  String get pictures => 'Фотографии';
 
   @override
-  String get localPictureTypeOther => 'Other';
+  String get localPictureTypeOther => 'Прочие';
 
   @override
-  String get localPictureTypeFileIcon32x32 => 'Icon 32x32';
+  String get localPictureTypeFileIcon32x32 => 'Икона 32x32';
 
   @override
-  String get localPictureTypeOtherFileIcon => 'Other file icon';
+  String get localPictureTypeOtherFileIcon => 'Другая иконка файла';
 
   @override
-  String get localPictureTypeCoverFront => 'Cover front';
+  String get localPictureTypeCoverFront => 'Передняя обложка';
 
   @override
-  String get localPictureTypeCoverBack => 'Cover back';
+  String get localPictureTypeCoverBack => 'Обложка сзади';
 
   @override
-  String get localPictureTypeLeafletPage => 'Leaflet page';
+  String get localPictureTypeLeafletPage => 'Страница листовки';
 
   @override
-  String get localPictureTypeMediaLabelCD => 'Media label CD';
+  String get localPictureTypeMediaLabelCD => 'Медиа-этикетка CD';
 
   @override
-  String get localPictureTypeLeadArtist => 'Lead artist';
+  String get localPictureTypeLeadArtist => 'Ведущий художник';
 
   @override
-  String get localPictureTypeArtistPerformer => 'Artist/Performer';
+  String get localPictureTypeArtistPerformer => 'Художник/исполнитель';
 
   @override
-  String get localPictureTypeConductor => 'Conductor';
+  String get localPictureTypeConductor => 'Проводник';
 
   @override
-  String get localPictureTypeBandOrchestra => 'Band/Orchestra';
+  String get localPictureTypeBandOrchestra => 'Группа/оркестр';
 
   @override
-  String get localPictureTypeComposer => 'Composer';
+  String get localPictureTypeComposer => 'Композитор';
 
   @override
-  String get localPictureTypeLyricistTextWriter => 'Lyricist/Text writer';
+  String get localPictureTypeLyricistTextWriter =>
+      'Автор текстов песен/текстовый автор';
 
   @override
-  String get localPictureTypeRecordingLocation => 'Recording location';
+  String get localPictureTypeRecordingLocation => 'Место записи';
 
   @override
-  String get localPictureTypeDuringRecording => 'During recording';
+  String get localPictureTypeDuringRecording => 'Во время записи';
 
   @override
-  String get localPictureTypeDuringPerformance => 'During performance';
+  String get localPictureTypeDuringPerformance => 'Во время выступления';
 
   @override
   String get localPictureTypeMovieVideoScreenCapture =>
-      'Movie/Video screen capture';
+      'Снимок экрана фильма/видео';
 
   @override
-  String get localPictureTypeBrightColouredFish => 'Bright coloured fish';
+  String get localPictureTypeBrightColouredFish => 'Яркая рыба';
 
   @override
-  String get localPictureTypeIllustration => 'Illustration';
+  String get localPictureTypeIllustration => 'Иллюстрация';
 
   @override
-  String get localPictureTypebandArtistLogotype => 'Band/Artist logotype';
+  String get localPictureTypebandArtistLogotype => 'Логотип группы/исполнителя';
 
   @override
   String get localPictureTypepublisherStudioLogotype =>
-      'Publisher/Studio logotype';
+      'Логотип издателя/студии';
 
   @override
   String get cantPinEmptyAlbum =>
-      'You can\'t pin albums without empty album metadata!';
+      'Вы не можете закреплять альбомы без пустых метаданных альбома!';
 
   @override
   String get cantUnpinEmptyAlbum =>
-      'You can\'t unpin albums without empty album metadata!';
+      'Вы не можете открепить альбомы без пустых метаданных альбома!';
 
   @override
-  String get path => 'Path';
+  String get path => 'Путь';
 
   @override
   String get albumNotFound =>
-      'This album does not exist or you have removed the external playlist (M3U/PLS file) where it has been loaded from.';
+      'Этот альбом не существует или вы удалили внешний плейлист (файл M3U/PLS), из которого он был загружен.';
 
   @override
   String get stationNotFound =>
-      'This station does not exist or it has been removed from the radiobrowser server.';
+      'Эта станция не существует или была удалена с сервера RadioBrowser.';
 
   @override
   String get onlyLocalAudioForPlaylists =>
-      'Only local audio is supported for playlist imports! Please search for them in the radio feature and add them with the star button to your library!';
+      'Для импорта плейлистов поддерживается только локальный аудиоконтент! Найдите их в функции радио и добавьте в свою библиотеку с помощью кнопки со звездочкой!';
 
   @override
   String get customStationWarning =>
-      'The provided URL must exist on the radiobrowser server, otherwise it will not be added to you library! Ideally search for them in the radio feature and add them with the star button to your library!';
+      'Указанный URL должен существовать на сервере radiobrowser, иначе он не будет добавлен в вашу библиотеку! В идеале, найдите их в функции радио и добавьте в свою библиотеку с помощью кнопки со звездочкой!';
 
   @override
-  String get disc => 'Disc';
+  String get disc => 'Диск';
 
   @override
-  String get groupAlbumsOnlyByAlbumName => 'Group albums only by album name';
+  String get groupAlbumsOnlyByAlbumName =>
+      'Группировать альбомы только по названию альбома';
 
   @override
   String get groupAlbumsOnlyByAlbumNameDescription =>
-      'This will group albums only by album name and not by artist name + album name, which assumes that the album name is unique inside your library!';
+      'Это сгруппирует альбомы только по названию альбома, а не по имени исполнителя + названию альбома, что предполагает, что название альбома является уникальным в вашей библиотеке!';
 
   @override
-  String get useYaruThemeTitle => 'Use Yaru theme';
+  String get useYaruThemeTitle => 'Используйте тему Яру';
 
   @override
   String get useYaruThemeDescription =>
-      'This will use the Yaru theme for the application. This is the default theme for Ubuntu.';
+      'Это приведет к использованию темы Yaru для приложения. Это тема по умолчанию для Ubuntu.';
 
   @override
-  String get customThemeColor => 'Custom theme color';
+  String get customThemeColor => 'Пользовательский цвет темы';
 
   @override
-  String get useCustomThemeColorTitle => 'Use custom accent color';
+  String get useCustomThemeColorTitle =>
+      'Использовать настраиваемый акцентный цвет';
 
   @override
   String get useCustomThemeColorDescription =>
-      'This will let you chose a custom accent color for the current theme.';
+      'Это позволит вам выбрать индивидуальный акцентный цвет для текущей темы.';
 
   @override
-  String get selectColor => 'Select color';
+  String get selectColor => 'Выберите цвет';
 
   @override
-  String get selectColorShade => 'Select color shade';
+  String get selectColorShade => 'Выбор цветового оттенка';
 
   @override
-  String get selectColorAndItsShades => 'Select color and its shades';
+  String get selectColorAndItsShades => 'Выберите цвет и его оттенки';
 
   @override
-  String get selectIconThemeTitle => 'Select icon theme';
+  String get selectIconThemeTitle => 'Выбрать тему значков';
 
   @override
   String get selectIconThemeDescription =>
-      'Chose an icon theme for the application. The default theme depends on your operating system. This reloads the application!';
+      'Выберите тему значков для приложения. Тема по умолчанию зависит от вашей операционной системы. Это приведет к перезагрузке приложения!';
 
   @override
-  String get saveWindowSizeTitle => 'Save window size';
+  String get saveWindowSizeTitle => 'Сохранить размер окна';
 
   @override
   String get saveWindowSizeDescription =>
-      'This will save the window size and position of the application.';
+      'Это сохранит размер и положение окна приложения.';
 
   @override
   String downloadsOfLatestRelease(String latestRelease) {
-    return 'Downloaded $latestRelease times outside of snapstore and flathub';
+    return 'Скачано $latestRelease раз вне snapstore и flathub';
   }
 
   @override
-  String get useBlurredPlayerBackgroundTitle => 'Use blurred player background';
+  String get useBlurredPlayerBackgroundTitle =>
+      'Использовать размытый фон игрока';
 
   @override
   String get useBlurredPlayerBackgroundDescription =>
-      'This will blur the background of the player. This might lead to lower performance on some devices.';
+      'Это приведет к размытию фона игрока. На некоторых устройствах это может привести к снижению производительности.';
 }

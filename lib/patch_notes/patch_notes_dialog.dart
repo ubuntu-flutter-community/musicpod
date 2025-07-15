@@ -32,7 +32,9 @@ class _PatchNotesDialogState extends State<PatchNotesDialog> {
       scrollable: true,
       content: FutureBuilder(
         future: _markdown,
-        builder: (context, snapshot) => snapshot.hasData
+        builder: (context, snapshot) => snapshot.hasError
+            ? Center(child: Text(snapshot.error.toString()))
+            : snapshot.hasData
             ? MarkdownBody(
                 onTapLink: (text, href, title) {
                   if (href == null) return;

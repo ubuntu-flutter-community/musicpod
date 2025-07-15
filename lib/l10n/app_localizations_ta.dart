@@ -135,7 +135,7 @@ class AppLocalizationsTa extends AppLocalizations {
   String get titles => 'தலைப்புகள்';
 
   @override
-  String get description => 'Description';
+  String get description => 'விவரம்';
 
   @override
   String get artist => 'கலைஞர்';
@@ -334,7 +334,7 @@ class AppLocalizationsTa extends AppLocalizations {
   String get queue => 'வரிசை';
 
   @override
-  String get clearQueue => 'Clear queue';
+  String get clearQueue => 'தெளிவான வரிசை';
 
   @override
   String get limit => 'வரம்பு';
@@ -454,64 +454,67 @@ class AppLocalizationsTa extends AppLocalizations {
   }
 
   @override
-  String get markAllEpisodesAsDone => 'Mark all episodes as done';
+  String get markAllEpisodesAsDone =>
+      'செய்தபடியே எல்லா அத்தியாயங்களையும் குறிக்கவும்';
 
   @override
-  String get reset => 'Reset';
+  String get reset => 'மீட்டமை';
 
   @override
-  String get resetAllSettings => 'Reset all settings';
+  String get resetAllSettings => 'எல்லா அமைப்புகளையும் மீட்டமைக்கவும்';
 
   @override
   String get resetAllSettingsConfirm =>
-      'Are you absolutely sure to reset all settings, your podcast subscriptions, your podcast progress, your starred stations and your pinned albums?  The app will be closed after and you need to re-open it.';
+      'எல்லா அமைப்புகளையும், உங்கள் போட்காச்ட் சந்தாக்கள், உங்கள் போட்காச்ட் முன்னேற்றம், உங்கள் நட்சத்திரமிட்ட நிலையங்கள் மற்றும் உங்கள் பின் செய்யப்பட்ட ஆல்பங்களை மீட்டமைப்பது உறுதி? பயன்பாடு மூடப்படும், நீங்கள் அதை மீண்டும் திறக்க வேண்டும்.';
 
   @override
-  String get confirm => 'Confirm';
+  String get confirm => 'உறுதிப்படுத்தவும்';
 
   @override
-  String get confirmation => 'Confirmation';
+  String get confirmation => 'உறுதிப்படுத்தல்';
 
   @override
-  String get isMaybeLowBandwidthDialogTitle => 'No WIFI/Ethernet';
+  String get isMaybeLowBandwidthDialogTitle => 'வைஃபை/ஈதர்நெட் இல்லை';
 
   @override
   String get isMaybeLowBandwidthDialogBody =>
-      'You are not connected to WIFI or Ethernet. Do you want to enable data safe mode?';
+      'நீங்கள் வைஃபை அல்லது ஈதர்நெட்டுடன் இணைக்கப்படவில்லை. தரவு பாதுகாப்பான பயன்முறையை இயக்க விரும்புகிறீர்களா?';
 
   @override
-  String get isBackInWifiDialogTitle => 'Back in WIFI/Ethernet';
+  String get isBackInWifiDialogTitle => 'மீண்டும் வைஃபை/ஈதர்நெட்டில்';
 
   @override
   String get isBackInWifiDialogBody =>
-      'You are connected to WIFI or Ethernet. Do you want to disable data safe mode?';
+      'நீங்கள் வைஃபை அல்லது ஈதர்நெட்டுடன் இணைக்கப்பட்டுள்ளீர்கள். தரவு பாதுகாப்பான பயன்முறையை முடக்க விரும்புகிறீர்களா?';
 
   @override
-  String get enableDataSafeModeSettingTitle => 'Data safe mode';
+  String get enableDataSafeModeSettingTitle => 'தரவு பாதுகாப்பான பயன்முறை';
 
   @override
   String get dataSafeModeEnabled =>
-      'Mobile Connection: Data safe mode enabled.';
+      'மொபைல் இணைப்பு: தரவு பாதுகாப்பான பயன்முறை இயக்கப்பட்டது.';
 
   @override
-  String get dataSafeModeDisabled => 'Wifi/Ethernet: Data safe mode disabled.';
+  String get dataSafeModeDisabled =>
+      'வைஃபை/ஈதர்நெட்: தரவு பாதுகாப்பான பயன்முறை முடக்கப்பட்டுள்ளது.';
 
   @override
   String get enableDataSafeModeSettingDescription =>
-      'When active the player will not try to download artwork of titles send from radio stations.';
+      'செயலில் இருக்கும்போது வீரர் வானொலி நிலையங்களிலிருந்து அனுப்பும் தலைப்புகளின் கலைப்படைப்புகளைப் பதிவிறக்க முயற்சிக்க மாட்டார்.';
 
   @override
-  String get stopToNotifyAboutDataSafeMode => 'Stop to notify me';
+  String get stopToNotifyAboutDataSafeMode => 'எனக்கு அறிவிப்பதை நிறுத்துங்கள்';
 
   @override
-  String get notifyMeAboutDataSafeModeTitle => 'Data safe mode notifications';
+  String get notifyMeAboutDataSafeModeTitle =>
+      'தரவு பாதுகாப்பான பயன்முறை அறிவிப்புகள்';
 
   @override
   String get notifyMeAboutDataSafeModeDescription =>
-      'Notify me about data safe mode';
+      'தரவு பாதுகாப்பான பயன்முறையைப் பற்றி எனக்குத் தெரிவிக்கவும்';
 
   @override
-  String get resourceSectionTitle => 'Device resources';
+  String get resourceSectionTitle => 'சாதன வளங்கள்';
 
   @override
   String get downloadsOnly => 'பதிவிறக்கங்கள் மட்டுமே';
@@ -537,13 +540,13 @@ class AppLocalizationsTa extends AppLocalizations {
   String get connectedTo => 'இணைக்கப்பட்டுள்ளது';
 
   @override
-  String get connectedToDiscord => 'Connected to Discord';
+  String get connectedToDiscord => 'முரண்பாட்டுடன் இணைக்கப்பட்டுள்ளது';
 
   @override
   String get disconnectedFrom => 'இருந்து துண்டிக்கப்பட்டது';
 
   @override
-  String get disconnectedFromDiscord => 'Disconnected from Discord';
+  String get disconnectedFromDiscord => 'முரண்பாட்டிலிருந்து துண்டிக்கப்பட்டது';
 
   @override
   String get tryReconnect => 'மீண்டும் இணைக்க முயற்சிக்கவும்';
@@ -985,67 +988,72 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get exportPinnedAlbumsToM3UFiles =>
-      'Export pinned albums to M3U files';
+      'M3U கோப்புகளுக்கு பொருத்தப்பட்ட ஆல்பங்களை ஏற்றுமதி செய்யுங்கள்';
 
   @override
-  String get exportPinnedAlbumToM3UFile => 'Export pinned albums to M3U file';
+  String get exportPinnedAlbumToM3UFile =>
+      'பொருத்தப்பட்ட ஆல்பங்களை M3U கோப்பிற்கு ஏற்றுமதி செய்யுங்கள்';
 
   @override
-  String get exportPlaylistToM3UFile => 'Export playlist to M3U';
+  String get exportPlaylistToM3UFile =>
+      'M3U க்கு பிளேலிச்ட்டை ஏற்றுமதி செய்யுங்கள்';
 
   @override
   String get exportPlaylistsAndAlbumsToM3UFiles =>
-      'Export playlists and albums to M3U files';
+      'M3U கோப்புகளுக்கு பிளேலிச்ட்கள் மற்றும் ஆல்பங்களை ஏற்றுமதி செய்யுங்கள்';
 
   @override
-  String get exportPodcastsToOpmlFile => 'Export podcasts to OPML file';
+  String get exportPodcastsToOpmlFile =>
+      'OPML கோப்பிற்கு பாட்காச்ட்களை ஏற்றுமதி செய்யுங்கள்';
 
   @override
-  String get importPodcastsFromOpmlFile => 'Import podcasts from OPML file';
+  String get importPodcastsFromOpmlFile =>
+      'OPML கோப்பிலிருந்து பாட்காச்ட்களை இறக்குமதி செய்யுங்கள்';
 
   @override
   String get exportStarredStationsToOpmlFile =>
-      'Export starred stations to OPML file';
+      'OPML கோப்பிற்கு நட்சத்திரமிட்ட நிலையங்களை ஏற்றுமதி செய்யுங்கள்';
 
   @override
   String get importStarredStationsFromOpmlFile =>
-      'Import starred stations from OPML file';
+      'OPML கோப்பிலிருந்து நட்சத்திரமிட்ட நிலையங்களை இறக்குமதி செய்யுங்கள்';
 
   @override
-  String get removeAllStarredStations => 'Remove all starred stations';
+  String get removeAllStarredStations =>
+      'நட்சத்திரமிட்ட அனைத்து நிலையங்களையும் அகற்றவும்';
 
   @override
   String get removeAllStarredStationsConfirm =>
-      'Are you sure you want to remove all starred stations?';
+      'நட்சத்திரமிட்ட அனைத்து நிலையங்களையும் அகற்ற விரும்புகிறீர்களா?';
 
   @override
   String get removeAllStarredStationsDescription =>
-      'This will remove all your starred stations.';
+      'இது உங்கள் நட்சத்திரமிட்ட அனைத்து நிலையங்களையும் அகற்றும்.';
 
   @override
-  String get removeAllPodcasts => 'Remove all podcasts';
+  String get removeAllPodcasts => 'அனைத்து பாட்காச்ட்களையும் அகற்று';
 
   @override
   String get removeAllPodcastsConfirm =>
-      'Are you sure you want to remove all podcasts?';
+      'எல்லா பாட்காச்ட்களையும் அகற்ற விரும்புகிறீர்களா?';
 
   @override
   String get removeAllPodcastsDescription =>
-      'This will remove all your podcast subscriptions and progress.';
+      'இது உங்கள் போட்காச்ட் சந்தாக்கள் மற்றும் முன்னேற்றத்தை அகற்றும்.';
 
   @override
-  String get customContentTitle => 'Add custom content';
+  String get customContentTitle => 'தனிப்பயன் உள்ளடக்கத்தைச் சேர்க்கவும்';
 
   @override
   String get customContentDescription =>
-      'If you do not want to use the radiobrowser or podcast search feature you can add your own content here, or you can add empty playlists or import playlists from M3U and PLS files.';
+      'ரேடியோப்ரோவுசர் அல்லது போட்காச்ட் தேடல் அம்சத்தைப் பயன்படுத்த நீங்கள் விரும்பவில்லை என்றால், உங்கள் சொந்த உள்ளடக்கத்தை இங்கே சேர்க்கலாம், அல்லது நீங்கள் வெற்று பிளேலிச்ட்களைச் சேர்க்கலாம் அல்லது M3U மற்றும் PLS கோப்புகளிலிருந்து பிளேலிச்ட்களை இறக்குமதி செய்யலாம்.';
 
   @override
   String get setPlaylistNameAndAddMoreLater =>
-      'Set playlist name and add more titles later';
+      'பிளேலிச்ட் பெயரை அமைத்து மேலும் தலைப்புகளைச் சேர்க்கவும்';
 
   @override
-  String get or => 'or';
+  String get or => 'அல்லது';
 
   @override
   String get loadMore => 'மேலும் ஏற்றவும்';
@@ -1095,7 +1103,7 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String checkForUpdatesConfirm(Object length) {
-    return 'Are you sure you want to check for updates for $length podcasts?';
+    return '$length பாட்காச்ட்களுக்கான புதுப்பிப்புகளை சரிபார்க்க விரும்புகிறீர்களா?';
   }
 
   @override
@@ -1142,13 +1150,13 @@ class AppLocalizationsTa extends AppLocalizations {
   String get onlineArtError => 'நிகழ்நிலை கலை தேடல் தற்போது கிடைக்கவில்லை';
 
   @override
-  String get clicks => 'கிளிக்குகள்';
+  String get clicks => 'சொடுக்குகள்';
 
   @override
-  String get theClick => 'click';
+  String get theClick => 'சொடுக்கு செய்க';
 
   @override
-  String get toClick => 'click';
+  String get toClick => 'சொடுக்கு செய்க';
 
   @override
   String get exposeOnlineHeadline =>
@@ -1954,216 +1962,222 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get failedToReadMetadata =>
-      'Failed to read metadata for the following media files:';
+      'பின்வரும் மீடியா கோப்புகளுக்கு மெட்டாடேட்டாவைப் படிக்கத் தவறிவிட்டது:';
 
   @override
   String get failedToReadMetadataDescription =>
-      'The metadata of this file could not be read. This is usually caused by a missing codec or a corrupted file.';
+      'இந்த கோப்பின் மெட்டாடேட்டாவைப் படிக்க முடியவில்லை. இது பொதுவாக காணாமல் போன கோடெக் அல்லது சிதைந்த கோப்பால் ஏற்படுகிறது.';
 
   @override
   String get breakingChangesPleaseBackupTitle =>
-      'Breaking changes: Please backup!';
+      'மாற்றங்களை உடைத்தல்: தயவுசெய்து காப்புப்பிரதி!';
 
   @override
   String get breakingChangesPleaseBackupDescription =>
-      'The next version of MusicPod will have breaking changes. Please backup your playlists, podcast subscriptions and pinned albums before updating.';
+      'மியூசிக் பாடின் அடுத்த பதிப்பில் முறிவு மாற்றங்கள் இருக்கும். புதுப்பிப்பதற்கு முன் உங்கள் பிளேலிச்ட்கள், போட்காச்ட் சந்தாக்கள் மற்றும் பின் செய்யப்பட்ட ஆல்பங்களை காப்புப் பிரதி எடுக்கவும்.';
 
   @override
   String get breakingChangesPleaseBackupConfirmation =>
-      'I confirm that I have backed up my:';
+      'நான் எனது காப்புப் பிரதி எடுத்துள்ளேன் என்பதை உறுதிப்படுத்துகிறேன்:';
 
   @override
-  String get pinnedAlbumsAndPlaylists => 'Pinned albums and playlists';
+  String get pinnedAlbumsAndPlaylists =>
+      'பின் செய்யப்பட்ட ஆல்பங்கள் மற்றும் பிளேலிச்ட்கள்';
 
   @override
-  String get starredStations => 'Starred stations';
+  String get starredStations => 'நட்சத்திரமிட்ட நிலையங்கள்';
 
   @override
-  String get podcastSubscriptions => 'Podcast subscriptions';
+  String get podcastSubscriptions => 'பாட்காச்ட் சந்தாக்கள்';
 
   @override
-  String get pinnedAlbums => 'Pinned albums';
+  String get pinnedAlbums => 'பின் செய்யப்பட்ட ஆல்பங்கள்';
 
   @override
-  String get export => 'Export';
+  String get export => 'ஏற்றுமதி';
 
   @override
-  String get import => 'Import';
+  String get import => 'இறக்குமதி';
 
   @override
-  String get exportYourData => 'Export your data';
+  String get exportYourData => 'உங்கள் தரவை ஏற்றுமதி செய்யுங்கள்';
 
   @override
   String get exportYourDataDescription =>
-      'Export your podcast subscriptions, starred stations and pinned albums.';
+      'உங்கள் போட்காச்ட் சந்தாக்கள், நட்சத்திரமிட்ட நிலையங்கள் மற்றும் பின் செய்யப்பட்ட ஆல்பங்களை ஏற்றுமதி செய்யுங்கள்.';
 
   @override
-  String get localAudioWatchDialogTitle => 'Local audio directory was modified';
+  String get localAudioWatchDialogTitle => 'உள்ளக ஆடியோ அடைவு மாற்றப்பட்டது';
 
   @override
   String get localAudioWatchDialogDescription =>
-      'Do you want to reload the local audio directory?';
+      'உள்ளக ஆடியோ கோப்பகத்தை மீண்டும் ஏற்ற விரும்புகிறீர்களா?';
 
   @override
-  String get external => 'external';
+  String get external => 'வெளிப்புறம்';
 
   @override
-  String get externalPlaylist => 'External playlist';
+  String get externalPlaylist => 'வெளிப்புற பிளேலிச்ட்';
 
   @override
-  String get pictures => 'Pictures';
+  String get pictures => 'படங்கள்';
 
   @override
-  String get localPictureTypeOther => 'Other';
+  String get localPictureTypeOther => 'மற்றொன்று';
 
   @override
-  String get localPictureTypeFileIcon32x32 => 'Icon 32x32';
+  String get localPictureTypeFileIcon32x32 => 'படவுரு 32x32';
 
   @override
-  String get localPictureTypeOtherFileIcon => 'Other file icon';
+  String get localPictureTypeOtherFileIcon => 'பிற கோப்பு படவுரு';
 
   @override
-  String get localPictureTypeCoverFront => 'Cover front';
+  String get localPictureTypeCoverFront => 'மூடு முன்';
 
   @override
-  String get localPictureTypeCoverBack => 'Cover back';
+  String get localPictureTypeCoverBack => 'மீண்டும் மூடு';
 
   @override
-  String get localPictureTypeLeafletPage => 'Leaflet page';
+  String get localPictureTypeLeafletPage => 'துண்டுப்பிரசுரம் பக்கம்';
 
   @override
-  String get localPictureTypeMediaLabelCD => 'Media label CD';
+  String get localPictureTypeMediaLabelCD => 'மீடியா சிட்டை குறுவட்டு';
 
   @override
-  String get localPictureTypeLeadArtist => 'Lead artist';
+  String get localPictureTypeLeadArtist => 'முன்னணி கலைஞர்';
 
   @override
-  String get localPictureTypeArtistPerformer => 'Artist/Performer';
+  String get localPictureTypeArtistPerformer => 'கலைஞர்/நடிகர்';
 
   @override
-  String get localPictureTypeConductor => 'Conductor';
+  String get localPictureTypeConductor => 'நடத்துனர்';
 
   @override
-  String get localPictureTypeBandOrchestra => 'Band/Orchestra';
+  String get localPictureTypeBandOrchestra => 'இசைக்குழு/இசைக்கருவியாளர் குழு';
 
   @override
-  String get localPictureTypeComposer => 'Composer';
+  String get localPictureTypeComposer => 'இசையமைப்பாளர்';
 
   @override
-  String get localPictureTypeLyricistTextWriter => 'Lyricist/Text writer';
+  String get localPictureTypeLyricistTextWriter =>
+      'பாடலாசிரியர்/உரை எழுத்தாளர்';
 
   @override
-  String get localPictureTypeRecordingLocation => 'Recording location';
+  String get localPictureTypeRecordingLocation => 'பதிவு செய்யும் இடம்';
 
   @override
-  String get localPictureTypeDuringRecording => 'During recording';
+  String get localPictureTypeDuringRecording => 'பதிவு செய்யும் போது';
 
   @override
-  String get localPictureTypeDuringPerformance => 'During performance';
+  String get localPictureTypeDuringPerformance => 'செயல்திறனின் போது';
 
   @override
   String get localPictureTypeMovieVideoScreenCapture =>
-      'Movie/Video screen capture';
+      'திரைப்படம்/வீடியோ திரை பிடிப்பு';
 
   @override
-  String get localPictureTypeBrightColouredFish => 'Bright coloured fish';
+  String get localPictureTypeBrightColouredFish => 'பிரகாசமான வண்ண மீன்';
 
   @override
-  String get localPictureTypeIllustration => 'Illustration';
+  String get localPictureTypeIllustration => 'விளக்கம்';
 
   @override
-  String get localPictureTypebandArtistLogotype => 'Band/Artist logotype';
+  String get localPictureTypebandArtistLogotype => 'இசைக்குழு/கலைஞர் லோகோடைப்';
 
   @override
   String get localPictureTypepublisherStudioLogotype =>
-      'Publisher/Studio logotype';
+      'வெளியீட்டாளர்/ச்டுடியோ லோகோடைப்';
 
   @override
   String get cantPinEmptyAlbum =>
-      'You can\'t pin albums without empty album metadata!';
+      'வெற்று ஆல்பம் மேனிலை தரவு இல்லாமல் நீங்கள் ஆல்பங்களை பின் செய்ய முடியாது!';
 
   @override
   String get cantUnpinEmptyAlbum =>
-      'You can\'t unpin albums without empty album metadata!';
+      'வெற்று ஆல்பம் மேனிலை தரவு இல்லாமல் நீங்கள் ஆல்பங்களை அவிழ்க்க முடியாது!';
 
   @override
-  String get path => 'Path';
+  String get path => 'பாதை';
 
   @override
   String get albumNotFound =>
-      'This album does not exist or you have removed the external playlist (M3U/PLS file) where it has been loaded from.';
+      'இந்த ஆல்பம் இல்லை அல்லது நீங்கள் ஏற்றப்பட்ட வெளிப்புற பிளேலிச்ட்டை (M3U/PLS கோப்பு) அகற்றிவிட்டீர்கள்.';
 
   @override
   String get stationNotFound =>
-      'This station does not exist or it has been removed from the radiobrowser server.';
+      'இந்த நிலையம் இல்லை அல்லது ரேடியோப்ரோவுசர் சேவையகத்திலிருந்து அகற்றப்பட்டுள்ளது.';
 
   @override
   String get onlyLocalAudioForPlaylists =>
-      'Only local audio is supported for playlist imports! Please search for them in the radio feature and add them with the star button to your library!';
+      'பிளேலிச்ட் இறக்குமதிக்கு உள்ளக ஆடியோ மட்டுமே ஆதரிக்கப்படுகிறது! ரேடியோ அம்சத்தில் அவற்றைத் தேடுங்கள் மற்றும் அவற்றை உங்கள் நூலகத்தில் ச்டார் பொத்தானுடன் சேர்க்கவும்!';
 
   @override
   String get customStationWarning =>
-      'The provided URL must exist on the radiobrowser server, otherwise it will not be added to you library! Ideally search for them in the radio feature and add them with the star button to your library!';
+      'வழங்கப்பட்ட முகவரி ரேடியோப்ரோவுசர் சேவையகத்தில் இருக்க வேண்டும், இல்லையெனில் அது உங்கள் நூலகத்தில் சேர்க்கப்படாது! ரேடியோ அம்சத்தில் அவற்றைத் தேடி, அவற்றை உங்கள் நூலகத்தில் ச்டார் பொத்தானுடன் சேர்க்கவும்!';
 
   @override
-  String get disc => 'Disc';
+  String get disc => 'வட்டு';
 
   @override
-  String get groupAlbumsOnlyByAlbumName => 'Group albums only by album name';
+  String get groupAlbumsOnlyByAlbumName =>
+      'குழு ஆல்பங்கள் ஆல்பத்தின் பெயரால் மட்டுமே';
 
   @override
   String get groupAlbumsOnlyByAlbumNameDescription =>
-      'This will group albums only by album name and not by artist name + album name, which assumes that the album name is unique inside your library!';
+      'இது ஆல்பங்களை ஆல்பம் பெயரால் மட்டுமே குழு செய்யும், கலைஞரின் பெயர் + ஆல்பம் பெயரால் அல்ல, இது உங்கள் நூலகத்திற்குள் ஆல்பத்தின் பெயர் தனித்துவமானது என்று கருதுகிறது!';
 
   @override
-  String get useYaruThemeTitle => 'Use Yaru theme';
+  String get useYaruThemeTitle => 'Yaru கருப்பொருளைப் பயன்படுத்தவும்';
 
   @override
   String get useYaruThemeDescription =>
-      'This will use the Yaru theme for the application. This is the default theme for Ubuntu.';
+      'இது பயன்பாட்டிற்கான யரு கருப்பொருளைப் பயன்படுத்தும். இது உபுண்டுவின் இயல்புநிலை கருப்பொருள்.';
 
   @override
-  String get customThemeColor => 'Custom theme color';
+  String get customThemeColor => 'தனிப்பயன் கருப்பொருள் நிறம்';
 
   @override
-  String get useCustomThemeColorTitle => 'Use custom accent color';
+  String get useCustomThemeColorTitle =>
+      'தனிப்பயன் உச்சரிப்பு வண்ணத்தைப் பயன்படுத்தவும்';
 
   @override
   String get useCustomThemeColorDescription =>
-      'This will let you chose a custom accent color for the current theme.';
+      'தற்போதைய கருப்பொருளுக்கு தனிப்பயன் உச்சரிப்பு வண்ணத்தைத் தேர்வுசெய்ய இது உங்களை அனுமதிக்கும்.';
 
   @override
-  String get selectColor => 'Select color';
+  String get selectColor => 'வண்ணத்தைத் தேர்ந்தெடுக்கவும்';
 
   @override
-  String get selectColorShade => 'Select color shade';
+  String get selectColorShade => 'வண்ண நிழலைத் தேர்ந்தெடுக்கவும்';
 
   @override
-  String get selectColorAndItsShades => 'Select color and its shades';
+  String get selectColorAndItsShades =>
+      'வண்ணம் மற்றும் அதன் நிழல்களைத் தேர்ந்தெடுக்கவும்';
 
   @override
-  String get selectIconThemeTitle => 'Select icon theme';
+  String get selectIconThemeTitle => 'படவுரு கருப்பொருள் தேர்ந்தெடுக்கவும்';
 
   @override
   String get selectIconThemeDescription =>
-      'Chose an icon theme for the application. The default theme depends on your operating system. This reloads the application!';
+      'பயன்பாட்டிற்கான படவுரு கருப்பொருள் தேர்வு செய்தது. இயல்புநிலை கருப்பொருள் உங்கள் இயக்க முறைமையைப் பொறுத்தது. இது பயன்பாட்டை மீண்டும் ஏற்றுகிறது!';
 
   @override
-  String get saveWindowSizeTitle => 'Save window size';
+  String get saveWindowSizeTitle => 'சாளர அளவை சேமி';
 
   @override
   String get saveWindowSizeDescription =>
-      'This will save the window size and position of the application.';
+      'இது சாளர அளவு மற்றும் பயன்பாட்டின் நிலையை சேமிக்கும்.';
 
   @override
   String downloadsOfLatestRelease(String latestRelease) {
-    return 'Downloaded $latestRelease times outside of snapstore and flathub';
+    return 'ச்னாப்ச்டோர் மற்றும் பிளாடூப்பிற்கு வெளியே $latestRelease முறை பதிவிறக்கம் செய்யப்பட்டது';
   }
 
   @override
-  String get useBlurredPlayerBackgroundTitle => 'Use blurred player background';
+  String get useBlurredPlayerBackgroundTitle =>
+      'மங்கலான பிளேயர் பின்னணியைப் பயன்படுத்தவும்';
 
   @override
   String get useBlurredPlayerBackgroundDescription =>
-      'This will blur the background of the player. This might lead to lower performance on some devices.';
+      'இது பிளேயரின் பின்னணியை மங்கச் செய்யும். இது சில சாதனங்களில் குறைந்த செயல்திறனுக்கு வழிவகுக்கும்.';
 }

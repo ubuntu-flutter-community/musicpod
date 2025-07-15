@@ -6,9 +6,12 @@ import 'package:path/path.dart' as p;
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:collection/collection.dart';
 
+import '../common/data/audio.dart';
 import '../common/logging.dart';
 import '../extensions/media_file_x.dart';
 import '../extensions/string_x.dart';
+import '../extensions/taget_platform_x.dart';
+import '../persistence_utils.dart';
 
 class LocalCoverService {
   final _propertiesChangedController = StreamController<bool>.broadcast();
@@ -99,4 +102,48 @@ class LocalCoverService {
   Uint8List? get(String? albumId) => albumId == null ? null : _store[albumId];
 
   Future<void> dispose() async => _propertiesChangedController.close();
+
+  Future<Uri?> createMediaControlsArtUri({Audio? audio}) async {
+    if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
+      return Uri.tryParse(audio?.imageUrl ?? audio!.albumArtUrl!);
+    } else if (audio?.canHaveLocalCover == true &&
+        File(audio!.path!).existsSync()) {
+      final maybeData = get(audio.albumId);
+      if (maybeData != null) {
+        final File newFile = await _safeTempCover(maybeData);
+
+        return Uri.file(newFile.path, windows: isWindows);
+      } else {
+        final newData = await getCover(
+          albumId: audio.albumId!,
+          path: audio.path!,
+        );
+        if (newData != null) {
+          final File newFile = await _safeTempCover(newData);
+
+          return Uri.file(newFile.path, windows: isWindows);
+        }
+      }
+    }
+
+    return null;
+  }
+
+  Future<File> _safeTempCover(Uint8List maybeData) async {
+    final workingDir = await getWorkingDir();
+
+    final imagesDir = p.join(workingDir, 'images');
+
+    if (Directory(imagesDir).existsSync()) {
+      Directory(imagesDir).deleteSync(recursive: true);
+    }
+    Directory(imagesDir).createSync();
+    final now = DateTime.now().toUtc().toString().replaceAll(
+      RegExp(r'[^0-9]'),
+      '',
+    );
+    final file = File(p.join(imagesDir, '$now.png'));
+    final newFile = await file.writeAsBytes(maybeData);
+    return newFile;
+  }
 }

@@ -21,10 +21,10 @@ class AppLocalizationsPl extends AppLocalizations {
   String get stop => 'Stop';
 
   @override
-  String get shuffle => 'Shuffle';
+  String get shuffle => 'Losowo';
 
   @override
-  String get repeat => 'Repeat';
+  String get repeat => 'Powtarzaj';
 
   @override
   String get repeatAll => 'Repeat All';
@@ -63,10 +63,10 @@ class AppLocalizationsPl extends AppLocalizations {
   String get removeFromFavorites => 'Remove from favorites';
 
   @override
-  String get share => 'Share';
+  String get share => 'Udostępnij';
 
   @override
-  String get local => 'Local';
+  String get local => 'Lokalne';
 
   @override
   String get localAudio => 'Lokalne pliki audio';
@@ -135,7 +135,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get titles => 'Tytuły';
 
   @override
-  String get description => 'Description';
+  String get description => 'Opis';
 
   @override
   String get artist => 'Artysta';
@@ -312,7 +312,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get station => 'Stacja';
 
   @override
-  String get stations => 'Stations';
+  String get stations => 'Stacje';
 
   @override
   String get country => 'Kraj';
@@ -468,7 +468,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get confirm => 'Confirm';
 
   @override
-  String get confirmation => 'Confirmation';
+  String get confirmation => 'Potwierdzenie';
 
   @override
   String get isMaybeLowBandwidthDialogTitle => 'No WIFI/Ethernet';
@@ -932,7 +932,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get reorder => 'Reorder';
 
   @override
-  String get move => 'Move';
+  String get move => 'Przenieś';
 
   @override
   String get pinAlbum => 'Pin album to sidebar';
@@ -973,7 +973,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get podcastName => 'Podcast name';
 
   @override
-  String get url => 'Url';
+  String get url => 'Adres URL';
 
   @override
   String get loadFromFileOptional => 'Load from file (optional)';
@@ -1040,7 +1040,7 @@ class AppLocalizationsPl extends AppLocalizations {
       'Set playlist name and add more titles later';
 
   @override
-  String get or => 'or';
+  String get or => 'lub';
 
   @override
   String get loadMore => 'Load more';
@@ -1061,7 +1061,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get language => 'Język';
 
   @override
-  String get duration => 'Duration';
+  String get duration => 'Czas trwania';
 
   @override
   String get radioTagDisclaimerTitle => 'This station sends a lot of tags.';
@@ -1190,7 +1190,7 @@ class AppLocalizationsPl extends AppLocalizations {
       'Ta funkcja jest aktualnie niedostępna dla tego systemu operacyjnego.';
 
   @override
-  String get regionNone => 'None';
+  String get regionNone => 'Żaden';
 
   @override
   String get regionAfghanistan => 'Afganistan';
@@ -1202,13 +1202,13 @@ class AppLocalizationsPl extends AppLocalizations {
   String get regionAlbania => 'Albania';
 
   @override
-  String get regionAlgeria => 'Algeria';
+  String get regionAlgeria => 'Algieria';
 
   @override
   String get regionAmericansamoa => 'Americansamoa';
 
   @override
-  String get regionAndorra => 'Andorra';
+  String get regionAndorra => 'Andora';
 
   @override
   String get regionAngolia => 'Angolia';
@@ -1978,7 +1978,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get pinnedAlbums => 'Pinned albums';
 
   @override
-  String get export => 'Export';
+  String get export => 'Eksport';
 
   @override
   String get import => 'Import';
@@ -1998,16 +1998,16 @@ class AppLocalizationsPl extends AppLocalizations {
       'Do you want to reload the local audio directory?';
 
   @override
-  String get external => 'external';
+  String get external => 'zewnętrzne';
 
   @override
   String get externalPlaylist => 'External playlist';
 
   @override
-  String get pictures => 'Pictures';
+  String get pictures => 'Obrazy';
 
   @override
-  String get localPictureTypeOther => 'Other';
+  String get localPictureTypeOther => 'Inne';
 
   @override
   String get localPictureTypeFileIcon32x32 => 'Icon 32x32';
@@ -2037,10 +2037,10 @@ class AppLocalizationsPl extends AppLocalizations {
   String get localPictureTypeConductor => 'Conductor';
 
   @override
-  String get localPictureTypeBandOrchestra => 'Band/Orchestra';
+  String get localPictureTypeBandOrchestra => 'Zespół/Orkiestra';
 
   @override
-  String get localPictureTypeComposer => 'Composer';
+  String get localPictureTypeComposer => 'Kompozytor';
 
   @override
   String get localPictureTypeLyricistTextWriter => 'Lyricist/Text writer';
@@ -2080,7 +2080,7 @@ class AppLocalizationsPl extends AppLocalizations {
       'You can\'t unpin albums without empty album metadata!';
 
   @override
-  String get path => 'Path';
+  String get path => 'Ścieżka';
 
   @override
   String get albumNotFound =>
@@ -2099,7 +2099,7 @@ class AppLocalizationsPl extends AppLocalizations {
       'The provided URL must exist on the radiobrowser server, otherwise it will not be added to you library! Ideally search for them in the radio feature and add them with the star button to your library!';
 
   @override
-  String get disc => 'Disc';
+  String get disc => 'Dysk';
 
   @override
   String get groupAlbumsOnlyByAlbumName => 'Group albums only by album name';

@@ -69,6 +69,12 @@ class _AboutPageState extends State<_AboutPage> {
               FutureBuilder<List<Contributor>>(
                 future: _contributors,
                 builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: Center(child: Text(snapshot.error.toString())),
+                    );
+                  }
                   if (snapshot.hasData) {
                     return SliverPadding(
                       padding: const EdgeInsets.symmetric(
