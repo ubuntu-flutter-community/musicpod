@@ -1,16 +1,12 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 
-import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart' hide PlayerState;
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:path/path.dart' as p;
-import 'package:smtc_windows/smtc_windows.dart';
 import 'package:yaru/yaru.dart';
 
-import '../app_config.dart';
 import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
 import '../common/data/mpv_meta_data.dart';
@@ -20,11 +16,9 @@ import '../common/logging.dart';
 import '../expose/expose_service.dart';
 import '../extensions/media_file_x.dart';
 import '../extensions/string_x.dart';
-import '../extensions/taget_platform_x.dart';
 import '../local_audio/local_cover_service.dart';
 import '../persistence_utils.dart';
 import '../radio/online_art_service.dart';
-import 'player_service_audio_handler.dart';
 
 typedef Queue = ({String name, List<Audio> audios});
 
@@ -49,12 +43,7 @@ class PlayerService {
   VideoController get controller => _controller;
   Player get _player => _controller.player;
 
-  // Native media trays
-  SMTCWindows? _smtc;
-  PlayerServiceAudioHandler? _audioHandler;
-
   // Helper stream subscriptions
-  StreamSubscription<PressedButton>? _smtcSub;
   StreamSubscription<bool>? _isPlayingSub;
   StreamSubscription<Duration>? _durationSub;
   StreamSubscription<Duration>? _positionSub;
@@ -70,8 +59,6 @@ class PlayerService {
 
   /// All stream subscriptions and the initial [PlayerState] are set here
   Future<void> init() async {
-    await _initMediaControl();
-
     _isPlayingSub ??= _player.stream.playing.listen((value) {
       setIsPlaying(value);
     });
@@ -131,9 +118,6 @@ class PlayerService {
   /// All subscriptions, native media trays and the pause timer need to be closed and disposed
   Future<void> dispose() async {
     await _propertiesChangedController.close();
-    await _smtcSub?.cancel();
-    await _smtc?.disableSmtc();
-    await _smtc?.dispose();
     await _isPlayingSub?.cancel();
     await _positionSub?.cancel();
     await _durationSub?.cancel();
@@ -607,218 +591,58 @@ class PlayerService {
     await addLastPosition(_audio!.url!, _position!);
   }
 
-  Future<void> _initMediaControl() async {
-    if (isWindows) {
-      await _initSmtc();
-    } else {
-      await _initAudioService();
-    }
-  }
-
   //
   // Native media trays
   //
 
-  Future<void> _initSmtc() async {
-    await SMTCWindows.initialize();
-    _smtc = SMTCWindows(
-      enabled: true,
-      config: const SMTCConfig(
-        fastForwardEnabled: false,
-        nextEnabled: true,
-        pauseEnabled: true,
-        playEnabled: true,
-        rewindEnabled: false,
-        prevEnabled: true,
-        stopEnabled: false,
-      ),
-    );
+  Future<void>? Function({
+    required bool isPlaying,
+    required AudioType? audioType,
+    required bool queueNotEmpty,
+  })?
+  _onSetMediaControlsIsPlaying;
+  Future<void>? Function({required Audio audio, required Uri? artUri})?
+  _onSetMediaControlsMetaData;
+  Future<void>? Function(Duration? position)? _onSetMediaControlsPosition;
+  Future<void>? Function(Duration? duration)? _onSetMediaControlsDuration;
 
-    _smtcSub = _smtc?.buttonPressStream.listen((event) {
-      switch (event) {
-        case PressedButton.play:
-          playOrPause().then(
-            (_) => _smtc?.setPlaybackStatus(
-              _isPlaying ? PlaybackStatus.playing : PlaybackStatus.paused,
-            ),
-          );
-        case PressedButton.pause:
-          playOrPause().then(
-            (_) => _smtc?.setPlaybackStatus(
-              _isPlaying ? PlaybackStatus.playing : PlaybackStatus.paused,
-            ),
-          );
-        case PressedButton.next:
-          playNext();
-        case PressedButton.previous:
-          playPrevious();
-        default:
-          break;
-      }
-    });
+  void registerMediaControlsCallBacks({
+    required Future<void> onIsPlaying({
+      required bool isPlaying,
+      required AudioType? audioType,
+      required bool queueNotEmpty,
+    }),
+    required Future<void> onSetMetaData({
+      required Audio audio,
+      required Uri? artUri,
+    }),
+    required Future<void> onSetPosition(Duration? position),
+    required Future<void> onSetDuration(Duration? duration)?,
+  }) {
+    _onSetMediaControlsIsPlaying = onIsPlaying;
+    _onSetMediaControlsMetaData = onSetMetaData;
+    _onSetMediaControlsPosition = onSetPosition;
+    _onSetMediaControlsDuration = onSetDuration;
   }
 
-  Future<void> _initAudioService() async {
-    _audioHandler = await AudioService.init(
-      config: AudioServiceConfig(
-        androidNotificationOngoing: false,
-        androidStopForegroundOnPause: false,
-        androidNotificationChannelName: AppConfig.appName,
-        androidNotificationChannelId: isAndroid
-            ? AppConfig.androidChannelId
-            : null,
-        androidNotificationChannelDescription: 'MusicPod Media Controls',
-      ),
-      builder: () {
-        return PlayerServiceAudioHandler(
-          onPlay: playOrPause,
-          onNext: playNext,
-          onPause: pause,
-          onPrevious: playPrevious,
-          onSeek: (position) async {
-            setPosition(position);
-            await seek();
-          },
-        );
-      },
-    );
-  }
-
-  void _setMediaControlPosition(Duration? position) {
-    if (_audioHandler != null) {
-      _audioHandler!.playbackState.add(
-        _audioHandler!.playbackState.value.copyWith(
-          updatePosition: position ?? Duration.zero,
-        ),
+  Future<void> _setMediaControlsIsPlaying(bool playing) async =>
+      await _onSetMediaControlsIsPlaying?.call(
+        isPlaying: playing,
+        audioType: _audio?.audioType,
+        queueNotEmpty: _queue.audios.isNotEmpty,
       );
-    } else if (_smtc != null && position != null) {
-      _smtc?.setPosition(position);
-    }
-  }
 
-  void _setMediaControlDuration(Duration? duration) {
-    if (_audioHandler == null || _audioHandler!.mediaItem.value == null) return;
-    _audioHandler!.mediaItem.add(
-      _audioHandler!.mediaItem.value!.copyWith(duration: duration),
-    );
-  }
+  Future<void> _setMediaControlPosition(Duration? position) async =>
+      await _onSetMediaControlsPosition?.call(position);
+
+  Future<void> _setMediaControlDuration(Duration? duration) async =>
+      await _onSetMediaControlsDuration?.call(duration);
 
   Future<void> _setMediaControlsMetaData({required Audio audio}) async {
-    final artUri = await _createMediaControlsArtUri(audio: audio);
-    _setSmtcMetaData(audio: audio, artUri: artUri);
-    _setAudioServiceMetaData(audio: audio, artUri: artUri);
-  }
-
-  Future<Uri?> _createMediaControlsArtUri({Audio? audio}) async {
-    if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
-      return Uri.tryParse(audio?.imageUrl ?? audio!.albumArtUrl!);
-    } else if (audio?.canHaveLocalCover == true &&
-        File(audio!.path!).existsSync()) {
-      final maybeData = _localCoverService.get(audio.albumId);
-      if (maybeData != null) {
-        final File newFile = await _safeTempCover(maybeData);
-
-        return Uri.file(newFile.path, windows: isWindows);
-      } else {
-        final newData = await _localCoverService.getCover(
-          albumId: audio.albumId!,
-          path: audio.path!,
-        );
-        if (newData != null) {
-          final File newFile = await _safeTempCover(newData);
-
-          return Uri.file(newFile.path, windows: isWindows);
-        }
-      }
-    }
-
-    return null;
-  }
-
-  Future<File> _safeTempCover(Uint8List maybeData) async {
-    final workingDir = await getWorkingDir();
-
-    final imagesDir = p.join(workingDir, 'images');
-
-    if (Directory(imagesDir).existsSync()) {
-      Directory(imagesDir).deleteSync(recursive: true);
-    }
-    Directory(imagesDir).createSync();
-    final now = DateTime.now().toUtc().toString().replaceAll(
-      RegExp(r'[^0-9]'),
-      '',
+    final artUri = await _localCoverService.createMediaControlsArtUri(
+      audio: audio,
     );
-    final file = File(p.join(imagesDir, '$now.png'));
-    final newFile = await file.writeAsBytes(maybeData);
-    return newFile;
-  }
-
-  Future<void> _setMediaControlsIsPlaying(bool playing) async {
-    if (_audioHandler != null) {
-      _audioHandler!.playbackState.add(
-        _audioHandler!.playbackState.value.copyWith(
-          playing: playing,
-          controls: _determineMediaControls(playing),
-          processingState: AudioProcessingState.ready,
-        ),
-      );
-    } else if (_smtc != null) {
-      _smtc!.setPlaybackStatus(
-        playing ? PlaybackStatus.playing : PlaybackStatus.paused,
-      );
-    }
-  }
-
-  List<MediaControl> _determineMediaControls(bool playing) {
-    final showSkipControls =
-        _queue.audios.isNotEmpty && _audio?.audioType != AudioType.radio;
-
-    final showSeekControls =
-        _audio?.audioType == AudioType.podcast && (isMacOS || isAndroid);
-
-    return [
-      if (showSeekControls)
-        MediaControl.rewind
-      else if (showSkipControls)
-        MediaControl.skipToPrevious,
-      playing ? MediaControl.pause : MediaControl.play,
-      if (showSeekControls)
-        MediaControl.fastForward
-      else if (showSkipControls)
-        MediaControl.skipToNext,
-    ];
-  }
-
-  void _setAudioServiceMetaData({required Audio audio, required Uri? artUri}) {
-    if (_audioHandler == null) return;
-    _audioHandler!.mediaItem.add(
-      MediaItem(
-        id: audio.toString(),
-        title: audio.title ?? AppConfig.appTitle,
-        artist: audio.artist ?? '',
-        artUri: artUri,
-        duration: audio.durationMs == null
-            ? null
-            : Duration(milliseconds: audio.durationMs!.toInt()),
-      ),
-    );
-  }
-
-  void _setSmtcMetaData({required Audio audio, required Uri? artUri}) {
-    if (_smtc == null) return;
-    _smtc!.updateMetadata(
-      MusicMetadata(
-        title: audio.title ?? AppConfig.appTitle,
-        album: audio.album,
-        albumArtist: audio.artist,
-        artist: audio.artist ?? '',
-        thumbnail: audio.audioType == AudioType.local
-            ? AppConfig.fallbackThumbnailUrl
-            : artUri == null
-            ? null
-            : '$artUri',
-      ),
-    );
+    await _onSetMediaControlsMetaData?.call(audio: audio, artUri: artUri);
   }
 
   //

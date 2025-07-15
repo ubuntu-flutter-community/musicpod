@@ -36,7 +36,9 @@ class _MusicPodState extends State<MusicPod> {
       return FutureBuilder(
         key: key,
         future: _allReady,
-        builder: (context, snapshot) => snapshot.hasData
+        builder: (context, snapshot) => snapshot.hasError
+            ? SplashScreen(body: Center(child: Text(snapshot.error.toString())))
+            : snapshot.hasData
             ? isLinux
                   ? GtkApplication(
                       onCommandLine: (args) =>

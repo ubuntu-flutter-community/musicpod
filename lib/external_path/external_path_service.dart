@@ -52,29 +52,14 @@ class ExternalPathService {
     return [];
   }
 
-  Future<bool> _androidPermissionsGranted() async {
-    final mediaLibraryIsGranted =
-        (await Permission.mediaLibrary
-                .onDeniedCallback(() {})
-                .onGrantedCallback(() {})
-                .onPermanentlyDeniedCallback(() {})
-                .onRestrictedCallback(() {})
-                .onLimitedCallback(() {})
-                .onProvisionalCallback(() {})
-                .request())
-            .isGranted;
-
-    final manageExternalStorageIsGranted =
-        (await Permission.manageExternalStorage
-                .onDeniedCallback(() {})
-                .onGrantedCallback(() {})
-                .onPermanentlyDeniedCallback(() {})
-                .onRestrictedCallback(() {})
-                .onLimitedCallback(() {})
-                .onProvisionalCallback(() {})
-                .request())
-            .isGranted;
-
-    return mediaLibraryIsGranted && manageExternalStorageIsGranted;
-  }
+  Future<bool> _androidPermissionsGranted() async =>
+      (await Permission.audio
+              .onDeniedCallback(() {})
+              .onGrantedCallback(() {})
+              .onPermanentlyDeniedCallback(() {})
+              .onRestrictedCallback(() {})
+              .onLimitedCallback(() {})
+              .onProvisionalCallback(() {})
+              .request())
+          .isGranted;
 }

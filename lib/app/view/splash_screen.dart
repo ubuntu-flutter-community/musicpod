@@ -8,7 +8,9 @@ import '../../l10n/app_localizations.dart';
 import '../../l10n/l10n.dart';
 
 class SplashScreen extends StatelessWidget {
-  const SplashScreen({super.key});
+  const SplashScreen({super.key, this.body});
+
+  final Widget? body;
 
   @override
   Widget build(BuildContext context) => MaterialApp(
@@ -27,24 +29,26 @@ class SplashScreen extends StatelessWidget {
         border: BorderSide.none,
         backgroundColor: Colors.transparent,
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Image.asset('assets/icon.png', height: 250, width: 250),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: isLinux
-                      ? const YaruCircularProgressIndicator()
-                      : const CircularProgressIndicator.adaptive(),
+      body:
+          body ??
+          Center(
+            child: SingleChildScrollView(
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset('assets/icon.png', height: 250, width: 250),
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: isLinux
+                          ? const YaruCircularProgressIndicator()
+                          : const CircularProgressIndicator.adaptive(),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
     ),
   );
 }

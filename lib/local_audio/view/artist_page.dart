@@ -101,6 +101,9 @@ class _ArtistPageState extends State<ArtistPage> {
       body: FutureBuilder(
         future: _artistAudios,
         builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text(snapshot.error.toString()));
+          }
           if (!snapshot.hasData) {
             return const Center(child: Progress());
           }

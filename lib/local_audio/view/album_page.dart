@@ -68,6 +68,12 @@ class _AlbumPageState extends State<AlbumPage> {
     return FutureBuilder(
       future: _album,
       builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Scaffold(
+            appBar: const HeaderBar(adaptive: true),
+            body: Center(child: Text(snapshot.error.toString())),
+          );
+        }
         if (!snapshot.hasData) {
           return const Scaffold(
             appBar: HeaderBar(adaptive: true),
