@@ -4,6 +4,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../app_config.dart';
+import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
 import '../extensions/taget_platform_x.dart';
 import 'player_service.dart';
@@ -54,7 +55,7 @@ Future<AudioServiceHandler> registerAudioServiceHandler() async {
           );
           return Future.value();
         },
-    onSetMetaData: ({required artUri, required audio}) {
+    onSetMetaData: ({required Uri? artUri, required Audio audio}) {
       audioHandler.mediaItem.add(
         MediaItem(
           id: audio.toString(),
@@ -77,9 +78,12 @@ Future<AudioServiceHandler> registerAudioServiceHandler() async {
       return Future.value();
     },
     onSetDuration: (duration) {
-      audioHandler.mediaItem.add(
-        audioHandler.mediaItem.value!.copyWith(duration: duration),
-      );
+      if (audioHandler.mediaItem.value != null) {
+        audioHandler.mediaItem.add(
+          audioHandler.mediaItem.value!.copyWith(duration: duration),
+        );
+      }
+
       return Future.value();
     },
   );

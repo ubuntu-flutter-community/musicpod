@@ -146,11 +146,16 @@ void registerDependencies() {
     di.registerSingletonAsync<SMTCWindows>(
       registerSMTCWindows,
       dependsOn: [PlayerService],
+      dispose: (s) async {
+        smtcSubscription?.cancel();
+        await s.dispose();
+      },
     );
   } else {
     di.registerSingletonAsync<AudioServiceHandler>(
       registerAudioServiceHandler,
       dependsOn: [PlayerService],
+      dispose: (s) async => s.stop(),
     );
   }
 

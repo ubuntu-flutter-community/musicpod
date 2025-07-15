@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:smtc_windows/smtc_windows.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../app_config.dart';
 import '../common/data/audio_type.dart';
 import 'player_service.dart';
+
+StreamSubscription<PressedButton>? smtcSubscription;
 
 Future<SMTCWindows> registerSMTCWindows() async {
   final playerService = di<PlayerService>();
@@ -22,7 +26,7 @@ Future<SMTCWindows> registerSMTCWindows() async {
     ),
   );
 
-  smtc.buttonPressStream.listen((event) {
+  smtcSubscription = smtc.buttonPressStream.listen((event) {
     switch (event) {
       case PressedButton.play:
         playerService.playOrPause().then(
