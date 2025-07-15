@@ -9,13 +9,13 @@ source-code: https://github.com/ubuntu-flutter-community/musicpod
 icon: snap/gui/musicpod.png
 
 confinement: strict
-base: core24
+base: core22
 grade: stable
 license: GPL-3.0+
 
-platforms:
-  amd64:
-  arm64:
+architectures:
+  - build-on: amd64
+  - build-on: arm64
 
 environment:
   LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/blas:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/lapack:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/caca:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/vdpau:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/mfx
@@ -213,9 +213,9 @@ parts:
   cleanup:
     after: [musicpod, deps]
     plugin: nil
-    build-snaps: [core24, gtk-common-themes, gnome-42-2204]
+    build-snaps: [core22, gtk-common-themes, gnome-42-2204]
     override-prime: |
       set -eux
-      for snap in "core24" "gtk-common-themes" "gnome-42-2204"; do
+      for snap in "core22" "gtk-common-themes" "gnome-42-2204"; do
         cd "/snap/$snap/current" && find . -type f,l -name *.so.* -exec rm -f "$CRAFT_PRIME/{}" \;
       done
