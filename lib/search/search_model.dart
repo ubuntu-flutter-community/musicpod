@@ -270,7 +270,7 @@ class SearchModel extends SafeChangeNotifier {
               (v) => setRadioSearchResult(
                 _searchQuery == null || _searchQuery!.isEmpty
                     ? null
-                    : v?.map((e) => Audio.fromStation(e)).toList(),
+                    : v?.map(Audio.fromStation).toList(),
               ),
             )
             .then((_) => _loading = false),
@@ -278,9 +278,7 @@ class SearchModel extends SafeChangeNotifier {
         await _radioService
             .search(tag: _tag?.name, limit: _radioLimit)
             .then(
-              (v) => setRadioSearchResult(
-                v?.map((e) => Audio.fromStation(e)).toList(),
-              ),
+              (v) => setRadioSearchResult(v?.map(Audio.fromStation).toList()),
             )
             .then((_) => _loading = false),
       SearchType.radioCountry =>
@@ -296,9 +294,7 @@ class SearchModel extends SafeChangeNotifier {
         await _radioService
             .search(language: _language?.name.toLowerCase(), limit: _radioLimit)
             .then(
-              (v) => setRadioSearchResult(
-                v?.map((e) => Audio.fromStation(e)).toList(),
-              ),
+              (v) => setRadioSearchResult(v?.map(Audio.fromStation).toList()),
             )
             .then((_) => _loading = false),
       SearchType.podcastTitle =>
