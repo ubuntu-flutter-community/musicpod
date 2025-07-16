@@ -56,7 +56,7 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
               showSlimTileSubtitle: width >= 900,
               showSecondLineSubTitle: width < 900,
               allowLeadingImage: allowLeadingImage,
-              key: ValueKey(audio.path ?? audio.url),
+              key: ValueKey(audio.path ?? audio.url ?? index),
               audioPageType: audioPageType,
               onSubTitleTap: onSubTitleTab,
               isPlayerPlaying: isPlaying,

@@ -6,11 +6,9 @@ on:
       - main
   workflow_dispatch:
 
-env:
-  FLUTTER_VERSION: '3.32.2'
 
 jobs:
-  release_with_macos_dmg:
+  release:
     permissions:
       contents: write
       pull-requests: write

@@ -37,6 +37,8 @@ class SafeNetworkImage extends StatelessWidget {
   final Map<String, String>? httpHeaders;
   final Function(ImageProvider imageProvider)? onImageLoaded;
 
+  static final List<String> _failedUrls = [];
+
   @override
   Widget build(BuildContext context) {
     final fallBack = Center(
@@ -45,7 +47,11 @@ class SafeNetworkImage extends StatelessWidget {
           Icon(Iconz.musicNote, size: height != null ? height! * 0.7 : null),
     );
 
-    if (url == null) return fallBack;
+    if (url == null ||
+        url!.isEmpty ||
+        _failedUrls.contains(url!) ||
+        (Uri.tryParse(url!)?.host.isEmpty ?? false))
+      return fallBack;
 
     final errorWidget = Center(
       child:
@@ -72,9 +78,18 @@ class SafeNetworkImage extends StatelessWidget {
           );
         },
         errorWidget: (context, url, _) => errorWidget,
-        errorListener: (e) => printMessageInDebugMode(e.toString()),
+        errorListener: (e) {
+          printMessageInDebugMode('Failed to load image: $url');
+          if (url != null) {
+            _failedUrls.add(url!);
+          }
+        },
       );
     } on Exception {
+      printMessageInDebugMode('Failed to load image: $url');
+      if (url != null) {
+        _failedUrls.add(url!);
+      }
       return fallBack;
     }
   }
