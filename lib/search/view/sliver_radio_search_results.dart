@@ -1,4 +1,3 @@
-import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -47,7 +46,6 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
     if (radioSearchResult == null ||
         (searchQuery?.isEmpty == true && radioSearchResult.isEmpty == true)) {
       return SliverNoSearchResultPage(
-        icon: const AnimatedEmoji(AnimatedEmojis.drum),
         message: Text(
           '${context.l10n.search} ${searchType.localize(context.l10n)}',
         ),
@@ -55,7 +53,6 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
     }
     if (radioSearchResult.isEmpty && !loading) {
       return SliverNoSearchResultPage(
-        icon: const AnimatedEmoji(AnimatedEmojis.rabbit),
         message: Text(context.l10n.noStationFound),
       );
     }

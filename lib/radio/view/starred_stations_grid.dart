@@ -1,4 +1,3 @@
-import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -38,7 +37,6 @@ class StarredStationsGrid extends StatelessWidget with WatchItMixin {
             const OpenRadioSearchButton(),
           ],
         ),
-        icon: const AnimatedEmoji(AnimatedEmojis.glowingStar),
       );
     }
 

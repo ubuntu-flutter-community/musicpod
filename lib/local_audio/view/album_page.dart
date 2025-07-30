@@ -1,4 +1,3 @@
-import 'package:animated_emoji/animated_emoji.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
@@ -53,7 +52,6 @@ class _AlbumPageState extends State<AlbumPage> {
         audioPageType: AudioPageType.album,
         audios: cachedAlbum,
         image: AlbumPageImage(audio: cachedAlbum.firstOrNull),
-        noSearchResultIcons: const AnimatedEmoji(AnimatedEmojis.bubbles),
         noSearchResultMessage: Text(context.l10n.albumNotFound),
         pageTitle: cachedAlbum.firstWhereOrNull((e) => e.album != null)?.album,
         pageSubTitle: cachedAlbum
@@ -88,7 +86,6 @@ class _AlbumPageState extends State<AlbumPage> {
           audioPageType: AudioPageType.album,
           audios: album,
           image: AlbumPageImage(audio: album.firstOrNull),
-          noSearchResultIcons: const AnimatedEmoji(AnimatedEmojis.bubbles),
           noSearchResultMessage: Text(context.l10n.albumNotFound),
           pageTitle: album.firstWhereOrNull((e) => e.album != null)?.album,
           pageSubTitle: album.firstWhereOrNull((e) => e.artist != null)?.artist,

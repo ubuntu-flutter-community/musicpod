@@ -1,4 +1,3 @@
-import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -56,11 +55,6 @@ class _SliverPodcastSearchResultsState
 
     if (searchResultItems == null || searchResultItems.isEmpty) {
       return SliverNoSearchResultPage(
-        icon: loading
-            ? const SizedBox.shrink()
-            : searchResultItems == null
-            ? const AnimatedEmoji(AnimatedEmojis.drum)
-            : const AnimatedEmoji(AnimatedEmojis.babyChick),
         message: loading
             ? const Progress()
             : Text(

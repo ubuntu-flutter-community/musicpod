@@ -1,5 +1,3 @@
-import 'package:animated_emoji/emoji.dart';
-import 'package:animated_emoji/emojis.g.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -65,10 +63,7 @@ class _SliverLocalSearchResultState extends State<SliverLocalSearchResult> {
     final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
 
     if (searchQuery == null || searchQuery.isEmpty == true) {
-      return SliverNoSearchResultPage(
-        icon: const AnimatedEmoji(AnimatedEmojis.drum),
-        message: Text(context.l10n.search),
-      );
+      return SliverNoSearchResultPage(message: Text(context.l10n.search));
     }
 
     return LocalAudioBody(
