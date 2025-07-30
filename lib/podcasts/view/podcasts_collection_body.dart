@@ -1,4 +1,3 @@
-import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -89,7 +88,6 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
           ? SliverLoadingGrid(limit: subsLength)
           : (subsLength == 0)
           ? SliverNoSearchResultPage(
-              icon: const AnimatedEmoji(AnimatedEmojis.faceInClouds),
               message: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [

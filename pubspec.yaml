@@ -8,7 +8,6 @@ environment:
   sdk: ">=3.8.0 <4.0.0"
 
 dependencies:
-  animated_emoji: ^3.2.1
   audio_metadata_reader: ^1.4.2
   audio_service: ^0.18.12
   audio_service_mpris:

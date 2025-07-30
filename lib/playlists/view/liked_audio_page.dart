@@ -1,4 +1,3 @@
-import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -47,7 +46,6 @@ class _LikedAudioPageState extends State<LikedAudioPage> {
         pageId: text,
       ),
       noSearchResultMessage: Text(context.l10n.likedSongsSubtitle),
-      noSearchResultIcons: const AnimatedEmoji(AnimatedEmojis.twoHearts),
       audios: _likedAudios,
       audioPageType: AudioPageType.likedAudio,
       pageId: PageIDs.likedAudios,

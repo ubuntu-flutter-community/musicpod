@@ -1,8 +1,8 @@
-import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
+import 'ui_constants.dart';
 
 class NoSearchResultPage extends StatelessWidget {
   const NoSearchResultPage({super.key, this.message, this.icon});
@@ -33,14 +33,13 @@ class NoSearchResultPage extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                icon ?? const AnimatedEmoji(AnimatedEmojis.thinkingFace),
-                const SizedBox(height: 10),
                 message ??
                     Text(
                       context.l10n.nothingFound,
                       style: style,
                       textAlign: TextAlign.center,
                     ),
+                const SizedBox(height: kLargestSpace),
               ],
             ),
           ),

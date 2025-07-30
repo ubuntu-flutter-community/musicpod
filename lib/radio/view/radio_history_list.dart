@@ -1,4 +1,3 @@
-import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -34,7 +33,6 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin {
 
     if (length == 0) {
       return NoSearchResultPage(
-        icon: emptyIcon ?? const AnimatedEmoji(AnimatedEmojis.crystalBall),
         message: emptyMessage ?? Text(context.l10n.emptyHearingHistory),
       );
     }
@@ -102,7 +100,6 @@ class SliverRadioHistoryList extends StatelessWidget with WatchItMixin {
     if (length == 0) {
       return SliverToBoxAdapter(
         child: NoSearchResultPage(
-          icon: emptyIcon ?? const AnimatedEmoji(AnimatedEmojis.crystalBall),
           message: emptyMessage ?? Text(context.l10n.emptyHearingHistory),
         ),
       );

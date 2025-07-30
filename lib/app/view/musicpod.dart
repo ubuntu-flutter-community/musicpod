@@ -30,24 +30,18 @@ class _MusicPodState extends State<MusicPod> {
   }
 
   @override
-  Widget build(BuildContext context) => ValueListenableBuilder(
-    valueListenable: appRestartNotifier,
-    builder: (context, key, child) {
-      return FutureBuilder(
-        key: key,
-        future: _allReady,
-        builder: (context, snapshot) => snapshot.hasError
-            ? SplashScreen(body: Center(child: Text(snapshot.error.toString())))
-            : snapshot.hasData
-            ? isLinux
-                  ? GtkApplication(
-                      onCommandLine: (args) =>
-                          di<PlayerService>().playPath(args.firstOrNull),
-                      child: const YaruMusicPodApp(),
-                    )
-                  : const MaterialMusicPodApp()
-            : const SplashScreen(),
-      );
-    },
+  Widget build(BuildContext context) => FutureBuilder(
+    future: _allReady,
+    builder: (context, snapshot) => snapshot.hasError
+        ? SplashScreen(body: Center(child: Text(snapshot.error.toString())))
+        : snapshot.hasData
+        ? isLinux
+              ? GtkApplication(
+                  onCommandLine: (args) =>
+                      di<PlayerService>().playPath(args.firstOrNull),
+                  child: const YaruMusicPodApp(),
+                )
+              : const MaterialMusicPodApp()
+        : const SplashScreen(),
   );
 }

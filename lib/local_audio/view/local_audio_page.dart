@@ -1,4 +1,3 @@
-import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -86,7 +85,6 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
         contentBuilder: (context, constraints) =>
             audios != null && audios.isEmpty
             ? SliverNoSearchResultPage(
-                icon: const AnimatedEmoji(AnimatedEmojis.bird),
                 message: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
