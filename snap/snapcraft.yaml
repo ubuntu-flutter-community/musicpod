@@ -9,16 +9,22 @@ source-code: https://github.com/ubuntu-flutter-community/musicpod
 icon: snap/gui/musicpod.png
 
 confinement: strict
-base: core22
+base: core24
 grade: stable
 license: GPL-3.0+
 
-architectures:
-  - build-on: amd64
-  - build-on: arm64
+platforms:
+  amd64:
+  arm64:
+
+layout:
+  /usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/alsa-lib:
+    bind: $SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/alsa-lib
+  /usr/share/alsa:
+    bind: $SNAP/gnome-platform/usr/share/alsa
 
 environment:
-  LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/blas:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/lapack:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/caca:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/vdpau:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/mfx
+  LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/caca:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/vdpau:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/mfx:$SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR:$SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/blas:$SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/lapack
 
 apps:
   musicpod:
@@ -42,7 +48,7 @@ slots:
 parts:
   mpv:
     source: https://github.com/mpv-player/mpv.git
-    source-tag: "v0.36.0"
+    source-tag: "v0.40.0"
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -57,6 +63,7 @@ parts:
       - libvorbis-dev
       - libjpeg-turbo8-dev
       - libasound2-dev
+      - libplacebo-dev
     prime:
       - usr/lib/*/libmpv*
 
@@ -85,7 +92,7 @@ parts:
     source-type: git
     plugin: nil
     build-environment:
-      - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET:/snap/gnome-42-2204-sdk/current/lib/$CRAFT_ARCH_TRIPLET:/snap/gnome-42-2204-sdk/current/usr/lib/$CRAFT_ARCH_TRIPLET:/snap/gnome-42-2204-sdk/current/usr/lib:/snap/gnome-42-2204-sdk/current/usr/lib/vala-current:/snap/gnome-42-2204-sdk/current/usr/lib/$CRAFT_ARCH_TRIPLET/pulseaudio${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+      - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR:/snap/gnome-46-2404-sdk/current/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR:/snap/gnome-46-2404-sdk/current/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR:/snap/gnome-46-2404-sdk/current/usr/lib:/snap/gnome-46-2404-sdk/current/usr/lib/vala-current:/snap/gnome-46-2404-sdk/current/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pulseaudio${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
     override-build: |
       set -eux
       curl https://sh.rustup.rs -sSf | sh -s -- -y
@@ -106,7 +113,7 @@ parts:
       - libbluray2
       - libbs2b0
       - libchromaprint1
-      - libcodec2-1.0
+      - libcodec2-1.2
       - libflite1
       - libgme0
       - libgsm1
@@ -139,12 +146,13 @@ parts:
       - libzimg2
       - libzmq5
       - libzvbi0
-      - libavfilter7
-      - libavformat58
-      - libpostproc55
-      - libswscale5
-      - libsrt1.4-gnutls
+      - libavfilter9
+      - libavformat60
+      - libpostproc57
+      - libswscale7
+      - libsrt1.5-gnutls
       - ocl-icd-libopencl1
+      - libplacebo338
       - on amd64:
           - libmfx1
     prime:
@@ -207,15 +215,22 @@ parts:
       - usr/lib/*/libavcodec.so*
       - usr/lib/*/libavutil.so*
       - usr/lib/*/libswresample.so*
+      - usr/lib/*/libplacebo.so*
+      - usr/lib/*/libunibreak.so.*
+      - usr/lib/*/libblas.so.*
+      - usr/lib/*/liblapack.so.*
+      - usr/lib/*/libfftw3.so.*
+      - usr/lib/*/libsamplerate.so.*
+      - usr/lib/*/libzix-0.so.*
 
   # Find files provided by the base and platform snap and ensure they aren't
   # duplicated in this snap
   cleanup:
     after: [musicpod, deps]
     plugin: nil
-    build-snaps: [core22, gtk-common-themes, gnome-42-2204]
+    build-snaps: [core24, gtk-common-themes, gnome-46-2404, mesa-2404]
     override-prime: |
       set -eux
-      for snap in "core22" "gtk-common-themes" "gnome-42-2204"; do
+      for snap in "core24" "gtk-common-themes" "gnome-46-2404" "mesa-2404"; do
         cd "/snap/$snap/current" && find . -type f,l -name *.so.* -exec rm -f "$CRAFT_PRIME/{}" \;
       done
