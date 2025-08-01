@@ -17,8 +17,14 @@ platforms:
   amd64:
   arm64:
 
+layout:
+  /usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/alsa-lib:
+    bind: $SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/alsa-lib
+  /usr/share/alsa:
+    bind: $SNAP/gnome-platform/usr/share/alsa
+
 environment:
-  LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/blas:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/lapack:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/caca:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/vdpau:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/mfx
+  LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/caca:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/vdpau:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/mfx:$SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR:$SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/blas:$SNAP/gnome-platform/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/lapack
 
 apps:
   musicpod:
@@ -42,7 +48,7 @@ slots:
 parts:
   mpv:
     source: https://github.com/mpv-player/mpv.git
-    source-tag: "v0.36.0"
+    source-tag: "v0.40.0"
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -57,6 +63,7 @@ parts:
       - libvorbis-dev
       - libjpeg-turbo8-dev
       - libasound2-dev
+      - libplacebo-dev
     prime:
       - usr/lib/*/libmpv*
 
@@ -145,6 +152,7 @@ parts:
       - libswscale7
       - libsrt1.5-gnutls
       - ocl-icd-libopencl1
+      - libplacebo338
       - on amd64:
           - libmfx1
     prime:
@@ -207,6 +215,13 @@ parts:
       - usr/lib/*/libavcodec.so*
       - usr/lib/*/libavutil.so*
       - usr/lib/*/libswresample.so*
+      - usr/lib/*/libplacebo.so*
+      - usr/lib/*/libunibreak.so.*
+      - usr/lib/*/libblas.so.*
+      - usr/lib/*/liblapack.so.*
+      - usr/lib/*/libfftw3.so.*
+      - usr/lib/*/libsamplerate.so.*
+      - usr/lib/*/libzix-0.so.*
 
   # Find files provided by the base and platform snap and ensure they aren't
   # duplicated in this snap
