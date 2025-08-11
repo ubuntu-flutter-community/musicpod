@@ -10,7 +10,7 @@ jobs:
   build_and_release_linux_snap_edge_amd64:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 5
       - run: echo ${{ vars.FORCED_UPDATE_THRESHOLD }} > forced_update.txt
@@ -29,7 +29,7 @@ jobs:
   build_and_release_linux_snap_edge_arm64:
     runs-on: ubuntu-24.04-arm
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 5
       - run: echo ${{ vars.FORCED_UPDATE_THRESHOLD }} > forced_update.txt
