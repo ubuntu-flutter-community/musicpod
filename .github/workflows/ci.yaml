@@ -9,7 +9,7 @@ jobs:
   analyze:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: kuhnroyal/flutter-fvm-config-action/setup@v3
       - run: flutter pub get
       - run: flutter analyze --fatal-infos
@@ -17,7 +17,7 @@ jobs:
   format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: kuhnroyal/flutter-fvm-config-action/setup@v3
       - run: flutter pub get
       - run: dart format --set-exit-if-changed .
@@ -25,14 +25,14 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: kuhnroyal/flutter-fvm-config-action/setup@v3
       - run: flutter test
 
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: kuhnroyal/flutter-fvm-config-action/setup@v3
       - run: sudo apt update
       - run: sudo apt install -y clang cmake curl libgtk-3-dev ninja-build pkg-config unzip libunwind-dev libmpv-dev
