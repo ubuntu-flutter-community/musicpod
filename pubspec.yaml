@@ -83,7 +83,7 @@ dependencies:
   watch_it: ^1.5.0
   watcher: ^1.1.1
   win32: ^5.5.4
-  window_manager: ^0.4.2
+  window_manager: ^0.5.0
   xdg_directories: ^1.0.4
   yaru:
     git:
