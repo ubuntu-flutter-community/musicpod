@@ -121,18 +121,18 @@ void registerDependencies() {
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton(LocalCoverService.new, dispose: (s) => s.dispose())
+    ..registerLazySingleton<VideoController>(() {
+      MediaKit.ensureInitialized();
+      return VideoController(
+        Player(
+          configuration: const PlayerConfiguration(title: AppConfig.appTitle),
+        ),
+      );
+    }, dispose: (s) => s.player.dispose())
     ..registerSingletonAsync<PlayerService>(
       () async {
-        MediaKit.ensureInitialized();
         final playerService = PlayerService(
-          onlineArtService: di<OnlineArtService>(),
-          controller: VideoController(
-            Player(
-              configuration: const PlayerConfiguration(
-                title: AppConfig.appTitle,
-              ),
-            ),
-          ),
+          controller: di<VideoController>(),
           exposeService: di<ExposeService>(),
           localCoverService: di<LocalCoverService>(),
         );
@@ -197,11 +197,19 @@ void registerDependencies() {
       dependsOn: [SettingsService, LibraryService],
     )
     ..registerLazySingleton<Connectivity>(() => Connectivity())
-    ..registerSingletonAsync<RadioService>(() async {
-      final s = RadioService();
-      await s.init();
-      return s;
-    }, dispose: (s) => s.dispose())
+    ..registerSingletonAsync<RadioService>(
+      () async {
+        final s = RadioService(
+          playerService: di<PlayerService>(),
+          onlineArtService: di<OnlineArtService>(),
+          exposeService: di<ExposeService>(),
+        );
+        await s.init();
+        return s;
+      },
+      dispose: (s) => s.dispose(),
+      dependsOn: [PlayerService, ExposeService],
+    )
     ..registerLazySingleton<GitHub>(() => GitHub())
     ..registerSingletonAsync<ConnectivityModel>(() async {
       final connectivityModel = ConnectivityModel(
@@ -276,8 +284,11 @@ void registerDependencies() {
       dispose: (s) => s.dispose(),
     )
     ..registerSingletonWithDependencies<RadioModel>(
-      () => RadioModel(radioService: di<RadioService>()),
-      dependsOn: [RadioService],
+      () => RadioModel(
+        radioService: di<RadioService>(),
+        playerService: di<PlayerService>(),
+      ),
+      dependsOn: [RadioService, PlayerService],
       dispose: (s) => s.dispose(),
     )
     ..registerSingletonWithDependencies<DownloadModel>(

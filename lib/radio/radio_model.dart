@@ -3,15 +3,21 @@ import 'dart:async';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
+import '../common/data/mpv_meta_data.dart';
 import '../l10n/app_localizations.dart';
+import '../player/player_service.dart';
 import 'radio_service.dart';
 
 class RadioModel extends SafeChangeNotifier {
   final RadioService _radioService;
+  final PlayerService _playerService;
   StreamSubscription<bool>? _propertiesChangedSub;
 
-  RadioModel({required RadioService radioService})
-    : _radioService = radioService {
+  RadioModel({
+    required RadioService radioService,
+    required PlayerService playerService,
+  }) : _radioService = radioService,
+       _playerService = playerService {
     _propertiesChangedSub ??= _radioService.propertiesChanged.listen(
       (_) => notifyListeners(),
     );
@@ -34,6 +40,25 @@ class RadioModel extends SafeChangeNotifier {
     _radioCollectionView = value;
     notifyListeners();
   }
+
+  MpvMetaData? get mpvMetaData => _radioService.mpvMetaData;
+
+  void setDataSafeMode(bool value) => _radioService.setDataSafeMode(value);
+  bool get dataSafeMode => _radioService.dataSafeMode;
+
+  int getRadioHistoryLength({String? filter}) =>
+      filteredRadioHistory(filter: filter).length;
+  MpvMetaData? getMetadata(String? icyTitle) =>
+      icyTitle == null ? null : _radioService.radioHistory[icyTitle];
+
+  Iterable<MapEntry<String, MpvMetaData>> filteredRadioHistory({
+    required String? filter,
+  }) => _radioService.filteredRadioHistory(filter: filter);
+
+  String getRadioHistoryList({String? filter}) =>
+      _radioService.getRadioHistoryList(filter: filter);
+
+  void setTimer(Duration duration) => _playerService.setPauseTimer(duration);
 
   @override
   Future<void> dispose() async {

@@ -5,7 +5,6 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
-import '../common/data/mpv_meta_data.dart';
 import '../radio/online_art_service.dart';
 import 'player_service.dart';
 
@@ -35,7 +34,6 @@ class PlayerModel extends SafeChangeNotifier {
 
   List<Audio> get queue => _playerService.queue.audios;
   void clearQueue() => _playerService.clearQueue();
-  MpvMetaData? get mpvMetaData => _playerService.mpvMetaData;
 
   Audio? get audio => _playerService.audio;
 
@@ -127,32 +125,7 @@ class PlayerModel extends SafeChangeNotifier {
   Future<void> removeLastPositions(List<Audio> audios) =>
       _playerService.removeLastPositions(audios);
 
-  int getRadioHistoryLength({String? filter}) =>
-      filteredRadioHistory(filter: filter).length;
-  MpvMetaData? getMetadata(String? icyTitle) =>
-      icyTitle == null ? null : _playerService.radioHistory[icyTitle];
-
-  Iterable<MapEntry<String, MpvMetaData>> filteredRadioHistory({
-    required String? filter,
-  }) {
-    return _playerService.radioHistory.entries.where(
-      (e) => filter == null
-          ? true
-          : e.value.icyName.contains(filter) ||
-                filter.contains(e.value.icyName),
-    );
-  }
-
-  String getRadioHistoryList({String? filter}) {
-    return filteredRadioHistory(
-      filter: filter,
-    ).map((e) => '${e.value.icyTitle}\n').toList().reversed.join();
-  }
-
   void setTimer(Duration duration) => _playerService.setPauseTimer(duration);
-
-  void setDataSafeMode(bool value) => _playerService.setDataSafeMode(value);
-  bool get dataSafeMode => _playerService.dataSafeMode;
 
   @override
   Future<void> dispose() async {

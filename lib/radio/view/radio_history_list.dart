@@ -4,7 +4,7 @@ import 'package:watch_it/watch_it.dart';
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../l10n/l10n.dart';
-import '../../player/player_model.dart';
+import '../radio_model.dart';
 import 'radio_history_tile.dart';
 
 class RadioHistoryList extends StatelessWidget with WatchItMixin {
@@ -26,10 +26,10 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final length = watchPropertyValue(
-      (PlayerModel m) => m.getRadioHistoryLength(filter: filter),
+      (RadioModel m) => m.getRadioHistoryLength(filter: filter),
     );
 
-    final current = watchPropertyValue((PlayerModel m) => m.mpvMetaData);
+    final current = watchPropertyValue((RadioModel m) => m.mpvMetaData);
 
     if (length == 0) {
       return NoSearchResultPage(
@@ -46,7 +46,7 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin {
             itemCount: length,
             itemBuilder: (context, index) {
               final reversedIndex = length - index - 1;
-              final e = di<PlayerModel>()
+              final e = di<RadioModel>()
                   .filteredRadioHistory(filter: filter)
                   .elementAt(reversedIndex);
               return simpleList
@@ -92,10 +92,10 @@ class SliverRadioHistoryList extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final length = watchPropertyValue(
-      (PlayerModel m) => m.getRadioHistoryLength(filter: filter),
+      (RadioModel m) => m.getRadioHistoryLength(filter: filter),
     );
 
-    final current = watchPropertyValue((PlayerModel m) => m.mpvMetaData);
+    final current = watchPropertyValue((RadioModel m) => m.mpvMetaData);
 
     if (length == 0) {
       return SliverToBoxAdapter(
@@ -108,7 +108,7 @@ class SliverRadioHistoryList extends StatelessWidget with WatchItMixin {
     return SliverList(
       delegate: SliverChildBuilderDelegate((context, index) {
         final reversedIndex = length - index - 1;
-        final e = di<PlayerModel>()
+        final e = di<RadioModel>()
             .filteredRadioHistory(filter: filter)
             .elementAt(reversedIndex);
         return RadioHistoryTile(
