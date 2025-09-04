@@ -5,7 +5,7 @@ import 'package:watch_it/watch_it.dart';
 import '../../app/connectivity_model.dart';
 import '../../extensions/connectivity_x.dart';
 import '../../l10n/l10n.dart';
-import '../../player/player_model.dart';
+import '../../radio/radio_model.dart';
 import '../../settings/settings_model.dart';
 import 'confirm.dart';
 
@@ -33,7 +33,7 @@ class DataSafeModeDialog extends StatelessWidget with WatchItMixin {
             ? l10n.isBackInWifiDialogBody
             : l10n.isMaybeLowBandwidthDialogBody,
       ),
-      onConfirm: () => di<PlayerModel>().setDataSafeMode(!isEthernetOrWifi),
+      onConfirm: () => di<RadioModel>().setDataSafeMode(!isEthernetOrWifi),
       cancelLabel: l10n.stopToNotifyAboutDataSafeMode,
       onCancel: () {
         di<SettingsModel>().setNotifyDataSafeMode(false);

@@ -2,10 +2,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:musicpod/common/data/audio.dart';
 import 'package:musicpod/radio/radio_service.dart';
 
+import 'radio_service_test.mocks.dart';
+
 const Audio sixFortyStation = Audio(url: 'http://radio.6forty.com:8000/6forty');
 
 Future<void> main() async {
-  final service = RadioService();
+  final service = RadioService(
+    playerService: MockPlayerService(),
+    exposeService: MockExposeService(),
+    onlineArtService: MockOnlineArtService(),
+  );
   String? host;
   setUp(() async {
     await service.init();

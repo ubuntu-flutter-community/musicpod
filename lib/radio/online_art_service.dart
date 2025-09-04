@@ -4,8 +4,8 @@ import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-import '../common/logging.dart';
 import '../app_config.dart';
+import '../common/logging.dart';
 import '../extensions/string_x.dart';
 
 const _kMusicBrainzAddress = 'https://musicbrainz.org/ws/2/recording/';
@@ -26,6 +26,14 @@ class OnlineArtService {
   Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
   final _errorController = StreamController<String?>.broadcast();
   Stream<String?> get error => _errorController.stream;
+
+  bool _dataSafeMode = false;
+  bool get dataSafeMode => _dataSafeMode;
+  void setDataSafeMode(bool value) {
+    if (value == _dataSafeMode) return;
+    _dataSafeMode = value;
+    _propertiesChangedController.add(true);
+  }
 
   Future<String?> fetchAlbumArt(String icyTitle) async {
     _errorController.add(null);

@@ -8,8 +8,8 @@ import '../../common/view/safe_network_image.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
-import '../../player/player_model.dart';
 import '../online_art_model.dart';
+import '../radio_model.dart';
 
 class RadioHistoryTileImage extends StatelessWidget with WatchItMixin {
   const RadioHistoryTileImage({
@@ -39,7 +39,7 @@ class RadioHistoryTileImage extends StatelessWidget with WatchItMixin {
         child: InkWell(
           borderRadius: bR,
           onTap: () {
-            final metadata = di<PlayerModel>().getMetadata(icyTitle);
+            final metadata = di<RadioModel>().getMetadata(icyTitle);
             if (metadata == null) return;
             showModal(
               mode: ModalMode.platformModalMode,

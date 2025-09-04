@@ -7,6 +7,7 @@ import 'dart:async' as _i3;
 import 'dart:typed_data' as _i4;
 
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:musicpod/common/data/audio.dart' as _i5;
 import 'package:musicpod/local_audio/local_cover_service.dart' as _i2;
 
 // ignore_for_file: type=lint
@@ -22,6 +23,7 @@ import 'package:musicpod/local_audio/local_cover_service.dart' as _i2;
 // ignore_for_file: unnecessary_parenthesis
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
+// ignore_for_file: invalid_use_of_internal_member
 
 /// A class which mocks [LocalCoverService].
 ///
@@ -68,4 +70,12 @@ class MockLocalCoverService extends _i1.Mock implements _i2.LocalCoverService {
             returnValueForMissingStub: _i3.Future<void>.value(),
           )
           as _i3.Future<void>);
+
+  @override
+  _i3.Future<Uri?> createMediaControlsArtUri({_i5.Audio? audio}) =>
+      (super.noSuchMethod(
+            Invocation.method(#createMediaControlsArtUri, [], {#audio: audio}),
+            returnValue: _i3.Future<Uri?>.value(),
+          )
+          as _i3.Future<Uri?>);
 }

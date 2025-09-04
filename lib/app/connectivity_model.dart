@@ -9,8 +9,8 @@ import '../common/data/audio_type.dart';
 import '../common/view/snackbars.dart';
 import '../extensions/connectivity_x.dart';
 import '../l10n/l10n.dart';
-import '../player/player_model.dart';
 import '../player/player_service.dart';
+import '../radio/radio_model.dart';
 import '../settings/settings_model.dart';
 
 class ConnectivityModel extends SafeChangeNotifier {
@@ -69,18 +69,18 @@ void onConnectivityChangedHandler(
   void Function() cancel,
 ) {
   final l10n = context.l10n;
-  final dataSafeMode = di<PlayerModel>().dataSafeMode;
+  final dataSafeMode = di<RadioModel>().dataSafeMode;
   final notifyDataSafeMode = di<SettingsModel>().notifyDataSafeMode;
   if (!res.hasData || !context.mounted || !notifyDataSafeMode) {
     return;
   }
 
   if (!dataSafeMode && di<Connectivity>().isNotWifiNorEthernet(res.data)) {
-    di<PlayerModel>().setDataSafeMode(true);
+    di<RadioModel>().setDataSafeMode(true);
     showSnackBar(context: context, content: Text(l10n.dataSafeModeEnabled));
   } else if (dataSafeMode &&
       !di<Connectivity>().isNotWifiNorEthernet(res.data)) {
-    di<PlayerModel>().setDataSafeMode(false);
+    di<RadioModel>().setDataSafeMode(false);
     showSnackBar(context: context, content: Text(l10n.dataSafeModeDisabled));
   }
 }

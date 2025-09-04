@@ -13,10 +13,10 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
-import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../settings/settings_model.dart';
 import '../online_art_model.dart';
+import '../radio_model.dart';
 import 'radio_history_tile_image.dart';
 import 'station_page.dart';
 
@@ -44,7 +44,7 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final icyName = di<PlayerModel>().getMetadata(icyTitle)?.icyName;
+    final icyName = di<RadioModel>().getMetadata(icyTitle)?.icyName;
     final useYaruTheme = watchPropertyValue(
       (SettingsModel m) => m.useYaruTheme,
     );
@@ -69,7 +69,7 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
           tooltip: context.l10n.metadata,
           onPressed: () {
             final imageUrl = di<OnlineArtModel>().getCover(icyTitle);
-            final metadata = di<PlayerModel>().getMetadata(icyTitle);
+            final metadata = di<RadioModel>().getMetadata(icyTitle);
             if (metadata == null) return;
 
             showModal(
@@ -142,8 +142,7 @@ class _SimpleRadioHistoryTile extends StatelessWidget {
         ),
       ),
       subtitle: Text(
-        di<PlayerModel>().getMetadata(icyTitle)?.icyName ??
-            context.l10n.station,
+        di<RadioModel>().getMetadata(icyTitle)?.icyName ?? context.l10n.station,
       ),
     );
   }

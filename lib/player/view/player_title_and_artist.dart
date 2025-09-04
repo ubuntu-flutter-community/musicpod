@@ -16,6 +16,7 @@ import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../podcasts/podcast_model.dart';
 import '../../podcasts/view/lazy_podcast_page.dart';
+import '../../radio/radio_model.dart';
 import '../../radio/view/station_page.dart';
 import '../../settings/settings_model.dart';
 import '../player_model.dart';
@@ -33,7 +34,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
 
     final icyTitle = watchPropertyValue(
-      (PlayerModel m) => m.mpvMetaData?.icyTitle,
+      (RadioModel m) => m.mpvMetaData?.icyTitle,
     );
     final showPositionDuration = watchPropertyValue(
       (SettingsModel m) => m.showPositionDuration,
