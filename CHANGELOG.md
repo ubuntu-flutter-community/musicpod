@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.14.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.13.0...v2.14.0) (2025-09-05)
+
+
+### Features
+
+* Translated using Weblate (Polish) ([#1335](https://github.com/ubuntu-flutter-community/musicpod/issues/1335)) ([61d6ee3](https://github.com/ubuntu-flutter-community/musicpod/commit/61d6ee303f8bd1142e07533277cc5205ccf15a98))
+* Translated using Weblate (Portuguese) ([#1351](https://github.com/ubuntu-flutter-community/musicpod/issues/1351)) ([ee21426](https://github.com/ubuntu-flutter-community/musicpod/commit/ee2142663d4a45edd724c5a66dfc487e1921b97f))
+* Translations update from Hosted Weblate ([#1337](https://github.com/ubuntu-flutter-community/musicpod/issues/1337)) ([9bad2cd](https://github.com/ubuntu-flutter-community/musicpod/commit/9bad2cde17dfb4d1486581e09883df867d9e88c9))
+* Updated to core24 and updated mpv to 0.40.0 ([#1349](https://github.com/ubuntu-flutter-community/musicpod/issues/1349)) ([41a17b9](https://github.com/ubuntu-flutter-community/musicpod/commit/41a17b99de6a963b4039a7606b2e5a353e2e823c))
+
+
+### Bug Fixes
+
+* attempt to fix flicker on some setups ([#1344](https://github.com/ubuntu-flutter-community/musicpod/issues/1344)) ([a1abb7b](https://github.com/ubuntu-flutter-community/musicpod/commit/a1abb7bbe4d15956752317a25e7a2031548c10a7))
+* **deps:** update dependency window_manager to ^0.5.0 ([#1326](https://github.com/ubuntu-flutter-community/musicpod/issues/1326)) ([583e4ce](https://github.com/ubuntu-flutter-community/musicpod/commit/583e4ce7ee5574d46bc3fa81388805ad471edd23))
+
 ## [2.13.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.12.0...v2.13.0) (2025-06-12)
 
 
