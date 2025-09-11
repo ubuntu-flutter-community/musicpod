@@ -18,7 +18,7 @@ dependencies:
   blur: ^4.0.2
   cached_network_image: ^3.4.1
   collection: ^1.18.0
-  connectivity_plus: ^6.0.5
+  connectivity_plus: ^7.0.0
   cupertino_icons: ^1.0.8
   desktop_notifications: ^0.6.3
   dio: ^5.7.0
