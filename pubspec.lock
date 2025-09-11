@@ -150,10 +150,10 @@ packages:
     dependency: transitive
     description:
       name: build_cli_annotations
-      sha256: b59d2769769efd6c9ff6d4c4cede0be115a566afc591705c2040b707534b1172
+      sha256: e563c2e01de8974566a1998410d3f6f03521788160a02503b0b1f1a46c7b3d95
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "2.1.1"
   build_config:
     dependency: transitive
     description:
@@ -170,30 +170,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.4"
-  build_resolvers:
-    dependency: transitive
-    description:
-      name: build_resolvers
-      sha256: "065445f16bde0abf5dab8ff20dcc6773125fe387a128cb175f77df756910b452"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.4"
   build_runner:
     dependency: "direct dev"
     description:
       name: build_runner
-      sha256: b1c7d812e9dd647d8dec0dc1041ec549f7bc2270d60cd1f8ec13f206c10227f8
+      sha256: "804c47c936df75e1911c19a4fb8c46fa8ff2b3099b9f2b2aa4726af3774f734b"
       url: "https://pub.dev"
     source: hosted
-    version: "2.7.2"
-  build_runner_core:
-    dependency: transitive
-    description:
-      name: build_runner_core
-      sha256: "59dc22b9724207519e6c8790fa706d7517dd8cff2d0d55da439c5ce7285200c9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "9.3.2"
+    version: "2.8.0"
   built_collection:
     dependency: transitive
     description:
@@ -206,10 +190,10 @@ packages:
     dependency: transitive
     description:
       name: built_value
-      sha256: "1b3b173f3379c8f941446267868548b6fc67e9134d81f4842eb98bb729451359"
+      sha256: a30f0a0e38671e89a492c44d005b5545b830a961575bbd8336d42869ff71066d
       url: "https://pub.dev"
     source: hosted
-    version: "8.11.2"
+    version: "8.12.0"
   cached_network_image:
     dependency: "direct main"
     description:
@@ -278,10 +262,10 @@ packages:
     dependency: transitive
     description:
       name: code_builder
-      sha256: "0ec10bf4a89e4c613960bf1e8b42c64127021740fb21640c29c909826a5eea3e"
+      sha256: "11654819532ba94c34de52ff5feb52bd81cba1de00ef2ed622fd50295f9d4243"
       url: "https://pub.dev"
     source: hosted
-    version: "4.10.1"
+    version: "4.11.0"
   collection:
     dependency: "direct main"
     description:
@@ -294,10 +278,10 @@ packages:
     dependency: "direct main"
     description:
       name: connectivity_plus
-      sha256: b5e72753cf63becce2c61fd04dfe0f1c430cc5278b53a1342dc5ad839eab29ec
+      sha256: "33bae12a398f841c6cda09d1064212957265869104c478e5ad51e2fb26c3973c"
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.5"
+    version: "7.0.0"
   connectivity_plus_platform_interface:
     dependency: transitive
     description:
@@ -438,10 +422,10 @@ packages:
     dependency: "direct main"
     description:
       name: file_picker
-      sha256: e7e16c9d15c36330b94ca0e2ad8cb61f93cd5282d0158c09805aed13b5452f22
+      sha256: f2d9f173c2c14635cc0e9b14c143c49ef30b4934e8d1d274d6206fcb0086a06f
       url: "https://pub.dev"
     source: hosted
-    version: "10.3.2"
+    version: "10.3.3"
   file_selector:
     dependency: "direct main"
     description:
@@ -802,10 +786,10 @@ packages:
     dependency: transitive
     description:
       name: leak_tracker
-      sha256: "8dcda04c3fc16c14f48a7bb586d4be1f0d1572731b6d81d51772ef47c02081e0"
+      sha256: "33e2e26bdd85a0112ec15400c8cbffea70d0f9c3407491f672a2fad47915e2de"
       url: "https://pub.dev"
     source: hosted
-    version: "11.0.1"
+    version: "11.0.2"
   leak_tracker_flutter_testing:
     dependency: transitive
     description:
@@ -898,8 +882,8 @@ packages:
     dependency: "direct main"
     description:
       path: media_kit
-      ref: d544e1c52db47a45097a8332a862687c832359d9
-      resolved-ref: d544e1c52db47a45097a8332a862687c832359d9
+      ref: c9617f570b8c0ba02857e721997f78c053a856c1
+      resolved-ref: c9617f570b8c0ba02857e721997f78c053a856c1
       url: "https://github.com/media-kit/media-kit"
     source: git
     version: "1.2.0"
@@ -939,8 +923,8 @@ packages:
     dependency: "direct main"
     description:
       path: "libs/universal/media_kit_libs_video"
-      ref: d544e1c52db47a45097a8332a862687c832359d9
-      resolved-ref: d544e1c52db47a45097a8332a862687c832359d9
+      ref: c9617f570b8c0ba02857e721997f78c053a856c1
+      resolved-ref: c9617f570b8c0ba02857e721997f78c053a856c1
       url: "https://github.com/media-kit/media-kit"
     source: git
     version: "1.0.6"
@@ -956,8 +940,8 @@ packages:
     dependency: "direct main"
     description:
       path: media_kit_video
-      ref: d544e1c52db47a45097a8332a862687c832359d9
-      resolved-ref: d544e1c52db47a45097a8332a862687c832359d9
+      ref: c9617f570b8c0ba02857e721997f78c053a856c1
+      resolved-ref: c9617f570b8c0ba02857e721997f78c053a856c1
       url: "https://github.com/media-kit/media-kit"
     source: git
     version: "1.3.0"
@@ -1623,14 +1607,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.6"
-  timing:
-    dependency: transitive
-    description:
-      name: timing
-      sha256: "62ee18aca144e4a9f29d212f5a4c6a053be252b895ab14b5821996cff4ed90fe"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.2"
   typed_data:
     dependency: transitive
     description:
@@ -1667,10 +1643,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_android
-      sha256: "69ee86740f2847b9a4ba6cffa74ed12ce500bbe2b07f3dc1e643439da60637b7"
+      sha256: "07cffecb7d68cbc6437cd803d5f11a86fe06736735c3dfe46ff73bcb0f958eed"
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.18"
+    version: "6.3.21"
   url_launcher_ios:
     dependency: transitive
     description:
@@ -1755,10 +1731,10 @@ packages:
     dependency: transitive
     description:
       name: wakelock_plus
-      sha256: a474e314c3e8fb5adef1f9ae2d247e57467ad557fa7483a2b895bc1b421c5678
+      sha256: "61713aa82b7f85c21c9f4cd0a148abd75f38a74ec645fcb1e446f882c82fd09b"
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.2"
+    version: "1.3.3"
   wakelock_plus_platform_interface:
     dependency: transitive
     description:
@@ -1858,12 +1834,11 @@ packages:
   yaru:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "chore/flutter_3.35.0"
-      resolved-ref: "057adea72f234a2a37641a15f19f6bb3ce1e9dd9"
-      url: "https://github.com/ubuntu/yaru.dart"
-    source: git
-    version: "8.2.0"
+      name: yaru
+      sha256: "67ac8c3dc52a5d69c049056d5fa40b909973e10b36df3cffeb666de867532d79"
+      url: "https://pub.dev"
+    source: hosted
+    version: "8.3.0"
   yaru_window:
     dependency: "direct main"
     description:
@@ -1906,4 +1881,4 @@ packages:
     version: "0.0.4"
 sdks:
   dart: ">=3.9.0 <4.0.0"
-  flutter: ">=3.32.0"
+  flutter: ">=3.35.0"
