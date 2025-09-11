@@ -85,10 +85,7 @@ dependencies:
   win32: ^5.5.4
   window_manager: ^0.5.1
   xdg_directories: ^1.0.4
-  yaru:
-    git:
-      url: https://github.com/ubuntu/yaru.dart
-      ref: e09d8512665c521def2d65ca233c365e50eda711
+  yaru: ^8.3.0
   yaru_window: ^0.2.2
   yaru_window_linux: ^0.2.2
 
