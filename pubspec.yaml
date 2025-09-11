@@ -123,14 +123,14 @@ dependency_overrides:
     git:
       url: https://github.com/media-kit/media-kit
       path: media_kit
-      ref: d544e1c52db47a45097a8332a862687c832359d9
+      ref: c9617f570b8c0ba02857e721997f78c053a856c1
   media_kit_libs_video:
     git:
       url: https://github.com/media-kit/media-kit
       path: libs/universal/media_kit_libs_video
-      ref: d544e1c52db47a45097a8332a862687c832359d9
+      ref: c9617f570b8c0ba02857e721997f78c053a856c1
   media_kit_video:
     git:
       url: https://github.com/media-kit/media-kit
       path: media_kit_video
-      ref: d544e1c52db47a45097a8332a862687c832359d9
+      ref: c9617f570b8c0ba02857e721997f78c053a856c1
