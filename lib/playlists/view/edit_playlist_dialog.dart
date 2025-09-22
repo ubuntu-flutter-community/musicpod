@@ -107,9 +107,6 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
         ],
       ),
       confirmLabel: context.l10n.save,
-      confirmEnabled: watchPropertyValue(
-        (CustomContentModel m) => !m.processing,
-      ),
       onConfirm: () {
         di<LocalAudioModel>().setLocalAudioindex(
           LocalAudioView.playlists.index,

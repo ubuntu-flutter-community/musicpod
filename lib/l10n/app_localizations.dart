@@ -4254,6 +4254,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This will blur the background of the player. This might lead to lower performance on some devices.'**
   String get useBlurredPlayerBackgroundDescription;
+
+  /// No description provided for @loadingPleaseWait.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading, please wait ...'**
+  String get loadingPleaseWait;
+
+  /// No description provided for @importingPodcastsPleaseWait.
+  ///
+  /// In en, this message translates to:
+  /// **'Importing your podcasts, please wait ...'**
+  String get importingPodcastsPleaseWait;
+
+  /// No description provided for @exportingPodcastsPleaseWait.
+  ///
+  /// In en, this message translates to:
+  /// **'Exporting your podcasts, please wait ...'**
+  String get exportingPodcastsPleaseWait;
+
+  /// No description provided for @importingStationsPleaseWait.
+  ///
+  /// In en, this message translates to:
+  /// **'Importing your stations, please wait ...'**
+  String get importingStationsPleaseWait;
+
+  /// No description provided for @exportingStationsPleaseWait.
+  ///
+  /// In en, this message translates to:
+  /// **'Exporting your stations, please wait ...'**
+  String get exportingStationsPleaseWait;
+
+  /// No description provided for @importingPlaylistsPleaseWait.
+  ///
+  /// In en, this message translates to:
+  /// **'Importing your playlists, please wait ...'**
+  String get importingPlaylistsPleaseWait;
+
+  /// No description provided for @exportingPlaylistsPleaseWait.
+  ///
+  /// In en, this message translates to:
+  /// **'Exporting your playlists, please wait ...'**
+  String get exportingPlaylistsPleaseWait;
 }
 
 class _AppLocalizationsDelegate

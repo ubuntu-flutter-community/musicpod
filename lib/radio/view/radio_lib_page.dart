@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../common/view/progress.dart';
 import '../../common/view/sliver_body.dart';
-import '../../custom_content/custom_content_model.dart';
 import '../../settings/view/settings_action.dart';
 import '../radio_model.dart';
 import 'favorite_radio_tags_grid.dart';
@@ -19,21 +17,15 @@ class RadioLibPage extends StatelessWidget with WatchItMixin {
     final radioCollectionView = watchPropertyValue(
       (RadioModel m) => m.radioCollectionView,
     );
-    final processing = watchPropertyValue(
-      (CustomContentModel m) => m.processing,
-    );
 
-    return processing
-        ? const Center(child: Progress())
-        : SliverBody(
-            controlPanel: const RadioLibPageControlPanel(),
-            controlPanelSuffix: const SettingsButton.icon(scrollIndex: 3),
-            contentBuilder: (context, constraints) =>
-                switch (radioCollectionView) {
-                  RadioCollectionView.stations => const StarredStationsGrid(),
-                  RadioCollectionView.tags => const FavoriteRadioTagsGrid(),
-                  RadioCollectionView.history => const SliverRadioHistoryList(),
-                },
-          );
+    return SliverBody(
+      controlPanel: const RadioLibPageControlPanel(),
+      controlPanelSuffix: const SettingsButton.icon(scrollIndex: 3),
+      contentBuilder: (context, constraints) => switch (radioCollectionView) {
+        RadioCollectionView.stations => const StarredStationsGrid(),
+        RadioCollectionView.tags => const FavoriteRadioTagsGrid(),
+        RadioCollectionView.history => const SliverRadioHistoryList(),
+      },
+    );
   }
 }

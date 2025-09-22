@@ -3,7 +3,6 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../common/view/icons.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../podcast_model.dart';
 
 class PodcastRefreshButton extends StatelessWidget {
@@ -13,14 +12,14 @@ class PodcastRefreshButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final podcast = di<LibraryModel>().getPodcast(pageId);
+    final podcast = di<PodcastModel>().getPodcastEpisodesFromCache(pageId);
 
     return IconButton(
       tooltip: context.l10n.checkForUpdates,
       onPressed: podcast == null
           ? null
           : () => di<PodcastModel>().update(
-              oldPodcasts: {pageId: podcast},
+              feedUrls: {pageId},
               updateMessage: context.l10n.newEpisodeAvailable,
             ),
       icon: Icon(Iconz.refresh),

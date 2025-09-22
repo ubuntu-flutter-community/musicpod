@@ -7,28 +7,16 @@ import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
 import '../../library/library_model.dart';
 
-class PodcastPageSideBarIcon extends StatefulWidget {
+class PodcastPageSideBarIcon extends StatelessWidget with WatchItMixin {
   const PodcastPageSideBarIcon({super.key, required this.feedUrl});
 
   final String feedUrl;
 
   @override
-  State<PodcastPageSideBarIcon> createState() => _PodcastPageSideBarIconState();
-}
-
-class _PodcastPageSideBarIconState extends State<PodcastPageSideBarIcon> {
-  late final String? imageUrl;
-
-  @override
-  void initState() {
-    super.initState();
-    final podcast = di<LibraryModel>().getPodcast(widget.feedUrl);
-    imageUrl =
-        podcast?.firstOrNull?.albumArtUrl ?? podcast?.firstOrNull?.imageUrl;
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final imageUrl = watchPropertyValue(
+      (LibraryModel m) => m.getSubscribedPodcastImage(feedUrl),
+    );
     if (imageUrl == null) {
       return SideBarFallBackImage(child: Icon(Iconz.podcast));
     }

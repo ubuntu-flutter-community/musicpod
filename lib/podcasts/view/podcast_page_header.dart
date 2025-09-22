@@ -22,17 +22,22 @@ class PodcastPageHeader extends StatelessWidget {
     required this.title,
     required this.episodes,
     this.imageUrl,
+    required this.showFallbackIcon,
   });
 
   final String title;
   final String? imageUrl;
   final List<Audio>? episodes;
+  final bool showFallbackIcon;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return AudioPageHeader(
-      image: PodcastPageImage(imageUrl: imageUrl),
+      image: PodcastPageImage(
+        imageUrl: imageUrl,
+        showFallbackIcon: showFallbackIcon,
+      ),
       label:
           (episodes ?? []).firstWhereOrNull((e) => e.genre != null)?.genre ??
           l10n.podcast,

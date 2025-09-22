@@ -256,10 +256,10 @@ class Iconz {
       ? CupertinoIcons.plus
       : Icons.add;
   static IconData get removeFromLibrary => yaru
-      ? YaruIcons.checkmark
+      ? YaruIcons.minus
       : cupertino
-      ? CupertinoIcons.check_mark
-      : Icons.check;
+      ? CupertinoIcons.minus
+      : Icons.remove;
   static IconData get refresh => yaru
       ? YaruIcons.refresh
       : cupertino

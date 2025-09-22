@@ -11,7 +11,7 @@ import '../podcast_model.dart';
 import 'lazy_podcast_loading_page.dart';
 import 'podcast_page.dart';
 
-class LazyPodcastPage extends StatefulWidget {
+class LazyPodcastPage extends StatefulWidget with WatchItStatefulWidgetMixin {
   const LazyPodcastPage({
     super.key,
     this.podcastItem,
@@ -29,69 +29,74 @@ class LazyPodcastPage extends StatefulWidget {
 
 class _LazyPodcastPageState extends State<LazyPodcastPage> {
   late Future<List<Audio>?> _episodes;
+  String? url;
 
   @override
   void initState() {
     super.initState();
-    final url = widget.feedUrl ?? widget.podcastItem?.feedUrl;
-    final libraryModel = di<LibraryModel>();
-    _episodes = libraryModel.isPodcastSubscribed(url)
-        ? Future.value(libraryModel.getPodcast(url))
-        : di<PodcastModel>().findEpisodes(
-            item: widget.podcastItem,
-            feedUrl: url,
-          );
+    url = widget.feedUrl ?? widget.podcastItem?.feedUrl;
+    _episodes = di<PodcastModel>().findEpisodes(
+      item: widget.podcastItem,
+      feedUrl: url,
+      addUpdates: true,
+    );
   }
 
   @override
-  Widget build(BuildContext context) => FutureBuilder(
-    future: _episodes,
-    builder: (context, snapshot) {
-      final feedUrl = widget.feedUrl ?? widget.podcastItem?.feedUrl;
-      final title =
-          widget.podcastItem?.collectionName ??
-          widget.podcastItem?.trackName ??
-          context.l10n.podcast;
-      final imageUrl =
-          widget.imageUrl ??
-          widget.podcastItem?.artworkUrl600 ??
-          widget.podcastItem?.artworkUrl ??
-          snapshot.data?.first.albumArtUrl ??
-          snapshot.data?.first.imageUrl;
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _episodes,
+      builder: (context, snapshot) {
+        final feedUrl = widget.feedUrl ?? widget.podcastItem?.feedUrl;
+        final title =
+            (feedUrl == null
+                ? null
+                : di<LibraryModel>().getSubscribedPodcastName(feedUrl)) ??
+            widget.podcastItem?.collectionName ??
+            widget.podcastItem?.trackName ??
+            context.l10n.podcast;
+        final imageUrl =
+            widget.imageUrl ??
+            widget.podcastItem?.artworkUrl600 ??
+            widget.podcastItem?.artworkUrl ??
+            snapshot.data?.first.albumArtUrl ??
+            snapshot.data?.first.imageUrl;
 
-      if (!snapshot.hasData) {
-        return LazyPodcastLoadingPage(
-          title: title,
+        if (!snapshot.hasData) {
+          return LazyPodcastLoadingPage(
+            title: title,
+            imageUrl: imageUrl,
+            child: const Center(child: Progress()),
+          );
+        }
+
+        if (snapshot.hasError) {
+          return LazyPodcastLoadingPage(
+            title: title,
+            imageUrl: imageUrl,
+            child: NoSearchResultPage(message: Text(snapshot.error.toString())),
+          );
+        }
+
+        final episodes = snapshot.data!;
+
+        if (feedUrl == null || episodes.isEmpty) {
+          return LazyPodcastLoadingPage(
+            title: title,
+            imageUrl: imageUrl,
+            child: NoSearchResultPage(
+              message: Text(context.l10n.podcastFeedIsEmpty),
+            ),
+          );
+        }
+
+        return PodcastPage(
           imageUrl: imageUrl,
-          child: const Center(child: Progress()),
-        );
-      }
-
-      if (snapshot.hasError) {
-        return LazyPodcastLoadingPage(
+          episodes: episodes,
+          feedUrl: feedUrl,
           title: title,
-          imageUrl: imageUrl,
-          child: NoSearchResultPage(message: Text(snapshot.error.toString())),
         );
-      }
-
-      final episodes = snapshot.data;
-      if (feedUrl == null || episodes!.isEmpty) {
-        return LazyPodcastLoadingPage(
-          title: title,
-          imageUrl: imageUrl,
-          child: NoSearchResultPage(
-            message: Text(context.l10n.podcastFeedIsEmpty),
-          ),
-        );
-      }
-
-      return PodcastPage(
-        imageUrl: imageUrl,
-        episodes: episodes,
-        feedUrl: feedUrl,
-        title: title,
-      );
-    },
-  );
+      },
+    );
+  }
 }

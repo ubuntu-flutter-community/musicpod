@@ -20,7 +20,6 @@ dependencies:
   collection: ^1.18.0
   connectivity_plus: ^7.0.0
   cupertino_icons: ^1.0.8
-  desktop_notifications: ^0.6.3
   dio: ^5.7.0
   file: ^7.0.0
   file_picker: ^10.0.0
@@ -36,6 +35,7 @@ dependencies:
     sdk: flutter
   flutter_markdown: ^0.7.3
   flutter_tabler_icons: ^1.41.0
+  future_loading_dialog: ^0.3.0
   github: ^9.24.0
   gtk: ^2.1.0
   handy_window: ^0.4.0
@@ -43,6 +43,7 @@ dependencies:
   intl: ^0.20.2
   lastfm: ^0.0.6
   listenbrainz_dart: ^0.0.4
+  local_notifier: ^0.1.6
   m3u_parser_nullsafe: ^1.0.3
   media_kit:
     git:

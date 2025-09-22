@@ -1,21 +1,16 @@
-import 'package:desktop_notifications/desktop_notifications.dart';
+import 'package:local_notifier/local_notifier.dart';
 
 class NotificationsService {
   NotificationsService([this._notificationsClient]);
 
-  final NotificationsClient? _notificationsClient;
+  final LocalNotifier? _notificationsClient;
 
-  Future<void> notify({required String message, String? uri}) async {
+  Future<void> notify({required String message}) async {
     if (_notificationsClient != null) {
-      _notificationsClient.notify(
-        message,
-        appIcon: uri ?? 'music-app',
-        appName: 'MusicPod',
-      );
+      final notification = LocalNotification(title: message);
+      notification.show();
     }
   }
 
-  Future<void> dispose() async {
-    await _notificationsClient?.close();
-  }
+  Future<void> dispose() async {}
 }

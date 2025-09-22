@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/view/routing_manager.dart';
-import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
 import '../../extensions/build_context_x.dart';
@@ -14,11 +13,15 @@ class PodcastSubButton extends StatelessWidget with WatchItMixin {
   const PodcastSubButton({
     super.key,
     required this.pageId,
-    required this.audios,
+    this.imageUrl,
+    required this.name,
+    required this.artist,
   });
 
   final String pageId;
-  final List<Audio> audios;
+  final String? imageUrl;
+  final String name;
+  final String artist;
 
   @override
   Widget build(BuildContext context) {
@@ -50,12 +53,17 @@ class PodcastSubButton extends StatelessWidget with WatchItMixin {
             ),
       onPressed: disabled
           ? null
-          : () {
+          : () async {
               if (subscribed) {
                 libraryModel.removePodcast(pageId);
                 di<RoutingManager>().pop();
-              } else if (audios.isNotEmpty) {
-                libraryModel.addPodcast(pageId, audios);
+              } else {
+                libraryModel.addPodcast(
+                  feedUrl: pageId,
+                  imageUrl: imageUrl,
+                  name: name,
+                  artist: artist,
+                );
               }
             },
     );

@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
@@ -90,9 +91,12 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
           ],
         ),
         TextButton(
-          onPressed: () {
-            di<CustomContentModel>().addPlaylists();
-          },
+          onPressed: () => showFutureLoadingDialog(
+            context: context,
+            future: () => di<CustomContentModel>().addPlaylists(),
+            backLabel: context.l10n.back,
+            title: context.l10n.importingPlaylistsPleaseWait,
+          ),
           child: Text(l10n.loadFromFileOptional),
         ),
         ...playlists.map((e) {

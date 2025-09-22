@@ -3,21 +3,19 @@ import 'package:watch_it/watch_it.dart';
 
 import '../../app/connectivity_model.dart';
 import '../../app/view/routing_manager.dart';
-import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/confirm.dart';
+import '../../common/view/icons.dart';
 import '../../common/view/loading_grid.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/offline_page.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/sliver_body.dart';
 import '../../common/view/theme.dart';
-import '../../custom_content/custom_content_model.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/string_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
@@ -38,9 +36,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
     final checkingForUpdates = watchPropertyValue(
       (PodcastModel m) => m.checkingForUpdates,
     );
-    final processing = watchPropertyValue(
-      (CustomContentModel m) => m.processing,
-    );
+
     final subs = watchPropertyValue((LibraryModel m) => m.podcastFeedUrls);
     final libraryModel = di<LibraryModel>();
     final updatesLength = watchPropertyValue(
@@ -63,7 +59,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
       controlPanel: const PodcastCollectionControlPanel(),
       controlPanelSuffix: const SettingsButton.icon(scrollIndex: 1),
       onStretchTrigger: () async {
-        if (checkingForUpdates || processing) return;
+        if (checkingForUpdates) return;
         if (subsLength > 10) {
           showDialog(
             context: context,
@@ -110,7 +106,6 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
               itemCount: itemCount,
               gridDelegate: audioCardGridDelegate,
               itemBuilder: (context, index) {
-                final List<Audio>? episodes;
                 final String? feedUrl;
                 if (updatesOnly) {
                   feedUrl = subs
@@ -124,20 +119,18 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                   feedUrl = subs.elementAtOrNull(index);
                 }
 
-                episodes = libraryModel.getPodcast(feedUrl);
-
-                if (feedUrl == null || episodes == null) {
+                if (feedUrl == null) {
                   return const SizedBox.shrink();
                 }
-                final first = episodes.firstOrNull;
 
                 return AudioCard(
                   key: ValueKey(feedUrl),
                   image: SafeNetworkImage(
-                    url: first?.albumArtUrl ?? first?.imageUrl,
+                    url: di<LibraryModel>().getSubscribedPodcastImage(feedUrl),
                     fit: BoxFit.cover,
                     height: audioCardDimension,
                     width: audioCardDimension,
+                    fallBackIcon: Icon(Iconz.podcast, size: 70),
                   ),
                   bottom: AudioCardBottom(
                     style: libraryModel.podcastUpdateAvailable(feedUrl)
@@ -150,14 +143,20 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                                 fontWeight: FontWeight.bold,
                               )
                         : null,
-                    text:
-                        first?.album?.unEscapeHtml ??
-                        first?.title ??
-                        first.toString(),
+                    text: di<LibraryModel>().getSubscribedPodcastName(feedUrl),
                   ),
-                  onPlay: () => di<PlayerModel>()
-                      .startPlaylist(audios: episodes!, listName: feedUrl!)
-                      .then((_) => libraryModel.removePodcastUpdate(feedUrl!)),
+                  onPlay: () async {
+                    final episodes =
+                        di<PodcastModel>().getPodcastEpisodesFromCache(
+                          feedUrl,
+                        ) ??
+                        await di<PodcastModel>().findEpisodes(feedUrl: feedUrl);
+                    di<PlayerModel>()
+                        .startPlaylist(audios: episodes, listName: feedUrl!)
+                        .then(
+                          (_) => libraryModel.removePodcastUpdate(feedUrl!),
+                        );
+                  },
                   onTap: () => di<RoutingManager>().push(pageId: feedUrl!),
                 );
               },

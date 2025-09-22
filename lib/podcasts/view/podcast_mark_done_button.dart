@@ -5,6 +5,7 @@ import '../../common/view/icons.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
+import '../podcast_model.dart';
 
 class PodcastMarkDoneButton extends StatelessWidget with WatchItMixin {
   const PodcastMarkDoneButton({super.key, required this.feedUrl});
@@ -14,7 +15,7 @@ class PodcastMarkDoneButton extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final podcast = watchPropertyValue(
-      (LibraryModel m) => m.getPodcast(feedUrl),
+      (PodcastModel m) => m.getPodcastEpisodesFromCache(feedUrl),
     );
 
     return IconButton(

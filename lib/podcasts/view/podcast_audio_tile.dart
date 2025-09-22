@@ -5,6 +5,7 @@ import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/data/audio.dart';
+import '../../common/logging.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/share_button.dart';
 import '../../common/view/snackbars.dart';
@@ -93,7 +94,6 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
                   selected: selected,
                   title: audio.title ?? '',
                   label: label,
-                  addPodcast: addPodcast,
                 ),
               ),
             ],
@@ -161,13 +161,11 @@ class _Center extends StatelessWidget {
     required this.title,
     required this.selected,
     required this.label,
-    required this.addPodcast,
   });
 
   final String title;
   final String label;
   final bool selected;
-  final void Function()? addPodcast;
 
   @override
   Widget build(BuildContext context) {
@@ -260,23 +258,36 @@ class _Description extends StatelessWidget with WatchItMixin {
     TextAlign? textAlign,
     HtmlPaddings? paddings,
   }) {
-    return Html(
-      data: description,
-      onAnchorTap: (url, attributes, element) {
-        if (url == null) return;
-        launchUrl(Uri.parse(url));
-      },
-      style: {
-        'img': Style(display: Display.none),
-        'body': Style(
-          margin: Margins.zero,
-          padding: paddings,
-          color: color,
-          textOverflow: TextOverflow.ellipsis,
+    Widget? html;
+    try {
+      html = Html(
+        data: description,
+        onAnchorTap: (url, attributes, element) {
+          if (url == null) return;
+          launchUrl(Uri.parse(url));
+        },
+        style: {
+          'img': Style(display: Display.none),
+          'body': Style(
+            margin: Margins.zero,
+            padding: paddings,
+            color: color,
+            textOverflow: TextOverflow.ellipsis,
+            maxLines: maxLines,
+            textAlign: textAlign ?? TextAlign.start,
+          ),
+        },
+      );
+    } on Exception catch (_) {
+      printMessageInDebugMode('Error parsing html');
+    }
+    return html ??
+        Text(
+          description ?? '',
+          style: TextStyle(color: color),
+          overflow: TextOverflow.ellipsis,
           maxLines: maxLines,
           textAlign: textAlign ?? TextAlign.start,
-        ),
-      },
-    );
+        );
   }
 }

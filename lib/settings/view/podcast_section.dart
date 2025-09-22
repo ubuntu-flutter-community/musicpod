@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../common/file_names.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
@@ -13,6 +15,8 @@ import '../../extensions/shared_preferences_x.dart';
 import '../../extensions/string_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
+import '../../persistence_utils.dart';
+import '../../player/player_service.dart';
 import '../../podcasts/download_model.dart';
 import '../../podcasts/podcast_model.dart';
 import '../settings_model.dart';
@@ -150,9 +154,6 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
       (PodcastModel m) => m.checkingForUpdates,
     );
 
-    final processing = watchPropertyValue(
-      (CustomContentModel m) => m.processing,
-    );
     return YaruTile(
       title: Text(l10n.podcastSubscriptions),
       trailing: Row(
@@ -163,9 +164,15 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
               semanticLabel: context.l10n.exportPodcastsToOpmlFile,
             ),
             tooltip: context.l10n.exportPodcastsToOpmlFile,
-            onPressed: processing || checkingForUpdates
+            onPressed: checkingForUpdates
                 ? null
-                : () => di<CustomContentModel>().exportPodcastsToOpmlFile(),
+                : () => showFutureLoadingDialog(
+                    context: context,
+                    future: () =>
+                        di<CustomContentModel>().exportPodcastsToOpmlFile(),
+                    backLabel: context.l10n.back,
+                    title: context.l10n.exportingPodcastsPleaseWait,
+                  ),
           ),
           IconButton(
             icon: Icon(
@@ -173,19 +180,25 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
               semanticLabel: context.l10n.importPodcastsFromOpmlFile,
             ),
             tooltip: context.l10n.importPodcastsFromOpmlFile,
-            onPressed: processing || checkingForUpdates
+            onPressed: checkingForUpdates
                 ? null
-                : () => di<CustomContentModel>().importPodcastsFromOpmlFile(),
+                : () => showFutureLoadingDialog(
+                    context: context,
+                    future: () =>
+                        di<CustomContentModel>().importPodcastsFromOpmlFile(),
+                    title: context.l10n.importingPodcastsPleaseWait,
+                    backLabel: context.l10n.back,
+                  ),
           ),
           IconButton(
-            icon: processing || checkingForUpdates
+            icon: checkingForUpdates
                 ? const SizedBox.square(
                     dimension: 20,
                     child: Progress(strokeWidth: 2),
                   )
                 : Icon(Iconz.remove),
             tooltip: context.l10n.podcasts,
-            onPressed: processing || checkingForUpdates
+            onPressed: checkingForUpdates
                 ? null
                 : () => showDialog(
                     context: context,
@@ -194,7 +207,12 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
                       content: Text(context.l10n.removeAllPodcastsDescription),
                       confirmLabel: context.l10n.ok,
                       cancelLabel: context.l10n.cancel,
-                      onConfirm: () => di<LibraryModel>().removeAllPodcasts(),
+                      onConfirm: () async {
+                        await di<LibraryModel>().removeAllPodcasts();
+                        di<PlayerService>().clearAllLastPositions();
+                        wipeCustomSettings(filename: FileNames.podcastUpdates);
+                        wipeCustomSettings(filename: FileNames.lastPositions);
+                      },
                     ),
                   ),
           ),

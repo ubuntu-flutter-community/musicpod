@@ -18,22 +18,31 @@ class PodcastPageControlPanel extends StatelessWidget {
     required this.feedUrl,
     required this.audios,
     required this.title,
+    this.imageUrl,
   });
 
   final String feedUrl;
   final String title;
+  final String? imageUrl;
   final List<Audio> audios;
 
   @override
   Widget build(BuildContext context) {
     final width = context.mediaQuerySize.width;
+
+    final artist = audios.firstOrNull?.artist ?? '';
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: space(
         children: [
           if (width > 700) PodcastReplayButton(feedUrl: feedUrl),
           PodcastMarkDoneButton(feedUrl: feedUrl),
-          PodcastSubButton(audios: audios, pageId: feedUrl),
+          PodcastSubButton(
+            pageId: feedUrl,
+            imageUrl: imageUrl,
+            name: title,
+            artist: artist,
+          ),
           AvatarPlayButton(audios: audios, pageId: feedUrl),
           PodcastPageSearchButton(feedUrl: feedUrl),
           PodcastReorderButton(feedUrl: feedUrl),
@@ -45,7 +54,7 @@ class PodcastPageControlPanel extends StatelessWidget {
               selected: false,
               searchTerm: title,
               title: Text(title),
-              subTitle: Text(audios.firstOrNull?.artist ?? ''),
+              subTitle: Text(artist),
             ),
         ],
       ),

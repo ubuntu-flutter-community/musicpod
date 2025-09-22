@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
@@ -17,9 +18,7 @@ class RadioSection extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     watchPropertyValue((RadioModel m) => m.radioCollectionView);
-    final processing = watchPropertyValue(
-      (CustomContentModel m) => m.processing,
-    );
+
     return YaruSection(
       margin: const EdgeInsets.all(kLargestSpace),
       headline: Text(l10n.radio),
@@ -35,10 +34,13 @@ class RadioSection extends StatelessWidget with WatchItMixin {
                     Iconz.export,
                     semanticLabel: l10n.exportStarredStationsToOpmlFile,
                   ),
-                  onPressed: processing
-                      ? null
-                      : () => di<CustomContentModel>()
-                            .exportStarredStationsToOpmlFile(),
+                  onPressed: () => showFutureLoadingDialog(
+                    context: context,
+                    future: () => di<CustomContentModel>()
+                        .exportStarredStationsToOpmlFile(),
+                    title: context.l10n.exportingStationsPleaseWait,
+                    backLabel: context.l10n.back,
+                  ),
                 ),
                 IconButton(
                   tooltip: l10n.importStarredStationsFromOpmlFile,
@@ -46,10 +48,13 @@ class RadioSection extends StatelessWidget with WatchItMixin {
                     Iconz.import,
                     semanticLabel: l10n.importStarredStationsFromOpmlFile,
                   ),
-                  onPressed: processing
-                      ? null
-                      : () => di<CustomContentModel>()
-                            .importStarredStationsFromOpmlFile(),
+                  onPressed: () => showFutureLoadingDialog(
+                    context: context,
+                    future: () => di<CustomContentModel>()
+                        .importStarredStationsFromOpmlFile(),
+                    title: context.l10n.importingStationsPleaseWait,
+                    backLabel: context.l10n.back,
+                  ),
                 ),
                 IconButton(
                   icon: Icon(
@@ -57,23 +62,18 @@ class RadioSection extends StatelessWidget with WatchItMixin {
                     semanticLabel: l10n.removeAllStarredStations,
                   ),
                   tooltip: context.l10n.removeAllStarredStations,
-                  onPressed: processing
-                      ? null
-                      : () => showDialog(
-                          context: context,
-                          builder: (context) => ConfirmationDialog(
-                            showCloseIcon: false,
-                            title: Text(l10n.removeAllStarredStationsConfirm),
-                            content: SizedBox(
-                              width: 350,
-                              child: Text(
-                                l10n.removeAllStarredStationsDescription,
-                              ),
-                            ),
-                            onConfirm: () =>
-                                di<LibraryModel>().unStarAllStations(),
-                          ),
-                        ),
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => ConfirmationDialog(
+                      showCloseIcon: false,
+                      title: Text(l10n.removeAllStarredStationsConfirm),
+                      content: SizedBox(
+                        width: 350,
+                        child: Text(l10n.removeAllStarredStationsDescription),
+                      ),
+                      onConfirm: () => di<LibraryModel>().unStarAllStations(),
+                    ),
+                  ),
                 ),
               ],
             ),

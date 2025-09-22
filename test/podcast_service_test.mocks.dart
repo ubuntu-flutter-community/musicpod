@@ -38,9 +38,9 @@ class MockNotificationsService extends _i1.Mock
   }
 
   @override
-  _i3.Future<void> notify({required String? message, String? uri}) =>
+  _i3.Future<void> notify({required String? message}) =>
       (super.noSuchMethod(
-            Invocation.method(#notify, [], {#message: message, #uri: uri}),
+            Invocation.method(#notify, [], {#message: message}),
             returnValue: _i3.Future<void>.value(),
             returnValueForMissingStub: _i3.Future<void>.value(),
           )
@@ -578,12 +578,9 @@ class MockLibraryService extends _i1.Mock implements _i7.LibraryService {
           as List<String>);
 
   @override
-  Map<String, List<_i8.Audio>> get podcasts =>
-      (super.noSuchMethod(
-            Invocation.getter(#podcasts),
-            returnValue: <String, List<_i8.Audio>>{},
-          )
-          as Map<String, List<_i8.Audio>>);
+  Set<String> get podcasts =>
+      (super.noSuchMethod(Invocation.getter(#podcasts), returnValue: <String>{})
+          as Set<String>);
 
   @override
   int get podcastsLength =>
@@ -915,34 +912,106 @@ class MockLibraryService extends _i1.Mock implements _i7.LibraryService {
           as bool);
 
   @override
-  void addPodcast(String? feedUrl, List<_i8.Audio>? audios) =>
-      super.noSuchMethod(
-        Invocation.method(#addPodcast, [feedUrl, audios]),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  void addPodcasts(List<(String, List<_i8.Audio>)>? podcasts) =>
-      super.noSuchMethod(
-        Invocation.method(#addPodcasts, [podcasts]),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i3.Future<void> updatePodcast(String? feedUrl, List<_i8.Audio>? audios) =>
+  String? getSubscribedPodcastImage(String? feedUrl) =>
       (super.noSuchMethod(
-            Invocation.method(#updatePodcast, [feedUrl, audios]),
+            Invocation.method(#getSubscribedPodcastImage, [feedUrl]),
+          )
+          as String?);
+
+  @override
+  void addSubscribedPodcastImage({
+    required String? feedUrl,
+    required String? imageUrl,
+  }) => super.noSuchMethod(
+    Invocation.method(#addSubscribedPodcastImage, [], {
+      #feedUrl: feedUrl,
+      #imageUrl: imageUrl,
+    }),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void removeSubscribedPodcastImage(String? feedUrl) => super.noSuchMethod(
+    Invocation.method(#removeSubscribedPodcastImage, [feedUrl]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  String? getSubscribedPodcastName(String? feedUrl) =>
+      (super.noSuchMethod(
+            Invocation.method(#getSubscribedPodcastName, [feedUrl]),
+          )
+          as String?);
+
+  @override
+  void addSubscribedPodcastName({
+    required String? feedUrl,
+    required String? name,
+  }) => super.noSuchMethod(
+    Invocation.method(#addSubscribedPodcastName, [], {
+      #feedUrl: feedUrl,
+      #name: name,
+    }),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void removeSubscribedPodcastName(String? feedUrl) => super.noSuchMethod(
+    Invocation.method(#removeSubscribedPodcastName, [feedUrl]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  String? getSubscribedPodcastArtist(String? feedUrl) =>
+      (super.noSuchMethod(
+            Invocation.method(#getSubscribedPodcastArtist, [feedUrl]),
+          )
+          as String?);
+
+  @override
+  void addSubscribedPodcastArtist({
+    required String? feedUrl,
+    required String? artist,
+  }) => super.noSuchMethod(
+    Invocation.method(#addSubscribedPodcastArtist, [], {
+      #feedUrl: feedUrl,
+      #artist: artist,
+    }),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void removeSubscribedPodcastArtist(String? feedUrl) => super.noSuchMethod(
+    Invocation.method(#removeSubscribedPodcastArtist, [feedUrl]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  _i3.Future<void> addPodcast({
+    required String? feedUrl,
+    required String? imageUrl,
+    required String? name,
+    required String? artist,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#addPodcast, [], {
+              #feedUrl: feedUrl,
+              #imageUrl: imageUrl,
+              #name: name,
+              #artist: artist,
+            }),
             returnValue: _i3.Future<void>.value(),
             returnValueForMissingStub: _i3.Future<void>.value(),
           )
           as _i3.Future<void>);
 
   @override
-  _i3.Future<void> updatePodcasts(
-    List<({List<_i8.Audio> audios, String feedUrl})>? podcasts,
+  _i3.Future<void> addPodcasts(
+    List<({String artist, String feedUrl, String? imageUrl, String name})>?
+    podcasts,
   ) =>
       (super.noSuchMethod(
-            Invocation.method(#updatePodcasts, [podcasts]),
+            Invocation.method(#addPodcasts, [podcasts]),
             returnValue: _i3.Future<void>.value(),
             returnValueForMissingStub: _i3.Future<void>.value(),
           )
@@ -972,12 +1041,24 @@ class MockLibraryService extends _i1.Mock implements _i7.LibraryService {
           as _i3.Future<void>);
 
   @override
+  String? getPodcastLastUpdated(String? feedUrl) =>
+      (super.noSuchMethod(Invocation.method(#getPodcastLastUpdated, [feedUrl]))
+          as String?);
+
+  @override
   bool podcastUpdateAvailable(String? feedUrl) =>
       (super.noSuchMethod(
             Invocation.method(#podcastUpdateAvailable, [feedUrl]),
             returnValue: false,
           )
           as bool);
+
+  @override
+  void addPodcastUpdate(String? feedUrl, DateTime? lastUpdated) =>
+      super.noSuchMethod(
+        Invocation.method(#addPodcastUpdate, [feedUrl, lastUpdated]),
+        returnValueForMissingStub: null,
+      );
 
   @override
   void removePodcastUpdate(String? feedUrl) => super.noSuchMethod(

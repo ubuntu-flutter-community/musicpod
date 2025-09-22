@@ -4,9 +4,14 @@ import '../../common/view/safe_network_image.dart';
 import '../../extensions/build_context_x.dart';
 
 class PodcastPageImage extends StatelessWidget {
-  const PodcastPageImage({super.key, required this.imageUrl});
+  const PodcastPageImage({
+    super.key,
+    required this.imageUrl,
+    required this.showFallbackIcon,
+  });
 
   final String? imageUrl;
+  final bool showFallbackIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +26,9 @@ class PodcastPageImage extends StatelessWidget {
 
     return InkWell(
       borderRadius: BorderRadius.circular(10),
-      child: safeNetworkImage,
+      child: imageUrl == null && !showFallbackIcon
+          ? const SizedBox.shrink()
+          : safeNetworkImage,
       onTap: () => showDialog(
         context: context,
         builder: (context) => SimpleDialog(
