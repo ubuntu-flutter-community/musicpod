@@ -376,6 +376,12 @@ class MockPlayerService extends _i1.Mock implements _i5.PlayerService {
           as _i6.Future<void>);
 
   @override
+  void clearAllLastPositions() => super.noSuchMethod(
+    Invocation.method(#clearAllLastPositions, []),
+    returnValueForMissingStub: null,
+  );
+
+  @override
   _i6.Future<void> safeLastPosition() =>
       (super.noSuchMethod(
             Invocation.method(#safeLastPosition, []),

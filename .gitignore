@@ -46,13 +46,7 @@ app.*.map.json
 /android/app/release
 /android/app/.cxx/
 
-.vscode/
-musicpod_0.1.0_amd64.snap
-#pubspec.lock
-pinnedAlbums.json
-playlists.json
-podcasts.json
-starredStations.json
+
 
 # FVM Version Cache
 .fvm/
