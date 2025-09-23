@@ -30,6 +30,7 @@ class LazyPodcastLoadingPage extends StatelessWidget {
                 title: title,
                 imageUrl: imageUrl,
                 episodes: [],
+                showFallbackIcon: false,
               ),
             ),
           ),

@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:podcast_search/podcast_search.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/data/audio.dart';
 import '../common/file_names.dart';
+import '../common/logging.dart';
 import '../common/page_ids.dart';
-import '../common/view/audio_filter.dart';
+import '../extensions/date_time_x.dart';
 import '../extensions/shared_preferences_x.dart';
 import '../persistence_utils.dart';
 
@@ -494,66 +496,97 @@ class LibraryService {
     ).then((_) => _propertiesChangedController.add(true));
   }
 
-  Map<String, List<Audio>> _podcasts = {};
-  bool isPodcastSubscribed(String feedUrl) => _podcasts.containsKey(feedUrl);
-  List<String> get podcastFeedUrls => _podcasts.keys.toList();
-  Map<String, List<Audio>> get podcasts => _podcasts;
+  Set<String> get _podcasts =>
+      _sharedPreferences.getStringList(SPKeys.podcastFeedUrls)?.toSet() ?? {};
+  bool isPodcastSubscribed(String feedUrl) => _podcasts.contains(feedUrl);
+  List<String> get podcastFeedUrls => _podcasts.toList();
+  Set<String> get podcasts => _podcasts;
   int get podcastsLength => _podcasts.length;
+  String? getSubscribedPodcastImage(String feedUrl) =>
+      _sharedPreferences.getString(feedUrl + SPKeys.podcastImageUrlSuffix);
+  void addSubscribedPodcastImage({
+    required String feedUrl,
+    required String imageUrl,
+  }) => _sharedPreferences
+      .setString(feedUrl + SPKeys.podcastImageUrlSuffix, imageUrl)
+      .then(notify);
+  void removeSubscribedPodcastImage(String feedUrl) =>
+      _sharedPreferences.remove(feedUrl + SPKeys.podcastImageUrlSuffix);
+  String? getSubscribedPodcastName(String feedUrl) =>
+      _sharedPreferences.getString(feedUrl + SPKeys.podcastNameSuffix);
+  void addSubscribedPodcastName({
+    required String feedUrl,
+    required String name,
+  }) => _sharedPreferences.setString(feedUrl + SPKeys.podcastNameSuffix, name);
+  void removeSubscribedPodcastName(String feedUrl) =>
+      _sharedPreferences.remove(feedUrl + SPKeys.podcastNameSuffix);
+  String? getSubscribedPodcastArtist(String feedUrl) =>
+      _sharedPreferences.getString(feedUrl + SPKeys.podcastArtistSuffix);
+  void addSubscribedPodcastArtist({
+    required String feedUrl,
+    required String artist,
+  }) => _sharedPreferences
+      .setString(feedUrl + SPKeys.podcastArtistSuffix, artist)
+      .then(notify);
+  void removeSubscribedPodcastArtist(String feedUrl) =>
+      _sharedPreferences.remove(feedUrl + SPKeys.podcastArtistSuffix);
 
-  void addPodcast(String feedUrl, List<Audio> audios) {
+  Future<void> addPodcast({
+    required String feedUrl,
+    required String? imageUrl,
+    required String name,
+    required String artist,
+  }) async {
     if (isPodcastSubscribed(feedUrl)) return;
-    _podcasts.putIfAbsent(feedUrl, () => audios);
-    writeAudioMap(
-      map: _podcasts,
-      fileName: FileNames.podcasts,
-    ).then((_) => _propertiesChangedController.add(true));
-  }
-
-  void addPodcasts(List<(String feedUrl, List<Audio> audios)> podcasts) {
-    if (podcasts.isEmpty) return;
-    for (var podcast in podcasts) {
-      if (!isPodcastSubscribed(podcast.$1)) {
-        _podcasts.putIfAbsent(podcast.$1, () => podcast.$2);
-      }
+    _sharedPreferences
+        .setStringList(SPKeys.podcastFeedUrls, [
+          ...List<String>.from(_podcasts),
+          feedUrl,
+        ])
+        .then(notify);
+    if (imageUrl != null) {
+      addSubscribedPodcastImage(feedUrl: feedUrl, imageUrl: imageUrl);
     }
-    writeAudioMap(
-      map: _podcasts,
-      fileName: FileNames.podcasts,
-    ).then((_) => _propertiesChangedController.add(true));
+    addSubscribedPodcastName(feedUrl: feedUrl, name: name);
+    addSubscribedPodcastArtist(feedUrl: feedUrl, artist: artist);
+    await _addPodcastLastUpdatedWithTimestamp(feedUrl);
   }
 
-  Future<void> updatePodcast(String feedUrl, List<Audio> audios) async {
-    if (feedUrl.isEmpty || audios.isEmpty) return;
-    _addPodcastUpdate(feedUrl);
-    _podcasts.update(feedUrl, (value) => audios);
-    return writeAudioMap(
-      map: _podcasts,
-      fileName: FileNames.podcasts,
-    ).then((_) => _propertiesChangedController.add(true));
+  Future<void> _addPodcastLastUpdatedWithTimestamp(String feedUrl) async {
+    DateTime? lastUpdated;
+    try {
+      lastUpdated = await Feed.feedLastUpdated(url: feedUrl);
+    } on Exception catch (e) {
+      printMessageInDebugMode(e);
+    }
+    if (lastUpdated != null) {
+      _addPodcastLastUpdated(
+        feedUrl: feedUrl,
+        timestamp: lastUpdated.podcastTimeStamp,
+      );
+    }
   }
 
-  Future<void> updatePodcasts(
-    List<({String feedUrl, List<Audio> audios})> podcasts,
+  Future<void> addPodcasts(
+    List<({String feedUrl, String? imageUrl, String name, String artist})>
+    podcasts,
   ) async {
     if (podcasts.isEmpty) return;
-    for (var podcast in podcasts) {
-      if (podcast.feedUrl.isEmpty || podcast.audios.isEmpty) continue;
-      _addPodcastUpdate(podcast.feedUrl);
-      _podcasts.update(podcast.feedUrl, (value) => podcast.audios);
+    final newList = List<String>.from(_podcasts);
+    for (var p in podcasts) {
+      if (!newList.contains(p.feedUrl)) {
+        newList.add(p.feedUrl);
+        if (p.imageUrl != null) {
+          addSubscribedPodcastImage(feedUrl: p.feedUrl, imageUrl: p.imageUrl!);
+        }
+        addSubscribedPodcastName(feedUrl: p.feedUrl, name: p.name);
+        addSubscribedPodcastArtist(feedUrl: p.feedUrl, artist: p.artist);
+        await _addPodcastLastUpdatedWithTimestamp(p.feedUrl);
+      }
     }
-    return writeAudioMap(
-      map: _podcasts,
-      fileName: FileNames.podcasts,
-    ).then((_) => _propertiesChangedController.add(true));
-  }
-
-  void _addPodcastUpdate(String feedUrl) {
-    if (_podcastUpdates?.contains(feedUrl) == true) return;
-    _podcastUpdates?.add(feedUrl);
-    writeStringIterable(
-      iterable: _podcastUpdates!,
-      filename: FileNames.podcastUpdates,
-    ).then((_) => _propertiesChangedController.add(true));
+    _sharedPreferences
+        .setStringList(SPKeys.podcastFeedUrls, newList)
+        .then(notify);
   }
 
   bool showPodcastAscending(String feedUrl) =>
@@ -574,26 +607,49 @@ class LibraryService {
     required String feedUrl,
     required bool ascending,
   }) async {
-    final podcast = _podcasts[feedUrl];
-    if (podcast == null || podcast.isEmpty) return;
-    sortListByAudioFilter(
-      audioFilter: AudioFilter.year,
-      audios: podcast,
-      descending: !ascending,
-    );
     if (ascending) {
       await _addAscendingPodcast(feedUrl);
     } else {
       await _removeAscendingPodcast(feedUrl);
     }
-    await updatePodcast(feedUrl, podcast);
   }
 
   Set<String>? _podcastUpdates;
   int? get podcastUpdatesLength => _podcastUpdates?.length;
 
+  void _addPodcastLastUpdated({
+    required String feedUrl,
+    required String timestamp,
+  }) {
+    _sharedPreferences
+        .setString(feedUrl + SPKeys.podcastLastUpdatedSuffix, timestamp)
+        .then(notify);
+  }
+
+  void _removePodcastLastUpdated(String feedUrl) => _sharedPreferences
+      .remove(feedUrl + SPKeys.podcastLastUpdatedSuffix)
+      .then(notify);
+
+  String? getPodcastLastUpdated(String feedUrl) =>
+      _sharedPreferences.getString(feedUrl + SPKeys.podcastLastUpdatedSuffix);
+
   bool podcastUpdateAvailable(String feedUrl) =>
       _podcastUpdates?.contains(feedUrl) == true;
+
+  void addPodcastUpdate(String feedUrl, DateTime? lastUpdated) {
+    if (_podcastUpdates?.contains(feedUrl) == true || lastUpdated == null)
+      return;
+
+    _addPodcastLastUpdated(
+      feedUrl: feedUrl,
+      timestamp: lastUpdated.podcastTimeStamp,
+    );
+    _podcastUpdates?.add(feedUrl);
+    writeStringIterable(
+      iterable: _podcastUpdates!,
+      filename: FileNames.podcastUpdates,
+    ).then((_) => _propertiesChangedController.add(true));
+  }
 
   void removePodcastUpdate(String feedUrl) {
     if (_podcastUpdates?.isNotEmpty == false) return;
@@ -606,20 +662,27 @@ class LibraryService {
 
   void removePodcast(String feedUrl) {
     if (!isPodcastSubscribed(feedUrl)) return;
-    _podcasts.remove(feedUrl);
-    writeAudioMap(map: _podcasts, fileName: FileNames.podcasts)
-        .then((_) => _propertiesChangedController.add(true))
-        .then((_) => removePodcastUpdate(feedUrl))
-        .then((_) => _removeFeedWithDownload(feedUrl));
+    final newList = List<String>.from(_podcasts);
+    newList.remove(feedUrl);
+    _sharedPreferences
+        .setStringList(SPKeys.podcastFeedUrls, newList)
+        .then(notify);
+    _removeFeedWithDownload(feedUrl);
+    removeSubscribedPodcastImage(feedUrl);
+    removeSubscribedPodcastName(feedUrl);
+    removeSubscribedPodcastArtist(feedUrl);
   }
 
   Future<void> removeAllPodcasts() async {
+    for (final feedUrl in _podcasts) {
+      removeSubscribedPodcastImage(feedUrl);
+      removeSubscribedPodcastName(feedUrl);
+      removeSubscribedPodcastArtist(feedUrl);
+      _removePodcastLastUpdated(feedUrl);
+    }
     _podcasts.clear();
     _podcastUpdates?.clear();
-    writeAudioMap(
-      map: _podcasts,
-      fileName: FileNames.podcasts,
-    ).then((_) => _propertiesChangedController.add(true));
+    _sharedPreferences.setStringList(SPKeys.podcastFeedUrls, []).then(notify);
   }
 
   //
@@ -669,7 +732,6 @@ class LibraryService {
           FileNames.likedAudios,
         )).entries.firstOrNull?.value ??
         <Audio>[];
-    _podcasts = await readAudioMap(FileNames.podcasts);
     _podcastUpdates = Set.from(
       await readStringIterable(filename: FileNames.podcastUpdates) ??
           <String>{},

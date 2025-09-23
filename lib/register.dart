@@ -1,8 +1,8 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:desktop_notifications/desktop_notifications.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_discord_rpc/flutter_discord_rpc.dart';
 import 'package:github/github.dart';
+import 'package:local_notifier/local_notifier.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -184,9 +184,17 @@ void registerDependencies() {
       dependsOn: [SettingsService, LibraryService],
       dispose: (s) async => s.dispose(),
     )
-    ..registerLazySingleton<NotificationsService>(
-      () => NotificationsService(isLinux ? NotificationsClient() : null),
+    ..registerSingletonAsync<LocalNotifier>(() async {
+      await localNotifier.setup(
+        appName: AppConfig.appId,
+        shortcutPolicy: ShortcutPolicy.requireCreate,
+      );
+      return localNotifier;
+    })
+    ..registerSingletonWithDependencies<NotificationsService>(
+      () => NotificationsService(isDesktop ? di<LocalNotifier>() : null),
       dispose: (s) async => s.dispose(),
+      dependsOn: [if (isDesktop) LocalNotifier],
     )
     ..registerSingletonWithDependencies<PodcastService>(
       () => PodcastService(
@@ -194,7 +202,7 @@ void registerDependencies() {
         settingsService: di<SettingsService>(),
         libraryService: di<LibraryService>(),
       ),
-      dependsOn: [SettingsService, LibraryService],
+      dependsOn: [SettingsService, LibraryService, NotificationsService],
     )
     ..registerLazySingleton<Connectivity>(() => Connectivity())
     ..registerSingletonAsync<RadioService>(
@@ -279,9 +287,10 @@ void registerDependencies() {
       dependsOn: [SettingsService, LocalAudioService, LibraryService],
       dispose: (s) => s.dispose(),
     )
-    ..registerLazySingleton<PodcastModel>(
+    ..registerSingletonWithDependencies<PodcastModel>(
       () => PodcastModel(podcastService: di<PodcastService>()),
       dispose: (s) => s.dispose(),
+      dependsOn: [PodcastService],
     )
     ..registerSingletonWithDependencies<RadioModel>(
       () => RadioModel(
@@ -307,7 +316,12 @@ void registerDependencies() {
         libraryService: di<LibraryService>(),
         localAudioService: di<LocalAudioService>(),
       ),
-      dependsOn: [RadioService, LibraryService, LocalAudioService],
+      dependsOn: [
+        RadioService,
+        LibraryService,
+        LocalAudioService,
+        PodcastService,
+      ],
     )
     ..registerSingletonWithDependencies<CustomContentModel>(
       () => CustomContentModel(

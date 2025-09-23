@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
@@ -11,9 +12,11 @@ import '../../common/view/spaced_divider.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../local_audio/local_audio_model.dart';
 import '../../player/player_model.dart';
+import '../../podcasts/podcast_model.dart';
 import '../../radio/radio_model.dart';
 import 'master_item.dart';
 import 'routing_manager.dart';
@@ -160,7 +163,14 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
                 child: IconButton(
                   style: tonedIconButtonStyle(context.colorScheme),
                   onPressed: () async {
-                    final audios = await getAudiosById(widget.pageId);
+                    final result = await showFutureLoadingDialog(
+                      context: context,
+                      future: () async => await getAudiosById(widget.pageId),
+                      backLabel: context.l10n.back,
+                      barrierDismissible: true,
+                      title: context.l10n.loadingPleaseWait,
+                    );
+                    final audios = result.asValue?.value;
                     if (audios?.firstOrNull?.audioType == AudioType.radio) {
                       di<RadioModel>().clickStation(audios?.firstOrNull);
                     }
@@ -200,8 +210,17 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
       return audio == null ? [] : [audio];
     }
 
-    return libraryModel.getPodcast(pageId) ??
-        libraryModel.getPlaylistById(pageId) ??
-        (await di<LocalAudioModel>().findAlbum(pageId));
+    if (libraryModel.isPodcastSubscribed(pageId)) {
+      final episodes =
+          di<PodcastModel>().getPodcastEpisodesFromCache(pageId) ??
+          await di<PodcastModel>().findEpisodes(feedUrl: pageId);
+      return episodes;
+    }
+
+    if (libraryModel.isPlaylistSaved(pageId)) {
+      return libraryModel.getPlaylistById(pageId);
+    }
+
+    return di<LocalAudioModel>().findAlbum(pageId);
   }
 }

@@ -5,7 +5,6 @@ import '../../app/connectivity_model.dart';
 import '../../common/view/common_control_panel.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/offline_page.dart';
-import '../../custom_content/custom_content_model.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../podcast_model.dart';
@@ -27,9 +26,6 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
     final downloadsOnly = watchPropertyValue(
       (PodcastModel m) => m.downloadsOnly,
     );
-    final processing = watchPropertyValue(
-      (CustomContentModel m) => m.processing,
-    );
 
     return CommonControlPanel(
       labels: [
@@ -37,7 +33,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
         Text(context.l10n.downloadsOnly),
       ],
       isSelected: [updatesOnly, downloadsOnly],
-      onSelected: processing || checkingForUpdates
+      onSelected: checkingForUpdates
           ? null
           : (index) {
               if (index == 0) {

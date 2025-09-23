@@ -2166,4 +2166,31 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get useBlurredPlayerBackgroundDescription =>
       'Это приведет к размытию фона игрока. На некоторых устройствах это может привести к снижению производительности.';
+
+  @override
+  String get loadingPleaseWait => 'Loading, please wait ...';
+
+  @override
+  String get importingPodcastsPleaseWait =>
+      'Importing your podcasts, please wait ...';
+
+  @override
+  String get exportingPodcastsPleaseWait =>
+      'Exporting your podcasts, please wait ...';
+
+  @override
+  String get importingStationsPleaseWait =>
+      'Importing your stations, please wait ...';
+
+  @override
+  String get exportingStationsPleaseWait =>
+      'Exporting your stations, please wait ...';
+
+  @override
+  String get importingPlaylistsPleaseWait =>
+      'Importing your playlists, please wait ...';
+
+  @override
+  String get exportingPlaylistsPleaseWait =>
+      'Exporting your playlists, please wait ...';
 }

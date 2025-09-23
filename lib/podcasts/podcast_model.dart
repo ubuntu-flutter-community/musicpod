@@ -23,14 +23,14 @@ class PodcastModel extends SafeChangeNotifier {
   }
 
   void update({
-    String? updateMessage,
+    required String updateMessage,
     // Note: because the podcasts can be modified to include downloads
     // this needs a map and not only the feedurl
-    Map<String, List<Audio>>? oldPodcasts,
+    Set<String>? feedUrls,
   }) {
     _setCheckingForUpdates(true);
     _podcastService
-        .updatePodcasts(updateMessage: updateMessage, oldPodcasts: oldPodcasts)
+        .updatePodcasts(updateMessage: updateMessage, feedUrls: feedUrls)
         .then((_) => _setCheckingForUpdates(false));
   }
 
@@ -96,8 +96,18 @@ class PodcastModel extends SafeChangeNotifier {
 
   String? getSearchQuery(String? feedUrl) => _searchQuery[feedUrl];
 
-  Future<List<Audio>> findEpisodes({Item? item, String? feedUrl}) =>
-      _podcastService.findEpisodes(item: item, feedUrl: feedUrl);
+  Future<List<Audio>> findEpisodes({
+    Item? item,
+    String? feedUrl,
+    bool addUpdates = false,
+  }) => _podcastService.findEpisodes(
+    item: item,
+    feedUrl: feedUrl,
+    addUpdates: addUpdates,
+  );
+
+  List<Audio>? getPodcastEpisodesFromCache(String? feedUrl) =>
+      _podcastService.getPodcastEpisodesFromCache(feedUrl);
 }
 
 enum PodcastEpisodeFilter {

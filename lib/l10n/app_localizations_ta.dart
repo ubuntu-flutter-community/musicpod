@@ -2180,4 +2180,31 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get useBlurredPlayerBackgroundDescription =>
       'இது பிளேயரின் பின்னணியை மங்கச் செய்யும். இது சில சாதனங்களில் குறைந்த செயல்திறனுக்கு வழிவகுக்கும்.';
+
+  @override
+  String get loadingPleaseWait => 'Loading, please wait ...';
+
+  @override
+  String get importingPodcastsPleaseWait =>
+      'Importing your podcasts, please wait ...';
+
+  @override
+  String get exportingPodcastsPleaseWait =>
+      'Exporting your podcasts, please wait ...';
+
+  @override
+  String get importingStationsPleaseWait =>
+      'Importing your stations, please wait ...';
+
+  @override
+  String get exportingStationsPleaseWait =>
+      'Exporting your stations, please wait ...';
+
+  @override
+  String get importingPlaylistsPleaseWait =>
+      'Importing your playlists, please wait ...';
+
+  @override
+  String get exportingPlaylistsPleaseWait =>
+      'Exporting your playlists, please wait ...';
 }

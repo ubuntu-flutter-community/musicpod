@@ -2163,4 +2163,31 @@ class AppLocalizationsSk extends AppLocalizations {
   @override
   String get useBlurredPlayerBackgroundDescription =>
       'Týmto sa rozmaže pozadie prehrávača. Na niektorých zariadeniach to môže viesť k nižšiemu výkonu.';
+
+  @override
+  String get loadingPleaseWait => 'Loading, please wait ...';
+
+  @override
+  String get importingPodcastsPleaseWait =>
+      'Importing your podcasts, please wait ...';
+
+  @override
+  String get exportingPodcastsPleaseWait =>
+      'Exporting your podcasts, please wait ...';
+
+  @override
+  String get importingStationsPleaseWait =>
+      'Importing your stations, please wait ...';
+
+  @override
+  String get exportingStationsPleaseWait =>
+      'Exporting your stations, please wait ...';
+
+  @override
+  String get importingPlaylistsPleaseWait =>
+      'Importing your playlists, please wait ...';
+
+  @override
+  String get exportingPlaylistsPleaseWait =>
+      'Exporting your playlists, please wait ...';
 }

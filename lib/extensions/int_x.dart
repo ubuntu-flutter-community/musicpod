@@ -5,20 +5,24 @@ import '../common/logging.dart';
 
 extension IntX on int? {
   String get unixTimeToDateString {
-    var s = '';
+    var time = '';
+    var date = '';
     if (this == null || this!.abs() > 999999999999999) {
-      return s;
+      return time;
     } else {
       try {
         final dateTime = DateTime.fromMillisecondsSinceEpoch(this!);
-        s = DateFormat.yMMMEd(
+        date = DateFormat.yMd(
+          Platform.localeName == 'und' ? 'en_US' : Platform.localeName,
+        ).format(dateTime);
+        time = DateFormat.Hm(
           Platform.localeName == 'und' ? 'en_US' : Platform.localeName,
         ).format(dateTime);
       } on Exception catch (e) {
         printMessageInDebugMode(e);
-        return s;
+        return date + ', ' + time;
       }
-      return s;
+      return date + ', ' + time;
     }
   }
 }

@@ -125,14 +125,33 @@ class LibraryModel extends SafeChangeNotifier {
   //
 
   List<String> get podcastFeedUrls => _service.podcastFeedUrls;
-  List<Audio>? getPodcast(String? feedUrl) => _service.podcasts[feedUrl];
   int get podcastsLength => _service.podcasts.length;
-  void addPodcast(String feedUrl, List<Audio> audios) =>
-      _service.addPodcast(feedUrl, audios);
+  Future<void> addPodcast({
+    required String feedUrl,
+    String? imageUrl,
+    required String name,
+    required String artist,
+  }) async => _service.addPodcast(
+    feedUrl: feedUrl,
+    imageUrl: imageUrl,
+    name: name,
+    artist: artist,
+  );
+  String? getSubscribedPodcastImage(String feedUrl) =>
+      _service.getSubscribedPodcastImage(feedUrl);
+  void addSubscribedPodcastImage({
+    required String feedUrl,
+    required String imageUrl,
+  }) =>
+      _service.addSubscribedPodcastImage(feedUrl: feedUrl, imageUrl: imageUrl);
+  String? getSubscribedPodcastName(String feedUrl) =>
+      _service.getSubscribedPodcastName(feedUrl);
+  String? getSubscribedPocastArtist(String feedUrl) =>
+      _service.getSubscribedPodcastArtist(feedUrl);
   void removePodcast(String feedUrl) => _service.removePodcast(feedUrl);
 
   bool isPodcastSubscribed(String? feedUrl) =>
-      feedUrl == null ? false : _service.podcasts.containsKey(feedUrl);
+      feedUrl == null ? false : _service.isPodcastSubscribed(feedUrl);
   bool podcastUpdateAvailable(String feedUrl) =>
       _service.podcastUpdateAvailable(feedUrl);
   int? get podcastUpdatesLength => _service.podcastUpdatesLength;

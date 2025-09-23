@@ -569,6 +569,11 @@ class PlayerService {
     _propertiesChangedController.add(true);
   }
 
+  void clearAllLastPositions() {
+    _lastPositions.clear();
+    _propertiesChangedController.add(true);
+  }
+
   Duration? getLastPosition(String? url) => _lastPositions[url];
 
   Future<void> safeLastPosition() async {

@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:collection/collection.dart';
-import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:m3u_parser_nullsafe/m3u_parser_nullsafe.dart';
 import 'package:opml/opml.dart';
@@ -36,8 +34,8 @@ class CustomContentModel extends SafeChangeNotifier {
 
   List<({List<Audio> audios, String id})> _playlists = [];
   List<({List<Audio> audios, String id})> get playlists => _playlists;
-  void setPlaylists(List<({List<Audio> audios, String id})> value) {
-    _playlists = value;
+  Future<void> addPlaylists() async {
+    _playlists = [..._playlists, ...await loadPlaylists()];
     notifyListeners();
   }
 
@@ -46,18 +44,11 @@ class CustomContentModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addPlaylists({List<XFile>? files}) async =>
-      setPlaylists([..._playlists, ...await loadPlaylists(files: files)]);
-
-  Future<List<({List<Audio> audios, String id})>> loadPlaylists({
-    List<XFile>? files,
-  }) async {
+  Future<List<({List<Audio> audios, String id})>> loadPlaylists() async {
     final List<({List<Audio> audios, String id})> lists = [];
 
     try {
-      final paths =
-          files?.map((e) => e.path) ??
-          await _externalPathService.getPathsOfFiles();
+      final paths = await _externalPathService.getPathsOfFiles();
       for (var path in paths) {
         if (path.endsWith('.m3u')) {
           lists.add((
@@ -131,21 +122,13 @@ class CustomContentModel extends SafeChangeNotifier {
     File(join(basePath, '$id.m3u')).writeAsStringSync(m3uAsString.toString());
   }
 
-  bool _processing = false;
-  bool get processing => _processing;
-  void setProcessing(bool value) {
-    if (_processing == value) return;
-    _processing = value;
-    notifyListeners();
-  }
-
   Future<void> importPodcastsFromOpmlFile() async {
-    if (_processing) return;
-    setProcessing(true);
+    final podcasts =
+        <({String artist, String feedUrl, String? imageUrl, String name})>[];
+
     final path = await _externalPathService.getPathOfFile();
 
     if (path == null) {
-      setProcessing(false);
       return;
     }
     final file = File(path);
@@ -153,30 +136,63 @@ class CustomContentModel extends SafeChangeNotifier {
     final xml = file.readAsStringSync();
     final doc = OpmlDocument.parse(xml);
 
-    for (var category in doc.body.where((e) => e.children != null)) {
-      final children = category.children!.where((e) => e.xmlUrl != null);
-      final podcasts = <(String feedUrl, List<Audio> audios)>[];
-      for (var feed in children) {
-        final audios = await _podcastService.findEpisodes(
-          feedUrl: feed.xmlUrl!,
+    for (var outline in doc.body) {
+      if (outline.xmlUrl != null) {
+        final maybe = await _findPodcast(
+          outline.xmlUrl!,
+          text: outline.text,
+          title: outline.title,
         );
-        if (audios.isNotEmpty) {
-          podcasts.add((feed.xmlUrl!, audios));
+        if (maybe != null) {
+          podcasts.add(maybe);
+        }
+      } else {
+        for (var outlineChild in (outline.children ?? <OpmlOutline>[]).where(
+          (e) => e.xmlUrl != null,
+        )) {
+          final maybe = await _findPodcast(
+            outlineChild.xmlUrl!,
+            text: outlineChild.text,
+            title: outlineChild.title,
+          );
+          if (maybe != null) {
+            podcasts.add(maybe);
+          }
         }
       }
-      if (podcasts.isNotEmpty) {
-        _libraryService.addPodcasts(podcasts);
-      }
     }
-    setProcessing(false);
+
+    if (podcasts.isNotEmpty) {
+      await _libraryService.addPodcasts(podcasts);
+    }
+  }
+
+  Future<({String artist, String feedUrl, String? imageUrl, String name})?>
+  _findPodcast(String feed, {String? text, String? title}) async {
+    if (title != null && text != null) {
+      return (feedUrl: feed, artist: text, imageUrl: null, name: title);
+    }
+
+    // Only load the feed if the fields are not provided because this is expensive
+    final audios = await _podcastService.findEpisodes(feedUrl: feed);
+    final artist = audios.first.artist ?? '';
+    final imageUrl = audios.first.albumArtUrl ?? audios.first.imageUrl;
+    final name = audios.first.album ?? '';
+    if (audios.isNotEmpty) {
+      final value = (
+        feedUrl: feed,
+        artist: artist,
+        imageUrl: imageUrl,
+        name: name,
+      );
+      return value;
+    }
+    return null;
   }
 
   Future<bool> exportPodcastsToOpmlFile() async {
-    if (_processing) return false;
-    setProcessing(true);
     final location = await _externalPathService.getPathOfDirectory();
     if (location == null) {
-      setProcessing(false);
       return false;
     }
 
@@ -188,15 +204,17 @@ class CustomContentModel extends SafeChangeNotifier {
     final body = <OpmlOutline>[];
     final category = OpmlOutlineBuilder();
 
-    for (var podcast in _libraryService.podcasts.entries) {
-      category.addChild(
-        OpmlOutlineBuilder()
-            .type('rss')
-            .title(podcast.value.firstOrNull?.album ?? '')
-            .text(podcast.value.firstOrNull?.artist ?? '')
-            .xmlUrl(podcast.key)
-            .build(),
-      );
+    for (var podcast in _libraryService.podcasts) {
+      final name = _libraryService.getSubscribedPodcastName(podcast);
+      final artist = _libraryService.getSubscribedPodcastArtist(podcast);
+      final builder = OpmlOutlineBuilder().type('rss').xmlUrl(podcast);
+      if (name != null) {
+        builder.title(name);
+      }
+      if (artist != null) {
+        builder.text(artist);
+      }
+      category.addChild(builder.build());
     }
 
     body.add(category.type('rss').title('Podcasts').text('Podcasts').build());
@@ -204,16 +222,13 @@ class CustomContentModel extends SafeChangeNotifier {
     final opml = OpmlDocument(head: head, body: body);
     final xml = opml.toXmlString(pretty: true);
     file.writeAsStringSync(xml);
-    setProcessing(false);
+
     return true;
   }
 
   Future<bool> exportStarredStationsToOpmlFile() async {
-    if (_processing) return false;
-    setProcessing(true);
     final location = await _externalPathService.getPathOfDirectory();
     if (location == null) {
-      setProcessing(false);
       return false;
     }
 
@@ -236,17 +251,14 @@ class CustomContentModel extends SafeChangeNotifier {
     final opml = OpmlDocument(head: head, body: body);
     final xml = opml.toXmlString(pretty: true);
     file.writeAsStringSync(xml);
-    setProcessing(false);
+
     return true;
   }
 
   Future<void> importStarredStationsFromOpmlFile() async {
-    if (_processing) return;
-    setProcessing(true);
     final path = await _externalPathService.getPathOfFile();
 
     if (path == null) {
-      setProcessing(false);
       return;
     }
     final file = File(path);
@@ -264,7 +276,6 @@ class CustomContentModel extends SafeChangeNotifier {
         _libraryService.addStarredStations(starredStations);
       }
     }
-    setProcessing(false);
   }
 
   String? _playlistName;
@@ -278,7 +289,6 @@ class CustomContentModel extends SafeChangeNotifier {
   void reset() {
     _playlists = [];
     _playlistName = null;
-    _processing = false;
     notifyListeners();
   }
 }

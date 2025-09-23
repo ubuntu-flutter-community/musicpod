@@ -356,8 +356,8 @@
     "exportPinnedAlbumToM3UFile": "Export pinned albums to M3U file",
     "exportPlaylistToM3UFile": "Export playlist to M3U",
     "exportPlaylistsAndAlbumsToM3UFiles": "Export playlists and albums to M3U files",
-    "exportPodcastsToOpmlFile" : "Export podcasts to OPML file",
-    "importPodcastsFromOpmlFile" : "Import podcasts from OPML file",
+    "exportPodcastsToOpmlFile": "Export podcasts to OPML file",
+    "importPodcastsFromOpmlFile": "Import podcasts from OPML file",
     "exportStarredStationsToOpmlFile": "Export starred stations to OPML file",
     "importStarredStationsFromOpmlFile": "Import starred stations from OPML file",
     "removeAllStarredStations": "Remove all starred stations",
@@ -735,5 +735,12 @@
         }
     },
     "useBlurredPlayerBackgroundTitle": "Use blurred player background",
-    "useBlurredPlayerBackgroundDescription": "This will blur the background of the player. This might lead to lower performance on some devices."
+    "useBlurredPlayerBackgroundDescription": "This will blur the background of the player. This might lead to lower performance on some devices.",
+    "loadingPleaseWait": "Loading, please wait ...",
+    "importingPodcastsPleaseWait": "Importing your podcasts, please wait ...",
+    "exportingPodcastsPleaseWait": "Exporting your podcasts, please wait ...",
+    "importingStationsPleaseWait": "Importing your stations, please wait ...",
+    "exportingStationsPleaseWait": "Exporting your stations, please wait ...",
+    "importingPlaylistsPleaseWait": "Importing your playlists, please wait ...",
+    "exportingPlaylistsPleaseWait": "Exporting your playlists, please wait ..."
 }

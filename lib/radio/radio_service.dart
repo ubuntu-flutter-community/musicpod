@@ -33,11 +33,13 @@ class RadioService {
   String? get connectedHost =>
       _tags == null || _tags!.isEmpty ? null : _radioBrowserApi?.host;
 
-  Future<void> init() async {
-    await (_playerService.player.platform as NativePlayer).observeProperty(
-      'metadata',
-      _onMpvMetadata,
-    );
+  Future<void> init({bool observePlayer = true}) async {
+    if (observePlayer) {
+      await (_playerService.player.platform as NativePlayer).observeProperty(
+        'metadata',
+        _onMpvMetadata,
+      );
+    }
 
     if (connectedHost != null && _tags?.isNotEmpty == true) {
       _propertiesChangedController.add(true);

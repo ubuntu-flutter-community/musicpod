@@ -48,4 +48,9 @@ extension SPKeys on SharedPreferences {
   static const iconSetIndex = 'iconSetIndex';
   static const saveWindowSize = 'saveWindowSize';
   static const blurredPlayerBackground = 'blurredPlayerBackground';
+  static const podcastFeedUrls = 'podcastFeedUrls';
+  static const podcastImageUrlSuffix = '_imageUrl';
+  static const podcastNameSuffix = '_name';
+  static const podcastArtistSuffix = '_artist';
+  static const podcastLastUpdatedSuffix = '_last_updated';
 }

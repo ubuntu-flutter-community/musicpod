@@ -1,24 +1,37 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:media_kit/media_kit.dart';
+import 'package:mockito/annotations.dart';
 import 'package:musicpod/common/data/audio.dart';
+import 'package:musicpod/expose/expose_service.dart';
+import 'package:musicpod/player/player_service.dart';
+import 'package:musicpod/radio/online_art_service.dart';
 import 'package:musicpod/radio/radio_service.dart';
 
 import 'radio_service_test.mocks.dart';
 
 const Audio sixFortyStation = Audio(url: 'http://radio.6forty.com:8000/6forty');
 
+@GenerateMocks([PlayerService, ExposeService, OnlineArtService, Player])
 Future<void> main() async {
-  final service = RadioService(
-    playerService: MockPlayerService(),
-    exposeService: MockExposeService(),
-    onlineArtService: MockOnlineArtService(),
-  );
+  late MockPlayerService mockPlayerService;
+  late RadioService service;
+
   String? host;
-  setUp(() async {
-    await service.init();
-    host = service.connectedHost;
-  });
 
   group('radio tests', () {
+    setUpAll(() async {
+      mockPlayerService = MockPlayerService();
+
+      service = RadioService(
+        playerService: mockPlayerService,
+        exposeService: MockExposeService(),
+        onlineArtService: MockOnlineArtService(),
+      );
+
+      await service.init(observePlayer: false);
+      host = service.connectedHost;
+    });
+
     test('initRadioService', () {
       expect(host != null, true);
     });
