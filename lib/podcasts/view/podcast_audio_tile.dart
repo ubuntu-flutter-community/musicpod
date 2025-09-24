@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/data/audio.dart';
-import '../../common/logging.dart';
+import '../../common/view/html_text.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/share_button.dart';
 import '../../common/view/snackbars.dart';
@@ -231,63 +229,13 @@ class _Description extends StatelessWidget with WatchItMixin {
                 bottom: kLargestSpace,
               ),
               children: [
-                SizedBox(
-                  width: 400,
-                  child: _createHtml(
-                    color: theme.colorScheme.onSurface,
-                    maxLines: 200,
-                    paddings: HtmlPaddings.zero,
-                  ),
-                ),
+                SizedBox(width: 400, child: HtmlText(text: description ?? '')),
               ],
             );
           },
         );
       },
-      child: _createHtml(
-        color: theme.colorScheme.onSurface,
-        maxLines: 5,
-        paddings: HtmlPaddings.all(5),
-      ),
+      child: HtmlText(text: description ?? ''),
     );
-  }
-
-  Widget _createHtml({
-    required Color color,
-    int? maxLines,
-    TextAlign? textAlign,
-    HtmlPaddings? paddings,
-  }) {
-    Widget? html;
-    try {
-      html = Html(
-        data: description,
-        onAnchorTap: (url, attributes, element) {
-          if (url == null) return;
-          launchUrl(Uri.parse(url));
-        },
-        style: {
-          'img': Style(display: Display.none),
-          'body': Style(
-            margin: Margins.zero,
-            padding: paddings,
-            color: color,
-            textOverflow: TextOverflow.ellipsis,
-            maxLines: maxLines,
-            textAlign: textAlign ?? TextAlign.start,
-          ),
-        },
-      );
-    } on Exception catch (_) {
-      printMessageInDebugMode('Error parsing html');
-    }
-    return html ??
-        Text(
-          description ?? '',
-          style: TextStyle(color: color),
-          overflow: TextOverflow.ellipsis,
-          maxLines: maxLines,
-          textAlign: textAlign ?? TextAlign.start,
-        );
   }
 }
