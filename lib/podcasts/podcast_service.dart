@@ -51,6 +51,7 @@ class PodcastService {
     Country? country,
     SimpleLanguage? language,
     int limit = 10,
+    Attribute attribute = Attribute.none,
   }) async {
     SearchResult? result;
     try {
@@ -71,6 +72,7 @@ class PodcastService {
               ? ''
               : language!.isoCode,
           limit: limit,
+          attribute: attribute,
         );
       }
     } catch (e) {

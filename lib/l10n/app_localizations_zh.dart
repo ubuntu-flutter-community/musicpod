@@ -2123,6 +2123,15 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get exportingPlaylistsPleaseWait =>
       'Exporting your playlists, please wait ...';
+
+  @override
+  String get author => 'Author';
+
+  @override
+  String get rating => 'Rating';
+
+  @override
+  String get keywords => 'Keywords';
 }
 
 /// The translations for Chinese, as used in Hong Kong (`zh_HK`).

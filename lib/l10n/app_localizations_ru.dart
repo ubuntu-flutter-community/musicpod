@@ -2193,4 +2193,13 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get exportingPlaylistsPleaseWait =>
       'Exporting your playlists, please wait ...';
+
+  @override
+  String get author => 'Author';
+
+  @override
+  String get rating => 'Rating';
+
+  @override
+  String get keywords => 'Keywords';
 }

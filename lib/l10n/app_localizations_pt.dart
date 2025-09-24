@@ -2192,6 +2192,15 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get exportingPlaylistsPleaseWait =>
       'Exporting your playlists, please wait ...';
+
+  @override
+  String get author => 'Author';
+
+  @override
+  String get rating => 'Rating';
+
+  @override
+  String get keywords => 'Keywords';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).

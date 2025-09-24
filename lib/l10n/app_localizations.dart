@@ -4296,6 +4296,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Exporting your playlists, please wait ...'**
   String get exportingPlaylistsPleaseWait;
+
+  /// No description provided for @author.
+  ///
+  /// In en, this message translates to:
+  /// **'Author'**
+  String get author;
+
+  /// No description provided for @rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating'**
+  String get rating;
+
+  /// No description provided for @keywords.
+  ///
+  /// In en, this message translates to:
+  /// **'Keywords'**
+  String get keywords;
 }
 
 class _AppLocalizationsDelegate

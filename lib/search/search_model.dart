@@ -249,6 +249,14 @@ class SearchModel extends SafeChangeNotifier {
     return match;
   }
 
+  Attribute _podcastSearchAttribute = Attribute.none;
+  Attribute get podcastSearchAttribute => _podcastSearchAttribute;
+  void setPodcastSearchAttribute(Attribute value) {
+    if (value == _podcastSearchAttribute) return;
+    _podcastSearchAttribute = value;
+    notifyListeners();
+  }
+
   Future<void> search({bool clear = false, bool manualFilter = false}) async {
     _loading = true;
 
@@ -305,6 +313,7 @@ class SearchModel extends SafeChangeNotifier {
               country: _country,
               language: _language,
               podcastGenre: _podcastGenre,
+              attribute: _podcastSearchAttribute,
             )
             .then((v) => setPodcastSearchResult(v))
             .then((_) => _loading = false),

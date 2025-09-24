@@ -742,5 +742,8 @@
     "importingStationsPleaseWait": "Importing your stations, please wait ...",
     "exportingStationsPleaseWait": "Exporting your stations, please wait ...",
     "importingPlaylistsPleaseWait": "Importing your playlists, please wait ...",
-    "exportingPlaylistsPleaseWait": "Exporting your playlists, please wait ..."
+    "exportingPlaylistsPleaseWait": "Exporting your playlists, please wait ...",
+    "author": "Author",
+    "rating": "Rating",
+    "keywords": "Keywords"
 }

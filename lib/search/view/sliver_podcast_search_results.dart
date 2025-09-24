@@ -68,8 +68,10 @@ class _SliverPodcastSearchResultsState
     return SliverGrid.builder(
       itemCount: searchResultItems.length,
       gridDelegate: audioCardGridDelegate,
-      itemBuilder: (context, index) =>
-          PodcastCard(item: searchResultItems.elementAt(index)),
+      itemBuilder: (context, index) {
+        final item = searchResultItems.elementAt(index);
+        return PodcastCard(key: ValueKey(item.feedUrl ?? index), item: item);
+      },
     );
   }
 }
@@ -112,8 +114,10 @@ class _SliverPodcastSearchCountryChartsResultsState
       child: ListView.separated(
         itemCount: results.length,
         scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) =>
-            PodcastCard(item: results.elementAt(index)),
+        itemBuilder: (context, index) {
+          final item = results.elementAt(index);
+          return PodcastCard(key: ValueKey(item.feedUrl ?? index), item: item);
+        },
         separatorBuilder: (context, index) =>
             const SizedBox(width: kMediumSpace),
       ),
