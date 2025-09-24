@@ -30,16 +30,16 @@ dependencies:
     sdk: flutter
   flutter_cache_manager: ^3.4.1
   flutter_discord_rpc: ^1.0.0
-  flutter_html: ^3.0.0-beta.2
   flutter_localizations:
     sdk: flutter
   flutter_markdown: ^0.7.3
   flutter_tabler_icons: ^1.41.0
+  flutter_widget_from_html_core: ^0.17.0
   future_loading_dialog: ^0.3.0
   github: ^9.24.0
   gtk: ^2.1.0
   handy_window: ^0.4.0
-  html: ^0.15.4
+
   intl: ^0.20.2
   lastfm: ^0.0.6
   listenbrainz_dart: ^0.0.4
