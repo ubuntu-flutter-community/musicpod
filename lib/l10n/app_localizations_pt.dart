@@ -2201,6 +2201,11 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get keywords => 'Keywords';
+
+  @override
+  String newEpisodesAvailableFor(int length) {
+    return 'New episodes available for $length podcasts';
+  }
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).

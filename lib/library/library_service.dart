@@ -275,14 +275,14 @@ class LibraryService {
     }
   }
 
-  void updatePlaylistName(String oldName, String newName) {
+  Future<void> updatePlaylistName(String oldName, String newName) async {
     if (newName == oldName) return;
     final oldList = _playlists[oldName];
     if (oldList != null) {
       _playlists.remove(oldName);
       _playlists.putIfAbsent(newName, () => oldList);
       updateExternalPlaylistID(oldName, newName);
-      writeAudioMap(
+      await writeAudioMap(
         map: _playlists,
         fileName: FileNames.playlists,
       ).then((_) => _propertiesChangedController.add(true));

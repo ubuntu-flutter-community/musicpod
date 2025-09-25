@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/connectivity_model.dart';
@@ -19,9 +20,6 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     if (!isOnline) return const OfflineBody();
 
-    final checkingForUpdates = watchPropertyValue(
-      (PodcastModel m) => m.checkingForUpdates,
-    );
     final updatesOnly = watchPropertyValue((PodcastModel m) => m.updatesOnly);
     final downloadsOnly = watchPropertyValue(
       (PodcastModel m) => m.downloadsOnly,
@@ -33,46 +31,53 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
         Text(context.l10n.downloadsOnly),
       ],
       isSelected: [updatesOnly, downloadsOnly],
-      onSelected: checkingForUpdates
-          ? null
-          : (index) {
-              if (index == 0) {
-                if (updatesOnly) {
-                  model.setUpdatesOnly(false);
-                } else {
-                  if (di<LibraryModel>().podcastsLength > 10) {
-                    showDialog(
-                      context: context,
-                      builder: (context) => ConfirmationDialog(
-                        title: Text(context.l10n.checkForUpdates),
-                        confirmLabel: context.l10n.checkForUpdates,
-                        content: Text(
-                          context.l10n.checkForUpdatesConfirm(
-                            di<LibraryModel>().podcastsLength.toString(),
-                          ),
-                        ),
-                        onConfirm: () => model.update(
-                          updateMessage: context.l10n.newEpisodeAvailable,
-                        ),
-                      ),
-                    );
-                  } else {
-                    model.update(
-                      updateMessage: context.l10n.newEpisodeAvailable,
-                    );
-                  }
-                  model.setUpdatesOnly(true);
-                  model.setDownloadsOnly(false);
-                }
-              } else {
-                if (downloadsOnly) {
-                  model.setDownloadsOnly(false);
-                } else {
-                  model.setDownloadsOnly(true);
-                  model.setUpdatesOnly(false);
-                }
-              }
-            },
+      onSelected: (index) {
+        if (index == 0) {
+          if (updatesOnly) {
+            model.setUpdatesOnly(false);
+          } else {
+            if (di<LibraryModel>().podcastsLength > 10) {
+              ConfirmationDialog.show(
+                context: context,
+                title: Text(context.l10n.checkForUpdates),
+                confirmLabel: context.l10n.checkForUpdates,
+                content: Text(
+                  context.l10n.checkForUpdatesConfirm(
+                    di<LibraryModel>().podcastsLength.toString(),
+                  ),
+                ),
+                onConfirm: () => di<PodcastModel>().update(
+                  updateMessage: context.l10n.newEpisodeAvailable,
+                  multiUpdateMessage: (length) => context.mounted
+                      ? context.l10n.newEpisodesAvailableFor(length)
+                      : context.l10n.newEpisodeAvailable,
+                ),
+              );
+            } else {
+              showFutureLoadingDialog(
+                context: context,
+                backLabel: context.l10n.back,
+                title: context.l10n.loadingPleaseWait,
+                future: () => di<PodcastModel>().update(
+                  updateMessage: context.l10n.newEpisodeAvailable,
+                  multiUpdateMessage: (length) => context.mounted
+                      ? context.l10n.newEpisodesAvailableFor(length)
+                      : context.l10n.newEpisodeAvailable,
+                ),
+              );
+            }
+            model.setUpdatesOnly(true);
+            model.setDownloadsOnly(false);
+          }
+        } else {
+          if (downloadsOnly) {
+            model.setDownloadsOnly(false);
+          } else {
+            model.setDownloadsOnly(true);
+            model.setUpdatesOnly(false);
+          }
+        }
+      },
     );
   }
 }

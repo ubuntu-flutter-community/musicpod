@@ -98,7 +98,7 @@ class LibraryModel extends SafeChangeNotifier {
       _service.updatePlaylist(id: id, audios: audios, external: external);
   Future<void> removePlaylist(String id) => _service.removePlaylist(id);
 
-  void updatePlaylistName(String oldName, String newName) =>
+  Future<void> updatePlaylistName(String oldName, String newName) async =>
       _service.updatePlaylistName(oldName, newName);
   void addAudiosToPlaylist({required String id, required List<Audio> audios}) =>
       _service.addAudiosToPlaylist(id: id, audios: audios);

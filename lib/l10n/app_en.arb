@@ -745,5 +745,13 @@
     "exportingPlaylistsPleaseWait": "Exporting your playlists, please wait ...",
     "author": "Author",
     "rating": "Rating",
-    "keywords": "Keywords"
+    "keywords": "Keywords",
+    "newEpisodesAvailableFor": "New episodes available for {length} podcasts",
+    "@newEpisodesAvailableFor": {
+        "placeholders": {
+            "length": {
+                "type": "int"
+            }
+        }
+    }
 }

@@ -71,7 +71,8 @@ class RadioSection extends StatelessWidget with WatchItMixin {
                         width: 350,
                         child: Text(l10n.removeAllStarredStationsDescription),
                       ),
-                      onConfirm: () => di<LibraryModel>().unStarAllStations(),
+                      onConfirm: () async =>
+                          di<LibraryModel>().unStarAllStations(),
                     ),
                   ),
                 ),

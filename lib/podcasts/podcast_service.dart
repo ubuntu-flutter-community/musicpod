@@ -98,9 +98,12 @@ class PodcastService {
   Future<void> updatePodcasts({
     Set<String>? feedUrls,
     required String updateMessage,
+    required String Function(int length) multiUpdateMessage,
   }) async {
     if (_updateLock) return;
     _updateLock = true;
+
+    final newUpdateFeedUrls = <String>{};
 
     for (final feedUrl in (feedUrls ?? _libraryService.podcasts)) {
       DateTime? feedLastUpdated;
@@ -116,12 +119,16 @@ class PodcastService {
           feedLastUpdated.podcastTimeStamp != storedTimeStamp) {
         await findEpisodes(feedUrl: feedUrl, loadFromCache: false);
         _libraryService.addPodcastUpdate(feedUrl, feedLastUpdated);
-        final updateMessageSuffix =
-            '${_episodeCache[feedUrl]?.firstOrNull?.album != null ? ' ${_episodeCache[feedUrl]?.firstOrNull?.album}' : ''}';
-        _notificationsService.notify(
-          message: updateMessage + updateMessageSuffix,
-        );
+        newUpdateFeedUrls.add(feedUrl);
       }
+    }
+
+    if (newUpdateFeedUrls.isNotEmpty) {
+      final msg = newUpdateFeedUrls.length == 1
+          ? updateMessage +
+                '${_episodeCache[newUpdateFeedUrls.first]?.firstOrNull?.album != null ? ' ${_episodeCache[newUpdateFeedUrls.first]?.firstOrNull?.album}' : ''}'
+          : multiUpdateMessage(newUpdateFeedUrls.length);
+      _notificationsService.notify(message: msg);
     }
 
     _updateLock = false;
@@ -148,6 +155,15 @@ class PodcastService {
     final url = feedUrl ?? item!.feedUrl!;
 
     if (_episodeCache.containsKey(url) && loadFromCache) {
+      if (_episodeCache[url]?.firstOrNull?.albumArtUrl != null ||
+          _episodeCache[url]?.firstOrNull?.imageUrl != null) {
+        _libraryService.addSubscribedPodcastImage(
+          feedUrl: url,
+          imageUrl:
+              _episodeCache[url]?.firstOrNull?.albumArtUrl ??
+              _episodeCache[url]!.firstOrNull!.imageUrl!,
+        );
+      }
       return _episodeCache[url]!;
     }
 

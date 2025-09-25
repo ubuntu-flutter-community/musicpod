@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -107,13 +109,17 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
         ],
       ),
       confirmLabel: context.l10n.save,
-      onConfirm: () {
-        di<LocalAudioModel>().setLocalAudioindex(
+      onConfirm: () async {
+        unawaited(
+          routingManager.push(pageId: PageIDs.localAudio, replace: true),
+        );
+        await di<LocalAudioModel>().setLocalAudioindex(
           LocalAudioView.playlists.index,
         );
-        routingManager.push(pageId: PageIDs.localAudio);
-        libraryModel.updatePlaylistName(widget.playlistName!, _controller.text);
-        Navigator.of(context).maybePop();
+        await libraryModel.updatePlaylistName(
+          widget.playlistName!,
+          _controller.text,
+        );
       },
     );
   }

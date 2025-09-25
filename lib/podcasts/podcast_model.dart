@@ -22,25 +22,17 @@ class PodcastModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  void update({
+  Future<void> update({
     required String updateMessage,
+    required String Function(int length) multiUpdateMessage,
     // Note: because the podcasts can be modified to include downloads
     // this needs a map and not only the feedurl
     Set<String>? feedUrls,
-  }) {
-    _setCheckingForUpdates(true);
-    _podcastService
-        .updatePodcasts(updateMessage: updateMessage, feedUrls: feedUrls)
-        .then((_) => _setCheckingForUpdates(false));
-  }
-
-  bool _checkingForUpdates = false;
-  bool get checkingForUpdates => _checkingForUpdates;
-  void _setCheckingForUpdates(bool value) {
-    if (_checkingForUpdates == value) return;
-    _checkingForUpdates = value;
-    notifyListeners();
-  }
+  }) async => _podcastService.updatePodcasts(
+    updateMessage: updateMessage,
+    multiUpdateMessage: multiUpdateMessage,
+    feedUrls: feedUrls,
+  );
 
   bool _updatesOnly = false;
   bool get updatesOnly => _updatesOnly;
