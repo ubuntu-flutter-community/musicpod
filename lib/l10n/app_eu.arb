@@ -1428,5 +1428,11 @@
     "importingPlaylistsPleaseWait": "Zure erreprodukzio-zerrendak inportatzen, itxaron mesedez ...",
     "@importingPlaylistsPleaseWait": {},
     "exportingPlaylistsPleaseWait": "Zure erreprodukzio-zerrendak esportatzen, itxaron mesedez ...",
-    "@exportingPlaylistsPleaseWait": {}
+    "@exportingPlaylistsPleaseWait": {},
+    "author": "Egilea",
+    "@author": {},
+    "rating": "Balorazioa",
+    "@rating": {},
+    "keywords": "Hitz-gakoak",
+    "@keywords": {}
 }
