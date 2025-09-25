@@ -16,7 +16,7 @@ Future<AudioServiceHandler> registerAudioServiceHandler() async {
       androidNotificationOngoing: false,
       androidStopForegroundOnPause: false,
       androidNotificationChannelName: AppConfig.appName,
-      androidNotificationChannelId: isAndroid
+      androidNotificationChannelId: isAndroid || isWindows
           ? AppConfig.androidChannelId
           : null,
       androidNotificationChannelDescription: 'MusicPod Media Controls',
