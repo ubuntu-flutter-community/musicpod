@@ -246,10 +246,13 @@ class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
   );
 
   @override
-  void setLocalAudioIndex(int? value) => super.noSuchMethod(
-    Invocation.method(#setLocalAudioIndex, [value]),
-    returnValueForMissingStub: null,
-  );
+  _i3.Future<void> setLocalAudioIndex(int? value) =>
+      (super.noSuchMethod(
+            Invocation.method(#setLocalAudioIndex, [value]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
   void setNeverShowFailedImports(bool? value) => super.noSuchMethod(
@@ -802,11 +805,13 @@ class MockLibraryService extends _i1.Mock implements _i7.LibraryService {
           as _i3.Future<void>);
 
   @override
-  void updatePlaylistName(String? oldName, String? newName) =>
-      super.noSuchMethod(
-        Invocation.method(#updatePlaylistName, [oldName, newName]),
-        returnValueForMissingStub: null,
-      );
+  _i3.Future<void> updatePlaylistName(String? oldName, String? newName) =>
+      (super.noSuchMethod(
+            Invocation.method(#updatePlaylistName, [oldName, newName]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
   void moveAudioInPlaylist({
