@@ -37,4 +37,5 @@ jobs:
       - run: sudo apt update
       - run: sudo apt install -y clang cmake curl libgtk-3-dev ninja-build pkg-config unzip libunwind-dev libmpv-dev libnotify-dev
       - run: flutter pub get
+      - run: rm -rf ~/.rustup ~/.cargo
       - run: flutter build linux -v
