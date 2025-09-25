@@ -4314,6 +4314,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Keywords'**
   String get keywords;
+
+  /// No description provided for @newEpisodesAvailableFor.
+  ///
+  /// In en, this message translates to:
+  /// **'New episodes available for {length} podcasts'**
+  String newEpisodesAvailableFor(int length);
 }
 
 class _AppLocalizationsDelegate

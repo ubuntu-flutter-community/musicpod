@@ -93,7 +93,7 @@ class SettingsService {
   int get localAudioIndex =>
       _preferences.getInt(SPKeys.localAudioIndex) ??
       LocalAudioView.albums.index;
-  void setLocalAudioIndex(int value) =>
+  Future<void> setLocalAudioIndex(int value) async =>
       _preferences.setInt(SPKeys.localAudioIndex, value).then(notify);
 
   bool get neverShowFailedImports =>

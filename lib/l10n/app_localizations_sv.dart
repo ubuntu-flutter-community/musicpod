@@ -2194,4 +2194,9 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get keywords => 'Keywords';
+
+  @override
+  String newEpisodesAvailableFor(int length) {
+    return 'New episodes available for $length podcasts';
+  }
 }

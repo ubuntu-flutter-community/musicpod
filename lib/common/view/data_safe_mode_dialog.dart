@@ -33,9 +33,10 @@ class DataSafeModeDialog extends StatelessWidget with WatchItMixin {
             ? l10n.isBackInWifiDialogBody
             : l10n.isMaybeLowBandwidthDialogBody,
       ),
-      onConfirm: () => di<RadioModel>().setDataSafeMode(!isEthernetOrWifi),
+      onConfirm: () async =>
+          di<RadioModel>().setDataSafeMode(!isEthernetOrWifi),
       cancelLabel: l10n.stopToNotifyAboutDataSafeMode,
-      onCancel: () {
+      onCancel: () async {
         di<SettingsModel>().setNotifyDataSafeMode(false);
         cancel();
       },

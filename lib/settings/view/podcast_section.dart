@@ -7,7 +7,6 @@ import '../../common/file_names.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
-import '../../common/view/progress.dart';
 import '../../common/view/ui_constants.dart';
 import '../../custom_content/custom_content_model.dart';
 import '../../extensions/build_context_x.dart';
@@ -150,10 +149,6 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
-    final checkingForUpdates = watchPropertyValue(
-      (PodcastModel m) => m.checkingForUpdates,
-    );
-
     return YaruTile(
       title: Text(l10n.podcastSubscriptions),
       trailing: Row(
@@ -164,15 +159,12 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
               semanticLabel: context.l10n.exportPodcastsToOpmlFile,
             ),
             tooltip: context.l10n.exportPodcastsToOpmlFile,
-            onPressed: checkingForUpdates
-                ? null
-                : () => showFutureLoadingDialog(
-                    context: context,
-                    future: () =>
-                        di<CustomContentModel>().exportPodcastsToOpmlFile(),
-                    backLabel: context.l10n.back,
-                    title: context.l10n.exportingPodcastsPleaseWait,
-                  ),
+            onPressed: () => showFutureLoadingDialog(
+              context: context,
+              future: () => di<CustomContentModel>().exportPodcastsToOpmlFile(),
+              backLabel: context.l10n.back,
+              title: context.l10n.exportingPodcastsPleaseWait,
+            ),
           ),
           IconButton(
             icon: Icon(
@@ -180,41 +172,30 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
               semanticLabel: context.l10n.importPodcastsFromOpmlFile,
             ),
             tooltip: context.l10n.importPodcastsFromOpmlFile,
-            onPressed: checkingForUpdates
-                ? null
-                : () => showFutureLoadingDialog(
-                    context: context,
-                    future: () =>
-                        di<CustomContentModel>().importPodcastsFromOpmlFile(),
-                    title: context.l10n.importingPodcastsPleaseWait,
-                    backLabel: context.l10n.back,
-                  ),
+            onPressed: () => showFutureLoadingDialog(
+              context: context,
+              future: () =>
+                  di<CustomContentModel>().importPodcastsFromOpmlFile(),
+              title: context.l10n.importingPodcastsPleaseWait,
+              backLabel: context.l10n.back,
+            ),
           ),
           IconButton(
-            icon: checkingForUpdates
-                ? const SizedBox.square(
-                    dimension: 20,
-                    child: Progress(strokeWidth: 2),
-                  )
-                : Icon(Iconz.remove),
+            icon: Icon(Iconz.remove),
             tooltip: context.l10n.podcasts,
-            onPressed: checkingForUpdates
-                ? null
-                : () => showDialog(
-                    context: context,
-                    builder: (_) => ConfirmationDialog(
-                      title: Text(context.l10n.removeAllPodcastsConfirm),
-                      content: Text(context.l10n.removeAllPodcastsDescription),
-                      confirmLabel: context.l10n.ok,
-                      cancelLabel: context.l10n.cancel,
-                      onConfirm: () async {
-                        await di<LibraryModel>().removeAllPodcasts();
-                        di<PlayerService>().clearAllLastPositions();
-                        wipeCustomSettings(filename: FileNames.podcastUpdates);
-                        wipeCustomSettings(filename: FileNames.lastPositions);
-                      },
-                    ),
-                  ),
+            onPressed: () => ConfirmationDialog.show(
+              context: context,
+              title: Text(context.l10n.removeAllPodcastsConfirm),
+              content: Text(context.l10n.removeAllPodcastsDescription),
+              confirmLabel: context.l10n.ok,
+              cancelLabel: context.l10n.cancel,
+              onConfirm: () async {
+                await di<LibraryModel>().removeAllPodcasts();
+                di<PlayerService>().clearAllLastPositions();
+                wipeCustomSettings(filename: FileNames.podcastUpdates);
+                wipeCustomSettings(filename: FileNames.lastPositions);
+              },
+            ),
           ),
         ],
       ),

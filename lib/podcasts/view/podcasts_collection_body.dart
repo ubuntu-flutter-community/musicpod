@@ -9,7 +9,6 @@ import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
-import '../../common/view/loading_grid.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/offline_page.dart';
 import '../../common/view/safe_network_image.dart';
@@ -33,10 +32,6 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     if (!isOnline) return const OfflineBody();
 
-    final checkingForUpdates = watchPropertyValue(
-      (PodcastModel m) => m.checkingForUpdates,
-    );
-
     final subs = watchPropertyValue((LibraryModel m) => m.podcastFeedUrls);
     final libraryModel = di<LibraryModel>();
     final updatesLength = watchPropertyValue(
@@ -59,30 +54,29 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
       controlPanel: const PodcastCollectionControlPanel(),
       controlPanelSuffix: const SettingsButton.icon(scrollIndex: 1),
       onStretchTrigger: () async {
-        if (checkingForUpdates) return;
         if (subsLength > 10) {
-          showDialog(
+          ConfirmationDialog.show(
             context: context,
-            builder: (context) => ConfirmationDialog(
-              title: Text(context.l10n.checkForUpdates),
-              confirmLabel: context.l10n.checkForUpdates,
-              content: Text(
-                context.l10n.checkForUpdatesConfirm(subsLength.toString()),
-              ),
-              onConfirm: () => di<PodcastModel>().update(
-                updateMessage: context.l10n.newEpisodeAvailable,
-              ),
+            title: Text(context.l10n.checkForUpdates),
+            confirmLabel: context.l10n.checkForUpdates,
+            content: Text(
+              context.l10n.checkForUpdatesConfirm(subsLength.toString()),
+            ),
+            onConfirm: () => di<PodcastModel>().update(
+              updateMessage: context.l10n.newEpisodeAvailable,
+              multiUpdateMessage: (length) =>
+                  context.l10n.newEpisodesAvailableFor(length),
             ),
           );
         } else {
           di<PodcastModel>().update(
             updateMessage: context.l10n.newEpisodeAvailable,
+            multiUpdateMessage: (length) =>
+                context.l10n.newEpisodesAvailableFor(length),
           );
         }
       },
-      contentBuilder: (context, constraints) => checkingForUpdates
-          ? SliverLoadingGrid(limit: subsLength)
-          : (subsLength == 0)
+      contentBuilder: (context, constraints) => (subsLength == 0)
           ? SliverNoSearchResultPage(
               message: Column(
                 mainAxisSize: MainAxisSize.min,

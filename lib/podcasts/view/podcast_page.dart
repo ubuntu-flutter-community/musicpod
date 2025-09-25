@@ -110,6 +110,8 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
             onRefresh: () async => di<PodcastModel>().update(
               feedUrls: {feedUrl},
               updateMessage: context.l10n.newEpisodeAvailable,
+              multiUpdateMessage: (length) =>
+                  context.l10n.newEpisodesAvailableFor(length),
             ),
             child: CustomScrollView(
               slivers: [

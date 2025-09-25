@@ -21,6 +21,8 @@ class PodcastRefreshButton extends StatelessWidget {
           : () => di<PodcastModel>().update(
               feedUrls: {pageId},
               updateMessage: context.l10n.newEpisodeAvailable,
+              multiUpdateMessage: (length) =>
+                  context.l10n.newEpisodesAvailableFor(length),
             ),
       icon: Icon(Iconz.refresh),
     );
