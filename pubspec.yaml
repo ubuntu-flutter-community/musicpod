@@ -14,7 +14,6 @@ dependencies:
     git:
       url: https://github.com/Feichtmeier/audio-service-mpris
       ref: ad6f743b73e320670449026fa1852d9978438bb9
-  audio_service_win: ^0.0.2
   basic_utils: ^5.7.0
   blur: ^4.0.2
   cached_network_image: ^3.4.1
@@ -77,6 +76,7 @@ dependencies:
   scroll_to_index: ^3.0.1
   shared_preferences: ^2.3.1
   shimmer: ^3.0.0
+  smtc_windows: ^1.1.0
   super_drag_and_drop: ^0.9.1
   synchronized: ^3.3.1
   system_theme: ^3.0.0
