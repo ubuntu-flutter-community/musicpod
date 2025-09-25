@@ -1431,5 +1431,11 @@
     "importingPlaylistsPleaseWait": "Importazione playlist...",
     "@importingPlaylistsPleaseWait": {},
     "exportingPlaylistsPleaseWait": "Esportazione playlist...",
-    "@exportingPlaylistsPleaseWait": {}
+    "@exportingPlaylistsPleaseWait": {},
+    "author": "Autore",
+    "@author": {},
+    "rating": "Valutazione",
+    "@rating": {},
+    "keywords": "Parole chiave",
+    "@keywords": {}
 }
