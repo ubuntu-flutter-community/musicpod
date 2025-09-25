@@ -7,7 +7,6 @@ import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:smtc_windows/smtc_windows.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -29,10 +28,9 @@ import 'local_audio/local_cover_model.dart';
 import 'local_audio/local_cover_service.dart';
 import 'notifications/notifications_service.dart';
 import 'persistence_utils.dart';
-import 'player/register_audio_service_handler.dart';
 import 'player/player_model.dart';
 import 'player/player_service.dart';
-import 'player/register_smtc_windows.dart';
+import 'player/register_audio_service_handler.dart';
 import 'podcasts/download_model.dart';
 import 'podcasts/podcast_model.dart';
 import 'podcasts/podcast_service.dart';
@@ -141,25 +139,12 @@ void registerDependencies() {
       },
       dependsOn: [ExposeService],
       dispose: (s) async => s.dispose(),
-    );
-  if (isWindows) {
-    di.registerSingletonAsync<SMTCWindows>(
-      registerSMTCWindows,
-      dependsOn: [PlayerService],
-      dispose: (s) async {
-        smtcSubscription?.cancel();
-        await s.dispose();
-      },
-    );
-  } else {
-    di.registerSingletonAsync<AudioServiceHandler>(
+    )
+    ..registerSingletonAsync<AudioServiceHandler>(
       registerAudioServiceHandler,
       dependsOn: [PlayerService],
       dispose: (s) async => s.stop(),
-    );
-  }
-
-  di
+    )
     ..registerSingleton<ExternalPathService>(const ExternalPathService())
     ..registerSingletonAsync<LibraryService>(
       () async {

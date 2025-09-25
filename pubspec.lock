@@ -106,6 +106,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.4"
+  audio_service_win:
+    dependency: "direct main"
+    description:
+      name: audio_service_win
+      sha256: "8e8cd6a576901e4386dc22a8ca6d959317bf41c74b2bc4c6c5466826d0e529e8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   audio_session:
     dependency: transitive
     description:
@@ -1431,14 +1439,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  smtc_windows:
-    dependency: "direct main"
-    description:
-      name: smtc_windows
-      sha256: dee279b0ddf663c4c729a88bca4e57fb4861aa1b3d01e230bdbf1277b8bfe664
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0"
   source_gen:
     dependency: transitive
     description:
