@@ -211,6 +211,11 @@ class SettingsService {
   Future<void> setShowPositionDuration(bool value) async =>
       _preferences.setBool(SPKeys.showPositionDuration, value).then(notify);
 
+  bool get hideCompletedEpisodes =>
+      _preferences.getBool(SPKeys.hideCompletedEpisodes) ?? false;
+  Future<void> setHideCompletedEpisodes(bool value) =>
+      _preferences.setBool(SPKeys.hideCompletedEpisodes, value).then(notify);
+
   CloseBtnAction get closeBtnActionIndex =>
       _preferences.getString(SPKeys.closeBtnAction) == null
       ? CloseBtnAction.alwaysAsk

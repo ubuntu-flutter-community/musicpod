@@ -973,6 +973,24 @@ abstract class AppLocalizations {
   /// **'Mark all episodes as done'**
   String get markAllEpisodesAsDone;
 
+  /// No description provided for @markEpisodeAsDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark episode as done'**
+  String get markEpisodeAsDone;
+
+  /// No description provided for @hideCompletedEpisodes.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide completed episodes'**
+  String get hideCompletedEpisodes;
+
+  /// No description provided for @showCompletedEpisodes.
+  ///
+  /// In en, this message translates to:
+  /// **'Show completed episodes'**
+  String get showCompletedEpisodes;
+
   /// No description provided for @reset.
   ///
   /// In en, this message translates to:

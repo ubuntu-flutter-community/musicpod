@@ -260,7 +260,12 @@ class RadioService {
     }
   }
 
-  Future<void> dispose() async => _propertiesChangedController.close();
+  Future<void> dispose() async {
+    await _propertiesChangedController.close();
+    await (_playerService.player.platform as NativePlayer).unobserveProperty(
+      'metadata',
+    );
+  }
 
   //
   // Everything related to radio stream icy-title information observed from MPV and digested here

@@ -453,6 +453,15 @@ class AppLocalizationsEt extends AppLocalizations {
   String get markAllEpisodesAsDone => 'Märgi kõik osad vaadatuks';
 
   @override
+  String get markEpisodeAsDone => 'Mark episode as done';
+
+  @override
+  String get hideCompletedEpisodes => 'Hide completed episodes';
+
+  @override
+  String get showCompletedEpisodes => 'Show completed episodes';
+
+  @override
   String get reset => 'Lähtesta';
 
   @override

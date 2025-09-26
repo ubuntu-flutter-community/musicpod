@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
@@ -17,6 +18,7 @@ import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../../settings/settings_model.dart';
 import 'download_button.dart';
+import 'podcast_mark_done_button.dart';
 import 'podcast_tile_play_button.dart';
 
 class PodcastAudioTile extends StatelessWidget with WatchItMixin {
@@ -66,6 +68,8 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
             ? 42
             : 38) /
         2;
+
+    final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
 
     return YaruExpandable(
       isExpanded: isExpanded,
@@ -135,12 +139,21 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
                           tooltip: context.l10n.replayEpisode,
                           onPressed: audio.url == null
                               ? null
-                              : () => playerModel
-                                  ..removeLastPosition(audio.url!)
-                                  ..setPosition(Duration.zero)
-                                  ..seek(),
+                              : () => showFutureLoadingDialog(
+                                  context: context,
+                                  future: () async {
+                                    await playerModel.removeLastPosition(
+                                      audio.url!,
+                                    );
+                                    if (audio == currentAudio) {
+                                      playerModel.setPosition(Duration.zero);
+                                      await playerModel.seek();
+                                    }
+                                  },
+                                ),
                           icon: Icon(Iconz.replay),
                         ),
+                        EpisodeMarkDownButton(episode: audio),
                       ],
                     ),
                   ),
@@ -211,31 +224,30 @@ class _Description extends StatelessWidget with WatchItMixin {
     final theme = context.theme;
     return InkWell(
       borderRadius: BorderRadius.circular(8),
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (c) {
-            return SimpleDialog(
-              titlePadding: EdgeInsets.zero,
-              title: YaruDialogTitleBar(
-                backgroundColor: theme.dialogTheme.backgroundColor,
-                border: BorderSide.none,
-                title: Text(title ?? ''),
-              ),
-              contentPadding: EdgeInsets.only(
-                top: useYaruTheme ? 0 : kLargestSpace,
-                left: kLargestSpace,
-                right: kLargestSpace,
-                bottom: kLargestSpace,
-              ),
-              children: [
-                SizedBox(width: 400, child: HtmlText(text: description ?? '')),
-              ],
-            );
-          },
-        );
-      },
-      child: HtmlText(text: description ?? ''),
+      onTap: () => showDialog(
+        context: context,
+        builder: (c) => SimpleDialog(
+          titlePadding: EdgeInsets.zero,
+          title: YaruDialogTitleBar(
+            backgroundColor: theme.dialogTheme.backgroundColor,
+            border: BorderSide.none,
+            title: Text(title ?? ''),
+          ),
+          contentPadding: EdgeInsets.only(
+            top: useYaruTheme ? 0 : kLargestSpace,
+            left: kLargestSpace,
+            right: kLargestSpace,
+            bottom: kLargestSpace,
+          ),
+          children: [
+            SizedBox(width: 400, child: HtmlText(text: description ?? '')),
+          ],
+        ),
+      ),
+      child: SizedBox(
+        height: 100,
+        child: HtmlText(text: description ?? '', wrapInFakeScroll: true),
+      ),
     );
   }
 }

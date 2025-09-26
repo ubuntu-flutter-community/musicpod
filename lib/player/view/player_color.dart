@@ -80,6 +80,7 @@ class _BlurredPlayerColor extends StatelessWidget {
               ? Colors.white
               : theme.scaffoldBackgroundColor,
           child: FullHeightPlayerImage(
+            showAudioVisualizer: false,
             emptyFallBack: true,
             borderRadius: BorderRadius.zero,
             fit: BoxFit.cover,

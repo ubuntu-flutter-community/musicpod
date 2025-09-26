@@ -11,6 +11,18 @@ class Iconz {
   static bool get cupertino => _iconSetIndex == IconSet.cupertino.index;
   static bool get yaru => _iconSetIndex == IconSet.yaru.index;
 
+  static IconData get show => yaru
+      ? YaruIcons.eye
+      : cupertino
+      ? CupertinoIcons.eye
+      : Icons.remove_red_eye_outlined;
+
+  static IconData get hide => yaru
+      ? YaruIcons.hide
+      : cupertino
+      ? CupertinoIcons.eye_slash
+      : Icons.visibility_off_outlined;
+
   static IconData get dropdown => yaru
       ? YaruIcons.pan_down
       : cupertino

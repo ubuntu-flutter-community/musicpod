@@ -67,7 +67,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
             if (!isMobile || context.isPortrait)
               const Hero(
                 tag: 'FullHeightPlayerImageInPortrait',
-                child: FullHeightPlayerImage(),
+                child: FullHeightPlayerImage(showAudioVisualizer: true),
               ),
             const SizedBox(height: kLargestSpace),
             Padding(

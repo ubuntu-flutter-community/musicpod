@@ -182,6 +182,9 @@
         }
     },
     "markAllEpisodesAsDone": "Mark all episodes as done",
+    "markEpisodeAsDone": "Mark episode as done",
+    "hideCompletedEpisodes": "Hide completed episodes",
+    "showCompletedEpisodes": "Show completed episodes",
     "reset": "Reset",
     "resetAllSettings": "Reset all settings",
     "resetAllSettingsConfirm": "Are you absolutely sure to reset all settings, your podcast subscriptions, your podcast progress, your starred stations and your pinned albums?  The app will be closed after and you need to re-open it.",

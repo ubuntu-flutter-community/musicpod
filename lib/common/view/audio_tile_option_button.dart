@@ -13,6 +13,7 @@ import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../player/player_model.dart';
 import '../../playlists/view/add_to_playlist_dialog.dart';
+import '../../settings/settings_model.dart';
 import '../data/audio.dart';
 import '../data/audio_type.dart';
 import '../page_ids.dart';
@@ -66,14 +67,19 @@ class AudioTileOptionButton extends StatelessWidget {
     return PopupMenuButton(
       tooltip: l10n.moreOptions,
       padding: EdgeInsets.zero,
-      enabled: audios.isNotEmpty && playlistId.isNotEmpty,
+      enabled:
+          (audios.isNotEmpty || audios.every((e) => e.isPodcast)) &&
+          playlistId.isNotEmpty,
       itemBuilder: (context) {
+        final hideCompletedEpisodes = di<SettingsModel>().hideCompletedEpisodes;
         final playerModel = di<PlayerModel>();
         final currentAudio = playerModel.audio;
         final currentlyLocalPlaying =
             currentAudio != null && currentAudio.isLocal;
         return [
-          if (audios.none((e) => e.isRadio) && audios.none((e) => e.isPodcast))
+          if (audios.isNotEmpty &&
+              audios.none((e) => e.isRadio) &&
+              audios.none((e) => e.isPodcast))
             PopupMenuItem(
               onTap: () {
                 if (currentlyLocalPlaying) {
@@ -111,7 +117,8 @@ class AudioTileOptionButton extends StatelessWidget {
                 ),
               ),
             ),
-          if (audios.none((e) => e.audioType == AudioType.radio) &&
+          if (audios.isNotEmpty &&
+              audios.none((e) => e.audioType == AudioType.radio) &&
               audios.none((e) => e.audioType == AudioType.podcast))
             PopupMenuItem(
               onTap: () => showDialog(
@@ -192,6 +199,21 @@ class AudioTileOptionButton extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     text: searchTerm,
                   ),
+                ),
+              ),
+            ),
+          if (audios.every((e) => e.isPodcast))
+            PopupMenuItem(
+              onTap: () => di<SettingsModel>().setHideCompletedEpisodes(
+                !hideCompletedEpisodes,
+              ),
+              child: ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                leading: Icon(hideCompletedEpisodes ? Iconz.show : Iconz.hide),
+                title: Text(
+                  hideCompletedEpisodes
+                      ? l10n.showCompletedEpisodes
+                      : l10n.hideCompletedEpisodes,
                 ),
               ),
             ),

@@ -200,6 +200,14 @@ class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
           as bool);
 
   @override
+  bool get hideCompletedEpisodes =>
+      (super.noSuchMethod(
+            Invocation.getter(#hideCompletedEpisodes),
+            returnValue: false,
+          )
+          as bool);
+
+  @override
   _i6.CloseBtnAction get closeBtnActionIndex =>
       (super.noSuchMethod(
             Invocation.getter(#closeBtnActionIndex),
@@ -417,6 +425,15 @@ class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
   _i3.Future<void> setShowPositionDuration(bool? value) =>
       (super.noSuchMethod(
             Invocation.method(#setShowPositionDuration, [value]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
+
+  @override
+  _i3.Future<void> setHideCompletedEpisodes(bool? value) =>
+      (super.noSuchMethod(
+            Invocation.method(#setHideCompletedEpisodes, [value]),
             returnValue: _i3.Future<void>.value(),
             returnValueForMissingStub: _i3.Future<void>.value(),
           )
@@ -1066,10 +1083,13 @@ class MockLibraryService extends _i1.Mock implements _i7.LibraryService {
       );
 
   @override
-  void removePodcastUpdate(String? feedUrl) => super.noSuchMethod(
-    Invocation.method(#removePodcastUpdate, [feedUrl]),
-    returnValueForMissingStub: null,
-  );
+  _i3.Future<void> removePodcastUpdate(String? feedUrl) =>
+      (super.noSuchMethod(
+            Invocation.method(#removePodcastUpdate, [feedUrl]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
   void removePodcast(String? feedUrl) => super.noSuchMethod(

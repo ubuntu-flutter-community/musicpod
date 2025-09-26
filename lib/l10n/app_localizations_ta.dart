@@ -458,6 +458,15 @@ class AppLocalizationsTa extends AppLocalizations {
       'செய்தபடியே எல்லா அத்தியாயங்களையும் குறிக்கவும்';
 
   @override
+  String get markEpisodeAsDone => 'Mark episode as done';
+
+  @override
+  String get hideCompletedEpisodes => 'Hide completed episodes';
+
+  @override
+  String get showCompletedEpisodes => 'Show completed episodes';
+
+  @override
   String get reset => 'மீட்டமை';
 
   @override

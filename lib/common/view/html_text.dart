@@ -57,7 +57,7 @@ class HtmlText extends StatelessWidget {
       behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
       child: SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
-
+        clipBehavior: Clip.antiAliasWithSaveLayer,
         child: htmlWidget,
       ),
     );

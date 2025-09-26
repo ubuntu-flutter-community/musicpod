@@ -441,6 +441,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get markAllEpisodesAsDone => '将所有剧集标记为已完成';
 
   @override
+  String get markEpisodeAsDone => 'Mark episode as done';
+
+  @override
+  String get hideCompletedEpisodes => 'Hide completed episodes';
+
+  @override
+  String get showCompletedEpisodes => 'Show completed episodes';
+
+  @override
   String get reset => '重置';
 
   @override

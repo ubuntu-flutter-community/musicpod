@@ -83,6 +83,7 @@ dependencies:
   url_launcher: ^6.3.0
   watch_it: ^1.5.0
   watcher: ^1.1.1
+  waveform_visualizer: ^1.0.0
   win32: ^5.5.4
   window_manager: ^0.5.1
   xdg_directories: ^1.0.4
