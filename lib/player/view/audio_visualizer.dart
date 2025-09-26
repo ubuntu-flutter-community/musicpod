@@ -67,42 +67,19 @@ class _AudioVisualizerState extends State<AudioVisualizer> {
       (PlayerModel m) => m.color ?? context.colorScheme.primary,
     );
     return Center(
-      child: InkWell(
-        onTap: () {
-          if (_controller.isActive) {
-            _controller.stop();
-          } else {
-            _controller.start();
-          }
-        },
-        child: AnimatedOpacity(
-          opacity: color != context.colorScheme.primary ? 0.9 : 1,
-          duration: const Duration(milliseconds: 300),
-          child: WaveformWidget(
-            controller: _controller,
-            height: widget.height,
-            style: WaveformStyle(
-              waveColor: color,
-              backgroundColor: Colors.transparent,
-              waveformStyle: WaveformDrawStyle.bars,
-            ),
+      child: AnimatedOpacity(
+        opacity: color != context.colorScheme.primary ? 0.9 : 1,
+        duration: const Duration(milliseconds: 300),
+        child: WaveformWidget(
+          controller: _controller,
+          height: widget.height,
+          style: WaveformStyle(
+            waveColor: color,
+            backgroundColor: Colors.transparent,
+            waveformStyle: WaveformDrawStyle.bars,
           ),
         ),
       ),
     );
-
-    // return Scaffold(
-    //   body: ,
-    //   floatingActionButton: FloatingActionButton(
-    //     onPressed: () {
-    //       if (_controller.isActive) {
-    //         _controller.stop();
-    //       } else {
-    //         _controller.start();
-    //       }
-    //     },
-    //     child: Icon(_controller.isActive ? Icons.stop : Icons.play_arrow),
-    //   ),
-    // );
   }
 }
