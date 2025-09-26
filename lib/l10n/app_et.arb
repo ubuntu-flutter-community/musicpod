@@ -1430,5 +1430,19 @@
     "importingPlaylistsPleaseWait": "Impordin sinu esitusloendeid, palun oota...",
     "@importingPlaylistsPleaseWait": {},
     "exportingPlaylistsPleaseWait": "Ekspordin sinu esitusloendeid, palun oota...",
-    "@exportingPlaylistsPleaseWait": {}
+    "@exportingPlaylistsPleaseWait": {},
+    "author": "Autor",
+    "@author": {},
+    "rating": "Hinnang",
+    "@rating": {},
+    "keywords": "Märksõnad",
+    "@keywords": {},
+    "newEpisodesAvailableFor": "{length}-l taskuhäälingul on uusi osi",
+    "@newEpisodesAvailableFor": {
+        "placeholders": {
+            "length": {
+                "type": "int"
+            }
+        }
+    }
 }
