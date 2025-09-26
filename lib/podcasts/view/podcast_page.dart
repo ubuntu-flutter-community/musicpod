@@ -17,6 +17,7 @@ import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
+import '../../settings/settings_model.dart';
 import '../podcast_model.dart';
 import 'podcast_page_control_panel.dart';
 import 'podcast_page_header.dart';
@@ -62,6 +63,10 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
       (PodcastModel m) => m.getSearchQuery(feedUrl),
     );
 
+    final hideCompletedEpisodes = watchPropertyValue(
+      (SettingsModel m) => m.hideCompletedEpisodes,
+    );
+
     final filter = watchPropertyValue((PodcastModel m) => m.filter);
     final episodesWithDownloads = episodes
         .map((e) => e.copyWith(path: di<LibraryModel>().getDownload(e.url)))
@@ -79,6 +84,14 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
                     ),
                 },
         )
+        .where((e) {
+          if (!hideCompletedEpisodes) return true;
+          if (e.url == null) return false;
+
+          return e.durationMs != null &&
+              di<PlayerModel>().getLastPosition(e.url)?.inMilliseconds !=
+                  e.durationMs;
+        })
         .toList();
 
     sortListByAudioFilter(

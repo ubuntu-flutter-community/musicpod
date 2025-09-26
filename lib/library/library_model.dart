@@ -155,7 +155,7 @@ class LibraryModel extends SafeChangeNotifier {
   bool podcastUpdateAvailable(String feedUrl) =>
       _service.podcastUpdateAvailable(feedUrl);
   int? get podcastUpdatesLength => _service.podcastUpdatesLength;
-  void removePodcastUpdate(String feedUrl) =>
+  Future<void> removePodcastUpdate(String feedUrl) async =>
       _service.removePodcastUpdate(feedUrl);
 
   int get downloadsLength => _service.downloads.length;

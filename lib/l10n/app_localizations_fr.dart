@@ -457,6 +457,15 @@ class AppLocalizationsFr extends AppLocalizations {
       'Marquer tous les épisodes comme terminés';
 
   @override
+  String get markEpisodeAsDone => 'Mark episode as done';
+
+  @override
+  String get hideCompletedEpisodes => 'Hide completed episodes';
+
+  @override
+  String get showCompletedEpisodes => 'Show completed episodes';
+
+  @override
   String get reset => 'Réinitialiser';
 
   @override

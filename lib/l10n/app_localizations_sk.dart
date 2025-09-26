@@ -452,6 +452,15 @@ class AppLocalizationsSk extends AppLocalizations {
   String get markAllEpisodesAsDone => 'Označiť všetky epizódy ako dokončené';
 
   @override
+  String get markEpisodeAsDone => 'Mark episode as done';
+
+  @override
+  String get hideCompletedEpisodes => 'Hide completed episodes';
+
+  @override
+  String get showCompletedEpisodes => 'Show completed episodes';
+
+  @override
   String get reset => 'Obnoviť';
 
   @override

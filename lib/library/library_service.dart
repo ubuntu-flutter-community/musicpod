@@ -651,10 +651,10 @@ class LibraryService {
     ).then((_) => _propertiesChangedController.add(true));
   }
 
-  void removePodcastUpdate(String feedUrl) {
+  Future<void> removePodcastUpdate(String feedUrl) async {
     if (_podcastUpdates?.isNotEmpty == false) return;
     _podcastUpdates?.remove(feedUrl);
-    writeStringIterable(
+    await writeStringIterable(
       iterable: _podcastUpdates!,
       filename: FileNames.podcastUpdates,
     ).then((_) => _propertiesChangedController.add(true));

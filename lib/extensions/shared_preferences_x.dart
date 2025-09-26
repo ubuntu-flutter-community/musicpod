@@ -53,4 +53,5 @@ extension SPKeys on SharedPreferences {
   static const podcastNameSuffix = '_name';
   static const podcastArtistSuffix = '_artist';
   static const podcastLastUpdatedSuffix = '_last_updated';
+  static const hideCompletedEpisodes = 'hideCompletedEpisodes';
 }

@@ -453,6 +453,15 @@ class AppLocalizationsEu extends AppLocalizations {
   String get markAllEpisodesAsDone => 'Atal guztiak eginda bezala markatu';
 
   @override
+  String get markEpisodeAsDone => 'Mark episode as done';
+
+  @override
+  String get hideCompletedEpisodes => 'Hide completed episodes';
+
+  @override
+  String get showCompletedEpisodes => 'Show completed episodes';
+
+  @override
   String get reset => 'Berrasieratu';
 
   @override

@@ -132,4 +132,12 @@ class PlayerModel extends SafeChangeNotifier {
     await _propertiesChangedSub?.cancel();
     super.dispose();
   }
+
+  bool _showAudioVisualizer = false;
+  bool get showAudioVisualizer => _showAudioVisualizer;
+  void setShowAudioVisalizer(bool value) {
+    if (value == _showAudioVisualizer) return;
+    _showAudioVisualizer = value;
+    notifyListeners();
+  }
 }

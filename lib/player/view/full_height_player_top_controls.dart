@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -45,6 +46,9 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
 
     final playerToTheRight = context.mediaQuerySize.width > kSideBarThreshHold;
     final fullScreen = watchPropertyValue((AppModel m) => m.fullWindowMode);
+    final showAudioVisualizer = watchPropertyValue(
+      (PlayerModel m) => m.showAudioVisualizer,
+    );
     final appModel = di<AppModel>();
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     final active = audio?.path != null || isOnline;
@@ -97,6 +101,12 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
           if (audio?.audioType == AudioType.podcast)
             PlaybackRateButton(active: active, color: iconColor),
           if (!isMobile) VolumeSliderPopup(color: iconColor),
+          if (kDebugMode)
+            IconButton(
+              onPressed: () =>
+                  di<PlayerModel>().setShowAudioVisalizer(!showAudioVisualizer),
+              icon: showAudioVisualizer ? Icon(Iconz.show) : Icon(Iconz.hide),
+            ),
           IconButton(
             tooltip: playerPosition == PlayerPosition.fullWindow
                 ? context.l10n.leaveFullWindow
