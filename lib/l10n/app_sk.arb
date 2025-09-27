@@ -1443,5 +1443,11 @@
                 "type": "int"
             }
         }
-    }
+    },
+    "markEpisodeAsDone": "Označiť epizódu ako dokončenú",
+    "@markEpisodeAsDone": {},
+    "hideCompletedEpisodes": "Skryť dokončené epizódy",
+    "@hideCompletedEpisodes": {},
+    "showCompletedEpisodes": "Zobraziť dokončené epizódy",
+    "@showCompletedEpisodes": {}
 }
