@@ -1437,5 +1437,19 @@
     "rating": "Valutazione",
     "@rating": {},
     "keywords": "Parole chiave",
-    "@keywords": {}
+    "@keywords": {},
+    "markEpisodeAsDone": "Segna episodio come visto",
+    "@markEpisodeAsDone": {},
+    "hideCompletedEpisodes": "Nascondi episodi visti",
+    "@hideCompletedEpisodes": {},
+    "showCompletedEpisodes": "Visualizza episodi visti",
+    "@showCompletedEpisodes": {},
+    "newEpisodesAvailableFor": "Nuovi episodi disponibili per i podcast {length}",
+    "@newEpisodesAvailableFor": {
+        "placeholders": {
+            "length": {
+                "type": "int"
+            }
+        }
+    }
 }
