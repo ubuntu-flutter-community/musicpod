@@ -1444,5 +1444,11 @@
                 "type": "int"
             }
         }
-    }
+    },
+    "markEpisodeAsDone": "Märgi osa kuulatuks",
+    "@markEpisodeAsDone": {},
+    "hideCompletedEpisodes": "Peida kuulatud osad",
+    "@hideCompletedEpisodes": {},
+    "showCompletedEpisodes": "Näita kuulatud osi",
+    "@showCompletedEpisodes": {}
 }
