@@ -1434,5 +1434,19 @@
     "rating": "Balorazioa",
     "@rating": {},
     "keywords": "Hitz-gakoak",
-    "@keywords": {}
+    "@keywords": {},
+    "markEpisodeAsDone": "Markatu atala amaitutzat",
+    "@markEpisodeAsDone": {},
+    "hideCompletedEpisodes": "Ezkutatu amaitutako atalak",
+    "@hideCompletedEpisodes": {},
+    "showCompletedEpisodes": "Erakutsi amaitutako atalak",
+    "@showCompletedEpisodes": {},
+    "newEpisodesAvailableFor": "{length} podcastetarako atal berriak eskuragarri",
+    "@newEpisodesAvailableFor": {
+        "placeholders": {
+            "length": {
+                "type": "int"
+            }
+        }
+    }
 }
