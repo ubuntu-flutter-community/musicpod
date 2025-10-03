@@ -43,6 +43,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
     final showPodcastsAscending = watchPropertyValue(
       (LibraryModel m) => m.showPodcastAscending(feedUrl),
     );
+    watchPropertyValue((LibraryModel m) => m.podcastUpdatesLength);
 
     watchPropertyValue(
       (PodcastModel m) => m.getPodcastEpisodesFromCache(feedUrl)?.length,

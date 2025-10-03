@@ -30,13 +30,9 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
-    final showAudioVisualizer =
-        this.showAudioVisualizer &&
-        watchPropertyValue((PlayerModel m) => m.showAudioVisualizer);
-
-    if (showAudioVisualizer) {
-      return AudioVisualizer(height: height ?? 400);
-    }
+    final showAudioVisualizer = watchPropertyValue(
+      (PlayerModel m) => m.showAudioVisualizer && this.showAudioVisualizer,
+    );
 
     final size = context.isPortrait
         ? fullHeightPlayerImageSize
@@ -72,6 +68,10 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
         fallBackIcon: fallBackImage,
         errorIcon: fallBackImage,
       );
+    }
+
+    if (showAudioVisualizer) {
+      return AudioVisualizer(height: height ?? 200);
     }
 
     return SizedBox(
