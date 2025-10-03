@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:basic_utils/basic_utils.dart';
-import 'package:media_kit/media_kit.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 
 import '../common/data/audio.dart';
@@ -10,6 +9,7 @@ import '../common/data/mpv_meta_data.dart';
 import '../common/logging.dart';
 import '../expose/expose_service.dart';
 import '../extensions/string_x.dart';
+import '../player/observe_property_io.dart';
 import '../player/player_service.dart';
 import 'online_art_service.dart';
 
@@ -35,9 +35,10 @@ class RadioService {
 
   Future<void> init({bool observePlayer = true}) async {
     if (observePlayer) {
-      await (_playerService.player.platform as NativePlayer).observeProperty(
-        'metadata',
-        _onMpvMetadata,
+      await observeProperty(
+        property: 'metadata',
+        player: _playerService.player,
+        listener: _onMpvMetadata,
       );
     }
 
@@ -262,9 +263,8 @@ class RadioService {
 
   Future<void> dispose() async {
     await _propertiesChangedController.close();
-    await (_playerService.player.platform as NativePlayer).unobserveProperty(
-      'metadata',
-    );
+
+    await observeProperty(property: 'metadata', player: _playerService.player);
   }
 
   //
@@ -279,8 +279,7 @@ class RadioService {
   }
 
   Future<void> _onMpvMetadata(data) async {
-    if (_playerService.audio?.audioType != AudioType.radio ||
-        !data.contains('icy-title')) {
+    if (!data.contains('icy-title')) {
       return;
     }
     final newData = MpvMetaData.fromJson(data);

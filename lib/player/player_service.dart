@@ -425,7 +425,7 @@ class PlayerService {
 
   String? _remoteImageUrl;
   String? get remoteImageUrl => _remoteImageUrl;
-  Future<void> setRemoteImageUrl(String? url) async {
+  void setRemoteImageUrl(String? url) {
     if (_color != null) {
       _setColor(null);
     }
