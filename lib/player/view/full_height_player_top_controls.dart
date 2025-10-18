@@ -105,7 +105,9 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
             IconButton(
               onPressed: () =>
                   di<PlayerModel>().setShowAudioVisalizer(!showAudioVisualizer),
-              icon: showAudioVisualizer ? Icon(Iconz.show) : Icon(Iconz.hide),
+              icon: showAudioVisualizer
+                  ? Icon(Iconz.show, color: iconColor)
+                  : Icon(Iconz.hide, color: iconColor),
             ),
           IconButton(
             tooltip: playerPosition == PlayerPosition.fullWindow

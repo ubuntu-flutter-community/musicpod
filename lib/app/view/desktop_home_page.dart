@@ -103,19 +103,19 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
     return Scaffold(
       backgroundColor: isVideo ? Colors.black : null,
       body: isInFullWindowMode
-          ? const PlayerView(position: PlayerPosition.fullWindow)
+          ? const PlayerView.fullWindow()
           : Row(
               children: [
                 const Expanded(child: const MasterDetailPage()),
                 if (playerToTheRight)
                   const SizedBox(
                     width: kSideBarPlayerWidth,
-                    child: PlayerView(position: PlayerPosition.sideBar),
+                    child: PlayerView.sideBar(),
                   ),
               ],
             ),
       bottomNavigationBar: !playerToTheRight && !isInFullWindowMode
-          ? const PlayerView(position: PlayerPosition.bottom)
+          ? const PlayerView.bottom()
           : null,
     );
   }
