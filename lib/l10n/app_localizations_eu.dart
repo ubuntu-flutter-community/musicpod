@@ -453,13 +453,13 @@ class AppLocalizationsEu extends AppLocalizations {
   String get markAllEpisodesAsDone => 'Atal guztiak eginda bezala markatu';
 
   @override
-  String get markEpisodeAsDone => 'Mark episode as done';
+  String get markEpisodeAsDone => 'Markatu atala amaitutzat';
 
   @override
-  String get hideCompletedEpisodes => 'Hide completed episodes';
+  String get hideCompletedEpisodes => 'Ezkutatu amaitutako atalak';
 
   @override
-  String get showCompletedEpisodes => 'Show completed episodes';
+  String get showCompletedEpisodes => 'Erakutsi amaitutako atalak';
 
   @override
   String get reset => 'Berrasieratu';
@@ -2185,43 +2185,43 @@ class AppLocalizationsEu extends AppLocalizations {
       'Honek erreproduzitzailearen atzeko planoa lausotuko du. Honek errendimendua txikiagoa izan dezake gailu batzuetan.';
 
   @override
-  String get loadingPleaseWait => 'Loading, please wait ...';
+  String get loadingPleaseWait => 'Kargatzen, itxaron mesedez ...';
 
   @override
   String get importingPodcastsPleaseWait =>
-      'Importing your podcasts, please wait ...';
+      'Zure podcast-ak inportatzen, itxaron mesedez ...';
 
   @override
   String get exportingPodcastsPleaseWait =>
-      'Exporting your podcasts, please wait ...';
+      'Zure podcast-ak esportatzen, itxaron mesedez ...';
 
   @override
   String get importingStationsPleaseWait =>
-      'Importing your stations, please wait ...';
+      'Zure irrati-kateak inportatzen, itxaron mesedez ...';
 
   @override
   String get exportingStationsPleaseWait =>
-      'Exporting your stations, please wait ...';
+      'Zure irrati-kateak esportatzen, itxaron mesedez ...';
 
   @override
   String get importingPlaylistsPleaseWait =>
-      'Importing your playlists, please wait ...';
+      'Zure erreprodukzio-zerrendak inportatzen, itxaron mesedez ...';
 
   @override
   String get exportingPlaylistsPleaseWait =>
-      'Exporting your playlists, please wait ...';
+      'Zure erreprodukzio-zerrendak esportatzen, itxaron mesedez ...';
 
   @override
-  String get author => 'Author';
+  String get author => 'Egilea';
 
   @override
-  String get rating => 'Rating';
+  String get rating => 'Balorazioa';
 
   @override
-  String get keywords => 'Keywords';
+  String get keywords => 'Hitz-gakoak';
 
   @override
   String newEpisodesAvailableFor(int length) {
-    return 'New episodes available for $length podcasts';
+    return '$length podcastetarako atal berriak eskuragarri';
   }
 }

@@ -453,13 +453,13 @@ class AppLocalizationsEt extends AppLocalizations {
   String get markAllEpisodesAsDone => 'Märgi kõik osad vaadatuks';
 
   @override
-  String get markEpisodeAsDone => 'Mark episode as done';
+  String get markEpisodeAsDone => 'Märgi osa kuulatuks';
 
   @override
-  String get hideCompletedEpisodes => 'Hide completed episodes';
+  String get hideCompletedEpisodes => 'Peida kuulatud osad';
 
   @override
-  String get showCompletedEpisodes => 'Show completed episodes';
+  String get showCompletedEpisodes => 'Näita kuulatud osi';
 
   @override
   String get reset => 'Lähtesta';
@@ -2176,43 +2176,43 @@ class AppLocalizationsEt extends AppLocalizations {
       'Selle valikuga kuvatakse meediaesitaja taust hägusena, kuid mõnedes seadmetes võib see tekitada jõudlusprobleeme.';
 
   @override
-  String get loadingPleaseWait => 'Loading, please wait ...';
+  String get loadingPleaseWait => 'Laadin, palun oota...';
 
   @override
   String get importingPodcastsPleaseWait =>
-      'Importing your podcasts, please wait ...';
+      'Impordin sinu taskuhäälinguid, palun oota...';
 
   @override
   String get exportingPodcastsPleaseWait =>
-      'Exporting your podcasts, please wait ...';
+      'Ekspordin sinu taskuhäälinguid, palun oota...';
 
   @override
   String get importingStationsPleaseWait =>
-      'Importing your stations, please wait ...';
+      'Impordin sinu raadiojaamu, palun oota...';
 
   @override
   String get exportingStationsPleaseWait =>
-      'Exporting your stations, please wait ...';
+      'Ekspordin sinu raadiojaamu, palun oota...';
 
   @override
   String get importingPlaylistsPleaseWait =>
-      'Importing your playlists, please wait ...';
+      'Impordin sinu esitusloendeid, palun oota...';
 
   @override
   String get exportingPlaylistsPleaseWait =>
-      'Exporting your playlists, please wait ...';
+      'Ekspordin sinu esitusloendeid, palun oota...';
 
   @override
-  String get author => 'Author';
+  String get author => 'Autor';
 
   @override
-  String get rating => 'Rating';
+  String get rating => 'Hinnang';
 
   @override
-  String get keywords => 'Keywords';
+  String get keywords => 'Märksõnad';
 
   @override
   String newEpisodesAvailableFor(int length) {
-    return 'New episodes available for $length podcasts';
+    return '$length-l taskuhäälingul on uusi osi';
   }
 }
