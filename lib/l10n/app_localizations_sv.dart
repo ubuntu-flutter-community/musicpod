@@ -450,13 +450,13 @@ class AppLocalizationsSv extends AppLocalizations {
   String get markAllEpisodesAsDone => 'Markera alla avsnitt som färdiga';
 
   @override
-  String get markEpisodeAsDone => 'Mark episode as done';
+  String get markEpisodeAsDone => 'Markera avsnittet uppspelat';
 
   @override
-  String get hideCompletedEpisodes => 'Hide completed episodes';
+  String get hideCompletedEpisodes => 'Dölj spelade avsnitt';
 
   @override
-  String get showCompletedEpisodes => 'Show completed episodes';
+  String get showCompletedEpisodes => 'Visa spelade avsnitt';
 
   @override
   String get reset => 'Återställ';
@@ -2169,43 +2169,43 @@ class AppLocalizationsSv extends AppLocalizations {
       'Detta gör spelarens bakgrund suddig. Detta kan leda till lägre prestanda på vissa enheter.';
 
   @override
-  String get loadingPleaseWait => 'Loading, please wait ...';
+  String get loadingPleaseWait => 'Laddar, vänligen vänta ...';
 
   @override
   String get importingPodcastsPleaseWait =>
-      'Importing your podcasts, please wait ...';
+      'Importerar dina poddsändningar, vänligen vänta...';
 
   @override
   String get exportingPodcastsPleaseWait =>
-      'Exporting your podcasts, please wait ...';
+      'Exporterar dina poddsändningar, vänligen vänta...';
 
   @override
   String get importingStationsPleaseWait =>
-      'Importing your stations, please wait ...';
+      'Importerar dina radio stationer, vänligen vänta ...';
 
   @override
   String get exportingStationsPleaseWait =>
-      'Exporting your stations, please wait ...';
+      'Exporterar dina radio stationer, vänligen vänta ...';
 
   @override
   String get importingPlaylistsPleaseWait =>
-      'Importing your playlists, please wait ...';
+      'Importerar dina spellistor, vänligen vänta ...';
 
   @override
   String get exportingPlaylistsPleaseWait =>
-      'Exporting your playlists, please wait ...';
+      'Exporterar dina spellistor, vänligen vänta ...';
 
   @override
-  String get author => 'Author';
+  String get author => 'Upphovsman';
 
   @override
-  String get rating => 'Rating';
+  String get rating => 'Betyg';
 
   @override
-  String get keywords => 'Keywords';
+  String get keywords => 'Nyckelord';
 
   @override
   String newEpisodesAvailableFor(int length) {
-    return 'New episodes available for $length podcasts';
+    return 'Nya avsnitt tillgängliga för $length poddsändningar';
   }
 }

@@ -2167,54 +2167,55 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String downloadsOfLatestRelease(String latestRelease) {
-    return 'Downloaded $latestRelease times outside of snapstore and flathub';
+    return '$latestRelease Mal außerhalb von Snapstore und Flathub heruntergeladen';
   }
 
   @override
-  String get useBlurredPlayerBackgroundTitle => 'Use blurred player background';
+  String get useBlurredPlayerBackgroundTitle =>
+      'Unscharfen Player-Hintergrund verwenden';
 
   @override
   String get useBlurredPlayerBackgroundDescription =>
-      'This will blur the background of the player. This might lead to lower performance on some devices.';
+      'Dadurch wird der Hintergrund des Players unscharf. Dies kann auf einigen Geräten zu Leistungseinbußen führen.';
 
   @override
-  String get loadingPleaseWait => 'Loading, please wait ...';
+  String get loadingPleaseWait => 'Wird geladen, bitte warten ...';
 
   @override
   String get importingPodcastsPleaseWait =>
-      'Importing your podcasts, please wait ...';
+      'Ihre Podcasts werden importiert, bitte warten ...';
 
   @override
   String get exportingPodcastsPleaseWait =>
-      'Exporting your podcasts, please wait ...';
+      'Ihre Podcasts werden exportiert, bitte warten ...';
 
   @override
   String get importingStationsPleaseWait =>
-      'Importing your stations, please wait ...';
+      'Ihre Sender werden importiert, bitte warten ...';
 
   @override
   String get exportingStationsPleaseWait =>
-      'Exporting your stations, please wait ...';
+      'Ihre Stationen werden exportiert, bitte warten ...';
 
   @override
   String get importingPlaylistsPleaseWait =>
-      'Importing your playlists, please wait ...';
+      'Ihre Wiedergabelisten werden importiert, bitte warten ...';
 
   @override
   String get exportingPlaylistsPleaseWait =>
-      'Exporting your playlists, please wait ...';
+      'Ihre Wiedergabelisten werden exportiert, bitte warten ...';
 
   @override
-  String get author => 'Author';
+  String get author => 'Autor';
 
   @override
-  String get rating => 'Rating';
+  String get rating => 'Bewertung';
 
   @override
-  String get keywords => 'Keywords';
+  String get keywords => 'Schlüsselworte';
 
   @override
   String newEpisodesAvailableFor(int length) {
-    return 'New episodes available for $length podcasts';
+    return 'Neue Folgen für $length Podcasts verfügbar';
   }
 }

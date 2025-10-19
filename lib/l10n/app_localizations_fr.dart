@@ -457,13 +457,13 @@ class AppLocalizationsFr extends AppLocalizations {
       'Marquer tous les épisodes comme terminés';
 
   @override
-  String get markEpisodeAsDone => 'Mark episode as done';
+  String get markEpisodeAsDone => 'Marquer l\'épisode comme terminé';
 
   @override
-  String get hideCompletedEpisodes => 'Hide completed episodes';
+  String get hideCompletedEpisodes => 'Masquer les épisodes terminés';
 
   @override
-  String get showCompletedEpisodes => 'Show completed episodes';
+  String get showCompletedEpisodes => 'Montrer les épisodes terminés';
 
   @override
   String get reset => 'Réinitialiser';
@@ -2188,43 +2188,43 @@ class AppLocalizationsFr extends AppLocalizations {
       'Cela va flouter l\'arrière-plan du lecteur. Les performances de certains appareils peuvent être affectées.';
 
   @override
-  String get loadingPleaseWait => 'Loading, please wait ...';
+  String get loadingPleaseWait => 'Chargement, veuillez patienter…';
 
   @override
   String get importingPodcastsPleaseWait =>
-      'Importing your podcasts, please wait ...';
+      'Importation de vos podcasts, veuillez patienter…';
 
   @override
   String get exportingPodcastsPleaseWait =>
-      'Exporting your podcasts, please wait ...';
+      'Exportation de vos podcasts, veuillez patienter…';
 
   @override
   String get importingStationsPleaseWait =>
-      'Importing your stations, please wait ...';
+      'Importation de vos stations, veuillez patienter…';
 
   @override
   String get exportingStationsPleaseWait =>
-      'Exporting your stations, please wait ...';
+      'Exportation de vos stations, veuillez patienter…';
 
   @override
   String get importingPlaylistsPleaseWait =>
-      'Importing your playlists, please wait ...';
+      'Importation de vos listes de lecture, veuillez patienter…';
 
   @override
   String get exportingPlaylistsPleaseWait =>
-      'Exporting your playlists, please wait ...';
+      'Exportation de vos listes de lecture, veuillez patienter…';
 
   @override
-  String get author => 'Author';
+  String get author => 'Auteur';
 
   @override
-  String get rating => 'Rating';
+  String get rating => 'Note';
 
   @override
-  String get keywords => 'Keywords';
+  String get keywords => 'Mots clés';
 
   @override
   String newEpisodesAvailableFor(int length) {
-    return 'New episodes available for $length podcasts';
+    return 'De nouveaux épisodes sont disponibles pour $length podcasts';
   }
 }
