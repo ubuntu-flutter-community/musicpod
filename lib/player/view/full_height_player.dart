@@ -42,7 +42,16 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
 
     final Widget body;
     if (isVideo) {
-      body = FullHeightVideoPlayer(playerPosition: playerPosition);
+      body = Stack(
+        alignment: Alignment.topRight,
+        children: [
+          const SimpleFullHeightVideoPlayer(),
+          FullHeightPlayerTopControls(
+            iconColor: iconColor,
+            playerPosition: playerPosition,
+          ),
+        ],
+      );
     } else {
       final queueOrHistory = audio?.audioType == AudioType.radio
           ? const SizedBox(

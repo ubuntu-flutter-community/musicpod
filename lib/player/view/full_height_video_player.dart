@@ -105,17 +105,23 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
             ),
         ],
       ),
-      child: Padding(
-        padding: context.isPortrait && isMobile
-            ? const EdgeInsets.only(bottom: 40)
-            : EdgeInsets.zero,
-        child: RepaintBoundary(
-          child: Video(
-            controller: di<PlayerModel>().controller,
-            controls: (state) => MaterialVideoControls(state),
-          ),
-        ),
+      child: SimpleFullHeightVideoPlayer(
+        controls: (state) => MaterialVideoControls(state),
       ),
     );
   }
+}
+
+class SimpleFullHeightVideoPlayer extends StatelessWidget {
+  const SimpleFullHeightVideoPlayer({super.key, this.controls});
+
+  final Widget Function(VideoState)? controls;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: context.isPortrait && isMobile
+        ? const EdgeInsets.only(bottom: 40)
+        : EdgeInsets.zero,
+    child: Video(controller: di<PlayerModel>().controller, controls: controls),
+  );
 }
