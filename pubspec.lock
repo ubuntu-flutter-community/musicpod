@@ -874,11 +874,11 @@ packages:
     dependency: "direct main"
     description:
       path: media_kit
-      ref: c9617f570b8c0ba02857e721997f78c053a856c1
-      resolved-ref: c9617f570b8c0ba02857e721997f78c053a856c1
+      ref: d310049f24196250d876efb02b9ff56fa9ef5068
+      resolved-ref: d310049f24196250d876efb02b9ff56fa9ef5068
       url: "https://github.com/media-kit/media-kit"
     source: git
-    version: "1.2.0"
+    version: "1.2.1"
   media_kit_libs_android_video:
     dependency: transitive
     description:
@@ -915,11 +915,11 @@ packages:
     dependency: "direct main"
     description:
       path: "libs/universal/media_kit_libs_video"
-      ref: c9617f570b8c0ba02857e721997f78c053a856c1
-      resolved-ref: c9617f570b8c0ba02857e721997f78c053a856c1
+      ref: d310049f24196250d876efb02b9ff56fa9ef5068
+      resolved-ref: d310049f24196250d876efb02b9ff56fa9ef5068
       url: "https://github.com/media-kit/media-kit"
     source: git
-    version: "1.0.6"
+    version: "1.0.7"
   media_kit_libs_windows_video:
     dependency: transitive
     description:
@@ -932,11 +932,11 @@ packages:
     dependency: "direct main"
     description:
       path: media_kit_video
-      ref: c9617f570b8c0ba02857e721997f78c053a856c1
-      resolved-ref: c9617f570b8c0ba02857e721997f78c053a856c1
+      ref: d310049f24196250d876efb02b9ff56fa9ef5068
+      resolved-ref: d310049f24196250d876efb02b9ff56fa9ef5068
       url: "https://github.com/media-kit/media-kit"
     source: git
-    version: "1.3.0"
+    version: "1.3.1"
   meta:
     dependency: transitive
     description:
