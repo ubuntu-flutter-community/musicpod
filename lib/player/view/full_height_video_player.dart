@@ -2,37 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../app/connectivity_model.dart';
 import '../../app_config.dart';
+import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
+import '../../common/view/progress.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../player_model.dart';
-import 'full_height_player_top_controls.dart';
 import 'player_main_controls.dart';
 import 'player_view.dart';
 
-class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
-  const FullHeightVideoPlayer({super.key, required this.playerPosition});
+class FullHeightVideoPlayer extends StatelessWidget {
+  const FullHeightVideoPlayer({
+    super.key,
+    required this.playerPosition,
+    this.audio,
+    required this.controlsActive,
+    this.topControls,
+  });
 
   final PlayerPosition playerPosition;
+  final Audio? audio;
+  final bool controlsActive;
+  final Widget? topControls;
 
   @override
   Widget build(BuildContext context) {
     const baseColor = Colors.white;
-
-    final audio = watchPropertyValue((PlayerModel m) => m.audio);
-    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
-    final active = audio?.path != null || isOnline;
-
-    final controls = FullHeightPlayerTopControls(
-      iconColor: baseColor,
-      playerPosition: playerPosition,
-      padding: EdgeInsets.zero,
-    );
 
     final text = audio?.audioType == AudioType.radio
         ? audio?.title ?? ''
@@ -46,11 +45,13 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
       controlsHoverDuration: const Duration(seconds: 10),
       seekGesture: true,
       seekOnDoubleTap: true,
+      bufferingIndicatorBuilder: (context) =>
+          const Center(child: Progress(color: baseColor)),
       primaryButtonBar: [
         SizedBox(
           width: 300,
           child: PlayerMainControls(
-            active: active,
+            active: controlsActive,
             iconColor: baseColor,
             avatarColor: baseColor.withValues(alpha: 0.1),
           ),
@@ -63,7 +64,7 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
       ),
       topButtonBar: [
         const Spacer(),
-        controls,
+        if (topControls != null) topControls!,
         if (AppConfig.allowVideoFullScreen)
           Tooltip(
             message: context.l10n.leaveFullScreen,
@@ -95,7 +96,7 @@ class FullHeightVideoPlayer extends StatelessWidget with WatchItMixin {
       normal: mediaKitTheme.copyWith(
         topButtonBar: [
           const Spacer(),
-          controls,
+          if (topControls != null) topControls!,
           if (AppConfig.allowVideoFullScreen)
             Tooltip(
               message: context.l10n.fullScreen,
