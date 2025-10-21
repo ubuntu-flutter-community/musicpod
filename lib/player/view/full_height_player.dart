@@ -7,10 +7,8 @@ import '../../extensions/taget_platform_x.dart';
 import '../../player/player_model.dart';
 import 'full_height_player_audio_body.dart';
 import 'full_height_player_header_bar.dart';
-import 'full_height_player_top_controls.dart';
 import 'full_height_video_player.dart';
 import 'player_color.dart';
-import 'player_main_controls.dart';
 import 'player_view.dart';
 
 class FullHeightPlayer extends StatelessWidget with WatchItMixin {
@@ -31,25 +29,11 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
     final Widget body;
     if (isVideo) {
       body = isLinux
-          ? Stack(
-              alignment: Alignment.center,
-              children: [
-                const SimpleFullHeightVideoPlayer(),
-                PlayerMainControls(
-                  iconColor: iconColor,
-                  active: active,
-                  mainAxisSize: MainAxisSize.min,
-                  avatarColor: Colors.black.withAlpha(150),
-                ),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: FullHeightPlayerTopControls(
-                    iconColor: iconColor,
-                    playerPosition: playerPosition,
-                  ),
-                ),
-              ],
+          // Note: for some reason the video widget crashes if we use the built in controls, so we replicate this with a stack
+          ? LinuxFullHeightPlayer(
+              iconColor: iconColor,
+              active: active,
+              playerPosition: playerPosition,
             )
           : FullHeightVideoPlayer(
               playerPosition: playerPosition,

@@ -14,6 +14,7 @@ import '../../l10n/l10n.dart';
 import '../player_model.dart';
 import 'full_height_player_top_controls.dart';
 import 'player_main_controls.dart';
+import 'player_track.dart';
 import 'player_view.dart';
 
 class FullHeightVideoPlayer extends StatelessWidget {
@@ -116,6 +117,75 @@ class FullHeightVideoPlayer extends StatelessWidget {
         child: MaterialFullscreenButton(icon: Icon(icon, color: baseColor)),
       ),
   ];
+}
+
+class LinuxFullHeightPlayer extends StatefulWidget {
+  const LinuxFullHeightPlayer({
+    super.key,
+    required this.iconColor,
+    required this.active,
+    required this.playerPosition,
+  });
+
+  final Color iconColor;
+  final bool active;
+  final PlayerPosition playerPosition;
+
+  @override
+  State<LinuxFullHeightPlayer> createState() => _LinuxFullHeightPlayerState();
+}
+
+class _LinuxFullHeightPlayerState extends State<LinuxFullHeightPlayer> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) => MouseRegion(
+    onEnter: (_) => setState(() => _hovered = true),
+    onExit: (_) => setState(() => _hovered = false),
+    child: Stack(
+      alignment: Alignment.center,
+      children: [
+        const SimpleFullHeightVideoPlayer(),
+        AnimatedOpacity(
+          duration: const Duration(milliseconds: 200),
+          opacity: _hovered ? 1 : 0,
+          child: PlayerMainControls(
+            iconColor: widget.iconColor,
+            active: widget.active,
+            mainAxisSize: MainAxisSize.min,
+            avatarColor: Colors.black.withAlpha(150),
+          ),
+        ),
+        Positioned(
+          top: 0,
+          right: 0,
+          child: AnimatedOpacity(
+            duration: const Duration(milliseconds: 200),
+            opacity: _hovered ? 1 : 0,
+            child: FullHeightPlayerTopControls(
+              iconColor: widget.iconColor,
+              playerPosition: widget.playerPosition,
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: 0,
+          child: AnimatedOpacity(
+            duration: const Duration(milliseconds: 200),
+            opacity: _hovered ? 1 : 0,
+            child: const Padding(
+              padding: EdgeInsets.only(bottom: kLargestSpace),
+              child: SizedBox(
+                height: kLargestSpace,
+                width: 600,
+                child: PlayerTrack(),
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
 class SimpleFullHeightVideoPlayer extends StatelessWidget {
