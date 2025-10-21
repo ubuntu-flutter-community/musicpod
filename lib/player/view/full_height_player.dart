@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/connectivity_model.dart';
@@ -7,6 +8,7 @@ import '../../extensions/taget_platform_x.dart';
 import '../../player/player_model.dart';
 import 'full_height_player_audio_body.dart';
 import 'full_height_player_header_bar.dart';
+import 'full_height_player_top_controls.dart';
 import 'full_height_video_player.dart';
 import 'player_color.dart';
 import 'player_view.dart';
@@ -28,11 +30,24 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
 
     final Widget body;
     if (isVideo) {
-      body = FullHeightVideoPlayer(
-        playerPosition: playerPosition,
-        audio: audio,
-        controlsActive: active,
-      );
+      body = isLinux
+          ? Stack(
+              alignment: Alignment.topRight,
+              children: [
+                SimpleFullHeightVideoPlayer(
+                  controls: (state) => MaterialVideoControls(state),
+                ),
+                FullHeightPlayerTopControls(
+                  iconColor: iconColor,
+                  playerPosition: playerPosition,
+                ),
+              ],
+            )
+          : FullHeightVideoPlayer(
+              playerPosition: playerPosition,
+              audio: audio,
+              controlsActive: active,
+            );
     } else {
       body = FullHeightPlayerAudioBody(
         active: active,
