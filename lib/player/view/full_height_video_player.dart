@@ -174,7 +174,11 @@ class _LinuxFullHeightPlayerState extends State<LinuxFullHeightPlayer> {
             duration: const Duration(milliseconds: 200),
             opacity: _hovered ? 1 : 0,
             child: const Padding(
-              padding: EdgeInsets.only(bottom: kLargestSpace),
+              padding: EdgeInsets.only(
+                bottom: kLargestSpace,
+                left: kLargestSpace,
+                right: kLargestSpace,
+              ),
               child: SizedBox(
                 height: kLargestSpace,
                 width: 600,
