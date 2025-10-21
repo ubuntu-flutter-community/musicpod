@@ -12,6 +12,7 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../player_model.dart';
+import 'full_height_player_top_controls.dart';
 import 'player_main_controls.dart';
 import 'player_view.dart';
 
@@ -21,13 +22,11 @@ class FullHeightVideoPlayer extends StatelessWidget {
     required this.playerPosition,
     this.audio,
     required this.controlsActive,
-    this.topControls,
   });
 
   final PlayerPosition playerPosition;
   final Audio? audio;
   final bool controlsActive;
-  final Widget? topControls;
 
   @override
   Widget build(BuildContext context) {
@@ -62,17 +61,11 @@ class FullHeightVideoPlayer extends StatelessWidget {
         right: kLargestSpace,
         top: isMobile ? 2 * kLargestSpace : 0,
       ),
-      topButtonBar: [
-        const Spacer(),
-        if (topControls != null) topControls!,
-        if (AppConfig.allowVideoFullScreen)
-          Tooltip(
-            message: context.l10n.leaveFullScreen,
-            child: MaterialFullscreenButton(
-              icon: Icon(Iconz.fullScreenExit, color: baseColor),
-            ),
-          ),
-      ],
+      topButtonBar: _buildTopButtonBar(
+        baseColor: baseColor,
+        context: context,
+        icon: Iconz.fullScreenExit,
+      ),
       bottomButtonBarMargin: const EdgeInsets.all(20),
       bottomButtonBar: [
         Flexible(
@@ -82,7 +75,7 @@ class FullHeightVideoPlayer extends StatelessWidget {
             child: Text(
               text,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(color: baseColor),
             ),
           ),
         ),
@@ -94,23 +87,35 @@ class FullHeightVideoPlayer extends StatelessWidget {
       key: ValueKey(audio?.url),
       fullscreen: mediaKitTheme,
       normal: mediaKitTheme.copyWith(
-        topButtonBar: [
-          const Spacer(),
-          if (topControls != null) topControls!,
-          if (AppConfig.allowVideoFullScreen)
-            Tooltip(
-              message: context.l10n.fullScreen,
-              child: MaterialFullscreenButton(
-                icon: Icon(Iconz.fullScreen, color: baseColor),
-              ),
-            ),
-        ],
+        topButtonBar: _buildTopButtonBar(
+          baseColor: baseColor,
+          context: context,
+          icon: Iconz.fullScreen,
+        ),
       ),
       child: SimpleFullHeightVideoPlayer(
         controls: (state) => MaterialVideoControls(state),
       ),
     );
   }
+
+  List<Widget> _buildTopButtonBar({
+    required Color baseColor,
+    required BuildContext context,
+    required IconData icon,
+  }) => [
+    const Spacer(),
+    FullHeightPlayerTopControls(
+      iconColor: baseColor,
+      playerPosition: playerPosition,
+      padding: EdgeInsets.zero,
+    ),
+    if (AppConfig.allowVideoFullScreen)
+      Tooltip(
+        message: context.l10n.fullScreen,
+        child: MaterialFullscreenButton(icon: Icon(icon, color: baseColor)),
+      ),
+  ];
 }
 
 class SimpleFullHeightVideoPlayer extends StatelessWidget {

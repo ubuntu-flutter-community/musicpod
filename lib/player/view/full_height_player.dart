@@ -7,7 +7,6 @@ import '../../extensions/taget_platform_x.dart';
 import '../../player/player_model.dart';
 import 'full_height_player_audio_body.dart';
 import 'full_height_player_header_bar.dart';
-import 'full_height_player_top_controls.dart';
 import 'full_height_video_player.dart';
 import 'player_color.dart';
 import 'player_view.dart';
@@ -33,13 +32,6 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
         playerPosition: playerPosition,
         audio: audio,
         controlsActive: active,
-        topControls: isLinux
-            ? null
-            : FullHeightPlayerTopControls(
-                iconColor: iconColor,
-                playerPosition: playerPosition,
-                padding: EdgeInsets.zero,
-              ),
       );
     } else {
       body = FullHeightPlayerAudioBody(
