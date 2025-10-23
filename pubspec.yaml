@@ -42,6 +42,7 @@ dependencies:
 
   intl: ^0.20.2
   lastfm: ^0.0.6
+  listen_it: ^5.0.0
   listenbrainz_dart: ^0.0.4
   local_notifier: ^0.1.6
   lrc: ^1.0.2
