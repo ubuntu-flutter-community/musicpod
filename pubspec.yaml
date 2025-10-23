@@ -44,6 +44,7 @@ dependencies:
   lastfm: ^0.0.6
   listenbrainz_dart: ^0.0.4
   local_notifier: ^0.1.6
+  lrc: ^1.0.2
   m3u_parser_nullsafe: ^1.0.3
   media_kit:
     git:

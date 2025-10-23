@@ -17,6 +17,18 @@ class Iconz {
       ? CupertinoIcons.eye
       : Icons.remove_red_eye_outlined;
 
+  static IconData get showLyrics => yaru
+      ? YaruIcons.chat_bubble_filled
+      : cupertino
+      ? CupertinoIcons.chat_bubble_text_fill
+      : Icons.chat_bubble;
+
+  static IconData get hideLyrics => yaru
+      ? YaruIcons.chat_bubble
+      : cupertino
+      ? CupertinoIcons.chat_bubble_text
+      : Icons.chat_bubble_outline;
+
   static IconData get hide => yaru
       ? YaruIcons.hide
       : cupertino

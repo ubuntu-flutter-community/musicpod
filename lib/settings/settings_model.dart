@@ -153,6 +153,10 @@ class SettingsModel extends SafeChangeNotifier {
   Future<void> setHideCompletedEpisodes(bool value) =>
       _service.setHideCompletedEpisodes(value);
 
+  bool get showPlayerLyrics => _service.showPlayerLyrics;
+  Future<void> setShowPlayerLyrics(bool value) =>
+      _service.setShowPlayerLyrics(value);
+
   Future<void> wipeAllSettings() async => _service.wipeAllSettings();
 
   @override
