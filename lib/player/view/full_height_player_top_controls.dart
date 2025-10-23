@@ -20,6 +20,7 @@ import '../../l10n/l10n.dart';
 import '../../local_audio/view/pin_album_button.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
+import '../../settings/settings_model.dart';
 import 'playback_rate_button.dart';
 import 'player_pause_timer_button.dart';
 import 'player_view.dart';
@@ -109,6 +110,7 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
                   ? Icon(Iconz.show, color: iconColor)
                   : Icon(Iconz.hide, color: iconColor),
             ),
+          ShowPlayerLyricButton(),
           IconButton(
             tooltip: playerPosition == PlayerPosition.fullWindow
                 ? context.l10n.leaveFullWindow
@@ -123,6 +125,20 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
           ),
         ],
       ),
+    );
+  }
+}
+
+class ShowPlayerLyricButton extends StatelessWidget with WatchItMixin {
+  @override
+  Widget build(BuildContext context) {
+    final showPlayerLyrics = watchPropertyValue(
+      (SettingsModel m) => m.showPlayerLyrics,
+    );
+    return IconButton(
+      icon: Icon(!showPlayerLyrics ? Iconz.hideLyrics : Iconz.showLyrics),
+      onPressed: () =>
+          di<SettingsModel>().setShowPlayerLyrics(!showPlayerLyrics),
     );
   }
 }
