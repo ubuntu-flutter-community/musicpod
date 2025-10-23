@@ -7,8 +7,10 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../radio/view/radio_history_list.dart';
+import '../../settings/settings_model.dart';
 import 'full_height_player_image.dart';
 import 'full_height_player_top_controls.dart';
+import 'player_lyrics.dart';
 import 'player_main_controls.dart';
 import 'player_title_and_artist.dart';
 import 'player_track.dart';
@@ -33,17 +35,28 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final showQueue = watchPropertyValue((AppModel m) => m.showQueueOverlay);
+    final showPlayerLyrics = watchPropertyValue(
+      (SettingsModel m) => m.showPlayerLyrics,
+    );
+
     final playerWithSidePanel =
         playerPosition == PlayerPosition.fullWindow &&
         context.mediaQuerySize.width > 1000;
     final theme = context.theme;
-    final queueOrHistory = audio?.audioType == AudioType.radio
-        ? const SizedBox(
-            width: 400,
+    final queueOrHistory = showPlayerLyrics && audio != null
+        ? PlayerLyrics(
+            key: ValueKey(audio?.path),
+            audio: audio!,
             height: 500,
-            child: RadioHistoryList(simpleList: true),
+            width: 400,
           )
-        : QueueBody(selectedColor: theme.colorScheme.onSurface);
+        : (audio?.audioType == AudioType.radio
+              ? const SizedBox(
+                  width: 400,
+                  height: 500,
+                  child: RadioHistoryList(simpleList: true),
+                )
+              : QueueBody(selectedColor: theme.colorScheme.onSurface));
     final column = Column(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
