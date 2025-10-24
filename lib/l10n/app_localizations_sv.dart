@@ -2208,4 +2208,10 @@ class AppLocalizationsSv extends AppLocalizations {
   String newEpisodesAvailableFor(int length) {
     return 'Nya avsnitt tillgängliga för $length poddsändningar';
   }
+
+  @override
+  String get lyrics => 'Lyrics';
+
+  @override
+  String get autoScrolling => 'Auto scroll';
 }

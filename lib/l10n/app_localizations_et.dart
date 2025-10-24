@@ -2215,4 +2215,10 @@ class AppLocalizationsEt extends AppLocalizations {
   String newEpisodesAvailableFor(int length) {
     return '$length-l taskuhäälingul on uusi osi';
   }
+
+  @override
+  String get lyrics => 'Lyrics';
+
+  @override
+  String get autoScrolling => 'Auto scroll';
 }

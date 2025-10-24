@@ -2213,4 +2213,10 @@ class AppLocalizationsSk extends AppLocalizations {
   String newEpisodesAvailableFor(int length) {
     return 'Nové epizódy sú dostupné pre $length podcastov';
   }
+
+  @override
+  String get lyrics => 'Lyrics';
+
+  @override
+  String get autoScrolling => 'Auto scroll';
 }

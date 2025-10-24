@@ -2227,4 +2227,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String newEpisodesAvailableFor(int length) {
     return 'De nouveaux épisodes sont disponibles pour $length podcasts';
   }
+
+  @override
+  String get lyrics => 'Lyrics';
+
+  @override
+  String get autoScrolling => 'Auto scroll';
 }

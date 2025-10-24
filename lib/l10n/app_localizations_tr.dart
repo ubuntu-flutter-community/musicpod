@@ -2215,4 +2215,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String newEpisodesAvailableFor(int length) {
     return '$length podcastleri için yeni bölümler mevcut';
   }
+
+  @override
+  String get lyrics => 'Lyrics';
+
+  @override
+  String get autoScrolling => 'Auto scroll';
 }
