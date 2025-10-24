@@ -61,10 +61,7 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
         if (showQueue && !playerWithSidePanel) ...[
           Flexible(
             child: Padding(
-              padding: const EdgeInsets.only(
-                bottom: 2 * kLargestSpace,
-                top: kLargestSpace,
-              ),
+              padding: const EdgeInsets.only(top: kLargestSpace),
               child: queueOrHistory,
             ),
           ),
@@ -95,7 +92,12 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
         ],
         SizedBox(
           width: playerWithSidePanel ? 400 : 320,
-          child: PlayerMainControls(active: active),
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: showQueue && !playerWithSidePanel ? 2 * kLargestSpace : 0,
+            ),
+            child: PlayerMainControls(active: active),
+          ),
         ),
       ],
     );
