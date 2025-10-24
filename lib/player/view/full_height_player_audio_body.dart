@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
+
 import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
@@ -7,16 +8,14 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../radio/view/radio_history_list.dart';
-import '../../settings/settings_model.dart';
 import 'full_height_player_image.dart';
 import 'full_height_player_top_controls.dart';
-import 'player_lyrics.dart';
 import 'player_main_controls.dart';
 import 'player_title_and_artist.dart';
 import 'player_track.dart';
 import 'player_view.dart';
-import 'queue/queue_body.dart';
 import 'queue/queue_button.dart';
+import 'queue/queue_or_lyrics.dart';
 
 class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
   const FullHeightPlayerAudioBody({
@@ -35,41 +34,47 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final showQueue = watchPropertyValue((AppModel m) => m.showQueueOverlay);
-    final showPlayerLyrics = watchPropertyValue(
-      (SettingsModel m) => m.showPlayerLyrics,
-    );
 
+    final mediaQuerySize = context.mediaQuerySize;
     final playerWithSidePanel =
         playerPosition == PlayerPosition.fullWindow &&
-        context.mediaQuerySize.width > 1000;
+        mediaQuerySize.width > 1000;
     final theme = context.theme;
-    final queueOrHistory = showPlayerLyrics && audio != null
-        ? PlayerLyrics(
-            key: ValueKey(audio?.path),
-            audio: audio!,
-            height: 500,
+    final queueOrHistory = (audio?.audioType == AudioType.radio
+        ? const SizedBox(
             width: 400,
+            height: 500,
+            child: RadioHistoryList(simpleList: true),
           )
-        : (audio?.audioType == AudioType.radio
-              ? const SizedBox(
-                  width: 400,
-                  height: 500,
-                  child: RadioHistoryList(simpleList: true),
-                )
-              : QueueBody(selectedColor: theme.colorScheme.onSurface));
+        : Padding(
+            padding: const EdgeInsets.only(top: 50, bottom: 50),
+            child: QueueOrLyrics(
+              key: ValueKey(audio?.path),
+              width: 400,
+              selectedColor: theme.colorScheme.onSurface,
+            ),
+          ));
     final column = Column(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (showQueue && !playerWithSidePanel)
-          Padding(
-            padding: const EdgeInsets.only(
-              bottom: 2 * kLargestSpace,
-              top: kLargestSpace,
+        if (showQueue && !playerWithSidePanel) ...[
+          Flexible(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                bottom: 2 * kLargestSpace,
+                top: kLargestSpace,
+              ),
+              child: queueOrHistory,
             ),
-            child: queueOrHistory,
-          )
-        else ...[
+          ),
+          SizedBox(
+            height: kLargestSpace,
+            width: playerWithSidePanel ? 400 : 350,
+            child: const PlayerTrack(),
+          ),
+          const SizedBox(height: kLargestSpace),
+        ] else ...[
           if (!isMobile || context.isPortrait)
             const Hero(
               tag: 'FullHeightPlayerImageInPortrait',

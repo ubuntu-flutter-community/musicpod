@@ -2146,6 +2146,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String newEpisodesAvailableFor(int length) {
     return 'New episodes available for $length podcasts';
   }
+
+  @override
+  String get lyrics => 'Lyrics';
+
+  @override
+  String get autoScrolling => 'Auto scroll';
 }
 
 /// The translations for Chinese, as used in Hong Kong (`zh_HK`).

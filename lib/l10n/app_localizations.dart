@@ -4338,6 +4338,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New episodes available for {length} podcasts'**
   String newEpisodesAvailableFor(int length);
+
+  /// No description provided for @lyrics.
+  ///
+  /// In en, this message translates to:
+  /// **'Lyrics'**
+  String get lyrics;
+
+  /// No description provided for @autoScrolling.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto scroll'**
+  String get autoScrolling;
 }
 
 class _AppLocalizationsDelegate

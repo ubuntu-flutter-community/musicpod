@@ -756,5 +756,7 @@
                 "type": "int"
             }
         }
-    }
+    },
+    "lyrics": "Lyrics",
+    "autoScrolling": "Auto scroll"
 }

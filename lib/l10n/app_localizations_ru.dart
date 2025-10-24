@@ -2216,4 +2216,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String newEpisodesAvailableFor(int length) {
     return 'Доступны новые выпуски для $length подкастов';
   }
+
+  @override
+  String get lyrics => 'Lyrics';
+
+  @override
+  String get autoScrolling => 'Auto scroll';
 }
