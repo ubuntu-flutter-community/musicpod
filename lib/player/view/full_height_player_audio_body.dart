@@ -40,20 +40,21 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
         playerPosition == PlayerPosition.fullWindow &&
         mediaQuerySize.width > 1000;
     final theme = context.theme;
-    final queueOrHistory = (audio?.audioType == AudioType.radio
-        ? const SizedBox(
-            width: 400,
-            height: 500,
-            child: RadioHistoryList(simpleList: true),
-          )
-        : Padding(
-            padding: const EdgeInsets.only(top: 50, bottom: 50),
-            child: QueueOrLyrics(
-              key: ValueKey(audio?.path),
-              width: 400,
-              selectedColor: theme.colorScheme.onSurface,
-            ),
-          ));
+    final queueOrHistory = Padding(
+      padding: const EdgeInsets.only(top: 50, bottom: 50),
+      child: SizedBox(
+        width: 400,
+        child: (audio?.audioType == AudioType.radio
+            ? SizedBox(
+                height: playerWithSidePanel ? 500 : null,
+                child: const RadioHistoryList(simpleList: true),
+              )
+            : QueueOrLyrics(
+                key: ValueKey(audio?.path),
+                selectedColor: theme.colorScheme.onSurface,
+              )),
+      ),
+    );
     final column = Column(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
