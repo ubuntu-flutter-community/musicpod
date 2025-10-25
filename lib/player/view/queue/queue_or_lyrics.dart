@@ -13,12 +13,10 @@ class QueueOrLyrics extends StatefulWidget with WatchItStatefulWidgetMixin {
     super.key,
     this.selectedColor,
     this.shownInDialog = false,
-    required this.width,
   });
 
   final Color? selectedColor;
   final bool shownInDialog;
-  final double width;
 
   @override
   State<QueueOrLyrics> createState() => _QueueOrLyricsState();
@@ -54,34 +52,32 @@ class _QueueOrLyricsState extends State<QueueOrLyrics>
     }
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
 
-    return SizedBox(
-      width: widget.width,
-      child: Column(
-        spacing: kLargestSpace,
-        children: [
-          YaruTabBar(
-            tabs: [
-              Tab(text: context.l10n.queue),
-              Tab(text: context.l10n.lyrics),
+    return Column(
+      spacing: kLargestSpace,
+      children: [
+        YaruTabBar(
+          onTap: (i) => di<SettingsModel>().setShowPlayerLyrics(i == 1),
+          tabs: [
+            Tab(text: context.l10n.queue),
+            Tab(text: context.l10n.lyrics),
+          ],
+          tabController: _controller,
+        ),
+        Expanded(
+          child: TabBarView(
+            controller: _controller,
+            children: [
+              QueueBody(
+                selectedColor: widget.selectedColor,
+                shownInDialog: widget.shownInDialog,
+              ),
+              audio == null
+                  ? const SizedBox.shrink()
+                  : PlayerLyrics(audio: audio),
             ],
-            tabController: _controller,
           ),
-          Expanded(
-            child: TabBarView(
-              controller: _controller,
-              children: [
-                QueueBody(
-                  selectedColor: widget.selectedColor,
-                  shownInDialog: widget.shownInDialog,
-                ),
-                audio == null
-                    ? const SizedBox.shrink()
-                    : PlayerLyrics(audio: audio, width: widget.width),
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
