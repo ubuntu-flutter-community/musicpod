@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_discord_rpc/flutter_discord_rpc.dart';
 import 'package:github/github.dart';
 import 'package:local_notifier/local_notifier.dart';
@@ -14,6 +15,7 @@ import 'package:window_manager/window_manager.dart';
 import 'app/app_model.dart';
 import 'app/connectivity_model.dart';
 import 'app/view/routing_manager.dart';
+import 'app/window_size_to_settings_listener.dart';
 import 'app_config.dart';
 import 'custom_content/custom_content_model.dart';
 import 'expose/expose_service.dart';
@@ -64,6 +66,19 @@ void registerDependencies() {
     di.registerSingletonAsync<WindowManager>(() async {
       final wm = WindowManager.instance;
       await wm.ensureInitialized();
+      await wm.waitUntilReadyToShow(
+        const WindowOptions(
+          backgroundColor: Colors.transparent,
+          minimumSize: Size(500, 700),
+          skipTaskbar: false,
+          titleBarStyle: TitleBarStyle.hidden,
+        ),
+        () async {
+          await windowManager.show();
+          await windowManager.focus();
+        },
+      );
+
       return wm;
     });
   }
@@ -84,20 +99,27 @@ void registerDependencies() {
           defaultValue: '2.11.0',
         );
         return SettingsService(
-          windowManager: AppConfig.windowManagerImplemented
-              ? di<WindowManager>()
-              : null,
           forcedUpdateThreshold: forcedUpdateThreshold,
           sharedPreferences: di<SharedPreferences>(),
           downloadsDefaultDir: downloadsDefaultDir,
         );
       },
-      dependsOn: [
-        SharedPreferences,
-        if (AppConfig.windowManagerImplemented) WindowManager,
-      ],
+      dependsOn: [SharedPreferences],
       dispose: (s) async => s.dispose(),
-    )
+    );
+
+  if (AppConfig.windowManagerImplemented) {
+    di.registerSingletonAsync<WindowSizeToSettingsListener>(
+      () async => WindowSizeToSettingsListener.register(
+        sharedPreferences: di<SharedPreferences>(),
+        windowManager: di<WindowManager>(),
+      ),
+      dispose: (s) => s.dispose(),
+      dependsOn: [SharedPreferences, WindowManager],
+    );
+  }
+
+  di
     ..registerSingletonWithDependencies(
       () => LastfmService(settingsService: di<SettingsService>()),
       dependsOn: [SettingsService],
