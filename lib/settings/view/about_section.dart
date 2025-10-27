@@ -68,9 +68,9 @@ class _AboutTileState extends State<_AboutTile> {
     );
 
     return YaruTile(
-      subtitle: Text(
-        context.l10n.downloadsOfLatestRelease(downloads.toString()),
-      ),
+      subtitle: downloads == null
+          ? null
+          : Text(context.l10n.downloadsOfLatestRelease(downloads.toString())),
       title:
           !di<ConnectivityModel>().isOnline == true ||
               !appModel.allowManualUpdate
