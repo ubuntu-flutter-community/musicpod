@@ -98,7 +98,7 @@ class PodcastList extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     watchPropertyValue((LibraryModel m) => m.podcastsLength);
-    final masterItems = createPodcastMasterItems(di<LibraryModel>());
+    final masterItems = createPodcastMasterItems(context, di<LibraryModel>());
     final selectedPageId = watchPropertyValue(
       (RoutingManager m) => m.selectedPageId,
     );

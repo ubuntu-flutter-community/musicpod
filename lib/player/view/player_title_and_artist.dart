@@ -114,6 +114,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
             onTap: audio == null
                 ? null
                 : () => _onArtistTap(
+                    context: context,
                     audio: audio,
                     routingManager: routingManager,
                     localAudioModel: localAudioModel,
@@ -260,6 +261,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
   }
 
   void _onArtistTap({
+    required BuildContext context,
     required Audio audio,
     required PodcastModel podcastModel,
     required LocalAudioModel localAudioModel,
@@ -288,6 +290,9 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
             builder: (_) => LazyPodcastPage(
               feedUrl: feedUrl,
               imageUrl: audio.imageUrl ?? audio.albumArtUrl,
+              updateMessage: context.l10n.newEpisodeAvailable,
+              multiUpdateMessage: (length) =>
+                  context.l10n.newEpisodesAvailableFor(length),
             ),
           );
         }

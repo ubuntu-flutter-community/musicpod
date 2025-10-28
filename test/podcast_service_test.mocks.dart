@@ -208,6 +208,14 @@ class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
           as bool);
 
   @override
+  bool get showPlayerLyrics =>
+      (super.noSuchMethod(
+            Invocation.getter(#showPlayerLyrics),
+            returnValue: false,
+          )
+          as bool);
+
+  @override
   _i6.CloseBtnAction get closeBtnActionIndex =>
       (super.noSuchMethod(
             Invocation.getter(#closeBtnActionIndex),
@@ -434,6 +442,15 @@ class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
   _i3.Future<void> setHideCompletedEpisodes(bool? value) =>
       (super.noSuchMethod(
             Invocation.method(#setHideCompletedEpisodes, [value]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
+
+  @override
+  _i3.Future<void> setShowPlayerLyrics(bool? value) =>
+      (super.noSuchMethod(
+            Invocation.method(#setShowPlayerLyrics, [value]),
             returnValue: _i3.Future<void>.value(),
             returnValueForMissingStub: _i3.Future<void>.value(),
           )
@@ -1063,6 +1080,21 @@ class MockLibraryService extends _i1.Mock implements _i7.LibraryService {
           as _i3.Future<void>);
 
   @override
+  _i3.Future<void> addPodcastLastUpdated({
+    required String? feedUrl,
+    required String? timestamp,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#addPodcastLastUpdated, [], {
+              #feedUrl: feedUrl,
+              #timestamp: timestamp,
+            }),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
+
+  @override
   String? getPodcastLastUpdated(String? feedUrl) =>
       (super.noSuchMethod(Invocation.method(#getPodcastLastUpdated, [feedUrl]))
           as String?);
@@ -1076,11 +1108,13 @@ class MockLibraryService extends _i1.Mock implements _i7.LibraryService {
           as bool);
 
   @override
-  void addPodcastUpdate(String? feedUrl, DateTime? lastUpdated) =>
-      super.noSuchMethod(
-        Invocation.method(#addPodcastUpdate, [feedUrl, lastUpdated]),
-        returnValueForMissingStub: null,
-      );
+  _i3.Future<void> addPodcastUpdate(String? feedUrl, DateTime? lastUpdated) =>
+      (super.noSuchMethod(
+            Invocation.method(#addPodcastUpdate, [feedUrl, lastUpdated]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
   _i3.Future<void> removePodcastUpdate(String? feedUrl) =>

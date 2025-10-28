@@ -56,7 +56,10 @@ class MasterDetailPage extends StatelessWidget {
               key: routingManager.masterNavigatorKey,
               observers: [routingManager],
               onGenerateRoute: (settings) {
-                final masterItems = getAllMasterItems(di<LibraryModel>());
+                final masterItems = getAllMasterItems(
+                  context,
+                  di<LibraryModel>(),
+                );
                 final page =
                     (masterItems.firstWhereOrNull(
                               (e) => e.pageId == settings.name,

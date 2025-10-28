@@ -22,13 +22,13 @@ class PodcastModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> update({
+  Future<void> checkForUpdates({
     required String updateMessage,
     required String Function(int length) multiUpdateMessage,
     // Note: because the podcasts can be modified to include downloads
     // this needs a map and not only the feedurl
     Set<String>? feedUrls,
-  }) async => _podcastService.updatePodcasts(
+  }) async => _podcastService.checkForUpdates(
     updateMessage: updateMessage,
     multiUpdateMessage: multiUpdateMessage,
     feedUrls: feedUrls,
@@ -91,11 +91,11 @@ class PodcastModel extends SafeChangeNotifier {
   Future<List<Audio>> findEpisodes({
     Item? item,
     String? feedUrl,
-    bool addUpdates = false,
+    bool loadFromCache = true,
   }) => _podcastService.findEpisodes(
     item: item,
     feedUrl: feedUrl,
-    addUpdates: addUpdates,
+    loadFromCache: loadFromCache,
   );
 
   List<Audio>? getPodcastEpisodesFromCache(String? feedUrl) =>

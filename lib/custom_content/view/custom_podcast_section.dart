@@ -68,6 +68,11 @@ class _CustomPodcastSectionState extends State<CustomPodcastSection> {
                                   di<RoutingManager>().push(
                                     pageId: _urlController.text,
                                     builder: (context) => LazyPodcastPage(
+                                      updateMessage:
+                                          context.l10n.newEpisodeAvailable,
+                                      multiUpdateMessage: (length) => context
+                                          .l10n
+                                          .newEpisodesAvailableFor(length),
                                       imageUrl: v.firstOrNull?.imageUrl,
                                       feedUrl: _urlController.text,
                                     ),
