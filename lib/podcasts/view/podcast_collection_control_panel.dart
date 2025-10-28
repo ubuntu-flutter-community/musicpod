@@ -46,7 +46,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
                     di<LibraryModel>().podcastsLength.toString(),
                   ),
                 ),
-                onConfirm: () => di<PodcastModel>().update(
+                onConfirm: () => di<PodcastModel>().checkForUpdates(
                   updateMessage: context.l10n.newEpisodeAvailable,
                   multiUpdateMessage: (length) => context.mounted
                       ? context.l10n.newEpisodesAvailableFor(length)
@@ -58,7 +58,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
                 context: context,
                 backLabel: context.l10n.back,
                 title: context.l10n.loadingPleaseWait,
-                future: () => di<PodcastModel>().update(
+                future: () => di<PodcastModel>().checkForUpdates(
                   updateMessage: context.l10n.newEpisodeAvailable,
                   multiUpdateMessage: (length) => context.mounted
                       ? context.l10n.newEpisodesAvailableFor(length)

@@ -3,6 +3,7 @@ import 'package:podcast_search/podcast_search.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../common/data/audio.dart';
+import '../../common/logging.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
 import '../../l10n/l10n.dart';
@@ -17,11 +18,15 @@ class LazyPodcastPage extends StatefulWidget with WatchItStatefulWidgetMixin {
     this.podcastItem,
     this.feedUrl,
     this.imageUrl,
+    required this.updateMessage,
+    required this.multiUpdateMessage,
   });
 
   final Item? podcastItem;
   final String? feedUrl;
   final String? imageUrl;
+  final String updateMessage;
+  final String Function(int length) multiUpdateMessage;
 
   @override
   State<LazyPodcastPage> createState() => _LazyPodcastPageState();
@@ -35,11 +40,30 @@ class _LazyPodcastPageState extends State<LazyPodcastPage> {
   void initState() {
     super.initState();
     url = widget.feedUrl ?? widget.podcastItem?.feedUrl;
-    _episodes = di<PodcastModel>().findEpisodes(
-      item: widget.podcastItem,
-      feedUrl: url,
-      addUpdates: true,
-    );
+    if (url == null) {
+      printMessageInDebugMode('checkupdates called without feedUrl or item!');
+      _episodes = Future.value(<Audio>[]);
+    } else {
+      _episodes = _findEpisodes(url!);
+    }
+  }
+
+  Future<List<Audio>?> _findEpisodes(String url) async {
+    final podcastModel = di<PodcastModel>();
+    final libraryModel = di<LibraryModel>();
+    if (libraryModel.isPodcastSubscribed(url) &&
+        podcastModel.getPodcastEpisodesFromCache(url) == null) {
+      await podcastModel.checkForUpdates(
+        feedUrls: {url},
+        updateMessage: widget.updateMessage,
+        multiUpdateMessage: widget.multiUpdateMessage,
+      );
+    }
+
+    final episodes = await podcastModel.findEpisodes(feedUrl: url);
+    await libraryModel.removePodcastUpdate(url);
+
+    return episodes;
   }
 
   @override

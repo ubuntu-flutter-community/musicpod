@@ -7,6 +7,7 @@ import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
+import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../../podcasts/podcast_model.dart';
 import '../../podcasts/view/lazy_podcast_page.dart';
@@ -42,7 +43,12 @@ class PodcastCard extends StatelessWidget with WatchItMixin {
       onTap: feedUrl == null
           ? null
           : () => di<RoutingManager>().push(
-              builder: (_) => LazyPodcastPage(podcastItem: item),
+              builder: (_) => LazyPodcastPage(
+                podcastItem: item,
+                updateMessage: context.l10n.newEpisodeAvailable,
+                multiUpdateMessage: (length) =>
+                    context.l10n.newEpisodesAvailableFor(length),
+              ),
               pageId: feedUrl,
             ),
     );

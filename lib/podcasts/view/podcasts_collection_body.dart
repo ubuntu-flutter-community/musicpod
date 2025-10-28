@@ -62,14 +62,14 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
             content: Text(
               context.l10n.checkForUpdatesConfirm(subsLength.toString()),
             ),
-            onConfirm: () => di<PodcastModel>().update(
+            onConfirm: () => di<PodcastModel>().checkForUpdates(
               updateMessage: context.l10n.newEpisodeAvailable,
               multiUpdateMessage: (length) =>
                   context.l10n.newEpisodesAvailableFor(length),
             ),
           );
         } else {
-          di<PodcastModel>().update(
+          di<PodcastModel>().checkForUpdates(
             updateMessage: context.l10n.newEpisodeAvailable,
             multiUpdateMessage: (length) =>
                 context.l10n.newEpisodesAvailableFor(length),
@@ -140,16 +140,13 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                     text: di<LibraryModel>().getSubscribedPodcastName(feedUrl),
                   ),
                   onPlay: () async {
-                    final episodes =
-                        di<PodcastModel>().getPodcastEpisodesFromCache(
-                          feedUrl,
-                        ) ??
-                        await di<PodcastModel>().findEpisodes(feedUrl: feedUrl);
-                    di<PlayerModel>()
-                        .startPlaylist(audios: episodes, listName: feedUrl!)
-                        .then(
-                          (_) => libraryModel.removePodcastUpdate(feedUrl!),
-                        );
+                    final episodes = await di<PodcastModel>().findEpisodes(
+                      feedUrl: feedUrl,
+                    );
+                    di<PlayerModel>().startPlaylist(
+                      audios: episodes,
+                      listName: feedUrl!,
+                    );
                   },
                   onTap: () => di<RoutingManager>().push(pageId: feedUrl!),
                 );

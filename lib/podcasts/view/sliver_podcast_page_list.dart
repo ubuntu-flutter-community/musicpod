@@ -21,7 +21,6 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final playerModel = di<PlayerModel>();
     final libraryModel = di<LibraryModel>();
-    final isPlayerPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
     final selectedAudio = watchPropertyValue((PlayerModel m) => m.audio);
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
 
@@ -36,7 +35,6 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
           key: ValueKey(episode.path ?? episode.url),
           audio: episode,
           isOnline: isOnline,
-          isPlayerPlaying: isPlayerPlaying,
           addPodcast: episode.website == null
               ? null
               : () async => libraryModel.addPodcast(
@@ -45,7 +43,6 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
                   name: episode.album ?? '',
                   artist: episode.artist ?? '',
                 ),
-          removeUpdate: () => libraryModel.removePodcastUpdate(pageId),
           isExpanded: episode == selectedAudio,
           selected: episode == selectedAudio,
           startPlaylist: () => playerModel.startPlaylist(
