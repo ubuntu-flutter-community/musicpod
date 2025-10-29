@@ -44,6 +44,11 @@ class SettingsService {
   void setUseCustomThemeColor(bool value) =>
       _preferences.setBool(SPKeys.useCustomThemeColor, value).then(notify);
 
+  bool get usePlayerColor =>
+      _preferences.getBool(SPKeys.usePlayerColor) ?? false;
+  Future<void> setUsePlayerColor(bool value) =>
+      _preferences.setBool(SPKeys.usePlayerColor, value).then(notify);
+
   int? get customThemeColor => _preferences.getInt(SPKeys.customThemeColor);
   void setCustomThemeColor(int? value) {
     if (value == null) return;

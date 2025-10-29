@@ -2141,6 +2141,13 @@ class AppLocalizationsRu extends AppLocalizations {
       'Это позволит вам выбрать индивидуальный акцентный цвет для текущей темы.';
 
   @override
+  String get usePlayerColorTitle => 'Use player color';
+
+  @override
+  String get usePlayerColorDescription =>
+      'This will use the dominant color has been extracted out of the current artwork (if available) for the whole app.';
+
+  @override
   String get selectColor => 'Выберите цвет';
 
   @override

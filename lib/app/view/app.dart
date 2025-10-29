@@ -5,6 +5,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../common/view/theme.dart';
 import '../../extensions/taget_platform_x.dart';
+import '../../player/player_model.dart';
 import '../../settings/settings_model.dart';
 import 'desktop_musicpod_app.dart';
 import 'mobile_musicpod_app.dart';
@@ -61,19 +62,22 @@ class MaterialMusicPodApp extends StatelessWidget with WatchItMixin {
       (SettingsModel m) => m.customThemeColor,
     );
 
+    final usePlayerColor = watchPropertyValue(
+      (SettingsModel m) => m.usePlayerColor,
+    );
+    final playerColor = watchPropertyValue((PlayerModel m) => m.color);
+
     return SystemThemeBuilder(
       builder: (context, accent) {
+        final color = playerColor != null && usePlayerColor
+            ? playerColor
+            : (customThemeColor != null && useCustomThemeColor
+                  ? Color(customThemeColor)
+                  : accent.accent);
+
         return isMobile
-            ? MobileMusicPodApp(
-                accent: customThemeColor != null && useCustomThemeColor
-                    ? Color(customThemeColor)
-                    : accent.accent,
-              )
-            : DesktopMusicPodApp(
-                accent: customThemeColor != null && useCustomThemeColor
-                    ? Color(customThemeColor)
-                    : accent.accent,
-              );
+            ? MobileMusicPodApp(accent: color)
+            : DesktopMusicPodApp(accent: color);
       },
     );
   }

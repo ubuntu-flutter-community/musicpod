@@ -130,6 +130,10 @@ class SettingsModel extends SafeChangeNotifier {
   void setUseCustomThemeColor(bool value) =>
       _service.setUseCustomThemeColor(value);
 
+  bool get usePlayerColor => _service.usePlayerColor;
+  Future<void> setUsePlayerColor(bool value) =>
+      _service.setUsePlayerColor(value);
+
   int get iconSetIndex => _service.iconSetIndex;
   void setIconSetIndex(int value) => _service.setIconSetIndex(value);
 

@@ -2133,6 +2133,13 @@ class AppLocalizationsSv extends AppLocalizations {
       'Detta låter dig välja en anpassad accentfärg för det aktuella temat.';
 
   @override
+  String get usePlayerColorTitle => 'Use player color';
+
+  @override
+  String get usePlayerColorDescription =>
+      'This will use the dominant color has been extracted out of the current artwork (if available) for the whole app.';
+
+  @override
   String get selectColor => 'Välj färg';
 
   @override

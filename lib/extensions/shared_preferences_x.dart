@@ -45,6 +45,7 @@ extension SPKeys on SharedPreferences {
   static const useYaruTheme = 'useYaruTheme';
   static const customThemeColor = 'customThemeColor';
   static const useCustomThemeColor = 'useCustomThemeColor';
+  static const usePlayerColor = 'usePlayerColor';
   static const iconSetIndex = 'iconSetIndex';
   static const saveWindowSize = 'saveWindowSize';
   static const blurredPlayerBackground = 'blurredPlayerBackground';

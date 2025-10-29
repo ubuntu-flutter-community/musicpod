@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -6,6 +7,7 @@ import '../../app/view/routing_manager.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/safe_network_image.dart';
+import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
@@ -32,14 +34,25 @@ class PodcastCard extends StatelessWidget with WatchItMixin {
       ),
       onPlay: feedUrl == null
           ? null
-          : () => di<PodcastModel>()
-                .findEpisodes(item: item)
-                .then(
-                  (audios) => di<PlayerModel>().startPlaylist(
-                    listName: feedUrl,
-                    audios: audios,
-                  ),
-                ),
+          : () =>
+                showFutureLoadingDialog(
+                  barrierDismissible: true,
+                  title: context.l10n.loadingPodcastFeed,
+                  context: context,
+                  future: () => di<PodcastModel>().findEpisodes(item: item),
+                ).then((res) {
+                  if (res.isValue) {
+                    di<PlayerModel>().startPlaylist(
+                      audios: res.asValue!.value,
+                      listName: feedUrl,
+                    );
+                  } else {
+                    showSnackBar(
+                      context: context,
+                      content: Text(context.l10n.podcastFeedIsEmpty),
+                    );
+                  }
+                }),
       onTap: feedUrl == null
           ? null
           : () => di<RoutingManager>().push(

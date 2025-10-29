@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:watch_it/watch_it.dart';
 
 import '../../app/connectivity_model.dart';
@@ -13,6 +14,7 @@ import '../../common/view/no_search_result_page.dart';
 import '../../common/view/offline_page.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/sliver_body.dart';
+import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
@@ -139,15 +141,26 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                         : null,
                     text: di<LibraryModel>().getSubscribedPodcastName(feedUrl),
                   ),
-                  onPlay: () async {
-                    final episodes = await di<PodcastModel>().findEpisodes(
-                      feedUrl: feedUrl,
-                    );
-                    di<PlayerModel>().startPlaylist(
-                      audios: episodes,
-                      listName: feedUrl!,
-                    );
-                  },
+                  onPlay: () =>
+                      showFutureLoadingDialog(
+                        barrierDismissible: true,
+                        title: context.l10n.loadingPodcastFeed,
+                        context: context,
+                        future: () =>
+                            di<PodcastModel>().findEpisodes(feedUrl: feedUrl),
+                      ).then((res) {
+                        if (res.isValue) {
+                          di<PlayerModel>().startPlaylist(
+                            audios: res.asValue!.value,
+                            listName: feedUrl!,
+                          );
+                        } else {
+                          showSnackBar(
+                            context: context,
+                            content: Text(context.l10n.podcastFeedIsEmpty),
+                          );
+                        }
+                      }),
                   onTap: () => di<RoutingManager>().push(pageId: feedUrl!),
                 );
               },
