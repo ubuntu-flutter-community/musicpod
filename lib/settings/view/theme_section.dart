@@ -33,6 +33,10 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
       (SettingsModel m) => m.customThemeColor,
     );
 
+    final usePlayerColor = watchPropertyValue(
+      (SettingsModel m) => m.usePlayerColor,
+    );
+
     final color = customThemeColor == null
         ? kMusicPodDefaultColor
         : Color(customThemeColor);
@@ -114,10 +118,18 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
             ),
           ],
           YaruTile(
+            title: Text(l10n.usePlayerColorTitle),
+            subtitle: Text(l10n.usePlayerColorDescription),
+            trailing: CommonSwitch(
+              onChanged: model.setUsePlayerColor,
+              value: usePlayerColor,
+            ),
+          ),
+          YaruTile(
             title: Text(l10n.useCustomThemeColorTitle),
             subtitle: Text(l10n.useCustomThemeColorDescription),
             trailing: CommonSwitch(
-              onChanged: model.setUseCustomThemeColor,
+              onChanged: usePlayerColor ? null : model.setUseCustomThemeColor,
               value: useCustomThemeColor,
             ),
           ),

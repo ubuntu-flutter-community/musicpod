@@ -722,6 +722,8 @@
     "customThemeColor": "Custom theme color",
     "useCustomThemeColorTitle": "Use custom accent color",
     "useCustomThemeColorDescription": "This will let you chose a custom accent color for the current theme.",
+    "usePlayerColorTitle": "Use player color",
+    "usePlayerColorDescription": "This will use the dominant color has been extracted out of the current artwork (if available) for the whole app.",
     "selectColor": "Select color",
     "selectColorShade": "Select color shade",
     "selectColorAndItsShades": "Select color and its shades",

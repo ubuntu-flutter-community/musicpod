@@ -2136,6 +2136,13 @@ class AppLocalizationsIt extends AppLocalizations {
       'Questo ti consentirà di scegliere un colore accento personalizzato per il tema attuale.';
 
   @override
+  String get usePlayerColorTitle => 'Use player color';
+
+  @override
+  String get usePlayerColorDescription =>
+      'This will use the dominant color has been extracted out of the current artwork (if available) for the whole app.';
+
+  @override
   String get selectColor => 'Seleziona colore';
 
   @override

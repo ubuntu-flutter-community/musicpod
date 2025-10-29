@@ -2154,6 +2154,13 @@ class AppLocalizationsTa extends AppLocalizations {
       'தற்போதைய கருப்பொருளுக்கு தனிப்பயன் உச்சரிப்பு வண்ணத்தைத் தேர்வுசெய்ய இது உங்களை அனுமதிக்கும்.';
 
   @override
+  String get usePlayerColorTitle => 'Use player color';
+
+  @override
+  String get usePlayerColorDescription =>
+      'This will use the dominant color has been extracted out of the current artwork (if available) for the whole app.';
+
+  @override
   String get selectColor => 'வண்ணத்தைத் தேர்ந்தெடுக்கவும்';
 
   @override

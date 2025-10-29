@@ -4213,6 +4213,18 @@ abstract class AppLocalizations {
   /// **'This will let you chose a custom accent color for the current theme.'**
   String get useCustomThemeColorDescription;
 
+  /// No description provided for @usePlayerColorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Use player color'**
+  String get usePlayerColorTitle;
+
+  /// No description provided for @usePlayerColorDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'This will use the dominant color has been extracted out of the current artwork (if available) for the whole app.'**
+  String get usePlayerColorDescription;
+
   /// No description provided for @selectColor.
   ///
   /// In en, this message translates to:
