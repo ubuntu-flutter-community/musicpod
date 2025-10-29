@@ -1,5 +1,36 @@
 # Changelog
 
+## [2.14.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.13.0...v2.14.0) (2025-10-29)
+
+
+### Features
+
+* add initial lyrics support ([#1372](https://github.com/ubuntu-flutter-community/musicpod/issues/1372)) ([6000b11](https://github.com/ubuntu-flutter-community/musicpod/commit/6000b111a42af8a6df64af792c1c8ffdb99b6f1c))
+* add player color as theme option ([#1378](https://github.com/ubuntu-flutter-community/musicpod/issues/1378)) ([0162c60](https://github.com/ubuntu-flutter-community/musicpod/commit/0162c602391919f3e81b1629a0e9e9a86eb07be1))
+* add podcast search attribute ([e5cad8d](https://github.com/ubuntu-flutter-community/musicpod/commit/e5cad8dc1e4adb151de5db44949d192f7c6a0493))
+* add reading lyrics from files ([#1373](https://github.com/ubuntu-flutter-community/musicpod/issues/1373)) ([14a6a0b](https://github.com/ubuntu-flutter-community/musicpod/commit/14a6a0bca279fc25920c571356fef704595c18c5))
+* auto scroll lyrics ([#1374](https://github.com/ubuntu-flutter-community/musicpod/issues/1374)) ([b15aca1](https://github.com/ubuntu-flutter-community/musicpod/commit/b15aca1a35c93d2c82436a2f67acc711441d3baa))
+* improve future loading and podcast update notifications ([#1362](https://github.com/ubuntu-flutter-community/musicpod/issues/1362)) ([d02c572](https://github.com/ubuntu-flutter-community/musicpod/commit/d02c572826c0cd13c48dc97820e61beedb1d9c02))
+* Mark as played / Hide played ([#1365](https://github.com/ubuntu-flutter-community/musicpod/issues/1365)) ([67f08e9](https://github.com/ubuntu-flutter-community/musicpod/commit/67f08e988b8b5ec615365340632b8476f76af464))
+* Translated using Weblate (Polish) ([#1335](https://github.com/ubuntu-flutter-community/musicpod/issues/1335)) ([61d6ee3](https://github.com/ubuntu-flutter-community/musicpod/commit/61d6ee303f8bd1142e07533277cc5205ccf15a98))
+* Translated using Weblate (Portuguese) ([#1351](https://github.com/ubuntu-flutter-community/musicpod/issues/1351)) ([ee21426](https://github.com/ubuntu-flutter-community/musicpod/commit/ee2142663d4a45edd724c5a66dfc487e1921b97f))
+* Translations update from Hosted Weblate ([#1337](https://github.com/ubuntu-flutter-community/musicpod/issues/1337)) ([9bad2cd](https://github.com/ubuntu-flutter-community/musicpod/commit/9bad2cde17dfb4d1486581e09883df867d9e88c9))
+* Translations update from Hosted Weblate ([#1361](https://github.com/ubuntu-flutter-community/musicpod/issues/1361)) ([be53f4f](https://github.com/ubuntu-flutter-community/musicpod/commit/be53f4f3b78432fdae51d13648089208c728f2c7))
+* Updated to core24 and updated mpv to 0.40.0 ([#1349](https://github.com/ubuntu-flutter-community/musicpod/issues/1349)) ([41a17b9](https://github.com/ubuntu-flutter-community/musicpod/commit/41a17b99de6a963b4039a7606b2e5a353e2e823c))
+
+
+### Bug Fixes
+
+* attempt to fix flicker on some setups ([#1344](https://github.com/ubuntu-flutter-community/musicpod/issues/1344)) ([a1abb7b](https://github.com/ubuntu-flutter-community/musicpod/commit/a1abb7bbe4d15956752317a25e7a2031548c10a7))
+* bring back smtc windows, audio service win does not work yet sadly ([#1363](https://github.com/ubuntu-flutter-community/musicpod/issues/1363)) ([e3d1a35](https://github.com/ubuntu-flutter-community/musicpod/commit/e3d1a35186037b7019e00fab203f6050e37888c8))
+* **deps:** update dependency window_manager to ^0.5.0 ([#1326](https://github.com/ubuntu-flutter-community/musicpod/issues/1326)) ([583e4ce](https://github.com/ubuntu-flutter-community/musicpod/commit/583e4ce7ee5574d46bc3fa81388805ad471edd23))
+* exchange html widget library ([#1360](https://github.com/ubuntu-flutter-community/musicpod/issues/1360)) ([663fb3d](https://github.com/ubuntu-flutter-community/musicpod/commit/663fb3d1920397665e7bbf0b4b13e424d4143027))
+* full height video player crashes the app on Linux on snap ([#1366](https://github.com/ubuntu-flutter-community/musicpod/issues/1366)) ([7c9a833](https://github.com/ubuntu-flutter-community/musicpod/commit/7c9a8336fb952362b1e68c995bdc21aad3667a40)), closes [#1345](https://github.com/ubuntu-flutter-community/musicpod/issues/1345)
+* macos titlebar with recent macos and move window size code ([#1376](https://github.com/ubuntu-flutter-community/musicpod/issues/1376)) ([2b67700](https://github.com/ubuntu-flutter-community/musicpod/commit/2b677008b565f6d0c7fb2e986493ccac3d2fe3bf))
+* make all podcast pages fully ID based ([#1359](https://github.com/ubuntu-flutter-community/musicpod/issues/1359)) ([1927bfa](https://github.com/ubuntu-flutter-community/musicpod/commit/1927bfad2b5ba35669b9f3c18d197c93a88d7058))
+* organize player code and add a different video player for linux to fix video crash ([#1371](https://github.com/ubuntu-flutter-community/musicpod/issues/1371)) ([dd59b7f](https://github.com/ubuntu-flutter-community/musicpod/commit/dd59b7fc171cd768be101eae23dd0c25ac91b9b1))
+* podcast updates not working after fully ID based podcast page ([#1377](https://github.com/ubuntu-flutter-community/musicpod/issues/1377)) ([247a918](https://github.com/ubuntu-flutter-community/musicpod/commit/247a9184d4a67c4b26eefe6cf381b4fdbee78815))
+
 ## [2.13.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.12.0...v2.13.0) (2025-06-12)
 
 
