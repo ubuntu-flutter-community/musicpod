@@ -21,25 +21,35 @@ class YaruMusicPodApp extends StatelessWidget with WatchItMixin {
     final customThemeColor = watchPropertyValue(
       (SettingsModel m) => m.customThemeColor,
     );
+
+    final usePlayerColor = watchPropertyValue(
+      (SettingsModel m) => m.usePlayerColor,
+    );
+    final playerColor = watchPropertyValue((PlayerModel m) => m.color);
+
     final useYaruTheme = watchPropertyValue(
       (SettingsModel m) => m.useYaruTheme,
     );
 
     return YaruTheme(
       builder: (context, yaru, child) {
-        final yaruLightFlavor = useCustomThemeColor && customThemeColor != null
-            ? createYaruLightTheme(primaryColor: Color(customThemeColor))
+        final color = playerColor != null && usePlayerColor
+            ? playerColor
+            : (customThemeColor != null && useCustomThemeColor
+                  ? Color(customThemeColor)
+                  : yaru.theme?.colorScheme.primary);
+
+        final yaruLightFlavor = color != null
+            ? createYaruLightTheme(primaryColor: color)
             : yaru.theme;
-        final yaruDarkFlavor = useCustomThemeColor && customThemeColor != null
-            ? createYaruDarkTheme(primaryColor: Color(customThemeColor))
+        final yaruDarkFlavor = color != null
+            ? createYaruDarkTheme(primaryColor: color)
             : yaru.darkTheme;
 
         return DesktopMusicPodApp(
           highContrastTheme: yaruHighContrastLight,
           highContrastDarkTheme: yaruHighContrastDark,
-          accent: customThemeColor != null && useCustomThemeColor
-              ? Color(customThemeColor)
-              : yaru.theme?.colorScheme.primary,
+          accent: color,
           lightTheme: useYaruTheme
               ? yaruLightWithTweaks(yaruLightFlavor)
               : null,
