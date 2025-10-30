@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.14.1](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.14.0...v2.14.1) (2025-10-30)
+
+
+### Bug Fixes
+
+* linux player color option ([#1379](https://github.com/ubuntu-flutter-community/musicpod/issues/1379)) ([e27dd59](https://github.com/ubuntu-flutter-community/musicpod/commit/e27dd59c42b3386dc5a6bd6dfb07d3c0597d08c3))
+
 ## [2.14.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.13.0...v2.14.0) (2025-10-29)
 
 
