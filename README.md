@@ -89,6 +89,48 @@ If you want to contribute code, please create an issue first.
 - required for macos builds: [install xcode](https://developer.apple.com/xcode/)
 - as a good IDE for all builds: [install vcode](https://code.visualstudio.com/)
 
+## Release
+
+[The release please bot](https://github.com/googleapis/release-please) automatically creates a pull request when new changes after the last release are made with [sconventional commits](https://www.conventionalcommits.org/en/v1.0.0/).
+It force pushes those to its branch and updates the version string in pubspec.yaml and the changelog file.
+When the release please pull request is merged the version and changelog will be updated in main.
+
+### Linux
+
+The linux snap packages are always build when a new commit lands in main.
+When a new release is made go to https://snapcraft.io/musicpod/releases and promote the latest snap from edge to stable.
+
+### MacOs
+
+- fvm flutter build macos --release
+- open the macos directory in xcode
+  - in xcode go to "Product" -> "Archive"
+  - create archive
+  - validate
+  - distribute
+  - notarize
+  - export app
+- install [create-dmg](https://github.com/create-dmg/create-dmg)
+- open the location you exported the app to
+- create-dmg --idenfity=XXXXXXXX musicpod.app (XXXXXXXX is your apple dev ID which needs to be with your certificate in your mac...)
+
+### Windows
+
+Currently inno setup is needed. This hopefully changes some day when https://github.com/ubuntu-flutter-community/musicpod/issues/964 is merged.
+
+- fvm flutter build windows --release
+- copy the following files from C:\Program Files (x86)\Microsoft Visual Studio\2022\Community\VC\
+Redist\MSVC\14.34.31931\x64\Microsoft.VC143.CRT\ into your windows build
+
+```
+msvcp140.dll
+msvcp140_1.dll
+msvcp140_2.dll
+vcruntime140.dll
+vcruntime140_1.dll
+```
+- run .../musicpod/windows/inno.iss
+
 ## Testing
 
 Test mocks are generated with [Mockito](https://github.com/dart-lang/mockito). You need to run the `build_runner` command in order to re-generate mocks, in case you changed the signatures of service methods.

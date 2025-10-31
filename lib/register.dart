@@ -289,7 +289,12 @@ void registerDependencies() {
         );
         return appModel;
       },
-      dependsOn: [SettingsService, ExposeService, ConnectivityModel],
+      dependsOn: [
+        SettingsService,
+        ExposeService,
+        ConnectivityModel,
+        PackageInfo,
+      ],
       dispose: (s) => s.dispose(),
     )
     ..registerSingletonWithDependencies<LibraryModel>(

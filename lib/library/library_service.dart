@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -496,6 +497,31 @@ class LibraryService {
     ).then((_) => _propertiesChangedController.add(true));
   }
 
+  Future<void> _migrateOldPodcast() async {
+    final oldPodcasts = await readAudioMap(FileNames.podcasts);
+    for (final podcast in oldPodcasts.entries) {
+      final feed = podcast.key;
+      final episodes = podcast.value;
+      final first = episodes.firstWhereOrNull(
+        (e) =>
+            e.album != null &&
+            (e.albumArtUrl != null || e.imageUrl != null) &&
+            e.artist != null,
+      );
+      final name = first?.album;
+      final artist = first?.artist;
+      final image = first?.albumArtUrl ?? first?.imageUrl;
+      if (name != null && artist != null) {
+        await addPodcast(
+          feedUrl: feed,
+          imageUrl: image,
+          name: name,
+          artist: artist,
+        );
+      }
+    }
+  }
+
   Set<String> get _podcasts =>
       _sharedPreferences.getStringList(SPKeys.podcastFeedUrls)?.toSet() ?? {};
   bool isPodcastSubscribed(String feedUrl) => _podcasts.contains(feedUrl);
@@ -721,6 +747,7 @@ class LibraryService {
   }
 
   Future<void> init() async {
+    await _migrateOldPodcast();
     _playlists = await readAudioMap(FileNames.playlists);
     _likedAudios =
         (await readAudioMap(
