@@ -30,6 +30,7 @@ dependencies:
     sdk: flutter
   flutter_cache_manager: ^3.4.1
   flutter_discord_rpc: ^1.0.0
+  flutter_it: ^1.0.2
   flutter_localizations:
     sdk: flutter
   flutter_markdown: ^0.7.3
@@ -42,7 +43,6 @@ dependencies:
 
   intl: ^0.20.2
   lastfm: ^0.0.6
-  listen_it: ^5.0.0
   listenbrainz_dart: ^0.0.4
   local_notifier: ^0.1.6
   lrc: ^1.0.2
@@ -83,7 +83,6 @@ dependencies:
   synchronized: ^3.3.1
   system_theme: ^3.0.0
   url_launcher: ^6.3.0
-  watch_it: ^1.5.0
   watcher: ^1.1.1
   waveform_visualizer: ^1.0.0
   win32: ^5.5.4

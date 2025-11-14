@@ -760,5 +760,48 @@
         }
     },
     "lyrics": "Lyrics",
-    "autoScrolling": "Auto scroll"
+    "autoScrolling": "Auto scroll",
+    "genericErrorTitle": "An error occurred",
+    "genericErrorDescription": "An unexpected error occurred. Please try again later.",
+    "errorDetails": "Error details: {details}",
+    "@errorDetails": {
+        "placeholders": {
+            "details": {
+                "type": "String"
+            }
+        }
+    },
+    "appendToQueue": "Append to queue",
+    "@appendToQueue": {},
+    "appendedToQueue": "Appended to queue: {title}",
+    "@appendedToQueue": {
+        "type": "text",
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "appendMediaToQueueDescription": "{title} is already inside the queue. Do you want to append it to the end of the queue?",
+    "@appendMediaToQueueDescription": {
+        "type": "text",
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "appendMediaToQueueTitle": "Append media to queue",
+    "@appendMediaToQueueTitle": {},
+    "appendMediaToQueue": "Append media to queue: {title}",
+    "@appendMediaToQueue": {
+        "type": "text",
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "explore": "Explore",
+    "favorites": "Favorites"
 }
