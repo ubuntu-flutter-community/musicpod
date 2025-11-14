@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:smtc_windows/smtc_windows.dart';
-import 'package:watch_it/watch_it.dart';
+import 'package:flutter_it/flutter_it.dart';
 
 import '../app_config.dart';
 import '../common/data/audio_type.dart';

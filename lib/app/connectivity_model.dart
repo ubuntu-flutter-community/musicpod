@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
-import 'package:watch_it/watch_it.dart';
 
 import '../common/data/audio_type.dart';
 import '../common/view/snackbars.dart';

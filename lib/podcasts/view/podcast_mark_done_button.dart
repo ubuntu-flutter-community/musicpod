@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:future_loading_dialog/future_loading_dialog.dart';
-import 'package:watch_it/watch_it.dart';
+import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
@@ -42,8 +42,12 @@ class EpisodeMarkDownButton extends StatelessWidget with WatchItMixin {
           ? null
           : () => showFutureLoadingDialog(
               context: context,
-              future: () async =>
-                  di<PlayerModel>().safeAllLastPositions([episode]),
+              future: () async {
+                if (di<PlayerModel>().audio == episode) {
+                  di<PlayerModel>().playNext();
+                }
+                return di<PlayerModel>().safeAllLastPositions([episode]);
+              },
             ),
       icon: Icon(Iconz.markAllRead),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:watch_it/watch_it.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
+
 import '../../common/view/icons.dart';
 import '../../common/view/sliver_app_bar_bottom_space.dart';
 import '../../common/view/ui_constants.dart';

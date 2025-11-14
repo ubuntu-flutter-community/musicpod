@@ -4362,6 +4362,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Auto scroll'**
   String get autoScrolling;
+
+  /// No description provided for @genericErrorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred'**
+  String get genericErrorTitle;
+
+  /// No description provided for @genericErrorDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred. Please try again later.'**
+  String get genericErrorDescription;
+
+  /// No description provided for @errorDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Error details: {details}'**
+  String errorDetails(String details);
+
+  /// No description provided for @appendToQueue.
+  ///
+  /// In en, this message translates to:
+  /// **'Append to queue'**
+  String get appendToQueue;
+
+  /// No description provided for @appendedToQueue.
+  ///
+  /// In en, this message translates to:
+  /// **'Appended to queue: {title}'**
+  String appendedToQueue(String title);
+
+  /// No description provided for @appendMediaToQueueDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} is already inside the queue. Do you want to append it to the end of the queue?'**
+  String appendMediaToQueueDescription(String title);
+
+  /// No description provided for @appendMediaToQueueTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Append media to queue'**
+  String get appendMediaToQueueTitle;
+
+  /// No description provided for @appendMediaToQueue.
+  ///
+  /// In en, this message translates to:
+  /// **'Append media to queue: {title}'**
+  String appendMediaToQueue(String title);
+
+  /// No description provided for @explore.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore'**
+  String get explore;
+
+  /// No description provided for @favorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get favorites;
 }
 
 class _AppLocalizationsDelegate
