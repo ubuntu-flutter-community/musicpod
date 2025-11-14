@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.14.1](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.14.0...v2.14.1) (2025-11-14)
+
+
+### Bug Fixes
+
+* linux player color option ([#1379](https://github.com/ubuntu-flutter-community/musicpod/issues/1379)) ([e27dd59](https://github.com/ubuntu-flutter-community/musicpod/commit/e27dd59c42b3386dc5a6bd6dfb07d3c0597d08c3))
+* mark as played doesn't mark when podcast is partially played ([#1391](https://github.com/ubuntu-flutter-community/musicpod/issues/1391)) ([0b11515](https://github.com/ubuntu-flutter-community/musicpod/commit/0b11515fde1dd8dd914b20de8bd7a3beeb1248f6)), closes [#1388](https://github.com/ubuntu-flutter-community/musicpod/issues/1388)
+* migrate old podcasts to new podcasts ([#1384](https://github.com/ubuntu-flutter-community/musicpod/issues/1384)) ([a158692](https://github.com/ubuntu-flutter-community/musicpod/commit/a1586929fb046765c372d6537b73890a07ddb69a))
+
 ## [2.14.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.13.0...v2.14.0) (2025-10-29)
 
 
