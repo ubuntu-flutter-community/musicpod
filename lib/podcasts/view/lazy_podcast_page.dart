@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:flutter_it/flutter_it.dart';
 
+import '../../app/connectivity_model.dart';
 import '../../common/data/audio.dart';
 import '../../common/logging.dart';
 import '../../common/view/no_search_result_page.dart';
@@ -68,7 +69,10 @@ class _LazyPodcastPageState extends State<LazyPodcastPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
+
     return FutureBuilder(
+      key: ValueKey(isOnline),
       future: _episodes,
       builder: (context, snapshot) {
         final feedUrl = widget.feedUrl ?? widget.podcastItem?.feedUrl;
@@ -119,6 +123,7 @@ class _LazyPodcastPageState extends State<LazyPodcastPage> {
           episodes: episodes,
           feedUrl: feedUrl,
           title: title,
+          isOnline: isOnline,
         );
       },
     );

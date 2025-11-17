@@ -11,7 +11,6 @@ import '../../player/view/player_main_controls.dart';
 import '../../player/view/player_view.dart';
 import '../../podcasts/download_model.dart';
 import '../app_model.dart';
-import '../connectivity_model.dart';
 import 'create_master_items.dart';
 import 'mobile_bottom_bar.dart';
 import 'routing_manager.dart';
@@ -29,11 +28,6 @@ class MobilePage extends StatelessWidget with WatchItMixin {
     registerStreamHandler(
       select: (DownloadModel m) => m.messageStream,
       handler: downloadMessageStreamHandler,
-    );
-
-    registerStreamHandler(
-      select: (ConnectivityModel m) => m.onConnectivityChanged,
-      handler: onConnectivityChangedHandler,
     );
 
     return PopScope(

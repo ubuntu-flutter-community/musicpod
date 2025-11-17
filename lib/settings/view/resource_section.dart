@@ -53,16 +53,6 @@ class ResourceSection extends StatelessWidget with WatchItMixin {
             ),
           ),
           YaruTile(
-            title: Text(l10n.notifyMeAboutDataSafeModeTitle),
-            subtitle: Text(l10n.notifyMeAboutDataSafeModeDescription),
-            trailing: CommonSwitch(
-              onChanged: di<SettingsModel>().setNotifyDataSafeMode,
-              value: watchPropertyValue(
-                (SettingsModel m) => m.notifyDataSafeMode,
-              ),
-            ),
-          ),
-          YaruTile(
             title: Text(l10n.saveWindowSizeTitle),
             subtitle: Text(l10n.saveWindowSizeDescription),
             trailing: CommonSwitch(
