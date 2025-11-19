@@ -803,5 +803,7 @@
         }
     },
     "explore": "Explore",
-    "favorites": "Favorites"
+    "favorites": "Favorites",
+     "autoMovePlayerTitle": "Auto move player",
+     "autoMovePlayerDescription": "Move the player to the right if there is enough horizontal space"
 }

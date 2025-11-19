@@ -2268,4 +2268,11 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get favorites => 'Favorites';
+
+  @override
+  String get autoMovePlayerTitle => 'Auto move player';
+
+  @override
+  String get autoMovePlayerDescription =>
+      'Move the player to the right if there is enough horizontal space';
 }

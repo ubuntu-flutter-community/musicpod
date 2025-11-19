@@ -161,6 +161,10 @@ class SettingsModel extends SafeChangeNotifier {
   Future<void> setShowPlayerLyrics(bool value) =>
       _service.setShowPlayerLyrics(value);
 
+  bool get autoMovePlayer => _service.autoMovePlayer;
+  Future<void> setAutoMovePlayer(bool value) =>
+      _service.setAutoMovePlayer(value);
+
   Future<void> wipeAllSettings() async => _service.wipeAllSettings();
 
   @override
