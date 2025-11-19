@@ -190,6 +190,11 @@ class SettingsService {
   Future<void> setShowPlayerLyrics(bool value) =>
       _preferences.setBool(SPKeys.showPlayerLyrics, value).then(notify);
 
+  bool get autoMovePlayer =>
+      _preferences.getBool(SPKeys.autoMovePlayer) ?? true;
+  Future<void> setAutoMovePlayer(bool value) =>
+      _preferences.setBool(SPKeys.autoMovePlayer, value).then(notify);
+
   CloseBtnAction get closeBtnActionIndex =>
       _preferences.getString(SPKeys.closeBtnAction) == null
       ? CloseBtnAction.alwaysAsk

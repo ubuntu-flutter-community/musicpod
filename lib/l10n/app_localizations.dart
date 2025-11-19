@@ -4422,6 +4422,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Favorites'**
   String get favorites;
+
+  /// No description provided for @autoMovePlayerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto move player'**
+  String get autoMovePlayerTitle;
+
+  /// No description provided for @autoMovePlayerDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Move the player to the right if there is enough horizontal space'**
+  String get autoMovePlayerDescription;
 }
 
 class _AppLocalizationsDelegate
