@@ -18,7 +18,6 @@ dependencies:
   blur: ^4.0.2
   cached_network_image: ^3.4.1
   collection: ^1.18.0
-  connectivity_plus: ^7.0.0
   cupertino_icons: ^1.0.8
   dio: ^5.7.0
   file: ^7.0.0
@@ -40,7 +39,7 @@ dependencies:
   github: ^9.24.0
   gtk: ^2.1.0
   handy_window: ^0.4.0
-
+  internet_connection_checker_plus: ^2.9.1
   intl: ^0.20.2
   lastfm: ^0.0.6
   listenbrainz_dart: ^0.0.4

@@ -73,12 +73,6 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
       select: (DownloadModel m) => m.messageStream,
       handler: downloadMessageStreamHandler,
     );
-
-    registerStreamHandler(
-      select: (ConnectivityModel m) => m.onConnectivityChanged,
-      handler: onConnectivityChangedHandler,
-    );
-
     registerStreamHandler(
       select: (LocalAudioModel m) =>
           m.fileWatcher?.events ?? const Stream<WatchEvent>.empty(),

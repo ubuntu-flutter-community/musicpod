@@ -1,9 +1,9 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_discord_rpc/flutter_discord_rpc.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:github/github.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:local_notifier/local_notifier.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
@@ -227,7 +227,7 @@ void registerDependencies() {
       ),
       dependsOn: [SettingsService, LibraryService, NotificationsService],
     )
-    ..registerLazySingleton<Connectivity>(() => Connectivity())
+    ..registerLazySingleton<InternetConnection>(() => InternetConnection())
     ..registerSingletonAsync<RadioService>(
       () async {
         final s = RadioService(
@@ -245,7 +245,7 @@ void registerDependencies() {
     ..registerSingletonAsync<ConnectivityModel>(() async {
       final connectivityModel = ConnectivityModel(
         playerService: di<PlayerService>(),
-        connectivity: di<Connectivity>(),
+        internetConnection: di<InternetConnection>(),
       );
       await connectivityModel.init();
       return connectivityModel;
