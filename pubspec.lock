@@ -278,10 +278,10 @@ packages:
     dependency: transitive
     description:
       name: command_it
-      sha256: c2a658f52219bb082e283b4177870e8875bf056aaeb8d2737e20e285647fcf21
+      sha256: "6198e223b5a4d0e23281fd9514a67d264fb9239eeb3c1372176f49367aa2b198"
       url: "https://pub.dev"
     source: hosted
-    version: "8.0.0"
+    version: "9.0.2"
   connectivity_plus:
     dependency: transitive
     description:
@@ -539,10 +539,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_it
-      sha256: "6afd345b1db30209a80e29e9e7fb0e58fffe3f46a5c04329d84e0f97323c98d7"
+      sha256: "81fe23d007abd87f26a3dec0b52ad2772ecd3b6d3c8f7e6e1daa24c04c9b1a2d"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2"
+    version: "2.0.0"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -973,10 +973,10 @@ packages:
     dependency: transitive
     description:
       name: meta
-      sha256: e3641ec5d63ebf0d9b41bd43201a66e3fc79a65db5f61fc181f04cd27aab950c
+      sha256: "23f08335362185a5ea2ad3a4e597f1375e78bce8a040df5c600c8d3552ef2394"
       url: "https://pub.dev"
     source: hosted
-    version: "1.16.0"
+    version: "1.17.0"
   mime:
     dependency: "direct main"
     description:
@@ -1635,10 +1635,10 @@ packages:
     dependency: transitive
     description:
       name: test_api
-      sha256: "522f00f556e73044315fa4585ec3270f1808a4b186c936e612cab0b565ff1e00"
+      sha256: ab2726c1a94d3176a45960b6234466ec367179b87dd74f1611adb1f3b5fb9d55
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.6"
+    version: "0.7.7"
   typed_data:
     dependency: transitive
     description:
@@ -1779,10 +1779,10 @@ packages:
     dependency: transitive
     description:
       name: watch_it
-      sha256: "4c2a1a8143162769b3c64f005844ae55c0f4fc69403d9f74a3b67ba315c82997"
+      sha256: "98e091d39aab70c57c6d38883ad83b9a22a0e12683e0222391d20d61cda4d250"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "2.1.1"
   watcher:
     dependency: "direct main"
     description:
