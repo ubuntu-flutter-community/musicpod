@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.15.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.14.0...v2.15.0) (2025-11-20)
+
+
+### Features
+
+* disable player auto resize / auto-move ([#1394](https://github.com/ubuntu-flutter-community/musicpod/issues/1394)) ([1736a27](https://github.com/ubuntu-flutter-community/musicpod/commit/1736a270669d1f529f6365649997d49870d3f565)), closes [#1386](https://github.com/ubuntu-flutter-community/musicpod/issues/1386)
+
+
+### Bug Fixes
+
+* linux player color option ([#1379](https://github.com/ubuntu-flutter-community/musicpod/issues/1379)) ([e27dd59](https://github.com/ubuntu-flutter-community/musicpod/commit/e27dd59c42b3386dc5a6bd6dfb07d3c0597d08c3))
+* mark as played doesn't mark when podcast is partially played ([#1391](https://github.com/ubuntu-flutter-community/musicpod/issues/1391)) ([0b11515](https://github.com/ubuntu-flutter-community/musicpod/commit/0b11515fde1dd8dd914b20de8bd7a3beeb1248f6)), closes [#1388](https://github.com/ubuntu-flutter-community/musicpod/issues/1388)
+* migrate old podcasts to new podcasts ([#1384](https://github.com/ubuntu-flutter-community/musicpod/issues/1384)) ([a158692](https://github.com/ubuntu-flutter-community/musicpod/commit/a1586929fb046765c372d6537b73890a07ddb69a))
+* Showing no connection page when wwan is connection is active ([#1393](https://github.com/ubuntu-flutter-community/musicpod/issues/1393)) ([e314f2d](https://github.com/ubuntu-flutter-community/musicpod/commit/e314f2dd7610e779be45c7cd689c322a38448f6d)), closes [#1390](https://github.com/ubuntu-flutter-community/musicpod/issues/1390)
+
 ## [2.14.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.13.0...v2.14.0) (2025-10-29)
 
 
