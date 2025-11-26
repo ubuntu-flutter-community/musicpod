@@ -278,10 +278,10 @@ packages:
     dependency: transitive
     description:
       name: command_it
-      sha256: "6198e223b5a4d0e23281fd9514a67d264fb9239eeb3c1372176f49367aa2b198"
+      sha256: "4f1cd9131565e0d03569213b40180d7ea12830cc31fcb563a8081cd9fdddec3b"
       url: "https://pub.dev"
     source: hosted
-    version: "9.0.2"
+    version: "9.4.2"
   connectivity_plus:
     dependency: transitive
     description:
@@ -539,10 +539,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_it
-      sha256: "81fe23d007abd87f26a3dec0b52ad2772ecd3b6d3c8f7e6e1daa24c04c9b1a2d"
+      sha256: "12ad0696a2aaabbe9e86eee9b296f8906e043d31e0283b09c3a12c309d6affac"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.1"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -634,10 +634,10 @@ packages:
     dependency: transitive
     description:
       name: get_it
-      sha256: "84792561b731b6463d053e9761a5236da967c369da10b134b8585a5e18429956"
+      sha256: "2c120112e34bbd5f4ce2ca1ad3076a5b2068eb1e48aae8dd7b717b26cdd38543"
       url: "https://pub.dev"
     source: hosted
-    version: "9.0.5"
+    version: "9.1.1"
   github:
     dependency: "direct main"
     description:
@@ -826,10 +826,10 @@ packages:
     dependency: transitive
     description:
       name: listen_it
-      sha256: "516bfd486ca6fcb5d73c5640ed59e3c281a2871ee11863ffd4713e581b11c8d0"
+      sha256: "461f46cc86e9c3be0d679f1ee4d94c8893c0a9ce42d0aad4474fe7e154e62c4a"
       url: "https://pub.dev"
     source: hosted
-    version: "5.3.3"
+    version: "5.3.4"
   listenbrainz_dart:
     dependency: "direct main"
     description:
@@ -1779,10 +1779,10 @@ packages:
     dependency: transitive
     description:
       name: watch_it
-      sha256: "98e091d39aab70c57c6d38883ad83b9a22a0e12683e0222391d20d61cda4d250"
+      sha256: "561910e534af41dda7c9bce2eca2b3d65c48aa88b6570964b3dcb29fb1cc6dc3"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.1"
+    version: "2.3.1"
   watcher:
     dependency: "direct main"
     description:
