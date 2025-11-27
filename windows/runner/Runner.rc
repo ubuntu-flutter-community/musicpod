@@ -89,11 +89,11 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "org.feichtmeier" "\0"
+            VALUE "CompanyName", "org.feichtmeier.apps" "\0"
             VALUE "FileDescription", "musicpod" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "musicpod" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2023 - 2025 org.feichtmeier. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2025 org.feichtmeier.apps. All rights reserved." "\0"
             VALUE "OriginalFilename", "musicpod.exe" "\0"
             VALUE "ProductName", "musicpod" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"

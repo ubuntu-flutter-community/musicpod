@@ -23,7 +23,7 @@ import '../persistence_utils.dart';
 
 typedef Queue = ({String name, List<Audio> audios});
 
-class PlayerService extends BaseAudioHandler with SeekHandler {
+class PlayerService extends BaseAudioHandler with SeekHandler, QueueHandler {
   PlayerService({
     required VideoController controller,
     required ExposeService exposeService,

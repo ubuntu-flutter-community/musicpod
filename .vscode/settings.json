@@ -1,5 +1,5 @@
 {
   "yaml.schemaStore.enable": false,
-  "dart.flutterSdkPath": ".fvm/versions/3.38.3",
+  "dart.flutterSdkPath": ".fvm/versions/3.35.5",
   "cmake.sourceDirectory": "C:/Users/frederik/Documents/CodeProjects/musicpod/windows"
 }
