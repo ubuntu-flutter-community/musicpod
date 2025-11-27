@@ -1,3 +1,4 @@
+import 'package:audio_service/audio_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_discord_rpc/flutter_discord_rpc.dart';
@@ -9,7 +10,6 @@ import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:smtc_windows/smtc_windows.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'app/app_model.dart';
@@ -33,8 +33,6 @@ import 'notifications/notifications_service.dart';
 import 'persistence_utils.dart';
 import 'player/player_model.dart';
 import 'player/player_service.dart';
-import 'player/register_audio_service_handler.dart';
-import 'player/register_smtc_windows.dart';
 import 'podcasts/download_model.dart';
 import 'podcasts/podcast_model.dart';
 import 'podcasts/podcast_service.dart';
@@ -153,36 +151,28 @@ void registerDependencies() {
     }, dispose: (s) => s.player.dispose())
     ..registerSingletonAsync<PlayerService>(
       () async {
-        final playerService = PlayerService(
-          controller: di<VideoController>(),
-          exposeService: di<ExposeService>(),
-          localCoverService: di<LocalCoverService>(),
+        final playerService = await AudioService.init(
+          config: AudioServiceConfig(
+            androidNotificationOngoing: false,
+            androidStopForegroundOnPause: false,
+            androidNotificationChannelName: AppConfig.appName,
+            androidNotificationChannelId: isAndroid || isWindows
+                ? AppConfig.androidChannelId
+                : null,
+            androidNotificationChannelDescription: 'MusicPod Media Controls',
+          ),
+          builder: () => PlayerService(
+            controller: di<VideoController>(),
+            exposeService: di<ExposeService>(),
+            localCoverService: di<LocalCoverService>(),
+          ),
         );
         await playerService.init();
         return playerService;
       },
       dependsOn: [ExposeService],
       dispose: (s) async => s.dispose(),
-    );
-
-  if (isWindows) {
-    di.registerSingletonAsync<SMTCWindows>(
-      registerSMTCWindows,
-      dependsOn: [PlayerService],
-      dispose: (s) async {
-        smtcSubscription?.cancel();
-        await s.dispose();
-      },
-    );
-  } else {
-    di.registerSingletonAsync<AudioServiceHandler>(
-      registerAudioServiceHandler,
-      dependsOn: [PlayerService],
-      dispose: (s) async => s.stop(),
-    );
-  }
-
-  di
+    )
     ..registerSingleton<ExternalPathService>(const ExternalPathService())
     ..registerSingletonAsync<LibraryService>(
       () async {

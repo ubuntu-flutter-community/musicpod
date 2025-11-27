@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart' hide PlayerState;
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:path/path.dart' as p;
 import 'package:yaru/yaru.dart';
 
+import '../app_config.dart';
 import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
 import '../common/data/player_state.dart';
@@ -15,19 +17,22 @@ import '../common/logging.dart';
 import '../expose/expose_service.dart';
 import '../extensions/media_file_x.dart';
 import '../extensions/string_x.dart';
+import '../extensions/taget_platform_x.dart';
 import '../local_audio/local_cover_service.dart';
 import '../persistence_utils.dart';
 
 typedef Queue = ({String name, List<Audio> audios});
 
-class PlayerService {
+class PlayerService extends BaseAudioHandler with SeekHandler {
   PlayerService({
     required VideoController controller,
     required ExposeService exposeService,
     required LocalCoverService localCoverService,
   }) : _controller = controller,
        _exposeService = exposeService,
-       _localCoverService = localCoverService;
+       _localCoverService = localCoverService {
+    registerMediaControlsCallBacks();
+  }
 
   // External dependencies
   final ExposeService _exposeService;
@@ -65,7 +70,7 @@ class PlayerService {
     });
 
     _positionSub ??= player.stream.position.listen((newPosition) {
-      setPosition(newPosition);
+      _setPosition(newPosition);
     });
 
     _bufferSub ??= player.stream.buffer.listen((event) {
@@ -77,7 +82,7 @@ class PlayerService {
         if (_repeatSingle) {
           _play(newAudio: _audio);
         } else {
-          await playNext();
+          await skipToNext();
         }
       }
     });
@@ -120,9 +125,11 @@ class PlayerService {
     await player.dispose();
   }
 
+  // Because we don't want to work with the [Media] class from media_kit
+  // we create our own queue
   Queue? _oldQueue;
   Queue _queue = (name: '', audios: []);
-  Queue get queue => _queue;
+  Queue get theQueue => _queue;
   void setQueue(Queue value) {
     if (value.audios.isEmpty) return;
     _queue = value;
@@ -188,7 +195,7 @@ class PlayerService {
   int _playerStateTicker = 0;
   Duration? _position = Duration.zero;
   Duration? get position => _position;
-  void setPosition(Duration? value) {
+  void _setPosition(Duration? value) {
     if (position?.inSeconds == value?.inSeconds) return;
     _position = value;
     _playerStateTicker = value?.inSeconds ?? 0;
@@ -294,30 +301,29 @@ class PlayerService {
     }
   }
 
-  Future<void> playOrPause() async {
+  @override
+  Future<void> play() async {
     return _firstPlay ? _play(newPosition: _position) : player.playOrPause();
   }
 
-  Future<void> pause() async {
-    await player.pause();
-  }
+  @override
+  Future<void> pause() => player.pause();
 
   Timer? _timer;
   void setPauseTimer(Duration duration) {
     _timer = Timer(duration, () => pause());
   }
 
-  Future<void> seek() async {
-    if (position == null) return;
-    await player.seek(position!);
-  }
+  @override
+  Future<void> seek(Duration position) => player.seek(position);
 
   Future<void> resume() async {
     if (audio == null) return;
-    await playOrPause();
+    await play();
   }
 
-  Future<void> playNext() async {
+  @override
+  Future<void> skipToNext() async {
     await safeLastPosition();
     if (nextAudio != null) {
       _setAudio(nextAudio!);
@@ -336,7 +342,7 @@ class PlayerService {
     if (_queue.audios.isNotEmpty &&
         !_queue.audios.contains(newAudio) &&
         _audio != null) {
-      final currentIndex = queue.audios.indexOf(_audio!);
+      final currentIndex = theQueue.audios.indexOf(_audio!);
       _queue.audios.insert(currentIndex + 1, newAudio);
       nextAudio = newAudio;
     }
@@ -366,30 +372,34 @@ class PlayerService {
   void _estimateNext() {
     if (audio == null) return;
 
-    if (queue.audios.isNotEmpty && queue.audios.contains(audio)) {
-      final currentIndex = queue.audios.indexOf(audio!);
+    if (theQueue.audios.isNotEmpty && theQueue.audios.contains(audio)) {
+      final currentIndex = theQueue.audios.indexOf(audio!);
 
-      if (currentIndex == queue.audios.length - 1) {
-        nextAudio = queue.audios.elementAt(0);
+      if (currentIndex == theQueue.audios.length - 1) {
+        nextAudio = theQueue.audios.elementAt(0);
       } else {
-        nextAudio = queue.audios.elementAt(queue.audios.indexOf(audio!) + 1);
+        nextAudio = theQueue.audios.elementAt(
+          theQueue.audios.indexOf(audio!) + 1,
+        );
       }
     }
   }
 
-  Future<void> playPrevious() async {
-    if (queue.audios.isNotEmpty == true &&
+  @override
+  Future<void> skipToPrevious() async {
+    if (theQueue.audios.isNotEmpty == true &&
         audio != null &&
-        queue.audios.contains(audio)) {
+        theQueue.audios.contains(audio)) {
       if (position != null && position!.inSeconds > 10) {
-        setPosition(Duration.zero);
-        await seek();
+        await seek(Duration.zero);
       } else {
-        final currentIndex = queue.audios.indexOf(audio!);
+        final currentIndex = theQueue.audios.indexOf(audio!);
         if (currentIndex == 0) {
           return;
         }
-        final mightBePrevious = queue.audios.elementAtOrNull(currentIndex - 1);
+        final mightBePrevious = theQueue.audios.elementAtOrNull(
+          currentIndex - 1,
+        );
         if (mightBePrevious == null) return;
         _setAudio(mightBePrevious);
         _estimateNext();
@@ -482,16 +492,17 @@ class PlayerService {
       _setAudio(playerState!.audio!);
       setRemoteImageUrl(playerState.audio!.imageUrl);
 
-      if (playerState.duration != null) {
-        setDuration(playerState.duration!.parsedDuration);
-      }
-      if (playerState.position != null) {
-        setPosition(playerState.position!.parsedDuration);
-      }
-
       if (playerState.queue?.isNotEmpty == true &&
           playerState.queueName?.isNotEmpty == true) {
         setQueue((name: playerState.queueName!, audios: playerState.queue!));
+      }
+
+      if (playerState.duration?.parsedDuration != null) {
+        setDuration(playerState.duration!.parsedDuration);
+      }
+      if (playerState.position?.parsedDuration != null) {
+        _setPosition(playerState.position!.parsedDuration!);
+        seek(playerState.position!.parsedDuration!);
       }
 
       if (playerState.volume != null) {
@@ -589,6 +600,9 @@ class PlayerService {
   // Native media trays
   //
 
+  // Just in case we need to change the third party library in the future
+  // the callbacks are setup here.
+
   Future<void>? Function({
     required bool isPlaying,
     required AudioType? audioType,
@@ -600,23 +614,77 @@ class PlayerService {
   Future<void>? Function(Duration? position)? _onSetMediaControlsPosition;
   Future<void>? Function(Duration? duration)? _onSetMediaControlsDuration;
 
-  void registerMediaControlsCallBacks({
-    required Future<void> onIsPlaying({
-      required bool isPlaying,
-      required AudioType? audioType,
-      required bool queueNotEmpty,
-    }),
-    required Future<void> onSetMetaData({
-      required Audio audio,
-      required Uri? artUri,
-    }),
-    required Future<void> onSetPosition(Duration? position),
-    required Future<void> onSetDuration(Duration? duration)?,
-  }) {
-    _onSetMediaControlsIsPlaying = onIsPlaying;
-    _onSetMediaControlsMetaData = onSetMetaData;
-    _onSetMediaControlsPosition = onSetPosition;
-    _onSetMediaControlsDuration = onSetDuration;
+  void registerMediaControlsCallBacks() {
+    playbackState.add(
+      PlaybackState(
+        playing: false,
+        systemActions: {
+          MediaAction.seek,
+          MediaAction.seekBackward,
+          MediaAction.seekForward,
+        },
+        controls: [
+          MediaControl.skipToPrevious,
+          MediaControl.rewind,
+          MediaControl.play,
+          MediaControl.fastForward,
+          MediaControl.skipToNext,
+        ],
+      ),
+    );
+
+    _onSetMediaControlsIsPlaying =
+        ({
+          required audioType,
+          required isPlaying,
+          required queueNotEmpty,
+        }) async {
+          playbackState.add(
+            playbackState.value.copyWith(
+              playing: isPlaying,
+              controls: [
+                if (audioType == AudioType.podcast && (isMacOS || isAndroid))
+                  MediaControl.rewind
+                else if (queueNotEmpty && audioType != AudioType.radio)
+                  MediaControl.skipToPrevious,
+                isPlaying ? MediaControl.pause : MediaControl.play,
+                if (audioType == AudioType.podcast && (isMacOS || isAndroid))
+                  MediaControl.fastForward
+                else if (queueNotEmpty && audioType != AudioType.radio)
+                  MediaControl.skipToNext,
+              ],
+              processingState: AudioProcessingState.ready,
+            ),
+          );
+        };
+    _onSetMediaControlsMetaData =
+        ({required Uri? artUri, required Audio audio}) {
+          mediaItem.add(
+            MediaItem(
+              id: audio.toString(),
+              title: audio.title ?? AppConfig.appTitle,
+              artist: audio.artist ?? '',
+              artUri: artUri,
+              duration: audio.durationMs == null
+                  ? null
+                  : Duration(milliseconds: audio.durationMs!.toInt()),
+            ),
+          );
+          return Future.value();
+        };
+    _onSetMediaControlsPosition = (position) {
+      playbackState.add(
+        playbackState.value.copyWith(updatePosition: position ?? Duration.zero),
+      );
+      return Future.value();
+    };
+    _onSetMediaControlsDuration = (duration) {
+      if (mediaItem.value != null) {
+        mediaItem.add(mediaItem.value!.copyWith(duration: duration));
+      }
+
+      return Future.value();
+    };
   }
 
   Future<void> _setMediaControlsIsPlaying(bool playing) async =>

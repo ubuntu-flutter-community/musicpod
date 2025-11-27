@@ -74,7 +74,16 @@ class _PlayerLyricsState extends State<PlayerLyrics> {
     }
 
     if (lrc == null || lrc!.isEmpty) {
-      return const Text('no lyrcis found');
+      return Align(
+        alignment: Alignment.topCenter,
+        child: Padding(
+          padding: const EdgeInsets.all(kLargestSpace),
+          child: Text(
+            context.l10n.noLyricsFound + ' 🎵🧐',
+            style: context.textTheme.bodyLarge,
+          ),
+        ),
+      );
     }
 
     watchPropertyValue((PlayerModel m) {

@@ -140,8 +140,7 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
                                       audio.url!,
                                     );
                                     if (audio == currentAudio) {
-                                      playerModel.setPosition(Duration.zero);
-                                      await playerModel.seek();
+                                      await playerModel.seek(Duration.zero);
                                     }
                                   },
                                 ),

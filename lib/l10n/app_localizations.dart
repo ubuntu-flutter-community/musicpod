@@ -4357,6 +4357,12 @@ abstract class AppLocalizations {
   /// **'Lyrics'**
   String get lyrics;
 
+  /// No description provided for @noLyricsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No lyrics found'**
+  String get noLyricsFound;
+
   /// No description provided for @autoScrolling.
   ///
   /// In en, this message translates to:

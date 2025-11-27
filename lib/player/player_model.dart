@@ -30,9 +30,9 @@ class PlayerModel extends SafeChangeNotifier {
 
   Stream<String?> get onlineArtError => _onlineArtService.error;
 
-  String? get queueName => _playerService.queue.name;
+  String? get queueName => _playerService.theQueue.name;
 
-  List<Audio> get queue => _playerService.queue.audios;
+  List<Audio> get queue => _playerService.theQueue.audios;
   void clearQueue() => _playerService.clearQueue();
 
   Audio? get audio => _playerService.audio;
@@ -50,14 +50,12 @@ class PlayerModel extends SafeChangeNotifier {
   Duration? get duration => _playerService.duration;
 
   Duration? get position => _playerService.position;
-  void setPosition(Duration? value) => _playerService.setPosition(value);
 
   Duration? get buffer => _playerService.buffer;
 
   Future<void> seekInSeconds(int seconds) async {
     if (position != null && position!.inSeconds + seconds >= 0) {
-      setPosition(Duration(seconds: position!.inSeconds + seconds));
-      await seek();
+      await seek(Duration(seconds: position!.inSeconds + seconds));
     }
   }
 
@@ -73,15 +71,15 @@ class PlayerModel extends SafeChangeNotifier {
   double get rate => _playerService.rate;
   Future<void> setRate(double value) async => _playerService.setRate(value);
 
-  Future<void> playOrPause() async => _playerService.playOrPause();
+  Future<void> playOrPause() async => _playerService.play();
 
   Future<void> pause() async => _playerService.pause();
 
-  Future<void> seek() async => _playerService.seek();
+  Future<void> seek(Duration position) async => _playerService.seek(position);
 
   Future<void> resume() async => _playerService.resume();
 
-  Future<void> playNext() async => _playerService.playNext();
+  Future<void> playNext() async => _playerService.skipToNext();
 
   void insertIntoQueue(List<Audio> newAudios) async =>
       _playerService.insertIntoQueue(newAudios);
@@ -91,7 +89,7 @@ class PlayerModel extends SafeChangeNotifier {
 
   void remove(Audio deleteMe) => _playerService.remove(deleteMe);
 
-  Future<void> playPrevious() async => _playerService.playPrevious();
+  Future<void> playPrevious() async => _playerService.skipToPrevious();
 
   Future<void> startPlaylist({
     required List<Audio> audios,

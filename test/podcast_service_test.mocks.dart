@@ -91,6 +91,14 @@ class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
           as bool);
 
   @override
+  bool get usePlayerColor =>
+      (super.noSuchMethod(
+            Invocation.getter(#usePlayerColor),
+            returnValue: false,
+          )
+          as bool);
+
+  @override
   int get iconSetIndex =>
       (super.noSuchMethod(Invocation.getter(#iconSetIndex), returnValue: 0)
           as int);
@@ -216,6 +224,14 @@ class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
           as bool);
 
   @override
+  bool get autoMovePlayer =>
+      (super.noSuchMethod(
+            Invocation.getter(#autoMovePlayer),
+            returnValue: false,
+          )
+          as bool);
+
+  @override
   _i6.CloseBtnAction get closeBtnActionIndex =>
       (super.noSuchMethod(
             Invocation.getter(#closeBtnActionIndex),
@@ -248,6 +264,15 @@ class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
     Invocation.method(#setUseCustomThemeColor, [value]),
     returnValueForMissingStub: null,
   );
+
+  @override
+  _i3.Future<void> setUsePlayerColor(bool? value) =>
+      (super.noSuchMethod(
+            Invocation.method(#setUsePlayerColor, [value]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
   void setCustomThemeColor(int? value) => super.noSuchMethod(
@@ -451,6 +476,15 @@ class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
   _i3.Future<void> setShowPlayerLyrics(bool? value) =>
       (super.noSuchMethod(
             Invocation.method(#setShowPlayerLyrics, [value]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
+
+  @override
+  _i3.Future<void> setAutoMovePlayer(bool? value) =>
+      (super.noSuchMethod(
+            Invocation.method(#setAutoMovePlayer, [value]),
             returnValue: _i3.Future<void>.value(),
             returnValueForMissingStub: _i3.Future<void>.value(),
           )
