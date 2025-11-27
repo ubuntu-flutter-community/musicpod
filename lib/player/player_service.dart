@@ -130,7 +130,7 @@ class PlayerService extends BaseAudioHandler with SeekHandler {
   Queue? _oldQueue;
   Queue _queue = (name: '', audios: []);
   Queue get theQueue => _queue;
-  void setQueue(Queue value) {
+  void _setQueue(Queue value) {
     if (value.audios.isEmpty) return;
     _queue = value;
     _propertiesChangedController.add(true);
@@ -235,7 +235,7 @@ class PlayerService extends BaseAudioHandler with SeekHandler {
     } else if (_oldQueue != null &&
         _oldQueue?.name != null &&
         _oldQueue!.name == _queue.name) {
-      setQueue((audios: List.from(_oldQueue!.audios), name: _oldQueue!.name));
+      _setQueue((audios: List.from(_oldQueue!.audios), name: _oldQueue!.name));
     }
     _estimateNext();
     _propertiesChangedController.add(true);
@@ -421,7 +421,7 @@ class PlayerService extends BaseAudioHandler with SeekHandler {
       _setAudio(audios.elementAtOrNull(index)!);
     } else {
       setShuffle(false);
-      setQueue((name: listName, audios: audios.toList()));
+      _setQueue((name: listName, audios: audios.toList()));
       _setAudio(
         (index != null && audios.elementAtOrNull(index) != null)
             ? audios.elementAtOrNull(index)!
@@ -494,7 +494,7 @@ class PlayerService extends BaseAudioHandler with SeekHandler {
 
       if (playerState.queue?.isNotEmpty == true &&
           playerState.queueName?.isNotEmpty == true) {
-        setQueue((name: playerState.queueName!, audios: playerState.queue!));
+        _setQueue((name: playerState.queueName!, audios: playerState.queue!));
       }
 
       if (playerState.duration?.parsedDuration != null) {
