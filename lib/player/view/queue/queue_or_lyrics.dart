@@ -52,32 +52,35 @@ class _QueueOrLyricsState extends State<QueueOrLyrics>
     }
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
 
-    return Column(
-      spacing: kLargestSpace,
-      children: [
-        YaruTabBar(
-          onTap: (i) => di<SettingsModel>().setShowPlayerLyrics(i == 1),
-          tabs: [
-            Tab(text: context.l10n.queue),
-            Tab(text: context.l10n.lyrics),
-          ],
-          tabController: _controller,
-        ),
-        Expanded(
-          child: TabBarView(
-            controller: _controller,
-            children: [
-              QueueBody(
-                selectedColor: widget.selectedColor,
-                shownInDialog: widget.shownInDialog,
-              ),
-              audio == null
-                  ? const SizedBox.shrink()
-                  : PlayerLyrics(audio: audio),
+    return Padding(
+      padding: const EdgeInsets.only(top: kLargestSpace),
+      child: Column(
+        spacing: kLargestSpace,
+        children: [
+          YaruTabBar(
+            onTap: (i) => di<SettingsModel>().setShowPlayerLyrics(i == 1),
+            tabs: [
+              Tab(text: context.l10n.queue),
+              Tab(text: context.l10n.lyrics),
             ],
+            tabController: _controller,
           ),
-        ),
-      ],
+          Expanded(
+            child: TabBarView(
+              controller: _controller,
+              children: [
+                QueueBody(
+                  selectedColor: widget.selectedColor,
+                  shownInDialog: widget.shownInDialog,
+                ),
+                audio == null
+                    ? const SizedBox.shrink()
+                    : PlayerLyrics(audio: audio),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
