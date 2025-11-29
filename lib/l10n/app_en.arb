@@ -760,6 +760,7 @@
         }
     },
     "lyrics": "Lyrics",
+    "noLyricsFound": "No lyrics found",
     "autoScrolling": "Auto scroll",
     "genericErrorTitle": "An error occurred",
     "genericErrorDescription": "An unexpected error occurred. Please try again later.",
@@ -804,6 +805,6 @@
     },
     "explore": "Explore",
     "favorites": "Favorites",
-     "autoMovePlayerTitle": "Auto move player",
-     "autoMovePlayerDescription": "Move the player to the right if there is enough horizontal space"
+    "autoMovePlayerTitle": "Auto move player",
+    "autoMovePlayerDescription": "Move the player to the right if there is enough horizontal space"
 }

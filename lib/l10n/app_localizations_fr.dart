@@ -2239,6 +2239,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get lyrics => 'Lyrics';
 
   @override
+  String get noLyricsFound => 'No lyrics found';
+
+  @override
   String get autoScrolling => 'Auto scroll';
 
   @override
