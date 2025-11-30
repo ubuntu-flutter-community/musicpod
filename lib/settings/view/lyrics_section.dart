@@ -56,12 +56,15 @@ class _LyricsSectionState extends State<LyricsSection> {
         'MusicPod, its contributors, and the\n'
         'Genius API are not responsible for any misuse of the API key.\n'
         'By providing your API key, you agree to use it responsibly and in\n'
-        'accordance with Genius\'s terms of service.\n';
+        'accordance with Genius\'s terms of service.\n\n';
 
     const tosLink = 'https://genius.com/static/terms';
 
     const tosLinkText = 'Read Genius\'s Terms of Service';
 
+    final neverAskAgainForGeniusToken = watchPropertyValue(
+      (SettingsModel m) => m.neverAskAgainForGeniusToken,
+    );
     return YaruSection(
       headline: const Text('Lyrics Settings'),
 
@@ -82,18 +85,15 @@ class _LyricsSectionState extends State<LyricsSection> {
             ),
           ),
           YaruTile(
-            title: const Text('Do not ask for Genius API Key again'),
+            title: const Text(
+              'Do not use Genius or ask for Genius API Key again',
+            ),
             subtitle: const Text(
-              'Prevent the app from prompting for the Genius API key in the future.',
+              'This prevents the app from prompting for the Genius API key in the future and makes the lyrics feature fully rely on local LRC files or LRC strings embedded in audio metadata.',
             ),
             trailing: CommonSwitch(
-              value: watchPropertyValue(
-                (SettingsModel m) => m.neverAskAgainForGeniusToken,
-              ),
-
-              onChanged: (value) {
-                di<SettingsModel>().setNeverAskAgainForGeniusToken(value);
-              },
+              value: neverAskAgainForGeniusToken,
+              onChanged: di<SettingsModel>().setNeverAskAgainForGeniusToken,
             ),
           ),
           YaruTile(
@@ -124,6 +124,7 @@ class _LyricsSectionState extends State<LyricsSection> {
             subtitle: SizedBox(
               height: context.buttonHeight - 3,
               child: TextField(
+                enabled: !neverAskAgainForGeniusToken,
                 obscureText: !_showToken,
                 controller: _geniusApiKeyController,
                 decoration: InputDecoration(
@@ -159,11 +160,8 @@ class _LyricsSectionState extends State<LyricsSection> {
                       IconButton(
                         style: getTextFieldSuffixStyle(context, true),
                         icon: Icon(_showToken ? Iconz.hide : Iconz.show),
-                        onPressed: () {
-                          setState(() {
-                            _showToken = !_showToken;
-                          });
-                        },
+                        onPressed: () =>
+                            setState(() => _showToken = !_showToken),
                       ),
                     ],
                   ),
