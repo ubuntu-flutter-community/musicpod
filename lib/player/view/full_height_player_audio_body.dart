@@ -62,6 +62,12 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
               child: queueOrHistory,
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 30,
+            ).copyWith(bottom: kLargestSpace),
+            child: PlayerTitleAndArtist(playerPosition: playerPosition),
+          ),
           SizedBox(
             height: kLargestSpace,
             width: playerWithSidePanel ? 400 : 350,
