@@ -62,18 +62,6 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
               child: queueOrHistory,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 30,
-            ).copyWith(bottom: kLargestSpace),
-            child: PlayerTitleAndArtist(playerPosition: playerPosition),
-          ),
-          SizedBox(
-            height: kLargestSpace,
-            width: playerWithSidePanel ? 400 : 350,
-            child: const PlayerTrack(),
-          ),
-          const SizedBox(height: kLargestSpace),
         ] else ...[
           if (!isMobile || context.isPortrait)
             const Hero(
@@ -81,23 +69,23 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
               child: FullHeightPlayerImage(showAudioVisualizer: true),
             ),
           const SizedBox(height: kLargestSpace),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: PlayerTitleAndArtist(playerPosition: playerPosition),
-          ),
-          const SizedBox(height: kLargestSpace),
-          SizedBox(
-            height: kLargestSpace,
-            width: playerWithSidePanel ? 400 : 350,
-            child: const PlayerTrack(),
-          ),
-          const SizedBox(height: kLargestSpace),
         ],
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: PlayerTitleAndArtist(playerPosition: playerPosition),
+        ),
+        const SizedBox(height: kLargestSpace),
+        SizedBox(
+          height: kLargestSpace,
+          width: playerWithSidePanel ? 400 : 350,
+          child: const PlayerTrack(),
+        ),
+        const SizedBox(height: kLargestSpace),
         SizedBox(
           width: playerWithSidePanel ? 400 : 320,
           child: Padding(
             padding: EdgeInsets.only(
-              bottom: showQueue && !playerWithSidePanel ? 2 * kLargestSpace : 0,
+              bottom: showQueue && !playerWithSidePanel ? 4 * kLargestSpace : 0,
             ),
             child: PlayerMainControls(active: active),
           ),
@@ -115,7 +103,10 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(width: 490, child: column),
-                    queueOrHistory,
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 3 * kLargestSpace),
+                      child: queueOrHistory,
+                    ),
                   ],
                 )
               : isMobile && !context.isPortrait

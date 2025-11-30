@@ -32,33 +32,40 @@ class PlayerLyrics extends StatelessWidget with WatchItMixin {
 
     if ((geniusAccessToken == null || geniusAccessToken.isEmpty) &&
         !neverAskAgainForGeniusToken)
-      return Center(
-        child: SizedBox(
-          width: 300,
-          child: Column(
-            spacing: kMediumSpace,
-            children: [
-              // TODO: localize
-              const Padding(
-                padding: const EdgeInsets.only(bottom: kMediumSpace),
-                child: Text(
-                  'If you want to fetch lyrics from Genius, please provide an API key '
-                  'in the settings.',
-                ),
-              ),
-              const SettingsButton.important(scrollIndex: 7),
-              OutlinedButton(
-                onPressed: () =>
-                    di<SettingsModel>().setNeverAskAgainForGeniusToken(true),
-                child: Text(context.l10n.doNotAskAgain),
-              ),
-            ].map((e) => SizedBox(width: double.infinity, child: e)).toList(),
-          ),
-        ),
-      );
+      return const _OnlineLyricsNotSetup();
 
     return _PlayerLyrics(audio: audio, title: title, artist: artist);
   }
+}
+
+class _OnlineLyricsNotSetup extends StatelessWidget {
+  const _OnlineLyricsNotSetup();
+
+  @override
+  Widget build(BuildContext context) => Center(
+    child: SizedBox(
+      width: 300,
+      child: Column(
+        spacing: kMediumSpace,
+        children: [
+          // TODO: localize
+          const Padding(
+            padding: const EdgeInsets.only(bottom: kMediumSpace),
+            child: Text(
+              'If you want to fetch lyrics from Genius, please provide an API key '
+              'in the settings.',
+            ),
+          ),
+          const SettingsButton.important(scrollIndex: 7),
+          OutlinedButton(
+            onPressed: () =>
+                di<SettingsModel>().setNeverAskAgainForGeniusToken(true),
+            child: Text(context.l10n.doNotAskAgain),
+          ),
+        ].map((e) => SizedBox(width: double.infinity, child: e)).toList(),
+      ),
+    ),
+  );
 }
 
 class _PlayerLyrics extends StatefulWidget with WatchItStatefulWidgetMixin {
@@ -110,6 +117,9 @@ class __PlayerLyricsState extends State<_PlayerLyrics> {
       future: _lyricsFuture,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
+          if (snapshot.error is GeniusNotSetupException) {
+            return const _OnlineLyricsNotSetup();
+          }
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(kLargestSpace),
@@ -125,7 +135,7 @@ class __PlayerLyricsState extends State<_PlayerLyrics> {
         final data = snapshot.data;
         final lrcLines = data?.outputLrcLines;
         if (lrcLines?.isNotEmpty ?? false) {
-          return _LrcLineViwer(lrc: lrcLines!);
+          return _LrcLineViewer(lrc: lrcLines!);
         }
 
         final lyricsString = data?.outputString;
@@ -136,28 +146,37 @@ class __PlayerLyricsState extends State<_PlayerLyrics> {
           );
         }
 
-        return Align(
-          alignment: Alignment.topCenter,
-          child: Padding(
-            padding: const EdgeInsets.all(kLargestSpace),
-            child: Text(context.l10n.noLyricsFound),
-          ),
-        );
+        return const NoLyricsFound();
       },
     );
   }
 }
 
-class _LrcLineViwer extends StatefulWidget with WatchItStatefulWidgetMixin {
-  const _LrcLineViwer({required this.lrc});
+class NoLyricsFound extends StatelessWidget {
+  const NoLyricsFound({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Padding(
+        padding: const EdgeInsets.all(kLargestSpace),
+        child: Text(context.l10n.noLyricsFound),
+      ),
+    );
+  }
+}
+
+class _LrcLineViewer extends StatefulWidget with WatchItStatefulWidgetMixin {
+  const _LrcLineViewer({required this.lrc});
 
   final List<LrcLine> lrc;
 
   @override
-  State<_LrcLineViwer> createState() => __LrcLineViwerState();
+  State<_LrcLineViewer> createState() => _LrcLineViewerState();
 }
 
-class __LrcLineViwerState extends State<_LrcLineViwer> {
+class _LrcLineViewerState extends State<_LrcLineViewer> {
   late AutoScrollController _controller;
   int? _selectedIndex;
   bool _autoScroll = true;

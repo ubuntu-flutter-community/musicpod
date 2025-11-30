@@ -368,9 +368,12 @@ void registerDependencies() {
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton(() => LicenseStore())
-    ..registerLazySingleton(() => LocalLyricsService());
-
-  OnlineLyricsService.refreshRegistration(
-    localLyricsService: di<LocalLyricsService>(),
-  );
+    ..registerLazySingleton(() => LocalLyricsService())
+    ..registerSingletonWithDependencies(
+      () => OnlineLyricsService.registerWithDependencies(
+        localLyricsService: di<LocalLyricsService>(),
+        settingsService: di<SettingsService>(),
+      ),
+      dependsOn: [SettingsService],
+    );
 }

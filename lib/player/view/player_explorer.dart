@@ -90,6 +90,8 @@ class _PlayerExplorerState extends State<PlayerExplorer>
                       ),
                 audio == null
                     ? const SizedBox.shrink()
+                    : audio.audioType == AudioType.podcast
+                    ? const NoLyricsFound()
                     : PlayerLyrics(
                         key: ValueKey(
                           audio.toString() + splitByDash.toString(),

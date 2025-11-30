@@ -203,7 +203,7 @@ class SettingsService {
 
   String? get lyricsGeniusAccessToken =>
       _preferences.getString(SPKeys.lyricsGeniusAccessToken);
-  Future<void> setLyricsGeniusAccessToken(String value) => _preferences
+  Future<bool> setLyricsGeniusAccessToken(String value) => _preferences
       .setString(SPKeys.lyricsGeniusAccessToken, value)
       .then(notify);
 

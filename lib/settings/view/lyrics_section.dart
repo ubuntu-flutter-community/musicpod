@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
@@ -6,13 +5,16 @@ import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/widgets.dart';
 
+import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../l10n/l10n.dart';
 import '../../lyrics/lyrics_service.dart';
 import '../settings_model.dart';
 
+// TODO: localize
 class LyricsSection extends StatefulWidget with WatchItStatefulWidgetMixin {
   const LyricsSection({super.key});
 
@@ -61,11 +63,39 @@ class _LyricsSectionState extends State<LyricsSection> {
     const tosLinkText = 'Read Genius\'s Terms of Service';
 
     return YaruSection(
-      // TODO: localize
       headline: const Text('Lyrics Settings'),
+
       margin: const EdgeInsets.all(kLargestSpace),
       child: Column(
         children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'To fetch lyrics from Genius, you need to provide a Genius API Key.\n'
+                'You can obtain an API key by creating an account on Genius and\n'
+                'registering an application to get your access token.',
+                style: context.textTheme.bodyMedium,
+                textAlign: TextAlign.left,
+              ),
+            ),
+          ),
+          YaruTile(
+            title: const Text('Do not ask for Genius API Key again'),
+            subtitle: const Text(
+              'Prevent the app from prompting for the Genius API key in the future.',
+            ),
+            trailing: CommonSwitch(
+              value: watchPropertyValue(
+                (SettingsModel m) => m.neverAskAgainForGeniusToken,
+              ),
+
+              onChanged: (value) {
+                di<SettingsModel>().setNeverAskAgainForGeniusToken(value);
+              },
+            ),
+          ),
           YaruTile(
             title: Column(
               spacing: kSmallestSpace,
@@ -119,16 +149,11 @@ class _LyricsSectionState extends State<LyricsSection> {
                           ),
                         ),
                         onPressed: () => showFutureLoadingDialog(
+                          title: context.l10n.loadingPleaseWait,
                           context: context,
-                          future: () async {
-                            final token = _geniusApiKeyController.text;
-                            OnlineLyricsService.refreshRegistration(
-                              geniusAccessToken: token,
-                              localLyricsService: di<LocalLyricsService>(),
-                            );
-                            await di<SettingsModel>()
-                                .setLyricsGeniusAccessToken(token);
-                          },
+                          future: () => OnlineLyricsService.refreshRegistration(
+                            _geniusApiKeyController.text.trim(),
+                          ),
                         ),
                       ),
                       IconButton(
@@ -146,14 +171,6 @@ class _LyricsSectionState extends State<LyricsSection> {
               ),
             ),
           ),
-          if (kDebugMode)
-            YaruTile(
-              title: ElevatedButton(
-                onPressed: () =>
-                    di<SettingsModel>().setNeverAskAgainForGeniusToken(false),
-                child: const Text('Debug: Reset "Never Ask Again" Flag'),
-              ),
-            ),
         ],
       ),
     );
