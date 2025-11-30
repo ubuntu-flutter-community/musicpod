@@ -135,7 +135,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get titles => 'Başlıklar';
 
   @override
-  String get description => 'Description';
+  String get description => 'Açıklama';
 
   @override
   String get artist => 'Sanatçı';
@@ -292,7 +292,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get noStationFound =>
-      'Üzgünüz, bu arama sorgusuyla eşleşen bir radyo istasyonu bulunamadı.';
+      'Üzgünüz, bu arama sorgusuyla eşleşen bir radyo istasyonu bulunamadı';
 
   @override
   String get nothingFound => 'Hiçbir şey bulunamadı';
@@ -332,13 +332,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get queue => 'Sıra';
 
   @override
-  String get clearQueue => 'Clear queue';
+  String get clearQueue => 'Sırayı temizle';
 
   @override
   String get limit => 'Sınır';
 
   @override
-  String get decreaseSearchLimit => 'Lütfen arama sınırını azaltın:';
+  String get decreaseSearchLimit => 'Lütfen arama sınırını azaltın';
 
   @override
   String get podcastFeedIsEmpty =>
@@ -454,16 +454,16 @@ class AppLocalizationsTr extends AppLocalizations {
       'Tüm bölümleri tamamlandı olarak işaretle';
 
   @override
-  String get markEpisodeAsDone => 'Mark episode as done';
+  String get markEpisodeAsDone => 'Bölümü tamamlandı olarak işaretle';
 
   @override
-  String get hideCompletedEpisodes => 'Hide completed episodes';
+  String get hideCompletedEpisodes => 'Tamamlanan bölümleri gizle';
 
   @override
-  String get showCompletedEpisodes => 'Show completed episodes';
+  String get showCompletedEpisodes => 'Tamamlanmış bölümleri göster';
 
   @override
-  String get reset => 'Reset';
+  String get reset => 'Sıfırla';
 
   @override
   String get resetAllSettings => 'Tüm ayarları sıfırla';
@@ -545,13 +545,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get connectedTo => 'Bağlandı';
 
   @override
-  String get connectedToDiscord => 'Connected to Discord';
+  String get connectedToDiscord => 'Discord\'a Bağlı';
 
   @override
   String get disconnectedFrom => 'Bağlantı kesildi';
 
   @override
-  String get disconnectedFromDiscord => 'Disconnected from Discord';
+  String get disconnectedFromDiscord => 'Discord\'la Bağlantı Kesildi';
 
   @override
   String get tryReconnect => 'Yeniden bağlanmayı dene';
@@ -570,7 +570,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get noCountryFound =>
-      'Bu isimle bir ülke bulunamadı. +49 gibi telefon ön eklerini de kullanabilirsiniz.';
+      'Bu isimle bir ülke bulunamadı. +49 gibi telefon ön eklerini de kullanabilirsiniz';
 
   @override
   String get noStarredTags => 'Henüz hiçbir etiketi yıldızlamadınız';
@@ -989,67 +989,69 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get exportPinnedAlbumsToM3UFiles =>
-      'Export pinned albums to M3U files';
+      'Sabitlenmiş albümleri M3U dosyalarına aktarın';
 
   @override
-  String get exportPinnedAlbumToM3UFile => 'Export pinned albums to M3U file';
+  String get exportPinnedAlbumToM3UFile =>
+      'Sabitlenmiş albümleri M3U dosyasına aktarın';
 
   @override
-  String get exportPlaylistToM3UFile => 'Export playlist to M3U';
+  String get exportPlaylistToM3UFile => 'Çalma listesini M3U dosyasına aktarın';
 
   @override
   String get exportPlaylistsAndAlbumsToM3UFiles =>
-      'Export playlists and albums to M3U files';
+      'Çalşma listelerini ve albümleri M3U dosyalarına aktarın';
 
   @override
-  String get exportPodcastsToOpmlFile => 'Export podcasts to OPML file';
+  String get exportPodcastsToOpmlFile => 'Podcastleri OPML dosyasına aktarın';
 
   @override
-  String get importPodcastsFromOpmlFile => 'Import podcasts from OPML file';
+  String get importPodcastsFromOpmlFile =>
+      'Podcastleri OPML dosyasından içe aktarın';
 
   @override
   String get exportStarredStationsToOpmlFile =>
-      'Export starred stations to OPML file';
+      'Yıldızlı istasyonları OPML dosyasına aktarın';
 
   @override
   String get importStarredStationsFromOpmlFile =>
-      'Import starred stations from OPML file';
+      'Yıldızlı istasyonları OPML dosyasından içe aktarın';
 
   @override
-  String get removeAllStarredStations => 'Remove all starred stations';
+  String get removeAllStarredStations => 'Tüm yıldızlı istasyonları kaldırın';
 
   @override
   String get removeAllStarredStationsConfirm =>
-      'Are you sure you want to remove all starred stations?';
+      'Yıldızlı tüm istasyonları kaldırmak istediğinizden emin misiniz?';
 
   @override
   String get removeAllStarredStationsDescription =>
-      'This will remove all your starred stations.';
+      'Bu yıldızlı bütün istasyonlarını kaldıracaktır.';
 
   @override
-  String get removeAllPodcasts => 'Remove all podcasts';
+  String get removeAllPodcasts => 'Tüm podcastleri kaldır';
 
   @override
   String get removeAllPodcastsConfirm =>
-      'Are you sure you want to remove all podcasts?';
+      'Tüm podcastleri kaldırmak istediğinizden emin misiniz?';
 
   @override
   String get removeAllPodcastsDescription =>
-      'This will remove all your podcast subscriptions and progress.';
+      'Bu sizin tüm podcast aboneliklerinizi ve ilerlemelerinizi kaldıracaktır.';
 
   @override
-  String get customContentTitle => 'Add custom content';
+  String get customContentTitle => 'Özel içerik ekle';
 
   @override
   String get customContentDescription =>
-      'If you do not want to use the radiobrowser or podcast search feature you can add your own content here, or you can add empty playlists or import playlists from M3U and PLS files.';
+      'Radyo tarayıcı veya podcast arama özelliğini kullanmak istemiyorsanız, buraya kendi içeriğinizi ekleyebilir, boş çalma listeleri ekleyebilir veya M3U ve PLS dosyalarından çalma listeleri içe aktarabilirsiniz.';
 
   @override
   String get setPlaylistNameAndAddMoreLater =>
-      'Set playlist name and add more titles later';
+      'Oynatma listesi adını belirle ve daha sonra daha fazla başlık ekle';
 
   @override
-  String get or => 'or';
+  String get or => 'veya';
 
   @override
   String get loadMore => 'Daha fazla yükle';
@@ -1099,7 +1101,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String checkForUpdatesConfirm(Object length) {
-    return 'Are you sure you want to check for updates for $length podcasts?';
+    return '$length podcastler için güncellemeleri kontrol etmek istediğinizden emin misiniz?';
   }
 
   @override
@@ -1958,257 +1960,321 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get failedToReadMetadata =>
-      'Failed to read metadata for the following media files:';
+      'Bu medya dosyalarının meta verileri okunamadı:';
 
   @override
   String get failedToReadMetadataDescription =>
-      'The metadata of this file could not be read. This is usually caused by a missing codec or a corrupted file.';
+      'Bu dosyanın meta verileri okunamadı. Bu genelde eksik codec veya bozuk dosyadan kaynaklanır.';
 
   @override
   String get breakingChangesPleaseBackupTitle =>
-      'Breaking changes: Please backup!';
+      'Önemli değişiklikler: Lütfen yedekleyin!';
 
   @override
   String get breakingChangesPleaseBackupDescription =>
-      'The next version of MusicPod will have breaking changes. Please backup your playlists, podcast subscriptions and pinned albums before updating.';
+      'MusicPod\'un bir sonraki sürümünde önemli değişiklikler olacak. Güncelleme yapmadan önce çalma listelerinizi, podcast aboneliklerinizi ve sabitlenmiş albümlerinizi yedekleyin.';
 
   @override
   String get breakingChangesPleaseBackupConfirmation =>
-      'I confirm that I have backed up my:';
+      'Bunları yedeklediğimi onaylıyorum:';
 
   @override
-  String get pinnedAlbumsAndPlaylists => 'Pinned albums and playlists';
+  String get pinnedAlbumsAndPlaylists =>
+      'Sabitlenmiş albümler ve çalma listeleri';
 
   @override
-  String get starredStations => 'Starred stations';
+  String get starredStations => 'Yıldızlı istasyonlar';
 
   @override
-  String get podcastSubscriptions => 'Podcast subscriptions';
+  String get podcastSubscriptions => 'Podcast abonelikleri';
 
   @override
-  String get pinnedAlbums => 'Pinned albums';
+  String get pinnedAlbums => 'Sabitlenmiş albümler';
 
   @override
-  String get export => 'Export';
+  String get export => 'Dışa Aktar';
 
   @override
-  String get import => 'Import';
+  String get import => 'İçe Aktar';
 
   @override
-  String get exportYourData => 'Export your data';
+  String get exportYourData => 'Verilerini dışa aktar';
 
   @override
   String get exportYourDataDescription =>
-      'Export your podcast subscriptions, starred stations and pinned albums.';
+      'Podcast abonelikleriniz, yıldızlı istasyonlarını ve sabitlenmiş albümlerinizi dışa aktarın.';
 
   @override
-  String get localAudioWatchDialogTitle => 'Local audio directory was modified';
+  String get localAudioWatchDialogTitle => 'Yerel ses dizini değiştirildi';
 
   @override
   String get localAudioWatchDialogDescription =>
-      'Do you want to reload the local audio directory?';
+      'Yerel ses dizinini yeniden yüklemek istiyor musunuz?';
 
   @override
-  String get external => 'external';
+  String get external => 'harici';
 
   @override
-  String get externalPlaylist => 'External playlist';
+  String get externalPlaylist => 'Harici çalma listesi';
 
   @override
-  String get pictures => 'Pictures';
+  String get pictures => 'Resimleri';
 
   @override
-  String get localPictureTypeOther => 'Other';
+  String get localPictureTypeOther => 'Diğer';
 
   @override
-  String get localPictureTypeFileIcon32x32 => 'Icon 32x32';
+  String get localPictureTypeFileIcon32x32 => 'Simge 32x32';
 
   @override
-  String get localPictureTypeOtherFileIcon => 'Other file icon';
+  String get localPictureTypeOtherFileIcon => 'Diğer dosya simgesi';
 
   @override
-  String get localPictureTypeCoverFront => 'Cover front';
+  String get localPictureTypeCoverFront => 'Ön kapak';
 
   @override
-  String get localPictureTypeCoverBack => 'Cover back';
+  String get localPictureTypeCoverBack => 'Arka kapak';
 
   @override
-  String get localPictureTypeLeafletPage => 'Leaflet page';
+  String get localPictureTypeLeafletPage => 'Broşür sayfası';
 
   @override
-  String get localPictureTypeMediaLabelCD => 'Media label CD';
+  String get localPictureTypeMediaLabelCD => 'CD medya etiketi';
 
   @override
-  String get localPictureTypeLeadArtist => 'Lead artist';
+  String get localPictureTypeLeadArtist => 'Baş sanatçı';
 
   @override
-  String get localPictureTypeArtistPerformer => 'Artist/Performer';
+  String get localPictureTypeArtistPerformer => 'Sanatçı/Sunucu';
 
   @override
-  String get localPictureTypeConductor => 'Conductor';
+  String get localPictureTypeConductor => 'Şef';
 
   @override
-  String get localPictureTypeBandOrchestra => 'Band/Orchestra';
+  String get localPictureTypeBandOrchestra => 'Grup/Orkestra';
 
   @override
-  String get localPictureTypeComposer => 'Composer';
+  String get localPictureTypeComposer => 'Besteci';
 
   @override
-  String get localPictureTypeLyricistTextWriter => 'Lyricist/Text writer';
+  String get localPictureTypeLyricistTextWriter => 'Söz yazı/Metin yazarı';
 
   @override
-  String get localPictureTypeRecordingLocation => 'Recording location';
+  String get localPictureTypeRecordingLocation => 'Kayıt yeri';
 
   @override
-  String get localPictureTypeDuringRecording => 'During recording';
+  String get localPictureTypeDuringRecording => 'Kayıt sırasında';
 
   @override
-  String get localPictureTypeDuringPerformance => 'During performance';
+  String get localPictureTypeDuringPerformance => 'Performans sırasında';
 
   @override
   String get localPictureTypeMovieVideoScreenCapture =>
-      'Movie/Video screen capture';
+      'Film/Video ekran görüntüsü';
 
   @override
-  String get localPictureTypeBrightColouredFish => 'Bright coloured fish';
+  String get localPictureTypeBrightColouredFish => 'Parlak renkli balık';
 
   @override
-  String get localPictureTypeIllustration => 'Illustration';
+  String get localPictureTypeIllustration => 'İllüstrasyon';
 
   @override
-  String get localPictureTypebandArtistLogotype => 'Band/Artist logotype';
+  String get localPictureTypebandArtistLogotype => 'Grup/Sanatçı logosu';
 
   @override
-  String get localPictureTypepublisherStudioLogotype =>
-      'Publisher/Studio logotype';
+  String get localPictureTypepublisherStudioLogotype => 'Yayıncı/Stüdyo logosu';
 
   @override
   String get cantPinEmptyAlbum =>
-      'You can\'t pin albums without empty album metadata!';
+      'Boş albüm meta verileri olmadan albümleri sabitleyemezsiniz!';
 
   @override
   String get cantUnpinEmptyAlbum =>
-      'You can\'t unpin albums without empty album metadata!';
+      'Boş albüm meta verileri olmadan albüm sabitlemelerini kaldıramazsınız!';
 
   @override
-  String get path => 'Path';
+  String get path => 'Yol';
 
   @override
   String get albumNotFound =>
-      'This album does not exist or you have removed the external playlist (M3U/PLS file) where it has been loaded from.';
+      'Bu albüm mevcut değil veya albümün yüklendiği harici çalma listesi (M3U/PLS dosyası) kaldırılmış.';
 
   @override
   String get stationNotFound =>
-      'This station does not exist or it has been removed from the radiobrowser server.';
+      'Bu istasyon mevcut değil veya radiobrowser sunucusundan kaldırılmış.';
 
   @override
   String get onlyLocalAudioForPlaylists =>
-      'Only local audio is supported for playlist imports! Please search for them in the radio feature and add them with the star button to your library!';
+      'Çalma listesi içe aktarmaları için yalnızca yerel ses desteklenir! Lütfen radyo özelliğinde bunları arayın ve yıldız düğmesiyle kitaplığınıza ekleyin!';
 
   @override
   String get customStationWarning =>
-      'The provided URL must exist on the radiobrowser server, otherwise it will not be added to you library! Ideally search for them in the radio feature and add them with the star button to your library!';
+      'Verilen URL, radiobrowser sunucusunda mevcut olmalıdır, aksi takdirde kitaplığınıza eklenmez! İdeal olarak, bunları radyo özelliğinde arayın ve yıldız düğmesiyle kitaplığınıza ekleyin!';
 
   @override
-  String get disc => 'Disc';
+  String get disc => 'Disk';
 
   @override
-  String get groupAlbumsOnlyByAlbumName => 'Group albums only by album name';
+  String get groupAlbumsOnlyByAlbumName =>
+      'Albümleri yalnızca albüm adına göre gruplandır';
 
   @override
   String get groupAlbumsOnlyByAlbumNameDescription =>
-      'This will group albums only by album name and not by artist name + album name, which assumes that the album name is unique inside your library!';
+      'Bu, albümleri yalnızca albüm adına göre gruplandırır, sanatçı adı + albüm adına göre gruplandırmaz. Bu, albüm adının kitaplığınızda benzersiz olduğunu varsayar!';
 
   @override
-  String get useYaruThemeTitle => 'Use Yaru theme';
+  String get useYaruThemeTitle => 'Yaru temasını kullan';
 
   @override
   String get useYaruThemeDescription =>
-      'This will use the Yaru theme for the application. This is the default theme for Ubuntu.';
+      'Bu, uygulama için Yaru temasını kullanacaktır. Bu, Ubuntu için varsayılan temadır.';
 
   @override
-  String get customThemeColor => 'Custom theme color';
+  String get customThemeColor => 'Özel tema rengi';
 
   @override
-  String get useCustomThemeColorTitle => 'Use custom accent color';
+  String get useCustomThemeColorTitle => 'Özel vurgu rengi kullan';
 
   @override
   String get useCustomThemeColorDescription =>
-      'This will let you chose a custom accent color for the current theme.';
+      'Bu, mevcut tema için özel bir vurgu rengi seçmenizi sağlar.';
 
   @override
-  String get selectColor => 'Select color';
+  String get usePlayerColorTitle => 'Use player color';
 
   @override
-  String get selectColorShade => 'Select color shade';
+  String get usePlayerColorDescription =>
+      'This will use the dominant color has been extracted out of the current artwork (if available) for the whole app.';
 
   @override
-  String get selectColorAndItsShades => 'Select color and its shades';
+  String get selectColor => 'Renk seçin';
 
   @override
-  String get selectIconThemeTitle => 'Select icon theme';
+  String get selectColorShade => 'Renk tonunu seçin';
+
+  @override
+  String get selectColorAndItsShades => 'Renk ve tonlarını seçin';
+
+  @override
+  String get selectIconThemeTitle => 'Simge teması seçin';
 
   @override
   String get selectIconThemeDescription =>
-      'Chose an icon theme for the application. The default theme depends on your operating system. This reloads the application!';
+      'Uygulama için bir simge teması seçin. Varsayılan tema, işletim sisteminize bağlıdır. Bu, uygulamayı yeniden yükler!';
 
   @override
-  String get saveWindowSizeTitle => 'Save window size';
+  String get saveWindowSizeTitle => 'Pencere boyutunu kaydet';
 
   @override
   String get saveWindowSizeDescription =>
-      'This will save the window size and position of the application.';
+      'Bu, uygulamanın pencere boyutunu ve konumunu kaydedecektir.';
 
   @override
   String downloadsOfLatestRelease(String latestRelease) {
-    return 'Downloaded $latestRelease times outside of snapstore and flathub';
+    return 'Snapstore ve flathub dışında $latestRelease kere indirildi';
   }
 
   @override
-  String get useBlurredPlayerBackgroundTitle => 'Use blurred player background';
+  String get useBlurredPlayerBackgroundTitle =>
+      'Bulanık oynatıcı arkaplanı kullan';
 
   @override
   String get useBlurredPlayerBackgroundDescription =>
-      'This will blur the background of the player. This might lead to lower performance on some devices.';
+      'Bu, oynatıcının arka planını bulanıklaştıracaktır. Bazı cihazlarda performans düşüşüne neden olabilir.';
 
   @override
-  String get loadingPleaseWait => 'Loading, please wait ...';
+  String get loadingPleaseWait => 'Yükleniyor, lütfen bekleyin...';
 
   @override
   String get importingPodcastsPleaseWait =>
-      'Importing your podcasts, please wait ...';
+      'Podcastleriniz içe aktarılıyor, lütfen bekleyin...';
 
   @override
   String get exportingPodcastsPleaseWait =>
-      'Exporting your podcasts, please wait ...';
+      'Podcastleriniz dışa aktarılıyor, lütfen bekleyin...';
 
   @override
   String get importingStationsPleaseWait =>
-      'Importing your stations, please wait ...';
+      'İstasyonlarınız içe aktarılıyor, lütfen bekleyin...';
 
   @override
   String get exportingStationsPleaseWait =>
-      'Exporting your stations, please wait ...';
+      'İstasyonlarınız dışa aktarılıyor, lütfen bekleyin...';
 
   @override
   String get importingPlaylistsPleaseWait =>
-      'Importing your playlists, please wait ...';
+      'Çalma listeleriniz içe aktarılıyor, lütfen bekleyin...';
 
   @override
   String get exportingPlaylistsPleaseWait =>
-      'Exporting your playlists, please wait ...';
+      'Çalma listeleriniz dışa aktarılıyor, lütfen bekleyin...';
 
   @override
-  String get author => 'Author';
+  String get author => 'Yazar';
 
   @override
-  String get rating => 'Rating';
+  String get rating => 'Derecelendirme';
 
   @override
-  String get keywords => 'Keywords';
+  String get keywords => 'Anahtar kelimeler';
 
   @override
   String newEpisodesAvailableFor(int length) {
-    return 'New episodes available for $length podcasts';
+    return '$length podcastleri için yeni bölümler mevcut';
   }
+
+  @override
+  String get lyrics => 'Lyrics';
+
+  @override
+  String get noLyricsFound => 'No lyrics found';
+
+  @override
+  String get autoScrolling => 'Auto scroll';
+
+  @override
+  String get genericErrorTitle => 'An error occurred';
+
+  @override
+  String get genericErrorDescription =>
+      'An unexpected error occurred. Please try again later.';
+
+  @override
+  String errorDetails(String details) {
+    return 'Error details: $details';
+  }
+
+  @override
+  String get appendToQueue => 'Append to queue';
+
+  @override
+  String appendedToQueue(String title) {
+    return 'Appended to queue: $title';
+  }
+
+  @override
+  String appendMediaToQueueDescription(String title) {
+    return '$title is already inside the queue. Do you want to append it to the end of the queue?';
+  }
+
+  @override
+  String get appendMediaToQueueTitle => 'Append media to queue';
+
+  @override
+  String appendMediaToQueue(String title) {
+    return 'Append media to queue: $title';
+  }
+
+  @override
+  String get explore => 'Explore';
+
+  @override
+  String get favorites => 'Favorites';
+
+  @override
+  String get autoMovePlayerTitle => 'Auto move player';
+
+  @override
+  String get autoMovePlayerDescription =>
+      'Move the player to the right if there is enough horizontal space';
 }

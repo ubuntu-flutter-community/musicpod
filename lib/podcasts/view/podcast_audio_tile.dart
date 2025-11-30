@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:future_loading_dialog/future_loading_dialog.dart';
-import 'package:watch_it/watch_it.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/data/audio.dart';
@@ -25,21 +25,17 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
   const PodcastAudioTile({
     super.key,
     required this.audio,
-    required this.isPlayerPlaying,
     required this.selected,
     required this.startPlaylist,
     this.isExpanded = false,
-    this.removeUpdate,
     this.isOnline = true,
     required this.addPodcast,
   });
 
   final Audio audio;
-  final bool isPlayerPlaying;
   final bool selected;
 
   final void Function()? startPlaylist;
-  final void Function()? removeUpdate;
   final void Function()? addPodcast;
 
   final bool isExpanded;
@@ -86,9 +82,7 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
               PodcastTilePlayButton(
                 selected: selected,
                 audio: audio,
-                isPlayerPlaying: isPlayerPlaying,
                 startPlaylist: startPlaylist,
-                removeUpdate: removeUpdate,
               ),
               SizedBox(width: isMobile ? 15 : 25),
               Expanded(

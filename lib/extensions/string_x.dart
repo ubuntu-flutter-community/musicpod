@@ -46,6 +46,35 @@ extension StringExtension on String {
       .replaceAll(Audio.albumIdReplacer, Audio.albumIdReplacement);
   String get artistOfId => (split(Audio.albumIdSplitter).firstOrNull ?? '')
       .replaceAll(Audio.albumIdReplacer, Audio.albumIdReplacement);
+
+  DateTime? get _parsedDateTimeFromPodcastTimeStamp {
+    final list = this.split('_');
+
+    final year = int.tryParse(list.first);
+    final month = int.tryParse(list[1]);
+    final day = int.tryParse(list[2]);
+    final hour = int.tryParse(list[3]);
+    final minute = int.tryParse(list[4]);
+
+    if (year != null &&
+        month != null &&
+        day != null &&
+        minute != null &&
+        hour != null) {
+      return DateTime(year, month, day, hour, minute);
+    }
+
+    return null;
+  }
+
+  bool isSamePodcastTimeStamp(DateTime other) {
+    final ts = this._parsedDateTimeFromPodcastTimeStamp;
+    if (ts == null) return false;
+    return other.year == ts.year &&
+        other.month == ts.month &&
+        other.day == ts.day &&
+        other.minute == ts.minute;
+  }
 }
 
 extension NullableStringX on String? {

@@ -722,6 +722,8 @@
     "customThemeColor": "Custom theme color",
     "useCustomThemeColorTitle": "Use custom accent color",
     "useCustomThemeColorDescription": "This will let you chose a custom accent color for the current theme.",
+    "usePlayerColorTitle": "Use player color",
+    "usePlayerColorDescription": "This will use the dominant color has been extracted out of the current artwork (if available) for the whole app.",
     "selectColor": "Select color",
     "selectColorShade": "Select color shade",
     "selectColorAndItsShades": "Select color and its shades",
@@ -756,5 +758,53 @@
                 "type": "int"
             }
         }
-    }
+    },
+    "lyrics": "Lyrics",
+    "noLyricsFound": "No lyrics found",
+    "autoScrolling": "Auto scroll",
+    "genericErrorTitle": "An error occurred",
+    "genericErrorDescription": "An unexpected error occurred. Please try again later.",
+    "errorDetails": "Error details: {details}",
+    "@errorDetails": {
+        "placeholders": {
+            "details": {
+                "type": "String"
+            }
+        }
+    },
+    "appendToQueue": "Append to queue",
+    "@appendToQueue": {},
+    "appendedToQueue": "Appended to queue: {title}",
+    "@appendedToQueue": {
+        "type": "text",
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "appendMediaToQueueDescription": "{title} is already inside the queue. Do you want to append it to the end of the queue?",
+    "@appendMediaToQueueDescription": {
+        "type": "text",
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "appendMediaToQueueTitle": "Append media to queue",
+    "@appendMediaToQueueTitle": {},
+    "appendMediaToQueue": "Append media to queue: {title}",
+    "@appendMediaToQueue": {
+        "type": "text",
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "explore": "Explore",
+    "favorites": "Favorites",
+    "autoMovePlayerTitle": "Auto move player",
+    "autoMovePlayerDescription": "Move the player to the right if there is enough horizontal space"
 }

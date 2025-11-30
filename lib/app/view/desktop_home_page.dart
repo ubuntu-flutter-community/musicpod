@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:watch_it/watch_it.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:watcher/watcher.dart';
 
 import '../../common/view/confirm.dart';
@@ -13,6 +13,7 @@ import '../../patch_notes/patch_notes_dialog.dart';
 import '../../player/player_model.dart';
 import '../../player/view/player_view.dart';
 import '../../podcasts/download_model.dart';
+import '../../settings/settings_model.dart';
 import '../app_model.dart';
 import '../connectivity_model.dart';
 import 'master_detail_page.dart';
@@ -58,7 +59,11 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final playerToTheRight = context.mediaQuerySize.width > kSideBarThreshHold;
+    final autoMovePlayer = watchPropertyValue(
+      (SettingsModel m) => m.autoMovePlayer,
+    );
+    final playerToTheRight =
+        autoMovePlayer && context.mediaQuerySize.width > kSideBarThreshHold;
     final isInFullWindowMode = watchPropertyValue(
       (AppModel m) => m.fullWindowMode ?? false,
     );
@@ -73,12 +78,6 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
       select: (DownloadModel m) => m.messageStream,
       handler: downloadMessageStreamHandler,
     );
-
-    registerStreamHandler(
-      select: (ConnectivityModel m) => m.onConnectivityChanged,
-      handler: onConnectivityChangedHandler,
-    );
-
     registerStreamHandler(
       select: (LocalAudioModel m) =>
           m.fileWatcher?.events ?? const Stream<WatchEvent>.empty(),

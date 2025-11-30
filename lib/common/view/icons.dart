@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:watch_it/watch_it.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../extensions/taget_platform_x.dart';
@@ -16,6 +16,18 @@ class Iconz {
       : cupertino
       ? CupertinoIcons.eye
       : Icons.remove_red_eye_outlined;
+
+  static IconData get showLyrics => yaru
+      ? YaruIcons.chat_bubble_filled
+      : cupertino
+      ? CupertinoIcons.chat_bubble_text_fill
+      : Icons.chat_bubble;
+
+  static IconData get hideLyrics => yaru
+      ? YaruIcons.chat_bubble
+      : cupertino
+      ? CupertinoIcons.chat_bubble_text
+      : Icons.chat_bubble_outline;
 
   static IconData get hide => yaru
       ? YaruIcons.hide

@@ -4213,6 +4213,18 @@ abstract class AppLocalizations {
   /// **'This will let you chose a custom accent color for the current theme.'**
   String get useCustomThemeColorDescription;
 
+  /// No description provided for @usePlayerColorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Use player color'**
+  String get usePlayerColorTitle;
+
+  /// No description provided for @usePlayerColorDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'This will use the dominant color has been extracted out of the current artwork (if available) for the whole app.'**
+  String get usePlayerColorDescription;
+
   /// No description provided for @selectColor.
   ///
   /// In en, this message translates to:
@@ -4338,6 +4350,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New episodes available for {length} podcasts'**
   String newEpisodesAvailableFor(int length);
+
+  /// No description provided for @lyrics.
+  ///
+  /// In en, this message translates to:
+  /// **'Lyrics'**
+  String get lyrics;
+
+  /// No description provided for @noLyricsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No lyrics found'**
+  String get noLyricsFound;
+
+  /// No description provided for @autoScrolling.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto scroll'**
+  String get autoScrolling;
+
+  /// No description provided for @genericErrorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred'**
+  String get genericErrorTitle;
+
+  /// No description provided for @genericErrorDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred. Please try again later.'**
+  String get genericErrorDescription;
+
+  /// No description provided for @errorDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Error details: {details}'**
+  String errorDetails(String details);
+
+  /// No description provided for @appendToQueue.
+  ///
+  /// In en, this message translates to:
+  /// **'Append to queue'**
+  String get appendToQueue;
+
+  /// No description provided for @appendedToQueue.
+  ///
+  /// In en, this message translates to:
+  /// **'Appended to queue: {title}'**
+  String appendedToQueue(String title);
+
+  /// No description provided for @appendMediaToQueueDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} is already inside the queue. Do you want to append it to the end of the queue?'**
+  String appendMediaToQueueDescription(String title);
+
+  /// No description provided for @appendMediaToQueueTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Append media to queue'**
+  String get appendMediaToQueueTitle;
+
+  /// No description provided for @appendMediaToQueue.
+  ///
+  /// In en, this message translates to:
+  /// **'Append media to queue: {title}'**
+  String appendMediaToQueue(String title);
+
+  /// No description provided for @explore.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore'**
+  String get explore;
+
+  /// No description provided for @favorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get favorites;
+
+  /// No description provided for @autoMovePlayerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto move player'**
+  String get autoMovePlayerTitle;
+
+  /// No description provided for @autoMovePlayerDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Move the player to the right if there is enough horizontal space'**
+  String get autoMovePlayerDescription;
 }
 
 class _AppLocalizationsDelegate

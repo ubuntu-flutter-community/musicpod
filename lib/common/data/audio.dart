@@ -80,6 +80,8 @@ class Audio {
   /// Optional art that can belong to a parent element.
   final String? albumArtUrl;
 
+  final String? lyrics;
+
   const Audio({
     this.path,
     this.url,
@@ -102,6 +104,7 @@ class Audio {
     this.pictureData,
     this.fileSize,
     this.albumArtUrl,
+    this.lyrics,
   });
 
   Audio copyWith({
@@ -127,6 +130,7 @@ class Audio {
     Uint8List? pictureData,
     int? fileSize,
     String? albumArtUrl,
+    String? lyrics,
   }) {
     return Audio(
       path: path ?? this.path,
@@ -150,6 +154,7 @@ class Audio {
       pictureData: pictureData ?? this.pictureData,
       fileSize: fileSize ?? this.fileSize,
       albumArtUrl: albumArtUrl ?? this.albumArtUrl,
+      lyrics: lyrics ?? this.lyrics,
     );
   }
 
@@ -219,6 +224,9 @@ class Audio {
     if (albumArtUrl != null) {
       result.addAll({'albumArtUrl': albumArtUrl});
     }
+    if (lyrics != null) {
+      result.addAll({'lyrics': lyrics});
+    }
 
     return result;
   }
@@ -250,6 +258,7 @@ class Audio {
           : null,
       fileSize: map['fileSize']?.toInt(),
       albumArtUrl: map['albumArtUrl'],
+      lyrics: map['lyrics'],
     );
   }
 
@@ -259,7 +268,7 @@ class Audio {
 
   @override
   String toString() {
-    return 'Audio(path: $path, url: $url,  audioType: $audioType, imageUrl: $imageUrl, description: $description, website: $website, title: $title, durationMs: $durationMs, artist: $artist, album: $album, albumArtist: $albumArtist, trackNumber: $trackNumber, trackTotal: $trackTotal, discNumber: $discNumber, discTotal: $discTotal, year: $year, genre: $genre, pictureMimeType: $pictureMimeType, pictureData: $pictureData, fileSize: $fileSize, albumArtUrl: $albumArtUrl)';
+    return 'Audio(path: $path, url: $url,  audioType: $audioType, imageUrl: $imageUrl, description: $description, website: $website, title: $title, durationMs: $durationMs, artist: $artist, album: $album, albumArtist: $albumArtist, trackNumber: $trackNumber, trackTotal: $trackTotal, discNumber: $discNumber, discTotal: $discTotal, year: $year, genre: $genre, pictureMimeType: $pictureMimeType, pictureData: $pictureData, fileSize: $fileSize, albumArtUrl: $albumArtUrl, lyrics: $lyrics)';
   }
 
   @override
@@ -348,6 +357,7 @@ class Audio {
       pictureMimeType: data.pictures.firstOrNull?.mimetype,
       trackNumber: data.trackNumber,
       year: data.year?.year,
+      lyrics: data.lyrics,
     );
   }
 

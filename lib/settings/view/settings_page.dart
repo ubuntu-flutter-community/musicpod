@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-import 'package:watch_it/watch_it.dart';
 
 import '../../common/view/adaptive_container.dart';
 import '../../common/view/header_bar.dart';

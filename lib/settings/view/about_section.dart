@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart' hide AboutDialog, LicensePage;
+import 'package:flutter_it/flutter_it.dart';
 import 'package:path/path.dart' as p;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:watch_it/watch_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
@@ -68,9 +68,9 @@ class _AboutTileState extends State<_AboutTile> {
     );
 
     return YaruTile(
-      subtitle: Text(
-        context.l10n.downloadsOfLatestRelease(downloads.toString()),
-      ),
+      subtitle: downloads == null
+          ? null
+          : Text(context.l10n.downloadsOfLatestRelease(downloads.toString())),
       title:
           !di<ConnectivityModel>().isOnline == true ||
               !appModel.allowManualUpdate

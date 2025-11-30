@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:watch_it/watch_it.dart';
+import 'package:future_loading_dialog/future_loading_dialog.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/view/routing_manager.dart';
@@ -13,6 +14,7 @@ import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../player/player_model.dart';
 import '../../playlists/view/add_to_playlist_dialog.dart';
+import '../../podcasts/podcast_model.dart';
 import '../../settings/settings_model.dart';
 import '../data/audio.dart';
 import '../data/audio_type.dart';
@@ -202,7 +204,7 @@ class AudioTileOptionButton extends StatelessWidget {
                 ),
               ),
             ),
-          if (audios.every((e) => e.isPodcast))
+          if (audios.every((e) => e.isPodcast)) ...[
             PopupMenuItem(
               onTap: () => di<SettingsModel>().setHideCompletedEpisodes(
                 !hideCompletedEpisodes,
@@ -217,6 +219,25 @@ class AudioTileOptionButton extends StatelessWidget {
                 ),
               ),
             ),
+            if (audios.firstOrNull?.website != null)
+              PopupMenuItem(
+                onTap: () => showFutureLoadingDialog(
+                  context: context,
+                  title: context.l10n.loadingPodcastFeed,
+                  future: () => di<PodcastModel>().checkForUpdates(
+                    feedUrls: {audios.first.website!},
+                    updateMessage: context.l10n.newEpisodeAvailable,
+                    multiUpdateMessage: (length) =>
+                        context.l10n.newEpisodesAvailableFor(length),
+                  ),
+                ),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                  title: Text(context.l10n.checkForUpdates),
+                  leading: Icon(Iconz.refresh),
+                ),
+              ),
+          ],
         ];
       },
       icon: icon ?? Icon(Iconz.viewMore),

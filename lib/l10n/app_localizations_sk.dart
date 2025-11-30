@@ -452,13 +452,13 @@ class AppLocalizationsSk extends AppLocalizations {
   String get markAllEpisodesAsDone => 'Označiť všetky epizódy ako dokončené';
 
   @override
-  String get markEpisodeAsDone => 'Mark episode as done';
+  String get markEpisodeAsDone => 'Označiť epizódu ako dokončenú';
 
   @override
-  String get hideCompletedEpisodes => 'Hide completed episodes';
+  String get hideCompletedEpisodes => 'Skryť dokončené epizódy';
 
   @override
-  String get showCompletedEpisodes => 'Show completed episodes';
+  String get showCompletedEpisodes => 'Zobraziť dokončené epizódy';
 
   @override
   String get reset => 'Obnoviť';
@@ -2138,6 +2138,13 @@ class AppLocalizationsSk extends AppLocalizations {
       'Toto vám umožní vybrať si vlastnú zvýrazňujúcu farbu pre aktuálnu tému.';
 
   @override
+  String get usePlayerColorTitle => 'Use player color';
+
+  @override
+  String get usePlayerColorDescription =>
+      'This will use the dominant color has been extracted out of the current artwork (if available) for the whole app.';
+
+  @override
   String get selectColor => 'Vybrať farbu';
 
   @override
@@ -2174,43 +2181,98 @@ class AppLocalizationsSk extends AppLocalizations {
       'Týmto sa rozmaže pozadie prehrávača. Na niektorých zariadeniach to môže viesť k nižšiemu výkonu.';
 
   @override
-  String get loadingPleaseWait => 'Loading, please wait ...';
+  String get loadingPleaseWait => 'Načítava sa, prosím čakajte ...';
 
   @override
   String get importingPodcastsPleaseWait =>
-      'Importing your podcasts, please wait ...';
+      'Importujú sa vaše podcasty, prosím čakajte ...';
 
   @override
   String get exportingPodcastsPleaseWait =>
-      'Exporting your podcasts, please wait ...';
+      'Exportujú sa vaše podcasty, prosím čakajte ...';
 
   @override
   String get importingStationsPleaseWait =>
-      'Importing your stations, please wait ...';
+      'Importujú sa vaše stanice, prosím čakajte ...';
 
   @override
   String get exportingStationsPleaseWait =>
-      'Exporting your stations, please wait ...';
+      'Exportujú sa vaše stanice, prosím čakajte ...';
 
   @override
   String get importingPlaylistsPleaseWait =>
-      'Importing your playlists, please wait ...';
+      'Importujú sa vaše playlisty, prosím čakajte ...';
 
   @override
   String get exportingPlaylistsPleaseWait =>
-      'Exporting your playlists, please wait ...';
+      'Exportujú sa vaše playlisty, prosím čakajte ...';
 
   @override
-  String get author => 'Author';
+  String get author => 'Autor';
 
   @override
-  String get rating => 'Rating';
+  String get rating => 'Ohodnotenie';
 
   @override
-  String get keywords => 'Keywords';
+  String get keywords => 'Kľúčové slová';
 
   @override
   String newEpisodesAvailableFor(int length) {
-    return 'New episodes available for $length podcasts';
+    return 'Nové epizódy sú dostupné pre $length podcastov';
   }
+
+  @override
+  String get lyrics => 'Lyrics';
+
+  @override
+  String get noLyricsFound => 'No lyrics found';
+
+  @override
+  String get autoScrolling => 'Auto scroll';
+
+  @override
+  String get genericErrorTitle => 'An error occurred';
+
+  @override
+  String get genericErrorDescription =>
+      'An unexpected error occurred. Please try again later.';
+
+  @override
+  String errorDetails(String details) {
+    return 'Error details: $details';
+  }
+
+  @override
+  String get appendToQueue => 'Append to queue';
+
+  @override
+  String appendedToQueue(String title) {
+    return 'Appended to queue: $title';
+  }
+
+  @override
+  String appendMediaToQueueDescription(String title) {
+    return '$title is already inside the queue. Do you want to append it to the end of the queue?';
+  }
+
+  @override
+  String get appendMediaToQueueTitle => 'Append media to queue';
+
+  @override
+  String appendMediaToQueue(String title) {
+    return 'Append media to queue: $title';
+  }
+
+  @override
+  String get explore => 'Explore';
+
+  @override
+  String get favorites => 'Favorites';
+
+  @override
+  String get autoMovePlayerTitle => 'Auto move player';
+
+  @override
+  String get autoMovePlayerDescription =>
+      'Move the player to the right if there is enough horizontal space';
 }

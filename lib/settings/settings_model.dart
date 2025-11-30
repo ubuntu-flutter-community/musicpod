@@ -130,6 +130,10 @@ class SettingsModel extends SafeChangeNotifier {
   void setUseCustomThemeColor(bool value) =>
       _service.setUseCustomThemeColor(value);
 
+  bool get usePlayerColor => _service.usePlayerColor;
+  Future<void> setUsePlayerColor(bool value) =>
+      _service.setUsePlayerColor(value);
+
   int get iconSetIndex => _service.iconSetIndex;
   void setIconSetIndex(int value) => _service.setIconSetIndex(value);
 
@@ -152,6 +156,14 @@ class SettingsModel extends SafeChangeNotifier {
   bool get hideCompletedEpisodes => _service.hideCompletedEpisodes;
   Future<void> setHideCompletedEpisodes(bool value) =>
       _service.setHideCompletedEpisodes(value);
+
+  bool get showPlayerLyrics => _service.showPlayerLyrics;
+  Future<void> setShowPlayerLyrics(bool value) =>
+      _service.setShowPlayerLyrics(value);
+
+  bool get autoMovePlayer => _service.autoMovePlayer;
+  Future<void> setAutoMovePlayer(bool value) =>
+      _service.setAutoMovePlayer(value);
 
   Future<void> wipeAllSettings() async => _service.wipeAllSettings();
 

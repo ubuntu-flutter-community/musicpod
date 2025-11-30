@@ -1,11 +1,8 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:window_manager/window_manager.dart';
 
-import '../app/window_size_to_settings_listener.dart';
 import '../app_config.dart';
 import '../common/data/close_btn_action.dart';
 import '../common/file_names.dart';
@@ -20,41 +17,9 @@ class SettingsService {
     required String? downloadsDefaultDir,
     required SharedPreferences sharedPreferences,
     required String forcedUpdateThreshold,
-    required WindowManager? windowManager,
   }) : _preferences = sharedPreferences,
        _downloadsDefaultDir = downloadsDefaultDir,
-       _forcedUpdateThreshold = forcedUpdateThreshold {
-    if (windowManager != null) {
-      final wm = windowManager;
-      final ps = _preferences;
-      wm
-        ..setMinimumSize(const Size(500, 700))
-        ..setSize(const Size(950, 820));
-      wm.addListener(
-        WindowSizeToSettingsListener(
-          onFullscreen: (v) => ps.setBool(SPKeys.windowFullscreen, v),
-          onMaximize: (v) => ps.setBool(SPKeys.windowMaximized, v),
-          onResize: (v) async {
-            if (ps.getBool(SPKeys.saveWindowSize) ?? false) {
-              ps
-                  .setInt(SPKeys.windowHeight, v.height.toInt())
-                  .then((_) => ps.setInt(SPKeys.windowWidth, v.width.toInt()));
-            }
-          },
-        ),
-      );
-
-      if (ps.getBool(SPKeys.windowFullscreen) ?? false) {
-        wm.setFullScreen(true);
-      } else if (ps.getBool(SPKeys.windowMaximized) ?? false) {
-        wm.maximize();
-      } else {
-        final height = ps.getInt(SPKeys.windowHeight) ?? 820;
-        final width = ps.getInt(SPKeys.windowWidth) ?? 950;
-        wm.setSize(Size(width.toDouble(), height.toDouble()));
-      }
-    }
-  }
+       _forcedUpdateThreshold = forcedUpdateThreshold;
 
   final String? _downloadsDefaultDir;
   final SharedPreferences _preferences;
@@ -78,6 +43,11 @@ class SettingsService {
       _preferences.getBool(SPKeys.useCustomThemeColor) ?? false;
   void setUseCustomThemeColor(bool value) =>
       _preferences.setBool(SPKeys.useCustomThemeColor, value).then(notify);
+
+  bool get usePlayerColor =>
+      _preferences.getBool(SPKeys.usePlayerColor) ?? false;
+  Future<void> setUsePlayerColor(bool value) =>
+      _preferences.setBool(SPKeys.usePlayerColor, value).then(notify);
 
   int? get customThemeColor => _preferences.getInt(SPKeys.customThemeColor);
   void setCustomThemeColor(int? value) {
@@ -156,8 +126,7 @@ class SettingsService {
       _preferences.setBool(SPKeys.blurredPlayerBackground, value).then(notify);
 
   bool get saveWindowSize =>
-      _preferences.getBool(SPKeys.saveWindowSize) ??
-      AppConfig.windowManagerImplemented;
+      _preferences.getBool(SPKeys.saveWindowSize) ?? false;
   void setSaveWindowSize(bool value) =>
       _preferences.setBool(SPKeys.saveWindowSize, value).then(notify);
 
@@ -215,6 +184,16 @@ class SettingsService {
       _preferences.getBool(SPKeys.hideCompletedEpisodes) ?? false;
   Future<void> setHideCompletedEpisodes(bool value) =>
       _preferences.setBool(SPKeys.hideCompletedEpisodes, value).then(notify);
+
+  bool get showPlayerLyrics =>
+      _preferences.getBool(SPKeys.showPlayerLyrics) ?? false;
+  Future<void> setShowPlayerLyrics(bool value) =>
+      _preferences.setBool(SPKeys.showPlayerLyrics, value).then(notify);
+
+  bool get autoMovePlayer =>
+      _preferences.getBool(SPKeys.autoMovePlayer) ?? true;
+  Future<void> setAutoMovePlayer(bool value) =>
+      _preferences.setBool(SPKeys.autoMovePlayer, value).then(notify);
 
   CloseBtnAction get closeBtnActionIndex =>
       _preferences.getString(SPKeys.closeBtnAction) == null

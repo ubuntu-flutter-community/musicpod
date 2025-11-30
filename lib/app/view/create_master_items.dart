@@ -28,10 +28,13 @@ import '../../settings/view/settings_page.dart';
 import 'main_page_icon.dart';
 import 'master_item.dart';
 
-Iterable<MasterItem> getAllMasterItems(LibraryModel libraryModel) => [
+Iterable<MasterItem> getAllMasterItems(
+  BuildContext context,
+  LibraryModel libraryModel,
+) => [
   ...permanentMasterItems,
   ...createPlaylistMasterItems(libraryModel),
-  ...createPodcastMasterItems(libraryModel),
+  ...createPodcastMasterItems(context, libraryModel),
   ...createFavoriteAlbumsMasterItems(libraryModel),
   ...createStarredStationsMasterItems(libraryModel),
 ];
@@ -131,13 +134,20 @@ Iterable<MasterItem> createFavoriteAlbumsMasterItems(
   ),
 );
 
-Iterable<MasterItem> createPodcastMasterItems(LibraryModel libraryModel) =>
-    libraryModel.podcastFeedUrls.map(
-      (feedUrl) => MasterItem(
-        titleBuilder: (_) => PodcastPageTitle(feedUrl: feedUrl),
-        subtitleBuilder: (_) => PodcastPageSubTitle(feedUrl: feedUrl),
-        pageId: feedUrl,
-        pageBuilder: (_) => LazyPodcastPage(feedUrl: feedUrl),
-        iconBuilder: (selected) => PodcastPageSideBarIcon(feedUrl: feedUrl),
-      ),
-    );
+Iterable<MasterItem> createPodcastMasterItems(
+  BuildContext context,
+  LibraryModel libraryModel,
+) => libraryModel.podcastFeedUrls.map(
+  (feedUrl) => MasterItem(
+    titleBuilder: (_) => PodcastPageTitle(feedUrl: feedUrl),
+    subtitleBuilder: (_) => PodcastPageSubTitle(feedUrl: feedUrl),
+    pageId: feedUrl,
+    pageBuilder: (_) => LazyPodcastPage(
+      feedUrl: feedUrl,
+      updateMessage: context.l10n.newEpisodeAvailable,
+      multiUpdateMessage: (length) =>
+          context.l10n.newEpisodesAvailableFor(length),
+    ),
+    iconBuilder: (selected) => PodcastPageSideBarIcon(feedUrl: feedUrl),
+  ),
+);

@@ -110,7 +110,7 @@ class AppModel extends SafeChangeNotifier {
     _updateAvailable == null;
     notifyListeners();
 
-    if (!_allowManualUpdates || !isOnline) {
+    if (!isOnline) {
       _updateAvailable = false;
       notifyListeners();
       return Future.value();
@@ -122,7 +122,7 @@ class AppModel extends SafeChangeNotifier {
     final onlineVersion = getExtendedVersionNumber(_onlineVersion) ?? 0;
     final currentVersion = getExtendedVersionNumber(version) ?? 0;
     if (onlineVersion > currentVersion) {
-      _updateAvailable = true;
+      _updateAvailable = _allowManualUpdates && true;
     } else {
       _updateAvailable = false;
     }

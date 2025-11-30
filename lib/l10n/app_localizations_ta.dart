@@ -2154,6 +2154,13 @@ class AppLocalizationsTa extends AppLocalizations {
       'தற்போதைய கருப்பொருளுக்கு தனிப்பயன் உச்சரிப்பு வண்ணத்தைத் தேர்வுசெய்ய இது உங்களை அனுமதிக்கும்.';
 
   @override
+  String get usePlayerColorTitle => 'Use player color';
+
+  @override
+  String get usePlayerColorDescription =>
+      'This will use the dominant color has been extracted out of the current artwork (if available) for the whole app.';
+
+  @override
   String get selectColor => 'வண்ணத்தைத் தேர்ந்தெடுக்கவும்';
 
   @override
@@ -2230,4 +2237,59 @@ class AppLocalizationsTa extends AppLocalizations {
   String newEpisodesAvailableFor(int length) {
     return 'New episodes available for $length podcasts';
   }
+
+  @override
+  String get lyrics => 'Lyrics';
+
+  @override
+  String get noLyricsFound => 'No lyrics found';
+
+  @override
+  String get autoScrolling => 'Auto scroll';
+
+  @override
+  String get genericErrorTitle => 'An error occurred';
+
+  @override
+  String get genericErrorDescription =>
+      'An unexpected error occurred. Please try again later.';
+
+  @override
+  String errorDetails(String details) {
+    return 'Error details: $details';
+  }
+
+  @override
+  String get appendToQueue => 'Append to queue';
+
+  @override
+  String appendedToQueue(String title) {
+    return 'Appended to queue: $title';
+  }
+
+  @override
+  String appendMediaToQueueDescription(String title) {
+    return '$title is already inside the queue. Do you want to append it to the end of the queue?';
+  }
+
+  @override
+  String get appendMediaToQueueTitle => 'Append media to queue';
+
+  @override
+  String appendMediaToQueue(String title) {
+    return 'Append media to queue: $title';
+  }
+
+  @override
+  String get explore => 'Explore';
+
+  @override
+  String get favorites => 'Favorites';
+
+  @override
+  String get autoMovePlayerTitle => 'Auto move player';
+
+  @override
+  String get autoMovePlayerDescription =>
+      'Move the player to the right if there is enough horizontal space';
 }

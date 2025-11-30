@@ -453,13 +453,13 @@ class AppLocalizationsEt extends AppLocalizations {
   String get markAllEpisodesAsDone => 'Märgi kõik osad vaadatuks';
 
   @override
-  String get markEpisodeAsDone => 'Mark episode as done';
+  String get markEpisodeAsDone => 'Märgi osa kuulatuks';
 
   @override
-  String get hideCompletedEpisodes => 'Hide completed episodes';
+  String get hideCompletedEpisodes => 'Peida kuulatud osad';
 
   @override
-  String get showCompletedEpisodes => 'Show completed episodes';
+  String get showCompletedEpisodes => 'Näita kuulatud osi';
 
   @override
   String get reset => 'Lähtesta';
@@ -2140,6 +2140,13 @@ class AppLocalizationsEt extends AppLocalizations {
       'See eelistus võimaldab sul valida aktsentvärvi vastavalt oma soovidele.';
 
   @override
+  String get usePlayerColorTitle => 'Use player color';
+
+  @override
+  String get usePlayerColorDescription =>
+      'This will use the dominant color has been extracted out of the current artwork (if available) for the whole app.';
+
+  @override
   String get selectColor => 'Vali värv';
 
   @override
@@ -2176,43 +2183,98 @@ class AppLocalizationsEt extends AppLocalizations {
       'Selle valikuga kuvatakse meediaesitaja taust hägusena, kuid mõnedes seadmetes võib see tekitada jõudlusprobleeme.';
 
   @override
-  String get loadingPleaseWait => 'Loading, please wait ...';
+  String get loadingPleaseWait => 'Laadin, palun oota...';
 
   @override
   String get importingPodcastsPleaseWait =>
-      'Importing your podcasts, please wait ...';
+      'Impordin sinu taskuhäälinguid, palun oota...';
 
   @override
   String get exportingPodcastsPleaseWait =>
-      'Exporting your podcasts, please wait ...';
+      'Ekspordin sinu taskuhäälinguid, palun oota...';
 
   @override
   String get importingStationsPleaseWait =>
-      'Importing your stations, please wait ...';
+      'Impordin sinu raadiojaamu, palun oota...';
 
   @override
   String get exportingStationsPleaseWait =>
-      'Exporting your stations, please wait ...';
+      'Ekspordin sinu raadiojaamu, palun oota...';
 
   @override
   String get importingPlaylistsPleaseWait =>
-      'Importing your playlists, please wait ...';
+      'Impordin sinu esitusloendeid, palun oota...';
 
   @override
   String get exportingPlaylistsPleaseWait =>
-      'Exporting your playlists, please wait ...';
+      'Ekspordin sinu esitusloendeid, palun oota...';
 
   @override
-  String get author => 'Author';
+  String get author => 'Autor';
 
   @override
-  String get rating => 'Rating';
+  String get rating => 'Hinnang';
 
   @override
-  String get keywords => 'Keywords';
+  String get keywords => 'Märksõnad';
 
   @override
   String newEpisodesAvailableFor(int length) {
-    return 'New episodes available for $length podcasts';
+    return '$length-l taskuhäälingul on uusi osi';
   }
+
+  @override
+  String get lyrics => 'Lyrics';
+
+  @override
+  String get noLyricsFound => 'No lyrics found';
+
+  @override
+  String get autoScrolling => 'Auto scroll';
+
+  @override
+  String get genericErrorTitle => 'An error occurred';
+
+  @override
+  String get genericErrorDescription =>
+      'An unexpected error occurred. Please try again later.';
+
+  @override
+  String errorDetails(String details) {
+    return 'Error details: $details';
+  }
+
+  @override
+  String get appendToQueue => 'Append to queue';
+
+  @override
+  String appendedToQueue(String title) {
+    return 'Appended to queue: $title';
+  }
+
+  @override
+  String appendMediaToQueueDescription(String title) {
+    return '$title is already inside the queue. Do you want to append it to the end of the queue?';
+  }
+
+  @override
+  String get appendMediaToQueueTitle => 'Append media to queue';
+
+  @override
+  String appendMediaToQueue(String title) {
+    return 'Append media to queue: $title';
+  }
+
+  @override
+  String get explore => 'Explore';
+
+  @override
+  String get favorites => 'Favorites';
+
+  @override
+  String get autoMovePlayerTitle => 'Auto move player';
+
+  @override
+  String get autoMovePlayerDescription =>
+      'Move the player to the right if there is enough horizontal space';
 }

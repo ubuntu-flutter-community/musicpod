@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:radio_browser_api/radio_browser_api.dart' hide State;
-import 'package:watch_it/watch_it.dart';
+import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';

@@ -457,13 +457,13 @@ class AppLocalizationsFr extends AppLocalizations {
       'Marquer tous les épisodes comme terminés';
 
   @override
-  String get markEpisodeAsDone => 'Mark episode as done';
+  String get markEpisodeAsDone => 'Marquer l\'épisode comme terminé';
 
   @override
-  String get hideCompletedEpisodes => 'Hide completed episodes';
+  String get hideCompletedEpisodes => 'Masquer les épisodes terminés';
 
   @override
-  String get showCompletedEpisodes => 'Show completed episodes';
+  String get showCompletedEpisodes => 'Montrer les épisodes terminés';
 
   @override
   String get reset => 'Réinitialiser';
@@ -2152,6 +2152,13 @@ class AppLocalizationsFr extends AppLocalizations {
       'Cela vous permettra de choisir une couleur d\'accentuation personnalisée pour le thème actuel.';
 
   @override
+  String get usePlayerColorTitle => 'Use player color';
+
+  @override
+  String get usePlayerColorDescription =>
+      'This will use the dominant color has been extracted out of the current artwork (if available) for the whole app.';
+
+  @override
   String get selectColor => 'Sélectionner une couleur';
 
   @override
@@ -2188,43 +2195,98 @@ class AppLocalizationsFr extends AppLocalizations {
       'Cela va flouter l\'arrière-plan du lecteur. Les performances de certains appareils peuvent être affectées.';
 
   @override
-  String get loadingPleaseWait => 'Loading, please wait ...';
+  String get loadingPleaseWait => 'Chargement, veuillez patienter…';
 
   @override
   String get importingPodcastsPleaseWait =>
-      'Importing your podcasts, please wait ...';
+      'Importation de vos podcasts, veuillez patienter…';
 
   @override
   String get exportingPodcastsPleaseWait =>
-      'Exporting your podcasts, please wait ...';
+      'Exportation de vos podcasts, veuillez patienter…';
 
   @override
   String get importingStationsPleaseWait =>
-      'Importing your stations, please wait ...';
+      'Importation de vos stations, veuillez patienter…';
 
   @override
   String get exportingStationsPleaseWait =>
-      'Exporting your stations, please wait ...';
+      'Exportation de vos stations, veuillez patienter…';
 
   @override
   String get importingPlaylistsPleaseWait =>
-      'Importing your playlists, please wait ...';
+      'Importation de vos listes de lecture, veuillez patienter…';
 
   @override
   String get exportingPlaylistsPleaseWait =>
-      'Exporting your playlists, please wait ...';
+      'Exportation de vos listes de lecture, veuillez patienter…';
 
   @override
-  String get author => 'Author';
+  String get author => 'Auteur';
 
   @override
-  String get rating => 'Rating';
+  String get rating => 'Note';
 
   @override
-  String get keywords => 'Keywords';
+  String get keywords => 'Mots clés';
 
   @override
   String newEpisodesAvailableFor(int length) {
-    return 'New episodes available for $length podcasts';
+    return 'De nouveaux épisodes sont disponibles pour $length podcasts';
   }
+
+  @override
+  String get lyrics => 'Lyrics';
+
+  @override
+  String get noLyricsFound => 'No lyrics found';
+
+  @override
+  String get autoScrolling => 'Auto scroll';
+
+  @override
+  String get genericErrorTitle => 'An error occurred';
+
+  @override
+  String get genericErrorDescription =>
+      'An unexpected error occurred. Please try again later.';
+
+  @override
+  String errorDetails(String details) {
+    return 'Error details: $details';
+  }
+
+  @override
+  String get appendToQueue => 'Append to queue';
+
+  @override
+  String appendedToQueue(String title) {
+    return 'Appended to queue: $title';
+  }
+
+  @override
+  String appendMediaToQueueDescription(String title) {
+    return '$title is already inside the queue. Do you want to append it to the end of the queue?';
+  }
+
+  @override
+  String get appendMediaToQueueTitle => 'Append media to queue';
+
+  @override
+  String appendMediaToQueue(String title) {
+    return 'Append media to queue: $title';
+  }
+
+  @override
+  String get explore => 'Explore';
+
+  @override
+  String get favorites => 'Favorites';
+
+  @override
+  String get autoMovePlayerTitle => 'Auto move player';
+
+  @override
+  String get autoMovePlayerDescription =>
+      'Move the player to the right if there is enough horizontal space';
 }
