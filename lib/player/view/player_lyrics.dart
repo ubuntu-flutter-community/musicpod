@@ -1,64 +1,171 @@
-import 'dart:io';
-
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:lrc/lrc.dart';
-import 'package:path/path.dart' as p;
-import 'package:path/path.dart';
-import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:lrc/lrc.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:yaru/constants.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
+import '../../lyrics/lyrics_service.dart';
+import '../../settings/settings_model.dart';
+import '../../settings/view/settings_action.dart';
 import '../player_model.dart';
 
-class PlayerLyrics extends StatefulWidget with WatchItStatefulWidgetMixin {
-  const PlayerLyrics({super.key, required this.audio});
+class PlayerLyrics extends StatelessWidget with WatchItMixin {
+  const PlayerLyrics({super.key, required this.audio, this.title, this.artist});
 
   final Audio audio;
+  final String? title;
+  final String? artist;
 
   @override
-  State<PlayerLyrics> createState() => _PlayerLyricsState();
+  Widget build(BuildContext context) {
+    final geniusAccessToken = watchPropertyValue(
+      (SettingsModel m) => m.lyricsGeniusAccessToken,
+    );
+    final neverAskAgainForGeniusToken = watchPropertyValue(
+      (SettingsModel m) => m.neverAskAgainForGeniusToken,
+    );
+
+    if ((geniusAccessToken == null || geniusAccessToken.isEmpty) &&
+        !neverAskAgainForGeniusToken)
+      return Center(
+        child: SizedBox(
+          width: 300,
+          child: Column(
+            spacing: kMediumSpace,
+            children: [
+              // TODO: localize
+              const Padding(
+                padding: const EdgeInsets.only(bottom: kMediumSpace),
+                child: Text(
+                  'If you want to fetch lyrics from Genius, please provide an API key '
+                  'in the settings.',
+                ),
+              ),
+              const SettingsButton.important(scrollIndex: 7),
+              OutlinedButton(
+                onPressed: () =>
+                    di<SettingsModel>().setNeverAskAgainForGeniusToken(true),
+                child: Text(context.l10n.doNotAskAgain),
+              ),
+            ].map((e) => SizedBox(width: double.infinity, child: e)).toList(),
+          ),
+        ),
+      );
+
+    return _PlayerLyrics(audio: audio, title: title, artist: artist);
+  }
 }
 
-class _PlayerLyricsState extends State<PlayerLyrics> {
+class _PlayerLyrics extends StatefulWidget with WatchItStatefulWidgetMixin {
+  const _PlayerLyrics({required this.audio, this.title, this.artist});
+
+  final Audio audio;
+  final String? title;
+  final String? artist;
+
+  @override
+  State<_PlayerLyrics> createState() => __PlayerLyricsState();
+}
+
+class __PlayerLyricsState extends State<_PlayerLyrics> {
+  late final Future<({String? outputString, List<LrcLine>? outputLrcLines})?>
+  _lyricsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _lyricsFuture = _getLyrics();
+  }
+
+  Future<({String? outputString, List<LrcLine>? outputLrcLines})?>
+  _getLyrics() async {
+    final local = di<LocalLyricsService>().parseLocalLyrics(
+      filePath: widget.audio.path,
+      inputString: widget.audio.lyrics,
+    );
+
+    if (local?.outputLrcLines?.isNotEmpty ?? false) {
+      return local;
+    }
+    if (local?.outputString?.isNotEmpty ?? false) {
+      return local;
+    }
+
+    return di<OnlineLyricsService>().fetchLyricsFromGenius(
+      title: widget.title ?? widget.audio.title ?? '',
+      artist: widget.artist ?? widget.audio.artist,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<
+      ({String? outputString, List<LrcLine>? outputLrcLines})?
+    >(
+      future: _lyricsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(kLargestSpace),
+              child: Text(snapshot.error.toString()),
+            ),
+          );
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        final data = snapshot.data;
+        final lrcLines = data?.outputLrcLines;
+        if (lrcLines?.isNotEmpty ?? false) {
+          return _LrcLineViwer(lrc: lrcLines!);
+        }
+
+        final lyricsString = data?.outputString;
+        if (lyricsString?.isNotEmpty ?? false) {
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(kLargestSpace),
+            child: Text(lyricsString!),
+          );
+        }
+
+        return Align(
+          alignment: Alignment.topCenter,
+          child: Padding(
+            padding: const EdgeInsets.all(kLargestSpace),
+            child: Text(context.l10n.noLyricsFound),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _LrcLineViwer extends StatefulWidget with WatchItStatefulWidgetMixin {
+  const _LrcLineViwer({required this.lrc});
+
+  final List<LrcLine> lrc;
+
+  @override
+  State<_LrcLineViwer> createState() => __LrcLineViwerState();
+}
+
+class __LrcLineViwerState extends State<_LrcLineViwer> {
   late AutoScrollController _controller;
   int? _selectedIndex;
   bool _autoScroll = true;
-
-  List<LrcLine>? lrc;
-  String? lyricsString;
 
   @override
   void initState() {
     super.initState();
     _controller = AutoScrollController();
-
-    if (widget.audio.lyrics != null) {
-      if (widget.audio.lyrics!.isValidLrc) {
-        lrc = Lrc.parse(widget.audio.lyrics!).lyrics;
-      } else {
-        lyricsString = widget.audio.lyrics;
-      }
-    } else {
-      if (widget.audio.path != null) {
-        final base = basenameWithoutExtension(widget.audio.path!);
-        final dir = File(widget.audio.path!).parent;
-        final maybe = p.join(dir.path, base + '.lrc');
-        final file = File(maybe);
-        if (file.existsSync()) {
-          final lrcString = file.readAsStringSync();
-          if (lrcString.isValidLrc) {
-            lrc = Lrc.parse(lrcString).lyrics;
-          } else {
-            lyricsString = lrcString;
-          }
-        }
-      }
-    }
   }
 
   @override
@@ -69,26 +176,12 @@ class _PlayerLyricsState extends State<PlayerLyrics> {
 
   @override
   Widget build(BuildContext context) {
-    if (lyricsString != null) {
-      return Text(lyricsString!);
-    }
-
-    if (lrc == null || lrc!.isEmpty) {
-      return Align(
-        alignment: Alignment.topCenter,
-        child: Padding(
-          padding: const EdgeInsets.all(kMediumSpace),
-          child: Text(context.l10n.noLyricsFound),
-        ),
-      );
-    }
-
     watchPropertyValue((PlayerModel m) {
-      final maybe = lrc?.firstWhereOrNull(
+      final maybe = widget.lrc.firstWhereOrNull(
         (e) => e.timestamp.inSeconds == m.position?.inSeconds,
       );
       if (maybe != null) {
-        _selectedIndex = lrc?.indexOf(maybe);
+        _selectedIndex = widget.lrc.indexOf(maybe);
       }
 
       return m.position;
@@ -115,7 +208,7 @@ class _PlayerLyricsState extends State<PlayerLyrics> {
             ).copyWith(scrollbars: !_autoScroll),
             child: ListView.builder(
               controller: _controller,
-              itemCount: lrc!.length,
+              itemCount: widget.lrc.length,
               itemBuilder: (context, index) => AutoScrollTag(
                 index: index,
                 controller: _controller,
@@ -128,7 +221,7 @@ class _PlayerLyricsState extends State<PlayerLyrics> {
                     selectedTileColor: Colors.transparent,
                     selectedColor: color,
                     title: Text(
-                      lrc!.elementAt(index).lyrics,
+                      widget.lrc.elementAt(index).lyrics,
                       style: context.textTheme.bodyLarge?.copyWith(
                         fontSize: _selectedIndex == index ? 18 : 15,
                         fontWeight: _selectedIndex == index

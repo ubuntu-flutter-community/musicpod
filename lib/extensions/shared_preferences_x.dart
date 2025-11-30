@@ -57,4 +57,7 @@ extension SPKeys on SharedPreferences {
   static const hideCompletedEpisodes = 'hideCompletedEpisodes';
   static const showPlayerLyrics = 'showPlayerLyrics';
   static const autoMovePlayer = 'autoMovePlayer';
+  static const lyricsGeniusAccessToken = 'lyricsGeniusAccessToken';
+  static const enableLyricsGenius = 'enableLyricsGenius';
+  static const neverAskAgainForGeniusToken = 'neverAskAgainForGeniusToken';
 }

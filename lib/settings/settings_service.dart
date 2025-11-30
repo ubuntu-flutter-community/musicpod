@@ -12,6 +12,7 @@ import '../extensions/taget_platform_x.dart';
 import '../local_audio/local_audio_view.dart';
 import '../persistence_utils.dart';
 
+// TODO: rework like in media-dojo
 class SettingsService {
   SettingsService({
     required String? downloadsDefaultDir,
@@ -194,6 +195,23 @@ class SettingsService {
       _preferences.getBool(SPKeys.autoMovePlayer) ?? true;
   Future<void> setAutoMovePlayer(bool value) =>
       _preferences.setBool(SPKeys.autoMovePlayer, value).then(notify);
+
+  bool get enableLyricsGenius =>
+      _preferences.getBool(SPKeys.enableLyricsGenius) ?? false;
+  Future<void> setEnableLyricsGenius(bool value) =>
+      _preferences.setBool(SPKeys.enableLyricsGenius, value).then(notify);
+
+  String? get lyricsGeniusAccessToken =>
+      _preferences.getString(SPKeys.lyricsGeniusAccessToken);
+  Future<void> setLyricsGeniusAccessToken(String value) => _preferences
+      .setString(SPKeys.lyricsGeniusAccessToken, value)
+      .then(notify);
+
+  bool get neverAskAgainForGeniusToken =>
+      _preferences.getBool(SPKeys.neverAskAgainForGeniusToken) ?? false;
+  Future<void> setNeverAskAgainForGeniusToken(bool value) => _preferences
+      .setBool(SPKeys.neverAskAgainForGeniusToken, value)
+      .then(notify);
 
   CloseBtnAction get closeBtnActionIndex =>
       _preferences.getString(SPKeys.closeBtnAction) == null

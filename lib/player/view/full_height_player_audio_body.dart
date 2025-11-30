@@ -3,19 +3,17 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
-import '../../common/data/audio_type.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../radio/view/radio_history_list.dart';
 import 'full_height_player_image.dart';
 import 'full_height_player_top_controls.dart';
+import 'player_explorer.dart';
 import 'player_main_controls.dart';
 import 'player_title_and_artist.dart';
 import 'player_track.dart';
 import 'player_view.dart';
 import 'queue/queue_button.dart';
-import 'queue/queue_or_lyrics.dart';
 
 class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
   const FullHeightPlayerAudioBody({
@@ -33,28 +31,26 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.theme;
+    final mediaQuerySize = context.mediaQuerySize;
+
     final showQueue = watchPropertyValue((AppModel m) => m.showQueueOverlay);
 
-    final mediaQuerySize = context.mediaQuerySize;
     final playerWithSidePanel =
         playerPosition == PlayerPosition.fullWindow &&
         mediaQuerySize.width > 1000;
-    final theme = context.theme;
+
     final queueOrHistory = Padding(
       padding: const EdgeInsets.only(top: 50, bottom: 50),
       child: SizedBox(
         width: 400,
-        child: (audio?.audioType == AudioType.radio
-            ? SizedBox(
-                height: playerWithSidePanel ? 500 : null,
-                child: const RadioHistoryList(simpleList: true),
-              )
-            : QueueOrLyrics(
-                key: ValueKey(audio?.path),
-                selectedColor: theme.colorScheme.onSurface,
-              )),
+        child: PlayerExplorer(
+          key: ValueKey(audio?.path),
+          selectedColor: theme.colorScheme.onSurface,
+        ),
       ),
     );
+
     final column = Column(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,

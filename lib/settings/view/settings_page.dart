@@ -12,6 +12,7 @@ import '../settings_model.dart';
 import 'about_section.dart';
 import 'expose_online_section.dart';
 import 'local_audio_section.dart';
+import 'lyrics_section.dart';
 import 'podcast_section.dart';
 import 'radio_section.dart';
 import 'reset_section.dart';
@@ -74,6 +75,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ExposeOnlineSection(),
                   ResourceSection(),
                   ResetSection(),
+                  LyricsSection(),
                   AboutSection(),
                 ]
                 .mapIndexed(

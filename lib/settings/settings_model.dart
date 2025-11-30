@@ -165,6 +165,18 @@ class SettingsModel extends SafeChangeNotifier {
   Future<void> setAutoMovePlayer(bool value) =>
       _service.setAutoMovePlayer(value);
 
+  bool get enableLyricsGenius => _service.enableLyricsGenius;
+  Future<void> setEnableLyricsGenius(bool value) =>
+      _service.setEnableLyricsGenius(value);
+
+  String? get lyricsGeniusAccessToken => _service.lyricsGeniusAccessToken;
+  Future<void> setLyricsGeniusAccessToken(String value) =>
+      _service.setLyricsGeniusAccessToken(value);
+
+  bool get neverAskAgainForGeniusToken => _service.neverAskAgainForGeniusToken;
+  Future<void> setNeverAskAgainForGeniusToken(bool value) =>
+      _service.setNeverAskAgainForGeniusToken(value);
+
   Future<void> wipeAllSettings() async => _service.wipeAllSettings();
 
   @override

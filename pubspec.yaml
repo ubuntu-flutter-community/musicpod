@@ -36,6 +36,7 @@ dependencies:
   flutter_tabler_icons: ^1.41.0
   flutter_widget_from_html_core: ^0.17.0
   future_loading_dialog: ^0.3.0
+  genius_lyrics: ^1.0.1
   github: ^9.24.0
   gtk: ^2.1.0
   handy_window: ^0.4.0
