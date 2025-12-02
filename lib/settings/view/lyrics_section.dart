@@ -14,7 +14,6 @@ import '../../l10n/l10n.dart';
 import '../../lyrics/lyrics_service.dart';
 import '../settings_model.dart';
 
-// TODO: localize
 class LyricsSection extends StatefulWidget with WatchItStatefulWidgetMixin {
   const LyricsSection({super.key});
 
@@ -52,19 +51,10 @@ class _LyricsSectionState extends State<LyricsSection> {
       return lyricsGeniusAccessToken;
     });
 
-    const disclaimer =
-        'MusicPod, its contributors, and the\n'
-        'Genius API are not responsible for any misuse of the API key.\n'
-        'By providing your API key, you agree to use it responsibly and in\n'
-        'accordance with Genius\'s terms of service.\n\n';
-
-    const tosLink = 'https://genius.com/static/terms';
-
-    const tosLinkText = 'Read Genius\'s Terms of Service';
-
     final neverAskAgainForGeniusToken = watchPropertyValue(
       (SettingsModel m) => m.neverAskAgainForGeniusToken,
     );
+
     return YaruSection(
       headline: const Text('Lyrics Settings'),
 
@@ -76,21 +66,15 @@ class _LyricsSectionState extends State<LyricsSection> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                'To fetch lyrics from Genius, you need to provide a Genius API Key.\n'
-                'You can obtain an API key by creating an account on Genius and\n'
-                'registering an application to get your access token.',
+                context.l10n.settingsGeniusDescription,
                 style: context.textTheme.bodyMedium,
                 textAlign: TextAlign.left,
               ),
             ),
           ),
           YaruTile(
-            title: const Text(
-              'Do not use Genius or ask for Genius API Key again',
-            ),
-            subtitle: const Text(
-              'This prevents the app from prompting for the Genius API key in the future and makes the lyrics feature fully rely on local LRC files or LRC strings embedded in audio metadata.',
-            ),
+            title: Text(context.l10n.settingsDoNotAskForGeniusTitle),
+            subtitle: Text(context.l10n.settingsDoNotAskForGeniusDescription),
             trailing: CommonSwitch(
               value: neverAskAgainForGeniusToken,
               onChanged: di<SettingsModel>().setNeverAskAgainForGeniusToken,
@@ -106,14 +90,15 @@ class _LyricsSectionState extends State<LyricsSection> {
                   text: TextSpan(
                     style: context.textTheme.bodySmall,
                     children: [
-                      const TextSpan(text: disclaimer),
+                      TextSpan(text: context.l10n.settingsGeniusDisclaimer),
                       TextSpan(
-                        text: tosLinkText,
+                        text: context.l10n.tosLinkText,
                         style: const TextStyle(
                           decoration: TextDecoration.underline,
                         ),
                         recognizer: TapGestureRecognizer()
-                          ..onTap = () => launchUrl(Uri.parse(tosLink)),
+                          ..onTap = () =>
+                              launchUrl(Uri.parse(context.l10n.tosLink)),
                       ),
                     ],
                   ),

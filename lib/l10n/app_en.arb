@@ -806,5 +806,12 @@
     "explore": "Explore",
     "favorites": "Favorites",
     "autoMovePlayerTitle": "Auto move player",
-    "autoMovePlayerDescription": "Move the player to the right if there is enough horizontal space"
+    "autoMovePlayerDescription": "Move the player to the right if there is enough horizontal space",
+    "onlineLyricsNotSetup": "If you want to fetch lyrics from Genius, please provide an API key in the settings.",
+    "settingsGeniusDisclaimer": "MusicPod, its contributors, and the Genius API are not responsible for any misuse of the API key. By providing your API key, you agree to use it responsibly and in accordance with Genius terms of service.\n\n",
+    "settingsGeniusDescription": "To fetch lyrics from Genius, you need to provide a Genius API Key. You can obtain an API key by creating an account on Genius and registering an application to get your access token.",
+    "settingsDoNotAskForGeniusTitle": "Do not use Genius or ask for Genius API Key again",
+    "settingsDoNotAskForGeniusDescription": "This prevents the app from prompting for the Genius API key in the future and makes the lyrics feature fully rely on local LRC files or LRC strings embedded in audio metadata.",
+    "tosLink": "https://genius.com/static/terms",
+    "tosLinkText": "Read Genius's Terms of Service"
 }

@@ -34,7 +34,14 @@ class PlayerLyrics extends StatelessWidget with WatchItMixin {
         !neverAskAgainForGeniusToken)
       return const _OnlineLyricsNotSetup();
 
-    return _PlayerLyrics(audio: audio, title: title, artist: artist);
+    return _PlayerLyrics(
+      key: ValueKey(
+        geniusAccessToken.toString() + neverAskAgainForGeniusToken.toString(),
+      ),
+      audio: audio,
+      title: title,
+      artist: artist,
+    );
   }
 }
 
@@ -48,13 +55,9 @@ class _OnlineLyricsNotSetup extends StatelessWidget {
       child: Column(
         spacing: kMediumSpace,
         children: [
-          // TODO: localize
-          const Padding(
+          Padding(
             padding: const EdgeInsets.only(bottom: kMediumSpace),
-            child: Text(
-              'If you want to fetch lyrics from Genius, please provide an API key '
-              'in the settings.',
-            ),
+            child: Text(context.l10n.onlineLyricsNotSetup),
           ),
           const SettingsButton.important(scrollIndex: 7),
           OutlinedButton(
@@ -69,7 +72,8 @@ class _OnlineLyricsNotSetup extends StatelessWidget {
 }
 
 class _PlayerLyrics extends StatefulWidget with WatchItStatefulWidgetMixin {
-  const _PlayerLyrics({required this.audio, this.title, this.artist});
+  const _PlayerLyrics({Key? key, required this.audio, this.title, this.artist})
+    : super(key: key);
 
   final Audio audio;
   final String? title;
