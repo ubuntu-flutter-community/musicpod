@@ -12,7 +12,7 @@ import '../extensions/taget_platform_x.dart';
 import '../local_audio/local_audio_view.dart';
 import '../persistence_utils.dart';
 
-// TODO: rework like in media-dojo
+// TODO: rework to use only generic setter and getter and let the model create more methods with SPKeys
 class SettingsService {
   SettingsService({
     required String? downloadsDefaultDir,
@@ -158,7 +158,7 @@ class SettingsService {
       _preferences.setString(SPKeys.podcastIndexApiSecret, value).then(notify);
 
   String? get directory =>
-      _preferences.getString(SPKeys.directory) ?? getMusicDefaultDir();
+      _preferences.getString(SPKeys.directory) ?? PlatformX.musicDefaultDir;
   Future<void> setDirectory(String directory) async =>
       _preferences.setString(SPKeys.directory, directory).then(notify);
 

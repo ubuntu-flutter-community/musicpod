@@ -318,8 +318,8 @@ class RadioService {
     'No Title',
     'No Artist - No Title',
     ' - ',
-    'Verbraucherinformation'
-        'Werbung',
+    'Verbraucherinformation',
+    'Werbung',
     'Advertisement',
   };
 
@@ -328,22 +328,25 @@ class RadioService {
     if (icyTitle == null || icyTitle.isEmpty) {
       return false;
     }
-    if (_blockedIcyTitles.contains(icyTitle)) {
+    if (_blockedIcyTitles.any(
+      (e) => e.toLowerCase().contains(icyTitle.toLowerCase()),
+    )) {
       return false;
     }
 
+    // This is often the title of the station
     final icyDescription = data?.icyDescription;
     if (icyDescription == null || icyDescription.isEmpty) {
       return true;
     }
 
-    final sanitizedDescription = icyDescription.replaceAll(
+    final sanitizedDescription = icyDescription.toLowerCase().replaceAll(
       RegExp(r'[^a-zA-Z0-9]'),
       '',
     );
 
-    return !icyTitle.contains(icyDescription) &&
-        !icyTitle.contains(sanitizedDescription);
+    return !icyTitle.toLowerCase().contains(icyDescription) &&
+        !icyTitle.toLowerCase().contains(sanitizedDescription);
   }
 
   Future<void> _processParsedIcyTitle(String parsedIcyTitle) async {

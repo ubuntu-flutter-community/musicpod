@@ -39,27 +39,6 @@ Future<String> getWorkingDir() async {
   }
 }
 
-String? getMusicDefaultDir() =>
-    isLinux ? getUserDirectory('MUSIC')?.path : null;
-
-Future<String?> getDownloadsDefaultDir() async {
-  String? path;
-  if (isLinux) {
-    path = getUserDirectory('DOWNLOAD')?.path;
-  } else if (isMacOS || isIOS || isWindows) {
-    path = (await getDownloadsDirectory())?.path;
-  } else if (isAndroid) {
-    final androidDir = Directory('/storage/emulated/0/Download');
-    if (androidDir.existsSync()) {
-      path = androidDir.path;
-    }
-  }
-  if (path != null) {
-    return p.join(path, AppConfig.appName);
-  }
-  return null;
-}
-
 Future<void> writeCustomSetting({
   required String? key,
   required dynamic value,

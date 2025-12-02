@@ -6,9 +6,6 @@ import '../../app/app_model.dart';
 import '../../app/view/routing_manager.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../l10n/l10n.dart';
-import '../../settings/settings_model.dart';
-import '../data/close_btn_action.dart';
 import 'global_keys.dart';
 import 'icons.dart';
 import 'nav_back_button.dart';
@@ -110,70 +107,6 @@ class HeaderBar extends StatelessWidget
         ? (style == YaruTitleBarStyle.hidden ? 0 : kYaruTitleBarHeight)
         : kToolbarHeight,
   );
-}
-
-class CloseWindowActionConfirmDialog extends StatefulWidget {
-  const CloseWindowActionConfirmDialog({super.key});
-
-  @override
-  State<CloseWindowActionConfirmDialog> createState() =>
-      _CloseWindowActionConfirmDialogState();
-}
-
-class _CloseWindowActionConfirmDialogState
-    extends State<CloseWindowActionConfirmDialog> {
-  bool rememberChoice = false;
-  @override
-  Widget build(BuildContext context) {
-    final model = di<SettingsModel>();
-    return AlertDialog(
-      title: YaruDialogTitleBar(
-        border: BorderSide.none,
-        backgroundColor: Colors.transparent,
-        title: Text(context.l10n.closeMusicPod),
-      ),
-      titlePadding: EdgeInsets.zero,
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.error, color: Colors.red, size: 50),
-          const SizedBox(height: 12),
-          Text(context.l10n.confirmCloseOrHideTip),
-          CheckboxListTile(
-            title: Text(context.l10n.doNotAskAgain),
-            value: rememberChoice,
-            onChanged: (value) {
-              setState(() {
-                rememberChoice = value!;
-              });
-            },
-          ),
-        ],
-      ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            if (rememberChoice) {
-              model.setCloseBtnActionIndex(CloseBtnAction.hideToTray);
-            }
-            Navigator.of(context).pop();
-            YaruWindow.hide(context);
-          },
-          child: Text(context.l10n.hideToTray),
-        ),
-        TextButton(
-          onPressed: () {
-            if (rememberChoice) {
-              model.setCloseBtnActionIndex(CloseBtnAction.close);
-            }
-            Navigator.of(context).pop();
-            YaruWindow.close(context);
-          },
-          child: Text(context.l10n.closeApp),
-        ),
-      ],
-    );
-  }
 }
 
 class SidebarButton extends StatelessWidget {

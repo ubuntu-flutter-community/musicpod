@@ -44,10 +44,7 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
       padding: const EdgeInsets.only(top: 50, bottom: 50),
       child: SizedBox(
         width: 400,
-        child: PlayerExplorer(
-          key: ValueKey(audio?.path),
-          selectedColor: theme.colorScheme.onSurface,
-        ),
+        child: PlayerExplorer(selectedColor: theme.colorScheme.onSurface),
       ),
     );
 

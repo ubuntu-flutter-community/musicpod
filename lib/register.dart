@@ -31,7 +31,6 @@ import 'local_audio/local_cover_model.dart';
 import 'local_audio/local_cover_service.dart';
 import 'lyrics/lyrics_service.dart';
 import 'notifications/notifications_service.dart';
-import 'persistence_utils.dart';
 import 'player/player_model.dart';
 import 'player/player_service.dart';
 import 'player/register_audio_service_handler.dart';
@@ -94,7 +93,7 @@ void registerDependencies() {
     )
     ..registerSingletonAsync<SettingsService>(
       () async {
-        final downloadsDefaultDir = await getDownloadsDefaultDir();
+        final downloadsDefaultDir = await PlatformX.downloadsDefaultDir;
         const forcedUpdateThreshold = String.fromEnvironment(
           'FORCED_UPDATE_THRESHOLD',
           defaultValue: '2.11.0',
