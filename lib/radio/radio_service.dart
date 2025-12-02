@@ -312,18 +312,41 @@ class RadioService {
     _propertiesChangedController.add(true);
   }
 
-  bool _isValidHistoryElement(MpvMetaData? data) {
-    var validHistoryElement = data?.icyTitle.isNotEmpty == true;
+  final _blockedIcyTitles = <String>{
+    'Unknown',
+    'Untitled',
+    'No Title',
+    'No Artist - No Title',
+    ' - ',
+    'Verbraucherinformation',
+    'Werbung',
+    'Advertisement',
+  };
 
-    if (validHistoryElement &&
-        data?.icyDescription.isNotEmpty == true &&
-        (data!.icyTitle.contains(data.icyDescription) ||
-            data.icyTitle.contains(
-              data.icyDescription.replaceAll(RegExp(r'[^a-zA-Z0-9]'), ''),
-            ))) {
-      validHistoryElement = false;
+  bool _isValidHistoryElement(MpvMetaData? data) {
+    final icyTitle = data?.icyTitle;
+    if (icyTitle == null || icyTitle.isEmpty) {
+      return false;
     }
-    return validHistoryElement;
+    if (_blockedIcyTitles.any(
+      (e) => e.toLowerCase().contains(icyTitle.toLowerCase()),
+    )) {
+      return false;
+    }
+
+    // This is often the title of the station
+    final icyDescription = data?.icyDescription;
+    if (icyDescription == null || icyDescription.isEmpty) {
+      return true;
+    }
+
+    final sanitizedDescription = icyDescription.toLowerCase().replaceAll(
+      RegExp(r'[^a-zA-Z0-9]'),
+      '',
+    );
+
+    return !icyTitle.toLowerCase().contains(icyDescription) &&
+        !icyTitle.toLowerCase().contains(sanitizedDescription);
   }
 
   Future<void> _processParsedIcyTitle(String parsedIcyTitle) async {

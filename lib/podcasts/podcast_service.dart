@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:podcast_search/podcast_search.dart';
+import 'package:synchronized/synchronized.dart';
 
 import '../common/data/audio.dart';
 import '../common/data/podcast_genre.dart';
@@ -94,45 +95,53 @@ class PodcastService {
     return _searchResult;
   }
 
-  bool _updateLock = false;
-
+  final _syncLock = Lock();
   Future<void> checkForUpdates({
     Set<String>? feedUrls,
     required String updateMessage,
     required String Function(int length) multiUpdateMessage,
-  }) async {
-    if (_updateLock) return;
-    _updateLock = true;
+  }) => _syncLock.synchronized(() async {
+    await _checkForUpdates(
+      feedUrls: feedUrls,
+      updateMessage: updateMessage,
+      multiUpdateMessage: multiUpdateMessage,
+    );
+  });
 
+  Future<void> _checkForUpdates({
+    Set<String>? feedUrls,
+    required String updateMessage,
+    required String Function(int length) multiUpdateMessage,
+  }) async {
     final newUpdateFeedUrls = <String>{};
 
     for (final feedUrl in (feedUrls ?? _libraryService.podcasts)) {
       final storedTimeStamp = _libraryService.getPodcastLastUpdated(feedUrl);
+      final name = _libraryService.getSubscribedPodcastName(feedUrl);
+
+      printMessageInDebugMode('checking update for: ${name ?? feedUrl} ');
+      printMessageInDebugMode(
+        'storedTimeStamp: ${storedTimeStamp ?? 'no timestamp stored'}',
+      );
+
       DateTime? feedLastUpdated;
       try {
         feedLastUpdated = await Feed.feedLastUpdated(url: feedUrl);
       } on Exception catch (e) {
         printMessageInDebugMode(e);
       }
-      final name = _libraryService.getSubscribedPodcastName(feedUrl);
 
-      printMessageInDebugMode('checking update for: ${name ?? feedUrl} ');
       printMessageInDebugMode(
-        'storedTimeStamp: ${storedTimeStamp ?? 'no timestamp'}',
-      );
-      printMessageInDebugMode(
-        'feedLastUpdated: ${feedLastUpdated?.podcastTimeStamp ?? 'no timestamp'}',
+        'feedLastUpdated: ${feedLastUpdated?.toPodcastTimeStamp ?? 'Feed did not set "lastUpdated"'}',
       );
 
       if (feedLastUpdated == null) continue;
 
-      await _libraryService.addPodcastLastUpdated(
-        feedUrl: feedUrl,
-        timestamp: feedLastUpdated.podcastTimeStamp,
-      );
-
-      if (storedTimeStamp != null &&
-          !storedTimeStamp.isSamePodcastTimeStamp(feedLastUpdated)) {
+      if (!storedTimeStamp.isSamePodcastTimeStamp(feedLastUpdated)) {
+        await _libraryService.addPodcastLastUpdated(
+          feedUrl: feedUrl,
+          timestamp: feedLastUpdated.toPodcastTimeStamp,
+        );
         await findEpisodes(feedUrl: feedUrl, loadFromCache: false);
         await _libraryService.addPodcastUpdate(feedUrl, feedLastUpdated);
 
@@ -147,8 +156,6 @@ class PodcastService {
           : multiUpdateMessage(newUpdateFeedUrls.length);
       _notificationsService.notify(message: msg);
     }
-
-    _updateLock = false;
   }
 
   List<Audio>? getPodcastEpisodesFromCache(String? feedUrl) =>

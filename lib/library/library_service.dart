@@ -2,12 +2,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:collection/collection.dart';
-import 'package:podcast_search/podcast_search.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/data/audio.dart';
 import '../common/file_names.dart';
-import '../common/logging.dart';
 import '../common/page_ids.dart';
 import '../extensions/date_time_x.dart';
 import '../extensions/shared_preferences_x.dart';
@@ -575,22 +573,10 @@ class LibraryService {
     }
     addSubscribedPodcastName(feedUrl: feedUrl, name: name);
     addSubscribedPodcastArtist(feedUrl: feedUrl, artist: artist);
-    await _checkAndAddPodcastLastUpdated(feedUrl);
-  }
-
-  Future<void> _checkAndAddPodcastLastUpdated(String feedUrl) async {
-    DateTime? lastUpdated;
-    try {
-      lastUpdated = await Feed.feedLastUpdated(url: feedUrl);
-    } on Exception catch (e) {
-      printMessageInDebugMode(e);
-    }
-    if (lastUpdated != null) {
-      addPodcastLastUpdated(
-        feedUrl: feedUrl,
-        timestamp: lastUpdated.podcastTimeStamp,
-      );
-    }
+    await addPodcastLastUpdated(
+      feedUrl: feedUrl,
+      timestamp: DateTime.now().toPodcastTimeStamp,
+    );
   }
 
   Future<void> addPodcasts(
@@ -607,7 +593,10 @@ class LibraryService {
         }
         addSubscribedPodcastName(feedUrl: p.feedUrl, name: p.name);
         addSubscribedPodcastArtist(feedUrl: p.feedUrl, artist: p.artist);
-        await _checkAndAddPodcastLastUpdated(p.feedUrl);
+        addPodcastLastUpdated(
+          feedUrl: p.feedUrl,
+          timestamp: DateTime.now().toPodcastTimeStamp,
+        );
       }
     }
     _sharedPreferences

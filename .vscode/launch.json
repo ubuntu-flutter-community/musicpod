@@ -7,19 +7,31 @@
         {
             "name": "musicpod",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "args": [
+                "--dart-define-from-file",
+                "api_keys.json"
+            ]
         },
         {
             "name": "musicpod (profile mode)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "profile"
+            "flutterMode": "profile",
+            "args": [
+                "--dart-define-from-file",
+                "api_keys.json"
+            ]
         },
         {
             "name": "musicpod (release mode)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "release"
+            "flutterMode": "release",
+            "args": [
+                "--dart-define-from-file",
+                "api_keys.json"
+            ]
         }
     ]
 }

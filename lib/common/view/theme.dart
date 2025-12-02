@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import 'icons.dart';
 import 'ui_constants.dart';
@@ -410,6 +411,32 @@ TextTheme createTextTheme(Color textColor) {
     ),
   );
 }
+
+ButtonStyle getTextFieldSuffixStyle(BuildContext context, bool isLast) =>
+    IconButton.styleFrom(
+      fixedSize: Size.square(context.buttonHeight),
+      shape: RoundedRectangleBorder(
+        borderRadius: isLast
+            ? BorderRadius.only(
+                topRight: Radius.circular(context.buttonRadius),
+                bottomRight: Radius.circular(context.buttonRadius),
+              )
+            : BorderRadius.zero,
+      ),
+    );
+
+ButtonStyle getTextFieldPrefixStyle(BuildContext context, int index) =>
+    IconButton.styleFrom(
+      fixedSize: Size.square(context.buttonHeight),
+      shape: RoundedRectangleBorder(
+        borderRadius: index == 0
+            ? BorderRadius.only(
+                topLeft: Radius.circular(context.buttonRadius),
+                bottomLeft: Radius.circular(context.buttonRadius),
+              )
+            : BorderRadius.zero,
+      ),
+    );
 
 class _TextStyle extends TextStyle {
   const _TextStyle({super.fontSize, super.fontWeight, required this.textColor})

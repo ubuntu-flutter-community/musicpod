@@ -2289,4 +2289,30 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get autoMovePlayerDescription =>
       'Move the player to the right if there is enough horizontal space';
+
+  @override
+  String get onlineLyricsNotSetup =>
+      'If you want to fetch lyrics from Genius, please provide an API key in the settings.';
+
+  @override
+  String get settingsGeniusDisclaimer =>
+      'MusicPod, its contributors, and the Genius API are not responsible for any misuse of the API key. By providing your API key, you agree to use it responsibly and in accordance with Genius terms of service.\n\n';
+
+  @override
+  String get settingsGeniusDescription =>
+      'To fetch lyrics from Genius, you need to provide a Genius API Key. You can obtain an API key by creating an account on Genius and registering an application to get your access token.';
+
+  @override
+  String get settingsDoNotAskForGeniusTitle =>
+      'Do not use Genius or ask for Genius API Key again';
+
+  @override
+  String get settingsDoNotAskForGeniusDescription =>
+      'This prevents the app from prompting for the Genius API key in the future and makes the lyrics feature fully rely on local LRC files or LRC strings embedded in audio metadata.';
+
+  @override
+  String get tosLink => 'https://genius.com/static/terms';
+
+  @override
+  String get tosLinkText => 'Read Genius\'s Terms of Service';
 }
