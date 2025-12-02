@@ -72,8 +72,12 @@ class _OnlineLyricsNotSetup extends StatelessWidget {
 }
 
 class _PlayerLyrics extends StatefulWidget with WatchItStatefulWidgetMixin {
-  const _PlayerLyrics({Key? key, required this.audio, this.title, this.artist})
-    : super(key: key);
+  const _PlayerLyrics({
+    super.key,
+    required this.audio,
+    this.title,
+    this.artist,
+  });
 
   final Audio audio;
   final String? title;
