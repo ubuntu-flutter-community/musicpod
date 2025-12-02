@@ -88,7 +88,7 @@ dependencies:
   win32: ^5.5.4
   window_manager: ^0.5.1
   xdg_directories: ^1.0.4
-  yaru: ^8.3.0
+  yaru: 9.0.0
   yaru_window: ^0.2.2
   yaru_window_linux: ^0.2.2
 
