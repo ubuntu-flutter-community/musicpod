@@ -547,10 +547,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_it
-      sha256: "12ad0696a2aaabbe9e86eee9b296f8906e043d31e0283b09c3a12c309d6affac"
+      sha256: b425c790294f31941adeeb6fd9184ea37f0a9cd384ce644d1f726db39f7bf442
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.1"
+    version: "2.1.1"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -650,10 +650,10 @@ packages:
     dependency: transitive
     description:
       name: get_it
-      sha256: "2c120112e34bbd5f4ce2ca1ad3076a5b2068eb1e48aae8dd7b717b26cdd38543"
+      sha256: "1d648d2dd2047d7f7450d5727ca24ee435f240385753d90b49650e3cdff32e56"
       url: "https://pub.dev"
     source: hosted
-    version: "9.1.1"
+    version: "9.2.0"
   github:
     dependency: "direct main"
     description:
@@ -989,10 +989,10 @@ packages:
     dependency: transitive
     description:
       name: meta
-      sha256: e3641ec5d63ebf0d9b41bd43201a66e3fc79a65db5f61fc181f04cd27aab950c
+      sha256: "23f08335362185a5ea2ad3a4e597f1375e78bce8a040df5c600c8d3552ef2394"
       url: "https://pub.dev"
     source: hosted
-    version: "1.16.0"
+    version: "1.17.0"
   mime:
     dependency: "direct main"
     description:
@@ -1651,10 +1651,10 @@ packages:
     dependency: transitive
     description:
       name: test_api
-      sha256: "522f00f556e73044315fa4585ec3270f1808a4b186c936e612cab0b565ff1e00"
+      sha256: ab2726c1a94d3176a45960b6234466ec367179b87dd74f1611adb1f3b5fb9d55
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.6"
+    version: "0.7.7"
   typed_data:
     dependency: transitive
     description:
@@ -1803,10 +1803,10 @@ packages:
     dependency: transitive
     description:
       name: watch_it
-      sha256: "561910e534af41dda7c9bce2eca2b3d65c48aa88b6570964b3dcb29fb1cc6dc3"
+      sha256: f5dee042b876212f6201a4e92604ba5826ff11062e72ec70799abec163bea336
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.1"
+    version: "2.4.1"
   watcher:
     dependency: "direct main"
     description:
