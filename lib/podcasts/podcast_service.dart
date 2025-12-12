@@ -10,6 +10,7 @@ import '../common/logging.dart';
 import '../common/view/audio_filter.dart';
 import '../common/view/languages.dart';
 import '../extensions/date_time_x.dart';
+import '../settings/shared_preferences_keys.dart';
 import '../extensions/string_x.dart';
 import '../library/library_service.dart';
 import '../notifications/notifications_service.dart';
@@ -34,12 +35,14 @@ class PodcastService {
     if (_search == null || forceInit) {
       _search = Search(
         searchProvider:
-            _settingsService.usePodcastIndex == true &&
-                _settingsService.podcastIndexApiKey != null &&
-                _settingsService.podcastIndexApiSecret != null
+            _settingsService.getBool(SPKeys.usePodcastIndex) == true &&
+                _settingsService.getString(SPKeys.podcastIndexApiKey) != null &&
+                _settingsService.getString(SPKeys.podcastIndexApiSecret) != null
             ? PodcastIndexProvider(
-                key: _settingsService.podcastIndexApiKey!,
-                secret: _settingsService.podcastIndexApiSecret!,
+                key: _settingsService.getString(SPKeys.podcastIndexApiKey)!,
+                secret: _settingsService.getString(
+                  SPKeys.podcastIndexApiSecret,
+                )!,
               )
             : const ITunesProvider(),
       );

@@ -3,6 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/common_control_panel.dart';
 import '../../l10n/l10n.dart';
+import '../../settings/settings_model.dart';
 import '../local_audio_model.dart';
 import '../local_audio_view.dart';
 
@@ -11,7 +12,7 @@ class LocalAudioControlPanel extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final index = watchPropertyValue((LocalAudioModel m) => m.localAudioindex);
+    final index = watchPropertyValue((SettingsModel m) => m.localAudioindex);
     final audios = watchPropertyValue((LocalAudioModel m) => m.audios);
 
     return CommonControlPanel(
@@ -23,7 +24,7 @@ class LocalAudioControlPanel extends StatelessWidget with WatchItMixin {
           .toList(),
       onSelected: audios == null
           ? null
-          : di<LocalAudioModel>().setLocalAudioindex,
+          : di<SettingsModel>().setLocalAudioindex,
     );
   }
 }

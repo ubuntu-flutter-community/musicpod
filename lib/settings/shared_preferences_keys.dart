@@ -1,6 +1,4 @@
-import 'package:shared_preferences/shared_preferences.dart';
-
-extension SPKeys on SharedPreferences {
+class SPKeys {
   static const directory = 'directory';
   static const downloads = 'downloadsCustomDir';
   static const localAudioIndex = 'localAudioIndex';

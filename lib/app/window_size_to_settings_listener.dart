@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 
-import '../extensions/shared_preferences_x.dart';
+import '../settings/shared_preferences_keys.dart';
 import '../extensions/taget_platform_x.dart';
 
 class WindowSizeToSettingsListener implements WindowListener {

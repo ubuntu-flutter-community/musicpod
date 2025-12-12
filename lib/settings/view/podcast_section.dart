@@ -10,7 +10,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../custom_content/custom_content_model.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/shared_preferences_x.dart';
+import '../shared_preferences_keys.dart';
 import '../../extensions/string_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';

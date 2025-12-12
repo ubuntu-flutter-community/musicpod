@@ -14,6 +14,7 @@ import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
+import '../../settings/settings_model.dart';
 import '../../settings/view/settings_action.dart';
 import '../local_audio_model.dart';
 import '../local_audio_view.dart';
@@ -55,7 +56,7 @@ class _LocalAudioPageState extends State<LocalAudioPage> {
     );
     final allGenres = watchPropertyValue((LocalAudioModel m) => m.allGenres);
     final playlists = watchPropertyValue((LibraryModel m) => m.playlistIDs);
-    final index = watchPropertyValue((LocalAudioModel m) => m.localAudioindex);
+    final index = watchPropertyValue((SettingsModel m) => m.localAudioindex);
     final localAudioView = LocalAudioView.values[index];
 
     return Scaffold(

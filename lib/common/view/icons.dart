@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../settings/shared_preferences_keys.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../settings/settings_service.dart';
 
 class Iconz {
-  static int get _iconSetIndex => di<SettingsService>().iconSetIndex;
+  static int get _iconSetIndex =>
+      di<SettingsService>().getInt(SPKeys.iconSetIndex) ??
+      IconSet.platformDefaultIndex;
   static bool get cupertino => _iconSetIndex == IconSet.cupertino.index;
   static bool get yaru => _iconSetIndex == IconSet.yaru.index;
 

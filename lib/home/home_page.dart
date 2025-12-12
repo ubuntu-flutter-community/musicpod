@@ -15,13 +15,13 @@ import '../extensions/build_context_x.dart';
 import '../extensions/country_x.dart';
 import '../l10n/l10n.dart';
 import '../library/library_model.dart';
-import '../local_audio/local_audio_model.dart';
 import '../local_audio/local_audio_view.dart';
 import '../local_audio/view/playlists_view.dart';
 import '../search/search_model.dart';
 import '../search/search_type.dart';
 import '../search/view/sliver_podcast_search_results.dart';
 import '../search/view/sliver_radio_country_grid.dart';
+import '../settings/settings_model.dart';
 
 class HomePage extends StatelessWidget with WatchItMixin {
   const HomePage({super.key});
@@ -121,7 +121,7 @@ class HomePage extends StatelessWidget with WatchItMixin {
                       title: Text(l10n.playlists, style: textStyle),
                       trailing: Icon(Iconz.goNext),
                       onTap: () {
-                        di<LocalAudioModel>().setLocalAudioindex(
+                        di<SettingsModel>().setLocalAudioindex(
                           LocalAudioView.playlists.index,
                         );
                         di<RoutingManager>().push(pageId: PageIDs.localAudio);

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/app_model.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
+import '../../settings/settings_model.dart';
+import '../player_model.dart';
 import 'full_height_player_image.dart';
 import 'full_height_player_top_controls.dart';
 import 'player_explorer.dart';
@@ -13,7 +14,6 @@ import 'player_main_controls.dart';
 import 'player_title_and_artist.dart';
 import 'player_track.dart';
 import 'player_view.dart';
-import 'queue/queue_button.dart';
 
 class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
   const FullHeightPlayerAudioBody({
@@ -34,7 +34,12 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
     final theme = context.theme;
     final mediaQuerySize = context.mediaQuerySize;
 
-    final showQueue = watchPropertyValue((AppModel m) => m.showQueueOverlay);
+    final showQueue = watchPropertyValue((PlayerModel m) => m.showQueue);
+
+    final showPlayerLyrics = watchPropertyValue(
+      (SettingsModel m) => m.showPlayerLyrics,
+    );
+    final showPlayerExplorer = showQueue || showPlayerLyrics;
 
     final playerWithSidePanel =
         playerPosition == PlayerPosition.fullWindow &&
@@ -52,7 +57,7 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (showQueue && !playerWithSidePanel) ...[
+        if (showPlayerExplorer && !playerWithSidePanel) ...[
           Flexible(
             child: Padding(
               padding: const EdgeInsets.only(top: kLargestSpace),
@@ -63,7 +68,7 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
           if (!isMobile || context.isPortrait)
             const Hero(
               tag: 'FullHeightPlayerImageInPortrait',
-              child: FullHeightPlayerImage(showAudioVisualizer: true),
+              child: FullHeightPlayerImage(),
             ),
           const SizedBox(height: kLargestSpace),
         ],
@@ -82,7 +87,9 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
           width: playerWithSidePanel ? 400 : 320,
           child: Padding(
             padding: EdgeInsets.only(
-              bottom: showQueue && !playerWithSidePanel ? 4 * kLargestSpace : 0,
+              bottom: showPlayerExplorer && !playerWithSidePanel
+                  ? 4 * kLargestSpace
+                  : 0,
             ),
             child: PlayerMainControls(active: active),
           ),
@@ -127,14 +134,8 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
           child: FullHeightPlayerTopControls(
             iconColor: iconColor,
             playerPosition: playerPosition,
-            showQueueButton: !playerWithSidePanel,
           ),
         ),
-        if (isMobile)
-          const Positioned(
-            bottom: 2 * kLargestSpace,
-            child: QueueButton.text(),
-          ),
       ],
     );
   }
