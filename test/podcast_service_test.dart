@@ -26,9 +26,7 @@ Future<void> main() async {
   final mockSettingsService = MockSettingsService();
   final mockLibraryService = MockLibraryService();
 
-  when(
-    mockSettingsService.usePodcastIndex,
-  ).thenAnswer((realInvocation) => false);
+  when(mockSettingsService.getBool(any)).thenAnswer((realInvocation) => false);
 
   final service = PodcastService(
     notificationsService: mockNotificationsService,

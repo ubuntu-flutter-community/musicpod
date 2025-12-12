@@ -5,6 +5,7 @@ import 'package:lastfm/lastfm.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../common/logging.dart';
+import '../settings/shared_preferences_keys.dart';
 import '../settings/settings_service.dart';
 
 class LastfmService {
@@ -26,7 +27,8 @@ class LastfmService {
     required String title,
     required String artist,
   }) async {
-    if (isAuthorized.value && _settingsService.enableLastFmScrobbling) {
+    if (isAuthorized.value &&
+        _settingsService.getBool(SPKeys.enableLastFm) == true) {
       try {
         await (_lastFm as LastFMAuthorized).scrobble(
           track: title,
@@ -42,13 +44,19 @@ class LastfmService {
   void init({LastFMAuthorized? lastFmAuthorized}) {
     if (lastFmAuthorized != null) {
       _setLastFm(lastFmAuthorized);
-      _settingsService.setLastFmSessionKey(lastFmAuthorized.sessionKey);
-      _settingsService.setLastFmUsername(lastFmAuthorized.username);
+      _settingsService.setValue(
+        SPKeys.lastFmSessionKey,
+        lastFmAuthorized.sessionKey,
+      );
+      _settingsService.setValue(
+        SPKeys.lastFmUsername,
+        lastFmAuthorized.username,
+      );
     } else {
-      final apiKey = _settingsService.lastFmApiKey;
-      final apiSecret = _settingsService.lastFmSecret;
-      final sessionKey = _settingsService.lastFmSessionKey;
-      final username = _settingsService.lastFmUsername;
+      final apiKey = _settingsService.getString(SPKeys.lastFmApiKey);
+      final apiSecret = _settingsService.getString(SPKeys.lastFmSecret);
+      final sessionKey = _settingsService.getString(SPKeys.lastFmSessionKey);
+      final username = _settingsService.getString(SPKeys.lastFmUsername);
 
       if (sessionKey != null &&
           username != null &&
@@ -72,8 +80,8 @@ class LastfmService {
     required String apiKey,
     required String apiSecret,
   }) async {
-    _settingsService.setLastFmApiKey(apiKey);
-    _settingsService.setLastFmSecret(apiSecret);
+    _settingsService.setValue(SPKeys.lastFmApiKey, apiKey);
+    _settingsService.setValue(SPKeys.lastFmSecret, apiSecret);
 
     final lastfmua = LastFMUnauthorized(apiKey, apiSecret);
     launchUrl(Uri.parse(await lastfmua.authorizeDesktop()));

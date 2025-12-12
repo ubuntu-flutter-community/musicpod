@@ -12,8 +12,8 @@ import '../../common/view/ui_constants.dart';
 import '../../custom_content/custom_content_model.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../local_audio/local_audio_model.dart';
 import '../../local_audio/local_audio_view.dart';
+import '../../settings/settings_model.dart';
 
 class EditPlaylistDialog extends StatefulWidget
     with WatchItStatefulWidgetMixin {
@@ -92,7 +92,7 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
                       if (context.mounted && Navigator.of(context).canPop()) {
                         Navigator.of(context).pop();
                       }
-                      di<LocalAudioModel>().setLocalAudioindex(
+                      di<SettingsModel>().setLocalAudioindex(
                         LocalAudioView.playlists.index,
                       );
                       routingManager.push(
@@ -113,7 +113,7 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
         unawaited(
           routingManager.push(pageId: PageIDs.localAudio, replace: true),
         );
-        await di<LocalAudioModel>().setLocalAudioindex(
+        await di<SettingsModel>().setLocalAudioindex(
           LocalAudioView.playlists.index,
         );
         await libraryModel.updatePlaylistName(

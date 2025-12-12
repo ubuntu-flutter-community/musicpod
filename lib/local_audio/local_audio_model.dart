@@ -62,10 +62,6 @@ class LocalAudioModel extends SafeChangeNotifier {
     pictures: pictures,
   );
 
-  int get localAudioindex => _settingsService.localAudioIndex;
-  Future<void> setLocalAudioindex(int value) async =>
-      _settingsService.setLocalAudioIndex(value);
-
   bool _allowReorder = false;
   bool get allowReorder => _allowReorder;
   void setAllowReorder(bool value) {

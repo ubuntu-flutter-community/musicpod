@@ -8,6 +8,7 @@ import 'package:lrc/lrc.dart';
 import 'package:path/path.dart' as p;
 
 import '../common/logging.dart';
+import '../settings/shared_preferences_keys.dart';
 import '../settings/settings_service.dart';
 
 class LocalLyricsService {
@@ -73,7 +74,7 @@ class OnlineLyricsService {
     required SettingsService settingsService,
   }) {
     final maybeGeniusAccessToken =
-        settingsService.lyricsGeniusAccessToken ??
+        settingsService.getString(SPKeys.lyricsGeniusAccessToken) ??
         // this is only for development purposes, users should provide their own token
         const String.fromEnvironment('GENIUS_ACCESS_TOKEN');
 
@@ -95,7 +96,10 @@ class OnlineLyricsService {
       di.unregister<OnlineLyricsService>();
     }
 
-    final saved = await di<SettingsService>().setLyricsGeniusAccessToken(token);
+    final saved = await di<SettingsService>().setValue(
+      SPKeys.lyricsGeniusAccessToken,
+      token,
+    );
 
     if (!saved) {
       throw GeniusNotSetupException();
@@ -117,7 +121,7 @@ class OnlineLyricsService {
 
   Future<({String? outputString, List<LrcLine>? outputLrcLines})?>
   fetchLyricsFromGenius({required String title, String? artist}) {
-    if (_settingsService.neverAskAgainForGeniusToken) {
+    if (_settingsService.getBool(SPKeys.neverAskAgainForGeniusToken) ?? false) {
       return Future.value(null);
     }
 

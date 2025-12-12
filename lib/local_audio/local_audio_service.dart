@@ -11,6 +11,7 @@ import '../common/data/audio.dart';
 import '../common/logging.dart';
 import '../common/view/audio_filter.dart';
 import '../extensions/media_file_x.dart';
+import '../settings/shared_preferences_keys.dart';
 import '../extensions/string_x.dart';
 import '../extensions/taget_platform_x.dart';
 import '../settings/settings_service.dart';
@@ -73,7 +74,7 @@ class LocalAudioService {
   List<String>? get allAlbumIDs => _allAlbumIDs;
   List<String>? findAllAlbumIDs({String? artist, bool clean = true}) {
     final groupAlbumsOnlyByAlbumName =
-        _settingsService?.groupAlbumsOnlyByAlbumName ?? false;
+        _settingsService?.getBool(SPKeys.groupAlbumsOnlyByAlbumName) ?? false;
 
     final theAudios = artist == null || artist.isEmpty
         ? audios
@@ -133,7 +134,8 @@ class LocalAudioService {
     }
 
     final album = audios?.where((a) {
-      if (_settingsService?.groupAlbumsOnlyByAlbumName ?? false) {
+      if (_settingsService?.getBool(SPKeys.groupAlbumsOnlyByAlbumName) ??
+          false) {
         return a.album != null && a.album == albumId.albumOfId;
       }
       return a.albumId != null && a.albumId == albumId;
@@ -337,10 +339,11 @@ class LocalAudioService {
         return;
       }
 
-      if (newDirectory != null && newDirectory != _settingsService?.directory) {
-        await _settingsService?.setDirectory(newDirectory);
+      if (newDirectory != null &&
+          newDirectory != _settingsService?.getString(SPKeys.directory)) {
+        await _settingsService?.setValue(SPKeys.directory, newDirectory);
       }
-      final dir = newDirectory ?? _settingsService?.directory;
+      final dir = newDirectory ?? _settingsService?.getString(SPKeys.directory);
 
       final result = await compute(_readAudiosFromDirectory, dir);
       _failedImports = result.failedImports;
