@@ -1,0 +1,17 @@
+Source: musicpod
+Section: sound
+Priority: optional
+Maintainer: Frederik Feichtmeier <frederik.feichtmeier@gmail.com>
+Build-Depends: debhelper-compat (= 13), cmake, ninja-build, pkg-config, libgtk-3-dev, clang, curl, unzip, xz-utils, zip, rustc, cargo
+Standards-Version: 4.6.2
+Homepage: https://github.com/ubuntu-flutter-community/musicpod
+Vcs-Browser: https://github.com/ubuntu-flutter-community/musicpod
+Vcs-Git: https://github.com/ubuntu-flutter-community/musicpod.git
+
+Package: musicpod
+Architecture: amd64
+Depends: ${shlibs:Depends}, ${misc:Depends}, libgtk-3-0, libmpv-dev, mpv
+Description: Music, podcast and internet radio player
+MusicPod is a local music, radio, television and podcast player for Linux Desktop.
+It allows you to play local audio files, browse podcasts online, and listen to
+internet radio stations with support for metadata and artwork lookup.

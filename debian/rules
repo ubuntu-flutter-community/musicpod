@@ -1,0 +1,40 @@
+#!/usr/bin/make -f
+
+export DH_VERBOSE = 1
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	# Build the Flutter Linux release
+	flutter build linux --release
+
+override_dh_auto_install:
+	# Install files to debian/musicpod/
+	mkdir -p debian/musicpod/opt/musicpod
+	cp -r build/linux/x64/release/bundle/* debian/musicpod/opt/musicpod/
+	
+	# Install binary symlink to /usr/bin
+	mkdir -p debian/musicpod/usr/bin
+	ln -s /opt/musicpod/musicpod debian/musicpod/usr/bin/musicpod
+	
+	# Install desktop file
+	mkdir -p debian/musicpod/usr/share/applications
+	cp snap/gui/musicpod.desktop debian/musicpod/usr/share/applications/org.feichtmeier.musicpod.desktop
+	sed -i 's|Icon=${SNAP}/meta/gui/musicpod.png|Icon=musicpod|g' debian/musicpod/usr/share/applications/org.feichtmeier.musicpod.desktop
+	
+	# Install icon
+	mkdir -p debian/musicpod/usr/share/icons/hicolor/256x256/apps
+	cp snap/gui/musicpod.png debian/musicpod/usr/share/icons/hicolor/256x256/apps/musicpod.png
+	mkdir -p debian/musicpod/usr/share/pixmaps
+	cp snap/gui/musicpod.png debian/musicpod/usr/share/pixmaps/musicpod.png
+
+override_dh_fixperms:
+	dh_fixperms
+	chmod +x debian/musicpod/opt/musicpod/musicpod
+
+override_dh_strip:
+	# Don't strip Flutter binaries as they may be AOT compiled
+	dh_strip --exclude=libflutter_linux_gtk.so --exclude=libapp.so
+

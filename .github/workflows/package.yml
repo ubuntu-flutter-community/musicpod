@@ -1,0 +1,205 @@
+name: Build Packages
+
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  FLUTTER_VERSION: '3.29.1'
+
+jobs:
+  build-deb:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          flutter-version: ${{env.FLUTTER_VERSION}}
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            clang \
+            cmake \
+            curl \
+            libgtk-3-dev \
+            ninja-build \
+            pkg-config \
+            unzip \
+            libunwind-dev \
+            libmpv-dev \
+            mpv \
+            rustc \
+            cargo
+
+      - name: Install DEB packaging tools
+        run: |
+          sudo apt-get install -y \
+            devscripts \
+            debhelper \
+            build-essential
+
+      - name: Setup git for debian/changelog
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+      - name: Get version from pubspec.yaml
+        id: version
+        run: |
+          VERSION=$(grep '^version:' pubspec.yaml | cut -d' ' -f2 | tr -d "'\"")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+
+      - name: Update debian/changelog
+        run: |
+          DEB_VERSION="${{ steps.version.outputs.version }}-1"
+          DATE=$(date -R)
+          sed -i "1i musicpod (${DEB_VERSION}) unstable; urgency=medium\n\n  * Release ${DEB_VERSION}\n\n -- GitHub Actions <actions@github.com>  ${DATE}\n" debian/changelog
+
+      - name: Install Flutter dependencies
+        run: flutter pub get
+
+      - name: Build Flutter Linux release
+        run: flutter build linux --release
+
+      - name: Build DEB package
+        run: |
+          dpkg-buildpackage -b -us -uc
+          ls -lh ../musicpod_*.deb
+
+      - name: Upload DEB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: musicpod-deb
+          path: ../musicpod_*.deb
+          retention-days: 30
+
+      - name: Upload to release
+        if: github.event_name == 'release' || startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ../musicpod_*.deb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-rpm:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          flutter-version: ${{env.FLUTTER_VERSION}}
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            clang \
+            cmake \
+            curl \
+            libgtk-3-dev \
+            ninja-build \
+            pkg-config \
+            unzip \
+            libunwind-dev \
+            libmpv-dev \
+            mpv \
+            rustc \
+            cargo
+
+      - name: Setup Docker for RPM build
+        run: |
+          docker pull fedora:latest
+
+      - name: Get version from pubspec.yaml
+        id: version
+        run: |
+          VERSION=$(grep '^version:' pubspec.yaml | cut -d' ' -f2 | tr -d "'\"")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+
+      - name: Build RPM package in Docker
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace \
+            -w /workspace \
+            fedora:latest \
+            bash -c "
+              set -e
+              
+              # Install all dependencies including Flutter build requirements
+              dnf install -y rpm-build rpmdevtools cmake ninja-build pkgconfig gtk3-devel clang curl unzip libmpv-devel mpv rust cargo git
+              
+              # Install Flutter
+              cd /tmp
+              git clone https://github.com/flutter/flutter.git -b ${{env.FLUTTER_VERSION}} --depth 1
+              export PATH=\$PATH:/tmp/flutter/bin
+              flutter doctor -v
+              
+              # Setup RPM build
+              cd /workspace
+              rpmdev-setuptree
+              
+              # Get version
+              VERSION='${{ steps.version.outputs.version }}'
+              
+              # Create source tarball
+              TARBALL_NAME=musicpod-\${VERSION}
+              tar -czf ~/rpmbuild/SOURCES/\${TARBALL_NAME}.tar.gz \
+                --exclude='.git' \
+                --exclude='build' \
+                --exclude='*.deb' \
+                --exclude='*.rpm' \
+                --exclude='.dart_tool' \
+                --exclude='.flutter-plugins' \
+                --exclude='.flutter-plugins-dependencies' \
+                -C /workspace .
+              
+              # Update spec file version
+              sed -i \"s/^Version:.*/Version:        \${VERSION}/\" rpm/musicpod.spec
+              cp rpm/musicpod.spec ~/rpmbuild/SPECS/
+              
+              # Build RPM (spec file will build Flutter app)
+              rpmbuild -ba ~/rpmbuild/SPECS/musicpod.spec
+              
+              # Copy RPM to workspace
+              find ~/rpmbuild/RPMS -name 'musicpod-*.rpm' -exec cp {} /workspace/ \;
+            "
+
+      - name: Upload RPM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: musicpod-rpm
+          path: musicpod-*.rpm
+          retention-days: 30
+
+      - name: Upload to release
+        if: github.event_name == 'release' || startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: musicpod-*.rpm
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
