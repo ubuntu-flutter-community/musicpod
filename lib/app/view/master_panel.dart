@@ -27,7 +27,20 @@ class MasterPanel extends StatelessWidget {
           backgroundColor: Colors.transparent,
           style: YaruTitleBarStyle.undecorated,
           adaptive: false,
-          title: Text(AppConfig.appTitle),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(AppConfig.appTitle),
+              Text(
+                'by Macpac312',
+                style: TextStyle(
+                  fontSize: 10,
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
         ),
         Expanded(child: MasterList()),
         SettingsButton.tile(),
