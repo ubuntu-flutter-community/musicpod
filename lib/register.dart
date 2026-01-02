@@ -216,21 +216,30 @@ void registerDependencies() {
       );
       return localNotifier;
     });
+    di.registerSingletonWithDependencies<NotificationsService>(
+      () => NotificationsService(di<LocalNotifier>()),
+      dispose: (s) async => s.dispose(),
+      dependsOn: [LocalNotifier],
+    );
+  } else {
+    di.registerLazySingleton<NotificationsService>(
+      () => NotificationsService(null),
+      dispose: (s) async => s.dispose(),
+    );
   }
 
   di
-    ..registerSingletonWithDependencies<NotificationsService>(
-      () => NotificationsService(isDesktop ? di<LocalNotifier>() : null),
-      dispose: (s) async => s.dispose(),
-      dependsOn: [if (isDesktop) LocalNotifier],
-    )
     ..registerSingletonWithDependencies<PodcastService>(
       () => PodcastService(
         notificationsService: di<NotificationsService>(),
         settingsService: di<SettingsService>(),
         libraryService: di<LibraryService>(),
       ),
-      dependsOn: [SettingsService, LibraryService, NotificationsService],
+      dependsOn: [
+        SettingsService,
+        LibraryService,
+        if (isDesktop) NotificationsService,
+      ],
     )
     ..registerLazySingleton<InternetConnection>(() => InternetConnection())
     ..registerSingletonAsync<RadioService>(
