@@ -206,14 +206,19 @@ void registerDependencies() {
       },
       dependsOn: [SettingsService, LibraryService],
       dispose: (s) async => s.dispose(),
-    )
-    ..registerSingletonAsync<LocalNotifier>(() async {
+    );
+
+  if (isDesktop) {
+    di.registerSingletonAsync<LocalNotifier>(() async {
       await localNotifier.setup(
         appName: AppConfig.appId,
         shortcutPolicy: ShortcutPolicy.requireCreate,
       );
       return localNotifier;
-    })
+    });
+  }
+
+  di
     ..registerSingletonWithDependencies<NotificationsService>(
       () => NotificationsService(isDesktop ? di<LocalNotifier>() : null),
       dispose: (s) async => s.dispose(),
