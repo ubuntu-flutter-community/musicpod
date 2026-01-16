@@ -1415,7 +1415,7 @@
     },
     "useBlurredPlayerBackgroundDescription": "Selle valikuga kuvatakse meediaesitaja taust hägusena, kuid mõnedes seadmetes võib see tekitada jõudlusprobleeme.",
     "@useBlurredPlayerBackgroundDescription": {},
-    "useBlurredPlayerBackgroundTitle": "Kasuta meediaesitajal hägustatud tausta",
+    "useBlurredPlayerBackgroundTitle": "Kasuta meediaesitaja hägustatud tausta",
     "@useBlurredPlayerBackgroundTitle": {},
     "loadingPleaseWait": "Laadin, palun oota...",
     "@loadingPleaseWait": {},
@@ -1450,5 +1450,80 @@
     "hideCompletedEpisodes": "Peida kuulatud osad",
     "@hideCompletedEpisodes": {},
     "showCompletedEpisodes": "Näita kuulatud osi",
-    "@showCompletedEpisodes": {}
+    "@showCompletedEpisodes": {},
+    "usePlayerColorTitle": "Kasuta meediaesitaja värvi rakenduseüleselt",
+    "@usePlayerColorTitle": {},
+    "usePlayerColorDescription": "See valik võimaldab kaanepildilt (kui ta olemas on) tuvastatud põhivärvi kasutamist läbivalt kogu rakenduses.",
+    "@usePlayerColorDescription": {},
+    "autoMovePlayerTitle": "Teisalda meediaesitaja automaatselt",
+    "@autoMovePlayerTitle": {},
+    "autoMovePlayerDescription": "Kui on piisavalt rõhtloodis ruumi, siis meediaesitaja tõstetakse paremasse äärde",
+    "@autoMovePlayerDescription": {},
+    "lyrics": "Laulusõnad",
+    "@lyrics": {},
+    "noLyricsFound": "Laulusõnu ei leidunud",
+    "@noLyricsFound": {},
+    "autoScrolling": "Automaatne kerimine",
+    "@autoScrolling": {},
+    "genericErrorTitle": "Tekkis viga",
+    "@genericErrorTitle": {},
+    "genericErrorDescription": "Tekkis ootamatu viga. Palun proovi hiljem uuesti.",
+    "@genericErrorDescription": {},
+    "errorDetails": "Vea üksikasjad: {details}",
+    "@errorDetails": {
+        "placeholders": {
+            "details": {
+                "type": "String"
+            }
+        }
+    },
+    "appendToQueue": "Lisa esitusjärjekorda",
+    "@appendToQueue": {},
+    "appendedToQueue": "Lisa esitusjärjekorda: {title}",
+    "@appendedToQueue": {
+        "type": "text",
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "appendMediaToQueueDescription": "„{title}“ on juba esitusjärjekorras olemas. Kas sa sooviksid ta esitusjärjekorra lõppu lisada?",
+    "@appendMediaToQueueDescription": {
+        "type": "text",
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "appendMediaToQueueTitle": "Lisa meedium esitusjärjekorda",
+    "@appendMediaToQueueTitle": {},
+    "appendMediaToQueue": "Lisa meedium esitusjärjekorda: {title}",
+    "@appendMediaToQueue": {
+        "type": "text",
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "explore": "Uuri ja avasta",
+    "@explore": {},
+    "favorites": "Lemmikud",
+    "@favorites": {},
+    "onlineLyricsNotSetup": "Kui soovid Geniuse teenusest laadida laulusõnu, siis palun sisesta seadistuses API võti.",
+    "@onlineLyricsNotSetup": {},
+    "settingsGeniusDisclaimer": "MusicPod, selle arendajad ja kaasautorid, ega Geniuse API pole vastutavad API võtme väärkasutuse eest. API võtme sisestamisega nõustud tema vastutustundliku kasutamisega vastavuses Geniuse üldtingimustega.\n\n",
+    "@settingsGeniusDisclaimer": {},
+    "settingsGeniusDescription": "Geniuse teenusest laulusõnade laadimiseks pead sisestama Geniuse API võtme. Selle saad, kui lood Geniuse konto ja registreerid oma tunnusloa jaoks rakenduse.",
+    "@settingsGeniusDescription": {},
+    "settingsDoNotAskForGeniusTitle": "Ära kasuta Geniuse teenust ega küsi enam Geniuse API võtme kohta",
+    "@settingsDoNotAskForGeniusTitle": {},
+    "settingsDoNotAskForGeniusDescription": "Selle valikuga keelad kõik võimalikud ettepanekud Geniuse API võtme sisestamise kohta ja laulusõnade kuvamine sõltub vaid kohalike LRC-failide olemasolust või LRC-lõimingust helifaili metateabes.",
+    "@settingsDoNotAskForGeniusDescription": {},
+    "tosLink": "https://genius.com/static/terms",
+    "@tosLink": {},
+    "tosLinkText": "Loe Geniuse kasutustingimusi",
+    "@tosLinkText": {}
 }
