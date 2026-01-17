@@ -1451,5 +1451,80 @@
                 "type": "int"
             }
         }
-    }
+    },
+    "usePlayerColorTitle": "Usa colore riproduttore",
+    "@usePlayerColorTitle": {},
+    "usePlayerColorDescription": "Verrà usato per l'intera app il colore dominante estratto dall'opera d'arte attuale (se disponibile).",
+    "@usePlayerColorDescription": {},
+    "lyrics": "Testi",
+    "@lyrics": {},
+    "noLyricsFound": "Nessun testo trovato",
+    "@noLyricsFound": {},
+    "autoScrolling": "Scorrimento automatico",
+    "@autoScrolling": {},
+    "genericErrorTitle": "Si è verificato un errore",
+    "@genericErrorTitle": {},
+    "genericErrorDescription": "Si è verificato un errore imprevisto. Riprova più tardi.",
+    "@genericErrorDescription": {},
+    "errorDetails": "Dettagli errore: {details}",
+    "@errorDetails": {
+        "placeholders": {
+            "details": {
+                "type": "String"
+            }
+        }
+    },
+    "appendToQueue": "Aggiungi alla coda",
+    "@appendToQueue": {},
+    "appendedToQueue": "Aggiunto alla coda: {title}",
+    "@appendedToQueue": {
+        "type": "text",
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "appendMediaToQueueDescription": "{title} è già in coda. Vuoi aggiungerlo alla fine della coda?",
+    "@appendMediaToQueueDescription": {
+        "type": "text",
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "appendMediaToQueueTitle": "Aggiungi media alla coda",
+    "@appendMediaToQueueTitle": {},
+    "appendMediaToQueue": "Aggiungi media alla coda: {title}",
+    "@appendMediaToQueue": {
+        "type": "text",
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "explore": "Esplora",
+    "@explore": {},
+    "favorites": "Preferiti",
+    "@favorites": {},
+    "autoMovePlayerTitle": "Sposta automaticamente riproduttore",
+    "@autoMovePlayerTitle": {},
+    "autoMovePlayerDescription": "Sposta il riproduttore a destra se c'è abbastanza spazio in orizzontale",
+    "@autoMovePlayerDescription": {},
+    "onlineLyricsNotSetup": "Se vuoi recuperare testi da Genius, configura nelle impostazioni una chiave API.",
+    "@onlineLyricsNotSetup": {},
+    "settingsGeniusDisclaimer": "MusicPod, i suoi contributori e l'API Genius non sono responsabili per qualsiasi uso improprio della chiave API. Impostando la chiave API, accetti di usarla in modo responsabile e in conformità con i termini di servizio di Genius.\n\n",
+    "@settingsGeniusDisclaimer": {},
+    "settingsGeniusDescription": "Per recuperare i testi da Genius, devi fornire una chiave API Genius. Puoi ottenere una chiave API creando un account in Genius e registrando un'applicazione per ottenere il token di accesso.",
+    "@settingsGeniusDescription": {},
+    "settingsDoNotAskForGeniusTitle": "Non usare Genius e non richiedere nuovamente la chiave API Genius",
+    "@settingsDoNotAskForGeniusTitle": {},
+    "settingsDoNotAskForGeniusDescription": "Ciò impedisce all'app di richiedere la chiave API Genius in futuro e fa sì che la funzionalità dei testi si affidi completamente ai file LRC locali o alle stringhe LRC incorporate nei metadati audio.",
+    "@settingsDoNotAskForGeniusDescription": {},
+    "tosLink": "https://genius.com/static/terms",
+    "@tosLink": {},
+    "tosLinkText": "Leggi i Termini di servizio di Genius",
+    "@tosLinkText": {}
 }
