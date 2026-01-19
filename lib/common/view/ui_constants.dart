@@ -58,7 +58,7 @@ const kHeaderPadding = EdgeInsets.only(
 
 const kAudioCardDimension = 130.0;
 
-const kAudioCardBottomHeight = 30.0;
+const kAudioCardBottomHeight = 50.0;
 
 const kMasterDetailBreakPoint = 720.0;
 

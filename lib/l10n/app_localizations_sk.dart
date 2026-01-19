@@ -2138,11 +2138,11 @@ class AppLocalizationsSk extends AppLocalizations {
       'Toto vám umožní vybrať si vlastnú zvýrazňujúcu farbu pre aktuálnu tému.';
 
   @override
-  String get usePlayerColorTitle => 'Use player color';
+  String get usePlayerColorTitle => 'Použiť farbu prehrávača';
 
   @override
   String get usePlayerColorDescription =>
-      'This will use the dominant color has been extracted out of the current artwork (if available) for the whole app.';
+      'Toto použije dominantnú farbu, ktorá bola (ak je dostupná) extrahovaná z aktuálneho obalu albumu pre celú aplikáciu.';
 
   @override
   String get selectColor => 'Vybrať farbu';
@@ -2222,45 +2222,45 @@ class AppLocalizationsSk extends AppLocalizations {
   }
 
   @override
-  String get lyrics => 'Lyrics';
+  String get lyrics => 'Texty piesní';
 
   @override
-  String get noLyricsFound => 'No lyrics found';
+  String get noLyricsFound => 'Text piesne sa nenašiel';
 
   @override
-  String get autoScrolling => 'Auto scroll';
+  String get autoScrolling => 'Automatické posúvanie';
 
   @override
-  String get genericErrorTitle => 'An error occurred';
+  String get genericErrorTitle => 'Vyskytla sa chyba';
 
   @override
   String get genericErrorDescription =>
-      'An unexpected error occurred. Please try again later.';
+      'Nastala neočakávaná chyba. Skúste to znova neskôr.';
 
   @override
   String errorDetails(String details) {
-    return 'Error details: $details';
+    return 'Podrobnosti o chybe: $details';
   }
 
   @override
-  String get appendToQueue => 'Append to queue';
+  String get appendToQueue => 'Pridať do poradia';
 
   @override
   String appendedToQueue(String title) {
-    return 'Appended to queue: $title';
+    return 'Pridané do poradia: $title';
   }
 
   @override
   String appendMediaToQueueDescription(String title) {
-    return '$title is already inside the queue. Do you want to append it to the end of the queue?';
+    return '$title sa už nachádza vo fronte. Chcete ho pridať na koniec frontu?';
   }
 
   @override
-  String get appendMediaToQueueTitle => 'Append media to queue';
+  String get appendMediaToQueueTitle => 'Pridať médiá do poradia';
 
   @override
   String appendMediaToQueue(String title) {
-    return 'Append media to queue: $title';
+    return 'Pridať do poradia: $title';
   }
 
   @override
@@ -2270,31 +2270,31 @@ class AppLocalizationsSk extends AppLocalizations {
   String get favorites => 'Favorites';
 
   @override
-  String get autoMovePlayerTitle => 'Auto move player';
+  String get autoMovePlayerTitle => 'Automaticky presunúť prehrávač';
 
   @override
   String get autoMovePlayerDescription =>
-      'Move the player to the right if there is enough horizontal space';
+      'Presunie prehrávač doprava, ak je k dispozícii dostatok horizontálneho priestoru';
 
   @override
   String get onlineLyricsNotSetup =>
-      'If you want to fetch lyrics from Genius, please provide an API key in the settings.';
+      'Ak chcete získavať texty piesní z Geniusu, zadajte v nastaveniach svoj API kľúč.';
 
   @override
   String get settingsGeniusDisclaimer =>
-      'MusicPod, its contributors, and the Genius API are not responsible for any misuse of the API key. By providing your API key, you agree to use it responsibly and in accordance with Genius terms of service.\n\n';
+      'MusicPod, jeho prispievatelia ani Genius API nenesú zodpovednosť za akékoľvek zneužitie vášho API kľúča. Poskytnutím API kľúča súhlasíte s jeho zodpovedným používaním v súlade s podmienkami služby Genius.\n\n';
 
   @override
   String get settingsGeniusDescription =>
-      'To fetch lyrics from Genius, you need to provide a Genius API Key. You can obtain an API key by creating an account on Genius and registering an application to get your access token.';
+      'Na získavanie textov piesní z Geniusu musíte zadať svoj Genius API kľúč. API kľúč získate vytvorením účtu na Genius a registráciou aplikácie, čím získate svoj prístupový token.';
 
   @override
   String get settingsDoNotAskForGeniusTitle =>
-      'Do not use Genius or ask for Genius API Key again';
+      'Nepoužívať Genius ani znovu nežiadať o API kľúč';
 
   @override
   String get settingsDoNotAskForGeniusDescription =>
-      'This prevents the app from prompting for the Genius API key in the future and makes the lyrics feature fully rely on local LRC files or LRC strings embedded in audio metadata.';
+      'Zabráni tomu, aby aplikácia v budúcnosti žiadala o Genius API kľúč, a funkcia textov piesní sa bude spoliehať výhradne na lokálne LRC súbory alebo LRC reťazce vložené v metadátach audia.';
 
   @override
   String get tosLink => 'https://genius.com/static/terms';

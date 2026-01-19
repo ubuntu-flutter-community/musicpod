@@ -2140,11 +2140,12 @@ class AppLocalizationsEt extends AppLocalizations {
       'See eelistus võimaldab sul valida aktsentvärvi vastavalt oma soovidele.';
 
   @override
-  String get usePlayerColorTitle => 'Use player color';
+  String get usePlayerColorTitle =>
+      'Kasuta meediaesitaja värvi rakenduseüleselt';
 
   @override
   String get usePlayerColorDescription =>
-      'This will use the dominant color has been extracted out of the current artwork (if available) for the whole app.';
+      'See valik võimaldab kaanepildilt (kui ta olemas on) tuvastatud põhivärvi kasutamist läbivalt kogu rakenduses.';
 
   @override
   String get selectColor => 'Vali värv';
@@ -2176,7 +2177,7 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String get useBlurredPlayerBackgroundTitle =>
-      'Kasuta meediaesitajal hägustatud tausta';
+      'Kasuta meediaesitaja hägustatud tausta';
 
   @override
   String get useBlurredPlayerBackgroundDescription =>
@@ -2224,83 +2225,83 @@ class AppLocalizationsEt extends AppLocalizations {
   }
 
   @override
-  String get lyrics => 'Lyrics';
+  String get lyrics => 'Laulusõnad';
 
   @override
-  String get noLyricsFound => 'No lyrics found';
+  String get noLyricsFound => 'Laulusõnu ei leidunud';
 
   @override
-  String get autoScrolling => 'Auto scroll';
+  String get autoScrolling => 'Automaatne kerimine';
 
   @override
-  String get genericErrorTitle => 'An error occurred';
+  String get genericErrorTitle => 'Tekkis viga';
 
   @override
   String get genericErrorDescription =>
-      'An unexpected error occurred. Please try again later.';
+      'Tekkis ootamatu viga. Palun proovi hiljem uuesti.';
 
   @override
   String errorDetails(String details) {
-    return 'Error details: $details';
+    return 'Vea üksikasjad: $details';
   }
 
   @override
-  String get appendToQueue => 'Append to queue';
+  String get appendToQueue => 'Lisa esitusjärjekorda';
 
   @override
   String appendedToQueue(String title) {
-    return 'Appended to queue: $title';
+    return 'Lisa esitusjärjekorda: $title';
   }
 
   @override
   String appendMediaToQueueDescription(String title) {
-    return '$title is already inside the queue. Do you want to append it to the end of the queue?';
+    return '„$title“ on juba esitusjärjekorras olemas. Kas sa sooviksid ta esitusjärjekorra lõppu lisada?';
   }
 
   @override
-  String get appendMediaToQueueTitle => 'Append media to queue';
+  String get appendMediaToQueueTitle => 'Lisa meedium esitusjärjekorda';
 
   @override
   String appendMediaToQueue(String title) {
-    return 'Append media to queue: $title';
+    return 'Lisa meedium esitusjärjekorda: $title';
   }
 
   @override
-  String get explore => 'Explore';
+  String get explore => 'Uuri ja avasta';
 
   @override
-  String get favorites => 'Favorites';
+  String get favorites => 'Lemmikud';
 
   @override
-  String get autoMovePlayerTitle => 'Auto move player';
+  String get autoMovePlayerTitle => 'Teisalda meediaesitaja automaatselt';
 
   @override
   String get autoMovePlayerDescription =>
-      'Move the player to the right if there is enough horizontal space';
+      'Kui on piisavalt rõhtloodis ruumi, siis meediaesitaja tõstetakse paremasse äärde';
 
   @override
   String get onlineLyricsNotSetup =>
-      'If you want to fetch lyrics from Genius, please provide an API key in the settings.';
+      'Kui soovid Geniuse teenusest laadida laulusõnu, siis palun sisesta seadistuses API võti.';
 
   @override
   String get settingsGeniusDisclaimer =>
-      'MusicPod, its contributors, and the Genius API are not responsible for any misuse of the API key. By providing your API key, you agree to use it responsibly and in accordance with Genius terms of service.\n\n';
+      'MusicPod, selle arendajad ja kaasautorid, ega Geniuse API pole vastutavad API võtme väärkasutuse eest. API võtme sisestamisega nõustud tema vastutustundliku kasutamisega vastavuses Geniuse üldtingimustega.\n\n';
 
   @override
   String get settingsGeniusDescription =>
-      'To fetch lyrics from Genius, you need to provide a Genius API Key. You can obtain an API key by creating an account on Genius and registering an application to get your access token.';
+      'Geniuse teenusest laulusõnade laadimiseks pead sisestama Geniuse API võtme. Selle saad, kui lood Geniuse konto ja registreerid oma tunnusloa jaoks rakenduse.';
 
   @override
   String get settingsDoNotAskForGeniusTitle =>
-      'Do not use Genius or ask for Genius API Key again';
+      'Ära kasuta Geniuse teenust ega küsi enam Geniuse API võtme kohta';
 
   @override
   String get settingsDoNotAskForGeniusDescription =>
-      'This prevents the app from prompting for the Genius API key in the future and makes the lyrics feature fully rely on local LRC files or LRC strings embedded in audio metadata.';
+      'Selle valikuga keelad kõik võimalikud ettepanekud Geniuse API võtme sisestamise kohta ja laulusõnade kuvamine sõltub vaid kohalike LRC-failide olemasolust või LRC-lõimingust helifaili metateabes.';
 
   @override
   String get tosLink => 'https://genius.com/static/terms';
 
   @override
-  String get tosLinkText => 'Read Genius\'s Terms of Service';
+  String get tosLinkText => 'Loe Geniuse kasutustingimusi';
 }
