@@ -58,7 +58,7 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
       mainAxisSize: MainAxisSize.min,
       children: [
         if (showPlayerExplorer && !playerWithSidePanel) ...[
-          Flexible(
+          Expanded(
             child: Padding(
               padding: const EdgeInsets.only(top: kLargestSpace),
               child: queueOrHistory,

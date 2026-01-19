@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:yaru/widgets.dart';
+import 'package:yaru/yaru.dart';
 
 import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
@@ -130,8 +130,8 @@ class _LyricsSectionState extends State<LyricsSection> {
                             color:
                                 lyricsGeniusAccessToken != null &&
                                     lyricsGeniusAccessToken.isNotEmpty
-                                ? Colors.green
-                                : Colors.red,
+                                ? context.colorScheme.success
+                                : context.colorScheme.error,
                           ),
                         ),
                         onPressed: () => showFutureLoadingDialog(

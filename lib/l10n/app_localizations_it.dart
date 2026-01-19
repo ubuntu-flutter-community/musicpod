@@ -2136,11 +2136,11 @@ class AppLocalizationsIt extends AppLocalizations {
       'Questo ti consentirà di scegliere un colore accento personalizzato per il tema attuale.';
 
   @override
-  String get usePlayerColorTitle => 'Use player color';
+  String get usePlayerColorTitle => 'Usa colore riproduttore';
 
   @override
   String get usePlayerColorDescription =>
-      'This will use the dominant color has been extracted out of the current artwork (if available) for the whole app.';
+      'Verrà usato per l\'intera app il colore dominante estratto dall\'opera d\'arte attuale (se disponibile).';
 
   @override
   String get selectColor => 'Seleziona colore';
@@ -2214,83 +2214,83 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get lyrics => 'Lyrics';
+  String get lyrics => 'Testi';
 
   @override
-  String get noLyricsFound => 'No lyrics found';
+  String get noLyricsFound => 'Nessun testo trovato';
 
   @override
-  String get autoScrolling => 'Auto scroll';
+  String get autoScrolling => 'Scorrimento automatico';
 
   @override
-  String get genericErrorTitle => 'An error occurred';
+  String get genericErrorTitle => 'Si è verificato un errore';
 
   @override
   String get genericErrorDescription =>
-      'An unexpected error occurred. Please try again later.';
+      'Si è verificato un errore imprevisto. Riprova più tardi.';
 
   @override
   String errorDetails(String details) {
-    return 'Error details: $details';
+    return 'Dettagli errore: $details';
   }
 
   @override
-  String get appendToQueue => 'Append to queue';
+  String get appendToQueue => 'Aggiungi alla coda';
 
   @override
   String appendedToQueue(String title) {
-    return 'Appended to queue: $title';
+    return 'Aggiunto alla coda: $title';
   }
 
   @override
   String appendMediaToQueueDescription(String title) {
-    return '$title is already inside the queue. Do you want to append it to the end of the queue?';
+    return '$title è già in coda. Vuoi aggiungerlo alla fine della coda?';
   }
 
   @override
-  String get appendMediaToQueueTitle => 'Append media to queue';
+  String get appendMediaToQueueTitle => 'Aggiungi media alla coda';
 
   @override
   String appendMediaToQueue(String title) {
-    return 'Append media to queue: $title';
+    return 'Aggiungi media alla coda: $title';
   }
 
   @override
-  String get explore => 'Explore';
+  String get explore => 'Esplora';
 
   @override
-  String get favorites => 'Favorites';
+  String get favorites => 'Preferiti';
 
   @override
-  String get autoMovePlayerTitle => 'Auto move player';
+  String get autoMovePlayerTitle => 'Sposta automaticamente riproduttore';
 
   @override
   String get autoMovePlayerDescription =>
-      'Move the player to the right if there is enough horizontal space';
+      'Sposta il riproduttore a destra se c\'è abbastanza spazio in orizzontale';
 
   @override
   String get onlineLyricsNotSetup =>
-      'If you want to fetch lyrics from Genius, please provide an API key in the settings.';
+      'Se vuoi recuperare testi da Genius, configura nelle impostazioni una chiave API.';
 
   @override
   String get settingsGeniusDisclaimer =>
-      'MusicPod, its contributors, and the Genius API are not responsible for any misuse of the API key. By providing your API key, you agree to use it responsibly and in accordance with Genius terms of service.\n\n';
+      'MusicPod, i suoi contributori e l\'API Genius non sono responsabili per qualsiasi uso improprio della chiave API. Impostando la chiave API, accetti di usarla in modo responsabile e in conformità con i termini di servizio di Genius.\n\n';
 
   @override
   String get settingsGeniusDescription =>
-      'To fetch lyrics from Genius, you need to provide a Genius API Key. You can obtain an API key by creating an account on Genius and registering an application to get your access token.';
+      'Per recuperare i testi da Genius, devi fornire una chiave API Genius. Puoi ottenere una chiave API creando un account in Genius e registrando un\'applicazione per ottenere il token di accesso.';
 
   @override
   String get settingsDoNotAskForGeniusTitle =>
-      'Do not use Genius or ask for Genius API Key again';
+      'Non usare Genius e non richiedere nuovamente la chiave API Genius';
 
   @override
   String get settingsDoNotAskForGeniusDescription =>
-      'This prevents the app from prompting for the Genius API key in the future and makes the lyrics feature fully rely on local LRC files or LRC strings embedded in audio metadata.';
+      'Ciò impedisce all\'app di richiedere la chiave API Genius in futuro e fa sì che la funzionalità dei testi si affidi completamente ai file LRC locali o alle stringhe LRC incorporate nei metadati audio.';
 
   @override
   String get tosLink => 'https://genius.com/static/terms';
 
   @override
-  String get tosLinkText => 'Read Genius\'s Terms of Service';
+  String get tosLinkText => 'Leggi i Termini di servizio di Genius';
 }
