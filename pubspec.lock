@@ -1907,10 +1907,10 @@ packages:
     dependency: "direct main"
     description:
       name: yaru
-      sha256: "704e10633b173d8f5308677d0879d31339204c5ae063aa904e46d8182e1cf191"
+      sha256: "859f062535a51585689f7d72904e9533f7b1df93c0fe2e860591cff8f9371162"
       url: "https://pub.dev"
     source: hosted
-    version: "9.0.0"
+    version: "9.0.1"
   yaru_window:
     dependency: "direct main"
     description:
