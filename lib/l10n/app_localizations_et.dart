@@ -453,13 +453,13 @@ class AppLocalizationsEt extends AppLocalizations {
   String get markAllEpisodesAsDone => 'Märgi kõik osad vaadatuks';
 
   @override
-  String get markEpisodeAsDone => 'Mark episode as done';
+  String get markEpisodeAsDone => 'Märgi osa kuulatuks';
 
   @override
-  String get hideCompletedEpisodes => 'Hide completed episodes';
+  String get hideCompletedEpisodes => 'Peida kuulatud osad';
 
   @override
-  String get showCompletedEpisodes => 'Show completed episodes';
+  String get showCompletedEpisodes => 'Näita kuulatud osi';
 
   @override
   String get reset => 'Lähtesta';
@@ -2140,6 +2140,14 @@ class AppLocalizationsEt extends AppLocalizations {
       'See eelistus võimaldab sul valida aktsentvärvi vastavalt oma soovidele.';
 
   @override
+  String get usePlayerColorTitle =>
+      'Kasuta meediaesitaja värvi rakenduseüleselt';
+
+  @override
+  String get usePlayerColorDescription =>
+      'See valik võimaldab kaanepildilt (kui ta olemas on) tuvastatud põhivärvi kasutamist läbivalt kogu rakenduses.';
+
+  @override
   String get selectColor => 'Vali värv';
 
   @override
@@ -2169,50 +2177,131 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String get useBlurredPlayerBackgroundTitle =>
-      'Kasuta meediaesitajal hägustatud tausta';
+      'Kasuta meediaesitaja hägustatud tausta';
 
   @override
   String get useBlurredPlayerBackgroundDescription =>
       'Selle valikuga kuvatakse meediaesitaja taust hägusena, kuid mõnedes seadmetes võib see tekitada jõudlusprobleeme.';
 
   @override
-  String get loadingPleaseWait => 'Loading, please wait ...';
+  String get loadingPleaseWait => 'Laadin, palun oota...';
 
   @override
   String get importingPodcastsPleaseWait =>
-      'Importing your podcasts, please wait ...';
+      'Impordin sinu taskuhäälinguid, palun oota...';
 
   @override
   String get exportingPodcastsPleaseWait =>
-      'Exporting your podcasts, please wait ...';
+      'Ekspordin sinu taskuhäälinguid, palun oota...';
 
   @override
   String get importingStationsPleaseWait =>
-      'Importing your stations, please wait ...';
+      'Impordin sinu raadiojaamu, palun oota...';
 
   @override
   String get exportingStationsPleaseWait =>
-      'Exporting your stations, please wait ...';
+      'Ekspordin sinu raadiojaamu, palun oota...';
 
   @override
   String get importingPlaylistsPleaseWait =>
-      'Importing your playlists, please wait ...';
+      'Impordin sinu esitusloendeid, palun oota...';
 
   @override
   String get exportingPlaylistsPleaseWait =>
-      'Exporting your playlists, please wait ...';
+      'Ekspordin sinu esitusloendeid, palun oota...';
 
   @override
-  String get author => 'Author';
+  String get author => 'Autor';
 
   @override
-  String get rating => 'Rating';
+  String get rating => 'Hinnang';
 
   @override
-  String get keywords => 'Keywords';
+  String get keywords => 'Märksõnad';
 
   @override
   String newEpisodesAvailableFor(int length) {
-    return 'New episodes available for $length podcasts';
+    return '$length-l taskuhäälingul on uusi osi';
   }
+
+  @override
+  String get lyrics => 'Laulusõnad';
+
+  @override
+  String get noLyricsFound => 'Laulusõnu ei leidunud';
+
+  @override
+  String get autoScrolling => 'Automaatne kerimine';
+
+  @override
+  String get genericErrorTitle => 'Tekkis viga';
+
+  @override
+  String get genericErrorDescription =>
+      'Tekkis ootamatu viga. Palun proovi hiljem uuesti.';
+
+  @override
+  String errorDetails(String details) {
+    return 'Vea üksikasjad: $details';
+  }
+
+  @override
+  String get appendToQueue => 'Lisa esitusjärjekorda';
+
+  @override
+  String appendedToQueue(String title) {
+    return 'Lisa esitusjärjekorda: $title';
+  }
+
+  @override
+  String appendMediaToQueueDescription(String title) {
+    return '„$title“ on juba esitusjärjekorras olemas. Kas sa sooviksid ta esitusjärjekorra lõppu lisada?';
+  }
+
+  @override
+  String get appendMediaToQueueTitle => 'Lisa meedium esitusjärjekorda';
+
+  @override
+  String appendMediaToQueue(String title) {
+    return 'Lisa meedium esitusjärjekorda: $title';
+  }
+
+  @override
+  String get explore => 'Uuri ja avasta';
+
+  @override
+  String get favorites => 'Lemmikud';
+
+  @override
+  String get autoMovePlayerTitle => 'Teisalda meediaesitaja automaatselt';
+
+  @override
+  String get autoMovePlayerDescription =>
+      'Kui on piisavalt rõhtloodis ruumi, siis meediaesitaja tõstetakse paremasse äärde';
+
+  @override
+  String get onlineLyricsNotSetup =>
+      'Kui soovid Geniuse teenusest laadida laulusõnu, siis palun sisesta seadistuses API võti.';
+
+  @override
+  String get settingsGeniusDisclaimer =>
+      'MusicPod, selle arendajad ja kaasautorid, ega Geniuse API pole vastutavad API võtme väärkasutuse eest. API võtme sisestamisega nõustud tema vastutustundliku kasutamisega vastavuses Geniuse üldtingimustega.\n\n';
+
+  @override
+  String get settingsGeniusDescription =>
+      'Geniuse teenusest laulusõnade laadimiseks pead sisestama Geniuse API võtme. Selle saad, kui lood Geniuse konto ja registreerid oma tunnusloa jaoks rakenduse.';
+
+  @override
+  String get settingsDoNotAskForGeniusTitle =>
+      'Ära kasuta Geniuse teenust ega küsi enam Geniuse API võtme kohta';
+
+  @override
+  String get settingsDoNotAskForGeniusDescription =>
+      'Selle valikuga keelad kõik võimalikud ettepanekud Geniuse API võtme sisestamise kohta ja laulusõnade kuvamine sõltub vaid kohalike LRC-failide olemasolust või LRC-lõimingust helifaili metateabes.';
+
+  @override
+  String get tosLink => 'https://genius.com/static/terms';
+
+  @override
+  String get tosLinkText => 'Loe Geniuse kasutustingimusi';
 }

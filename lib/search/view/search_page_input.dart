@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:podcast_search/podcast_search.dart';
-import 'package:watch_it/watch_it.dart';
+import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/data/audio_type.dart';
 import '../../common/data/podcast_genre.dart';

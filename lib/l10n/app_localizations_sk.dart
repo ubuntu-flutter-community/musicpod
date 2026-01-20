@@ -452,13 +452,13 @@ class AppLocalizationsSk extends AppLocalizations {
   String get markAllEpisodesAsDone => 'Označiť všetky epizódy ako dokončené';
 
   @override
-  String get markEpisodeAsDone => 'Mark episode as done';
+  String get markEpisodeAsDone => 'Označiť epizódu ako dokončenú';
 
   @override
-  String get hideCompletedEpisodes => 'Hide completed episodes';
+  String get hideCompletedEpisodes => 'Skryť dokončené epizódy';
 
   @override
-  String get showCompletedEpisodes => 'Show completed episodes';
+  String get showCompletedEpisodes => 'Zobraziť dokončené epizódy';
 
   @override
   String get reset => 'Obnoviť';
@@ -2138,6 +2138,13 @@ class AppLocalizationsSk extends AppLocalizations {
       'Toto vám umožní vybrať si vlastnú zvýrazňujúcu farbu pre aktuálnu tému.';
 
   @override
+  String get usePlayerColorTitle => 'Použiť farbu prehrávača';
+
+  @override
+  String get usePlayerColorDescription =>
+      'Toto použije dominantnú farbu, ktorá bola (ak je dostupná) extrahovaná z aktuálneho obalu albumu pre celú aplikáciu.';
+
+  @override
   String get selectColor => 'Vybrať farbu';
 
   @override
@@ -2174,43 +2181,124 @@ class AppLocalizationsSk extends AppLocalizations {
       'Týmto sa rozmaže pozadie prehrávača. Na niektorých zariadeniach to môže viesť k nižšiemu výkonu.';
 
   @override
-  String get loadingPleaseWait => 'Loading, please wait ...';
+  String get loadingPleaseWait => 'Načítava sa, prosím čakajte ...';
 
   @override
   String get importingPodcastsPleaseWait =>
-      'Importing your podcasts, please wait ...';
+      'Importujú sa vaše podcasty, prosím čakajte ...';
 
   @override
   String get exportingPodcastsPleaseWait =>
-      'Exporting your podcasts, please wait ...';
+      'Exportujú sa vaše podcasty, prosím čakajte ...';
 
   @override
   String get importingStationsPleaseWait =>
-      'Importing your stations, please wait ...';
+      'Importujú sa vaše stanice, prosím čakajte ...';
 
   @override
   String get exportingStationsPleaseWait =>
-      'Exporting your stations, please wait ...';
+      'Exportujú sa vaše stanice, prosím čakajte ...';
 
   @override
   String get importingPlaylistsPleaseWait =>
-      'Importing your playlists, please wait ...';
+      'Importujú sa vaše playlisty, prosím čakajte ...';
 
   @override
   String get exportingPlaylistsPleaseWait =>
-      'Exporting your playlists, please wait ...';
+      'Exportujú sa vaše playlisty, prosím čakajte ...';
 
   @override
-  String get author => 'Author';
+  String get author => 'Autor';
 
   @override
-  String get rating => 'Rating';
+  String get rating => 'Ohodnotenie';
 
   @override
-  String get keywords => 'Keywords';
+  String get keywords => 'Kľúčové slová';
 
   @override
   String newEpisodesAvailableFor(int length) {
-    return 'New episodes available for $length podcasts';
+    return 'Nové epizódy sú dostupné pre $length podcastov';
   }
+
+  @override
+  String get lyrics => 'Texty piesní';
+
+  @override
+  String get noLyricsFound => 'Text piesne sa nenašiel';
+
+  @override
+  String get autoScrolling => 'Automatické posúvanie';
+
+  @override
+  String get genericErrorTitle => 'Vyskytla sa chyba';
+
+  @override
+  String get genericErrorDescription =>
+      'Nastala neočakávaná chyba. Skúste to znova neskôr.';
+
+  @override
+  String errorDetails(String details) {
+    return 'Podrobnosti o chybe: $details';
+  }
+
+  @override
+  String get appendToQueue => 'Pridať do poradia';
+
+  @override
+  String appendedToQueue(String title) {
+    return 'Pridané do poradia: $title';
+  }
+
+  @override
+  String appendMediaToQueueDescription(String title) {
+    return '$title sa už nachádza vo fronte. Chcete ho pridať na koniec frontu?';
+  }
+
+  @override
+  String get appendMediaToQueueTitle => 'Pridať médiá do poradia';
+
+  @override
+  String appendMediaToQueue(String title) {
+    return 'Pridať do poradia: $title';
+  }
+
+  @override
+  String get explore => 'Explore';
+
+  @override
+  String get favorites => 'Favorites';
+
+  @override
+  String get autoMovePlayerTitle => 'Automaticky presunúť prehrávač';
+
+  @override
+  String get autoMovePlayerDescription =>
+      'Presunie prehrávač doprava, ak je k dispozícii dostatok horizontálneho priestoru';
+
+  @override
+  String get onlineLyricsNotSetup =>
+      'Ak chcete získavať texty piesní z Geniusu, zadajte v nastaveniach svoj API kľúč.';
+
+  @override
+  String get settingsGeniusDisclaimer =>
+      'MusicPod, jeho prispievatelia ani Genius API nenesú zodpovednosť za akékoľvek zneužitie vášho API kľúča. Poskytnutím API kľúča súhlasíte s jeho zodpovedným používaním v súlade s podmienkami služby Genius.\n\n';
+
+  @override
+  String get settingsGeniusDescription =>
+      'Na získavanie textov piesní z Geniusu musíte zadať svoj Genius API kľúč. API kľúč získate vytvorením účtu na Genius a registráciou aplikácie, čím získate svoj prístupový token.';
+
+  @override
+  String get settingsDoNotAskForGeniusTitle =>
+      'Nepoužívať Genius ani znovu nežiadať o API kľúč';
+
+  @override
+  String get settingsDoNotAskForGeniusDescription =>
+      'Zabráni tomu, aby aplikácia v budúcnosti žiadala o Genius API kľúč, a funkcia textov piesní sa bude spoliehať výhradne na lokálne LRC súbory alebo LRC reťazce vložené v metadátach audia.';
+
+  @override
+  String get tosLink => 'https://genius.com/static/terms';
+
+  @override
+  String get tosLinkText => 'Read Genius\'s Terms of Service';
 }

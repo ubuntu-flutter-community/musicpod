@@ -49,6 +49,36 @@ extension StringExtension on String {
 }
 
 extension NullableStringX on String? {
+  bool isSamePodcastTimeStamp(DateTime other) {
+    final ts = this._parsedDateTimeFromPodcastTimeStamp;
+    if (ts == null) return false;
+    return other.year == ts.year &&
+        other.month == ts.month &&
+        other.day == ts.day &&
+        other.minute == ts.minute;
+  }
+
+  DateTime? get _parsedDateTimeFromPodcastTimeStamp {
+    if (this == null) return null;
+    final list = this!.split('_');
+
+    final year = int.tryParse(list.first);
+    final month = int.tryParse(list[1]);
+    final day = int.tryParse(list[2]);
+    final hour = int.tryParse(list[3]);
+    final minute = int.tryParse(list[4]);
+
+    if (year != null &&
+        month != null &&
+        day != null &&
+        minute != null &&
+        hour != null) {
+      return DateTime(year, month, day, hour, minute);
+    }
+
+    return null;
+  }
+
   Duration? get parsedDuration {
     final durationAsString = this;
     if (durationAsString == null || durationAsString == 'null') return null;

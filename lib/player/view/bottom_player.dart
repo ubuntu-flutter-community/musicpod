@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:watch_it/watch_it.dart';
+import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/app_model.dart';
 import '../../app/connectivity_model.dart';
@@ -21,7 +21,6 @@ import 'player_pause_timer_button.dart';
 import 'player_title_and_artist.dart';
 import 'player_track.dart';
 import 'player_view.dart';
-import 'queue/queue_button.dart';
 import 'volume_popup.dart';
 
 class BottomPlayer extends StatelessWidget with WatchItMixin {
@@ -90,7 +89,6 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                         PlaybackRateButton(active: active),
                       if (!isMobile) const VolumeSliderPopup(),
                       const PlayerPauseTimerButton(),
-                      const QueueButton(isSelected: false),
                       IconButton(
                         tooltip: context.l10n.fullWindow,
                         icon: Icon(

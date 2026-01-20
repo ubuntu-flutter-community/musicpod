@@ -722,6 +722,8 @@
     "customThemeColor": "Custom theme color",
     "useCustomThemeColorTitle": "Use custom accent color",
     "useCustomThemeColorDescription": "This will let you chose a custom accent color for the current theme.",
+    "usePlayerColorTitle": "Use player color",
+    "usePlayerColorDescription": "This will use the dominant color has been extracted out of the current artwork (if available) for the whole app.",
     "selectColor": "Select color",
     "selectColorShade": "Select color shade",
     "selectColorAndItsShades": "Select color and its shades",
@@ -756,5 +758,60 @@
                 "type": "int"
             }
         }
-    }
+    },
+    "lyrics": "Lyrics",
+    "noLyricsFound": "No lyrics found",
+    "autoScrolling": "Auto scroll",
+    "genericErrorTitle": "An error occurred",
+    "genericErrorDescription": "An unexpected error occurred. Please try again later.",
+    "errorDetails": "Error details: {details}",
+    "@errorDetails": {
+        "placeholders": {
+            "details": {
+                "type": "String"
+            }
+        }
+    },
+    "appendToQueue": "Append to queue",
+    "@appendToQueue": {},
+    "appendedToQueue": "Appended to queue: {title}",
+    "@appendedToQueue": {
+        "type": "text",
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "appendMediaToQueueDescription": "{title} is already inside the queue. Do you want to append it to the end of the queue?",
+    "@appendMediaToQueueDescription": {
+        "type": "text",
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "appendMediaToQueueTitle": "Append media to queue",
+    "@appendMediaToQueueTitle": {},
+    "appendMediaToQueue": "Append media to queue: {title}",
+    "@appendMediaToQueue": {
+        "type": "text",
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "explore": "Explore",
+    "favorites": "Favorites",
+    "autoMovePlayerTitle": "Auto move player",
+    "autoMovePlayerDescription": "Move the player to the right if there is enough horizontal space",
+    "onlineLyricsNotSetup": "If you want to fetch lyrics from Genius, please provide an API key in the settings.",
+    "settingsGeniusDisclaimer": "MusicPod, its contributors, and the Genius API are not responsible for any misuse of the API key. By providing your API key, you agree to use it responsibly and in accordance with Genius terms of service.\n\n",
+    "settingsGeniusDescription": "To fetch lyrics from Genius, you need to provide a Genius API Key. You can obtain an API key by creating an account on Genius and registering an application to get your access token.",
+    "settingsDoNotAskForGeniusTitle": "Do not use Genius or ask for Genius API Key again",
+    "settingsDoNotAskForGeniusDescription": "This prevents the app from prompting for the Genius API key in the future and makes the lyrics feature fully rely on local LRC files or LRC strings embedded in audio metadata.",
+    "tosLink": "https://genius.com/static/terms",
+    "tosLinkText": "Read Genius's Terms of Service"
 }

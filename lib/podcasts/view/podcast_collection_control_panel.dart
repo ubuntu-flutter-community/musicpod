@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:future_loading_dialog/future_loading_dialog.dart';
-import 'package:watch_it/watch_it.dart';
+import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/connectivity_model.dart';
 import '../../common/view/common_control_panel.dart';
@@ -46,7 +46,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
                     di<LibraryModel>().podcastsLength.toString(),
                   ),
                 ),
-                onConfirm: () => di<PodcastModel>().update(
+                onConfirm: () => di<PodcastModel>().checkForUpdates(
                   updateMessage: context.l10n.newEpisodeAvailable,
                   multiUpdateMessage: (length) => context.mounted
                       ? context.l10n.newEpisodesAvailableFor(length)
@@ -58,7 +58,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
                 context: context,
                 backLabel: context.l10n.back,
                 title: context.l10n.loadingPleaseWait,
-                future: () => di<PodcastModel>().update(
+                future: () => di<PodcastModel>().checkForUpdates(
                   updateMessage: context.l10n.newEpisodeAvailable,
                   multiUpdateMessage: (length) => context.mounted
                       ? context.l10n.newEpisodesAvailableFor(length)

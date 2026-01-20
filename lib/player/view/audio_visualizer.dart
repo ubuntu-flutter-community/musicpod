@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:watch_it/watch_it.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:waveform_visualizer/waveform_visualizer.dart';
 
 import '../../extensions/build_context_x.dart';
@@ -63,22 +63,15 @@ class _AudioVisualizerState extends State<AudioVisualizer> {
 
   @override
   Widget build(BuildContext context) {
-    final color = watchPropertyValue(
-      (PlayerModel m) => m.color ?? context.colorScheme.primary,
-    );
-    return Center(
-      child: AnimatedOpacity(
-        opacity: color != context.colorScheme.primary ? 0.9 : 1,
-        duration: const Duration(milliseconds: 300),
-        child: WaveformWidget(
-          controller: _controller,
-          height: widget.height,
-          style: WaveformStyle(
-            waveColor: color,
-            backgroundColor: Colors.transparent,
-            waveformStyle: WaveformDrawStyle.bars,
-          ),
-        ),
+    final color = watchPropertyValue((PlayerModel m) => m.color);
+    return WaveformWidget(
+      controller: _controller,
+      height: widget.height,
+      style: WaveformStyle(
+        waveColor: color ?? context.colorScheme.primary,
+        barCount: 35,
+        backgroundColor: Colors.transparent,
+        waveformStyle: WaveformDrawStyle.bars,
       ),
     );
   }

@@ -1,6 +1,6 @@
 import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
-import 'package:watch_it/watch_it.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/theme.dart';
 
 import '../../common/view/ui_constants.dart';
@@ -29,8 +29,11 @@ class PlayerColor extends StatelessWidget with WatchItMixin {
     final blurredPlayerBackground = watchPropertyValue(
       (SettingsModel m) => m.blurredPlayerBackground,
     );
+    final showAudioVisualizer = watchPropertyValue(
+      (PlayerModel m) => m.showAudioVisualizer,
+    );
 
-    if (blurredPlayerBackground) {
+    if (!showAudioVisualizer && blurredPlayerBackground) {
       return _BlurredPlayerColor(size: size);
     }
 
@@ -80,7 +83,6 @@ class _BlurredPlayerColor extends StatelessWidget {
               ? Colors.white
               : theme.scaffoldBackgroundColor,
           child: FullHeightPlayerImage(
-            showAudioVisualizer: false,
             emptyFallBack: true,
             borderRadius: BorderRadius.zero,
             fit: BoxFit.cover,

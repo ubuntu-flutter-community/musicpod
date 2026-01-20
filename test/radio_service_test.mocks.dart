@@ -320,13 +320,10 @@ class MockPlayerService extends _i1.Mock implements _i5.PlayerService {
           as _i6.Future<void>);
 
   @override
-  _i6.Future<void> setRemoteImageUrl(String? url) =>
-      (super.noSuchMethod(
-            Invocation.method(#setRemoteImageUrl, [url]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
+  void setRemoteImageUrl(String? url) => super.noSuchMethod(
+    Invocation.method(#setRemoteImageUrl, [url]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   _i6.Future<void> setRemoteColorFromImageProvider(

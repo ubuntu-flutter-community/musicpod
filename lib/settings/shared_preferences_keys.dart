@@ -1,6 +1,4 @@
-import 'package:shared_preferences/shared_preferences.dart';
-
-extension SPKeys on SharedPreferences {
+class SPKeys {
   static const directory = 'directory';
   static const downloads = 'downloadsCustomDir';
   static const localAudioIndex = 'localAudioIndex';
@@ -45,6 +43,7 @@ extension SPKeys on SharedPreferences {
   static const useYaruTheme = 'useYaruTheme';
   static const customThemeColor = 'customThemeColor';
   static const useCustomThemeColor = 'useCustomThemeColor';
+  static const usePlayerColor = 'usePlayerColor';
   static const iconSetIndex = 'iconSetIndex';
   static const saveWindowSize = 'saveWindowSize';
   static const blurredPlayerBackground = 'blurredPlayerBackground';
@@ -54,4 +53,9 @@ extension SPKeys on SharedPreferences {
   static const podcastArtistSuffix = '_artist';
   static const podcastLastUpdatedSuffix = '_last_updated';
   static const hideCompletedEpisodes = 'hideCompletedEpisodes';
+  static const showPlayerLyrics = 'showPlayerLyrics';
+  static const autoMovePlayer = 'autoMovePlayer';
+  static const lyricsGeniusAccessToken = 'lyricsGeniusAccessToken';
+  static const enableLyricsGenius = 'enableLyricsGenius';
+  static const neverAskAgainForGeniusToken = 'neverAskAgainForGeniusToken';
 }

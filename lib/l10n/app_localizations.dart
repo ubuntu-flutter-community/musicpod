@@ -4213,6 +4213,18 @@ abstract class AppLocalizations {
   /// **'This will let you chose a custom accent color for the current theme.'**
   String get useCustomThemeColorDescription;
 
+  /// No description provided for @usePlayerColorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Use player color'**
+  String get usePlayerColorTitle;
+
+  /// No description provided for @usePlayerColorDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'This will use the dominant color has been extracted out of the current artwork (if available) for the whole app.'**
+  String get usePlayerColorDescription;
+
   /// No description provided for @selectColor.
   ///
   /// In en, this message translates to:
@@ -4338,6 +4350,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New episodes available for {length} podcasts'**
   String newEpisodesAvailableFor(int length);
+
+  /// No description provided for @lyrics.
+  ///
+  /// In en, this message translates to:
+  /// **'Lyrics'**
+  String get lyrics;
+
+  /// No description provided for @noLyricsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No lyrics found'**
+  String get noLyricsFound;
+
+  /// No description provided for @autoScrolling.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto scroll'**
+  String get autoScrolling;
+
+  /// No description provided for @genericErrorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred'**
+  String get genericErrorTitle;
+
+  /// No description provided for @genericErrorDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred. Please try again later.'**
+  String get genericErrorDescription;
+
+  /// No description provided for @errorDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Error details: {details}'**
+  String errorDetails(String details);
+
+  /// No description provided for @appendToQueue.
+  ///
+  /// In en, this message translates to:
+  /// **'Append to queue'**
+  String get appendToQueue;
+
+  /// No description provided for @appendedToQueue.
+  ///
+  /// In en, this message translates to:
+  /// **'Appended to queue: {title}'**
+  String appendedToQueue(String title);
+
+  /// No description provided for @appendMediaToQueueDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} is already inside the queue. Do you want to append it to the end of the queue?'**
+  String appendMediaToQueueDescription(String title);
+
+  /// No description provided for @appendMediaToQueueTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Append media to queue'**
+  String get appendMediaToQueueTitle;
+
+  /// No description provided for @appendMediaToQueue.
+  ///
+  /// In en, this message translates to:
+  /// **'Append media to queue: {title}'**
+  String appendMediaToQueue(String title);
+
+  /// No description provided for @explore.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore'**
+  String get explore;
+
+  /// No description provided for @favorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get favorites;
+
+  /// No description provided for @autoMovePlayerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto move player'**
+  String get autoMovePlayerTitle;
+
+  /// No description provided for @autoMovePlayerDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Move the player to the right if there is enough horizontal space'**
+  String get autoMovePlayerDescription;
+
+  /// No description provided for @onlineLyricsNotSetup.
+  ///
+  /// In en, this message translates to:
+  /// **'If you want to fetch lyrics from Genius, please provide an API key in the settings.'**
+  String get onlineLyricsNotSetup;
+
+  /// No description provided for @settingsGeniusDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'MusicPod, its contributors, and the Genius API are not responsible for any misuse of the API key. By providing your API key, you agree to use it responsibly and in accordance with Genius terms of service.\n\n'**
+  String get settingsGeniusDisclaimer;
+
+  /// No description provided for @settingsGeniusDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'To fetch lyrics from Genius, you need to provide a Genius API Key. You can obtain an API key by creating an account on Genius and registering an application to get your access token.'**
+  String get settingsGeniusDescription;
+
+  /// No description provided for @settingsDoNotAskForGeniusTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Do not use Genius or ask for Genius API Key again'**
+  String get settingsDoNotAskForGeniusTitle;
+
+  /// No description provided for @settingsDoNotAskForGeniusDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'This prevents the app from prompting for the Genius API key in the future and makes the lyrics feature fully rely on local LRC files or LRC strings embedded in audio metadata.'**
+  String get settingsDoNotAskForGeniusDescription;
+
+  /// No description provided for @tosLink.
+  ///
+  /// In en, this message translates to:
+  /// **'https://genius.com/static/terms'**
+  String get tosLink;
+
+  /// No description provided for @tosLinkText.
+  ///
+  /// In en, this message translates to:
+  /// **'Read Genius\'s Terms of Service'**
+  String get tosLinkText;
 }
 
 class _AppLocalizationsDelegate

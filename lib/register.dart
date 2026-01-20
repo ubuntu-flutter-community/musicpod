@@ -1,19 +1,21 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_discord_rpc/flutter_discord_rpc.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:github/github.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:local_notifier/local_notifier.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smtc_windows/smtc_windows.dart';
-import 'package:watch_it/watch_it.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'app/app_model.dart';
 import 'app/connectivity_model.dart';
 import 'app/view/routing_manager.dart';
+import 'app/window_size_to_settings_listener.dart';
 import 'app_config.dart';
 import 'custom_content/custom_content_model.dart';
 import 'expose/expose_service.dart';
@@ -27,8 +29,8 @@ import 'local_audio/local_audio_model.dart';
 import 'local_audio/local_audio_service.dart';
 import 'local_audio/local_cover_model.dart';
 import 'local_audio/local_cover_service.dart';
+import 'lyrics/lyrics_service.dart';
 import 'notifications/notifications_service.dart';
-import 'persistence_utils.dart';
 import 'player/player_model.dart';
 import 'player/player_service.dart';
 import 'player/register_audio_service_handler.dart';
@@ -64,6 +66,19 @@ void registerDependencies() {
     di.registerSingletonAsync<WindowManager>(() async {
       final wm = WindowManager.instance;
       await wm.ensureInitialized();
+      await wm.waitUntilReadyToShow(
+        const WindowOptions(
+          backgroundColor: Colors.transparent,
+          minimumSize: Size(500, 700),
+          skipTaskbar: false,
+          titleBarStyle: TitleBarStyle.hidden,
+        ),
+        () async {
+          await windowManager.show();
+          await windowManager.focus();
+        },
+      );
+
       return wm;
     });
   }
@@ -78,26 +93,33 @@ void registerDependencies() {
     )
     ..registerSingletonAsync<SettingsService>(
       () async {
-        final downloadsDefaultDir = await getDownloadsDefaultDir();
+        final downloadsDefaultDir = await PlatformX.downloadsDefaultDir;
         const forcedUpdateThreshold = String.fromEnvironment(
           'FORCED_UPDATE_THRESHOLD',
           defaultValue: '2.11.0',
         );
         return SettingsService(
-          windowManager: AppConfig.windowManagerImplemented
-              ? di<WindowManager>()
-              : null,
           forcedUpdateThreshold: forcedUpdateThreshold,
           sharedPreferences: di<SharedPreferences>(),
           downloadsDefaultDir: downloadsDefaultDir,
         );
       },
-      dependsOn: [
-        SharedPreferences,
-        if (AppConfig.windowManagerImplemented) WindowManager,
-      ],
+      dependsOn: [SharedPreferences],
       dispose: (s) async => s.dispose(),
-    )
+    );
+
+  if (AppConfig.windowManagerImplemented) {
+    di.registerSingletonAsync<WindowSizeToSettingsListener>(
+      () async => WindowSizeToSettingsListener.register(
+        sharedPreferences: di<SharedPreferences>(),
+        windowManager: di<WindowManager>(),
+      ),
+      dispose: (s) => s.dispose(),
+      dependsOn: [SharedPreferences, WindowManager],
+    );
+  }
+
+  di
     ..registerSingletonWithDependencies(
       () => LastfmService(settingsService: di<SettingsService>()),
       dependsOn: [SettingsService],
@@ -205,7 +227,7 @@ void registerDependencies() {
       ),
       dependsOn: [SettingsService, LibraryService, NotificationsService],
     )
-    ..registerLazySingleton<Connectivity>(() => Connectivity())
+    ..registerLazySingleton<InternetConnection>(() => InternetConnection())
     ..registerSingletonAsync<RadioService>(
       () async {
         final s = RadioService(
@@ -223,7 +245,7 @@ void registerDependencies() {
     ..registerSingletonAsync<ConnectivityModel>(() async {
       final connectivityModel = ConnectivityModel(
         playerService: di<PlayerService>(),
-        connectivity: di<Connectivity>(),
+        internetConnection: di<InternetConnection>(),
       );
       await connectivityModel.init();
       return connectivityModel;
@@ -267,7 +289,12 @@ void registerDependencies() {
         );
         return appModel;
       },
-      dependsOn: [SettingsService, ExposeService, ConnectivityModel],
+      dependsOn: [
+        SettingsService,
+        ExposeService,
+        ConnectivityModel,
+        PackageInfo,
+      ],
       dispose: (s) => s.dispose(),
     )
     ..registerSingletonWithDependencies<LibraryModel>(
@@ -339,5 +366,13 @@ void registerDependencies() {
       ],
       dispose: (s) => s.dispose(),
     )
-    ..registerLazySingleton(() => LicenseStore());
+    ..registerLazySingleton(() => LicenseStore())
+    ..registerLazySingleton(() => LocalLyricsService())
+    ..registerSingletonWithDependencies(
+      () => OnlineLyricsService.registerWithDependencies(
+        localLyricsService: di<LocalLyricsService>(),
+        settingsService: di<SettingsService>(),
+      ),
+      dependsOn: [SettingsService],
+    );
 }

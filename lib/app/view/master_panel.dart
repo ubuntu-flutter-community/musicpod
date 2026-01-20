@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:watch_it/watch_it.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app_config.dart';
@@ -98,7 +98,7 @@ class PodcastList extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     watchPropertyValue((LibraryModel m) => m.podcastsLength);
-    final masterItems = createPodcastMasterItems(di<LibraryModel>());
+    final masterItems = createPodcastMasterItems(context, di<LibraryModel>());
     final selectedPageId = watchPropertyValue(
       (RoutingManager m) => m.selectedPageId,
     );

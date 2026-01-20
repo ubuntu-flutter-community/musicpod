@@ -1,6 +1,6 @@
 name: musicpod
 description: Ubuntu music, radio and podcast player.
-version: 2.13.0+1339
+version: 2.14.0+1340
 
 publish_to: "none"
 
@@ -19,7 +19,6 @@ dependencies:
   cached_network_image: ^3.4.1
   chinese_font_library: ^1.2.0
   collection: ^1.18.0
-  connectivity_plus: ^7.0.0
   cupertino_icons: ^1.0.8
   dio: ^5.7.0
   file: ^7.0.0
@@ -31,20 +30,23 @@ dependencies:
     sdk: flutter
   flutter_cache_manager: ^3.4.1
   flutter_discord_rpc: ^1.0.0
+  flutter_it: 2.1.1
   flutter_localizations:
     sdk: flutter
   flutter_markdown: ^0.7.3
   flutter_tabler_icons: ^1.41.0
   flutter_widget_from_html_core: ^0.17.0
   future_loading_dialog: ^0.3.0
+  genius_lyrics: ^1.0.1
   github: ^9.24.0
   gtk: ^2.1.0
   handy_window: ^0.4.0
-
+  internet_connection_checker_plus: ^2.9.1
   intl: ^0.20.2
   lastfm: ^0.0.6
   listenbrainz_dart: ^0.0.4
   local_notifier: ^0.1.6
+  lrc: ^1.0.2
   m3u_parser_nullsafe: ^1.0.3
   media_kit:
     git:
@@ -82,13 +84,12 @@ dependencies:
   synchronized: ^3.3.1
   system_theme: ^3.0.0
   url_launcher: ^6.3.0
-  watch_it: ^1.5.0
   watcher: ^1.1.1
   waveform_visualizer: ^1.0.0
   win32: ^5.5.4
   window_manager: ^0.5.1
   xdg_directories: ^1.0.4
-  yaru: ^8.3.0
+  yaru: 9.0.0
   yaru_window: ^0.2.2
   yaru_window_linux: ^0.2.2
 
@@ -126,14 +127,14 @@ dependency_overrides:
     git:
       url: https://github.com/media-kit/media-kit
       path: media_kit
-      ref: c9617f570b8c0ba02857e721997f78c053a856c1
+      ref: d310049f24196250d876efb02b9ff56fa9ef5068
   media_kit_libs_video:
     git:
       url: https://github.com/media-kit/media-kit
       path: libs/universal/media_kit_libs_video
-      ref: c9617f570b8c0ba02857e721997f78c053a856c1
+      ref: d310049f24196250d876efb02b9ff56fa9ef5068
   media_kit_video:
     git:
       url: https://github.com/media-kit/media-kit
       path: media_kit_video
-      ref: c9617f570b8c0ba02857e721997f78c053a856c1
+      ref: d310049f24196250d876efb02b9ff56fa9ef5068

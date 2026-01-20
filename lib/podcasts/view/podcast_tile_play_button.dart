@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:watch_it/watch_it.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/constants.dart';
 
 import '../../common/data/audio.dart';
@@ -17,20 +17,18 @@ class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
     super.key,
     required this.selected,
     required this.audio,
-    required this.isPlayerPlaying,
     required this.startPlaylist,
-    required this.removeUpdate,
   });
 
   final bool selected;
   final Audio audio;
-  final bool isPlayerPlaying;
 
   final void Function()? startPlaylist;
-  final void Function()? removeUpdate;
 
   @override
   Widget build(BuildContext context) {
+    final isPlayerPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
+
     final playerModel = di<PlayerModel>();
     final useYaruTheme = watchPropertyValue(
       (SettingsModel m) => m.useYaruTheme,
@@ -92,7 +90,6 @@ class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
                 } else {
                   playerModel.safeLastPosition().then((value) {
                     startPlaylist?.call();
-                    removeUpdate?.call();
                   });
                 }
               },

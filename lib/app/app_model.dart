@@ -7,6 +7,7 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 import '../app_config.dart';
 import '../common/view/snackbars.dart';
 import '../expose/expose_service.dart';
+import '../settings/shared_preferences_keys.dart';
 import '../extensions/taget_platform_x.dart';
 import '../settings/settings_service.dart';
 import 'view/discord_connect_content.dart';
@@ -63,13 +64,6 @@ class AppModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  bool _showQueueOverlay = false;
-  bool get showQueueOverlay => _showQueueOverlay;
-  void setOrToggleQueueOverlay({bool? value}) {
-    _showQueueOverlay = value ?? !_showQueueOverlay;
-    notifyListeners();
-  }
-
   bool? _fullWindowMode;
   bool? get fullWindowMode => _fullWindowMode;
   Future<void> setFullWindowMode(bool? value) async {
@@ -94,11 +88,6 @@ class AppModel extends SafeChangeNotifier {
   final PackageInfo _packageInfo;
   String get version => _packageInfo.version;
 
-  Future<void> disposePatchNotes() async =>
-      _settingsService.disposePatchNotes(version);
-
-  bool recentPatchNotesDisposed() =>
-      _settingsService.recentPatchNotesDisposed(version);
   bool? _updateAvailable;
   bool? get updateAvailable => _updateAvailable;
   String? _onlineVersion;
@@ -110,7 +99,7 @@ class AppModel extends SafeChangeNotifier {
     _updateAvailable == null;
     notifyListeners();
 
-    if (!_allowManualUpdates || !isOnline) {
+    if (!isOnline) {
       _updateAvailable = false;
       notifyListeners();
       return Future.value();
@@ -122,7 +111,7 @@ class AppModel extends SafeChangeNotifier {
     final onlineVersion = getExtendedVersionNumber(_onlineVersion) ?? 0;
     final currentVersion = getExtendedVersionNumber(version) ?? 0;
     if (onlineVersion > currentVersion) {
-      _updateAvailable = true;
+      _updateAvailable = _allowManualUpdates && true;
     } else {
       _updateAvailable = false;
     }
@@ -155,9 +144,17 @@ class AppModel extends SafeChangeNotifier {
     }
   }
 
-  bool get wasBackupSaved => _settingsService.getBackupSaved(version);
+  Future<void> disposePatchNotes() async =>
+      _settingsService.setValue(SPKeys.patchNotesDisposed, version);
+
+  bool recentPatchNotesDisposed() =>
+      _settingsService.getString(SPKeys.patchNotesDisposed) == version;
+
+  bool get wasBackupSaved =>
+      _settingsService.getBool(SPKeys.backupSaved + version) ?? false;
+
   Future<void> setBackupSaved(bool value) async {
-    await _settingsService.setBackupSaved(version, value);
+    await _settingsService.setValue(SPKeys.backupSaved + version, value);
     notifyListeners();
   }
 

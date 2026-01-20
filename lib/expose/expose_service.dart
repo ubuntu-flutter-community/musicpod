@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_discord_rpc/flutter_discord_rpc.dart';
 
+import '../settings/shared_preferences_keys.dart';
 import '../settings/settings_service.dart';
 import 'lastfm_service.dart';
 import 'listenbrainz_service.dart';
@@ -60,7 +61,7 @@ class ExposeService {
     String? imageUrl,
   }) async {
     try {
-      if (_settingsService.enableDiscordRPC &&
+      if (_settingsService.getBool(SPKeys.enableDiscord) == true &&
           _discordRPC?.isConnected == false) {
         await _discordRPC?.connect();
       }

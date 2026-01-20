@@ -1,6 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:watch_it/watch_it.dart';
+import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/app_model.dart';
 import '../../app/connectivity_model.dart';
@@ -20,10 +19,10 @@ import '../../l10n/l10n.dart';
 import '../../local_audio/view/pin_album_button.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
+import '../../settings/settings_model.dart';
 import 'playback_rate_button.dart';
 import 'player_pause_timer_button.dart';
 import 'player_view.dart';
-import 'queue/queue_button.dart';
 import 'volume_popup.dart';
 
 class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
@@ -32,23 +31,28 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
     required this.iconColor,
     required this.playerPosition,
     this.padding,
-    this.showQueueButton = true,
   });
 
   final Color iconColor;
   final PlayerPosition playerPosition;
   final EdgeInsetsGeometry? padding;
-  final bool showQueueButton;
 
   @override
   Widget build(BuildContext context) {
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
 
-    final playerToTheRight = context.mediaQuerySize.width > kSideBarThreshHold;
+    final mediaQuerySize = context.mediaQuerySize;
+    final playerToTheRight = mediaQuerySize.width > kSideBarThreshHold;
+    final playerWithSidePanel =
+        playerPosition == PlayerPosition.fullWindow &&
+        mediaQuerySize.width > 1000;
     final fullScreen = watchPropertyValue((AppModel m) => m.fullWindowMode);
-    final showAudioVisualizer = watchPropertyValue(
-      (PlayerModel m) => m.showAudioVisualizer,
+
+    final showPlayerLyrics = watchPropertyValue(
+      (SettingsModel m) => m.showPlayerLyrics,
     );
+    final showQueue = watchPropertyValue((PlayerModel m) => m.showQueue);
+
     final appModel = di<AppModel>();
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     final active = audio?.path != null || isOnline;
@@ -91,22 +95,58 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
               ),
               _ => const SizedBox.shrink(),
             },
-          if (!isMobile && showQueueButton)
-            QueueButton(
+          if (true) ...[
+            IconButton(
+              tooltip: audio?.isRadio == true
+                  ? context.l10n.hearingHistory
+                  : context.l10n.queue,
+              icon: Icon(
+                audio?.isRadio == true ? Iconz.radioHistory : Iconz.playlist,
+                color: iconColor,
+              ),
+              isSelected: showQueue || playerWithSidePanel && !showPlayerLyrics,
               color: iconColor,
-              onTap: () => di<AppModel>().setOrToggleQueueOverlay(),
+              onPressed: () {
+                if (playerWithSidePanel) {
+                  if (showPlayerLyrics) {
+                    di<PlayerModel>().setShowQueue(true);
+                    di<SettingsModel>().setShowPlayerLyrics(false);
+                  }
+                } else {
+                  if (!showQueue && !showPlayerLyrics) {
+                    di<PlayerModel>().setShowQueue(true);
+                  } else if (showQueue) {
+                    di<PlayerModel>().setShowQueue(false);
+                  }
+                }
+              },
             ),
+            IconButton(
+              tooltip: context.l10n.lyrics,
+              isSelected: showPlayerLyrics,
+              onPressed: () {
+                if (playerWithSidePanel) {
+                  di<SettingsModel>().setShowPlayerLyrics(!showPlayerLyrics);
+                  if (showQueue) {
+                    di<PlayerModel>().setShowQueue(false);
+                  }
+                } else {
+                  if (!showQueue && !showPlayerLyrics) {
+                    di<SettingsModel>().setShowPlayerLyrics(true);
+                  } else if (showPlayerLyrics) {
+                    di<SettingsModel>().setShowPlayerLyrics(false);
+                  }
+                }
+              },
+              icon: Icon(Iconz.showLyrics),
+            ),
+          ],
           PlayerPauseTimerButton(iconColor: iconColor),
           ShareButton(audio: audio, active: active, color: iconColor),
           if (audio?.audioType == AudioType.podcast)
             PlaybackRateButton(active: active, color: iconColor),
           if (!isMobile) VolumeSliderPopup(color: iconColor),
-          if (kDebugMode)
-            IconButton(
-              onPressed: () =>
-                  di<PlayerModel>().setShowAudioVisalizer(!showAudioVisualizer),
-              icon: showAudioVisualizer ? Icon(Iconz.show) : Icon(Iconz.hide),
-            ),
+
           IconButton(
             tooltip: playerPosition == PlayerPosition.fullWindow
                 ? context.l10n.leaveFullWindow

@@ -140,4 +140,11 @@ class PlayerModel extends SafeChangeNotifier {
     _showAudioVisualizer = value;
     notifyListeners();
   }
+
+  bool _showQueue = true;
+  bool get showQueue => _showQueue;
+  void setShowQueue(bool value) {
+    _showQueue = value;
+    notifyListeners();
+  }
 }

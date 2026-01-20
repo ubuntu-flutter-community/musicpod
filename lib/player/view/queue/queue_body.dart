@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-import 'package:watch_it/watch_it.dart';
 
 import '../../../common/data/audio.dart';
 import '../../../common/view/icons.dart';
@@ -20,21 +20,24 @@ class QueueBody extends StatefulWidget with WatchItStatefulWidgetMixin {
   State<QueueBody> createState() => _QueueBodyState();
 }
 
-class _QueueBodyState extends State<QueueBody> {
+class _QueueBodyState extends State<QueueBody>
+    with AutomaticKeepAliveClientMixin {
   late AutoScrollController _controller;
-  Audio? _audio;
 
   @override
   void initState() {
     super.initState();
     _controller = AutoScrollController();
-    _jump();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => _jump());
   }
 
   void _jump() {
     final model = di<PlayerModel>();
     final currentAudio = model.audio;
-    if (currentAudio != null && model.queue.isNotEmpty == true) {
+    if (currentAudio != null &&
+        model.queue.isNotEmpty == true &&
+        _controller.hasClients) {
       _controller.scrollToIndex(
         model.queue.indexOf(currentAudio),
         preferPosition: AutoScrollPosition.middle,
@@ -51,20 +54,24 @@ class _QueueBodyState extends State<QueueBody> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final l10n = context.l10n;
     final theme = context.theme;
     final colorScheme = theme.colorScheme;
-    final queue = watchPropertyValue((PlayerModel m) => m.queue);
-    watchPropertyValue((PlayerModel m) => m.queue.length);
-
-    final queueName = watchPropertyValue((PlayerModel m) => m.queueName);
     final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
-    if (_audio != currentAudio) {
+    final queueLength = watchPropertyValue((PlayerModel m) => m.queue.length);
+    watchPropertyValue((PlayerModel m) {
+      final i = m.queue.length > 0
+          ? m.queue.indexWhere((a) => a == m.audio)
+          : -1;
       _jump();
-    }
-    _audio = currentAudio;
+      return i;
+    });
+
+    final queue = di<PlayerModel>().queue;
+    final queueName = di<PlayerModel>().queueName;
+
     return SizedBox(
-      key: ValueKey(queue.length),
       width: 400,
       height: 500,
       child: Column(
@@ -95,7 +102,7 @@ class _QueueBodyState extends State<QueueBody> {
                   selected: selected,
                 );
               },
-              itemCount: queue.length,
+              itemCount: queueLength,
               onReorder: di<PlayerModel>().moveAudioInQueue,
             ),
           ),
@@ -144,6 +151,9 @@ class _QueueBodyState extends State<QueueBody> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class _QueueTile extends StatefulWidget {

@@ -452,13 +452,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get markAllEpisodesAsDone => 'Segna tutti gli episodi come completati';
 
   @override
-  String get markEpisodeAsDone => 'Mark episode as done';
+  String get markEpisodeAsDone => 'Segna episodio come visto';
 
   @override
-  String get hideCompletedEpisodes => 'Hide completed episodes';
+  String get hideCompletedEpisodes => 'Nascondi episodi visti';
 
   @override
-  String get showCompletedEpisodes => 'Show completed episodes';
+  String get showCompletedEpisodes => 'Visualizza episodi visti';
 
   @override
   String get reset => 'Ripristina';
@@ -2136,6 +2136,13 @@ class AppLocalizationsIt extends AppLocalizations {
       'Questo ti consentirà di scegliere un colore accento personalizzato per il tema attuale.';
 
   @override
+  String get usePlayerColorTitle => 'Usa colore riproduttore';
+
+  @override
+  String get usePlayerColorDescription =>
+      'Verrà usato per l\'intera app il colore dominante estratto dall\'opera d\'arte attuale (se disponibile).';
+
+  @override
   String get selectColor => 'Seleziona colore';
 
   @override
@@ -2172,43 +2179,118 @@ class AppLocalizationsIt extends AppLocalizations {
       'Ciò offuscerà lo sfondo del riproduttore. Ciò potrebbe portare in alcuni dispositivi a prestazioni più basse.';
 
   @override
-  String get loadingPleaseWait => 'Loading, please wait ...';
+  String get loadingPleaseWait => 'Caricamento...';
 
   @override
-  String get importingPodcastsPleaseWait =>
-      'Importing your podcasts, please wait ...';
+  String get importingPodcastsPleaseWait => 'Importazione podcast...';
 
   @override
-  String get exportingPodcastsPleaseWait =>
-      'Exporting your podcasts, please wait ...';
+  String get exportingPodcastsPleaseWait => 'Esportazione podcast...';
 
   @override
-  String get importingStationsPleaseWait =>
-      'Importing your stations, please wait ...';
+  String get importingStationsPleaseWait => 'Importazione stazioni...';
 
   @override
-  String get exportingStationsPleaseWait =>
-      'Exporting your stations, please wait ...';
+  String get exportingStationsPleaseWait => 'Esposrtazione stazioni...';
 
   @override
-  String get importingPlaylistsPleaseWait =>
-      'Importing your playlists, please wait ...';
+  String get importingPlaylistsPleaseWait => 'Importazione playlist...';
 
   @override
-  String get exportingPlaylistsPleaseWait =>
-      'Exporting your playlists, please wait ...';
+  String get exportingPlaylistsPleaseWait => 'Esportazione playlist...';
 
   @override
-  String get author => 'Author';
+  String get author => 'Autore';
 
   @override
-  String get rating => 'Rating';
+  String get rating => 'Valutazione';
 
   @override
-  String get keywords => 'Keywords';
+  String get keywords => 'Parole chiave';
 
   @override
   String newEpisodesAvailableFor(int length) {
-    return 'New episodes available for $length podcasts';
+    return 'Nuovi episodi disponibili per i podcast $length';
   }
+
+  @override
+  String get lyrics => 'Testi';
+
+  @override
+  String get noLyricsFound => 'Nessun testo trovato';
+
+  @override
+  String get autoScrolling => 'Scorrimento automatico';
+
+  @override
+  String get genericErrorTitle => 'Si è verificato un errore';
+
+  @override
+  String get genericErrorDescription =>
+      'Si è verificato un errore imprevisto. Riprova più tardi.';
+
+  @override
+  String errorDetails(String details) {
+    return 'Dettagli errore: $details';
+  }
+
+  @override
+  String get appendToQueue => 'Aggiungi alla coda';
+
+  @override
+  String appendedToQueue(String title) {
+    return 'Aggiunto alla coda: $title';
+  }
+
+  @override
+  String appendMediaToQueueDescription(String title) {
+    return '$title è già in coda. Vuoi aggiungerlo alla fine della coda?';
+  }
+
+  @override
+  String get appendMediaToQueueTitle => 'Aggiungi media alla coda';
+
+  @override
+  String appendMediaToQueue(String title) {
+    return 'Aggiungi media alla coda: $title';
+  }
+
+  @override
+  String get explore => 'Esplora';
+
+  @override
+  String get favorites => 'Preferiti';
+
+  @override
+  String get autoMovePlayerTitle => 'Sposta automaticamente riproduttore';
+
+  @override
+  String get autoMovePlayerDescription =>
+      'Sposta il riproduttore a destra se c\'è abbastanza spazio in orizzontale';
+
+  @override
+  String get onlineLyricsNotSetup =>
+      'Se vuoi recuperare testi da Genius, configura nelle impostazioni una chiave API.';
+
+  @override
+  String get settingsGeniusDisclaimer =>
+      'MusicPod, i suoi contributori e l\'API Genius non sono responsabili per qualsiasi uso improprio della chiave API. Impostando la chiave API, accetti di usarla in modo responsabile e in conformità con i termini di servizio di Genius.\n\n';
+
+  @override
+  String get settingsGeniusDescription =>
+      'Per recuperare i testi da Genius, devi fornire una chiave API Genius. Puoi ottenere una chiave API creando un account in Genius e registrando un\'applicazione per ottenere il token di accesso.';
+
+  @override
+  String get settingsDoNotAskForGeniusTitle =>
+      'Non usare Genius e non richiedere nuovamente la chiave API Genius';
+
+  @override
+  String get settingsDoNotAskForGeniusDescription =>
+      'Ciò impedisce all\'app di richiedere la chiave API Genius in futuro e fa sì che la funzionalità dei testi si affidi completamente ai file LRC locali o alle stringhe LRC incorporate nei metadati audio.';
+
+  @override
+  String get tosLink => 'https://genius.com/static/terms';
+
+  @override
+  String get tosLinkText => 'Leggi i Termini di servizio di Genius';
 }

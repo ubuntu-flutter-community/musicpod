@@ -1,6 +1,6 @@
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:watch_it/watch_it.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/view/musicpod.dart';
@@ -26,11 +26,18 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
     final useYaruTheme = watchPropertyValue(
       (SettingsModel m) => m.useYaruTheme,
     );
+    final autoMovePlayer = watchPropertyValue(
+      (SettingsModel m) => m.autoMovePlayer,
+    );
     final useCustomThemeColor = watchPropertyValue(
       (SettingsModel m) => m.useCustomThemeColor,
     );
     final customThemeColor = watchPropertyValue(
       (SettingsModel m) => m.customThemeColor,
+    );
+
+    final usePlayerColor = watchPropertyValue(
+      (SettingsModel m) => m.usePlayerColor,
     );
 
     final color = customThemeColor == null
@@ -114,10 +121,18 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
             ),
           ],
           YaruTile(
+            title: Text(l10n.usePlayerColorTitle),
+            subtitle: Text(l10n.usePlayerColorDescription),
+            trailing: CommonSwitch(
+              onChanged: model.setUsePlayerColor,
+              value: usePlayerColor,
+            ),
+          ),
+          YaruTile(
             title: Text(l10n.useCustomThemeColorTitle),
             subtitle: Text(l10n.useCustomThemeColorDescription),
             trailing: CommonSwitch(
-              onChanged: model.setUseCustomThemeColor,
+              onChanged: usePlayerColor ? null : model.setUseCustomThemeColor,
               value: useCustomThemeColor,
             ),
           ),
@@ -189,6 +204,14 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
               value: watchPropertyValue(
                 (SettingsModel m) => m.showPositionDuration,
               ),
+            ),
+          ),
+          YaruTile(
+            title: Text(l10n.autoMovePlayerTitle),
+            subtitle: Text(l10n.autoMovePlayerDescription),
+            trailing: CommonSwitch(
+              onChanged: model.setAutoMovePlayer,
+              value: autoMovePlayer,
             ),
           ),
         ],

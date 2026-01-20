@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:watch_it/watch_it.dart';
+import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/app_model.dart';
 import '../../extensions/build_context_x.dart';
@@ -7,9 +7,14 @@ import 'bottom_player.dart';
 import 'full_height_player.dart';
 
 class PlayerView extends StatefulWidget with WatchItStatefulWidgetMixin {
-  const PlayerView({super.key, required this.position});
+  const PlayerView.bottom({super.key}) : _position = PlayerPosition.bottom;
 
-  final PlayerPosition position;
+  const PlayerView.sideBar({super.key}) : _position = PlayerPosition.sideBar;
+
+  const PlayerView.fullWindow({super.key})
+    : _position = PlayerPosition.fullWindow;
+
+  final PlayerPosition _position;
 
   @override
   State<PlayerView> createState() => _PlayerViewState();
@@ -22,7 +27,7 @@ class _PlayerViewState extends State<PlayerView> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
       di<AppModel>().setShowWindowControls(
-        widget.position != PlayerPosition.sideBar,
+        widget._position != PlayerPosition.sideBar,
       );
     });
   }
@@ -34,7 +39,7 @@ class _PlayerViewState extends State<PlayerView> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
       di<AppModel>().setShowWindowControls(
-        widget.position != PlayerPosition.sideBar,
+        widget._position != PlayerPosition.sideBar,
       );
     });
   }
@@ -44,8 +49,8 @@ class _PlayerViewState extends State<PlayerView> {
     final theme = context.theme;
 
     Widget player;
-    if (widget.position != PlayerPosition.bottom) {
-      player = FullHeightPlayer(playerPosition: widget.position);
+    if (widget._position != PlayerPosition.bottom) {
+      player = FullHeightPlayer(playerPosition: widget._position);
     } else {
       player = const BottomPlayer();
     }

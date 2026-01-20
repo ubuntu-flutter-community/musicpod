@@ -453,13 +453,13 @@ class AppLocalizationsEu extends AppLocalizations {
   String get markAllEpisodesAsDone => 'Atal guztiak eginda bezala markatu';
 
   @override
-  String get markEpisodeAsDone => 'Mark episode as done';
+  String get markEpisodeAsDone => 'Markatu atala amaitutzat';
 
   @override
-  String get hideCompletedEpisodes => 'Hide completed episodes';
+  String get hideCompletedEpisodes => 'Ezkutatu amaitutako atalak';
 
   @override
-  String get showCompletedEpisodes => 'Show completed episodes';
+  String get showCompletedEpisodes => 'Erakutsi amaitutako atalak';
 
   @override
   String get reset => 'Berrasieratu';
@@ -2149,6 +2149,13 @@ class AppLocalizationsEu extends AppLocalizations {
       'Horri esker, uneko gaiarentzako azentu-kolore pertsonalizatu bat aukeratu ahal izango duzu.';
 
   @override
+  String get usePlayerColorTitle => 'Use player color';
+
+  @override
+  String get usePlayerColorDescription =>
+      'This will use the dominant color has been extracted out of the current artwork (if available) for the whole app.';
+
+  @override
   String get selectColor => 'Hautatu kolorea';
 
   @override
@@ -2185,43 +2192,124 @@ class AppLocalizationsEu extends AppLocalizations {
       'Honek erreproduzitzailearen atzeko planoa lausotuko du. Honek errendimendua txikiagoa izan dezake gailu batzuetan.';
 
   @override
-  String get loadingPleaseWait => 'Loading, please wait ...';
+  String get loadingPleaseWait => 'Kargatzen, itxaron mesedez ...';
 
   @override
   String get importingPodcastsPleaseWait =>
-      'Importing your podcasts, please wait ...';
+      'Zure podcast-ak inportatzen, itxaron mesedez ...';
 
   @override
   String get exportingPodcastsPleaseWait =>
-      'Exporting your podcasts, please wait ...';
+      'Zure podcast-ak esportatzen, itxaron mesedez ...';
 
   @override
   String get importingStationsPleaseWait =>
-      'Importing your stations, please wait ...';
+      'Zure irrati-kateak inportatzen, itxaron mesedez ...';
 
   @override
   String get exportingStationsPleaseWait =>
-      'Exporting your stations, please wait ...';
+      'Zure irrati-kateak esportatzen, itxaron mesedez ...';
 
   @override
   String get importingPlaylistsPleaseWait =>
-      'Importing your playlists, please wait ...';
+      'Zure erreprodukzio-zerrendak inportatzen, itxaron mesedez ...';
 
   @override
   String get exportingPlaylistsPleaseWait =>
-      'Exporting your playlists, please wait ...';
+      'Zure erreprodukzio-zerrendak esportatzen, itxaron mesedez ...';
 
   @override
-  String get author => 'Author';
+  String get author => 'Egilea';
 
   @override
-  String get rating => 'Rating';
+  String get rating => 'Balorazioa';
 
   @override
-  String get keywords => 'Keywords';
+  String get keywords => 'Hitz-gakoak';
 
   @override
   String newEpisodesAvailableFor(int length) {
-    return 'New episodes available for $length podcasts';
+    return '$length podcastetarako atal berriak eskuragarri';
   }
+
+  @override
+  String get lyrics => 'Lyrics';
+
+  @override
+  String get noLyricsFound => 'No lyrics found';
+
+  @override
+  String get autoScrolling => 'Auto scroll';
+
+  @override
+  String get genericErrorTitle => 'An error occurred';
+
+  @override
+  String get genericErrorDescription =>
+      'An unexpected error occurred. Please try again later.';
+
+  @override
+  String errorDetails(String details) {
+    return 'Error details: $details';
+  }
+
+  @override
+  String get appendToQueue => 'Append to queue';
+
+  @override
+  String appendedToQueue(String title) {
+    return 'Appended to queue: $title';
+  }
+
+  @override
+  String appendMediaToQueueDescription(String title) {
+    return '$title is already inside the queue. Do you want to append it to the end of the queue?';
+  }
+
+  @override
+  String get appendMediaToQueueTitle => 'Append media to queue';
+
+  @override
+  String appendMediaToQueue(String title) {
+    return 'Append media to queue: $title';
+  }
+
+  @override
+  String get explore => 'Explore';
+
+  @override
+  String get favorites => 'Favorites';
+
+  @override
+  String get autoMovePlayerTitle => 'Auto move player';
+
+  @override
+  String get autoMovePlayerDescription =>
+      'Move the player to the right if there is enough horizontal space';
+
+  @override
+  String get onlineLyricsNotSetup =>
+      'If you want to fetch lyrics from Genius, please provide an API key in the settings.';
+
+  @override
+  String get settingsGeniusDisclaimer =>
+      'MusicPod, its contributors, and the Genius API are not responsible for any misuse of the API key. By providing your API key, you agree to use it responsibly and in accordance with Genius terms of service.\n\n';
+
+  @override
+  String get settingsGeniusDescription =>
+      'To fetch lyrics from Genius, you need to provide a Genius API Key. You can obtain an API key by creating an account on Genius and registering an application to get your access token.';
+
+  @override
+  String get settingsDoNotAskForGeniusTitle =>
+      'Do not use Genius or ask for Genius API Key again';
+
+  @override
+  String get settingsDoNotAskForGeniusDescription =>
+      'This prevents the app from prompting for the Genius API key in the future and makes the lyrics feature fully rely on local LRC files or LRC strings embedded in audio metadata.';
+
+  @override
+  String get tosLink => 'https://genius.com/static/terms';
+
+  @override
+  String get tosLinkText => 'Read Genius\'s Terms of Service';
 }

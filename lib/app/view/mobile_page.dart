@@ -1,18 +1,16 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:watch_it/watch_it.dart';
+import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/page_ids.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../player/player_model.dart';
-import '../../player/view/full_height_player.dart';
 import '../../player/view/player_main_controls.dart';
 import '../../player/view/player_view.dart';
 import '../../podcasts/download_model.dart';
 import '../app_model.dart';
-import '../connectivity_model.dart';
 import 'create_master_items.dart';
 import 'mobile_bottom_bar.dart';
 import 'routing_manager.dart';
@@ -30,11 +28,6 @@ class MobilePage extends StatelessWidget with WatchItMixin {
     registerStreamHandler(
       select: (DownloadModel m) => m.messageStream,
       handler: downloadMessageStreamHandler,
-    );
-
-    registerStreamHandler(
-      select: (ConnectivityModel m) => m.onConnectivityChanged,
-      handler: onConnectivityChangedHandler,
     );
 
     return PopScope(
@@ -85,9 +78,7 @@ class MobilePage extends StatelessWidget with WatchItMixin {
                             di<AppModel>().setFullWindowMode(false);
                           }
                         },
-                        child: const FullHeightPlayer(
-                          playerPosition: PlayerPosition.fullWindow,
-                        ),
+                        child: const PlayerView.fullWindow(),
                       ),
                     ),
                 ],

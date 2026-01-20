@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:watch_it/watch_it.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app_config.dart';
@@ -50,16 +50,6 @@ class ResourceSection extends StatelessWidget with WatchItMixin {
             trailing: CommonSwitch(
               onChanged: di<RadioModel>().setDataSafeMode,
               value: watchPropertyValue((RadioModel m) => m.dataSafeMode),
-            ),
-          ),
-          YaruTile(
-            title: Text(l10n.notifyMeAboutDataSafeModeTitle),
-            subtitle: Text(l10n.notifyMeAboutDataSafeModeDescription),
-            trailing: CommonSwitch(
-              onChanged: di<SettingsModel>().setNotifyDataSafeMode,
-              value: watchPropertyValue(
-                (SettingsModel m) => m.notifyDataSafeMode,
-              ),
             ),
           ),
           YaruTile(

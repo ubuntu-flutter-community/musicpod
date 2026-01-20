@@ -1,13 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:watch_it/watch_it.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../settings/shared_preferences_keys.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../settings/settings_service.dart';
 
 class Iconz {
-  static int get _iconSetIndex => di<SettingsService>().iconSetIndex;
+  static int get _iconSetIndex =>
+      di<SettingsService>().getInt(SPKeys.iconSetIndex) ??
+      IconSet.platformDefaultIndex;
   static bool get cupertino => _iconSetIndex == IconSet.cupertino.index;
   static bool get yaru => _iconSetIndex == IconSet.yaru.index;
 
@@ -16,6 +19,18 @@ class Iconz {
       : cupertino
       ? CupertinoIcons.eye
       : Icons.remove_red_eye_outlined;
+
+  static IconData get showLyrics => yaru
+      ? YaruIcons.chat_bubble_filled
+      : cupertino
+      ? CupertinoIcons.chat_bubble_text_fill
+      : Icons.chat_bubble;
+
+  static IconData get hideLyrics => yaru
+      ? YaruIcons.chat_bubble
+      : cupertino
+      ? CupertinoIcons.chat_bubble_text
+      : Icons.chat_bubble_outline;
 
   static IconData get hide => yaru
       ? YaruIcons.hide

@@ -1,15 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:podcast_search/podcast_search.dart';
+import 'package:collection/collection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/data/audio.dart';
 import '../common/file_names.dart';
-import '../common/logging.dart';
 import '../common/page_ids.dart';
 import '../extensions/date_time_x.dart';
-import '../extensions/shared_preferences_x.dart';
+import '../settings/shared_preferences_keys.dart';
 import '../persistence_utils.dart';
 
 class LibraryService {
@@ -496,6 +495,31 @@ class LibraryService {
     ).then((_) => _propertiesChangedController.add(true));
   }
 
+  Future<void> _migrateOldPodcast() async {
+    final oldPodcasts = await readAudioMap(FileNames.podcasts);
+    for (final podcast in oldPodcasts.entries) {
+      final feed = podcast.key;
+      final episodes = podcast.value;
+      final first = episodes.firstWhereOrNull(
+        (e) =>
+            e.album != null &&
+            (e.albumArtUrl != null || e.imageUrl != null) &&
+            e.artist != null,
+      );
+      final name = first?.album;
+      final artist = first?.artist;
+      final image = first?.albumArtUrl ?? first?.imageUrl;
+      if (name != null && artist != null) {
+        await addPodcast(
+          feedUrl: feed,
+          imageUrl: image,
+          name: name,
+          artist: artist,
+        );
+      }
+    }
+  }
+
   Set<String> get _podcasts =>
       _sharedPreferences.getStringList(SPKeys.podcastFeedUrls)?.toSet() ?? {};
   bool isPodcastSubscribed(String feedUrl) => _podcasts.contains(feedUrl);
@@ -549,22 +573,10 @@ class LibraryService {
     }
     addSubscribedPodcastName(feedUrl: feedUrl, name: name);
     addSubscribedPodcastArtist(feedUrl: feedUrl, artist: artist);
-    await _addPodcastLastUpdatedWithTimestamp(feedUrl);
-  }
-
-  Future<void> _addPodcastLastUpdatedWithTimestamp(String feedUrl) async {
-    DateTime? lastUpdated;
-    try {
-      lastUpdated = await Feed.feedLastUpdated(url: feedUrl);
-    } on Exception catch (e) {
-      printMessageInDebugMode(e);
-    }
-    if (lastUpdated != null) {
-      _addPodcastLastUpdated(
-        feedUrl: feedUrl,
-        timestamp: lastUpdated.podcastTimeStamp,
-      );
-    }
+    await addPodcastLastUpdated(
+      feedUrl: feedUrl,
+      timestamp: DateTime.now().toPodcastTimeStamp,
+    );
   }
 
   Future<void> addPodcasts(
@@ -581,7 +593,10 @@ class LibraryService {
         }
         addSubscribedPodcastName(feedUrl: p.feedUrl, name: p.name);
         addSubscribedPodcastArtist(feedUrl: p.feedUrl, artist: p.artist);
-        await _addPodcastLastUpdatedWithTimestamp(p.feedUrl);
+        addPodcastLastUpdated(
+          feedUrl: p.feedUrl,
+          timestamp: DateTime.now().toPodcastTimeStamp,
+        );
       }
     }
     _sharedPreferences
@@ -617,14 +632,12 @@ class LibraryService {
   Set<String>? _podcastUpdates;
   int? get podcastUpdatesLength => _podcastUpdates?.length;
 
-  void _addPodcastLastUpdated({
+  Future<void> addPodcastLastUpdated({
     required String feedUrl,
     required String timestamp,
-  }) {
-    _sharedPreferences
-        .setString(feedUrl + SPKeys.podcastLastUpdatedSuffix, timestamp)
-        .then(notify);
-  }
+  }) async => _sharedPreferences
+      .setString(feedUrl + SPKeys.podcastLastUpdatedSuffix, timestamp)
+      .then(notify);
 
   void _removePodcastLastUpdated(String feedUrl) => _sharedPreferences
       .remove(feedUrl + SPKeys.podcastLastUpdatedSuffix)
@@ -636,19 +649,16 @@ class LibraryService {
   bool podcastUpdateAvailable(String feedUrl) =>
       _podcastUpdates?.contains(feedUrl) == true;
 
-  void addPodcastUpdate(String feedUrl, DateTime? lastUpdated) {
-    if (_podcastUpdates?.contains(feedUrl) == true || lastUpdated == null)
-      return;
+  Future<void> addPodcastUpdate(String feedUrl, DateTime lastUpdated) async {
+    if (_podcastUpdates?.contains(feedUrl) == true) return;
 
-    _addPodcastLastUpdated(
-      feedUrl: feedUrl,
-      timestamp: lastUpdated.podcastTimeStamp,
-    );
-    _podcastUpdates?.add(feedUrl);
-    writeStringIterable(
+    await writeStringIterable(
       iterable: _podcastUpdates!,
       filename: FileNames.podcastUpdates,
-    ).then((_) => _propertiesChangedController.add(true));
+    ).then((_) {
+      _podcastUpdates?.add(feedUrl);
+      _propertiesChangedController.add(true);
+    });
   }
 
   Future<void> removePodcastUpdate(String feedUrl) async {
@@ -726,6 +736,7 @@ class LibraryService {
   }
 
   Future<void> init() async {
+    await _migrateOldPodcast();
     _playlists = await readAudioMap(FileNames.playlists);
     _likedAudios =
         (await readAudioMap(

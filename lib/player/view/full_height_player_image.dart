@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:watch_it/watch_it.dart';
+import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../local_audio/view/local_cover.dart';
 import '../player_model.dart';
-import 'audio_visualizer.dart';
 import 'player_fall_back_image.dart';
 import 'player_remote_source_image.dart';
 
@@ -18,25 +17,16 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
     this.width,
     this.borderRadius,
     this.emptyFallBack = false,
-    this.showAudioVisualizer = false,
   });
 
   final BoxFit? fit;
   final double? height, width;
   final BorderRadius? borderRadius;
   final bool emptyFallBack;
-  final bool showAudioVisualizer;
 
   @override
   Widget build(BuildContext context) {
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
-    final showAudioVisualizer =
-        this.showAudioVisualizer &&
-        watchPropertyValue((PlayerModel m) => m.showAudioVisualizer);
-
-    if (showAudioVisualizer) {
-      return AudioVisualizer(height: height ?? 400);
-    }
 
     final size = context.isPortrait
         ? fullHeightPlayerImageSize

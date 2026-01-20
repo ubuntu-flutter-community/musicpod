@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:future_loading_dialog/future_loading_dialog.dart';
-import 'package:watch_it/watch_it.dart';
+import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../podcast_model.dart';
 
@@ -24,10 +23,7 @@ class PodcastMarkDoneButton extends StatelessWidget with WatchItMixin {
       tooltip: context.l10n.markAllEpisodesAsDone,
       onPressed: podcast == null
           ? null
-          : () {
-              di<PlayerModel>().safeAllLastPositions(podcast);
-              di<LibraryModel>().removePodcastUpdate(feedUrl);
-            },
+          : () => di<PlayerModel>().safeAllLastPositions(podcast),
       icon: Icon(Iconz.markAllRead),
     );
   }
@@ -47,8 +43,10 @@ class EpisodeMarkDownButton extends StatelessWidget with WatchItMixin {
           : () => showFutureLoadingDialog(
               context: context,
               future: () async {
-                await di<PlayerModel>().safeAllLastPositions([episode]);
-                await di<LibraryModel>().removePodcastUpdate(episode.website!);
+                if (di<PlayerModel>().audio == episode) {
+                  di<PlayerModel>().playNext();
+                }
+                return di<PlayerModel>().safeAllLastPositions([episode]);
               },
             ),
       icon: Icon(Iconz.markAllRead),

@@ -152,9 +152,9 @@ Future<String?> _fetchAlbumArtUrlFromReleaseId({
 
     final path = '$_kCoverArtArchiveAddress$releaseId';
     final response = await dio.get(path);
-    final imagesMaps = response.data['images'] as List;
+    final imagesMaps = response.data['images'] as List?;
 
-    if (imagesMaps.isNotEmpty == true) {
+    if (imagesMaps != null && imagesMaps.isNotEmpty == true) {
       final imageMap = imagesMaps.firstWhereOrNull(
         (e) => (e['front'] as bool?) == true || e != null,
       );
