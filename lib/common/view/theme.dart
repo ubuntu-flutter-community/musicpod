@@ -1,3 +1,4 @@
+import 'package:chinese_font_library/chinese_font_library.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
@@ -9,7 +10,9 @@ ThemeData? yaruDarkWithTweaks(ThemeData? darkTheme) {
   return darkTheme?.copyWith(
     textTheme: isLinux
         ? null
-        : createTextTheme(darkTheme.colorScheme.onSurface),
+        : createTextTheme(
+            darkTheme.colorScheme.onSurface,
+          ).useSystemChineseFont(Brightness.dark),
     actionIconTheme: ActionIconThemeData(
       backButtonIconBuilder: (context) => Icon(Iconz.goBack),
     ),
@@ -29,7 +32,11 @@ ThemeData? yaruDarkWithTweaks(ThemeData? darkTheme) {
 
 ThemeData? yaruLightWithTweaks(ThemeData? theme) {
   return theme?.copyWith(
-    textTheme: isLinux ? null : createTextTheme(theme.colorScheme.onSurface),
+    textTheme: isLinux
+        ? null
+        : createTextTheme(
+            theme.colorScheme.onSurface,
+          ).useSystemChineseFont(Brightness.light),
     actionIconTheme: ActionIconThemeData(
       backButtonIconBuilder: (context) => Icon(Iconz.goBack),
     ),
@@ -415,4 +422,25 @@ class _TextStyle extends TextStyle {
   const _TextStyle({super.fontSize, super.fontWeight, required this.textColor})
     : super(fontFamily: 'CupertinoSystemText', color: textColor);
   final Color textColor;
+}
+
+ThemeData applyChineseFontToPhoenixTheme({
+  required ThemeData lightTheme,
+  required ThemeData darkTheme,
+}) {
+  return lightTheme.copyWith(
+    textTheme: lightTheme.textTheme.useSystemChineseFont(Brightness.light),
+    primaryTextTheme: lightTheme.primaryTextTheme.useSystemChineseFont(
+      Brightness.light,
+    ),
+  );
+}
+
+ThemeData applyChineseFontToPhoenixDarkTheme({required ThemeData darkTheme}) {
+  return darkTheme.copyWith(
+    textTheme: darkTheme.textTheme.useSystemChineseFont(Brightness.dark),
+    primaryTextTheme: darkTheme.primaryTextTheme.useSystemChineseFont(
+      Brightness.dark,
+    ),
+  );
 }

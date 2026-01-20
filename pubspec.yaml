@@ -17,6 +17,7 @@ dependencies:
   basic_utils: ^5.7.0
   blur: ^4.0.2
   cached_network_image: ^3.4.1
+  chinese_font_library: ^1.2.0
   collection: ^1.18.0
   connectivity_plus: ^7.0.0
   cupertino_icons: ^1.0.8

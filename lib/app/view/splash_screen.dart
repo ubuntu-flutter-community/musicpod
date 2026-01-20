@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:phoenix_theme/phoenix_theme.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../l10n/app_localizations.dart';
@@ -13,42 +14,51 @@ class SplashScreen extends StatelessWidget {
   final Widget? body;
 
   @override
-  Widget build(BuildContext context) => MaterialApp(
-    theme: isLinux
-        ? yaruLight
-        : phoenixTheme(color: kMusicPodDefaultColor).lightTheme,
-    darkTheme: isLinux
-        ? yaruDark
-        : phoenixTheme(color: kMusicPodDefaultColor).darkTheme,
-    title: '',
-    debugShowCheckedModeBanner: false,
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
-    supportedLocales: supportedLocales,
-    home: Scaffold(
-      appBar: const YaruWindowTitleBar(
-        border: BorderSide.none,
-        backgroundColor: Colors.transparent,
-      ),
-      body:
-          body ??
-          Center(
-            child: SingleChildScrollView(
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Image.asset('assets/icon.png', height: 250, width: 250),
-                    Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: isLinux
-                          ? const YaruCircularProgressIndicator()
-                          : const CircularProgressIndicator.adaptive(),
-                    ),
-                  ],
+  Widget build(BuildContext context) {
+    final phoenix = phoenixTheme(color: kMusicPodDefaultColor);
+    final phoenixLightWithFont = isLinux
+        ? phoenix.lightTheme
+        : applyChineseFontToPhoenixTheme(
+            lightTheme: phoenix.lightTheme,
+            darkTheme: phoenix.darkTheme,
+          );
+    final phoenixDarkWithFont = isLinux
+        ? phoenix.darkTheme
+        : applyChineseFontToPhoenixDarkTheme(darkTheme: phoenix.darkTheme);
+
+    return MaterialApp(
+      theme: isLinux ? yaruLight : phoenixLightWithFont,
+      darkTheme: isLinux ? yaruDark : phoenixDarkWithFont,
+      title: '',
+      debugShowCheckedModeBanner: false,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: supportedLocales,
+      home: Scaffold(
+        appBar: const YaruWindowTitleBar(
+          border: BorderSide.none,
+          backgroundColor: Colors.transparent,
+        ),
+        body:
+            body ??
+            Center(
+              child: SingleChildScrollView(
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset('assets/icon.png', height: 250, width: 250),
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: isLinux
+                            ? const YaruCircularProgressIndicator()
+                            : const CircularProgressIndicator.adaptive(),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-    ),
-  );
+      ),
+    );
+  }
 }
