@@ -1,5 +1,30 @@
 # Changelog
 
+## [2.15.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.14.0...v2.15.0) (2026-01-20)
+
+
+### Features
+
+* disable player auto resize / auto-move ([#1394](https://github.com/ubuntu-flutter-community/musicpod/issues/1394)) ([1736a27](https://github.com/ubuntu-flutter-community/musicpod/commit/1736a270669d1f529f6365649997d49870d3f565)), closes [#1386](https://github.com/ubuntu-flutter-community/musicpod/issues/1386)
+* **FetchLyricsOnline:** refactor lyrics and offline lyrics service, add optional online (based on genius) service and widgets ([#1403](https://github.com/ubuntu-flutter-community/musicpod/issues/1403)) ([e2c4090](https://github.com/ubuntu-flutter-community/musicpod/commit/e2c409077b8a25a591b94d354928c18736865874))
+* improve CJK font rendering with chinese_font_library ([#1417](https://github.com/ubuntu-flutter-community/musicpod/issues/1417)) ([0c25af7](https://github.com/ubuntu-flutter-community/musicpod/commit/0c25af7424f0038f839a53873f903f915ad39622))
+* Translated using Weblate (Slovak) ([#1414](https://github.com/ubuntu-flutter-community/musicpod/issues/1414)) ([2d22a47](https://github.com/ubuntu-flutter-community/musicpod/commit/2d22a4741b65efab7c7b039fe55f76c69e9f2184))
+* Translations update from Hosted Weblate ([#1402](https://github.com/ubuntu-flutter-community/musicpod/issues/1402)) ([041fa5e](https://github.com/ubuntu-flutter-community/musicpod/commit/041fa5ede376193e31f2ff951b8a537235d75045))
+* Translations update from Hosted Weblate ([#1413](https://github.com/ubuntu-flutter-community/musicpod/issues/1413)) ([7618496](https://github.com/ubuntu-flutter-community/musicpod/commit/761849694ac59edd35a7c93b4611aa715b614fd0))
+
+
+### Bug Fixes
+
+* **deps:** update dependency flutter_it to v2.0.1 ([#1397](https://github.com/ubuntu-flutter-community/musicpod/issues/1397)) ([d6d2428](https://github.com/ubuntu-flutter-community/musicpod/commit/d6d2428d488b7fd169d758648c49eeeec0805c50))
+* **deps:** update dependency flutter_it to v2.1.1 ([#1406](https://github.com/ubuntu-flutter-community/musicpod/issues/1406)) ([d3806e8](https://github.com/ubuntu-flutter-community/musicpod/commit/d3806e83575b4b180157de0b1d1646dbb0eaa8ba))
+* **deps:** update dependency yaru to v9 ([#1398](https://github.com/ubuntu-flutter-community/musicpod/issues/1398)) ([6a0ef98](https://github.com/ubuntu-flutter-community/musicpod/commit/6a0ef98cdcece8ac09b5744963b2209bac89ddaa))
+* linux player color option ([#1379](https://github.com/ubuntu-flutter-community/musicpod/issues/1379)) ([e27dd59](https://github.com/ubuntu-flutter-community/musicpod/commit/e27dd59c42b3386dc5a6bd6dfb07d3c0597d08c3))
+* mark as played doesn't mark when podcast is partially played ([#1391](https://github.com/ubuntu-flutter-community/musicpod/issues/1391)) ([0b11515](https://github.com/ubuntu-flutter-community/musicpod/commit/0b11515fde1dd8dd914b20de8bd7a3beeb1248f6)), closes [#1388](https://github.com/ubuntu-flutter-community/musicpod/issues/1388)
+* migrate old podcasts to new podcasts ([#1384](https://github.com/ubuntu-flutter-community/musicpod/issues/1384)) ([a158692](https://github.com/ubuntu-flutter-community/musicpod/commit/a1586929fb046765c372d6537b73890a07ddb69a))
+* Showing no connection page when wwan is connection is active ([#1393](https://github.com/ubuntu-flutter-community/musicpod/issues/1393)) ([e314f2d](https://github.com/ubuntu-flutter-community/musicpod/commit/e314f2dd7610e779be45c7cd689c322a38448f6d)), closes [#1390](https://github.com/ubuntu-flutter-community/musicpod/issues/1390)
+* Spelling of "lyrics" ([#1401](https://github.com/ubuntu-flutter-community/musicpod/issues/1401)) ([6df4d14](https://github.com/ubuntu-flutter-community/musicpod/commit/6df4d14a0d41503b3470985ceb04f42e20d8245d))
+* update side player height ([#1415](https://github.com/ubuntu-flutter-community/musicpod/issues/1415)) ([5ccc93a](https://github.com/ubuntu-flutter-community/musicpod/commit/5ccc93a5a70cee3053b4c12576f2ab7414b4de5a))
+
 ## [2.14.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.13.0...v2.14.0) (2025-10-29)
 
 
