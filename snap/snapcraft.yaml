@@ -52,7 +52,7 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - --buildtype3=release
       - -Dlibmpv=true
     build-packages:
       - curl
@@ -64,6 +64,7 @@ parts:
       - libjpeg-turbo8-dev
       - libasound2-dev
       - libplacebo-dev
+      - libxv-dev
     prime:
       - usr/lib/*/libmpv*
 
@@ -155,6 +156,7 @@ parts:
       - libsrt1.5-gnutls
       - ocl-icd-libopencl1
       - libplacebo338
+      - libxv1
       - on amd64:
           - libmfx1
     prime:
