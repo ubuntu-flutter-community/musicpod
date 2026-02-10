@@ -84,6 +84,8 @@ parts:
       - unzip
       - xz-utils
       - zip
+      - lld
+      - llvm
     override-prime: ""
 
   musicpod:
