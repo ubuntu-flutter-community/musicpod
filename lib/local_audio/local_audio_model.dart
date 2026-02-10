@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
-import 'package:watcher/watcher.dart';
 
 import '../common/data/audio.dart';
 import '../common/view/audio_filter.dart';
@@ -32,7 +31,6 @@ class LocalAudioModel extends SafeChangeNotifier {
   final SettingsService _settingsService;
   StreamSubscription<bool>? _audiosChangedSub;
   StreamSubscription<bool>? _settingsChangedSub;
-  FileWatcher? get fileWatcher => _localAudioService.fileWatcher;
 
   void changeMetadata(
     Audio audio, {

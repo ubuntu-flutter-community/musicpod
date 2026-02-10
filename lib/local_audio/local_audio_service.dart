@@ -5,16 +5,14 @@ import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:synchronized/synchronized.dart';
-import 'package:watcher/watcher.dart';
 
 import '../common/data/audio.dart';
 import '../common/logging.dart';
 import '../common/view/audio_filter.dart';
 import '../extensions/media_file_x.dart';
-import '../settings/shared_preferences_keys.dart';
 import '../extensions/string_x.dart';
-import '../extensions/taget_platform_x.dart';
 import '../settings/settings_service.dart';
+import '../settings/shared_preferences_keys.dart';
 import 'local_cover_service.dart';
 import 'local_search_result.dart';
 
@@ -329,9 +327,6 @@ class LocalAudioService {
     );
   }
 
-  FileWatcher? _fileWatcher;
-  FileWatcher? get fileWatcher => _fileWatcher;
-
   final Lock _lock = Lock();
   Future<void> init({String? newDirectory, bool forceInit = false}) async {
     await _lock.synchronized(() async {
@@ -347,13 +342,6 @@ class LocalAudioService {
 
       final result = await compute(_readAudiosFromDirectory, dir);
       _failedImports = result.failedImports;
-
-      if (!isWindows &&
-          dir != null &&
-          Directory(dir).existsSync() &&
-          (_fileWatcher == null || _fileWatcher!.path != dir)) {
-        _fileWatcher = FileWatcher(dir);
-      }
 
       addAudiosAndBuildCollection(result.audios, clear: forceInit);
     });
