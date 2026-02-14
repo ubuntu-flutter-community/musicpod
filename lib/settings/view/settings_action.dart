@@ -27,12 +27,11 @@ class SettingsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    void onPressed() {
-      if (di<AppModel>().fullWindowMode == true) {
-        di<AppModel>().setFullWindowMode(false);
-      }
+    Future<void> onPressed() async {
+      await di<AppModel>().setFullWindowMode(false);
+      await Future.delayed(const Duration(milliseconds: 300));
       di<SettingsModel>().scrollIndex = scrollIndex;
-      di<RoutingManager>().push(pageId: PageIDs.settings);
+      await di<RoutingManager>().push(pageId: PageIDs.settings);
     }
 
     return switch (_mode) {

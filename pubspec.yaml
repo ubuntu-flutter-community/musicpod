@@ -75,7 +75,7 @@ dependencies:
       url: https://github.com/ubuntu-flutter-community/phoenix_theme
       ref: 7d22aba2841e522bf4c140e60e4a60f33c8f5aa6
   pls: ^1.1.0
-  podcast_search: ^0.7.13
+  podcast_search: ^0.7.14
   radio_browser_api: ^2.0.0+1
   reorderableitemsview: ^2.0.1
   safe_change_notifier: ^0.4.0+1
@@ -97,7 +97,7 @@ dependencies:
   yaru_window_linux: ^0.2.2
 
 dev_dependencies:
-  build_runner: ^2.11.0
+  build_runner: ^2.11.1
   flutter_launcher_icons: ^0.14.4
   flutter_lints: ^6.0.0
   flutter_test:
