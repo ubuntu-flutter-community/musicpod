@@ -30,7 +30,7 @@ dependencies:
     sdk: flutter
   flutter_cache_manager: ^3.4.1
   flutter_discord_rpc: ^1.1.0
-  flutter_it: 2.1.1
+  flutter_it: 2.1.2
   flutter_localizations:
     sdk: flutter
   flutter_markdown: ^0.7.7+1
