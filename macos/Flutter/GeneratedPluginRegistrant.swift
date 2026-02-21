@@ -23,7 +23,6 @@ import sqflite_darwin
 import super_native_extensions
 import system_theme
 import url_launcher_macos
-import volume_controller
 import wakelock_plus
 import window_manager
 
@@ -46,7 +45,6 @@ func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   SuperNativeExtensionsPlugin.register(with: registry.registrar(forPlugin: "SuperNativeExtensionsPlugin"))
   SystemThemePlugin.register(with: registry.registrar(forPlugin: "SystemThemePlugin"))
   UrlLauncherPlugin.register(with: registry.registrar(forPlugin: "UrlLauncherPlugin"))
-  VolumeControllerPlugin.register(with: registry.registrar(forPlugin: "VolumeControllerPlugin"))
   WakelockPlusMacosPlugin.register(with: registry.registrar(forPlugin: "WakelockPlusMacosPlugin"))
   WindowManagerPlugin.register(with: registry.registrar(forPlugin: "WindowManagerPlugin"))
 }
