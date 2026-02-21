@@ -52,7 +52,7 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype3=release
+      - --buildtype=release
       - -Dlibmpv=true
     build-packages:
       - curl
