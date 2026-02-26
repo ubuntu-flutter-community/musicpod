@@ -77,10 +77,6 @@ class SettingsModel extends SafeChangeNotifier {
   void setNeverShowFailedImports(bool value) =>
       _service.setValue(SPKeys.neverShowImportFails, value);
 
-  bool get enableDiscordRPC => _service.getBool(SPKeys.enableDiscord) ?? false;
-  Future<bool> setEnableDiscordRPC(bool value) =>
-      _service.setValue(SPKeys.enableDiscord, value);
-
   bool get groupAlbumsOnlyByAlbumName =>
       _service.getBool(SPKeys.groupAlbumsOnlyByAlbumName) ?? false;
   void setGroupAlbumsOnlyByAlbumName(bool value) =>

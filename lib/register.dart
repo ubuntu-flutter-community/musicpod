@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_discord_rpc/flutter_discord_rpc.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:github/github.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
@@ -49,19 +48,6 @@ import 'settings/view/licenses_dialog.dart';
 
 /// Registers all Services, ViewModels and external dependencies
 void registerDependencies() {
-  if (AppConfig.allowDiscordRPC) {
-    di.registerSingletonAsync<FlutterDiscordRPC>(
-      () async {
-        await FlutterDiscordRPC.initialize(AppConfig.discordApplicationId);
-        return FlutterDiscordRPC.instance;
-      },
-      dispose: (s) {
-        s.disconnect();
-        s.dispose();
-      },
-    );
-  }
-
   if (AppConfig.windowManagerImplemented) {
     di.registerSingletonAsync<WindowManager>(() async {
       final wm = WindowManager.instance;
@@ -130,16 +116,10 @@ void registerDependencies() {
     )
     ..registerSingletonAsync<ExposeService>(
       () async => ExposeService(
-        settingsService: di<SettingsService>(),
-        discordRPC: AppConfig.allowDiscordRPC ? di<FlutterDiscordRPC>() : null,
         lastFmService: di<LastfmService>(),
         listenBrainzService: di<ListenBrainzService>(),
       ),
-      dependsOn: [
-        if (AppConfig.allowDiscordRPC) FlutterDiscordRPC,
-        LastfmService,
-        SettingsService,
-      ],
+      dependsOn: [LastfmService],
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton(LocalCoverService.new, dispose: (s) => s.dispose())

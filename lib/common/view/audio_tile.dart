@@ -212,7 +212,6 @@ class AudioTileTrail extends StatelessWidget with WatchItMixin {
       spacing: kSmallestSpace,
       mainAxisSize: MainAxisSize.min,
       children: [
-        // TODO: check if a mouse is connected instead of checking the platform
         if (!isMobile)
           Opacity(
             opacity: hovered || selected || liked || starred ? 1 : 0,
