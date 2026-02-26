@@ -41,73 +41,69 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
 
     final trackAndPlayer = [
       PlayerTrack(active: active, bottomPlayer: true),
-      InkWell(
-        onTap: () => appModel.setFullWindowMode(true),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 10, right: kLargestSpace),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: BottomPlayerImage(
-                    audio: audio,
-                    size: bottomPlayerDefaultHeight - 24,
-                    videoController: model.controller,
-                    isVideo: isVideo,
-                    isOnline: isOnline,
-                  ),
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 10, right: kLargestSpace),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: BottomPlayerImage(
+                  audio: audio,
+                  size: bottomPlayerDefaultHeight - 24,
+                  videoController: model.controller,
+                  isVideo: isVideo,
+                  isOnline: isOnline,
                 ),
               ),
-              Expanded(
+            ),
+            Expanded(
+              flex: 4,
+              child: Row(
+                children: [
+                  const Flexible(
+                    flex: 5,
+                    child: PlayerTitleAndArtist(
+                      playerPosition: PlayerPosition.bottom,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  if (!smallWindow) BottomPlayerLikeAndStarButton(audio: audio),
+                ],
+              ),
+            ),
+            if (!smallWindow)
+              Expanded(flex: 6, child: PlayerMainControls(active: active)),
+            if (!smallWindow)
+              Flexible(
                 flex: 4,
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    const Flexible(
-                      flex: 5,
-                      child: PlayerTitleAndArtist(
-                        playerPosition: PlayerPosition.bottom,
+                    if (audio?.audioType == AudioType.podcast)
+                      PlaybackRateButton(active: active),
+                    if (!isMobile) const VolumeSliderPopup(),
+                    const PlayerPauseTimerButton(),
+                    IconButton(
+                      tooltip: context.l10n.fullWindow,
+                      icon: Icon(
+                        Iconz.fullWindow,
+                        color: theme.colorScheme.onSurface,
                       ),
+                      onPressed: () => appModel.setFullWindowMode(true),
                     ),
-                    const SizedBox(width: 10),
-                    if (!smallWindow)
-                      BottomPlayerLikeAndStarButton(audio: audio),
                   ],
                 ),
-              ),
-              if (!smallWindow)
-                Expanded(flex: 6, child: PlayerMainControls(active: active)),
-              if (!smallWindow)
-                Flexible(
-                  flex: 4,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      if (audio?.audioType == AudioType.podcast)
-                        PlaybackRateButton(active: active),
-                      if (!isMobile) const VolumeSliderPopup(),
-                      const PlayerPauseTimerButton(),
-                      IconButton(
-                        tooltip: context.l10n.fullWindow,
-                        icon: Icon(
-                          Iconz.fullWindow,
-                          color: theme.colorScheme.onSurface,
-                        ),
-                        onPressed: () => appModel.setFullWindowMode(true),
-                      ),
-                    ],
-                  ),
-                )
-              else ...[
-                BottomPlayerLikeAndStarButton(audio: audio),
-                const SizedBox(width: 10),
-                PlayButton(active: active),
-              ],
+              )
+            else ...[
+              BottomPlayerLikeAndStarButton(audio: audio),
               const SizedBox(width: 10),
+              PlayButton(active: active),
             ],
-          ),
+            const SizedBox(width: 10),
+          ],
         ),
       ),
     ];
