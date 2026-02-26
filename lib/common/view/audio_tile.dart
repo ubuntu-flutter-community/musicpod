@@ -108,7 +108,7 @@ class _AudioTileState extends State<AudioTile> {
       padding: const EdgeInsets.only(right: kLargestSpace),
       child: widget.onTitleTap == null
           ? TapAbleText(
-              onTap: onTileTap,
+              onTap: isMobile ? null : onTileTap,
               text: widget.audio.title ?? l10n.unknown,
               overflow: titleOverflow,
               maxLines: titleMaxLines,
