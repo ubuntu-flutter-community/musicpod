@@ -67,11 +67,6 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
     final isVideo = watchPropertyValue((PlayerModel m) => m.isVideo == true);
 
     registerStreamHandler(
-      select: (AppModel m) => m.isDiscordConnectedStream,
-      handler: discordConnectedHandler,
-    );
-
-    registerStreamHandler(
       select: (DownloadModel m) => m.messageStream,
       handler: downloadMessageStreamHandler,
     );

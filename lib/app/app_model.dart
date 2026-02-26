@@ -32,12 +32,6 @@ class AppModel extends SafeChangeNotifier {
        _exposeService = exposeService;
 
   final ExposeService _exposeService;
-  Stream<String?> get errorStream => _exposeService.discordErrorStream;
-  Stream<bool> get isDiscordConnectedStream =>
-      _exposeService.isDiscordConnectedStream;
-  Future<void> connectToDiscord(bool value) async =>
-      _exposeService.connectToDiscord(value);
-  bool get isDiscordConnected => _exposeService.isDiscordConnected;
 
   ValueNotifier<bool> get isLastFmAuthorized =>
       _exposeService.isLastFmAuthorized;

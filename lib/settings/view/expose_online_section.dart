@@ -4,11 +4,9 @@ import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/app_model.dart';
-import '../../app_config.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
-import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../settings_model.dart';
 
@@ -49,10 +47,6 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
-    final discordEnabled = watchPropertyValue(
-      (SettingsModel m) => m.enableDiscordRPC,
-    );
-
     final lastFmEnabled = watchPropertyValue(
       (SettingsModel m) => m.enableLastFmScrobbling,
     );
@@ -66,38 +60,6 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
       margin: const EdgeInsets.symmetric(horizontal: kLargestSpace),
       child: Column(
         children: [
-          YaruTile(
-            title: Row(
-              children: space(
-                children: [
-                  AppConfig.allowDiscordRPC
-                      ? const Icon(TablerIcons.brand_discord_filled)
-                      : Icon(
-                          TablerIcons.brand_discord_filled,
-                          color: context.theme.disabledColor,
-                        ),
-                  Text(l10n.exposeToDiscordTitle),
-                ],
-              ),
-            ),
-            subtitle: Text(
-              AppConfig.allowDiscordRPC
-                  ? l10n.exposeToDiscordSubTitle
-                  : l10n.featureDisabledOnPlatform,
-            ),
-            trailing: CommonSwitch(
-              value: discordEnabled,
-              onChanged: AppConfig.allowDiscordRPC
-                  ? (v) => di<AppModel>()
-                        .connectToDiscord(v)
-                        .then(
-                          (_) => di<SettingsModel>().setEnableDiscordRPC(
-                            di<AppModel>().isDiscordConnected,
-                          ),
-                        )
-                  : null,
-            ),
-          ),
           YaruTile(
             title: Row(
               children: space(
