@@ -16,37 +16,20 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
       (context) => di<SearchModel>().loadPodcastGenresCommand.run(),
     );
 
-    final searchModel = di<SearchModel>();
-
     final podcastGenre = watchPropertyValue((SearchModel m) => m.podcastGenre);
-
-    final setPodcastGenre = searchModel.setPodcastGenre;
 
     return watchValue(
       (SearchModel m) => m.loadPodcastGenresCommand.results,
     ).toWidget(
       whileRunning: (lastResult, param) => const Progress(),
-      onError: (_, lastResult, _) => lastResult != null
-          ? CommonControlPanel(
-              labels: lastResult
-                  .map((e) => Text(e.localize(context.l10n)))
-                  .toList(),
-              isSelected: lastResult.map((e) => e == podcastGenre).toList(),
-              onSelected: (i) {
-                searchModel.setSearchQuery(null);
-                setPodcastGenre(PodcastGenre.values.elementAt(i));
-                searchModel.search();
-              },
-            )
-          : const SizedBox.shrink(),
+      onError: (_, lastResult, _) => const SizedBox.shrink(),
       onData: (result, param) => CommonControlPanel(
         labels: result.map((e) => Text(e.localize(context.l10n))).toList(),
         isSelected: result.map((e) => e == podcastGenre).toList(),
-        onSelected: (i) {
-          searchModel.setSearchQuery(null);
-          setPodcastGenre(PodcastGenre.values.elementAt(i));
-          searchModel.search();
-        },
+        onSelected: (i) => di<SearchModel>()
+          ..setSearchQuery(null)
+          ..setPodcastGenre(PodcastGenre.values.elementAt(i))
+          ..search(),
       ),
     );
   }

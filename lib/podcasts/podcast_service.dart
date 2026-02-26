@@ -49,12 +49,19 @@ class PodcastService {
     }
   }
 
+  List<PodcastGenre> get cachedPodcastGenres => _podcastGenreCache;
   List<PodcastGenre> _podcastGenreCache = [];
   Future<List<PodcastGenre>> loadGenres() async {
     if (_podcastGenreCache.isNotEmpty) {
       return _podcastGenreCache;
     }
-    final genres = await _search?.genres() ?? <String>{};
+
+    var genres = <String>{};
+    try {
+      genres = await _search?.genres().toSet() ?? <String>{};
+    } on Exception catch (e) {
+      printMessageInDebugMode(e);
+    }
 
     _podcastGenreCache = genres
         .map((g) => PodcastGenre.fromString(g))

@@ -122,7 +122,10 @@ class SearchModel extends SafeChangeNotifier {
   }
 
   late final Command<void, List<PodcastGenre>> loadPodcastGenresCommand =
-      Command.createAsyncNoParam(_podcastService.loadGenres, initialValue: []);
+      Command.createAsyncNoParam(
+        _podcastService.loadGenres,
+        initialValue: _podcastService.cachedPodcastGenres,
+      );
 
   List<Audio>? _radioSearchResult;
   List<Audio>? get radioSearchResult => _radioSearchResult;
