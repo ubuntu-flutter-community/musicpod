@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:basic_utils/basic_utils.dart';
+import 'package:collection/collection.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 
 import '../common/data/audio.dart';
@@ -408,5 +410,62 @@ class RadioService {
           : e.value.icyName.contains(filter) ||
                 filter.contains(e.value.icyName),
     );
+  }
+
+  Future<Audio?> findSimilarStation(Audio station) async {
+    final Station? maybe = await _findSimilarStation(station);
+    if (maybe != null) {
+      return Audio.fromStation(maybe);
+    }
+
+    return null;
+  }
+
+  final noNumbers = RegExp(r'^[^0-9]+$');
+  Future<Station?> _findSimilarStation(Audio audio) async {
+    final searchTags = audio.tags?.where((e) => noNumbers.hasMatch(e));
+    if (searchTags == null || searchTags.isEmpty) {
+      return null;
+    }
+    Station? maybe;
+    int tries = audio.tags!.length;
+    do {
+      maybe =
+          (await search(
+                limit: 500,
+                tag: searchTags.elementAt(Random().nextInt(searchTags.length)),
+              ))
+              ?.where(
+                (e) => _areTagsSimilar(
+                  stationTags: searchTags,
+                  otherTags: (Audio.fromStation(e).tags ?? []).where(
+                    (e) => noNumbers.hasMatch(e),
+                  ),
+                ),
+              )
+              .lastWhereOrNull((e) => e.stationUUID != audio.uuid);
+
+      tries--;
+    } while (tries > 0 && (maybe == null || audio == Audio.fromStation(maybe)));
+
+    return maybe;
+  }
+
+  bool _areTagsSimilar({
+    required Iterable<String> stationTags,
+    required Iterable<String> otherTags,
+  }) {
+    final matches = <String>{};
+    for (var tag in stationTags.map((e) => e.toLowerCase().trim()).toList()) {
+      if (otherTags.contains(tag.toLowerCase().trim())) {
+        matches.add(tag);
+      }
+    }
+
+    return switch (stationTags.length) {
+      1 || 2 || 3 => matches.isNotEmpty,
+      4 || 5 || 6 || 7 || 8 || 9 || 10 => matches.length >= 2,
+      _ => matches.length >= 3,
+    };
   }
 }

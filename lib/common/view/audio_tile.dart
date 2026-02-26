@@ -5,7 +5,6 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../../l10n/app_localizations.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
@@ -15,7 +14,6 @@ import 'audio_page_type.dart';
 import 'audio_tile_image.dart';
 import 'audio_tile_option_button.dart';
 import 'like_icon_button.dart';
-import 'stared_station_icon_button.dart';
 import 'tapable_text.dart';
 import 'theme.dart';
 import 'ui_constants.dart';
@@ -73,7 +71,6 @@ class _AudioTileState extends State<AudioTile> {
 
     final subTitle = switch (widget.audioPageType) {
       AudioPageType.artist => widget.audio.album ?? l10n.unknown,
-      AudioPageType.radioSearch => _buildRadioSubTitle(widget.audio, l10n),
       _ => widget.audio.artist ?? l10n.unknown,
     };
 
@@ -183,9 +180,6 @@ class _AudioTileState extends State<AudioTile> {
       child: listTile,
     );
   }
-
-  String _buildRadioSubTitle(Audio audio, AppLocalizations l10n) =>
-      '${audio.albumArtist?.isNotEmpty == true ? '${audio.albumArtist}' : ''}${audio.bitRate > 0 ? ' • ${audio.fileSize} kbps' : ''}${audio.clicks > 0 ? ' • ${audio.clicks} ${l10n.clicks}' : ''}${audio.language.trim().isNotEmpty ? ' • ${audio.language}' : ''}';
 }
 
 class AudioTileTrail extends StatelessWidget with WatchItMixin {
@@ -223,10 +217,6 @@ class AudioTileTrail extends StatelessWidget with WatchItMixin {
           Opacity(
             opacity: hovered || selected || liked || starred ? 1 : 0,
             child: switch (audio.audioType) {
-              AudioType.radio => StaredStationIconButton(
-                audio: audio,
-                color: selected && isPlayerPlaying ? selectedColor : null,
-              ),
               AudioType.local => LikeIconButton(
                 audio: audio,
                 color: selected && isPlayerPlaying ? selectedColor : null,
