@@ -14,7 +14,6 @@ import '../data/audio_type.dart';
 import 'audio_page_type.dart';
 import 'audio_tile_image.dart';
 import 'audio_tile_option_button.dart';
-import 'icons.dart';
 import 'like_icon_button.dart';
 import 'stared_station_icon_button.dart';
 import 'tapable_text.dart';
@@ -93,11 +92,24 @@ class _AudioTileState extends State<AudioTile> {
     const titleOverflow = TextOverflow.ellipsis;
     const titleMaxLines = 1;
 
+    final onTileTap = () {
+      if (widget.selected) {
+        if (widget.isPlayerPlaying) {
+          playerModel.pause();
+        } else {
+          playerModel.resume();
+        }
+      } else {
+        widget.onTap?.call();
+      }
+    };
+
     final title = Padding(
       padding: const EdgeInsets.only(right: kLargestSpace),
       child: widget.onTitleTap == null
-          ? Text(
-              widget.audio.title ?? l10n.unknown,
+          ? TapAbleText(
+              onTap: onTileTap,
+              text: widget.audio.title ?? l10n.unknown,
               overflow: titleOverflow,
               maxLines: titleMaxLines,
             )
@@ -141,19 +153,7 @@ class _AudioTileState extends State<AudioTile> {
         left: widget.audioPageType == AudioPageType.album ? 10 : null,
         right: 0,
       ),
-      onTap: isMobile
-          ? () {
-              if (widget.selected) {
-                if (widget.isPlayerPlaying) {
-                  playerModel.pause();
-                } else {
-                  playerModel.resume();
-                }
-              } else {
-                widget.onTap?.call();
-              }
-            }
-          : null,
+      onTap: isMobile ? onTileTap : null,
       title: Row(
         spacing: kMediumSpace,
         children: [
@@ -296,7 +296,7 @@ class _AlbumTileLead extends StatelessWidget {
   }
 }
 
-class _AudioTileLeading extends StatefulWidget {
+class _AudioTileLeading extends StatelessWidget {
   const _AudioTileLeading({
     required this.audio,
     required this.audioPageType,
@@ -318,112 +318,19 @@ class _AudioTileLeading extends StatefulWidget {
   final double dimension;
 
   @override
-  State<_AudioTileLeading> createState() => _AudioTileLeadingState();
-}
-
-class _AudioTileLeadingState extends State<_AudioTileLeading> {
-  bool _hovered = false;
-
-  @override
-  Widget build(BuildContext context) => MouseRegion(
-    onEnter: isMobile ? null : (e) => setState(() => _hovered = true),
-    onExit: isMobile ? null : (e) => setState(() => _hovered = false),
-    child: Stack(
-      children: [
-        AnimatedOpacity(
-          duration: const Duration(milliseconds: 200),
-          opacity: _hovered ? 0 : 1,
-          child: switch (widget.audioPageType) {
-            AudioPageType.album => _AlbumTileLead(
-              trackNumber: widget.audio.trackNumber,
-              color: widget.color,
-              dimension: widget.dimension,
-            ),
-            _ => AudioTileImage(
-              key: switch (widget.audio.audioType) {
-                AudioType.radio => ValueKey(widget.audio.uuid),
-                _ => null,
-              },
-              size: widget.dimension,
-              audio: widget.audio,
-            ),
-          },
-        ),
-        if (_hovered)
-          _AudioLeadingPlayButton(
-            dimension: widget.dimension,
-            selected: widget.selected,
-            audio: widget.audio,
-            startPlaylist: widget.onTap,
-            isPlayerPlaying: widget.isPlayerPlaying,
-          ),
-      ],
+  Widget build(BuildContext context) => switch (audioPageType) {
+    AudioPageType.album => _AlbumTileLead(
+      trackNumber: audio.trackNumber,
+      color: color,
+      dimension: dimension,
     ),
-  );
-}
-
-class _AudioLeadingPlayButton extends StatelessWidget {
-  const _AudioLeadingPlayButton({
-    required this.selected,
-    required this.audio,
-    required this.startPlaylist,
-    required this.isPlayerPlaying,
-    required this.dimension,
-  });
-
-  final bool selected;
-  final Audio audio;
-  final bool isPlayerPlaying;
-  final void Function()? startPlaylist;
-  final double dimension;
-
-  @override
-  Widget build(BuildContext context) {
-    final playerModel = di<PlayerModel>();
-
-    final radius = dimension / 2;
-
-    String label;
-    final l10n = context.l10n;
-    if (selected) {
-      if (isPlayerPlaying) {
-        label = l10n.pause;
-      } else {
-        label = l10n.play;
-      }
-    } else {
-      label = l10n.playAll;
-    }
-
-    return SizedBox.square(
-      dimension: radius * 2,
-      child: SizedBox.square(
-        dimension: radius * 2,
-        child: IconButton.filled(
-          style: translucentIconButtonStyle(context.colorScheme),
-          icon: (isPlayerPlaying && selected)
-              ? Icon(Iconz.pause, semanticLabel: label)
-              : Padding(
-                  padding: Iconz.cupertino
-                      ? const EdgeInsets.only(left: 3)
-                      : EdgeInsets.zero,
-                  child: Icon(Iconz.playFilled, semanticLabel: label),
-                ),
-          onPressed: () {
-            if (selected) {
-              if (isPlayerPlaying) {
-                playerModel.pause();
-              } else {
-                playerModel.resume();
-              }
-            } else {
-              playerModel.safeLastPosition().then((value) {
-                startPlaylist?.call();
-              });
-            }
-          },
-        ),
-      ),
-    );
-  }
+    _ => AudioTileImage(
+      key: switch (audio.audioType) {
+        AudioType.radio => ValueKey(audio.uuid),
+        _ => null,
+      },
+      size: dimension,
+      audio: audio,
+    ),
+  };
 }
