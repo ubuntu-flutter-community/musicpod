@@ -19,6 +19,7 @@ class NextStationButton extends StatelessWidget with WatchItMixin {
       select: (SearchModel m) => m.findSimilarStationCommand,
       handler: (context, newValue, cancel) {
         if (newValue != null &&
+            newValue.uuid != null &&
             newValue.uuid != di<PlayerModel>().audio?.uuid) {
           di<PlayerModel>().startPlaylist(
             audios: [newValue],
