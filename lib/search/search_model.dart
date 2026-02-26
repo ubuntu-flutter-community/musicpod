@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:radio_browser_api/radio_browser_api.dart' hide Country;
 import 'package:safe_change_notifier/safe_change_notifier.dart';
@@ -120,15 +121,11 @@ class SearchModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  List<PodcastGenre> getPodcastGenres(bool usePodcastIndex) {
-    PodcastGenre.values.where((g) => g != podcastGenre).toList();
-
-    const list = PodcastGenre.values;
-
-    return usePodcastIndex
-        ? list.where((e) => !e.name.contains('XXXITunesOnly')).toList()
-        : list.where((e) => !e.name.contains('XXXPodcastIndexOnly')).toList();
-  }
+  late final Command<void, List<PodcastGenre>> loadPodcastGenresCommand =
+      Command.createAsyncNoParam(
+        _podcastService.loadGenres,
+        initialValue: _podcastService.cachedPodcastGenres,
+      );
 
   List<Audio>? _radioSearchResult;
   List<Audio>? get radioSearchResult => _radioSearchResult;

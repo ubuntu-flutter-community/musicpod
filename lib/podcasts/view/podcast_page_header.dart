@@ -12,7 +12,6 @@ import '../../extensions/string_x.dart';
 import '../../l10n/app_localizations.dart';
 import '../../l10n/l10n.dart';
 import '../../search/search_model.dart';
-import '../../settings/settings_model.dart';
 import '../podcast_model.dart';
 import 'podcast_page_image.dart';
 
@@ -71,9 +70,7 @@ class PodcastPageHeader extends StatelessWidget {
     required String text,
   }) async {
     await di<PodcastModel>().init(updateMessage: l10n.updateAvailable);
-    final genres = di<SearchModel>().getPodcastGenres(
-      di<SettingsModel>().usePodcastIndex,
-    );
+    final genres = await di<SearchModel>().loadPodcastGenresCommand.runAsync();
 
     final genreOrNull = genres.firstWhereOrNull(
       (e) =>

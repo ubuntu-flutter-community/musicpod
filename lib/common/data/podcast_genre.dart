@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+
 import '../../extensions/string_x.dart';
 import '../../l10n/app_localizations.dart';
 
@@ -9,17 +11,17 @@ enum PodcastGenre {
   education,
   fiction,
   government,
-  healthAndFitnessXXXITunesOnly,
+  healthAndFitness,
   history,
-  kidsAndFamilyXXXITunesOnly,
+  kidsAndFamily,
   leisure,
   music,
   news,
-  religionAndSpiritualityXXXITunesOnly,
+  religionAndSpirituality,
   science,
-  societyAndCultureXXXITunesOnly,
+  societyAndCulture,
   sports,
-  tvAndFilmXXXITunesOnly,
+  tvAndFilm,
   technology,
   trueCrime,
   afterShows,
@@ -27,118 +29,118 @@ enum PodcastGenre {
   animals,
   animation,
 
-  astronomyXXXPodcastIndexOnly,
-  automotiveXXXPodcastIndexOnly,
-  aviationXXXPodcastIndexOnly,
-  baseballXXXPodcastIndexOnly,
-  basketballXXXPodcastIndexOnly,
-  beautyXXXPodcastIndexOnly,
-  booksXXXPodcastIndexOnly,
-  buddhismXXXPodcastIndexOnly,
-  careersXXXPodcastIndexOnly,
-  chemistryXXXPodcastIndexOnly,
-  christianityXXXPodcastIndexOnly,
-  climateXXXPodcastIndexOnly,
-  commentaryXXXPodcastIndexOnly,
-  coursesXXXPodcastIndexOnly,
-  craftsXXXPodcastIndexOnly,
-  cricketXXXPodcastIndexOnly,
-  cryptocurrencyXXXPodcastIndexOnly,
-  cultureXXXPodcastIndexOnly,
-  dailyXXXPodcastIndexOnly,
-  designXXXPodcastIndexOnly,
-  documentaryXXXPodcastIndexOnly,
-  dramaXXXPodcastIndexOnly,
-  earthXXXPodcastIndexOnly,
-  entertainmentXXXPodcastIndexOnly,
-  entrepreneurshipXXXPodcastIndexOnly,
-  familyXXXPodcastIndexOnly,
-  fantasyXXXPodcastIndexOnly,
-  fashionXXXPodcastIndexOnly,
-  filmXXXPodcastIndexOnly,
-  fitnessXXXPodcastIndexOnly,
-  foodXXXPodcastIndexOnly,
-  footballXXXPodcastIndexOnly,
-  gamesXXXPodcastIndexOnly,
-  gardenXXXPodcastIndexOnly,
-  golfXXXPodcastIndexOnly,
-  healthXXXPodcastIndexOnly,
-  hinduismXXXPodcastIndexOnly,
-  hobbiesXXXPodcastIndexOnly,
-  hockeyXXXPodcastIndexOnly,
-  homeXXXPodcastIndexOnly,
-  howToXXXPodcastIndexOnly,
-  improvXXXPodcastIndexOnly,
-  interviewsXXXPodcastIndexOnly,
-  investingXXXPodcastIndexOnly,
-  islamXXXPodcastIndexOnly,
-  journalsXXXPodcastIndexOnly,
-  judaismXXXPodcastIndexOnly,
-  kidsXXXPodcastIndexOnly,
-  languageXXXPodcastIndexOnly,
-  learningXXXPodcastIndexOnly,
-  lifeXXXPodcastIndexOnly,
-  managementXXXPodcastIndexOnly,
-  mangaXXXPodcastIndexOnly,
-  marketingXXXPodcastIndexOnly,
-  mathematicsXXXPodcastIndexOnly,
-  medicineXXXPodcastIndexOnly,
-  mentalXXXPodcastIndexOnly,
-  naturalXXXPodcastIndexOnly,
-  natureXXXPodcastIndexOnly,
-  nonProfitXXXPodcastIndexOnly,
-  nutritionXXXPodcastIndexOnly,
-  parentingXXXPodcastIndexOnly,
-  performingXXXPodcastIndexOnly,
-  personalXXXPodcastIndexOnly,
-  petsXXXPodcastIndexOnly,
-  philosophyXXXPodcastIndexOnly,
-  physicsXXXPodcastIndexOnly,
-  placesXXXPodcastIndexOnly,
-  politicsXXXPodcastIndexOnly,
-  relationshipsXXXPodcastIndexOnly,
-  religionXXXPodcastIndexOnly,
-  reviewsXXXPodcastIndexOnly,
-  rolePlayingXXXPodcastIndexOnly,
-  rugbyXXXPodcastIndexOnly,
-  runningXXXPodcastIndexOnly,
-  selfImprovementXXXPodcastIndexOnly,
-  sexualityXXXPodcastIndexOnly,
-  soccerXXXPodcastIndexOnly,
-  socialXXXPodcastIndexOnly,
-  societyXXXPodcastIndexOnly,
-  spiritualityXXXPodcastIndexOnly,
-  standUpXXXPodcastIndexOnly,
-  storiesXXXPodcastIndexOnly,
-  swimmingXXXPodcastIndexOnly,
-  tVXXXPodcastIndexOnly,
-  tabletopXXXPodcastIndexOnly,
-  tennisXXXPodcastIndexOnly,
-  travelXXXPodcastIndexOnly,
-  videoGamesXXXPodcastIndexOnly,
-  visualXXXPodcastIndexOnly,
-  volleyballXXXPodcastIndexOnly,
-  weatherXXXPodcastIndexOnly,
-  wildernessXXXPodcastIndexOnly,
-  wrestlingXXXPodcastIndexOnly;
+  astronomy,
+  automotive,
+  aviation,
+  baseball,
+  basketball,
+  beauty,
+  books,
+  buddhism,
+  careers,
+  chemistry,
+  christianity,
+  climate,
+  commentary,
+  courses,
+  crafts,
+  cricket,
+  cryptocurrency,
+  culture,
+  daily,
+  design,
+  documentary,
+  drama,
+  earth,
+  entertainment,
+  entrepreneurship,
+  family,
+  fantasy,
+  fashion,
+  film,
+  fitness,
+  food,
+  football,
+  games,
+  garden,
+  golf,
+  health,
+  hinduism,
+  hobbies,
+  hockey,
+  home,
+  howTo,
+  improv,
+  interviews,
+  investing,
+  islam,
+  journals,
+  judaism,
+  kids,
+  language,
+  learning,
+  life,
+  management,
+  manga,
+  marketing,
+  mathematics,
+  medicine,
+  mental,
+  natural,
+  nature,
+  nonProfit,
+  nutrition,
+  parenting,
+  performing,
+  personal,
+  pets,
+  philosophy,
+  physics,
+  places,
+  politics,
+  relationships,
+  religion,
+  reviews,
+  rolePlaying,
+  rugby,
+  running,
+  selfImprovement,
+  sexuality,
+  soccer,
+  social,
+  society,
+  spirituality,
+  standUp,
+  stories,
+  swimming,
+  tV,
+  tabletop,
+  tennis,
+  travel,
+  videoGames,
+  visual,
+  volleyball,
+  weather,
+  wilderness,
+  wrestling;
 
   String get id {
     switch (this) {
-      case healthAndFitnessXXXITunesOnly:
+      case healthAndFitness:
         return 'Health & Fitness';
-      case kidsAndFamilyXXXITunesOnly:
+      case kidsAndFamily:
         return 'Kids & Family';
-      case religionAndSpiritualityXXXITunesOnly:
+      case religionAndSpirituality:
         return 'Religion & Spirituality';
-      case societyAndCultureXXXITunesOnly:
+      case societyAndCulture:
         return 'Society & Culture';
-      case tvAndFilmXXXITunesOnly:
+      case tvAndFilm:
         return 'TV & Film';
       case trueCrime:
         return 'True Crime';
       default:
         return name
-            .replaceAll('XXXITunesOnly', '')
+            .replaceAll('', '')
             .replaceAll('XXXPodcastIndexOnly', '')
             .capitalized;
     }
@@ -160,11 +162,11 @@ enum PodcastGenre {
         return l10n.fiction;
       case government:
         return l10n.government;
-      case healthAndFitnessXXXITunesOnly:
+      case healthAndFitness:
         return l10n.healthAndFitness;
       case history:
         return l10n.history;
-      case kidsAndFamilyXXXITunesOnly:
+      case kidsAndFamily:
         return l10n.kidsAndFamily;
       case leisure:
         return l10n.leisure;
@@ -172,213 +174,221 @@ enum PodcastGenre {
         return l10n.music;
       case news:
         return l10n.news;
-      case religionAndSpiritualityXXXITunesOnly:
+      case religionAndSpirituality:
         return l10n.religionAndSpirituality;
       case science:
         return l10n.science;
-      case societyAndCultureXXXITunesOnly:
+      case societyAndCulture:
         return l10n.societyAndCulture;
       case sports:
         return l10n.sports;
-      case tvAndFilmXXXITunesOnly:
+      case tvAndFilm:
         return l10n.tvAndFilm;
       case technology:
         return l10n.technology;
       case trueCrime:
         return l10n.trueCrime;
-      case astronomyXXXPodcastIndexOnly:
+      case astronomy:
         return l10n.astronomyXXXPodcastIndexOnly;
-      case automotiveXXXPodcastIndexOnly:
+      case automotive:
         return l10n.automotiveXXXPodcastIndexOnly;
-      case aviationXXXPodcastIndexOnly:
+      case aviation:
         return l10n.aviationXXXPodcastIndexOnly;
-      case baseballXXXPodcastIndexOnly:
+      case baseball:
         return l10n.baseballXXXPodcastIndexOnly;
-      case basketballXXXPodcastIndexOnly:
+      case basketball:
         return l10n.basketballXXXPodcastIndexOnly;
-      case beautyXXXPodcastIndexOnly:
+      case beauty:
         return l10n.beautyXXXPodcastIndexOnly;
-      case booksXXXPodcastIndexOnly:
+      case books:
         return l10n.booksXXXPodcastIndexOnly;
-      case buddhismXXXPodcastIndexOnly:
+      case buddhism:
         return l10n.buddhismXXXPodcastIndexOnly;
-      case careersXXXPodcastIndexOnly:
+      case careers:
         return l10n.careersXXXPodcastIndexOnly;
-      case chemistryXXXPodcastIndexOnly:
+      case chemistry:
         return l10n.chemistryXXXPodcastIndexOnly;
-      case christianityXXXPodcastIndexOnly:
+      case christianity:
         return l10n.christianityXXXPodcastIndexOnly;
-      case climateXXXPodcastIndexOnly:
+      case climate:
         return l10n.climateXXXPodcastIndexOnly;
-      case commentaryXXXPodcastIndexOnly:
+      case commentary:
         return l10n.commentaryXXXPodcastIndexOnly;
-      case coursesXXXPodcastIndexOnly:
+      case courses:
         return l10n.coursesXXXPodcastIndexOnly;
-      case craftsXXXPodcastIndexOnly:
+      case crafts:
         return l10n.craftsXXXPodcastIndexOnly;
-      case cricketXXXPodcastIndexOnly:
+      case cricket:
         return l10n.cricketXXXPodcastIndexOnly;
-      case cryptocurrencyXXXPodcastIndexOnly:
+      case cryptocurrency:
         return l10n.cryptocurrencyXXXPodcastIndexOnly;
-      case cultureXXXPodcastIndexOnly:
+      case culture:
         return l10n.cultureXXXPodcastIndexOnly;
-      case dailyXXXPodcastIndexOnly:
+      case daily:
         return l10n.dailyXXXPodcastIndexOnly;
-      case designXXXPodcastIndexOnly:
+      case design:
         return l10n.designXXXPodcastIndexOnly;
-      case documentaryXXXPodcastIndexOnly:
+      case documentary:
         return l10n.documentaryXXXPodcastIndexOnly;
-      case dramaXXXPodcastIndexOnly:
+      case drama:
         return l10n.dramaXXXPodcastIndexOnly;
-      case earthXXXPodcastIndexOnly:
+      case earth:
         return l10n.earthXXXPodcastIndexOnly;
-      case entertainmentXXXPodcastIndexOnly:
+      case entertainment:
         return l10n.entertainmentXXXPodcastIndexOnly;
-      case entrepreneurshipXXXPodcastIndexOnly:
+      case entrepreneurship:
         return l10n.entrepreneurshipXXXPodcastIndexOnly;
-      case familyXXXPodcastIndexOnly:
+      case family:
         return l10n.familyXXXPodcastIndexOnly;
-      case fantasyXXXPodcastIndexOnly:
+      case fantasy:
         return l10n.fantasyXXXPodcastIndexOnly;
-      case fashionXXXPodcastIndexOnly:
+      case fashion:
         return l10n.fashionXXXPodcastIndexOnly;
-      case filmXXXPodcastIndexOnly:
+      case film:
         return l10n.filmXXXPodcastIndexOnly;
-      case fitnessXXXPodcastIndexOnly:
+      case fitness:
         return l10n.fitnessXXXPodcastIndexOnly;
-      case foodXXXPodcastIndexOnly:
+      case food:
         return l10n.foodXXXPodcastIndexOnly;
-      case footballXXXPodcastIndexOnly:
+      case football:
         return l10n.footballXXXPodcastIndexOnly;
-      case gamesXXXPodcastIndexOnly:
+      case games:
         return l10n.gamesXXXPodcastIndexOnly;
-      case gardenXXXPodcastIndexOnly:
+      case garden:
         return l10n.gardenXXXPodcastIndexOnly;
-      case golfXXXPodcastIndexOnly:
+      case golf:
         return l10n.golfXXXPodcastIndexOnly;
-      case healthXXXPodcastIndexOnly:
+      case health:
         return l10n.healthXXXPodcastIndexOnly;
-      case hinduismXXXPodcastIndexOnly:
+      case hinduism:
         return l10n.hinduismXXXPodcastIndexOnly;
-      case hobbiesXXXPodcastIndexOnly:
+      case hobbies:
         return l10n.hobbiesXXXPodcastIndexOnly;
-      case hockeyXXXPodcastIndexOnly:
+      case hockey:
         return l10n.hockeyXXXPodcastIndexOnly;
-      case homeXXXPodcastIndexOnly:
+      case home:
         return l10n.homeXXXPodcastIndexOnly;
-      case howToXXXPodcastIndexOnly:
+      case howTo:
         return l10n.howToXXXPodcastIndexOnly;
-      case improvXXXPodcastIndexOnly:
+      case improv:
         return l10n.improvXXXPodcastIndexOnly;
-      case interviewsXXXPodcastIndexOnly:
+      case interviews:
         return l10n.interviewsXXXPodcastIndexOnly;
-      case investingXXXPodcastIndexOnly:
+      case investing:
         return l10n.investingXXXPodcastIndexOnly;
-      case islamXXXPodcastIndexOnly:
+      case islam:
         return l10n.islamXXXPodcastIndexOnly;
-      case journalsXXXPodcastIndexOnly:
+      case journals:
         return l10n.journalsXXXPodcastIndexOnly;
-      case judaismXXXPodcastIndexOnly:
+      case judaism:
         return l10n.judaismXXXPodcastIndexOnly;
-      case kidsXXXPodcastIndexOnly:
+      case kids:
         return l10n.kidsXXXPodcastIndexOnly;
-      case languageXXXPodcastIndexOnly:
+      case language:
         return l10n.languageXXXPodcastIndexOnly;
-      case learningXXXPodcastIndexOnly:
+      case learning:
         return l10n.learningXXXPodcastIndexOnly;
-      case lifeXXXPodcastIndexOnly:
+      case life:
         return l10n.lifeXXXPodcastIndexOnly;
-      case managementXXXPodcastIndexOnly:
+      case management:
         return l10n.managementXXXPodcastIndexOnly;
-      case mangaXXXPodcastIndexOnly:
+      case manga:
         return l10n.mangaXXXPodcastIndexOnly;
-      case marketingXXXPodcastIndexOnly:
+      case marketing:
         return l10n.marketingXXXPodcastIndexOnly;
-      case mathematicsXXXPodcastIndexOnly:
+      case mathematics:
         return l10n.mathematicsXXXPodcastIndexOnly;
-      case medicineXXXPodcastIndexOnly:
+      case medicine:
         return l10n.medicineXXXPodcastIndexOnly;
-      case mentalXXXPodcastIndexOnly:
+      case mental:
         return l10n.mentalXXXPodcastIndexOnly;
-      case naturalXXXPodcastIndexOnly:
+      case natural:
         return l10n.naturalXXXPodcastIndexOnly;
-      case natureXXXPodcastIndexOnly:
+      case nature:
         return l10n.natureXXXPodcastIndexOnly;
-      case nonProfitXXXPodcastIndexOnly:
+      case nonProfit:
         return l10n.nonProfitXXXPodcastIndexOnly;
-      case nutritionXXXPodcastIndexOnly:
+      case nutrition:
         return l10n.nutritionXXXPodcastIndexOnly;
-      case parentingXXXPodcastIndexOnly:
+      case parenting:
         return l10n.parentingXXXPodcastIndexOnly;
-      case performingXXXPodcastIndexOnly:
+      case performing:
         return l10n.performingXXXPodcastIndexOnly;
-      case personalXXXPodcastIndexOnly:
+      case personal:
         return l10n.personalXXXPodcastIndexOnly;
-      case petsXXXPodcastIndexOnly:
+      case pets:
         return l10n.petsXXXPodcastIndexOnly;
-      case philosophyXXXPodcastIndexOnly:
+      case philosophy:
         return l10n.philosophyXXXPodcastIndexOnly;
-      case physicsXXXPodcastIndexOnly:
+      case physics:
         return l10n.physicsXXXPodcastIndexOnly;
-      case placesXXXPodcastIndexOnly:
+      case places:
         return l10n.placesXXXPodcastIndexOnly;
-      case politicsXXXPodcastIndexOnly:
+      case politics:
         return l10n.politicsXXXPodcastIndexOnly;
-      case relationshipsXXXPodcastIndexOnly:
+      case relationships:
         return l10n.relationshipsXXXPodcastIndexOnly;
-      case religionXXXPodcastIndexOnly:
+      case religion:
         return l10n.religionXXXPodcastIndexOnly;
-      case reviewsXXXPodcastIndexOnly:
+      case reviews:
         return l10n.reviewsXXXPodcastIndexOnly;
-      case rolePlayingXXXPodcastIndexOnly:
+      case rolePlaying:
         return l10n.rolePlayingXXXPodcastIndexOnly;
-      case rugbyXXXPodcastIndexOnly:
+      case rugby:
         return l10n.rugbyXXXPodcastIndexOnly;
-      case runningXXXPodcastIndexOnly:
+      case running:
         return l10n.runningXXXPodcastIndexOnly;
-      case selfImprovementXXXPodcastIndexOnly:
+      case selfImprovement:
         return l10n.selfImprovementXXXPodcastIndexOnly;
-      case sexualityXXXPodcastIndexOnly:
+      case sexuality:
         return l10n.sexualityXXXPodcastIndexOnly;
-      case soccerXXXPodcastIndexOnly:
+      case soccer:
         return l10n.soccerXXXPodcastIndexOnly;
-      case socialXXXPodcastIndexOnly:
+      case social:
         return l10n.socialXXXPodcastIndexOnly;
-      case societyXXXPodcastIndexOnly:
+      case society:
         return l10n.societyXXXPodcastIndexOnly;
-      case spiritualityXXXPodcastIndexOnly:
+      case spirituality:
         return l10n.spiritualityXXXPodcastIndexOnly;
-      case standUpXXXPodcastIndexOnly:
+      case standUp:
         return l10n.standUpXXXPodcastIndexOnly;
-      case storiesXXXPodcastIndexOnly:
+      case stories:
         return l10n.storiesXXXPodcastIndexOnly;
-      case swimmingXXXPodcastIndexOnly:
+      case swimming:
         return l10n.swimmingXXXPodcastIndexOnly;
-      case tVXXXPodcastIndexOnly:
+      case tV:
         return l10n.tVXXXPodcastIndexOnly;
-      case tabletopXXXPodcastIndexOnly:
+      case tabletop:
         return l10n.tabletopXXXPodcastIndexOnly;
-      case tennisXXXPodcastIndexOnly:
+      case tennis:
         return l10n.tennisXXXPodcastIndexOnly;
-      case travelXXXPodcastIndexOnly:
+      case travel:
         return l10n.travelXXXPodcastIndexOnly;
-      case videoGamesXXXPodcastIndexOnly:
+      case videoGames:
         return l10n.videoGamesXXXPodcastIndexOnly;
-      case visualXXXPodcastIndexOnly:
+      case visual:
         return l10n.visualXXXPodcastIndexOnly;
-      case volleyballXXXPodcastIndexOnly:
+      case volleyball:
         return l10n.volleyballXXXPodcastIndexOnly;
-      case weatherXXXPodcastIndexOnly:
+      case weather:
         return l10n.weatherXXXPodcastIndexOnly;
-      case wildernessXXXPodcastIndexOnly:
+      case wilderness:
         return l10n.wildernessXXXPodcastIndexOnly;
-      case wrestlingXXXPodcastIndexOnly:
+      case wrestling:
         return l10n.wrestlingXXXPodcastIndexOnly;
       default:
-        return name
-            .replaceAll('XXXITunesOnly', '')
-            .replaceAll('XXXPodcastIndexOnly', '')
-            .capitalized;
+        return name.capitalized;
+    }
+  }
+
+  static PodcastGenre fromString(String id) {
+    try {
+      return PodcastGenre.values.firstWhereOrNull(
+            (genre) => id.toLowerCase().contains(genre.id.toLowerCase()),
+          ) ??
+          PodcastGenre.all;
+    } catch (e) {
+      return PodcastGenre.all;
     }
   }
 }
