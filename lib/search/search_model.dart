@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
@@ -175,76 +173,8 @@ class SearchModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  final noNumbers = RegExp(r'^[^0-9]+$');
-  Future<Station?> _findSimilarStation(Audio audio) async {
-    final searchTags = audio.tags?.where((e) => noNumbers.hasMatch(e));
-    if (searchTags == null || searchTags.isEmpty) {
-      return null;
-    }
-    Station? maybe;
-    int tries = audio.tags!.length;
-    do {
-      maybe =
-          (await _radioService.search(
-                limit: 500,
-                tag: searchTags.elementAt(Random().nextInt(searchTags.length)),
-              ))
-              ?.where(
-                (e) => _areTagsSimilar(
-                  stationTags: searchTags,
-                  otherTags: (Audio.fromStation(e).tags ?? []).where(
-                    (e) => noNumbers.hasMatch(e),
-                  ),
-                ),
-              )
-              .lastWhereOrNull((e) => e.stationUUID != audio.uuid);
-
-      tries--;
-    } while (tries > 0 && (maybe == null || audio == Audio.fromStation(maybe)));
-
-    return maybe;
-  }
-
-  bool _areTagsSimilar({
-    required Iterable<String> stationTags,
-    required Iterable<String> otherTags,
-  }) {
-    final matches = <String>{};
-    for (var tag in stationTags.map((e) => e.toLowerCase().trim()).toList()) {
-      if (otherTags.contains(tag.toLowerCase().trim())) {
-        matches.add(tag);
-      }
-    }
-
-    return switch (stationTags.length) {
-      1 || 2 || 3 => matches.isNotEmpty,
-      4 || 5 || 6 || 7 || 8 || 9 || 10 => matches.length >= 2,
-      _ => matches.length >= 3,
-    };
-  }
-
-  bool _findingSimilarStation = false;
-  bool get findingSimilarStation => _findingSimilarStation;
-  set _setFindingSimilarStation(bool value) {
-    _findingSimilarStation = value;
-    notifyListeners();
-  }
-
-  Future<Audio> nextSimilarStation(Audio station) async {
-    _setFindingSimilarStation = true;
-
-    Audio? match;
-    final Station? maybe = await _findSimilarStation(station);
-    if (maybe != null) {
-      match = Audio.fromStation(maybe);
-    } else {
-      match = station;
-    }
-
-    _setFindingSimilarStation = false;
-
-    return match;
-  }
+  late final Command<Audio, Audio?> findSimilarStationCommand =
+      Command.createAsync(_radioService.findSimilarStation, initialValue: null);
 
   Attribute _podcastSearchAttribute = Attribute.none;
   Attribute get podcastSearchAttribute => _podcastSearchAttribute;
