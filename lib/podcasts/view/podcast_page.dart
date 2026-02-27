@@ -6,13 +6,11 @@ import '../../app/view/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
-import '../../common/view/adaptive_container.dart';
+import '../../common/view/adaptive_multi_layout_body.dart';
 import '../../common/view/audio_filter.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/search_button.dart';
-import '../../common/view/sliver_audio_page_control_panel.dart';
 import '../../common/view/theme.dart';
-import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
@@ -22,8 +20,8 @@ import '../../settings/settings_model.dart';
 import '../podcast_model.dart';
 import 'podcast_page_control_panel.dart';
 import 'podcast_page_header.dart';
+import 'podcast_page_search_field.dart';
 import 'sliver_podcast_page_list.dart';
-import 'sliver_podcast_page_search_field.dart';
 
 class PodcastPage extends StatelessWidget with WatchItMixin {
   const PodcastPage({
@@ -106,6 +104,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
 
     return Scaffold(
       appBar: HeaderBar(
+        title: Text(title),
         adaptive: true,
         actions: [
           Padding(
@@ -121,59 +120,45 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
           ),
         ],
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return RefreshIndicator(
-            onRefresh: () async => showFutureLoadingDialog(
-              barrierDismissible: true,
-              context: context,
-              title: context.l10n.loadingPodcastFeed,
-              future: () => di<PodcastModel>().checkForUpdates(
-                feedUrls: {feedUrl},
-                updateMessage: context.l10n.newEpisodeAvailable,
-                multiUpdateMessage: (length) =>
-                    context.l10n.newEpisodesAvailableFor(length),
-              ),
-            ),
-            child: CustomScrollView(
-              slivers: [
-                SliverPadding(
-                  padding: getAdaptiveHorizontalPadding(
-                    constraints: constraints,
-                    min: 40,
-                  ),
-                  sliver: SliverToBoxAdapter(
-                    child: PodcastPageHeader(
-                      title: title,
-                      imageUrl: imageUrl,
-                      episodes: episodes,
-                      showFallbackIcon: true,
-                    ),
-                  ),
-                ),
-                SliverAudioPageControlPanel(
-                  controlPanel: PodcastPageControlPanel(
-                    feedUrl: feedUrl,
-                    audios: episodesWithDownloads,
-                    title: title,
-                    imageUrl: imageUrl,
-                  ),
-                ),
-                if (showSearch) SliverPodcastPageSearchField(feedUrl: feedUrl),
-                SliverPadding(
-                  padding: getAdaptiveHorizontalPadding(
-                    constraints: constraints,
-                  ).copyWith(bottom: bottomPlayerPageGap ?? kLargestSpace),
-                  sliver: SliverPodcastPageList(
-                    audios: episodesWithDownloads,
-                    pageId: feedUrl,
-                    isOnline: isOnline,
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
+      body: RefreshIndicator(
+        onRefresh: () async => showFutureLoadingDialog(
+          barrierDismissible: true,
+          context: context,
+          title: context.l10n.loadingPodcastFeed,
+          future: () => di<PodcastModel>().checkForUpdates(
+            feedUrls: {feedUrl},
+            updateMessage: context.l10n.newEpisodeAvailable,
+            multiUpdateMessage: (length) =>
+                context.l10n.newEpisodesAvailableFor(length),
+          ),
+        ),
+        child: AdaptiveMultiLayoutBody(
+          header: PodcastPageHeader(
+            title: title,
+            imageUrl: imageUrl,
+            episodes: episodes,
+            showFallbackIcon: true,
+          ),
+          sliverBody: (constraints) => SliverPodcastPageList(
+            audios: episodesWithDownloads,
+            pageId: feedUrl,
+            isOnline: isOnline,
+          ),
+          controlPanel: PodcastPageControlPanel(
+            feedUrl: feedUrl,
+            audios: episodesWithDownloads,
+            title: title,
+            imageUrl: imageUrl,
+          ),
+          secondControlPanel: showSearch
+              ? PodcastPageSearchField(feedUrl: feedUrl, sliver: false)
+              : null,
+          secondSliverControlPanel: showSearch
+              ? PodcastPageSearchField(feedUrl: feedUrl, sliver: true)
+              : null,
+        ),
+
+        //
       ),
     );
   }

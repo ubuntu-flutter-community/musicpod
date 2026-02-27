@@ -18,12 +18,12 @@ class TitlesView extends StatelessWidget with WatchItMixin {
     required this.audios,
     this.noResultMessage,
     this.noResultIcon,
-    this.constraints,
+    required this.constraints,
   });
 
   final List<Audio>? audios;
   final Widget? noResultMessage, noResultIcon;
-  final BoxConstraints? constraints;
+  final BoxConstraints constraints;
 
   @override
   Widget build(BuildContext context) {

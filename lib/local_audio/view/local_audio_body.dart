@@ -19,7 +19,7 @@ class LocalAudioBody extends StatelessWidget {
     required this.playlists,
     this.noResultMessage,
     this.noResultIcon,
-    this.constraints,
+    required this.constraints,
   });
 
   final LocalAudioView localAudioView;
@@ -30,7 +30,7 @@ class LocalAudioBody extends StatelessWidget {
   final List<String>? genres;
   final List<String>? playlists;
   final Widget? noResultMessage, noResultIcon;
-  final BoxConstraints? constraints;
+  final BoxConstraints constraints;
 
   @override
   Widget build(BuildContext context) => switch (localAudioView) {

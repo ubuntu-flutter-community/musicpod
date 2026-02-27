@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../extensions/build_context_x.dart';
 import '../../player/player_model.dart';
 import '../../settings/settings_model.dart';
 import '../data/audio.dart';
@@ -17,7 +16,7 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
     this.onSubTitleTab,
     required this.audioPageType,
     this.selectedColor,
-    this.constraints,
+    required this.constraints,
   });
 
   final List<Audio> audios;
@@ -25,11 +24,11 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
   final AudioPageType audioPageType;
   final void Function(String text)? onSubTitleTab;
   final Color? selectedColor;
-  final BoxConstraints? constraints;
+  final BoxConstraints constraints;
 
   @override
   Widget build(BuildContext context) {
-    final mqSize = constraints?.maxWidth ?? context.mediaQuerySize.width;
+    final mqSize = constraints.maxWidth;
     final playerToTheRight = mqSize > kSideBarThreshHold;
     final autoMovePlayer = watchPropertyValue(
       (SettingsModel m) => m.autoMovePlayer,
@@ -46,39 +45,45 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
         audios.length < kShowLeadingThreshold &&
         audioPageType != AudioPageType.allTitlesView;
 
-    return SliverPadding(
-      padding: const EdgeInsets.only(bottom: kMediumSpace),
-      sliver: SliverList(
-        delegate: SliverChildBuilderDelegate(childCount: audios.length, (
-          context,
-          index,
-        ) {
-          final audio = audios.elementAt(index);
-          final audioSelected = currentAudio == audio;
-          return Padding(
-            padding: const EdgeInsets.only(bottom: kSmallestSpace),
-            child: AudioTile(
-              showDuration: width > 1200,
-              showSlimTileSubtitle: width >= 900,
-              showSecondLineSubTitle: width < 900,
-              allowLeadingImage: allowLeadingImage,
-              key: ValueKey(audio.path ?? audio.url ?? index),
-              audioPageType: audioPageType,
-              onSubTitleTap: onSubTitleTab,
-              isPlayerPlaying: isPlaying,
-              onTap: () => playerModel.startPlaylist(
-                audios: audios,
-                listName: pageId,
-                index: index,
-              ),
-              selected: audioSelected,
-              audio: audio,
-              pageId: pageId,
-              selectedColor: selectedColor,
-            ),
-          );
-        }),
-      ),
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(childCount: audios.length, (
+        context,
+        index,
+      ) {
+        final audio = audios.elementAt(index);
+        final audioSelected = currentAudio == audio;
+        return Padding(
+          padding: const EdgeInsets.only(bottom: kSmallestSpace),
+          child: AudioTile(
+            showDuration: width > 1200,
+            showSecondElement: width >= 1000,
+            allowLeadingImage: allowLeadingImage,
+            key: ValueKey(audio.path ?? audio.url ?? index),
+            audioPageType: audioPageType,
+            onSubTitleTap: onSubTitleTab,
+            isPlayerPlaying: isPlaying,
+            onTap: () {
+              if (audioSelected) {
+                if (isPlaying) {
+                  playerModel.pause();
+                } else {
+                  playerModel.resume();
+                }
+              } else {
+                playerModel.startPlaylist(
+                  audios: audios,
+                  listName: pageId,
+                  index: index,
+                );
+              }
+            },
+            selected: audioSelected,
+            audio: audio,
+            pageId: pageId,
+            selectedColor: selectedColor,
+          ),
+        );
+      }),
     );
   }
 }

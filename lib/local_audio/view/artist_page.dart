@@ -6,7 +6,7 @@ import '../../app/view/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
-import '../../common/view/adaptive_container.dart';
+import '../../common/view/adaptive_multi_layout_body.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/audio_tile_option_button.dart';
@@ -17,7 +17,6 @@ import '../../common/view/icons.dart';
 import '../../common/view/like_all_icon_button.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/search_button.dart';
-import '../../common/view/sliver_audio_page_control_panel.dart';
 import '../../common/view/sliver_audio_tile_list.dart';
 import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
@@ -81,6 +80,7 @@ class _ArtistPageState extends State<ArtistPage> {
 
     return Scaffold(
       appBar: HeaderBar(
+        title: Text(widget.pageId),
         adaptive: true,
         actions: [
           Padding(
@@ -110,63 +110,37 @@ class _ArtistPageState extends State<ArtistPage> {
 
           final artistAudios = snapshot.data!;
 
-          return LayoutBuilder(
-            builder: (context, constraints) {
-              return CustomScrollView(
-                slivers: [
-                  SliverPadding(
-                    padding: getAdaptiveHorizontalPadding(
-                      constraints: constraints,
-                      min: 40,
+          return AdaptiveMultiLayoutBody(
+            header: AudioPageHeader(
+              imageRadius: BorderRadius.circular(10000),
+              title: widget.pageId,
+              image: ArtistImage(
+                artist: widget.pageId,
+                dimension: kMaxAudioPageHeaderHeight,
+              ),
+              subTitleWidget: GenreBar(audios: artistAudios),
+              label: context.l10n.artist,
+              onLabelTab: onAlbumTap,
+              onSubTitleTab: onSubTitleTab,
+            ),
+            controlPanel: _ArtistPageControlPanel(
+              pageId: widget.pageId,
+              audios: artistAudios,
+            ),
+            sliverBody: (constraints) => useGridView
+                ? AlbumsView(
+                    albumIDs: di<LocalAudioModel>().findAllAlbumIDs(
+                      artist: widget.pageId,
+                      clean: false,
                     ),
-                    sliver: SliverToBoxAdapter(
-                      child: AudioPageHeader(
-                        imageRadius: BorderRadius.circular(10000),
-                        title: widget.pageId,
-                        image: ArtistImage(
-                          artist: widget.pageId,
-                          dimension: kMaxAudioPageHeaderHeight,
-                        ),
-                        subTitleWidget: GenreBar(audios: artistAudios),
-                        label: context.l10n.artist,
-                        onLabelTab: onAlbumTap,
-                        onSubTitleTab: onSubTitleTab,
-                      ),
-                    ),
+                  )
+                : SliverAudioTileList(
+                    audios: artistAudios,
+                    pageId: widget.pageId,
+                    audioPageType: AudioPageType.artist,
+                    onSubTitleTab: onAlbumTap,
+                    constraints: constraints,
                   ),
-                  SliverAudioPageControlPanel(
-                    controlPanel: _ArtistPageControlPanel(
-                      pageId: widget.pageId,
-                      audios: artistAudios,
-                    ),
-                  ),
-                  if (useGridView)
-                    SliverPadding(
-                      padding: getAdaptiveHorizontalPadding(
-                        constraints: constraints,
-                      ).copyWith(bottom: bottomPlayerPageGap),
-                      sliver: AlbumsView(
-                        albumIDs: model.findAllAlbumIDs(
-                          artist: widget.pageId,
-                          clean: false,
-                        ),
-                      ),
-                    )
-                  else
-                    SliverPadding(
-                      padding: getAdaptiveHorizontalPadding(
-                        constraints: constraints,
-                      ).copyWith(bottom: bottomPlayerPageGap),
-                      sliver: SliverAudioTileList(
-                        audios: artistAudios,
-                        pageId: widget.pageId,
-                        audioPageType: AudioPageType.artist,
-                        onSubTitleTab: onAlbumTap,
-                      ),
-                    ),
-                ],
-              );
-            },
           );
         },
       ),
@@ -188,6 +162,7 @@ class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
     final setUseGridView = di<LocalAudioModel>().setUseArtistGridView;
     return Row(
       mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: space(
         children: [
           IconButton(
@@ -206,7 +181,6 @@ class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
             audios: audios,
             playlistId: pageId,
             allowRemove: false,
-            selected: false,
             searchTerm: audios.firstOrNull?.artist ?? '',
             title: Text(audios.firstOrNull?.artist ?? ''),
             subTitle: Text(audios.firstOrNull?.genre ?? ''),

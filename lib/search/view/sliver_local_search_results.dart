@@ -12,7 +12,9 @@ import '../search_type.dart';
 
 class SliverLocalSearchResult extends StatefulWidget
     with WatchItStatefulWidgetMixin {
-  const SliverLocalSearchResult({super.key});
+  const SliverLocalSearchResult({super.key, required this.constraints});
+
+  final BoxConstraints constraints;
 
   @override
   State<SliverLocalSearchResult> createState() =>
@@ -73,6 +75,7 @@ class _SliverLocalSearchResultState extends State<SliverLocalSearchResult> {
       albumIDs: albums,
       genres: genresResult,
       playlists: playlistsResult,
+      constraints: widget.constraints,
     );
   }
 }

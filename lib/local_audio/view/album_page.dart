@@ -207,7 +207,6 @@ class AlbumPageControlPanel extends StatelessWidget {
             audios: album,
             playlistId: id,
             allowRemove: false,
-            selected: false,
             searchTerm:
                 '${album.firstOrNull?.artist} - ${album.firstOrNull?.album}',
             title: Text('${album.firstOrNull?.artist}'),
