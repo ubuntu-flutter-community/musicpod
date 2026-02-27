@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/view/routing_manager.dart';
-import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import '../data/audio.dart';
 import '../data/audio_type.dart';
 import '../page_ids.dart';
-import 'adaptive_container.dart';
+import 'adaptive_multi_layout_body.dart';
 import 'audio_page_header.dart';
 import 'audio_page_type.dart';
 import 'avatar_play_button.dart';
@@ -17,7 +16,6 @@ import 'header_bar.dart';
 import 'no_search_result_page.dart';
 import 'progress.dart';
 import 'search_button.dart';
-import 'sliver_audio_page_control_panel.dart';
 import 'sliver_audio_tile_list.dart';
 import 'theme.dart';
 
@@ -62,6 +60,7 @@ class SliverAudioPage extends StatelessWidget {
     return Scaffold(
       appBar: HeaderBar(
         adaptive: true,
+        title: Text(pageTitle ?? ''),
         actions: [
           Padding(
             padding: appBarSingleActionSpacing,
@@ -81,58 +80,37 @@ class SliverAudioPage extends StatelessWidget {
           ),
         ],
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          final padding = getAdaptiveHorizontalPadding(
-            constraints: constraints,
-            min: isMobile ? 5 : 15,
-          );
-
-          return CustomScrollView(
-            slivers: [
-              SliverPadding(
-                padding: padding,
-                sliver: SliverToBoxAdapter(
-                  child: AudioPageHeader(
-                    title: pageTitle ?? context.l10n.album,
-                    image: image,
-                    subTitle: pageSubTitle,
-                    label: pageLabel,
-                    onLabelTab: audioPageType == AudioPageType.likedAudio
-                        ? null
-                        : onPageLabelTab,
-                    onSubTitleTab: onPageSubTitleTab,
-                    description: description,
-                  ),
+      body: AdaptiveMultiLayoutBody(
+        header: AudioPageHeader(
+          title: pageTitle ?? context.l10n.album,
+          image: image,
+          subTitle: pageSubTitle,
+          label: pageLabel,
+          onLabelTab: audioPageType == AudioPageType.likedAudio
+              ? null
+              : onPageLabelTab,
+          onSubTitleTab: onPageSubTitleTab,
+          description: description,
+        ),
+        controlPanel:
+            controlPanel ??
+            AvatarPlayButton(audios: audios ?? [], pageId: pageId),
+        sliverBody: (constraints) => audios == null
+            ? const SliverToBoxAdapter(child: Center(child: Progress()))
+            : audios!.isEmpty
+            ? SliverToBoxAdapter(
+                child: NoSearchResultPage(
+                  message: noSearchResultMessage,
+                  icon: noSearchResultIcons,
                 ),
+              )
+            : SliverAudioTileList(
+                audioPageType: audioPageType,
+                audios: audios!,
+                pageId: pageId,
+                onSubTitleTab: onPageLabelTab,
+                constraints: constraints,
               ),
-              SliverAudioPageControlPanel(
-                controlPanel:
-                    controlPanel ??
-                    AvatarPlayButton(audios: audios ?? [], pageId: pageId),
-              ),
-              if (audios == null)
-                const SliverToBoxAdapter(child: Center(child: Progress()))
-              else if (audios!.isEmpty)
-                SliverToBoxAdapter(
-                  child: NoSearchResultPage(
-                    message: noSearchResultMessage,
-                    icon: noSearchResultIcons,
-                  ),
-                )
-              else
-                SliverPadding(
-                  padding: padding.copyWith(bottom: bottomPlayerPageGap),
-                  sliver: SliverAudioTileList(
-                    audioPageType: audioPageType,
-                    audios: audios!,
-                    pageId: pageId,
-                    onSubTitleTab: onPageLabelTab,
-                  ),
-                ),
-            ],
-          );
-        },
       ),
     );
   }

@@ -47,7 +47,6 @@ class PodcastPageControlPanel extends StatelessWidget {
             audios: audios,
             playlistId: feedUrl,
             allowRemove: false,
-            selected: false,
             searchTerm: title,
             title: Text(title),
             subTitle: Text(artist),

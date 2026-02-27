@@ -32,7 +32,6 @@ class AudioTileOptionButton extends StatelessWidget {
     required this.audios,
     required this.playlistId,
     required this.allowRemove,
-    required this.selected,
     required this.searchTerm,
     required this.title,
     required this.subTitle,
@@ -43,7 +42,6 @@ class AudioTileOptionButton extends StatelessWidget {
   final List<Audio> audios;
   final String searchTerm;
   final bool allowRemove;
-  final bool selected;
   final Widget title;
   final Widget subTitle;
   final Widget? icon;

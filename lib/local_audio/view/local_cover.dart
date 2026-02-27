@@ -87,6 +87,8 @@ class _LocalCoverState extends State<LocalCover> {
                   fit: fit,
                   height: widget.dimension ?? widget.height,
                   width: widget.dimension ?? widget.width,
+                  cacheHeight: (widget.dimension ?? widget.height)?.toInt(),
+                  cacheWidth: (widget.dimension ?? widget.width)?.toInt(),
                   filterQuality: medium,
                 );
               }

@@ -56,49 +56,53 @@ class SearchPage extends StatelessWidget with WatchItMixin {
           ),
         ],
       ),
-      body: SliverBody(
-        controlPanel: switch (audioType) {
-          AudioType.podcast => const SliverPodcastFilterBar(),
-          _ => const SearchTypeFilterBar(),
-        },
-        contentBuilder: (context, constraints) => switch (audioType) {
-          AudioType.radio => const SliverRadioSearchResults(),
-          AudioType.podcast => const SliverPodcastSearchResults(),
-          AudioType.local => const SliverLocalSearchResult(),
-        },
-        onStretchTrigger: () async {
-          WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-            if (context.mounted) {
-              return di<SearchModel>().search();
-            }
-          });
-        },
-        onNotification: (ScrollNotification notification) {
-          if (audioType == AudioType.local) return true;
+      body: LayoutBuilder(
+        builder: (context, constraints) => SliverBody(
+          controlPanel: switch (audioType) {
+            AudioType.podcast => const SliverPodcastFilterBar(),
+            _ => const SearchTypeFilterBar(),
+          },
+          contentBuilder: (context, constraints) => switch (audioType) {
+            AudioType.radio => const SliverRadioSearchResults(),
+            AudioType.podcast => const SliverPodcastSearchResults(),
+            AudioType.local => SliverLocalSearchResult(
+              constraints: constraints,
+            ),
+          },
+          onStretchTrigger: () async {
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+              if (context.mounted) {
+                return di<SearchModel>().search();
+              }
+            });
+          },
+          onNotification: (ScrollNotification notification) {
+            if (audioType == AudioType.local) return true;
 
-          if (notification is UserScrollNotification) {
-            if (notification.metrics.axisDirection == AxisDirection.down &&
-                notification.direction == ScrollDirection.reverse &&
-                notification.metrics.pixels >=
-                    notification.metrics.maxScrollExtent * 0.6) {
-              di<SearchModel>()
-                ..incrementLimit(8)
-                ..search();
-            }
-          } else if (notification is ScrollEndNotification) {
-            final metrics = notification.metrics;
-            if (metrics.atEdge) {
-              final isAtBottom = metrics.pixels != 0;
-              if (isAtBottom) {
+            if (notification is UserScrollNotification) {
+              if (notification.metrics.axisDirection == AxisDirection.down &&
+                  notification.direction == ScrollDirection.reverse &&
+                  notification.metrics.pixels >=
+                      notification.metrics.maxScrollExtent * 0.6) {
                 di<SearchModel>()
-                  ..incrementLimit(16)
+                  ..incrementLimit(8)
                   ..search();
               }
+            } else if (notification is ScrollEndNotification) {
+              final metrics = notification.metrics;
+              if (metrics.atEdge) {
+                final isAtBottom = metrics.pixels != 0;
+                if (isAtBottom) {
+                  di<SearchModel>()
+                    ..incrementLimit(16)
+                    ..search();
+                }
+              }
             }
-          }
 
-          return true;
-        },
+            return true;
+          },
+        ),
       ),
     );
   }
