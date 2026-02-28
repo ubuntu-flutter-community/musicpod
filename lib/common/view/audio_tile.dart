@@ -141,8 +141,8 @@ class _AudioTileState extends State<AudioTile> {
         title: Row(
           spacing: kMediumSpace,
           children: [
-            Expanded(flex: 2, child: title),
-            if (widget.showSecondElement) Expanded(flex: 2, child: subtitle),
+            Expanded(flex: 5, child: title),
+            if (widget.showSecondElement) Expanded(flex: 5, child: subtitle),
             if (widget.showDuration)
               Expanded(
                 child: _AudioTileDuration(splitter: '', audio: widget.audio),
