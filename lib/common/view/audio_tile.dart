@@ -144,7 +144,8 @@ class _AudioTileState extends State<AudioTile> {
             Expanded(flex: 5, child: title),
             if (widget.showSecondElement) Expanded(flex: 5, child: subtitle),
             if (widget.showDuration)
-              Expanded(
+              SizedBox(
+                width: 65,
                 child: _AudioTileDuration(splitter: '', audio: widget.audio),
               ),
           ],
