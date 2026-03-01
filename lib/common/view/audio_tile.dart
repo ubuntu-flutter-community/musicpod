@@ -25,14 +25,15 @@ class AudioTile extends StatefulWidget {
     required this.audio,
     required this.isPlayerPlaying,
     this.onSubTitleTap,
+    this.onSubSubTitleTap,
     required this.onTap,
     required this.audioPageType,
     required this.allowLeadingImage,
     this.selectedColor,
     this.onTitleTap,
     this.showDuration = true,
-    this.showSecondElement = true,
-    this.showSecondLineSubTitle = false,
+    this.showSubTitle = true,
+    this.showSubSubTitle = false,
   });
 
   final String pageId;
@@ -44,10 +45,8 @@ class AudioTile extends StatefulWidget {
   final void Function() onTap;
   final void Function()? onTitleTap;
   final void Function(String text)? onSubTitleTap;
-  final bool allowLeadingImage,
-      showDuration,
-      showSecondElement,
-      showSecondLineSubTitle;
+  final void Function(Audio audio)? onSubSubTitleTap;
+  final bool allowLeadingImage, showDuration, showSubTitle, showSubSubTitle;
   final Color? selectedColor;
 
   @override
@@ -66,11 +65,6 @@ class _AudioTileState extends State<AudioTile> {
     final color = widget.selected && widget.isPlayerPlaying
         ? selectedColor
         : null;
-
-    final subTitle = switch (widget.audioPageType) {
-      AudioPageType.artist => widget.audio.album ?? l10n.unknown,
-      _ => widget.audio.artist ?? l10n.unknown,
-    };
 
     const titleOverflow = TextOverflow.ellipsis;
     const titleMaxLines = 1;
@@ -92,21 +86,26 @@ class _AudioTileState extends State<AudioTile> {
             ),
     );
 
-    final useDiscNumberAsSubTitle =
-        widget.audioPageType == AudioPageType.album &&
-        widget.audio.discNumber != null &&
-        widget.audio.discTotal != null &&
-        widget.audio.discTotal! > 1;
-    final subtitle = useDiscNumberAsSubTitle
+    final subTitle = _useDiscnumberAsSubTitle
         ? Text('${l10n.disc} ${widget.audio.discNumber}', maxLines: 1)
         : TapAbleText(
             maxLines: 1,
             wrapInFlexible: true,
-            text: subTitle,
+            text: switch (widget.audioPageType) {
+              AudioPageType.artist => widget.audio.album ?? l10n.unknown,
+              _ => widget.audio.artist ?? l10n.unknown,
+            },
             onTap: widget.onSubTitleTap == null
                 ? null
-                : () => widget.onSubTitleTap?.call(subTitle),
+                : () =>
+                      widget.onSubTitleTap?.call(switch (widget.audioPageType) {
+                        AudioPageType.artist =>
+                          widget.audio.album ?? l10n.unknown,
+                        _ => widget.audio.artist ?? l10n.unknown,
+                      }),
           );
+
+    const notTitleFlex = 2;
 
     return MouseRegion(
       key: ObjectKey(widget.audio),
@@ -116,16 +115,18 @@ class _AudioTileState extends State<AudioTile> {
         key: ObjectKey(widget.audio),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         minLeadingWidth: kAudioTrackWidth,
-        leading: _AudioTileLeading(
-          audioPageType: widget.audioPageType,
-          audio: widget.audio,
-          dimension: kAudioTrackWidth,
-          color: color,
-          selected: widget.selected,
-          isPlayerPlaying: widget.isPlayerPlaying,
-          hovered: _hovered,
-          onTap: widget.onTap,
-        ),
+        leading: widget.allowLeadingImage
+            ? _AudioTileLeading(
+                audioPageType: widget.audioPageType,
+                audio: widget.audio,
+                dimension: kAudioTrackWidth,
+                color: color,
+                selected: widget.selected,
+                isPlayerPlaying: widget.isPlayerPlaying,
+                hovered: _hovered,
+                onTap: widget.onTap,
+              )
+            : null,
         selected: widget.selected,
         selectedColor: widget.isPlayerPlaying
             ? selectedColor
@@ -139,10 +140,26 @@ class _AudioTileState extends State<AudioTile> {
         ),
         onTap: isMobile ? widget.onTap : null,
         title: Row(
-          spacing: kMediumSpace,
+          spacing: kLargestSpace,
           children: [
             Expanded(flex: 5, child: title),
-            if (widget.showSecondElement) Expanded(flex: 5, child: subtitle),
+            if (widget.showSubTitle)
+              Expanded(flex: notTitleFlex, child: subTitle),
+            if ((widget.audioPageType == AudioPageType.allTitlesView ||
+                    widget.audioPageType == AudioPageType.playlist) &&
+                widget.showSubSubTitle &&
+                widget.audio.album != null)
+              Expanded(
+                flex: notTitleFlex,
+                child: TapAbleText(
+                  text: widget.audio.album!,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  onTap: widget.onSubSubTitleTap != null
+                      ? () => widget.onSubSubTitleTap!.call(widget.audio)
+                      : null,
+                ),
+              ),
             if (widget.showDuration)
               SizedBox(
                 width: 65,
@@ -162,6 +179,12 @@ class _AudioTileState extends State<AudioTile> {
       ),
     );
   }
+
+  bool get _useDiscnumberAsSubTitle =>
+      widget.audioPageType == AudioPageType.album &&
+      widget.audio.discNumber != null &&
+      widget.audio.discTotal != null &&
+      widget.audio.discTotal! > 1;
 }
 
 class _AudioTileTrailing extends StatelessWidget with WatchItMixin {

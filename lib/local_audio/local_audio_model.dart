@@ -6,7 +6,6 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
-import '../common/logging.dart';
 import '../common/view/audio_filter.dart';
 import '../library/library_service.dart';
 import '../settings/settings_service.dart';
@@ -86,16 +85,6 @@ class LocalAudioModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  late final Command<void, List<Audio>> initAudiosCommand =
-      Command.createAsyncNoParam(() async {
-        await _localAudioService.init();
-        final list = _localAudioService.audios ?? [];
-        printMessageInDebugMode(
-          'Initialized local audios: ${list.length} found',
-        );
-        return list;
-      }, initialValue: []);
-
   List<Audio>? get audios => _localAudioService.audios;
   List<String>? get allArtists => _localAudioService.allArtists;
   List<String>? get allGenres => _localAudioService.allGenres;
@@ -136,29 +125,27 @@ class LocalAudioModel extends SafeChangeNotifier {
   List<Audio> findUniqueAlbumAudios(List<Audio> audios) =>
       _localAudioService.findUniqueAlbumAudios(audios);
 
-  List<String>? get failedImports => _localAudioService.failedImports;
-
   List<String>? findAllAlbumIDs({String? artist, bool clean = true}) =>
       _localAudioService.findAllAlbumIDs(artist: artist, clean: clean);
 
-  bool get importing => _localAudioService.audios == null;
-
-  bool _firstPlaylistCheck = true;
-  Future<void> init({bool forceInit = false, String? directory}) async {
-    await _localAudioService.init(
-      forceInit: forceInit,
-      newDirectory: directory,
+  late final Command<
+    ({bool forceInit, String? directory}),
+    ({List<Audio> audios, List<String> failedImports})
+  >
+  initAudiosCommand = Command.createAsync((param) async {
+    final failedImports = await _localAudioService.init(
+      forceInit: param.forceInit,
+      newDirectory: param.directory,
+      externalPlaylistAudios: _libraryService.externalPlaylistAudios,
     );
 
-    final additionalAudios = _libraryService.externalPlaylistAudios;
-    if ((_firstPlaylistCheck || forceInit) && additionalAudios.isNotEmpty) {
-      addAudios(additionalAudios.where((e) => e.isLocal).toList());
-      _firstPlaylistCheck = false;
-    }
-  }
-
-  void addAudios(List<Audio> newAudios, {bool clear = false}) =>
-      _localAudioService.addAudiosAndBuildCollection(newAudios, clear: clear);
+    return (
+      audios: _localAudioService.audios ?? [],
+      failedImports: failedImports,
+    );
+  }, initialValue: (audios: [], failedImports: []));
+  void addAudios(List<Audio> newAudios) =>
+      _localAudioService.addAudiosAndBuildCollection(newAudios);
 
   @override
   Future<void> dispose() async {

@@ -17,11 +17,13 @@ import '../../common/view/genre_bar.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/sliver_audio_tile_list.dart';
+import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../local_audio/local_audio_model.dart';
+import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../local_audio/view/failed_import_snackbar.dart';
 import '../../player/player_model.dart';
@@ -63,12 +65,12 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
                 Audio.local(
                   file,
                   getImage: true,
-                  onError: (path) => showFailedImportsSnackBar(
+                  onError: (path) => showFailedImportsSnackBarIfNotBlocked(
                     failedImports: [path],
                     context: context,
                     failedToImport: true,
                   ),
-                  onParseError: (path) => showFailedImportsSnackBar(
+                  onParseError: (path) => showFailedImportsSnackBarIfNotBlocked(
                     failedImports: [path],
                     context: context,
                   ),
@@ -76,7 +78,7 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
               );
             } on Exception catch (e) {
               printMessageInDebugMode(e);
-              showFailedImportsSnackBar(
+              showFailedImportsSnackBarIfNotBlocked(
                 failedImports: [value.toString()],
                 context: context,
                 failedToImport: true,
@@ -223,6 +225,32 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
               audioPageType: AudioPageType.playlist,
               onSubTitleTab: onArtistTap,
               constraints: constraints,
+              onSubSubTitleTab: (Audio audio) {
+                if (audio.album == null || audio.artist == null) {
+                  showSnackBar(
+                    context: context,
+                    content: Text(context.l10n.nothingFound),
+                  );
+                  return;
+                }
+                final id = di<LocalAudioModel>().findAlbumId(
+                  artist: audio.artist!,
+                  album: audio.album!,
+                );
+
+                if (id == null) {
+                  showSnackBar(
+                    context: context,
+                    content: Text(context.l10n.nothingFound),
+                  );
+                  return;
+                }
+
+                di<RoutingManager>().push(
+                  builder: (_) => AlbumPage(id: id),
+                  pageId: id,
+                );
+              },
             ),
     );
   }

@@ -3,36 +3,15 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/no_search_result_page.dart';
 import '../../l10n/l10n.dart';
-import '../../local_audio/local_audio_model.dart';
-import '../../local_audio/view/failed_import_snackbar.dart';
-import '../../local_audio/view/local_audio_body.dart';
 import '../../local_audio/local_audio_view.dart';
+import '../../local_audio/view/local_audio_body.dart';
 import '../search_model.dart';
 import '../search_type.dart';
 
-class SliverLocalSearchResult extends StatefulWidget
-    with WatchItStatefulWidgetMixin {
+class SliverLocalSearchResult extends StatelessWidget with WatchItMixin {
   const SliverLocalSearchResult({super.key, required this.constraints});
 
   final BoxConstraints constraints;
-
-  @override
-  State<SliverLocalSearchResult> createState() =>
-      _SliverLocalSearchResultState();
-}
-
-class _SliverLocalSearchResultState extends State<SliverLocalSearchResult> {
-  @override
-  void initState() {
-    super.initState();
-    final failedImports = di<LocalAudioModel>().failedImports;
-    if (mounted && failedImports?.isNotEmpty == true) {
-      showFailedImportsSnackBar(
-        failedImports: failedImports!,
-        context: context,
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +54,7 @@ class _SliverLocalSearchResultState extends State<SliverLocalSearchResult> {
       albumIDs: albums,
       genres: genresResult,
       playlists: playlistsResult,
-      constraints: widget.constraints,
+      constraints: constraints,
     );
   }
 }

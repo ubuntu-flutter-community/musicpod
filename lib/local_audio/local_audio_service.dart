@@ -30,9 +30,9 @@ class LocalAudioService {
   List<Audio>? get audios => _audios;
   final _audiosController = StreamController<bool>.broadcast();
   Stream<bool> get audiosChanged => _audiosController.stream;
-  List<String>? _failedImports;
-  List<String>? get failedImports => _failedImports;
+  List<String> _failedImports = [];
 
+  // TODO: convert this nonesense to a database (drift?)
   void _sortAllTitles() {
     if (_audios == null) return;
     sortListByAudioFilter(audioFilter: AudioFilter.title, audios: _audios!);
@@ -328,9 +328,17 @@ class LocalAudioService {
   }
 
   final Lock _lock = Lock();
-  Future<void> init({String? newDirectory, bool forceInit = false}) async {
+  Future<List<String>> init({
+    String? newDirectory,
+    bool forceInit = false,
+    List<Audio> externalPlaylistAudios = const [],
+  }) async {
     await _lock.synchronized(() async {
       if (forceInit == false && (_audios != null && _audios!.isNotEmpty)) {
+        printMessageInDebugMode(
+          'Already initialized, skipping',
+          tag: '$LocalAudioService',
+        );
         return;
       }
 
@@ -343,8 +351,13 @@ class LocalAudioService {
       final result = await compute(_readAudiosFromDirectory, dir);
       _failedImports = result.failedImports;
 
+      if (externalPlaylistAudios.isNotEmpty) {
+        result.audios.addAll(externalPlaylistAudios.where((e) => e.isLocal));
+      }
+
       addAudiosAndBuildCollection(result.audios, clear: forceInit);
     });
+    return _failedImports;
   }
 
   Future<void> dispose() async => _audiosController.close();
@@ -467,6 +480,11 @@ FutureOr<ImportResult> _readAudiosFromDirectory(String? directory) async {
       }
     }
   }
+
+  printMessageInDebugMode(
+    'Finished reading audios from directory. Found ${newAudios.length} audios, with ${failedImports.length} failed imports.',
+    tag: '$LocalAudioService',
+  );
 
   return (audios: newAudios, failedImports: failedImports);
 }

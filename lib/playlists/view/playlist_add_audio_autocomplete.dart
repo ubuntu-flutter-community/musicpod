@@ -47,9 +47,6 @@ class _PlaylistAddAudioAutoCompleteState
       (LocalAudioModel m) => m.showPlaylistAddAudios,
     );
 
-    callOnceAfterThisBuild(
-      (_) => di<LocalAudioModel>().initAudiosCommand.call(),
-    );
     final theme = context.theme;
     final colorScheme = context.colorScheme;
     final fallBackTextStyle = theme.textTheme.bodyMedium?.copyWith(
@@ -61,7 +58,7 @@ class _PlaylistAddAudioAutoCompleteState
     final allAudiosResults = watchValue(
       (LocalAudioModel m) => m.initAudiosCommand.results,
     );
-    final allAudios = allAudiosResults.data ?? [];
+    final allAudios = allAudiosResults.data?.audios ?? [];
     final isRunning = allAudiosResults.isRunning;
     final error = allAudiosResults.error;
     final playlist = watchPropertyValue(

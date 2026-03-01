@@ -22,33 +22,30 @@ import 'failed_import_snackbar.dart';
 import 'local_audio_body.dart';
 import 'local_audio_control_panel.dart';
 
-class LocalAudioPage extends StatefulWidget with WatchItStatefulWidgetMixin {
+class LocalAudioPage extends StatelessWidget with WatchItMixin {
   const LocalAudioPage({super.key});
 
   @override
-  State<LocalAudioPage> createState() => _LocalAudioPageState();
-}
+  Widget build(BuildContext context) {
+    callOnceAfterThisBuild(
+      (_) => di<LocalAudioModel>().initAudiosCommand.run((
+        directory: null,
+        forceInit: false,
+      )),
+    );
 
-class _LocalAudioPageState extends State<LocalAudioPage> {
-  @override
-  void initState() {
-    super.initState();
-    final model = di<LocalAudioModel>();
-    final failedImports = model.failedImports;
-    model.init().then((_) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted && failedImports != null && failedImports.isNotEmpty) {
-          showFailedImportsSnackBar(
-            failedImports: failedImports,
+    registerHandler(
+      select: (LocalAudioModel m) => m.initAudiosCommand,
+      handler: (context, newValue, cancel) {
+        if (newValue.failedImports.isNotEmpty) {
+          showFailedImportsSnackBarIfNotBlocked(
+            failedImports: newValue.failedImports,
             context: context,
           );
         }
-      });
-    });
-  }
+      },
+    );
 
-  @override
-  Widget build(BuildContext context) {
     final audios = watchPropertyValue((LocalAudioModel m) => m.audios);
     final allArtists = watchPropertyValue((LocalAudioModel m) => m.allArtists);
     final allAlbumIDs = watchPropertyValue(
