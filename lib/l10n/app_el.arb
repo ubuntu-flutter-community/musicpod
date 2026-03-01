@@ -663,5 +663,150 @@
     "regionWesternsahara": "Western Sahara",
     "regionYemen": "Yemen",
     "regionZambia": "Zambia",
-    "regionZimbabwe": "Zimbabwe"
+    "regionZimbabwe": "Zimbabwe",
+    "failedToReadMetadata": "Η ανάγνωση των μεταδεδομένων απέτυχε για τα ακόλουθα αρχεία πολυμέσων:",
+    "failedToReadMetadataDescription": "Δεν ήταν δυνατή η ανάγνωση των μεταδεδομένων αυτού του αρχείου. Αυτό συνήθως οφείλεται σε έλλειψη κωδικοποιητή (codec) ή σε κατεστραμμένο αρχείο.",
+    "breakingChangesPleaseBackupTitle": "Αλλαγές που σπάνε τη συμβατότητα: Παρακαλώ κάνε backup!",
+    "breakingChangesPleaseBackupDescription": "Η επόμενη έκδοση του MusicPod θα έχει αλλαγές που σπάνε τη συμβατότητα. Παρακαλώ κάνε αντίγραφο (backup) τις λίστες αναπαραγωγής σου, τις συνδρομές podcast και τα καρφιτσωμένα άλμπουμ πριν την ενημέρωση.",
+    "breakingChangesPleaseBackupConfirmation": "Επιβεβαιώνω ότι έχω κάνει αντίγραφο (backup) των:",
+    "pinnedAlbumsAndPlaylists": "Καρφιτσωμένα άλμπουμ και λίστες αναπαραγωγής",
+    "starredStations": "Αγαπημένοι σταθμοί",
+    "podcastSubscriptions": "Συνδρομές Podcast",
+    "pinnedAlbums": "Καρφιτσωμένα άλμπουμ",
+    "export": "Εξαγωγή",
+    "import": "Εισαγωγή",
+    "exportYourData": "Εξαγωγή των δεδομένων σου",
+    "exportYourDataDescription": "Να εξάγεις τις συνδρομές podcast, τους αγαπημένους σταθμούς και τα καρφιτσωμένα άλμπουμ σου.",
+    "localAudioWatchDialogTitle": "Ο τοπικός φάκελος ήχου τροποποιήθηκε",
+    "localAudioWatchDialogDescription": "Θες να ξαναφορτώσεις τον τοπικό φάκελο ήχου;",
+    "external": "εξωτερικό",
+    "externalPlaylist": "Εξωτερική λίστα αναπαραγωγής",
+    "pictures": "Εικόνες",
+    "localPictureTypeOther": "Άλλο",
+    "localPictureTypeFileIcon32x32": "Εικονίδιο 32x32",
+    "localPictureTypeOtherFileIcon": "Άλλο εικονίδιο αρχείου",
+    "localPictureTypeCoverFront": "Εξώφυλλο",
+    "localPictureTypeCoverBack": "Οπισθόφυλλο",
+    "localPictureTypeLeafletPage": "Σελίδα φυλλαδίου",
+    "localPictureTypeMediaLabelCD": "Ετικέτα πολυμέσου CD",
+    "localPictureTypeLeadArtist": "Κύριος καλλιτέχνης",
+    "localPictureTypeArtistPerformer": "Καλλιτέχνης/Ερμηνευτής",
+    "localPictureTypeConductor": "Διευθυντής ορχήστρας",
+    "localPictureTypeBandOrchestra": "Συγκρότημα/Ορχήστρα",
+    "localPictureTypeComposer": "Συνθέτης",
+    "localPictureTypeLyricistTextWriter": "Στιχουργός/Συγγραφέας κειμένου",
+    "localPictureTypeRecordingLocation": "Τοποθεσία ηχογράφησης",
+    "localPictureTypeDuringRecording": "Κατά τη διάρκεια της ηχογράφησης",
+    "localPictureTypeDuringPerformance": "Κατά τη διάρκεια της παράστασης",
+    "localPictureTypeMovieVideoScreenCapture": "Στιγμιότυπο οθόνης ταινίας/βίντεο",
+    "localPictureTypeBrightColouredFish": "Φωτεινόχρωμο ψάρι",
+    "localPictureTypeIllustration": "Εικονογράφηση",
+    "localPictureTypebandArtistLogotype": "Λογότυπο συγκροτήματος/καλλιτέχνη",
+    "localPictureTypepublisherStudioLogotype": "Λογότυπο εκδότη/στούντιο",
+    "cantPinEmptyAlbum": "Δεν μπορείς να καρφιτσώσεις άλμπουμ χωρίς μεταδεδομένα άλμπουμ!",
+    "cantUnpinEmptyAlbum": "Δεν μπορείς να ξεκαρφιτσώσεις άλμπουμ χωρίς μεταδεδομένα άλμπουμ!",
+    "path": "Μονοπάτι",
+    "albumNotFound": "Αυτό το άλμπουμ δεν υπάρχει ή έχεις αφαιρέσει την εξωτερική λίστα αναπαραγωγής (αρχείο M3U/PLS) από την οποία έχει φορτωθεί.",
+    "stationNotFound": "Αυτός ο σταθμός δεν υπάρχει ή έχει αφαιρεθεί από τον διακομιστή radiobrowser.",
+    "onlyLocalAudioForPlaylists": "Μόνο τοπικός ήχος υποστηρίζεται για εισαγωγές λιστών αναπαραγωγής! Παρακαλώ αναζήτησε τους στη λειτουργία ραδιοφώνου και πρόσθεσε τους με το κουμπί Αστέρι στη βιβλιοθήκη σας!",
+    "customStationWarning": "Το παραχωρημένο URL πρέπει να υπάρχει στον διακομιστή radiobrowser, διαφορετικά δεν θα προστεθεί στη βιβλιοθήκη σου! Ιδανικά αναζήτησε τους στη λειτουργία ραδιοφώνου και πρόσθεσε τους με το κουμπί Αστέρι στη βιβλιοθήκη σου!",
+    "disc": "Δίσκος",
+    "groupAlbumsOnlyByAlbumName": "Ομαδοποιήσε τα άλμπουμ μόνο κατά όνομα άλμπουμ",
+    "groupAlbumsOnlyByAlbumNameDescription": "Αυτό θα ομαδοποιήσει τα άλμπουμ μόνο κατά όνομα άλμπουμ και όχι κατά όνομα καλλιτέχνη + όνομα άλμπουμ, το οποίο υποθέτει ότι το όνομα του άλμπουμ είναι μοναδικό μέσα στη βιβλιοθήκη σου!",
+    "useYaruThemeTitle": "Χρήση θέματος Yaru",
+    "useYaruThemeDescription": "Αυτό θα χρησιμοποιήσει το θέμα Yaru για την εφαρμογή. Αυτό είναι το προεπιλεγμένο θέμα για τα Ubuntu.",
+    "customThemeColor": "Παραμετροποιήσιμο χρώμα θέματος",
+    "useCustomThemeColorTitle": "Χρησιμοποίησε παραμετροποιήσιμο χρώμα θέματος",
+    "useCustomThemeColorDescription": "Αυτό θα σου επιτρέψει να επιλέξεις ένα παραμετροποιήσιμο χρώμα για το τρέχον θέμα.",
+    "usePlayerColorTitle": "Χρησιμοποίησε το χρώμα του αναπαραγωγέα",
+    "usePlayerColorDescription": "Αυτό θα χρησιμοποιήσει το κυρίαρχο χρώμα που έχει εξαχθεί από το τρέχον εξώφυλλο (αν είναι διαθέσιμο) για τον αναπαραγωγέα.",
+    "selectColor": "Επέλεξε χρώμα",
+    "selectColorShade": "Επέλεξε απόχρωση χρώματος",
+    "selectColorAndItsShades": "Επέλεξε ένα χρώμα και τις αποχρώσεις του",
+    "selectIconThemeTitle": "Επέλεξε θέμα εικονιδίων",
+    "selectIconThemeDescription": "Επέλεξε ένα θέμα εικονιδίων για την εφαρμογή. Το προεπιλεγμένο θέμα εξαρτάται από το λειτουργικό σου σύστημα. Αυτό θα επαναφορτώσει την εφαρμογή!",
+    "saveWindowSizeTitle": "Αποθήκευση μεγέθους παραθύρου",
+    "saveWindowSizeDescription": "Αυτό θα αποθηκεύσει το μέγεθος και τη θέση του παραθύρου της εφαρμογής.",
+    "downloadsOfLatestRelease": "Λήφθηκαν {latestRelease} φορές εκτός του snapstore και του flathub",
+    "@downloadsOfLatestRelease": {
+        "placeholders": {
+            "latestRelease": {
+                "type": "String"
+            }
+        }
+    },
+    "useBlurredPlayerBackgroundTitle": "Χρήση θολωμένου φόντου αναπαραγωγέα",
+    "useBlurredPlayerBackgroundDescription": "Αυτό θα χρησιμοποιήσει μια θολωμένη έκδοση του εξώφυλλου ως φόντο για τον αναπαραγωγέα. Μπορεί να οδηγήσει σε χαμηλότερη απόδοση σε ορισμένες συσκευές.",
+    "loadingPleaseWait": "Φόρτωση, παρακαλώ περιμένετε ...",
+    "importingPodcastsPleaseWait": "Γίνεται εισαγωγή των podcast σου, παρακαλώ περίμενε ...",
+    "exportingPodcastsPleaseWait": "Γίνεται εξαγωγή των podcast σου, παρακαλώ περίμενε ...",
+    "importingStationsPleaseWait": "Γίνεται εισαγωγή των σταθμών σου, παρακαλώ περίμενε ...",
+    "exportingStationsPleaseWait": "Γίνεται εξαγωγή των σταθμών σου, παρακαλώ περίμενε ...",
+    "importingPlaylistsPleaseWait": "Γίνεται εισαγωγή των λιστών αναπαραγωγής σου, παρακαλώ περίμενε ...",
+    "exportingPlaylistsPleaseWait": "Γίνεται εξαγωγή των λιστών αναπαραγωγής σου, παρακαλώ περίμενε ...",
+    "author": "Συγγραφέας",
+    "rating": "Βαθμολογία",
+    "keywords": "Λέξεις-κλειδιά",
+    "newEpisodesAvailableFor": "Νέα επεισόδια διαθέσιμα για {length} podcasts",
+    "@newEpisodesAvailableFor": {
+        "placeholders": {
+            "length": {
+                "type": "int"
+            }
+        }
+    },
+    "lyrics": "Στίχοι",
+    "noLyricsFound": "Δεν βρέθηκαν στίχοι",
+    "autoScrolling": "Αυτόματη κύλιση",
+    "genericErrorTitle": "Προέκυψε ένα σφάλμα",
+    "genericErrorDescription": "Συγγνώμη, αλλά κάτι πήγε στραβά. Παρακαλώ δοκίμασε ξανά αργότερα.",
+    "errorDetails": "Λεπτομέρειες σφάλματος: {details}",
+    "@errorDetails": {
+        "placeholders": {
+            "details": {
+                "type": "String"
+            }
+        }
+    },
+    "appendToQueue": "Προσθήκη στην ουρά",
+    "appendedToQueue": "Προστέθηκε στην ουρά: {title}",
+    "@appendedToQueue": {
+        "type": "text",
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "appendMediaToQueueDescription": "Το {title} υπάρχει ήδη στην ουρά. Θέλεις να το προσθέσεις στο τέλος της ουράς;",
+    "@appendMediaToQueueDescription": {
+        "type": "text",
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "appendMediaToQueueTitle": "Πρόσθεσε πολυμέσο στην ουρά",
+    "appendMediaToQueue": "Πρόσθεσε πολυμέσο στην ουρά: {title}",
+    "@appendMediaToQueue": {
+        "type": "text",
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "explore": "Ανακάλυψε",
+    "favorites": "Αγαπημένα",
+    "autoMovePlayerTitle": "Αυτόματη μετακίνηση του αναπαραγωγέα",
+    "autoMovePlayerDescription": "Μετακίνησε τον αναπαραγωγέα προς τα δεξιά αν υπάρχει αρκετός οριζόντιος χώρος",
+    "onlineLyricsNotSetup": "Αν θέλεις να φορτώσεις στίχους από το Genius, παρακαλώ να παραχωρήσεις ένα API κλειδί στις ρυθμίσεις.",
+    "settingsGeniusDisclaimer": "Το MusicPod, οι συνεισφέροντες του και το Genius API δεν είναι υπεύθυνοι για οποιαδήποτε κακή χρήση του API κλειδιού. Παρέχοντας το API κλειδί σου, συμφωνείς να το χρησιμοποιήσεις υπεύθυνα και σύμφωνα με τους όρους υπηρεσίας του Genius.\n\n",
+    "settingsGeniusDescription": "Για να φορτώσεις στίχους από το Genius, πρέπει να παρέχεις ένα Genius API Key. Μπορείς να αποκτήσεις ένα κλειδί API δημιουργώντας έναν λογαριασμό στο Genius και καταχωρώντας μια εφαρμογή για να πάρεις το token πρόσβασής σου.",
+    "settingsDoNotAskForGeniusTitle": "Μην χρησιμοποιησείς το Genius ή μην ξαναζητήσεις το κλειδί του Genius API",
+    "settingsDoNotAskForGeniusDescription": "Αυτό εμποδίζει την εφαρμογή από το να ζητά το κλειδί API του Genius στο μέλλον και κάνει τη λειτουργία στίχων να βασίζεται αποκλειστικά σε τοπικά αρχεία LRC ή σε συμβολοσειρές LRC ενσωματωμένες στα μεταδεδομένα του ήχου.",
+    "tosLink": "https://genius.com/static/terms",
+    "tosLinkText": "Διάβασε τους Όρους Υπηρεσίας του Genius",
+    "regionSlovenia": "Slovenia"
 }
