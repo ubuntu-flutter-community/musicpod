@@ -808,5 +808,7 @@
     "settingsDoNotAskForGeniusDescription": "Αυτό εμποδίζει την εφαρμογή από το να ζητά το κλειδί API του Genius στο μέλλον και κάνει τη λειτουργία στίχων να βασίζεται αποκλειστικά σε τοπικά αρχεία LRC ή σε συμβολοσειρές LRC ενσωματωμένες στα μεταδεδομένα του ήχου.",
     "tosLink": "https://genius.com/static/terms",
     "tosLinkText": "Διάβασε τους Όρους Υπηρεσίας του Genius",
-    "regionSlovenia": "Slovenia"
+    "regionSlovenia": "Slovenia",
+    "regionMauritania": "Mauritania",
+    "regionSouthsudan": "South Sudan"
 }
