@@ -9,7 +9,10 @@ import '../../common/view/audio_page_type.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/sliver_audio_tile_list.dart';
 import '../../common/view/sliver_fill_remaining_progress.dart';
+import '../../common/view/snackbars.dart';
+import '../../l10n/l10n.dart';
 import '../local_audio_model.dart';
+import 'album_page.dart';
 import 'artist_page.dart';
 
 class TitlesView extends StatelessWidget with WatchItMixin {
@@ -27,7 +30,9 @@ class TitlesView extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final importing = watchPropertyValue((LocalAudioModel m) => m.importing);
+    final importing = watchValue(
+      (LocalAudioModel m) => m.initAudiosCommand.isRunning,
+    );
 
     if (audios == null || importing) {
       return const SliverFillRemainingProgress();
@@ -49,6 +54,32 @@ class TitlesView extends StatelessWidget with WatchItMixin {
         builder: (_) => ArtistPage(pageId: artist),
         pageId: artist,
       ),
+      onSubSubTitleTab: (Audio audio) {
+        if (audio.album == null || audio.artist == null) {
+          showSnackBar(
+            context: context,
+            content: Text(context.l10n.nothingFound),
+          );
+          return;
+        }
+        final id = di<LocalAudioModel>().findAlbumId(
+          artist: audio.artist!,
+          album: audio.album!,
+        );
+
+        if (id == null) {
+          showSnackBar(
+            context: context,
+            content: Text(context.l10n.nothingFound),
+          );
+          return;
+        }
+
+        di<RoutingManager>().push(
+          builder: (_) => AlbumPage(id: id),
+          pageId: id,
+        );
+      },
     );
   }
 }

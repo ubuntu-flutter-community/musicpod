@@ -8,7 +8,7 @@ import '../../l10n/l10n.dart';
 import '../../settings/settings_model.dart';
 
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason>?
-showFailedImportsSnackBar({
+showFailedImportsSnackBarIfNotBlocked({
   required List<String> failedImports,
   required BuildContext context,
   bool failedToImport = false,

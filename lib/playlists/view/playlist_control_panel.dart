@@ -9,7 +9,6 @@ import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../local_audio/local_audio_model.dart';
 import 'edit_playlist_dialog.dart';
-import 'playlst_add_audios_dialog.dart';
 
 class PlaylistControlPanel extends StatelessWidget with WatchItMixin {
   const PlaylistControlPanel({
@@ -51,11 +50,13 @@ class PlaylistControlPanel extends StatelessWidget with WatchItMixin {
           ),
           AvatarPlayButton(audios: audios, pageId: pageId),
           IconButton(
+            isSelected: watchPropertyValue(
+              (LocalAudioModel m) => m.showPlaylistAddAudios,
+            ),
             tooltip: l10n.add,
             icon: Icon(Iconz.plus),
-            onPressed: () => showDialog(
-              context: context,
-              builder: (context) => PlaylistAddAudiosDialog(playlistId: pageId),
+            onPressed: () => di<LocalAudioModel>().setShowPlaylistAddAudios(
+              !di<LocalAudioModel>().showPlaylistAddAudios,
             ),
           ),
           IconButton(

@@ -23,7 +23,6 @@ class LocalCoverService {
   Future<Uint8List?> getCover({
     required String albumId,
     required String path,
-    Function()? onError,
   }) async {
     final file = File(path);
     if (file.existsSync() && file.isPlayable && albumId.isNotEmpty == true) {
@@ -48,7 +47,6 @@ class LocalCoverService {
         }
       } on Exception catch (e) {
         printMessageInDebugMode(e);
-        onError?.call();
       }
 
       if (bytesFromMetadata == null) return null;

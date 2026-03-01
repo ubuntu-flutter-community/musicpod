@@ -27,25 +27,46 @@ class LocalMetadataCovers extends StatefulWidget {
 }
 
 class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
-  AudioMetadata? data;
+  AudioMetadata? _data;
+  String? _error;
   @override
   void initState() {
     super.initState();
+    _readMetadata();
+  }
+
+  void _readMetadata() {
     if (widget.audio.path != null) {
-      data = readMetadata(File(widget.audio.path!), getImage: true);
+      try {
+        _error = null;
+        _data = readMetadata(File(widget.audio.path!), getImage: true);
+      } on Exception catch (e) {
+        _error = e.toString();
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     const dimension = MetaDataContent.dimension;
+
+    if (_error != null) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: kMediumSpace),
+        child: Text(
+          context.l10n.failedToImport + ': ' + '${widget.audio.path ?? ''}',
+          style: TextStyle(color: context.colorScheme.error),
+        ),
+      );
+    }
+
     return Padding(
       padding: const EdgeInsets.only(bottom: kLargestSpace),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(kMediumSpace),
         child: Stack(
           children: [
-            data == null || data!.pictures.isEmpty
+            _data == null || _data!.pictures.isEmpty
                 ? widget.audio.path == null || widget.audio.albumId == null
                       ? const SizedBox.shrink()
                       : LocalCover(
@@ -63,7 +84,7 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
                     placeIndicator: false,
                     navigationControls: true,
                     controller: YaruCarouselController(viewportFraction: 1),
-                    children: data!.pictures
+                    children: _data!.pictures
                         .map(
                           (picture) => Stack(
                             fit: StackFit.expand,
@@ -118,8 +139,8 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
                                       di<LocalAudioModel>().changeMetadata(
                                         widget.audio,
                                         pictures: [
-                                          if (data?.pictures != null)
-                                            ...data!.pictures.map((e) {
+                                          if (_data?.pictures != null)
+                                            ..._data!.pictures.map((e) {
                                               if (v != null &&
                                                   e.pictureType != v &&
                                                   File.fromRawPath(
@@ -139,10 +160,7 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
                                             }),
                                         ],
                                       );
-                                      data = readMetadata(
-                                        File(widget.audio.path!),
-                                        getImage: true,
-                                      );
+                                      _readMetadata();
                                       setState(() {});
                                     },
                                   ),
@@ -164,7 +182,7 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
                   di<LocalAudioModel>().changeMetadata(
                     widget.audio,
                     pictures: [
-                      if (data?.pictures != null) ...data!.pictures,
+                      if (_data?.pictures != null) ..._data!.pictures,
                       ...paths.map(
                         (e) => Picture(
                           File(e).readAsBytesSync(),
@@ -174,7 +192,7 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
                       ),
                     ],
                   );
-                  data = readMetadata(File(widget.audio.path!), getImage: true);
+                  _readMetadata();
                   setState(() {});
                 },
               ),
@@ -199,7 +217,7 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
                       ),
                     ],
                   );
-                  data = readMetadata(File(widget.audio.path!), getImage: true);
+                  _readMetadata();
                   setState(() {});
                 },
               ),

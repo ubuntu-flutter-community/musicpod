@@ -35,10 +35,10 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
                 final directoryPath = await di<ExternalPathService>()
                     .getPathOfDirectory();
                 if (directoryPath != null) {
-                  await di<LocalAudioModel>().init(
+                  await di<LocalAudioModel>().initAudiosCommand.runAsync((
                     forceInit: true,
                     directory: directoryPath,
-                  );
+                  ));
                 }
               },
               child: Text(
@@ -46,6 +46,19 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
               ),
+            ),
+          ),
+          YaruTile(
+            title: Text(
+              l10n.dontShowAgain +
+                  ': ' +
+                  '"${l10n.failedToImport.replaceAll(':', '')}"',
+            ),
+            trailing: CommonSwitch(
+              value: watchPropertyValue(
+                (SettingsModel m) => m.neverShowFailedImports,
+              ),
+              onChanged: di<SettingsModel>().setNeverShowFailedImports,
             ),
           ),
           YaruTile(

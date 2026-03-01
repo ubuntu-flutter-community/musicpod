@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../local_cover_model.dart';
-import 'failed_import_snackbar.dart';
 
 class LocalCover extends StatefulWidget with WatchItStatefulWidgetMixin {
   const LocalCover({
@@ -42,16 +41,7 @@ class _LocalCoverState extends State<LocalCover> {
     _cover = localCoverModel.get(widget.albumId);
     _future = _cover != null
         ? Future.value(_cover)
-        : localCoverModel.getCover(
-            albumId: widget.albumId,
-            path: widget.path,
-            onError: () => WidgetsBinding.instance.addPostFrameCallback((_) {
-              showFailedImportsSnackBar(
-                failedImports: [widget.path],
-                context: context,
-              );
-            }),
-          );
+        : localCoverModel.getCover(albumId: widget.albumId, path: widget.path);
   }
 
   @override

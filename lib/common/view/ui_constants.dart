@@ -97,7 +97,7 @@ const kMainPageIconPadding = EdgeInsets.only(right: 4.0);
 
 const kAudioHeaderDescriptionWidth = 400.0;
 
-const kShowLeadingThreshold = 1500;
+const kShowLeadingThreshold = 500;
 
 const kMusicPodDefaultColor = Color(0xFFed3c63);
 
