@@ -27,6 +27,7 @@ import '../../local_audio/view/failed_import_snackbar.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
+import 'playlist_add_audio_autocomplete.dart';
 import 'playlist_control_panel.dart';
 import 'playlist_header_image.dart';
 
@@ -163,7 +164,17 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
 
     return AdaptiveMultiLayoutBody(
       header: audioPageHeader,
-      controlPanel: PlaylistControlPanel(pageId: pageId, audios: audios),
+      controlPanel: Padding(
+        padding: const EdgeInsets.only(bottom: kLargestSpace),
+        child: PlaylistControlPanel(pageId: pageId, audios: audios),
+      ),
+      secondSliverControlPanel: SliverPadding(
+        padding: const EdgeInsets.only(bottom: kLargestSpace),
+        sliver: SliverToBoxAdapter(
+          child: PlaylistAddAudioAutoComplete(pageId: pageId),
+        ),
+      ),
+      secondControlPanel: PlaylistAddAudioAutoComplete(pageId: pageId),
       sliverBody: (constraints) => allowReorder
           ? SliverReorderableList(
               itemCount: audios.length,

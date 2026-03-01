@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
+import '../common/logging.dart';
 import '../common/view/audio_filter.dart';
 import '../library/library_service.dart';
 import '../settings/settings_service.dart';
@@ -75,6 +77,24 @@ class LocalAudioModel extends SafeChangeNotifier {
     _useArtistGridView = value;
     notifyListeners();
   }
+
+  bool _showPlaylistAddAudios = true;
+  bool get showPlaylistAddAudios => _showPlaylistAddAudios;
+  void setShowPlaylistAddAudios(bool value) {
+    if (value == _showPlaylistAddAudios) return;
+    _showPlaylistAddAudios = value;
+    notifyListeners();
+  }
+
+  late final Command<void, List<Audio>> initAudiosCommand =
+      Command.createAsyncNoParam(() async {
+        await _localAudioService.init();
+        final list = _localAudioService.audios ?? [];
+        printMessageInDebugMode(
+          'Initialized local audios: ${list.length} found',
+        );
+        return list;
+      }, initialValue: []);
 
   List<Audio>? get audios => _localAudioService.audios;
   List<String>? get allArtists => _localAudioService.allArtists;
