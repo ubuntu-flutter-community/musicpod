@@ -115,18 +115,17 @@ class _AudioTileState extends State<AudioTile> {
         key: ObjectKey(widget.audio),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         minLeadingWidth: kAudioTrackWidth,
-        leading: widget.allowLeadingImage
-            ? _AudioTileLeading(
-                audioPageType: widget.audioPageType,
-                audio: widget.audio,
-                dimension: kAudioTrackWidth,
-                color: color,
-                selected: widget.selected,
-                isPlayerPlaying: widget.isPlayerPlaying,
-                hovered: _hovered,
-                onTap: widget.onTap,
-              )
-            : null,
+        leading: _AudioTileLeading(
+          audioPageType: widget.audioPageType,
+          audio: widget.audio,
+          dimension: kAudioTrackWidth,
+          color: color,
+          selected: widget.selected,
+          isPlayerPlaying: widget.isPlayerPlaying,
+          hovered: _hovered,
+          onTap: widget.onTap,
+          hideIfNotSelected: !widget.allowLeadingImage,
+        ),
         selected: widget.selected,
         selectedColor: widget.isPlayerPlaying
             ? selectedColor
@@ -266,6 +265,7 @@ class _AudioTileLeading extends StatelessWidget {
     required this.dimension,
     required this.hovered,
     required this.onTap,
+    this.hideIfNotSelected = true,
   });
 
   final Audio audio;
@@ -278,12 +278,13 @@ class _AudioTileLeading extends StatelessWidget {
   final double dimension;
   final bool hovered;
   final VoidCallback onTap;
+  final bool hideIfNotSelected;
 
   @override
-  Widget build(BuildContext context) => hovered || selected
-      ? SizedBox.square(
-          dimension: dimension,
-          child: IconButton(
+  Widget build(BuildContext context) => SizedBox.square(
+    dimension: dimension,
+    child: hovered || selected
+        ? IconButton(
             onPressed: onTap,
             icon: switch ((isPlayerPlaying, selected)) {
               (true, true) => const Icon(Icons.pause),
@@ -291,17 +292,15 @@ class _AudioTileLeading extends StatelessWidget {
               (false, true) => const Icon(Icons.play_arrow),
               (false, false) => const Icon(Icons.play_arrow),
             },
-          ),
-        )
-      : switch (audioPageType) {
-          AudioPageType.album => _AlbumTileLead(
-            trackNumber: audio.trackNumber,
-            color: color,
-            dimension: dimension,
-          ),
-          _ => SizedBox(
-            width: dimension,
-            child: Center(
+          )
+        : hideIfNotSelected
+        ? null
+        : switch (audioPageType) {
+            AudioPageType.album => _AlbumTileLead(
+              trackNumber: audio.trackNumber,
+              color: color,
+            ),
+            _ => Center(
               child: AudioTileImage(
                 key: switch (audio.audioType) {
                   AudioType.radio => ValueKey(audio.uuid),
@@ -311,32 +310,24 @@ class _AudioTileLeading extends StatelessWidget {
                 audio: audio,
               ),
             ),
-          ),
-        };
+          },
+  );
 }
 
 class _AlbumTileLead extends StatelessWidget {
-  const _AlbumTileLead({
-    required this.trackNumber,
-    this.color,
-    this.dimension = kAudioTrackWidth,
-  });
+  const _AlbumTileLead({required this.trackNumber, this.color});
 
   final int? trackNumber;
   final Color? color;
-  final double? dimension;
 
   @override
-  Widget build(BuildContext context) => SizedBox.square(
-    dimension: dimension,
-    child: Center(
-      widthFactor: 1,
-      child: Text(
-        trackNumber?.toString() ?? '0',
-        style: context.theme.textTheme.labelLarge?.copyWith(color: color),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
+  Widget build(BuildContext context) => Center(
+    widthFactor: 1,
+    child: Text(
+      trackNumber?.toString() ?? '0',
+      style: context.theme.textTheme.labelLarge?.copyWith(color: color),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
     ),
   );
 }
