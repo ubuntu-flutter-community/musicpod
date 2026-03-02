@@ -88,7 +88,7 @@ dependencies:
   url_launcher: ^6.3.2
   watcher: ^1.2.1
   waveform_visualizer: ^1.0.0
-  win32: ^5.15.0
+  win32: 6.0.0
   window_manager: ^0.5.1
   xdg_directories: ^1.1.0
   yaru: ^9.0.1
