@@ -437,30 +437,6 @@ class MockExposeService extends _i1.Mock implements _i10.ExposeService {
   }
 
   @override
-  _i6.Stream<String?> get discordErrorStream =>
-      (super.noSuchMethod(
-            Invocation.getter(#discordErrorStream),
-            returnValue: _i6.Stream<String?>.empty(),
-          )
-          as _i6.Stream<String?>);
-
-  @override
-  _i6.Stream<bool> get isDiscordConnectedStream =>
-      (super.noSuchMethod(
-            Invocation.getter(#isDiscordConnectedStream),
-            returnValue: _i6.Stream<bool>.empty(),
-          )
-          as _i6.Stream<bool>);
-
-  @override
-  bool get isDiscordConnected =>
-      (super.noSuchMethod(
-            Invocation.getter(#isDiscordConnected),
-            returnValue: false,
-          )
-          as bool);
-
-  @override
   _i4.ValueNotifier<bool> get isLastFmAuthorized =>
       (super.noSuchMethod(
             Invocation.getter(#isLastFmAuthorized),
@@ -495,15 +471,6 @@ class MockExposeService extends _i1.Mock implements _i10.ExposeService {
     Invocation.method(#initListenBrains, []),
     returnValueForMissingStub: null,
   );
-
-  @override
-  _i6.Future<void> connectToDiscord(bool? value) =>
-      (super.noSuchMethod(
-            Invocation.method(#connectToDiscord, [value]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
 
   @override
   _i6.Future<void> authorizeLastFm({

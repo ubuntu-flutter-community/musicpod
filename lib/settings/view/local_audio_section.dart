@@ -35,7 +35,7 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
                 final directoryPath = await di<ExternalPathService>()
                     .getPathOfDirectory();
                 if (directoryPath != null) {
-                  await di<LocalAudioModel>().initAudiosCommand.runAsync((
+                  di<LocalAudioModel>().initAudiosCommand.run((
                     forceInit: true,
                     directory: directoryPath,
                   ));
