@@ -458,13 +458,13 @@ class AppLocalizationsTa extends AppLocalizations {
       'செய்தபடியே எல்லா அத்தியாயங்களையும் குறிக்கவும்';
 
   @override
-  String get markEpisodeAsDone => 'Mark episode as done';
+  String get markEpisodeAsDone => 'எபிசோட் முடிந்தது எனக் குறிக்கவும்';
 
   @override
-  String get hideCompletedEpisodes => 'Hide completed episodes';
+  String get hideCompletedEpisodes => 'முடிக்கப்பட்ட அத்தியாயங்களை மறை';
 
   @override
-  String get showCompletedEpisodes => 'Show completed episodes';
+  String get showCompletedEpisodes => 'முடிக்கப்பட்ட அத்தியாயங்களைக் காட்டு';
 
   @override
   String get reset => 'மீட்டமை';
@@ -2154,11 +2154,11 @@ class AppLocalizationsTa extends AppLocalizations {
       'தற்போதைய கருப்பொருளுக்கு தனிப்பயன் உச்சரிப்பு வண்ணத்தைத் தேர்வுசெய்ய இது உங்களை அனுமதிக்கும்.';
 
   @override
-  String get usePlayerColorTitle => 'Use player color';
+  String get usePlayerColorTitle => 'பிளேயர் நிறத்தைப் பயன்படுத்தவும்';
 
   @override
   String get usePlayerColorDescription =>
-      'This will use the dominant color has been extracted out of the current artwork (if available) for the whole app.';
+      'முழு பயன்பாட்டிற்கும் தற்போதைய கலைப்படைப்பிலிருந்து (கிடைத்தால்) பிரித்தெடுக்கப்பட்ட ஆதிக்க நிறத்தை இது பயன்படுத்தும்.';
 
   @override
   String get selectColor => 'வண்ணத்தைத் தேர்ந்தெடுக்கவும்';
@@ -2198,124 +2198,124 @@ class AppLocalizationsTa extends AppLocalizations {
       'இது பிளேயரின் பின்னணியை மங்கச் செய்யும். இது சில சாதனங்களில் குறைந்த செயல்திறனுக்கு வழிவகுக்கும்.';
 
   @override
-  String get loadingPleaseWait => 'Loading, please wait ...';
+  String get loadingPleaseWait => 'ஏற்றுகிறது, காத்திருக்கவும்...';
 
   @override
   String get importingPodcastsPleaseWait =>
-      'Importing your podcasts, please wait ...';
+      'உங்கள் பாட்காச்ட்களை இறக்குமதி செய்கிறது, காத்திருக்கவும்...';
 
   @override
   String get exportingPodcastsPleaseWait =>
-      'Exporting your podcasts, please wait ...';
+      'உங்கள் பாட்காச்ட்களை ஏற்றுமதி செய்கிறது, காத்திருக்கவும்...';
 
   @override
   String get importingStationsPleaseWait =>
-      'Importing your stations, please wait ...';
+      'உங்கள் நிலையங்களை இறக்குமதி செய்கிறது, காத்திருக்கவும்...';
 
   @override
   String get exportingStationsPleaseWait =>
-      'Exporting your stations, please wait ...';
+      'உங்கள் நிலையங்களை ஏற்றுமதி செய்கிறது, காத்திருக்கவும்...';
 
   @override
   String get importingPlaylistsPleaseWait =>
-      'Importing your playlists, please wait ...';
+      'உங்கள் பிளேலிச்ட்களை இறக்குமதி செய்கிறது, காத்திருக்கவும்...';
 
   @override
   String get exportingPlaylistsPleaseWait =>
-      'Exporting your playlists, please wait ...';
+      'உங்கள் பிளேலிச்ட்களை ஏற்றுமதி செய்கிறது, காத்திருக்கவும்...';
 
   @override
-  String get author => 'Author';
+  String get author => 'நூலாசிரியர்';
 
   @override
-  String get rating => 'Rating';
+  String get rating => 'செயல்வரம்பு';
 
   @override
-  String get keywords => 'Keywords';
+  String get keywords => 'முக்கிய வார்த்தைகள்';
 
   @override
   String newEpisodesAvailableFor(int length) {
-    return 'New episodes available for $length podcasts';
+    return '$length பாட்காச்ட்களுக்கு புதிய எபிசோடுகள் உள்ளன';
   }
 
   @override
-  String get lyrics => 'Lyrics';
+  String get lyrics => 'பாடல் வரிகள்';
 
   @override
-  String get noLyricsFound => 'No lyrics found';
+  String get noLyricsFound => 'பாடல் வரிகள் எதுவும் கிடைக்கவில்லை';
 
   @override
-  String get autoScrolling => 'Auto scroll';
+  String get autoScrolling => 'தானாக உருட்டும்';
 
   @override
-  String get genericErrorTitle => 'An error occurred';
+  String get genericErrorTitle => 'பிழை ஏற்பட்டது';
 
   @override
   String get genericErrorDescription =>
-      'An unexpected error occurred. Please try again later.';
+      'எதிர்பாராத பிழை ஏற்பட்டது. பிறகு முயற்சிக்கவும்.';
 
   @override
   String errorDetails(String details) {
-    return 'Error details: $details';
+    return 'பிழை விவரங்கள்: $details';
   }
 
   @override
-  String get appendToQueue => 'Append to queue';
+  String get appendToQueue => 'வரிசையில் இணைக்கவும்';
 
   @override
   String appendedToQueue(String title) {
-    return 'Appended to queue: $title';
+    return 'வரிசையில் சேர்க்கப்பட்டது: $title';
   }
 
   @override
   String appendMediaToQueueDescription(String title) {
-    return '$title is already inside the queue. Do you want to append it to the end of the queue?';
+    return '$title ஏற்கனவே வரிசையில் உள்ளது. வரிசையின் முடிவில் அதைச் சேர்க்க விரும்புகிறீர்களா?';
   }
 
   @override
-  String get appendMediaToQueueTitle => 'Append media to queue';
+  String get appendMediaToQueueTitle => 'வரிசையில் மீடியாவைச் சேர்க்கவும்';
 
   @override
   String appendMediaToQueue(String title) {
-    return 'Append media to queue: $title';
+    return 'வரிசையில் மீடியாவைச் சேர்க்கவும்: $title';
   }
 
   @override
-  String get explore => 'Explore';
+  String get explore => 'ஆராயுங்கள்';
 
   @override
-  String get favorites => 'Favorites';
+  String get favorites => 'பிடித்தவை';
 
   @override
-  String get autoMovePlayerTitle => 'Auto move player';
+  String get autoMovePlayerTitle => 'ஆட்டோ மூவ் பிளேயர்';
 
   @override
   String get autoMovePlayerDescription =>
-      'Move the player to the right if there is enough horizontal space';
+      'போதுமான கிடைமட்ட இடம் இருந்தால், பிளேயரை வலதுபுறமாக நகர்த்தவும்';
 
   @override
   String get onlineLyricsNotSetup =>
-      'If you want to fetch lyrics from Genius, please provide an API key in the settings.';
+      'சீனியசிடமிருந்து பாடல் வரிகளைப் பெற விரும்பினால், அமைப்புகளில் பநிஇ விசையை வழங்கவும்.';
 
   @override
   String get settingsGeniusDisclaimer =>
-      'MusicPod, its contributors, and the Genius API are not responsible for any misuse of the API key. By providing your API key, you agree to use it responsibly and in accordance with Genius terms of service.\n\n';
+      'மியூசிக் பாட், அதன் பங்களிப்பாளர்கள் மற்றும் சீனியச் பநிஇ ஆகியவை பநிஇ விசையை தவறாகப் பயன்படுத்துவதற்கு பொறுப்பாகாது. உங்கள் பநிஇ விசையை வழங்குவதன் மூலம், அதை பொறுப்புடன் மற்றும் சீனியச் பணி விதிமுறைகளின்படி பயன்படுத்த ஒப்புக்கொள்கிறீர்கள்.\n\n';
 
   @override
   String get settingsGeniusDescription =>
-      'To fetch lyrics from Genius, you need to provide a Genius API Key. You can obtain an API key by creating an account on Genius and registering an application to get your access token.';
+      'சீனியசிடமிருந்து பாடல் வரிகளைப் பெற, நீங்கள் ஒரு சீனியச் பநிஇ விசையை வழங்க வேண்டும். சீனியசில் ஒரு கணக்கை உருவாக்கி, உங்கள் அணுகல் கிள்ளாக்கைப் பெற ஒரு பயன்பாட்டைப் பதிவு செய்வதன் மூலம் நீங்கள் பநிஇ விசையைப் பெறலாம்.';
 
   @override
   String get settingsDoNotAskForGeniusTitle =>
-      'Do not use Genius or ask for Genius API Key again';
+      'சீனியசைப் பயன்படுத்த வேண்டாம் அல்லது சீனியச் பநிஇ விசையை மீண்டும் கேட்க வேண்டாம்';
 
   @override
   String get settingsDoNotAskForGeniusDescription =>
-      'This prevents the app from prompting for the Genius API key in the future and makes the lyrics feature fully rely on local LRC files or LRC strings embedded in audio metadata.';
+      'இது எதிர்காலத்தில் சீனியச் பநிஇ விசையைத் தூண்டுவதிலிருந்து பயன்பாட்டைத் தடுக்கிறது மற்றும் பாடல் வரிகள் அம்சத்தை உள்ளக எல்ஆர்சி கோப்புகள் அல்லது ஆடியோ மெட்டாடேட்டாவில் உட்பொதிக்கப்பட்ட எல்ஆர்சி சரங்களை முழுமையாகச் சார்ந்திருக்கும்.';
 
   @override
   String get tosLink => 'https://genius.com/static/terms';
 
   @override
-  String get tosLinkText => 'Read Genius\'s Terms of Service';
+  String get tosLinkText => 'சீனியசின் பணி விதிமுறைகளைப் படிக்கவும்';
 }
