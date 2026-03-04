@@ -55,7 +55,7 @@ class CountryAutoComplete extends StatelessWidget with WatchItMixin {
     final useYaruTheme = watchPropertyValue(
       (SettingsModel m) => m.useYaruTheme,
     );
-    final inputHeight = getInputHeight(useYaruTheme);
+    final inputHeight = getInputHeight();
 
     return SizedBox(
       height: height ?? inputHeight,

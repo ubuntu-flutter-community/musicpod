@@ -106,50 +106,46 @@ class _LyricsSectionState extends State<LyricsSection> {
                 const SizedBox(height: kMediumSpace),
               ],
             ),
-            subtitle: SizedBox(
-              height: context.buttonHeight - 3,
-              child: TextField(
-                enabled: !neverAskAgainForGeniusToken,
-                obscureText: !_showToken,
-                controller: _geniusApiKeyController,
-                decoration: InputDecoration(
-                  hintText: 'Enter your Genius API Key',
-                  suffixIconConstraints: BoxConstraints(
-                    minHeight: context.buttonHeight,
-                  ),
-                  suffixIcon: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        tooltip: 'Save API Key',
-                        style: getTextFieldSuffixStyle(context, false),
-                        icon: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          child: Icon(
-                            Iconz.download,
-                            color:
-                                lyricsGeniusAccessToken != null &&
-                                    lyricsGeniusAccessToken.isNotEmpty
-                                ? context.colorScheme.success
-                                : context.colorScheme.error,
-                          ),
-                        ),
-                        onPressed: () => showFutureLoadingDialog(
-                          title: context.l10n.loadingPleaseWait,
-                          context: context,
-                          future: () => OnlineLyricsService.refreshRegistration(
-                            _geniusApiKeyController.text.trim(),
-                          ),
+            subtitle: TextField(
+              enabled: !neverAskAgainForGeniusToken,
+              obscureText: !_showToken,
+              controller: _geniusApiKeyController,
+              decoration: InputDecoration(
+                hintText: 'Enter your Genius API Key',
+                suffixIconConstraints: BoxConstraints(
+                  minHeight: context.buttonHeight,
+                ),
+                suffixIcon: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      tooltip: 'Save API Key',
+                      style: getTextFieldSuffixStyle(context, false),
+                      icon: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        child: Icon(
+                          Iconz.download,
+                          color:
+                              lyricsGeniusAccessToken != null &&
+                                  lyricsGeniusAccessToken.isNotEmpty
+                              ? context.colorScheme.success
+                              : context.colorScheme.error,
                         ),
                       ),
-                      IconButton(
-                        style: getTextFieldSuffixStyle(context, true),
-                        icon: Icon(_showToken ? Iconz.hide : Iconz.show),
-                        onPressed: () =>
-                            setState(() => _showToken = !_showToken),
+                      onPressed: () => showFutureLoadingDialog(
+                        title: context.l10n.loadingPleaseWait,
+                        context: context,
+                        future: () => OnlineLyricsService.refreshRegistration(
+                          _geniusApiKeyController.text.trim(),
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                    IconButton(
+                      style: getTextFieldSuffixStyle(context, true),
+                      icon: Icon(_showToken ? Iconz.hide : Iconz.show),
+                      onPressed: () => setState(() => _showToken = !_showToken),
+                    ),
+                  ],
                 ),
               ),
             ),
