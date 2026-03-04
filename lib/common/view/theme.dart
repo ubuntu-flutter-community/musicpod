@@ -290,11 +290,7 @@ EdgeInsets getCountryPillPadding(bool useYaruTheme) => useYaruTheme
     ? const EdgeInsets.only(bottom: 9, top: 9, right: 15, left: 15)
     : const EdgeInsets.only(top: 11, bottom: 11, left: 15, right: 15);
 
-double getInputHeight(bool useYaruTheme) => isMobile
-    ? 40
-    : useYaruTheme
-    ? kYaruTitleBarItemHeight
-    : 36;
+double getInputHeight() => isMobile ? 40 : 36;
 
 double get audioCardDimension => kAudioCardDimension - (isMobile ? 15 : 0);
 

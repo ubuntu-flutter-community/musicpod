@@ -14,7 +14,6 @@ import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../radio/view/tag_auto_complete.dart';
-import '../../settings/settings_model.dart';
 import '../search_model.dart';
 import '../search_type.dart';
 import 'audio_type_filter_button.dart';
@@ -30,13 +29,10 @@ class SearchPageInput extends StatelessWidget with WatchItMixin {
     final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
     final searchType = watchPropertyValue((SearchModel m) => m.searchType);
     final audioType = watchPropertyValue((SearchModel m) => m.audioType);
-    final useYaruTheme = watchPropertyValue(
-      (SettingsModel m) => m.useYaruTheme,
-    );
 
     return SizedBox(
       width: searchBarWidth,
-      height: getInputHeight(useYaruTheme),
+      height: getInputHeight(),
       child: Theme(
         data: context.theme.copyWith(
           listTileTheme: context.theme.listTileTheme.copyWith(

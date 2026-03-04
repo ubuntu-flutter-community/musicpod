@@ -55,7 +55,7 @@ class LanguageAutoComplete extends StatelessWidget with WatchItMixin {
     );
 
     return SizedBox(
-      height: height ?? getInputHeight(useYaruTheme),
+      height: height ?? getInputHeight(),
       width: width,
       child: LayoutBuilder(
         builder: (_, constraints) {

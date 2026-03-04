@@ -34,17 +34,17 @@ class MainPageIcon extends StatelessWidget with WatchItMixin {
       (LocalAudioModel m) => m.initAudiosCommand.isRunning,
     );
 
-    if (currentAudioType == audioType) {
-      if (isLocalAudioImporting) {
-        return Padding(
-          padding: mainPageIconPadding,
-          child: const SizedBox(
-            width: 16,
-            height: 16,
-            child: Progress(strokeWidth: 2),
-          ),
-        );
-      } else if (isPlaying) {
+    if (isLocalAudioImporting && audioType == AudioType.local) {
+      return Padding(
+        padding: mainPageIconPadding,
+        child: const SizedBox(
+          width: 16,
+          height: 16,
+          child: Progress(strokeWidth: 2),
+        ),
+      );
+    } else if (currentAudioType == audioType) {
+      if (isPlaying) {
         if (useMoreAnimations) {
           return const ActiveAudioSignalIndicator(thickness: 2);
         } else {
