@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.15.1](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.14.0...v2.15.1) (2026-03-04)
+
+
+### Bug Fixes
+
+* control panel heights mismatch ([#1449](https://github.com/ubuntu-flutter-community/musicpod/commit/384e34ce1301f2f7f9cc553200047011bc430dbe))
+
+
 ## [2.15.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.14.0...v2.15.0) (2026-03-03)
 
 
