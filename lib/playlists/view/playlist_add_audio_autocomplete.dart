@@ -14,6 +14,28 @@ import '../../library/library_model.dart';
 import '../../local_audio/local_audio_model.dart';
 import '../../settings/settings_model.dart';
 
+class PlaylistAddAudioAutoCompleteOrShrink extends StatelessWidget
+    with WatchItMixin {
+  const PlaylistAddAudioAutoCompleteOrShrink({super.key, required this.pageId});
+
+  final String pageId;
+
+  @override
+  Widget build(BuildContext context) {
+    final show = watchPropertyValue(
+      (LocalAudioModel m) => m.showPlaylistAddAudios,
+    );
+
+    return AnimatedContainer(
+      width: 400,
+      duration: const Duration(milliseconds: 300),
+      child: !show
+          ? const SizedBox.shrink()
+          : PlaylistAddAudioAutoComplete(pageId: pageId),
+    );
+  }
+}
+
 class PlaylistAddAudioAutoComplete extends StatefulWidget
     with WatchItStatefulWidgetMixin {
   const PlaylistAddAudioAutoComplete({
@@ -44,8 +66,11 @@ class _PlaylistAddAudioAutoCompleteState
 
   @override
   Widget build(BuildContext context) {
-    final show = watchPropertyValue(
-      (LocalAudioModel m) => m.showPlaylistAddAudios,
+    callOnceAfterThisBuild(
+      (_) => di<LocalAudioModel>().initAudiosCommand.run((
+        directory: null,
+        forceInit: false,
+      )),
     );
 
     final theme = context.theme;
@@ -65,172 +90,162 @@ class _PlaylistAddAudioAutoCompleteState
     final playlist = watchPropertyValue(
       (LibraryModel m) => m.getPlaylistById(widget.pageId) ?? [],
     );
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 300),
 
-      child: !show
-          ? const SizedBox.shrink()
-          : Padding(
-              padding: const EdgeInsets.only(bottom: kMediumSpace),
-              child: SizedBox(
-                width: 400,
-                child: isRunning
-                    ? const Center(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: kMediumSpace),
-                          child: LinearProgress(),
-                        ),
-                      )
-                    : error != null
-                    ? Center(child: Text(error.toString()))
-                    : Autocomplete<Audio>(
-                        focusNode: _focusNode,
-                        textEditingController: _controller,
-                        displayStringForOption: (option) =>
-                            '${option.artist} - ${option.title}',
-                        fieldViewBuilder:
-                            (
-                              context,
-                              textEditingController,
-                              focusNode,
-                              onFieldSubmitted,
-                            ) {
-                              final hintText =
-                                  '${context.l10n.search}: ${context.l10n.localAudio}';
-                              return TextField(
-                                controller: textEditingController,
-                                autofocus: true,
-                                maxLines: 1,
-                                onTap: () {
-                                  textEditingController
-                                      .selection = TextSelection(
-                                    baseOffset: 0,
-                                    extentOffset:
-                                        textEditingController.value.text.length,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: kMediumSpace),
+      child: SizedBox(
+        width: 400,
+        height: 50,
+        child: isRunning
+            ? const Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: kMediumSpace),
+                  child: LinearProgress(),
+                ),
+              )
+            : error != null
+            ? Center(child: Text(error.toString()))
+            : Autocomplete<Audio>(
+                focusNode: _focusNode,
+                textEditingController: _controller,
+                displayStringForOption: (option) =>
+                    '${option.artist} - ${option.title}',
+                fieldViewBuilder:
+                    (
+                      context,
+                      textEditingController,
+                      focusNode,
+                      onFieldSubmitted,
+                    ) {
+                      final hintText =
+                          '${context.l10n.search}: ${context.l10n.localAudio}';
+                      return TextField(
+                        controller: textEditingController,
+                        autofocus: true,
+                        maxLines: 1,
+                        onTap: () {
+                          textEditingController.selection = TextSelection(
+                            baseOffset: 0,
+                            extentOffset:
+                                textEditingController.value.text.length,
+                          );
+                        },
+                        style: useYaruTheme ? theme.textTheme.bodyMedium : null,
+                        strutStyle: useYaruTheme
+                            ? const StrutStyle(leading: 0.2)
+                            : null,
+                        textAlignVertical: useYaruTheme
+                            ? TextAlignVertical.center
+                            : null,
+                        cursorWidth: useYaruTheme ? 1 : 2.0,
+                        decoration: useYaruTheme
+                            ? createYaruDecoration(
+                                theme: theme,
+                                hintText: hintText,
+                              )
+                            : createMaterialDecoration(
+                                colorScheme: colorScheme,
+                                hintText: hintText,
+                              ),
+
+                        focusNode: focusNode,
+                        onSubmitted: (String value) {
+                          setState(() {});
+                          onFieldSubmitted();
+                          textEditingController.clear();
+                          focusNode.requestFocus();
+                        },
+                      );
+                    },
+                optionsViewBuilder: (context, onSelected, options) {
+                  return Align(
+                    alignment: Alignment.topLeft,
+                    child: SizedBox(
+                      width: 400,
+                      height: (options.length * 50) > 400
+                          ? 400
+                          : options.length * 50,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(6),
+                        child: Material(
+                          color: theme.isLight
+                              ? colorScheme.surface
+                              : colorScheme.surfaceContainerHighest,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            side: BorderSide(
+                              color: theme.dividerColor,
+                              width: 1,
+                            ),
+                          ),
+                          elevation: 1,
+                          child: ListView.builder(
+                            itemCount: options.length,
+                            itemBuilder: (context, index) {
+                              return Builder(
+                                builder: (BuildContext context) {
+                                  final bool highlight =
+                                      AutocompleteHighlightedOption.of(
+                                        context,
+                                      ) ==
+                                      index;
+                                  if (highlight) {
+                                    SchedulerBinding.instance
+                                        .addPostFrameCallback((
+                                          Duration timeStamp,
+                                        ) {
+                                          Scrollable.ensureVisible(
+                                            context,
+                                            alignment: 0.5,
+                                          );
+                                        });
+                                  }
+                                  final t = options.elementAt(index);
+                                  return _AudioTile(
+                                    onSelected: (v) {
+                                      setState(() {});
+                                      onSelected(v);
+                                      _controller.clear();
+                                      _focusNode.requestFocus();
+                                    },
+                                    fallBackTextStyle: fallBackTextStyle,
+                                    highlight: highlight,
+                                    theme: theme,
+                                    t: t,
                                   );
-                                },
-                                style: useYaruTheme
-                                    ? theme.textTheme.bodyMedium
-                                    : null,
-                                strutStyle: useYaruTheme
-                                    ? const StrutStyle(leading: 0.2)
-                                    : null,
-                                textAlignVertical: useYaruTheme
-                                    ? TextAlignVertical.center
-                                    : null,
-                                cursorWidth: useYaruTheme ? 1 : 2.0,
-                                decoration: useYaruTheme
-                                    ? createYaruDecoration(
-                                        theme: theme,
-                                        hintText: hintText,
-                                      )
-                                    : createMaterialDecoration(
-                                        colorScheme: colorScheme,
-                                        hintText: hintText,
-                                      ),
-
-                                focusNode: focusNode,
-                                onSubmitted: (String value) {
-                                  setState(() {});
-                                  onFieldSubmitted();
-                                  textEditingController.clear();
-                                  focusNode.requestFocus();
                                 },
                               );
                             },
-                        optionsViewBuilder: (context, onSelected, options) {
-                          return Align(
-                            alignment: Alignment.topLeft,
-                            child: SizedBox(
-                              width: searchBarWidth,
-                              height: (options.length * 50) > 400
-                                  ? 400
-                                  : options.length * 50,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(6),
-                                child: Material(
-                                  color: theme.isLight
-                                      ? colorScheme.surface
-                                      : colorScheme.surfaceContainerHighest,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(6),
-                                    side: BorderSide(
-                                      color: theme.dividerColor,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  elevation: 1,
-                                  child: ListView.builder(
-                                    itemCount: options.length,
-                                    itemBuilder: (context, index) {
-                                      return Builder(
-                                        builder: (BuildContext context) {
-                                          final bool highlight =
-                                              AutocompleteHighlightedOption.of(
-                                                context,
-                                              ) ==
-                                              index;
-                                          if (highlight) {
-                                            SchedulerBinding.instance
-                                                .addPostFrameCallback((
-                                                  Duration timeStamp,
-                                                ) {
-                                                  Scrollable.ensureVisible(
-                                                    context,
-                                                    alignment: 0.5,
-                                                  );
-                                                });
-                                          }
-                                          final t = options.elementAt(index);
-                                          return _AudioTile(
-                                            onSelected: (v) {
-                                              setState(() {});
-                                              onSelected(v);
-                                              _controller.clear();
-                                              _focusNode.requestFocus();
-                                            },
-                                            fallBackTextStyle:
-                                                fallBackTextStyle,
-                                            highlight: highlight,
-                                            theme: theme,
-                                            t: t,
-                                          );
-                                        },
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                        optionsBuilder: (textEditingValue) {
-                          final options = allAudios
-                              .whereNot(
-                                (oneOfAll) => playlist.any(
-                                  (playlistElement) =>
-                                      playlistElement == oneOfAll,
-                                ),
-                              )
-                              .toList();
-
-                          if (textEditingValue.text.isEmpty) {
-                            return options;
-                          }
-                          return options.where(
-                            (a) => '${a.artist} ${a.title}'
-                                .toLowerCase()
-                                .contains(textEditingValue.text.toLowerCase()),
-                          );
-                        },
-                        onSelected: (option) =>
-                            di<LibraryModel>().addAudiosToPlaylist(
-                              id: widget.pageId,
-                              audios: [option],
-                            ),
+                          ),
+                        ),
                       ),
+                    ),
+                  );
+                },
+                optionsBuilder: (textEditingValue) {
+                  final options = allAudios
+                      .whereNot(
+                        (oneOfAll) => playlist.any(
+                          (playlistElement) => playlistElement == oneOfAll,
+                        ),
+                      )
+                      .toList();
+
+                  if (textEditingValue.text.isEmpty) {
+                    return options;
+                  }
+                  return options.where(
+                    (a) => '${a.artist} ${a.title}'.toLowerCase().contains(
+                      textEditingValue.text.toLowerCase(),
+                    ),
+                  );
+                },
+                onSelected: (option) => di<LibraryModel>().addAudiosToPlaylist(
+                  id: widget.pageId,
+                  audios: [option],
+                ),
               ),
-            ),
+      ),
     );
   }
 }

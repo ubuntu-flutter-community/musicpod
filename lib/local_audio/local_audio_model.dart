@@ -82,9 +82,6 @@ class LocalAudioModel extends SafeChangeNotifier {
   void setShowPlaylistAddAudios(bool value) {
     if (value == _showPlaylistAddAudios) return;
     _showPlaylistAddAudios = value;
-    if (_showPlaylistAddAudios && audios == null) {
-      initAudiosCommand.run((directory: null, forceInit: false));
-    }
     notifyListeners();
   }
 

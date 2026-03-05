@@ -12,13 +12,11 @@ import 'player_service.dart';
 Future<AudioServiceHandler> registerAudioServiceHandler() async {
   final playerService = di<PlayerService>();
   final audioHandler = await AudioService.init(
-    config: AudioServiceConfig(
+    config: const AudioServiceConfig(
       androidNotificationOngoing: false,
       androidStopForegroundOnPause: false,
       androidNotificationChannelName: AppConfig.appName,
-      androidNotificationChannelId: isAndroid || isWindows
-          ? AppConfig.androidChannelId
-          : null,
+      androidNotificationChannelId: AppConfig.androidChannelId,
       androidNotificationChannelDescription: 'MusicPod Media Controls',
     ),
     builder: () => AudioServiceHandler(
