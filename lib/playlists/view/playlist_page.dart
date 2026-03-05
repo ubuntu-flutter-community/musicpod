@@ -167,12 +167,17 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
     return AdaptiveMultiLayoutBody(
       header: audioPageHeader,
       controlPanel: PlaylistControlPanel(pageId: pageId, audios: audios),
-      secondSliverControlPanel: SliverToBoxAdapter(
-        child: PlaylistAddAudioAutoComplete(pageId: pageId),
+      secondSliverControlPanel: SliverPadding(
+        padding: const EdgeInsetsGeometry.symmetric(
+          horizontal: 2 * kLargestSpace,
+        ),
+        sliver: SliverToBoxAdapter(
+          child: PlaylistAddAudioAutoCompleteOrShrink(pageId: pageId),
+        ),
       ),
       secondControlPanel: Padding(
         padding: const EdgeInsets.only(top: kLargestSpace),
-        child: PlaylistAddAudioAutoComplete(pageId: pageId),
+        child: PlaylistAddAudioAutoCompleteOrShrink(pageId: pageId),
       ),
       sliverBody: (constraints) => allowReorder
           ? SliverReorderableList(
