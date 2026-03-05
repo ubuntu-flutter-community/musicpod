@@ -30,20 +30,17 @@ class MainPageIcon extends StatelessWidget with WatchItMixin {
     final useMoreAnimations = watchPropertyValue(
       (SettingsModel m) => m.useMoreAnimations,
     );
-    final isLocalAudioImporting = watchValue(
-      (LocalAudioModel m) => m.initAudiosCommand.isRunning,
-    );
 
-    if (isLocalAudioImporting && audioType == AudioType.local) {
-      return Padding(
-        padding: mainPageIconPadding,
-        child: const SizedBox(
-          width: 16,
-          height: 16,
-          child: Progress(strokeWidth: 2),
-        ),
+    if (audioType == AudioType.local) {
+      return LocalMainPageIcon(
+        isCurrentlyPlaying: currentAudioType == AudioType.local,
+        selected: selected,
+        isPlaying: isPlaying,
+        useMoreAnimations: useMoreAnimations,
       );
-    } else if (currentAudioType == audioType) {
+    }
+
+    if (currentAudioType == audioType) {
       if (isPlaying) {
         if (useMoreAnimations) {
           return const ActiveAudioSignalIndicator(thickness: 2);
@@ -62,6 +59,51 @@ class MainPageIcon extends StatelessWidget with WatchItMixin {
         selected
             ? audioType.selectedIconDataMainPage
             : audioType.iconDataMainPage,
+      ),
+    );
+  }
+}
+
+class LocalMainPageIcon extends StatelessWidget with WatchItMixin {
+  const LocalMainPageIcon({
+    super.key,
+    required this.selected,
+    required this.isPlaying,
+    required this.useMoreAnimations,
+    required this.isCurrentlyPlaying,
+  });
+
+  final bool selected;
+  final bool isPlaying;
+  final bool useMoreAnimations;
+  final bool isCurrentlyPlaying;
+
+  @override
+  Widget build(BuildContext context) {
+    final isLocalAudioImporting = watchValue(
+      (LocalAudioModel m) => m.initAudiosCommand.isRunning,
+    );
+
+    if (isLocalAudioImporting)
+      return Padding(
+        padding: mainPageIconPadding,
+        child: const SizedBox(
+          width: 16,
+          height: 16,
+          child: Progress(strokeWidth: 2),
+        ),
+      );
+
+    if (useMoreAnimations && isCurrentlyPlaying && isPlaying) {
+      return const ActiveAudioSignalIndicator(thickness: 2);
+    }
+
+    return Padding(
+      padding: mainPageIconPadding,
+      child: Icon(
+        selected
+            ? AudioType.local.selectedIconDataMainPage
+            : AudioType.local.iconDataMainPage,
       ),
     );
   }
