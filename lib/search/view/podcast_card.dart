@@ -56,12 +56,7 @@ class PodcastCard extends StatelessWidget with WatchItMixin {
       onTap: feedUrl == null
           ? null
           : () => di<RoutingManager>().push(
-              builder: (_) => LazyPodcastPage(
-                podcastItem: item,
-                updateMessage: context.l10n.newEpisodeAvailable,
-                multiUpdateMessage: (length) =>
-                    context.l10n.newEpisodesAvailableFor(length),
-              ),
+              builder: (_) => LazyPodcastPage(podcastItem: item),
               pageId: feedUrl,
             ),
     );
