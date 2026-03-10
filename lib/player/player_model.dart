@@ -116,6 +116,7 @@ class PlayerModel extends SafeChangeNotifier {
   Map<String, Duration>? get lastPositions => _playerService.lastPositions;
   Duration? getLastPosition(String? url) => _playerService.getLastPosition(url);
   Future<void> safeLastPosition() => _playerService.safeLastPosition();
+  Future<void> persistPlayerState() => _playerService.persistPlayerState();
 
   Future<void> safeAllLastPositions(List<Audio> audios) =>
       _playerService.safeAllLastPositions(audios);

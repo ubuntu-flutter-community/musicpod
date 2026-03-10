@@ -142,7 +142,7 @@ Iterable<MasterItem> createPodcastMasterItems(
     titleBuilder: (_) => PodcastPageTitle(feedUrl: feedUrl),
     subtitleBuilder: (_) => PodcastPageSubTitle(feedUrl: feedUrl),
     pageId: feedUrl,
-    pageBuilder: (_) => LazyPodcastPage(
+    pageBuilder: (context) => LazyPodcastPage(
       feedUrl: feedUrl,
       updateMessage: context.l10n.newEpisodeAvailable,
       multiUpdateMessage: (length) =>

@@ -14,15 +14,41 @@ import '../../extensions/taget_platform_x.dart';
 import '../../l10n/app_localizations.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
+import '../../player/player_model.dart';
 import '../../settings/settings_model.dart';
 import 'create_master_items.dart';
 import 'mobile_page.dart';
 import 'routing_manager.dart';
 
-class MobileMusicPodApp extends StatelessWidget with WatchItMixin {
+class MobileMusicPodApp extends StatefulWidget with WatchItStatefulWidgetMixin {
   const MobileMusicPodApp({super.key, this.accent});
 
   final Color? accent;
+
+  @override
+  State<MobileMusicPodApp> createState() => _MobileMusicPodAppState();
+}
+
+class _MobileMusicPodAppState extends State<MobileMusicPodApp> {
+  late final AppLifecycleListener _listener;
+  @override
+  void initState() {
+    super.initState();
+
+    _listener = AppLifecycleListener(onStateChange: _onStateChanged);
+  }
+
+  @override
+  void dispose() {
+    _listener.dispose();
+    super.dispose();
+  }
+
+  Future<void> _onStateChanged(AppLifecycleState state) async {
+    if (state == AppLifecycleState.paused) {
+      await di<PlayerModel>().persistPlayerState();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +57,7 @@ class MobileMusicPodApp extends StatelessWidget with WatchItMixin {
       (SettingsModel m) => m.useYaruTheme,
     );
 
-    final phoenix = phoenixTheme(color: accent ?? kMusicPodDefaultColor);
+    final phoenix = phoenixTheme(color: widget.accent ?? kMusicPodDefaultColor);
     final routingManager = di<RoutingManager>();
 
     final phoenixLightWithFont = isLinux
@@ -63,13 +89,15 @@ class MobileMusicPodApp extends StatelessWidget with WatchItMixin {
       },
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.values[themeIndex],
-      theme: (useYaruTheme && accent != null
-          ? yaruLightWithTweaks(createYaruLightTheme(primaryColor: accent!))
+      theme: (useYaruTheme && widget.accent != null
+          ? yaruLightWithTweaks(
+              createYaruLightTheme(primaryColor: widget.accent!),
+            )
           : phoenixLightWithFont),
       darkTheme:
-          (useYaruTheme && accent != null
+          (useYaruTheme && widget.accent != null
                   ? yaruDarkWithTweaks(
-                      createYaruDarkTheme(primaryColor: accent!),
+                      createYaruDarkTheme(primaryColor: widget.accent!),
                     )
                   : phoenixDarkWithFont)
               ?.copyWith(
