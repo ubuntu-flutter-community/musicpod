@@ -287,9 +287,12 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
 
           routingManager.push(
             pageId: feedUrl,
-            builder: (_) => LazyPodcastPage(
+            builder: (context) => LazyPodcastPage(
               feedUrl: feedUrl,
               imageUrl: audio.imageUrl ?? audio.albumArtUrl,
+              updateMessage: context.l10n.newEpisodeAvailable,
+              multiUpdateMessage: (length) =>
+                  context.l10n.newEpisodesAvailableFor(length),
             ),
           );
         }

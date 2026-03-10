@@ -19,11 +19,15 @@ class LazyPodcastPage extends StatefulWidget with WatchItStatefulWidgetMixin {
     this.podcastItem,
     this.feedUrl,
     this.imageUrl,
+    required this.updateMessage,
+    required this.multiUpdateMessage,
   });
 
   final Item? podcastItem;
   final String? feedUrl;
   final String? imageUrl;
+  final String updateMessage;
+  final String Function(int length) multiUpdateMessage;
 
   @override
   State<LazyPodcastPage> createState() => _LazyPodcastPageState();
@@ -52,9 +56,8 @@ class _LazyPodcastPageState extends State<LazyPodcastPage> {
         podcastModel.getPodcastEpisodesFromCache(url) == null) {
       await podcastModel.checkForUpdates(
         feedUrls: {url},
-        updateMessage: context.l10n.newEpisodeAvailable,
-        multiUpdateMessage: (length) =>
-            context.l10n.newEpisodesAvailableFor(length),
+        updateMessage: widget.updateMessage,
+        multiUpdateMessage: widget.multiUpdateMessage,
       );
     }
 

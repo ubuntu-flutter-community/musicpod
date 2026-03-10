@@ -185,19 +185,13 @@ class PlayerService {
     _setMediaControlDuration(value);
   }
 
-  int _playerStateTicker = 0;
   Duration? _position = Duration.zero;
   Duration? get position => _position;
   void setPosition(Duration? value) {
     if (position?.inSeconds == value?.inSeconds) return;
     _position = value;
-    _playerStateTicker = value?.inSeconds ?? 0;
     _propertiesChangedController.add(true);
     _setMediaControlPosition(value);
-    if (_playerStateTicker >= 5) {
-      _playerStateTicker = 0;
-      safeLastPosition().then((_) => _writePlayerState());
-    }
   }
 
   Duration? _buffer = Duration.zero;
@@ -582,6 +576,9 @@ class PlayerService {
         _position == null) {
       return;
     }
+    printMessageInDebugMode(
+      'Saving last position for ${_audio!.url}: $_position',
+    );
     await addLastPosition(_audio!.url!, _position!);
   }
 
@@ -639,6 +636,15 @@ class PlayerService {
     await _onSetMediaControlsMetaData?.call(audio: audio, artUri: artUri);
   }
 
+  Future<void> persistPlayerState() async {
+    try {
+      await safeLastPosition();
+      await _writePlayerState();
+    } on Exception catch (e) {
+      printMessageInDebugMode('Error while persisting player state: $e');
+    }
+  }
+
   Future<void> _writePlayerState() async {
     final playerState = PlayerState(
       audio: _audio,
@@ -653,6 +659,9 @@ class PlayerService {
     );
 
     await writeJsonToFile(playerState.toMap(), FileNames.playerState);
+    printMessageInDebugMode(
+      'Player state saved, audio: ${playerState.audio?.title}, position: ${playerState.position}, queue length: ${playerState.queue?.length}, volume: ${playerState.volume}, rate: ${playerState.rate},',
+    );
   }
 
   Future<PlayerState?> _readPlayerState() async {
