@@ -43,7 +43,7 @@ class MainPageIcon extends StatelessWidget with WatchItMixin {
     if (currentAudioType == audioType) {
       if (isPlaying) {
         if (useMoreAnimations) {
-          return const ActiveAudioSignalIndicator(thickness: 2);
+          return const ActiveAudioSignalIndicator();
         } else {
           return Padding(
             padding: mainPageIconPadding,

@@ -13,7 +13,7 @@ import '../../player/player_model.dart';
 import '../radio_model.dart';
 import 'station_page.dart';
 
-class StationCard extends StatefulWidget {
+class StationCard extends StatefulWidget with WatchItStatefulWidgetMixin {
   const StationCard({super.key, required this.uuid});
 
   final String uuid;
@@ -33,6 +33,11 @@ class _StationCardState extends State<StationCard> {
 
   @override
   Widget build(BuildContext context) {
+    final isSelected = watchPropertyValue(
+      (PlayerModel m) => m.audio?.uuid == widget.uuid,
+    );
+    final isPlayerPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
+
     return FutureBuilder(
       future: _station,
       builder: (context, snapshot) {
@@ -43,15 +48,27 @@ class _StationCardState extends State<StationCard> {
 
         final station = snapshot.data!;
 
+        final iconData = isSelected && isPlayerPlaying
+            ? Iconz.pause
+            : Iconz.playFilled;
+
         return AudioCard(
           bottom: AudioCardBottom(
             text: station.title?.replaceAll('_', '') ?? '',
           ),
+          playIcon: iconData,
+          seleted: isSelected,
           onPlay: station.uuid == null
               ? null
-              : () => di<PlayerModel>()
-                    .startPlaylist(audios: [station], listName: widget.uuid)
-                    .then((_) => di<RadioModel>().clickStation(station)),
+              : () {
+                  if (isSelected) {
+                    di<PlayerModel>().playOrPause();
+                    return;
+                  }
+                  di<PlayerModel>()
+                      .startPlaylist(audios: [station], listName: widget.uuid)
+                      .then((_) => di<RadioModel>().clickStation(station));
+                },
           onTap: station.uuid == null
               ? null
               : () => di<RoutingManager>().push(

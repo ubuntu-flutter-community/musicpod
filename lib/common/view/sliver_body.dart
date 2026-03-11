@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'adaptive_container.dart';
 import 'sliver_filter_app_bar.dart';
 import 'theme.dart';
 import 'ui_constants.dart';
@@ -30,11 +29,10 @@ class SliverBody extends StatelessWidget {
       child: CustomScrollView(
         slivers: [
           SliverFilterAppBar(
-            padding: getAdaptiveHorizontalPadding(constraints: constraints)
-                .copyWith(
-                  bottom: filterPanelPadding.bottom,
-                  top: filterPanelPadding.top,
-                ),
+            padding: kGridPadding.copyWith(
+              bottom: filterPanelPadding.bottom,
+              top: filterPanelPadding.top,
+            ),
 
             title: controlPanel,
             actions: [
@@ -46,9 +44,7 @@ class SliverBody extends StatelessWidget {
             onStretchTrigger: onStretchTrigger,
           ),
           SliverPadding(
-            padding: getAdaptiveHorizontalPadding(
-              constraints: constraints,
-            ).copyWith(bottom: bottomPlayerPageGap),
+            padding: kGridPadding.copyWith(bottom: bottomPlayerPageGap),
             sliver: contentBuilder(context, constraints),
           ),
         ],

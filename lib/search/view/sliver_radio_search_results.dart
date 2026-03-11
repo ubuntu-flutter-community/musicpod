@@ -75,6 +75,8 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
           child: ListTile(
             key: ValueKey(station.uuid),
             leading: AudioTileImage(size: kAudioTrackWidth, audio: station),
+            selected: currentAudio?.uuid == station.uuid,
+            selectedColor: context.theme.contrastyPrimary,
             title: TapAbleText(
               text: station.title ?? context.l10n.unknown,
               onTap: () => di<RoutingManager>().push(

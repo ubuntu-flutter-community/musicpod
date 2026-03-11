@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../common/view/adaptive_container.dart';
 import '../../common/view/no_search_result_page.dart';
+import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../radio_model.dart';
 import 'radio_history_tile.dart';
@@ -39,34 +39,30 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin {
 
     return Align(
       alignment: Alignment.topCenter,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return ListView.builder(
-            padding: getAdaptiveHorizontalPadding(constraints: constraints),
-            itemCount: length,
-            itemBuilder: (context, index) {
-              final reversedIndex = length - index - 1;
-              final e = di<RadioModel>()
-                  .filteredRadioHistory(filter: filter)
-                  .elementAt(reversedIndex);
-              return simpleList
-                  ? RadioHistoryTile.simple(
-                      icyTitle: e.key,
-                      selected:
-                          current?.icyTitle != null &&
-                          current?.icyTitle == e.value.icyTitle,
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.only(bottom: 5),
-                      child: RadioHistoryTile(
-                        icyTitle: e.key,
-                        selected:
-                            current?.icyTitle != null &&
-                            current?.icyTitle == e.value.icyTitle,
-                      ),
-                    );
-            },
-          );
+      child: ListView.builder(
+        padding: kGridPadding,
+        itemCount: length,
+        itemBuilder: (context, index) {
+          final reversedIndex = length - index - 1;
+          final e = di<RadioModel>()
+              .filteredRadioHistory(filter: filter)
+              .elementAt(reversedIndex);
+          return simpleList
+              ? RadioHistoryTile.simple(
+                  icyTitle: e.key,
+                  selected:
+                      current?.icyTitle != null &&
+                      current?.icyTitle == e.value.icyTitle,
+                )
+              : Padding(
+                  padding: const EdgeInsets.only(bottom: 5),
+                  child: RadioHistoryTile(
+                    icyTitle: e.key,
+                    selected:
+                        current?.icyTitle != null &&
+                        current?.icyTitle == e.value.icyTitle,
+                  ),
+                );
         },
       ),
     );

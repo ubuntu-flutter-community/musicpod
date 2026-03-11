@@ -19,6 +19,8 @@ class AudioCard extends StatefulWidget {
     this.color,
     this.showBorder = true,
     this.background,
+    this.playIcon,
+    this.seleted = false,
   });
   final Widget? image;
   final Widget? background;
@@ -29,6 +31,8 @@ class AudioCard extends StatefulWidget {
   final double? width;
   final Color? color;
   final bool showBorder;
+  final IconData? playIcon;
+  final bool seleted;
 
   @override
   State<AudioCard> createState() => _AudioCardState();
@@ -67,7 +71,7 @@ class _AudioCardState extends State<AudioCard> {
                     child: Container(color: theme.cardColor),
                   ),
                 if (widget.image != null) widget.image!,
-                if (_hovered && widget.onPlay != null)
+                if ((_hovered || widget.seleted) && widget.onPlay != null)
                   Positioned(
                     bottom: 10,
                     right: 10,
@@ -75,7 +79,10 @@ class _AudioCardState extends State<AudioCard> {
                       onPressed: widget.onPlay,
                       elevation: 0.5,
                       backgroundColor: Colors.white,
-                      child: Icon(Iconz.playFilled, color: Colors.black),
+                      child: Icon(
+                        widget.playIcon ?? Iconz.playFilled,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
               ],

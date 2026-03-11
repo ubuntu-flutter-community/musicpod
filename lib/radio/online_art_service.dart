@@ -162,11 +162,8 @@ Future<String?> _fetchAlbumArtUrlFromReleaseId({
       final thumbnail = imageMap?['thumbnails'] as Map?;
 
       final url =
-          thumbnail?['large'] as String? ??
-          thumbnail?['small'] as String? ??
-          thumbnail?['500'] as String? ??
-          thumbnail?['1200'] as String? ??
-          imageMap['image'] as String?;
+          thumbnail?.entries.firstWhere((e) => e.value != null).value
+              as String?;
 
       return url?.replaceAll('http://', 'https://');
     }

@@ -5,7 +5,6 @@ import '../app/connectivity_model.dart';
 import '../app/view/routing_manager.dart';
 import '../common/data/audio_type.dart';
 import '../common/page_ids.dart';
-import '../common/view/adaptive_container.dart';
 import '../common/view/header_bar.dart';
 import '../common/view/icons.dart';
 import '../common/view/search_button.dart';
@@ -38,6 +37,8 @@ class HomePage extends StatelessWidget with WatchItMixin {
     final country = watchPropertyValue(
       (SearchModel m) => m.country?.localize(l10n),
     );
+    const padding = kGridPadding;
+    final textStyle = context.textTheme.bodyLarge;
 
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
 
@@ -52,91 +53,81 @@ class HomePage extends StatelessWidget with WatchItMixin {
           ),
         ],
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          final padding = getAdaptiveHorizontalPadding(
-            constraints: constraints,
-          );
-          final textStyle = context.textTheme.bodyLarge;
-          return CustomScrollView(
-            slivers: [
-              if (isOnline) ...[
-                SliverPadding(
-                  padding: padding.copyWith(top: kMediumSpace),
-                  sliver: SliverToBoxAdapter(
-                    child: ListTile(
-                      contentPadding: textPadding,
-                      title: Text(
-                        '${l10n.podcast} ${l10n.charts} ${country ?? ''}',
-                        style: textStyle,
-                      ),
-                      trailing: Icon(Iconz.goNext),
-                      onTap: () {
-                        di<RoutingManager>().push(pageId: PageIDs.searchPage);
-                        di<SearchModel>()
-                          ..setAudioType(AudioType.podcast)
-                          ..setSearchType(SearchType.podcastTitle)
-                          ..search();
-                      },
-                    ),
+      body: CustomScrollView(
+        slivers: [
+          if (isOnline) ...[
+            SliverPadding(
+              padding: padding.copyWith(top: kMediumSpace),
+              sliver: SliverToBoxAdapter(
+                child: ListTile(
+                  contentPadding: textPadding,
+                  title: Text(
+                    '${l10n.podcast} ${l10n.charts} ${country ?? ''}',
+                    style: textStyle,
                   ),
+                  trailing: Icon(Iconz.goNext),
+                  onTap: () {
+                    di<RoutingManager>().push(pageId: PageIDs.searchPage);
+                    di<SearchModel>()
+                      ..setAudioType(AudioType.podcast)
+                      ..setSearchType(SearchType.podcastTitle)
+                      ..search();
+                  },
                 ),
-                SliverPadding(
-                  padding: padding,
-                  sliver: const SliverToBoxAdapter(
-                    child: SliverPodcastSearchCountryChartsResults(),
-                  ),
-                ),
-                SliverPadding(
-                  padding: padding,
-                  sliver: SliverToBoxAdapter(
-                    child: ListTile(
-                      contentPadding: textPadding,
-                      title: Text(
-                        '${l10n.radio} ${l10n.charts} ${country ?? ''}',
-                        style: textStyle,
-                      ),
-                      onTap: () {
-                        di<RoutingManager>().push(pageId: PageIDs.searchPage);
-                        di<SearchModel>()
-                          ..setAudioType(AudioType.radio)
-                          ..setSearchType(SearchType.radioCountry)
-                          ..search();
-                      },
-                      trailing: Icon(Iconz.goNext),
-                    ),
-                  ),
-                ),
-                SliverPadding(
-                  padding: padding,
-                  sliver: const SliverToBoxAdapter(
-                    child: SliverRadioCountryGrid(),
-                  ),
-                ),
-                SliverPadding(
-                  padding: padding,
-                  sliver: SliverToBoxAdapter(
-                    child: ListTile(
-                      contentPadding: textPadding,
-                      title: Text(l10n.playlists, style: textStyle),
-                      trailing: Icon(Iconz.goNext),
-                      onTap: () {
-                        di<SettingsModel>().setLocalAudioindex(
-                          LocalAudioView.playlists.index,
-                        );
-                        di<RoutingManager>().push(pageId: PageIDs.localAudio);
-                      },
-                    ),
-                  ),
-                ),
-              ],
-              SliverPadding(
-                padding: padding.copyWith(bottom: bottomPlayerPageGap),
-                sliver: PlaylistsView(playlists: playlists),
               ),
-            ],
-          );
-        },
+            ),
+            const SliverPadding(
+              padding: padding,
+              sliver: const SliverToBoxAdapter(
+                child: SliverPodcastSearchCountryChartsResults(),
+              ),
+            ),
+            SliverPadding(
+              padding: padding,
+              sliver: SliverToBoxAdapter(
+                child: ListTile(
+                  contentPadding: textPadding,
+                  title: Text(
+                    '${l10n.radio} ${l10n.charts} ${country ?? ''}',
+                    style: textStyle,
+                  ),
+                  onTap: () {
+                    di<RoutingManager>().push(pageId: PageIDs.searchPage);
+                    di<SearchModel>()
+                      ..setAudioType(AudioType.radio)
+                      ..setSearchType(SearchType.radioCountry)
+                      ..search();
+                  },
+                  trailing: Icon(Iconz.goNext),
+                ),
+              ),
+            ),
+            const SliverPadding(
+              padding: padding,
+              sliver: const SliverToBoxAdapter(child: SliverRadioCountryGrid()),
+            ),
+            SliverPadding(
+              padding: padding,
+              sliver: SliverToBoxAdapter(
+                child: ListTile(
+                  contentPadding: textPadding,
+                  title: Text(l10n.playlists, style: textStyle),
+                  trailing: Icon(Iconz.goNext),
+                  onTap: () {
+                    di<SettingsModel>().setLocalAudioindex(
+                      LocalAudioView.playlists.index,
+                    );
+                    di<RoutingManager>().push(pageId: PageIDs.localAudio);
+                  },
+                ),
+              ),
+            ),
+          ],
+          SliverPadding(
+            padding: padding.copyWith(bottom: bottomPlayerPageGap),
+            sliver: PlaylistsView(playlists: playlists),
+          ),
+        ],
       ),
     );
   }
