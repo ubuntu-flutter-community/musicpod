@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../common/view/ui_constants.dart';
 import '../../custom_content/view/backup_dialog.dart';
@@ -53,11 +52,6 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
             );
           }
         });
-
-    YaruWindow.of(context).onClose(() async {
-      await di<PlayerModel>().persistPlayerState();
-      return true;
-    });
   }
 
   @override

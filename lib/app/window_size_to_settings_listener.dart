@@ -4,18 +4,24 @@ import 'dart:ui';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 
+import '../player/player_service.dart';
 import '../settings/shared_preferences_keys.dart';
 import '../extensions/taget_platform_x.dart';
 
 class WindowSizeToSettingsListener implements WindowListener {
-  WindowSizeToSettingsListener({required SharedPreferences sharedPreferences})
-    : _sp = sharedPreferences;
+  WindowSizeToSettingsListener({
+    required SharedPreferences sharedPreferences,
+    required PlayerService playerService,
+  }) : _sp = sharedPreferences,
+       _playerService = playerService;
 
   final SharedPreferences _sp;
+  final PlayerService _playerService;
 
   static Future<WindowSizeToSettingsListener> register({
     required SharedPreferences sharedPreferences,
     required WindowManager windowManager,
+    required PlayerService playerService,
   }) async {
     final wm = windowManager;
     final sp = sharedPreferences;
@@ -35,6 +41,7 @@ class WindowSizeToSettingsListener implements WindowListener {
 
     final windowSizeToSettingsListener = WindowSizeToSettingsListener(
       sharedPreferences: sp,
+      playerService: playerService,
     );
     wm.addListener(windowSizeToSettingsListener);
 
@@ -45,7 +52,9 @@ class WindowSizeToSettingsListener implements WindowListener {
   void onWindowBlur() {}
 
   @override
-  void onWindowClose() {}
+  void onWindowClose() {
+    _playerService.persistPlayerState();
+  }
 
   @override
   void onWindowDocked() {}

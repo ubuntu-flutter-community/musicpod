@@ -94,17 +94,6 @@ void registerDependencies() {
       dispose: (s) async => s.dispose(),
     );
 
-  if (AppConfig.windowManagerImplemented) {
-    di.registerSingletonAsync<WindowSizeToSettingsListener>(
-      () async => WindowSizeToSettingsListener.register(
-        sharedPreferences: di<SharedPreferences>(),
-        windowManager: di<WindowManager>(),
-      ),
-      dispose: (s) => s.dispose(),
-      dependsOn: [SharedPreferences, WindowManager],
-    );
-  }
-
   di
     ..registerSingletonWithDependencies(
       () => LastfmService(settingsService: di<SettingsService>()),
@@ -159,6 +148,18 @@ void registerDependencies() {
       registerAudioServiceHandler,
       dependsOn: [PlayerService],
       dispose: (s) async => s.stop(),
+    );
+  }
+
+  if (AppConfig.windowManagerImplemented) {
+    di.registerSingletonAsync<WindowSizeToSettingsListener>(
+      () async => WindowSizeToSettingsListener.register(
+        sharedPreferences: di<SharedPreferences>(),
+        windowManager: di<WindowManager>(),
+        playerService: di<PlayerService>(),
+      ),
+      dispose: (s) => s.dispose(),
+      dependsOn: [SharedPreferences, WindowManager, PlayerService],
     );
   }
 
