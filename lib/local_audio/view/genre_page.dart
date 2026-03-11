@@ -5,10 +5,10 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../app/view/routing_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
-import '../../common/view/adaptive_container.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
+import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
@@ -64,25 +64,19 @@ class _GenrePageState extends State<GenrePage> {
           ],
         ),
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return CustomScrollView(
-            slivers: [
-              SliverPadding(
-                padding: getAdaptiveHorizontalPadding(
-                  constraints: constraints,
-                ).copyWith(bottom: bottomPlayerPageGap),
-                sliver: cachedAlbumIDsOfGenre != null
-                    ? AlbumsView(albumIDs: cachedAlbumIDsOfGenre)
-                    : FutureBuilder(
-                        future: _albumIDsOfGenre,
-                        builder: (context, snapshot) =>
-                            AlbumsView(albumIDs: snapshot.data),
-                      ),
-              ),
-            ],
-          );
-        },
+      body: CustomScrollView(
+        slivers: [
+          SliverPadding(
+            padding: kGridPadding.copyWith(bottom: bottomPlayerPageGap),
+            sliver: cachedAlbumIDsOfGenre != null
+                ? AlbumsView(albumIDs: cachedAlbumIDsOfGenre)
+                : FutureBuilder(
+                    future: _albumIDsOfGenre,
+                    builder: (context, snapshot) =>
+                        AlbumsView(albumIDs: snapshot.data),
+                  ),
+          ),
+        ],
       ),
     );
   }

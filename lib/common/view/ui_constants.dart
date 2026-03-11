@@ -39,8 +39,8 @@ const kSideBarPlayerWidth = 500.0;
 const kGridPadding = EdgeInsets.only(
   top: 0,
   bottom: kLargestSpace,
-  left: kLargestSpace - 5,
-  right: kLargestSpace - 5,
+  left: kLargestSpace,
+  right: kLargestSpace,
 );
 const kMobileGridPadding = EdgeInsets.only(
   top: 0,
