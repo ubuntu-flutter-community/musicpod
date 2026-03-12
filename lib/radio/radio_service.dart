@@ -35,7 +35,11 @@ class RadioService {
   String? get connectedHost =>
       _tags == null || _tags!.isEmpty ? null : _radioBrowserApi?.host;
 
-  Future<void> init({bool observePlayer = true}) async {
+  Future<String?> init({bool observePlayer = true}) async {
+    if (_radioBrowserApi?.host != null && _tags?.isNotEmpty == true) {
+      return _radioBrowserApi?.host;
+    }
+
     if (observePlayer) {
       await observeProperty(
         property: 'metadata',
@@ -44,33 +48,29 @@ class RadioService {
       );
     }
 
-    if (connectedHost != null && _tags?.isNotEmpty == true) {
-      _propertiesChangedController.add(true);
-      return;
-    }
-
     List<String>? hosts;
     try {
-      hosts = await _findHosts().timeout(const Duration(seconds: 5));
+      hosts = await _findHosts().timeout(const Duration(seconds: 15));
     } on TimeoutException catch (_) {
       printMessageInDebugMode('Timeout while trying to find a host.');
-      return;
+      return null;
     } on Exception catch (e) {
       printMessageInDebugMode(e);
-      return;
+      return null;
     }
     for (var host in hosts) {
       try {
         _radioBrowserApi = RadioBrowserApi.fromHost(host);
         _tags = await _loadTags();
-        if (connectedHost != null && _tags?.isNotEmpty == true) {
-          _propertiesChangedController.add(true);
-          return;
+        if (_radioBrowserApi?.host != null && _tags?.isNotEmpty == true) {
+          break;
         }
       } on Exception catch (e) {
         printMessageInDebugMode(e);
       }
     }
+
+    return _radioBrowserApi?.host;
   }
 
   Future<List<String>> _findHosts() async {
@@ -90,18 +90,13 @@ class RadioService {
           hosts.add(r.data.replaceAll('info.', 'info'));
         }
       }
-    } on Exception catch (e) {
-      printMessageInDebugMode(e);
+    } on Exception {
+      rethrow;
     }
     return hosts;
   }
 
-  final Map<String, Station> _cache = {};
   Future<Station?> getStationByUUID(String uuid) async {
-    if (_cache.containsKey(uuid)) {
-      return _cache[uuid];
-    }
-
     if (_radioBrowserApi == null) {
       await init();
       if (connectedHost == null) {
@@ -115,7 +110,6 @@ class RadioService {
         return null;
       }
       final station = response.items.first;
-      _cache[uuid] = station;
       return station;
     } on Exception catch (e) {
       printMessageInDebugMode(e);
@@ -134,9 +128,7 @@ class RadioService {
     try {
       final response = await _radioBrowserApi!.getStationsByUrl(url: url);
       final station = response.items.firstOrNull;
-      if (station != null) {
-        _cache[station.stationUUID] = station;
-      }
+
       return station;
     } on Exception catch (e) {
       printMessageInDebugMode(e);

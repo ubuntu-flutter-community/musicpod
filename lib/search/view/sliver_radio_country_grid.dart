@@ -26,7 +26,9 @@ class _SliverRadioCountryGridState extends State<SliverRadioCountryGrid> {
 
   @override
   Widget build(BuildContext context) {
-    if (watchPropertyValue((RadioModel m) => m.connectedHost) == null) {
+    final connectedHost = watchValue((RadioModel m) => m.connectCommand);
+
+    if (connectedHost == null) {
       return const Center(child: RadioReconnectButton());
     }
 

@@ -2,51 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/connectivity_model.dart';
-import '../../common/data/audio.dart';
 import '../../l10n/l10n.dart';
 import '../radio_model.dart';
 
-class StationTitle extends StatefulWidget with WatchItStatefulWidgetMixin {
+class StationTitle extends StatelessWidget with WatchItMixin {
   const StationTitle({super.key, required this.uuid});
 
   final String uuid;
 
   @override
-  State<StationTitle> createState() => _StationTitleState();
-}
-
-class _StationTitleState extends State<StationTitle> {
-  late Future<Audio?> _future;
-
-  @override
-  void initState() {
-    super.initState();
-    setFuture();
-  }
-
-  void setFuture() => _future = di<RadioModel>().getStationByUUID(widget.uuid);
-
-  @override
   Widget build(BuildContext context) {
-    watchPropertyValue((ConnectivityModel m) {
-      setFuture();
-      return m.isOnline;
-    });
-    return FutureBuilder(
-      future: _future,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const Text('...');
-        }
-
-        if (snapshot.hasError) {
-          return Text(context.l10n.station);
-        }
-
-        final station = snapshot.data!;
-
-        return Text(station.title ?? context.l10n.station);
-      },
+    watchPropertyValue((ConnectivityModel m) => m.isOnline);
+    final stationResults = watchValue(
+      (RadioModel m) => m.getStationByUUIDCommand(uuid).results,
     );
+    final station = stationResults.data;
+
+    if (stationResults.error != null) {
+      return Text(context.l10n.station);
+    }
+
+    if (station == null) {
+      return const Text('...');
+    }
+
+    return Text(station.title ?? context.l10n.station);
   }
 }
