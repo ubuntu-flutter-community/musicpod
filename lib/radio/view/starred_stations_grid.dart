@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/no_search_result_page.dart';
+import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
@@ -16,7 +17,23 @@ class StarredStationsGrid extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    if (watchPropertyValue((RadioModel m) => m.connectedHost) == null) {
+    registerHandler(
+      select: (RadioModel m) => m.connectCommand,
+      handler: (context, connectedHost, cancel) {
+        showSnackBar(
+          context: context,
+          content: Text(
+            connectedHost != null
+                ? '${context.l10n.connectedTo}: $connectedHost'
+                : context.l10n.noRadioServerFound,
+          ),
+        );
+      },
+    );
+
+    final connectedHost = watchValue((RadioModel m) => m.connectCommand);
+
+    if (connectedHost == null) {
       return const SliverFillRemaining(
         hasScrollBody: false,
         child: Center(child: RadioReconnectButton()),

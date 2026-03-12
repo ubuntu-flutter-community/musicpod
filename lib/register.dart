@@ -209,16 +209,12 @@ void registerDependencies() {
       dependsOn: [SettingsService, LibraryService, NotificationsService],
     )
     ..registerLazySingleton<InternetConnection>(() => InternetConnection())
-    ..registerSingletonAsync<RadioService>(
-      () async {
-        final s = RadioService(
-          playerService: di<PlayerService>(),
-          onlineArtService: di<OnlineArtService>(),
-          exposeService: di<ExposeService>(),
-        );
-        await s.init();
-        return s;
-      },
+    ..registerSingletonWithDependencies<RadioService>(
+      () => RadioService(
+        playerService: di<PlayerService>(),
+        onlineArtService: di<OnlineArtService>(),
+        exposeService: di<ExposeService>(),
+      ),
       dispose: (s) => s.dispose(),
       dependsOn: [PlayerService, ExposeService],
     )
@@ -307,7 +303,6 @@ void registerDependencies() {
         playerService: di<PlayerService>(),
       ),
       dependsOn: [RadioService, PlayerService],
-      dispose: (s) => s.dispose(),
     )
     ..registerSingletonWithDependencies<DownloadModel>(
       () => DownloadModel(

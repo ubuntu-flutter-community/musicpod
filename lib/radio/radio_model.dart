@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_it/flutter_it.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
@@ -21,17 +22,21 @@ class RadioModel extends SafeChangeNotifier {
     _propertiesChangedSub ??= _radioService.propertiesChanged.listen(
       (_) => notifyListeners(),
     );
+    connectCommand = Command.createAsyncNoParam(
+      () => _radioService.init(),
+      initialValue: null,
+    );
+
+    connectCommand.run();
   }
+
+  late final Command<void, String?> connectCommand;
 
   Future<void> clickStation(Audio? station) async {
     if (station?.uuid != null) {
       return _radioService.clickStation(station!.uuid!);
     }
   }
-
-  String? get connectedHost => _radioService.connectedHost;
-
-  Future<void> reconnect() async => _radioService.init();
 
   RadioCollectionView _radioCollectionView = RadioCollectionView.stations;
   RadioCollectionView get radioCollectionView => _radioCollectionView;
@@ -66,7 +71,20 @@ class RadioModel extends SafeChangeNotifier {
     super.dispose();
   }
 
-  Future<Audio?> getStationByUUID(String pageId) async {
+  final _getStationByUUIDCommands = <String, Command<void, Audio?>>{};
+  Command<void, Audio?> getStationByUUIDCommand(String uuid) =>
+      _getStationByUUIDCommands.putIfAbsent(
+        uuid,
+        () => Command.createAsyncNoParam(
+          () => _getStationByUUID(uuid),
+          initialValue: null,
+        ),
+      );
+
+  Audio? getStationByUUID(String uuid) =>
+      getStationByUUIDCommand(uuid).results.value.data;
+
+  Future<Audio?> _getStationByUUID(String pageId) async {
     final stationByUUID = await _radioService.getStationByUUID(pageId);
 
     if (stationByUUID == null) {

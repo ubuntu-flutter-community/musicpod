@@ -32,7 +32,7 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
       );
     }
 
-    final connectedHost = watchPropertyValue((RadioModel m) => m.connectedHost);
+    final connectedHost = watchValue((RadioModel m) => m.connectCommand);
 
     if (connectedHost == null) {
       return const SliverFillRemaining(

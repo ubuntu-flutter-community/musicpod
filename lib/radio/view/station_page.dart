@@ -28,33 +28,27 @@ import 'radio_page_copy_histoy_button.dart';
 import 'radio_page_star_button.dart';
 import 'radio_page_tag_bar.dart';
 
-class StationPage extends StatefulWidget with WatchItStatefulWidgetMixin {
+class StationPage extends StatelessWidget with WatchItMixin {
   const StationPage({super.key, required this.uuid});
 
   final String uuid;
 
   @override
-  State<StationPage> createState() => _StationPageState();
-}
-
-class _StationPageState extends State<StationPage> {
-  late Future<Audio?> _future;
-
-  @override
-  void initState() {
-    super.initState();
-    setFuture();
-  }
-
-  void setFuture() => _future = di<RadioModel>().getStationByUUID(widget.uuid);
-
-  @override
   Widget build(BuildContext context) {
-    final isOnline = watchPropertyValue((ConnectivityModel m) {
-      setFuture();
-      return m.isOnline;
-    });
+    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     if (!isOnline) return const OfflinePage();
+
+    if (di<RadioModel>().getStationByUUID(uuid) == null) {
+      callOnceAfterThisBuild(
+        (_) => di<RadioModel>().getStationByUUIDCommand(uuid).run(),
+      );
+    }
+
+    final stationResult = watchValue(
+      (RadioModel m) => m.getStationByUUIDCommand(uuid).results,
+    );
+    final station = stationResult.data;
+    final error = stationResult.error;
 
     final useYaruTheme = watchPropertyValue(
       (SettingsModel m) => m.useYaruTheme,
@@ -64,17 +58,9 @@ class _StationPageState extends State<StationPage> {
     return Scaffold(
       appBar: HeaderBar(
         adaptive: true,
-        title: FutureBuilder(
-          future: _future,
-          builder: (context, snapshot) {
-            if (snapshot.hasError || !snapshot.hasData) {
-              return Text(context.l10n.station);
-            }
-
-            final station = snapshot.data!;
-            return Text(station.title ?? station.description ?? '');
-          },
-        ),
+        title: station != null
+            ? Text(station.title ?? station.description ?? '')
+            : Text(context.l10n.station),
         actions: [
           Padding(
             padding: appBarSingleActionSpacing,
@@ -94,20 +80,17 @@ class _StationPageState extends State<StationPage> {
           ),
         ],
       ),
-      body: FutureBuilder(
-        future: _future,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
+      body: Builder(
+        builder: (context) {
+          if (error != null) {
             return NoSearchResultPage(
               message: Text(context.l10n.stationNotFound),
             );
           }
 
-          if (!snapshot.hasData) {
+          if (station == null) {
             return const Center(child: Progress());
           }
-
-          final station = snapshot.data!;
 
           return AdaptiveMultiLayoutBody(
             header: AudioPageHeader(
@@ -132,7 +115,7 @@ class _StationPageState extends State<StationPage> {
                   color: getAlphabetColor(station.uuid ?? 'a'),
                 ),
                 url: station.imageUrl,
-                fit: BoxFit.cover,
+                fit: BoxFit.scaleDown,
               ),
             ),
             sliverBody: (constraints) => SliverRadioHistoryList(

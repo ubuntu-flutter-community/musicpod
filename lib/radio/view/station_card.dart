@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/view/routing_manager.dart';
-import '../../common/data/audio.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/audio_fall_back_icon.dart';
@@ -13,80 +12,69 @@ import '../../player/player_model.dart';
 import '../radio_model.dart';
 import 'station_page.dart';
 
-class StationCard extends StatefulWidget with WatchItStatefulWidgetMixin {
+class StationCard extends StatelessWidget with WatchItMixin {
   const StationCard({super.key, required this.uuid});
 
   final String uuid;
 
   @override
-  State<StationCard> createState() => _StationCardState();
-}
-
-class _StationCardState extends State<StationCard> {
-  late Future<Audio?> _station;
-
-  @override
-  void initState() {
-    super.initState();
-    _station = di<RadioModel>().getStationByUUID(widget.uuid);
-  }
-
-  @override
   Widget build(BuildContext context) {
+    if (di<RadioModel>().getStationByUUID(uuid) == null) {
+      callOnceAfterThisBuild(
+        (_) => di<RadioModel>().getStationByUUIDCommand(uuid).run(),
+      );
+    }
+
     final isSelected = watchPropertyValue(
-      (PlayerModel m) => m.audio?.uuid == widget.uuid,
+      (PlayerModel m) => m.audio?.uuid == uuid,
     );
     final isPlayerPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
 
-    return FutureBuilder(
-      future: _station,
-      builder: (context, snapshot) {
-        if (snapshot.hasError)
-          return AudioCard(image: Icon(Iconz.imageMissing));
+    final stationResult = watchValue(
+      (RadioModel m) => m.getStationByUUIDCommand(uuid).results,
+    );
+    final station = stationResult.data;
+    final error = stationResult.error;
 
-        if (!snapshot.hasData) return const AudioCard();
+    if (error != null) return AudioCard(image: Icon(Iconz.imageMissing));
 
-        final station = snapshot.data!;
+    if (station == null) return const AudioCard();
 
-        final iconData = isSelected && isPlayerPlaying
-            ? Iconz.pause
-            : Iconz.playFilled;
+    final iconData = isSelected && isPlayerPlaying
+        ? Iconz.pause
+        : Iconz.playFilled;
 
-        return AudioCard(
-          bottom: AudioCardBottom(
-            text: station.title?.replaceAll('_', '') ?? '',
-          ),
-          playIcon: iconData,
-          seleted: isSelected,
-          onPlay: station.uuid == null
-              ? null
-              : () {
-                  if (isSelected) {
-                    di<PlayerModel>().playOrPause();
-                    return;
-                  }
-                  di<PlayerModel>()
-                      .startPlaylist(audios: [station], listName: widget.uuid)
-                      .then((_) => di<RadioModel>().clickStation(station));
-                },
-          onTap: station.uuid == null
-              ? null
-              : () => di<RoutingManager>().push(
-                  builder: (_) => StationPage(uuid: widget.uuid),
-                  pageId: widget.uuid,
-                ),
-          image: SizedBox.expand(
-            child: SafeNetworkImage(
-              fallBackIcon: AudioFallBackIcon(audio: station, iconSize: 70),
-              errorIcon: AudioFallBackIcon(audio: station, iconSize: 70),
-              url: station.imageUrl,
-              fit: BoxFit.scaleDown,
-              height: audioCardDimension,
-              width: audioCardDimension,
+    return AudioCard(
+      bottom: AudioCardBottom(text: station.title?.replaceAll('_', '') ?? ''),
+      playIcon: iconData,
+      seleted: isSelected,
+      onPlay: station.uuid == null
+          ? null
+          : () {
+              if (isSelected) {
+                di<PlayerModel>().playOrPause();
+                return;
+              }
+              di<PlayerModel>()
+                  .startPlaylist(audios: [station], listName: uuid)
+                  .then((_) => di<RadioModel>().clickStation(station));
+            },
+      onTap: station.uuid == null
+          ? null
+          : () => di<RoutingManager>().push(
+              builder: (_) => StationPage(uuid: uuid),
+              pageId: uuid,
             ),
-          ),
-        );
-      },
+      image: SizedBox.expand(
+        child: SafeNetworkImage(
+          fallBackIcon: AudioFallBackIcon(audio: station, iconSize: 70),
+          errorIcon: AudioFallBackIcon(audio: station, iconSize: 70),
+          url: station.imageUrl,
+          fit: BoxFit.scaleDown,
+          height: audioCardDimension,
+          width: audioCardDimension,
+        ),
+      ),
     );
   }
 }

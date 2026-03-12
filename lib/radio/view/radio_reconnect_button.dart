@@ -17,23 +17,7 @@ class RadioReconnectButton extends StatelessWidget with WatchItMixin {
       label: Text(
         '${context.l10n.noRadioServerFound}: ${context.l10n.tryReconnect}',
       ),
-      onPressed: isOnline
-          ? () async {
-              final radioModel = di<RadioModel>();
-              await radioModel.reconnect();
-              final connectedHost = radioModel.connectedHost;
-              if (!context.mounted) return;
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    connectedHost != null
-                        ? '${context.l10n.connectedTo}: $connectedHost'
-                        : context.l10n.noRadioServerFound,
-                  ),
-                ),
-              );
-            }
-          : null,
+      onPressed: isOnline ? di<RadioModel>().connectCommand.run : null,
       icon: const DisconnectedServerIcon(),
     );
   }
