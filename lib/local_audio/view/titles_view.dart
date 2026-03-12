@@ -11,7 +11,7 @@ import '../../common/view/sliver_audio_tile_list.dart';
 import '../../common/view/sliver_fill_remaining_progress.dart';
 import '../../common/view/snackbars.dart';
 import '../../l10n/l10n.dart';
-import '../local_audio_model.dart';
+import '../local_audio_manager.dart';
 import 'album_page.dart';
 import 'artist_page.dart';
 
@@ -31,7 +31,7 @@ class TitlesView extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final importing = watchValue(
-      (LocalAudioModel m) => m.initAudiosCommand.isRunning,
+      (LocalAudioManager m) => m.initAudiosCommand.isRunning,
     );
 
     if (audios == null || importing) {
@@ -62,7 +62,7 @@ class TitlesView extends StatelessWidget with WatchItMixin {
           );
           return;
         }
-        final id = di<LocalAudioModel>().findAlbumId(
+        final id = di<LocalAudioManager>().findAlbumId(
           artist: audio.artist!,
           album: audio.album!,
         );

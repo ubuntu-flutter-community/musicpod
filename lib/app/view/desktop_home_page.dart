@@ -5,7 +5,7 @@ import '../../common/view/ui_constants.dart';
 import '../../custom_content/view/backup_dialog.dart';
 import '../../extensions/build_context_x.dart';
 import '../../library/library_model.dart';
-import '../../local_audio/local_audio_model.dart';
+import '../../local_audio/local_audio_manager.dart';
 import '../../patch_notes/patch_notes_dialog.dart';
 import '../../player/player_model.dart';
 import '../../player/view/player_view.dart';
@@ -35,7 +35,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
               context: context,
               builder: (_) => PatchNotesDialog(
                 onClose: () {
-                  if ((di<LocalAudioModel>().audios?.isNotEmpty ?? false) &&
+                  if ((di<LocalAudioManager>().audios?.isNotEmpty ?? false) &&
                       di<LibraryModel>().playlistIDs.isNotEmpty &&
                       di<LibraryModel>().favoriteAlbums.isNotEmpty &&
                       di<AppModel>().isBackupScreenNeeded &&

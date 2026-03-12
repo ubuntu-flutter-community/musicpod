@@ -17,7 +17,7 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
-import '../local_audio_model.dart';
+import '../local_audio_manager.dart';
 import 'artist_page.dart';
 import 'local_cover.dart';
 import 'pin_album_button.dart';
@@ -40,12 +40,12 @@ class _AlbumPageState extends State<AlbumPage> {
     getAlbum();
   }
 
-  void getAlbum() => _album = di<LocalAudioModel>().findAlbum(widget.id);
+  void getAlbum() => _album = di<LocalAudioManager>().findAlbum(widget.id);
 
   @override
   Widget build(BuildContext context) {
-    final localAudioModel = di<LocalAudioModel>();
-    final cachedAlbum = localAudioModel.getCachedAlbum(widget.id);
+    final localAudioManager = di<LocalAudioManager>();
+    final cachedAlbum = localAudioManager.getCachedAlbum(widget.id);
     if (cachedAlbum != null) {
       return SliverAudioPage(
         pageId: widget.id,
@@ -118,7 +118,7 @@ class _AlbumPageSideBarIconState extends State<AlbumPageSideBarIcon> {
   @override
   void initState() {
     super.initState();
-    _future = di<LocalAudioModel>().findCoverPath(widget.albumId);
+    _future = di<LocalAudioManager>().findCoverPath(widget.albumId);
   }
 
   @override

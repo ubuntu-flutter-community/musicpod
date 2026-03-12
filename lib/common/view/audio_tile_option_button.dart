@@ -9,7 +9,7 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../local_audio/local_audio_model.dart';
+import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../player/player_model.dart';
@@ -151,7 +151,7 @@ class AudioTileOptionButton extends StatelessWidget {
               onTap: () async {
                 final albumId = audios.firstOrNull?.albumId;
                 if (albumId != null) {
-                  final albumAudios = await di<LocalAudioModel>().findAlbum(
+                  final albumAudios = await di<LocalAudioManager>().findAlbum(
                     albumId,
                   );
                   if (albumAudios != null) {

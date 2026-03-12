@@ -22,7 +22,7 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../local_audio/local_audio_model.dart';
+import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../local_audio/view/failed_import_snackbar.dart';
@@ -145,9 +145,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final allowReorder = watchPropertyValue(
-      (LocalAudioModel m) => m.allowReorder,
-    );
+    final allowReorder = watchValue((LocalAudioManager m) => m.allowReorder);
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
     final libraryModel = di<LibraryModel>();
     final playerModel = di<PlayerModel>();
@@ -235,7 +233,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
                   );
                   return;
                 }
-                final id = di<LocalAudioModel>().findAlbumId(
+                final id = di<LocalAudioManager>().findAlbumId(
                   artist: audio.artist!,
                   album: audio.album!,
                 );

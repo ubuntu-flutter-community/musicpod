@@ -10,7 +10,7 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/picture_type_x.dart';
 import '../../external_path/external_path_service.dart';
 import '../../l10n/l10n.dart';
-import '../../local_audio/local_audio_model.dart';
+import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/view/local_cover.dart';
 import '../data/audio.dart';
 import 'icons.dart';
@@ -136,7 +136,7 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
                                         )
                                         .toList(),
                                     onChanged: (v) {
-                                      di<LocalAudioModel>().changeMetadata(
+                                      di<LocalAudioManager>().changeMetadata(
                                         widget.audio,
                                         pictures: [
                                           if (_data?.pictures != null)
@@ -179,7 +179,7 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
                 onPressed: () async {
                   final paths = await di<ExternalPathService>()
                       .getPathsOfFiles();
-                  di<LocalAudioModel>().changeMetadata(
+                  di<LocalAudioManager>().changeMetadata(
                     widget.audio,
                     pictures: [
                       if (_data?.pictures != null) ..._data!.pictures,
@@ -205,7 +205,7 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
                 onPressed: () async {
                   final paths = await di<ExternalPathService>()
                       .getPathsOfFiles();
-                  di<LocalAudioModel>().changeMetadata(
+                  di<LocalAudioManager>().changeMetadata(
                     widget.audio,
                     pictures: [
                       ...paths.map(

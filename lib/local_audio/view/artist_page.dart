@@ -24,7 +24,7 @@ import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
-import '../local_audio_model.dart';
+import '../local_audio_manager.dart';
 import 'album_page.dart';
 import 'album_view.dart';
 import 'artist_image.dart';
@@ -45,19 +45,19 @@ class _ArtistPageState extends State<ArtistPage> {
   @override
   void initState() {
     super.initState();
-    _artistAudios = di<LocalAudioModel>().findTitlesOfArtist(widget.pageId);
+    _artistAudios = di<LocalAudioManager>().findTitlesOfArtist(widget.pageId);
   }
 
   @override
   Widget build(BuildContext context) {
-    final model = di<LocalAudioModel>();
+    final manager = di<LocalAudioManager>();
 
-    final useGridView = watchPropertyValue(
-      (LocalAudioModel m) => m.useArtistGridView,
+    final useGridView = watchValue(
+      (LocalAudioManager m) => m.useArtistGridView,
     );
 
     void onAlbumTap(String text) {
-      final id = model.findAlbumId(artist: widget.pageId, album: text);
+      final id = manager.findAlbumId(artist: widget.pageId, album: text);
 
       if (id == null) {
         showSnackBar(
@@ -129,7 +129,7 @@ class _ArtistPageState extends State<ArtistPage> {
             ),
             sliverBody: (constraints) => useGridView
                 ? AlbumsView(
-                    albumIDs: di<LocalAudioModel>().findAllAlbumIDs(
+                    albumIDs: di<LocalAudioManager>().findAllAlbumIDs(
                       artist: widget.pageId,
                       clean: false,
                     ),
@@ -156,10 +156,10 @@ class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final useGridView = watchPropertyValue(
-      (LocalAudioModel m) => m.useArtistGridView,
+    final useGridView = watchValue(
+      (LocalAudioManager m) => m.useArtistGridView,
     );
-    final setUseGridView = di<LocalAudioModel>().setUseArtistGridView;
+    final setUseGridView = di<LocalAudioManager>().setUseArtistGridView;
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,

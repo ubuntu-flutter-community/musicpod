@@ -15,7 +15,7 @@ import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
-import '../local_audio_model.dart';
+import '../local_audio_manager.dart';
 import 'album_page.dart';
 import 'local_cover.dart';
 
@@ -34,17 +34,17 @@ class _AlbumCardState extends State<AlbumCard> {
   @override
   void initState() {
     super.initState();
-    final model = di<LocalAudioModel>();
-    final cachedCoverPath = model.getCachedCoverPath(widget.id);
+    final manager = di<LocalAudioManager>();
+    final cachedCoverPath = manager.getCachedCoverPath(widget.id);
     _pathFuture = cachedCoverPath != null
         ? Future.value(cachedCoverPath)
-        : model.findCoverPath(widget.id);
+        : manager.findCoverPath(widget.id);
   }
 
   @override
   Widget build(BuildContext context) {
-    final model = di<LocalAudioModel>();
-    final cachedCoverPath = model.getCachedCoverPath(widget.id);
+    final manager = di<LocalAudioManager>();
+    final cachedCoverPath = manager.getCachedCoverPath(widget.id);
     final pinned = watchPropertyValue(
       (LibraryModel m) => m.isFavoriteAlbum(widget.id),
     );
@@ -108,7 +108,7 @@ class _AlbumCard extends StatelessWidget {
         pageId: id,
       ),
       onPlay: () async => di<PlayerModel>().startPlaylist(
-        audios: await di<LocalAudioModel>().findAlbum(id) ?? [],
+        audios: await di<LocalAudioManager>().findAlbum(id) ?? [],
         listName: id,
       ),
     );

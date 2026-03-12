@@ -140,7 +140,6 @@ class SearchModel extends SafeChangeNotifier {
   }
 
   Future<LocalSearchResult?> localSearch(String? query) async {
-    await Future.delayed(const Duration(microseconds: 1));
     final search = _localAudioService.search(_searchQuery);
     return LocalSearchResult(
       titles: search?.titles,

@@ -12,7 +12,7 @@ import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
-import '../local_audio_model.dart';
+import '../local_audio_manager.dart';
 import 'album_view.dart';
 
 class GenrePage extends StatefulWidget {
@@ -30,12 +30,14 @@ class _GenrePageState extends State<GenrePage> {
   @override
   void initState() {
     super.initState();
-    _albumIDsOfGenre = di<LocalAudioModel>().findAlbumsIDOfGenre(widget.genre);
+    _albumIDsOfGenre = di<LocalAudioManager>().findAlbumsIDOfGenre(
+      widget.genre,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final cachedAlbumIDsOfGenre = di<LocalAudioModel>()
+    final cachedAlbumIDsOfGenre = di<LocalAudioManager>()
         .getCachedAlbumIDsOfGenre(widget.genre);
 
     return Scaffold(

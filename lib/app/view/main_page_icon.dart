@@ -7,7 +7,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../../local_audio/local_audio_model.dart';
+import '../../local_audio/local_audio_manager.dart';
 import '../../player/player_model.dart';
 import '../../settings/settings_model.dart';
 
@@ -81,7 +81,7 @@ class LocalMainPageIcon extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final isLocalAudioImporting = watchValue(
-      (LocalAudioModel m) => m.initAudiosCommand.isRunning,
+      (LocalAudioManager m) => m.initAudiosCommand.isRunning,
     );
 
     if (isLocalAudioImporting)

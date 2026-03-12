@@ -14,7 +14,7 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../local_audio/local_audio_model.dart';
+import '../../local_audio/local_audio_manager.dart';
 import '../../player/player_model.dart';
 import '../../podcasts/podcast_model.dart';
 import '../../radio/radio_model.dart';
@@ -223,6 +223,6 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
       return libraryModel.getPlaylistById(pageId);
     }
 
-    return di<LocalAudioModel>().findAlbum(pageId);
+    return di<LocalAudioManager>().findAlbum(pageId);
   }
 }
