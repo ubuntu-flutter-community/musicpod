@@ -7,7 +7,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../local_audio/local_audio_model.dart';
+import '../../local_audio/local_audio_manager.dart';
 import 'edit_playlist_dialog.dart';
 
 class PlaylistControlPanel extends StatelessWidget with WatchItMixin {
@@ -23,9 +23,7 @@ class PlaylistControlPanel extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final allowReorder = watchPropertyValue(
-      (LocalAudioModel m) => m.allowReorder,
-    );
+    final allowReorder = watchValue((LocalAudioManager m) => m.allowReorder);
     final libraryModel = di<LibraryModel>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -50,20 +48,20 @@ class PlaylistControlPanel extends StatelessWidget with WatchItMixin {
           ),
           AvatarPlayButton(audios: audios, pageId: pageId),
           IconButton(
-            isSelected: watchPropertyValue(
-              (LocalAudioModel m) => m.showPlaylistAddAudios,
+            isSelected: watchValue(
+              (LocalAudioManager m) => m.showPlaylistAddAudios,
             ),
             tooltip: l10n.add,
             icon: Icon(Iconz.plus),
-            onPressed: () => di<LocalAudioModel>().setShowPlaylistAddAudios(
-              !di<LocalAudioModel>().showPlaylistAddAudios,
+            onPressed: () => di<LocalAudioManager>().setShowPlaylistAddAudios(
+              !di<LocalAudioManager>().showPlaylistAddAudios.value,
             ),
           ),
           IconButton(
             tooltip: l10n.move,
             isSelected: allowReorder,
             onPressed: () =>
-                di<LocalAudioModel>().setAllowReorder(!allowReorder),
+                di<LocalAudioManager>().setAllowReorder(!allowReorder),
             icon: Icon(Iconz.move),
           ),
         ],

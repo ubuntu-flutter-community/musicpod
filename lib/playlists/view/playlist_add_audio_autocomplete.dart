@@ -11,7 +11,7 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../local_audio/local_audio_model.dart';
+import '../../local_audio/local_audio_manager.dart';
 import '../../settings/settings_model.dart';
 
 class PlaylistAddAudioAutoCompleteOrShrink extends StatelessWidget
@@ -22,9 +22,7 @@ class PlaylistAddAudioAutoCompleteOrShrink extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    final show = watchPropertyValue(
-      (LocalAudioModel m) => m.showPlaylistAddAudios,
-    );
+    final show = watchValue((LocalAudioManager m) => m.showPlaylistAddAudios);
 
     return AnimatedContainer(
       width: 400,
@@ -67,9 +65,10 @@ class _PlaylistAddAudioAutoCompleteState
   @override
   Widget build(BuildContext context) {
     callOnceAfterThisBuild(
-      (_) => di<LocalAudioModel>().initAudiosCommand.run((
+      (_) => di<LocalAudioManager>().initAudiosCommand.run((
         directory: null,
         forceInit: false,
+        extraAudios: [],
       )),
     );
 
@@ -82,7 +81,7 @@ class _PlaylistAddAudioAutoCompleteState
       (SettingsModel m) => m.useYaruTheme,
     );
     final allAudiosResults = watchValue(
-      (LocalAudioModel m) => m.initAudiosCommand.results,
+      (LocalAudioManager m) => m.initAudiosCommand.results,
     );
     final allAudios = allAudiosResults.data?.audios ?? [];
     final isRunning = allAudiosResults.isRunning;

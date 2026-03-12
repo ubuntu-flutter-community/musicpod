@@ -11,7 +11,7 @@ import '../../common/view/snackbars.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
 import '../../l10n/l10n.dart';
-import '../../local_audio/local_audio_model.dart';
+import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../podcasts/podcast_model.dart';
@@ -42,7 +42,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
 
     final appModel = di<AppModel>();
     final routingManager = di<RoutingManager>();
-    final localAudioModel = di<LocalAudioModel>();
+    final localAudioManager = di<LocalAudioManager>();
     final playerModel = di<PlayerModel>();
     final podcastModel = di<PodcastModel>();
 
@@ -81,7 +81,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
                     context: context,
                     routingManager: routingManager,
                     playerModel: playerModel,
-                    localAudioModel: localAudioModel,
+                    localAudioManager: localAudioManager,
                     appModel: appModel,
                   ),
             child: Tooltip(
@@ -117,7 +117,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
                     context: context,
                     audio: audio,
                     routingManager: routingManager,
-                    localAudioModel: localAudioModel,
+                    localAudioManager: localAudioManager,
                     appModel: appModel,
                     podcastModel: podcastModel,
                   ),
@@ -203,7 +203,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     required BuildContext context,
     required PlayerModel playerModel,
     required RoutingManager routingManager,
-    required LocalAudioModel localAudioModel,
+    required LocalAudioManager localAudioManager,
     required AppModel appModel,
   }) {
     if (text?.isNotEmpty == true && audio?.audioType == AudioType.radio ||
@@ -222,7 +222,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
           audio: audio!,
           appModel: appModel,
           routingManager: routingManager,
-          localAudioModel: localAudioModel,
+          localAudioManager: localAudioManager,
         );
         return;
       case AudioType.radio:
@@ -246,7 +246,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     required Audio audio,
     required AppModel appModel,
     required RoutingManager routingManager,
-    required LocalAudioModel localAudioModel,
+    required LocalAudioManager localAudioManager,
   }) {
     if (audio.albumId == null) {
       showSnackBar(context: context, content: Text(context.l10n.albumNotFound));
@@ -264,7 +264,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     required BuildContext context,
     required Audio audio,
     required PodcastModel podcastModel,
-    required LocalAudioModel localAudioModel,
+    required LocalAudioManager localAudioManager,
     required RoutingManager routingManager,
     required AppModel appModel,
   }) {
@@ -274,7 +274,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
           audio: audio,
           appModel: appModel,
           libraryModel: routingManager,
-          localAudioModel: localAudioModel,
+          localAudioManager: localAudioManager,
         );
         return;
       case AudioType.radio:
@@ -319,7 +319,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
 
   void _onLocalAudioArtistTap({
     required Audio audio,
-    required LocalAudioModel localAudioModel,
+    required LocalAudioManager localAudioManager,
     required AppModel appModel,
     required RoutingManager libraryModel,
   }) {

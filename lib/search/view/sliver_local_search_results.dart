@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/no_search_result_page.dart';
+import '../../common/view/progress.dart';
 import '../../l10n/l10n.dart';
+import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/local_audio_view.dart';
 import '../../local_audio/view/local_audio_body.dart';
 import '../search_model.dart';
@@ -15,6 +17,17 @@ class SliverLocalSearchResult extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
+    final initialiazing = watchValue(
+      (LocalAudioManager m) => m.initAudiosCommand.isRunning,
+    );
+
+    if (initialiazing) {
+      return const SliverFillRemaining(
+        hasScrollBody: false,
+        child: Center(child: Progress()),
+      );
+    }
+
     final localAudioView = watchPropertyValue(
       (SearchModel m) => switch (m.searchType) {
         SearchType.localAlbum => LocalAudioView.albums,

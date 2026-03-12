@@ -6,7 +6,7 @@ import '../../extensions/build_context_x.dart';
 import '../../l10n/app_localizations.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../local_audio/local_audio_model.dart';
+import '../../local_audio/local_audio_manager.dart';
 import '../data/audio.dart';
 import 'icons.dart';
 import 'ui_constants.dart';
@@ -87,7 +87,10 @@ class _LocalMetadataTileState extends State<LocalMetadataTile> {
 
   @override
   Widget build(BuildContext context) {
-    watchPropertyValue((LocalAudioModel m) => m.audios.hashCode);
+    watchValue(
+      (LocalAudioManager m) =>
+          m.initAudiosCommand.select((r) => r?.audios.hashCode),
+    );
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: kLargestSpace),
       subtitle: TextField(
@@ -146,48 +149,52 @@ class _LocalMetadataTileState extends State<LocalMetadataTile> {
   }
 
   void onSubmitted(String text) {
-    final model = di<LocalAudioModel>();
+    final manager = di<LocalAudioManager>();
     setState(() {
       wasChangedLocally = false;
     });
     void onChange() {
       setState(() {});
       di<LibraryModel>().notifyListeners();
-      di<LocalAudioModel>().notifyListeners();
+      di<LocalAudioManager>().initAudiosCommand.run((
+        directory: null,
+        forceInit: true,
+        extraAudios: [widget.audio],
+      ));
     }
 
     return switch (widget.type) {
-      LocalMetadataTileType.title => model.changeMetadata(
+      LocalMetadataTileType.title => manager.changeMetadata(
         widget.audio,
         title: text,
         onChange: onChange,
       ),
-      LocalMetadataTileType.album => model.changeMetadata(
+      LocalMetadataTileType.album => manager.changeMetadata(
         widget.audio,
         album: text,
         onChange: onChange,
       ),
-      LocalMetadataTileType.artist => model.changeMetadata(
+      LocalMetadataTileType.artist => manager.changeMetadata(
         widget.audio,
         artist: text,
         onChange: onChange,
       ),
-      LocalMetadataTileType.trackNumber => model.changeMetadata(
+      LocalMetadataTileType.trackNumber => manager.changeMetadata(
         widget.audio,
         trackNumber: text,
         onChange: onChange,
       ),
-      LocalMetadataTileType.diskNumber => model.changeMetadata(
+      LocalMetadataTileType.diskNumber => manager.changeMetadata(
         widget.audio,
         discNumber: text,
         onChange: onChange,
       ),
-      LocalMetadataTileType.totalDisks => model.changeMetadata(
+      LocalMetadataTileType.totalDisks => manager.changeMetadata(
         widget.audio,
         discTotal: text,
         onChange: onChange,
       ),
-      LocalMetadataTileType.genre => model.changeMetadata(
+      LocalMetadataTileType.genre => manager.changeMetadata(
         widget.audio,
         genre: text,
         onChange: onChange,

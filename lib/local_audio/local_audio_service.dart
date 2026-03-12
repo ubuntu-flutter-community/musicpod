@@ -28,9 +28,6 @@ class LocalAudioService {
 
   List<Audio>? _audios;
   List<Audio>? get audios => _audios;
-  final _audiosController = StreamController<bool>.broadcast();
-  Stream<bool> get audiosChanged => _audiosController.stream;
-  List<String> _failedImports = [];
 
   // TODO: convert this nonesense to a database (drift?)
   void _sortAllTitles() {
@@ -331,8 +328,10 @@ class LocalAudioService {
   Future<List<String>> init({
     String? newDirectory,
     bool forceInit = false,
-    List<Audio> externalPlaylistAudios = const [],
+    List<Audio> extraAudios = const [],
   }) async {
+    List<String> _failedImports = [];
+
     await _lock.synchronized(() async {
       if (forceInit == false && (_audios != null && _audios!.isNotEmpty)) {
         printMessageInDebugMode(
@@ -351,18 +350,16 @@ class LocalAudioService {
       final result = await compute(_readAudiosFromDirectory, dir);
       _failedImports = result.failedImports;
 
-      if (externalPlaylistAudios.isNotEmpty) {
-        result.audios.addAll(externalPlaylistAudios.where((e) => e.isLocal));
+      if (extraAudios.isNotEmpty) {
+        result.audios.addAll(extraAudios.where((e) => e.isLocal));
       }
 
-      addAudiosAndBuildCollection(result.audios, clear: forceInit);
+      _addAudiosAndBuildCollection(result.audios, clear: forceInit);
     });
     return _failedImports;
   }
 
-  Future<void> dispose() async => _audiosController.close();
-
-  void addAudiosAndBuildCollection(
+  void _addAudiosAndBuildCollection(
     List<Audio> newAudios, {
     bool clear = false,
   }) {
@@ -372,7 +369,6 @@ class LocalAudioService {
       _albumIDsOfGenreCache.clear();
       _coverPathCache.clear();
       _audios = null;
-      _audiosController.add(true);
     }
 
     _audios ??= [];
@@ -389,7 +385,6 @@ class LocalAudioService {
     _findAllArtists();
     findAllAlbumIDs();
     _findAllGenres();
-    _audiosController.add(true);
   }
 
   void changeMetadata(

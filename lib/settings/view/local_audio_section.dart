@@ -6,7 +6,8 @@ import '../../common/view/common_widgets.dart';
 import '../../common/view/ui_constants.dart';
 import '../../external_path/external_path_service.dart';
 import '../../l10n/l10n.dart';
-import '../../local_audio/local_audio_model.dart';
+import '../../library/library_model.dart';
+import '../../local_audio/local_audio_manager.dart';
 import '../settings_model.dart';
 
 class LocalAudioSection extends StatelessWidget with WatchItMixin {
@@ -35,9 +36,10 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
                 final directoryPath = await di<ExternalPathService>()
                     .getPathOfDirectory();
                 if (directoryPath != null) {
-                  di<LocalAudioModel>().initAudiosCommand.run((
+                  di<LocalAudioManager>().initAudiosCommand.run((
                     forceInit: true,
                     directory: directoryPath,
+                    extraAudios: di<LibraryModel>().externalPlaylistAudios,
                   ));
                 }
               },

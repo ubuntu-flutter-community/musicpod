@@ -4,7 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/round_image_container.dart';
 import '../../extensions/build_context_x.dart';
-import '../local_audio_model.dart';
+import '../local_audio_manager.dart';
 import 'local_cover.dart';
 
 class ArtistImage extends StatefulWidget {
@@ -23,18 +23,18 @@ class _ArtistImageState extends State<ArtistImage> {
   @override
   void initState() {
     super.initState();
-    final model = di<LocalAudioModel>();
-    final cachedTitlesOfArtist = model.getCachedTitlesOfArtist(widget.artist);
+    final manager = di<LocalAudioManager>();
+    final cachedTitlesOfArtist = manager.getCachedTitlesOfArtist(widget.artist);
     _artistAudios = cachedTitlesOfArtist != null
         ? Future.value(cachedTitlesOfArtist)
-        : model.findTitlesOfArtist(widget.artist);
+        : manager.findTitlesOfArtist(widget.artist);
   }
 
   @override
   Widget build(BuildContext context) {
-    final model = di<LocalAudioModel>();
+    final manager = di<LocalAudioManager>();
 
-    final cachedTitlesOfArtist = model.getCachedTitlesOfArtist(widget.artist);
+    final cachedTitlesOfArtist = manager.getCachedTitlesOfArtist(widget.artist);
     if (cachedTitlesOfArtist != null) {
       return _ArtistImage(
         artist: widget.artist,
@@ -72,7 +72,7 @@ class _ArtistImage extends StatelessWidget {
       backgroundColor: theme.cardColor,
       images: artistAudios.isEmpty
           ? []
-          : di<LocalAudioModel>()
+          : di<LocalAudioManager>()
                 .findUniqueAlbumAudios(artistAudios)
                 .where((e) => e.albumId != null && e.path != null)
                 .map(

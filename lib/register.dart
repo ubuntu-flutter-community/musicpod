@@ -24,7 +24,7 @@ import 'extensions/taget_platform_x.dart';
 import 'external_path/external_path_service.dart';
 import 'library/library_model.dart';
 import 'library/library_service.dart';
-import 'local_audio/local_audio_model.dart';
+import 'local_audio/local_audio_manager.dart';
 import 'local_audio/local_audio_service.dart';
 import 'local_audio/local_cover_model.dart';
 import 'local_audio/local_cover_service.dart';
@@ -176,18 +176,14 @@ void registerDependencies() {
       dependsOn: [SharedPreferences],
       dispose: (s) async => s.dispose(),
     )
-    ..registerSingletonAsync<LocalAudioService>(
-      () async {
-        final localAudioService = LocalAudioService(
-          settingsService: di<SettingsService>(),
-          localCoverService: di<LocalCoverService>(),
-        );
+    ..registerSingletonAsync<LocalAudioService>(() async {
+      final localAudioService = LocalAudioService(
+        settingsService: di<SettingsService>(),
+        localCoverService: di<LocalCoverService>(),
+      );
 
-        return localAudioService;
-      },
-      dependsOn: [SettingsService, LibraryService],
-      dispose: (s) async => s.dispose(),
-    )
+      return localAudioService;
+    }, dependsOn: [SettingsService, LibraryService])
     ..registerSingletonAsync<LocalNotifier>(() async {
       await localNotifier.setup(
         appName: AppConfig.appId,
@@ -283,14 +279,9 @@ void registerDependencies() {
       () => RoutingManager(libraryService: di<LibraryService>()),
       dependsOn: [LibraryService],
     )
-    ..registerSingletonWithDependencies<LocalAudioModel>(
-      () => LocalAudioModel(
-        localAudioService: di<LocalAudioService>(),
-        settingsService: di<SettingsService>(),
-        libraryService: di<LibraryService>(),
-      ),
-      dependsOn: [SettingsService, LocalAudioService, LibraryService],
-      dispose: (s) => s.dispose(),
+    ..registerSingletonWithDependencies<LocalAudioManager>(
+      () => LocalAudioManager(localAudioService: di<LocalAudioService>()),
+      dependsOn: [LocalAudioService],
     )
     ..registerSingletonWithDependencies<PodcastModel>(
       () => PodcastModel(podcastService: di<PodcastService>()),

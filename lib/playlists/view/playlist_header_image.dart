@@ -6,7 +6,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../library/library_model.dart';
-import '../../local_audio/local_audio_model.dart';
+import '../../local_audio/local_audio_manager.dart';
 
 class PlaylistHeaderImage extends StatelessWidget with WatchItMixin {
   const PlaylistHeaderImage({
@@ -20,9 +20,11 @@ class PlaylistHeaderImage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final model = di<LocalAudioModel>();
     watchPropertyValue((LibraryModel m) => m.getPlaylistById(pageId)?.hashCode);
-    final playlistImages = model.findLocalCovers(audios: playlist, limit: 16);
+    final playlistImages = di<LocalAudioManager>().findLocalCovers(
+      audios: playlist,
+      limit: 16,
+    );
     final length = playlistImages == null ? 0 : playlistImages.take(16).length;
 
     final padding = length == 1 ? 0.0 : 8.0;

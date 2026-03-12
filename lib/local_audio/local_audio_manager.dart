@@ -7,31 +7,13 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
 import '../common/view/audio_filter.dart';
-import '../library/library_service.dart';
-import '../settings/settings_service.dart';
 import 'local_audio_service.dart';
 
-class LocalAudioModel extends SafeChangeNotifier {
-  LocalAudioModel({
-    required LocalAudioService localAudioService,
-    required SettingsService settingsService,
-    required LibraryService libraryService,
-  }) : _localAudioService = localAudioService,
-       _settingsService = settingsService,
-       _libraryService = libraryService {
-    _audiosChangedSub ??= _localAudioService.audiosChanged.listen(
-      (_) => notifyListeners(),
-    );
-    _settingsChangedSub ??= _settingsService.propertiesChanged.listen(
-      (_) => notifyListeners(),
-    );
-  }
+class LocalAudioManager {
+  LocalAudioManager({required LocalAudioService localAudioService})
+    : _localAudioService = localAudioService;
 
   final LocalAudioService _localAudioService;
-  final LibraryService _libraryService;
-  final SettingsService _settingsService;
-  StreamSubscription<bool>? _audiosChangedSub;
-  StreamSubscription<bool>? _settingsChangedSub;
 
   void changeMetadata(
     Audio audio, {
@@ -61,31 +43,29 @@ class LocalAudioModel extends SafeChangeNotifier {
     pictures: pictures,
   );
 
-  bool _allowReorder = false;
-  bool get allowReorder => _allowReorder;
+  final allowReorder = SafeValueNotifier<bool>(false);
   void setAllowReorder(bool value) {
-    if (value == _allowReorder) return;
-    _allowReorder = value;
-    notifyListeners();
+    if (value == allowReorder.value) return;
+    allowReorder.value = value;
   }
 
-  bool _useArtistGridView = true;
-  bool get useArtistGridView => _useArtistGridView;
+  final useArtistGridView = SafeValueNotifier<bool>(true);
   void setUseArtistGridView(bool value) {
-    if (value == _useArtistGridView) return;
-    _useArtistGridView = value;
-    notifyListeners();
+    if (value == useArtistGridView.value) return;
+    useArtistGridView.value = value;
   }
 
-  bool _showPlaylistAddAudios = false;
-  bool get showPlaylistAddAudios => _showPlaylistAddAudios;
+  final showPlaylistAddAudios = SafeValueNotifier<bool>(false);
   void setShowPlaylistAddAudios(bool value) {
-    if (value == _showPlaylistAddAudios) return;
-    _showPlaylistAddAudios = value;
-    if (_showPlaylistAddAudios && audios == null) {
-      initAudiosCommand.run((directory: null, forceInit: false));
+    if (value == showPlaylistAddAudios.value) return;
+    showPlaylistAddAudios.value = value;
+    if (showPlaylistAddAudios.value && audios == null) {
+      initAudiosCommand.run((
+        directory: null,
+        forceInit: false,
+        extraAudios: [],
+      ));
     }
-    notifyListeners();
   }
 
   List<Audio>? get audios => _localAudioService.audios;
@@ -132,28 +112,19 @@ class LocalAudioModel extends SafeChangeNotifier {
       _localAudioService.findAllAlbumIDs(artist: artist, clean: clean);
 
   late final Command<
-    ({bool forceInit, String? directory}),
-    ({List<Audio> audios, List<String> failedImports})
+    ({bool forceInit, String? directory, List<Audio> extraAudios}),
+    ({List<Audio> audios, List<String> failedImports})?
   >
   initAudiosCommand = Command.createAsync((param) async {
     final failedImports = await _localAudioService.init(
       forceInit: param.forceInit,
       newDirectory: param.directory,
-      externalPlaylistAudios: _libraryService.externalPlaylistAudios,
+      extraAudios: param.extraAudios,
     );
 
     return (
       audios: _localAudioService.audios ?? [],
       failedImports: failedImports,
     );
-  }, initialValue: (audios: [], failedImports: []));
-  void addAudios(List<Audio> newAudios) =>
-      _localAudioService.addAudiosAndBuildCollection(newAudios);
-
-  @override
-  Future<void> dispose() async {
-    await _audiosChangedSub?.cancel();
-    await _settingsChangedSub?.cancel();
-    super.dispose();
-  }
+  }, initialValue: null);
 }
