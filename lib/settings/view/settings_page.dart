@@ -58,31 +58,34 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       ],
     ),
-    body: LayoutBuilder(
-      builder: (context, constraints) => ListView(
-        controller: _scrollController,
-        padding: kGridPadding.copyWith(bottom: bottomPlayerPageGap),
-        children:
-            const [
-                  ThemeSection(),
-                  PodcastSection(),
-                  LocalAudioSection(),
-                  RadioSection(),
-                  ExposeOnlineSection(),
-                  ResourceSection(),
-                  ResetSection(),
-                  LyricsSection(),
-                  AboutSection(),
-                ]
-                .mapIndexed(
-                  (i, e) => AutoScrollTag(
-                    key: ValueKey(i),
-                    controller: _scrollController,
-                    index: i,
-                    child: e,
-                  ),
-                )
-                .toList(),
+    body: Center(
+      child: SizedBox(
+        width: 700,
+        child: ListView(
+          controller: _scrollController,
+          padding: kGridPadding.copyWith(bottom: bottomPlayerPageGap),
+          children:
+              const [
+                    ThemeSection(),
+                    PodcastSection(),
+                    LocalAudioSection(),
+                    RadioSection(),
+                    ExposeOnlineSection(),
+                    ResourceSection(),
+                    ResetSection(),
+                    LyricsSection(),
+                    AboutSection(),
+                  ]
+                  .mapIndexed(
+                    (i, e) => AutoScrollTag(
+                      key: ValueKey(i),
+                      controller: _scrollController,
+                      index: i,
+                      child: e,
+                    ),
+                  )
+                  .toList(),
+        ),
       ),
     ),
   );
