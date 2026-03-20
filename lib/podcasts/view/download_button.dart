@@ -39,9 +39,6 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
     final useYaruTheme = watchPropertyValue(
       (SettingsModel m) => m.useYaruTheme,
     );
-    final downloadsDir = watchPropertyValue(
-      (SettingsModel m) => m.downloadsDir,
-    );
 
     final radius =
         (useYaruTheme
@@ -72,24 +69,22 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
             download ? Iconz.downloadFilled : Iconz.download,
             color: audio?.path != null ? theme.colorScheme.primary : null,
           ),
-          onPressed: downloadsDir == null
-              ? null
-              : () {
-                  if (download) {
-                    model.deleteDownload(audio: audio);
-                  } else {
-                    addPodcast?.call();
-                    model.startDownload(
-                      finishedMessage: context.l10n.downloadFinished(
-                        audio?.title ?? '',
-                      ),
-                      canceledMessage: context.l10n.downloadCancelled(
-                        audio?.title ?? '',
-                      ),
-                      audio: audio,
-                    );
-                  }
-                },
+          onPressed: () {
+            if (download) {
+              model.deleteDownload(audio: audio);
+            } else {
+              addPodcast?.call();
+              model.startDownload(
+                finishedMessage: context.l10n.downloadFinished(
+                  audio?.title ?? '',
+                ),
+                canceledMessage: context.l10n.downloadCancelled(
+                  audio?.title ?? '',
+                ),
+                audio: audio,
+              );
+            }
+          },
           iconSize: iconSize,
           color: download
               ? theme.contrastyPrimary

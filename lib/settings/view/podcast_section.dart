@@ -211,17 +211,19 @@ class _DownloadsTile extends StatefulWidget with WatchItStatefulWidgetMixin {
 }
 
 class _DownloadsTileState extends State<_DownloadsTile> {
-  String? _error;
-
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
+    final downloadsDirResults = watchValue(
+      (DownloadModel m) => m.downloadsDirCommand.results,
+    );
+    final error = downloadsDirResults.error;
+    final downloadsDir = downloadsDirResults.data;
+
     return YaruTile(
       title: Text(l10n.downloadsDirectory),
-      subtitle: Text(
-        _error ?? watchPropertyValue((SettingsModel m) => m.downloadsDir ?? ''),
-      ),
+      subtitle: Text(error?.toString() ?? downloadsDir ?? ''),
       trailing: ElevatedButton(
         onPressed: () {
           showDialog(
@@ -234,9 +236,8 @@ class _DownloadsTileState extends State<_DownloadsTile> {
                   style: context.textTheme.bodyLarge,
                 ),
               ),
-              onConfirm: () => di<SettingsModel>().setDownloadsCustomDir(
-                onSuccess: () => di<DownloadModel>().deleteAllDownloads(),
-                onFail: (e) => setState(() => _error = e.toString()),
+              onConfirm: () => di<DownloadModel>().downloadsDirCommand.runAsync(
+                (setNewDir: true),
               ),
             ),
           );

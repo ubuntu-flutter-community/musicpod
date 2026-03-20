@@ -111,14 +111,7 @@ class _MetaDataContentState extends State<MetaDataContent> {
           title: Text(l10n.tags),
           subtitle: Align(
             alignment: Alignment.centerLeft,
-            child: RadioPageTagBar(
-              station: audio,
-              onTap: (_) {
-                if (context.mounted) {
-                  Navigator.of(context).pop();
-                }
-              },
-            ),
+            child: RadioPageTagBar(station: audio),
           ),
         ),
         ListTile(title: Text(l10n.language), subtitle: Text(audio.language)),

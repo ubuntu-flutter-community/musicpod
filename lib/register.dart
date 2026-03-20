@@ -77,19 +77,8 @@ void registerDependencies() {
       () => OnlineArtService(dio: di<Dio>()),
       dispose: (s) => s.dispose(),
     )
-    ..registerSingletonAsync<SettingsService>(
-      () async {
-        final downloadsDefaultDir = await PlatformX.downloadsDefaultDir;
-        const forcedUpdateThreshold = String.fromEnvironment(
-          'FORCED_UPDATE_THRESHOLD',
-          defaultValue: '2.11.0',
-        );
-        return SettingsService(
-          forcedUpdateThreshold: forcedUpdateThreshold,
-          sharedPreferences: di<SharedPreferences>(),
-          downloadsDefaultDir: downloadsDefaultDir,
-        );
-      },
+    ..registerSingletonWithDependencies<SettingsService>(
+      () => SettingsService(sharedPreferences: di<SharedPreferences>()),
       dependsOn: [SharedPreferences],
       dispose: (s) async => s.dispose(),
     );
@@ -103,12 +92,12 @@ void registerDependencies() {
       () => ListenBrainzService(settingsService: di<SettingsService>()),
       dependsOn: [SettingsService],
     )
-    ..registerSingletonAsync<ExposeService>(
-      () async => ExposeService(
+    ..registerSingletonWithDependencies<ExposeService>(
+      () => ExposeService(
         lastFmService: di<LastfmService>(),
         listenBrainzService: di<ListenBrainzService>(),
       ),
-      dependsOn: [LastfmService],
+      dependsOn: [LastfmService, ListenBrainzService],
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton(LocalCoverService.new, dispose: (s) => s.dispose())
@@ -183,7 +172,7 @@ void registerDependencies() {
       );
 
       return localAudioService;
-    }, dependsOn: [SettingsService, LibraryService])
+    }, dependsOn: [SettingsService])
     ..registerSingletonAsync<LocalNotifier>(() async {
       await localNotifier.setup(
         appName: AppConfig.appId,
@@ -224,11 +213,7 @@ void registerDependencies() {
       return connectivityModel;
     }, dependsOn: [PlayerService])
     ..registerSingletonWithDependencies<SettingsModel>(
-      () => SettingsModel(
-        service: di<SettingsService>(),
-        externalPathService: di<ExternalPathService>(),
-        gitHub: di<GitHub>(),
-      ),
+      () => SettingsModel(service: di<SettingsService>()),
       dependsOn: [SettingsService],
       dispose: (s) => s.dispose(),
     )
@@ -262,7 +247,6 @@ void registerDependencies() {
       dependsOn: [
         SettingsService,
         ExposeService,
-        ConnectivityModel,
         PackageInfo,
         LocalAudioService,
         LibraryService,
@@ -299,6 +283,7 @@ void registerDependencies() {
         settingsService: di<SettingsService>(),
         libraryService: di<LibraryService>(),
         dio: di<Dio>(),
+        externalPathService: di<ExternalPathService>(),
       ),
       dependsOn: [SettingsService, LibraryService],
       dispose: (s) => s.dispose(),
@@ -324,12 +309,7 @@ void registerDependencies() {
         podcastService: di<PodcastService>(),
         localAudioService: di<LocalAudioService>(),
       ),
-      dependsOn: [
-        LibraryService,
-        PodcastService,
-        RadioService,
-        LocalAudioService,
-      ],
+      dependsOn: [LibraryService, PodcastService, LocalAudioService],
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton(() => LicenseStore())

@@ -155,7 +155,12 @@ class AppModel extends SafeChangeNotifier {
             (_localAudioService.audios?.isNotEmpty ?? false) &&
             _libraryService.playlistIDs.isNotEmpty &&
             _libraryService.favoriteAlbums.isNotEmpty &&
-            isBackupScreenNeeded &&
+            isCurrentVersionLowerThan(
+              const String.fromEnvironment(
+                'FORCED_UPDATE_THRESHOLD',
+                defaultValue: '2.11.0',
+              ),
+            ) &&
             !wasBackupSaved;
         return needed;
       }, initialValue: null);
@@ -167,9 +172,6 @@ class AppModel extends SafeChangeNotifier {
     await _settingsService.setValue(SPKeys.backupSaved + version, value);
     notifyListeners();
   }
-
-  bool get isBackupScreenNeeded =>
-      isCurrentVersionLowerThan(_settingsService.forcedUpdateThreshold);
 
   bool isCurrentVersionLowerThan(String otherVersion) {
     final currentVersionInt = getExtendedVersionNumber(version) ?? 0;

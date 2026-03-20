@@ -3,26 +3,35 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:path/path.dart' as p;
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
 import '../common/view/snackbars.dart';
+import '../extensions/taget_platform_x.dart';
+import '../external_path/external_path_service.dart';
 import '../library/library_service.dart';
 import '../settings/settings_service.dart';
+import '../settings/shared_preferences_keys.dart';
 
 class DownloadModel extends SafeChangeNotifier {
   DownloadModel({
     required LibraryService libraryService,
     required SettingsService settingsService,
     required Dio dio,
+    required ExternalPathService externalPathService,
   }) : _libraryService = libraryService,
        _settingsService = settingsService,
-       _dio = dio;
+       _dio = dio,
+       _externalPathService = externalPathService {
+    downloadsDirCommand.run((setNewDir: false));
+  }
 
   final LibraryService _libraryService;
   final SettingsService _settingsService;
   final Dio _dio;
+  final ExternalPathService _externalPathService;
 
   final _values = <String, double?>{};
   final _cancelTokens = <String, CancelToken?>{};
@@ -51,9 +60,53 @@ class DownloadModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
+  late final Command<({bool setNewDir}), String?> downloadsDirCommand =
+      Command.createAsync((param) async {
+        if (!param.setNewDir) {
+          return _downloadsDirOrDefault;
+        }
+
+        final dir = await setDownloadsCustomDir();
+        await deleteAllDownloads();
+        return dir;
+      }, initialValue: null);
+
+  Future<String?> setDownloadsCustomDir() async {
+    String? dirError;
+    String? directoryPath;
+
+    try {
+      directoryPath = await _externalPathService.getPathOfDirectory();
+      if (directoryPath == null) return _downloadsDirOrDefault;
+      final maybeDir = Directory(directoryPath);
+      if (!maybeDir.existsSync()) return _downloadsDirOrDefault;
+      maybeDir.statSync();
+      File(p.join(directoryPath, 'test'))
+        ..createSync()
+        ..deleteSync();
+    } catch (e) {
+      dirError = e.toString();
+    }
+
+    if (dirError != null) {
+      throw Exception('Selected directory is not valid: $dirError');
+    } else {
+      if (directoryPath != null) {
+        await _settingsService.setValue(SPKeys.downloads, directoryPath);
+        return _downloadsDirOrDefault;
+      }
+    }
+
+    return null;
+  }
+
+  Future<String?> get _downloadsDirOrDefault async =>
+      _settingsService.getString(SPKeys.downloads) ??
+      await PlatformX.downloadsDefaultDir;
+
   Future<void> deleteDownload({required Audio? audio}) async {
     if (audio?.url != null &&
-        _settingsService.downloadsDir != null &&
+        (downloadsDirCommand.value) != null &&
         audio?.website != null) {
       _libraryService.removeDownload(url: audio!.url!, feedUrl: audio.website!);
       if (_values.containsKey(audio.url)) {
@@ -65,9 +118,9 @@ class DownloadModel extends SafeChangeNotifier {
   }
 
   Future<void> deleteAllDownloads() async {
-    if (_settingsService.downloadsDir != null) {
+    if ((downloadsDirCommand.value) != null) {
       _libraryService.removeAllDownloads();
-      _values.clear;
+      _values.clear();
 
       notifyListeners();
     }
@@ -78,8 +131,12 @@ class DownloadModel extends SafeChangeNotifier {
     required String canceledMessage,
     required String finishedMessage,
   }) async {
-    final downloadsDir = _settingsService.downloadsDir;
-    if (audio?.url == null || downloadsDir == null) return;
+    final downloadsDir = downloadsDirCommand.value;
+    if (downloadsDir == null) {
+      _addMessage('No downloads directory set');
+      return;
+    }
+    if (audio?.url == null) return;
     final url = audio!.url!;
 
     if (_cancelTokens[url] != null) {

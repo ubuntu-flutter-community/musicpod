@@ -16,15 +16,21 @@ import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 
 class RadioPageTagBar extends StatelessWidget {
-  const RadioPageTagBar({super.key, required this.station, this.onTap});
+  const RadioPageTagBar({
+    super.key,
+    required this.station,
+    this.tagLimit,
+    this.style,
+  });
 
   final Audio station;
-  final Function(String value)? onTap;
+  final int? tagLimit;
+  final TextStyle? style;
 
   @override
   Widget build(BuildContext context) {
-    final style = context.theme.pageHeaderDescription;
-    final tags = station.tags;
+    final style = this.style ?? context.theme.pageHeaderDescription;
+    final tags = station.tags?.take(tagLimit ?? station.tags!.length).toList();
     if (tags == null || tags.isEmpty) return const SizedBox.shrink();
 
     final childOrFullBar = SingleChildScrollView(
@@ -36,7 +42,7 @@ class RadioPageTagBar extends StatelessWidget {
           context: context,
           tags: tags,
           style: style,
-          onTap: onTap,
+          limit: tagLimit,
         ),
       ),
     );
@@ -68,7 +74,6 @@ class RadioPageTagBar extends StatelessWidget {
     required List<String> tags,
     required TextStyle? style,
     int? limit,
-    Function(String value)? onTap,
   }) {
     return tags
         .take(limit ?? tags.length)
@@ -80,7 +85,6 @@ class RadioPageTagBar extends StatelessWidget {
                 style: style,
                 wrapInFlexible: false,
                 onTap: () {
-                  onTap?.call(e);
                   di<RoutingManager>().push(pageId: PageIDs.searchPage);
                   di<SearchModel>()
                     ..setTag(Tag(name: e, stationCount: 1))
