@@ -15,7 +15,6 @@ import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/sliver_audio_page.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
-import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../local_audio_manager.dart';
 import 'artist_page.dart';
@@ -158,14 +157,7 @@ class AlbumPageImage extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        Container(
-          decoration: BoxDecoration(
-            color: context.theme.cardColor,
-            image: const DecorationImage(
-              image: AssetImage('assets/images/media-optical.png'),
-            ),
-          ),
-        ),
+        const CoverBackground(dimension: kMaxAudioPageHeaderHeight),
         Align(
           alignment: Alignment.centerLeft,
           child: audio != null && audio!.canHaveLocalCover

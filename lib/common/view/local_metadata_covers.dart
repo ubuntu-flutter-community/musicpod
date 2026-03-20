@@ -73,9 +73,7 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
                           path: widget.audio.path!,
                           albumId: widget.audio.albumId!,
                           fallback: Icon(Iconz.musicNote, size: dimension / 2),
-                          width: dimension,
-                          height: dimension,
-                          fit: BoxFit.cover,
+                          dimension: dimension,
                         )
                 : YaruCarousel(
                     height: dimension,

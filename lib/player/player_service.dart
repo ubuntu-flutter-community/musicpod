@@ -152,9 +152,11 @@ class PlayerService {
     _setLocalColor(_audio!);
   }
 
-  bool? _isVideo;
-  bool? get isVideo => _isVideo;
-  void _setIsVideo(bool? value) {
+  bool _isVideo = false;
+  bool get isVideo => _isVideo;
+  void _setIsVideo(bool value) {
+    if (value == _isVideo) return;
+    printMessageInDebugMode('Is video: $value');
     _isVideo = value;
     _propertiesChangedController.add(true);
   }

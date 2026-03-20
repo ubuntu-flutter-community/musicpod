@@ -98,11 +98,10 @@ class _AlbumCard extends StatelessWidget {
                 dimension: audioCardDimension,
                 albumId: id,
                 path: path!,
-                fallback: const CoverBackground(),
+                fallback: CoverBackground(dimension: audioCardDimension),
               )
             : null,
       ),
-      background: const CoverBackground(),
       onTap: () => di<RoutingManager>().push(
         builder: (context) => AlbumPage(id: id),
         pageId: id,

@@ -58,7 +58,10 @@ class RoundImageContainer extends StatelessWidget {
             ),
           ],
         ),
-        _ => FourImagesGrid(images: images.take(4).toList()),
+        _ => FourImagesGrid(
+          dimension: dimension,
+          images: images.take(4).toList(),
+        ),
       },
     );
   }

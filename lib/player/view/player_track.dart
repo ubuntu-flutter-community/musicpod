@@ -44,6 +44,7 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
     final textStyle = TextStyle(
       fontSize: 12,
       color: !active ? theme.disabledColor : null,
+      fontFeatures: const [FontFeature.tabularFigures()],
     );
 
     final thumbShape = RoundSliderThumbShape(
@@ -66,6 +67,10 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
         ? const RectangularSliderTrackShape()
         : CustomTrackShape();
 
+    final trackHeight = useYaruTheme && !bottomPlayer
+        ? 5.0
+        : (isMobile ? 2.0 : 4.0);
+
     final slider =
         (duration?.inSeconds != null && duration!.inSeconds < 10) &&
             audioType == AudioType.radio &&
@@ -76,9 +81,7 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
                 : const EdgeInsets.only(left: 7, right: 7, top: 3),
             child: LinearProgress(
               value: null,
-              trackHeight: useYaruTheme && !bottomPlayer
-                  ? 5.0
-                  : (isMobile ? 2.0 : 4.0),
+              trackHeight: trackHeight,
               color: mainColor.withValues(alpha: 0.8),
               backgroundColor: mainColor.withValues(alpha: 0.4),
             ),
@@ -96,7 +99,7 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
                   overlayShape: thumbShape,
                   minThumbSeparation: 0,
                   trackShape: trackShape as SliderTrackShape,
-                  trackHeight: bottomPlayer ? (isMobile ? 2.0 : 4.0) : 4.0,
+                  trackHeight: trackHeight,
                   inactiveTrackColor: mainColor.withValues(alpha: 0.2),
                   activeTrackColor: mainColor.withValues(alpha: 0.85),
                   overlayColor: mainColor,
@@ -182,6 +185,7 @@ class PlayerSimpleTrack extends StatelessWidget with WatchItMixin {
     final textStyle = TextStyle(
       fontSize: 10,
       color: !active ? theme.disabledColor : null,
+      fontFeatures: const [FontFeature.tabularFigures()],
     );
 
     final positionWidth = (position?.inHours != null && position!.inHours > 0)

@@ -41,7 +41,7 @@ class PlayerModel extends SafeChangeNotifier {
   Future<void> setRemoteColorFromImageProvider(ImageProvider imageProvider) =>
       _playerService.setRemoteColorFromImageProvider(imageProvider);
 
-  bool? get isVideo => _playerService.isVideo;
+  bool get isVideo => _playerService.isVideo;
 
   Audio? get nextAudio => _playerService.nextAudio;
 

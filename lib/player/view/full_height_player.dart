@@ -49,17 +49,20 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
       );
     }
 
-    return Stack(
-      children: [
-        if (!isVideo)
-          PlayerColor(alpha: 0.4, size: size, position: playerPosition),
-        Column(
-          children: [
-            if (!isMobile) FullHeightPlayerHeaderBar(isVideo: isVideo),
-            Expanded(child: body),
-          ],
-        ),
-      ],
+    return Material(
+      color: theme.cardColor,
+      child: Stack(
+        children: [
+          if (!isVideo)
+            PlayerColor(alpha: 0.4, size: size, position: playerPosition),
+          Column(
+            children: [
+              if (!isMobile) FullHeightPlayerHeaderBar(isVideo: isVideo),
+              Expanded(child: body),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

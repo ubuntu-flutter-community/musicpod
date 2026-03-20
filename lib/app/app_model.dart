@@ -1,16 +1,17 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:github/github.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../app_config.dart';
-import '../common/view/snackbars.dart';
 import '../expose/expose_service.dart';
+import '../library/library_service.dart';
+import '../local_audio/local_audio_service.dart';
 import '../settings/shared_preferences_keys.dart';
 import '../extensions/taget_platform_x.dart';
 import '../settings/settings_service.dart';
-import 'view/discord_connect_content.dart';
 
 class AppModel extends SafeChangeNotifier {
   AppModel({
@@ -19,6 +20,8 @@ class AppModel extends SafeChangeNotifier {
     required GitHub gitHub,
     required bool allowManualUpdates,
     required ExposeService exposeService,
+    required LocalAudioService localAudioService,
+    required LibraryService libraryService,
   }) : _countryCode = WidgetsBinding
            .instance
            .platformDispatcher
@@ -29,9 +32,13 @@ class AppModel extends SafeChangeNotifier {
        _allowManualUpdates = allowManualUpdates,
        _settingsService = settingsService,
        _packageInfo = packageInfo,
-       _exposeService = exposeService;
+       _exposeService = exposeService,
+       _localAudioService = localAudioService,
+       _libraryService = libraryService;
 
   final ExposeService _exposeService;
+  final LocalAudioService _localAudioService;
+  final LibraryService _libraryService;
 
   ValueNotifier<bool> get isLastFmAuthorized =>
       _exposeService.isLastFmAuthorized;
@@ -138,11 +145,27 @@ class AppModel extends SafeChangeNotifier {
     }
   }
 
-  Future<void> disposePatchNotes() async =>
-      _settingsService.setValue(SPKeys.patchNotesDisposed, version);
+  Future<void> disposePatchNotes() async {
+    await _settingsService.setValue(SPKeys.patchNotesDisposed, version);
+    recentPatchNotesDisposedCommand.run();
+  }
+
+  late final Command<void, bool?> recentPatchNotesDisposedCommand =
+      Command.createSyncNoParam(recentPatchNotesDisposed, initialValue: null);
 
   bool recentPatchNotesDisposed() =>
       _settingsService.getString(SPKeys.patchNotesDisposed) == version;
+
+  late final Command<void, bool?> backupNeededCommand =
+      Command.createAsyncNoParam(() async {
+        final needed =
+            (_localAudioService.audios?.isNotEmpty ?? false) &&
+            _libraryService.playlistIDs.isNotEmpty &&
+            _libraryService.favoriteAlbums.isNotEmpty &&
+            isBackupScreenNeeded &&
+            !wasBackupSaved;
+        return needed;
+      }, initialValue: null);
 
   bool get wasBackupSaved =>
       _settingsService.getBool(SPKeys.backupSaved + version) ?? false;
@@ -219,19 +242,5 @@ class AppModel extends SafeChangeNotifier {
         avatarUrl: 'https://avatars.githubusercontent.com/u/38893390?v=4',
       ),
     ];
-  }
-}
-
-void discordConnectedHandler(
-  BuildContext context,
-  AsyncSnapshot<bool?> snapshot,
-  void Function() cancel,
-) {
-  if (snapshot.data == true) {
-    showSnackBar(
-      context: context,
-      duration: const Duration(seconds: 3),
-      content: DiscordConnectContent(connected: snapshot.data == true),
-    );
   }
 }
