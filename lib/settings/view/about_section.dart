@@ -8,7 +8,6 @@ import '../../app/app_model.dart';
 import '../../app/connectivity_model.dart';
 import '../../app_config.dart';
 import '../../common/view/progress.dart';
-import '../../common/view/snackbars.dart';
 import '../../common/view/tapable_text.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -32,50 +31,41 @@ class AboutSection extends StatelessWidget with WatchItMixin {
   }
 }
 
-class _AboutTile extends StatefulWidget with WatchItStatefulWidgetMixin {
+class _AboutTile extends StatelessWidget with WatchItMixin {
   const _AboutTile();
 
   @override
-  State<_AboutTile> createState() => _AboutTileState();
-}
-
-class _AboutTileState extends State<_AboutTile> {
-  @override
-  void initState() {
-    super.initState();
-    di<AppModel>().checkForUpdate(
-      isOnline: di<ConnectivityModel>().isOnline == true,
-      onError: (e) {
-        if (mounted) {
-          showSnackBar(context: context, content: Text(e));
-        }
-      },
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
+    callOnceAfterThisBuild((context) {
+      final appModel = di<AppModel>();
+      appModel.checkForUpdateCommand.run();
+      appModel.fetchNumberOfDownloadsCommand.run();
+    });
+
     final theme = context.theme;
     final appModel = di<AppModel>();
-    final updateAvailable = watchPropertyValue(
-      (AppModel m) => m.updateAvailable,
+    final updateAvailableResults = watchValue(
+      (AppModel m) => m.checkForUpdateCommand.results,
     );
+    final updateAvailable = updateAvailableResults.data == true;
     final onlineVersion = watchPropertyValue((AppModel m) => m.onlineVersion);
-    final downloads = watchPropertyValue((AppModel m) => m.downloads);
+    final downloads = watchValue(
+      (AppModel m) => m.fetchNumberOfDownloadsCommand,
+    );
     final currentVersion = watchPropertyValue((AppModel m) => m.version);
     final useYaruTheme = watchPropertyValue(
       (SettingsModel m) => m.useYaruTheme,
     );
 
     return YaruTile(
-      subtitle: downloads == null
-          ? null
-          : Text(context.l10n.downloadsOfLatestRelease(downloads.toString())),
+      subtitle: Text(
+        context.l10n.downloadsOfLatestRelease(downloads.toString()),
+      ),
       title:
           !di<ConnectivityModel>().isOnline == true ||
               !appModel.allowManualUpdate
           ? Text(di<AppModel>().version)
-          : updateAvailable == null
+          : updateAvailableResults.isRunning
           ? Center(
               child: SizedBox.square(
                 dimension: useYaruTheme ? kYaruTitleBarItemHeight : 40,
@@ -83,10 +73,10 @@ class _AboutTileState extends State<_AboutTile> {
               ),
             )
           : TapAbleText(
-              text: updateAvailable == true
+              text: updateAvailable
                   ? '${context.l10n.updateAvailable}: $onlineVersion'
                   : currentVersion,
-              style: updateAvailable == true
+              style: updateAvailable
                   ? TextStyle(
                       color: context.theme.colorScheme.success.scale(
                         lightness: theme.isLight ? 0 : 0.3,

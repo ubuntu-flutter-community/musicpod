@@ -2,16 +2,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:github/github.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../app_config.dart';
 import '../expose/expose_service.dart';
+import '../extensions/taget_platform_x.dart';
 import '../library/library_service.dart';
 import '../local_audio/local_audio_service.dart';
-import '../settings/shared_preferences_keys.dart';
-import '../extensions/taget_platform_x.dart';
 import '../settings/settings_service.dart';
+import '../settings/shared_preferences_keys.dart';
 
 class AppModel extends SafeChangeNotifier {
   AppModel({
@@ -22,6 +23,7 @@ class AppModel extends SafeChangeNotifier {
     required ExposeService exposeService,
     required LocalAudioService localAudioService,
     required LibraryService libraryService,
+    required InternetConnection internetConnection,
   }) : _countryCode = WidgetsBinding
            .instance
            .platformDispatcher
@@ -34,11 +36,15 @@ class AppModel extends SafeChangeNotifier {
        _packageInfo = packageInfo,
        _exposeService = exposeService,
        _localAudioService = localAudioService,
-       _libraryService = libraryService;
+       _libraryService = libraryService,
+       _internetConnection = internetConnection;
 
   final ExposeService _exposeService;
   final LocalAudioService _localAudioService;
   final LibraryService _libraryService;
+  final InternetConnection _internetConnection;
+  final GitHub _gitHub;
+  final SettingsService _settingsService;
 
   ValueNotifier<bool> get isLastFmAuthorized =>
       _exposeService.isLastFmAuthorized;
@@ -50,8 +56,6 @@ class AppModel extends SafeChangeNotifier {
 
   void initListenBrains() => _exposeService.initListenBrains();
 
-  final GitHub _gitHub;
-  final SettingsService _settingsService;
   final bool _allowManualUpdates;
   bool get allowManualUpdate => _allowManualUpdates;
 
@@ -89,26 +93,20 @@ class AppModel extends SafeChangeNotifier {
   final PackageInfo _packageInfo;
   String get version => _packageInfo.version;
 
-  bool? _updateAvailable;
-  bool? get updateAvailable => _updateAvailable;
   String? _onlineVersion;
   String? get onlineVersion => _onlineVersion;
-  Future<void> checkForUpdate({
-    required bool isOnline,
-    Function(String error)? onError,
-  }) async {
-    _updateAvailable == null;
-    notifyListeners();
 
-    if (!isOnline) {
-      _updateAvailable = false;
-      notifyListeners();
-      return Future.value();
+  late final Command<void, bool> checkForUpdateCommand =
+      Command.createAsyncNoParam(_checkForUpdate, initialValue: false);
+
+  Future<bool> _checkForUpdate() async {
+    var _updateAvailable = false;
+
+    if (await _internetConnection.internetStatus != InternetStatus.connected) {
+      return _updateAvailable;
     }
-    _onlineVersion = await getOnlineVersion().onError((error, stackTrace) {
-      onError?.call(error.toString());
-      return null;
-    });
+
+    _onlineVersion = await getOnlineVersion();
     final onlineVersion = getExtendedVersionNumber(_onlineVersion) ?? 0;
     final currentVersion = getExtendedVersionNumber(version) ?? 0;
     if (onlineVersion > currentVersion) {
@@ -116,18 +114,12 @@ class AppModel extends SafeChangeNotifier {
     } else {
       _updateAvailable = false;
     }
-    notifyListeners();
-    await fetchNumberOfDownloads();
+    return _updateAvailable;
   }
 
-  int? _downloads;
-  int? get downloads => _downloads;
-  void setDownloads(int? value) {
-    _downloads = value;
-    notifyListeners();
-  }
-
-  Future<void> fetchNumberOfDownloads() async {
+  late final Command<void, int> fetchNumberOfDownloadsCommand =
+      Command.createAsyncNoParam(fetchNumberOfDownloads, initialValue: 0);
+  Future<int> fetchNumberOfDownloads() async {
     if (_latestRelease != null) {
       final assets = await _gitHub.repositories
           .listReleaseAssets(
@@ -135,14 +127,15 @@ class AppModel extends SafeChangeNotifier {
             _latestRelease!,
           )
           .toList();
-      setDownloads(
-        assets.fold<int>(
-          0,
-          (previousValue, element) =>
-              previousValue + (element.downloadCount ?? 0),
-        ),
+
+      return assets.fold<int>(
+        0,
+        (previousValue, element) =>
+            previousValue + (element.downloadCount ?? 0),
       );
     }
+
+    return 0;
   }
 
   Future<void> disposePatchNotes() async {

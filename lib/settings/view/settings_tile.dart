@@ -60,37 +60,46 @@ class _UpdateButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
+    callOnceAfterThisBuild(
+      (context) => di<AppModel>().checkForUpdateCommand.run(),
+    );
+
     final useYaruTheme = watchPropertyValue(
       (SettingsModel m) => m.useYaruTheme,
     );
-    final updateAvailable = watchPropertyValue(
-      (AppModel m) => m.updateAvailable,
-    );
-    return switch (updateAvailable) {
-      null => Center(
+
+    return watchValue((AppModel m) => m.checkForUpdateCommand.results).toWidget(
+      whileRunning: (lastResult, param) => Center(
         child: SizedBox.square(
           dimension: useYaruTheme ? kYaruTitleBarItemHeight : 40,
           child: const Progress(padding: EdgeInsets.all(10)),
         ),
       ),
-      false => const SizedBox.shrink(),
-      true => IconButton(
-        tooltip: context.l10n.updateAvailable,
-        onPressed: () => launchUrl(
-          Uri.parse(
-            p.join(
-              AppConfig.repoUrl,
-              'releases',
-              'tag',
-              di<AppModel>().onlineVersion,
+      onError: (error, param, _) => IconButton(
+        tooltip: error.toString(),
+        onPressed: di<AppModel>().checkForUpdateCommand,
+        icon: Icon(Iconz.warning),
+      ),
+      onData: (result, param) => switch (result) {
+        true => IconButton(
+          tooltip: context.l10n.updateAvailable,
+          onPressed: () => launchUrl(
+            Uri.parse(
+              p.join(
+                AppConfig.repoUrl,
+                'releases',
+                'tag',
+                di<AppModel>().onlineVersion,
+              ),
             ),
           ),
+          icon: Icon(
+            Iconz.updateAvailable,
+            color: context.theme.colorScheme.success,
+          ),
         ),
-        icon: Icon(
-          Iconz.updateAvailable,
-          color: context.theme.colorScheme.success,
-        ),
-      ),
-    };
+        false => const SizedBox.shrink(),
+      },
+    );
   }
 }
