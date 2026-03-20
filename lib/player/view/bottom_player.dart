@@ -120,16 +120,19 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
       return player;
     }
 
-    return Stack(
-      children: [
-        if (!isMobile)
-          PlayerColor(
-            position: PlayerPosition.bottom,
-            alpha: 0.2,
-            size: Size(double.infinity, bottomPlayerDefaultHeight),
-          ),
-        player,
-      ],
+    return Material(
+      color: theme.cardColor,
+      child: Stack(
+        children: [
+          if (!isMobile)
+            PlayerColor(
+              position: PlayerPosition.bottom,
+              alpha: 0.2,
+              size: Size(double.infinity, bottomPlayerDefaultHeight),
+            ),
+          player,
+        ],
+      ),
     );
   }
 }

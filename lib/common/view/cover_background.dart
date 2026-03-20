@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 
-import 'theme.dart';
-
 class CoverBackground extends StatelessWidget {
-  const CoverBackground({super.key, this.dimension});
+  const CoverBackground({super.key, required this.dimension});
 
-  final double? dimension;
+  final double dimension;
 
   @override
-  Widget build(BuildContext context) {
-    return Image.asset(
-      'assets/images/media-optical.png',
-      height: dimension ?? audioCardDimension,
-      width: dimension ?? audioCardDimension,
-    );
-  }
+  Widget build(BuildContext context) => Image.asset(
+    'assets/images/media-optical.png',
+    height: dimension,
+    width: dimension,
+    cacheHeight: dimension.toInt(),
+    cacheWidth: dimension.toInt(),
+  );
 }

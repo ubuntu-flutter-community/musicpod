@@ -18,12 +18,10 @@ class AudioCard extends StatefulWidget {
     this.width,
     this.color,
     this.showBorder = true,
-    this.background,
     this.playIcon,
     this.seleted = false,
   });
   final Widget? image;
-  final Widget? background;
   final void Function()? onTap;
   final void Function()? onPlay;
   final Widget? bottom;
@@ -61,7 +59,6 @@ class _AudioCardState extends State<AudioCard> {
             borderRadius: BorderRadius.circular(10),
             child: Stack(
               children: [
-                if (widget.background != null) widget.background!,
                 if (widget.image == null)
                   Shimmer.fromColors(
                     baseColor: theme.cardColor,

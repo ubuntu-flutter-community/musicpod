@@ -138,7 +138,7 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
                   }
                 }
               },
-              icon: Icon(Iconz.showLyrics),
+              icon: Icon(Iconz.showLyrics, color: iconColor),
             ),
           ],
           PlayerPauseTimerButton(iconColor: iconColor),

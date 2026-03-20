@@ -11,19 +11,15 @@ class LocalCover extends StatefulWidget with WatchItStatefulWidgetMixin {
     required this.albumId,
     required this.path,
     required this.fallback,
-    this.dimension,
-    this.height,
-    this.fit,
-    this.width,
+    required this.dimension,
+    this.fit = BoxFit.cover,
   });
 
   final String albumId;
   final String path;
   final Widget fallback;
-  final double? dimension;
-  final double? height;
-  final double? width;
-  final BoxFit? fit;
+  final double dimension;
+  final BoxFit fit;
 
   @override
   State<LocalCover> createState() => _LocalCoverState();
@@ -48,16 +44,16 @@ class _LocalCoverState extends State<LocalCover> {
   Widget build(BuildContext context) {
     watchPropertyValue((LocalCoverModel m) => m.storeLength);
     _cover ??= di<LocalCoverModel>().get(widget.albumId);
-    final fit = widget.fit ?? BoxFit.fitHeight;
+
     const medium = FilterQuality.medium;
 
     final child = _cover != null
         ? Image.memory(
             key: ValueKey(widget.albumId),
             _cover!,
-            fit: fit,
-            height: widget.dimension ?? widget.height,
-            width: widget.dimension ?? widget.width,
+            fit: widget.fit,
+            height: widget.dimension,
+            width: widget.dimension,
             filterQuality: medium,
           )
         : FutureBuilder(
@@ -66,19 +62,17 @@ class _LocalCoverState extends State<LocalCover> {
               if (!snapshot.hasData || snapshot.hasError) {
                 return SizedBox(
                   key: ValueKey('${widget.albumId}1'),
-                  height: widget.dimension ?? widget.height,
-                  width: widget.dimension ?? widget.width,
+                  height: widget.dimension,
+                  width: widget.dimension,
                   child: widget.fallback,
                 );
               } else {
                 return Image.memory(
                   key: ValueKey('${widget.albumId}2'),
                   snapshot.data!,
-                  fit: fit,
-                  height: widget.dimension ?? widget.height,
-                  width: widget.dimension ?? widget.width,
-                  cacheHeight: (widget.dimension ?? widget.height)?.toInt(),
-                  cacheWidth: (widget.dimension ?? widget.width)?.toInt(),
+                  fit: widget.fit,
+                  height: widget.dimension,
+                  width: widget.dimension,
                   filterQuality: medium,
                 );
               }
@@ -86,8 +80,8 @@ class _LocalCoverState extends State<LocalCover> {
           );
 
     return SizedBox(
-      height: widget.dimension ?? widget.height,
-      width: widget.dimension ?? widget.width,
+      height: widget.dimension,
+      width: widget.dimension,
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 200),
         transitionBuilder: (Widget child, Animation<double> animation) =>

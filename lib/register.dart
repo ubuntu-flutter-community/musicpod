@@ -256,6 +256,8 @@ void registerDependencies() {
           settingsService: di<SettingsService>(),
           exposeService: di<ExposeService>(),
           allowManualUpdates: isLinux ? false : true,
+          localAudioService: di<LocalAudioService>(),
+          libraryService: di<LibraryService>(),
         );
         await appModel.checkForUpdate(
           isOnline: di<ConnectivityModel>().isOnline == true,
@@ -267,6 +269,8 @@ void registerDependencies() {
         ExposeService,
         ConnectivityModel,
         PackageInfo,
+        LocalAudioService,
+        LibraryService,
       ],
       dispose: (s) => s.dispose(),
     )

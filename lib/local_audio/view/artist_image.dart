@@ -8,10 +8,10 @@ import '../local_audio_manager.dart';
 import 'local_cover.dart';
 
 class ArtistImage extends StatefulWidget {
-  const ArtistImage({super.key, required this.artist, this.dimension});
+  const ArtistImage({super.key, required this.artist, required this.dimension});
 
   final String artist;
-  final double? dimension;
+  final double dimension;
 
   @override
   State<ArtistImage> createState() => _ArtistImageState();
@@ -58,11 +58,11 @@ class _ArtistImage extends StatelessWidget {
   const _ArtistImage({
     required this.artist,
     required this.artistAudios,
-    this.dimension,
+    required this.dimension,
   });
   final String artist;
   final List<Audio> artistAudios;
-  final double? dimension;
+  final double dimension;
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +80,7 @@ class _ArtistImage extends StatelessWidget {
                     albumId: e.albumId!,
                     path: e.path!,
                     fallback: ColoredBox(color: theme.cardColor),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                     dimension: dimension,
                   ),
                 )

@@ -47,8 +47,10 @@ class MasterDetailPage extends StatelessWidget {
       drawer: isMacOS ? null : drawer,
       body: Row(
         children: [
-          if (context.showMasterPanel) const MasterPanel(),
-          if (context.showMasterPanel) const VerticalDivider(),
+          if (context.showMasterPanel) ...[
+            const MasterPanel(),
+            const VerticalDivider(),
+          ],
           Expanded(
             child: Navigator(
               initialRoute: routingManager.selectedPageId ?? PageIDs.searchPage,

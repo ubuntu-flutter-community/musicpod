@@ -5,7 +5,6 @@ class AppConfig {
   static const appTitle = 'MusicPod';
   static const appId = 'org.feichtmeier.Musicpod';
   static const androidAppId = 'org.feichtmeier.apps.musicpod';
-  static const discordApplicationId = '1235321910221602837';
   static const linuxDBusName = 'org.mpris.MediaPlayer2.musicpod';
   static const androidChannelId = 'org.feichtmeier.apps.musicpod.channel.audio';
   static const repoUrl = 'http://github.com/ubuntu-flutter-community/musicpod';

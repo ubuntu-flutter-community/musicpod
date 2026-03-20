@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/app_model.dart';
-import '../../extensions/build_context_x.dart';
 import 'bottom_player.dart';
 import 'full_height_player.dart';
 
@@ -45,21 +44,11 @@ class _PlayerViewState extends State<PlayerView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final theme = context.theme;
-
-    Widget player;
-    if (widget._position != PlayerPosition.bottom) {
-      player = FullHeightPlayer(playerPosition: widget._position);
-    } else {
-      player = const BottomPlayer();
-    }
-
-    // VERY important to reduce CPU usage
-    return RepaintBoundary(
-      child: Material(color: theme.cardColor, child: player),
-    );
-  }
+  Widget build(BuildContext context) => RepaintBoundary(
+    child: widget._position != PlayerPosition.bottom
+        ? FullHeightPlayer(playerPosition: widget._position)
+        : const BottomPlayer(),
+  );
 }
 
 enum PlayerPosition {
