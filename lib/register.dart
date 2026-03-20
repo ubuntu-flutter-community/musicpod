@@ -77,19 +77,8 @@ void registerDependencies() {
       () => OnlineArtService(dio: di<Dio>()),
       dispose: (s) => s.dispose(),
     )
-    ..registerSingletonAsync<SettingsService>(
-      () async {
-        final downloadsDefaultDir = await PlatformX.downloadsDefaultDir;
-        const forcedUpdateThreshold = String.fromEnvironment(
-          'FORCED_UPDATE_THRESHOLD',
-          defaultValue: '2.11.0',
-        );
-        return SettingsService(
-          forcedUpdateThreshold: forcedUpdateThreshold,
-          sharedPreferences: di<SharedPreferences>(),
-          downloadsDefaultDir: downloadsDefaultDir,
-        );
-      },
+    ..registerSingletonWithDependencies<SettingsService>(
+      () => SettingsService(sharedPreferences: di<SharedPreferences>()),
       dependsOn: [SharedPreferences],
       dispose: (s) async => s.dispose(),
     );
@@ -224,11 +213,7 @@ void registerDependencies() {
       return connectivityModel;
     }, dependsOn: [PlayerService])
     ..registerSingletonWithDependencies<SettingsModel>(
-      () => SettingsModel(
-        service: di<SettingsService>(),
-        externalPathService: di<ExternalPathService>(),
-        gitHub: di<GitHub>(),
-      ),
+      () => SettingsModel(service: di<SettingsService>()),
       dependsOn: [SettingsService],
       dispose: (s) => s.dispose(),
     )
@@ -298,6 +283,7 @@ void registerDependencies() {
         settingsService: di<SettingsService>(),
         libraryService: di<LibraryService>(),
         dio: di<Dio>(),
+        externalPathService: di<ExternalPathService>(),
       ),
       dependsOn: [SettingsService, LibraryService],
       dispose: (s) => s.dispose(),

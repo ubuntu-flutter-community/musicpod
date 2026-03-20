@@ -1,28 +1,18 @@
 import 'dart:async';
-import 'dart:io';
 
-import 'package:github/github.dart';
-import 'package:path/path.dart' as p;
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-import '../../external_path/external_path_service.dart';
-import 'shared_preferences_keys.dart';
 import 'settings_service.dart';
+import 'shared_preferences_keys.dart';
 
 class SettingsModel extends SafeChangeNotifier {
-  SettingsModel({
-    required SettingsService service,
-    required ExternalPathService externalPathService,
-    required GitHub gitHub,
-  }) : _service = service,
-       _externalPathService = externalPathService {
+  SettingsModel({required SettingsService service}) : _service = service {
     _propertiesChangedSub ??= _service.propertiesChanged.listen(
       (_) => notifyListeners(),
     );
   }
 
   final SettingsService _service;
-  final ExternalPathService _externalPathService;
 
   int _scrollIndex = 0;
   int get scrollIndex => _scrollIndex;
@@ -36,37 +26,6 @@ class SettingsModel extends SafeChangeNotifier {
   String? get directory => _service.getString(SPKeys.directory);
   Future<void> setDirectory(String value) async =>
       _service.setValue(SPKeys.directory, value);
-
-  String? get downloadsDir => _service.getString(SPKeys.downloads);
-  Future<void> setDownloadsCustomDir({
-    required Function() onSuccess,
-    required Function(String e) onFail,
-  }) async {
-    String? dirError;
-    String? directoryPath;
-
-    try {
-      directoryPath = await _externalPathService.getPathOfDirectory();
-      if (directoryPath == null) return;
-      final maybeDir = Directory(directoryPath);
-      if (!maybeDir.existsSync()) return;
-      maybeDir.statSync();
-      File(p.join(directoryPath, 'test'))
-        ..createSync()
-        ..deleteSync();
-    } catch (e) {
-      dirError = e.toString();
-    }
-
-    if (dirError != null) {
-      onFail(dirError);
-    } else {
-      if (directoryPath != null) {
-        await _service.setValue(SPKeys.downloads, directoryPath);
-        onSuccess();
-      }
-    }
-  }
 
   int get localAudioindex => _service.getInt(SPKeys.localAudioIndex) ?? 0;
   Future<void> setLocalAudioindex(int value) async =>

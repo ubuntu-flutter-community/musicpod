@@ -5,17 +5,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/file_names.dart';
 import '../common/logging.dart';
-import 'shared_preferences_keys.dart';
 import '../persistence_utils.dart';
 
 class SettingsService {
-  SettingsService({
-    required SharedPreferences sharedPreferences,
-    required String forcedUpdateThreshold,
-    required String? downloadsDefaultDir,
-  }) : _sharedPreferences = sharedPreferences,
-       _forcedUpdateThreshold = forcedUpdateThreshold,
-       _downloadsDefaultDir = downloadsDefaultDir;
+  SettingsService({required SharedPreferences sharedPreferences})
+    : _sharedPreferences = sharedPreferences;
 
   final SharedPreferences _sharedPreferences;
   final _propertiesChangedController = StreamController<bool>.broadcast();
@@ -24,12 +18,6 @@ class SettingsService {
     if (saved) _propertiesChangedController.add(true);
     return saved;
   }
-
-  final String _forcedUpdateThreshold;
-  String get forcedUpdateThreshold => _forcedUpdateThreshold;
-  final String? _downloadsDefaultDir;
-  String? get downloadsDir =>
-      _downloadsDefaultDir ?? getString(SPKeys.downloads);
 
   String? getString(String key) {
     try {
