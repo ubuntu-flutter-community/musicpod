@@ -248,22 +248,17 @@ void registerDependencies() {
       () => OnlineArtModel(onlineArtService: di<OnlineArtService>()),
       dispose: (s) => s.dispose(),
     )
-    ..registerSingletonAsync<AppModel>(
-      () async {
-        final appModel = AppModel(
-          packageInfo: di<PackageInfo>(),
-          gitHub: di<GitHub>(),
-          settingsService: di<SettingsService>(),
-          exposeService: di<ExposeService>(),
-          allowManualUpdates: isLinux ? false : true,
-          localAudioService: di<LocalAudioService>(),
-          libraryService: di<LibraryService>(),
-        );
-        await appModel.checkForUpdate(
-          isOnline: di<ConnectivityModel>().isOnline == true,
-        );
-        return appModel;
-      },
+    ..registerSingletonWithDependencies<AppModel>(
+      () => AppModel(
+        packageInfo: di<PackageInfo>(),
+        gitHub: di<GitHub>(),
+        settingsService: di<SettingsService>(),
+        exposeService: di<ExposeService>(),
+        allowManualUpdates: isLinux ? false : true,
+        localAudioService: di<LocalAudioService>(),
+        libraryService: di<LibraryService>(),
+        internetConnection: di<InternetConnection>(),
+      ),
       dependsOn: [
         SettingsService,
         ExposeService,
