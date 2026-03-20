@@ -63,7 +63,9 @@ class SearchPage extends StatelessWidget with WatchItMixin {
             _ => const SearchTypeFilterBar(),
           },
           contentBuilder: (context, constraints) => switch (audioType) {
-            AudioType.radio => const SliverRadioSearchResults(),
+            AudioType.radio => SliverRadioSearchResults(
+              width: constraints.maxWidth,
+            ),
             AudioType.podcast => const SliverPodcastSearchResults(),
             AudioType.local => SliverLocalSearchResult(
               constraints: constraints,

@@ -103,12 +103,12 @@ void registerDependencies() {
       () => ListenBrainzService(settingsService: di<SettingsService>()),
       dependsOn: [SettingsService],
     )
-    ..registerSingletonAsync<ExposeService>(
-      () async => ExposeService(
+    ..registerSingletonWithDependencies<ExposeService>(
+      () => ExposeService(
         lastFmService: di<LastfmService>(),
         listenBrainzService: di<ListenBrainzService>(),
       ),
-      dependsOn: [LastfmService],
+      dependsOn: [LastfmService, ListenBrainzService],
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton(LocalCoverService.new, dispose: (s) => s.dispose())
@@ -183,7 +183,7 @@ void registerDependencies() {
       );
 
       return localAudioService;
-    }, dependsOn: [SettingsService, LibraryService])
+    }, dependsOn: [SettingsService])
     ..registerSingletonAsync<LocalNotifier>(() async {
       await localNotifier.setup(
         appName: AppConfig.appId,
@@ -262,7 +262,6 @@ void registerDependencies() {
       dependsOn: [
         SettingsService,
         ExposeService,
-        ConnectivityModel,
         PackageInfo,
         LocalAudioService,
         LibraryService,
@@ -324,12 +323,7 @@ void registerDependencies() {
         podcastService: di<PodcastService>(),
         localAudioService: di<LocalAudioService>(),
       ),
-      dependsOn: [
-        LibraryService,
-        PodcastService,
-        RadioService,
-        LocalAudioService,
-      ],
+      dependsOn: [LibraryService, PodcastService, LocalAudioService],
       dispose: (s) => s.dispose(),
     )
     ..registerLazySingleton(() => LicenseStore())
