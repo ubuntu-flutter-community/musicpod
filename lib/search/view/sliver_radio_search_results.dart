@@ -127,7 +127,7 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
                 if (width > 800)
                   Expanded(
                     child: Text(
-                      '${station.albumArtist?.isNotEmpty == true ? '${station.albumArtist}' : ''}',
+                      '${station.albumArtist?.isNotEmpty == true ? '${station.albumArtist}' : context.l10n.unknown}',
                       maxLines: maxLines,
                     ),
                   ),
@@ -135,14 +135,14 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
                 if (width > 1100)
                   Expanded(
                     child: Text(
-                      '${station.clicks > 0 ? '${station.clicks} ${context.l10n.clicks}' : ''}',
+                      '${station.clicks > 0 ? '${station.clicks} ${context.l10n.clicks}' : context.l10n.unknown}',
                       maxLines: maxLines,
                     ),
                   ),
                 if (width > 1200)
                   Expanded(
                     child: Text(
-                      '${station.language.trim().isNotEmpty ? '${station.language.split(',').join(', ')}' : ''}',
+                      '${station.language.trim().isNotEmpty ? '${station.language.split(',').join(', ')}' : context.l10n.unknown}',
                       maxLines: maxLines,
                     ),
                   ),
