@@ -295,13 +295,11 @@ class LibraryService {
     required int newIndex,
     required String id,
   }) {
-    final audios = id == PageIDs.likedAudios
+    final list = id == PageIDs.likedAudios
         ? _likedAudios.toList()
         : playlists[id]?.toList();
 
-    if (audios == null ||
-        audios.isEmpty == true ||
-        !(newIndex < audios.length)) {
+    if (list == null || list.isEmpty == true || !(newIndex <= list.length)) {
       return;
     }
 
@@ -309,21 +307,21 @@ class LibraryService {
       newIndex -= 1;
     }
 
-    final audio = audios.removeAt(oldIndex);
-    audios.insert(newIndex, audio);
+    final audio = list.removeAt(oldIndex);
+    list.insert(newIndex, audio);
 
     if (id == PageIDs.likedAudios) {
+      _likedAudios.clear();
+      _likedAudios.addAll(list);
       writeAudioMap(
         map: {PageIDs.likedAudios: _likedAudios},
         fileName: FileNames.likedAudios,
       ).then((value) {
-        _likedAudios.clear();
-        _likedAudios.addAll(audios);
         _propertiesChangedController.add(true);
       });
     } else {
-      writeAudioMap(map: _playlists, fileName: FileNames.likedAudios).then((_) {
-        _playlists.update(id, (value) => audios);
+      _playlists.update(id, (value) => list);
+      writeAudioMap(map: _playlists, fileName: FileNames.playlists).then((_) {
         _propertiesChangedController.add(true);
       });
     }

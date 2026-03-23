@@ -16,6 +16,7 @@ import '../common/logging.dart';
 import '../expose/expose_service.dart';
 import '../extensions/media_file_x.dart';
 import '../extensions/string_x.dart';
+import '../extensions/taget_platform_x.dart';
 import '../local_audio/local_cover_service.dart';
 import '../persistence_utils.dart';
 
@@ -198,6 +199,10 @@ class PlayerService {
     _position = value;
     _propertiesChangedController.add(true);
     _setMediaControlPosition(value);
+
+    if (isWindows && value != null && value.inSeconds % 5 == 0) {
+      persistPlayerState();
+    }
   }
 
   Duration? _buffer = Duration.zero;

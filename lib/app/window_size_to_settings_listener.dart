@@ -81,13 +81,13 @@ class WindowSizeToSettingsListener implements WindowListener {
   @override
   void onWindowMoved() {}
 
-  // Note: linux does not have window resized, so we need to use window resize
+  // Note: linux and windows do not have window resized, so we need to use window resize
   // and debounce it
   Timer? _debounce;
   void dispose() => _debounce?.cancel();
   @override
   void onWindowResize() {
-    if (isLinux) {
+    if (isLinux || isWindows) {
       if (_debounce?.isActive ?? false) _debounce?.cancel();
       _debounce = Timer(const Duration(seconds: 5), () {
         WindowManager.instance.getSize().then((v) async {
@@ -103,7 +103,7 @@ class WindowSizeToSettingsListener implements WindowListener {
 
   @override
   void onWindowResized() {
-    if (isMacOS || isWindows) {
+    if (isMacOS) {
       WindowManager.instance.getSize().then((v) async {
         if (_sp.getBool(SPKeys.saveWindowSize) ?? false) {
           _sp
