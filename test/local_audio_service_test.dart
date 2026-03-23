@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:musicpod/common/data/audio.dart';
 import 'package:musicpod/local_audio/local_cover_service.dart';
 import 'package:musicpod/local_audio/local_audio_service.dart';
@@ -31,6 +32,10 @@ Future<void> main() async {
   final mockSettingsService = MockSettingsService();
 
   setUpAll(() async {
+    when(mockSettingsService.getString(any)).thenReturn(null);
+    when(mockSettingsService.getBool(any)).thenReturn(null);
+    when(mockSettingsService.setValue(any, any)).thenAnswer((_) async => true);
+
     service = LocalAudioService(
       localCoverService: localCoverService,
       settingsService: mockSettingsService,
