@@ -1,13 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
+import 'package:injectable/injectable.dart';
 import 'package:lastfm/lastfm.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../common/logging.dart';
-import '../settings/shared_preferences_keys.dart';
 import '../settings/settings_service.dart';
+import '../settings/shared_preferences_keys.dart';
 
+@lazySingleton
 class LastfmService {
   LastfmService({required SettingsService settingsService})
     : _settingsService = settingsService {

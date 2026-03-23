@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import 'settings_service.dart';
 import 'shared_preferences_keys.dart';
 
+@lazySingleton
 class SettingsModel extends SafeChangeNotifier {
   SettingsModel({required SettingsService service}) : _service = service {
     _propertiesChangedSub ??= _service.propertiesChanged.listen(

@@ -4,7 +4,6 @@ import 'package:yaru/yaru.dart' show YaruWindowTitleBar;
 
 import 'app/view/musicpod.dart';
 import 'extensions/taget_platform_x.dart';
-import 'register.dart';
 
 Future<void> main(List<String> args) async {
   if (isMobile) {
@@ -16,8 +15,6 @@ Future<void> main(List<String> args) async {
   if (isWindows) {
     await SystemTheme.accentColor.load();
   }
-
-  registerDependencies();
 
   runApp(const MusicPod());
 }

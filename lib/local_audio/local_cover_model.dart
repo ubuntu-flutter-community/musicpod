@@ -1,8 +1,11 @@
+import 'package:injectable/injectable.dart';
+
 import 'local_cover_service.dart';
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
+@lazySingleton
 class LocalCoverModel extends SafeChangeNotifier {
   LocalCoverModel({required LocalCoverService localCoverService})
     : _localCoverService = localCoverService {

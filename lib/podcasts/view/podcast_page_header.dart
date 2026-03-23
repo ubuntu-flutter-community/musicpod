@@ -12,7 +12,6 @@ import '../../extensions/string_x.dart';
 import '../../l10n/app_localizations.dart';
 import '../../l10n/l10n.dart';
 import '../../search/search_model.dart';
-import '../podcast_model.dart';
 import 'podcast_page_image.dart';
 
 class PodcastPageHeader extends StatelessWidget {
@@ -53,11 +52,7 @@ class PodcastPageHeader extends StatelessWidget {
     );
   }
 
-  Future<void> _onArtistTap({
-    required AppLocalizations l10n,
-    required String text,
-  }) async {
-    await di<PodcastModel>().init(updateMessage: l10n.updateAvailable);
+  void _onArtistTap({required AppLocalizations l10n, required String text}) {
     di<RoutingManager>().push(pageId: PageIDs.searchPage);
     di<SearchModel>()
       ..setAudioType(AudioType.podcast)
@@ -69,7 +64,6 @@ class PodcastPageHeader extends StatelessWidget {
     required AppLocalizations l10n,
     required String text,
   }) async {
-    await di<PodcastModel>().init(updateMessage: l10n.updateAvailable);
     final genres = await di<SearchModel>().loadPodcastGenresCommand.runAsync();
 
     final genreOrNull = genres.firstWhereOrNull(

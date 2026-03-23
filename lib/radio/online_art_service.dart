@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:injectable/injectable.dart';
 
 import '../app_config.dart';
 import '../common/logging.dart';
@@ -19,6 +20,7 @@ const _kInternetArchiveHeaders = {
   'User-Agent': '${AppConfig.appTitle} (${AppConfig.repoUrl})',
 };
 
+@lazySingleton
 class OnlineArtService {
   OnlineArtService({required Dio dio}) : _dio = dio;
   final Dio _dio;

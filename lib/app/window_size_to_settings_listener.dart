@@ -1,51 +1,49 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 
+import '../app_config.dart';
 import '../player/player_service.dart';
 import '../settings/shared_preferences_keys.dart';
 import '../extensions/taget_platform_x.dart';
 
+@singleton
 class WindowSizeToSettingsListener implements WindowListener {
   WindowSizeToSettingsListener({
     required SharedPreferences sharedPreferences,
     required PlayerService playerService,
+    required WindowManager windowManager,
   }) : _sp = sharedPreferences,
-       _playerService = playerService;
+       _playerService = playerService,
+       _windowManager = windowManager {
+    windowManager.addListener(this);
+  }
+
+  final WindowManager _windowManager;
 
   final SharedPreferences _sp;
   final PlayerService _playerService;
 
-  static Future<WindowSizeToSettingsListener> register({
-    required SharedPreferences sharedPreferences,
-    required WindowManager windowManager,
-    required PlayerService playerService,
-  }) async {
-    final wm = windowManager;
-    final sp = sharedPreferences;
-    if (sp.getBool(SPKeys.saveWindowSize) == null) {
-      await sp.setBool(SPKeys.saveWindowSize, true);
+  @PostConstruct(preResolve: true)
+  Future<void> init() async {
+    if (!AppConfig.windowManagerImplemented) return;
+
+    if (_sp.getBool(SPKeys.saveWindowSize) == null) {
+      await _sp.setBool(SPKeys.saveWindowSize, true);
     }
 
-    if (sp.getBool(SPKeys.windowFullscreen) ?? false) {
-      await wm.setFullScreen(true);
-    } else if (sp.getBool(SPKeys.windowMaximized) ?? false) {
-      await wm.maximize();
+    if (_sp.getBool(SPKeys.windowFullscreen) ?? false) {
+      await _windowManager.setFullScreen(true);
+    } else if (_sp.getBool(SPKeys.windowMaximized) ?? false) {
+      await _windowManager.maximize();
     } else {
-      final height = sp.getInt(SPKeys.windowHeight) ?? 820;
-      final width = sp.getInt(SPKeys.windowWidth) ?? 950;
-      await wm.setSize(Size(width.toDouble(), height.toDouble()));
+      final height = _sp.getInt(SPKeys.windowHeight) ?? 820;
+      final width = _sp.getInt(SPKeys.windowWidth) ?? 950;
+      await _windowManager.setSize(Size(width.toDouble(), height.toDouble()));
     }
-
-    final windowSizeToSettingsListener = WindowSizeToSettingsListener(
-      sharedPreferences: sp,
-      playerService: playerService,
-    );
-    wm.addListener(windowSizeToSettingsListener);
-
-    return windowSizeToSettingsListener;
   }
 
   @override
@@ -83,13 +81,13 @@ class WindowSizeToSettingsListener implements WindowListener {
   @override
   void onWindowMoved() {}
 
-  // Note: linux does not have window resized, so we need to use window resize
+  // Note: linux and windows do not have window resized, so we need to use window resize
   // and debounce it
   Timer? _debounce;
   void dispose() => _debounce?.cancel();
   @override
   void onWindowResize() {
-    if (isLinux) {
+    if (isLinux || isWindows) {
       if (_debounce?.isActive ?? false) _debounce?.cancel();
       _debounce = Timer(const Duration(seconds: 5), () {
         WindowManager.instance.getSize().then((v) async {
@@ -105,7 +103,7 @@ class WindowSizeToSettingsListener implements WindowListener {
 
   @override
   void onWindowResized() {
-    if (isMacOS || isWindows) {
+    if (isMacOS) {
       WindowManager.instance.getSize().then((v) async {
         if (_sp.getBool(SPKeys.saveWindowSize) ?? false) {
           _sp

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../common/logging.dart';
@@ -9,6 +10,7 @@ import '../../extensions/taget_platform_x.dart';
 import '../../library/library_service.dart';
 import 'mobile_page.dart';
 
+@lazySingleton
 class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
   RoutingManager({required LibraryService libraryService})
     : _libraryService = libraryService {
@@ -20,6 +22,7 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
   final LibraryService _libraryService;
   StreamSubscription<bool>? _propertiesChangedSub;
 
+  @disposeMethod
   @override
   Future<void> dispose() async {
     await _propertiesChangedSub?.cancel();

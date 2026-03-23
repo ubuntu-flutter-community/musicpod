@@ -8,7 +8,6 @@ import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
-import '../../podcasts/podcast_model.dart';
 import '../search_model.dart';
 import 'podcast_card.dart';
 
@@ -28,9 +27,9 @@ class _SliverPodcastSearchResultsState
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    di<PodcastModel>()
-        .init(updateMessage: context.l10n.newEpisodeAvailable)
-        .then((_) => di<SearchModel>().search());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      di<SearchModel>().search();
+    });
   }
 
   @override
@@ -90,9 +89,9 @@ class _SliverPodcastSearchCountryChartsResultsState
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    di<PodcastModel>()
-        .init(updateMessage: context.l10n.newEpisodeAvailable)
-        .then((_) => di<SearchModel>().fetchPodcastChartsPeak());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      di<SearchModel>().fetchPodcastChartsPeak();
+    });
   }
 
   @override

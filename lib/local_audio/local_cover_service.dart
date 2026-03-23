@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:path/path.dart' as p;
 
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:collection/collection.dart';
+import 'package:injectable/injectable.dart';
+import 'package:path/path.dart' as p;
 
 import '../common/data/audio.dart';
 import '../common/logging.dart';
@@ -13,6 +14,7 @@ import '../extensions/string_x.dart';
 import '../extensions/taget_platform_x.dart';
 import '../persistence_utils.dart';
 
+@lazySingleton
 class LocalCoverService {
   final _propertiesChangedController = StreamController<bool>.broadcast();
   Stream<bool> get propertiesChanged => _propertiesChangedController.stream;

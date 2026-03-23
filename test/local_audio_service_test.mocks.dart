@@ -9,6 +9,7 @@ import 'dart:typed_data' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:musicpod/common/data/audio.dart' as _i5;
 import 'package:musicpod/local_audio/local_cover_service.dart' as _i2;
+import 'package:musicpod/settings/settings_service.dart' as _i6;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -73,4 +74,76 @@ class MockLocalCoverService extends _i1.Mock implements _i2.LocalCoverService {
             returnValue: _i3.Future<Uri?>.value(),
           )
           as _i3.Future<Uri?>);
+}
+
+/// A class which mocks [SettingsService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSettingsService extends _i1.Mock implements _i6.SettingsService {
+  MockSettingsService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i3.Stream<bool> get propertiesChanged =>
+      (super.noSuchMethod(
+            Invocation.getter(#propertiesChanged),
+            returnValue: _i3.Stream<bool>.empty(),
+          )
+          as _i3.Stream<bool>);
+
+  @override
+  bool notify(bool? saved) =>
+      (super.noSuchMethod(
+            Invocation.method(#notify, [saved]),
+            returnValue: false,
+          )
+          as bool);
+
+  @override
+  String? getString(String? key) =>
+      (super.noSuchMethod(Invocation.method(#getString, [key])) as String?);
+
+  @override
+  bool? getBool(String? key) =>
+      (super.noSuchMethod(Invocation.method(#getBool, [key])) as bool?);
+
+  @override
+  double? getDouble(String? key) =>
+      (super.noSuchMethod(Invocation.method(#getDouble, [key])) as double?);
+
+  @override
+  int? getInt(String? key) =>
+      (super.noSuchMethod(Invocation.method(#getInt, [key])) as int?);
+
+  @override
+  List<String>? getStringList(String? key) =>
+      (super.noSuchMethod(Invocation.method(#getStringList, [key]))
+          as List<String>?);
+
+  @override
+  _i3.Future<bool> setValue(String? key, dynamic value) =>
+      (super.noSuchMethod(
+            Invocation.method(#setValue, [key, value]),
+            returnValue: _i3.Future<bool>.value(false),
+          )
+          as _i3.Future<bool>);
+
+  @override
+  _i3.Future<void> wipeAllSettings() =>
+      (super.noSuchMethod(
+            Invocation.method(#wipeAllSettings, []),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
+
+  @override
+  _i3.Future<void> dispose() =>
+      (super.noSuchMethod(
+            Invocation.method(#dispose, []),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 }

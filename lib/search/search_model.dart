@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:injectable/injectable.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:radio_browser_api/radio_browser_api.dart' hide Country;
 import 'package:safe_change_notifier/safe_change_notifier.dart';
@@ -19,6 +20,7 @@ import 'search_type.dart';
 
 const _initialAudioType = AudioType.podcast;
 
+@lazySingleton
 class SearchModel extends SafeChangeNotifier {
   SearchModel({
     required RadioService radioService,
@@ -29,27 +31,23 @@ class SearchModel extends SafeChangeNotifier {
        _podcastService = podcastService,
        _libraryService = libraryService,
        _localAudioService = localAudioService {
-    init();
+    _country ??= Country.values.firstWhereOrNull(
+      (c) =>
+          c.code ==
+          (libraryService.lastCountryCode ??
+              WidgetsBinding.instance.platformDispatcher.locale.countryCode
+                  ?.toLowerCase()),
+    );
+
+    _language ??= Languages.defaultLanguages.firstWhereOrNull(
+      (c) => c.isoCode == libraryService.lastLanguageCode,
+    );
   }
 
   final RadioService _radioService;
   final PodcastService _podcastService;
   final LibraryService _libraryService;
   final LocalAudioService _localAudioService;
-
-  void init() {
-    _country ??= Country.values.firstWhereOrNull(
-      (c) =>
-          c.code ==
-          (_libraryService.lastCountryCode ??
-              WidgetsBinding.instance.platformDispatcher.locale.countryCode
-                  ?.toLowerCase()),
-    );
-
-    _language ??= Languages.defaultLanguages.firstWhereOrNull(
-      (c) => c.isoCode == _libraryService.lastLanguageCode,
-    );
-  }
 
   Set<SearchType> _searchTypes = searchTypesFromAudioType(_initialAudioType);
   Set<SearchType> get searchTypes => _searchTypes;

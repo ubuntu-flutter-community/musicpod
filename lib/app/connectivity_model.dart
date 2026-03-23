@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:injectable/injectable.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../player/player_service.dart';
 
+@singleton
 class ConnectivityModel extends SafeChangeNotifier {
   ConnectivityModel({
     required PlayerService playerService,
@@ -19,6 +21,7 @@ class ConnectivityModel extends SafeChangeNotifier {
   InternetStatus? _internetStatus;
   bool get isOnline => _internetStatus == InternetStatus.connected;
 
+  @PostConstruct(preResolve: true)
   Future<void> init() async {
     _internetConnectionSubscription ??= _internetConnection.onStatusChange
         .listen((status) {
@@ -36,6 +39,7 @@ class ConnectivityModel extends SafeChangeNotifier {
     });
   }
 
+  @disposeMethod
   @override
   Future<void> dispose() async {
     await _internetConnectionSubscription?.cancel();

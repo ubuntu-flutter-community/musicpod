@@ -78,10 +78,7 @@ class _PodcastSectionState extends State<PodcastSection> {
               onChanged: (v) async {
                 await model.setUsePodcastIndex(v);
                 if (context.mounted) {
-                  di<PodcastModel>().init(
-                    forceInit: true,
-                    updateMessage: l10n.newEpisodeAvailable,
-                  );
+                  di<PodcastModel>().initSearchCommand.run((forceInit: true));
                 }
               },
             ),

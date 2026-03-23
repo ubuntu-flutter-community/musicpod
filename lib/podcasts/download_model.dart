@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:injectable/injectable.dart';
 import 'package:path/path.dart' as p;
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
@@ -15,6 +16,7 @@ import '../library/library_service.dart';
 import '../settings/settings_service.dart';
 import '../settings/shared_preferences_keys.dart';
 
+@lazySingleton
 class DownloadModel extends SafeChangeNotifier {
   DownloadModel({
     required LibraryService libraryService,
@@ -214,6 +216,7 @@ class DownloadModel extends SafeChangeNotifier {
     }
   }
 
+  @disposeMethod
   @override
   Future<void> dispose() async {
     await _messageStreamController.close();

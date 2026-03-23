@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:injectable/injectable.dart';
 import 'package:m3u_parser_nullsafe/m3u_parser_nullsafe.dart';
 import 'package:opml/opml.dart';
 import 'package:path/path.dart';
@@ -16,6 +17,7 @@ import '../library/library_service.dart';
 import '../local_audio/local_audio_service.dart';
 import '../podcasts/podcast_service.dart';
 
+@lazySingleton
 class CustomContentModel extends SafeChangeNotifier {
   CustomContentModel({
     required ExternalPathService externalPathService,

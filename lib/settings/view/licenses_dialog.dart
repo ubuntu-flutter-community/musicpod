@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'package:yaru/yaru.dart';
 
@@ -57,6 +58,7 @@ class _LicensesDialogState extends State<LicensesDialog> {
   }
 }
 
+@lazySingleton
 class LicenseStore extends SafeChangeNotifier {
   final _licenses = <String, List<LicenseEntry>>{};
 

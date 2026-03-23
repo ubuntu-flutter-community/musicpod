@@ -1,16 +1,20 @@
+// ignore_for_file: unused_field
+
+import 'package:injectable/injectable.dart';
 import 'package:local_notifier/local_notifier.dart';
 
-class NotificationsService {
-  NotificationsService([this._notificationsClient]);
+import '../extensions/taget_platform_x.dart';
 
-  final LocalNotifier? _notificationsClient;
+@lazySingleton
+class NotificationsService {
+  NotificationsService({required LocalNotifier localNotifier})
+    : _localNotifier = localNotifier;
+
+  final LocalNotifier _localNotifier;
 
   Future<void> notify({required String message}) async {
-    if (_notificationsClient != null) {
-      final notification = LocalNotification(title: message);
-      notification.show();
-    }
+    if (!isDesktop) return;
+    final notification = LocalNotification(title: message);
+    notification.show();
   }
-
-  Future<void> dispose() async {}
 }

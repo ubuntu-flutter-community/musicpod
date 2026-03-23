@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_it/flutter_it.dart';
+import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
@@ -9,6 +10,7 @@ import '../l10n/app_localizations.dart';
 import '../player/player_service.dart';
 import 'radio_service.dart';
 
+@lazySingleton
 class RadioModel extends SafeChangeNotifier {
   final RadioService _radioService;
   final PlayerService _playerService;
@@ -65,6 +67,7 @@ class RadioModel extends SafeChangeNotifier {
 
   void setTimer(Duration duration) => _playerService.setPauseTimer(duration);
 
+  @disposeMethod
   @override
   Future<void> dispose() async {
     await _propertiesChangedSub?.cancel();
@@ -85,6 +88,10 @@ class RadioModel extends SafeChangeNotifier {
       getStationByUUIDCommand(uuid).results.value.data;
 
   Future<Audio?> _getStationByUUID(String pageId) async {
+    if (_radioService.connectedHost == null) {
+      await connectCommand.runAsync();
+    }
+
     final stationByUUID = await _radioService.getStationByUUID(pageId);
 
     if (stationByUUID == null) {

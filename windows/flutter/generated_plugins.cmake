@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  audio_service_win
   connectivity_plus
   file_selector_windows
   irondash_engine_context
@@ -18,7 +19,6 @@ list(APPEND FLUTTER_PLUGIN_LIST
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
-  smtc_windows
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)
