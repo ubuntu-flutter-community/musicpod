@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gtk/gtk.dart';
 import 'package:flutter_it/flutter_it.dart';
 
+import '../../dependencies.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../player/player_service.dart';
 import 'app.dart';
@@ -22,11 +23,7 @@ class _MusicPodState extends State<MusicPod> {
   @override
   void initState() {
     super.initState();
-    // Note: if this hangs, try
-    // timeout: const Duration(seconds: 5),
-    // ignorePendingAsyncCreation: true
-    // to debug
-    _allReady = di.allReady();
+    _allReady = configureDependencies();
   }
 
   @override

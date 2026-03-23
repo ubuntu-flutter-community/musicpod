@@ -1,16 +1,17 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:genius_lyrics/genius_lyrics.dart';
+import 'package:injectable/injectable.dart';
 import 'package:lrc/lrc.dart';
 import 'package:path/path.dart' as p;
 
 import '../common/logging.dart';
-import '../settings/shared_preferences_keys.dart';
 import '../settings/settings_service.dart';
+import '../settings/shared_preferences_keys.dart';
 
+@lazySingleton
 class LocalLyricsService {
   ({String? outputString, List<LrcLine>? outputLrcLines})? parseLocalLyrics({
     String? filePath,
@@ -46,9 +47,10 @@ class LocalLyricsService {
   }
 }
 
+@lazySingleton
 class OnlineLyricsService {
   OnlineLyricsService({
-    Genius? genius,
+    @ignoreParam Genius? genius,
     required LocalLyricsService localLyricsService,
     required SettingsService settingsService,
   }) : _genius = genius,
@@ -88,10 +90,6 @@ class OnlineLyricsService {
   }
 
   static Future<void> refreshRegistration(String token) async {
-    if (kDebugMode) {
-      await Future.delayed(const Duration(seconds: 1));
-    }
-
     if (di.isRegistered<OnlineLyricsService>()) {
       di.unregister<OnlineLyricsService>();
     }

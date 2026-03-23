@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
+import 'package:injectable/injectable.dart';
 
 import 'lastfm_service.dart';
 import 'listenbrainz_service.dart';
 
+@lazySingleton
 class ExposeService {
   ExposeService({
     required LastfmService lastFmService,

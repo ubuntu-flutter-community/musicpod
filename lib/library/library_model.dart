@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
 import 'library_service.dart';
 
+@lazySingleton
 class LibraryModel extends SafeChangeNotifier {
   LibraryModel({required LibraryService libraryService})
     : _service = libraryService {
@@ -16,6 +18,7 @@ class LibraryModel extends SafeChangeNotifier {
   final LibraryService _service;
   StreamSubscription<bool>? _propertiesChangedSub;
 
+  @disposeMethod
   @override
   Future<void> dispose() async {
     await _propertiesChangedSub?.cancel();

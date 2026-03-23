@@ -1,16 +1,26 @@
-import 'dart:async';
-
 import 'package:audio_service/audio_service.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:injectable/injectable.dart';
 
 import '../app_config.dart';
 import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
 import '../extensions/taget_platform_x.dart';
-import 'player_service.dart';
+import '../player/player_service.dart';
 
-Future<AudioServiceHandler> registerAudioServiceHandler() async {
-  final playerService = di<PlayerService>();
+@module
+abstract class AudioServiceModule {
+  @preResolve
+  Future<AudioServiceHandler> audioServiceHandler(
+    PlayerService playerService,
+  ) async {
+    final handler = await _registerAudioServiceHandler(playerService);
+    return handler;
+  }
+}
+
+Future<AudioServiceHandler> _registerAudioServiceHandler(
+  PlayerService playerService,
+) async {
   final audioHandler = await AudioService.init(
     config: const AudioServiceConfig(
       androidNotificationOngoing: false,

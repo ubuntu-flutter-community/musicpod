@@ -6,6 +6,7 @@ import 'package:mockito/annotations.dart';
 import 'package:musicpod/common/data/audio.dart';
 import 'package:musicpod/local_audio/local_cover_service.dart';
 import 'package:musicpod/local_audio/local_audio_service.dart';
+import 'package:musicpod/settings/settings_service.dart';
 
 import 'local_audio_service_test.mocks.dart';
 
@@ -23,13 +24,17 @@ const Audio testOgg = Audio(
   genre: 'Rock',
 );
 
-@GenerateMocks([LocalCoverService])
+@GenerateMocks([LocalCoverService, SettingsService])
 Future<void> main() async {
   LocalAudioService? service;
   final localCoverService = MockLocalCoverService();
+  final mockSettingsService = MockSettingsService();
 
   setUpAll(() async {
-    service = LocalAudioService(localCoverService: localCoverService);
+    service = LocalAudioService(
+      localCoverService: localCoverService,
+      settingsService: mockSettingsService,
+    );
     await service?.init(newDirectory: Directory.current.path);
   });
 

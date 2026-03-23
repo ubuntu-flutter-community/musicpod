@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
 import 'package:media_kit/media_kit.dart' hide PlayerState;
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:path/path.dart' as p;
@@ -20,6 +21,7 @@ import '../persistence_utils.dart';
 
 typedef Queue = ({String name, List<Audio> audios});
 
+@singleton
 class PlayerService {
   PlayerService({
     required VideoController controller,
@@ -53,6 +55,7 @@ class PlayerService {
   Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
 
   /// All stream subscriptions and the initial [PlayerState] are set here
+  @PostConstruct(preResolve: true)
   Future<void> init() async {
     _isPlayingSub ??= player.stream.playing.listen((value) {
       setIsPlaying(value);
@@ -106,6 +109,7 @@ class PlayerService {
   }
 
   /// All subscriptions, native media trays and the pause timer need to be closed and disposed
+  @disposeMethod
   Future<void> dispose() async {
     await _propertiesChangedController.close();
     await _isPlayingSub?.cancel();

@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/file_names.dart';
 import '../common/logging.dart';
 import '../persistence_utils.dart';
 
+@lazySingleton
 class SettingsService {
   SettingsService({required SharedPreferences sharedPreferences})
     : _sharedPreferences = sharedPreferences;
@@ -88,5 +90,6 @@ class SettingsService {
     exit(0);
   }
 
+  @disposeMethod
   Future<void> dispose() async => _propertiesChangedController.close();
 }

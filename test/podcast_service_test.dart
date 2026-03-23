@@ -33,7 +33,6 @@ Future<void> main() async {
     settingsService: mockSettingsService,
     libraryService: mockLibraryService,
   );
-  await service.init();
 
   test('searchByQuery', () async {
     final result = await service.search(

@@ -6,9 +6,8 @@
 import 'dart:async' as _i3;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i5;
-import 'package:musicpod/common/data/audio.dart' as _i7;
-import 'package:musicpod/library/library_service.dart' as _i6;
+import 'package:musicpod/common/data/audio.dart' as _i6;
+import 'package:musicpod/library/library_service.dart' as _i5;
 import 'package:musicpod/notifications/notifications_service.dart' as _i2;
 import 'package:musicpod/settings/settings_service.dart' as _i4;
 
@@ -44,15 +43,6 @@ class MockNotificationsService extends _i1.Mock
             returnValueForMissingStub: _i3.Future<void>.value(),
           )
           as _i3.Future<void>);
-
-  @override
-  _i3.Future<void> dispose() =>
-      (super.noSuchMethod(
-            Invocation.method(#dispose, []),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
 }
 
 /// A class which mocks [SettingsService].
@@ -70,17 +60,6 @@ class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
             returnValue: _i3.Stream<bool>.empty(),
           )
           as _i3.Stream<bool>);
-
-  @override
-  String get forcedUpdateThreshold =>
-      (super.noSuchMethod(
-            Invocation.getter(#forcedUpdateThreshold),
-            returnValue: _i5.dummyValue<String>(
-              this,
-              Invocation.getter(#forcedUpdateThreshold),
-            ),
-          )
-          as String);
 
   @override
   bool notify(bool? saved) =>
@@ -141,7 +120,7 @@ class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
 /// A class which mocks [LibraryService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
+class MockLibraryService extends _i1.Mock implements _i5.LibraryService {
   MockLibraryService() {
     _i1.throwOnMissingStub(this);
   }
@@ -155,12 +134,12 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
           as _i3.Stream<bool>);
 
   @override
-  List<_i7.Audio> get likedAudios =>
+  List<_i6.Audio> get likedAudios =>
       (super.noSuchMethod(
             Invocation.getter(#likedAudios),
-            returnValue: <_i7.Audio>[],
+            returnValue: <_i6.Audio>[],
           )
-          as List<_i7.Audio>);
+          as List<_i6.Audio>);
 
   @override
   int get likedAudiosLength =>
@@ -216,12 +195,12 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
           as List<String>);
 
   @override
-  Map<String, List<_i7.Audio>> get playlists =>
+  Map<String, List<_i6.Audio>> get playlists =>
       (super.noSuchMethod(
             Invocation.getter(#playlists),
-            returnValue: <String, List<_i7.Audio>>{},
+            returnValue: <String, List<_i6.Audio>>{},
           )
-          as Map<String, List<_i7.Audio>>);
+          as Map<String, List<_i6.Audio>>);
 
   @override
   List<String> get externalPlaylistIDs =>
@@ -232,20 +211,20 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
           as List<String>);
 
   @override
-  List<_i7.Audio> get externalPlaylistAudios =>
+  List<_i6.Audio> get externalPlaylistAudios =>
       (super.noSuchMethod(
             Invocation.getter(#externalPlaylistAudios),
-            returnValue: <_i7.Audio>[],
+            returnValue: <_i6.Audio>[],
           )
-          as List<_i7.Audio>);
+          as List<_i6.Audio>);
 
   @override
-  List<_i7.Audio> get playlistsAudios =>
+  List<_i6.Audio> get playlistsAudios =>
       (super.noSuchMethod(
             Invocation.getter(#playlistsAudios),
-            returnValue: <_i7.Audio>[],
+            returnValue: <_i6.Audio>[],
           )
-          as List<_i7.Audio>);
+          as List<_i6.Audio>);
 
   @override
   Map<String, String> get downloads =>
@@ -290,19 +269,19 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
           as List<String>);
 
   @override
-  void addLikedAudio(_i7.Audio? audio) => super.noSuchMethod(
+  void addLikedAudio(_i6.Audio? audio) => super.noSuchMethod(
     Invocation.method(#addLikedAudio, [audio]),
     returnValueForMissingStub: null,
   );
 
   @override
-  void addLikedAudios(List<_i7.Audio>? audios) => super.noSuchMethod(
+  void addLikedAudios(List<_i6.Audio>? audios) => super.noSuchMethod(
     Invocation.method(#addLikedAudios, [audios]),
     returnValueForMissingStub: null,
   );
 
   @override
-  bool isLiked(_i7.Audio? audio) =>
+  bool isLiked(_i6.Audio? audio) =>
       (super.noSuchMethod(
             Invocation.method(#isLiked, [audio]),
             returnValue: false,
@@ -310,7 +289,7 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
           as bool);
 
   @override
-  bool isLikedAudios(List<_i7.Audio>? audios) =>
+  bool isLikedAudios(List<_i6.Audio>? audios) =>
       (super.noSuchMethod(
             Invocation.method(#isLikedAudios, [audios]),
             returnValue: false,
@@ -318,14 +297,14 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
           as bool);
 
   @override
-  void removeLikedAudio(_i7.Audio? audio, [bool? notify = true]) =>
+  void removeLikedAudio(_i6.Audio? audio, [bool? notify = true]) =>
       super.noSuchMethod(
         Invocation.method(#removeLikedAudio, [audio, notify]),
         returnValueForMissingStub: null,
       );
 
   @override
-  void removeLikedAudios(List<_i7.Audio>? audios) => super.noSuchMethod(
+  void removeLikedAudios(List<_i6.Audio>? audios) => super.noSuchMethod(
     Invocation.method(#removeLikedAudios, [audios]),
     returnValueForMissingStub: null,
   );
@@ -435,9 +414,9 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
   );
 
   @override
-  List<_i7.Audio>? getPlaylistById(String? id) =>
+  List<_i6.Audio>? getPlaylistById(String? id) =>
       (super.noSuchMethod(Invocation.method(#getPlaylistById, [id]))
-          as List<_i7.Audio>?);
+          as List<_i6.Audio>?);
 
   @override
   bool isPlaylistSaved(String? id) =>
@@ -448,7 +427,7 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
           as bool);
 
   @override
-  _i3.Future<void> addPlaylist(String? id, List<_i7.Audio>? audios) =>
+  _i3.Future<void> addPlaylist(String? id, List<_i6.Audio>? audios) =>
       (super.noSuchMethod(
             Invocation.method(#addPlaylist, [id, audios]),
             returnValue: _i3.Future<void>.value(),
@@ -458,7 +437,7 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
 
   @override
   _i3.Future<void> addExternalPlaylists({
-    required List<({List<_i7.Audio> audios, String id})>? playlists,
+    required List<({List<_i6.Audio> audios, String id})>? playlists,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#addExternalPlaylists, [], {
@@ -472,7 +451,7 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
   @override
   _i3.Future<void> updatePlaylist({
     required String? id,
-    required List<_i7.Audio>? audios,
+    required List<_i6.Audio>? audios,
     bool? external = false,
   }) =>
       (super.noSuchMethod(
@@ -521,7 +500,7 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
   @override
   void addAudiosToPlaylist({
     required String? id,
-    required List<_i7.Audio>? audios,
+    required List<_i6.Audio>? audios,
   }) => super.noSuchMethod(
     Invocation.method(#addAudiosToPlaylist, [], {#id: id, #audios: audios}),
     returnValueForMissingStub: null,
@@ -530,7 +509,7 @@ class MockLibraryService extends _i1.Mock implements _i6.LibraryService {
   @override
   void removeAudiosFromPlaylist({
     required String? id,
-    required List<_i7.Audio>? audios,
+    required List<_i6.Audio>? audios,
   }) => super.noSuchMethod(
     Invocation.method(#removeAudiosFromPlaylist, [], {
       #id: id,

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
+import 'package:injectable/injectable.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
@@ -8,6 +9,7 @@ import '../common/data/audio.dart';
 import '../radio/online_art_service.dart';
 import 'player_service.dart';
 
+@lazySingleton
 class PlayerModel extends SafeChangeNotifier {
   PlayerModel({
     required PlayerService service,
@@ -128,6 +130,7 @@ class PlayerModel extends SafeChangeNotifier {
 
   void setTimer(Duration duration) => _playerService.setPauseTimer(duration);
 
+  @disposeMethod
   @override
   Future<void> dispose() async {
     await _propertiesChangedSub?.cancel();

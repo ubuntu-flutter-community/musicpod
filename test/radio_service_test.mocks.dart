@@ -106,6 +106,11 @@ class MockPlayerService extends _i1.Mock implements _i5.PlayerService {
           as ({List<_i7.Audio> audios, String name}));
 
   @override
+  bool get isVideo =>
+      (super.noSuchMethod(Invocation.getter(#isVideo), returnValue: false)
+          as bool);
+
+  @override
   bool get isPlaying =>
       (super.noSuchMethod(Invocation.getter(#isPlaying), returnValue: false)
           as bool);
@@ -416,6 +421,15 @@ class MockPlayerService extends _i1.Mock implements _i5.PlayerService {
   _i6.Future<void> setMediaControlsMetaData({required _i7.Audio? audio}) =>
       (super.noSuchMethod(
             Invocation.method(#setMediaControlsMetaData, [], {#audio: audio}),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
+          )
+          as _i6.Future<void>);
+
+  @override
+  _i6.Future<void> persistPlayerState() =>
+      (super.noSuchMethod(
+            Invocation.method(#persistPlayerState, []),
             returnValue: _i6.Future<void>.value(),
             returnValueForMissingStub: _i6.Future<void>.value(),
           )

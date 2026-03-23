@@ -14,6 +14,10 @@ dependencies:
     git:
       url: https://github.com/Feichtmeier/audio-service-mpris
       ref: 6756580bf0fde617d63a95f319e01a36d8a22615
+  audio_service_win:
+    git:
+      url: https://github.com/AfalpHy/audio_service_win.git
+      ref: fd21672b0083a5745ad1aa79fd5b0ae2033a942a
   basic_utils: ^5.8.2
   blur: ^4.0.2
   cached_network_image: ^3.4.1
@@ -40,6 +44,8 @@ dependencies:
   github: ^9.25.0
   gtk: ^2.1.0
   handy_window: ^0.4.2
+  injectable: ^2.7.1+4
+  injectable_generator: ^2.12.1
   internet_connection_checker_plus: ^2.9.1+2
   intl: ^0.20.2
   lastfm: ^0.0.6
@@ -81,7 +87,6 @@ dependencies:
   scroll_to_index: ^3.0.1
   shared_preferences: ^2.5.4
   shimmer: ^3.0.0
-  smtc_windows: ^1.1.0
   super_drag_and_drop: ^0.9.1
   synchronized: ^3.4.0
   system_theme: ^3.2.0

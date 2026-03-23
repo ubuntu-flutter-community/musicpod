@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:collection/collection.dart';
+import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/data/audio.dart';
@@ -11,6 +12,7 @@ import '../extensions/date_time_x.dart';
 import '../settings/shared_preferences_keys.dart';
 import '../persistence_utils.dart';
 
+@singleton
 class LibraryService {
   LibraryService({required SharedPreferences sharedPreferences})
     : _sharedPreferences = sharedPreferences;
@@ -735,6 +737,7 @@ class LibraryService {
     return saved;
   }
 
+  @PostConstruct(preResolve: true)
   Future<void> init() async {
     await _migrateOldPodcast();
     _playlists = await readAudioMap(FileNames.playlists);
@@ -767,6 +770,7 @@ class LibraryService {
     }
   }
 
+  @disposeMethod
   Future<void> dispose() async {
     await _propertiesChangedController.close();
   }

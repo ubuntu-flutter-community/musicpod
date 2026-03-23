@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter_it/flutter_it.dart';
+import 'package:injectable/injectable.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
@@ -7,20 +9,17 @@ import '../common/data/audio.dart';
 import '../l10n/app_localizations.dart';
 import 'podcast_service.dart';
 
+@lazySingleton
 class PodcastModel extends SafeChangeNotifier {
   PodcastModel({required PodcastService podcastService})
     : _podcastService = podcastService;
 
   final PodcastService _podcastService;
 
-  Future<void> init({
-    required String updateMessage,
-    bool forceInit = false,
-    Function({required String message})? notify,
-  }) async {
-    await _podcastService.init(forceInit: forceInit);
-    notifyListeners();
-  }
+  late final Command<({bool forceInit}), void> initSearchCommand =
+      Command.createSyncNoResult(
+        (param) => _podcastService.init(forceInit: param.forceInit),
+      );
 
   Future<void> checkForUpdates({
     required String updateMessage,

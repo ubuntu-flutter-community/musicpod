@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:injectable/injectable.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:synchronized/synchronized.dart';
 
@@ -16,6 +17,7 @@ import '../library/library_service.dart';
 import '../notifications/notifications_service.dart';
 import '../settings/settings_service.dart';
 
+@lazySingleton
 class PodcastService {
   final NotificationsService _notificationsService;
   final SettingsService _settingsService;
@@ -26,12 +28,24 @@ class PodcastService {
     required LibraryService libraryService,
   }) : _notificationsService = notificationsService,
        _settingsService = settingsService,
-       _libraryService = libraryService;
+       _libraryService = libraryService {
+    _search = Search(
+      searchProvider:
+          _settingsService.getBool(SPKeys.usePodcastIndex) == true &&
+              _settingsService.getString(SPKeys.podcastIndexApiKey) != null &&
+              _settingsService.getString(SPKeys.podcastIndexApiSecret) != null
+          ? PodcastIndexProvider(
+              key: _settingsService.getString(SPKeys.podcastIndexApiKey)!,
+              secret: _settingsService.getString(SPKeys.podcastIndexApiSecret)!,
+            )
+          : const ITunesProvider(),
+    );
+  }
 
   SearchResult? _searchResult;
   Search? _search;
 
-  Future<void> init({bool forceInit = false}) async {
+  void init({bool forceInit = false}) {
     if (_search == null || forceInit) {
       _search = Search(
         searchProvider:

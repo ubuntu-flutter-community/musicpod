@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
+import 'package:injectable/injectable.dart';
 import 'package:synchronized/synchronized.dart';
 
 import '../common/data/audio.dart';
@@ -16,13 +17,14 @@ import '../settings/shared_preferences_keys.dart';
 import 'local_cover_service.dart';
 import 'local_search_result.dart';
 
+@lazySingleton
 class LocalAudioService {
-  final SettingsService? _settingsService;
+  final SettingsService _settingsService;
   final LocalCoverService _localCoverService;
 
   LocalAudioService({
     required LocalCoverService localCoverService,
-    SettingsService? settingsService,
+    required SettingsService settingsService,
   }) : _settingsService = settingsService,
        _localCoverService = localCoverService;
 
@@ -69,7 +71,7 @@ class LocalAudioService {
   List<String>? get allAlbumIDs => _allAlbumIDs;
   List<String>? findAllAlbumIDs({String? artist, bool clean = true}) {
     final groupAlbumsOnlyByAlbumName =
-        _settingsService?.getBool(SPKeys.groupAlbumsOnlyByAlbumName) ?? false;
+        _settingsService.getBool(SPKeys.groupAlbumsOnlyByAlbumName) ?? false;
 
     final theAudios = artist == null || artist.isEmpty
         ? audios
@@ -129,7 +131,7 @@ class LocalAudioService {
     }
 
     final album = audios?.where((a) {
-      if (_settingsService?.getBool(SPKeys.groupAlbumsOnlyByAlbumName) ??
+      if (_settingsService.getBool(SPKeys.groupAlbumsOnlyByAlbumName) ??
           false) {
         return a.album != null && a.album == albumId.albumOfId;
       }
@@ -342,10 +344,10 @@ class LocalAudioService {
       }
 
       if (newDirectory != null &&
-          newDirectory != _settingsService?.getString(SPKeys.directory)) {
-        await _settingsService?.setValue(SPKeys.directory, newDirectory);
+          newDirectory != _settingsService.getString(SPKeys.directory)) {
+        await _settingsService.setValue(SPKeys.directory, newDirectory);
       }
-      final dir = newDirectory ?? _settingsService?.getString(SPKeys.directory);
+      final dir = newDirectory ?? _settingsService.getString(SPKeys.directory);
 
       final result = await compute(_readAudiosFromDirectory, dir);
       _failedImports = result.failedImports;

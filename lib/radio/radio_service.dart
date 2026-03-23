@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:basic_utils/basic_utils.dart';
 import 'package:collection/collection.dart';
+import 'package:injectable/injectable.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 
 import '../common/data/audio.dart';
@@ -15,6 +16,7 @@ import '../player/observe_property_io.dart';
 import '../player/player_service.dart';
 import 'online_art_service.dart';
 
+@lazySingleton
 class RadioService {
   RadioService({
     required PlayerService playerService,
