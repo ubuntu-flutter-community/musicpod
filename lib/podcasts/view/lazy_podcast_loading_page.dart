@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../common/view/adaptive_multi_layout_body.dart';
 import '../../common/view/header_bar.dart';
-import '../../common/view/sliver_audio_page_control_panel.dart';
 import 'podcast_page_control_panel.dart';
 import 'podcast_page_header.dart';
 
@@ -18,32 +18,21 @@ class LazyPodcastLoadingPage extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const HeaderBar(adaptive: true),
-      body: CustomScrollView(
-        slivers: [
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            sliver: SliverToBoxAdapter(
-              child: PodcastPageHeader(
-                title: title,
-                imageUrl: imageUrl,
-                episodes: [],
-                showFallbackIcon: false,
-              ),
-            ),
-          ),
-          const SliverAudioPageControlPanel(
-            controlPanel: PodcastPageControlPanel(
-              feedUrl: '',
-              audios: [],
-              title: '',
-            ),
-          ),
-          SliverToBoxAdapter(child: child),
-        ],
+  Widget build(BuildContext context) => Scaffold(
+    appBar: const HeaderBar(adaptive: true),
+    body: AdaptiveMultiLayoutBody(
+      header: PodcastPageHeader(
+        title: title,
+        imageUrl: imageUrl,
+        episodes: [],
+        showFallbackIcon: false,
       ),
-    );
-  }
+      sliverBody: (constraints) => SliverToBoxAdapter(child: child),
+      controlPanel: const PodcastPageControlPanel(
+        feedUrl: '',
+        audios: [],
+        title: '',
+      ),
+    ),
+  );
 }
