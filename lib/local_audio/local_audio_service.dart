@@ -327,7 +327,7 @@ class LocalAudioService {
   }
 
   final Lock _lock = Lock();
-  Future<List<String>> init({
+  Future<({List<Audio> audios, List<String> failedImports})> init({
     String? newDirectory,
     bool forceInit = false,
     List<Audio> extraAudios = const [],
@@ -358,7 +358,7 @@ class LocalAudioService {
 
       _addAudiosAndBuildCollection(result.audios, clear: forceInit);
     });
-    return _failedImports;
+    return (audios: _audios ?? [], failedImports: _failedImports);
   }
 
   void _addAudiosAndBuildCollection(
