@@ -17,7 +17,7 @@ class RadioSection extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    watchPropertyValue((RadioManager m) => m.radioCollectionView);
+    watchValue((RadioManager m) => m.radioCollectionView);
 
     return YaruSection(
       margin: const EdgeInsets.all(kLargestSpace),
