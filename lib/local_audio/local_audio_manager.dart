@@ -117,16 +117,12 @@ class LocalAudioManager {
     ({bool forceInit, String? directory, List<Audio> extraAudios}),
     ({List<Audio> audios, List<String> failedImports})?
   >
-  initAudiosCommand = Command.createAsync((param) async {
-    final failedImports = await _localAudioService.init(
+  initAudiosCommand = Command.createAsync(
+    (param) => _localAudioService.init(
       forceInit: param.forceInit,
       newDirectory: param.directory,
       extraAudios: param.extraAudios,
-    );
-
-    return (
-      audios: _localAudioService.audios ?? [],
-      failedImports: failedImports,
-    );
-  }, initialValue: null);
+    ),
+    initialValue: null,
+  );
 }
