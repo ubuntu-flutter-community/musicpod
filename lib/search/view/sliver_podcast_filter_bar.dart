@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../common/data/podcast_genre.dart';
 import '../../common/view/common_control_panel.dart';
 import '../../common/view/progress.dart';
 import '../../l10n/l10n.dart';
+import '../../podcasts/data/podcast_genre.dart';
 import '../search_model.dart';
 
 class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {

@@ -6,7 +6,7 @@ import '../../common/view/copy_clipboard_content.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/snackbars.dart';
 import '../../l10n/l10n.dart';
-import '../radio_model.dart';
+import '../../player/mpv_metadata_manager.dart';
 
 class RadioPageCopyHistoryButton extends StatelessWidget with WatchItMixin {
   const RadioPageCopyHistoryButton({super.key, required this.station});
@@ -14,24 +14,21 @@ class RadioPageCopyHistoryButton extends StatelessWidget with WatchItMixin {
   final Audio station;
 
   @override
-  Widget build(BuildContext context) {
-    watchPropertyValue(
-      (RadioModel m) => m.getRadioHistoryLength(filter: station.title),
-    );
-    final text = di<RadioModel>().getRadioHistoryList(filter: station.title);
-    return IconButton(
-      tooltip: context.l10n.copyToClipBoard,
-      onPressed: text.isEmpty
-          ? null
-          : () {
-              showSnackBar(
-                context: context,
-                content: SingleChildScrollView(
-                  child: CopyClipboardContent(text: text, showActions: false),
-                ),
-              );
-            },
-      icon: Icon(Iconz.copy),
-    );
-  }
+  Widget build(BuildContext context) => IconButton(
+    tooltip: context.l10n.copyToClipBoard,
+    onPressed: () {
+      showSnackBar(
+        context: context,
+        content: SingleChildScrollView(
+          child: CopyClipboardContent(
+            text: di<MpvMetadataManager>().getMpvMetaDataHistoryList(
+              filter: station.title,
+            ),
+            showActions: false,
+          ),
+        ),
+      );
+    },
+    icon: Icon(Iconz.copy),
+  );
 }

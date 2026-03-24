@@ -4,7 +4,7 @@ import 'sliver_audio_page_control_panel.dart';
 import 'ui_constants.dart';
 
 const _trashHold = 900.0;
-const _singleWidth = 400.0;
+const _singleWidth = 300.0;
 
 class AdaptiveMultiLayoutBody extends StatelessWidget {
   const AdaptiveMultiLayoutBody({
@@ -114,15 +114,16 @@ class _PanedLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(
-            top: 3 * kLargestSpace,
-            left: 3 * kLargestSpace,
-          ),
-          child: SizedBox(
-            width: singleWidth,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: kLargestSpace),
+        Flexible(
+          flex: 2,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              top: 4 * kLargestSpace,
+              left: 3 * kLargestSpace,
+              bottom: kLargestSpace,
+            ),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minWidth: singleWidth),
               child: _SingleLayout(
                 header: header,
                 controlPanel: controlPanel,
@@ -133,6 +134,7 @@ class _PanedLayout extends StatelessWidget {
           ),
         ),
         Expanded(
+          flex: 3,
           child: CustomScrollView(
             slivers: [
               SliverPadding(

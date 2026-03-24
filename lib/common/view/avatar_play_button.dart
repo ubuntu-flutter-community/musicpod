@@ -64,7 +64,7 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
               : () {
                   if (audios.isNotEmpty &&
                       audios.first.audioType == AudioType.radio) {
-                    di<RadioModel>().clickStation(audios.first);
+                    di<RadioManager>().clickStation(audios.first);
                   }
                   if (isPlayerPlaying) {
                     if (pageIsQueue &&

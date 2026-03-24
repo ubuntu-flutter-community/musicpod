@@ -8,12 +8,12 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
-import '../common/data/podcast_genre.dart';
 import '../common/view/languages.dart';
 import '../extensions/string_x.dart';
 import '../library/library_service.dart';
 import '../local_audio/local_audio_service.dart';
 import '../local_audio/local_search_result.dart';
+import '../podcasts/data/podcast_genre.dart';
 import '../podcasts/podcast_service.dart';
 import '../radio/radio_service.dart';
 import 'search_type.dart';

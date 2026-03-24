@@ -35,7 +35,7 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
 
     final theme = context.theme;
 
-    final connectedHost = watchValue((RadioModel m) => m.connectCommand);
+    final connectedHost = watchValue((RadioManager m) => m.connectCommand);
 
     if (connectedHost == null) {
       return const SliverFillRemaining(
@@ -158,7 +158,7 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
             onTap: () {
               di<PlayerModel>()
                   .startPlaylist(audios: [station], listName: station.uuid!)
-                  .then((_) => di<RadioModel>().clickStation(station));
+                  .then((_) => di<RadioManager>().clickStation(station));
             },
           ),
         );

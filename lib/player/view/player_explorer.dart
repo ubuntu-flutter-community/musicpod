@@ -4,9 +4,9 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/string_x.dart';
-import '../../radio/radio_model.dart';
 import '../../radio/view/radio_history_list.dart';
 import '../../settings/settings_model.dart';
+import '../mpv_metadata_manager.dart';
 import '../player_model.dart';
 import 'audio_visualizer.dart';
 import 'player_lyrics.dart';
@@ -61,8 +61,9 @@ class _PlayerExplorerState extends State<PlayerExplorer>
 
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
 
-    final splitByDash = watchPropertyValue(
-      (RadioModel m) => m.mpvMetaData?.icyTitle.splitByDash,
+    final splitByDash = watchValue(
+      (MpvMetadataManager m) =>
+          m.mpvMetaDataCommand.select((cmd) => cmd?.icyTitle.splitByDash),
     );
 
     return Padding(

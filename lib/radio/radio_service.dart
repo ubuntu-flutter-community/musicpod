@@ -7,47 +7,19 @@ import 'package:injectable/injectable.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 
 import '../common/data/audio.dart';
-import '../common/data/audio_type.dart';
-import '../common/data/mpv_meta_data.dart';
 import '../common/logging.dart';
-import '../expose/expose_service.dart';
-import '../extensions/string_x.dart';
-import '../player/observe_property_io.dart';
-import '../player/player_service.dart';
-import 'online_art_service.dart';
 
 @lazySingleton
 class RadioService {
-  RadioService({
-    required PlayerService playerService,
-    required OnlineArtService onlineArtService,
-    required ExposeService exposeService,
-  }) : _playerService = playerService,
-       _onlineArtService = onlineArtService,
-       _exposeService = exposeService;
-  final PlayerService _playerService;
-  final OnlineArtService _onlineArtService;
-  final ExposeService _exposeService;
-
   static const _kRadioBrowserBaseUrl = 'all.api.radio-browser.info';
 
   RadioBrowserApi? _radioBrowserApi;
-  final _propertiesChangedController = StreamController<bool>.broadcast();
-  Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
   String? get connectedHost =>
       _tags == null || _tags!.isEmpty ? null : _radioBrowserApi?.host;
 
-  Future<String?> init({bool observePlayer = true}) async {
+  Future<String?> init() async {
     if (_radioBrowserApi?.host != null && _tags?.isNotEmpty == true) {
       return _radioBrowserApi?.host;
-    }
-
-    if (observePlayer) {
-      await observeProperty(
-        property: 'metadata',
-        player: _playerService.player,
-        listener: _onMpvMetadata,
-      );
     }
 
     List<String>? hosts;
@@ -248,162 +220,17 @@ class RadioService {
     return _tags;
   }
 
-  Future<void> clickStation(String uuid) async {
+  Future<void> clickStation(String? uuid) async {
     try {
+      if (uuid == null) {
+        printMessageInDebugMode('Cannot click station with null uuid.');
+        return;
+      }
       await _radioBrowserApi?.clickStation(uuid: uuid);
       printMessageInDebugMode('Station clicked: $uuid');
     } on Exception catch (e) {
       printMessageInDebugMode(e);
     }
-  }
-
-  Future<void> dispose() async {
-    await _propertiesChangedController.close();
-
-    await observeProperty(property: 'metadata', player: _playerService.player);
-  }
-
-  //
-  // Everything related to radio stream icy-title information observed from MPV and digested here
-  //
-  bool _dataSafeMode = false;
-  bool get dataSafeMode => _dataSafeMode;
-  void setDataSafeMode(bool value) {
-    if (value == _dataSafeMode) return;
-    _dataSafeMode = value;
-    _propertiesChangedController.add(true);
-  }
-
-  Future<void> _onMpvMetadata(data) async {
-    if (!data.contains('icy-title')) {
-      return;
-    }
-    final newData = MpvMetaData.fromJson(data);
-    final parsedIcyTitle = newData.icyTitle.unEscapeHtml;
-    if (parsedIcyTitle == null || parsedIcyTitle == _mpvMetaData?.icyTitle) {
-      return;
-    }
-
-    _setMpvMetaData(newData.copyWith(icyTitle: parsedIcyTitle));
-  }
-
-  MpvMetaData? _mpvMetaData;
-  MpvMetaData? get mpvMetaData => _mpvMetaData;
-  Future<void> _setMpvMetaData(MpvMetaData? value) async {
-    _mpvMetaData = value;
-
-    if (_isValidHistoryElement(_mpvMetaData)) {
-      _addRadioHistoryElement(
-        icyTitle: mpvMetaData!.icyTitle,
-        mpvMetaData: mpvMetaData!.copyWith(
-          icyName:
-              _playerService.audio?.title?.trim() ??
-              _mpvMetaData?.icyName ??
-              '',
-        ),
-      );
-
-      await _processParsedIcyTitle(mpvMetaData!.icyTitle);
-    }
-    _propertiesChangedController.add(true);
-  }
-
-  final _blockedIcyTitles = <String>{
-    'Unknown',
-    'Untitled',
-    'No Title',
-    'No Artist - No Title',
-    ' - ',
-    'Verbraucherinformation',
-    'Werbung',
-    'Advertisement',
-  };
-
-  bool _isValidHistoryElement(MpvMetaData? data) {
-    final icyTitle = data?.icyTitle;
-    if (icyTitle == null || icyTitle.isEmpty) {
-      return false;
-    }
-    if (_blockedIcyTitles.any(
-      (e) => e.toLowerCase().contains(icyTitle.toLowerCase()),
-    )) {
-      return false;
-    }
-
-    // This is often the title of the station
-    final icyDescription = data?.icyDescription;
-    if (icyDescription == null || icyDescription.isEmpty) {
-      return true;
-    }
-
-    final sanitizedDescription = icyDescription.toLowerCase().replaceAll(
-      RegExp(r'[^a-zA-Z0-9]'),
-      '',
-    );
-
-    return !icyTitle.toLowerCase().contains(icyDescription) &&
-        !icyTitle.toLowerCase().contains(sanitizedDescription);
-  }
-
-  Future<void> _processParsedIcyTitle(String parsedIcyTitle) async {
-    final songInfo = parsedIcyTitle.splitByDash;
-    String? albumArt;
-    if (!_dataSafeMode) {
-      albumArt = await _onlineArtService.fetchAlbumArt(parsedIcyTitle);
-    }
-
-    final mergedAudio =
-        (_playerService.audio ?? const Audio(audioType: AudioType.radio))
-            .copyWith(
-              imageUrl: albumArt,
-              title: songInfo.songName,
-              artist: songInfo.artist,
-            );
-    await _playerService.setMediaControlsMetaData(audio: mergedAudio);
-    _playerService.setRemoteImageUrl(
-      albumArt ??
-          _playerService.audio?.imageUrl ??
-          _playerService.audio?.albumArtUrl,
-    );
-
-    await _exposeService.exposeTitleOnline(
-      title: songInfo.songName ?? '',
-      artist: songInfo.artist ?? '',
-      additionalInfo: _playerService.audio?.title ?? 'Internet Radio',
-      imageUrl: albumArt,
-    );
-  }
-
-  final Map<String, MpvMetaData> _radioHistory = {};
-  Map<String, MpvMetaData> get radioHistory => _radioHistory;
-  void _addRadioHistoryElement({
-    required String icyTitle,
-    required MpvMetaData mpvMetaData,
-  }) {
-    _radioHistory.putIfAbsent(icyTitle, () => mpvMetaData);
-  }
-
-  int getRadioHistoryLength({String? filter}) =>
-      filteredRadioHistory(filter: filter).length;
-
-  String getRadioHistoryList({String? filter}) {
-    return filteredRadioHistory(
-      filter: filter,
-    ).map((e) => '${e.value.icyTitle}\n').toList().reversed.join();
-  }
-
-  MpvMetaData? getMetadata(String? icyTitle) =>
-      icyTitle == null ? null : radioHistory[icyTitle];
-
-  Iterable<MapEntry<String, MpvMetaData>> filteredRadioHistory({
-    required String? filter,
-  }) {
-    return radioHistory.entries.where(
-      (e) => filter == null
-          ? true
-          : e.value.icyName.contains(filter) ||
-                filter.contains(e.value.icyName),
-    );
   }
 
   Future<Audio?> findSimilarStation(Audio station) async {

@@ -10,16 +10,16 @@ class RadioLibPageControlPanel extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final radioCollectionView = watchPropertyValue(
-      (RadioModel m) => m.radioCollectionView,
+    final radioCollectionView = watchValue(
+      (RadioManager m) => m.radioCollectionView,
     );
-    final radioModel = di<RadioModel>();
 
     return CommonControlPanel(
-      onSelected: (index) =>
-          radioModel.setRadioCollectionView(RadioCollectionView.values[index]),
+      onSelected: (index) => di<RadioManager>().setRadioCollectionView(
+        RadioCollectionView.values[index],
+      ),
       labels: [
-        Text(context.l10n.station),
+        Text(context.l10n.stations),
         Text(context.l10n.tags),
         Text(context.l10n.hearingHistory),
       ],

@@ -14,7 +14,7 @@ class StationTitle extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     watchPropertyValue((ConnectivityModel m) => m.isOnline);
     final stationResults = watchValue(
-      (RadioModel m) => m.getStationByUUIDCommand(uuid).results,
+      (RadioManager m) => m.getStationByUUIDCommand(uuid).results,
     );
     final station = stationResults.data;
 

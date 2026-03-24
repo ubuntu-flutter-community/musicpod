@@ -19,11 +19,9 @@ class StationCard extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    if (di<RadioModel>().getStationByUUID(uuid) == null) {
-      callOnceAfterThisBuild(
-        (_) => di<RadioModel>().getStationByUUIDCommand(uuid).run(),
-      );
-    }
+    callOnceAfterThisBuild(
+      (_) => di<RadioManager>().getStationByUUIDCommand(uuid).run(),
+    );
 
     final isSelected = watchPropertyValue(
       (PlayerModel m) => m.audio?.uuid == uuid,
@@ -31,7 +29,7 @@ class StationCard extends StatelessWidget with WatchItMixin {
     final isPlayerPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
 
     final stationResult = watchValue(
-      (RadioModel m) => m.getStationByUUIDCommand(uuid).results,
+      (RadioManager m) => m.getStationByUUIDCommand(uuid).results,
     );
     final station = stationResult.data;
     final error = stationResult.error;
@@ -57,7 +55,7 @@ class StationCard extends StatelessWidget with WatchItMixin {
               }
               di<PlayerModel>()
                   .startPlaylist(audios: [station], listName: uuid)
-                  .then((_) => di<RadioModel>().clickStation(station));
+                  .then((_) => di<RadioManager>().clickStation(station));
             },
       onTap: station.uuid == null
           ? null

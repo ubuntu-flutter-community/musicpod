@@ -11,7 +11,6 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
-import '../../radio/radio_model.dart';
 import '../player_model.dart';
 
 class PlayerPauseTimerButton extends StatelessWidget {
@@ -63,7 +62,7 @@ class _DialogState extends State<_Dialog> {
               hours: _timeOfDay.hour - TimeOfDay.now().hour,
               minutes: _timeOfDay.minute - TimeOfDay.now().minute,
             );
-            di<RadioModel>().setTimer(duration);
+            di<PlayerModel>().setTimer(duration);
             showSnackBar(
               context: context,
               content: Text(

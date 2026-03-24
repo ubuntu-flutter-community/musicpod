@@ -16,20 +16,21 @@ import '../../common/view/offline_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/search_button.dart';
-import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
+import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import '../../settings/settings_model.dart';
 import '../radio_model.dart';
+import 'radio_connect_mixin.dart';
 import 'radio_history_list.dart';
 import 'radio_page_copy_histoy_button.dart';
 import 'radio_page_star_button.dart';
 import 'radio_page_tag_bar.dart';
 
-class StationPage extends StatelessWidget with WatchItMixin {
+class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
   const StationPage({super.key, required this.uuid});
 
   final String uuid;
@@ -39,39 +40,14 @@ class StationPage extends StatelessWidget with WatchItMixin {
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     if (!isOnline) return const OfflinePage();
 
-    registerHandler(
-      select: (RadioModel m) => m.connectCommand.results,
-      handler: (context, results, cancel) {
-        final connectedHost = results.data;
-        final isRunning = results.isRunning;
-        showSnackBar(
-          context: context,
-          duration: const Duration(seconds: 3),
-          content: isRunning
-              ? const Progress()
-              : Text(
-                  connectedHost != null
-                      ? '${context.l10n.connectedTo}: $connectedHost'
-                      : context.l10n.noRadioServerFound,
-                ),
-          action: connectedHost == null && !isRunning
-              ? SnackBarAction(
-                  label: context.l10n.tryReconnect,
-                  onPressed: di<RadioModel>().connectCommand,
-                )
-              : null,
-        );
-      },
+    registerRadioConnectHandler(context);
+
+    callOnceAfterThisBuild(
+      (_) => di<RadioManager>().getStationByUUIDCommand(uuid).run(),
     );
 
-    if (di<RadioModel>().getStationByUUID(uuid) == null) {
-      callOnceAfterThisBuild(
-        (_) => di<RadioModel>().getStationByUUIDCommand(uuid).run(),
-      );
-    }
-
     final stationResult = watchValue(
-      (RadioModel m) => m.getStationByUUIDCommand(uuid).results,
+      (RadioManager m) => m.getStationByUUIDCommand(uuid).results,
     );
     final station = stationResult.data;
     final error = stationResult.error;
@@ -115,7 +91,21 @@ class StationPage extends StatelessWidget with WatchItMixin {
           }
 
           if (station == null) {
-            return const Center(child: Progress());
+            return AdaptiveMultiLayoutBody(
+              controlPanel: const SizedBox.shrink(),
+              header: AudioPageHeader(
+                title: '',
+                image: Container(
+                  width: kMaxAudioPageHeaderHeight,
+                  height: kMaxAudioPageHeaderHeight,
+                  color: context.theme.cardColor,
+                ),
+              ),
+              sliverBody: (_) => const SliverFillRemaining(
+                hasScrollBody: false,
+                child: Center(child: Progress()),
+              ),
+            );
           }
 
           return AdaptiveMultiLayoutBody(

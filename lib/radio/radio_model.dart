@@ -5,74 +5,23 @@ import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
-import '../common/data/mpv_meta_data.dart';
 import '../l10n/app_localizations.dart';
-import '../player/player_service.dart';
 import 'radio_service.dart';
 
 @lazySingleton
-class RadioModel extends SafeChangeNotifier {
+class RadioManager {
   final RadioService _radioService;
-  final PlayerService _playerService;
-  StreamSubscription<bool>? _propertiesChangedSub;
 
-  RadioModel({
-    required RadioService radioService,
-    required PlayerService playerService,
-  }) : _radioService = radioService,
-       _playerService = playerService {
-    _propertiesChangedSub ??= _radioService.propertiesChanged.listen(
-      (_) => notifyListeners(),
-    );
-    connectCommand = Command.createAsyncNoParam(
-      () => _radioService.init(),
-      initialValue: null,
-    );
-
+  RadioManager({required RadioService radioService})
+    : _radioService = radioService {
     connectCommand.run();
   }
 
-  late final Command<void, String?> connectCommand;
-
-  Future<void> clickStation(Audio? station) async {
-    if (station?.uuid != null) {
-      return _radioService.clickStation(station!.uuid!);
-    }
-  }
-
-  RadioCollectionView _radioCollectionView = RadioCollectionView.stations;
-  RadioCollectionView get radioCollectionView => _radioCollectionView;
-  void setRadioCollectionView(RadioCollectionView value) {
-    if (value == _radioCollectionView) return;
-    _radioCollectionView = value;
-    notifyListeners();
-  }
-
-  MpvMetaData? get mpvMetaData => _radioService.mpvMetaData;
-
-  void setDataSafeMode(bool value) => _radioService.setDataSafeMode(value);
-  bool get dataSafeMode => _radioService.dataSafeMode;
-
-  int getRadioHistoryLength({String? filter}) =>
-      filteredRadioHistory(filter: filter).length;
-  MpvMetaData? getMetadata(String? icyTitle) =>
-      icyTitle == null ? null : _radioService.radioHistory[icyTitle];
-
-  Iterable<MapEntry<String, MpvMetaData>> filteredRadioHistory({
-    required String? filter,
-  }) => _radioService.filteredRadioHistory(filter: filter);
-
-  String getRadioHistoryList({String? filter}) =>
-      _radioService.getRadioHistoryList(filter: filter);
-
-  void setTimer(Duration duration) => _playerService.setPauseTimer(duration);
-
-  @disposeMethod
-  @override
-  Future<void> dispose() async {
-    await _propertiesChangedSub?.cancel();
-    super.dispose();
-  }
+  final _stationCache = <String, Audio>{};
+  late final Command<void, String?> connectCommand = Command.createAsyncNoParam(
+    () => _radioService.init(),
+    initialValue: null,
+  );
 
   final _getStationByUUIDCommands = <String, Command<void, Audio?>>{};
   Command<void, Audio?> getStationByUUIDCommand(String uuid) =>
@@ -84,11 +33,12 @@ class RadioModel extends SafeChangeNotifier {
         ),
       );
 
-  Audio? getStationByUUID(String uuid) =>
-      getStationByUUIDCommand(uuid).results.value.data;
-
   Future<Audio?> _getStationByUUID(String pageId) async {
-    if (_radioService.connectedHost == null) {
+    if (_stationCache.containsKey(pageId)) {
+      return _stationCache[pageId];
+    }
+
+    if (connectCommand.value == null) {
       await connectCommand.runAsync();
     }
 
@@ -98,12 +48,33 @@ class RadioModel extends SafeChangeNotifier {
       return null;
     }
 
-    return Audio.fromStation(stationByUUID);
+    final audio = Audio.fromStation(stationByUUID);
+    _stationCache[pageId] = audio;
+    return audio;
   }
 
   Future<Audio?> getStationByUrl(String url) async {
+    if (_stationCache.containsKey(url)) {
+      return _stationCache[url];
+    }
     final stationByUrl = await _radioService.getStationByUrl(url);
-    return stationByUrl != null ? Audio.fromStation(stationByUrl) : null;
+    if (stationByUrl == null) {
+      return null;
+    }
+    final audio = Audio.fromStation(stationByUrl);
+    _stationCache[url] = audio;
+    return audio;
+  }
+
+  Future<void> clickStation(Audio? station) =>
+      _radioService.clickStation(station?.uuid);
+
+  final radioCollectionView = SafeValueNotifier<RadioCollectionView>(
+    RadioCollectionView.stations,
+  );
+  void setRadioCollectionView(RadioCollectionView value) {
+    if (value == radioCollectionView.value) return;
+    radioCollectionView.value = value;
   }
 }
 

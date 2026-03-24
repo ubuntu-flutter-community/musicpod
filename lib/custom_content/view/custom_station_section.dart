@@ -83,7 +83,7 @@ class _AddStationDialogState extends State<CustomStationSection> {
                             !_urlController.text.startsWith('http')
                         ? null
                         : () {
-                            di<RadioModel>()
+                            di<RadioManager>()
                                 .getStationByUrl(_urlController.text)
                                 .then((v) {
                                   if (v?.uuid == null) {
