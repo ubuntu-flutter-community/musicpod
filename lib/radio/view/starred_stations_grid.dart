@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/no_search_result_page.dart';
-import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../radio_model.dart';
 import 'open_radio_discover_page_button.dart';
-import 'radio_reconnect_button.dart';
 import 'station_card.dart';
 
 class StarredStationsGrid extends StatelessWidget with WatchItMixin {
@@ -17,29 +14,6 @@ class StarredStationsGrid extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    registerHandler(
-      select: (RadioModel m) => m.connectCommand,
-      handler: (context, connectedHost, cancel) {
-        showSnackBar(
-          context: context,
-          content: Text(
-            connectedHost != null
-                ? '${context.l10n.connectedTo}: $connectedHost'
-                : context.l10n.noRadioServerFound,
-          ),
-        );
-      },
-    );
-
-    final connectedHost = watchValue((RadioModel m) => m.connectCommand);
-
-    if (connectedHost == null) {
-      return const SliverFillRemaining(
-        hasScrollBody: false,
-        child: Center(child: RadioReconnectButton()),
-      );
-    }
-
     final stations = watchPropertyValue((LibraryModel m) => m.starredStations);
     final length = watchPropertyValue(
       (LibraryModel m) => m.starredStationsLength,

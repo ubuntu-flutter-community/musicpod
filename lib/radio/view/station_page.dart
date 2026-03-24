@@ -16,6 +16,7 @@ import '../../common/view/offline_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/search_button.dart';
+import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
@@ -37,6 +38,31 @@ class StationPage extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     if (!isOnline) return const OfflinePage();
+
+    registerHandler(
+      select: (RadioModel m) => m.connectCommand.results,
+      handler: (context, results, cancel) {
+        final connectedHost = results.data;
+        final isRunning = results.isRunning;
+        showSnackBar(
+          context: context,
+          duration: const Duration(seconds: 3),
+          content: isRunning
+              ? const Progress()
+              : Text(
+                  connectedHost != null
+                      ? '${context.l10n.connectedTo}: $connectedHost'
+                      : context.l10n.noRadioServerFound,
+                ),
+          action: connectedHost == null && !isRunning
+              ? SnackBarAction(
+                  label: context.l10n.tryReconnect,
+                  onPressed: di<RadioModel>().connectCommand,
+                )
+              : null,
+        );
+      },
+    );
 
     if (di<RadioModel>().getStationByUUID(uuid) == null) {
       callOnceAfterThisBuild(
