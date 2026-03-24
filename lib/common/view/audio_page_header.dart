@@ -65,11 +65,16 @@ class AudioPageHeader extends StatelessWidget {
               ),
             ),
           Padding(
-            padding: const EdgeInsets.only(top: kLargestSpace, bottom: 5),
+            padding: const EdgeInsets.only(
+              top: kLargestSpace,
+              bottom: kMediumSpace,
+            ),
             child: Text(
               title,
               style: theme.pageHeaderStyle,
               overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+              textAlign: TextAlign.center,
             ),
           ),
           if (subTitle != null)

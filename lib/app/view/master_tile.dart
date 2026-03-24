@@ -172,7 +172,7 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
                     );
                     final audios = result.asValue?.value;
                     if (audios?.firstOrNull?.audioType == AudioType.radio) {
-                      di<RadioModel>().clickStation(audios?.firstOrNull);
+                      di<RadioManager>().clickStation(audios?.firstOrNull);
                     }
                     if (isEnQueued) {
                       isPlaying ? playerModel.pause() : playerModel.resume();
@@ -206,9 +206,9 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
     final libraryModel = di<LibraryModel>();
 
     if (libraryModel.isStarredStation(pageId)) {
-      final audio =
-          di<RadioModel>().getStationByUUID(pageId) ??
-          await di<RadioModel>().getStationByUUIDCommand(pageId).runAsync();
+      final audio = await di<RadioManager>()
+          .getStationByUUIDCommand(pageId)
+          .runAsync();
       return audio == null ? [] : [audio];
     }
 

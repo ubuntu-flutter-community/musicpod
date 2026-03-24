@@ -238,9 +238,13 @@ class _Description extends StatelessWidget with WatchItMixin {
           ],
         ),
       ),
-      child: SizedBox(
-        height: 100,
-        child: HtmlText(text: description ?? '', wrapInFakeScroll: true),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: kSmallestSpace),
+        child: SizedBox(
+          height: 100,
+          width: double.infinity,
+          child: HtmlText(text: description ?? '', wrapInFakeScroll: true),
+        ),
       ),
     );
   }

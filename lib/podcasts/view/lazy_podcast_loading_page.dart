@@ -27,7 +27,8 @@ class LazyPodcastLoadingPage extends StatelessWidget {
         episodes: [],
         showFallbackIcon: false,
       ),
-      sliverBody: (constraints) => SliverToBoxAdapter(child: child),
+      sliverBody: (constraints) =>
+          SliverFillRemaining(hasScrollBody: false, child: child),
       controlPanel: const PodcastPageControlPanel(
         feedUrl: '',
         audios: [],

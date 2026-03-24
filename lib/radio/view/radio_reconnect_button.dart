@@ -17,7 +17,7 @@ class RadioReconnectButton extends StatelessWidget with WatchItMixin {
       label: Text(
         '${context.l10n.noRadioServerFound}: ${context.l10n.tryReconnect}',
       ),
-      onPressed: isOnline ? di<RadioModel>().connectCommand.run : null,
+      onPressed: isOnline ? di<RadioManager>().connectCommand.run : null,
       icon: const DisconnectedServerIcon(),
     );
   }

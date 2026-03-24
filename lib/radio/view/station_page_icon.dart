@@ -22,13 +22,11 @@ class StationPageIcon extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     watchPropertyValue((ConnectivityModel m) => m.isOnline);
-    if (di<RadioModel>().getStationByUUID(uuid) == null) {
-      callOnceAfterThisBuild(
-        (_) => di<RadioModel>().getStationByUUIDCommand(uuid).run(),
-      );
-    }
+    callOnceAfterThisBuild(
+      (_) => di<RadioManager>().getStationByUUIDCommand(uuid).run(),
+    );
     final stationResults = watchValue(
-      (RadioModel m) => m.getStationByUUIDCommand(uuid).results,
+      (RadioManager m) => m.getStationByUUIDCommand(uuid).results,
     );
 
     final station = stationResults.data;

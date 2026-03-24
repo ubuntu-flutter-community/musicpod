@@ -6,7 +6,7 @@ import '../../app_config.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
-import '../../radio/radio_model.dart';
+import '../../player/mpv_metadata_manager.dart';
 import '../settings_model.dart';
 
 class ResourceSection extends StatelessWidget with WatchItMixin {
@@ -48,8 +48,9 @@ class ResourceSection extends StatelessWidget with WatchItMixin {
             title: Text(l10n.enableDataSafeModeSettingTitle),
             subtitle: Text(l10n.enableDataSafeModeSettingDescription),
             trailing: CommonSwitch(
-              onChanged: di<RadioModel>().setDataSafeMode,
-              value: watchPropertyValue((RadioModel m) => m.dataSafeMode),
+              onChanged: (value) =>
+                  di<MpvMetadataManager>().dataSafeMode.value = value,
+              value: watchValue((MpvMetadataManager m) => m.dataSafeMode),
             ),
           ),
           YaruTile(

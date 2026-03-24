@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../app/app_model.dart';
 import '../../app/view/routing_manager.dart';
@@ -16,9 +16,9 @@ import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../podcasts/podcast_model.dart';
 import '../../podcasts/view/lazy_podcast_page.dart';
-import '../../radio/radio_model.dart';
 import '../../radio/view/station_page.dart';
 import '../../settings/settings_model.dart';
+import '../mpv_metadata_manager.dart';
 import '../player_model.dart';
 import 'player_track.dart';
 import 'player_view.dart';
@@ -33,8 +33,9 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     final theme = context.theme;
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
 
-    final icyTitle = watchPropertyValue(
-      (RadioModel m) => m.mpvMetaData?.icyTitle,
+    final icyTitle = watchValue(
+      (MpvMetadataManager m) =>
+          m.mpvMetaDataCommand.select((cmd) => cmd?.icyTitle),
     );
     final showPositionDuration = watchPropertyValue(
       (SettingsModel m) => m.showPositionDuration,

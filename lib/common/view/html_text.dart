@@ -33,6 +33,7 @@ class HtmlText extends StatelessWidget {
             return true;
           },
       textStyle: TextStyle(color: color),
+
       customStylesBuilder: (element) {
         return {
           'color': '${theColor.toHexTriplet()}',
@@ -44,6 +45,7 @@ class HtmlText extends StatelessWidget {
             '-webkit-line-clamp': '1',
             'ine-clamp': '1',
             '-webkit-box-orient': 'vertical',
+            'text-align': 'left',
           },
         };
       },

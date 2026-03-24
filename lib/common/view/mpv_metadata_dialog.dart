@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
-import 'ui_constants.dart';
-import '../data/mpv_meta_data.dart';
+import '../../player/data/mpv_meta_data.dart';
 import 'icons.dart';
 import 'modals.dart';
 import 'safe_network_image.dart';
 import 'stream_provider_share_button.dart';
+import 'ui_constants.dart';
 
 class MpvMetadataDialog extends StatelessWidget {
   const MpvMetadataDialog({

@@ -6,16 +6,16 @@ import 'package:podcast_search/podcast_search.dart';
 import 'package:synchronized/synchronized.dart';
 
 import '../common/data/audio.dart';
-import '../common/data/podcast_genre.dart';
 import '../common/logging.dart';
 import '../common/view/audio_filter.dart';
 import '../common/view/languages.dart';
 import '../extensions/date_time_x.dart';
-import '../settings/shared_preferences_keys.dart';
 import '../extensions/string_x.dart';
 import '../library/library_service.dart';
 import '../notifications/notifications_service.dart';
 import '../settings/settings_service.dart';
+import '../settings/shared_preferences_keys.dart';
+import 'data/podcast_genre.dart';
 
 @lazySingleton
 class PodcastService {

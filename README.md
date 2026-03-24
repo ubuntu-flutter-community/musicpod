@@ -60,8 +60,6 @@ Thank you [@escamoteur](https://github.com/escamoteur) for creating [get_it](htt
 ## Contributing
 
 Contributions are highly welcome. Especially translations.
-Please [fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo) MusicPod to your GitHub namespace, [clone](https://docs.github.com/de/repositories/creating-and-managing-repositories/cloning-a-repository) it to your computer, create a branch named by yourself, commit your changes to your local branch, push them to your fork and then make a pull request from your fork to this repository.
-I recommend the vscode extension [GitHub Pull Requests](https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-pull-request-github) especially for people new to [Git](https://git-scm.com/doc) and [GitHub](https://docs.github.com/en/get-started/start-your-journey).
 
 ## Translations
 
@@ -77,9 +75,14 @@ https://hosted.weblate.org/projects/musicpod/app
 ## Code contributions
 
 If you find any error please feel free to report it as an issue and describe it as good as you can.
-If you want to contribute code, please create an issue first.
+If you want to contribute code, please create an issue first, then proceed as follows:
+
+Please [fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo) MusicPod to your GitHub namespace, [clone](https://docs.github.com/de/repositories/creating-and-managing-repositories/cloning-a-repository) it to your computer, create a branch named by yourself, commit your changes to your local branch, push them to your fork and then make a pull request from your fork to this repository.
+I recommend the vscode extension [GitHub Pull Requests](https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-pull-request-github) especially for people new to [Git](https://git-scm.com/doc) and [GitHub](https://docs.github.com/en/get-started/start-your-journey).
 
 ## Build
+
+### Prerequisites
 
 - for Linux desktop builds: `sudo apt install libmpv-dev mpv`
 - [install rust](https://www.rust-lang.org/tools/install) (for some dependencies)
@@ -88,6 +91,20 @@ If you want to contribute code, please create an issue first.
 - required for android builds: [install android-studio](https://developer.android.com/studio)
 - required for macos builds: [install xcode](https://developer.apple.com/xcode/)
 - as a good IDE for all builds: [install vcode](https://code.visualstudio.com/)
+
+### Generate some code
+
+The dependencies and test mocks are generated with [build_runner](https://pub.dev/packages/build_runner). You need to run the `build_runner` command in order to re-generate dependencies, in case you changed the signatures of service methods, like this:
+
+`dart pub run build_runner build --delete-conflicting-outputs`
+
+or if you use fvm:
+
+`fvm dart pub run build_runner build --delete-conflicting-outputs`
+
+### Run
+
+Now you can run the app with `flutter run` or `fvm flutter run` in the project directory. If not, please open an issue if I maybe have forgotten a step which I had locally, but not in the README.md.
 
 ## Release
 
@@ -102,7 +119,7 @@ When a new release is made go to https://snapcraft.io/musicpod/releases and prom
 
 ### MacOs
 
-- fvm flutter build macos --release
+- `fvm flutter build macos --release`
 - open the macos directory in xcode
   - in xcode go to "Product" -> "Archive"
   - create archive
@@ -112,7 +129,7 @@ When a new release is made go to https://snapcraft.io/musicpod/releases and prom
   - export app
 - install [create-dmg](https://github.com/create-dmg/create-dmg)
 - open the location you exported the app to
-- create-dmg --idenfity=XXXXXXXX musicpod.app (XXXXXXXX is your apple dev ID which needs to be with your certificate in your mac...)
+- `create-dmg --idenfity=XXXXXXXX musicpod.app` (XXXXXXXX is your apple dev ID which needs to be with your certificate in your mac...)
 
 ### Windows
 

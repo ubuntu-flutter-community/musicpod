@@ -10,7 +10,6 @@ import 'package:yaru/yaru.dart';
 
 import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
-import '../common/data/player_state.dart';
 import '../common/file_names.dart';
 import '../common/logging.dart';
 import '../expose/expose_service.dart';
@@ -19,6 +18,7 @@ import '../extensions/string_x.dart';
 import '../extensions/taget_platform_x.dart';
 import '../local_audio/local_cover_service.dart';
 import '../persistence_utils.dart';
+import 'data/player_state.dart';
 
 typedef Queue = ({String name, List<Audio> audios});
 

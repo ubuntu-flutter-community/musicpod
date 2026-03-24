@@ -55,11 +55,7 @@ class MainPageIcon extends StatelessWidget with WatchItMixin {
 
     return Padding(
       padding: mainPageIconPadding,
-      child: Icon(
-        selected
-            ? audioType.selectedIconDataMainPage
-            : audioType.iconDataMainPage,
-      ),
+      child: Icon(selected ? audioType.selectedIconData : audioType.iconData),
     );
   }
 }
@@ -101,9 +97,7 @@ class LocalMainPageIcon extends StatelessWidget with WatchItMixin {
     return Padding(
       padding: mainPageIconPadding,
       child: Icon(
-        selected
-            ? AudioType.local.selectedIconDataMainPage
-            : AudioType.local.iconDataMainPage,
+        selected ? AudioType.local.selectedIconData : AudioType.local.iconData,
       ),
     );
   }

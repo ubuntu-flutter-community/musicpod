@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 
-import 'audio.dart';
+import '../../common/data/audio.dart';
 
 class PlayerState {
   final String? position;
