@@ -22,7 +22,7 @@ class LocalCoverModel extends SafeChangeNotifier {
 
   Future<Uint8List?> getCover({
     required String albumId,
-    required String path,
+    required String? path,
   }) async => _localCoverService.getCover(albumId: albumId, path: path);
 
   @override

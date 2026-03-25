@@ -1,23 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../common/data/audio.dart';
-import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
+import '../../common/view/progress.dart';
 import '../../common/view/spaced_divider.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
-import '../../local_audio/local_audio_manager.dart';
 import '../../player/player_model.dart';
-import '../../podcasts/podcast_model.dart';
-import '../../radio/radio_model.dart';
+import '../sidebar_audios_manager.dart';
 import 'master_item.dart';
 import 'routing_manager.dart';
 
@@ -146,7 +140,15 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
       (PlayerModel m) => m.queueName != null && m.queueName == widget.pageId,
     );
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
-    final playerModel = di<PlayerModel>();
+
+    final playAudiosByIdCommandResults = watchValue(
+      (SidebarAudiosManager m) => m.playAudiosByIdCommand.results,
+    );
+
+    final isRunning = playAudiosByIdCommandResults.isRunning;
+    final paramPageId = playAudiosByIdCommandResults.paramData;
+
+    final busy = isRunning && paramPageId == widget.pageId;
 
     return MouseRegion(
       onEnter: (e) => setState(() => _hovered = true),
@@ -162,67 +164,28 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
                 dimension: kTinyButtonSize,
                 child: IconButton(
                   style: tonedIconButtonStyle(context.colorScheme),
-                  onPressed: () async {
-                    final result = await showFutureLoadingDialog(
-                      context: context,
-                      future: () async => await getAudiosById(widget.pageId),
-                      backLabel: context.l10n.back,
-                      barrierDismissible: true,
-                      title: context.l10n.loadingPleaseWait,
-                    );
-                    final audios = result.asValue?.value;
-                    if (audios?.firstOrNull?.audioType == AudioType.radio) {
-                      di<RadioManager>().clickStation(audios?.firstOrNull);
-                    }
-                    if (isEnQueued) {
-                      isPlaying ? playerModel.pause() : playerModel.resume();
-                    } else if (audios != null) {
-                      playerModel
-                          .startPlaylist(
-                            audios: audios,
-                            listName: widget.pageId,
-                          )
-                          .then(
-                            (_) => di<LibraryModel>().removePodcastUpdate(
-                              widget.pageId,
-                            ),
-                          );
-                    }
-                  },
-                  icon: Icon(
-                    isPlaying && isEnQueued ? Iconz.pause : Iconz.playFilled,
-                    size: kTinyButtonIconSize,
-                    color: context.theme.colorScheme.onSurface,
-                  ),
+                  onPressed: isRunning
+                      ? null
+                      : () => di<SidebarAudiosManager>().playAudiosByIdCommand
+                            .run(widget.pageId),
+                  icon: busy
+                      ? const SizedBox(
+                          width: 15,
+                          height: 15,
+                          child: Progress(strokeWidth: 1),
+                        )
+                      : Icon(
+                          isPlaying && isEnQueued
+                              ? Iconz.pause
+                              : Iconz.playFilled,
+                          size: kTinyButtonIconSize,
+                          color: context.theme.colorScheme.onSurface,
+                        ),
                 ),
               ),
             ),
         ],
       ),
     );
-  }
-
-  Future<List<Audio>?>? getAudiosById(String pageId) async {
-    final libraryModel = di<LibraryModel>();
-
-    if (libraryModel.isStarredStation(pageId)) {
-      final audio = await di<RadioManager>()
-          .getStationByUUIDCommand(pageId)
-          .runAsync();
-      return audio == null ? [] : [audio];
-    }
-
-    if (libraryModel.isPodcastSubscribed(pageId)) {
-      final episodes =
-          di<PodcastModel>().getPodcastEpisodesFromCache(pageId) ??
-          await di<PodcastModel>().findEpisodes(feedUrl: pageId);
-      return episodes;
-    }
-
-    if (libraryModel.isPlaylistSaved(pageId)) {
-      return libraryModel.getPlaylistById(pageId);
-    }
-
-    return di<LocalAudioManager>().findAlbum(pageId);
   }
 }

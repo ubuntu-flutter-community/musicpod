@@ -86,6 +86,7 @@ class AudioTileOptionButton extends StatelessWidget {
                   playerModel.insertIntoQueue(audios);
                   showSnackBar(
                     context: context,
+                    duration: const Duration(seconds: 2),
                     content: Text('${l10n.addedTo} ${l10n.queue}: $searchTerm'),
                   );
                 } else {
@@ -151,9 +152,9 @@ class AudioTileOptionButton extends StatelessWidget {
               onTap: () async {
                 final albumId = audios.firstOrNull?.albumId;
                 if (albumId != null) {
-                  final albumAudios = await di<LocalAudioManager>().findAlbum(
-                    albumId,
-                  );
+                  final albumAudios = await di<LocalAudioManager>()
+                      .findAlbumCommand(albumId)
+                      .runAsync();
                   if (albumAudios != null) {
                     di<RoutingManager>().push(
                       pageId: albumId,

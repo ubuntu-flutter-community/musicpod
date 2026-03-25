@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../app/view/routing_manager.dart';
 import '../../common/data/audio.dart';
@@ -21,67 +22,38 @@ import 'artist_page.dart';
 import 'local_cover.dart';
 import 'pin_album_button.dart';
 
-class AlbumPage extends StatefulWidget with WatchItStatefulWidgetMixin {
+class AlbumPage extends StatelessWidget with WatchItMixin {
   const AlbumPage({super.key, required this.id});
 
   final String id;
 
   @override
-  State<AlbumPage> createState() => _AlbumPageState();
-}
-
-class _AlbumPageState extends State<AlbumPage> {
-  late Future<List<Audio>?> _album;
-
-  @override
-  void initState() {
-    super.initState();
-    getAlbum();
-  }
-
-  void getAlbum() => _album = di<LocalAudioManager>().findAlbum(widget.id);
-
-  @override
   Widget build(BuildContext context) {
-    final localAudioManager = di<LocalAudioManager>();
-    final cachedAlbum = localAudioManager.getCachedAlbum(widget.id);
-    if (cachedAlbum != null) {
-      return SliverAudioPage(
-        pageId: widget.id,
-        audioPageType: AudioPageType.album,
-        audios: cachedAlbum,
-        image: AlbumPageImage(audio: cachedAlbum.firstOrNull),
-        noSearchResultMessage: Text(context.l10n.albumNotFound),
-        pageTitle: cachedAlbum.firstWhereOrNull((e) => e.album != null)?.album,
-        pageSubTitle: cachedAlbum
-            .firstWhereOrNull((e) => e.artist != null)
-            ?.artist,
-        onPageSubTitleTab: onArtistTap,
-        onPageLabelTab: onArtistTap,
-        controlPanel: AlbumPageControlPanel(album: cachedAlbum, id: widget.id),
-      );
-    }
+    callOnceAfterThisBuild(
+      (context) => di<LocalAudioManager>().findAlbumCommand(id).run(),
+    );
 
-    return FutureBuilder(
-      future: _album,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
+    return watchValue(
+      (LocalAudioManager m) => m.findAlbumCommand(id).results,
+    ).toWidget(
+      onError: (error, lastResult, param) => Scaffold(
+        appBar: const HeaderBar(adaptive: true),
+        body: Center(child: Text(error.toString())),
+      ),
+      whileRunning: (lastResult, param) => const Scaffold(
+        appBar: HeaderBar(adaptive: true),
+        body: Center(child: Progress()),
+      ),
+      onData: (album, param) {
+        if (album == null) {
           return Scaffold(
             appBar: const HeaderBar(adaptive: true),
-            body: Center(child: Text(snapshot.error.toString())),
+            body: Center(child: Text(context.l10n.albumNotFound)),
           );
         }
-        if (!snapshot.hasData) {
-          return const Scaffold(
-            appBar: HeaderBar(adaptive: true),
-            body: Center(child: Progress()),
-          );
-        }
-
-        final album = snapshot.data!;
 
         return SliverAudioPage(
-          pageId: widget.id,
+          pageId: id,
           audioPageType: AudioPageType.album,
           audios: album,
           image: AlbumPageImage(audio: album.firstOrNull),
@@ -90,7 +62,7 @@ class _AlbumPageState extends State<AlbumPage> {
           pageSubTitle: album.firstWhereOrNull((e) => e.artist != null)?.artist,
           onPageSubTitleTab: onArtistTap,
           onPageLabelTab: onArtistTap,
-          controlPanel: AlbumPageControlPanel(album: album, id: widget.id),
+          controlPanel: AlbumPageControlPanel(album: album, id: id),
         );
       },
     );
@@ -102,76 +74,97 @@ class _AlbumPageState extends State<AlbumPage> {
   );
 }
 
-class AlbumPageSideBarIcon extends StatefulWidget {
+class AlbumPageSideBarIcon extends StatelessWidget with WatchItMixin {
   const AlbumPageSideBarIcon({super.key, required this.albumId});
 
   final String albumId;
 
   @override
-  State<AlbumPageSideBarIcon> createState() => _AlbumPageSideBarIconState();
-}
-
-class _AlbumPageSideBarIconState extends State<AlbumPageSideBarIcon> {
-  late Future<String?> _future;
-
-  @override
-  void initState() {
-    super.initState();
-    _future = di<LocalAudioManager>().findCoverPath(widget.albumId);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final fallBack = SideBarFallBackImage(
-      color: getAlphabetColor(widget.albumId),
-      child: Icon(Iconz.startPlayList),
+    callOnceAfterThisBuild(
+      (context) => di<LocalAudioManager>().findAlbumCommand(albumId).run(),
     );
+    final alphabetColor = getAlphabetColor(albumId);
 
-    return FutureBuilder(
-      future: _future,
-      builder: (context, snapshot) {
-        final path = snapshot.data;
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(5),
-          child: path == null
-              ? fallBack
-              : LocalCover(
-                  albumId: widget.albumId,
-                  path: path,
-                  fallback: fallBack,
-                  dimension: sideBarImageSize,
-                ),
-        );
-      },
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(5),
+      child:
+          watchValue(
+            (LocalAudioManager m) => m.findAlbumCommand(albumId).results,
+          ).toWidget(
+            onError: (error, lastResult, param) {
+              return SideBarFallBackImage(
+                color: alphabetColor,
+                child: Icon(Iconz.startPlayList),
+              );
+            },
+            whileRunning: (lastResult, param) => Shimmer.fromColors(
+              child: SideBarFallBackImage(
+                color: alphabetColor,
+                child: const SizedBox.shrink(),
+              ),
+              baseColor: alphabetColor,
+              highlightColor: alphabetColor.withValues(alpha: 0.5),
+            ),
+            onData: (album, param) {
+              final path = album
+                  ?.firstWhereOrNull((e) => e.albumId == albumId)
+                  ?.path;
+              return path == null
+                  ? SideBarFallBackImage(
+                      color: alphabetColor,
+                      child: Icon(Iconz.startPlayList),
+                    )
+                  : LocalCover(
+                      albumId: albumId,
+                      path: path,
+                      fallback: SideBarFallBackImage(
+                        color: alphabetColor,
+                        child: Icon(Iconz.startPlayList),
+                      ),
+                      dimension: sideBarImageSize,
+                    );
+            },
+          ),
     );
   }
 }
 
-class AlbumPageImage extends StatelessWidget {
+class AlbumPageImage extends StatelessWidget with WatchItMixin {
   const AlbumPageImage({super.key, required this.audio});
 
   final Audio? audio;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        const CoverBackground(dimension: kMaxAudioPageHeaderHeight),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: audio != null && audio!.canHaveLocalCover
-              ? LocalCover(
-                  albumId: audio!.albumId!,
-                  path: audio!.path!,
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: audio != null && audio!.canHaveLocalCover
+          ? watchValue(
+              (LocalAudioManager m) =>
+                  m.findAlbumCommand(audio!.albumId!).results,
+            ).toWidget(
+              whileRunning: (lastResult, param) => Shimmer.fromColors(
+                child: const SizedBox.square(
                   dimension: kMaxAudioPageHeaderHeight,
-                  fallback: const CoverBackground(
-                    dimension: kMaxAudioPageHeaderHeight,
-                  ),
-                )
-              : const CoverBackground(dimension: kMaxAudioPageHeaderHeight),
-        ),
-      ],
+                ),
+                baseColor: getAlphabetColor(audio!.albumId!),
+                highlightColor: getAlphabetColor(
+                  audio!.albumId!,
+                ).withValues(alpha: 0.5),
+              ),
+              onError: (error, lastResult, param) =>
+                  const CoverBackground(dimension: kMaxAudioPageHeaderHeight),
+              onData: (album, param) => LocalCover(
+                albumId: audio!.albumId!,
+                path: audio!.path!,
+                dimension: kMaxAudioPageHeaderHeight,
+                fallback: const CoverBackground(
+                  dimension: kMaxAudioPageHeaderHeight,
+                ),
+              ),
+            )
+          : const CoverBackground(dimension: kMaxAudioPageHeaderHeight),
     );
   }
 }

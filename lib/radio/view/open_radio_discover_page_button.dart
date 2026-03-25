@@ -6,9 +6,12 @@ import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
 import '../../l10n/l10n.dart';
 import '../../search/search_model.dart';
+import '../../search/search_type.dart';
 
 class OpenRadioSearchButton extends StatelessWidget with WatchItMixin {
-  const OpenRadioSearchButton({super.key});
+  const OpenRadioSearchButton({super.key, required this.searchType});
+
+  final SearchType searchType;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +20,8 @@ class OpenRadioSearchButton extends StatelessWidget with WatchItMixin {
         di<RoutingManager>().push(pageId: PageIDs.searchPage);
         di<SearchModel>()
           ..setAudioType(AudioType.radio)
-          ..search();
+          ..setSearchType(searchType)
+          ..search(clear: true);
       },
       child: Text(context.l10n.discover),
     );

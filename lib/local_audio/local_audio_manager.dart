@@ -78,17 +78,26 @@ class LocalAudioManager {
   String? findAlbumId({required String artist, required String album}) =>
       _localAudioService.findAlbumId(artist: artist, album: album);
 
-  List<Audio>? getCachedAlbum(String albumId) =>
-      _localAudioService.getCachedAlbum(albumId);
-  Future<List<Audio>?> findAlbum(
-    String albumId, [
-    AudioFilter audioFilter = AudioFilter.trackNumber,
-  ]) => _localAudioService.findAlbum(albumId, audioFilter);
+  final _findAlbumCommands = <String, Command<AudioFilter?, List<Audio>?>>{};
+  Command<AudioFilter?, List<Audio>?> findAlbumCommand(String albumId) =>
+      _findAlbumCommands.putIfAbsent(
+        albumId,
+        () => Command.createAsync((audioFilter) async {
+          if (initAudiosCommand.value == null) {
+            await initAudiosCommand.runAsync((
+              directory: null,
+              forceInit: false,
+              extraAudios: [],
+            ));
+          }
 
-  String? getCachedCoverPath(String albumId) =>
-      _localAudioService.getCachedCoverPath(albumId);
-  Future<String?> findCoverPath(String albumId) async =>
-      _localAudioService.findCoverPath(albumId);
+          return _localAudioService.getCachedAlbum(albumId) ??
+              _localAudioService.findAlbum(
+                albumId,
+                audioFilter ?? AudioFilter.trackNumber,
+              );
+        }, initialValue: null),
+      );
 
   List<Audio>? getCachedTitlesOfArtist(String artist) =>
       _localAudioService.getCachedTitlesOfArtist(artist);
@@ -117,12 +126,14 @@ class LocalAudioManager {
     ({bool forceInit, String? directory, List<Audio> extraAudios}),
     ({List<Audio> audios, List<String> failedImports})?
   >
-  initAudiosCommand = Command.createAsync(
-    (param) => _localAudioService.init(
+  initAudiosCommand = Command.createAsync((param) {
+    if (param.forceInit) {
+      _findAlbumCommands.clear();
+    }
+    return _localAudioService.init(
       forceInit: param.forceInit,
       newDirectory: param.directory,
       extraAudios: param.extraAudios,
-    ),
-    initialValue: null,
-  );
+    );
+  }, initialValue: null);
 }

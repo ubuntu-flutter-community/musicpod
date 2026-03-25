@@ -32,7 +32,7 @@ class FavoriteRadioTagsGrid extends StatelessWidget with WatchItMixin {
           children: [
             Text(context.l10n.noStarredTags),
             const SizedBox(height: kLargestSpace),
-            const OpenRadioSearchButton(),
+            const OpenRadioSearchButton(searchType: SearchType.radioTag),
           ],
         ),
       );

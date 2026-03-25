@@ -213,7 +213,8 @@ class AudioTileBottomSheet extends StatelessWidget {
                             final albumId = audios.firstOrNull?.albumId;
                             if (albumId != null) {
                               final albumAudios = await di<LocalAudioManager>()
-                                  .findAlbum(albumId);
+                                  .findAlbumCommand(albumId)
+                                  .runAsync();
                               if (albumAudios != null) {
                                 routingManager.push(
                                   pageId: albumId,
