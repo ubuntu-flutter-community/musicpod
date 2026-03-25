@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:injectable_generator/utils.dart';
 
 import '../../app/view/routing_manager.dart';
 import '../../common/view/audio_card.dart';
@@ -19,47 +20,34 @@ import '../local_audio_manager.dart';
 import 'album_page.dart';
 import 'local_cover.dart';
 
-class AlbumCard extends StatefulWidget with WatchItStatefulWidgetMixin {
+class AlbumCard extends StatelessWidget with WatchItMixin {
   const AlbumCard({super.key, required this.id});
 
   final String id;
 
   @override
-  State<AlbumCard> createState() => _AlbumCardState();
-}
-
-class _AlbumCardState extends State<AlbumCard> {
-  late Future<String?> _pathFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    final manager = di<LocalAudioManager>();
-    final cachedCoverPath = manager.getCachedCoverPath(widget.id);
-    _pathFuture = cachedCoverPath != null
-        ? Future.value(cachedCoverPath)
-        : manager.findCoverPath(widget.id);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final manager = di<LocalAudioManager>();
-    final cachedCoverPath = manager.getCachedCoverPath(widget.id);
+    callOnceAfterThisBuild(
+      (context) => di<LocalAudioManager>().findAlbumCommand(id).run(),
+    );
+
     final pinned = watchPropertyValue(
-      (LibraryModel m) => m.isFavoriteAlbum(widget.id),
+      (LibraryModel m) => m.isFavoriteAlbum(id),
     );
 
     return Stack(
       alignment: Alignment.center,
       children: [
-        if (cachedCoverPath != null)
-          _AlbumCard(id: widget.id, path: cachedCoverPath)
-        else
-          FutureBuilder(
-            future: _pathFuture,
-            builder: (context, snapshot) =>
-                _AlbumCard(path: snapshot.data, id: widget.id),
-          ),
+        watchValue(
+          (LocalAudioManager m) => m.findAlbumCommand(id).results,
+        ).toWidget(
+          onError: (error, lastResult, param) => _AlbumCard(id: id, path: null),
+          whileRunning: (lastResult, param) => _AlbumCard(id: id, path: null),
+          onData: (album, param) {
+            final path = album?.firstWhereOrNull((e) => e.albumId == id)?.path;
+            return _AlbumCard(id: id, path: path);
+          },
+        ),
         if (pinned)
           Positioned(
             left: isMobile ? 6 : 5,
@@ -67,7 +55,7 @@ class _AlbumCardState extends State<AlbumCard> {
             child: AudioCardVignette(
               iconData: Iconz.pinFilled,
               onTap: () => di<LibraryModel>().removeFavoriteAlbum(
-                widget.id,
+                id,
                 onFail: () => showSnackBar(
                   context: context,
                   content: Text(context.l10n.cantUnpinEmptyAlbum),
@@ -87,29 +75,22 @@ class _AlbumCard extends StatelessWidget {
   final String? path;
 
   @override
-  Widget build(BuildContext context) {
-    return AudioCard(
-      bottom: AudioCardBottom(text: id.albumOfId),
-      image: AnimatedOpacity(
-        opacity: path == null ? 0 : 1,
-        duration: const Duration(milliseconds: 300),
-        child: path != null
-            ? LocalCover(
-                dimension: audioCardDimension,
-                albumId: id,
-                path: path!,
-                fallback: CoverBackground(dimension: audioCardDimension),
-              )
-            : null,
-      ),
-      onTap: () => di<RoutingManager>().push(
-        builder: (context) => AlbumPage(id: id),
-        pageId: id,
-      ),
-      onPlay: () async => di<PlayerModel>().startPlaylist(
-        audios: await di<LocalAudioManager>().findAlbum(id) ?? [],
-        listName: id,
-      ),
-    );
-  }
+  Widget build(BuildContext context) => AudioCard(
+    bottom: AudioCardBottom(text: id.albumOfId),
+    image: LocalCover(
+      dimension: audioCardDimension,
+      albumId: id,
+      path: path,
+      fallback: CoverBackground(dimension: audioCardDimension),
+    ),
+    onTap: () => di<RoutingManager>().push(
+      builder: (context) => AlbumPage(id: id),
+      pageId: id,
+    ),
+    onPlay: () async => di<PlayerModel>().startPlaylist(
+      audios:
+          await di<LocalAudioManager>().findAlbumCommand(id).runAsync() ?? [],
+      listName: id,
+    ),
+  );
 }

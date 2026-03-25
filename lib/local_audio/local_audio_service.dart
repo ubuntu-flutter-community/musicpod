@@ -116,10 +116,7 @@ class LocalAudioService {
   Future<List<Audio>?> findAlbum(
     String albumId, [
     AudioFilter audioFilter = AudioFilter.trackNumber,
-  ]) async {
-    await init();
-    return _findAlbum(albumId);
-  }
+  ]) async => _findAlbum(albumId);
 
   List<Audio>? _findAlbum(
     String albumId, [
@@ -150,28 +147,6 @@ class LocalAudioService {
     return list;
   }
 
-  String? getCachedCoverPath(String albumId) {
-    final maybe = _coverPathCache[albumId];
-    if (maybe != null) {
-      return maybe;
-    }
-    return null;
-  }
-
-  final Map<String, String?> _coverPathCache = {};
-  Future<String?> findCoverPath(String albumId) async {
-    final maybe = _coverPathCache[albumId];
-    if (maybe != null) {
-      return maybe;
-    }
-
-    final albumAudios = await findAlbum(albumId);
-    _coverPathCache[albumId] = albumAudios
-        ?.firstWhereOrNull((e) => e.path != null)
-        ?.path;
-    return _coverPathCache[albumId];
-  }
-
   final Map<String, List<Audio>?> _titlesOfArtistCache = {};
   List<Audio>? getCachedTitlesOfArtist(String artist) {
     final maybe = _titlesOfArtistCache[artist];
@@ -185,7 +160,6 @@ class LocalAudioService {
     String artist, [
     AudioFilter audioFilter = AudioFilter.album,
   ]) async {
-    await init();
     final maybe = _titlesOfArtistCache[artist];
     if (maybe != null) {
       return maybe;
@@ -216,7 +190,6 @@ class LocalAudioService {
 
   final Map<String, List<String>?> _albumIDsOfGenreCache = {};
   Future<List<String>?> findAlbumIDsOfGenre(String genre) async {
-    await init();
     if (_audios == null) return null;
     final maybe = _albumIDsOfGenreCache[genre];
     if (maybe != null) {
@@ -369,7 +342,6 @@ class LocalAudioService {
       _albumCache.clear();
       _titlesOfArtistCache.clear();
       _albumIDsOfGenreCache.clear();
-      _coverPathCache.clear();
       _audios = null;
     }
 

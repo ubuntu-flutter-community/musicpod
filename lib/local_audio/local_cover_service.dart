@@ -24,8 +24,9 @@ class LocalCoverService {
 
   Future<Uint8List?> getCover({
     required String albumId,
-    required String path,
+    required String? path,
   }) async {
+    if (path == null) return null;
     final file = File(path);
     if (file.existsSync() && file.isPlayable && albumId.isNotEmpty == true) {
       Uint8List? bytesFromMetadata;

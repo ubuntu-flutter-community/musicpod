@@ -123,7 +123,6 @@ flutter:
   assets:
     - snap/gui/musicpod.png
     - assets/images/listenbrainz-icon.png
-    - assets/images/media-optical.png
     - assets/images/tray_icon.ico
     - assets/images/tray_icon.png
     - assets/icon.png

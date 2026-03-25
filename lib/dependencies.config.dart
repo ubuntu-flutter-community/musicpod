@@ -23,6 +23,7 @@ import 'package:window_manager/window_manager.dart' as _i740;
 
 import 'app/app_model.dart' as _i162;
 import 'app/connectivity_model.dart' as _i788;
+import 'app/sidebar_audios_manager.dart' as _i190;
 import 'app/view/routing_manager.dart' as _i73;
 import 'app/window_size_to_settings_listener.dart' as _i517;
 import 'custom_content/custom_content_model.dart' as _i55;
@@ -284,6 +285,15 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioService: gh<_i438.LocalAudioService>(),
         libraryService: gh<_i595.LibraryService>(),
         internetConnection: gh<_i161.InternetConnection>(),
+      ),
+    );
+    gh.lazySingleton<_i190.SidebarAudiosManager>(
+      () => _i190.SidebarAudiosManager(
+        libraryModel: gh<_i1032.LibraryModel>(),
+        localAudioManager: gh<_i688.LocalAudioManager>(),
+        podcastModel: gh<_i41.PodcastModel>(),
+        radioManager: gh<_i798.RadioManager>(),
+        playerModel: gh<_i1025.PlayerModel>(),
       ),
     );
     return this;

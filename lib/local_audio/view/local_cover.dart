@@ -16,7 +16,7 @@ class LocalCover extends StatefulWidget with WatchItStatefulWidgetMixin {
   });
 
   final String albumId;
-  final String path;
+  final String? path;
   final Widget fallback;
   final double dimension;
   final BoxFit fit;
@@ -59,7 +59,14 @@ class _LocalCoverState extends State<LocalCover> {
         : FutureBuilder(
             future: _future,
             builder: (context, snapshot) {
-              if (!snapshot.hasData || snapshot.hasError) {
+              if (snapshot.hasError) {
+                return SizedBox(
+                  key: ValueKey('${widget.albumId}0'),
+                  height: widget.dimension,
+                  width: widget.dimension,
+                  child: widget.fallback,
+                );
+              } else if (!snapshot.hasData) {
                 return SizedBox(
                   key: ValueKey('${widget.albumId}1'),
                   height: widget.dimension,
