@@ -114,10 +114,13 @@ class _MetaDataContentState extends State<MetaDataContent> {
             child: RadioPageTagBar(station: audio),
           ),
         ),
-        ListTile(title: Text(l10n.language), subtitle: Text(audio.language)),
+        ListTile(
+          title: Text(l10n.language),
+          subtitle: Text(audio.language ?? ''),
+        ),
         ListTile(
           title: Text(l10n.quality),
-          subtitle: Text('${audio.albumArtist}'),
+          subtitle: Text('${audio.codec ?? ''}'),
         ),
         ListTile(title: Text(l10n.clicks), subtitle: Text('${audio.clicks}')),
         ListTile(

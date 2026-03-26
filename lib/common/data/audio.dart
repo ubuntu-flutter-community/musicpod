@@ -29,10 +29,10 @@ class Audio {
   /// The url of the image if remote.
   final String? imageUrl;
 
-  /// The description of the audio file or stream, for radio stations this is the UUID
+  /// The description of the audio file or stream.
   final String? description;
 
-  /// Website link or feed url in case of podcasts.
+  /// Website link.
   final String? website;
 
   /// The title of the audio file or stream.
@@ -41,13 +41,13 @@ class Audio {
   /// The duration of the audio file or stream. It can be null if was not set
   final double? durationMs;
 
-  /// The artist(s) of the audio file or stream, for radio stations this is the language.
+  /// The artist(s) of the audio file or stream.
   final String? artist;
 
-  /// The album of the audio file or stream, for radio stations these are the tags.
+  /// The album of the audio file or stream.
   final String? album;
 
-  /// The album artist(s) of the audio file or stream, for radio stations this is the codec.
+  /// The album artist(s) of the audio file or stream.
   final String? albumArtist;
 
   /// The track number of the audio file or stream.
@@ -74,13 +74,51 @@ class Audio {
   /// The image data. Only for local audio.
   final Uint8List? pictureData;
 
-  /// The file size of the audio file, for radio stations this is the stream quality in kbps.
+  /// The file size of the audio file.
   final int? fileSize;
 
   /// Optional art that can belong to a parent element.
   final String? albumArtUrl;
 
   final String? lyrics;
+
+  // Radio-specific fields
+  /// The UUID of the radio station.
+  final String? uuid;
+
+  /// The language of the radio station.
+  final String? language;
+
+  /// Comma-separated tags for the radio station.
+  final String? radioTags;
+
+  /// The codec of the radio station stream.
+  final String? codec;
+
+  /// The click count of the radio station.
+  final int? clicks;
+
+  /// The bitrate of the radio station stream in kbps.
+  final int? bitRate;
+
+  // Podcast-specific fields
+  /// The feed URL for the podcast.
+  final String? feedUrl;
+
+  /// The title of the podcast series.
+  final String? podcastTitle;
+
+  /// The copyright of the podcast.
+  final String? copyright;
+
+  /// The description of the podcast series.
+  final String? podcastDescription;
+
+  /// The description of the podcast episode.
+  final String? episodeDescription;
+
+  /// The publication date of the podcast episode in milliseconds since epoch.
+  final int? publicationDate;
 
   const Audio({
     this.path,
@@ -105,6 +143,18 @@ class Audio {
     this.fileSize,
     this.albumArtUrl,
     this.lyrics,
+    this.uuid,
+    this.language,
+    this.radioTags,
+    this.codec,
+    this.clicks,
+    this.bitRate,
+    this.feedUrl,
+    this.podcastTitle,
+    this.copyright,
+    this.podcastDescription,
+    this.episodeDescription,
+    this.publicationDate,
   });
 
   Audio copyWith({
@@ -131,6 +181,18 @@ class Audio {
     int? fileSize,
     String? albumArtUrl,
     String? lyrics,
+    String? uuid,
+    String? language,
+    String? radioTags,
+    String? codec,
+    int? clicks,
+    int? bitRate,
+    String? feedUrl,
+    String? podcastTitle,
+    String? copyright,
+    String? podcastDescription,
+    String? episodeDescription,
+    int? publicationDate,
   }) {
     return Audio(
       path: path ?? this.path,
@@ -155,6 +217,18 @@ class Audio {
       fileSize: fileSize ?? this.fileSize,
       albumArtUrl: albumArtUrl ?? this.albumArtUrl,
       lyrics: lyrics ?? this.lyrics,
+      uuid: uuid ?? this.uuid,
+      language: language ?? this.language,
+      radioTags: radioTags ?? this.radioTags,
+      codec: codec ?? this.codec,
+      clicks: clicks ?? this.clicks,
+      bitRate: bitRate ?? this.bitRate,
+      feedUrl: feedUrl ?? this.feedUrl,
+      podcastTitle: podcastTitle ?? this.podcastTitle,
+      copyright: copyright ?? this.copyright,
+      podcastDescription: podcastDescription ?? this.podcastDescription,
+      episodeDescription: episodeDescription ?? this.episodeDescription,
+      publicationDate: publicationDate ?? this.publicationDate,
     );
   }
 
@@ -227,6 +301,42 @@ class Audio {
     if (lyrics != null) {
       result.addAll({'lyrics': lyrics});
     }
+    if (uuid != null) {
+      result.addAll({'uuid': uuid});
+    }
+    if (language != null) {
+      result.addAll({'language': language});
+    }
+    if (radioTags != null) {
+      result.addAll({'radioTags': radioTags});
+    }
+    if (codec != null) {
+      result.addAll({'codec': codec});
+    }
+    if (clicks != null) {
+      result.addAll({'clicks': clicks});
+    }
+    if (bitRate != null) {
+      result.addAll({'bitRate': bitRate});
+    }
+    if (feedUrl != null) {
+      result.addAll({'feedUrl': feedUrl});
+    }
+    if (podcastTitle != null) {
+      result.addAll({'podcastTitle': podcastTitle});
+    }
+    if (copyright != null) {
+      result.addAll({'copyright': copyright});
+    }
+    if (podcastDescription != null) {
+      result.addAll({'podcastDescription': podcastDescription});
+    }
+    if (episodeDescription != null) {
+      result.addAll({'episodeDescription': episodeDescription});
+    }
+    if (publicationDate != null) {
+      result.addAll({'publicationDate': publicationDate});
+    }
 
     return result;
   }
@@ -259,16 +369,19 @@ class Audio {
       fileSize: map['fileSize']?.toInt(),
       albumArtUrl: map['albumArtUrl'],
       lyrics: map['lyrics'],
+      uuid: map['uuid'],
+      language: map['language'],
+      radioTags: map['radioTags'],
+      codec: map['codec'],
+      clicks: map['clicks']?.toInt(),
+      bitRate: map['bitRate']?.toInt(),
+      feedUrl: map['feedUrl'],
+      podcastTitle: map['podcastTitle'],
+      copyright: map['copyright'],
+      podcastDescription: map['podcastDescription'],
+      episodeDescription: map['episodeDescription'],
+      publicationDate: map['publicationDate']?.toInt(),
     );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Audio.fromJson(String source) => Audio.fromMap(json.decode(source));
-
-  @override
-  String toString() {
-    return 'Audio(path: $path, url: $url,  audioType: $audioType, imageUrl: $imageUrl, description: $description, website: $website, title: $title, durationMs: $durationMs, artist: $artist, album: $album, albumArtist: $albumArtist, trackNumber: $trackNumber, trackTotal: $trackTotal, discNumber: $discNumber, discTotal: $discTotal, year: $year, genre: $genre, pictureMimeType: $pictureMimeType, pictureData: $pictureData, fileSize: $fileSize, albumArtUrl: $albumArtUrl, lyrics: $lyrics)';
   }
 
   @override
@@ -371,27 +484,23 @@ class Audio {
     audioType: AudioType.local,
   );
 
-  String? get uuid => description;
-  String get language => artist ?? '';
-  int get clicks => discTotal ?? 0;
-  int get bitRate => fileSize ?? 0;
-  List<String>? get tags => album?.isNotEmpty == false
+  List<String>? get tags => radioTags?.isNotEmpty == false
       ? null
-      : <String>[for (final tag in album?.split(',') ?? <String>[]) tag];
+      : <String>[for (final tag in radioTags?.split(',') ?? <String>[]) tag];
 
   factory Audio.fromStation(Station station) {
     return Audio(
       url: station.urlResolved,
       title: station.name.trim(),
-      artist: station.language,
-      album: station.tags ?? '',
       audioType: AudioType.radio,
       imageUrl: station.favicon,
       website: station.homepage,
-      description: station.stationUUID,
-      fileSize: station.bitrate,
-      albumArtist: station.codec,
-      discTotal: station.clickCount,
+      uuid: station.stationUUID,
+      language: station.language,
+      radioTags: station.tags ?? '',
+      codec: station.codec,
+      clicks: station.clickCount,
+      bitRate: station.bitrate,
     );
   }
 
@@ -407,14 +516,14 @@ class Audio {
       imageUrl: episode.imageUrl,
       albumArtUrl: itemImageUrl ?? podcast?.image,
       title: episode.title,
-      album: podcast?.title,
-      artist: podcast?.copyright,
-      albumArtist: podcast?.description,
       durationMs: episode.duration?.inMilliseconds.toDouble(),
-      year: episode.publicationDate?.millisecondsSinceEpoch,
-      description: episode.description,
-      website: podcast?.url,
       genre: genre,
+      feedUrl: podcast?.url,
+      podcastTitle: podcast?.title,
+      copyright: podcast?.copyright,
+      podcastDescription: podcast?.description,
+      episodeDescription: episode.description,
+      publicationDate: episode.publicationDate?.millisecondsSinceEpoch,
     );
   }
 

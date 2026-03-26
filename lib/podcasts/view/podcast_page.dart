@@ -57,7 +57,6 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
         this.episodes;
 
     watchPropertyValue((PlayerModel m) => m.lastPositions?.length);
-    watchPropertyValue((LibraryModel m) => m.downloadsLength);
     final showSearch = watchPropertyValue(
       (PodcastModel m) => m.getShowSearch(feedUrl),
     );
@@ -71,8 +70,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
 
     final filter = watchPropertyValue((PodcastModel m) => m.filter);
     final episodesWithDownloads = episodes
-        .map((e) => e.copyWith(path: di<LibraryModel>().getDownload(e.url)))
-        .where((e) => e.title != null && e.description != null)
+        .where((e) => e.title != null && e.episodeDescription != null)
         .where(
           (e) => (searchQuery == null || searchQuery.trim().isEmpty)
               ? true
@@ -81,7 +79,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
                     searchQuery.toLowerCase(),
                   ),
                   PodcastEpisodeFilter.description =>
-                    e.description!.toLowerCase().contains(
+                    e.episodeDescription!.toLowerCase().contains(
                       searchQuery.toLowerCase(),
                     ),
                 },

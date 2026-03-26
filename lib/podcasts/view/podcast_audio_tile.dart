@@ -15,8 +15,10 @@ import '../../extensions/duration_x.dart';
 import '../../extensions/int_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
+import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../settings/settings_model.dart';
+import '../podcast_model.dart';
 import 'download_button.dart';
 import 'podcast_mark_done_button.dart';
 import 'podcast_tile_play_button.dart';
@@ -43,11 +45,16 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    if (!isOnline && audio.path == null) {
+    final showDownloadsOnly = watchPropertyValue(
+      (PodcastModel m) => m.downloadsOnly,
+    );
+    watchPropertyValue((LibraryModel m) => m.downloadsLength);
+    final download = di<LibraryModel>().getDownload(audio.url);
+    if ((!isOnline || showDownloadsOnly) && download == null) {
       return const SizedBox.shrink();
     }
 
-    final date = audio.year.unixTimeToDateString;
+    final date = audio.publicationDate.unixTimeToDateString;
     final duration = audio.durationMs != null
         ? Duration(milliseconds: audio.durationMs!.toInt()).formattedTime
         : context.l10n.unknown;
@@ -104,7 +111,10 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
               : EdgeInsets.only(left: (radius * 2) + 30, right: 60),
           child: Column(
             children: [
-              _Description(description: audio.description, title: audio.title),
+              _Description(
+                description: audio.episodeDescription,
+                title: audio.title,
+              ),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
@@ -112,13 +122,17 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
                   child: Row(
                     children: space(
                       children: [
-                        DownloadButton(audio: audio, addPodcast: addPodcast),
+                        DownloadButton(
+                          audio: audio,
+                          addPodcast: addPodcast,
+                          hasDownload: download != null,
+                        ),
                         ShareButton(active: true, audio: audio),
                         IconButton(
                           tooltip: context.l10n.insertIntoQueue,
                           onPressed: () {
                             final text =
-                                '${audio.title != null ? '${audio.album} - ' : ''}${audio.title ?? ''}';
+                                '${audio.title != null ? '${audio.podcastTitle} - ' : ''}${audio.title ?? ''}';
                             playerModel.insertIntoQueue([audio]);
                             showSnackBar(
                               context: context,

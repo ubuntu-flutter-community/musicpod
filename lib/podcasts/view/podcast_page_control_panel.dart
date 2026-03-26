@@ -27,7 +27,7 @@ class PodcastPageControlPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final artist = audios.firstOrNull?.artist ?? '';
+    final artist = audios.firstOrNull?.copyright ?? '';
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: space(

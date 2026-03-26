@@ -14,8 +14,8 @@ import 'podcast_service_test.mocks.dart';
 const Audio episodeOneAudio = Audio(
   url:
       'https://audio2.redcircle.com/episodes/28b15c18-4d42-4036-a6f2-dc403fa7c8a4/stream.mp3',
-  website: 'https://feeds.redcircle.com/1e717ca8-94d4-4a39-807e-a148884a9786',
-  artist: 'Allen Wyma',
+  feedUrl: 'https://feeds.redcircle.com/1e717ca8-94d4-4a39-807e-a148884a9786',
+  copyright: 'Allen Wyma',
   title:
       'Introduction to Flying High with Flutter - Flying High with Flutter #1',
 );
@@ -45,8 +45,8 @@ Future<void> main() async {
     }
 
     expect(episodes?.last.url == episodeOneAudio.url, true);
-    expect(episodes?.last.website == episodeOneAudio.website, true);
-    expect(episodes?.last.artist == episodeOneAudio.artist, true);
+    expect(episodes?.last.feedUrl == episodeOneAudio.feedUrl, true);
+    expect(episodes?.last.copyright == episodeOneAudio.copyright, true);
     expect(episodes?.last.title == episodeOneAudio.title, true);
   });
 

@@ -38,7 +38,7 @@ class EpisodeMarkDownButton extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     return IconButton(
       tooltip: context.l10n.markEpisodeAsDone,
-      onPressed: episode.website == null
+      onPressed: episode.feedUrl == null
           ? null
           : () => showFutureLoadingDialog(
               context: context,

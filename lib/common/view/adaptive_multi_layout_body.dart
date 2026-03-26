@@ -138,11 +138,9 @@ class _PanedLayout extends StatelessWidget {
           child: CustomScrollView(
             slivers: [
               SliverPadding(
-                padding: const EdgeInsets.only(
-                  left: kLargestSpace,
-                  right: 4 * kLargestSpace,
-                  bottom: kLargestSpace,
-                  top: 3 * kLargestSpace,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 3 * kLargestSpace,
+                  vertical: kLargestSpace,
                 ),
                 sliver: sliverBody,
               ),

@@ -47,10 +47,10 @@ void sortListByAudioFilter({
       });
     case AudioFilter.year:
       audios.sort((a, b) {
-        if (a.year != null && b.year != null) {
-          return descending
-              ? b.year!.compareTo(a.year!)
-              : a.year!.compareTo(b.year!);
+        final aYear = a.year ?? a.publicationDate;
+        final bYear = b.year ?? b.publicationDate;
+        if (aYear != null && bYear != null) {
+          return descending ? bYear.compareTo(aYear) : aYear.compareTo(bYear);
         }
         return 0;
       });

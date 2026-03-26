@@ -218,13 +218,13 @@ class AudioTileOptionButton extends StatelessWidget {
                 ),
               ),
             ),
-            if (audios.firstOrNull?.website != null)
+            if (audios.firstOrNull?.feedUrl != null)
               PopupMenuItem(
                 onTap: () => showFutureLoadingDialog(
                   context: context,
                   title: context.l10n.loadingPodcastFeed,
                   future: () => di<PodcastModel>().checkForUpdates(
-                    feedUrls: {audios.first.website!},
+                    feedUrls: {audios.first.feedUrl!},
                     updateMessage: context.l10n.newEpisodeAvailable,
                     multiUpdateMessage: (length) =>
                         context.l10n.newEpisodesAvailableFor(length),
@@ -236,6 +236,17 @@ class AudioTileOptionButton extends StatelessWidget {
                   leading: Icon(Iconz.refresh),
                 ),
               ),
+            PopupMenuItem(
+              onTap: () => di<PodcastModel>().setDownloadsOnly(
+                !di<PodcastModel>().downloadsOnly,
+              ),
+              child: ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                title: Text(context.l10n.downloadsOnly),
+                selected: di<PodcastModel>().downloadsOnly,
+                leading: Icon(Iconz.download),
+              ),
+            ),
           ],
         ];
       },

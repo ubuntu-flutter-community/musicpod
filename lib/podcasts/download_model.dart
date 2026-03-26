@@ -109,8 +109,8 @@ class DownloadModel extends SafeChangeNotifier {
   Future<void> deleteDownload({required Audio? audio}) async {
     if (audio?.url != null &&
         (downloadsDirCommand.value) != null &&
-        audio?.website != null) {
-      _libraryService.removeDownload(url: audio!.url!, feedUrl: audio.website!);
+        audio?.feedUrl != null) {
+      _libraryService.removeDownload(url: audio!.url!, feedUrl: audio.feedUrl!);
       if (_values.containsKey(audio.url)) {
         _values.update(audio.url!, (value) => null);
       }
@@ -165,11 +165,11 @@ class DownloadModel extends SafeChangeNotifier {
       path: path,
       name: audio.title ?? '',
     ).then((response) {
-      if (response?.statusCode == 200 && audio.website != null) {
+      if (response?.statusCode == 200 && audio.feedUrl != null) {
         _libraryService.addDownload(
           url: url,
           path: path,
-          feedUrl: audio.website!,
+          feedUrl: audio.feedUrl!,
         );
         _addMessage(finishedMessage);
 
@@ -182,7 +182,7 @@ class DownloadModel extends SafeChangeNotifier {
 
   String _createAudioDownloadId(Audio audio) {
     final now = DateTime.now().toUtc().toString();
-    return '${audio.artist ?? ''}${audio.title ?? ''}${audio.durationMs ?? ''}${audio.year ?? ''})$now'
+    return '${audio.copyright ?? ''}${audio.title ?? ''}${audio.durationMs ?? ''}${audio.publicationDate ?? ''})$now'
         .replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
   }
 

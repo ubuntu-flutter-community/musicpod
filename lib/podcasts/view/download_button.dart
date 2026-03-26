@@ -9,7 +9,6 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../settings/settings_model.dart';
 import '../download_model.dart';
 
@@ -19,11 +18,13 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
     this.iconSize,
     required this.audio,
     required this.addPodcast,
+    required this.hasDownload,
   });
 
   final double? iconSize;
   final Audio? audio;
   final void Function()? addPodcast;
+  final bool hasDownload;
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +34,6 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
       (DownloadModel m) => m.getValue(audio?.url),
     );
 
-    final download = watchPropertyValue(
-      (LibraryModel m) => m.getDownload(audio?.url) != null,
-    );
     final useYaruTheme = watchPropertyValue(
       (SettingsModel m) => m.useYaruTheme,
     );
@@ -61,16 +59,16 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
           ),
         ),
         IconButton(
-          isSelected: download,
+          isSelected: hasDownload,
           tooltip: audio?.path != null
               ? context.l10n.removeDownloadEpisode
               : context.l10n.downloadEpisode,
           icon: Icon(
-            download ? Iconz.downloadFilled : Iconz.download,
-            color: audio?.path != null ? theme.colorScheme.primary : null,
+            hasDownload ? Iconz.downloadFilled : Iconz.download,
+            color: hasDownload ? theme.colorScheme.primary : null,
           ),
           onPressed: () {
-            if (download) {
+            if (hasDownload) {
               model.deleteDownload(audio: audio);
             } else {
               addPodcast?.call();
@@ -86,7 +84,7 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
             }
           },
           iconSize: iconSize,
-          color: download
+          color: hasDownload
               ? theme.contrastyPrimary
               : theme.colorScheme.onSurface,
         ),

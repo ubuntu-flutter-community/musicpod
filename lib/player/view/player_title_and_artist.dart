@@ -186,7 +186,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
 
   String _subTitle(Audio? audio) =>
       (switch (audio?.audioType) {
-                AudioType.podcast => audio?.album?.unEscapeHtml,
+                AudioType.podcast => audio?.podcastTitle?.unEscapeHtml,
                 AudioType.radio => audio?.title,
                 _ => audio?.artist,
               } ??
@@ -282,9 +282,9 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
         _onRadioArtistTap(audio: audio, routingManager: routingManager);
         return;
       case AudioType.podcast:
-        if (audio.website != null &&
-            routingManager.selectedPageId != audio.website) {
-          final feedUrl = audio.website!;
+        if (audio.feedUrl != null &&
+            routingManager.selectedPageId != audio.feedUrl) {
+          final feedUrl = audio.feedUrl!;
 
           routingManager.push(
             pageId: feedUrl,

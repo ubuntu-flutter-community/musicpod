@@ -191,7 +191,7 @@ class PodcastService {
     if (newUpdateFeedUrls.isNotEmpty) {
       final msg = newUpdateFeedUrls.length == 1
           ? updateMessage +
-                '${_episodeCache[newUpdateFeedUrls.first]?.firstOrNull?.album != null ? ' ${_episodeCache[newUpdateFeedUrls.first]?.firstOrNull?.album}' : ''}'
+                '${_episodeCache[newUpdateFeedUrls.first]?.firstOrNull?.podcastTitle != null ? ' ${_episodeCache[newUpdateFeedUrls.first]?.firstOrNull?.podcastTitle}' : ''}'
           : multiUpdateMessage(newUpdateFeedUrls.length);
       _notificationsService.notify(message: msg);
     }

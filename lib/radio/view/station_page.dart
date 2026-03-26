@@ -61,7 +61,7 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
       appBar: HeaderBar(
         adaptive: true,
         title: station != null
-            ? Text(station.title ?? station.description ?? '')
+            ? Text(station.title ?? station.uuid ?? '')
             : Text(context.l10n.station),
         actions: [
           Padding(
@@ -110,11 +110,9 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
 
           return AdaptiveMultiLayoutBody(
             header: AudioPageHeader(
-              title: station.title ?? station.description ?? '',
-              subTitle: station.albumArtist == null
-                  ? null
-                  : station.albumArtist ?? '',
-              label: '${context.l10n.station} · ${station.fileSize ?? ''} kbps',
+              title: station.title ?? station.uuid ?? '',
+              subTitle: station.codec == null ? null : station.codec ?? '',
+              label: '${context.l10n.station} · ${station.bitRate ?? ''} kbps',
               description: SizedBox(
                 width: kAudioHeaderDescriptionWidth,
                 child: RadioPageTagBar(station: station),
@@ -160,8 +158,8 @@ class _StationPageControlPanel extends StatelessWidget {
       children: space(
         children: [
           RadioPageStarButton(station: station),
-          if (station.description != null)
-            AvatarPlayButton(audios: [station], pageId: station.description!),
+          if (station.uuid != null)
+            AvatarPlayButton(audios: [station], pageId: station.uuid!),
           RadioPageCopyHistoryButton(station: station),
         ],
       ),
