@@ -30,6 +30,9 @@ class AppLocalizationsSv extends AppLocalizations {
   String get repeatAll => 'Upprepa alla';
 
   @override
+  String get repeatOff => 'Repeat Off';
+
+  @override
   String get next => 'Nästa';
 
   @override

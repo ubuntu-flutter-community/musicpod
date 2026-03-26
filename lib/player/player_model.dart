@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:injectable/injectable.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
@@ -63,8 +64,8 @@ class PlayerModel extends SafeChangeNotifier {
     }
   }
 
-  bool get repeatSingle => _playerService.repeatSingle;
-  void setRepeatSingle(bool value) => _playerService.setRepeatSingle(value);
+  PlaylistMode get playlistMode => _playerService.playlistMode;
+  void setPlaylistMode() => _playerService.setPlaylistMode();
 
   bool get shuffle => _playerService.shuffle;
   void setShuffle(bool value) => _playerService.setShuffle(value);

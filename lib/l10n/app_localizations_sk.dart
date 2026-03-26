@@ -30,6 +30,9 @@ class AppLocalizationsSk extends AppLocalizations {
   String get repeatAll => 'Opakovať všetko';
 
   @override
+  String get repeatOff => 'Repeat Off';
+
+  @override
   String get next => 'Ďalšie';
 
   @override

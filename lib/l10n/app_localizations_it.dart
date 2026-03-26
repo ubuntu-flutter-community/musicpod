@@ -30,6 +30,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get repeatAll => 'Ripeti tutto';
 
   @override
+  String get repeatOff => 'Repeat Off';
+
+  @override
   String get next => 'Avanti';
 
   @override

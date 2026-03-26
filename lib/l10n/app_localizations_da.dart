@@ -30,6 +30,9 @@ class AppLocalizationsDa extends AppLocalizations {
   String get repeatAll => 'Gentag alle';
 
   @override
+  String get repeatOff => 'Repeat Off';
+
+  @override
   String get next => 'Næste';
 
   @override

@@ -179,6 +179,12 @@ abstract class AppLocalizations {
   /// **'Repeat All'**
   String get repeatAll;
 
+  /// No description provided for @repeatOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat Off'**
+  String get repeatOff;
+
   /// No description provided for @next.
   ///
   /// In en, this message translates to:
