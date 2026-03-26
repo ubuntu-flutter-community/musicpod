@@ -70,9 +70,12 @@ class _LazyPodcastPageState extends State<LazyPodcastPage> {
   @override
   Widget build(BuildContext context) {
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
+    final showDownloadsOnly = watchPropertyValue(
+      (PodcastModel m) => m.downloadsOnly,
+    );
 
     return FutureBuilder(
-      key: ValueKey(isOnline),
+      key: ValueKey('${showDownloadsOnly}_${isOnline}'),
       future: _episodes,
       builder: (context, snapshot) {
         final feedUrl = widget.feedUrl ?? widget.podcastItem?.feedUrl;
@@ -124,6 +127,7 @@ class _LazyPodcastPageState extends State<LazyPodcastPage> {
           feedUrl: feedUrl,
           title: title,
           isOnline: isOnline,
+          showDownloadsOnly: showDownloadsOnly,
         );
       },
     );

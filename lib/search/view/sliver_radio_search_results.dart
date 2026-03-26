@@ -120,14 +120,14 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
                 if (width > 500)
                   Expanded(
                     child: Text(
-                      '${station.bitRate > 0 ? '${station.fileSize} kbps' : context.l10n.unknown}',
+                      '${(station.bitRate ?? 0) > 0 ? '${station.bitRate} kbps' : context.l10n.unknown}',
                       maxLines: maxLines,
                     ),
                   ),
                 if (width > 800)
                   Expanded(
                     child: Text(
-                      '${station.albumArtist?.isNotEmpty == true ? '${station.albumArtist}' : context.l10n.unknown}',
+                      '${station.codec?.isNotEmpty == true ? '${station.codec}' : context.l10n.unknown}',
                       maxLines: maxLines,
                     ),
                   ),
@@ -135,14 +135,14 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
                 if (width > 1100)
                   Expanded(
                     child: Text(
-                      '${station.clicks > 0 ? '${station.clicks} ${context.l10n.clicks}' : context.l10n.unknown}',
+                      '${(station.clicks ?? 0) > 0 ? '${station.clicks} ${context.l10n.clicks}' : context.l10n.unknown}',
                       maxLines: maxLines,
                     ),
                   ),
                 if (width > 1200)
                   Expanded(
                     child: Text(
-                      '${station.language.trim().isNotEmpty ? '${station.language.split(',').join(', ')}' : context.l10n.unknown}',
+                      '${(station.language ?? '').trim().isNotEmpty ? '${station.language!.split(',').join(', ')}' : context.l10n.unknown}',
                       maxLines: maxLines,
                     ),
                   ),

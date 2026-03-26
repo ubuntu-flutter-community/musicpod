@@ -68,7 +68,7 @@ Future<AudioServiceHandler> _registerAudioServiceHandler(
         MediaItem(
           id: audio.toString(),
           title: audio.title ?? AppConfig.appTitle,
-          artist: audio.artist ?? '',
+          artist: audio.artist ?? audio.copyright ?? audio.language ?? '',
           artUri: artUri,
           duration: audio.durationMs == null
               ? null

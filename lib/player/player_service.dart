@@ -16,6 +16,7 @@ import '../expose/expose_service.dart';
 import '../extensions/media_file_x.dart';
 import '../extensions/string_x.dart';
 import '../extensions/taget_platform_x.dart';
+import '../library/library_service.dart';
 import '../local_audio/local_cover_service.dart';
 import '../persistence_utils.dart';
 import 'data/player_state.dart';
@@ -28,14 +29,17 @@ class PlayerService {
     required VideoController controller,
     required ExposeService exposeService,
     required LocalCoverService localCoverService,
+    required LibraryService libraryService,
   }) : _controller = controller,
        _exposeService = exposeService,
-       _localCoverService = localCoverService;
+       _localCoverService = localCoverService,
+       _libraryService = libraryService;
 
   // External dependencies
   final ExposeService _exposeService;
   final LocalCoverService _localCoverService;
   final VideoController _controller;
+  final LibraryService _libraryService;
 
   // MediaKit getters
   VideoController get controller => _controller;
@@ -273,6 +277,12 @@ class PlayerService {
       }
       if (audio == null) return;
 
+      if (_audio!.url != null && _audio!.isPodcast) {
+        _audio = audio?.copyWith(
+          path: _libraryService.getDownload(_audio!.url!),
+        );
+      }
+
       final Media? media = audio!.path != null
           ? Media('file://${audio!.path!}')
           : (audio!.url != null)
@@ -299,8 +309,8 @@ class PlayerService {
       await setMediaControlsMetaData(audio: audio!);
       await _exposeService.exposeTitleOnline(
         title: audio?.title ?? '',
-        artist: audio?.artist ?? '',
-        additionalInfo: audio?.album ?? '',
+        artist: audio?.artist ?? audio?.copyright ?? audio?.language ?? '',
+        additionalInfo: audio?.album ?? audio?.podcastTitle ?? '',
         imageUrl: audio?.imageUrl ?? audio?.albumArtUrl,
       );
       _firstPlay = false;
