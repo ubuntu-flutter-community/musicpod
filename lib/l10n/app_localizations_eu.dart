@@ -30,6 +30,9 @@ class AppLocalizationsEu extends AppLocalizations {
   String get repeatAll => 'Denak errepikatu';
 
   @override
+  String get repeatOff => 'Repeat Off';
+
+  @override
   String get next => 'Hurrengoa';
 
   @override

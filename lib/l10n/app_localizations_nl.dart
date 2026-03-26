@@ -30,6 +30,9 @@ class AppLocalizationsNl extends AppLocalizations {
   String get repeatAll => 'Alles herhalen';
 
   @override
+  String get repeatOff => 'Repeat Off';
+
+  @override
   String get next => 'Volgende';
 
   @override

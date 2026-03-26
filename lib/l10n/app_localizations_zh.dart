@@ -30,6 +30,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get repeatAll => '全部重复';
 
   @override
+  String get repeatOff => 'Repeat Off';
+
+  @override
   String get next => '下一个';
 
   @override

@@ -30,6 +30,9 @@ class AppLocalizationsEt extends AppLocalizations {
   String get repeatAll => 'Korda kõiki';
 
   @override
+  String get repeatOff => 'Repeat Off';
+
+  @override
   String get next => 'Edasi';
 
   @override

@@ -30,6 +30,9 @@ class AppLocalizationsTa extends AppLocalizations {
   String get repeatAll => 'அனைத்தையும் மீண்டும் செய்யவும்';
 
   @override
+  String get repeatOff => 'Repeat Off';
+
+  @override
   String get next => 'அடுத்தது';
 
   @override

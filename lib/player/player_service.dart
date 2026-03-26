@@ -78,9 +78,12 @@ class PlayerService {
 
     _isCompletedSub ??= player.stream.completed.listen((value) async {
       if (value) {
-        if (_repeatSingle) {
+        if (_playlistMode == PlaylistMode.single) {
           _play(newAudio: _audio);
-        } else {
+        } else if (_playlistMode == PlaylistMode.loop ||
+            _audio != null &&
+                queue.audios.contains(_audio) &&
+                queue.audios.indexOf(_audio!) < queue.audios.length - 1) {
           await playNext();
         }
       }
@@ -149,7 +152,11 @@ class PlayerService {
     }
     if (value.audioType != _audio?.audioType) {
       _shuffle = false;
-      _repeatSingle = false;
+      if (_playlistMode == PlaylistMode.single) {
+        _playlistMode = PlaylistMode.none;
+      } else if (value.isRadio) {
+        _playlistMode = PlaylistMode.loop;
+      }
       setRate(1);
     }
     _audio = value;
@@ -213,11 +220,14 @@ class PlayerService {
     _propertiesChangedController.add(true);
   }
 
-  bool _repeatSingle = false;
-  bool get repeatSingle => _repeatSingle;
-  void setRepeatSingle(bool value) {
-    if (value == _repeatSingle) return;
-    _repeatSingle = value;
+  PlaylistMode _playlistMode = PlaylistMode.none;
+  PlaylistMode get playlistMode => _playlistMode;
+  void setPlaylistMode() {
+    _playlistMode = switch (_playlistMode) {
+      PlaylistMode.none => PlaylistMode.single,
+      PlaylistMode.single => PlaylistMode.loop,
+      PlaylistMode.loop => PlaylistMode.none,
+    };
     _estimateNext();
     _propertiesChangedController.add(true);
   }

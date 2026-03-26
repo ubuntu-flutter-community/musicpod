@@ -30,6 +30,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get repeatAll => 'Повторить все';
 
   @override
+  String get repeatOff => 'Repeat Off';
+
+  @override
   String get next => 'Следующая';
 
   @override

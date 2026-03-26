@@ -30,6 +30,9 @@ class AppLocalizationsCs extends AppLocalizations {
   String get repeatAll => 'Opakovat vše';
 
   @override
+  String get repeatOff => 'Repeat Off';
+
+  @override
   String get next => 'Další';
 
   @override

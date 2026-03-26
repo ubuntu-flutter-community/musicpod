@@ -342,6 +342,11 @@ class Iconz {
       : cupertino
       ? CupertinoIcons.repeat_1
       : Icons.repeat_one_rounded;
+  static IconData get repeatAll => yaru
+      ? YaruIcons.repeat
+      : cupertino
+      ? CupertinoIcons.repeat
+      : Icons.repeat_rounded;
   static IconData get shuffle => yaru
       ? YaruIcons.shuffle
       : cupertino

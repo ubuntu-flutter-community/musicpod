@@ -30,6 +30,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get repeatAll => 'Tümünü Tekrarla';
 
   @override
+  String get repeatOff => 'Repeat Off';
+
+  @override
   String get next => 'Sonraki';
 
   @override
