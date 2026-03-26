@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/data/audio.dart';
@@ -18,7 +18,6 @@ import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../settings/settings_model.dart';
-import '../podcast_model.dart';
 import 'download_button.dart';
 import 'podcast_mark_done_button.dart';
 import 'podcast_tile_play_button.dart';
@@ -32,6 +31,7 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
     this.isExpanded = false,
     this.isOnline = true,
     required this.addPodcast,
+    required this.showDownloadsOnly,
   });
 
   final Audio audio;
@@ -42,12 +42,10 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
 
   final bool isExpanded;
   final bool isOnline;
+  final bool showDownloadsOnly;
 
   @override
   Widget build(BuildContext context) {
-    final showDownloadsOnly = watchPropertyValue(
-      (PodcastModel m) => m.downloadsOnly,
-    );
     watchPropertyValue((LibraryModel m) => m.downloadsLength);
     final download = di<LibraryModel>().getDownload(audio.url);
     if ((!isOnline || showDownloadsOnly) && download == null) {

@@ -12,11 +12,13 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
     required this.audios,
     required this.pageId,
     required this.isOnline,
+    required this.showDownloadsOnly,
   });
 
   final List<Audio> audios;
   final String pageId;
   final bool isOnline;
+  final bool showDownloadsOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +35,7 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
 
         return PodcastAudioTile(
           key: ValueKey(episode.path ?? episode.url),
+          showDownloadsOnly: showDownloadsOnly,
           audio: episode,
           isOnline: isOnline,
           addPodcast: episode.feedUrl == null

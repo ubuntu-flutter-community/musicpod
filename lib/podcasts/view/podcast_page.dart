@@ -31,6 +31,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
     required this.episodes,
     required this.title,
     this.isOnline = true,
+    required this.showDownloadsOnly,
   });
 
   final String feedUrl;
@@ -38,6 +39,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
   final String title;
   final List<Audio> episodes;
   final bool isOnline;
+  final bool showDownloadsOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -141,6 +143,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
             audios: episodesWithDownloads,
             pageId: feedUrl,
             isOnline: isOnline,
+            showDownloadsOnly: showDownloadsOnly,
           ),
           controlPanel: PodcastPageControlPanel(
             feedUrl: feedUrl,
