@@ -6,7 +6,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
-import 'routing_manager.dart';
+import '../routing_manager.dart';
 
 const double _kButtonSize = 50;
 const double _kMaxExtent = 400;

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../common/page_ids.dart';
+import '../page_ids.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
@@ -13,7 +13,7 @@ import '../../extensions/build_context_x.dart';
 import '../../player/player_model.dart';
 import '../sidebar_audios_manager.dart';
 import 'master_item.dart';
-import 'routing_manager.dart';
+import '../routing_manager.dart';
 
 class MasterTileWithPageId extends StatelessWidget {
   const MasterTileWithPageId({

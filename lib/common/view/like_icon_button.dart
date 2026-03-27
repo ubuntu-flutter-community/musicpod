@@ -5,7 +5,7 @@ import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../playlists/view/add_to_playlist_snack_bar.dart';
 import '../data/audio.dart';
-import '../page_ids.dart';
+import '../../app/page_ids.dart';
 import 'animated_like_icon.dart';
 
 class LikeIconButton extends StatelessWidget with WatchItMixin {

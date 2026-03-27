@@ -3,9 +3,9 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/app_manager.dart';
 import '../../app/connectivity_model.dart';
-import '../../app/view/routing_manager.dart';
+import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
-import '../../common/page_ids.dart';
+import '../../app/page_ids.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/like_icon_button.dart';
 import '../../common/view/search_button.dart';

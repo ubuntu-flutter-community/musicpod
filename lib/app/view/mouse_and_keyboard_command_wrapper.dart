@@ -4,11 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/data/audio_type.dart';
-import '../../common/page_ids.dart';
+import '../page_ids.dart';
 import '../../search/search_model.dart';
 import '../app_manager.dart';
 import 'back_gesture.dart';
-import 'routing_manager.dart';
+import '../routing_manager.dart';
 
 class MouseAndKeyboardCommandWrapper extends StatelessWidget {
   const MouseAndKeyboardCommandWrapper({super.key, required this.child});
