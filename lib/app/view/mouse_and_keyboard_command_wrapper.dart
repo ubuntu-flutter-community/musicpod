@@ -6,7 +6,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/page_ids.dart';
 import '../../search/search_model.dart';
-import '../app_model.dart';
+import '../app_manager.dart';
 import 'back_gesture.dart';
 import 'routing_manager.dart';
 
@@ -36,14 +36,14 @@ class MouseAndKeyboardCommandWrapper extends StatelessWidget {
             final currentPageId = di<RoutingManager>().selectedPageId;
 
             if (currentPageId == PageIDs.searchPage) {
-              if (di<AppModel>().fullWindowMode ?? false) {
-                di<AppModel>().setFullWindowMode(false);
+              if (di<AppManager>().fullWindowMode.value ?? false) {
+                di<AppManager>().setFullWindowMode(false);
               } else {
                 di<RoutingManager>().pop();
               }
             } else {
-              if (di<AppModel>().fullWindowMode ?? false) {
-                di<AppModel>().setFullWindowMode(false);
+              if (di<AppManager>().fullWindowMode.value ?? false) {
+                di<AppManager>().setFullWindowMode(false);
               }
               di<SearchModel>().setAudioType(switch (currentPageId) {
                 PageIDs.localAudio => AudioType.local,
@@ -58,8 +58,8 @@ class MouseAndKeyboardCommandWrapper extends StatelessWidget {
         ),
         _SettingsIntent: CallbackAction<_SettingsIntent>(
           onInvoke: (intent) {
-            if (di<AppModel>().fullWindowMode ?? false) {
-              di<AppModel>().setFullWindowMode(false);
+            if (di<AppManager>().fullWindowMode.value ?? false) {
+              di<AppManager>().setFullWindowMode(false);
             }
             di<RoutingManager>().push(pageId: PageIDs.settings);
             return null;
@@ -67,8 +67,8 @@ class MouseAndKeyboardCommandWrapper extends StatelessWidget {
         ),
         _BackIntent: CallbackAction<_BackIntent>(
           onInvoke: (intent) {
-            if (di<AppModel>().fullWindowMode ?? false) {
-              di<AppModel>().setFullWindowMode(false);
+            if (di<AppManager>().fullWindowMode.value ?? false) {
+              di<AppManager>().setFullWindowMode(false);
             }
             di<RoutingManager>().pop();
             return null;

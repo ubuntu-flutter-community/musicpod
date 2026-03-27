@@ -5,10 +5,10 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:xdg_directories/xdg_directories.dart';
 
-import 'app_config.dart';
-import 'common/data/audio.dart';
-import 'common/logging.dart';
-import 'extensions/taget_platform_x.dart';
+import '../app/app_config.dart';
+import 'data/audio.dart';
+import 'logging.dart';
+import '../extensions/taget_platform_x.dart';
 
 String? _workingDir;
 Future<String> getWorkingDir() async {
@@ -129,15 +129,6 @@ Future<void> removeCustomSettings({
     await file.create();
   }
   await file.writeAsString(jsonStr);
-}
-
-Future<dynamic> readCustomSetting({
-  required dynamic key,
-  required String filename,
-}) async {
-  if (key == null) return null;
-  final oldSettings = await getCustomSettings(filename);
-  return oldSettings[key];
 }
 
 Future<Map<String, String>> getCustomSettings(String filename) async {

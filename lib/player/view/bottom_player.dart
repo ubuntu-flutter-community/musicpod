@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/app_model.dart';
+import '../../app/app_manager.dart';
 import '../../app/connectivity_model.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
@@ -34,7 +34,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
     final isVideo = watchPropertyValue((PlayerModel m) => m.isVideo);
 
     final model = di<PlayerModel>();
-    final appModel = di<AppModel>();
+    final appManager = di<AppManager>();
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
 
     final active = audio?.path != null || isOnline;
@@ -92,7 +92,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                         Iconz.fullWindow,
                         color: theme.colorScheme.onSurface,
                       ),
-                      onPressed: () => appModel.setFullWindowMode(true),
+                      onPressed: () => appManager.setFullWindowMode(true),
                     ),
                   ],
                 ),

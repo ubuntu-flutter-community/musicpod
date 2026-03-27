@@ -1,7 +1,7 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:injectable/injectable.dart';
 
-import '../app_config.dart';
+import '../app/app_config.dart';
 import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
 import '../extensions/taget_platform_x.dart';

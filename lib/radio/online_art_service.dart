@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 
-import '../app_config.dart';
+import '../app/app_config.dart';
 import '../common/logging.dart';
 import '../extensions/string_x.dart';
 

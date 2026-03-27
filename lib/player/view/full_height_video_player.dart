@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app_config.dart';
+import '../../app/app_config.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';

@@ -5,7 +5,7 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:phoenix_theme/phoenix_theme.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app_config.dart';
+import '../app_config.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/taget_platform_x.dart';

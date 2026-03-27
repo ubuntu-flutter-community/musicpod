@@ -7,21 +7,19 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-import '../app_config.dart';
-import '../expose/expose_service.dart';
 import '../extensions/taget_platform_x.dart';
 import '../library/library_service.dart';
 import '../local_audio/local_audio_service.dart';
 import '../settings/settings_service.dart';
 import '../settings/shared_preferences_keys.dart';
+import 'app_config.dart';
 
 @lazySingleton
-class AppModel extends SafeChangeNotifier {
-  AppModel({
+class AppManager {
+  AppManager({
     required PackageInfo packageInfo,
     required SettingsService settingsService,
     required GitHub gitHub,
-    required ExposeService exposeService,
     required LocalAudioService localAudioService,
     required LibraryService libraryService,
     required InternetConnection internetConnection,
@@ -34,27 +32,15 @@ class AppModel extends SafeChangeNotifier {
        _gitHub = gitHub,
        _settingsService = settingsService,
        _packageInfo = packageInfo,
-       _exposeService = exposeService,
        _localAudioService = localAudioService,
        _libraryService = libraryService,
        _internetConnection = internetConnection;
 
-  final ExposeService _exposeService;
   final LocalAudioService _localAudioService;
   final LibraryService _libraryService;
   final InternetConnection _internetConnection;
   final GitHub _gitHub;
   final SettingsService _settingsService;
-
-  ValueNotifier<bool> get isLastFmAuthorized =>
-      _exposeService.isLastFmAuthorized;
-  Future<void> authorizeLastFm({
-    required String apiKey,
-    required String apiSecret,
-  }) async =>
-      _exposeService.authorizeLastFm(apiKey: apiKey, apiSecret: apiSecret);
-
-  void initListenBrains() => _exposeService.initListenBrains();
 
   final bool _allowManualUpdates = !isLinux;
   bool get allowManualUpdate => _allowManualUpdates;
@@ -62,21 +48,19 @@ class AppModel extends SafeChangeNotifier {
   final String? _countryCode;
   String? get countryCode => _countryCode;
 
-  bool _showWindowControls = true;
-  bool get showWindowControls => _showWindowControls;
+  final showWindowControls = SafeValueNotifier<bool>(!isMobile);
   void setShowWindowControls(bool value) {
-    _showWindowControls = value;
-    notifyListeners();
+    if (value == showWindowControls.value) return;
+    showWindowControls.value = value;
   }
 
-  bool? _fullWindowMode;
-  bool? get fullWindowMode => _fullWindowMode;
+  final fullWindowMode = SafeValueNotifier<bool?>(null);
   Future<void> setFullWindowMode(bool? value) async {
-    if (value == null || value == _fullWindowMode) return;
-    _fullWindowMode = value;
+    if (value == null || value == fullWindowMode.value) return;
+    fullWindowMode.value = value;
 
     if (isMobile) {
-      if (_fullWindowMode == true) {
+      if (fullWindowMode.value == true) {
         await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
       } else {
         await SystemChrome.setEnabledSystemUIMode(
@@ -86,15 +70,12 @@ class AppModel extends SafeChangeNotifier {
         await SystemChrome.setPreferredOrientations([]);
       }
     }
-
-    notifyListeners();
   }
 
   final PackageInfo _packageInfo;
   String get version => _packageInfo.version;
 
-  String? _onlineVersion;
-  String? get onlineVersion => _onlineVersion;
+  final onlineVersion = SafeValueNotifier<String?>(null);
 
   late final Command<void, bool> checkForUpdateCommand =
       Command.createAsyncNoParam(_checkForUpdate, initialValue: false);
@@ -106,10 +87,10 @@ class AppModel extends SafeChangeNotifier {
       return _updateAvailable;
     }
 
-    _onlineVersion = await getOnlineVersion();
-    final onlineVersion = getExtendedVersionNumber(_onlineVersion) ?? 0;
+    onlineVersion.value = await getOnlineVersion();
+    final onlineVersionInt = getExtendedVersionNumber(onlineVersion.value) ?? 0;
     final currentVersion = getExtendedVersionNumber(version) ?? 0;
-    if (onlineVersion > currentVersion) {
+    if (onlineVersionInt > currentVersion) {
       _updateAvailable = _allowManualUpdates && true;
     } else {
       _updateAvailable = false;
@@ -161,16 +142,18 @@ class AppModel extends SafeChangeNotifier {
                 defaultValue: '2.11.0',
               ),
             ) &&
-            !wasBackupSaved;
+            !(_settingsService.getBool(SPKeys.backupSaved + version) ?? false);
         return needed;
       }, initialValue: null);
 
-  bool get wasBackupSaved =>
-      _settingsService.getBool(SPKeys.backupSaved + version) ?? false;
+  late final Command<bool, bool> saveBackupCommand = Command.createAsync(
+    setBackupSaved,
+    initialValue: false,
+  );
 
-  Future<void> setBackupSaved(bool value) async {
+  Future<bool> setBackupSaved(bool value) async {
     await _settingsService.setValue(SPKeys.backupSaved + version, value);
-    notifyListeners();
+    return _settingsService.getBool(SPKeys.backupSaved + version) ?? false;
   }
 
   bool isCurrentVersionLowerThan(String otherVersion) {
@@ -179,32 +162,25 @@ class AppModel extends SafeChangeNotifier {
     return currentVersionInt < otherVersionInt;
   }
 
-  bool _localAudioBackup = false;
-  bool get localAudioBackup => _localAudioBackup;
+  final localAudioBackup = SafeValueNotifier<bool>(false);
   void setLocalAudioBackup(bool value) {
-    _localAudioBackup = value;
-    notifyListeners();
+    localAudioBackup.value = value;
   }
 
-  bool _podcastBackup = false;
-  bool get podcastBackup => _podcastBackup;
+  final podcastBackup = SafeValueNotifier<bool>(false);
   void setPodcastBackup(bool value) {
-    _podcastBackup = value;
-    notifyListeners();
+    podcastBackup.value = value;
   }
 
-  bool _radioBackup = false;
-  bool get radioBackup => _radioBackup;
+  final radioBackup = SafeValueNotifier<bool>(false);
   void setRadioBackup(bool value) {
-    _radioBackup = value;
-    notifyListeners();
+    radioBackup.value = value;
   }
 
   void resetBackupSettings() {
-    _localAudioBackup = false;
-    _podcastBackup = false;
-    _radioBackup = false;
-    notifyListeners();
+    localAudioBackup.value = false;
+    podcastBackup.value = false;
+    radioBackup.value = false;
   }
 
   int? getExtendedVersionNumber(String? version) {
