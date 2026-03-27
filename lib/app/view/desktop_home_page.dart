@@ -8,7 +8,7 @@ import '../../patch_notes/patch_notes_dialog.dart';
 import '../../player/view/player_view.dart';
 import '../../podcasts/download_model.dart';
 import '../../settings/settings_model.dart';
-import '../app_model.dart';
+import '../app_manager.dart';
 import 'master_detail_page.dart';
 
 class DesktopHomePage extends StatelessWidget with WatchItMixin {
@@ -17,13 +17,13 @@ class DesktopHomePage extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     callOnceAfterThisBuild((context) {
-      final appModel = di<AppModel>();
-      appModel.backupNeededCommand.run();
-      appModel.recentPatchNotesDisposedCommand.run();
+      final appManager = di<AppManager>();
+      appManager.backupNeededCommand.run();
+      appManager.recentPatchNotesDisposedCommand.run();
     });
 
     registerHandler(
-      select: (AppModel m) => m.recentPatchNotesDisposedCommand,
+      select: (AppManager m) => m.recentPatchNotesDisposedCommand,
       handler: (context, newValue, cancel) {
         if (newValue == false) {
           showDialog(
@@ -35,7 +35,7 @@ class DesktopHomePage extends StatelessWidget with WatchItMixin {
     );
 
     registerHandler(
-      select: (AppModel m) => m.backupNeededCommand,
+      select: (AppManager m) => m.backupNeededCommand,
       handler: (context, newValue, cancel) {
         if (newValue == true) {
           showDialog(
@@ -54,9 +54,8 @@ class DesktopHomePage extends StatelessWidget with WatchItMixin {
     final playerToTheRight =
         autoMovePlayer && context.mediaQuerySize.width > kSideBarThreshHold;
 
-    final isInFullWindowMode = watchPropertyValue(
-      (AppModel m) => m.fullWindowMode ?? false,
-    );
+    final isInFullWindowMode =
+        watchValue((AppManager m) => m.fullWindowMode) ?? false;
 
     registerStreamHandler(
       select: (DownloadModel m) => m.messageStream,

@@ -8,7 +8,7 @@ import 'package:path/path.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 
-import '../../app_config.dart';
+import '../../app/app_config.dart';
 import '../../extensions/media_file_x.dart';
 import '../../extensions/string_x.dart';
 import '../../extensions/taget_platform_x.dart';

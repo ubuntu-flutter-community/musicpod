@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../app/app_model.dart';
+import '../../app/app_manager.dart';
 import '../../app/view/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
@@ -41,7 +41,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
       (SettingsModel m) => m.showPositionDuration,
     );
 
-    final appModel = di<AppModel>();
+    final appManager = di<AppManager>();
     final routingManager = di<RoutingManager>();
     final localAudioManager = di<LocalAudioManager>();
     final playerModel = di<PlayerModel>();
@@ -83,7 +83,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
                     routingManager: routingManager,
                     playerModel: playerModel,
                     localAudioManager: localAudioManager,
-                    appModel: appModel,
+                    appManager: appManager,
                   ),
             child: Tooltip(
               message: _title(audio: audio, icyTitle: icyTitle),
@@ -119,7 +119,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
                     audio: audio,
                     routingManager: routingManager,
                     localAudioManager: localAudioManager,
-                    appModel: appModel,
+                    appManager: appManager,
                     podcastModel: podcastModel,
                   ),
             child: Tooltip(
@@ -205,7 +205,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     required PlayerModel playerModel,
     required RoutingManager routingManager,
     required LocalAudioManager localAudioManager,
-    required AppModel appModel,
+    required AppManager appManager,
   }) {
     if (text?.isNotEmpty == true && audio?.audioType == AudioType.radio ||
         audio?.audioType == null) {
@@ -221,7 +221,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
         _onLocalAudioTitleTap(
           context: context,
           audio: audio!,
-          appModel: appModel,
+          appManager: appManager,
           routingManager: routingManager,
           localAudioManager: localAudioManager,
         );
@@ -245,7 +245,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
   void _onLocalAudioTitleTap({
     required BuildContext context,
     required Audio audio,
-    required AppModel appModel,
+    required AppManager appManager,
     required RoutingManager routingManager,
     required LocalAudioManager localAudioManager,
   }) {
@@ -254,7 +254,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
       return;
     }
 
-    appModel.setFullWindowMode(false);
+    appManager.setFullWindowMode(false);
     routingManager.push(
       builder: (_) => AlbumPage(id: audio.albumId!),
       pageId: audio.albumId!,
@@ -267,13 +267,13 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     required PodcastModel podcastModel,
     required LocalAudioManager localAudioManager,
     required RoutingManager routingManager,
-    required AppModel appModel,
+    required AppManager appManager,
   }) {
     switch (audio.audioType) {
       case AudioType.local:
         _onLocalAudioArtistTap(
           audio: audio,
-          appModel: appModel,
+          appManager: appManager,
           libraryModel: routingManager,
           localAudioManager: localAudioManager,
         );
@@ -321,12 +321,12 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
   void _onLocalAudioArtistTap({
     required Audio audio,
     required LocalAudioManager localAudioManager,
-    required AppModel appModel,
+    required AppManager appManager,
     required RoutingManager libraryModel,
   }) {
     final artistId = audio.artist;
     if (artistId == null) return;
-    appModel.setFullWindowMode(false);
+    appManager.setFullWindowMode(false);
     libraryModel.push(
       builder: (_) => ArtistPage(pageId: artistId),
       pageId: artistId,

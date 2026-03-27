@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/app_model.dart';
+import '../../app/app_manager.dart';
 import '../../app/view/routing_manager.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/icons.dart';
@@ -28,7 +28,7 @@ class SettingsButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     Future<void> onPressed() async {
-      await di<AppModel>().setFullWindowMode(false);
+      await di<AppManager>().setFullWindowMode(false);
       await Future.delayed(const Duration(milliseconds: 300));
       di<SettingsModel>().scrollIndex = scrollIndex;
       await di<RoutingManager>().push(pageId: PageIDs.settings);

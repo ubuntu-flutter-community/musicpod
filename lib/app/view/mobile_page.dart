@@ -10,7 +10,7 @@ import '../../player/player_model.dart';
 import '../../player/view/player_main_controls.dart';
 import '../../player/view/player_view.dart';
 import '../../podcasts/download_model.dart';
-import '../app_model.dart';
+import '../app_manager.dart';
 import 'create_master_items.dart';
 import 'mobile_bottom_bar.dart';
 import 'routing_manager.dart';
@@ -23,7 +23,7 @@ class MobilePage extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final fullWindowMode =
-        watchPropertyValue((AppModel m) => m.fullWindowMode) ?? false;
+        watchValue((AppManager m) => m.fullWindowMode) ?? false;
 
     registerStreamHandler(
       select: (DownloadModel m) => m.messageStream,
@@ -35,7 +35,7 @@ class MobilePage extends StatelessWidget with WatchItMixin {
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
         if (fullWindowMode) {
-          di<AppModel>().setFullWindowMode(false);
+          di<AppManager>().setFullWindowMode(false);
         }
       },
       child: Scaffold(
@@ -75,7 +75,7 @@ class MobilePage extends StatelessWidget with WatchItMixin {
                         onVerticalDragEnd: (details) {
                           if (details.primaryVelocity != null &&
                               details.primaryVelocity! > 150) {
-                            di<AppModel>().setFullWindowMode(false);
+                            di<AppManager>().setFullWindowMode(false);
                           }
                         },
                         child: const PlayerView.fullWindow(),

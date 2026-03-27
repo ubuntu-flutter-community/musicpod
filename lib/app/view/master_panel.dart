@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app_config.dart';
+import '../app_config.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/ui_constants.dart';

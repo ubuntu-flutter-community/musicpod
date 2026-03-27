@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/app_model.dart';
+import '../../app/app_manager.dart';
 import '../../app/connectivity_model.dart';
 import '../../app/view/routing_manager.dart';
 import '../../common/data/audio_type.dart';
@@ -46,23 +46,23 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
     final playerWithSidePanel =
         playerPosition == PlayerPosition.fullWindow &&
         mediaQuerySize.width > 1000;
-    final fullScreen = watchPropertyValue((AppModel m) => m.fullWindowMode);
+    final fullScreen = watchValue((AppManager m) => m.fullWindowMode);
 
     final showPlayerLyrics = watchPropertyValue(
       (SettingsModel m) => m.showPlayerLyrics,
     );
     final showQueue = watchPropertyValue((PlayerModel m) => m.showQueue);
 
-    final appModel = di<AppModel>();
+    final appManager = di<AppManager>();
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     final active = audio?.path != null || isOnline;
 
     Future<void> onFullHeightButtonPressed() async {
-      await appModel.setFullWindowMode(
+      await appManager.setFullWindowMode(
         playerPosition == PlayerPosition.fullWindow ? false : true,
       );
 
-      appModel.setShowWindowControls(
+      appManager.setShowWindowControls(
         (fullScreen == true && playerToTheRight) ? false : true,
       );
     }

@@ -5,7 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 
-import '../app_config.dart';
+import 'app_config.dart';
 import '../player/player_service.dart';
 import '../settings/shared_preferences_keys.dart';
 import '../extensions/taget_platform_x.dart';

@@ -4,9 +4,9 @@ import 'package:path/path.dart' as p;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app/app_model.dart';
+import '../../app/app_manager.dart';
 import '../../app/connectivity_model.dart';
-import '../../app_config.dart';
+import '../../app/app_config.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/tapable_text.dart';
 import '../../common/view/ui_constants.dart';
@@ -37,22 +37,22 @@ class _AboutTile extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     callOnceAfterThisBuild((context) {
-      final appModel = di<AppModel>();
-      appModel.checkForUpdateCommand.run();
-      appModel.fetchNumberOfDownloadsCommand.run();
+      final appManager = di<AppManager>();
+      appManager.checkForUpdateCommand.run();
+      appManager.fetchNumberOfDownloadsCommand.run();
     });
 
     final theme = context.theme;
-    final appModel = di<AppModel>();
+    final appManager = di<AppManager>();
     final updateAvailableResults = watchValue(
-      (AppModel m) => m.checkForUpdateCommand.results,
+      (AppManager m) => m.checkForUpdateCommand.results,
     );
     final updateAvailable = updateAvailableResults.data == true;
-    final onlineVersion = watchPropertyValue((AppModel m) => m.onlineVersion);
+    final onlineVersion = watchValue((AppManager m) => m.onlineVersion);
     final downloads = watchValue(
-      (AppModel m) => m.fetchNumberOfDownloadsCommand,
+      (AppManager m) => m.fetchNumberOfDownloadsCommand,
     );
-    final currentVersion = watchPropertyValue((AppModel m) => m.version);
+    final currentVersion = di<AppManager>().version;
     final useYaruTheme = watchPropertyValue(
       (SettingsModel m) => m.useYaruTheme,
     );
@@ -63,8 +63,8 @@ class _AboutTile extends StatelessWidget with WatchItMixin {
       ),
       title:
           !di<ConnectivityModel>().isOnline == true ||
-              !appModel.allowManualUpdate
-          ? Text(di<AppModel>().version)
+              !appManager.allowManualUpdate
+          ? Text(di<AppManager>().version)
           : updateAvailableResults.isRunning
           ? Center(
               child: SizedBox.square(

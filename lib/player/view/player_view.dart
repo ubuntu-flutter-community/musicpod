@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/app_model.dart';
+import '../../app/app_manager.dart';
 import 'bottom_player.dart';
 import 'full_height_player.dart';
 
@@ -25,7 +25,7 @@ class _PlayerViewState extends State<PlayerView> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
-      di<AppModel>().setShowWindowControls(
+      di<AppManager>().setShowWindowControls(
         widget._position != PlayerPosition.sideBar,
       );
     });
@@ -37,7 +37,7 @@ class _PlayerViewState extends State<PlayerView> {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
-      di<AppModel>().setShowWindowControls(
+      di<AppManager>().setShowWindowControls(
         widget._position != PlayerPosition.sideBar,
       );
     });

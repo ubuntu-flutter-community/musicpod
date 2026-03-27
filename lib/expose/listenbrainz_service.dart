@@ -5,20 +5,27 @@ import '../common/logging.dart';
 import '../settings/settings_service.dart';
 import '../settings/shared_preferences_keys.dart';
 
-@lazySingleton
+@singleton
 class ListenBrainzService {
   ListenBrainzService({required SettingsService settingsService})
-    : _settingsService = settingsService {
-    init();
-  }
+    : _settingsService = settingsService;
 
   final SettingsService _settingsService;
   ListenBrainz? _listenBrainz;
 
-  void init() {
-    final apiKey = _settingsService.getString(SPKeys.listenBrainzApiKey);
-    if (apiKey != null) {
-      _listenBrainz = ListenBrainz(apiKey);
+  @PostConstruct(preResolve: true)
+  Future<void> init(String newKey, {bool rethrowError = false}) async {
+    try {
+      await _settingsService.setValue(SPKeys.listenBrainzApiKey, newKey);
+      final apiKey = _settingsService.getString(SPKeys.listenBrainzApiKey);
+      if (apiKey != null) {
+        _listenBrainz = ListenBrainz(apiKey);
+      }
+    } on Exception catch (e, st) {
+      printMessageInDebugMode(e, trace: st);
+      if (rethrowError) {
+        rethrow;
+      }
     }
   }
 

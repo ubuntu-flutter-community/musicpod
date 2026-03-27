@@ -3,10 +3,11 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app/app_model.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
+import '../../expose/data/last_fm_credentials.dart';
+import '../../expose/expose_manager.dart';
 import '../../l10n/l10n.dart';
 import '../settings_model.dart';
 
@@ -22,24 +23,27 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
   late TextEditingController _lastFmApiKeyController;
   late TextEditingController _lastFmSecretController;
   late TextEditingController _listenBrainzApiKeyController;
-  final _formkey = GlobalKey<FormState>();
+  final _lastFmFormKey = GlobalKey<FormState>();
+  final _listenBrainzFormKey = GlobalKey<FormState>();
 
   @override
   void initState() {
+    super.initState();
+
     final model = di<SettingsModel>();
     _lastFmApiKeyController = TextEditingController(text: model.lastFmApiKey);
     _lastFmSecretController = TextEditingController(text: model.lastFmSecret);
     _listenBrainzApiKeyController = TextEditingController(
       text: model.listenBrainzApiKey,
     );
-
-    super.initState();
   }
 
   @override
   void dispose() {
     _lastFmApiKeyController.dispose();
     _lastFmSecretController.dispose();
+    _listenBrainzApiKeyController.dispose();
+
     super.dispose();
   }
 
@@ -66,7 +70,7 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
                 children: [
                   const Icon(TablerIcons.brand_lastfm),
                   if (lastFmEnabled &&
-                      watchValue((AppModel m) => m.isLastFmAuthorized))
+                      watchValue((ExposeManager m) => m.isLastFmAuthorized))
                     Text(l10n.connectedTo),
                   Text(l10n.exposeToLastfmTitle),
                 ],
@@ -84,8 +88,8 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
             Padding(
               padding: const EdgeInsets.all(8),
               child: Form(
-                key: _formkey,
-                onChanged: _formkey.currentState?.validate,
+                key: _lastFmFormKey,
+                onChanged: _lastFmFormKey.currentState?.validate,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: space(
@@ -104,9 +108,10 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
                           }
                           return null;
                         },
-                        onChanged: (_) => _formkey.currentState?.validate(),
+                        onChanged: (_) =>
+                            _lastFmFormKey.currentState?.validate(),
                         onFieldSubmitted: (value) async {
-                          if (_formkey.currentState!.validate()) {
+                          if (_lastFmFormKey.currentState!.validate()) {
                             di<SettingsModel>().setLastFmApiKey(value);
                           }
                         },
@@ -124,23 +129,22 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
                           }
                           return null;
                         },
-                        onChanged: (_) => _formkey.currentState?.validate(),
+                        onChanged: (_) =>
+                            _lastFmFormKey.currentState?.validate(),
                         onFieldSubmitted: (value) async {
-                          if (_formkey.currentState!.validate()) {
+                          if (_lastFmFormKey.currentState!.validate()) {
                             di<SettingsModel>().setLastFmSecret(value);
                           }
                         },
                       ),
                       ElevatedButton(
-                        onPressed: () {
-                          di<SettingsModel>()
-                            ..setLastFmApiKey(_lastFmApiKeyController.text)
-                            ..setLastFmSecret(_lastFmSecretController.text);
-                          di<AppModel>().authorizeLastFm(
-                            apiKey: _lastFmApiKeyController.text,
-                            apiSecret: _lastFmSecretController.text,
-                          );
-                        },
+                        onPressed: () =>
+                            di<ExposeManager>().authorizeLastFmCommand.run(
+                              LastFmCredentials(
+                                apiKey: _lastFmApiKeyController.text,
+                                apiSecret: _lastFmSecretController.text,
+                              ),
+                            ),
                         child: Text(l10n.saveAndAuthorize),
                       ),
                     ],
@@ -163,9 +167,7 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
             subtitle: Text(l10n.exposeToListenBrainzSubTitle),
             trailing: CommonSwitch(
               value: listenBrainzEnabled,
-              onChanged: (v) {
-                di<SettingsModel>().setEnableListenBrainzScrobbling(v);
-              },
+              onChanged: di<SettingsModel>().setEnableListenBrainzScrobbling,
             ),
           ),
           if (listenBrainzEnabled) ...[
@@ -177,8 +179,8 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
                   heightGap: 10,
                   children: [
                     Form(
-                      key: _formkey,
-                      onChanged: _formkey.currentState?.validate,
+                      key: _listenBrainzFormKey,
+                      onChanged: _listenBrainzFormKey.currentState?.validate,
                       child: Column(
                         children: [
                           TextFormField(
@@ -194,9 +196,11 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
                               }
                               return null;
                             },
-                            onChanged: (_) => _formkey.currentState?.validate(),
+                            onChanged: (_) =>
+                                _listenBrainzFormKey.currentState?.validate(),
                             onFieldSubmitted: (value) async {
-                              if (_formkey.currentState!.validate()) {
+                              if (_listenBrainzFormKey.currentState!
+                                  .validate()) {
                                 di<SettingsModel>().setListenBrainzApiKey(
                                   value,
                                 );
@@ -207,12 +211,9 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () {
-                        di<SettingsModel>().setListenBrainzApiKey(
-                          _listenBrainzApiKeyController.text,
-                        );
-                        di<AppModel>().initListenBrains();
-                      },
+                      onPressed: () => di<ExposeManager>()
+                          .initListenBrainsCommand
+                          .run(_listenBrainzApiKeyController.text),
                       child: Text(l10n.save),
                     ),
                   ],

@@ -18,7 +18,7 @@ import '../extensions/string_x.dart';
 import '../extensions/taget_platform_x.dart';
 import '../library/library_service.dart';
 import '../local_audio/local_cover_service.dart';
-import '../persistence_utils.dart';
+import '../common/persistence_utils.dart';
 import 'data/player_state.dart';
 
 typedef Queue = ({String name, List<Audio> audios});

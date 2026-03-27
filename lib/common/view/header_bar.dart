@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app/app_model.dart';
+import '../../app/app_manager.dart';
 import '../../app/view/routing_manager.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
@@ -71,7 +71,7 @@ class HeaderBar extends StatelessWidget
 
     var theStyle = style;
     if (adaptive) {
-      theStyle = watchPropertyValue((AppModel m) => m.showWindowControls)
+      theStyle = watchValue((AppManager m) => m.showWindowControls)
           ? YaruTitleBarStyle.normal
           : YaruTitleBarStyle.undecorated;
     }

@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/file_names.dart';
 import '../common/logging.dart';
-import '../persistence_utils.dart';
+import '../common/persistence_utils.dart';
 
 @lazySingleton
 class SettingsService {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app/app_model.dart';
+import '../../app/app_manager.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
@@ -39,7 +39,7 @@ class ResetSection extends StatelessWidget {
                 barrierDismissible: false,
                 context: context,
                 builder: (context) {
-                  di<AppModel>().resetBackupSettings();
+                  di<AppManager>().resetBackupSettings();
                   return const BackupDialog(breakingChange: false);
                 },
               ),

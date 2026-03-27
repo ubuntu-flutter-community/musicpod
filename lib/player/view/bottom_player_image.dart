@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/app_model.dart';
+import '../../app/app_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
@@ -41,7 +41,7 @@ class _BottomPlayerImageState extends State<BottomPlayerImage> {
         child: MouseRegion(
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
-            onTap: () => di<AppModel>().setFullWindowMode(true),
+            onTap: () => di<AppManager>().setFullWindowMode(true),
             child: Video(
               height: widget.size,
               width: widget.size,
@@ -117,7 +117,7 @@ class _BottomPlayerImageState extends State<BottomPlayerImage> {
                 color: Colors.black45,
                 child: Center(
                   child: IconButton(
-                    onPressed: () => di<AppModel>().setFullWindowMode(true),
+                    onPressed: () => di<AppManager>().setFullWindowMode(true),
                     icon: Icon(Iconz.fullScreen, color: Colors.white),
                   ),
                 ),

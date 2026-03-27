@@ -12,7 +12,7 @@ import '../common/logging.dart';
 import '../extensions/media_file_x.dart';
 import '../extensions/string_x.dart';
 import '../extensions/taget_platform_x.dart';
-import '../persistence_utils.dart';
+import '../common/persistence_utils.dart';
 
 @lazySingleton
 class LocalCoverService {

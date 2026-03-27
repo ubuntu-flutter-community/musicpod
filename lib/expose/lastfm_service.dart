@@ -82,8 +82,8 @@ class LastfmService {
     required String apiKey,
     required String apiSecret,
   }) async {
-    _settingsService.setValue(SPKeys.lastFmApiKey, apiKey);
-    _settingsService.setValue(SPKeys.lastFmSecret, apiSecret);
+    await _settingsService.setValue(SPKeys.lastFmApiKey, apiKey);
+    await _settingsService.setValue(SPKeys.lastFmSecret, apiSecret);
 
     final lastfmua = LastFMUnauthorized(apiKey, apiSecret);
     launchUrl(Uri.parse(await lastfmua.authorizeDesktop()));

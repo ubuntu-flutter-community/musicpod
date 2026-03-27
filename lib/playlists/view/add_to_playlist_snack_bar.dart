@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/app_model.dart';
+import '../../app/app_manager.dart';
 import '../../app/view/routing_manager.dart';
 import '../../common/page_ids.dart';
 import '../../l10n/l10n.dart';
@@ -21,9 +21,9 @@ showAddedToPlaylistSnackBar({
       ),
       action: SnackBarAction(
         onPressed: () {
-          final appModel = di<AppModel>();
-          if (appModel.fullWindowMode == true) {
-            appModel.setFullWindowMode(false);
+          final appManager = di<AppManager>();
+          if (appManager.fullWindowMode == true) {
+            appManager.setFullWindowMode(false);
           }
           di<RoutingManager>().push(pageId: id);
         },
