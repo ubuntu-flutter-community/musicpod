@@ -23,6 +23,13 @@ class ExposeService {
     required String additionalInfo,
     String? imageUrl,
   }) async {
+    if (!_listenBrainzService.isInitialized) {
+      await _listenBrainzService.init();
+    }
+    if (!_lastFmService.isAuthorized.value) {
+      await _lastFmService.init();
+    }
+
     await _lastFmService.exposeTitleToLastfm(title: title, artist: artist);
 
     await _listenBrainzService.exposeTrackToListenBrainz(
@@ -32,7 +39,7 @@ class ExposeService {
   }
 
   Future<void> initListenBrains(String apiKey) =>
-      _listenBrainzService.init(apiKey, rethrowError: true);
+      _listenBrainzService.init(newKey: apiKey, rethrowError: true);
 
   ValueNotifier<bool> get isLastFmAuthorized => _lastFmService.isAuthorized;
   Future<void> authorizeLastFm({

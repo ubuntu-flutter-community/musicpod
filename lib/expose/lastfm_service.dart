@@ -12,9 +12,7 @@ import '../settings/shared_preferences_keys.dart';
 @lazySingleton
 class LastfmService {
   LastfmService({required SettingsService settingsService})
-    : _settingsService = settingsService {
-    init();
-  }
+    : _settingsService = settingsService;
 
   final SettingsService _settingsService;
 
@@ -43,14 +41,14 @@ class LastfmService {
     }
   }
 
-  void init({LastFMAuthorized? lastFmAuthorized}) {
+  Future<void> init({LastFMAuthorized? lastFmAuthorized}) async {
     if (lastFmAuthorized != null) {
       _setLastFm(lastFmAuthorized);
-      _settingsService.setValue(
+      await _settingsService.setValue(
         SPKeys.lastFmSessionKey,
         lastFmAuthorized.sessionKey,
       );
-      _settingsService.setValue(
+      await _settingsService.setValue(
         SPKeys.lastFmUsername,
         lastFmAuthorized.username,
       );
@@ -94,7 +92,7 @@ class LastfmService {
     while (DateTime.now().difference(startTime) < maxWaitDuration) {
       try {
         final lastfm = await lastfmua.finishAuthorizeDesktop();
-        init(lastFmAuthorized: lastfm);
+        await init(lastFmAuthorized: lastfm);
       } catch (e) {
         printMessageInDebugMode(e);
         await Future.delayed(const Duration(seconds: 10));
