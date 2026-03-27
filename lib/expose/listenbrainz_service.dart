@@ -8,17 +8,26 @@ import '../settings/shared_preferences_keys.dart';
 @lazySingleton
 class ListenBrainzService {
   ListenBrainzService({required SettingsService settingsService})
-    : _settingsService = settingsService {
-    init();
-  }
+    : _settingsService = settingsService;
 
   final SettingsService _settingsService;
   ListenBrainz? _listenBrainz;
+  bool get isInitialized => _listenBrainz != null;
 
-  void init() {
-    final apiKey = _settingsService.getString(SPKeys.listenBrainzApiKey);
-    if (apiKey != null) {
-      _listenBrainz = ListenBrainz(apiKey);
+  Future<void> init({String? newKey, bool rethrowError = false}) async {
+    try {
+      if (newKey != null) {
+        await _settingsService.setValue(SPKeys.listenBrainzApiKey, newKey);
+      }
+      final apiKey = _settingsService.getString(SPKeys.listenBrainzApiKey);
+      if (apiKey != null) {
+        _listenBrainz = ListenBrainz(apiKey);
+      }
+    } on Exception catch (e, st) {
+      printMessageInDebugMode(e, trace: st);
+      if (rethrowError) {
+        rethrow;
+      }
     }
   }
 

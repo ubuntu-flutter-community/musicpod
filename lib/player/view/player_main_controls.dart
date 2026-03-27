@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/app_model.dart';
+import '../../app/app_manager.dart';
 import '../../app/connectivity_model.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
@@ -182,7 +182,7 @@ class PlayerCompactControls extends StatelessWidget with WatchItMixin {
             child: SizedBox.square(dimension: 2 * radius, child: rawPlayButton),
           ),
           IconButton(
-            onPressed: () => di<AppModel>().setFullWindowMode(true),
+            onPressed: () => di<AppManager>().setFullWindowMode(true),
             icon: Icon(Iconz.fullScreen),
           ),
         ],

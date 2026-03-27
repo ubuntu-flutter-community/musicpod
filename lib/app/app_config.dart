@@ -1,4 +1,4 @@
-import 'extensions/taget_platform_x.dart';
+import '../extensions/taget_platform_x.dart';
 
 class AppConfig {
   static const appName = 'musicpod';

@@ -9,7 +9,7 @@ import '../../common/view/ui_constants.dart';
 import '../custom_content_model.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
-import '../../app/app_model.dart';
+import '../../app/app_manager.dart';
 
 class BackupDialog extends StatelessWidget with WatchItMixin {
   const BackupDialog({super.key, this.breakingChange = true});
@@ -20,21 +20,17 @@ class BackupDialog extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = context.theme;
-    final appModel = di<AppModel>();
-    final confirmEnabled = watchPropertyValue(
-      (AppModel m) => m.radioBackup && m.localAudioBackup && m.podcastBackup,
-    );
-    final radioBackup = watchPropertyValue((AppModel m) => m.radioBackup);
-    final localAudioBackup = watchPropertyValue(
-      (AppModel m) => m.localAudioBackup,
-    );
-    final podcastBackup = watchPropertyValue((AppModel m) => m.podcastBackup);
+    final appManager = di<AppManager>();
+    final radioBackup = watchValue((AppManager m) => m.radioBackup);
+    final localAudioBackup = watchValue((AppManager m) => m.localAudioBackup);
+    final podcastBackup = watchValue((AppManager m) => m.podcastBackup);
+    final confirmEnabled = radioBackup && localAudioBackup && podcastBackup;
 
     return ConfirmationDialog(
       showCancel: false,
       showCloseIcon: !breakingChange,
       confirmEnabled: confirmEnabled,
-      onConfirm: () => appModel.setBackupSaved(true),
+      onConfirm: () => appManager.setBackupSaved(true),
       title: Text(
         breakingChange
             ? l10n.breakingChangesPleaseBackupTitle
@@ -85,13 +81,13 @@ class BackupDialog extends StatelessWidget with WatchItMixin {
                               AudioType.radio => radioBackup,
                             },
                             onChanged: (v) => switch (e) {
-                              AudioType.podcast => appModel.setPodcastBackup(
+                              AudioType.podcast => appManager.setPodcastBackup(
                                 v ?? false,
                               ),
-                              AudioType.local => appModel.setLocalAudioBackup(
+                              AudioType.local => appManager.setLocalAudioBackup(
                                 v ?? false,
                               ),
-                              AudioType.radio => appModel.setRadioBackup(
+                              AudioType.radio => appManager.setRadioBackup(
                                 v ?? false,
                               ),
                             },
@@ -111,7 +107,8 @@ class BackupDialog extends StatelessWidget with WatchItMixin {
                                   di<CustomContentModel>()
                                       .exportPlaylistsAndPinnedAlbumsToM3Us()
                                       .then(
-                                        (v) => appModel.setLocalAudioBackup(v),
+                                        (v) =>
+                                            appManager.setLocalAudioBackup(v),
                                       );
                                 },
                                 child: Text(
@@ -128,7 +125,9 @@ class BackupDialog extends StatelessWidget with WatchItMixin {
                                 child: Text(l10n.exportPodcastsToOpmlFile),
                                 onPressed: () => di<CustomContentModel>()
                                     .exportPodcastsToOpmlFile()
-                                    .then((v) => appModel.setPodcastBackup(v)),
+                                    .then(
+                                      (v) => appManager.setPodcastBackup(v),
+                                    ),
                               ),
                             ),
                           ],
@@ -139,7 +138,7 @@ class BackupDialog extends StatelessWidget with WatchItMixin {
                               title: ElevatedButton(
                                 onPressed: () => di<CustomContentModel>()
                                     .exportStarredStationsToOpmlFile()
-                                    .then((v) => appModel.setRadioBackup(v)),
+                                    .then((v) => appManager.setRadioBackup(v)),
                                 child: Text(
                                   l10n.exportStarredStationsToOpmlFile,
                                 ),

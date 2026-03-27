@@ -17,14 +17,19 @@ class ExposeService {
   final LastfmService _lastFmService;
   final ListenBrainzService _listenBrainzService;
 
-  final _errorController = StreamController<String?>.broadcast();
-
   Future<void> exposeTitleOnline({
     required String title,
     required String artist,
     required String additionalInfo,
     String? imageUrl,
   }) async {
+    if (!_listenBrainzService.isInitialized) {
+      await _listenBrainzService.init();
+    }
+    if (!_lastFmService.isAuthorized.value) {
+      await _lastFmService.init();
+    }
+
     await _lastFmService.exposeTitleToLastfm(title: title, artist: artist);
 
     await _listenBrainzService.exposeTrackToListenBrainz(
@@ -33,15 +38,12 @@ class ExposeService {
     );
   }
 
-  void initListenBrains() => _listenBrainzService.init();
+  Future<void> initListenBrains(String apiKey) =>
+      _listenBrainzService.init(newKey: apiKey, rethrowError: true);
 
   ValueNotifier<bool> get isLastFmAuthorized => _lastFmService.isAuthorized;
   Future<void> authorizeLastFm({
     required String apiKey,
     required String apiSecret,
   }) => _lastFmService.authorize(apiKey: apiKey, apiSecret: apiSecret);
-
-  Future<void> dispose() async {
-    await _errorController.close();
-  }
 }

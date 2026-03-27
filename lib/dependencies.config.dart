@@ -21,12 +21,13 @@ import 'package:package_info_plus/package_info_plus.dart' as _i655;
 import 'package:shared_preferences/shared_preferences.dart' as _i460;
 import 'package:window_manager/window_manager.dart' as _i740;
 
-import 'app/app_model.dart' as _i162;
+import 'app/app_manager.dart' as _i369;
 import 'app/connectivity_model.dart' as _i788;
 import 'app/sidebar_audios_manager.dart' as _i190;
 import 'app/view/routing_manager.dart' as _i73;
 import 'app/window_size_to_settings_listener.dart' as _i517;
 import 'custom_content/custom_content_model.dart' as _i55;
+import 'expose/expose_manager.dart' as _i987;
 import 'expose/expose_service.dart' as _i820;
 import 'expose/lastfm_service.dart' as _i820;
 import 'expose/listenbrainz_service.dart' as _i348;
@@ -205,11 +206,24 @@ extension GetItInjectableX on _i174.GetIt {
       ),
       dispose: (i) => i.dispose(),
     );
+    gh.lazySingleton<_i369.AppManager>(
+      () => _i369.AppManager(
+        packageInfo: gh<_i655.PackageInfo>(),
+        settingsService: gh<_i763.SettingsService>(),
+        gitHub: gh<_i535.GitHub>(),
+        localAudioService: gh<_i438.LocalAudioService>(),
+        libraryService: gh<_i595.LibraryService>(),
+        internetConnection: gh<_i161.InternetConnection>(),
+      ),
+    );
     gh.lazySingleton<_i820.ExposeService>(
       () => _i820.ExposeService(
         lastFmService: gh<_i820.LastfmService>(),
         listenBrainzService: gh<_i348.ListenBrainzService>(),
       ),
+    );
+    gh.lazySingleton<_i987.ExposeManager>(
+      () => _i987.ExposeManager(exposeService: gh<_i820.ExposeService>()),
     );
     gh.lazySingleton<_i55.CustomContentModel>(
       () => _i55.CustomContentModel(
@@ -221,17 +235,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i41.PodcastModel>(
       () => _i41.PodcastModel(podcastService: gh<_i721.PodcastService>()),
-    );
-    gh.lazySingleton<_i162.AppModel>(
-      () => _i162.AppModel(
-        packageInfo: gh<_i655.PackageInfo>(),
-        settingsService: gh<_i763.SettingsService>(),
-        gitHub: gh<_i535.GitHub>(),
-        exposeService: gh<_i820.ExposeService>(),
-        localAudioService: gh<_i438.LocalAudioService>(),
-        libraryService: gh<_i595.LibraryService>(),
-        internetConnection: gh<_i161.InternetConnection>(),
-      ),
     );
     await gh.singletonAsync<_i38.PlayerService>(
       () {

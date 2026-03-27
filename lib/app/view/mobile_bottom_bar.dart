@@ -5,7 +5,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../extensions/build_context_x.dart';
 import '../../player/player_model.dart';
 import '../../player/view/bottom_player.dart';
-import '../app_model.dart';
+import '../app_manager.dart';
 import 'mobile_navigation_bar.dart';
 
 class MobileBottomBar extends StatelessWidget with WatchItMixin {
@@ -35,7 +35,7 @@ class MobileBottomBar extends StatelessWidget with WatchItMixin {
                 onVerticalDragEnd: (details) {
                   if (details.primaryVelocity != null &&
                       details.primaryVelocity! < 150) {
-                    di<AppModel>().setFullWindowMode(true);
+                    di<AppManager>().setFullWindowMode(true);
                   }
                 },
                 child: const BottomPlayer(),

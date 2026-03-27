@@ -5,13 +5,13 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:phoenix_theme/phoenix_theme.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app_config.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../l10n/app_localizations.dart';
 import '../../l10n/l10n.dart';
 import '../../settings/settings_model.dart';
+import '../app_config.dart';
 import 'desktop_home_page.dart';
 import 'mouse_and_keyboard_command_wrapper.dart';
 

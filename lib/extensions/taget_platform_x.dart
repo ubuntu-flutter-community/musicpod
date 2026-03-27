@@ -5,7 +5,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:xdg_directories/xdg_directories.dart';
 
-import '../app_config.dart';
+import '../app/app_config.dart';
 
 bool get isDesktop => !kIsWeb && !isMobile;
 bool get isMobile => !kIsWeb && (isIOS || isAndroid || isFuchsia);

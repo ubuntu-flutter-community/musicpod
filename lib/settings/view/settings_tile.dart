@@ -4,10 +4,10 @@ import 'package:path/path.dart' as p;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app/app_model.dart';
+import '../../app/app_manager.dart';
 import '../../app/connectivity_model.dart';
 import '../../app/view/routing_manager.dart';
-import '../../app_config.dart';
+import '../../app/app_config.dart';
 import '../../common/page_ids.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
@@ -24,7 +24,7 @@ class SettingsTile extends StatelessWidget with WatchItMixin {
     Widget? trailing;
     // To not show any progress for Snap/Flatpak
     if (di<ConnectivityModel>().isOnline == true &&
-        di<AppModel>().allowManualUpdate) {
+        di<AppManager>().allowManualUpdate) {
       trailing = const _UpdateButton();
     }
 
@@ -61,14 +61,16 @@ class _UpdateButton extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     callOnceAfterThisBuild(
-      (context) => di<AppModel>().checkForUpdateCommand.run(),
+      (context) => di<AppManager>().checkForUpdateCommand.run(),
     );
 
     final useYaruTheme = watchPropertyValue(
       (SettingsModel m) => m.useYaruTheme,
     );
 
-    return watchValue((AppModel m) => m.checkForUpdateCommand.results).toWidget(
+    return watchValue(
+      (AppManager m) => m.checkForUpdateCommand.results,
+    ).toWidget(
       whileRunning: (lastResult, param) => Center(
         child: SizedBox.square(
           dimension: useYaruTheme ? kYaruTitleBarItemHeight : 40,
@@ -77,7 +79,7 @@ class _UpdateButton extends StatelessWidget with WatchItMixin {
       ),
       onError: (error, param, _) => IconButton(
         tooltip: error.toString(),
-        onPressed: di<AppModel>().checkForUpdateCommand,
+        onPressed: di<AppManager>().checkForUpdateCommand,
         icon: Icon(Iconz.warning),
       ),
       onData: (result, param) => switch (result) {
@@ -89,7 +91,7 @@ class _UpdateButton extends StatelessWidget with WatchItMixin {
                 AppConfig.repoUrl,
                 'releases',
                 'tag',
-                di<AppModel>().onlineVersion,
+                di<AppManager>().onlineVersion.value,
               ),
             ),
           ),

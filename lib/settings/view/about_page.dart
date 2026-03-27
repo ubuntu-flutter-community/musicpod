@@ -4,8 +4,8 @@ import 'package:github/github.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app/app_model.dart';
-import '../../app_config.dart';
+import '../../app/app_manager.dart';
+import '../../app/app_config.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/tapable_text.dart';
@@ -47,7 +47,7 @@ class _AboutPageState extends State<_AboutPage> {
   @override
   void initState() {
     super.initState();
-    _contributors = di<AppModel>().getContributors();
+    _contributors = di<AppManager>().getContributors();
   }
 
   @override

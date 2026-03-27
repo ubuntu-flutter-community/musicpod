@@ -3,7 +3,7 @@ import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/app_model.dart';
+import '../../app/app_manager.dart';
 import '../../l10n/l10n.dart';
 import 'icons.dart';
 import 'ui_constants.dart';
@@ -88,7 +88,7 @@ class StreamProviderShareButton extends StatelessWidget {
   }
 
   String getAmazonSuffix() {
-    final countryCode = di<AppModel>().countryCode;
+    final countryCode = di<AppManager>().countryCode;
     return switch (countryCode) {
       'au' => 'com.au',
       'at' => 'at',

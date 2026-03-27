@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:window_manager/window_manager.dart';
 
-import '../app_config.dart';
+import '../app/app_config.dart';
 
 @module
 abstract class WindowManagerModule {
