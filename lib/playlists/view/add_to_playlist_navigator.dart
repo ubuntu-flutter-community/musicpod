@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/data/audio.dart';
-import '../../common/page_ids.dart';
+import '../../app/page_ids.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';

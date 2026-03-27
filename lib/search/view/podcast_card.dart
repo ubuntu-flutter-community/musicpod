@@ -3,7 +3,7 @@ import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/view/routing_manager.dart';
+import '../../app/routing_manager.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/safe_network_image.dart';

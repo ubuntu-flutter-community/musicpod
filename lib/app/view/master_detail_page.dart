@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../common/page_ids.dart';
+import '../page_ids.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
@@ -11,7 +11,7 @@ import '../../extensions/taget_platform_x.dart';
 import '../../library/library_model.dart';
 import 'create_master_items.dart';
 import 'master_panel.dart';
-import 'routing_manager.dart';
+import '../routing_manager.dart';
 
 class MasterDetailPage extends StatelessWidget {
   const MasterDetailPage({super.key});

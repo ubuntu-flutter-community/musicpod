@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gtk/gtk.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:gtk/gtk.dart';
 
 import '../../dependencies.dart';
 import '../../extensions/taget_platform_x.dart';

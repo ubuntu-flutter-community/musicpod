@@ -3,9 +3,9 @@ import 'package:radio_browser_api/radio_browser_api.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app/view/routing_manager.dart';
+import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
-import '../../common/page_ids.dart';
+import '../../app/page_ids.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/round_image_container.dart';
 import '../../common/view/theme.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/view/routing_manager.dart';
+import '../../app/routing_manager.dart';
 import '../../common/view/snackbars.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';

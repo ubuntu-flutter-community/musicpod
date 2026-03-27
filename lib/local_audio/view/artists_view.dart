@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app/view/routing_manager.dart';
+import '../../app/routing_manager.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/round_image_container.dart';
 import '../../common/view/sliver_fill_remaining_progress.dart';
