@@ -2,6 +2,7 @@
 
 ## [2.15.1](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.14.0...v2.15.1) (2026-03-27)
 
+## WARNING - THIS IS THE LAST RELEASE BEFORE MUSICPOD MIGRATES TO A NEW DATABASE - PLEASE BACKUP YOUR COLLECTION
 
 ### Features
 
