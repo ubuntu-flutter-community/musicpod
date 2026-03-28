@@ -3,7 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/app_manager.dart';
-import '../../app/view/routing_manager.dart';
+import '../../app/routing_manager.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import 'global_keys.dart';

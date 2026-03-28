@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../common/data/audio_type.dart';
-import '../../common/page_ids.dart';
+import '../page_ids.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';

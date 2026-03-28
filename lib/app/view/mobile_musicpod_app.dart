@@ -7,7 +7,7 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../app_config.dart';
-import '../../common/page_ids.dart';
+import '../page_ids.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/taget_platform_x.dart';
@@ -18,7 +18,7 @@ import '../../player/player_model.dart';
 import '../../settings/settings_model.dart';
 import 'create_master_items.dart';
 import 'mobile_page.dart';
-import 'routing_manager.dart';
+import '../routing_manager.dart';
 
 class MobileMusicPodApp extends StatefulWidget with WatchItStatefulWidgetMixin {
   const MobileMusicPodApp({super.key, this.accent});

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/app_manager.dart';
-import '../../app/view/routing_manager.dart';
-import '../../common/page_ids.dart';
+import '../../app/routing_manager.dart';
+import '../../app/page_ids.dart';
 import '../../l10n/l10n.dart';
 
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason>

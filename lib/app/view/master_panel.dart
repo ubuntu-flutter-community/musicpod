@@ -4,14 +4,14 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../app_config.dart';
-import '../../common/page_ids.dart';
+import '../page_ids.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/ui_constants.dart';
 import '../../library/library_model.dart';
 import '../../settings/view/settings_action.dart';
 import 'create_master_items.dart';
 import 'master_tile.dart';
-import 'routing_manager.dart';
+import '../routing_manager.dart';
 
 class MasterPanel extends StatelessWidget {
   const MasterPanel({super.key});

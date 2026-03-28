@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/view/routing_manager.dart';
+import '../../app/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/copy_clipboard_content.dart';
 import '../../common/view/icons.dart';

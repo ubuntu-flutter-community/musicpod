@@ -23,8 +23,8 @@ import 'package:window_manager/window_manager.dart' as _i740;
 
 import 'app/app_manager.dart' as _i369;
 import 'app/connectivity_model.dart' as _i788;
+import 'app/routing_manager.dart' as _i971;
 import 'app/sidebar_audios_manager.dart' as _i190;
-import 'app/view/routing_manager.dart' as _i73;
 import 'app/window_size_to_settings_listener.dart' as _i517;
 import 'custom_content/custom_content_model.dart' as _i55;
 import 'expose/expose_manager.dart' as _i987;
@@ -149,8 +149,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i57.NotificationsService>(
       () => _i57.NotificationsService(localNotifier: gh<_i526.LocalNotifier>()),
     );
-    gh.lazySingleton<_i73.RoutingManager>(
-      () => _i73.RoutingManager(libraryService: gh<_i595.LibraryService>()),
+    gh.lazySingleton<_i971.RoutingManager>(
+      () => _i971.RoutingManager(libraryService: gh<_i595.LibraryService>()),
       dispose: (i) => i.dispose(),
     );
     gh.lazySingleton<_i1032.LibraryModel>(

@@ -2,10 +2,10 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/view/routing_manager.dart';
+import '../../app/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
-import '../../common/page_ids.dart';
+import '../../app/page_ids.dart';
 import '../../common/view/adaptive_multi_layout_body.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/audio_page_type.dart';

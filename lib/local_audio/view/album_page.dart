@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../app/view/routing_manager.dart';
+import '../../app/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/audio_tile_option_button.dart';

@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../common/page_ids.dart';
+import '../page_ids.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -13,7 +13,7 @@ import '../../podcasts/download_model.dart';
 import '../app_manager.dart';
 import 'create_master_items.dart';
 import 'mobile_bottom_bar.dart';
-import 'routing_manager.dart';
+import '../routing_manager.dart';
 
 class MobilePage extends StatelessWidget with WatchItMixin {
   const MobilePage({super.key, required this.page});

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/view/routing_manager.dart';
+import '../../app/routing_manager.dart';
 import '../../l10n/l10n.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import '../data/audio.dart';
 import '../data/audio_type.dart';
-import '../page_ids.dart';
+import '../../app/page_ids.dart';
 import 'adaptive_multi_layout_body.dart';
 import 'audio_page_header.dart';
 import 'audio_page_type.dart';

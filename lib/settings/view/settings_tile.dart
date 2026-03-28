@@ -6,9 +6,9 @@ import 'package:yaru/yaru.dart';
 
 import '../../app/app_manager.dart';
 import '../../app/connectivity_model.dart';
-import '../../app/view/routing_manager.dart';
+import '../../app/routing_manager.dart';
 import '../../app/app_config.dart';
-import '../../common/page_ids.dart';
+import '../../app/page_ids.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';

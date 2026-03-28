@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/connectivity_model.dart';
-import '../../app/view/routing_manager.dart';
+import '../../app/routing_manager.dart';
 import '../../common/view/audio_tile_image.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/offline_page.dart';
