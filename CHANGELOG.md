@@ -1,5 +1,49 @@
 # Changelog
 
+## [2.15.1](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.14.0...v2.15.1) (2026-03-27)
+
+## WARNING - THIS IS THE LAST RELEASE BEFORE MUSICPOD MIGRATES TO A NEW DATABASE - PLEASE BACKUP YOUR COLLECTION
+
+### Features
+
+* adaptive page layout ([#1438](https://github.com/ubuntu-flutter-community/musicpod/issues/1438)) ([100a540](https://github.com/ubuntu-flutter-community/musicpod/commit/100a5406103c53f8609170c3f404aab2b5f4f075))
+* **desktop:** improve audio tile accessibility ([#1434](https://github.com/ubuntu-flutter-community/musicpod/issues/1434)) ([8df91d2](https://github.com/ubuntu-flutter-community/musicpod/commit/8df91d24e1d196ce112bb7c806518d00eaee3024))
+* disable player auto resize / auto-move ([#1394](https://github.com/ubuntu-flutter-community/musicpod/issues/1394)) ([1736a27](https://github.com/ubuntu-flutter-community/musicpod/commit/1736a270669d1f529f6365649997d49870d3f565)), closes [#1386](https://github.com/ubuntu-flutter-community/musicpod/issues/1386)
+* **FetchLyricsOnline:** refactor lyrics and offline lyrics service, add optional online (based on genius) service and widgets ([#1403](https://github.com/ubuntu-flutter-community/musicpod/issues/1403)) ([e2c4090](https://github.com/ubuntu-flutter-community/musicpod/commit/e2c409077b8a25a591b94d354928c18736865874))
+* improve CJK font rendering with chinese_font_library ([#1417](https://github.com/ubuntu-flutter-community/musicpod/issues/1417)) ([0c25af7](https://github.com/ubuntu-flutter-community/musicpod/commit/0c25af7424f0038f839a53873f903f915ad39622))
+* **l10n:** Add Arabic localization ([#1480](https://github.com/ubuntu-flutter-community/musicpod/issues/1480)) ([d428948](https://github.com/ubuntu-flutter-community/musicpod/commit/d42894867efbcd5c5d285bd892221e1f28c48df3))
+* Translated using Weblate (Slovak) ([#1414](https://github.com/ubuntu-flutter-community/musicpod/issues/1414)) ([2d22a47](https://github.com/ubuntu-flutter-community/musicpod/commit/2d22a4741b65efab7c7b039fe55f76c69e9f2184))
+* Translations update from Hosted Weblate ([#1402](https://github.com/ubuntu-flutter-community/musicpod/issues/1402)) ([041fa5e](https://github.com/ubuntu-flutter-community/musicpod/commit/041fa5ede376193e31f2ff951b8a537235d75045))
+* Translations update from Hosted Weblate ([#1413](https://github.com/ubuntu-flutter-community/musicpod/issues/1413)) ([7618496](https://github.com/ubuntu-flutter-community/musicpod/commit/761849694ac59edd35a7c93b4611aa715b614fd0))
+* Translations update from Hosted Weblate ([#1445](https://github.com/ubuntu-flutter-community/musicpod/issues/1445)) ([d880477](https://github.com/ubuntu-flutter-community/musicpod/commit/d8804777abc80599cff3cc9a0912390f5edd1152))
+
+
+### Bug Fixes
+
+* "search similar station" messed up radio function ([#1436](https://github.com/ubuntu-flutter-community/musicpod/issues/1436)) ([0115c7f](https://github.com/ubuntu-flutter-community/musicpod/commit/0115c7fef2fe7b46dca3b591125667168d25e2d6))
+* control panel heights mismatch ([#1449](https://github.com/ubuntu-flutter-community/musicpod/issues/1449)) ([384e34c](https://github.com/ubuntu-flutter-community/musicpod/commit/384e34ce1301f2f7f9cc553200047011bc430dbe))
+* correctly pass context to localisations of podcastpage and only persist player state on close/pause ([#1457](https://github.com/ubuntu-flutter-community/musicpod/issues/1457)) ([e5df3e9](https://github.com/ubuntu-flutter-community/musicpod/commit/e5df3e98fb2d02ae9b1959d5fd1150557c19cf6d))
+* **deps:** update dependency flutter_it to v2.0.1 ([#1397](https://github.com/ubuntu-flutter-community/musicpod/issues/1397)) ([d6d2428](https://github.com/ubuntu-flutter-community/musicpod/commit/d6d2428d488b7fd169d758648c49eeeec0805c50))
+* **deps:** update dependency flutter_it to v2.1.1 ([#1406](https://github.com/ubuntu-flutter-community/musicpod/issues/1406)) ([d3806e8](https://github.com/ubuntu-flutter-community/musicpod/commit/d3806e83575b4b180157de0b1d1646dbb0eaa8ba))
+* **deps:** update dependency yaru to v9 ([#1398](https://github.com/ubuntu-flutter-community/musicpod/issues/1398)) ([6a0ef98](https://github.com/ubuntu-flutter-community/musicpod/commit/6a0ef98cdcece8ac09b5744963b2209bac89ddaa))
+* **desktop:** remove inkwell from bottom player ([#1433](https://github.com/ubuntu-flutter-community/musicpod/issues/1433)) ([cae2cd8](https://github.com/ubuntu-flutter-community/musicpod/commit/cae2cd8d56564eb2d05885817b2d6b5e8eb462bd)), closes [#1422](https://github.com/ubuntu-flutter-community/musicpod/issues/1422)
+* dowload tiles rebuilds and stop re-using fields in audio.dart for different audio types ([#1479](https://github.com/ubuntu-flutter-community/musicpod/issues/1479)) ([de7a417](https://github.com/ubuntu-flutter-community/musicpod/commit/de7a417ffc8426463b40ba1ffd7adfabe0dcb0e3))
+* Entering and exiting full window mode resets scroll position to top of current tab ([#1435](https://github.com/ubuntu-flutter-community/musicpod/issues/1435)) ([63b9d90](https://github.com/ubuntu-flutter-community/musicpod/commit/63b9d90848bfb8e7a4d4af92d0642cf8d5d231fe)), closes [#1420](https://github.com/ubuntu-flutter-community/musicpod/issues/1420)
+* linux player color option ([#1379](https://github.com/ubuntu-flutter-community/musicpod/issues/1379)) ([e27dd59](https://github.com/ubuntu-flutter-community/musicpod/commit/e27dd59c42b3386dc5a6bd6dfb07d3c0597d08c3))
+* looping issue ([#1478](https://github.com/ubuntu-flutter-community/musicpod/issues/1478)) ([36d78a8](https://github.com/ubuntu-flutter-community/musicpod/commit/36d78a8fd8bca5388bb0cabcd9933d5ff3634536)), closes [#1472](https://github.com/ubuntu-flutter-community/musicpod/issues/1472)
+* mark as played doesn't mark when podcast is partially played ([#1391](https://github.com/ubuntu-flutter-community/musicpod/issues/1391)) ([0b11515](https://github.com/ubuntu-flutter-community/musicpod/commit/0b11515fde1dd8dd914b20de8bd7a3beeb1248f6)), closes [#1388](https://github.com/ubuntu-flutter-community/musicpod/issues/1388)
+* migrate old podcasts to new podcasts ([#1384](https://github.com/ubuntu-flutter-community/musicpod/issues/1384)) ([a158692](https://github.com/ubuntu-flutter-community/musicpod/commit/a1586929fb046765c372d6537b73890a07ddb69a))
+* Only first six podcast DISCOVER categories select correctly ([#1432](https://github.com/ubuntu-flutter-community/musicpod/issues/1432)) ([a168b1a](https://github.com/ubuntu-flutter-community/musicpod/commit/a168b1a449c4f46340bd26934c2d8cf5d9739646))
+* Showing no connection page when wwan is connection is active ([#1393](https://github.com/ubuntu-flutter-community/musicpod/issues/1393)) ([e314f2d](https://github.com/ubuntu-flutter-community/musicpod/commit/e314f2dd7610e779be45c7cd689c322a38448f6d)), closes [#1390](https://github.com/ubuntu-flutter-community/musicpod/issues/1390)
+* Spelling of "lyrics" ([#1401](https://github.com/ubuntu-flutter-community/musicpod/issues/1401)) ([6df4d14](https://github.com/ubuntu-flutter-community/musicpod/commit/6df4d14a0d41503b3470985ceb04f42e20d8245d))
+* update audio_service_mpris dependency to version 0.2.0 ([#1452](https://github.com/ubuntu-flutter-community/musicpod/issues/1452)) ([e448c39](https://github.com/ubuntu-flutter-community/musicpod/commit/e448c3900b5f632c4199faabf05c777cad631460))
+* update side player height ([#1415](https://github.com/ubuntu-flutter-community/musicpod/issues/1415)) ([5ccc93a](https://github.com/ubuntu-flutter-community/musicpod/commit/5ccc93a5a70cee3053b4c12576f2ab7414b4de5a))
+
+
+### Miscellaneous Chores
+
+* release 2.15.1 ([b849b14](https://github.com/ubuntu-flutter-community/musicpod/commit/b849b149ef3ce4a69b45fd2cf627879db7eab04d))
+
 ## [2.15.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.14.0...v2.15.0) (2026-03-03)
 
 
