@@ -33,7 +33,21 @@ class _MusicPodState extends State<MusicPod> {
       return FutureBuilder(
         future: _allReady,
         builder: (context, snapshot) => snapshot.hasError
-            ? SplashScreen(body: Center(child: Text(snapshot.error.toString())))
+            ? SplashScreen(
+                // TODO: use errorpage from nebu here
+                body: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SelectableText(
+                        'An error occurred during startup:\n${snapshot.error}',
+                        textAlign: TextAlign.center,
+                      ),
+                      SelectableText(snapshot.stackTrace.toString()),
+                    ],
+                  ),
+                ),
+              )
             : snapshot.hasData
             ? isLinux
                   ? GtkApplication(

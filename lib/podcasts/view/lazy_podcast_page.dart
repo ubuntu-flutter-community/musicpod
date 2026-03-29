@@ -42,7 +42,7 @@ class _LazyPodcastPageState extends State<LazyPodcastPage> {
     super.initState();
     url = widget.feedUrl ?? widget.podcastItem?.feedUrl;
     if (url == null) {
-      printMessageInDebugMode('checkupdates called without feedUrl or item!');
+      printMessageInDebugMode('Feed url missing - cannot load episodes!');
       _episodes = Future.value(<Audio>[]);
     } else {
       _episodes = _findEpisodes(url!);
@@ -61,7 +61,12 @@ class _LazyPodcastPageState extends State<LazyPodcastPage> {
       );
     }
 
-    final episodes = await podcastModel.findEpisodes(feedUrl: url);
+    final episodes = await podcastModel.findEpisodes(
+      feedUrl: url,
+      loadFromCache:
+          !(podcastModel.getPodcastEpisodesFromCache(url) == null ||
+              podcastModel.getPodcastEpisodesFromCache(url)!.isEmpty),
+    );
     await libraryModel.removePodcastUpdate(url);
 
     return episodes;
@@ -69,7 +74,13 @@ class _LazyPodcastPageState extends State<LazyPodcastPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
+    final isOnline = watchPropertyValue((ConnectivityModel m) {
+      final isOnline = m.isOnline;
+      if (isOnline && url != null) {
+        _episodes = _findEpisodes(url!);
+      }
+      return isOnline;
+    });
     final showDownloadsOnly = watchPropertyValue(
       (PodcastModel m) => m.downloadsOnly,
     );

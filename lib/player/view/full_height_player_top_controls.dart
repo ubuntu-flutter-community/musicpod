@@ -95,56 +95,56 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
               ),
               _ => const SizedBox.shrink(),
             },
-          if (true) ...[
-            IconButton(
-              tooltip: audio?.isRadio == true
-                  ? context.l10n.hearingHistory
-                  : context.l10n.queue,
-              icon: Icon(
-                audio?.isRadio == true ? Iconz.radioHistory : Iconz.playlist,
-                color: iconColor,
-              ),
-              isSelected: showQueue || playerWithSidePanel && !showPlayerLyrics,
+
+          IconButton(
+            tooltip: audio?.isRadio == true
+                ? context.l10n.hearingHistory
+                : context.l10n.queue,
+            icon: Icon(
+              audio?.isRadio == true ? Iconz.radioHistory : Iconz.playlist,
               color: iconColor,
-              onPressed: () {
-                if (playerWithSidePanel) {
-                  if (showPlayerLyrics) {
-                    di<PlayerModel>().setShowQueue(true);
-                    di<SettingsModel>().setShowPlayerLyrics(false);
-                  }
-                } else {
-                  if (!showQueue && !showPlayerLyrics) {
-                    di<PlayerModel>().setShowQueue(true);
-                  } else if (showQueue) {
-                    di<PlayerModel>().setShowQueue(false);
-                  }
-                }
-              },
             ),
-            IconButton(
-              tooltip: context.l10n.lyrics,
-              isSelected: showPlayerLyrics,
-              onPressed: () {
-                if (playerWithSidePanel) {
-                  di<SettingsModel>().setShowPlayerLyrics(!showPlayerLyrics);
-                  if (showQueue) {
-                    di<PlayerModel>().setShowQueue(false);
-                  }
-                } else {
-                  if (!showQueue && !showPlayerLyrics) {
-                    di<SettingsModel>().setShowPlayerLyrics(true);
-                  } else if (showPlayerLyrics) {
-                    di<SettingsModel>().setShowPlayerLyrics(false);
-                  }
+            isSelected: showQueue || playerWithSidePanel && !showPlayerLyrics,
+            color: iconColor,
+            onPressed: () {
+              if (playerWithSidePanel) {
+                if (showPlayerLyrics) {
+                  di<PlayerModel>().setShowQueue(true);
+                  di<SettingsModel>().setShowPlayerLyrics(false);
                 }
-              },
-              icon: Icon(Iconz.showLyrics, color: iconColor),
-            ),
-          ],
+              } else {
+                if (!showQueue && !showPlayerLyrics) {
+                  di<PlayerModel>().setShowQueue(true);
+                } else if (showQueue) {
+                  di<PlayerModel>().setShowQueue(false);
+                }
+              }
+            },
+          ),
+          IconButton(
+            tooltip: context.l10n.lyrics,
+            isSelected: showPlayerLyrics,
+            onPressed: () {
+              if (playerWithSidePanel) {
+                di<SettingsModel>().setShowPlayerLyrics(!showPlayerLyrics);
+                if (showQueue) {
+                  di<PlayerModel>().setShowQueue(false);
+                }
+              } else {
+                if (!showQueue && !showPlayerLyrics) {
+                  di<SettingsModel>().setShowPlayerLyrics(true);
+                } else if (showPlayerLyrics) {
+                  di<SettingsModel>().setShowPlayerLyrics(false);
+                }
+              }
+            },
+            icon: Icon(Iconz.showLyrics, color: iconColor),
+          ),
+
           PlayerPauseTimerButton(iconColor: iconColor),
           ShareButton(audio: audio, active: active, color: iconColor),
           if (audio?.audioType == AudioType.podcast)
-            PlaybackRateButton(active: active, color: iconColor),
+            PlaybackRateButton(color: iconColor),
           if (!isMobile) VolumeSliderPopup(color: iconColor),
 
           IconButton(

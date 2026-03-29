@@ -6,9 +6,8 @@ import '../../common/view/icons.dart';
 import '../player_model.dart';
 
 class PlaybackRateButton extends StatelessWidget with WatchItMixin {
-  const PlaybackRateButton({super.key, required this.active, this.color});
+  const PlaybackRateButton({super.key, this.color});
 
-  final bool active;
   final Color? color;
 
   @override
@@ -24,11 +23,11 @@ class PlaybackRateButton extends StatelessWidget with WatchItMixin {
           1.5 => Iconz.levelMiddle,
           _ => Iconz.levelLow,
         },
-        color: !active
-            ? theme.disabledColor
-            : (rate != 1.0
-                  ? theme.colorScheme.primary
-                  : (color ?? theme.colorScheme.onSurface)),
+        color:
+            color ??
+            (rate != 1.0
+                ? theme.colorScheme.primary
+                : (theme.colorScheme.onSurface)),
       ),
       initialValue: rate,
       itemBuilder: (context) => PlayerModel.rateValues
