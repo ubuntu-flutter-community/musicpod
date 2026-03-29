@@ -39,24 +39,32 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final defaultColor = iconColor ?? theme.colorScheme.onSurface;
-    final queueLength = watchPropertyValue((PlayerModel m) => m.queue.length);
+    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
+    final active = audio?.path != null || isOnline;
+    final defaultColor =
+        iconColor ??
+        (!active ? theme.disabledColor : theme.colorScheme.onSurface);
+    final queueLength = watchPropertyValue((PlayerModel m) => m.queue.length);
     final showSkipButtons =
         queueLength > 1 || audio?.audioType == AudioType.local;
-    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
-    final active = audio?.path != null || isOnline;
 
+    final playButtonIconColor =
+        iconColor ??
+        (!active
+            ? theme.disabledColor
+            : theme.isLight
+            ? Colors.white
+            : Colors.black);
     final rawPlayButton = PlayButton(
-      iconColor: iconColor ?? (theme.isLight ? Colors.white : Colors.black),
+      iconColor: playButtonIconColor,
       active: active,
       buttonStyle: avatarPlayButton
           ? IconButton.styleFrom(
               shape: const CircleBorder(),
               backgroundColor:
                   avatarColor ?? (theme.isLight ? Colors.black : Colors.white),
-              foregroundColor:
-                  iconColor ?? (theme.isLight ? Colors.white : Colors.black),
+              foregroundColor: playButtonIconColor,
               hoverColor: theme.colorScheme.primary.withValues(alpha: 0.5),
               focusColor: theme.colorScheme.primary.withValues(alpha: 0.5),
             )

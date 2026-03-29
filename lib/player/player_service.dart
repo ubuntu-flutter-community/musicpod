@@ -156,16 +156,17 @@ class PlayerService {
     }
     if (value.audioType != _audio?.audioType) {
       _shuffle = false;
-      if (_playlistMode == PlaylistMode.single) {
-        _playlistMode = PlaylistMode.none;
-      } else if (value.isRadio) {
+      if (value.isRadio) {
+        // NOTE: this is when the radio stream might stop/stutter/end, so it should start again immediately
         _playlistMode = PlaylistMode.loop;
+      } else {
+        _playlistMode = PlaylistMode.none;
       }
       setRate(1);
     }
     _audio = value;
-    _propertiesChangedController.add(true);
     _setLocalColor(_audio!);
+    _propertiesChangedController.add(true);
   }
 
   bool _isVideo = false;
@@ -533,10 +534,18 @@ class PlayerService {
     }
   }
 
+  // TODO: convert this nonesense to a table in the database
   Future<void> _loadLastPositions() async {
-    _lastPositions = (await getCustomSettings(FileNames.lastPositions)).map(
-      (key, value) => MapEntry(key, value.parsedDuration ?? Duration.zero),
-    );
+    try {
+      _lastPositions = (await getCustomSettings(FileNames.lastPositions)).map(
+        (key, value) => MapEntry(key, value.parsedDuration ?? Duration.zero),
+      );
+    } on Exception catch (_) {
+      printMessageInDebugMode(
+        'Error while loading last positions, clearing all last positions to prevent further errors.',
+      );
+      _lastPositions = {};
+    }
   }
 
   //
@@ -546,11 +555,18 @@ class PlayerService {
   Map<String, Duration> _lastPositions = {};
   Map<String, Duration> get lastPositions => _lastPositions;
   Future<void> addLastPosition(String key, Duration lastPosition) async {
-    await writeCustomSetting(
-      key: key,
-      value: lastPosition.toString(),
-      filename: FileNames.lastPositions,
-    );
+    try {
+      await writeCustomSetting(
+        key: key,
+        value: lastPosition.toString(),
+        filename: FileNames.lastPositions,
+      );
+    } on Exception catch (_) {
+      printMessageInDebugMode(
+        'Error while saving last position for $key, clearing all last positions to prevent further errors.',
+      );
+      await wipeCustomSettings(filename: FileNames.lastPositions);
+    }
     if (_lastPositions.containsKey(key)) {
       _lastPositions.update(key, (value) => lastPosition);
     } else {

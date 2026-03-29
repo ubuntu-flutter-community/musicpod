@@ -83,7 +83,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     if (audio?.audioType == AudioType.podcast)
-                      PlaybackRateButton(active: active),
+                      const PlaybackRateButton(),
                     if (!isMobile) const VolumeSliderPopup(),
                     const PlayerPauseTimerButton(),
                     IconButton(
