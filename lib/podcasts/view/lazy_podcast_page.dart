@@ -90,8 +90,8 @@ class _LazyPodcastPageState extends State<LazyPodcastPage> {
             widget.imageUrl ??
             widget.podcastItem?.artworkUrl600 ??
             widget.podcastItem?.artworkUrl ??
-            snapshot.data?.first.albumArtUrl ??
-            snapshot.data?.first.imageUrl;
+            snapshot.data?.firstOrNull?.albumArtUrl ??
+            snapshot.data?.firstOrNull?.imageUrl;
 
         if (!snapshot.hasData) {
           return LazyPodcastLoadingPage(
@@ -116,7 +116,11 @@ class _LazyPodcastPageState extends State<LazyPodcastPage> {
             title: title,
             imageUrl: imageUrl,
             child: NoSearchResultPage(
-              message: Text(context.l10n.podcastFeedIsEmpty),
+              message: Text(
+                !isOnline
+                    ? context.l10n.offlineDescription
+                    : context.l10n.podcastFeedIsEmpty,
+              ),
             ),
           );
         }

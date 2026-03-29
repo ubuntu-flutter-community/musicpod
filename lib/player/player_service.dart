@@ -156,16 +156,17 @@ class PlayerService {
     }
     if (value.audioType != _audio?.audioType) {
       _shuffle = false;
-      if (_playlistMode == PlaylistMode.single) {
-        _playlistMode = PlaylistMode.none;
-      } else if (value.isRadio) {
+      if (value.isRadio) {
+        // NOTE: this is when the radio stream might stop/stutter/end, so it should start again immediately
         _playlistMode = PlaylistMode.loop;
+      } else {
+        _playlistMode = PlaylistMode.none;
       }
       setRate(1);
     }
     _audio = value;
-    _propertiesChangedController.add(true);
     _setLocalColor(_audio!);
+    _propertiesChangedController.add(true);
   }
 
   bool _isVideo = false;
