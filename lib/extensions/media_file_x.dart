@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:mime/mime.dart';
+import 'package:path/path.dart' as p;
 
 final _resolver = MimeTypeResolver();
 
@@ -10,6 +11,11 @@ extension MediaFileX on File {
 
 extension _ValidPathX on String {
   bool get isPlayable {
+    final fileName = p.basename(this);
+    if (fileName.startsWith('._')) {
+      return false;
+    }
+
     for (var v in _SpecialMimeTypes.values) {
       _resolver
         ..addExtension(v.extension, v.mimeType)
