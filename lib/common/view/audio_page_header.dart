@@ -117,6 +117,7 @@ class _AudioPageHeaderSubTitle extends StatelessWidget {
     final style = theme.pageHeaderSubtitleStyle;
     return Row(
       mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Flexible(
           child: InkWell(
@@ -124,7 +125,12 @@ class _AudioPageHeaderSubTitle extends StatelessWidget {
             onTap: onLabelTab == null || label == null
                 ? null
                 : () => onLabelTab?.call(label!),
-            child: Text(label ?? context.l10n.album, style: style, maxLines: 1),
+            child: Text(
+              label ?? context.l10n.album,
+              style: style,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ),
         if (subTitle?.isNotEmpty == true)
@@ -143,7 +149,7 @@ class _AudioPageHeaderSubTitle extends StatelessWidget {
                 subTitle ?? '',
                 style: style,
                 maxLines: 1,
-                overflow: TextOverflow.visible,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ),
