@@ -39,7 +39,7 @@ class PodcastPageHeader extends StatelessWidget {
       label:
           (episodes ?? []).firstWhereOrNull((e) => e.genre != null)?.genre ??
           l10n.podcast,
-      subTitle: episodes?.firstOrNull?.copyright,
+      subTitle: episodes?.firstOrNull?.copyright?.trim(),
       description: episodes?.firstOrNull?.podcastDescription == null
           ? null
           : AudioPageHeaderHtmlDescription(

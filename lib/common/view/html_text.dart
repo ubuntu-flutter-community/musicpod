@@ -13,12 +13,14 @@ class HtmlText extends StatelessWidget {
     this.color,
     this.onTapUrl,
     this.wrapInFakeScroll = false,
+    this.textAlign = TextAlign.start,
   });
 
   final String text;
   final Color? color;
   final FutureOr<bool> Function(String)? onTapUrl;
   final bool wrapInFakeScroll;
+  final TextAlign textAlign;
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +47,16 @@ class HtmlText extends StatelessWidget {
             '-webkit-line-clamp': '1',
             'ine-clamp': '1',
             '-webkit-box-orient': 'vertical',
-            'text-align': 'left',
           },
+          'text-align':
+              '${switch (textAlign) {
+                TextAlign.left => 'left',
+                TextAlign.right => 'right',
+                TextAlign.center => 'center',
+                TextAlign.justify => 'justify',
+                TextAlign.start => 'start',
+                TextAlign.end => 'end',
+              }}',
         };
       },
     );

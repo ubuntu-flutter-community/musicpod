@@ -37,7 +37,11 @@ class AudioPageHeaderHtmlDescription extends StatelessWidget {
               descriptionStyle: descriptionStyle,
             ),
           ),
-          child: HtmlText(text: description, wrapInFakeScroll: true),
+          child: HtmlText(
+            text: description,
+            wrapInFakeScroll: true,
+            textAlign: TextAlign.center,
+          ),
         ),
       ),
     );
@@ -73,6 +77,7 @@ class _HtmlDialog extends StatelessWidget {
             child: HtmlText(
               text: description ?? '',
               color: context.colorScheme.onSurface,
+              textAlign: TextAlign.justify,
             ),
           ),
         ),

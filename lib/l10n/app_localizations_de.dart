@@ -30,7 +30,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get repeatAll => 'Alles wiederholen';
 
   @override
-  String get repeatOff => 'Repeat Off';
+  String get repeatOff => 'Wiederholen aus';
 
   @override
   String get next => 'Weiter';
@@ -457,13 +457,13 @@ class AppLocalizationsDe extends AppLocalizations {
       'Markiere alle Episoden als abgeschlossen';
 
   @override
-  String get markEpisodeAsDone => 'Mark episode as done';
+  String get markEpisodeAsDone => 'Markiere Episode als abgeschlossen';
 
   @override
-  String get hideCompletedEpisodes => 'Hide completed episodes';
+  String get hideCompletedEpisodes => 'Verstecke abgeschlossene Episoden';
 
   @override
-  String get showCompletedEpisodes => 'Show completed episodes';
+  String get showCompletedEpisodes => 'Zeige abgeschlossene Episoden';
 
   @override
   String get reset => 'Zurücksetzen';
@@ -2145,11 +2145,11 @@ class AppLocalizationsDe extends AppLocalizations {
       'Das lässt dich eine benutzerdefinierte Akzentfarbe für das aktuelle Design auswählen.';
 
   @override
-  String get usePlayerColorTitle => 'Use player color';
+  String get usePlayerColorTitle => 'Benutze Player-Farbe';
 
   @override
   String get usePlayerColorDescription =>
-      'This will use the dominant color has been extracted out of the current artwork (if available) for the whole app.';
+      'Dies nutzt die dominanteste Farbe der Albumkunst des momentanen Liedes/Podcast um ein Thema für die App zu erzeugen.';
 
   @override
   String get selectColor => 'Farbe auswählen';
@@ -2230,83 +2230,84 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get lyrics => 'Lyrics';
+  String get lyrics => 'Liedtext';
 
   @override
-  String get noLyricsFound => 'No lyrics found';
+  String get noLyricsFound => 'Kein Liedtext gefunden';
 
   @override
-  String get autoScrolling => 'Auto scroll';
+  String get autoScrolling => 'Automatisches Scrollen';
 
   @override
-  String get genericErrorTitle => 'An error occurred';
+  String get genericErrorTitle => 'Ein Fehler ist aufgetreten';
 
   @override
   String get genericErrorDescription =>
-      'An unexpected error occurred. Please try again later.';
+      'Ein unerwarteter Fehler ist aufgetreten. Bitte später erneut versuchen.';
 
   @override
   String errorDetails(String details) {
-    return 'Error details: $details';
+    return 'Fehler Details: $details';
   }
 
   @override
-  String get appendToQueue => 'Append to queue';
+  String get appendToQueue => 'Zur Warteschlange hinzufügen';
 
   @override
   String appendedToQueue(String title) {
-    return 'Appended to queue: $title';
+    return 'Zur Warteschlange hinzufügen: $title';
   }
 
   @override
   String appendMediaToQueueDescription(String title) {
-    return '$title is already inside the queue. Do you want to append it to the end of the queue?';
+    return '$title befindet sich bereits in der Warteschlange. Möchtest du dies ans Ende der Warteschlange hinzufügen?';
   }
 
   @override
-  String get appendMediaToQueueTitle => 'Append media to queue';
+  String get appendMediaToQueueTitle =>
+      'Hänge Medium ans ande der Warteschlange';
 
   @override
   String appendMediaToQueue(String title) {
-    return 'Append media to queue: $title';
+    return 'Hänge Medium ans Ende der Warteschlange: $title';
   }
 
   @override
-  String get explore => 'Explore';
+  String get explore => 'Erkunden';
 
   @override
-  String get favorites => 'Favorites';
+  String get favorites => 'Favoriten';
 
   @override
-  String get autoMovePlayerTitle => 'Auto move player';
+  String get autoMovePlayerTitle => 'Automatisches Bewegen des Players';
 
   @override
   String get autoMovePlayerDescription =>
-      'Move the player to the right if there is enough horizontal space';
+      'Bewege den Player an die Seite falls genug Platz vorhanden ist';
 
   @override
   String get onlineLyricsNotSetup =>
-      'If you want to fetch lyrics from Genius, please provide an API key in the settings.';
+      'Wenn du Liedertexte von Genius herunterladen möchtest, gib bitte den API Schlüssel in den Einstellungen ein.';
 
   @override
   String get settingsGeniusDisclaimer =>
-      'MusicPod, its contributors, and the Genius API are not responsible for any misuse of the API key. By providing your API key, you agree to use it responsibly and in accordance with Genius terms of service.\n\n';
+      'MusicPod, seine Mitwirkenden und die Genius-API übernehmen keine Haftung für jeglichen Missbrauch des API-Schlüssels. Mit der Bereitstellung Ihres API-Schlüssels erklären Sie sich damit einverstanden, diesen verantwortungsbewusst und in Übereinstimmung mit den Nutzungsbedingungen von Genius zu verwenden.\n\n';
 
   @override
   String get settingsGeniusDescription =>
-      'To fetch lyrics from Genius, you need to provide a Genius API Key. You can obtain an API key by creating an account on Genius and registering an application to get your access token.';
+      'Um Songtexte von Genius abzurufen, müssen Sie einen Genius-API-Schlüssel angeben. Sie können einen API-Schlüssel erhalten, indem Sie ein Konto bei Genius erstellen und eine Anwendung registrieren, um Ihr Zugriffs-Token zu erhalten.';
 
   @override
   String get settingsDoNotAskForGeniusTitle =>
-      'Do not use Genius or ask for Genius API Key again';
+      'Genius nicht verwenden oder nicht erneut nach dem Genius-API-Schlüssel fragen';
 
   @override
   String get settingsDoNotAskForGeniusDescription =>
-      'This prevents the app from prompting for the Genius API key in the future and makes the lyrics feature fully rely on local LRC files or LRC strings embedded in audio metadata.';
+      'Dies verhindert, dass die App in Zukunft nach dem Genius-API-Schlüssel fragt, und sorgt dafür, dass die Songtext-Funktion vollständig auf lokalen LRC-Dateien oder in den Audio-Metadaten eingebetteten LRC-Zeichenfolgen basiert.';
 
   @override
   String get tosLink => 'https://genius.com/static/terms';
 
   @override
-  String get tosLinkText => 'Read Genius\'s Terms of Service';
+  String get tosLinkText => 'Die Nutzungsbedingungen von Genius lesen';
 }
