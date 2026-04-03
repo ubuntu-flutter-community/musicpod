@@ -12,9 +12,9 @@ import '../../app/app_config.dart';
 import '../../extensions/media_file_x.dart';
 import '../../extensions/string_x.dart';
 import '../../extensions/taget_platform_x.dart';
+import '../../local_audio/data/local_audio_genres.dart';
 import '../logging.dart';
 import 'audio_type.dart';
-import 'genres.dart';
 
 class Audio {
   /// The local path if available.
@@ -446,7 +446,7 @@ class Audio {
         ? null
         : data.genres.firstOrNull?.startsWith('(') == true &&
               data.genres.firstOrNull?.endsWith(')') == true
-        ? tagGenres[data.genres.firstOrNull
+        ? localAudioGenres[data.genres.firstOrNull
               ?.replaceAll('(', '')
               .replaceAll(')', '')]
         : data.genres.firstOrNull;
