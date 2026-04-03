@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.16.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.15.1...v2.16.0) (2026-04-03)
+
+
+### Features
+
+* Translated using Weblate (German) ([#1486](https://github.com/ubuntu-flutter-community/musicpod/issues/1486)) ([b92d8e3](https://github.com/ubuntu-flutter-community/musicpod/commit/b92d8e3bbf1e911eb0e35090d781c1559af6d868))
+
+
+### Bug Fixes
+
+* filter out macOS hidden dot underscore files during import ([#1489](https://github.com/ubuntu-flutter-community/musicpod/issues/1489)) ([3306589](https://github.com/ubuntu-flutter-community/musicpod/commit/3306589bf00af8b8ce9df79ade8705c1b4431270))
+
 ## [2.15.1](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.14.0...v2.15.1) (2026-03-27)
 
 ## WARNING - THIS IS THE LAST RELEASE BEFORE MUSICPOD MIGRATES TO A NEW DATABASE - PLEASE BACKUP YOUR COLLECTION
