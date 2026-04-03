@@ -2,7 +2,9 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:yaru/yaru.dart';
 
+import '../../extensions/build_context_x.dart';
 import '../local_cover_model.dart';
 
 class LocalCover extends StatefulWidget with WatchItStatefulWidgetMixin {
@@ -12,12 +14,14 @@ class LocalCover extends StatefulWidget with WatchItStatefulWidgetMixin {
     required this.path,
     required this.fallback,
     required this.dimension,
+    this.loadingWidget,
     this.fit = BoxFit.cover,
   });
 
   final String albumId;
   final String? path;
   final Widget fallback;
+  final Widget? loadingWidget;
   final double dimension;
   final BoxFit fit;
 
@@ -59,30 +63,42 @@ class _LocalCoverState extends State<LocalCover> {
         : FutureBuilder(
             future: _future,
             builder: (context, snapshot) {
-              if (snapshot.hasError) {
+              if (snapshot.connectionState == ConnectionState.waiting)
                 return SizedBox(
                   key: ValueKey('${widget.albumId}0'),
                   height: widget.dimension,
                   width: widget.dimension,
-                  child: widget.fallback,
+                  child:
+                      widget.loadingWidget ??
+                      Container(
+                        decoration: BoxDecoration(
+                          color: context.colorScheme.onSurface.withValues(
+                            alpha: 0.2,
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            kYaruContainerRadius,
+                          ),
+                        ),
+                      ),
                 );
-              } else if (!snapshot.hasData) {
+
+              if (snapshot.data == null || snapshot.hasError) {
                 return SizedBox(
                   key: ValueKey('${widget.albumId}1'),
                   height: widget.dimension,
                   width: widget.dimension,
                   child: widget.fallback,
                 );
-              } else {
-                return Image.memory(
-                  key: ValueKey('${widget.albumId}2'),
-                  snapshot.data!,
-                  fit: widget.fit,
-                  height: widget.dimension,
-                  width: widget.dimension,
-                  filterQuality: medium,
-                );
               }
+
+              return Image.memory(
+                key: ValueKey('${widget.albumId}2'),
+                snapshot.data!,
+                fit: widget.fit,
+                height: widget.dimension,
+                width: widget.dimension,
+                filterQuality: medium,
+              );
             },
           );
 
