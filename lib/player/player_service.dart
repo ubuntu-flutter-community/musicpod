@@ -12,13 +12,14 @@ import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
 import '../common/file_names.dart';
 import '../common/logging.dart';
+import '../common/persistence/database.dart';
+import '../common/persistence_utils.dart';
 import '../expose/expose_service.dart';
 import '../extensions/media_file_x.dart';
 import '../extensions/string_x.dart';
 import '../extensions/taget_platform_x.dart';
 import '../library/library_service.dart';
 import '../local_audio/local_cover_service.dart';
-import '../common/persistence_utils.dart';
 import 'data/player_state.dart';
 
 typedef Queue = ({String name, List<Audio> audios});
@@ -30,16 +31,20 @@ class PlayerService {
     required ExposeService exposeService,
     required LocalCoverService localCoverService,
     required LibraryService libraryService,
+    required Database database,
   }) : _controller = controller,
        _exposeService = exposeService,
        _localCoverService = localCoverService,
-       _libraryService = libraryService;
+       _libraryService = libraryService,
+       _db = database;
 
   // External dependencies
   final ExposeService _exposeService;
   final LocalCoverService _localCoverService;
   final VideoController _controller;
   final LibraryService _libraryService;
+  // ignore: unused_field
+  final Database _db;
 
   // MediaKit getters
   VideoController get controller => _controller;
@@ -481,7 +486,10 @@ class PlayerService {
   Future<void> _setLocalColor(Audio audio) async {
     try {
       if (audio.canHaveLocalCover) {
-        var maybeData = _localCoverService.get(audio.albumDbId);
+        var maybeData = await _localCoverService.getCover(
+          albumId: audio.albumDbId!,
+          path: audio.path!,
+        );
         maybeData ??= await _localCoverService.getCover(
           albumId: audio.albumDbId!,
           path: audio.path!,

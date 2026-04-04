@@ -5548,6 +5548,404 @@ class DownloadTableCompanion extends UpdateCompanion<DownloadTableData> {
   }
 }
 
+class $PlayerStateTableTable extends PlayerStateTable
+    with TableInfo<$PlayerStateTableTable, PlayerStateTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PlayerStateTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _audioJsonMeta = const VerificationMeta(
+    'audioJson',
+  );
+  @override
+  late final GeneratedColumn<String> audioJson = GeneratedColumn<String>(
+    'audio_json',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _positionMeta = const VerificationMeta(
+    'position',
+  );
+  @override
+  late final GeneratedColumn<String> position = GeneratedColumn<String>(
+    'position',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _durationMeta = const VerificationMeta(
+    'duration',
+  );
+  @override
+  late final GeneratedColumn<String> duration = GeneratedColumn<String>(
+    'duration',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _volumeMeta = const VerificationMeta('volume');
+  @override
+  late final GeneratedColumn<String> volume = GeneratedColumn<String>(
+    'volume',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _rateMeta = const VerificationMeta('rate');
+  @override
+  late final GeneratedColumn<String> rate = GeneratedColumn<String>(
+    'rate',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    audioJson,
+    position,
+    duration,
+    volume,
+    rate,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'player_state_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PlayerStateTableData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('audio_json')) {
+      context.handle(
+        _audioJsonMeta,
+        audioJson.isAcceptableOrUnknown(data['audio_json']!, _audioJsonMeta),
+      );
+    }
+    if (data.containsKey('position')) {
+      context.handle(
+        _positionMeta,
+        position.isAcceptableOrUnknown(data['position']!, _positionMeta),
+      );
+    }
+    if (data.containsKey('duration')) {
+      context.handle(
+        _durationMeta,
+        duration.isAcceptableOrUnknown(data['duration']!, _durationMeta),
+      );
+    }
+    if (data.containsKey('volume')) {
+      context.handle(
+        _volumeMeta,
+        volume.isAcceptableOrUnknown(data['volume']!, _volumeMeta),
+      );
+    }
+    if (data.containsKey('rate')) {
+      context.handle(
+        _rateMeta,
+        rate.isAcceptableOrUnknown(data['rate']!, _rateMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PlayerStateTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PlayerStateTableData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      audioJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}audio_json'],
+      ),
+      position: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}position'],
+      ),
+      duration: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}duration'],
+      ),
+      volume: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}volume'],
+      ),
+      rate: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}rate'],
+      ),
+    );
+  }
+
+  @override
+  $PlayerStateTableTable createAlias(String alias) {
+    return $PlayerStateTableTable(attachedDatabase, alias);
+  }
+}
+
+class PlayerStateTableData extends DataClass
+    implements Insertable<PlayerStateTableData> {
+  final int id;
+  final String? audioJson;
+  final String? position;
+  final String? duration;
+  final String? volume;
+  final String? rate;
+  const PlayerStateTableData({
+    required this.id,
+    this.audioJson,
+    this.position,
+    this.duration,
+    this.volume,
+    this.rate,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || audioJson != null) {
+      map['audio_json'] = Variable<String>(audioJson);
+    }
+    if (!nullToAbsent || position != null) {
+      map['position'] = Variable<String>(position);
+    }
+    if (!nullToAbsent || duration != null) {
+      map['duration'] = Variable<String>(duration);
+    }
+    if (!nullToAbsent || volume != null) {
+      map['volume'] = Variable<String>(volume);
+    }
+    if (!nullToAbsent || rate != null) {
+      map['rate'] = Variable<String>(rate);
+    }
+    return map;
+  }
+
+  PlayerStateTableCompanion toCompanion(bool nullToAbsent) {
+    return PlayerStateTableCompanion(
+      id: Value(id),
+      audioJson: audioJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(audioJson),
+      position: position == null && nullToAbsent
+          ? const Value.absent()
+          : Value(position),
+      duration: duration == null && nullToAbsent
+          ? const Value.absent()
+          : Value(duration),
+      volume: volume == null && nullToAbsent
+          ? const Value.absent()
+          : Value(volume),
+      rate: rate == null && nullToAbsent ? const Value.absent() : Value(rate),
+    );
+  }
+
+  factory PlayerStateTableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PlayerStateTableData(
+      id: serializer.fromJson<int>(json['id']),
+      audioJson: serializer.fromJson<String?>(json['audioJson']),
+      position: serializer.fromJson<String?>(json['position']),
+      duration: serializer.fromJson<String?>(json['duration']),
+      volume: serializer.fromJson<String?>(json['volume']),
+      rate: serializer.fromJson<String?>(json['rate']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'audioJson': serializer.toJson<String?>(audioJson),
+      'position': serializer.toJson<String?>(position),
+      'duration': serializer.toJson<String?>(duration),
+      'volume': serializer.toJson<String?>(volume),
+      'rate': serializer.toJson<String?>(rate),
+    };
+  }
+
+  PlayerStateTableData copyWith({
+    int? id,
+    Value<String?> audioJson = const Value.absent(),
+    Value<String?> position = const Value.absent(),
+    Value<String?> duration = const Value.absent(),
+    Value<String?> volume = const Value.absent(),
+    Value<String?> rate = const Value.absent(),
+  }) => PlayerStateTableData(
+    id: id ?? this.id,
+    audioJson: audioJson.present ? audioJson.value : this.audioJson,
+    position: position.present ? position.value : this.position,
+    duration: duration.present ? duration.value : this.duration,
+    volume: volume.present ? volume.value : this.volume,
+    rate: rate.present ? rate.value : this.rate,
+  );
+  PlayerStateTableData copyWithCompanion(PlayerStateTableCompanion data) {
+    return PlayerStateTableData(
+      id: data.id.present ? data.id.value : this.id,
+      audioJson: data.audioJson.present ? data.audioJson.value : this.audioJson,
+      position: data.position.present ? data.position.value : this.position,
+      duration: data.duration.present ? data.duration.value : this.duration,
+      volume: data.volume.present ? data.volume.value : this.volume,
+      rate: data.rate.present ? data.rate.value : this.rate,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlayerStateTableData(')
+          ..write('id: $id, ')
+          ..write('audioJson: $audioJson, ')
+          ..write('position: $position, ')
+          ..write('duration: $duration, ')
+          ..write('volume: $volume, ')
+          ..write('rate: $rate')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, audioJson, position, duration, volume, rate);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PlayerStateTableData &&
+          other.id == this.id &&
+          other.audioJson == this.audioJson &&
+          other.position == this.position &&
+          other.duration == this.duration &&
+          other.volume == this.volume &&
+          other.rate == this.rate);
+}
+
+class PlayerStateTableCompanion extends UpdateCompanion<PlayerStateTableData> {
+  final Value<int> id;
+  final Value<String?> audioJson;
+  final Value<String?> position;
+  final Value<String?> duration;
+  final Value<String?> volume;
+  final Value<String?> rate;
+  const PlayerStateTableCompanion({
+    this.id = const Value.absent(),
+    this.audioJson = const Value.absent(),
+    this.position = const Value.absent(),
+    this.duration = const Value.absent(),
+    this.volume = const Value.absent(),
+    this.rate = const Value.absent(),
+  });
+  PlayerStateTableCompanion.insert({
+    this.id = const Value.absent(),
+    this.audioJson = const Value.absent(),
+    this.position = const Value.absent(),
+    this.duration = const Value.absent(),
+    this.volume = const Value.absent(),
+    this.rate = const Value.absent(),
+  });
+  static Insertable<PlayerStateTableData> custom({
+    Expression<int>? id,
+    Expression<String>? audioJson,
+    Expression<String>? position,
+    Expression<String>? duration,
+    Expression<String>? volume,
+    Expression<String>? rate,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (audioJson != null) 'audio_json': audioJson,
+      if (position != null) 'position': position,
+      if (duration != null) 'duration': duration,
+      if (volume != null) 'volume': volume,
+      if (rate != null) 'rate': rate,
+    });
+  }
+
+  PlayerStateTableCompanion copyWith({
+    Value<int>? id,
+    Value<String?>? audioJson,
+    Value<String?>? position,
+    Value<String?>? duration,
+    Value<String?>? volume,
+    Value<String?>? rate,
+  }) {
+    return PlayerStateTableCompanion(
+      id: id ?? this.id,
+      audioJson: audioJson ?? this.audioJson,
+      position: position ?? this.position,
+      duration: duration ?? this.duration,
+      volume: volume ?? this.volume,
+      rate: rate ?? this.rate,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (audioJson.present) {
+      map['audio_json'] = Variable<String>(audioJson.value);
+    }
+    if (position.present) {
+      map['position'] = Variable<String>(position.value);
+    }
+    if (duration.present) {
+      map['duration'] = Variable<String>(duration.value);
+    }
+    if (volume.present) {
+      map['volume'] = Variable<String>(volume.value);
+    }
+    if (rate.present) {
+      map['rate'] = Variable<String>(rate.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlayerStateTableCompanion(')
+          ..write('id: $id, ')
+          ..write('audioJson: $audioJson, ')
+          ..write('position: $position, ')
+          ..write('duration: $duration, ')
+          ..write('volume: $volume, ')
+          ..write('rate: $rate')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$Database extends GeneratedDatabase {
   _$Database(QueryExecutor e) : super(e);
   $DatabaseManager get managers => $DatabaseManager(this);
@@ -5584,6 +5982,9 @@ abstract class _$Database extends GeneratedDatabase {
   late final $DownloadedPodcastEpisodeTableTable downloadedPodcastEpisodeTable =
       $DownloadedPodcastEpisodeTableTable(this);
   late final $DownloadTableTable downloadTable = $DownloadTableTable(this);
+  late final $PlayerStateTableTable playerStateTable = $PlayerStateTableTable(
+    this,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -5608,6 +6009,7 @@ abstract class _$Database extends GeneratedDatabase {
     podcastEpisodeTable,
     downloadedPodcastEpisodeTable,
     downloadTable,
+    playerStateTable,
   ];
 }
 
@@ -11752,6 +12154,229 @@ typedef $$DownloadTableTableProcessedTableManager =
       DownloadTableData,
       PrefetchHooks Function()
     >;
+typedef $$PlayerStateTableTableCreateCompanionBuilder =
+    PlayerStateTableCompanion Function({
+      Value<int> id,
+      Value<String?> audioJson,
+      Value<String?> position,
+      Value<String?> duration,
+      Value<String?> volume,
+      Value<String?> rate,
+    });
+typedef $$PlayerStateTableTableUpdateCompanionBuilder =
+    PlayerStateTableCompanion Function({
+      Value<int> id,
+      Value<String?> audioJson,
+      Value<String?> position,
+      Value<String?> duration,
+      Value<String?> volume,
+      Value<String?> rate,
+    });
+
+class $$PlayerStateTableTableFilterComposer
+    extends Composer<_$Database, $PlayerStateTableTable> {
+  $$PlayerStateTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get audioJson => $composableBuilder(
+    column: $table.audioJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get position => $composableBuilder(
+    column: $table.position,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get duration => $composableBuilder(
+    column: $table.duration,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get volume => $composableBuilder(
+    column: $table.volume,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get rate => $composableBuilder(
+    column: $table.rate,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$PlayerStateTableTableOrderingComposer
+    extends Composer<_$Database, $PlayerStateTableTable> {
+  $$PlayerStateTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get audioJson => $composableBuilder(
+    column: $table.audioJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get position => $composableBuilder(
+    column: $table.position,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get duration => $composableBuilder(
+    column: $table.duration,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get volume => $composableBuilder(
+    column: $table.volume,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get rate => $composableBuilder(
+    column: $table.rate,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$PlayerStateTableTableAnnotationComposer
+    extends Composer<_$Database, $PlayerStateTableTable> {
+  $$PlayerStateTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get audioJson =>
+      $composableBuilder(column: $table.audioJson, builder: (column) => column);
+
+  GeneratedColumn<String> get position =>
+      $composableBuilder(column: $table.position, builder: (column) => column);
+
+  GeneratedColumn<String> get duration =>
+      $composableBuilder(column: $table.duration, builder: (column) => column);
+
+  GeneratedColumn<String> get volume =>
+      $composableBuilder(column: $table.volume, builder: (column) => column);
+
+  GeneratedColumn<String> get rate =>
+      $composableBuilder(column: $table.rate, builder: (column) => column);
+}
+
+class $$PlayerStateTableTableTableManager
+    extends
+        RootTableManager<
+          _$Database,
+          $PlayerStateTableTable,
+          PlayerStateTableData,
+          $$PlayerStateTableTableFilterComposer,
+          $$PlayerStateTableTableOrderingComposer,
+          $$PlayerStateTableTableAnnotationComposer,
+          $$PlayerStateTableTableCreateCompanionBuilder,
+          $$PlayerStateTableTableUpdateCompanionBuilder,
+          (
+            PlayerStateTableData,
+            BaseReferences<
+              _$Database,
+              $PlayerStateTableTable,
+              PlayerStateTableData
+            >,
+          ),
+          PlayerStateTableData,
+          PrefetchHooks Function()
+        > {
+  $$PlayerStateTableTableTableManager(
+    _$Database db,
+    $PlayerStateTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PlayerStateTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PlayerStateTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PlayerStateTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String?> audioJson = const Value.absent(),
+                Value<String?> position = const Value.absent(),
+                Value<String?> duration = const Value.absent(),
+                Value<String?> volume = const Value.absent(),
+                Value<String?> rate = const Value.absent(),
+              }) => PlayerStateTableCompanion(
+                id: id,
+                audioJson: audioJson,
+                position: position,
+                duration: duration,
+                volume: volume,
+                rate: rate,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String?> audioJson = const Value.absent(),
+                Value<String?> position = const Value.absent(),
+                Value<String?> duration = const Value.absent(),
+                Value<String?> volume = const Value.absent(),
+                Value<String?> rate = const Value.absent(),
+              }) => PlayerStateTableCompanion.insert(
+                id: id,
+                audioJson: audioJson,
+                position: position,
+                duration: duration,
+                volume: volume,
+                rate: rate,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$PlayerStateTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$Database,
+      $PlayerStateTableTable,
+      PlayerStateTableData,
+      $$PlayerStateTableTableFilterComposer,
+      $$PlayerStateTableTableOrderingComposer,
+      $$PlayerStateTableTableAnnotationComposer,
+      $$PlayerStateTableTableCreateCompanionBuilder,
+      $$PlayerStateTableTableUpdateCompanionBuilder,
+      (
+        PlayerStateTableData,
+        BaseReferences<
+          _$Database,
+          $PlayerStateTableTable,
+          PlayerStateTableData
+        >,
+      ),
+      PlayerStateTableData,
+      PrefetchHooks Function()
+    >;
 
 class $DatabaseManager {
   final _$Database _db;
@@ -11798,4 +12423,6 @@ class $DatabaseManager {
       );
   $$DownloadTableTableTableManager get downloadTable =>
       $$DownloadTableTableTableManager(_db, _db.downloadTable);
+  $$PlayerStateTableTableTableManager get playerStateTable =>
+      $$PlayerStateTableTableTableManager(_db, _db.playerStateTable);
 }

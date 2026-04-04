@@ -37,7 +37,7 @@ import 'library/library_model.dart' as _i1032;
 import 'library/library_service.dart' as _i595;
 import 'local_audio/local_audio_manager.dart' as _i688;
 import 'local_audio/local_audio_service.dart' as _i438;
-import 'local_audio/local_cover_model.dart' as _i1045;
+import 'local_audio/local_cover_manager.dart' as _i439;
 import 'local_audio/local_cover_service.dart' as _i57;
 import 'lyrics/lyrics_service.dart' as _i546;
 import 'notifications/notifications_service.dart' as _i57;
@@ -125,18 +125,17 @@ extension GetItInjectableX on _i174.GetIt {
           _i620.OnlineArtModel(onlineArtService: gh<_i328.OnlineArtService>()),
       dispose: (i) => i.dispose(),
     );
-    await gh.singletonAsync<_i57.LocalCoverService>(() {
-      final i = _i57.LocalCoverService(database: gh<_i115.Database>());
-      return i.init().then((_) => i);
-    }, preResolve: true);
+    gh.lazySingleton<_i57.LocalCoverService>(
+      () => _i57.LocalCoverService(database: gh<_i115.Database>()),
+    );
     gh.lazySingleton<_i763.SettingsService>(
       () => _i763.SettingsService(
         sharedPreferences: gh<_i460.SharedPreferences>(),
       ),
       dispose: (i) => i.dispose(),
     );
-    gh.lazySingleton<_i1045.LocalCoverModel>(
-      () => _i1045.LocalCoverModel(
+    gh.lazySingleton<_i439.LocalCoverManager>(
+      () => _i439.LocalCoverManager(
         localCoverService: gh<_i57.LocalCoverService>(),
       ),
     );
@@ -218,35 +217,6 @@ extension GetItInjectableX on _i174.GetIt {
         internetConnection: gh<_i161.InternetConnection>(),
       ),
     );
-    await gh.singletonAsync<_i38.PlayerService>(
-      () {
-        final i = _i38.PlayerService(
-          controller: gh<_i150.VideoController>(),
-          exposeService: gh<_i820.ExposeService>(),
-          localCoverService: gh<_i57.LocalCoverService>(),
-          libraryService: gh<_i595.LibraryService>(),
-        );
-        return i.init().then((_) => i);
-      },
-      preResolve: true,
-      dispose: (i) => i.dispose(),
-    );
-    await gh.singletonAsync<_i112.MpvMetadataManager>(
-      () {
-        final i = _i112.MpvMetadataManager(
-          playerService: gh<_i38.PlayerService>(),
-          onlineArtService: gh<_i328.OnlineArtService>(),
-          exposeService: gh<_i820.ExposeService>(),
-        );
-        return i.init().then((_) => i);
-      },
-      preResolve: true,
-      dispose: (i) => i.dispose(),
-    );
-    await gh.factoryAsync<_i739.AudioServiceHandler>(
-      () => audioServiceModule.audioServiceHandler(gh<_i38.PlayerService>()),
-      preResolve: true,
-    );
     gh.lazySingleton<_i55.CustomContentModel>(
       () => _i55.CustomContentModel(
         externalPathService: gh<_i551.ExternalPathService>(),
@@ -271,6 +241,20 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioService: gh<_i438.LocalAudioService>(),
         settingsService: gh<_i763.SettingsService>(),
       ),
+    );
+    await gh.singletonAsync<_i38.PlayerService>(
+      () {
+        final i = _i38.PlayerService(
+          controller: gh<_i150.VideoController>(),
+          exposeService: gh<_i820.ExposeService>(),
+          localCoverService: gh<_i57.LocalCoverService>(),
+          libraryService: gh<_i595.LibraryService>(),
+          database: gh<_i115.Database>(),
+        );
+        return i.init().then((_) => i);
+      },
+      preResolve: true,
+      dispose: (i) => i.dispose(),
     );
     gh.lazySingleton<_i1025.PlayerModel>(
       () => _i1025.PlayerModel(
@@ -300,6 +284,22 @@ extension GetItInjectableX on _i174.GetIt {
       },
       preResolve: true,
       dispose: (i) => i.dispose(),
+    );
+    await gh.singletonAsync<_i112.MpvMetadataManager>(
+      () {
+        final i = _i112.MpvMetadataManager(
+          playerService: gh<_i38.PlayerService>(),
+          onlineArtService: gh<_i328.OnlineArtService>(),
+          exposeService: gh<_i820.ExposeService>(),
+        );
+        return i.init().then((_) => i);
+      },
+      preResolve: true,
+      dispose: (i) => i.dispose(),
+    );
+    await gh.factoryAsync<_i739.AudioServiceHandler>(
+      () => audioServiceModule.audioServiceHandler(gh<_i38.PlayerService>()),
+      preResolve: true,
     );
     gh.lazySingleton<_i190.SidebarAudiosManager>(
       () => _i190.SidebarAudiosManager(

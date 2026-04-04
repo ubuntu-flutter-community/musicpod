@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:flutter_it/flutter_it.dart';
@@ -34,6 +36,7 @@ class LazyPodcastPage extends StatefulWidget with WatchItStatefulWidgetMixin {
 }
 
 class _LazyPodcastPageState extends State<LazyPodcastPage> {
+  Completer<List<Audio>?> _episodesCompleter = Completer<List<Audio>?>();
   late Future<List<Audio>?> _episodes;
   String? url;
 
@@ -74,9 +77,12 @@ class _LazyPodcastPageState extends State<LazyPodcastPage> {
 
   @override
   Widget build(BuildContext context) {
+    final podcastModel = di<PodcastModel>();
     final isOnline = watchPropertyValue((ConnectivityModel m) {
       final isOnline = m.isOnline;
-      if (isOnline && url != null) {
+      if (isOnline &&
+          (podcastModel.getPodcastEpisodesFromCache(url)?.isEmpty ?? true) &&
+          _episodesCompleter.isCompleted) {
         _episodes = _findEpisodes(url!);
       }
       return isOnline;
@@ -135,6 +141,8 @@ class _LazyPodcastPageState extends State<LazyPodcastPage> {
             ),
           );
         }
+
+        _episodesCompleter.complete(episodes);
 
         return PodcastPage(
           imageUrl: imageUrl,

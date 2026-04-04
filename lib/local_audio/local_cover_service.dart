@@ -15,39 +15,29 @@ import '../extensions/string_x.dart';
 import '../extensions/taget_platform_x.dart';
 import '../common/persistence_utils.dart';
 
-@singleton
+@lazySingleton
 class LocalCoverService {
   final Database _db;
 
   LocalCoverService({required Database database}) : _db = database;
 
-  final _propertiesChangedController = StreamController<bool>.broadcast();
-  Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
+  Future<Map<int, Uint8List?>> init() async {
+    final _cache = <int, Uint8List?>{};
 
-  final _cache = <int, Uint8List?>{};
-  int get storeLength => _cache.length;
-
-  @PostConstruct(preResolve: true)
-  Future<void> init() async {
     final existing = await _db.select(_db.albumArtTable).get();
     for (final row in existing) {
       _cache[row.album] = row.pictureData;
     }
+    return _cache;
   }
 
   Future<Uint8List?> getCover({
     required int albumId,
-    required String? path,
+    required String path,
   }) async {
-    if (path == null) return null;
-
-    // Check memory cache first
-    if (_cache.containsKey(albumId)) return _cache[albumId];
-
     // Check database
-    final dbCover = await _getFromDb(albumId);
+    final dbCover = await getFromDb(albumId);
     if (dbCover != null) {
-      _cache[albumId] = dbCover;
       return dbCover;
     }
 
@@ -78,17 +68,13 @@ class LocalCoverService {
 
       if (bytesFromMetadata == null) return null;
 
-      _cache[albumId] = bytesFromMetadata;
       await _persistToDb(albumId, bytesFromMetadata);
-      _propertiesChangedController.add(true);
       return bytesFromMetadata;
     }
     return null;
   }
 
-  Uint8List? get(int? albumId) => albumId == null ? null : _cache[albumId];
-
-  Future<Uint8List?> _getFromDb(int albumId) async {
+  Future<Uint8List?> getFromDb(int albumId) async {
     final row = await (_db.select(
       _db.albumArtTable,
     )..where((t) => t.album.equals(albumId))).getSingleOrNull();
@@ -148,29 +134,27 @@ class LocalCoverService {
     required String suffix,
   }) => Directory(p.join(file.parent.path, suffix)).existsSync();
 
-  Future<void> dispose() async => _propertiesChangedController.close();
-
   Future<Uri?> createMediaControlsArtUri({Audio? audio}) async {
     if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
       return Uri.tryParse(audio?.imageUrl ?? audio!.albumArtUrl!);
     } else if (audio?.canHaveLocalCover == true &&
         File(audio!.path!).existsSync()) {
-      final maybeData = get(audio.albumDbId);
-      if (maybeData != null) {
-        final File newFile = await _safeTempCover(maybeData);
+      // final maybeData = get(audio.albumDbId);
+      // if (maybeData != null) {
+      //   final File newFile = await _safeTempCover(maybeData);
+
+      //   return Uri.file(newFile.path, windows: isWindows);
+      // } else if (audio.albumDbId != null) {
+      final newData = await getCover(
+        albumId: audio.albumDbId!,
+        path: audio.path!,
+      );
+      if (newData != null) {
+        final File newFile = await _safeTempCover(newData);
 
         return Uri.file(newFile.path, windows: isWindows);
-      } else if (audio.albumDbId != null) {
-        final newData = await getCover(
-          albumId: audio.albumDbId!,
-          path: audio.path!,
-        );
-        if (newData != null) {
-          final File newFile = await _safeTempCover(newData);
-
-          return Uri.file(newFile.path, windows: isWindows);
-        }
       }
+      // }
     }
 
     return null;

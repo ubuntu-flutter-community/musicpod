@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:flutter_it/flutter_it.dart';
@@ -116,11 +115,6 @@ class LocalAudioManager {
       _localAudioService.getCachedAlbumIDsOfGenre(genre);
   Future<List<int>?> findAlbumsIDOfGenre(String genre) async =>
       _localAudioService.findAlbumIDsOfGenre(genre);
-
-  Set<Uint8List>? findLocalCovers({
-    required List<Audio> audios,
-    int limit = 4,
-  }) => _localAudioService.findLocalCovers(audios: audios, limit: limit);
 
   List<Audio> findUniqueAlbumAudios(List<Audio> audios) =>
       _localAudioService.findUniqueAlbumAudios(audios);

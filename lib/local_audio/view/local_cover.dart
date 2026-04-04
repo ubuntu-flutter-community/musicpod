@@ -1,13 +1,10 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
-import '../local_cover_model.dart';
+import '../local_cover_manager.dart';
 
-class LocalCover extends StatefulWidget with WatchItStatefulWidgetMixin {
+class LocalCover extends StatelessWidget with WatchItMixin {
   const LocalCover({
     super.key,
     required this.albumId,
@@ -26,91 +23,44 @@ class LocalCover extends StatefulWidget with WatchItStatefulWidgetMixin {
   final BoxFit fit;
 
   @override
-  State<LocalCover> createState() => _LocalCoverState();
-}
-
-class _LocalCoverState extends State<LocalCover> {
-  late Future<Uint8List?> _future;
-  Uint8List? _cover;
-
-  @override
-  void initState() {
-    super.initState();
-
-    final localCoverModel = di<LocalCoverModel>();
-    _cover = localCoverModel.get(widget.albumId);
-    _future = _cover != null
-        ? Future.value(_cover)
-        : localCoverModel.getCover(albumId: widget.albumId, path: widget.path);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    watchPropertyValue((LocalCoverModel m) => m.storeLength);
-    _cover ??= di<LocalCoverModel>().get(widget.albumId);
+    if (di<LocalCoverManager>().shouldRequestCover(albumId, path)) {
+      callOnceAfterThisBuild((context) {
+        di<LocalCoverManager>().getCoverCommand(albumId).run(path!);
+      });
+    }
 
-    const medium = FilterQuality.medium;
-
-    final child = _cover != null
-        ? Image.memory(
-            key: ValueKey(widget.albumId),
-            _cover!,
-            fit: widget.fit,
-            height: widget.dimension,
-            width: widget.dimension,
-            filterQuality: medium,
-          )
-        : FutureBuilder(
-            future: _future,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting)
-                return SizedBox(
-                  key: ValueKey('${widget.albumId}0'),
-                  height: widget.dimension,
-                  width: widget.dimension,
-                  child:
-                      widget.loadingWidget ??
-                      Container(
-                        decoration: BoxDecoration(
-                          color: context.colorScheme.onSurface.withValues(
-                            alpha: 0.2,
-                          ),
-                          borderRadius: BorderRadius.circular(
-                            kYaruContainerRadius,
-                          ),
-                        ),
-                      ),
-                );
-
-              if (snapshot.data == null || snapshot.hasError) {
-                return SizedBox(
-                  key: ValueKey('${widget.albumId}1'),
-                  height: widget.dimension,
-                  width: widget.dimension,
-                  child: widget.fallback,
-                );
-              }
-
-              return Image.memory(
-                key: ValueKey('${widget.albumId}2'),
-                snapshot.data!,
-                fit: widget.fit,
-                height: widget.dimension,
-                width: widget.dimension,
-                filterQuality: medium,
-              );
-            },
-          );
-
-    return SizedBox(
-      height: widget.dimension,
-      width: widget.dimension,
+    return SizedBox.square(
+      dimension: dimension,
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 200),
         transitionBuilder: (Widget child, Animation<double> animation) =>
             FadeTransition(opacity: animation, child: child),
         reverseDuration: const Duration(milliseconds: 200),
-        child: child,
+        child:
+            watchValue(
+              (LocalCoverManager m) => m.getCoverCommand(albumId).results,
+            ).toWidget(
+              whileRunning: (lastResult, param) =>
+                  loadingWidget ??
+                  Container(
+                    decoration: BoxDecoration(
+                      color: context.colorScheme.onSurface.withValues(
+                        alpha: 0.05,
+                      ),
+                    ),
+                  ),
+              onError: (error, lastResult, param) => fallback,
+              onNullData: (_) => fallback,
+              onData: (result, param) => result == null
+                  ? fallback
+                  : Image.memory(
+                      result,
+                      fit: fit,
+                      height: dimension,
+                      width: dimension,
+                    ),
+            ),
       ),
     );
   }

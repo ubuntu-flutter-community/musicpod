@@ -119,7 +119,20 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
             builder: (_) => ArtistPage(pageId: text),
             pageId: text,
           ),
-          image: PlaylistHeaderImage(playlist: playlist, pageId: pageId),
+          onAlbumTap: (audio) {
+            if (audio.albumDbId == null) {
+              showSnackBar(
+                context: context,
+                content: Text(context.l10n.nothingFound),
+              );
+              return;
+            }
+            di<RoutingManager>().push(
+              builder: (_) => AlbumPage(id: audio.albumDbId!),
+              pageId: audio.albumDbId!.toString(),
+            );
+          },
+          image: PlaylistHeaderImage(pageId: pageId),
           audios: playlist,
           pageId: pageId,
         ),
@@ -134,6 +147,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
     required this.audios,
     this.image,
     this.onArtistTap,
+    this.onAlbumTap,
   });
 
   final String pageId;
@@ -141,6 +155,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
   final Widget? image;
 
   final void Function(String text)? onArtistTap;
+  final void Function(Audio audio)? onAlbumTap;
 
   @override
   Widget build(BuildContext context) {
@@ -192,6 +207,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
                     child: AudioTile(
                       allowLeadingImage: audios.length < kShowLeadingThreshold,
                       onSubTitleTap: onArtistTap,
+                      onSubSubTitleTap: onAlbumTap,
                       key: ValueKey(audio.path ?? audio.url),
                       isPlayerPlaying: isPlaying,
                       onTap: () => playerModel.startPlaylist(

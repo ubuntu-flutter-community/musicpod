@@ -22,7 +22,6 @@ import 'local_search_result.dart';
 @lazySingleton
 class LocalAudioService {
   final SettingsService _settingsService;
-  final LocalCoverService _localCoverService;
   final Database _db;
 
   LocalAudioService({
@@ -30,7 +29,6 @@ class LocalAudioService {
     required SettingsService settingsService,
     required Database database,
   }) : _settingsService = settingsService,
-       _localCoverService = localCoverService,
        _db = database;
 
   bool _initialized = false;
@@ -223,23 +221,6 @@ class LocalAudioService {
 
     _albumIDsOfGenreCache[genre] = albumIDsOfGenre;
     return albumIDsOfGenre;
-  }
-
-  Set<Uint8List>? findLocalCovers({
-    required List<Audio> audios,
-    int limit = 4,
-  }) {
-    final images = <Uint8List>{};
-    final albumAudios = findUniqueAlbumAudios(audios);
-
-    for (var audio in albumAudios) {
-      final uint8list = _localCoverService.get(audio.albumDbId);
-      if (uint8list != null && images.length < limit) {
-        images.add(uint8list);
-      }
-    }
-
-    return images;
   }
 
   List<Audio> findUniqueAlbumAudios(List<Audio> audios) {

@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 import '../../local_audio/persistence/tables.dart';
+import '../../player/persistence/tables.dart';
 import '../../podcasts/persistence/tables.dart';
 import '../../radio/persistence/tables.dart';
 import 'tables.dart';
@@ -28,6 +29,7 @@ part 'database.g.dart';
     PodcastEpisodeTable,
     DownloadedPodcastEpisodeTable,
     DownloadTable,
+    PlayerStateTable,
   ],
 )
 class Database extends _$Database {

@@ -341,6 +341,9 @@ class Audio {
     if (publicationDate != null) {
       result.addAll({'publicationDate': publicationDate});
     }
+    if (albumDbId != null) {
+      result.addAll({'albumDbId': albumDbId});
+    }
 
     return result;
   }
@@ -385,6 +388,7 @@ class Audio {
       podcastDescription: map['podcastDescription'],
       episodeDescription: map['episodeDescription'],
       publicationDate: map['publicationDate']?.toInt(),
+      albumDbId: map['albumDbId']?.toInt(),
     );
   }
 
@@ -531,8 +535,7 @@ class Audio {
     );
   }
 
-  bool get canHaveLocalCover =>
-      albumDbId != null && path != null && audioType == AudioType.local;
+  bool get canHaveLocalCover => albumDbId != null && path != null && isLocal;
 
   bool get isLocal => audioType == AudioType.local;
   bool get isPodcast => audioType == AudioType.podcast;
