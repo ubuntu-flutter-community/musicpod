@@ -18,10 +18,10 @@ class LocalCoverModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _propertiesChangedSub;
 
   int get storeLength => _localCoverService.storeLength;
-  Uint8List? get(String? albumId) => _localCoverService.get(albumId);
+  Uint8List? get(int? albumId) => _localCoverService.get(albumId);
 
   Future<Uint8List?> getCover({
-    required String albumId,
+    required int albumId,
     required String? path,
   }) async => _localCoverService.getCover(albumId: albumId, path: path);
 

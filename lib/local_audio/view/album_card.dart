@@ -11,7 +11,6 @@ import '../../common/view/icons.dart';
 import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
-import '../../extensions/string_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
@@ -23,7 +22,7 @@ import 'local_cover.dart';
 class AlbumCard extends StatelessWidget with WatchItMixin {
   const AlbumCard({super.key, required this.id});
 
-  final String id;
+  final int id;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +43,9 @@ class AlbumCard extends StatelessWidget with WatchItMixin {
           onError: (error, lastResult, param) => _AlbumCard(id: id, path: null),
           whileRunning: (lastResult, param) => _AlbumCard(id: id, path: null),
           onData: (album, param) {
-            final path = album?.firstWhereOrNull((e) => e.albumId == id)?.path;
+            final path = album
+                ?.firstWhereOrNull((e) => e.albumDbId == id)
+                ?.path;
             return _AlbumCard(id: id, path: path);
           },
         ),
@@ -71,12 +72,14 @@ class AlbumCard extends StatelessWidget with WatchItMixin {
 class _AlbumCard extends StatelessWidget {
   const _AlbumCard({required this.path, required this.id});
 
-  final String id;
+  final int id;
   final String? path;
 
   @override
   Widget build(BuildContext context) => AudioCard(
-    bottom: AudioCardBottom(text: id.albumOfId),
+    bottom: AudioCardBottom(
+      text: di<LocalAudioManager>().findAlbumName(id) ?? '',
+    ),
     image: LocalCover(
       dimension: audioCardDimension,
       albumId: id,
@@ -85,12 +88,12 @@ class _AlbumCard extends StatelessWidget {
     ),
     onTap: () => di<RoutingManager>().push(
       builder: (context) => AlbumPage(id: id),
-      pageId: id,
+      pageId: id.toString(),
     ),
     onPlay: () async => di<PlayerModel>().startPlaylist(
       audios:
           await di<LocalAudioManager>().findAlbumCommand(id).runAsync() ?? [],
-      listName: id,
+      listName: id.toString(),
     ),
   );
 }

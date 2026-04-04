@@ -67,11 +67,11 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
         child: Stack(
           children: [
             _data == null || _data!.pictures.isEmpty
-                ? widget.audio.path == null || widget.audio.albumId == null
+                ? widget.audio.path == null || widget.audio.albumDbId == null
                       ? const SizedBox.shrink()
                       : LocalCover(
                           path: widget.audio.path!,
-                          albumId: widget.audio.albumId!,
+                          albumId: widget.audio.albumDbId!,
                           fallback: Icon(Iconz.musicNote, size: dimension / 2),
                           dimension: dimension,
                         )

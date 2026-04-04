@@ -26,6 +26,7 @@ import 'app/connectivity_model.dart' as _i788;
 import 'app/routing_manager.dart' as _i971;
 import 'app/sidebar_audios_manager.dart' as _i190;
 import 'app/window_size_to_settings_listener.dart' as _i517;
+import 'common/persistence/database.dart' as _i115;
 import 'custom_content/custom_content_model.dart' as _i55;
 import 'expose/expose_manager.dart' as _i987;
 import 'expose/expose_service.dart' as _i820;
@@ -55,6 +56,7 @@ import 'settings/settings_model.dart' as _i338;
 import 'settings/settings_service.dart' as _i763;
 import 'settings/view/licenses_dialog.dart' as _i1009;
 import 'third_party/audio_service_module.dart' as _i739;
+import 'third_party/database_module.dart' as _i440;
 import 'third_party/dio_module.dart' as _i1039;
 import 'third_party/github_module.dart' as _i207;
 import 'third_party/internet_connection_module.dart' as _i132;
@@ -79,6 +81,7 @@ extension GetItInjectableX on _i174.GetIt {
     final packageInfoModule = _$PackageInfoModule();
     final sharedPreferencesModule = _$SharedPreferencesModule();
     final windowManagerModule = _$WindowManagerModule();
+    final databaseModule = _$DatabaseModule();
     final audioServiceModule = _$AudioServiceModule();
     gh.factory<_i361.Dio>(() => dioModule.create());
     gh.factory<_i535.GitHub>(() => githubModule.gitHub);
@@ -105,12 +108,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i551.ExternalPathService>(
       () => const _i551.ExternalPathService(),
     );
-    gh.lazySingleton<_i57.LocalCoverService>(() => _i57.LocalCoverService());
     gh.lazySingleton<_i546.LocalLyricsService>(
       () => _i546.LocalLyricsService(),
     );
     gh.lazySingleton<_i811.RadioService>(() => _i811.RadioService());
     gh.lazySingleton<_i1009.LicenseStore>(() => _i1009.LicenseStore());
+    gh.lazySingleton<_i115.Database>(() => databaseModule.database);
     gh.lazySingleton<_i328.OnlineArtService>(
       () => _i328.OnlineArtService(dio: gh<_i361.Dio>()),
     );
@@ -122,6 +125,10 @@ extension GetItInjectableX on _i174.GetIt {
           _i620.OnlineArtModel(onlineArtService: gh<_i328.OnlineArtService>()),
       dispose: (i) => i.dispose(),
     );
+    await gh.singletonAsync<_i57.LocalCoverService>(() {
+      final i = _i57.LocalCoverService(database: gh<_i115.Database>());
+      return i.init().then((_) => i);
+    }, preResolve: true);
     await gh.singletonAsync<_i595.LibraryService>(
       () {
         final i = _i595.LibraryService(
@@ -157,12 +164,6 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i1032.LibraryModel(libraryService: gh<_i595.LibraryService>()),
       dispose: (i) => i.dispose(),
     );
-    gh.lazySingleton<_i438.LocalAudioService>(
-      () => _i438.LocalAudioService(
-        localCoverService: gh<_i57.LocalCoverService>(),
-        settingsService: gh<_i763.SettingsService>(),
-      ),
-    );
     gh.lazySingleton<_i820.LastfmService>(
       () => _i820.LastfmService(settingsService: gh<_i763.SettingsService>()),
     );
@@ -182,6 +183,13 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i546.OnlineLyricsService(
         localLyricsService: gh<_i546.LocalLyricsService>(),
         settingsService: gh<_i763.SettingsService>(),
+      ),
+    );
+    gh.lazySingleton<_i438.LocalAudioService>(
+      () => _i438.LocalAudioService(
+        localCoverService: gh<_i57.LocalCoverService>(),
+        settingsService: gh<_i763.SettingsService>(),
+        database: gh<_i115.Database>(),
       ),
     );
     gh.lazySingleton<_i688.LocalAudioManager>(
@@ -319,5 +327,7 @@ class _$PackageInfoModule extends _i855.PackageInfoModule {}
 class _$SharedPreferencesModule extends _i357.SharedPreferencesModule {}
 
 class _$WindowManagerModule extends _i271.WindowManagerModule {}
+
+class _$DatabaseModule extends _i440.DatabaseModule {}
 
 class _$AudioServiceModule extends _i739.AudioServiceModule {}

@@ -12,7 +12,7 @@ class LocalSearchResult {
   final List<Audio>? titles;
   final List<String>? artists;
 
-  final List<String>? albums;
+  final List<int>? albums;
   final List<String>? genres;
   final List<String>? playlists;
 }

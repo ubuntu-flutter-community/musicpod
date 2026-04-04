@@ -18,7 +18,7 @@ class LocalCover extends StatefulWidget with WatchItStatefulWidgetMixin {
     this.fit = BoxFit.cover,
   });
 
-  final String albumId;
+  final int albumId;
   final String? path;
   final Widget fallback;
   final Widget? loadingWidget;

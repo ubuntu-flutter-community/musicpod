@@ -4,7 +4,6 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/sliver_fill_remaining_progress.dart';
 import '../../common/view/theme.dart';
-import '../../extensions/string_x.dart';
 import '../../library/library_model.dart';
 import 'album_card.dart';
 
@@ -16,7 +15,7 @@ class AlbumsView extends StatelessWidget with WatchItMixin {
     this.noResultIcon,
   });
 
-  final List<String>? albumIDs;
+  final List<int>? albumIDs;
   final Widget? noResultMessage, noResultIcon;
 
   @override
@@ -34,7 +33,6 @@ class AlbumsView extends StatelessWidget with WatchItMixin {
 
     watchPropertyValue((LibraryModel m) => m.favoriteAlbumsLength);
     final favoriteAlbumIDs = di<LibraryModel>().favoriteAlbums;
-    favoriteAlbumIDs.sort((a, b) => a.albumOfId.compareTo(b.albumOfId));
 
     final pinned = albumIDs?.where((e) => favoriteAlbumIDs.contains(e)) ?? [];
     final notPinned =

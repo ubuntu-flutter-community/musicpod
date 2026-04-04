@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:collection/collection.dart';
+import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:musicpod/common/data/audio.dart';
+import 'package:musicpod/common/persistence/database.dart';
 import 'package:musicpod/local_audio/local_cover_service.dart';
 import 'package:musicpod/local_audio/local_audio_service.dart';
 import 'package:musicpod/settings/settings_service.dart';
@@ -39,6 +41,7 @@ Future<void> main() async {
     service = LocalAudioService(
       localCoverService: localCoverService,
       settingsService: mockSettingsService,
+      database: Database(NativeDatabase.memory()),
     );
     await service?.init(newDirectory: Directory.current.path);
   });

@@ -26,7 +26,7 @@ class LocalAudioBody extends StatelessWidget {
   final List<Audio>? titles;
   final List<String>? artists;
 
-  final List<String>? albumIDs;
+  final List<int>? albumIDs;
   final List<String>? genres;
   final List<String>? playlists;
   final Widget? noResultMessage, noResultIcon;

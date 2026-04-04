@@ -69,7 +69,7 @@ class _ArtistPageState extends State<ArtistPage> {
 
       di<RoutingManager>().push(
         builder: (_) => AlbumPage(id: id),
-        pageId: id,
+        pageId: id.toString(),
       );
     }
 

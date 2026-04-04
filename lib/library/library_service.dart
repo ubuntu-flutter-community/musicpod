@@ -699,34 +699,35 @@ class LibraryService {
   // Albums
   //
 
-  List<String> get favoriteAlbums =>
-      _sharedPreferences.getStringList(SPKeys.favoriteAlbums) ?? [];
+  List<int> get favoriteAlbums =>
+      (_sharedPreferences.getStringList(SPKeys.favoriteAlbums) ?? [])
+          .map((e) => int.tryParse(e))
+          .whereType<int>()
+          .toList();
 
-  bool isFavoriteAlbum(String id) => favoriteAlbums.contains(id);
+  bool isFavoriteAlbum(int id) => favoriteAlbums.contains(id);
 
-  void addFavoriteAlbum(String id, {required Function() onFail}) {
-    if (id.isEmpty) {
-      onFail();
-      return;
-    }
+  void addFavoriteAlbum(int id, {required Function() onFail}) {
     if (favoriteAlbums.contains(id)) return;
-    final List<String> favorites = List.from(favoriteAlbums);
+    final List<int> favorites = List.from(favoriteAlbums);
     favorites.add(id);
     _sharedPreferences
-        .setStringList(SPKeys.favoriteAlbums, favorites)
+        .setStringList(
+          SPKeys.favoriteAlbums,
+          favorites.map((e) => e.toString()).toList(),
+        )
         .then(notify);
   }
 
-  void removeFavoriteAlbum(String id, {required Function() onFail}) {
-    if (id.isEmpty) {
-      onFail();
-      return;
-    }
+  void removeFavoriteAlbum(int id, {required Function() onFail}) {
     if (!favoriteAlbums.contains(id)) return;
-    final List<String> favorites = List.from(favoriteAlbums);
+    final List<int> favorites = List.from(favoriteAlbums);
     favorites.remove(id);
     _sharedPreferences
-        .setStringList(SPKeys.favoriteAlbums, favorites)
+        .setStringList(
+          SPKeys.favoriteAlbums,
+          favorites.map((e) => e.toString()).toList(),
+        )
         .then(notify);
   }
 
@@ -776,7 +777,8 @@ class LibraryService {
   bool isPageInLibrary(String? pageId) =>
       pageId != null &&
       (PageIDs.permanent.contains(pageId) ||
-          favoriteAlbums.contains(pageId) ||
+          (int.tryParse(pageId) != null &&
+              favoriteAlbums.contains(int.parse(pageId))) ||
           isStarredStation(pageId) ||
           isPlaylistSaved(pageId) ||
           isPodcastSubscribed(pageId));

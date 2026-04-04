@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/data/audio_type.dart';
 import '../page_ids.dart';
@@ -6,11 +7,11 @@ import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
 import '../../custom_content/view/custom_content_page.dart';
-import '../../extensions/string_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../home/home_page.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
+import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/local_audio_page.dart';
 import '../../playlists/view/liked_audio_page.dart';
@@ -35,7 +36,7 @@ Iterable<MasterItem> getAllMasterItems(
   ...permanentMasterItems,
   ...createPlaylistMasterItems(libraryModel),
   ...createPodcastMasterItems(context, libraryModel),
-  ...createFavoriteAlbumsMasterItems(libraryModel),
+  ...createFavoriteAlbumsMasterItems(libraryModel, di<LocalAudioManager>()),
   ...createStarredStationsMasterItems(libraryModel),
 ];
 
@@ -124,11 +125,13 @@ Iterable<MasterItem> createStarredStationsMasterItems(
 
 Iterable<MasterItem> createFavoriteAlbumsMasterItems(
   LibraryModel libraryModel,
+  LocalAudioManager localAudioManager,
 ) => libraryModel.favoriteAlbums.map(
   (id) => MasterItem(
-    titleBuilder: (context) => Text(id.albumOfId),
-    subtitleBuilder: (context) => Text(id.artistOfId),
-    pageId: id,
+    titleBuilder: (context) => Text(localAudioManager.findAlbumName(id) ?? ''),
+    subtitleBuilder: (context) =>
+        Text(localAudioManager.findArtistOfAlbum(id) ?? ''),
+    pageId: id.toString(),
     pageBuilder: (_) => AlbumPage(id: id),
     iconBuilder: (selected) => AlbumPageSideBarIcon(albumId: id),
   ),

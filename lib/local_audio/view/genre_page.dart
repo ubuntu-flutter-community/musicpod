@@ -25,7 +25,7 @@ class GenrePage extends StatefulWidget {
 }
 
 class _GenrePageState extends State<GenrePage> {
-  late Future<List<String>?> _albumIDsOfGenre;
+  late Future<List<int>?> _albumIDsOfGenre;
 
   @override
   void initState() {

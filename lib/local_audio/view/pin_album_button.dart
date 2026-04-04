@@ -8,7 +8,7 @@ import '../../library/library_model.dart';
 class PinAlbumButton extends StatelessWidget with WatchItMixin {
   const PinAlbumButton({super.key, required this.albumId});
 
-  final String albumId;
+  final int albumId;
 
   @override
   Widget build(BuildContext context) {

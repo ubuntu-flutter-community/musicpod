@@ -210,14 +210,14 @@ class AudioTileBottomSheet extends StatelessWidget {
                           minLeadingWidth: 2 * kLargestSpace,
                           title: Text(l10n.showAlbumPage),
                           onTap: () async {
-                            final albumId = audios.firstOrNull?.albumId;
+                            final albumId = audios.firstOrNull?.albumDbId;
                             if (albumId != null) {
                               final albumAudios = await di<LocalAudioManager>()
                                   .findAlbumCommand(albumId)
                                   .runAsync();
                               if (albumAudios != null) {
                                 routingManager.push(
-                                  pageId: albumId,
+                                  pageId: albumId.toString(),
                                   builder: (context) => AlbumPage(id: albumId),
                                 );
                               }

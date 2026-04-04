@@ -77,7 +77,7 @@ class TitlesView extends StatelessWidget with WatchItMixin {
 
         di<RoutingManager>().push(
           builder: (_) => AlbumPage(id: id),
-          pageId: id,
+          pageId: id.toString(),
         );
       },
     );

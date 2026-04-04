@@ -84,8 +84,8 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
                 di<RoutingManager>().push(pageId: PageIDs.searchPage);
               },
             ),
-          if (audio?.audioType == AudioType.local && audio?.albumId != null)
-            PinAlbumButton(albumId: audio!.albumId!),
+          if (audio?.audioType == AudioType.local && audio?.albumDbId != null)
+            PinAlbumButton(albumId: audio!.albumDbId!),
           if (audio?.audioType != AudioType.podcast)
             switch (audio?.audioType) {
               AudioType.local => LikeIconButton(audio: audio, color: iconColor),

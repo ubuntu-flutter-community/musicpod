@@ -8,6 +8,7 @@ import '../page_ids.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/ui_constants.dart';
 import '../../library/library_model.dart';
+import '../../local_audio/local_audio_manager.dart';
 import '../../settings/view/settings_action.dart';
 import 'create_master_items.dart';
 import 'master_tile.dart';
@@ -138,7 +139,10 @@ class AlbumsList extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     watchPropertyValue((LibraryModel m) => m.favoriteAlbumsLength);
-    final masterItems = createFavoriteAlbumsMasterItems(di<LibraryModel>());
+    final masterItems = createFavoriteAlbumsMasterItems(
+      di<LibraryModel>(),
+      di<LocalAudioManager>(),
+    );
     final selectedPageId = watchPropertyValue(
       (RoutingManager m) => m.selectedPageId,
     );

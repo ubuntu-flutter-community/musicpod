@@ -481,9 +481,9 @@ class PlayerService {
   Future<void> _setLocalColor(Audio audio) async {
     try {
       if (audio.canHaveLocalCover) {
-        var maybeData = _localCoverService.get(audio.albumId);
+        var maybeData = _localCoverService.get(audio.albumDbId);
         maybeData ??= await _localCoverService.getCover(
-          albumId: audio.albumId!,
+          albumId: audio.albumDbId!,
           path: audio.path!,
         );
 

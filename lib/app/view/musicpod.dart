@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:gtk/gtk.dart';
 
+import '../../common/view/ui_constants.dart';
 import '../../dependencies.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../player/player_service.dart';
@@ -36,12 +37,13 @@ class _MusicPodState extends State<MusicPod> {
             ? SplashScreen(
                 // TODO: use errorpage from nebu here
                 body: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                  child: ListView(
+                    padding: const EdgeInsets.all(kLargestSpace),
+                    shrinkWrap: true,
                     children: [
                       SelectableText(
                         'An error occurred during startup:\n${snapshot.error}',
-                        textAlign: TextAlign.center,
+                        textAlign: TextAlign.left,
                       ),
                       SelectableText(snapshot.stackTrace.toString()),
                     ],

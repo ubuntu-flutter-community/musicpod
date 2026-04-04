@@ -249,15 +249,15 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     required RoutingManager routingManager,
     required LocalAudioManager localAudioManager,
   }) {
-    if (audio.albumId == null) {
+    if (audio.albumDbId == null) {
       showSnackBar(context: context, content: Text(context.l10n.albumNotFound));
       return;
     }
 
     appManager.setFullWindowMode(false);
     routingManager.push(
-      builder: (_) => AlbumPage(id: audio.albumId!),
-      pageId: audio.albumId!,
+      builder: (_) => AlbumPage(id: audio.albumDbId!),
+      pageId: audio.albumDbId!.toString(),
     );
   }
 

@@ -73,13 +73,19 @@ class LocalAudioManager {
   List<Audio>? get audios => _localAudioService.audios;
   List<String>? get allArtists => _localAudioService.allArtists;
   List<String>? get allGenres => _localAudioService.allGenres;
-  List<String>? get allAlbumIDs => _localAudioService.allAlbumIDs;
+  List<int>? get allAlbumIDs => _localAudioService.allAlbumIDs;
 
-  String? findAlbumId({required String artist, required String album}) =>
+  int? findAlbumId({required String artist, required String album}) =>
       _localAudioService.findAlbumId(artist: artist, album: album);
 
-  final _findAlbumCommands = <String, Command<AudioFilter?, List<Audio>?>>{};
-  Command<AudioFilter?, List<Audio>?> findAlbumCommand(String albumId) =>
+  String? findAlbumName(int albumId) =>
+      _localAudioService.findAlbumName(albumId);
+
+  String? findArtistOfAlbum(int albumId) =>
+      _localAudioService.findArtistOfAlbum(albumId);
+
+  final _findAlbumCommands = <int, Command<AudioFilter?, List<Audio>?>>{};
+  Command<AudioFilter?, List<Audio>?> findAlbumCommand(int albumId) =>
       _findAlbumCommands.putIfAbsent(
         albumId,
         () => Command.createAsync((audioFilter) async {
@@ -106,9 +112,9 @@ class LocalAudioManager {
     AudioFilter audioFilter = AudioFilter.album,
   ]) async => _localAudioService.findTitlesOfArtist(artist, audioFilter);
 
-  List<String>? getCachedAlbumIDsOfGenre(String albumId) =>
-      _localAudioService.getCachedAlbumIDsOfGenre(albumId);
-  Future<List<String>?> findAlbumsIDOfGenre(String genre) async =>
+  List<int>? getCachedAlbumIDsOfGenre(String genre) =>
+      _localAudioService.getCachedAlbumIDsOfGenre(genre);
+  Future<List<int>?> findAlbumsIDOfGenre(String genre) async =>
       _localAudioService.findAlbumIDsOfGenre(genre);
 
   Set<Uint8List>? findLocalCovers({
@@ -119,7 +125,7 @@ class LocalAudioManager {
   List<Audio> findUniqueAlbumAudios(List<Audio> audios) =>
       _localAudioService.findUniqueAlbumAudios(audios);
 
-  List<String>? findAllAlbumIDs({String? artist, bool clean = true}) =>
+  List<int>? findAllAlbumIDs({String? artist, bool clean = true}) =>
       _localAudioService.findAllAlbumIDs(artist: artist, clean: clean);
 
   late final Command<

@@ -66,6 +66,11 @@ class SidebarAudiosManager {
       return _libraryModel.getPlaylistById(pageId);
     }
 
-    return _localAudioManager.findAlbumCommand(pageId).runAsync();
+    final albumId = int.tryParse(pageId);
+    if (albumId != null) {
+      return _localAudioManager.findAlbumCommand(albumId).runAsync();
+    }
+
+    return null;
   }
 }

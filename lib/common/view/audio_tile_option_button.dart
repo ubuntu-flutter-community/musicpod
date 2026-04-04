@@ -150,14 +150,14 @@ class AudioTileOptionButton extends StatelessWidget {
             ),
             PopupMenuItem(
               onTap: () async {
-                final albumId = audios.firstOrNull?.albumId;
+                final albumId = audios.firstOrNull?.albumDbId;
                 if (albumId != null) {
                   final albumAudios = await di<LocalAudioManager>()
                       .findAlbumCommand(albumId)
                       .runAsync();
                   if (albumAudios != null) {
                     di<RoutingManager>().push(
-                      pageId: albumId,
+                      pageId: albumId.toString(),
                       builder: (context) => AlbumPage(id: albumId),
                     );
                   }

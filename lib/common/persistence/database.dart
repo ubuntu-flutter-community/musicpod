@@ -1,6 +1,8 @@
 import 'package:drift/drift.dart';
 
 import '../../local_audio/persistence/tables.dart';
+import '../../podcasts/persistence/tables.dart';
+import '../../radio/persistence/tables.dart';
 
 part 'database.g.dart';
 
@@ -8,9 +10,16 @@ part 'database.g.dart';
   tables: [
     ArtistTable,
     AlbumTable,
+    AlbumArtTable,
+    GenreTable,
     TrackTable,
     PlaylistTable,
     PlaylistTrackTable,
+    LikedTrackTable,
+    PinnedAlbumTable,
+    StarredStationTable,
+    PodcastTable,
+    PodcastEpisodeTable,
   ],
 )
 class Database extends _$Database {

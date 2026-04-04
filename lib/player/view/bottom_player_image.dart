@@ -67,7 +67,7 @@ class _BottomPlayerImageState extends State<BottomPlayerImage> {
     if (widget.audio?.canHaveLocalCover == true) {
       child = LocalCover(
         key: ValueKey(widget.audio!.path),
-        albumId: widget.audio!.albumId!,
+        albumId: widget.audio!.albumDbId!,
         path: widget.audio!.path!,
         fit: BoxFit.cover,
         dimension: widget.size,

@@ -182,14 +182,14 @@ class LibraryModel extends SafeChangeNotifier {
   // Albums
   //
 
-  List<String> get favoriteAlbums => _service.favoriteAlbums;
+  List<int> get favoriteAlbums => _service.favoriteAlbums;
   int get favoriteAlbumsLength => _service.favoriteAlbums.length;
 
-  bool isFavoriteAlbum(String id) => _service.isFavoriteAlbum(id);
+  bool isFavoriteAlbum(int id) => _service.isFavoriteAlbum(id);
 
-  void addFavoriteAlbum(String id, {required Function() onFail}) =>
+  void addFavoriteAlbum(int id, {required Function() onFail}) =>
       _service.addFavoriteAlbum(id, onFail: onFail);
 
-  void removeFavoriteAlbum(String id, {required Function() onFail}) =>
+  void removeFavoriteAlbum(int id, {required Function() onFail}) =>
       _service.removeFavoriteAlbum(id, onFail: onFail);
 }

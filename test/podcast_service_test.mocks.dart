@@ -261,12 +261,12 @@ class MockLibraryService extends _i1.Mock implements _i5.LibraryService {
           as int);
 
   @override
-  List<String> get favoriteAlbums =>
+  List<int> get favoriteAlbums =>
       (super.noSuchMethod(
             Invocation.getter(#favoriteAlbums),
-            returnValue: <String>[],
+            returnValue: <int>[],
           )
-          as List<String>);
+          as List<int>);
 
   @override
   void addLikedAudio(_i6.Audio? audio) => super.noSuchMethod(
@@ -777,7 +777,7 @@ class MockLibraryService extends _i1.Mock implements _i5.LibraryService {
           as _i3.Future<void>);
 
   @override
-  bool isFavoriteAlbum(String? id) =>
+  bool isFavoriteAlbum(int? id) =>
       (super.noSuchMethod(
             Invocation.method(#isFavoriteAlbum, [id]),
             returnValue: false,
@@ -785,14 +785,14 @@ class MockLibraryService extends _i1.Mock implements _i5.LibraryService {
           as bool);
 
   @override
-  void addFavoriteAlbum(String? id, {required dynamic Function()? onFail}) =>
+  void addFavoriteAlbum(int? id, {required dynamic Function()? onFail}) =>
       super.noSuchMethod(
         Invocation.method(#addFavoriteAlbum, [id], {#onFail: onFail}),
         returnValueForMissingStub: null,
       );
 
   @override
-  void removeFavoriteAlbum(String? id, {required dynamic Function()? onFail}) =>
+  void removeFavoriteAlbum(int? id, {required dynamic Function()? onFail}) =>
       super.noSuchMethod(
         Invocation.method(#removeFavoriteAlbum, [id], {#onFail: onFail}),
         returnValueForMissingStub: null,

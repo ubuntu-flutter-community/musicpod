@@ -66,7 +66,7 @@ class _MetaDataContentState extends State<MetaDataContent> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (audio.isLocal && audio.path != null && audio.albumId != null)
+          if (audio.isLocal && audio.path != null && audio.albumDbId != null)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: kLargestSpace),
               child: SizedBox.square(
