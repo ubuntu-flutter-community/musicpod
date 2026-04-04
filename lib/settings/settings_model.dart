@@ -158,6 +158,16 @@ class SettingsModel extends SafeChangeNotifier {
   Future<void> setNeverAskAgainForGeniusToken(bool value) =>
       _service.setValue(SPKeys.neverAskAgainForGeniusToken, value);
 
+  String? get lastCountryCode => _service.getString(SPKeys.lastCountryCode);
+  void setLastCountryCode(String value) {
+    _service.setValue(SPKeys.lastCountryCode, value);
+  }
+
+  String? get lastLanguageCode => _service.getString(SPKeys.lastLanguageCode);
+  void setLastLanguageCode(String value) {
+    _service.setValue(SPKeys.lastLanguageCode, value);
+  }
+
   Future<void> wipeAllSettings() async => _service.wipeAllSettings();
 
   @override

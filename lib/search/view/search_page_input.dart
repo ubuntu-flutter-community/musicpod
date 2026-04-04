@@ -14,6 +14,7 @@ import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../podcasts/data/podcast_genre.dart';
 import '../../radio/view/tag_auto_complete.dart';
+import '../../settings/settings_model.dart';
 import '../search_model.dart';
 import '../search_type.dart';
 import 'audio_type_filter_button.dart';
@@ -99,7 +100,7 @@ class CountryAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
       onSelected: (c) async {
         searchModel.setCountry(c);
         if (c?.code != null) {
-          libraryModel.setLastCountryCode(c!.code);
+          di<SettingsModel>().setLastCountryCode(c!.code);
         }
         await searchModel.search();
       },
@@ -173,7 +174,7 @@ class LanguageAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
         model.setLanguage(language);
         model.search();
         if (language?.isoCode != null) {
-          libraryModel.setLastLanguage(language!.isoCode);
+          di<SettingsModel>().setLastLanguageCode(language!.isoCode);
         }
       },
       favs: favLanguageCodes,

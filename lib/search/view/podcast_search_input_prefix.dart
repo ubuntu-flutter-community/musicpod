@@ -103,7 +103,7 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
     void setCountry(Country? country) {
       searchModel.setCountry(country);
       if (country?.code != null) {
-        libraryModel.setLastCountryCode(country!.code);
+        di<SettingsModel>().setLastCountryCode(country!.code);
       }
     }
 
@@ -148,7 +148,7 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
               Navigator.of(context).pop();
               searchModel.setLanguage(language);
               if (language?.isoCode != null) {
-                libraryModel.setLastLanguage(language!.isoCode);
+                di<SettingsModel>().setLastLanguageCode(language!.isoCode);
               }
               searchModel.search();
             },

@@ -1,50 +1,142 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:collection/collection.dart';
+import 'package:drift/drift.dart';
 import 'package:injectable/injectable.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/data/audio.dart';
-import '../common/file_names.dart';
 import '../app/page_ids.dart';
+import '../common/persistence/database.dart';
 import '../extensions/date_time_x.dart';
-import '../settings/shared_preferences_keys.dart';
-import '../common/persistence_utils.dart';
+import '../local_audio/local_audio_service.dart';
 
 @singleton
 class LibraryService {
-  LibraryService({required SharedPreferences sharedPreferences})
-    : _sharedPreferences = sharedPreferences;
+  LibraryService({
+    required Database database,
+    required LocalAudioService localAudioService,
+  }) : _db = database,
+       _localAudioService = localAudioService;
 
-  final SharedPreferences _sharedPreferences;
+  final Database _db;
+  final LocalAudioService _localAudioService;
 
   final _propertiesChangedController = StreamController<bool>.broadcast();
   Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
 
-  //
-  // Liked Audios
-  //
+  void _notify() => _propertiesChangedController.add(true);
+
+  @PostConstruct(preResolve: true)
+  Future<void> init() async {
+    await _loadLikedAudios();
+    await _loadStarredStations();
+    await _loadFavRadioTags();
+    await _loadFavCountryCodes();
+    await _loadFavLanguageCodes();
+    await _loadPlaylists();
+    await _loadExternalPlaylistIDs();
+    await _loadPodcastCache();
+    await _loadPodcastUpdates();
+    await _loadDownloads();
+    await _loadFavoriteAlbums();
+    await _loadSelectedPageId();
+  }
+
+  @disposeMethod
+  Future<void> dispose() => _propertiesChangedController.close();
+
+  // ── Helpers ──
+
+  Future<int?> _findTrackIdByPath(String? path) async {
+    if (path == null) return null;
+    final row = await (_db.select(
+      _db.trackTable,
+    )..where((t) => t.path.equals(path))).getSingleOrNull();
+    return row?.id;
+  }
+
+  List<Audio> _joinedRowsToAudios(List<TypedResult> rows) => rows.map((row) {
+    final track = row.readTable(_db.trackTable);
+    final albumRow = row.readTableOrNull(_db.albumTable);
+    final artistRow = row.readTableOrNull(_db.artistTable);
+    final albumArt = row.readTableOrNull(_db.albumArtTable);
+    final genreRow = row.readTableOrNull(_db.genreTable);
+    return _localAudioService.trackToAudio(
+      track,
+      albumRow,
+      artistRow,
+      albumArt,
+      genreRow,
+    );
+  }).toList();
+
+  JoinedSelectStatement _trackJoin(SimpleSelectStatement base) => base.join([
+    innerJoin(
+      _db.trackTable,
+      _db.trackTable.id.equalsExp(_db.likedTrackTable.trackId),
+    ),
+    leftOuterJoin(
+      _db.albumTable,
+      _db.albumTable.id.equalsExp(_db.trackTable.album),
+    ),
+    leftOuterJoin(
+      _db.artistTable,
+      _db.artistTable.id.equalsExp(_db.trackTable.artist),
+    ),
+    leftOuterJoin(
+      _db.albumArtTable,
+      _db.albumArtTable.album.equalsExp(_db.albumTable.id),
+    ),
+    leftOuterJoin(
+      _db.genreTable,
+      _db.genreTable.id.equalsExp(_db.trackTable.genre),
+    ),
+  ]);
+
+  // ── Liked Audios ──
+
   List<Audio> _likedAudios = [];
   List<Audio> get likedAudios => _likedAudios;
   int get likedAudiosLength => _likedAudios.length;
+
+  Future<void> _loadLikedAudios() async {
+    final rows = await _trackJoin(_db.select(_db.likedTrackTable)).get();
+    _likedAudios = _joinedRowsToAudios(rows);
+  }
+
   void addLikedAudio(Audio audio) {
     if (_likedAudios.contains(audio)) return;
     _likedAudios.add(audio);
-    writeAudioMap(
-      map: {PageIDs.likedAudios: _likedAudios},
-      fileName: FileNames.likedAudios,
-    ).then((_) => _propertiesChangedController.add(true));
+    _findTrackIdByPath(audio.path).then((trackId) {
+      if (trackId != null) {
+        _db
+            .into(_db.likedTrackTable)
+            .insert(
+              LikedTrackTableCompanion.insert(trackId: trackId),
+              mode: InsertMode.insertOrIgnore,
+            )
+            .then((_) => _notify());
+      }
+    });
   }
 
   void addLikedAudios(List<Audio> audios) {
     for (var audio in audios) {
       _likedAudios.add(audio);
     }
-    writeAudioMap(
-      map: {PageIDs.likedAudios: _likedAudios},
-      fileName: FileNames.likedAudios,
-    ).then((_) => _propertiesChangedController.add(true));
+    Future.wait(
+      audios.map((audio) async {
+        final trackId = await _findTrackIdByPath(audio.path);
+        if (trackId != null) {
+          await _db
+              .into(_db.likedTrackTable)
+              .insert(
+                LikedTrackTableCompanion.insert(trackId: trackId),
+                mode: InsertMode.insertOrIgnore,
+              );
+        }
+      }),
+    ).then((_) => _notify());
   }
 
   bool isLiked(Audio audio) => _likedAudios.contains(audio);
@@ -60,10 +152,14 @@ class LibraryService {
   void removeLikedAudio(Audio audio, [bool notify = true]) {
     _likedAudios.remove(audio);
     if (notify) {
-      writeAudioMap(
-        map: {PageIDs.likedAudios: _likedAudios},
-        fileName: FileNames.likedAudios,
-      ).then((_) => _propertiesChangedController.add(true));
+      _findTrackIdByPath(audio.path).then((trackId) {
+        if (trackId != null) {
+          (_db.delete(_db.likedTrackTable)
+                ..where((t) => t.trackId.equals(trackId)))
+              .go()
+              .then((_) => _notify());
+        }
+      });
     }
   }
 
@@ -71,139 +167,182 @@ class LibraryService {
     for (var audio in audios) {
       removeLikedAudio(audio, false);
     }
-    writeAudioMap(
-      map: {PageIDs.likedAudios: _likedAudios},
-      fileName: FileNames.likedAudios,
-    ).then((_) => _propertiesChangedController.add(true));
+    Future.wait(
+      audios.map((audio) async {
+        final trackId = await _findTrackIdByPath(audio.path);
+        if (trackId != null) {
+          await (_db.delete(
+            _db.likedTrackTable,
+          )..where((t) => t.trackId.equals(trackId))).go();
+        }
+      }),
+    ).then((_) => _notify());
   }
 
-  //
-  // Starred stations
-  //
+  Future<void> _persistLikedAudios() async {
+    await _db.delete(_db.likedTrackTable).go();
+    for (final audio in _likedAudios) {
+      final trackId = await _findTrackIdByPath(audio.path);
+      if (trackId != null) {
+        await _db
+            .into(_db.likedTrackTable)
+            .insert(
+              LikedTrackTableCompanion.insert(trackId: trackId),
+              mode: InsertMode.insertOrIgnore,
+            );
+      }
+    }
+  }
 
-  List<String> get starredStations =>
-      _sharedPreferences.getStringList(SPKeys.starredStations) ?? [];
-  int get starredStationsLength => starredStations.length;
+  // ── Starred stations ──
+
+  List<String> _starredStations = [];
+  List<String> get starredStations => _starredStations;
+  int get starredStationsLength => _starredStations.length;
+
+  Future<void> _loadStarredStations() async {
+    final rows = await _db.select(_db.starredStationTable).get();
+    _starredStations = rows.map((r) => r.uuid).toList();
+  }
 
   void addStarredStation(String uuid) {
-    if (starredStations.contains(uuid)) return;
-    final List<String> starred = List.from(starredStations);
-    starred.add(uuid);
-    _sharedPreferences
-        .setStringList(SPKeys.starredStations, starred)
-        .then(notify);
+    if (_starredStations.contains(uuid)) return;
+    _starredStations.add(uuid);
+    _db
+        .into(_db.starredStationTable)
+        .insert(
+          StarredStationTableCompanion.insert(uuid: uuid),
+          mode: InsertMode.insertOrIgnore,
+        )
+        .then((_) => _notify());
   }
 
   void addStarredStations(List<String?> uuids) {
     if (uuids.isEmpty) return;
-    final List<String> starred = List.from(starredStations);
     for (var uuid in uuids) {
-      if (uuid != null && uuid.isNotEmpty && !starred.contains(uuid)) {
-        starred.add(uuid);
+      if (uuid != null && uuid.isNotEmpty && !_starredStations.contains(uuid)) {
+        _starredStations.add(uuid);
+        _db
+            .into(_db.starredStationTable)
+            .insert(
+              StarredStationTableCompanion.insert(uuid: uuid),
+              mode: InsertMode.insertOrIgnore,
+            );
       }
     }
-    _sharedPreferences
-        .setStringList(SPKeys.starredStations, starred)
-        .then(notify);
+    _notify();
   }
 
   void removeStarredStation(String uuid) {
-    if (!starredStations.contains(uuid)) return;
-    final List<String> starred = List.from(starredStations);
-    starred.remove(uuid);
-    _sharedPreferences
-        .setStringList(SPKeys.starredStations, starred)
-        .then(notify);
+    if (!_starredStations.contains(uuid)) return;
+    _starredStations.remove(uuid);
+    (_db.delete(
+      _db.starredStationTable,
+    )..where((t) => t.uuid.equals(uuid))).go().then((_) => _notify());
   }
 
   void unStarAllStations() {
-    if (starredStations.isEmpty) return;
-    _sharedPreferences.setStringList(SPKeys.starredStations, []).then(notify);
+    if (_starredStations.isEmpty) return;
+    _starredStations.clear();
+    _db.delete(_db.starredStationTable).go().then((_) => _notify());
   }
 
-  bool isStarredStation(String? uuid) => starredStations.contains(uuid);
+  bool isStarredStation(String? uuid) => _starredStations.contains(uuid);
 
-  Set<String> get favRadioTags =>
-      _sharedPreferences.getStringList(SPKeys.favRadioTags)?.toSet() ?? {};
-  bool isFavTag(String value) => favRadioTags.contains(value);
+  // ── Fav radio tags ──
+
+  Set<String> _favRadioTags = {};
+  Set<String> get favRadioTags => _favRadioTags;
+  bool isFavTag(String value) => _favRadioTags.contains(value);
+
+  Future<void> _loadFavRadioTags() async {
+    final rows = await _db.select(_db.favoriteRadioTagTable).get();
+    _favRadioTags = rows.map((r) => r.name).toSet();
+  }
 
   void addFavRadioTag(String name) {
-    if (favRadioTags.contains(name)) return;
-    final Set<String> tags = favRadioTags;
-    tags.add(name);
-    _sharedPreferences
-        .setStringList(SPKeys.favRadioTags, tags.toList())
-        .then(notify);
+    if (_favRadioTags.contains(name)) return;
+    _favRadioTags.add(name);
+    _db
+        .into(_db.favoriteRadioTagTable)
+        .insert(
+          FavoriteRadioTagTableCompanion.insert(name: name),
+          mode: InsertMode.insertOrIgnore,
+        )
+        .then((_) => _notify());
   }
 
   void removeFavRadioTag(String name) {
-    if (!favRadioTags.contains(name)) return;
-    final Set<String> tags = favRadioTags;
-    tags.remove(name);
-    _sharedPreferences
-        .setStringList(SPKeys.favRadioTags, tags.toList())
-        .then(notify);
+    if (!_favRadioTags.contains(name)) return;
+    _favRadioTags.remove(name);
+    (_db.delete(
+      _db.favoriteRadioTagTable,
+    )..where((t) => t.name.equals(name))).go().then((_) => _notify());
   }
 
-  String? get lastCountryCode =>
-      _sharedPreferences.getString(SPKeys.lastCountryCode);
-  void setLastCountryCode(String value) {
-    _sharedPreferences.setString(SPKeys.lastCountryCode, value).then(notify);
-  }
+  // ── Fav country codes ──
 
-  Set<String> get favCountryCodes =>
-      _sharedPreferences.getStringList(SPKeys.favCountryCodes)?.toSet() ?? {};
-  bool isFavCountry(String value) => favCountryCodes.contains(value);
+  Set<String> _favCountryCodes = {};
+  Set<String> get favCountryCodes => _favCountryCodes;
+  bool isFavCountry(String value) => _favCountryCodes.contains(value);
+
+  Future<void> _loadFavCountryCodes() async {
+    final rows = await _db.select(_db.favoriteCountryTable).get();
+    _favCountryCodes = rows.map((r) => r.code).toSet();
+  }
 
   void addFavCountryCode(String name) {
-    if (favCountryCodes.contains(name)) return;
-    final favCodes = favCountryCodes;
-    favCodes.add(name);
-    _sharedPreferences
-        .setStringList(SPKeys.favCountryCodes, favCodes.toList())
-        .then(notify);
+    if (_favCountryCodes.contains(name)) return;
+    _favCountryCodes.add(name);
+    _db
+        .into(_db.favoriteCountryTable)
+        .insert(
+          FavoriteCountryTableCompanion.insert(code: name),
+          mode: InsertMode.insertOrIgnore,
+        )
+        .then((_) => _notify());
   }
 
   void removeFavCountryCode(String name) {
-    if (!favCountryCodes.contains(name)) return;
-    final favCodes = favCountryCodes;
-    favCodes.remove(name);
-    _sharedPreferences
-        .setStringList(SPKeys.favCountryCodes, favCodes.toList())
-        .then(notify);
+    if (!_favCountryCodes.contains(name)) return;
+    _favCountryCodes.remove(name);
+    (_db.delete(
+      _db.favoriteCountryTable,
+    )..where((t) => t.code.equals(name))).go().then((_) => _notify());
   }
 
-  String? get lastLanguageCode =>
-      _sharedPreferences.getString(SPKeys.lastLanguageCode);
-  void setLastLanguageCode(String value) {
-    _sharedPreferences.setString(SPKeys.lastLanguageCode, value).then(notify);
-  }
+  // ── Fav language codes ──
 
-  Set<String> get favLanguageCodes =>
-      _sharedPreferences.getStringList(SPKeys.favLanguageCodes)?.toSet() ?? {};
-  bool isFavLanguage(String value) => favLanguageCodes.contains(value);
+  Set<String> _favLanguageCodes = {};
+  Set<String> get favLanguageCodes => _favLanguageCodes;
+  bool isFavLanguage(String value) => _favLanguageCodes.contains(value);
+
+  Future<void> _loadFavLanguageCodes() async {
+    final rows = await _db.select(_db.favoriteLanguageTable).get();
+    _favLanguageCodes = rows.map((r) => r.isoCode).toSet();
+  }
 
   void addFavLanguageCode(String name) {
-    if (favLanguageCodes.contains(name)) return;
-    final favLangs = favLanguageCodes;
-    favLangs.add(name);
-    _sharedPreferences
-        .setStringList(SPKeys.favLanguageCodes, favLangs.toList())
-        .then(notify);
+    if (_favLanguageCodes.contains(name)) return;
+    _favLanguageCodes.add(name);
+    _db
+        .into(_db.favoriteLanguageTable)
+        .insert(
+          FavoriteLanguageTableCompanion.insert(isoCode: name),
+          mode: InsertMode.insertOrIgnore,
+        )
+        .then((_) => _notify());
   }
 
   void removeFavLanguageCode(String name) {
-    if (!favLanguageCodes.contains(name)) return;
-    final favLangs = favLanguageCodes;
-    favLangs.remove(name);
-    _sharedPreferences
-        .setStringList(SPKeys.favLanguageCodes, favLangs.toList())
-        .then(notify);
+    if (!_favLanguageCodes.contains(name)) return;
+    _favLanguageCodes.remove(name);
+    (_db.delete(
+      _db.favoriteLanguageTable,
+    )..where((t) => t.isoCode.equals(name))).go().then((_) => _notify());
   }
 
-  //
-  // Playlists
-  //
+  // ── Playlists ──
 
   Map<String, List<Audio>> _playlists = {};
   List<String> get playlistIDs => _playlists.keys.toList();
@@ -213,14 +352,59 @@ class LibraryService {
   bool isPlaylistSaved(String? id) =>
       id == null ? false : _playlists.containsKey(id);
 
-  Future<void> addPlaylist(String id, List<Audio> audios) async {
-    if (!_playlists.containsKey(id)) {
-      _playlists.putIfAbsent(id, () => audios.where((e) => e.isLocal).toList());
-      await writeAudioMap(
-        map: _playlists,
-        fileName: FileNames.playlists,
-      ).then((_) => _propertiesChangedController.add(true));
+  Future<void> _loadPlaylists() async {
+    _playlists = {};
+    final playlistRows = await _db.select(_db.playlistTable).get();
+    for (final pl in playlistRows) {
+      final trackRows = await (_db.select(_db.playlistTrackTable).join([
+        innerJoin(
+          _db.trackTable,
+          _db.trackTable.id.equalsExp(_db.playlistTrackTable.track),
+        ),
+        leftOuterJoin(
+          _db.albumTable,
+          _db.albumTable.id.equalsExp(_db.trackTable.album),
+        ),
+        leftOuterJoin(
+          _db.artistTable,
+          _db.artistTable.id.equalsExp(_db.trackTable.artist),
+        ),
+        leftOuterJoin(
+          _db.albumArtTable,
+          _db.albumArtTable.album.equalsExp(_db.albumTable.id),
+        ),
+        leftOuterJoin(
+          _db.genreTable,
+          _db.genreTable.id.equalsExp(_db.trackTable.genre),
+        ),
+      ])..where(_db.playlistTrackTable.playlist.equals(pl.id))).get();
+
+      _playlists[pl.name] = _joinedRowsToAudios(trackRows);
     }
+  }
+
+  Future<void> addPlaylist(String id, List<Audio> audios) async {
+    if (_playlists.containsKey(id)) return;
+    final localAudios = audios.where((e) => e.isLocal).toList();
+    _playlists[id] = localAudios;
+
+    final plId = await _db
+        .into(_db.playlistTable)
+        .insert(PlaylistTableCompanion.insert(name: id));
+    for (final audio in localAudios) {
+      final trackId = await _findTrackIdByPath(audio.path);
+      if (trackId != null) {
+        await _db
+            .into(_db.playlistTrackTable)
+            .insert(
+              PlaylistTrackTableCompanion.insert(
+                playlist: plId,
+                track: trackId,
+              ),
+            );
+      }
+    }
+    _notify();
   }
 
   Future<void> addExternalPlaylists({
@@ -230,18 +414,33 @@ class LibraryService {
     for (var playlist in playlists) {
       if (!_playlists.containsKey(playlist.id) &&
           playlist.audios.any((e) => e.isLocal)) {
-        _playlists.putIfAbsent(
-          playlist.id,
-          () => playlist.audios.where((e) => e.isLocal).toList(),
-        );
+        final localAudios = playlist.audios.where((e) => e.isLocal).toList();
+        _playlists[playlist.id] = localAudios;
 
-        addExternalPlaylistID(playlist.id);
+        final plId = await _db
+            .into(_db.playlistTable)
+            .insert(
+              PlaylistTableCompanion.insert(
+                name: playlist.id,
+                fromExternalSource: const Value(true),
+              ),
+            );
+        for (final audio in localAudios) {
+          final trackId = await _findTrackIdByPath(audio.path);
+          if (trackId != null) {
+            await _db
+                .into(_db.playlistTrackTable)
+                .insert(
+                  PlaylistTrackTableCompanion.insert(
+                    playlist: plId,
+                    track: trackId,
+                  ),
+                );
+          }
+        }
       }
     }
-    await writeAudioMap(
-      map: _playlists,
-      fileName: FileNames.playlists,
-    ).then((_) => _propertiesChangedController.add(true));
+    _notify();
   }
 
   Future<void> updatePlaylist({
@@ -249,31 +448,57 @@ class LibraryService {
     required List<Audio> audios,
     bool external = false,
   }) async {
-    if (_playlists.containsKey(id)) {
-      if (external) {
-        addExternalPlaylistID(id);
-      }
-      await writeAudioMap(map: _playlists, fileName: FileNames.playlists).then((
-        _,
-      ) {
-        _playlists.update(
-          id,
-          (value) => audios.where((e) => e.isLocal || e.isPodcast).toList(),
-        );
-        _propertiesChangedController.add(true);
-      });
+    if (!_playlists.containsKey(id)) return;
+    final filteredAudios = audios
+        .where((e) => e.isLocal || e.isPodcast)
+        .toList();
+    _playlists[id] = filteredAudios;
+
+    final plRow = await (_db.select(
+      _db.playlistTable,
+    )..where((t) => t.name.equals(id))).getSingleOrNull();
+    if (plRow == null) return;
+
+    if (external) {
+      await (_db.update(_db.playlistTable)..where((t) => t.id.equals(plRow.id)))
+          .write(const PlaylistTableCompanion(fromExternalSource: Value(true)));
     }
+
+    await (_db.delete(
+      _db.playlistTrackTable,
+    )..where((t) => t.playlist.equals(plRow.id))).go();
+    for (final audio in filteredAudios) {
+      final trackId = await _findTrackIdByPath(audio.path);
+      if (trackId != null) {
+        await _db
+            .into(_db.playlistTrackTable)
+            .insert(
+              PlaylistTrackTableCompanion.insert(
+                playlist: plRow.id,
+                track: trackId,
+              ),
+            );
+      }
+    }
+    _notify();
   }
 
   Future<void> removePlaylist(String id) async {
-    if (_playlists.containsKey(id)) {
-      _playlists.remove(id);
-      removeExternalPlaylistID(id);
-      return writeAudioMap(
-        map: _playlists,
-        fileName: FileNames.playlists,
-      ).then((_) => _propertiesChangedController.add(true));
+    if (!_playlists.containsKey(id)) return;
+    _playlists.remove(id);
+
+    final plRow = await (_db.select(
+      _db.playlistTable,
+    )..where((t) => t.name.equals(id))).getSingleOrNull();
+    if (plRow != null) {
+      await (_db.delete(
+        _db.playlistTrackTable,
+      )..where((t) => t.playlist.equals(plRow.id))).go();
+      await (_db.delete(
+        _db.playlistTable,
+      )..where((t) => t.id.equals(plRow.id))).go();
     }
+    _notify();
   }
 
   Future<void> updatePlaylistName(String oldName, String newName) async {
@@ -281,12 +506,17 @@ class LibraryService {
     final oldList = _playlists[oldName];
     if (oldList != null) {
       _playlists.remove(oldName);
-      _playlists.putIfAbsent(newName, () => oldList);
-      updateExternalPlaylistID(oldName, newName);
-      await writeAudioMap(
-        map: _playlists,
-        fileName: FileNames.playlists,
-      ).then((_) => _propertiesChangedController.add(true));
+      _playlists[newName] = oldList;
+
+      final plRow = await (_db.select(
+        _db.playlistTable,
+      )..where((t) => t.name.equals(oldName))).getSingleOrNull();
+      if (plRow != null) {
+        await (_db.update(_db.playlistTable)
+              ..where((t) => t.id.equals(plRow.id)))
+            .write(PlaylistTableCompanion(name: Value(newName)));
+      }
+      _notify();
     }
   }
 
@@ -313,17 +543,34 @@ class LibraryService {
     if (id == PageIDs.likedAudios) {
       _likedAudios.clear();
       _likedAudios.addAll(list);
-      writeAudioMap(
-        map: {PageIDs.likedAudios: _likedAudios},
-        fileName: FileNames.likedAudios,
-      ).then((value) {
-        _propertiesChangedController.add(true);
-      });
+      _persistLikedAudios().then((_) => _notify());
     } else {
-      _playlists.update(id, (value) => list);
-      writeAudioMap(map: _playlists, fileName: FileNames.playlists).then((_) {
-        _propertiesChangedController.add(true);
-      });
+      _playlists[id] = list;
+      _persistPlaylist(id, list).then((_) => _notify());
+    }
+  }
+
+  Future<void> _persistPlaylist(String name, List<Audio> audios) async {
+    final plRow = await (_db.select(
+      _db.playlistTable,
+    )..where((t) => t.name.equals(name))).getSingleOrNull();
+    if (plRow == null) return;
+
+    await (_db.delete(
+      _db.playlistTrackTable,
+    )..where((t) => t.playlist.equals(plRow.id))).go();
+    for (final audio in audios) {
+      final trackId = await _findTrackIdByPath(audio.path);
+      if (trackId != null) {
+        await _db
+            .into(_db.playlistTrackTable)
+            .insert(
+              PlaylistTrackTableCompanion.insert(
+                playlist: plRow.id,
+                track: trackId,
+              ),
+            );
+      }
     }
   }
 
@@ -336,10 +583,7 @@ class LibraryService {
         playlist.add(audio);
       }
     }
-    writeAudioMap(
-      map: _playlists,
-      fileName: FileNames.playlists,
-    ).then((_) => _propertiesChangedController.add(true));
+    _persistPlaylist(id, playlist).then((_) => _notify());
   }
 
   void removeAudiosFromPlaylist({
@@ -354,30 +598,30 @@ class LibraryService {
         playlist.remove(audio);
       }
     }
-    writeAudioMap(
-      map: _playlists,
-      fileName: FileNames.playlists,
-    ).then((_) => _propertiesChangedController.add(true));
+    _persistPlaylist(id, playlist).then((_) => _notify());
   }
 
   void clearPlaylist(String id) {
     final playlist = _playlists[id];
     if (playlist != null) {
       playlist.clear();
-      writeAudioMap(
-        map: _playlists,
-        fileName: FileNames.playlists,
-      ).then((_) => _propertiesChangedController.add(true));
+      _persistPlaylist(id, []).then((_) => _notify());
     }
   }
 
-  List<String> get externalPlaylistIDs =>
-      _sharedPreferences.getStringList(SPKeys.externalPlaylists) ?? [];
+  List<String> _externalPlaylistIDs = [];
+  List<String> get externalPlaylistIDs => _externalPlaylistIDs;
+
+  Future<void> _loadExternalPlaylistIDs() async {
+    final rows = await (_db.select(
+      _db.playlistTable,
+    )..where((t) => t.fromExternalSource.equals(true))).get();
+    _externalPlaylistIDs = rows.map((r) => r.name).toList();
+  }
 
   List<Audio> get externalPlaylistAudios {
-    if (externalPlaylistIDs.isEmpty) return [];
-
-    return [for (var e in externalPlaylistIDs) ...getPlaylistById(e) ?? []];
+    if (_externalPlaylistIDs.isEmpty) return [];
+    return [for (var e in _externalPlaylistIDs) ...getPlaylistById(e) ?? []];
   }
 
   List<Audio> get playlistsAudios {
@@ -385,46 +629,22 @@ class LibraryService {
     return [for (var e in _playlists.entries) ...e.value];
   }
 
-  void addExternalPlaylistID(String value) {
-    final lists = List<String>.from(externalPlaylistIDs);
-    if (lists.contains(value)) return;
-    lists.add(value);
-    _sharedPreferences
-        .setStringList(SPKeys.externalPlaylists, lists)
-        .then(notify);
-  }
+  // ── Podcasts ──
 
-  void removeExternalPlaylistID(String value) {
-    final lists = List<String>.from(externalPlaylistIDs);
-    if (!lists.contains(value)) return;
-    lists.remove(value);
-    _sharedPreferences
-        .setStringList(SPKeys.externalPlaylists, lists)
-        .then(notify);
-  }
-
-  void updateExternalPlaylistID(String oldName, String newName) {
-    final lists = List<String>.from(externalPlaylistIDs);
-    if (lists.contains(oldName)) {
-      lists.remove(oldName);
-      lists.add(newName);
-      _sharedPreferences
-          .setStringList(SPKeys.externalPlaylists, lists)
-          .then(notify);
-    }
-  }
-
-  ///
-  /// Podcasts
-  ///
   Map<String, String> _downloads = {};
   Map<String, String> get downloads => _downloads;
-  String? getDownload(String? url) => downloads[url];
+  String? getDownload(String? url) => _downloads[url];
 
   Set<String> _feedsWithDownloads = {};
   bool feedHasDownloads(String feedUrl) =>
       _feedsWithDownloads.contains(feedUrl);
   int get feedsWithDownloadsLength => _feedsWithDownloads.length;
+
+  Future<void> _loadDownloads() async {
+    final rows = await _db.select(_db.downloadTable).get();
+    _downloads = {for (final r in rows) r.url: r.filePath};
+    _feedsWithDownloads = rows.map((r) => r.feedUrl).toSet();
+  }
 
   void addDownload({
     required String url,
@@ -432,16 +652,19 @@ class LibraryService {
     required String feedUrl,
   }) {
     if (_downloads.containsKey(url)) return;
-    _downloads.putIfAbsent(url, () => path);
+    _downloads[url] = path;
     _feedsWithDownloads.add(feedUrl);
-    writeStringMap(_downloads, FileNames.downloads)
-        .then(
-          (_) => writeStringIterable(
-            iterable: _feedsWithDownloads,
-            filename: FileNames.feedsWithDownloads,
+    _db
+        .into(_db.downloadTable)
+        .insert(
+          DownloadTableCompanion.insert(
+            url: url,
+            filePath: path,
+            feedUrl: feedUrl,
           ),
+          mode: InsertMode.insertOrIgnore,
         )
-        .then((_) => _propertiesChangedController.add(true));
+        .then((_) => _notify());
   }
 
   void removeDownload({required String url, required String feedUrl}) {
@@ -450,14 +673,14 @@ class LibraryService {
     if (_downloads.containsKey(url)) {
       _downloads.remove(url);
       _feedsWithDownloads.remove(feedUrl);
-
-      _updateDownloads();
+      (_db.delete(
+        _db.downloadTable,
+      )..where((t) => t.url.equals(url))).go().then((_) => _notify());
     }
   }
 
   void _deleteDownload(String url) {
     final path = _downloads[url];
-
     if (path != null) {
       final file = File(path);
       if (file.existsSync()) {
@@ -466,94 +689,96 @@ class LibraryService {
     }
   }
 
-  void _updateDownloads() {
-    writeStringMap(_downloads, FileNames.downloads)
-        .then(
-          (_) => writeStringIterable(
-            iterable: _feedsWithDownloads,
-            filename: FileNames.feedsWithDownloads,
-          ),
-        )
-        .then((_) => _propertiesChangedController.add(true));
-  }
-
   void removeAllDownloads() {
     for (var download in _downloads.entries) {
       _deleteDownload(download.key);
     }
     _downloads.clear();
     _feedsWithDownloads.clear();
-    _updateDownloads();
+    _db.delete(_db.downloadTable).go().then((_) => _notify());
   }
 
   void _removeFeedWithDownload(String feedUrl) {
     if (!_feedsWithDownloads.contains(feedUrl)) return;
     _feedsWithDownloads.remove(feedUrl);
-    writeStringIterable(
-      iterable: _feedsWithDownloads,
-      filename: FileNames.feedsWithDownloads,
-    ).then((_) => _propertiesChangedController.add(true));
+    (_db.delete(
+      _db.downloadTable,
+    )..where((t) => t.feedUrl.equals(feedUrl))).go().then((_) => _notify());
   }
 
-  Future<void> _migrateOldPodcast() async {
-    final oldPodcasts = await readAudioMap(FileNames.podcasts);
-    for (final podcast in oldPodcasts.entries) {
-      final feed = podcast.key;
-      final episodes = podcast.value;
-      final first = episodes.firstWhereOrNull(
-        (e) =>
-            e.album != null &&
-            (e.albumArtUrl != null || e.imageUrl != null) &&
-            e.artist != null,
-      );
-      final name = first?.album;
-      final artist = first?.artist;
-      final image = first?.albumArtUrl ?? first?.imageUrl;
-      if (name != null && artist != null) {
-        await addPodcast(
-          feedUrl: feed,
-          imageUrl: image,
-          name: name,
-          artist: artist,
-        );
-      }
-    }
-  }
-
-  Set<String> get _podcasts =>
-      _sharedPreferences.getStringList(SPKeys.podcastFeedUrls)?.toSet() ?? {};
+  Set<String> _podcasts = {};
   bool isPodcastSubscribed(String feedUrl) => _podcasts.contains(feedUrl);
   List<String> get podcastFeedUrls => _podcasts.toList();
   Set<String> get podcasts => _podcasts;
   int get podcastsLength => _podcasts.length;
+
+  Map<String, PodcastTableData> _podcastCache = {};
+
+  Future<void> _loadPodcastCache() async {
+    final rows = await _db.select(_db.podcastTable).get();
+    _podcastCache = {for (final r in rows) r.feedUrl: r};
+    _podcasts = rows.map((r) => r.feedUrl).toSet();
+  }
+
   String? getSubscribedPodcastImage(String feedUrl) =>
-      _sharedPreferences.getString(feedUrl + SPKeys.podcastImageUrlSuffix);
+      _podcastCache[feedUrl]?.imageUrl;
+
   void addSubscribedPodcastImage({
     required String feedUrl,
     required String imageUrl,
-  }) => _sharedPreferences
-      .setString(feedUrl + SPKeys.podcastImageUrlSuffix, imageUrl)
-      .then(notify);
-  void removeSubscribedPodcastImage(String feedUrl) =>
-      _sharedPreferences.remove(feedUrl + SPKeys.podcastImageUrlSuffix);
+  }) {
+    (_db.update(_db.podcastTable)..where((t) => t.feedUrl.equals(feedUrl)))
+        .write(PodcastTableCompanion(imageUrl: Value(imageUrl)))
+        .then((_) {
+          final cached = _podcastCache[feedUrl];
+          if (cached != null) {
+            _podcastCache[feedUrl] = cached.copyWith(imageUrl: Value(imageUrl));
+          }
+          _notify();
+        });
+  }
+
+  void removeSubscribedPodcastImage(String feedUrl) {
+    (_db.update(_db.podcastTable)..where((t) => t.feedUrl.equals(feedUrl)))
+        .write(const PodcastTableCompanion(imageUrl: Value(null)));
+  }
+
   String? getSubscribedPodcastName(String feedUrl) =>
-      _sharedPreferences.getString(feedUrl + SPKeys.podcastNameSuffix);
+      _podcastCache[feedUrl]?.name;
+
   void addSubscribedPodcastName({
     required String feedUrl,
     required String name,
-  }) => _sharedPreferences.setString(feedUrl + SPKeys.podcastNameSuffix, name);
-  void removeSubscribedPodcastName(String feedUrl) =>
-      _sharedPreferences.remove(feedUrl + SPKeys.podcastNameSuffix);
+  }) {
+    (_db.update(_db.podcastTable)..where((t) => t.feedUrl.equals(feedUrl)))
+        .write(PodcastTableCompanion(name: Value(name)));
+    final cached = _podcastCache[feedUrl];
+    if (cached != null) {
+      _podcastCache[feedUrl] = cached.copyWith(name: name);
+    }
+  }
+
+  void removeSubscribedPodcastName(String feedUrl) {}
+
   String? getSubscribedPodcastArtist(String feedUrl) =>
-      _sharedPreferences.getString(feedUrl + SPKeys.podcastArtistSuffix);
+      _podcastCache[feedUrl]?.artist;
+
   void addSubscribedPodcastArtist({
     required String feedUrl,
     required String artist,
-  }) => _sharedPreferences
-      .setString(feedUrl + SPKeys.podcastArtistSuffix, artist)
-      .then(notify);
-  void removeSubscribedPodcastArtist(String feedUrl) =>
-      _sharedPreferences.remove(feedUrl + SPKeys.podcastArtistSuffix);
+  }) {
+    (_db.update(_db.podcastTable)..where((t) => t.feedUrl.equals(feedUrl)))
+        .write(PodcastTableCompanion(artist: Value(artist)))
+        .then((_) {
+          final cached = _podcastCache[feedUrl];
+          if (cached != null) {
+            _podcastCache[feedUrl] = cached.copyWith(artist: artist);
+          }
+          _notify();
+        });
+  }
+
+  void removeSubscribedPodcastArtist(String feedUrl) {}
 
   Future<void> addPodcast({
     required String feedUrl,
@@ -562,21 +787,31 @@ class LibraryService {
     required String artist,
   }) async {
     if (isPodcastSubscribed(feedUrl)) return;
-    _sharedPreferences
-        .setStringList(SPKeys.podcastFeedUrls, [
-          ...List<String>.from(_podcasts),
-          feedUrl,
-        ])
-        .then(notify);
-    if (imageUrl != null) {
-      addSubscribedPodcastImage(feedUrl: feedUrl, imageUrl: imageUrl);
-    }
-    addSubscribedPodcastName(feedUrl: feedUrl, name: name);
-    addSubscribedPodcastArtist(feedUrl: feedUrl, artist: artist);
-    await addPodcastLastUpdated(
+    _podcasts.add(feedUrl);
+    final now = DateTime.now();
+    await _db
+        .into(_db.podcastTable)
+        .insert(
+          PodcastTableCompanion.insert(
+            feedUrl: feedUrl,
+            name: name,
+            artist: artist,
+            description: '',
+            imageUrl: Value(imageUrl),
+            lastUpdated: now,
+          ),
+          mode: InsertMode.insertOrIgnore,
+        );
+    _podcastCache[feedUrl] = PodcastTableData(
       feedUrl: feedUrl,
-      timestamp: DateTime.now().toPodcastTimeStamp,
+      name: name,
+      artist: artist,
+      description: '',
+      imageUrl: imageUrl,
+      lastUpdated: now,
+      ascending: false,
     );
+    _notify();
   }
 
   Future<void> addPodcasts(
@@ -584,201 +819,186 @@ class LibraryService {
     podcasts,
   ) async {
     if (podcasts.isEmpty) return;
-    final newList = List<String>.from(_podcasts);
     for (var p in podcasts) {
-      if (!newList.contains(p.feedUrl)) {
-        newList.add(p.feedUrl);
-        if (p.imageUrl != null) {
-          addSubscribedPodcastImage(feedUrl: p.feedUrl, imageUrl: p.imageUrl!);
-        }
-        addSubscribedPodcastName(feedUrl: p.feedUrl, name: p.name);
-        addSubscribedPodcastArtist(feedUrl: p.feedUrl, artist: p.artist);
-        addPodcastLastUpdated(
+      if (!_podcasts.contains(p.feedUrl)) {
+        _podcasts.add(p.feedUrl);
+        final now = DateTime.now();
+        await _db
+            .into(_db.podcastTable)
+            .insert(
+              PodcastTableCompanion.insert(
+                feedUrl: p.feedUrl,
+                name: p.name,
+                artist: p.artist,
+                description: '',
+                imageUrl: Value(p.imageUrl),
+                lastUpdated: now,
+              ),
+              mode: InsertMode.insertOrIgnore,
+            );
+        _podcastCache[p.feedUrl] = PodcastTableData(
           feedUrl: p.feedUrl,
-          timestamp: DateTime.now().toPodcastTimeStamp,
+          name: p.name,
+          artist: p.artist,
+          description: '',
+          imageUrl: p.imageUrl,
+          lastUpdated: now,
+          ascending: false,
         );
       }
     }
-    _sharedPreferences
-        .setStringList(SPKeys.podcastFeedUrls, newList)
-        .then(notify);
+    _notify();
   }
 
   bool showPodcastAscending(String feedUrl) =>
-      _sharedPreferences.getBool(SPKeys.ascendingFeeds + feedUrl) ?? false;
-
-  Future<void> _addAscendingPodcast(String feedUrl) async {
-    await _sharedPreferences
-        .setBool(SPKeys.ascendingFeeds + feedUrl, true)
-        .then((_) => _propertiesChangedController.add(true));
-  }
-
-  Future<void> _removeAscendingPodcast(String feedUrl) async =>
-      _sharedPreferences
-          .remove(SPKeys.ascendingFeeds + feedUrl)
-          .then((_) => _propertiesChangedController.add(true));
+      _podcastCache[feedUrl]?.ascending ?? false;
 
   Future<void> reorderPodcast({
     required String feedUrl,
     required bool ascending,
   }) async {
-    if (ascending) {
-      await _addAscendingPodcast(feedUrl);
-    } else {
-      await _removeAscendingPodcast(feedUrl);
+    await (_db.update(_db.podcastTable)
+          ..where((t) => t.feedUrl.equals(feedUrl)))
+        .write(PodcastTableCompanion(ascending: Value(ascending)));
+    final cached = _podcastCache[feedUrl];
+    if (cached != null) {
+      _podcastCache[feedUrl] = cached.copyWith(ascending: ascending);
     }
+    _notify();
   }
 
   Set<String>? _podcastUpdates;
   int? get podcastUpdatesLength => _podcastUpdates?.length;
 
+  Future<void> _loadPodcastUpdates() async {
+    final rows = await _db.select(_db.podcastUpdateTable).get();
+    _podcastUpdates = rows.map((r) => r.podcastFeedUrl).toSet();
+  }
+
   Future<void> addPodcastLastUpdated({
     required String feedUrl,
     required String timestamp,
-  }) async => _sharedPreferences
-      .setString(feedUrl + SPKeys.podcastLastUpdatedSuffix, timestamp)
-      .then(notify);
-
-  void _removePodcastLastUpdated(String feedUrl) => _sharedPreferences
-      .remove(feedUrl + SPKeys.podcastLastUpdatedSuffix)
-      .then(notify);
+  }) async {
+    final dt =
+        DateTime.tryParse(timestamp.replaceAll('_', '-')) ?? DateTime.now();
+    await (_db.update(_db.podcastTable)
+          ..where((t) => t.feedUrl.equals(feedUrl)))
+        .write(PodcastTableCompanion(lastUpdated: Value(dt)));
+    final cached = _podcastCache[feedUrl];
+    if (cached != null) {
+      _podcastCache[feedUrl] = cached.copyWith(lastUpdated: dt);
+    }
+    _notify();
+  }
 
   String? getPodcastLastUpdated(String feedUrl) =>
-      _sharedPreferences.getString(feedUrl + SPKeys.podcastLastUpdatedSuffix);
+      _podcastCache[feedUrl]?.lastUpdated.toPodcastTimeStamp;
 
   bool podcastUpdateAvailable(String feedUrl) =>
       _podcastUpdates?.contains(feedUrl) == true;
 
   Future<void> addPodcastUpdate(String feedUrl, DateTime lastUpdated) async {
     if (_podcastUpdates?.contains(feedUrl) == true) return;
-
-    await writeStringIterable(
-      iterable: _podcastUpdates!,
-      filename: FileNames.podcastUpdates,
-    ).then((_) {
-      _podcastUpdates?.add(feedUrl);
-      _propertiesChangedController.add(true);
-    });
+    _podcastUpdates?.add(feedUrl);
+    await _db
+        .into(_db.podcastUpdateTable)
+        .insert(
+          PodcastUpdateTableCompanion.insert(podcastFeedUrl: feedUrl),
+          mode: InsertMode.insertOrIgnore,
+        );
+    _notify();
   }
 
   Future<void> removePodcastUpdate(String feedUrl) async {
     if (_podcastUpdates?.isNotEmpty == false) return;
     _podcastUpdates?.remove(feedUrl);
-    await writeStringIterable(
-      iterable: _podcastUpdates!,
-      filename: FileNames.podcastUpdates,
-    ).then((_) => _propertiesChangedController.add(true));
+    await (_db.delete(
+      _db.podcastUpdateTable,
+    )..where((t) => t.podcastFeedUrl.equals(feedUrl))).go();
+    _notify();
   }
 
   void removePodcast(String feedUrl) {
     if (!isPodcastSubscribed(feedUrl)) return;
-    final newList = List<String>.from(_podcasts);
-    newList.remove(feedUrl);
-    _sharedPreferences
-        .setStringList(SPKeys.podcastFeedUrls, newList)
-        .then(notify);
+    _podcasts.remove(feedUrl);
+    _podcastCache.remove(feedUrl);
     _removeFeedWithDownload(feedUrl);
-    removeSubscribedPodcastImage(feedUrl);
-    removeSubscribedPodcastName(feedUrl);
-    removeSubscribedPodcastArtist(feedUrl);
+    (_db.delete(
+      _db.podcastUpdateTable,
+    )..where((t) => t.podcastFeedUrl.equals(feedUrl))).go();
+    (_db.delete(
+      _db.podcastTable,
+    )..where((t) => t.feedUrl.equals(feedUrl))).go().then((_) => _notify());
   }
 
   Future<void> removeAllPodcasts() async {
-    for (final feedUrl in _podcasts) {
-      removeSubscribedPodcastImage(feedUrl);
-      removeSubscribedPodcastName(feedUrl);
-      removeSubscribedPodcastArtist(feedUrl);
-      _removePodcastLastUpdated(feedUrl);
-    }
     _podcasts.clear();
     _podcastUpdates?.clear();
-    _sharedPreferences.setStringList(SPKeys.podcastFeedUrls, []).then(notify);
+    _podcastCache.clear();
+    await _db.delete(_db.podcastUpdateTable).go();
+    await _db.delete(_db.podcastTable).go();
+    _notify();
   }
 
-  //
-  // Albums
-  //
+  // ── Albums ──
 
-  List<int> get favoriteAlbums =>
-      (_sharedPreferences.getStringList(SPKeys.favoriteAlbums) ?? [])
-          .map((e) => int.tryParse(e))
-          .whereType<int>()
-          .toList();
+  List<int> _favoriteAlbums = [];
+  List<int> get favoriteAlbums => _favoriteAlbums;
 
-  bool isFavoriteAlbum(int id) => favoriteAlbums.contains(id);
+  Future<void> _loadFavoriteAlbums() async {
+    final rows = await _db.select(_db.pinnedAlbumTable).get();
+    _favoriteAlbums = rows.map((r) => r.albumId).toList();
+  }
+
+  bool isFavoriteAlbum(int id) => _favoriteAlbums.contains(id);
 
   void addFavoriteAlbum(int id, {required Function() onFail}) {
-    if (favoriteAlbums.contains(id)) return;
-    final List<int> favorites = List.from(favoriteAlbums);
-    favorites.add(id);
-    _sharedPreferences
-        .setStringList(
-          SPKeys.favoriteAlbums,
-          favorites.map((e) => e.toString()).toList(),
+    if (_favoriteAlbums.contains(id)) return;
+    _favoriteAlbums.add(id);
+    _db
+        .into(_db.pinnedAlbumTable)
+        .insert(
+          PinnedAlbumTableCompanion.insert(albumId: id),
+          mode: InsertMode.insertOrIgnore,
         )
-        .then(notify);
+        .then((_) => _notify());
   }
 
   void removeFavoriteAlbum(int id, {required Function() onFail}) {
-    if (!favoriteAlbums.contains(id)) return;
-    final List<int> favorites = List.from(favoriteAlbums);
-    favorites.remove(id);
-    _sharedPreferences
-        .setStringList(
-          SPKeys.favoriteAlbums,
-          favorites.map((e) => e.toString()).toList(),
-        )
-        .then(notify);
+    if (!_favoriteAlbums.contains(id)) return;
+    _favoriteAlbums.remove(id);
+    (_db.delete(
+      _db.pinnedAlbumTable,
+    )..where((t) => t.albumId.equals(id))).go().then((_) => _notify());
   }
 
-  bool notify(bool saved) {
-    if (saved) _propertiesChangedController.add(true);
-    return saved;
+  // ── Selected page ──
+
+  String? _selectedPageId;
+  String? get selectedPageId => _selectedPageId;
+
+  Future<void> _loadSelectedPageId() async {
+    final row = await (_db.select(
+      _db.appSettingTable,
+    )..where((t) => t.key.equals('selectedPage'))).getSingleOrNull();
+    _selectedPageId = row?.value;
   }
 
-  @PostConstruct(preResolve: true)
-  Future<void> init() async {
-    await _migrateOldPodcast();
-    _playlists = await readAudioMap(FileNames.playlists);
-    _likedAudios =
-        (await readAudioMap(
-          FileNames.likedAudios,
-        )).entries.firstOrNull?.value ??
-        <Audio>[];
-    _podcastUpdates = Set.from(
-      await readStringIterable(filename: FileNames.podcastUpdates) ??
-          <String>{},
-    );
-    _podcastUpdates ??= {};
-    _downloads = await readStringMap(FileNames.downloads);
-    _feedsWithDownloads = Set.from(
-      await readStringIterable(filename: FileNames.feedsWithDownloads) ??
-          <String>{},
-    );
-  }
-
-  String? get selectedPageId =>
-      _sharedPreferences.getString(SPKeys.selectedPage);
   Future<void> setSelectedPageId(String value) async {
-    final success = await _sharedPreferences.setString(
-      SPKeys.selectedPage,
-      value,
-    );
-    if (success) {
-      _propertiesChangedController.add(true);
-    }
-  }
-
-  @disposeMethod
-  Future<void> dispose() async {
-    await _propertiesChangedController.close();
+    _selectedPageId = value;
+    await _db
+        .into(_db.appSettingTable)
+        .insertOnConflictUpdate(
+          AppSettingTableCompanion.insert(key: 'selectedPage', value: value),
+        );
+    _notify();
   }
 
   bool isPageInLibrary(String? pageId) =>
       pageId != null &&
       (PageIDs.permanent.contains(pageId) ||
           (int.tryParse(pageId) != null &&
-              favoriteAlbums.contains(int.parse(pageId))) ||
+              _favoriteAlbums.contains(int.parse(pageId))) ||
           isStarredStation(pageId) ||
           isPlaylistSaved(pageId) ||
           isPodcastSubscribed(pageId));

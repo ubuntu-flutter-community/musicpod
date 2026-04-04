@@ -45,6 +45,9 @@ class TrackTable extends Table {
 class PlaylistTable extends Table {
   late final id = integer().autoIncrement()();
   late final name = text()();
+  late final fromExternalSource = boolean().withDefault(
+    const Constant(false),
+  )();
 }
 
 class PlaylistTrackTable extends Table {

@@ -16,6 +16,8 @@ import '../local_audio/local_search_result.dart';
 import '../podcasts/data/podcast_genre.dart';
 import '../podcasts/podcast_service.dart';
 import '../radio/radio_service.dart';
+import '../settings/settings_service.dart';
+import '../settings/shared_preferences_keys.dart';
 import 'search_type.dart';
 
 const _initialAudioType = AudioType.podcast;
@@ -27,20 +29,22 @@ class SearchModel extends SafeChangeNotifier {
     required PodcastService podcastService,
     required LibraryService libraryService,
     required LocalAudioService localAudioService,
+    required SettingsService settingsService,
   }) : _radioService = radioService,
+
        _podcastService = podcastService,
        _libraryService = libraryService,
        _localAudioService = localAudioService {
     _country ??= Country.values.firstWhereOrNull(
       (c) =>
           c.code ==
-          (libraryService.lastCountryCode ??
+          (settingsService.getString(SPKeys.lastCountryCode) ??
               WidgetsBinding.instance.platformDispatcher.locale.countryCode
                   ?.toLowerCase()),
     );
 
     _language ??= Languages.defaultLanguages.firstWhereOrNull(
-      (c) => c.isoCode == libraryService.lastLanguageCode,
+      (c) => c.isoCode == settingsService.getString(SPKeys.lastLanguageCode),
     );
   }
 

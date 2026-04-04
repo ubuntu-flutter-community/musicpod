@@ -124,7 +124,7 @@ class LocalAudioService {
       final artistRow = row.readTableOrNull(_db.artistTable);
       final albumArt = row.readTableOrNull(_db.albumArtTable);
       final genreRow = row.readTableOrNull(_db.genreTable);
-      return _trackToAudio(track, albumRow, artistRow, albumArt, genreRow);
+      return trackToAudio(track, albumRow, artistRow, albumArt, genreRow);
     }).toList();
 
     _albumCache[albumId] = list;
@@ -193,7 +193,7 @@ class LocalAudioService {
       final artistRow = row.readTableOrNull(_db.artistTable);
       final albumArt = row.readTableOrNull(_db.albumArtTable);
       final genreRow = row.readTableOrNull(_db.genreTable);
-      return _trackToAudio(track, albumRow, artistRow, albumArt, genreRow);
+      return trackToAudio(track, albumRow, artistRow, albumArt, genreRow);
     }).toList();
 
     _titlesOfArtistCache[artist] = list;
@@ -545,7 +545,7 @@ class LocalAudioService {
       final artistRow = row.readTableOrNull(_db.artistTable);
       final albumArt = row.readTableOrNull(_db.albumArtTable);
       final genreRow = row.readTableOrNull(_db.genreTable);
-      return _trackToAudio(track, albumRow, artistRow, albumArt, genreRow);
+      return trackToAudio(track, albumRow, artistRow, albumArt, genreRow);
     }).toList();
 
     // Load all artists sorted
@@ -564,7 +564,7 @@ class LocalAudioService {
     findAllAlbumIDs();
   }
 
-  Audio _trackToAudio(
+  Audio trackToAudio(
     TrackTableData track,
     AlbumTableData? albumRow,
     ArtistTableData? artistRow,

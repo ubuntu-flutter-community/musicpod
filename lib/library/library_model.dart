@@ -60,16 +60,12 @@ class LibraryModel extends SafeChangeNotifier {
   Set<String> get favRadioTags => _service.favRadioTags;
   int get favRadioTagsLength => _service.favRadioTags.length;
 
-  String? get lastCountryCode => _service.lastCountryCode;
-  void setLastCountryCode(String value) => _service.setLastCountryCode(value);
   void addFavCountryCode(String value) => _service.addFavCountryCode(value);
   void removeFavCountryCode(String value) =>
       _service.removeFavCountryCode(value);
   Set<String> get favCountryCodes => _service.favCountryCodes;
   int get favCountriesLength => _service.favCountryCodes.length;
 
-  String? get lastLanguageCode => _service.lastLanguageCode;
-  void setLastLanguage(String value) => _service.setLastLanguageCode(value);
   void addFavLanguageCode(String value) => _service.addFavLanguageCode(value);
   void removeFavLanguageCode(String value) =>
       _service.removeFavLanguageCode(value);

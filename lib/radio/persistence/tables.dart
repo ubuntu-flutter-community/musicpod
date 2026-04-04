@@ -6,3 +6,8 @@ class StarredStationTable extends Table {
   @override
   Set<Column<Object>> get primaryKey => {uuid};
 }
+
+class FavoriteRadioTagTable extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get name => text()();
+}
