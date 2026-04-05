@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
-import 'package:path/path.dart';
+import 'package:path/path.dart' as p;
 import 'package:podcast_search/podcast_search.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 
@@ -484,7 +484,7 @@ class Audio {
 
   factory Audio._localWithoutMetadata({required String path}) => Audio(
     path: path,
-    title: basenameWithoutExtension(path),
+    title: p.basenameWithoutExtension(path),
     album: 'Unknown',
     artist: 'Unknown',
     albumArtist: 'Unknown',
@@ -540,4 +540,12 @@ class Audio {
   bool get isLocal => audioType == AudioType.local;
   bool get isPodcast => audioType == AudioType.podcast;
   bool get isRadio => audioType == AudioType.radio;
+
+  String get podcastDownloadId {
+    final urlExtension = p.extension(url ?? '').split('?').firstOrNull ?? '';
+    final baseString =
+        '${copyright ?? ''}_${title ?? ''}_${durationMs ?? ''}_${publicationDate ?? ''})'
+            .replaceAll(RegExp(r'[^a-zA-Z0-9_]'), '_');
+    return '$baseString$urlExtension';
+  }
 }

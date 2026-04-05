@@ -158,7 +158,7 @@ class DownloadModel extends SafeChangeNotifier {
       Directory(downloadsDir).createSync();
     }
 
-    final path = p.join(downloadsDir, _createAudioDownloadId(audio));
+    final path = p.join(downloadsDir, audio.podcastDownloadId);
     await _download(
       canceledMessage: canceledMessage,
       url: url,
@@ -178,12 +178,6 @@ class DownloadModel extends SafeChangeNotifier {
             : _cancelTokens.putIfAbsent(url, () => null);
       }
     });
-  }
-
-  String _createAudioDownloadId(Audio audio) {
-    final now = DateTime.now().toUtc().toString();
-    return '${audio.copyright ?? ''}${audio.title ?? ''}${audio.durationMs ?? ''}${audio.publicationDate ?? ''})$now'
-        .replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
   }
 
   Future<Response<dynamic>?> _download({
