@@ -205,9 +205,7 @@ class AudioTileOptionButton extends StatelessWidget {
             ),
           if (audios.every((e) => e.isPodcast)) ...[
             PopupMenuItem(
-              onTap: () => di<SettingsModel>().setHideCompletedEpisodes(
-                !hideCompletedEpisodes,
-              ),
+              onTap: di<SettingsModel>().toggleHideCompletedEpisodes,
               child: ListTile(
                 contentPadding: const EdgeInsets.symmetric(horizontal: 10),
                 leading: Icon(hideCompletedEpisodes ? Iconz.show : Iconz.hide),

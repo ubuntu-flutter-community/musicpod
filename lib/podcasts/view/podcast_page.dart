@@ -30,7 +30,6 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
     required this.feedUrl,
     required this.episodes,
     required this.title,
-    this.isOnline = true,
     required this.showDownloadsOnly,
   });
 
@@ -38,7 +37,6 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
   final String? imageUrl;
   final String title;
   final List<Audio> episodes;
-  final bool isOnline;
   final bool showDownloadsOnly;
 
   @override
@@ -127,7 +125,6 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
           sliverBody: (constraints) => SliverPodcastPageList(
             audios: episodesWithDownloads,
             pageId: feedUrl,
-            isOnline: isOnline,
             showDownloadsOnly: showDownloadsOnly,
           ),
           controlPanel: PodcastPageControlPanel(

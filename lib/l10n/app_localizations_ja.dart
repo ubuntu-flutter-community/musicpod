@@ -285,7 +285,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get offlineDescription => 'コンピュータがインターネットに接続されていないようです。';
 
   @override
-  String get newEpisodeAvailable => '新しいエピソードが利用可能です:';
+  String get newEpisodeAvailable => '新しいエピソードが利用可能です :';
 
   @override
   String get noStationFound => '申し訳ありません。その検索条件に一致するラジオ局は見つかりませんでした。';
@@ -390,11 +390,11 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String insertedIntoQueue(String name) {
-    return 'キューに挿入しました: $name';
+    return 'キューに挿入しました : $name';
   }
 
   @override
-  String get about => 'このアプリについて';
+  String get about => 'MusicPod について';
 
   @override
   String localAudioCacheSuggestion(String length) {
@@ -427,7 +427,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String downloadStarted(String name) {
-    return 'ダウンロードを開始しました: $name';
+    return 'ダウンロードを開始しました : $name';
   }
 
   @override
@@ -486,7 +486,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get enableDataSafeModeSettingTitle => 'データセーフモード';
 
   @override
-  String get dataSafeModeEnabled => 'モバイル接続: データセーフモードが有効です。';
+  String get dataSafeModeEnabled => 'モバイル接続 : データセーフモードが有効です。';
 
   @override
   String get dataSafeModeDisabled => 'Wifi/有線LAN : データセーフモードが無効です。';
@@ -579,7 +579,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get theme => 'テーマ';
 
   @override
-  String get useMoreAnimationsTitle => 'アニメーションを多く使用する';
+  String get useMoreAnimationsTitle => 'アニメーションをさらに使用する';
 
   @override
   String get useMoreAnimationsDescription =>
@@ -1934,7 +1934,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get breakingChangesPleaseBackupDescription =>
-      '次期バージョンの MusicPod には互換性を破る変更が含まれます。アップデート前にプレイリスト、ポッドキャストの購読、ピン留めしたアルバムをバックアップしてください。';
+      '次期バージョンの MusicPod には互換性のない変更が含まれます。アップデート前にプレイリスト、ポッドキャストの購読、ピン留めしたアルバムをバックアップしてください。';
 
   @override
   String get breakingChangesPleaseBackupConfirmation => '以下の項目のバックアップの確認 :';
@@ -2098,7 +2098,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get usePlayerColorDescription =>
-      '現在のアートワーク(利用可能な場合)から抽出され主要な色をアプリ全体で使用します。';
+      '現在のアートワーク(利用可能な場合)から抽出された主要な色をアプリ全体で使用します。';
 
   @override
   String get selectColor => '色を選択';
@@ -2223,15 +2223,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get autoMovePlayerDescription => '十分な水平スペースがある場合、プレーヤーを右側に移動します';
 
   @override
-  String get onlineLyricsNotSetup => 'Geniusから歌詞を取得する場合は、設定でAPIキーを提供してください。';
+  String get onlineLyricsNotSetup => 'Genius から歌詞を取得する場合は、設定で APIキーを提供してください。';
 
   @override
   String get settingsGeniusDisclaimer =>
-      'MusicPod、その貢献者、および Genius APIは、APIキーの誤用について一切の責任を負いません。APIキーを提供することにより、責任を持って、Genius の利用規約に従って使用することに同意したものとみなされます。\n\n';
+      'MusicPod、その貢献者、およびGenius APIは、APIキーの誤用について一切の責任を負いません。APIキーを提供することにより、責任を持って、Genius の利用規約に従って使用することに同意したものとみなされます。\n\n';
 
   @override
   String get settingsGeniusDescription =>
-      'Genius から歌詞を取得するには、Genius APIキーを提供する必要があります。Genius でアカウントを作成し、アプリケーションを登録してアクセストークンを取得することで、APIキーを入手できます。';
+      'Genius から歌詞を取得するには、Genius APIキーを提供する必要があります。Geniusでアカウントを作成し、アプリケーションを登録してアクセストークンを取得することで、APIキーを入手できます。';
 
   @override
   String get settingsDoNotAskForGeniusTitle =>

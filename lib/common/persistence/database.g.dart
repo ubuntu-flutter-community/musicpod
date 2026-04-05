@@ -10427,6 +10427,66 @@ final class $$PodcastTableTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<
+    $PodcastEpisodeTableTable,
+    List<PodcastEpisodeTableData>
+  >
+  _episodesByFeedUrlTable(_$Database db) => MultiTypedResultKey.fromTable(
+    db.podcastEpisodeTable,
+    aliasName: $_aliasNameGenerator(
+      db.podcastTable.feedUrl,
+      db.podcastEpisodeTable.podcastFeedUrl,
+    ),
+  );
+
+  $$PodcastEpisodeTableTableProcessedTableManager get episodesByFeedUrl {
+    final manager =
+        $$PodcastEpisodeTableTableTableManager(
+          $_db,
+          $_db.podcastEpisodeTable,
+        ).filter(
+          (f) => f.podcastFeedUrl.feedUrl.sqlEquals(
+            $_itemColumn<String>('feed_url')!,
+          ),
+        );
+
+    final cache = $_typedResult.readTableOrNull(_episodesByFeedUrlTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $PodcastEpisodeTableTable,
+    List<PodcastEpisodeTableData>
+  >
+  _episodesByDescriptionTable(_$Database db) => MultiTypedResultKey.fromTable(
+    db.podcastEpisodeTable,
+    aliasName: $_aliasNameGenerator(
+      db.podcastTable.description,
+      db.podcastEpisodeTable.podcastDescription,
+    ),
+  );
+
+  $$PodcastEpisodeTableTableProcessedTableManager get episodesByDescription {
+    final manager =
+        $$PodcastEpisodeTableTableTableManager(
+          $_db,
+          $_db.podcastEpisodeTable,
+        ).filter(
+          (f) => f.podcastDescription.description.sqlEquals(
+            $_itemColumn<String>('description')!,
+          ),
+        );
+
+    final cache = $_typedResult.readTableOrNull(
+      _episodesByDescriptionTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$PodcastTableTableFilterComposer
@@ -10489,6 +10549,56 @@ class $$PodcastTableTableFilterComposer
           }) => $$PodcastUpdateTableTableFilterComposer(
             $db: $db,
             $table: $db.podcastUpdateTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> episodesByFeedUrl(
+    Expression<bool> Function($$PodcastEpisodeTableTableFilterComposer f) f,
+  ) {
+    final $$PodcastEpisodeTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.feedUrl,
+      referencedTable: $db.podcastEpisodeTable,
+      getReferencedColumn: (t) => t.podcastFeedUrl,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PodcastEpisodeTableTableFilterComposer(
+            $db: $db,
+            $table: $db.podcastEpisodeTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> episodesByDescription(
+    Expression<bool> Function($$PodcastEpisodeTableTableFilterComposer f) f,
+  ) {
+    final $$PodcastEpisodeTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.description,
+      referencedTable: $db.podcastEpisodeTable,
+      getReferencedColumn: (t) => t.podcastDescription,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PodcastEpisodeTableTableFilterComposer(
+            $db: $db,
+            $table: $db.podcastEpisodeTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -10603,6 +10713,58 @@ class $$PodcastTableTableAnnotationComposer
         );
     return f(composer);
   }
+
+  Expression<T> episodesByFeedUrl<T extends Object>(
+    Expression<T> Function($$PodcastEpisodeTableTableAnnotationComposer a) f,
+  ) {
+    final $$PodcastEpisodeTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.feedUrl,
+          referencedTable: $db.podcastEpisodeTable,
+          getReferencedColumn: (t) => t.podcastFeedUrl,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$PodcastEpisodeTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.podcastEpisodeTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> episodesByDescription<T extends Object>(
+    Expression<T> Function($$PodcastEpisodeTableTableAnnotationComposer a) f,
+  ) {
+    final $$PodcastEpisodeTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.description,
+          referencedTable: $db.podcastEpisodeTable,
+          getReferencedColumn: (t) => t.podcastDescription,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$PodcastEpisodeTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.podcastEpisodeTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$PodcastTableTableTableManager
@@ -10618,7 +10780,11 @@ class $$PodcastTableTableTableManager
           $$PodcastTableTableUpdateCompanionBuilder,
           (PodcastTableData, $$PodcastTableTableReferences),
           PodcastTableData,
-          PrefetchHooks Function({bool podcastUpdateTableRefs})
+          PrefetchHooks Function({
+            bool podcastUpdateTableRefs,
+            bool episodesByFeedUrl,
+            bool episodesByDescription,
+          })
         > {
   $$PodcastTableTableTableManager(_$Database db, $PodcastTableTable table)
     : super(
@@ -10679,40 +10845,89 @@ class $$PodcastTableTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({podcastUpdateTableRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [
-                if (podcastUpdateTableRefs) db.podcastUpdateTable,
-              ],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (podcastUpdateTableRefs)
-                    await $_getPrefetchedData<
-                      PodcastTableData,
-                      $PodcastTableTable,
-                      PodcastUpdateTableData
-                    >(
-                      currentTable: table,
-                      referencedTable: $$PodcastTableTableReferences
-                          ._podcastUpdateTableRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$PodcastTableTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).podcastUpdateTableRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where(
-                            (e) => e.podcastFeedUrl == item.feedUrl,
-                          ),
-                      typedResults: items,
-                    ),
-                ];
+          prefetchHooksCallback:
+              ({
+                podcastUpdateTableRefs = false,
+                episodesByFeedUrl = false,
+                episodesByDescription = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (podcastUpdateTableRefs) db.podcastUpdateTable,
+                    if (episodesByFeedUrl) db.podcastEpisodeTable,
+                    if (episodesByDescription) db.podcastEpisodeTable,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (podcastUpdateTableRefs)
+                        await $_getPrefetchedData<
+                          PodcastTableData,
+                          $PodcastTableTable,
+                          PodcastUpdateTableData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$PodcastTableTableReferences
+                              ._podcastUpdateTableRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$PodcastTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).podcastUpdateTableRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.podcastFeedUrl == item.feedUrl,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (episodesByFeedUrl)
+                        await $_getPrefetchedData<
+                          PodcastTableData,
+                          $PodcastTableTable,
+                          PodcastEpisodeTableData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$PodcastTableTableReferences
+                              ._episodesByFeedUrlTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$PodcastTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).episodesByFeedUrl,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.podcastFeedUrl == item.feedUrl,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (episodesByDescription)
+                        await $_getPrefetchedData<
+                          PodcastTableData,
+                          $PodcastTableTable,
+                          PodcastEpisodeTableData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$PodcastTableTableReferences
+                              ._episodesByDescriptionTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$PodcastTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).episodesByDescription,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.podcastDescription == item.description,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
               },
-            );
-          },
         ),
       );
 }
@@ -10729,7 +10944,11 @@ typedef $$PodcastTableTableProcessedTableManager =
       $$PodcastTableTableUpdateCompanionBuilder,
       (PodcastTableData, $$PodcastTableTableReferences),
       PodcastTableData,
-      PrefetchHooks Function({bool podcastUpdateTableRefs})
+      PrefetchHooks Function({
+        bool podcastUpdateTableRefs,
+        bool episodesByFeedUrl,
+        bool episodesByDescription,
+      })
     >;
 typedef $$PodcastUpdateTableTableCreateCompanionBuilder =
     PodcastUpdateTableCompanion Function({

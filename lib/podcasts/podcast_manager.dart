@@ -73,22 +73,15 @@ class PodcastManager {
   ) => _episodesCommands.putIfAbsent(
     feedUrl,
     () => Command.createAsync(
-      (param) => _podcastService.findEpisodes(
-        item: param.item,
-        feedUrl: param.feedUrl,
-      ),
+      (param) => _podcastService
+          .findEpisodes(item: param.item, feedUrl: param.feedUrl)
+          .timeout(const Duration(seconds: 30)),
       initialValue: [],
     ),
   );
 
   bool shouldRunCommand(String feedUrl) =>
-      di<PodcastManager>()
-          .getEpisodesCommand(feedUrl)
-          .results
-          .value
-          .data
-          ?.isEmpty ??
-      true;
+      di<PodcastManager>().getEpisodesCommand(feedUrl).value.isEmpty;
 }
 
 enum PodcastEpisodeFilter {

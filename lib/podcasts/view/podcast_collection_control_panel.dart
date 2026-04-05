@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/connectivity_model.dart';
+import '../../app/connectivity_manager.dart';
 import '../../common/view/common_control_panel.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/offline_page.dart';
@@ -15,9 +15,12 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final model = di<PodcastManager>();
+    final manager = di<PodcastManager>();
 
-    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
+    final isOnline = watchValue(
+      (ConnectivityManager m) =>
+          m.connectivityCommand.select((p) => p.isOnline),
+    );
     if (!isOnline) return const OfflineBody();
 
     final updatesOnly = watchValue((PodcastManager m) => m.updatesOnly);
@@ -32,7 +35,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
       onSelected: (index) {
         if (index == 0) {
           if (updatesOnly) {
-            model.setUpdatesOnly(false);
+            manager.setUpdatesOnly(false);
           } else {
             if (di<LibraryModel>().podcastsLength > 10) {
               ConfirmationDialog.show(
@@ -64,15 +67,15 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
                 ),
               );
             }
-            model.setUpdatesOnly(true);
-            model.setDownloadsOnly(false);
+            manager.setUpdatesOnly(true);
+            manager.setDownloadsOnly(false);
           }
         } else {
           if (downloadsOnly) {
-            model.setDownloadsOnly(false);
+            manager.setDownloadsOnly(false);
           } else {
-            model.setDownloadsOnly(true);
-            model.setUpdatesOnly(false);
+            manager.setDownloadsOnly(true);
+            manager.setUpdatesOnly(false);
           }
         }
       },

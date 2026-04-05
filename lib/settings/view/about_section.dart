@@ -5,7 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/app_manager.dart';
-import '../../app/connectivity_model.dart';
+import '../../app/connectivity_manager.dart';
 import '../../app/app_config.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/tapable_text.dart';
@@ -57,13 +57,15 @@ class _AboutTile extends StatelessWidget with WatchItMixin {
       (SettingsModel m) => m.useYaruTheme,
     );
 
+    final isOnline = watchValue(
+      (ConnectivityManager m) =>
+          m.connectivityCommand.select((p) => p.isOnline),
+    );
     return YaruTile(
       subtitle: Text(
         context.l10n.downloadsOfLatestRelease(downloads.toString()),
       ),
-      title:
-          !di<ConnectivityModel>().isOnline == true ||
-              !appManager.allowManualUpdate
+      title: !isOnline || !appManager.allowManualUpdate
           ? Text(di<AppManager>().version)
           : updateAvailableResults.isRunning
           ? Center(

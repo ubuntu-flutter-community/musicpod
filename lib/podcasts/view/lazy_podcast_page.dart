@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:podcast_search/podcast_search.dart';
 
-import '../../app/connectivity_model.dart';
+import '../../app/connectivity_manager.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
 import '../../l10n/l10n.dart';
@@ -29,7 +29,15 @@ class LazyPodcastPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    if (this.feedUrl == null && podcastItem?.feedUrl == null) {
+    final connectivityCommand = watchValue(
+      (ConnectivityManager m) => m.connectivityCommand,
+    );
+
+    final showDownloadsOnly = watchValue((PodcastManager m) => m.downloadsOnly);
+
+    final feedUrl = this.feedUrl ?? podcastItem?.feedUrl;
+
+    if (feedUrl == null) {
       return LazyPodcastLoadingPage(
         title: context.l10n.podcast,
         imageUrl: this.imageUrl,
@@ -39,20 +47,15 @@ class LazyPodcastPage extends StatelessWidget with WatchItMixin {
       );
     }
 
-    final feedUrl = this.feedUrl ?? podcastItem!.feedUrl!;
-
-    if (di<PodcastManager>().shouldRunCommand(feedUrl)) {
-      callOnceAfterThisBuild((context) {
-        di<LibraryModel>().removePodcastUpdate(feedUrl);
-        di<PodcastManager>().getEpisodesCommand(feedUrl).run((
-          feedUrl: feedUrl,
-          item: podcastItem,
-        ));
-      });
+    if (di<PodcastManager>().shouldRunCommand(feedUrl) &&
+            connectivityCommand.isOnline ||
+        !connectivityCommand.wasOnline && connectivityCommand.isOnline) {
+      di<LibraryModel>().removePodcastUpdate(feedUrl);
+      di<PodcastManager>().getEpisodesCommand(feedUrl).run((
+        feedUrl: feedUrl,
+        item: podcastItem,
+      ));
     }
-
-    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
-    final showDownloadsOnly = watchValue((PodcastManager m) => m.downloadsOnly);
 
     final title =
         di<LibraryModel>().getSubscribedPodcastName(feedUrl) ??
@@ -89,7 +92,6 @@ class LazyPodcastPage extends StatelessWidget with WatchItMixin {
           episodes: episodes,
           feedUrl: feedUrl,
           title: title,
-          isOnline: isOnline,
           showDownloadsOnly: showDownloadsOnly,
         );
       },

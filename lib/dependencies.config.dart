@@ -22,7 +22,7 @@ import 'package:shared_preferences/shared_preferences.dart' as _i460;
 import 'package:window_manager/window_manager.dart' as _i740;
 
 import 'app/app_manager.dart' as _i369;
-import 'app/connectivity_model.dart' as _i788;
+import 'app/connectivity_manager.dart' as _i1035;
 import 'app/routing_manager.dart' as _i971;
 import 'app/sidebar_audios_manager.dart' as _i190;
 import 'app/window_size_to_settings_listener.dart' as _i517;
@@ -274,15 +274,11 @@ extension GetItInjectableX on _i174.GetIt {
       );
       return i.init().then((_) => i);
     }, preResolve: true);
-    await gh.singletonAsync<_i788.ConnectivityModel>(
-      () {
-        final i = _i788.ConnectivityModel(
-          playerService: gh<_i38.PlayerService>(),
-          internetConnection: gh<_i161.InternetConnection>(),
-        );
-        return i.init().then((_) => i);
-      },
-      preResolve: true,
+    gh.singleton<_i1035.ConnectivityManager>(
+      () => _i1035.ConnectivityManager(
+        playerService: gh<_i38.PlayerService>(),
+        internetConnection: gh<_i161.InternetConnection>(),
+      ),
       dispose: (i) => i.dispose(),
     );
     gh.lazySingleton<_i190.SidebarAudiosManager>(

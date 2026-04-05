@@ -133,6 +133,8 @@ class SettingsModel extends SafeChangeNotifier {
       _service.getBool(SPKeys.hideCompletedEpisodes) ?? false;
   Future<void> setHideCompletedEpisodes(bool value) =>
       _service.setValue(SPKeys.hideCompletedEpisodes, value);
+  Future<void> toggleHideCompletedEpisodes() =>
+      setHideCompletedEpisodes(!hideCompletedEpisodes);
 
   bool get showPlayerLyrics =>
       _service.getBool(SPKeys.showPlayerLyrics) ?? false;
