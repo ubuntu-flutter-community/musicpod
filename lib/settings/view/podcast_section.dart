@@ -17,7 +17,7 @@ import '../../library/library_model.dart';
 import '../../common/persistence_utils.dart';
 import '../../player/player_service.dart';
 import '../../podcasts/download_model.dart';
-import '../../podcasts/podcast_model.dart';
+import '../../podcasts/podcast_manager.dart';
 import '../settings_model.dart';
 
 class PodcastSection extends StatefulWidget with WatchItStatefulWidgetMixin {
@@ -78,7 +78,7 @@ class _PodcastSectionState extends State<PodcastSection> {
               onChanged: (v) async {
                 await model.setUsePodcastIndex(v);
                 if (context.mounted) {
-                  di<PodcastModel>().initSearchCommand.run((forceInit: true));
+                  di<PodcastManager>().initSearchCommand.run((forceInit: true));
                 }
               },
             ),

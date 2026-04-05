@@ -45,7 +45,7 @@ import 'player/mpv_metadata_manager.dart' as _i112;
 import 'player/player_model.dart' as _i1025;
 import 'player/player_service.dart' as _i38;
 import 'podcasts/download_model.dart' as _i251;
-import 'podcasts/podcast_model.dart' as _i41;
+import 'podcasts/podcast_manager.dart' as _i351;
 import 'podcasts/podcast_service.dart' as _i721;
 import 'radio/online_art_model.dart' as _i620;
 import 'radio/online_art_service.dart' as _i328;
@@ -263,8 +263,8 @@ extension GetItInjectableX on _i174.GetIt {
       ),
       dispose: (i) => i.dispose(),
     );
-    gh.lazySingleton<_i41.PodcastModel>(
-      () => _i41.PodcastModel(podcastService: gh<_i721.PodcastService>()),
+    gh.lazySingleton<_i351.PodcastManager>(
+      () => _i351.PodcastManager(podcastService: gh<_i721.PodcastService>()),
     );
     await gh.singletonAsync<_i517.WindowSizeToSettingsListener>(() {
       final i = _i517.WindowSizeToSettingsListener(
@@ -285,6 +285,15 @@ extension GetItInjectableX on _i174.GetIt {
       preResolve: true,
       dispose: (i) => i.dispose(),
     );
+    gh.lazySingleton<_i190.SidebarAudiosManager>(
+      () => _i190.SidebarAudiosManager(
+        libraryModel: gh<_i1032.LibraryModel>(),
+        localAudioManager: gh<_i688.LocalAudioManager>(),
+        podcastManager: gh<_i351.PodcastManager>(),
+        radioManager: gh<_i798.RadioManager>(),
+        playerModel: gh<_i1025.PlayerModel>(),
+      ),
+    );
     await gh.singletonAsync<_i112.MpvMetadataManager>(
       () {
         final i = _i112.MpvMetadataManager(
@@ -300,15 +309,6 @@ extension GetItInjectableX on _i174.GetIt {
     await gh.factoryAsync<_i739.AudioServiceHandler>(
       () => audioServiceModule.audioServiceHandler(gh<_i38.PlayerService>()),
       preResolve: true,
-    );
-    gh.lazySingleton<_i190.SidebarAudiosManager>(
-      () => _i190.SidebarAudiosManager(
-        libraryModel: gh<_i1032.LibraryModel>(),
-        localAudioManager: gh<_i688.LocalAudioManager>(),
-        podcastModel: gh<_i41.PodcastModel>(),
-        radioManager: gh<_i798.RadioManager>(),
-        playerModel: gh<_i1025.PlayerModel>(),
-      ),
     );
     return this;
   }

@@ -181,7 +181,7 @@ class PodcastService {
           feedUrl: feedUrl,
           timestamp: feedLastUpdated.toPodcastTimeStamp,
         );
-        await findEpisodes(feedUrl: feedUrl, loadFromCache: false);
+        await findEpisodes(feedUrl: feedUrl);
         await _libraryService.addPodcastUpdate(feedUrl, feedLastUpdated);
 
         newUpdateFeedUrls.add(feedUrl);
@@ -189,42 +189,18 @@ class PodcastService {
     }
 
     if (newUpdateFeedUrls.isNotEmpty) {
-      final msg = newUpdateFeedUrls.length == 1
-          ? updateMessage +
-                '${_episodeCache[newUpdateFeedUrls.first]?.firstOrNull?.podcastTitle != null ? ' ${_episodeCache[newUpdateFeedUrls.first]?.firstOrNull?.podcastTitle}' : ''}'
-          : multiUpdateMessage(newUpdateFeedUrls.length);
+      final msg = multiUpdateMessage(newUpdateFeedUrls.length);
       _notificationsService.notify(message: msg);
     }
   }
 
-  List<Audio>? getPodcastEpisodesFromCache(String? feedUrl) =>
-      _episodeCache[feedUrl];
-  Map<String, List<Audio>> _episodeCache = {};
-
-  Future<List<Audio>> findEpisodes({
-    Item? item,
-    String? feedUrl,
-    bool loadFromCache = true,
-  }) async {
+  Future<List<Audio>> findEpisodes({Item? item, String? feedUrl}) async {
     if (item == null && item?.feedUrl == null && feedUrl == null) {
       printMessageInDebugMode('findEpisodes called without feedUrl or item');
       return Future.value([]);
     }
 
     final url = feedUrl ?? item!.feedUrl!;
-
-    if (_episodeCache.containsKey(url) && loadFromCache) {
-      if (_episodeCache[url]?.firstOrNull?.albumArtUrl != null ||
-          _episodeCache[url]?.firstOrNull?.imageUrl != null) {
-        _libraryService.addSubscribedPodcastImage(
-          feedUrl: url,
-          imageUrl:
-              _episodeCache[url]?.firstOrNull?.albumArtUrl ??
-              _episodeCache[url]!.firstOrNull!.imageUrl!,
-        );
-      }
-      return _episodeCache[url]!;
-    }
 
     final Podcast? podcast = await compute(loadPodcast, url);
     if (podcast?.image != null) {
@@ -252,8 +228,6 @@ class PodcastService {
       audios: episodes,
       descending: true,
     );
-
-    _episodeCache[url] = episodes;
 
     return episodes;
   }

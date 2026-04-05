@@ -7,7 +7,7 @@ import '../../common/view/sliver_app_bar_bottom_space.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
-import '../podcast_model.dart';
+import '../podcast_manager.dart';
 
 class PodcastPageSearchField extends StatefulWidget
     with WatchItStatefulWidgetMixin {
@@ -30,15 +30,15 @@ class _PodcastPageSearchFieldState extends State<PodcastPageSearchField> {
   void initState() {
     super.initState();
     _textEditingController = TextEditingController(
-      text: di<PodcastModel>().getSearchQuery(widget.feedUrl),
+      text: di<PodcastManager>().searchQuery.value,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final filter = watchPropertyValue(
-      (PodcastModel m) => m.filter.localize(l10n),
+    final filter = watchValue(
+      (PodcastManager m) => m.filter.select((f) => f.localize(l10n)),
     );
 
     final field = Padding(
@@ -51,7 +51,7 @@ class _PodcastPageSearchFieldState extends State<PodcastPageSearchField> {
           decoration: InputDecoration(
             label: Text(l10n.search),
             prefix: InkWell(
-              onTap: di<PodcastModel>().setFilter,
+              onTap: di<PodcastManager>().setFilter,
               child: Text('$filter: '),
             ),
             suffixIcon: IconButton(
@@ -64,15 +64,11 @@ class _PodcastPageSearchFieldState extends State<PodcastPageSearchField> {
                   ),
                 ),
               ),
-              onPressed: () =>
-                  di<PodcastModel>().toggleShowSearch(feedUrl: widget.feedUrl),
+              onPressed: di<PodcastManager>().toggleShowSearch,
               icon: Icon(Iconz.search, semanticLabel: context.l10n.search),
             ),
           ),
-          onChanged: (v) => di<PodcastModel>().setSearchQuery(
-            feedUrl: widget.feedUrl,
-            value: v,
-          ),
+          onChanged: di<PodcastManager>().setSearchQuery,
         ),
       ),
     );

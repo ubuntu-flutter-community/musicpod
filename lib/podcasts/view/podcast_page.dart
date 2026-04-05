@@ -17,7 +17,7 @@ import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import '../../settings/settings_model.dart';
-import '../podcast_model.dart';
+import '../podcast_manager.dart';
 import 'podcast_page_control_panel.dart';
 import 'podcast_page_header.dart';
 import 'podcast_page_search_field.dart';
@@ -46,31 +46,16 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
     final showPodcastsAscending = watchPropertyValue(
       (LibraryModel m) => m.showPodcastAscending(feedUrl),
     );
-    watchPropertyValue((LibraryModel m) => m.podcastUpdatesLength);
-
-    watchPropertyValue(
-      (PodcastModel m) => m.getPodcastEpisodesFromCache(feedUrl)?.length,
-    );
-    watchPropertyValue(
-      (PodcastModel m) => m.getPodcastEpisodesFromCache(feedUrl)?.hashCode,
-    );
-    final episodes =
-        di<PodcastModel>().getPodcastEpisodesFromCache(feedUrl) ??
-        this.episodes;
 
     watchPropertyValue((PlayerModel m) => m.lastPositions?.length);
-    final showSearch = watchPropertyValue(
-      (PodcastModel m) => m.getShowSearch(feedUrl),
-    );
-    final searchQuery = watchPropertyValue(
-      (PodcastModel m) => m.getSearchQuery(feedUrl),
-    );
+    final showSearch = watchValue((PodcastManager m) => m.showSearch);
+    final searchQuery = watchValue((PodcastManager m) => m.searchQuery);
 
     final hideCompletedEpisodes = watchPropertyValue(
       (SettingsModel m) => m.hideCompletedEpisodes,
     );
 
-    final filter = watchPropertyValue((PodcastModel m) => m.filter);
+    final filter = watchValue((PodcastManager m) => m.filter);
     final episodesWithDownloads = episodes
         .where((e) => e.title != null && e.episodeDescription != null)
         .where(
@@ -125,7 +110,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
           barrierDismissible: true,
           context: context,
           title: context.l10n.loadingPodcastFeed,
-          future: () => di<PodcastModel>().checkForUpdates(
+          future: () => di<PodcastManager>().checkForUpdates(
             feedUrls: {feedUrl},
             updateMessage: context.l10n.newEpisodeAvailable,
             multiUpdateMessage: (length) =>

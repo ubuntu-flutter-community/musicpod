@@ -6,26 +6,26 @@ import '../common/data/audio_type.dart';
 import '../library/library_model.dart';
 import '../local_audio/local_audio_manager.dart';
 import '../player/player_model.dart';
-import '../podcasts/podcast_model.dart';
+import '../podcasts/podcast_manager.dart';
 import '../radio/radio_model.dart';
 
 @lazySingleton
 class SidebarAudiosManager {
   final LibraryModel _libraryModel;
   final LocalAudioManager _localAudioManager;
-  final PodcastModel _podcastModel;
+  final PodcastManager _podcastModel;
   final RadioManager _radioManager;
   final PlayerModel _playerModel;
 
   SidebarAudiosManager({
     required LibraryModel libraryModel,
     required LocalAudioManager localAudioManager,
-    required PodcastModel podcastModel,
+    required PodcastManager podcastManager,
     required RadioManager radioManager,
     required PlayerModel playerModel,
   }) : _libraryModel = libraryModel,
        _localAudioManager = localAudioManager,
-       _podcastModel = podcastModel,
+       _podcastModel = podcastManager,
        _radioManager = radioManager,
        _playerModel = playerModel;
 
@@ -56,9 +56,10 @@ class SidebarAudiosManager {
     }
 
     if (_libraryModel.isPodcastSubscribed(pageId)) {
-      final episodes =
-          _podcastModel.getPodcastEpisodesFromCache(pageId) ??
-          await _podcastModel.findEpisodes(feedUrl: pageId);
+      final episodes = _podcastModel.getEpisodesCommand(pageId).runAsync((
+        item: null,
+        feedUrl: pageId,
+      ));
       return episodes;
     }
 

@@ -8,22 +8,20 @@ import '../../common/view/confirm.dart';
 import '../../common/view/offline_page.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../podcast_model.dart';
+import '../podcast_manager.dart';
 
 class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
   const PodcastCollectionControlPanel({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final model = di<PodcastModel>();
+    final model = di<PodcastManager>();
 
     final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
     if (!isOnline) return const OfflineBody();
 
-    final updatesOnly = watchPropertyValue((PodcastModel m) => m.updatesOnly);
-    final downloadsOnly = watchPropertyValue(
-      (PodcastModel m) => m.downloadsOnly,
-    );
+    final updatesOnly = watchValue((PodcastManager m) => m.updatesOnly);
+    final downloadsOnly = watchValue((PodcastManager m) => m.downloadsOnly);
 
     return CommonControlPanel(
       labels: [
@@ -46,7 +44,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
                     di<LibraryModel>().podcastsLength.toString(),
                   ),
                 ),
-                onConfirm: () => di<PodcastModel>().checkForUpdates(
+                onConfirm: () => di<PodcastManager>().checkForUpdates(
                   updateMessage: context.l10n.newEpisodeAvailable,
                   multiUpdateMessage: (length) => context.mounted
                       ? context.l10n.newEpisodesAvailableFor(length)
@@ -58,7 +56,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
                 context: context,
                 backLabel: context.l10n.back,
                 title: context.l10n.loadingPleaseWait,
-                future: () => di<PodcastModel>().checkForUpdates(
+                future: () => di<PodcastManager>().checkForUpdates(
                   updateMessage: context.l10n.newEpisodeAvailable,
                   multiUpdateMessage: (length) => context.mounted
                       ? context.l10n.newEpisodesAvailableFor(length)

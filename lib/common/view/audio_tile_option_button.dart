@@ -14,7 +14,7 @@ import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../player/player_model.dart';
 import '../../playlists/view/add_to_playlist_dialog.dart';
-import '../../podcasts/podcast_model.dart';
+import '../../podcasts/podcast_manager.dart';
 import '../../settings/settings_model.dart';
 import '../data/audio.dart';
 import '../data/audio_type.dart';
@@ -223,7 +223,7 @@ class AudioTileOptionButton extends StatelessWidget {
                 onTap: () => showFutureLoadingDialog(
                   context: context,
                   title: context.l10n.loadingPodcastFeed,
-                  future: () => di<PodcastModel>().checkForUpdates(
+                  future: () => di<PodcastManager>().checkForUpdates(
                     feedUrls: {audios.first.feedUrl!},
                     updateMessage: context.l10n.newEpisodeAvailable,
                     multiUpdateMessage: (length) =>
@@ -237,13 +237,11 @@ class AudioTileOptionButton extends StatelessWidget {
                 ),
               ),
             PopupMenuItem(
-              onTap: () => di<PodcastModel>().setDownloadsOnly(
-                !di<PodcastModel>().downloadsOnly,
-              ),
+              onTap: di<PodcastManager>().toggleDownloadsOnly,
               child: ListTile(
                 contentPadding: const EdgeInsets.symmetric(horizontal: 10),
                 title: Text(context.l10n.downloadsOnly),
-                selected: di<PodcastModel>().downloadsOnly,
+                selected: di<PodcastManager>().downloadsOnly.value,
                 leading: Icon(Iconz.download),
               ),
             ),

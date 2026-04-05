@@ -22,7 +22,7 @@ import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../settings/view/settings_action.dart';
-import '../podcast_model.dart';
+import '../podcast_manager.dart';
 import 'podcast_collection_control_panel.dart';
 
 class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
@@ -39,10 +39,8 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
     final updatesLength = watchPropertyValue(
       (LibraryModel m) => m.podcastUpdatesLength,
     );
-    final updatesOnly = watchPropertyValue((PodcastModel m) => m.updatesOnly);
-    final downloadsOnly = watchPropertyValue(
-      (PodcastModel m) => m.downloadsOnly,
-    );
+    final updatesOnly = watchValue((PodcastManager m) => m.updatesOnly);
+    final downloadsOnly = watchValue((PodcastManager m) => m.downloadsOnly);
     final subsLength = watchPropertyValue((LibraryModel m) => m.podcastsLength);
     final feedsWithDownloadLength = watchPropertyValue(
       (LibraryModel m) => m.feedsWithDownloadsLength,
@@ -64,14 +62,14 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
             content: Text(
               context.l10n.checkForUpdatesConfirm(subsLength.toString()),
             ),
-            onConfirm: () => di<PodcastModel>().checkForUpdates(
+            onConfirm: () => di<PodcastManager>().checkForUpdates(
               updateMessage: context.l10n.newEpisodeAvailable,
               multiUpdateMessage: (length) =>
                   context.l10n.newEpisodesAvailableFor(length),
             ),
           );
         } else {
-          di<PodcastModel>().checkForUpdates(
+          di<PodcastManager>().checkForUpdates(
             updateMessage: context.l10n.newEpisodeAvailable,
             multiUpdateMessage: (length) =>
                 context.l10n.newEpisodesAvailableFor(length),
@@ -146,8 +144,9 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                         barrierDismissible: true,
                         title: context.l10n.loadingPodcastFeed,
                         context: context,
-                        future: () =>
-                            di<PodcastModel>().findEpisodes(feedUrl: feedUrl),
+                        future: () => di<PodcastManager>()
+                            .getEpisodesCommand(feedUrl!)
+                            .runAsync((item: null, feedUrl: feedUrl)),
                       ).then((res) {
                         if (res.isValue) {
                           di<PlayerModel>().startPlaylist(

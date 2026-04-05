@@ -6,7 +6,7 @@ import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
-import '../podcast_model.dart';
+import '../podcast_manager.dart';
 
 class PodcastMarkDoneButton extends StatelessWidget with WatchItMixin {
   const PodcastMarkDoneButton({super.key, required this.feedUrl});
@@ -15,15 +15,13 @@ class PodcastMarkDoneButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final podcast = watchPropertyValue(
-      (PodcastModel m) => m.getPodcastEpisodesFromCache(feedUrl),
+    final podcast = watchValue(
+      (PodcastManager m) => m.getEpisodesCommand(feedUrl),
     );
 
     return IconButton(
       tooltip: context.l10n.markAllEpisodesAsDone,
-      onPressed: podcast == null
-          ? null
-          : () => di<PlayerModel>().safeAllLastPositions(podcast),
+      onPressed: () => di<PlayerModel>().safeAllLastPositions(podcast),
       icon: Icon(Iconz.markAllRead),
     );
   }
