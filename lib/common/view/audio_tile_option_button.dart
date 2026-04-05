@@ -1,9 +1,9 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
@@ -18,7 +18,6 @@ import '../../podcasts/podcast_manager.dart';
 import '../../settings/settings_model.dart';
 import '../data/audio.dart';
 import '../data/audio_type.dart';
-import '../../app/page_ids.dart';
 import 'audio_tile_bottom_sheet.dart';
 import 'icons.dart';
 import 'meta_data_dialog.dart';
@@ -216,18 +215,12 @@ class AudioTileOptionButton extends StatelessWidget {
                 ),
               ),
             ),
-            if (audios.firstOrNull?.feedUrl != null)
+            if (audios.firstOrNull?.feedUrl != null &&
+                di<LibraryModel>().isPodcastSubscribed(audios.first.feedUrl!))
               PopupMenuItem(
-                onTap: () => showFutureLoadingDialog(
-                  context: context,
-                  title: context.l10n.loadingPodcastFeed,
-                  future: () => di<PodcastManager>().checkForUpdates(
-                    feedUrls: {audios.first.feedUrl!},
-                    updateMessage: context.l10n.newEpisodeAvailable,
-                    multiUpdateMessage: (length) =>
-                        context.l10n.newEpisodesAvailableFor(length),
-                  ),
-                ),
+                onTap: () => di<PodcastManager>()
+                    .getEpisodesCommand(audios.first.feedUrl!)
+                    .runAsync((feedUrl: audios.first.feedUrl!, item: null)),
                 child: ListTile(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 10),
                   title: Text(context.l10n.checkForUpdates),

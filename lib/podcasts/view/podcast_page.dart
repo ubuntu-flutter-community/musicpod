@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
-import 'package:future_loading_dialog/future_loading_dialog.dart';
 
+import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
-import '../../app/page_ids.dart';
 import '../../common/view/adaptive_multi_layout_body.dart';
 import '../../common/view/audio_filter.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
-import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
@@ -104,17 +102,11 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
         ],
       ),
       body: RefreshIndicator(
-        onRefresh: () async => showFutureLoadingDialog(
-          barrierDismissible: true,
-          context: context,
-          title: context.l10n.loadingPodcastFeed,
-          future: () => di<PodcastManager>().checkForUpdates(
-            feedUrls: {feedUrl},
-            updateMessage: context.l10n.newEpisodeAvailable,
-            multiUpdateMessage: (length) =>
-                context.l10n.newEpisodesAvailableFor(length),
-          ),
-        ),
+        onRefresh: di<LibraryModel>().isPodcastSubscribed(feedUrl)
+            ? () async => di<PodcastManager>()
+                  .getEpisodesCommand(feedUrl)
+                  .runAsync((feedUrl: feedUrl, item: null))
+            : () async {},
         child: AdaptiveMultiLayoutBody(
           header: PodcastPageHeader(
             title: title,

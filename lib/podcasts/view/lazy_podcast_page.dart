@@ -47,10 +47,13 @@ class LazyPodcastPage extends StatelessWidget with WatchItMixin {
       );
     }
 
+    callOnceAfterThisBuild(
+      (context) => di<LibraryModel>().removePodcastUpdate(feedUrl),
+    );
+
     if (di<PodcastManager>().shouldRunCommand(feedUrl) &&
             connectivityCommand.isOnline ||
         !connectivityCommand.wasOnline && connectivityCommand.isOnline) {
-      di<LibraryModel>().removePodcastUpdate(feedUrl);
       di<PodcastManager>().getEpisodesCommand(feedUrl).run((
         feedUrl: feedUrl,
         item: podcastItem,
