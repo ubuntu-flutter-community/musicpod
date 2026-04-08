@@ -2321,4 +2321,13 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get tosLinkText => 'சீனியசின் பணி விதிமுறைகளைப் படிக்கவும்';
+
+  @override
+  String get oopsSomethingWentWrong => 'Oops, something went wrong!';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get reportIssue => 'Report this issue';
 }

@@ -2246,4 +2246,13 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get tosLinkText => 'Genius の利用規約を読む';
+
+  @override
+  String get oopsSomethingWentWrong => 'Oops, something went wrong!';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get reportIssue => 'Report this issue';
 }

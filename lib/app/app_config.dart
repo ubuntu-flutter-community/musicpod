@@ -7,7 +7,6 @@ class AppConfig {
   static const androidAppId = 'org.feichtmeier.apps.musicpod';
   static const linuxDBusName = 'org.mpris.MediaPlayer2.musicpod';
   static const androidChannelId = 'org.feichtmeier.apps.musicpod.channel.audio';
-  static const repoUrl = 'http://github.com/ubuntu-flutter-community/musicpod';
   static const sponsorLink = 'https://github.com/sponsors/Feichtmeier';
   static const gitHubShortLink = 'ubuntu-flutter-community/musicpod';
   static const fallbackThumbnailUrl =
@@ -16,4 +15,10 @@ class AppConfig {
   static bool windowManagerImplemented = isDesktop;
 
   static bool allowVideoFullScreen = true;
+
+  static const String owner = 'ubuntu-flutter-community';
+  static const host = 'github.com';
+  static const scheme = 'https';
+  static const String repoUrl = '$scheme://$host/$owner/$appName';
+  static const String repoReportIssueUrl = '$owner/$appName/issues/new';
 }

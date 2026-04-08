@@ -4496,6 +4496,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Read Genius\'s Terms of Service'**
   String get tosLinkText;
+
+  /// No description provided for @oopsSomethingWentWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Oops, something went wrong!'**
+  String get oopsSomethingWentWrong;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @reportIssue.
+  ///
+  /// In en, this message translates to:
+  /// **'Report this issue'**
+  String get reportIssue;
 }
 
 class _AppLocalizationsDelegate

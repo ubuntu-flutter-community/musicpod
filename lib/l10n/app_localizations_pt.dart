@@ -2306,6 +2306,15 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get tosLinkText => 'Read Genius\'s Terms of Service';
+
+  @override
+  String get oopsSomethingWentWrong => 'Oops, something went wrong!';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get reportIssue => 'Report this issue';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).

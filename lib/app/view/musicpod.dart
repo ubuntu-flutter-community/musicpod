@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:gtk/gtk.dart';
 
-import '../../common/view/ui_constants.dart';
+import '../../common/view/error_page.dart';
 import '../../dependencies.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../player/player_service.dart';
@@ -35,19 +35,12 @@ class _MusicPodState extends State<MusicPod> {
         future: _allReady,
         builder: (context, snapshot) => snapshot.hasError
             ? SplashScreen(
-                // TODO: use errorpage from nebu here
-                body: Center(
-                  child: ListView(
-                    padding: const EdgeInsets.all(kLargestSpace),
-                    shrinkWrap: true,
-                    children: [
-                      SelectableText(
-                        'An error occurred during startup:\n${snapshot.error}',
-                        textAlign: TextAlign.left,
-                      ),
-                      SelectableText(snapshot.stackTrace.toString()),
-                    ],
-                  ),
+                body: ErrorBody(
+                  error: snapshot.error,
+                  onRetry: () => setState(() {
+                    _allReady = configureDependencies();
+                  }),
+                  addQuitButton: true,
                 ),
               )
             : snapshot.hasData

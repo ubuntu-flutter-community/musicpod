@@ -814,5 +814,8 @@
     "settingsDoNotAskForGeniusTitle": "Do not use Genius or ask for Genius API Key again",
     "settingsDoNotAskForGeniusDescription": "This prevents the app from prompting for the Genius API key in the future and makes the lyrics feature fully rely on local LRC files or LRC strings embedded in audio metadata.",
     "tosLink": "https://genius.com/static/terms",
-    "tosLinkText": "Read Genius's Terms of Service"
+    "tosLinkText": "Read Genius's Terms of Service",
+    "oopsSomethingWentWrong": "Oops, something went wrong!",
+    "retry": "Retry",
+    "reportIssue": "Report this issue"
 }

@@ -2310,4 +2310,13 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get tosLinkText => 'Die Nutzungsbedingungen von Genius lesen';
+
+  @override
+  String get oopsSomethingWentWrong => 'Oops, something went wrong!';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get reportIssue => 'Report this issue';
 }
