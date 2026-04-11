@@ -6,7 +6,7 @@ import '../../custom_content/view/backup_dialog.dart';
 import '../../extensions/build_context_x.dart';
 import '../../patch_notes/patch_notes_dialog.dart';
 import '../../player/view/player_view.dart';
-import '../../podcasts/download_model.dart';
+import '../../podcasts/download_manager.dart';
 import '../../settings/settings_model.dart';
 import '../app_manager.dart';
 import 'master_detail_page.dart';
@@ -58,7 +58,7 @@ class DesktopHomePage extends StatelessWidget with WatchItMixin {
         watchValue((AppManager m) => m.fullWindowMode) ?? false;
 
     registerStreamHandler(
-      select: (DownloadModel m) => m.messageStream,
+      select: (DownloadManager m) => m.messageStream,
       handler: downloadMessageStreamHandler,
     );
 

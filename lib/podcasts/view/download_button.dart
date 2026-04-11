@@ -10,7 +10,7 @@ import '../../extensions/taget_platform_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
 import '../../settings/settings_model.dart';
-import '../download_model.dart';
+import '../download_manager.dart';
 
 class DownloadButton extends StatelessWidget with WatchItMixin {
   const DownloadButton({
@@ -29,9 +29,9 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final model = di<DownloadModel>();
+    final manager = di<DownloadManager>();
     final value = watchPropertyValue(
-      (DownloadModel m) => m.getValue(audio?.url),
+      (DownloadManager m) => m.getValue(audio?.url),
     );
 
     final useYaruTheme = watchPropertyValue(
@@ -69,10 +69,10 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
           ),
           onPressed: () {
             if (hasDownload) {
-              model.deleteDownload(audio: audio);
+              manager.deleteDownload(audio: audio);
             } else {
               addPodcast?.call();
-              model.startDownload(
+              manager.startDownload(
                 finishedMessage: context.l10n.downloadFinished(
                   audio?.title ?? '',
                 ),

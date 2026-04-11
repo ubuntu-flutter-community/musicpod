@@ -295,18 +295,27 @@ class MockLibraryService extends _i1.Mock implements _i5.LibraryService {
           as _i3.Future<void>);
 
   @override
-  _i3.Future<void> dispose() =>
+  _i3.Future<void> wipeAndInitLibrary() =>
       (super.noSuchMethod(
-            Invocation.method(#dispose, []),
+            Invocation.method(#wipeAndInitLibrary, []),
             returnValue: _i3.Future<void>.value(),
             returnValueForMissingStub: _i3.Future<void>.value(),
           )
           as _i3.Future<void>);
 
   @override
-  _i3.Future<void> wipeAllData() =>
+  _i3.Future<void> wipeLocalAudioLibrary() =>
       (super.noSuchMethod(
-            Invocation.method(#wipeAllData, []),
+            Invocation.method(#wipeLocalAudioLibrary, []),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
+
+  @override
+  _i3.Future<void> dispose() =>
+      (super.noSuchMethod(
+            Invocation.method(#dispose, []),
             returnValue: _i3.Future<void>.value(),
             returnValueForMissingStub: _i3.Future<void>.value(),
           )

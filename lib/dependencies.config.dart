@@ -44,7 +44,7 @@ import 'notifications/notifications_service.dart' as _i57;
 import 'player/mpv_metadata_manager.dart' as _i112;
 import 'player/player_model.dart' as _i1025;
 import 'player/player_service.dart' as _i38;
-import 'podcasts/download_model.dart' as _i251;
+import 'podcasts/download_manager.dart' as _i388;
 import 'podcasts/podcast_manager.dart' as _i351;
 import 'podcasts/podcast_service.dart' as _i721;
 import 'radio/online_art_model.dart' as _i620;
@@ -206,8 +206,8 @@ extension GetItInjectableX on _i174.GetIt {
       ),
       dispose: (i) => i.dispose(),
     );
-    gh.lazySingleton<_i251.DownloadModel>(
-      () => _i251.DownloadModel(
+    gh.lazySingleton<_i388.DownloadManager>(
+      () => _i388.DownloadManager(
         libraryService: gh<_i595.LibraryService>(),
         settingsService: gh<_i763.SettingsService>(),
         dio: gh<_i361.Dio>(),

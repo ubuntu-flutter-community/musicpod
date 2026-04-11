@@ -16,7 +16,7 @@ import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
 import '../../common/persistence_utils.dart';
 import '../../player/player_service.dart';
-import '../../podcasts/download_model.dart';
+import '../../podcasts/download_manager.dart';
 import '../../podcasts/podcast_manager.dart';
 import '../settings_model.dart';
 
@@ -213,7 +213,7 @@ class _DownloadsTileState extends State<_DownloadsTile> {
     final l10n = context.l10n;
 
     final downloadsDirResults = watchValue(
-      (DownloadModel m) => m.downloadsDirCommand.results,
+      (DownloadManager m) => m.downloadsDirCommand.results,
     );
     final error = downloadsDirResults.error;
     final downloadsDir = downloadsDirResults.data;
@@ -233,9 +233,8 @@ class _DownloadsTileState extends State<_DownloadsTile> {
                   style: context.textTheme.bodyLarge,
                 ),
               ),
-              onConfirm: () => di<DownloadModel>().downloadsDirCommand.runAsync(
-                (setNewDir: true),
-              ),
+              onConfirm: () => di<DownloadManager>().downloadsDirCommand
+                  .runAsync((setNewDir: true)),
             ),
           );
         },

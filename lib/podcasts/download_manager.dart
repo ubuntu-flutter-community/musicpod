@@ -16,8 +16,8 @@ import '../settings/settings_service.dart';
 import '../settings/shared_preferences_keys.dart';
 
 @lazySingleton
-class DownloadModel extends SafeChangeNotifier {
-  DownloadModel({
+class DownloadManager extends SafeChangeNotifier {
+  DownloadManager({
     required LibraryService libraryService,
     required SettingsService settingsService,
     required Dio dio,
