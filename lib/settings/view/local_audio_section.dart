@@ -67,9 +67,7 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
             title: Text(l10n.groupAlbumsOnlyByAlbumName),
             trailing: CommonSwitch(
               value: groupAlbumsOnlyByAlbumName,
-              onChanged: (value) {
-                di<SettingsModel>().setGroupAlbumsOnlyByAlbumName(value);
-              },
+              onChanged: di<SettingsModel>().setGroupAlbumsOnlyByAlbumName,
             ),
           ),
           if (groupAlbumsOnlyByAlbumName)

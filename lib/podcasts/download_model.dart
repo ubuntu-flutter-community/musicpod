@@ -10,7 +10,6 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
 import '../common/view/snackbars.dart';
-import '../extensions/taget_platform_x.dart';
 import '../external_path/external_path_service.dart';
 import '../library/library_service.dart';
 import '../settings/settings_service.dart';
@@ -48,7 +47,7 @@ class DownloadModel extends SafeChangeNotifier {
   Stream<String> get messageStream => _messageStreamController.stream;
 
   double? getValue(String? url) => _values[url];
-  void setValue({
+  void _setValue({
     required int received,
     required int total,
     required String url,
@@ -65,7 +64,7 @@ class DownloadModel extends SafeChangeNotifier {
   late final Command<({bool setNewDir}), String?> downloadsDirCommand =
       Command.createAsync((param) async {
         if (!param.setNewDir) {
-          return _downloadsDirOrDefault;
+          return _settingsService.downloadsDirOrDefault;
         }
 
         final dir = await setDownloadsCustomDir();
@@ -79,9 +78,9 @@ class DownloadModel extends SafeChangeNotifier {
 
     try {
       directoryPath = await _externalPathService.getPathOfDirectory();
-      if (directoryPath == null) return _downloadsDirOrDefault;
+      if (directoryPath == null) return _settingsService.downloadsDirOrDefault;
       final maybeDir = Directory(directoryPath);
-      if (!maybeDir.existsSync()) return _downloadsDirOrDefault;
+      if (!maybeDir.existsSync()) return _settingsService.downloadsDirOrDefault;
       maybeDir.statSync();
       File(p.join(directoryPath, 'test'))
         ..createSync()
@@ -95,16 +94,12 @@ class DownloadModel extends SafeChangeNotifier {
     } else {
       if (directoryPath != null) {
         await _settingsService.setValue(SPKeys.downloads, directoryPath);
-        return _downloadsDirOrDefault;
+        return _settingsService.downloadsDirOrDefault;
       }
     }
 
     return null;
   }
-
-  Future<String?> get _downloadsDirOrDefault async =>
-      _settingsService.getString(SPKeys.downloads) ??
-      await PlatformX.downloadsDefaultDir;
 
   Future<void> deleteDownload({required Audio? audio}) async {
     if (audio?.url != null &&
@@ -164,9 +159,9 @@ class DownloadModel extends SafeChangeNotifier {
       url: url,
       path: path,
       name: audio.title ?? '',
-    ).then((response) {
+    ).then((response) async {
       if (response?.statusCode == 200 && audio.feedUrl != null) {
-        _libraryService.addDownload(
+        await _libraryService.addDownload(
           url: url,
           path: path,
           feedUrl: audio.feedUrl!,
@@ -194,7 +189,7 @@ class DownloadModel extends SafeChangeNotifier {
         url,
         path,
         onReceiveProgress: (count, total) =>
-            setValue(received: count, total: total, url: url),
+            _setValue(received: count, total: total, url: url),
         cancelToken: _cancelTokens[url],
       );
     } catch (e) {

@@ -62,6 +62,14 @@ class MockSettingsService extends _i1.Mock implements _i4.SettingsService {
           as _i3.Stream<bool>);
 
   @override
+  _i3.Future<String?> get downloadsDirOrDefault =>
+      (super.noSuchMethod(
+            Invocation.getter(#downloadsDirOrDefault),
+            returnValue: _i3.Future<String?>.value(),
+          )
+          as _i3.Future<String?>);
+
+  @override
   bool notify(bool? saved) =>
       (super.noSuchMethod(
             Invocation.method(#notify, [saved]),
@@ -278,9 +286,27 @@ class MockLibraryService extends _i1.Mock implements _i5.LibraryService {
           as _i3.Future<void>);
 
   @override
+  _i3.Future<void> initLocalAudioLibrary() =>
+      (super.noSuchMethod(
+            Invocation.method(#initLocalAudioLibrary, []),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
+
+  @override
   _i3.Future<void> dispose() =>
       (super.noSuchMethod(
             Invocation.method(#dispose, []),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
+
+  @override
+  _i3.Future<void> wipeAllData() =>
+      (super.noSuchMethod(
+            Invocation.method(#wipeAllData, []),
             returnValue: _i3.Future<void>.value(),
             returnValueForMissingStub: _i3.Future<void>.value(),
           )
@@ -539,31 +565,45 @@ class MockLibraryService extends _i1.Mock implements _i5.LibraryService {
           as bool);
 
   @override
-  void addDownload({
+  _i3.Future<void> addDownload({
     required String? url,
     required String? path,
     required String? feedUrl,
-  }) => super.noSuchMethod(
-    Invocation.method(#addDownload, [], {
-      #url: url,
-      #path: path,
-      #feedUrl: feedUrl,
-    }),
-    returnValueForMissingStub: null,
-  );
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#addDownload, [], {
+              #url: url,
+              #path: path,
+              #feedUrl: feedUrl,
+            }),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
-  void removeDownload({required String? url, required String? feedUrl}) =>
-      super.noSuchMethod(
-        Invocation.method(#removeDownload, [], {#url: url, #feedUrl: feedUrl}),
-        returnValueForMissingStub: null,
-      );
+  _i3.Future<void> removeDownload({
+    required String? url,
+    required String? feedUrl,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#removeDownload, [], {
+              #url: url,
+              #feedUrl: feedUrl,
+            }),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
-  void removeAllDownloads() => super.noSuchMethod(
-    Invocation.method(#removeAllDownloads, []),
-    returnValueForMissingStub: null,
-  );
+  _i3.Future<void> removeAllDownloads() =>
+      (super.noSuchMethod(
+            Invocation.method(#removeAllDownloads, []),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
   bool isPodcastSubscribed(String? feedUrl) =>
@@ -784,21 +824,4 @@ class MockLibraryService extends _i1.Mock implements _i5.LibraryService {
         Invocation.method(#removeFavoriteAlbum, [id], {#onFail: onFail}),
         returnValueForMissingStub: null,
       );
-
-  @override
-  _i3.Future<void> setSelectedPageId(String? value) =>
-      (super.noSuchMethod(
-            Invocation.method(#setSelectedPageId, [value]),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
-
-  @override
-  bool isPageInLibrary(String? pageId) =>
-      (super.noSuchMethod(
-            Invocation.method(#isPageInLibrary, [pageId]),
-            returnValue: false,
-          )
-          as bool);
 }

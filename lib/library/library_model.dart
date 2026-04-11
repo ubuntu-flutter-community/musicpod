@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
@@ -25,7 +26,8 @@ class LibraryModel extends SafeChangeNotifier {
     super.dispose();
   }
 
-  bool isPageInLibrary(String? pageId) => _service.isPageInLibrary(pageId);
+  late final Command<void, void> wipeAndInitLibraryCommand =
+      Command.createAsyncNoParamNoResult(_service.wipeAndInitLibrary);
 
   //
   // Liked Audios

@@ -7,14 +7,19 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
 import '../common/view/audio_filter.dart';
+import '../library/library_service.dart';
 import 'local_audio_service.dart';
 
 @lazySingleton
 class LocalAudioManager {
-  LocalAudioManager({required LocalAudioService localAudioService})
-    : _localAudioService = localAudioService;
+  LocalAudioManager({
+    required LocalAudioService localAudioService,
+    required LibraryService libraryService,
+  }) : _localAudioService = localAudioService,
+       _libraryService = libraryService;
 
   final LocalAudioService _localAudioService;
+  final LibraryService _libraryService;
 
   void changeMetadata(
     Audio audio, {
@@ -126,14 +131,16 @@ class LocalAudioManager {
     ({bool forceInit, String? directory, List<Audio> extraAudios}),
     ({List<Audio> audios, List<String> failedImports})?
   >
-  initAudiosCommand = Command.createAsync((param) {
+  initAudiosCommand = Command.createAsync((param) async {
     if (param.forceInit) {
       _findAlbumCommands.clear();
     }
-    return _localAudioService.init(
+    final localAudioResult = await _localAudioService.init(
       forceInit: param.forceInit,
       newDirectory: param.directory,
       extraAudios: param.extraAudios,
     );
+    await _libraryService.initLocalAudioLibrary();
+    return localAudioResult;
   }, initialValue: null);
 }

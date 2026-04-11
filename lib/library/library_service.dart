@@ -24,22 +24,51 @@ class LibraryService {
   final _propertiesChangedController = StreamController<bool>.broadcast();
   Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
 
-  void _notify() => _propertiesChangedController.add(true);
+  void _notify() {
+    if (_propertiesChangedController.hasListener) {
+      _propertiesChangedController.add(true);
+    }
+  }
 
   @PostConstruct(preResolve: true)
   Future<void> init() async {
-    await _loadLikedAudios();
+    await initLocalAudioLibrary();
     await _loadStarredStations();
     await _loadFavRadioTags();
     await _loadFavCountryCodes();
     await _loadFavLanguageCodes();
-    await _loadPlaylists();
-    await _loadExternalPlaylistIDs();
     await _loadPodcastCache();
     await _loadPodcastUpdates();
     await _loadDownloads();
+    _notify();
+  }
+
+  Future<void> initLocalAudioLibrary() async {
+    await _loadLikedAudios();
+    await _loadPlaylists();
+    await _loadExternalPlaylistIDs();
     await _loadFavoriteAlbums();
-    await _loadSelectedPageId();
+  }
+
+  Future<void> wipeAndInitLibrary() async {
+    await wipeLocalAudioLibrary();
+    await _db.delete(_db.starredStationTable).go();
+    await _db.delete(_db.favoriteRadioTagTable).go();
+    await _db.delete(_db.favoriteCountryTable).go();
+    await _db.delete(_db.favoriteLanguageTable).go();
+    await _db.delete(_db.podcastTable).go();
+    await _db.delete(_db.downloadTable).go();
+    await init();
+  }
+
+  Future<void> wipeLocalAudioLibrary() async {
+    await _db.delete(_db.likedTrackTable).go();
+    await _db.delete(_db.albumTable).go();
+    await _db.delete(_db.playlistTrackTable).go();
+    await _db.delete(_db.playlistTable).go();
+    await _db.delete(_db.artistTable).go();
+    await _db.delete(_db.albumArtTable).go();
+    await _db.delete(_db.genreTable).go();
   }
 
   @disposeMethod
@@ -646,15 +675,15 @@ class LibraryService {
     _feedsWithDownloads = rows.map((r) => r.feedUrl).toSet();
   }
 
-  void addDownload({
+  Future<void> addDownload({
     required String url,
     required String path,
     required String feedUrl,
-  }) {
+  }) async {
     if (_downloads.containsKey(url)) return;
     _downloads[url] = path;
     _feedsWithDownloads.add(feedUrl);
-    _db
+    await _db
         .into(_db.downloadTable)
         .insert(
           DownloadTableCompanion.insert(
@@ -663,19 +692,23 @@ class LibraryService {
             feedUrl: feedUrl,
           ),
           mode: InsertMode.insertOrIgnore,
-        )
-        .then((_) => _notify());
+        );
+    _notify();
   }
 
-  void removeDownload({required String url, required String feedUrl}) {
+  Future<void> removeDownload({
+    required String url,
+    required String feedUrl,
+  }) async {
     _deleteDownload(url);
 
     if (_downloads.containsKey(url)) {
       _downloads.remove(url);
       _feedsWithDownloads.remove(feedUrl);
-      (_db.delete(
+      await (_db.delete(
         _db.downloadTable,
-      )..where((t) => t.url.equals(url))).go().then((_) => _notify());
+      )..where((t) => t.url.equals(url))).go();
+      _notify();
     }
   }
 
@@ -689,13 +722,14 @@ class LibraryService {
     }
   }
 
-  void removeAllDownloads() {
+  Future<void> removeAllDownloads() async {
     for (var download in _downloads.entries) {
       _deleteDownload(download.key);
     }
     _downloads.clear();
     _feedsWithDownloads.clear();
-    _db.delete(_db.downloadTable).go().then((_) => _notify());
+    await _db.delete(_db.downloadTable).go();
+    _notify();
   }
 
   void _removeFeedWithDownload(String feedUrl) {
@@ -971,35 +1005,4 @@ class LibraryService {
       _db.pinnedAlbumTable,
     )..where((t) => t.albumId.equals(id))).go().then((_) => _notify());
   }
-
-  // ── Selected page ──
-
-  String? _selectedPageId;
-  String? get selectedPageId => _selectedPageId;
-
-  Future<void> _loadSelectedPageId() async {
-    final row = await (_db.select(
-      _db.appSettingTable,
-    )..where((t) => t.key.equals('selectedPage'))).getSingleOrNull();
-    _selectedPageId = row?.value;
-  }
-
-  Future<void> setSelectedPageId(String value) async {
-    _selectedPageId = value;
-    await _db
-        .into(_db.appSettingTable)
-        .insertOnConflictUpdate(
-          AppSettingTableCompanion.insert(key: 'selectedPage', value: value),
-        );
-    _notify();
-  }
-
-  bool isPageInLibrary(String? pageId) =>
-      pageId != null &&
-      (PageIDs.permanent.contains(pageId) ||
-          (int.tryParse(pageId) != null &&
-              _favoriteAlbums.contains(int.parse(pageId))) ||
-          isStarredStation(pageId) ||
-          isPlaylistSaved(pageId) ||
-          isPodcastSubscribed(pageId));
 }

@@ -5,6 +5,8 @@ import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/logging.dart';
+import '../settings/settings_service.dart';
+import '../settings/shared_preferences_keys.dart';
 import 'page_ids.dart';
 import '../extensions/taget_platform_x.dart';
 import '../library/library_service.dart';
@@ -12,29 +14,44 @@ import 'view/mobile_page.dart';
 
 @lazySingleton
 class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
-  RoutingManager({required LibraryService libraryService})
-    : _libraryService = libraryService {
-    _propertiesChangedSub ??= _libraryService.propertiesChanged.listen(
+  RoutingManager({
+    required LibraryService libraryService,
+    required SettingsService settingsService,
+  }) : _libraryService = libraryService,
+       _settingsService = settingsService {
+    _libraryPropertiesChangedSub ??= _libraryService.propertiesChanged.listen(
+      (_) => notifyListeners(),
+    );
+    _settingsChangedChangedSub ??= _settingsService.propertiesChanged.listen(
       (_) => notifyListeners(),
     );
   }
 
   final LibraryService _libraryService;
-  StreamSubscription<bool>? _propertiesChangedSub;
+  final SettingsService _settingsService;
+  StreamSubscription<bool>? _libraryPropertiesChangedSub;
+  StreamSubscription<bool>? _settingsChangedChangedSub;
 
   @disposeMethod
   @override
   Future<void> dispose() async {
-    await _propertiesChangedSub?.cancel();
+    await _libraryPropertiesChangedSub?.cancel();
+    await _settingsChangedChangedSub?.cancel();
     super.dispose();
   }
 
   bool isPageInLibrary(String? pageId) =>
-      _libraryService.isPageInLibrary(pageId);
+      pageId != null &&
+      (PageIDs.permanent.contains(pageId) ||
+          (int.tryParse(pageId) != null &&
+              _libraryService.favoriteAlbums.contains(int.parse(pageId))) ||
+          _libraryService.isStarredStation(pageId) ||
+          _libraryService.isPlaylistSaved(pageId) ||
+          _libraryService.isPodcastSubscribed(pageId));
 
-  String? get selectedPageId => _libraryService.selectedPageId;
+  String? get selectedPageId => _settingsService.getString(SPKeys.selectedPage);
   void _setSelectedPageId(String pageId) =>
-      _libraryService.setSelectedPageId(pageId);
+      _settingsService.setValue(SPKeys.selectedPage, pageId);
 
   Future<void> push({
     required String pageId,

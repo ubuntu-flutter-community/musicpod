@@ -89,6 +89,14 @@ class MockSettingsService extends _i1.Mock implements _i6.SettingsService {
           as _i3.Stream<bool>);
 
   @override
+  _i3.Future<String?> get downloadsDirOrDefault =>
+      (super.noSuchMethod(
+            Invocation.getter(#downloadsDirOrDefault),
+            returnValue: _i3.Future<String?>.value(),
+          )
+          as _i3.Future<String?>);
+
+  @override
   bool notify(bool? saved) =>
       (super.noSuchMethod(
             Invocation.method(#notify, [saved]),

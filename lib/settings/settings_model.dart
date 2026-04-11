@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
@@ -170,7 +171,8 @@ class SettingsModel extends SafeChangeNotifier {
     _service.setValue(SPKeys.lastLanguageCode, value);
   }
 
-  Future<void> wipeAllSettings() async => _service.wipeAllSettings();
+  late final Command<void, void> wipeAllSettingsCommand =
+      Command.createAsyncNoParamNoResult(_service.wipeAllSettings);
 
   @override
   Future<void> dispose() async {

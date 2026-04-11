@@ -166,11 +166,6 @@ extension GetItInjectableX on _i174.GetIt {
         database: gh<_i115.Database>(),
       ),
     );
-    gh.lazySingleton<_i688.LocalAudioManager>(
-      () => _i688.LocalAudioManager(
-        localAudioService: gh<_i438.LocalAudioService>(),
-      ),
-    );
     gh.lazySingleton<_i820.ExposeService>(
       () => _i820.ExposeService(
         lastFmService: gh<_i820.LastfmService>(),
@@ -191,12 +186,25 @@ extension GetItInjectableX on _i174.GetIt {
       preResolve: true,
       dispose: (i) => i.dispose(),
     );
+    gh.lazySingleton<_i688.LocalAudioManager>(
+      () => _i688.LocalAudioManager(
+        localAudioService: gh<_i438.LocalAudioService>(),
+        libraryService: gh<_i595.LibraryService>(),
+      ),
+    );
     gh.lazySingleton<_i721.PodcastService>(
       () => _i721.PodcastService(
         notificationsService: gh<_i57.NotificationsService>(),
         settingsService: gh<_i763.SettingsService>(),
         libraryService: gh<_i595.LibraryService>(),
       ),
+    );
+    gh.lazySingleton<_i971.RoutingManager>(
+      () => _i971.RoutingManager(
+        libraryService: gh<_i595.LibraryService>(),
+        settingsService: gh<_i763.SettingsService>(),
+      ),
+      dispose: (i) => i.dispose(),
     );
     gh.lazySingleton<_i251.DownloadModel>(
       () => _i251.DownloadModel(
@@ -224,10 +232,6 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioService: gh<_i438.LocalAudioService>(),
         podcastService: gh<_i721.PodcastService>(),
       ),
-    );
-    gh.lazySingleton<_i971.RoutingManager>(
-      () => _i971.RoutingManager(libraryService: gh<_i595.LibraryService>()),
-      dispose: (i) => i.dispose(),
     );
     gh.lazySingleton<_i1032.LibraryModel>(
       () => _i1032.LibraryModel(libraryService: gh<_i595.LibraryService>()),
