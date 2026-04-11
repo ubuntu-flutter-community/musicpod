@@ -35,7 +35,6 @@ class PodcastEpisodeTable extends Table {
   late final durationMs = integer().nullable()();
   late final positionMs = integer().withDefault(const Constant(0))();
   late final imageUrl = text().nullable()();
-  late final isPlayedPercent = integer().withDefault(const Constant(0))();
 }
 
 class DownloadedPodcastEpisodeTable extends Table {

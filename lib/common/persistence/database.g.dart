@@ -4447,18 +4447,6 @@ class $PodcastEpisodeTableTable extends PodcastEpisodeTable
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _isPlayedPercentMeta = const VerificationMeta(
-    'isPlayedPercent',
-  );
-  @override
-  late final GeneratedColumn<int> isPlayedPercent = GeneratedColumn<int>(
-    'is_played_percent',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(0),
-  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -4471,7 +4459,6 @@ class $PodcastEpisodeTableTable extends PodcastEpisodeTable
     durationMs,
     positionMs,
     imageUrl,
-    isPlayedPercent,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -4566,15 +4553,6 @@ class $PodcastEpisodeTableTable extends PodcastEpisodeTable
         imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
       );
     }
-    if (data.containsKey('is_played_percent')) {
-      context.handle(
-        _isPlayedPercentMeta,
-        isPlayedPercent.isAcceptableOrUnknown(
-          data['is_played_percent']!,
-          _isPlayedPercentMeta,
-        ),
-      );
-    }
     return context;
   }
 
@@ -4627,10 +4605,6 @@ class $PodcastEpisodeTableTable extends PodcastEpisodeTable
         DriftSqlType.string,
         data['${effectivePrefix}image_url'],
       ),
-      isPlayedPercent: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}is_played_percent'],
-      )!,
     );
   }
 
@@ -4652,7 +4626,6 @@ class PodcastEpisodeTableData extends DataClass
   final int? durationMs;
   final int positionMs;
   final String? imageUrl;
-  final int isPlayedPercent;
   const PodcastEpisodeTableData({
     required this.id,
     required this.podcastFeedUrl,
@@ -4664,7 +4637,6 @@ class PodcastEpisodeTableData extends DataClass
     this.durationMs,
     required this.positionMs,
     this.imageUrl,
-    required this.isPlayedPercent,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -4683,7 +4655,6 @@ class PodcastEpisodeTableData extends DataClass
     if (!nullToAbsent || imageUrl != null) {
       map['image_url'] = Variable<String>(imageUrl);
     }
-    map['is_played_percent'] = Variable<int>(isPlayedPercent);
     return map;
   }
 
@@ -4703,7 +4674,6 @@ class PodcastEpisodeTableData extends DataClass
       imageUrl: imageUrl == null && nullToAbsent
           ? const Value.absent()
           : Value(imageUrl),
-      isPlayedPercent: Value(isPlayedPercent),
     );
   }
 
@@ -4727,7 +4697,6 @@ class PodcastEpisodeTableData extends DataClass
       durationMs: serializer.fromJson<int?>(json['durationMs']),
       positionMs: serializer.fromJson<int>(json['positionMs']),
       imageUrl: serializer.fromJson<String?>(json['imageUrl']),
-      isPlayedPercent: serializer.fromJson<int>(json['isPlayedPercent']),
     );
   }
   @override
@@ -4744,7 +4713,6 @@ class PodcastEpisodeTableData extends DataClass
       'durationMs': serializer.toJson<int?>(durationMs),
       'positionMs': serializer.toJson<int>(positionMs),
       'imageUrl': serializer.toJson<String?>(imageUrl),
-      'isPlayedPercent': serializer.toJson<int>(isPlayedPercent),
     };
   }
 
@@ -4759,7 +4727,6 @@ class PodcastEpisodeTableData extends DataClass
     Value<int?> durationMs = const Value.absent(),
     int? positionMs,
     Value<String?> imageUrl = const Value.absent(),
-    int? isPlayedPercent,
   }) => PodcastEpisodeTableData(
     id: id ?? this.id,
     podcastFeedUrl: podcastFeedUrl ?? this.podcastFeedUrl,
@@ -4771,7 +4738,6 @@ class PodcastEpisodeTableData extends DataClass
     durationMs: durationMs.present ? durationMs.value : this.durationMs,
     positionMs: positionMs ?? this.positionMs,
     imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
-    isPlayedPercent: isPlayedPercent ?? this.isPlayedPercent,
   );
   PodcastEpisodeTableData copyWithCompanion(PodcastEpisodeTableCompanion data) {
     return PodcastEpisodeTableData(
@@ -4799,9 +4765,6 @@ class PodcastEpisodeTableData extends DataClass
           ? data.positionMs.value
           : this.positionMs,
       imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
-      isPlayedPercent: data.isPlayedPercent.present
-          ? data.isPlayedPercent.value
-          : this.isPlayedPercent,
     );
   }
 
@@ -4817,8 +4780,7 @@ class PodcastEpisodeTableData extends DataClass
           ..write('publicationDate: $publicationDate, ')
           ..write('durationMs: $durationMs, ')
           ..write('positionMs: $positionMs, ')
-          ..write('imageUrl: $imageUrl, ')
-          ..write('isPlayedPercent: $isPlayedPercent')
+          ..write('imageUrl: $imageUrl')
           ..write(')'))
         .toString();
   }
@@ -4835,7 +4797,6 @@ class PodcastEpisodeTableData extends DataClass
     durationMs,
     positionMs,
     imageUrl,
-    isPlayedPercent,
   );
   @override
   bool operator ==(Object other) =>
@@ -4850,8 +4811,7 @@ class PodcastEpisodeTableData extends DataClass
           other.publicationDate == this.publicationDate &&
           other.durationMs == this.durationMs &&
           other.positionMs == this.positionMs &&
-          other.imageUrl == this.imageUrl &&
-          other.isPlayedPercent == this.isPlayedPercent);
+          other.imageUrl == this.imageUrl);
 }
 
 class PodcastEpisodeTableCompanion
@@ -4866,7 +4826,6 @@ class PodcastEpisodeTableCompanion
   final Value<int?> durationMs;
   final Value<int> positionMs;
   final Value<String?> imageUrl;
-  final Value<int> isPlayedPercent;
   const PodcastEpisodeTableCompanion({
     this.id = const Value.absent(),
     this.podcastFeedUrl = const Value.absent(),
@@ -4878,7 +4837,6 @@ class PodcastEpisodeTableCompanion
     this.durationMs = const Value.absent(),
     this.positionMs = const Value.absent(),
     this.imageUrl = const Value.absent(),
-    this.isPlayedPercent = const Value.absent(),
   });
   PodcastEpisodeTableCompanion.insert({
     this.id = const Value.absent(),
@@ -4891,7 +4849,6 @@ class PodcastEpisodeTableCompanion
     this.durationMs = const Value.absent(),
     this.positionMs = const Value.absent(),
     this.imageUrl = const Value.absent(),
-    this.isPlayedPercent = const Value.absent(),
   }) : podcastFeedUrl = Value(podcastFeedUrl),
        title = Value(title),
        episodeDescription = Value(episodeDescription),
@@ -4909,7 +4866,6 @@ class PodcastEpisodeTableCompanion
     Expression<int>? durationMs,
     Expression<int>? positionMs,
     Expression<String>? imageUrl,
-    Expression<int>? isPlayedPercent,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -4922,7 +4878,6 @@ class PodcastEpisodeTableCompanion
       if (durationMs != null) 'duration_ms': durationMs,
       if (positionMs != null) 'position_ms': positionMs,
       if (imageUrl != null) 'image_url': imageUrl,
-      if (isPlayedPercent != null) 'is_played_percent': isPlayedPercent,
     });
   }
 
@@ -4937,7 +4892,6 @@ class PodcastEpisodeTableCompanion
     Value<int?>? durationMs,
     Value<int>? positionMs,
     Value<String?>? imageUrl,
-    Value<int>? isPlayedPercent,
   }) {
     return PodcastEpisodeTableCompanion(
       id: id ?? this.id,
@@ -4950,7 +4904,6 @@ class PodcastEpisodeTableCompanion
       durationMs: durationMs ?? this.durationMs,
       positionMs: positionMs ?? this.positionMs,
       imageUrl: imageUrl ?? this.imageUrl,
-      isPlayedPercent: isPlayedPercent ?? this.isPlayedPercent,
     );
   }
 
@@ -4987,9 +4940,6 @@ class PodcastEpisodeTableCompanion
     if (imageUrl.present) {
       map['image_url'] = Variable<String>(imageUrl.value);
     }
-    if (isPlayedPercent.present) {
-      map['is_played_percent'] = Variable<int>(isPlayedPercent.value);
-    }
     return map;
   }
 
@@ -5005,8 +4955,7 @@ class PodcastEpisodeTableCompanion
           ..write('publicationDate: $publicationDate, ')
           ..write('durationMs: $durationMs, ')
           ..write('positionMs: $positionMs, ')
-          ..write('imageUrl: $imageUrl, ')
-          ..write('isPlayedPercent: $isPlayedPercent')
+          ..write('imageUrl: $imageUrl')
           ..write(')'))
         .toString();
   }
@@ -11237,7 +11186,6 @@ typedef $$PodcastEpisodeTableTableCreateCompanionBuilder =
       Value<int?> durationMs,
       Value<int> positionMs,
       Value<String?> imageUrl,
-      Value<int> isPlayedPercent,
     });
 typedef $$PodcastEpisodeTableTableUpdateCompanionBuilder =
     PodcastEpisodeTableCompanion Function({
@@ -11251,7 +11199,6 @@ typedef $$PodcastEpisodeTableTableUpdateCompanionBuilder =
       Value<int?> durationMs,
       Value<int> positionMs,
       Value<String?> imageUrl,
-      Value<int> isPlayedPercent,
     });
 
 final class $$PodcastEpisodeTableTableReferences
@@ -11389,11 +11336,6 @@ class $$PodcastEpisodeTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get isPlayedPercent => $composableBuilder(
-    column: $table.isPlayedPercent,
-    builder: (column) => ColumnFilters(column),
-  );
-
   $$PodcastTableTableFilterComposer get podcastFeedUrl {
     final $$PodcastTableTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -11519,11 +11461,6 @@ class $$PodcastEpisodeTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get isPlayedPercent => $composableBuilder(
-    column: $table.isPlayedPercent,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   $$PodcastTableTableOrderingComposer get podcastFeedUrl {
     final $$PodcastTableTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -11613,11 +11550,6 @@ class $$PodcastEpisodeTableTableAnnotationComposer
 
   GeneratedColumn<String> get imageUrl =>
       $composableBuilder(column: $table.imageUrl, builder: (column) => column);
-
-  GeneratedColumn<int> get isPlayedPercent => $composableBuilder(
-    column: $table.isPlayedPercent,
-    builder: (column) => column,
-  );
 
   $$PodcastTableTableAnnotationComposer get podcastFeedUrl {
     final $$PodcastTableTableAnnotationComposer composer = $composerBuilder(
@@ -11745,7 +11677,6 @@ class $$PodcastEpisodeTableTableTableManager
                 Value<int?> durationMs = const Value.absent(),
                 Value<int> positionMs = const Value.absent(),
                 Value<String?> imageUrl = const Value.absent(),
-                Value<int> isPlayedPercent = const Value.absent(),
               }) => PodcastEpisodeTableCompanion(
                 id: id,
                 podcastFeedUrl: podcastFeedUrl,
@@ -11757,7 +11688,6 @@ class $$PodcastEpisodeTableTableTableManager
                 durationMs: durationMs,
                 positionMs: positionMs,
                 imageUrl: imageUrl,
-                isPlayedPercent: isPlayedPercent,
               ),
           createCompanionCallback:
               ({
@@ -11771,7 +11701,6 @@ class $$PodcastEpisodeTableTableTableManager
                 Value<int?> durationMs = const Value.absent(),
                 Value<int> positionMs = const Value.absent(),
                 Value<String?> imageUrl = const Value.absent(),
-                Value<int> isPlayedPercent = const Value.absent(),
               }) => PodcastEpisodeTableCompanion.insert(
                 id: id,
                 podcastFeedUrl: podcastFeedUrl,
@@ -11783,7 +11712,6 @@ class $$PodcastEpisodeTableTableTableManager
                 durationMs: durationMs,
                 positionMs: positionMs,
                 imageUrl: imageUrl,
-                isPlayedPercent: isPlayedPercent,
               ),
           withReferenceMapper: (p0) => p0
               .map(

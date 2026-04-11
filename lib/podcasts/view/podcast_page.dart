@@ -43,7 +43,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
       (LibraryModel m) => m.showPodcastAscending(feedUrl),
     );
 
-    watchPropertyValue((PlayerModel m) => m.lastPositions?.length);
+    watchPropertyValue((PlayerModel m) => m.lastPositions?.hashCode);
     final showSearch = watchValue((PodcastManager m) => m.showSearch);
     final searchQuery = watchValue((PodcastManager m) => m.searchQuery);
 
@@ -73,7 +73,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
 
           return e.durationMs != null &&
               di<PlayerModel>().getLastPosition(e.url)?.inMilliseconds !=
-                  e.durationMs;
+                  e.durationMs?.toInt();
         })
         .toList();
 
@@ -104,8 +104,8 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
       body: RefreshIndicator(
         onRefresh: di<LibraryModel>().isPodcastSubscribed(feedUrl)
             ? () async => di<PodcastManager>()
-                  .getEpisodesCommand(feedUrl)
-                  .runAsync((feedUrl: feedUrl, item: null))
+                  .checkForUpdateAndRefreshIfNeededCommand
+                  .runAsync(feedUrl)
             : () async {},
         child: AdaptiveMultiLayoutBody(
           header: PodcastPageHeader(

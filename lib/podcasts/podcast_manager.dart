@@ -64,21 +64,43 @@ class PodcastManager {
     };
   }
 
+  late final Command<String, void> checkForUpdateAndRefreshIfNeededCommand =
+      Command.createAsyncNoResult((feedUrl) async {
+        final updates = await _podcastService.checkForUpdates(
+          feedUrls: {feedUrl},
+          updateMessage: '',
+          multiUpdateMessage: (length) => '',
+        );
+        if (updates.contains(feedUrl)) {
+          await getEpisodesCommand(
+            feedUrl,
+            forceRefresh: true,
+          ).runAsync((feedUrl: feedUrl, item: null));
+        }
+      });
+
   // Note: passing the item makes it easier to
   // always have the correct image without needing to persist every item
   final _episodesCommands =
       <String, Command<({Item? item, String? feedUrl}), List<Audio>>>{};
   Command<({Item? item, String? feedUrl}), List<Audio>> getEpisodesCommand(
-    String feedUrl,
-  ) => _episodesCommands.putIfAbsent(
-    feedUrl,
-    () => Command.createAsync(
-      (param) => _podcastService
-          .findEpisodes(item: param.item, feedUrl: param.feedUrl)
-          .timeout(const Duration(seconds: 30)),
-      initialValue: [],
-    ),
-  );
+    String feedUrl, {
+    bool forceRefresh = false,
+  }) {
+    if (forceRefresh) {
+      _episodesCommands.remove(feedUrl);
+    }
+
+    return _episodesCommands.putIfAbsent(
+      feedUrl,
+      () => Command.createAsync(
+        (param) => _podcastService
+            .findEpisodes(item: param.item, feedUrl: param.feedUrl)
+            .timeout(const Duration(seconds: 30)),
+        initialValue: [],
+      ),
+    );
+  }
 
   bool shouldRunCommand(String feedUrl) =>
       di<PodcastManager>().getEpisodesCommand(feedUrl).value.isEmpty;

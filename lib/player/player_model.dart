@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
@@ -121,13 +122,19 @@ class PlayerModel extends SafeChangeNotifier {
   Future<void> safeLastPosition() => _playerService.safeLastPosition();
   Future<void> persistPlayerState() => _playerService.persistPlayerState();
 
-  Future<void> safeAllLastPositions(List<Audio> audios) =>
-      _playerService.safeAllLastPositions(audios);
+  late final Command<List<Audio>, void> markProgressCompleteCommand =
+      Command.createAsyncNoResult(
+        (audios) => _playerService.markAudiosProgressComplete(audios),
+      );
 
-  Future<void> removeLastPosition(String key) =>
-      _playerService.removeLastPosition(key);
-  Future<void> removeLastPositions(List<Audio> audios) =>
-      _playerService.removeLastPositions(audios);
+  late final Command<List<Audio>, void> removeLastPositionsCommand =
+      Command.createAsyncNoResult((audios) async {
+        await _playerService.removeLastPositions(audios);
+        if (audio == this.audio) {
+          setPosition(Duration.zero);
+          await seek();
+        }
+      });
 
   void setTimer(Duration duration) => _playerService.setPauseTimer(duration);
 

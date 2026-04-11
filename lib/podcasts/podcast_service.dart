@@ -1,12 +1,14 @@
 import 'dart:async';
 
+import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:podcast_search/podcast_search.dart';
+import 'package:podcast_search/podcast_search.dart' hide Value;
 import 'package:synchronized/synchronized.dart';
 
 import '../common/data/audio.dart';
 import '../common/logging.dart';
+import '../common/persistence/database.dart';
 import '../common/view/audio_filter.dart';
 import '../common/view/languages.dart';
 import '../extensions/date_time_x.dart';
@@ -22,13 +24,16 @@ class PodcastService {
   final NotificationsService _notificationsService;
   final SettingsService _settingsService;
   final LibraryService _libraryService;
+  final Database _db;
   PodcastService({
     required NotificationsService notificationsService,
     required SettingsService settingsService,
     required LibraryService libraryService,
+    required Database database,
   }) : _notificationsService = notificationsService,
        _settingsService = settingsService,
-       _libraryService = libraryService {
+       _libraryService = libraryService,
+       _db = database {
     _search = Search(
       searchProvider:
           _settingsService.getBool(SPKeys.usePodcastIndex) == true &&
@@ -135,19 +140,19 @@ class PodcastService {
   }
 
   final _syncLock = Lock();
-  Future<void> checkForUpdates({
+  Future<List<String>> checkForUpdates({
     Set<String>? feedUrls,
     required String updateMessage,
     required String Function(int length) multiUpdateMessage,
-  }) => _syncLock.synchronized(() async {
-    await _checkForUpdates(
+  }) => _syncLock.synchronized(
+    () => _checkForUpdates(
       feedUrls: feedUrls,
       updateMessage: updateMessage,
       multiUpdateMessage: multiUpdateMessage,
-    );
-  });
+    ),
+  );
 
-  Future<void> _checkForUpdates({
+  Future<List<String>> _checkForUpdates({
     Set<String>? feedUrls,
     required String updateMessage,
     required String Function(int length) multiUpdateMessage,
@@ -192,6 +197,7 @@ class PodcastService {
       final msg = multiUpdateMessage(newUpdateFeedUrls.length);
       _notificationsService.notify(message: msg);
     }
+    return newUpdateFeedUrls.toList();
   }
 
   Future<List<Audio>> findEpisodes({Item? item, String? feedUrl}) async {
@@ -229,7 +235,42 @@ class PodcastService {
       descending: true,
     );
 
+    await _upsertEpisodes(feedUrl: url, podcast: podcast, episodes: episodes);
+
     return episodes;
+  }
+
+  Future<void> _upsertEpisodes({
+    required String feedUrl,
+    required Podcast? podcast,
+    required List<Audio> episodes,
+  }) async {
+    if (episodes.isEmpty) return;
+    try {
+      await _db.batch((batch) {
+        for (final e in episodes) {
+          if (e.url == null) continue;
+          batch.insert(
+            _db.podcastEpisodeTable,
+            PodcastEpisodeTableCompanion.insert(
+              podcastFeedUrl: feedUrl,
+              title: e.title ?? '',
+              episodeDescription: e.episodeDescription ?? '',
+              podcastDescription: podcast?.description ?? '',
+              contentUrl: e.url!,
+              publicationDate: e.publicationDate != null
+                  ? DateTime.fromMillisecondsSinceEpoch(e.publicationDate!)
+                  : DateTime.now(),
+              durationMs: Value(e.durationMs?.toInt()),
+              imageUrl: Value(e.imageUrl),
+            ),
+            mode: InsertMode.insertOrIgnore,
+          );
+        }
+      });
+    } on Exception catch (e) {
+      printMessageInDebugMode('Error upserting episodes: $e');
+    }
   }
 }
 

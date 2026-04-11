@@ -3,22 +3,20 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../common/file_names.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../custom_content/custom_content_model.dart';
 import '../../extensions/build_context_x.dart';
-import '../shared_preferences_keys.dart';
 import '../../extensions/string_x.dart';
 import '../../l10n/l10n.dart';
 import '../../library/library_model.dart';
-import '../../common/persistence_utils.dart';
 import '../../player/player_service.dart';
 import '../../podcasts/download_manager.dart';
 import '../../podcasts/podcast_manager.dart';
 import '../settings_model.dart';
+import '../shared_preferences_keys.dart';
 
 class PodcastSection extends StatefulWidget with WatchItStatefulWidgetMixin {
   const PodcastSection({super.key});
@@ -188,9 +186,7 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
               cancelLabel: context.l10n.cancel,
               onConfirm: () async {
                 await di<LibraryModel>().removeAllPodcasts();
-                di<PlayerService>().clearAllLastPositions();
-                wipeCustomSettings(filename: FileNames.podcastUpdates);
-                wipeCustomSettings(filename: FileNames.lastPositions);
+                await di<PlayerService>().clearAllLastPositions();
               },
             ),
           ),

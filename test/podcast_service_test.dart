@@ -1,7 +1,9 @@
+import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:musicpod/common/data/audio.dart';
+import 'package:musicpod/common/persistence/database.dart';
 import 'package:musicpod/library/library_service.dart';
 import 'package:musicpod/notifications/notifications_service.dart';
 import 'package:musicpod/podcasts/data/podcast_genre.dart';
@@ -32,6 +34,7 @@ Future<void> main() async {
     notificationsService: mockNotificationsService,
     settingsService: mockSettingsService,
     libraryService: mockLibraryService,
+    database: Database(NativeDatabase.memory()),
   );
 
   test('searchByQuery', () async {

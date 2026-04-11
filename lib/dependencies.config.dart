@@ -192,13 +192,6 @@ extension GetItInjectableX on _i174.GetIt {
         libraryService: gh<_i595.LibraryService>(),
       ),
     );
-    gh.lazySingleton<_i721.PodcastService>(
-      () => _i721.PodcastService(
-        notificationsService: gh<_i57.NotificationsService>(),
-        settingsService: gh<_i763.SettingsService>(),
-        libraryService: gh<_i595.LibraryService>(),
-      ),
-    );
     gh.lazySingleton<_i971.RoutingManager>(
       () => _i971.RoutingManager(
         libraryService: gh<_i595.LibraryService>(),
@@ -223,6 +216,14 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioService: gh<_i438.LocalAudioService>(),
         libraryService: gh<_i595.LibraryService>(),
         internetConnection: gh<_i161.InternetConnection>(),
+      ),
+    );
+    gh.lazySingleton<_i721.PodcastService>(
+      () => _i721.PodcastService(
+        notificationsService: gh<_i57.NotificationsService>(),
+        settingsService: gh<_i763.SettingsService>(),
+        libraryService: gh<_i595.LibraryService>(),
+        database: gh<_i115.Database>(),
       ),
     );
     gh.lazySingleton<_i55.CustomContentModel>(

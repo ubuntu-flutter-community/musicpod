@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
-import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/data/audio.dart';
@@ -20,6 +19,7 @@ import '../../player/player_model.dart';
 import '../../settings/settings_model.dart';
 import 'download_button.dart';
 import 'podcast_mark_done_button.dart';
+import 'podcast_replay_button.dart';
 import 'podcast_tile_play_button.dart';
 
 class PodcastAudioTile extends StatelessWidget with WatchItMixin {
@@ -46,8 +46,9 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    watchPropertyValue((LibraryModel m) => m.downloadsLength);
-    final download = di<LibraryModel>().getDownload(audio.url);
+    final download = watchPropertyValue(
+      (LibraryModel m) => m.getDownload(audio.url),
+    );
     if ((!isOnline || showDownloadsOnly) && download == null) {
       return const SizedBox.shrink();
     }
@@ -69,8 +70,6 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
             ? 42
             : 38) /
         2;
-
-    final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
 
     return YaruExpandable(
       isExpanded: isExpanded,
@@ -141,24 +140,7 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
                           },
                           icon: Icon(Iconz.insertIntoQueue),
                         ),
-                        IconButton(
-                          tooltip: context.l10n.replayEpisode,
-                          onPressed: audio.url == null
-                              ? null
-                              : () => showFutureLoadingDialog(
-                                  context: context,
-                                  future: () async {
-                                    await playerModel.removeLastPosition(
-                                      audio.url!,
-                                    );
-                                    if (audio == currentAudio) {
-                                      playerModel.setPosition(Duration.zero);
-                                      await playerModel.seek();
-                                    }
-                                  },
-                                ),
-                          icon: Icon(Iconz.replay),
-                        ),
+                        PodcastEpisodeResetProgressButton(audio: audio),
                         EpisodeMarkDownButton(episode: audio),
                       ],
                     ),

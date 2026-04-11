@@ -1,6 +1,9 @@
+// ignore_for_file: unnecessary_parenthesis
+
 import 'dart:async';
 import 'dart:io';
 
+import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:media_kit/media_kit.dart' hide PlayerState;
@@ -43,7 +46,6 @@ class PlayerService {
   final LocalCoverService _localCoverService;
   final VideoController _controller;
   final LibraryService _libraryService;
-  // ignore: unused_field
   final Database _db;
 
   // MediaKit getters
@@ -542,16 +544,18 @@ class PlayerService {
     }
   }
 
-  // TODO: convert this nonesense to a table in the database
   Future<void> _loadLastPositions() async {
     try {
-      _lastPositions = (await getCustomSettings(FileNames.lastPositions)).map(
-        (key, value) => MapEntry(key, value.parsedDuration ?? Duration.zero),
-      );
+      final rows =
+          await (_db.podcastEpisodeTable.select()
+                ..where((t) => t.positionMs.isBiggerThanValue(0)))
+              .get();
+      _lastPositions = {
+        for (final row in rows)
+          row.contentUrl: Duration(milliseconds: row.positionMs),
+      };
     } on Exception catch (_) {
-      printMessageInDebugMode(
-        'Error while loading last positions, clearing all last positions to prevent further errors.',
-      );
+      printMessageInDebugMode('Error while loading last positions.');
       _lastPositions = {};
     }
   }
@@ -563,62 +567,57 @@ class PlayerService {
   Map<String, Duration> _lastPositions = {};
   Map<String, Duration> get lastPositions => _lastPositions;
   Future<void> addLastPosition(String key, Duration lastPosition) async {
-    try {
-      await writeCustomSetting(
-        key: key,
-        value: lastPosition.toString(),
-        filename: FileNames.lastPositions,
-      );
-    } on Exception catch (_) {
-      printMessageInDebugMode(
-        'Error while saving last position for $key, clearing all last positions to prevent further errors.',
-      );
-      await wipeCustomSettings(filename: FileNames.lastPositions);
-    }
-    if (_lastPositions.containsKey(key)) {
-      _lastPositions.update(key, (value) => lastPosition);
-    } else {
-      _lastPositions.putIfAbsent(key, () => lastPosition);
-    }
+    await (_db.podcastEpisodeTable.update()
+          ..where((t) => t.contentUrl.equals(key)))
+        .write(
+          PodcastEpisodeTableCompanion(
+            positionMs: Value(lastPosition.inMilliseconds),
+          ),
+        );
+    _lastPositions[key] = lastPosition;
     _propertiesChangedController.add(true);
   }
 
-  Future<void> safeAllLastPositions(List<Audio> audios) async {
-    await writeCustomSettings(
-      entries: audios
-          .where((e) => e.url != null && e.durationMs != null)
-          .map(
-            (e) => MapEntry(
-              e.url!,
-              Duration(milliseconds: e.durationMs!.toInt()).toString(),
-            ),
-          )
-          .toList(),
-      filename: FileNames.lastPositions,
-    );
+  Future<void> markAudiosProgressComplete(List<Audio> audios) async {
+    await _db.transaction(() async {
+      for (final e in audios) {
+        if (e.url != null && e.durationMs != null) {
+          await (_db.podcastEpisodeTable.update()
+                ..where((t) => t.contentUrl.equals(e.url!)))
+              .write(
+                PodcastEpisodeTableCompanion(
+                  durationMs: Value(e.durationMs!.toInt()),
+                  positionMs: Value(e.durationMs!.toInt()),
+                ),
+              );
+        }
+      }
+    });
     await _loadLastPositions();
-
     _propertiesChangedController.add(true);
   }
 
   Future<void> removeLastPosition(String key) async {
-    await removeCustomSetting(key: key, filename: FileNames.lastPositions);
+    await (_db.podcastEpisodeTable.update()
+          ..where((t) => t.contentUrl.equals(key)))
+        .write(const PodcastEpisodeTableCompanion(positionMs: Value(0)));
     _lastPositions.remove(key);
     _propertiesChangedController.add(true);
   }
 
   Future<void> removeLastPositions(List<Audio> audios) async {
-    await removeCustomSettings(
-      keys: audios.where((e) => e.url != null).map((e) => e.url!).toList(),
-      filename: FileNames.lastPositions,
-    );
-
+    final urls = audios.where((e) => e.url != null).map((e) => e.url!).toList();
+    await (_db.podcastEpisodeTable.update()
+          ..where((t) => t.contentUrl.isIn(urls)))
+        .write(const PodcastEpisodeTableCompanion(positionMs: Value(0)));
     await _loadLastPositions();
-
     _propertiesChangedController.add(true);
   }
 
-  void clearAllLastPositions() {
+  Future<void> clearAllLastPositions() async {
+    await (_db.podcastEpisodeTable.update()).write(
+      const PodcastEpisodeTableCompanion(positionMs: Value(0)),
+    );
     _lastPositions.clear();
     _propertiesChangedController.add(true);
   }
@@ -626,7 +625,7 @@ class PlayerService {
   Duration? getLastPosition(String? url) => _lastPositions[url];
 
   Future<void> safeLastPosition() async {
-    if (_audio?.audioType == AudioType.radio ||
+    if (_audio?.audioType != AudioType.podcast ||
         _audio?.url == null ||
         _position == null) {
       return;
