@@ -1,15 +1,11 @@
 import 'dart:convert';
 
-import 'package:collection/collection.dart';
-
 import '../../common/data/audio.dart';
 
 class PlayerState {
   final String? position;
   final String? duration;
   final Audio? audio;
-  final String? queueName;
-  final List<Audio>? queue;
   final String? volume;
   final String? rate;
 
@@ -17,8 +13,6 @@ class PlayerState {
     this.position,
     this.duration,
     this.audio,
-    this.queueName,
-    this.queue,
     this.volume,
     this.rate,
   });
@@ -27,8 +21,6 @@ class PlayerState {
     String? position,
     String? duration,
     Audio? audio,
-    String? queueName,
-    List<Audio>? queue,
     String? volume,
     String? rate,
   }) {
@@ -36,8 +28,6 @@ class PlayerState {
       position: position ?? this.position,
       duration: duration ?? this.duration,
       audio: audio ?? this.audio,
-      queueName: queueName ?? this.queueName,
-      queue: queue ?? this.queue,
       volume: volume ?? this.volume,
       rate: rate ?? this.rate,
     );
@@ -55,12 +45,6 @@ class PlayerState {
     if (audio != null) {
       result.addAll({'audio': audio!.toMap()});
     }
-    if (queueName != null) {
-      result.addAll({'queueName': queueName});
-    }
-    if (queue != null) {
-      result.addAll({'queue': queue!.map((x) => x.toMap()).toList()});
-    }
     if (volume != null) {
       result.addAll({'volume': volume});
     }
@@ -76,10 +60,6 @@ class PlayerState {
       position: map['position'],
       duration: map['duration'],
       audio: map['audio'] != null ? Audio.fromMap(map['audio']) : null,
-      queueName: map['queueName'],
-      queue: map['queue'] != null
-          ? List<Audio>.from(map['queue']?.map((x) => Audio.fromMap(x)))
-          : null,
       volume: map['volume'],
       rate: map['rate'],
     );
@@ -92,20 +72,17 @@ class PlayerState {
 
   @override
   String toString() {
-    return 'PlayerState(position: $position, duration: $duration, audio: $audio, queueName: $queueName, queue: $queue, volume: $volume, rate: $rate,)';
+    return 'PlayerState(position: $position, duration: $duration, audio: $audio, volume: $volume, rate: $rate,)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    final listEquals = const DeepCollectionEquality().equals;
 
     return other is PlayerState &&
         other.position == position &&
         other.duration == duration &&
         other.audio == audio &&
-        other.queueName == queueName &&
-        listEquals(other.queue, queue) &&
         other.volume == volume &&
         other.rate == rate;
   }
@@ -115,8 +92,6 @@ class PlayerState {
     return position.hashCode ^
         duration.hashCode ^
         audio.hashCode ^
-        queueName.hashCode ^
-        queue.hashCode ^
         volume.hashCode ^
         rate.hashCode;
   }

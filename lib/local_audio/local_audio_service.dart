@@ -479,20 +479,16 @@ class LocalAudioService {
       if (albumId != null &&
           audio.pictureData != null &&
           audio.pictureMimeType != null) {
-        final existingArt = await (_db.select(
-          _db.albumArtTable,
-        )..where((t) => t.album.equals(albumId))).getSingleOrNull();
-        if (existingArt == null) {
-          await _db
-              .into(_db.albumArtTable)
-              .insert(
-                AlbumArtTableCompanion.insert(
-                  album: albumId,
-                  pictureData: audio.pictureData!,
-                  pictureMimeType: audio.pictureMimeType!,
-                ),
-              );
-        }
+        await _db
+            .into(_db.albumArtTable)
+            .insert(
+              AlbumArtTableCompanion.insert(
+                album: albumId,
+                pictureData: audio.pictureData!,
+                pictureMimeType: audio.pictureMimeType!,
+              ),
+              mode: InsertMode.insertOrIgnore,
+            );
       }
     }
   }

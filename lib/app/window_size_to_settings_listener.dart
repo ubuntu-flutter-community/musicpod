@@ -50,7 +50,7 @@ class WindowSizeToSettingsListener implements WindowListener {
   void onWindowBlur() {}
 
   @override
-  void onWindowClose() => _playerService.persistPlayerState();
+  Future<void> onWindowClose() => _playerService.persistPlayerState();
 
   @override
   void onWindowDocked() {}

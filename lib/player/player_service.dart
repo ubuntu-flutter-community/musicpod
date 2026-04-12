@@ -1,6 +1,7 @@
 // ignore_for_file: unnecessary_parenthesis
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:drift/drift.dart';
@@ -8,22 +9,18 @@ import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:media_kit/media_kit.dart' hide PlayerState;
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:path/path.dart' as p;
 import 'package:yaru/yaru.dart';
 
 import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
-import '../common/file_names.dart';
 import '../common/logging.dart';
 import '../common/persistence/database.dart';
-import '../common/persistence_utils.dart';
 import '../expose/expose_service.dart';
 import '../extensions/media_file_x.dart';
 import '../extensions/string_x.dart';
 import '../extensions/taget_platform_x.dart';
 import '../library/library_service.dart';
 import '../local_audio/local_cover_service.dart';
-import 'data/player_state.dart';
 
 typedef Queue = ({String name, List<Audio> audios});
 
@@ -120,7 +117,9 @@ class PlayerService {
       }
     });
 
-    await _setPlayerState();
+    await _loadPlayerState();
+
+    await _loadLastPositions();
   }
 
   /// All subscriptions, native media trays and the pause timer need to be closed and disposed
@@ -509,57 +508,6 @@ class PlayerService {
     }
   }
 
-  Future<void> _setPlayerState() async {
-    final playerState = await _readPlayerState();
-
-    await _loadLastPositions();
-
-    if (playerState?.audio != null) {
-      _setAudio(playerState!.audio!);
-      setRemoteImageUrl(playerState.audio!.imageUrl);
-
-      if (playerState.duration != null) {
-        setDuration(playerState.duration!.parsedDuration);
-      }
-      if (playerState.position != null) {
-        setPosition(playerState.position!.parsedDuration);
-      }
-
-      if (playerState.queue?.isNotEmpty == true &&
-          playerState.queueName?.isNotEmpty == true) {
-        setQueue((name: playerState.queueName!, audios: playerState.queue!));
-      }
-
-      if (playerState.volume != null) {
-        setVolume(double.tryParse(playerState.volume!) ?? 100.0);
-      }
-
-      if (playerState.rate != null) {
-        setRate(double.tryParse(playerState.rate!) ?? 1.0);
-      }
-
-      _estimateNext();
-
-      await setMediaControlsMetaData(audio: playerState.audio!);
-    }
-  }
-
-  Future<void> _loadLastPositions() async {
-    try {
-      final rows =
-          await (_db.podcastEpisodeTable.select()
-                ..where((t) => t.positionMs.isBiggerThanValue(0)))
-              .get();
-      _lastPositions = {
-        for (final row in rows)
-          row.contentUrl: Duration(milliseconds: row.positionMs),
-      };
-    } on Exception catch (_) {
-      printMessageInDebugMode('Error while loading last positions.');
-      _lastPositions = {};
-    }
-  }
-
   //
   // Last Positions used when the app re-opens and for podcasts
   //
@@ -576,6 +524,22 @@ class PlayerService {
         );
     _lastPositions[key] = lastPosition;
     _propertiesChangedController.add(true);
+  }
+
+  Future<void> _loadLastPositions() async {
+    try {
+      final rows =
+          await (_db.podcastEpisodeTable.select()
+                ..where((t) => t.positionMs.isBiggerThanValue(0)))
+              .get();
+      _lastPositions = {
+        for (final row in rows)
+          row.contentUrl: Duration(milliseconds: row.positionMs),
+      };
+    } on Exception catch (_) {
+      printMessageInDebugMode('Error while loading last positions.');
+      _lastPositions = {};
+    }
   }
 
   Future<void> markAudiosProgressComplete(List<Audio> audios) async {
@@ -692,48 +656,70 @@ class PlayerService {
 
   Future<void> persistPlayerState() async {
     try {
-      await safeLastPosition();
       await _writePlayerState();
+      await safeLastPosition();
     } on Exception catch (e) {
       printMessageInDebugMode('Error while persisting player state: $e');
     }
   }
 
-  Future<void> _writePlayerState() async {
-    final playerState = PlayerState(
-      audio: _audio,
-      duration: _duration?.toString(),
-      position: _position?.toString(),
-      queue: _queue.audios.length > 100
-          ? _queue.audios.take(100).toList()
-          : _queue.audios,
-      queueName: _queue.name,
-      volume: _volume.toString(),
-      rate: _rate.toString(),
-    );
+  Future<void> _loadPlayerState() async {
+    try {
+      final row = await (_db.select(
+        _db.playerStateTable,
+      )..where((t) => t.id.equals(1))).getSingleOrNull();
+      if (row == null) return;
 
-    await writeJsonToFile(playerState.toMap(), FileNames.playerState);
-    printMessageInDebugMode(
-      'Player state saved, audio: ${playerState.audio?.title}, position: ${playerState.position}, queue length: ${playerState.queue?.length}, volume: ${playerState.volume}, rate: ${playerState.rate},',
-    );
+      Audio? audio;
+      if (row.audioJson != null) {
+        audio = Audio.fromMap(json.decode(row.audioJson!));
+      }
+      if (audio == null) return;
+
+      _setAudio(audio);
+      setRemoteImageUrl(audio.imageUrl);
+
+      if (row.duration != null) {
+        setDuration(row.duration!.parsedDuration);
+      }
+      if (row.position != null) {
+        setPosition(row.position!.parsedDuration);
+      }
+
+      if (row.volume != null) {
+        setVolume(double.tryParse(row.volume!) ?? 100.0);
+      }
+
+      if (row.rate != null) {
+        setRate(double.tryParse(row.rate!) ?? 1.0);
+      }
+
+      _estimateNext();
+
+      await setMediaControlsMetaData(audio: audio);
+    } on Exception catch (e) {
+      printMessageInDebugMode('Error loading player state: $e');
+    }
   }
 
-  Future<PlayerState?> _readPlayerState() async {
-    try {
-      final workingDir = await getWorkingDir();
-      final file = File(p.join(workingDir, FileNames.playerState));
+  Future<void> _writePlayerState() async {
+    final audioJson = _audio != null ? json.encode(_audio!.toMap()) : null;
 
-      if (file.existsSync()) {
-        final jsonStr = await file.readAsString();
-
-        return PlayerState.fromJson(jsonStr);
-      } else {
-        return null;
-      }
-    } on Exception catch (e) {
-      printMessageInDebugMode(e);
-      return null;
-    }
+    await _db
+        .into(_db.playerStateTable)
+        .insertOnConflictUpdate(
+          PlayerStateTableCompanion.insert(
+            id: const Value(1),
+            audioJson: Value(audioJson),
+            position: Value(_position?.toString()),
+            duration: Value(_duration?.toString()),
+            volume: Value(_volume?.toString()),
+            rate: Value(_rate.toString()),
+          ),
+        );
+    printMessageInDebugMode(
+      'Player state saved, audio: ${_audio?.title}, position: $_position, volume: $_volume, rate: $_rate,',
+    );
   }
 
   void playPath([String? path]) {

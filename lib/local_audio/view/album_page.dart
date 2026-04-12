@@ -74,6 +74,42 @@ class AlbumPage extends StatelessWidget with WatchItMixin {
   );
 }
 
+class AlbumPageSideBarName extends StatelessWidget with WatchItMixin {
+  const AlbumPageSideBarName({super.key, required this.albumId});
+
+  final int albumId;
+
+  @override
+  Widget build(BuildContext context) {
+    final albumName = watchValue(
+      (LocalAudioManager m) => m
+          .findAlbumCommand(albumId)
+          .select(
+            (r) => di<LocalAudioManager>().findAlbumName(albumId) ?? '...',
+          ),
+    );
+    return Text(albumName, maxLines: 1, overflow: TextOverflow.ellipsis);
+  }
+}
+
+class AlbumPageSideBarArtist extends StatelessWidget with WatchItMixin {
+  const AlbumPageSideBarArtist({super.key, required this.albumId});
+
+  final int albumId;
+
+  @override
+  Widget build(BuildContext context) {
+    final artistName = watchValue(
+      (LocalAudioManager m) => m
+          .findAlbumCommand(albumId)
+          .select(
+            (r) => di<LocalAudioManager>().findArtistOfAlbum(albumId) ?? '...',
+          ),
+    );
+    return Text(artistName, maxLines: 1, overflow: TextOverflow.ellipsis);
+  }
+}
+
 class AlbumPageSideBarIcon extends StatelessWidget with WatchItMixin {
   const AlbumPageSideBarIcon({super.key, required this.albumId});
 
@@ -85,7 +121,12 @@ class AlbumPageSideBarIcon extends StatelessWidget with WatchItMixin {
       (context) => di<LocalAudioManager>().findAlbumCommand(albumId).run(),
     );
     final albumName =
-        di<LocalAudioManager>().findAlbumName(albumId) ?? albumId.toString();
+        watchValue(
+          (LocalAudioManager m) => m
+              .findAlbumCommand(albumId)
+              .select((r) => di<LocalAudioManager>().findAlbumName(albumId)),
+        ) ??
+        albumId.toString();
     final alphabetColor = getAlphabetColor(albumName);
 
     return ClipRRect(

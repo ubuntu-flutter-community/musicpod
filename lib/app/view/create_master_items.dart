@@ -128,9 +128,8 @@ Iterable<MasterItem> createFavoriteAlbumsMasterItems(
   LocalAudioManager localAudioManager,
 ) => libraryModel.favoriteAlbums.map(
   (id) => MasterItem(
-    titleBuilder: (context) => Text(localAudioManager.findAlbumName(id) ?? ''),
-    subtitleBuilder: (context) =>
-        Text(localAudioManager.findArtistOfAlbum(id) ?? ''),
+    titleBuilder: (context) => AlbumPageSideBarName(albumId: id),
+    subtitleBuilder: (context) => AlbumPageSideBarArtist(albumId: id),
     pageId: id.toString(),
     pageBuilder: (_) => AlbumPage(id: id),
     iconBuilder: (selected) => AlbumPageSideBarIcon(albumId: id),
