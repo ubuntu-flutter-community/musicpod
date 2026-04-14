@@ -42,7 +42,7 @@ class RadioService {
   String? get connectedHost =>
       _tags == null || _tags!.isEmpty ? null : _radioBrowserApi?.host;
 
-  Future<String?> init() async {
+  Future<String?> initSearch() async {
     if (_radioBrowserApi?.host != null && _tags?.isNotEmpty == true) {
       return _radioBrowserApi?.host;
     }
@@ -97,7 +97,7 @@ class RadioService {
 
   Future<Station?> getStationByUUID(String uuid) async {
     if (_radioBrowserApi == null) {
-      await init();
+      await initSearch();
       if (connectedHost == null) {
         return null;
       }
@@ -119,7 +119,7 @@ class RadioService {
 
   Future<Station?> getStationByUrl(String url) async {
     if (_radioBrowserApi == null) {
-      await init();
+      await initSearch();
       if (connectedHost == null) {
         return null;
       }
@@ -152,7 +152,7 @@ class RadioService {
     required int limit,
   }) async {
     if (_radioBrowserApi == null) {
-      await init();
+      await initSearch();
       if (connectedHost == null) {
         return [];
       }
@@ -399,5 +399,13 @@ class RadioService {
     (_db.delete(
       _db.favoriteRadioTagTable,
     )..where((t) => t.name.equals(name))).go().then((_) => _notify());
+  }
+
+  Future<void> wipeRadioLibrary() async {
+    _favRadioTags.clear();
+    _starredStations.clear();
+    await _db.delete(_db.starredStationTable).go();
+    await _db.delete(_db.favoriteRadioTagTable).go();
+    _notify();
   }
 }

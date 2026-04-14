@@ -67,7 +67,7 @@ class PodcastService {
   SearchResult? _searchResult;
   Search? _search;
 
-  void init({bool forceInit = false}) {
+  void initSearchProvider({bool forceInit = false}) {
     if (_search == null || forceInit) {
       _search = Search(
         searchProvider:
@@ -403,47 +403,11 @@ class PodcastService {
         });
   }
 
-  void removeSubscribedPodcastImage(String feedUrl) {
-    (_db.update(_db.podcastTable)..where((t) => t.feedUrl.equals(feedUrl)))
-        .write(const PodcastTableCompanion(imageUrl: Value(null)));
-  }
-
   String? getSubscribedPodcastName(String feedUrl) =>
       _podcastCache[feedUrl]?.name;
 
-  void addSubscribedPodcastName({
-    required String feedUrl,
-    required String name,
-  }) {
-    (_db.update(_db.podcastTable)..where((t) => t.feedUrl.equals(feedUrl)))
-        .write(PodcastTableCompanion(name: Value(name)));
-    final cached = _podcastCache[feedUrl];
-    if (cached != null) {
-      _podcastCache[feedUrl] = cached.copyWith(name: name);
-    }
-  }
-
-  void removeSubscribedPodcastName(String feedUrl) {}
-
   String? getSubscribedPodcastArtist(String feedUrl) =>
       _podcastCache[feedUrl]?.artist;
-
-  void addSubscribedPodcastArtist({
-    required String feedUrl,
-    required String artist,
-  }) {
-    (_db.update(_db.podcastTable)..where((t) => t.feedUrl.equals(feedUrl)))
-        .write(PodcastTableCompanion(artist: Value(artist)))
-        .then((_) {
-          final cached = _podcastCache[feedUrl];
-          if (cached != null) {
-            _podcastCache[feedUrl] = cached.copyWith(artist: artist);
-          }
-          _notify();
-        });
-  }
-
-  void removeSubscribedPodcastArtist(String feedUrl) {}
 
   Future<void> addPodcast({
     required String feedUrl,
@@ -603,6 +567,12 @@ class PodcastService {
     await _db.delete(_db.podcastUpdateTable).go();
     await _db.delete(_db.podcastTable).go();
     _notify();
+  }
+
+  Future<void> wipePodcastLibrary() async {
+    await removeAllDownloads();
+    await removeAllPodcasts();
+    await initService();
   }
 }
 

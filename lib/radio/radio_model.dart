@@ -30,7 +30,7 @@ class RadioManager extends SafeChangeNotifier {
 
   final _stationCache = <String, Audio>{};
   late final Command<void, String?> connectCommand = Command.createAsyncNoParam(
-    () => _radioService.init(),
+    () => _radioService.initSearch(),
     initialValue: null,
   );
 

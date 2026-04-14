@@ -613,6 +613,7 @@ class LocalAudioService {
     await _db.delete(_db.artistTable).go();
     await _db.delete(_db.albumArtTable).go();
     await _db.delete(_db.genreTable).go();
+    await initLocalAudioLibrary();
   }
 
   // ── Liked Audios ──

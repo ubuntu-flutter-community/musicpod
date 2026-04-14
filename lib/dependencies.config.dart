@@ -141,9 +141,6 @@ extension GetItInjectableX on _i174.GetIt {
         localCoverService: gh<_i57.LocalCoverService>(),
       ),
     );
-    gh.lazySingleton<_i338.SettingsModel>(
-      () => _i338.SettingsModel(service: gh<_i763.SettingsService>()),
-    );
     gh.lazySingleton<_i57.NotificationsService>(
       () => _i57.NotificationsService(localNotifier: gh<_i526.LocalNotifier>()),
     );
@@ -223,6 +220,14 @@ extension GetItInjectableX on _i174.GetIt {
         externalPathService: gh<_i551.ExternalPathService>(),
       ),
       dispose: (i) => i.dispose(),
+    );
+    gh.lazySingleton<_i338.SettingsModel>(
+      () => _i338.SettingsModel(
+        service: gh<_i763.SettingsService>(),
+        podcastService: gh<_i721.PodcastService>(),
+        localAudioService: gh<_i438.LocalAudioService>(),
+        radioService: gh<_i811.RadioService>(),
+      ),
     );
     await gh.singletonAsync<_i38.PlayerService>(
       () {

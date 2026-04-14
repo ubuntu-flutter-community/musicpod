@@ -4,18 +4,32 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
+import '../local_audio/local_audio_service.dart';
+import '../podcasts/podcast_service.dart';
+import '../radio/radio_service.dart';
 import 'settings_service.dart';
 import 'shared_preferences_keys.dart';
 
 @lazySingleton
 class SettingsModel extends SafeChangeNotifier {
-  SettingsModel({required SettingsService service}) : _service = service {
+  SettingsModel({
+    required SettingsService service,
+    required PodcastService podcastService,
+    required LocalAudioService localAudioService,
+    required RadioService radioService,
+  }) : _service = service,
+       _podcastService = podcastService,
+       _localAudioService = localAudioService,
+       _radioService = radioService {
     _propertiesChangedSub ??= _service.propertiesChanged.listen(
       (_) => notifyListeners(),
     );
   }
 
   final SettingsService _service;
+  final PodcastService _podcastService;
+  final LocalAudioService _localAudioService;
+  final RadioService _radioService;
 
   int _scrollIndex = 0;
   int get scrollIndex => _scrollIndex;
@@ -216,7 +230,9 @@ class SettingsModel extends SafeChangeNotifier {
 
   late final Command<void, void> wipeAndInitLibraryCommand =
       Command.createAsyncNoParamNoResult(() async {
-        // TODO: get references to services and wipe/init them
+        await _podcastService.wipePodcastLibrary();
+        await _localAudioService.wipeLocalAudioLibrary();
+        await _radioService.wipeRadioLibrary();
       });
 
   @override

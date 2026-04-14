@@ -30,7 +30,8 @@ class PodcastManager extends SafeChangeNotifier {
 
   late final Command<({bool forceInit}), void> initSearchCommand =
       Command.createSyncNoResult(
-        (param) => _podcastService.init(forceInit: param.forceInit),
+        (param) =>
+            _podcastService.initSearchProvider(forceInit: param.forceInit),
       );
 
   Future<void> checkForUpdates({
@@ -134,15 +135,10 @@ class PodcastManager extends SafeChangeNotifier {
     name: name,
     artist: artist,
   );
+
   String? getSubscribedPodcastImage(String feedUrl) =>
       _podcastService.getSubscribedPodcastImage(feedUrl);
-  void addSubscribedPodcastImage({
-    required String feedUrl,
-    required String imageUrl,
-  }) => _podcastService.addSubscribedPodcastImage(
-    feedUrl: feedUrl,
-    imageUrl: imageUrl,
-  );
+
   String? getSubscribedPodcastName(String feedUrl) =>
       _podcastService.getSubscribedPodcastName(feedUrl);
   String? getSubscribedPodcastArtist(String feedUrl) =>

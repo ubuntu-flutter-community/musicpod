@@ -18,7 +18,7 @@ Future<void> main() async {
     setUpAll(() async {
       service = RadioService(database: MockDatabase());
 
-      await service.init();
+      await service.initSearch();
       host = service.connectedHost;
     });
 
