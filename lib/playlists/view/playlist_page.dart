@@ -21,7 +21,6 @@ import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
@@ -41,18 +40,24 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     // This is needed to be notified about both size changes and also reordering
-    watchPropertyValue((LibraryModel m) => m.getPlaylistById(pageId)?.length);
-    watchPropertyValue((LibraryModel m) => m.getPlaylistById(pageId)?.hashCode);
+    watchPropertyValue(
+      (LocalAudioManager m) => m.getPlaylistById(pageId)?.length,
+    );
+    watchPropertyValue(
+      (LocalAudioManager m) => m.getPlaylistById(pageId)?.hashCode,
+    );
 
-    final playlist = di<LibraryModel>().getPlaylistById(pageId) ?? [];
+    final playlist = di<LocalAudioManager>().getPlaylistById(pageId) ?? [];
 
     return DropRegion(
       formats: Formats.standardFormats,
       hitTestBehavior: HitTestBehavior.opaque,
       onDropEnded: (e) async {
         Future.delayed(const Duration(milliseconds: 300)).then(
-          (_) =>
-              di<LibraryModel>().updatePlaylist(id: pageId, audios: playlist),
+          (_) => di<LocalAudioManager>().updatePlaylist(
+            id: pageId,
+            audios: playlist,
+          ),
         );
       },
       onPerformDrop: (e) async {
@@ -162,16 +167,16 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
     final l10n = context.l10n;
     final allowReorder = watchValue((LocalAudioManager m) => m.allowReorder);
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
-    final libraryModel = di<LibraryModel>();
+    final localAudioManager = di<LocalAudioManager>();
     final playerModel = di<PlayerModel>();
     final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
-    watchPropertyValue((LibraryModel m) => m.externalPlaylists.length);
+    watchPropertyValue((LocalAudioManager m) => m.externalPlaylists.length);
 
     final audioPageHeader = AudioPageHeader(
       title: pageId,
       subTitle: '${audios.length} ${l10n.titles}',
       image: image,
-      label: di<LibraryModel>().externalPlaylists.contains(pageId)
+      label: di<LocalAudioManager>().externalPlaylists.contains(pageId)
           ? '${l10n.playlist} (${l10n.external})'
           : l10n.playlist,
       description: GenreBar(audios: audios),
@@ -228,7 +233,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
                   playerModel.moveAudioInQueue(oldIndex, newIndex);
                 }
 
-                libraryModel.moveAudioInPlaylist(
+                localAudioManager.moveAudioInPlaylist(
                   oldIndex: oldIndex,
                   newIndex: newIndex,
                   id: pageId,

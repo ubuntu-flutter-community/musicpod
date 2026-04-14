@@ -3,7 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
-import '../../library/library_model.dart';
+import '../podcast_manager.dart';
 
 class PodcastPageTitle extends StatelessWidget with WatchItMixin {
   const PodcastPageTitle({super.key, required this.feedUrl});
@@ -12,9 +12,9 @@ class PodcastPageTitle extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    watchPropertyValue((LibraryModel m) => m.podcastUpdatesLength);
-    final title = di<LibraryModel>().getSubscribedPodcastName(feedUrl) ?? '';
-    final visible = di<LibraryModel>().podcastUpdateAvailable(feedUrl);
+    watchPropertyValue((PodcastManager m) => m.podcastUpdatesLength);
+    final title = di<PodcastManager>().getSubscribedPodcastName(feedUrl) ?? '';
+    final visible = di<PodcastManager>().podcastUpdateAvailable(feedUrl);
     return Badge(
       backgroundColor: context.theme.colorScheme.primary,
       isLabelVisible: visible,
@@ -34,5 +34,5 @@ class PodcastPageSubTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      Text(di<LibraryModel>().getSubscribedPocastArtist(feedUrl) ?? '');
+      Text(di<PodcastManager>().getSubscribedPodcastArtist(feedUrl) ?? '');
 }

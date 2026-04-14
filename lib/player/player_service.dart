@@ -19,7 +19,7 @@ import '../expose/expose_service.dart';
 import '../extensions/media_file_x.dart';
 import '../extensions/string_x.dart';
 import '../extensions/taget_platform_x.dart';
-import '../library/library_service.dart';
+import '../podcasts/podcast_service.dart';
 import '../local_audio/local_cover_service.dart';
 
 typedef Queue = ({String name, List<Audio> audios});
@@ -30,19 +30,19 @@ class PlayerService {
     required VideoController controller,
     required ExposeService exposeService,
     required LocalCoverService localCoverService,
-    required LibraryService libraryService,
+    required PodcastService podcastService,
     required Database database,
   }) : _controller = controller,
        _exposeService = exposeService,
        _localCoverService = localCoverService,
-       _libraryService = libraryService,
+       _podcastService = podcastService,
        _db = database;
 
   // External dependencies
   final ExposeService _exposeService;
   final LocalCoverService _localCoverService;
   final VideoController _controller;
-  final LibraryService _libraryService;
+  final PodcastService _podcastService;
   final Database _db;
 
   // MediaKit getters
@@ -286,7 +286,7 @@ class PlayerService {
 
       if (_audio!.url != null && _audio!.isPodcast) {
         _audio = audio?.copyWith(
-          path: _libraryService.getDownload(_audio!.url!),
+          path: _podcastService.getDownload(_audio!.url!),
         );
       }
 

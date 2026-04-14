@@ -5,7 +5,6 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../app/routing_manager.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
@@ -46,7 +45,7 @@ class AudioTileBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final libraryModel = di<LibraryModel>();
+    final localAudioManager = di<LocalAudioManager>();
     final routingManager = di<RoutingManager>();
     return BottomSheet(
       enableDrag: false,
@@ -136,11 +135,14 @@ class AudioTileBottomSheet extends StatelessWidget {
                               _Button(
                                 onPressed: () {
                                   playlistId == PageIDs.likedAudios
-                                      ? libraryModel.removeLikedAudios(audios)
-                                      : libraryModel.removeAudiosFromPlaylist(
-                                          id: playlistId,
-                                          audios: audios,
-                                        );
+                                      ? localAudioManager.removeLikedAudios(
+                                          audios,
+                                        )
+                                      : localAudioManager
+                                            .removeAudiosFromPlaylist(
+                                              id: playlistId,
+                                              audios: audios,
+                                            );
                                   Navigator.of(context).pop();
                                 },
                                 icon: Icon(Iconz.remove),

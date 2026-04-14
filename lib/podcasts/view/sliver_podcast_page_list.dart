@@ -3,7 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/connectivity_manager.dart';
 import '../../common/data/audio.dart';
-import '../../library/library_model.dart';
+import '../podcast_manager.dart';
 import '../../player/player_model.dart';
 import 'podcast_audio_tile.dart';
 
@@ -22,7 +22,7 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final playerModel = di<PlayerModel>();
-    final libraryModel = di<LibraryModel>();
+    final podcastManager = di<PodcastManager>();
     final selectedAudio = watchPropertyValue((PlayerModel m) => m.audio);
     final isOnline = watchValue(
       (ConnectivityManager m) =>
@@ -43,7 +43,7 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
           isOnline: isOnline,
           addPodcast: episode.feedUrl == null
               ? null
-              : () async => libraryModel.addPodcast(
+              : () async => podcastManager.addPodcast(
                   feedUrl: episode.feedUrl!,
                   imageUrl: episode.albumArtUrl ?? episode.imageUrl ?? '',
                   name: episode.podcastTitle ?? '',

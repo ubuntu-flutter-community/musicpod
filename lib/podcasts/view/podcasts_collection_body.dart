@@ -18,7 +18,6 @@ import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../settings/view/settings_action.dart';
@@ -37,16 +36,18 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
     );
     if (!isOnline) return const OfflineBody();
 
-    final subs = watchPropertyValue((LibraryModel m) => m.podcastFeedUrls);
-    final libraryModel = di<LibraryModel>();
+    final subs = watchPropertyValue((PodcastManager m) => m.podcastFeedUrls);
+    final podcastManager = di<PodcastManager>();
     final updatesLength = watchPropertyValue(
-      (LibraryModel m) => m.podcastUpdatesLength,
+      (PodcastManager m) => m.podcastUpdatesLength,
     );
     final updatesOnly = watchValue((PodcastManager m) => m.updatesOnly);
     final downloadsOnly = watchValue((PodcastManager m) => m.downloadsOnly);
-    final subsLength = watchPropertyValue((LibraryModel m) => m.podcastsLength);
+    final subsLength = watchPropertyValue(
+      (PodcastManager m) => m.podcastsLength,
+    );
     final feedsWithDownloadLength = watchPropertyValue(
-      (LibraryModel m) => m.feedsWithDownloadsLength,
+      (PodcastManager m) => m.feedsWithDownloadsLength,
     );
 
     final itemCount = updatesOnly
@@ -106,11 +107,11 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                 final String? feedUrl;
                 if (updatesOnly) {
                   feedUrl = subs
-                      .where((e) => libraryModel.podcastUpdateAvailable(e))
+                      .where((e) => podcastManager.podcastUpdateAvailable(e))
                       .elementAtOrNull(index);
                 } else if (downloadsOnly) {
                   feedUrl = subs
-                      .where((e) => libraryModel.feedHasDownload(e))
+                      .where((e) => podcastManager.feedHasDownload(e))
                       .elementAtOrNull(index);
                 } else {
                   feedUrl = subs.elementAtOrNull(index);
@@ -123,14 +124,16 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                 return AudioCard(
                   key: ValueKey(feedUrl),
                   image: SafeNetworkImage(
-                    url: di<LibraryModel>().getSubscribedPodcastImage(feedUrl),
+                    url: di<PodcastManager>().getSubscribedPodcastImage(
+                      feedUrl,
+                    ),
                     fit: BoxFit.cover,
                     height: audioCardDimension,
                     width: audioCardDimension,
                     fallBackIcon: Icon(Iconz.podcast, size: 70),
                   ),
                   bottom: AudioCardBottom(
-                    style: libraryModel.podcastUpdateAvailable(feedUrl)
+                    style: podcastManager.podcastUpdateAvailable(feedUrl)
                         ? theme.textTheme.bodyMedium?.copyWith(
                                 color: theme.colorScheme.primary,
                                 fontWeight: FontWeight.bold,
@@ -140,7 +143,9 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                                 fontWeight: FontWeight.bold,
                               )
                         : null,
-                    text: di<LibraryModel>().getSubscribedPodcastName(feedUrl),
+                    text: di<PodcastManager>().getSubscribedPodcastName(
+                      feedUrl,
+                    ),
                   ),
                   onPlay: () =>
                       showFutureLoadingDialog(

@@ -9,12 +9,23 @@ import '../l10n/app_localizations.dart';
 import 'radio_service.dart';
 
 @lazySingleton
-class RadioManager {
+class RadioManager extends SafeChangeNotifier {
   final RadioService _radioService;
+  StreamSubscription<bool>? _propertiesChangedSub;
 
   RadioManager({required RadioService radioService})
     : _radioService = radioService {
+    _propertiesChangedSub = _radioService.propertiesChanged.listen(
+      (_) => notifyListeners(),
+    );
     connectCommand.run();
+  }
+
+  @disposeMethod
+  @override
+  Future<void> dispose() async {
+    await _propertiesChangedSub?.cancel();
+    super.dispose();
   }
 
   final _stationCache = <String, Audio>{};
@@ -76,6 +87,29 @@ class RadioManager {
     if (value == radioCollectionView.value) return;
     radioCollectionView.value = value;
   }
+
+  //
+  // Starred stations
+  //
+
+  List<String> get starredStations => _radioService.starredStations;
+  int get starredStationsLength => _radioService.starredStationsLength;
+  void addStarredStation(String uuid) => _radioService.addStarredStation(uuid);
+  void unStarStation(String uuid) => _radioService.removeStarredStation(uuid);
+  void unStarAllStations() => _radioService.unStarAllStations();
+
+  bool isStarredStation(String? uuid) =>
+      uuid?.isNotEmpty == false ? false : _radioService.isStarredStation(uuid);
+
+  //
+  // Fav radio tags
+  //
+
+  void addFavRadioTag(String value) => _radioService.addFavRadioTag(value);
+  void removeRadioFavTag(String value) =>
+      _radioService.removeFavRadioTag(value);
+  Set<String> get favRadioTags => _radioService.favRadioTags;
+  int get favRadioTagsLength => _radioService.favRadioTags.length;
 }
 
 enum RadioCollectionView {

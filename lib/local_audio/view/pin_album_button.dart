@@ -3,7 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/snackbars.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
+import '../local_audio_manager.dart';
 
 class PinAlbumButton extends StatelessWidget with WatchItMixin {
   const PinAlbumButton({super.key, required this.albumId});
@@ -12,8 +12,8 @@ class PinAlbumButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    watchPropertyValue((LibraryModel m) => m.favoriteAlbums.length);
-    final pinnedAlbum = di<LibraryModel>().isFavoriteAlbum(albumId);
+    watchPropertyValue((LocalAudioManager m) => m.pinnedAlbums.length);
+    final pinnedAlbum = di<LocalAudioManager>().isPinnedAlbum(albumId);
     return IconButton(
       key: ValueKey(pinnedAlbum),
       tooltip: pinnedAlbum ? context.l10n.unPinAlbum : context.l10n.pinAlbum,
@@ -21,7 +21,7 @@ class PinAlbumButton extends StatelessWidget with WatchItMixin {
       icon: Icon(pinnedAlbum ? Iconz.pinFilled : Iconz.pin),
       onPressed: () {
         if (pinnedAlbum) {
-          di<LibraryModel>().removeFavoriteAlbum(
+          di<LocalAudioManager>().unpinAlbum(
             albumId,
             onFail: () {
               showSnackBar(
@@ -31,7 +31,7 @@ class PinAlbumButton extends StatelessWidget with WatchItMixin {
             },
           );
         } else {
-          di<LibraryModel>().addFavoriteAlbum(
+          di<LocalAudioManager>().pinAlbum(
             albumId,
             onFail: () {
               showSnackBar(

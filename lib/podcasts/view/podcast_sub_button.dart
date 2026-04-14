@@ -5,7 +5,7 @@ import '../../app/routing_manager.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
+import '../podcast_manager.dart';
 
 class PodcastSubButton extends StatelessWidget with WatchItMixin {
   const PodcastSubButton({
@@ -23,10 +23,10 @@ class PodcastSubButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final libraryModel = di<LibraryModel>();
+    final podcastManager = di<PodcastManager>();
 
     final subscribed = watchPropertyValue(
-      (LibraryModel m) => m.isPodcastSubscribed(pageId),
+      (PodcastManager m) => m.isPodcastSubscribed(pageId),
     );
 
     final disabled = pageId.isEmpty;
@@ -43,10 +43,10 @@ class PodcastSubButton extends StatelessWidget with WatchItMixin {
           ? null
           : () async {
               if (subscribed) {
-                libraryModel.removePodcast(pageId);
+                podcastManager.removePodcast(pageId);
                 di<RoutingManager>().pop();
               } else {
-                libraryModel.addPodcast(
+                podcastManager.addPodcast(
                   feedUrl: pageId,
                   imageUrl: imageUrl,
                   name: name,

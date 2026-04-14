@@ -11,7 +11,6 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../settings/settings_model.dart';
 import '../search_model.dart';
 
@@ -94,10 +93,9 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final libraryModel = di<LibraryModel>();
     final searchModel = di<SearchModel>();
-    watchPropertyValue((LibraryModel m) => m.favLanguagesLength);
-    watchPropertyValue((LibraryModel m) => m.favCountriesLength);
+    watchPropertyValue((SettingsModel m) => m.favoriteLanguageCodeLength);
+    watchPropertyValue((SettingsModel m) => m.favoriteCountryCodeLength);
     final country = watchPropertyValue((SearchModel m) => m.country);
 
     void setCountry(Country? country) {
@@ -110,10 +108,10 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
     final usePodcastIndex = watchPropertyValue(
       (SettingsModel m) => m.usePodcastIndex,
     );
-    watchPropertyValue((LibraryModel m) => m.favLanguagesLength);
-    watchPropertyValue((LibraryModel m) => m.favCountriesLength);
+    watchPropertyValue((SettingsModel m) => m.favoriteLanguageCodeLength);
+    watchPropertyValue((SettingsModel m) => m.favoriteCountryCodeLength);
     final favLanguageCodes = watchPropertyValue(
-      (LibraryModel m) => m.favLanguageCodes,
+      (SettingsModel m) => m.favoriteLanguageCode,
     );
 
     final language = watchPropertyValue((SearchModel m) => m.language);
@@ -138,11 +136,11 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
             favs: favLanguageCodes,
             addFav: (language) {
               if (language?.isoCode == null) return;
-              libraryModel.addFavLanguageCode(language!.isoCode);
+              di<SettingsModel>().addFavoriteLanguageCode(language!.isoCode);
             },
             removeFav: (language) {
               if (language?.isoCode == null) return;
-              libraryModel.removeFavLanguageCode(language!.isoCode);
+              di<SettingsModel>().removeFavoriteLanguageCode(language!.isoCode);
             },
             onSelected: (language) {
               Navigator.of(context).pop();
@@ -162,10 +160,14 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
             height: height,
             countries: [
               ...[...Country.values].where(
-                (e) => libraryModel.favCountryCodes.contains(e.code) == true,
+                (e) =>
+                    di<SettingsModel>().favoriteCountryCode.contains(e.code) ==
+                    true,
               ),
               ...[...Country.values].where(
-                (e) => libraryModel.favCountryCodes.contains(e.code) == false,
+                (e) =>
+                    di<SettingsModel>().favoriteCountryCode.contains(e.code) ==
+                    false,
               ),
             ]..remove(Country.none),
             onSelected: (country) {
@@ -176,13 +178,13 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
             value: country,
             addFav: (v) {
               if (country?.code == null) return;
-              libraryModel.addFavCountryCode(v!.code);
+              di<SettingsModel>().addFavoriteCountryCode(v!.code);
             },
             removeFav: (v) {
               if (country?.code == null) return;
-              libraryModel.removeFavCountryCode(v!.code);
+              di<SettingsModel>().removeFavoriteCountryCode(v!.code);
             },
-            favs: libraryModel.favCountryCodes,
+            favs: di<SettingsModel>().favoriteCountryCode,
           );
   }
 }

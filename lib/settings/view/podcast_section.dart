@@ -11,7 +11,6 @@ import '../../custom_content/custom_content_model.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../player/player_service.dart';
 import '../../podcasts/download_manager.dart';
 import '../../podcasts/podcast_manager.dart';
@@ -185,7 +184,7 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
               confirmLabel: context.l10n.ok,
               cancelLabel: context.l10n.cancel,
               onConfirm: () async {
-                await di<LibraryModel>().removeAllPodcasts();
+                await di<PodcastManager>().removeAllPodcasts();
                 await di<PlayerService>().clearAllLastPositions();
               },
             ),

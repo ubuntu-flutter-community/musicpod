@@ -10,7 +10,7 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
+import '../../local_audio/local_audio_manager.dart';
 import 'add_to_playlist_snack_bar.dart';
 
 class AddToPlaylistNavigator extends StatelessWidget {
@@ -43,7 +43,9 @@ class _PlaylistTilesList extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final playlistNames = watchPropertyValue((LibraryModel m) => m.playlistIDs);
+    final playlistNames = watchPropertyValue(
+      (LocalAudioManager m) => m.playlistIDs,
+    );
 
     final children = [
       ListTile(
@@ -59,7 +61,7 @@ class _PlaylistTilesList extends StatelessWidget with WatchItMixin {
         playlistId: PageIDs.likedAudios,
         title: context.l10n.likedSongs,
         iconData: Iconz.heartFilled,
-        libraryModel: di<LibraryModel>(),
+        localAudioManager: di<LocalAudioManager>(),
         audios: audios,
       ),
       ...playlistNames.map(
@@ -67,7 +69,7 @@ class _PlaylistTilesList extends StatelessWidget with WatchItMixin {
           builder: (context) {
             return _PlaylistTile(
               playlistId: playlistId,
-              libraryModel: di<LibraryModel>(),
+              localAudioManager: di<LocalAudioManager>(),
               audios: audios,
             );
           },
@@ -87,14 +89,14 @@ class _PlaylistTilesList extends StatelessWidget with WatchItMixin {
 
 class _PlaylistTile extends StatelessWidget {
   const _PlaylistTile({
-    required this.libraryModel,
+    required this.localAudioManager,
     required this.audios,
     required this.playlistId,
     this.title,
     this.iconData,
   });
 
-  final LibraryModel libraryModel;
+  final LocalAudioManager localAudioManager;
   final List<Audio> audios;
   final String playlistId;
   final String? title;
@@ -109,9 +111,9 @@ class _PlaylistTile extends StatelessWidget {
       contentPadding: padding,
       onTap: () {
         if (playlistId == PageIDs.likedAudios) {
-          libraryModel.addLikedAudios(audios);
+          localAudioManager.addLikedAudios(audios);
         } else {
-          libraryModel.addAudiosToPlaylist(id: playlistId, audios: audios);
+          localAudioManager.addAudiosToPlaylist(id: playlistId, audios: audios);
         }
 
         Navigator.of(context, rootNavigator: true).maybePop();
@@ -152,7 +154,7 @@ class _NewViewState extends State<_NewView> {
 
   @override
   Widget build(BuildContext context) {
-    final libraryModel = di<LibraryModel>();
+    final localAudioManager = di<LocalAudioManager>();
     return Container(
       decoration: BoxDecoration(
         color: context.theme.dialogTheme.backgroundColor,
@@ -178,7 +180,10 @@ class _NewViewState extends State<_NewView> {
                   ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop();
-                      libraryModel.addPlaylist(_controller.text, widget.audios);
+                      localAudioManager.addPlaylist(
+                        _controller.text,
+                        widget.audios,
+                      );
                       showAddedToPlaylistSnackBar(
                         context: context,
                         id: _controller.text,

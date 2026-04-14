@@ -9,17 +9,28 @@ import '../settings/settings_service.dart';
 import '../settings/shared_preferences_keys.dart';
 import 'page_ids.dart';
 import '../extensions/taget_platform_x.dart';
-import '../library/library_service.dart';
+import '../local_audio/local_audio_service.dart';
+import '../podcasts/podcast_service.dart';
+import '../radio/radio_service.dart';
 import 'view/mobile_page.dart';
 
 @lazySingleton
 class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
   RoutingManager({
-    required LibraryService libraryService,
+    required PodcastService podcastService,
+    required LocalAudioService localAudioService,
+    required RadioService radioService,
     required SettingsService settingsService,
-  }) : _libraryService = libraryService,
+  }) : _podcastService = podcastService,
+       _localAudioService = localAudioService,
+       _radioService = radioService,
        _settingsService = settingsService {
-    _libraryPropertiesChangedSub ??= _libraryService.propertiesChanged.listen(
+    _podcastPropertiesChangedSub ??= _podcastService.propertiesChanged.listen(
+      (_) => notifyListeners(),
+    );
+    _localAudioPropertiesChangedSub ??= _localAudioService.propertiesChanged
+        .listen((_) => notifyListeners());
+    _radioPropertiesChangedSub ??= _radioService.propertiesChanged.listen(
       (_) => notifyListeners(),
     );
     _settingsChangedChangedSub ??= _settingsService.propertiesChanged.listen(
@@ -27,15 +38,21 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
     );
   }
 
-  final LibraryService _libraryService;
+  final PodcastService _podcastService;
+  final LocalAudioService _localAudioService;
+  final RadioService _radioService;
   final SettingsService _settingsService;
-  StreamSubscription<bool>? _libraryPropertiesChangedSub;
+  StreamSubscription<bool>? _podcastPropertiesChangedSub;
+  StreamSubscription<bool>? _localAudioPropertiesChangedSub;
+  StreamSubscription<bool>? _radioPropertiesChangedSub;
   StreamSubscription<bool>? _settingsChangedChangedSub;
 
   @disposeMethod
   @override
   Future<void> dispose() async {
-    await _libraryPropertiesChangedSub?.cancel();
+    await _podcastPropertiesChangedSub?.cancel();
+    await _localAudioPropertiesChangedSub?.cancel();
+    await _radioPropertiesChangedSub?.cancel();
     await _settingsChangedChangedSub?.cancel();
     super.dispose();
   }
@@ -44,10 +61,10 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
       pageId != null &&
       (PageIDs.permanent.contains(pageId) ||
           (int.tryParse(pageId) != null &&
-              _libraryService.favoriteAlbums.contains(int.parse(pageId))) ||
-          _libraryService.isStarredStation(pageId) ||
-          _libraryService.isPlaylistSaved(pageId) ||
-          _libraryService.isPodcastSubscribed(pageId));
+              _localAudioService.isPinnedAlbum(int.parse(pageId))) ||
+          _radioService.isStarredStation(pageId) ||
+          _localAudioService.isPlaylistSaved(pageId) ||
+          _podcastService.isPodcastSubscribed(pageId));
 
   String? get selectedPageId => _settingsService.getString(SPKeys.selectedPage);
   void _setSelectedPageId(String pageId) =>

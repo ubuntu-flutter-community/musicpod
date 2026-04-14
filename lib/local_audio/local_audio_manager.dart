@@ -7,19 +7,26 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
 import '../common/view/audio_filter.dart';
-import '../library/library_service.dart';
 import 'local_audio_service.dart';
 
 @lazySingleton
-class LocalAudioManager {
-  LocalAudioManager({
-    required LocalAudioService localAudioService,
-    required LibraryService libraryService,
-  }) : _localAudioService = localAudioService,
-       _libraryService = libraryService;
+class LocalAudioManager extends SafeChangeNotifier {
+  LocalAudioManager({required LocalAudioService localAudioService})
+    : _localAudioService = localAudioService {
+    _propertiesChangedSub ??= _localAudioService.propertiesChanged.listen(
+      (_) => notifyListeners(),
+    );
+  }
 
   final LocalAudioService _localAudioService;
-  final LibraryService _libraryService;
+  StreamSubscription<bool>? _propertiesChangedSub;
+
+  @disposeMethod
+  @override
+  Future<void> dispose() async {
+    await _propertiesChangedSub?.cancel();
+    super.dispose();
+  }
 
   void changeMetadata(
     Audio audio, {
@@ -140,7 +147,90 @@ class LocalAudioManager {
       newDirectory: param.directory,
       extraAudios: param.extraAudios,
     );
-    await _libraryService.initLocalAudioLibrary();
     return localAudioResult;
   }, initialValue: null);
+
+  //
+  // Liked Audios
+  //
+  int get likedAudiosLength => _localAudioService.likedAudiosLength;
+  List<Audio> get likedAudios => _localAudioService.likedAudios;
+  void addLikedAudio(Audio audio) => _localAudioService.addLikedAudio(audio);
+  void addLikedAudios(List<Audio> audios) =>
+      _localAudioService.addLikedAudios(audios);
+  void removeLikedAudios(List<Audio> audios) =>
+      _localAudioService.removeLikedAudios(audios);
+  bool isLikedAudio(Audio? audio) =>
+      audio == null ? false : _localAudioService.isLiked(audio);
+  bool isLikedAudios(List<Audio> audios) =>
+      _localAudioService.isLikedAudios(audios);
+  void removeLikedAudio(Audio audio, [bool notify = true]) =>
+      _localAudioService.removeLikedAudio(audio, notify);
+
+  //
+  // Playlists
+  //
+  List<String> get playlistIDs => _localAudioService.playlistIDs;
+  int get playlistsLength => playlistIDs.length;
+  List<Audio>? getPlaylistById(String id) =>
+      _localAudioService.getPlaylistById(id);
+  List<String> get externalPlaylists => _localAudioService.externalPlaylistIDs;
+  List<Audio> get externalPlaylistAudios =>
+      _localAudioService.externalPlaylistAudios;
+
+  bool isPlaylistSaved(String? id) => _localAudioService.isPlaylistSaved(id);
+  Future<void> addPlaylist(String name, List<Audio> audios) async =>
+      _localAudioService.addPlaylist(name, audios);
+  Future<void> addExternalPlaylists(
+    List<({String id, List<Audio> audios})> playlists,
+  ) async => _localAudioService.addExternalPlaylists(playlists: playlists);
+
+  Future<void> updatePlaylist({
+    required String id,
+    required List<Audio> audios,
+    bool external = false,
+  }) async => _localAudioService.updatePlaylist(
+    id: id,
+    audios: audios,
+    external: external,
+  );
+  Future<void> removePlaylist(String id) =>
+      _localAudioService.removePlaylist(id);
+
+  Future<void> updatePlaylistName(String oldName, String newName) async =>
+      _localAudioService.updatePlaylistName(oldName, newName);
+  void addAudiosToPlaylist({required String id, required List<Audio> audios}) =>
+      _localAudioService.addAudiosToPlaylist(id: id, audios: audios);
+  Future<void> removeAudiosFromPlaylist({
+    required String id,
+    required List<Audio> audios,
+  }) async =>
+      _localAudioService.removeAudiosFromPlaylist(id: id, audios: audios);
+
+  void clearPlaylist(String id) => _localAudioService.clearPlaylist(id);
+  void moveAudioInPlaylist({
+    required int oldIndex,
+    required int newIndex,
+    required String id,
+  }) {
+    _localAudioService.moveAudioInPlaylist(
+      oldIndex: oldIndex,
+      newIndex: newIndex,
+      id: id,
+    );
+  }
+
+  //
+  // Pinned Albums
+  //
+  List<int> get pinnedAlbums => _localAudioService.pinnedAlbums;
+  int get pinnedAlbumsLength => _localAudioService.pinnedAlbums.length;
+
+  bool isPinnedAlbum(int id) => _localAudioService.isPinnedAlbum(id);
+
+  void pinAlbum(int id, {required Function() onFail}) =>
+      _localAudioService.pinAlbum(id, onFail: onFail);
+
+  void unpinAlbum(int id, {required Function() onFail}) =>
+      _localAudioService.unpinAlbum(id, onFail: onFail);
 }

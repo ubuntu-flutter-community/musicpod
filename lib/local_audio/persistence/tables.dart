@@ -9,6 +9,7 @@ class AlbumTable extends Table {
   late final id = integer().autoIncrement()();
   late final name = text()();
   late final artist = integer().references(ArtistTable, #id)();
+  late final pinned = boolean().withDefault(const Constant(false))();
 }
 
 class AlbumArtTable extends Table {
@@ -59,9 +60,4 @@ class PlaylistTrackTable extends Table {
 class LikedTrackTable extends Table {
   late final id = integer().autoIncrement()();
   late final trackId = integer().references(TrackTable, #id)();
-}
-
-class PinnedAlbumTable extends Table {
-  late final id = integer().autoIncrement()();
-  late final albumId = integer().references(AlbumTable, #id)();
 }

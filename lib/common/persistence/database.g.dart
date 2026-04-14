@@ -232,8 +232,21 @@ class $AlbumTableTable extends AlbumTable
       'REFERENCES artist_table (id)',
     ),
   );
+  static const VerificationMeta _pinnedMeta = const VerificationMeta('pinned');
   @override
-  List<GeneratedColumn> get $columns => [id, name, artist];
+  late final GeneratedColumn<bool> pinned = GeneratedColumn<bool>(
+    'pinned',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("pinned" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, name, artist, pinned];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -265,6 +278,12 @@ class $AlbumTableTable extends AlbumTable
     } else if (isInserting) {
       context.missing(_artistMeta);
     }
+    if (data.containsKey('pinned')) {
+      context.handle(
+        _pinnedMeta,
+        pinned.isAcceptableOrUnknown(data['pinned']!, _pinnedMeta),
+      );
+    }
     return context;
   }
 
@@ -286,6 +305,10 @@ class $AlbumTableTable extends AlbumTable
         DriftSqlType.int,
         data['${effectivePrefix}artist'],
       )!,
+      pinned: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}pinned'],
+      )!,
     );
   }
 
@@ -299,10 +322,12 @@ class AlbumTableData extends DataClass implements Insertable<AlbumTableData> {
   final int id;
   final String name;
   final int artist;
+  final bool pinned;
   const AlbumTableData({
     required this.id,
     required this.name,
     required this.artist,
+    required this.pinned,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -310,6 +335,7 @@ class AlbumTableData extends DataClass implements Insertable<AlbumTableData> {
     map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
     map['artist'] = Variable<int>(artist);
+    map['pinned'] = Variable<bool>(pinned);
     return map;
   }
 
@@ -318,6 +344,7 @@ class AlbumTableData extends DataClass implements Insertable<AlbumTableData> {
       id: Value(id),
       name: Value(name),
       artist: Value(artist),
+      pinned: Value(pinned),
     );
   }
 
@@ -330,6 +357,7 @@ class AlbumTableData extends DataClass implements Insertable<AlbumTableData> {
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       artist: serializer.fromJson<int>(json['artist']),
+      pinned: serializer.fromJson<bool>(json['pinned']),
     );
   }
   @override
@@ -339,20 +367,23 @@ class AlbumTableData extends DataClass implements Insertable<AlbumTableData> {
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
       'artist': serializer.toJson<int>(artist),
+      'pinned': serializer.toJson<bool>(pinned),
     };
   }
 
-  AlbumTableData copyWith({int? id, String? name, int? artist}) =>
+  AlbumTableData copyWith({int? id, String? name, int? artist, bool? pinned}) =>
       AlbumTableData(
         id: id ?? this.id,
         name: name ?? this.name,
         artist: artist ?? this.artist,
+        pinned: pinned ?? this.pinned,
       );
   AlbumTableData copyWithCompanion(AlbumTableCompanion data) {
     return AlbumTableData(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
       artist: data.artist.present ? data.artist.value : this.artist,
+      pinned: data.pinned.present ? data.pinned.value : this.pinned,
     );
   }
 
@@ -361,46 +392,53 @@ class AlbumTableData extends DataClass implements Insertable<AlbumTableData> {
     return (StringBuffer('AlbumTableData(')
           ..write('id: $id, ')
           ..write('name: $name, ')
-          ..write('artist: $artist')
+          ..write('artist: $artist, ')
+          ..write('pinned: $pinned')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name, artist);
+  int get hashCode => Object.hash(id, name, artist, pinned);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is AlbumTableData &&
           other.id == this.id &&
           other.name == this.name &&
-          other.artist == this.artist);
+          other.artist == this.artist &&
+          other.pinned == this.pinned);
 }
 
 class AlbumTableCompanion extends UpdateCompanion<AlbumTableData> {
   final Value<int> id;
   final Value<String> name;
   final Value<int> artist;
+  final Value<bool> pinned;
   const AlbumTableCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.artist = const Value.absent(),
+    this.pinned = const Value.absent(),
   });
   AlbumTableCompanion.insert({
     this.id = const Value.absent(),
     required String name,
     required int artist,
+    this.pinned = const Value.absent(),
   }) : name = Value(name),
        artist = Value(artist);
   static Insertable<AlbumTableData> custom({
     Expression<int>? id,
     Expression<String>? name,
     Expression<int>? artist,
+    Expression<bool>? pinned,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
       if (artist != null) 'artist': artist,
+      if (pinned != null) 'pinned': pinned,
     });
   }
 
@@ -408,11 +446,13 @@ class AlbumTableCompanion extends UpdateCompanion<AlbumTableData> {
     Value<int>? id,
     Value<String>? name,
     Value<int>? artist,
+    Value<bool>? pinned,
   }) {
     return AlbumTableCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
       artist: artist ?? this.artist,
+      pinned: pinned ?? this.pinned,
     );
   }
 
@@ -428,6 +468,9 @@ class AlbumTableCompanion extends UpdateCompanion<AlbumTableData> {
     if (artist.present) {
       map['artist'] = Variable<int>(artist.value);
     }
+    if (pinned.present) {
+      map['pinned'] = Variable<bool>(pinned.value);
+    }
     return map;
   }
 
@@ -436,7 +479,8 @@ class AlbumTableCompanion extends UpdateCompanion<AlbumTableData> {
     return (StringBuffer('AlbumTableCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
-          ..write('artist: $artist')
+          ..write('artist: $artist, ')
+          ..write('pinned: $pinned')
           ..write(')'))
         .toString();
   }
@@ -2430,204 +2474,6 @@ class LikedTrackTableCompanion extends UpdateCompanion<LikedTrackTableData> {
   }
 }
 
-class $PinnedAlbumTableTable extends PinnedAlbumTable
-    with TableInfo<$PinnedAlbumTableTable, PinnedAlbumTableData> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $PinnedAlbumTableTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
-  static const VerificationMeta _albumIdMeta = const VerificationMeta(
-    'albumId',
-  );
-  @override
-  late final GeneratedColumn<int> albumId = GeneratedColumn<int>(
-    'album_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES album_table (id)',
-    ),
-  );
-  @override
-  List<GeneratedColumn> get $columns => [id, albumId];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'pinned_album_table';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<PinnedAlbumTableData> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('album_id')) {
-      context.handle(
-        _albumIdMeta,
-        albumId.isAcceptableOrUnknown(data['album_id']!, _albumIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_albumIdMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  PinnedAlbumTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return PinnedAlbumTableData(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
-      albumId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}album_id'],
-      )!,
-    );
-  }
-
-  @override
-  $PinnedAlbumTableTable createAlias(String alias) {
-    return $PinnedAlbumTableTable(attachedDatabase, alias);
-  }
-}
-
-class PinnedAlbumTableData extends DataClass
-    implements Insertable<PinnedAlbumTableData> {
-  final int id;
-  final int albumId;
-  const PinnedAlbumTableData({required this.id, required this.albumId});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['album_id'] = Variable<int>(albumId);
-    return map;
-  }
-
-  PinnedAlbumTableCompanion toCompanion(bool nullToAbsent) {
-    return PinnedAlbumTableCompanion(id: Value(id), albumId: Value(albumId));
-  }
-
-  factory PinnedAlbumTableData.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return PinnedAlbumTableData(
-      id: serializer.fromJson<int>(json['id']),
-      albumId: serializer.fromJson<int>(json['albumId']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'albumId': serializer.toJson<int>(albumId),
-    };
-  }
-
-  PinnedAlbumTableData copyWith({int? id, int? albumId}) =>
-      PinnedAlbumTableData(id: id ?? this.id, albumId: albumId ?? this.albumId);
-  PinnedAlbumTableData copyWithCompanion(PinnedAlbumTableCompanion data) {
-    return PinnedAlbumTableData(
-      id: data.id.present ? data.id.value : this.id,
-      albumId: data.albumId.present ? data.albumId.value : this.albumId,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('PinnedAlbumTableData(')
-          ..write('id: $id, ')
-          ..write('albumId: $albumId')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(id, albumId);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is PinnedAlbumTableData &&
-          other.id == this.id &&
-          other.albumId == this.albumId);
-}
-
-class PinnedAlbumTableCompanion extends UpdateCompanion<PinnedAlbumTableData> {
-  final Value<int> id;
-  final Value<int> albumId;
-  const PinnedAlbumTableCompanion({
-    this.id = const Value.absent(),
-    this.albumId = const Value.absent(),
-  });
-  PinnedAlbumTableCompanion.insert({
-    this.id = const Value.absent(),
-    required int albumId,
-  }) : albumId = Value(albumId);
-  static Insertable<PinnedAlbumTableData> custom({
-    Expression<int>? id,
-    Expression<int>? albumId,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (albumId != null) 'album_id': albumId,
-    });
-  }
-
-  PinnedAlbumTableCompanion copyWith({Value<int>? id, Value<int>? albumId}) {
-    return PinnedAlbumTableCompanion(
-      id: id ?? this.id,
-      albumId: albumId ?? this.albumId,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (albumId.present) {
-      map['album_id'] = Variable<int>(albumId.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('PinnedAlbumTableCompanion(')
-          ..write('id: $id, ')
-          ..write('albumId: $albumId')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class $StarredStationTableTable extends StarredStationTable
     with TableInfo<$StarredStationTableTable, StarredStationTableData> {
   @override
@@ -2995,635 +2841,6 @@ class FavoriteRadioTagTableCompanion
     return (StringBuffer('FavoriteRadioTagTableCompanion(')
           ..write('id: $id, ')
           ..write('name: $name')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $FavoriteCountryTableTable extends FavoriteCountryTable
-    with TableInfo<$FavoriteCountryTableTable, FavoriteCountryTableData> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $FavoriteCountryTableTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
-  static const VerificationMeta _codeMeta = const VerificationMeta('code');
-  @override
-  late final GeneratedColumn<String> code = GeneratedColumn<String>(
-    'code',
-    aliasedName,
-    false,
-    additionalChecks: GeneratedColumn.checkTextLength(
-      minTextLength: 2,
-      maxTextLength: 2,
-    ),
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  @override
-  List<GeneratedColumn> get $columns => [id, code];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'favorite_country_table';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<FavoriteCountryTableData> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('code')) {
-      context.handle(
-        _codeMeta,
-        code.isAcceptableOrUnknown(data['code']!, _codeMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_codeMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  FavoriteCountryTableData map(
-    Map<String, dynamic> data, {
-    String? tablePrefix,
-  }) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return FavoriteCountryTableData(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
-      code: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}code'],
-      )!,
-    );
-  }
-
-  @override
-  $FavoriteCountryTableTable createAlias(String alias) {
-    return $FavoriteCountryTableTable(attachedDatabase, alias);
-  }
-}
-
-class FavoriteCountryTableData extends DataClass
-    implements Insertable<FavoriteCountryTableData> {
-  final int id;
-  final String code;
-  const FavoriteCountryTableData({required this.id, required this.code});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['code'] = Variable<String>(code);
-    return map;
-  }
-
-  FavoriteCountryTableCompanion toCompanion(bool nullToAbsent) {
-    return FavoriteCountryTableCompanion(id: Value(id), code: Value(code));
-  }
-
-  factory FavoriteCountryTableData.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return FavoriteCountryTableData(
-      id: serializer.fromJson<int>(json['id']),
-      code: serializer.fromJson<String>(json['code']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'code': serializer.toJson<String>(code),
-    };
-  }
-
-  FavoriteCountryTableData copyWith({int? id, String? code}) =>
-      FavoriteCountryTableData(id: id ?? this.id, code: code ?? this.code);
-  FavoriteCountryTableData copyWithCompanion(
-    FavoriteCountryTableCompanion data,
-  ) {
-    return FavoriteCountryTableData(
-      id: data.id.present ? data.id.value : this.id,
-      code: data.code.present ? data.code.value : this.code,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('FavoriteCountryTableData(')
-          ..write('id: $id, ')
-          ..write('code: $code')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(id, code);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is FavoriteCountryTableData &&
-          other.id == this.id &&
-          other.code == this.code);
-}
-
-class FavoriteCountryTableCompanion
-    extends UpdateCompanion<FavoriteCountryTableData> {
-  final Value<int> id;
-  final Value<String> code;
-  const FavoriteCountryTableCompanion({
-    this.id = const Value.absent(),
-    this.code = const Value.absent(),
-  });
-  FavoriteCountryTableCompanion.insert({
-    this.id = const Value.absent(),
-    required String code,
-  }) : code = Value(code);
-  static Insertable<FavoriteCountryTableData> custom({
-    Expression<int>? id,
-    Expression<String>? code,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (code != null) 'code': code,
-    });
-  }
-
-  FavoriteCountryTableCompanion copyWith({
-    Value<int>? id,
-    Value<String>? code,
-  }) {
-    return FavoriteCountryTableCompanion(
-      id: id ?? this.id,
-      code: code ?? this.code,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (code.present) {
-      map['code'] = Variable<String>(code.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('FavoriteCountryTableCompanion(')
-          ..write('id: $id, ')
-          ..write('code: $code')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $FavoriteLanguageTableTable extends FavoriteLanguageTable
-    with TableInfo<$FavoriteLanguageTableTable, FavoriteLanguageTableData> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $FavoriteLanguageTableTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
-  static const VerificationMeta _isoCodeMeta = const VerificationMeta(
-    'isoCode',
-  );
-  @override
-  late final GeneratedColumn<String> isoCode = GeneratedColumn<String>(
-    'iso_code',
-    aliasedName,
-    false,
-    additionalChecks: GeneratedColumn.checkTextLength(
-      minTextLength: 2,
-      maxTextLength: 2,
-    ),
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  @override
-  List<GeneratedColumn> get $columns => [id, isoCode];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'favorite_language_table';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<FavoriteLanguageTableData> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('iso_code')) {
-      context.handle(
-        _isoCodeMeta,
-        isoCode.isAcceptableOrUnknown(data['iso_code']!, _isoCodeMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_isoCodeMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  FavoriteLanguageTableData map(
-    Map<String, dynamic> data, {
-    String? tablePrefix,
-  }) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return FavoriteLanguageTableData(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
-      isoCode: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}iso_code'],
-      )!,
-    );
-  }
-
-  @override
-  $FavoriteLanguageTableTable createAlias(String alias) {
-    return $FavoriteLanguageTableTable(attachedDatabase, alias);
-  }
-}
-
-class FavoriteLanguageTableData extends DataClass
-    implements Insertable<FavoriteLanguageTableData> {
-  final int id;
-  final String isoCode;
-  const FavoriteLanguageTableData({required this.id, required this.isoCode});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['iso_code'] = Variable<String>(isoCode);
-    return map;
-  }
-
-  FavoriteLanguageTableCompanion toCompanion(bool nullToAbsent) {
-    return FavoriteLanguageTableCompanion(
-      id: Value(id),
-      isoCode: Value(isoCode),
-    );
-  }
-
-  factory FavoriteLanguageTableData.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return FavoriteLanguageTableData(
-      id: serializer.fromJson<int>(json['id']),
-      isoCode: serializer.fromJson<String>(json['isoCode']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'isoCode': serializer.toJson<String>(isoCode),
-    };
-  }
-
-  FavoriteLanguageTableData copyWith({int? id, String? isoCode}) =>
-      FavoriteLanguageTableData(
-        id: id ?? this.id,
-        isoCode: isoCode ?? this.isoCode,
-      );
-  FavoriteLanguageTableData copyWithCompanion(
-    FavoriteLanguageTableCompanion data,
-  ) {
-    return FavoriteLanguageTableData(
-      id: data.id.present ? data.id.value : this.id,
-      isoCode: data.isoCode.present ? data.isoCode.value : this.isoCode,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('FavoriteLanguageTableData(')
-          ..write('id: $id, ')
-          ..write('isoCode: $isoCode')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(id, isoCode);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is FavoriteLanguageTableData &&
-          other.id == this.id &&
-          other.isoCode == this.isoCode);
-}
-
-class FavoriteLanguageTableCompanion
-    extends UpdateCompanion<FavoriteLanguageTableData> {
-  final Value<int> id;
-  final Value<String> isoCode;
-  const FavoriteLanguageTableCompanion({
-    this.id = const Value.absent(),
-    this.isoCode = const Value.absent(),
-  });
-  FavoriteLanguageTableCompanion.insert({
-    this.id = const Value.absent(),
-    required String isoCode,
-  }) : isoCode = Value(isoCode);
-  static Insertable<FavoriteLanguageTableData> custom({
-    Expression<int>? id,
-    Expression<String>? isoCode,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (isoCode != null) 'iso_code': isoCode,
-    });
-  }
-
-  FavoriteLanguageTableCompanion copyWith({
-    Value<int>? id,
-    Value<String>? isoCode,
-  }) {
-    return FavoriteLanguageTableCompanion(
-      id: id ?? this.id,
-      isoCode: isoCode ?? this.isoCode,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (isoCode.present) {
-      map['iso_code'] = Variable<String>(isoCode.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('FavoriteLanguageTableCompanion(')
-          ..write('id: $id, ')
-          ..write('isoCode: $isoCode')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $AppSettingTableTable extends AppSettingTable
-    with TableInfo<$AppSettingTableTable, AppSettingTableData> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $AppSettingTableTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _keyMeta = const VerificationMeta('key');
-  @override
-  late final GeneratedColumn<String> key = GeneratedColumn<String>(
-    'key',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _valueMeta = const VerificationMeta('value');
-  @override
-  late final GeneratedColumn<String> value = GeneratedColumn<String>(
-    'value',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  @override
-  List<GeneratedColumn> get $columns => [key, value];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'app_setting_table';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<AppSettingTableData> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('key')) {
-      context.handle(
-        _keyMeta,
-        key.isAcceptableOrUnknown(data['key']!, _keyMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_keyMeta);
-    }
-    if (data.containsKey('value')) {
-      context.handle(
-        _valueMeta,
-        value.isAcceptableOrUnknown(data['value']!, _valueMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_valueMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {key};
-  @override
-  AppSettingTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return AppSettingTableData(
-      key: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}key'],
-      )!,
-      value: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}value'],
-      )!,
-    );
-  }
-
-  @override
-  $AppSettingTableTable createAlias(String alias) {
-    return $AppSettingTableTable(attachedDatabase, alias);
-  }
-}
-
-class AppSettingTableData extends DataClass
-    implements Insertable<AppSettingTableData> {
-  final String key;
-  final String value;
-  const AppSettingTableData({required this.key, required this.value});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['key'] = Variable<String>(key);
-    map['value'] = Variable<String>(value);
-    return map;
-  }
-
-  AppSettingTableCompanion toCompanion(bool nullToAbsent) {
-    return AppSettingTableCompanion(key: Value(key), value: Value(value));
-  }
-
-  factory AppSettingTableData.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return AppSettingTableData(
-      key: serializer.fromJson<String>(json['key']),
-      value: serializer.fromJson<String>(json['value']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'key': serializer.toJson<String>(key),
-      'value': serializer.toJson<String>(value),
-    };
-  }
-
-  AppSettingTableData copyWith({String? key, String? value}) =>
-      AppSettingTableData(key: key ?? this.key, value: value ?? this.value);
-  AppSettingTableData copyWithCompanion(AppSettingTableCompanion data) {
-    return AppSettingTableData(
-      key: data.key.present ? data.key.value : this.key,
-      value: data.value.present ? data.value.value : this.value,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('AppSettingTableData(')
-          ..write('key: $key, ')
-          ..write('value: $value')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(key, value);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is AppSettingTableData &&
-          other.key == this.key &&
-          other.value == this.value);
-}
-
-class AppSettingTableCompanion extends UpdateCompanion<AppSettingTableData> {
-  final Value<String> key;
-  final Value<String> value;
-  final Value<int> rowid;
-  const AppSettingTableCompanion({
-    this.key = const Value.absent(),
-    this.value = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  AppSettingTableCompanion.insert({
-    required String key,
-    required String value,
-    this.rowid = const Value.absent(),
-  }) : key = Value(key),
-       value = Value(value);
-  static Insertable<AppSettingTableData> custom({
-    Expression<String>? key,
-    Expression<String>? value,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (key != null) 'key': key,
-      if (value != null) 'value': value,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  AppSettingTableCompanion copyWith({
-    Value<String>? key,
-    Value<String>? value,
-    Value<int>? rowid,
-  }) {
-    return AppSettingTableCompanion(
-      key: key ?? this.key,
-      value: value ?? this.value,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (key.present) {
-      map['key'] = Variable<String>(key.value);
-    }
-    if (value.present) {
-      map['value'] = Variable<String>(value.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('AppSettingTableCompanion(')
-          ..write('key: $key, ')
-          ..write('value: $value, ')
-          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -5909,20 +5126,10 @@ abstract class _$Database extends GeneratedDatabase {
   late final $LikedTrackTableTable likedTrackTable = $LikedTrackTableTable(
     this,
   );
-  late final $PinnedAlbumTableTable pinnedAlbumTable = $PinnedAlbumTableTable(
-    this,
-  );
   late final $StarredStationTableTable starredStationTable =
       $StarredStationTableTable(this);
   late final $FavoriteRadioTagTableTable favoriteRadioTagTable =
       $FavoriteRadioTagTableTable(this);
-  late final $FavoriteCountryTableTable favoriteCountryTable =
-      $FavoriteCountryTableTable(this);
-  late final $FavoriteLanguageTableTable favoriteLanguageTable =
-      $FavoriteLanguageTableTable(this);
-  late final $AppSettingTableTable appSettingTable = $AppSettingTableTable(
-    this,
-  );
   late final $PodcastTableTable podcastTable = $PodcastTableTable(this);
   late final $PodcastUpdateTableTable podcastUpdateTable =
       $PodcastUpdateTableTable(this);
@@ -5947,12 +5154,8 @@ abstract class _$Database extends GeneratedDatabase {
     playlistTable,
     playlistTrackTable,
     likedTrackTable,
-    pinnedAlbumTable,
     starredStationTable,
     favoriteRadioTagTable,
-    favoriteCountryTable,
-    favoriteLanguageTable,
-    appSettingTable,
     podcastTable,
     podcastUpdateTable,
     podcastEpisodeTable,
@@ -6393,12 +5596,14 @@ typedef $$AlbumTableTableCreateCompanionBuilder =
       Value<int> id,
       required String name,
       required int artist,
+      Value<bool> pinned,
     });
 typedef $$AlbumTableTableUpdateCompanionBuilder =
     AlbumTableCompanion Function({
       Value<int> id,
       Value<String> name,
       Value<int> artist,
+      Value<bool> pinned,
     });
 
 final class $$AlbumTableTableReferences
@@ -6459,29 +5664,6 @@ final class $$AlbumTableTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
-
-  static MultiTypedResultKey<$PinnedAlbumTableTable, List<PinnedAlbumTableData>>
-  _pinnedAlbumTableRefsTable(_$Database db) => MultiTypedResultKey.fromTable(
-    db.pinnedAlbumTable,
-    aliasName: $_aliasNameGenerator(
-      db.albumTable.id,
-      db.pinnedAlbumTable.albumId,
-    ),
-  );
-
-  $$PinnedAlbumTableTableProcessedTableManager get pinnedAlbumTableRefs {
-    final manager = $$PinnedAlbumTableTableTableManager(
-      $_db,
-      $_db.pinnedAlbumTable,
-    ).filter((f) => f.albumId.id.sqlEquals($_itemColumn<int>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(
-      _pinnedAlbumTableRefsTable($_db),
-    );
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
 }
 
 class $$AlbumTableTableFilterComposer
@@ -6500,6 +5682,11 @@ class $$AlbumTableTableFilterComposer
 
   ColumnFilters<String> get name => $composableBuilder(
     column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get pinned => $composableBuilder(
+    column: $table.pinned,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -6575,31 +5762,6 @@ class $$AlbumTableTableFilterComposer
     );
     return f(composer);
   }
-
-  Expression<bool> pinnedAlbumTableRefs(
-    Expression<bool> Function($$PinnedAlbumTableTableFilterComposer f) f,
-  ) {
-    final $$PinnedAlbumTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.pinnedAlbumTable,
-      getReferencedColumn: (t) => t.albumId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$PinnedAlbumTableTableFilterComposer(
-            $db: $db,
-            $table: $db.pinnedAlbumTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$AlbumTableTableOrderingComposer
@@ -6618,6 +5780,11 @@ class $$AlbumTableTableOrderingComposer
 
   ColumnOrderings<String> get name => $composableBuilder(
     column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get pinned => $composableBuilder(
+    column: $table.pinned,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -6659,6 +5826,9 @@ class $$AlbumTableTableAnnotationComposer
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<bool> get pinned =>
+      $composableBuilder(column: $table.pinned, builder: (column) => column);
 
   $$ArtistTableTableAnnotationComposer get artist {
     final $$ArtistTableTableAnnotationComposer composer = $composerBuilder(
@@ -6732,31 +5902,6 @@ class $$AlbumTableTableAnnotationComposer
     );
     return f(composer);
   }
-
-  Expression<T> pinnedAlbumTableRefs<T extends Object>(
-    Expression<T> Function($$PinnedAlbumTableTableAnnotationComposer a) f,
-  ) {
-    final $$PinnedAlbumTableTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.pinnedAlbumTable,
-      getReferencedColumn: (t) => t.albumId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$PinnedAlbumTableTableAnnotationComposer(
-            $db: $db,
-            $table: $db.pinnedAlbumTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$AlbumTableTableTableManager
@@ -6776,7 +5921,6 @@ class $$AlbumTableTableTableManager
             bool artist,
             bool albumArtTableRefs,
             bool trackTableRefs,
-            bool pinnedAlbumTableRefs,
           })
         > {
   $$AlbumTableTableTableManager(_$Database db, $AlbumTableTable table)
@@ -6795,16 +5939,24 @@ class $$AlbumTableTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<int> artist = const Value.absent(),
-              }) => AlbumTableCompanion(id: id, name: name, artist: artist),
+                Value<bool> pinned = const Value.absent(),
+              }) => AlbumTableCompanion(
+                id: id,
+                name: name,
+                artist: artist,
+                pinned: pinned,
+              ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 required String name,
                 required int artist,
+                Value<bool> pinned = const Value.absent(),
               }) => AlbumTableCompanion.insert(
                 id: id,
                 name: name,
                 artist: artist,
+                pinned: pinned,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -6819,14 +5971,12 @@ class $$AlbumTableTableTableManager
                 artist = false,
                 albumArtTableRefs = false,
                 trackTableRefs = false,
-                pinnedAlbumTableRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
                     if (albumArtTableRefs) db.albumArtTable,
                     if (trackTableRefs) db.trackTable,
-                    if (pinnedAlbumTableRefs) db.pinnedAlbumTable,
                   ],
                   addJoins:
                       <
@@ -6905,27 +6055,6 @@ class $$AlbumTableTableTableManager
                               ),
                           typedResults: items,
                         ),
-                      if (pinnedAlbumTableRefs)
-                        await $_getPrefetchedData<
-                          AlbumTableData,
-                          $AlbumTableTable,
-                          PinnedAlbumTableData
-                        >(
-                          currentTable: table,
-                          referencedTable: $$AlbumTableTableReferences
-                              ._pinnedAlbumTableRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$AlbumTableTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).pinnedAlbumTableRefs,
-                          referencedItemsForCurrentItem:
-                              (item, referencedItems) => referencedItems.where(
-                                (e) => e.albumId == item.id,
-                              ),
-                          typedResults: items,
-                        ),
                     ];
                   },
                 );
@@ -6950,7 +6079,6 @@ typedef $$AlbumTableTableProcessedTableManager =
         bool artist,
         bool albumArtTableRefs,
         bool trackTableRefs,
-        bool pinnedAlbumTableRefs,
       })
     >;
 typedef $$AlbumArtTableTableCreateCompanionBuilder =
@@ -9339,261 +8467,6 @@ typedef $$LikedTrackTableTableProcessedTableManager =
       LikedTrackTableData,
       PrefetchHooks Function({bool trackId})
     >;
-typedef $$PinnedAlbumTableTableCreateCompanionBuilder =
-    PinnedAlbumTableCompanion Function({Value<int> id, required int albumId});
-typedef $$PinnedAlbumTableTableUpdateCompanionBuilder =
-    PinnedAlbumTableCompanion Function({Value<int> id, Value<int> albumId});
-
-final class $$PinnedAlbumTableTableReferences
-    extends
-        BaseReferences<
-          _$Database,
-          $PinnedAlbumTableTable,
-          PinnedAlbumTableData
-        > {
-  $$PinnedAlbumTableTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
-  );
-
-  static $AlbumTableTable _albumIdTable(_$Database db) =>
-      db.albumTable.createAlias(
-        $_aliasNameGenerator(db.pinnedAlbumTable.albumId, db.albumTable.id),
-      );
-
-  $$AlbumTableTableProcessedTableManager get albumId {
-    final $_column = $_itemColumn<int>('album_id')!;
-
-    final manager = $$AlbumTableTableTableManager(
-      $_db,
-      $_db.albumTable,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_albumIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-}
-
-class $$PinnedAlbumTableTableFilterComposer
-    extends Composer<_$Database, $PinnedAlbumTableTable> {
-  $$PinnedAlbumTableTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  $$AlbumTableTableFilterComposer get albumId {
-    final $$AlbumTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.albumId,
-      referencedTable: $db.albumTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$AlbumTableTableFilterComposer(
-            $db: $db,
-            $table: $db.albumTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$PinnedAlbumTableTableOrderingComposer
-    extends Composer<_$Database, $PinnedAlbumTableTable> {
-  $$PinnedAlbumTableTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  $$AlbumTableTableOrderingComposer get albumId {
-    final $$AlbumTableTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.albumId,
-      referencedTable: $db.albumTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$AlbumTableTableOrderingComposer(
-            $db: $db,
-            $table: $db.albumTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$PinnedAlbumTableTableAnnotationComposer
-    extends Composer<_$Database, $PinnedAlbumTableTable> {
-  $$PinnedAlbumTableTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  $$AlbumTableTableAnnotationComposer get albumId {
-    final $$AlbumTableTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.albumId,
-      referencedTable: $db.albumTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$AlbumTableTableAnnotationComposer(
-            $db: $db,
-            $table: $db.albumTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$PinnedAlbumTableTableTableManager
-    extends
-        RootTableManager<
-          _$Database,
-          $PinnedAlbumTableTable,
-          PinnedAlbumTableData,
-          $$PinnedAlbumTableTableFilterComposer,
-          $$PinnedAlbumTableTableOrderingComposer,
-          $$PinnedAlbumTableTableAnnotationComposer,
-          $$PinnedAlbumTableTableCreateCompanionBuilder,
-          $$PinnedAlbumTableTableUpdateCompanionBuilder,
-          (PinnedAlbumTableData, $$PinnedAlbumTableTableReferences),
-          PinnedAlbumTableData,
-          PrefetchHooks Function({bool albumId})
-        > {
-  $$PinnedAlbumTableTableTableManager(
-    _$Database db,
-    $PinnedAlbumTableTable table,
-  ) : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$PinnedAlbumTableTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$PinnedAlbumTableTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$PinnedAlbumTableTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                Value<int> albumId = const Value.absent(),
-              }) => PinnedAlbumTableCompanion(id: id, albumId: albumId),
-          createCompanionCallback:
-              ({Value<int> id = const Value.absent(), required int albumId}) =>
-                  PinnedAlbumTableCompanion.insert(id: id, albumId: albumId),
-          withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$PinnedAlbumTableTableReferences(db, table, e),
-                ),
-              )
-              .toList(),
-          prefetchHooksCallback: ({albumId = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins:
-                  <
-                    T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic
-                    >
-                  >(state) {
-                    if (albumId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.albumId,
-                                referencedTable:
-                                    $$PinnedAlbumTableTableReferences
-                                        ._albumIdTable(db),
-                                referencedColumn:
-                                    $$PinnedAlbumTableTableReferences
-                                        ._albumIdTable(db)
-                                        .id,
-                              )
-                              as T;
-                    }
-
-                    return state;
-                  },
-              getPrefetchedDataCallback: (items) async {
-                return [];
-              },
-            );
-          },
-        ),
-      );
-}
-
-typedef $$PinnedAlbumTableTableProcessedTableManager =
-    ProcessedTableManager<
-      _$Database,
-      $PinnedAlbumTableTable,
-      PinnedAlbumTableData,
-      $$PinnedAlbumTableTableFilterComposer,
-      $$PinnedAlbumTableTableOrderingComposer,
-      $$PinnedAlbumTableTableAnnotationComposer,
-      $$PinnedAlbumTableTableCreateCompanionBuilder,
-      $$PinnedAlbumTableTableUpdateCompanionBuilder,
-      (PinnedAlbumTableData, $$PinnedAlbumTableTableReferences),
-      PinnedAlbumTableData,
-      PrefetchHooks Function({bool albumId})
-    >;
 typedef $$StarredStationTableTableCreateCompanionBuilder =
     StarredStationTableCompanion Function({
       required String uuid,
@@ -9875,448 +8748,6 @@ typedef $$FavoriteRadioTagTableTableProcessedTableManager =
         >,
       ),
       FavoriteRadioTagTableData,
-      PrefetchHooks Function()
-    >;
-typedef $$FavoriteCountryTableTableCreateCompanionBuilder =
-    FavoriteCountryTableCompanion Function({
-      Value<int> id,
-      required String code,
-    });
-typedef $$FavoriteCountryTableTableUpdateCompanionBuilder =
-    FavoriteCountryTableCompanion Function({Value<int> id, Value<String> code});
-
-class $$FavoriteCountryTableTableFilterComposer
-    extends Composer<_$Database, $FavoriteCountryTableTable> {
-  $$FavoriteCountryTableTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get code => $composableBuilder(
-    column: $table.code,
-    builder: (column) => ColumnFilters(column),
-  );
-}
-
-class $$FavoriteCountryTableTableOrderingComposer
-    extends Composer<_$Database, $FavoriteCountryTableTable> {
-  $$FavoriteCountryTableTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get code => $composableBuilder(
-    column: $table.code,
-    builder: (column) => ColumnOrderings(column),
-  );
-}
-
-class $$FavoriteCountryTableTableAnnotationComposer
-    extends Composer<_$Database, $FavoriteCountryTableTable> {
-  $$FavoriteCountryTableTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<String> get code =>
-      $composableBuilder(column: $table.code, builder: (column) => column);
-}
-
-class $$FavoriteCountryTableTableTableManager
-    extends
-        RootTableManager<
-          _$Database,
-          $FavoriteCountryTableTable,
-          FavoriteCountryTableData,
-          $$FavoriteCountryTableTableFilterComposer,
-          $$FavoriteCountryTableTableOrderingComposer,
-          $$FavoriteCountryTableTableAnnotationComposer,
-          $$FavoriteCountryTableTableCreateCompanionBuilder,
-          $$FavoriteCountryTableTableUpdateCompanionBuilder,
-          (
-            FavoriteCountryTableData,
-            BaseReferences<
-              _$Database,
-              $FavoriteCountryTableTable,
-              FavoriteCountryTableData
-            >,
-          ),
-          FavoriteCountryTableData,
-          PrefetchHooks Function()
-        > {
-  $$FavoriteCountryTableTableTableManager(
-    _$Database db,
-    $FavoriteCountryTableTable table,
-  ) : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$FavoriteCountryTableTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$FavoriteCountryTableTableOrderingComposer(
-                $db: db,
-                $table: table,
-              ),
-          createComputedFieldComposer: () =>
-              $$FavoriteCountryTableTableAnnotationComposer(
-                $db: db,
-                $table: table,
-              ),
-          updateCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                Value<String> code = const Value.absent(),
-              }) => FavoriteCountryTableCompanion(id: id, code: code),
-          createCompanionCallback:
-              ({Value<int> id = const Value.absent(), required String code}) =>
-                  FavoriteCountryTableCompanion.insert(id: id, code: code),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
-          prefetchHooksCallback: null,
-        ),
-      );
-}
-
-typedef $$FavoriteCountryTableTableProcessedTableManager =
-    ProcessedTableManager<
-      _$Database,
-      $FavoriteCountryTableTable,
-      FavoriteCountryTableData,
-      $$FavoriteCountryTableTableFilterComposer,
-      $$FavoriteCountryTableTableOrderingComposer,
-      $$FavoriteCountryTableTableAnnotationComposer,
-      $$FavoriteCountryTableTableCreateCompanionBuilder,
-      $$FavoriteCountryTableTableUpdateCompanionBuilder,
-      (
-        FavoriteCountryTableData,
-        BaseReferences<
-          _$Database,
-          $FavoriteCountryTableTable,
-          FavoriteCountryTableData
-        >,
-      ),
-      FavoriteCountryTableData,
-      PrefetchHooks Function()
-    >;
-typedef $$FavoriteLanguageTableTableCreateCompanionBuilder =
-    FavoriteLanguageTableCompanion Function({
-      Value<int> id,
-      required String isoCode,
-    });
-typedef $$FavoriteLanguageTableTableUpdateCompanionBuilder =
-    FavoriteLanguageTableCompanion Function({
-      Value<int> id,
-      Value<String> isoCode,
-    });
-
-class $$FavoriteLanguageTableTableFilterComposer
-    extends Composer<_$Database, $FavoriteLanguageTableTable> {
-  $$FavoriteLanguageTableTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get isoCode => $composableBuilder(
-    column: $table.isoCode,
-    builder: (column) => ColumnFilters(column),
-  );
-}
-
-class $$FavoriteLanguageTableTableOrderingComposer
-    extends Composer<_$Database, $FavoriteLanguageTableTable> {
-  $$FavoriteLanguageTableTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get isoCode => $composableBuilder(
-    column: $table.isoCode,
-    builder: (column) => ColumnOrderings(column),
-  );
-}
-
-class $$FavoriteLanguageTableTableAnnotationComposer
-    extends Composer<_$Database, $FavoriteLanguageTableTable> {
-  $$FavoriteLanguageTableTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<String> get isoCode =>
-      $composableBuilder(column: $table.isoCode, builder: (column) => column);
-}
-
-class $$FavoriteLanguageTableTableTableManager
-    extends
-        RootTableManager<
-          _$Database,
-          $FavoriteLanguageTableTable,
-          FavoriteLanguageTableData,
-          $$FavoriteLanguageTableTableFilterComposer,
-          $$FavoriteLanguageTableTableOrderingComposer,
-          $$FavoriteLanguageTableTableAnnotationComposer,
-          $$FavoriteLanguageTableTableCreateCompanionBuilder,
-          $$FavoriteLanguageTableTableUpdateCompanionBuilder,
-          (
-            FavoriteLanguageTableData,
-            BaseReferences<
-              _$Database,
-              $FavoriteLanguageTableTable,
-              FavoriteLanguageTableData
-            >,
-          ),
-          FavoriteLanguageTableData,
-          PrefetchHooks Function()
-        > {
-  $$FavoriteLanguageTableTableTableManager(
-    _$Database db,
-    $FavoriteLanguageTableTable table,
-  ) : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$FavoriteLanguageTableTableFilterComposer(
-                $db: db,
-                $table: table,
-              ),
-          createOrderingComposer: () =>
-              $$FavoriteLanguageTableTableOrderingComposer(
-                $db: db,
-                $table: table,
-              ),
-          createComputedFieldComposer: () =>
-              $$FavoriteLanguageTableTableAnnotationComposer(
-                $db: db,
-                $table: table,
-              ),
-          updateCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                Value<String> isoCode = const Value.absent(),
-              }) => FavoriteLanguageTableCompanion(id: id, isoCode: isoCode),
-          createCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                required String isoCode,
-              }) => FavoriteLanguageTableCompanion.insert(
-                id: id,
-                isoCode: isoCode,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
-          prefetchHooksCallback: null,
-        ),
-      );
-}
-
-typedef $$FavoriteLanguageTableTableProcessedTableManager =
-    ProcessedTableManager<
-      _$Database,
-      $FavoriteLanguageTableTable,
-      FavoriteLanguageTableData,
-      $$FavoriteLanguageTableTableFilterComposer,
-      $$FavoriteLanguageTableTableOrderingComposer,
-      $$FavoriteLanguageTableTableAnnotationComposer,
-      $$FavoriteLanguageTableTableCreateCompanionBuilder,
-      $$FavoriteLanguageTableTableUpdateCompanionBuilder,
-      (
-        FavoriteLanguageTableData,
-        BaseReferences<
-          _$Database,
-          $FavoriteLanguageTableTable,
-          FavoriteLanguageTableData
-        >,
-      ),
-      FavoriteLanguageTableData,
-      PrefetchHooks Function()
-    >;
-typedef $$AppSettingTableTableCreateCompanionBuilder =
-    AppSettingTableCompanion Function({
-      required String key,
-      required String value,
-      Value<int> rowid,
-    });
-typedef $$AppSettingTableTableUpdateCompanionBuilder =
-    AppSettingTableCompanion Function({
-      Value<String> key,
-      Value<String> value,
-      Value<int> rowid,
-    });
-
-class $$AppSettingTableTableFilterComposer
-    extends Composer<_$Database, $AppSettingTableTable> {
-  $$AppSettingTableTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<String> get key => $composableBuilder(
-    column: $table.key,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get value => $composableBuilder(
-    column: $table.value,
-    builder: (column) => ColumnFilters(column),
-  );
-}
-
-class $$AppSettingTableTableOrderingComposer
-    extends Composer<_$Database, $AppSettingTableTable> {
-  $$AppSettingTableTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<String> get key => $composableBuilder(
-    column: $table.key,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get value => $composableBuilder(
-    column: $table.value,
-    builder: (column) => ColumnOrderings(column),
-  );
-}
-
-class $$AppSettingTableTableAnnotationComposer
-    extends Composer<_$Database, $AppSettingTableTable> {
-  $$AppSettingTableTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<String> get key =>
-      $composableBuilder(column: $table.key, builder: (column) => column);
-
-  GeneratedColumn<String> get value =>
-      $composableBuilder(column: $table.value, builder: (column) => column);
-}
-
-class $$AppSettingTableTableTableManager
-    extends
-        RootTableManager<
-          _$Database,
-          $AppSettingTableTable,
-          AppSettingTableData,
-          $$AppSettingTableTableFilterComposer,
-          $$AppSettingTableTableOrderingComposer,
-          $$AppSettingTableTableAnnotationComposer,
-          $$AppSettingTableTableCreateCompanionBuilder,
-          $$AppSettingTableTableUpdateCompanionBuilder,
-          (
-            AppSettingTableData,
-            BaseReferences<
-              _$Database,
-              $AppSettingTableTable,
-              AppSettingTableData
-            >,
-          ),
-          AppSettingTableData,
-          PrefetchHooks Function()
-        > {
-  $$AppSettingTableTableTableManager(_$Database db, $AppSettingTableTable table)
-    : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$AppSettingTableTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$AppSettingTableTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$AppSettingTableTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<String> key = const Value.absent(),
-                Value<String> value = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => AppSettingTableCompanion(
-                key: key,
-                value: value,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required String key,
-                required String value,
-                Value<int> rowid = const Value.absent(),
-              }) => AppSettingTableCompanion.insert(
-                key: key,
-                value: value,
-                rowid: rowid,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
-          prefetchHooksCallback: null,
-        ),
-      );
-}
-
-typedef $$AppSettingTableTableProcessedTableManager =
-    ProcessedTableManager<
-      _$Database,
-      $AppSettingTableTable,
-      AppSettingTableData,
-      $$AppSettingTableTableFilterComposer,
-      $$AppSettingTableTableOrderingComposer,
-      $$AppSettingTableTableAnnotationComposer,
-      $$AppSettingTableTableCreateCompanionBuilder,
-      $$AppSettingTableTableUpdateCompanionBuilder,
-      (
-        AppSettingTableData,
-        BaseReferences<_$Database, $AppSettingTableTable, AppSettingTableData>,
-      ),
-      AppSettingTableData,
       PrefetchHooks Function()
     >;
 typedef $$PodcastTableTableCreateCompanionBuilder =
@@ -12544,18 +10975,10 @@ class $DatabaseManager {
       $$PlaylistTrackTableTableTableManager(_db, _db.playlistTrackTable);
   $$LikedTrackTableTableTableManager get likedTrackTable =>
       $$LikedTrackTableTableTableManager(_db, _db.likedTrackTable);
-  $$PinnedAlbumTableTableTableManager get pinnedAlbumTable =>
-      $$PinnedAlbumTableTableTableManager(_db, _db.pinnedAlbumTable);
   $$StarredStationTableTableTableManager get starredStationTable =>
       $$StarredStationTableTableTableManager(_db, _db.starredStationTable);
   $$FavoriteRadioTagTableTableTableManager get favoriteRadioTagTable =>
       $$FavoriteRadioTagTableTableTableManager(_db, _db.favoriteRadioTagTable);
-  $$FavoriteCountryTableTableTableManager get favoriteCountryTable =>
-      $$FavoriteCountryTableTableTableManager(_db, _db.favoriteCountryTable);
-  $$FavoriteLanguageTableTableTableManager get favoriteLanguageTable =>
-      $$FavoriteLanguageTableTableTableManager(_db, _db.favoriteLanguageTable);
-  $$AppSettingTableTableTableManager get appSettingTable =>
-      $$AppSettingTableTableTableManager(_db, _db.appSettingTable);
   $$PodcastTableTableTableManager get podcastTable =>
       $$PodcastTableTableTableManager(_db, _db.podcastTable);
   $$PodcastUpdateTableTableTableManager get podcastUpdateTable =>

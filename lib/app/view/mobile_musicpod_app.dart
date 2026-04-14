@@ -13,8 +13,10 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../l10n/app_localizations.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
+import '../../podcasts/podcast_manager.dart';
+import '../../local_audio/local_audio_manager.dart';
 import '../../player/player_model.dart';
+import '../../radio/radio_model.dart';
 import '../../settings/settings_model.dart';
 import 'create_master_items.dart';
 import 'mobile_page.dart';
@@ -75,7 +77,12 @@ class _MobileMusicPodAppState extends State<MobileMusicPodApp> {
       navigatorObservers: [routingManager],
       initialRoute: routingManager.selectedPageId ?? PageIDs.homePage,
       onGenerateRoute: (settings) {
-        final masterItems = getAllMasterItems(context, di<LibraryModel>());
+        final masterItems = getAllMasterItems(
+          context,
+          di<PodcastManager>(),
+          di<LocalAudioManager>(),
+          di<RadioManager>(),
+        );
         final page =
             (masterItems.firstWhereOrNull((e) => e.pageId == settings.name) ??
                     masterItems.elementAt(0))

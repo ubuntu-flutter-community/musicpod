@@ -5,7 +5,6 @@ import 'package:yaru/yaru.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/app_localizations.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../data/audio.dart';
 import 'icons.dart';
@@ -155,7 +154,7 @@ class _LocalMetadataTileState extends State<LocalMetadataTile> {
     });
     void onChange() {
       setState(() {});
-      di<LibraryModel>().notifyListeners();
+      di<LocalAudioManager>().notifyListeners();
       di<LocalAudioManager>().initAudiosCommand.run((
         directory: null,
         forceInit: true,

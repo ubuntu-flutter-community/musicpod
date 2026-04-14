@@ -12,7 +12,7 @@ import '../../common/view/sliver_audio_page.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
+import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/view/artist_page.dart';
 
 class LikedAudioPage extends StatefulWidget with WatchItStatefulWidgetMixin {
@@ -31,11 +31,11 @@ class _LikedAudioPageState extends State<LikedAudioPage> {
     getLikedAudios();
   }
 
-  void getLikedAudios() => _likedAudios = di<LibraryModel>().likedAudios;
+  void getLikedAudios() => _likedAudios = di<LocalAudioManager>().likedAudios;
 
   @override
   Widget build(BuildContext context) {
-    final likedAudiosLength = watchPropertyValue((LibraryModel m) {
+    final likedAudiosLength = watchPropertyValue((LocalAudioManager m) {
       setState(() => getLikedAudios());
       return m.likedAudiosLength;
     });

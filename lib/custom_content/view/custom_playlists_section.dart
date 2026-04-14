@@ -10,7 +10,6 @@ import '../../app/page_ids.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../search/search_model.dart';
 import '../custom_content_model.dart';
@@ -23,7 +22,7 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final libraryModel = di<LibraryModel>();
+    final localAudioManager = di<LocalAudioManager>();
     final routingManager = di<RoutingManager>();
 
     final customContentModel = di<CustomContentModel>();
@@ -38,7 +37,7 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
               Navigator.of(context).pop();
             }
 
-            await libraryModel.addPlaylist(playlistName!, []);
+            await localAudioManager.addPlaylist(playlistName!, []);
             await Future.delayed(
               const Duration(milliseconds: 200),
               () =>
@@ -152,12 +151,12 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
                           Navigator.of(context).pop();
                         }
 
-                        await libraryModel.addExternalPlaylists(playlists);
+                        await localAudioManager.addExternalPlaylists(playlists);
                         di<LocalAudioManager>().initAudiosCommand.run((
                           directory: null,
                           forceInit: true,
                           extraAudios:
-                              di<LibraryModel>().externalPlaylistAudios,
+                              di<LocalAudioManager>().externalPlaylistAudios,
                         ));
                         await Future.delayed(
                           const Duration(milliseconds: 200),

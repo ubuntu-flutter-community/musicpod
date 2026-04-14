@@ -11,7 +11,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../custom_content/custom_content_model.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
+import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/local_audio_view.dart';
 import '../../settings/settings_model.dart';
 
@@ -49,7 +49,7 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final libraryModel = di<LibraryModel>();
+    final localAudioManager = di<LocalAudioManager>();
     final routingManager = di<RoutingManager>();
     final l10n = context.l10n;
     return ConfirmationDialog(
@@ -99,7 +99,7 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
                         pageId: PageIDs.localAudio,
                         replace: true,
                       );
-                      libraryModel.removePlaylist(widget.playlistName!);
+                      localAudioManager.removePlaylist(widget.playlistName!);
                     },
                     label: Text(context.l10n.deletePlaylist),
                   ),
@@ -116,7 +116,7 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
         await di<SettingsModel>().setLocalAudioindex(
           LocalAudioView.playlists.index,
         );
-        await libraryModel.updatePlaylistName(
+        await localAudioManager.updatePlaylistName(
           widget.playlistName!,
           _controller.text,
         );

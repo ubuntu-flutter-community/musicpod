@@ -11,7 +11,7 @@ import '../../common/view/round_image_container.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
+import '../../radio/radio_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import 'open_radio_discover_page_button.dart';
@@ -22,9 +22,9 @@ class FavoriteRadioTagsGrid extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final favTagsLength = watchPropertyValue(
-      (LibraryModel m) => m.favRadioTags.length,
+      (RadioManager m) => m.favRadioTags.length,
     );
-    final favTags = watchPropertyValue((LibraryModel m) => m.favRadioTags);
+    final favTags = watchPropertyValue((RadioManager m) => m.favRadioTags);
 
     if (favTagsLength == 0) {
       return SliverNoSearchResultPage(

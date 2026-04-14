@@ -11,8 +11,8 @@ import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../podcasts/data/podcast_genre.dart';
+import '../../radio/radio_model.dart';
 import '../../radio/view/tag_auto_complete.dart';
 import '../../settings/settings_model.dart';
 import '../search_model.dart';
@@ -79,12 +79,11 @@ class CountryAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final libraryModel = di<LibraryModel>();
     final searchModel = di<SearchModel>();
     final country = watchPropertyValue((SearchModel m) => m.country);
-    watchPropertyValue((LibraryModel m) => m.favCountriesLength);
+    watchPropertyValue((SettingsModel m) => m.favoriteCountryCodeLength);
     final favCountryCodes = watchPropertyValue(
-      (LibraryModel m) => m.favCountryCodes,
+      (SettingsModel m) => m.favoriteCountryCode,
     );
 
     return CountryAutoComplete(
@@ -92,10 +91,10 @@ class CountryAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
       countries: [
         ...[
           ...Country.values,
-        ].where((e) => libraryModel.favCountryCodes.contains(e.code) == true),
+        ].where((e) => favCountryCodes.contains(e.code) == true),
         ...[
           ...Country.values,
-        ].where((e) => libraryModel.favCountryCodes.contains(e.code) == false),
+        ].where((e) => favCountryCodes.contains(e.code) == false),
       ]..remove(Country.none),
       onSelected: (c) async {
         searchModel.setCountry(c);
@@ -107,11 +106,11 @@ class CountryAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
       value: country,
       addFav: (v) {
         if (country?.code == null) return;
-        libraryModel.addFavCountryCode(v!.code);
+        di<SettingsModel>().addFavoriteCountryCode(v!.code);
       },
       removeFav: (v) {
         if (country?.code == null) return;
-        libraryModel.removeFavCountryCode(v!.code);
+        di<SettingsModel>().removeFavoriteCountryCode(v!.code);
       },
       favs: favCountryCodes,
     );
@@ -123,22 +122,22 @@ class TagAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final libraryModel = di<LibraryModel>();
+    final radioManager = di<RadioManager>();
     final model = di<SearchModel>();
     final tag = watchPropertyValue((SearchModel m) => m.tag);
-    watchPropertyValue((LibraryModel m) => m.favRadioTags);
+    watchPropertyValue((RadioManager m) => m.favRadioTags);
     return TagAutoComplete(
       suffixIcon: AudioTypeFilterButton(mode: OverlayMode.platformModalMode),
       value: tag,
       addFav: (tag) {
         if (tag?.name == null) return;
-        libraryModel.addFavRadioTag(tag!.name);
+        radioManager.addFavRadioTag(tag!.name);
       },
       removeFav: (tag) {
         if (tag?.name == null) return;
-        libraryModel.removeRadioFavTag(tag!.name);
+        radioManager.removeRadioFavTag(tag!.name);
       },
-      favs: libraryModel.favRadioTags,
+      favs: radioManager.favRadioTags,
       onSelected: (v) {
         model.setTag(v);
         model.search();
@@ -146,10 +145,10 @@ class TagAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
       tags: [
         ...[
           ...?model.tags,
-        ].where((e) => libraryModel.favRadioTags.contains(e.name) == true),
+        ].where((e) => radioManager.favRadioTags.contains(e.name) == true),
         ...[
           ...?model.tags,
-        ].where((e) => libraryModel.favRadioTags.contains(e.name) == false),
+        ].where((e) => radioManager.favRadioTags.contains(e.name) == false),
       ],
     );
   }
@@ -160,19 +159,18 @@ class LanguageAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final libraryModel = di<LibraryModel>();
-    final model = di<SearchModel>();
     final language = watchPropertyValue((SearchModel m) => m.language);
-    watchPropertyValue((LibraryModel m) => m.favLanguagesLength);
+    watchPropertyValue((SettingsModel m) => m.favoriteLanguageCodeLength);
     final favLanguageCodes = watchPropertyValue(
-      (LibraryModel m) => m.favLanguageCodes,
+      (SettingsModel m) => m.favoriteLanguageCode,
     );
     return LanguageAutoComplete(
       suffixIcon: AudioTypeFilterButton(mode: OverlayMode.platformModalMode),
       value: language,
       onSelected: (language) {
-        model.setLanguage(language);
-        model.search();
+        di<SearchModel>()
+          ..setLanguage(language)
+          ..search();
         if (language?.isoCode != null) {
           di<SettingsModel>().setLastLanguageCode(language!.isoCode);
         }
@@ -180,11 +178,11 @@ class LanguageAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
       favs: favLanguageCodes,
       addFav: (language) {
         if (language?.isoCode == null) return;
-        libraryModel.addFavLanguageCode(language!.isoCode);
+        di<SettingsModel>().addFavoriteLanguageCode(language!.isoCode);
       },
       removeFav: (language) {
         if (language?.isoCode == null) return;
-        libraryModel.removeFavLanguageCode(language!.isoCode);
+        di<SettingsModel>().removeFavoriteLanguageCode(language!.isoCode);
       },
     );
   }

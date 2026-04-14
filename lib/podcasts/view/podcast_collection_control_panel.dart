@@ -7,7 +7,6 @@ import '../../common/view/common_control_panel.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/offline_page.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../podcast_manager.dart';
 
 class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
@@ -37,14 +36,14 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
           if (updatesOnly) {
             manager.setUpdatesOnly(false);
           } else {
-            if (di<LibraryModel>().podcastsLength > 10) {
+            if (di<PodcastManager>().podcastsLength > 10) {
               ConfirmationDialog.show(
                 context: context,
                 title: Text(context.l10n.checkForUpdates),
                 confirmLabel: context.l10n.checkForUpdates,
                 content: Text(
                   context.l10n.checkForUpdatesConfirm(
-                    di<LibraryModel>().podcastsLength.toString(),
+                    di<PodcastManager>().podcastsLength.toString(),
                   ),
                 ),
                 onConfirm: () => di<PodcastManager>().checkForUpdates(

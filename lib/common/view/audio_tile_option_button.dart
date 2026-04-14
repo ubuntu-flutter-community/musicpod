@@ -8,7 +8,6 @@ import '../../app/routing_manager.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
@@ -49,7 +48,7 @@ class AudioTileOptionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.theme;
     final l10n = context.l10n;
-    final libraryModel = di<LibraryModel>();
+    final localAudioManager = di<LocalAudioManager>();
 
     if (isMobile) {
       return AudioTileBottomSheetButton(
@@ -105,8 +104,8 @@ class AudioTileOptionButton extends StatelessWidget {
           if (allowRemove)
             PopupMenuItem(
               onTap: () => playlistId == PageIDs.likedAudios
-                  ? libraryModel.removeLikedAudios(audios)
-                  : libraryModel.removeAudiosFromPlaylist(
+                  ? localAudioManager.removeLikedAudios(audios)
+                  : localAudioManager.removeAudiosFromPlaylist(
                       id: playlistId,
                       audios: audios,
                     ),
@@ -216,7 +215,7 @@ class AudioTileOptionButton extends StatelessWidget {
               ),
             ),
             if (audios.firstOrNull?.feedUrl != null &&
-                di<LibraryModel>().isPodcastSubscribed(audios.first.feedUrl!))
+                di<PodcastManager>().isPodcastSubscribed(audios.first.feedUrl!))
               PopupMenuItem(
                 onTap: () => di<PodcastManager>()
                     .getEpisodesCommand(audios.first.feedUrl!)

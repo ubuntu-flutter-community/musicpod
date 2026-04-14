@@ -8,7 +8,6 @@ import '../../app/page_ids.dart';
 import '../../common/view/snackbars.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../radio/radio_model.dart';
 import '../../search/search_model.dart';
 
@@ -98,7 +97,7 @@ class _AddStationDialogState extends State<CustomStationSection> {
 
                                     return;
                                   } else {
-                                    di<LibraryModel>().addStarredStation(
+                                    di<RadioManager>().addStarredStation(
                                       v!.uuid!,
                                     );
                                   }

@@ -13,7 +13,7 @@ import '../common/view/ui_constants.dart';
 import '../extensions/build_context_x.dart';
 import '../extensions/country_x.dart';
 import '../l10n/l10n.dart';
-import '../library/library_model.dart';
+import '../local_audio/local_audio_manager.dart';
 import '../local_audio/local_audio_view.dart';
 import '../local_audio/view/playlists_view.dart';
 import '../search/search_model.dart';
@@ -28,7 +28,9 @@ class HomePage extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final playlists = watchPropertyValue((LibraryModel m) => m.playlistIDs);
+    final playlists = watchPropertyValue(
+      (LocalAudioManager m) => m.playlistIDs,
+    );
     const textPadding = EdgeInsets.only(
       right: kMediumSpace,
       left: kSmallestSpace,

@@ -171,8 +171,53 @@ class SettingsModel extends SafeChangeNotifier {
     _service.setValue(SPKeys.lastLanguageCode, value);
   }
 
+  Set<String> get favoriteLanguageCode =>
+      _service.getStringList(SPKeys.favLanguageCodes)?.toSet() ?? {};
+  int get favoriteLanguageCodeLength => favoriteLanguageCode.length;
+  bool isFavCountryCode(String value) => favoriteCountryCode.contains(value);
+  void addFavoriteLanguageCode(String value) {
+    final current = favoriteLanguageCode;
+    if (!current.contains(value)) {
+      current.add(value);
+      _service.setValue(SPKeys.favLanguageCodes, current.toList());
+    }
+  }
+
+  void removeFavoriteLanguageCode(String value) {
+    final current = favoriteLanguageCode;
+    if (current.contains(value)) {
+      current.remove(value);
+      _service.setValue(SPKeys.favLanguageCodes, current.toList());
+    }
+  }
+
+  Set<String> get favoriteCountryCode =>
+      _service.getStringList(SPKeys.favCountryCodes)?.toSet() ?? {};
+  int get favoriteCountryCodeLength => favoriteCountryCode.length;
+  bool isFavLanguageCode(String value) => favoriteLanguageCode.contains(value);
+  void addFavoriteCountryCode(String value) {
+    final current = favoriteCountryCode;
+    if (!current.contains(value)) {
+      current.add(value);
+      _service.setValue(SPKeys.favCountryCodes, current.toList());
+    }
+  }
+
+  void removeFavoriteCountryCode(String value) {
+    final current = favoriteCountryCode;
+    if (current.contains(value)) {
+      current.remove(value);
+      _service.setValue(SPKeys.favCountryCodes, current.toList());
+    }
+  }
+
   late final Command<void, void> wipeAllSettingsCommand =
       Command.createAsyncNoParamNoResult(_service.wipeAllSettings);
+
+  late final Command<void, void> wipeAndInitLibraryCommand =
+      Command.createAsyncNoParamNoResult(() async {
+        // TODO: get references to services and wipe/init them
+      });
 
   @override
   Future<void> dispose() async {

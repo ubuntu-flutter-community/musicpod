@@ -10,7 +10,6 @@ import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
 import '../common/view/languages.dart';
 import '../extensions/string_x.dart';
-import '../library/library_service.dart';
 import '../local_audio/local_audio_service.dart';
 import '../local_audio/local_search_result.dart';
 import '../podcasts/data/podcast_genre.dart';
@@ -27,13 +26,11 @@ class SearchModel extends SafeChangeNotifier {
   SearchModel({
     required RadioService radioService,
     required PodcastService podcastService,
-    required LibraryService libraryService,
     required LocalAudioService localAudioService,
     required SettingsService settingsService,
   }) : _radioService = radioService,
 
        _podcastService = podcastService,
-       _libraryService = libraryService,
        _localAudioService = localAudioService {
     _country ??= Country.values.firstWhereOrNull(
       (c) =>
@@ -50,7 +47,6 @@ class SearchModel extends SafeChangeNotifier {
 
   final RadioService _radioService;
   final PodcastService _podcastService;
-  final LibraryService _libraryService;
   final LocalAudioService _localAudioService;
 
   Set<SearchType> _searchTypes = searchTypesFromAudioType(_initialAudioType);
@@ -149,7 +145,7 @@ class SearchModel extends SafeChangeNotifier {
       albums: search?.albums,
       genres: search?.genres,
       playlists: (query != null && query.isNotEmpty)
-          ? _libraryService.playlistIDs
+          ? _localAudioService.playlistIDs
                 .where((e) => e.toLowerCase().contains(query.toLowerCase()))
                 .toList()
           : null,

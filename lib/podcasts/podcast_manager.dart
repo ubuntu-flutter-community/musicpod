@@ -10,11 +10,23 @@ import '../l10n/app_localizations.dart';
 import 'podcast_service.dart';
 
 @lazySingleton
-class PodcastManager {
+class PodcastManager extends SafeChangeNotifier {
   PodcastManager({required PodcastService podcastService})
-    : _podcastService = podcastService;
+    : _podcastService = podcastService {
+    _propertiesChangedSub = _podcastService.propertiesChanged.listen(
+      (_) => notifyListeners(),
+    );
+  }
 
   final PodcastService _podcastService;
+  StreamSubscription<bool>? _propertiesChangedSub;
+
+  @disposeMethod
+  @override
+  Future<void> dispose() async {
+    await _propertiesChangedSub?.cancel();
+    super.dispose();
+  }
 
   late final Command<({bool forceInit}), void> initSearchCommand =
       Command.createSyncNoResult(
@@ -104,6 +116,63 @@ class PodcastManager {
 
   bool shouldRunCommand(String feedUrl) =>
       di<PodcastManager>().getEpisodesCommand(feedUrl).value.isEmpty;
+
+  //
+  // Podcasts
+  //
+
+  List<String> get podcastFeedUrls => _podcastService.podcastFeedUrls;
+  int get podcastsLength => _podcastService.podcastsLength;
+  Future<void> addPodcast({
+    required String feedUrl,
+    String? imageUrl,
+    required String name,
+    required String artist,
+  }) async => _podcastService.addPodcast(
+    feedUrl: feedUrl,
+    imageUrl: imageUrl,
+    name: name,
+    artist: artist,
+  );
+  String? getSubscribedPodcastImage(String feedUrl) =>
+      _podcastService.getSubscribedPodcastImage(feedUrl);
+  void addSubscribedPodcastImage({
+    required String feedUrl,
+    required String imageUrl,
+  }) => _podcastService.addSubscribedPodcastImage(
+    feedUrl: feedUrl,
+    imageUrl: imageUrl,
+  );
+  String? getSubscribedPodcastName(String feedUrl) =>
+      _podcastService.getSubscribedPodcastName(feedUrl);
+  String? getSubscribedPodcastArtist(String feedUrl) =>
+      _podcastService.getSubscribedPodcastArtist(feedUrl);
+  void removePodcast(String feedUrl) => _podcastService.removePodcast(feedUrl);
+
+  bool isPodcastSubscribed(String? feedUrl) =>
+      feedUrl == null ? false : _podcastService.isPodcastSubscribed(feedUrl);
+  bool podcastUpdateAvailable(String feedUrl) =>
+      _podcastService.podcastUpdateAvailable(feedUrl);
+  int? get podcastUpdatesLength => _podcastService.podcastUpdatesLength;
+  Future<void> removePodcastUpdate(String feedUrl) async =>
+      _podcastService.removePodcastUpdate(feedUrl);
+
+  int get downloadsLength => _podcastService.downloads.length;
+  String? getDownload(String? url) =>
+      url == null ? null : _podcastService.downloads[url];
+  bool feedHasDownload(String? feedUrl) =>
+      feedUrl == null ? false : _podcastService.feedHasDownloads(feedUrl);
+  int get feedsWithDownloadsLength => _podcastService.feedsWithDownloadsLength;
+
+  Future<void> reorderPodcast({
+    required String feedUrl,
+    required bool ascending,
+  }) => _podcastService.reorderPodcast(feedUrl: feedUrl, ascending: ascending);
+
+  bool showPodcastAscending(String feedUrl) =>
+      _podcastService.showPodcastAscending(feedUrl);
+
+  Future<void> removeAllPodcasts() async => _podcastService.removeAllPodcasts();
 }
 
 enum PodcastEpisodeFilter {

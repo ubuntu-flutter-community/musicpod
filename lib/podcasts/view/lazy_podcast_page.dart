@@ -6,7 +6,6 @@ import '../../app/connectivity_manager.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../podcast_manager.dart';
 import 'lazy_podcast_loading_page.dart';
 import 'podcast_page.dart';
@@ -48,7 +47,7 @@ class LazyPodcastPage extends StatelessWidget with WatchItMixin {
     }
 
     callOnceAfterThisBuild(
-      (context) => di<LibraryModel>().removePodcastUpdate(feedUrl),
+      (context) => di<PodcastManager>().removePodcastUpdate(feedUrl),
     );
 
     if (di<PodcastManager>().shouldRunCommand(feedUrl) &&
@@ -61,7 +60,7 @@ class LazyPodcastPage extends StatelessWidget with WatchItMixin {
     }
 
     final title =
-        di<LibraryModel>().getSubscribedPodcastName(feedUrl) ??
+        di<PodcastManager>().getSubscribedPodcastName(feedUrl) ??
         podcastItem?.collectionName ??
         podcastItem?.trackName ??
         context.l10n.podcast;

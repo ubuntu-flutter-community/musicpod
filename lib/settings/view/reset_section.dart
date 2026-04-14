@@ -9,7 +9,6 @@ import '../../common/view/ui_constants.dart';
 import '../../custom_content/view/backup_dialog.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../settings_model.dart';
 
@@ -90,7 +89,7 @@ class WipeConfirmDialog extends StatelessWidget {
           forceInit: true,
           extraAudios: [],
         ));
-        await di<LibraryModel>().wipeAndInitLibraryCommand.runAsync();
+        await di<SettingsModel>().wipeAndInitLibraryCommand.runAsync();
       },
     );
   }

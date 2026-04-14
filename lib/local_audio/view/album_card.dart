@@ -13,7 +13,6 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../local_audio_manager.dart';
 import 'album_page.dart';
@@ -31,7 +30,7 @@ class AlbumCard extends StatelessWidget with WatchItMixin {
     );
 
     final pinned = watchPropertyValue(
-      (LibraryModel m) => m.isFavoriteAlbum(id),
+      (LocalAudioManager m) => m.isPinnedAlbum(id),
     );
 
     return Stack(
@@ -55,7 +54,7 @@ class AlbumCard extends StatelessWidget with WatchItMixin {
             bottom: kAudioCardBottomHeight + (isMobile ? 25 : 13),
             child: AudioCardVignette(
               iconData: Iconz.pinFilled,
-              onTap: () => di<LibraryModel>().removeFavoriteAlbum(
+              onTap: () => di<LocalAudioManager>().unpinAlbum(
                 id,
                 onFail: () => showSnackBar(
                   context: context,

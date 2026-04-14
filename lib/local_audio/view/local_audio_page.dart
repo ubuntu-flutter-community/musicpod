@@ -12,7 +12,6 @@ import '../../common/view/sliver_body.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import '../../settings/settings_model.dart';
@@ -55,7 +54,9 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
     );
     final localAudioManager = di<LocalAudioManager>();
 
-    final playlists = watchPropertyValue((LibraryModel m) => m.playlistIDs);
+    final playlists = watchPropertyValue(
+      (LocalAudioManager m) => m.playlistIDs,
+    );
     final index = watchPropertyValue((SettingsModel m) => m.localAudioindex);
     final localAudioView = LocalAudioView.values[index];
 

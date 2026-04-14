@@ -6,7 +6,7 @@ import '../../extensions/duration_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
+import '../../local_audio/local_audio_manager.dart';
 import '../data/audio.dart';
 import '../data/audio_type.dart';
 import 'audio_page_type.dart';
@@ -204,7 +204,9 @@ class _AudioTileTrailing extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final liked = watchPropertyValue((LibraryModel m) => m.isLikedAudio(audio));
+    final liked = watchPropertyValue(
+      (LocalAudioManager m) => m.isLikedAudio(audio),
+    );
 
     return Row(
       spacing: kSmallestSpace,

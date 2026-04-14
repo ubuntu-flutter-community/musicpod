@@ -11,25 +11,25 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 import '../common/data/audio.dart';
 import '../common/view/snackbars.dart';
 import '../external_path/external_path_service.dart';
-import '../library/library_service.dart';
 import '../settings/settings_service.dart';
 import '../settings/shared_preferences_keys.dart';
+import 'podcast_service.dart';
 
 @lazySingleton
 class DownloadManager extends SafeChangeNotifier {
   DownloadManager({
-    required LibraryService libraryService,
+    required PodcastService podcastService,
     required SettingsService settingsService,
     required Dio dio,
     required ExternalPathService externalPathService,
-  }) : _libraryService = libraryService,
+  }) : _podcastService = podcastService,
        _settingsService = settingsService,
        _dio = dio,
        _externalPathService = externalPathService {
     downloadsDirCommand.run((setNewDir: false));
   }
 
-  final LibraryService _libraryService;
+  final PodcastService _podcastService;
   final SettingsService _settingsService;
   final Dio _dio;
   final ExternalPathService _externalPathService;
@@ -105,7 +105,7 @@ class DownloadManager extends SafeChangeNotifier {
     if (audio?.url != null &&
         (downloadsDirCommand.value) != null &&
         audio?.feedUrl != null) {
-      _libraryService.removeDownload(url: audio!.url!, feedUrl: audio.feedUrl!);
+      _podcastService.removeDownload(url: audio!.url!, feedUrl: audio.feedUrl!);
       if (_values.containsKey(audio.url)) {
         _values.update(audio.url!, (value) => null);
       }
@@ -116,7 +116,7 @@ class DownloadManager extends SafeChangeNotifier {
 
   Future<void> deleteAllDownloads() async {
     if ((downloadsDirCommand.value) != null) {
-      _libraryService.removeAllDownloads();
+      _podcastService.removeAllDownloads();
       _values.clear();
 
       notifyListeners();
@@ -161,7 +161,7 @@ class DownloadManager extends SafeChangeNotifier {
       name: audio.title ?? '',
     ).then((response) async {
       if (response?.statusCode == 200 && audio.feedUrl != null) {
-        await _libraryService.addDownload(
+        await _podcastService.addDownload(
           url: url,
           path: path,
           feedUrl: audio.feedUrl!,

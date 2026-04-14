@@ -33,8 +33,6 @@ import 'expose/expose_service.dart' as _i820;
 import 'expose/lastfm_service.dart' as _i820;
 import 'expose/listenbrainz_service.dart' as _i348;
 import 'external_path/external_path_service.dart' as _i551;
-import 'library/library_model.dart' as _i1032;
-import 'library/library_service.dart' as _i595;
 import 'local_audio/local_audio_manager.dart' as _i688;
 import 'local_audio/local_audio_service.dart' as _i438;
 import 'local_audio/local_cover_manager.dart' as _i439;
@@ -111,14 +109,10 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i546.LocalLyricsService>(
       () => _i546.LocalLyricsService(),
     );
-    gh.lazySingleton<_i811.RadioService>(() => _i811.RadioService());
     gh.lazySingleton<_i1009.LicenseStore>(() => _i1009.LicenseStore());
     gh.lazySingleton<_i115.Database>(() => databaseModule.database);
     gh.lazySingleton<_i328.OnlineArtService>(
       () => _i328.OnlineArtService(dio: gh<_i361.Dio>()),
-    );
-    gh.lazySingleton<_i798.RadioManager>(
-      () => _i798.RadioManager(radioService: gh<_i811.RadioService>()),
     );
     gh.lazySingleton<_i620.OnlineArtModel>(
       () =>
@@ -127,6 +121,14 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i57.LocalCoverService>(
       () => _i57.LocalCoverService(database: gh<_i115.Database>()),
+    );
+    await gh.singletonAsync<_i811.RadioService>(
+      () {
+        final i = _i811.RadioService(database: gh<_i115.Database>());
+        return i.initService().then((_) => i);
+      },
+      preResolve: true,
+      dispose: (i) => i.dispose(),
     );
     gh.lazySingleton<_i763.SettingsService>(
       () => _i763.SettingsService(
@@ -144,6 +146,10 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i57.NotificationsService>(
       () => _i57.NotificationsService(localNotifier: gh<_i526.LocalNotifier>()),
+    );
+    gh.lazySingleton<_i798.RadioManager>(
+      () => _i798.RadioManager(radioService: gh<_i811.RadioService>()),
+      dispose: (i) => i.dispose(),
     );
     gh.lazySingleton<_i820.LastfmService>(
       () => _i820.LastfmService(settingsService: gh<_i763.SettingsService>()),
@@ -166,22 +172,14 @@ extension GetItInjectableX on _i174.GetIt {
         database: gh<_i115.Database>(),
       ),
     );
-    gh.lazySingleton<_i820.ExposeService>(
-      () => _i820.ExposeService(
-        lastFmService: gh<_i820.LastfmService>(),
-        listenBrainzService: gh<_i348.ListenBrainzService>(),
-      ),
-    );
-    gh.lazySingleton<_i987.ExposeManager>(
-      () => _i987.ExposeManager(exposeService: gh<_i820.ExposeService>()),
-    );
-    await gh.singletonAsync<_i595.LibraryService>(
+    await gh.singletonAsync<_i721.PodcastService>(
       () {
-        final i = _i595.LibraryService(
+        final i = _i721.PodcastService(
+          notificationsService: gh<_i57.NotificationsService>(),
+          settingsService: gh<_i763.SettingsService>(),
           database: gh<_i115.Database>(),
-          localAudioService: gh<_i438.LocalAudioService>(),
         );
-        return i.init().then((_) => i);
+        return i.initService().then((_) => i);
       },
       preResolve: true,
       dispose: (i) => i.dispose(),
@@ -189,63 +187,42 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i688.LocalAudioManager>(
       () => _i688.LocalAudioManager(
         localAudioService: gh<_i438.LocalAudioService>(),
-        libraryService: gh<_i595.LibraryService>(),
       ),
-    );
-    gh.lazySingleton<_i971.RoutingManager>(
-      () => _i971.RoutingManager(
-        libraryService: gh<_i595.LibraryService>(),
-        settingsService: gh<_i763.SettingsService>(),
-      ),
-      dispose: (i) => i.dispose(),
-    );
-    gh.lazySingleton<_i388.DownloadManager>(
-      () => _i388.DownloadManager(
-        libraryService: gh<_i595.LibraryService>(),
-        settingsService: gh<_i763.SettingsService>(),
-        dio: gh<_i361.Dio>(),
-        externalPathService: gh<_i551.ExternalPathService>(),
-      ),
-      dispose: (i) => i.dispose(),
-    );
-    gh.lazySingleton<_i369.AppManager>(
-      () => _i369.AppManager(
-        packageInfo: gh<_i655.PackageInfo>(),
-        settingsService: gh<_i763.SettingsService>(),
-        gitHub: gh<_i535.GitHub>(),
-        localAudioService: gh<_i438.LocalAudioService>(),
-        libraryService: gh<_i595.LibraryService>(),
-        internetConnection: gh<_i161.InternetConnection>(),
-      ),
-    );
-    gh.lazySingleton<_i721.PodcastService>(
-      () => _i721.PodcastService(
-        notificationsService: gh<_i57.NotificationsService>(),
-        settingsService: gh<_i763.SettingsService>(),
-        libraryService: gh<_i595.LibraryService>(),
-        database: gh<_i115.Database>(),
-      ),
-    );
-    gh.lazySingleton<_i55.CustomContentModel>(
-      () => _i55.CustomContentModel(
-        externalPathService: gh<_i551.ExternalPathService>(),
-        libraryService: gh<_i595.LibraryService>(),
-        localAudioService: gh<_i438.LocalAudioService>(),
-        podcastService: gh<_i721.PodcastService>(),
-      ),
-    );
-    gh.lazySingleton<_i1032.LibraryModel>(
-      () => _i1032.LibraryModel(libraryService: gh<_i595.LibraryService>()),
       dispose: (i) => i.dispose(),
     );
     gh.lazySingleton<_i544.SearchModel>(
       () => _i544.SearchModel(
         radioService: gh<_i811.RadioService>(),
         podcastService: gh<_i721.PodcastService>(),
-        libraryService: gh<_i595.LibraryService>(),
         localAudioService: gh<_i438.LocalAudioService>(),
         settingsService: gh<_i763.SettingsService>(),
       ),
+    );
+    gh.lazySingleton<_i820.ExposeService>(
+      () => _i820.ExposeService(
+        lastFmService: gh<_i820.LastfmService>(),
+        listenBrainzService: gh<_i348.ListenBrainzService>(),
+      ),
+    );
+    gh.lazySingleton<_i55.CustomContentModel>(
+      () => _i55.CustomContentModel(
+        externalPathService: gh<_i551.ExternalPathService>(),
+        localAudioService: gh<_i438.LocalAudioService>(),
+        podcastService: gh<_i721.PodcastService>(),
+        radioService: gh<_i811.RadioService>(),
+      ),
+    );
+    gh.lazySingleton<_i987.ExposeManager>(
+      () => _i987.ExposeManager(exposeService: gh<_i820.ExposeService>()),
+    );
+    gh.lazySingleton<_i388.DownloadManager>(
+      () => _i388.DownloadManager(
+        podcastService: gh<_i721.PodcastService>(),
+        settingsService: gh<_i763.SettingsService>(),
+        dio: gh<_i361.Dio>(),
+        externalPathService: gh<_i551.ExternalPathService>(),
+      ),
+      dispose: (i) => i.dispose(),
     );
     await gh.singletonAsync<_i38.PlayerService>(
       () {
@@ -253,7 +230,7 @@ extension GetItInjectableX on _i174.GetIt {
           controller: gh<_i150.VideoController>(),
           exposeService: gh<_i820.ExposeService>(),
           localCoverService: gh<_i57.LocalCoverService>(),
-          libraryService: gh<_i595.LibraryService>(),
+          podcastService: gh<_i721.PodcastService>(),
           database: gh<_i115.Database>(),
         );
         return i.init().then((_) => i);
@@ -261,15 +238,9 @@ extension GetItInjectableX on _i174.GetIt {
       preResolve: true,
       dispose: (i) => i.dispose(),
     );
-    gh.lazySingleton<_i1025.PlayerModel>(
-      () => _i1025.PlayerModel(
-        service: gh<_i38.PlayerService>(),
-        onlineArtService: gh<_i328.OnlineArtService>(),
-      ),
-      dispose: (i) => i.dispose(),
-    );
     gh.lazySingleton<_i351.PodcastManager>(
       () => _i351.PodcastManager(podcastService: gh<_i721.PodcastService>()),
+      dispose: (i) => i.dispose(),
     );
     await gh.singletonAsync<_i517.WindowSizeToSettingsListener>(() {
       final i = _i517.WindowSizeToSettingsListener(
@@ -279,6 +250,15 @@ extension GetItInjectableX on _i174.GetIt {
       );
       return i.init().then((_) => i);
     }, preResolve: true);
+    gh.lazySingleton<_i971.RoutingManager>(
+      () => _i971.RoutingManager(
+        podcastService: gh<_i721.PodcastService>(),
+        localAudioService: gh<_i438.LocalAudioService>(),
+        radioService: gh<_i811.RadioService>(),
+        settingsService: gh<_i763.SettingsService>(),
+      ),
+      dispose: (i) => i.dispose(),
+    );
     gh.singleton<_i1035.ConnectivityManager>(
       () => _i1035.ConnectivityManager(
         playerService: gh<_i38.PlayerService>(),
@@ -286,13 +266,13 @@ extension GetItInjectableX on _i174.GetIt {
       ),
       dispose: (i) => i.dispose(),
     );
-    gh.lazySingleton<_i190.SidebarAudiosManager>(
-      () => _i190.SidebarAudiosManager(
-        libraryModel: gh<_i1032.LibraryModel>(),
-        localAudioManager: gh<_i688.LocalAudioManager>(),
-        podcastManager: gh<_i351.PodcastManager>(),
-        radioManager: gh<_i798.RadioManager>(),
-        playerModel: gh<_i1025.PlayerModel>(),
+    gh.lazySingleton<_i369.AppManager>(
+      () => _i369.AppManager(
+        packageInfo: gh<_i655.PackageInfo>(),
+        settingsService: gh<_i763.SettingsService>(),
+        gitHub: gh<_i535.GitHub>(),
+        localAudioService: gh<_i438.LocalAudioService>(),
+        internetConnection: gh<_i161.InternetConnection>(),
       ),
     );
     await gh.singletonAsync<_i112.MpvMetadataManager>(
@@ -310,6 +290,21 @@ extension GetItInjectableX on _i174.GetIt {
     await gh.factoryAsync<_i739.AudioServiceHandler>(
       () => audioServiceModule.audioServiceHandler(gh<_i38.PlayerService>()),
       preResolve: true,
+    );
+    gh.lazySingleton<_i1025.PlayerModel>(
+      () => _i1025.PlayerModel(
+        service: gh<_i38.PlayerService>(),
+        onlineArtService: gh<_i328.OnlineArtService>(),
+      ),
+      dispose: (i) => i.dispose(),
+    );
+    gh.lazySingleton<_i190.SidebarAudiosManager>(
+      () => _i190.SidebarAudiosManager(
+        podcastManager: gh<_i351.PodcastManager>(),
+        localAudioManager: gh<_i688.LocalAudioManager>(),
+        radioManager: gh<_i798.RadioManager>(),
+        playerModel: gh<_i1025.PlayerModel>(),
+      ),
     );
     return this;
   }

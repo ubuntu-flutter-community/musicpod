@@ -14,7 +14,7 @@ import '../../extensions/duration_x.dart';
 import '../../extensions/int_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
+import '../podcast_manager.dart';
 import '../../player/player_model.dart';
 import '../../settings/settings_model.dart';
 import 'download_button.dart';
@@ -47,7 +47,7 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final download = watchPropertyValue(
-      (LibraryModel m) => m.getDownload(audio.url),
+      (PodcastManager m) => m.getDownload(audio.url),
     );
     if ((!isOnline || showDownloadsOnly) && download == null) {
       return const SizedBox.shrink();

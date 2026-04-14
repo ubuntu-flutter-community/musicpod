@@ -10,7 +10,6 @@ import '../../common/view/audio_filter.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
-import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
@@ -40,7 +39,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final showPodcastsAscending = watchPropertyValue(
-      (LibraryModel m) => m.showPodcastAscending(feedUrl),
+      (PodcastManager m) => m.showPodcastAscending(feedUrl),
     );
 
     watchPropertyValue((PlayerModel m) => m.lastPositions?.hashCode);
@@ -102,7 +101,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
         ],
       ),
       body: RefreshIndicator(
-        onRefresh: di<LibraryModel>().isPodcastSubscribed(feedUrl)
+        onRefresh: di<PodcastManager>().isPodcastSubscribed(feedUrl)
             ? () async => di<PodcastManager>()
                   .checkForUpdateAndRefreshIfNeededCommand
                   .runAsync(feedUrl)

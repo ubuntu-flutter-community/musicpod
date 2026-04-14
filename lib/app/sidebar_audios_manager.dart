@@ -3,7 +3,6 @@ import 'package:injectable/injectable.dart';
 
 import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
-import '../library/library_model.dart';
 import '../local_audio/local_audio_manager.dart';
 import '../player/player_model.dart';
 import '../podcasts/podcast_manager.dart';
@@ -11,20 +10,17 @@ import '../radio/radio_model.dart';
 
 @lazySingleton
 class SidebarAudiosManager {
-  final LibraryModel _libraryModel;
-  final LocalAudioManager _localAudioManager;
   final PodcastManager _podcastModel;
+  final LocalAudioManager _localAudioManager;
   final RadioManager _radioManager;
   final PlayerModel _playerModel;
 
   SidebarAudiosManager({
-    required LibraryModel libraryModel,
-    required LocalAudioManager localAudioManager,
     required PodcastManager podcastManager,
+    required LocalAudioManager localAudioManager,
     required RadioManager radioManager,
     required PlayerModel playerModel,
-  }) : _libraryModel = libraryModel,
-       _localAudioManager = localAudioManager,
+  }) : _localAudioManager = localAudioManager,
        _podcastModel = podcastManager,
        _radioManager = radioManager,
        _playerModel = playerModel;
@@ -43,19 +39,19 @@ class SidebarAudiosManager {
         } else if (audios != null) {
           _playerModel
               .startPlaylist(audios: audios, listName: pageId)
-              .then((_) => _libraryModel.removePodcastUpdate(pageId));
+              .then((_) => _podcastModel.removePodcastUpdate(pageId));
         }
       });
 
   Future<List<Audio>?> _getAudiosById(String pageId) async {
-    if (_libraryModel.isStarredStation(pageId)) {
+    if (_radioManager.isStarredStation(pageId)) {
       final audio = await _radioManager
           .getStationByUUIDCommand(pageId)
           .runAsync();
       return audio == null ? [] : [audio];
     }
 
-    if (_libraryModel.isPodcastSubscribed(pageId)) {
+    if (_podcastModel.isPodcastSubscribed(pageId)) {
       final episodes = _podcastModel.getEpisodesCommand(pageId).runAsync((
         item: null,
         feedUrl: pageId,
@@ -63,8 +59,8 @@ class SidebarAudiosManager {
       return episodes;
     }
 
-    if (_libraryModel.isPlaylistSaved(pageId)) {
-      return _libraryModel.getPlaylistById(pageId);
+    if (_localAudioManager.isPlaylistSaved(pageId)) {
+      return _localAudioManager.getPlaylistById(pageId);
     }
 
     final albumId = int.tryParse(pageId);
