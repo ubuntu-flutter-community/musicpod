@@ -139,12 +139,6 @@ class LocalCoverService {
       return Uri.tryParse(audio?.imageUrl ?? audio!.albumArtUrl!);
     } else if (audio?.canHaveLocalCover == true &&
         File(audio!.path!).existsSync()) {
-      // final maybeData = get(audio.albumDbId);
-      // if (maybeData != null) {
-      //   final File newFile = await _safeTempCover(maybeData);
-
-      //   return Uri.file(newFile.path, windows: isWindows);
-      // } else if (audio.albumDbId != null) {
       final newData = await getCover(
         albumId: audio.albumDbId!,
         path: audio.path!,
@@ -154,7 +148,6 @@ class LocalCoverService {
 
         return Uri.file(newFile.path, windows: isWindows);
       }
-      // }
     }
 
     return null;
