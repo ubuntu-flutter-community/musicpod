@@ -200,7 +200,7 @@ class _AboutPageState extends State<_AboutPage> {
             style: linkStyle,
             onTap: () => launchUrl(Uri.parse(AppConfig.repoUrl)),
             text:
-                'Copyright by Frederik Feichtmeier 2023-2025 - all rights reserved.',
+                'Copyright by Frederik Feichtmeier 2023-${DateTime.now().year} - all rights reserved.',
             maxLines: maxLines,
           ),
         ),
