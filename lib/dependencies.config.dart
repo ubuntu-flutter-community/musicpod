@@ -221,14 +221,6 @@ extension GetItInjectableX on _i174.GetIt {
       ),
       dispose: (i) => i.dispose(),
     );
-    gh.lazySingleton<_i338.SettingsModel>(
-      () => _i338.SettingsModel(
-        service: gh<_i763.SettingsService>(),
-        podcastService: gh<_i721.PodcastService>(),
-        localAudioService: gh<_i438.LocalAudioService>(),
-        radioService: gh<_i811.RadioService>(),
-      ),
-    );
     await gh.singletonAsync<_i38.PlayerService>(
       () {
         final i = _i38.PlayerService(
@@ -295,6 +287,15 @@ extension GetItInjectableX on _i174.GetIt {
     await gh.factoryAsync<_i739.AudioServiceHandler>(
       () => audioServiceModule.audioServiceHandler(gh<_i38.PlayerService>()),
       preResolve: true,
+    );
+    gh.lazySingleton<_i338.SettingsModel>(
+      () => _i338.SettingsModel(
+        service: gh<_i763.SettingsService>(),
+        podcastService: gh<_i721.PodcastService>(),
+        localAudioService: gh<_i438.LocalAudioService>(),
+        radioService: gh<_i811.RadioService>(),
+        playerService: gh<_i38.PlayerService>(),
+      ),
     );
     gh.lazySingleton<_i1025.PlayerModel>(
       () => _i1025.PlayerModel(

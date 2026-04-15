@@ -722,6 +722,36 @@ class PlayerService {
     );
   }
 
+  Future<void> _wipePlayerState() async {
+    try {
+      await _db.delete(_db.playerStateTable).go();
+    } on Exception catch (e) {
+      printMessageInDebugMode('Error while wiping player state: $e');
+    }
+  }
+
+  Future<void> resetPlayerState() async {
+    await player.stop();
+    await _wipePlayerState();
+    _audio = null;
+    _nextAudio = null;
+    _queue = (name: '', audios: []);
+    _position = Duration.zero;
+    _duration = null;
+    _buffer = null;
+    _isPlaying = false;
+    _playlistMode = PlaylistMode.none;
+    _shuffle = false;
+    setRemoteImageUrl(null);
+    _setColor(null);
+    await _exposeService.exposeTitleOnline(
+      title: '',
+      artist: '',
+      additionalInfo: '',
+    );
+    _propertiesChangedController.add(true);
+  }
+
   void playPath([String? path]) {
     if (path == null) {
       return;

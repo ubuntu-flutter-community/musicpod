@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
+import 'package:flutter/foundation.dart';
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 import 'package:injectable/injectable.dart';
@@ -46,15 +47,7 @@ class LocalCoverService {
       Uint8List? bytesFromMetadata;
 
       try {
-        final metadata = readMetadata(file, getImage: true);
-        bytesFromMetadata = metadata.pictures
-            .firstWhereOrNull(
-              (e) =>
-                  (e.bytes.isNotEmpty &&
-                      e.pictureType == PictureType.coverFront) ||
-                  e.bytes.isNotEmpty,
-            )
-            ?.bytes;
+        bytesFromMetadata = await compute(_readCoverFromFile, path);
 
         if (bytesFromMetadata == null) {
           final maybeImageInFolder = _getImageInFolder(file);
@@ -170,4 +163,15 @@ class LocalCoverService {
     final newFile = await file.writeAsBytes(maybeData);
     return newFile;
   }
+}
+
+Uint8List? _readCoverFromFile(String path) {
+  final metadata = readMetadata(File(path), getImage: true);
+  return metadata.pictures
+      .firstWhereOrNull(
+        (e) =>
+            (e.bytes.isNotEmpty && e.pictureType == PictureType.coverFront) ||
+            e.bytes.isNotEmpty,
+      )
+      ?.bytes;
 }

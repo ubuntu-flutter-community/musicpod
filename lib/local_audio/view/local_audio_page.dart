@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
+import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
-import '../../app/page_ids.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
@@ -32,7 +32,7 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
         (_) => di<LocalAudioManager>().initAudiosCommand.run((
           directory: null,
           forceInit: false,
-          extraAudios: [],
+          extraAudios: const [],
         )),
       );
     }
@@ -49,9 +49,14 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
       },
     );
 
-    final audios = watchValue(
-      (LocalAudioManager m) => m.initAudiosCommand.select((r) => r?.audios),
+    final audiosResults = watchValue(
+      (LocalAudioManager m) => m.initAudiosCommand.results,
     );
+    final progress = watchValue(
+      (LocalAudioManager m) => m.initAudiosCommand.progress,
+    );
+    final audios = audiosResults.data?.audios;
+    final isRunning = audiosResults.isRunning;
     final localAudioManager = di<LocalAudioManager>();
 
     final playlists = watchPropertyValue(
@@ -82,8 +87,8 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
         ],
         title: Text(context.l10n.localAudio),
       ),
-      body: audios == null
-          ? const Center(child: Progress())
+      body: audios == null || isRunning
+          ? Center(child: Progress(value: progress))
           : SliverBody(
               controlPanel: const LocalAudioControlPanel(),
               contentBuilder: (context, constraints) => audios.isEmpty

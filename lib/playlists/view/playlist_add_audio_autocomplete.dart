@@ -67,7 +67,7 @@ class _PlaylistAddAudioAutoCompleteState
       (_) => di<LocalAudioManager>().initAudiosCommand.run((
         directory: null,
         forceInit: false,
-        extraAudios: [],
+        extraAudios: const [],
       )),
     );
 

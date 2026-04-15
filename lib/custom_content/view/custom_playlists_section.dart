@@ -151,13 +151,17 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
                           Navigator.of(context).pop();
                         }
 
+                        final extraAudios = playlists
+                            .expand((e) => e.audios)
+                            .where((e) => e.isLocal)
+                            .toList();
+                        await di<LocalAudioManager>().initAudiosCommand
+                            .runAsync((
+                              directory: null,
+                              forceInit: true,
+                              extraAudios: extraAudios,
+                            ));
                         await localAudioManager.addExternalPlaylists(playlists);
-                        di<LocalAudioManager>().initAudiosCommand.run((
-                          directory: null,
-                          forceInit: true,
-                          extraAudios:
-                              di<LocalAudioManager>().externalPlaylistAudios,
-                        ));
                         await Future.delayed(
                           const Duration(milliseconds: 200),
                           () => routingManager.push(pageId: playlists.first.id),

@@ -569,7 +569,7 @@ class PodcastService {
     _notify();
   }
 
-  Future<void> wipePodcastLibrary() async {
+  Future<void> wipeAndBuildPodcastLibrary() async {
     await removeAllDownloads();
     await removeAllPodcasts();
     await initService();

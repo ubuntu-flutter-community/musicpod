@@ -401,7 +401,12 @@ class RadioService {
     )..where((t) => t.name.equals(name))).go().then((_) => _notify());
   }
 
-  Future<void> wipeRadioLibrary() async {
+  Future<void> wipeAndBuildRadioLibrary() async {
+    await _wipeRadioLibrary();
+    await initService();
+  }
+
+  Future<void> _wipeRadioLibrary() async {
     _favRadioTags.clear();
     _starredStations.clear();
     await _db.delete(_db.starredStationTable).go();

@@ -79,14 +79,17 @@ class LocalMainPageIcon extends StatelessWidget with WatchItMixin {
     final isLocalAudioImporting = watchValue(
       (LocalAudioManager m) => m.initAudiosCommand.isRunning,
     );
+    final progress = watchValue(
+      (LocalAudioManager m) => m.initAudiosCommand.progress,
+    );
 
     if (isLocalAudioImporting)
       return Padding(
         padding: mainPageIconPadding,
-        child: const SizedBox(
+        child: SizedBox(
           width: 16,
           height: 16,
-          child: Progress(strokeWidth: 2),
+          child: Progress(value: progress, strokeWidth: 2),
         ),
       );
 

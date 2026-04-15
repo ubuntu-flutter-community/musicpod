@@ -170,13 +170,12 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
     final localAudioManager = di<LocalAudioManager>();
     final playerModel = di<PlayerModel>();
     final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
-    watchPropertyValue((LocalAudioManager m) => m.externalPlaylists.length);
 
     final audioPageHeader = AudioPageHeader(
       title: pageId,
       subTitle: '${audios.length} ${l10n.titles}',
       image: image,
-      label: di<LocalAudioManager>().externalPlaylists.contains(pageId)
+      label: di<LocalAudioManager>().isPlaylistExternal(pageId)
           ? '${l10n.playlist} (${l10n.external})'
           : l10n.playlist,
       description: GenreBar(audios: audios),

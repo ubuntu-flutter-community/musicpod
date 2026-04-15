@@ -87,7 +87,7 @@ class WipeConfirmDialog extends StatelessWidget {
         await di<LocalAudioManager>().initAudiosCommand.runAsync((
           directory: null,
           forceInit: true,
-          extraAudios: [],
+          extraAudios: const [],
         ));
         await di<SettingsModel>().wipeAndInitLibraryCommand.runAsync();
       },

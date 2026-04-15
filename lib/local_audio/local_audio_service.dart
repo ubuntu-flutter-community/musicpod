@@ -8,15 +8,16 @@ import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:synchronized/synchronized.dart';
 
+import '../app/page_ids.dart';
 import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
 import '../common/logging.dart';
 import '../common/persistence/database.dart';
 import '../common/view/audio_filter.dart';
-import '../app/page_ids.dart';
 import '../extensions/media_file_x.dart';
 import '../settings/settings_service.dart';
 import '../settings/shared_preferences_keys.dart';
+import 'data/change_metadata_capsule.dart';
 import 'local_cover_service.dart';
 import 'local_search_result.dart';
 
@@ -110,10 +111,6 @@ class LocalAudioService {
         _db.artistTable.id.equalsExp(_db.trackTable.artist),
       ),
       leftOuterJoin(
-        _db.albumArtTable,
-        _db.albumArtTable.album.equalsExp(_db.albumTable.id),
-      ),
-      leftOuterJoin(
         _db.genreTable,
         _db.genreTable.id.equalsExp(_db.trackTable.genre),
       ),
@@ -130,9 +127,8 @@ class LocalAudioService {
       final track = row.readTable(_db.trackTable);
       final albumRow = row.readTableOrNull(_db.albumTable);
       final artistRow = row.readTableOrNull(_db.artistTable);
-      final albumArt = row.readTableOrNull(_db.albumArtTable);
       final genreRow = row.readTableOrNull(_db.genreTable);
-      return _trackToAudio(track, albumRow, artistRow, albumArt, genreRow);
+      return _trackToAudio(track, albumRow, artistRow, genreRow);
     }).toList();
 
     _albumCache[albumId] = list;
@@ -158,10 +154,6 @@ class LocalAudioService {
       innerJoin(
         _db.artistTable,
         _db.artistTable.id.equalsExp(_db.trackTable.artist),
-      ),
-      leftOuterJoin(
-        _db.albumArtTable,
-        _db.albumArtTable.album.equalsExp(_db.albumTable.id),
       ),
       leftOuterJoin(
         _db.genreTable,
@@ -199,9 +191,8 @@ class LocalAudioService {
       final track = row.readTable(_db.trackTable);
       final albumRow = row.readTableOrNull(_db.albumTable);
       final artistRow = row.readTableOrNull(_db.artistTable);
-      final albumArt = row.readTableOrNull(_db.albumArtTable);
       final genreRow = row.readTableOrNull(_db.genreTable);
-      return _trackToAudio(track, albumRow, artistRow, albumArt, genreRow);
+      return _trackToAudio(track, albumRow, artistRow, genreRow);
     }).toList();
 
     _titlesOfArtistCache[artist] = list;
@@ -304,8 +295,11 @@ class LocalAudioService {
     String? newDirectory,
     bool forceInit = false,
     List<Audio> extraAudios = const [],
+    Function(double progress)? updateProgress,
   }) async {
     List<String> failedImports = [];
+    updateProgress?.call(0.1);
+    await Future<void>.delayed(Duration.zero);
 
     await _lock.synchronized(() async {
       if (!forceInit && _initialized) {
@@ -313,6 +307,7 @@ class LocalAudioService {
           'Already initialized, skipping',
           tag: '$LocalAudioService',
         );
+        updateProgress?.call(1);
         return;
       }
 
@@ -320,9 +315,9 @@ class LocalAudioService {
         // Try loading from database first
         final trackCount = await _db.trackTable.count().getSingle();
         if (trackCount > 0) {
-          await _loadCollectionsFromDb();
-          await initLocalAudioLibrary();
+          await _loadAndBuildLocalAudioLibrary();
           _initialized = true;
+          updateProgress?.call(1);
           return;
         }
       }
@@ -334,6 +329,8 @@ class LocalAudioService {
       final dir = newDirectory ?? _settingsService.getString(SPKeys.directory);
 
       final result = await compute(_readAudiosFromDirectory, dir);
+      updateProgress?.call(0.5);
+      await Future<void>.delayed(Duration.zero);
       failedImports = result.failedImports;
 
       final allAudios = [...result.audios];
@@ -353,160 +350,255 @@ class LocalAudioService {
       }
 
       await _persistAudios(allAudios);
-      await _loadCollectionsFromDb();
-      await initLocalAudioLibrary();
+      updateProgress?.call(0.75);
+      await Future<void>.delayed(Duration.zero);
+      await _loadAndBuildLocalAudioLibrary();
+      updateProgress?.call(1);
+
       _initialized = true;
     });
     return (audios: _audios ?? [], failedImports: failedImports);
   }
 
   Future<void> _persistAudios(List<Audio> audioList) async {
-    // Multi-pass: first collect unique artists, albums & genres, insert, then tracks.
-    final artistNameToId = <String, int>{};
-    final albumKeyToId = <String, int>{};
-    final genreNameToId = <String, int>{};
+    await _db.transaction(() async {
+      // ── 1. Artists: batch-insert new, then bulk-load IDs ──
+      final artistNameToId = <String, int>{};
 
-    // Collect unique artists
-    final uniqueArtists = <String>{};
-    for (final a in audioList) {
-      if (a.artist?.isNotEmpty == true) uniqueArtists.add(a.artist!);
-      if (a.albumArtist?.isNotEmpty == true) uniqueArtists.add(a.albumArtist!);
-    }
-
-    for (final name in uniqueArtists) {
-      final existing = await (_db.select(
-        _db.artistTable,
-      )..where((t) => t.name.equals(name))).getSingleOrNull();
-      if (existing != null) {
-        artistNameToId[name] = existing.id;
-      } else {
-        final id = await _db
-            .into(_db.artistTable)
-            .insert(ArtistTableCompanion.insert(name: name));
-        artistNameToId[name] = id;
+      // Load existing artists
+      final existingArtists = await _db.select(_db.artistTable).get();
+      for (final a in existingArtists) {
+        artistNameToId[a.name] = a.id;
       }
-    }
 
-    // Collect unique genres
-    final uniqueGenres = <String>{};
-    for (final a in audioList) {
-      if (a.genre?.trim().isNotEmpty == true) uniqueGenres.add(a.genre!.trim());
-    }
-
-    for (final name in uniqueGenres) {
-      final existing = await (_db.select(
-        _db.genreTable,
-      )..where((t) => t.name.equals(name))).getSingleOrNull();
-      if (existing != null) {
-        genreNameToId[name] = existing.id;
-      } else {
-        final id = await _db
-            .into(_db.genreTable)
-            .insert(GenreTableCompanion.insert(name: name));
-        genreNameToId[name] = id;
+      // Collect & batch-insert new artists
+      final newArtistNames = <String>[];
+      final uniqueArtists = <String>{};
+      for (final a in audioList) {
+        if (a.artist?.isNotEmpty == true) uniqueArtists.add(a.artist!);
+        if (a.albumArtist?.isNotEmpty == true) {
+          uniqueArtists.add(a.albumArtist!);
+        }
       }
-    }
-
-    // Collect unique albums
-    final uniqueAlbums = <String>{};
-    for (final a in audioList) {
-      if (a.album?.isNotEmpty == true) {
-        uniqueAlbums.add(a.album!);
+      for (final name in uniqueArtists) {
+        if (!artistNameToId.containsKey(name)) {
+          newArtistNames.add(name);
+        }
       }
-    }
-
-    for (final albumName in uniqueAlbums) {
-      // Find first audio with this album to get artist reference
-      final sampleAudio = audioList.firstWhere((a) => a.album == albumName);
-      final artistId = sampleAudio.artist != null
-          ? artistNameToId[sampleAudio.artist!]
-          : null;
-      final key = '${artistId ?? ''}_$albumName';
-
-      final existing =
-          await (_db.select(_db.albumTable)..where((t) {
-                if (artistId != null) {
-                  return t.name.equals(albumName) & t.artist.equals(artistId);
-                }
-                return t.name.equals(albumName);
-              }))
-              .getSingleOrNull();
-
-      if (existing != null) {
-        albumKeyToId[key] = existing.id;
-      } else {
-        final id = await _db
-            .into(_db.albumTable)
-            .insert(
-              AlbumTableCompanion.insert(
-                name: albumName,
-                artist: artistId ?? 0,
-              ),
-            );
-        albumKeyToId[key] = id;
+      if (newArtistNames.isNotEmpty) {
+        await _db.batch((batch) {
+          batch.insertAll(_db.artistTable, [
+            for (final name in newArtistNames)
+              ArtistTableCompanion.insert(name: name),
+          ]);
+        });
+        // Re-load to get generated IDs
+        final allArtists = await _db.select(_db.artistTable).get();
+        artistNameToId.clear();
+        for (final a in allArtists) {
+          artistNameToId[a.name] = a.id;
+        }
       }
-    }
 
-    // Insert tracks
-    for (final audio in audioList) {
-      if (audio.path == null) continue;
+      // ── 2. Genres: batch-insert new, then bulk-load IDs ──
+      final genreNameToId = <String, int>{};
 
-      final existing = await (_db.select(
-        _db.trackTable,
-      )..where((t) => t.path.equals(audio.path!))).getSingleOrNull();
-      if (existing != null) continue;
+      final existingGenres = await _db.select(_db.genreTable).get();
+      for (final g in existingGenres) {
+        genreNameToId[g.name] = g.id;
+      }
 
-      final artistId = audio.artist != null
-          ? artistNameToId[audio.artist!]
-          : null;
-      final albumArtistId = audio.albumArtist != null
-          ? artistNameToId[audio.albumArtist!]
-          : null;
-      final albumKey = '${artistId ?? ''}_${audio.album ?? ''}';
-      final albumId = audio.album != null ? albumKeyToId[albumKey] : null;
-      final genreId = audio.genre?.trim().isNotEmpty == true
-          ? genreNameToId[audio.genre!.trim()]
-          : null;
+      final newGenreNames = <String>[];
+      final uniqueGenres = <String>{};
+      for (final a in audioList) {
+        if (a.genre?.trim().isNotEmpty == true) {
+          uniqueGenres.add(a.genre!.trim());
+        }
+      }
+      for (final name in uniqueGenres) {
+        if (!genreNameToId.containsKey(name)) {
+          newGenreNames.add(name);
+        }
+      }
+      if (newGenreNames.isNotEmpty) {
+        await _db.batch((batch) {
+          batch.insertAll(_db.genreTable, [
+            for (final name in newGenreNames)
+              GenreTableCompanion.insert(name: name),
+          ]);
+        });
+        final allGenres = await _db.select(_db.genreTable).get();
+        genreNameToId.clear();
+        for (final g in allGenres) {
+          genreNameToId[g.name] = g.id;
+        }
+      }
 
-      await _db
-          .into(_db.trackTable)
-          .insert(
-            TrackTableCompanion.insert(
-              name: audio.title ?? audio.path!,
-              path: audio.path!,
-              album: Value(albumId),
-              artist: Value(artistId),
-              albumArtist: Value(albumArtistId),
-              discNumber: Value(audio.discNumber),
-              discTotal: Value(audio.discTotal),
-              durationMs: Value(audio.durationMs),
-              genre: Value(genreId),
-              trackNumber: Value(audio.trackNumber),
-              year: Value(audio.year),
-              lyrics: Value(audio.lyrics),
+      // ── 3. Albums: batch-insert new, then bulk-load IDs ──
+      final albumKeyToId = <String, int>{};
+
+      final existingAlbums = await _db.select(_db.albumTable).get();
+      for (final a in existingAlbums) {
+        albumKeyToId['${a.artist}_${a.name}'] = a.id;
+      }
+
+      final newAlbumCompanions = <AlbumTableCompanion>[];
+      final uniqueAlbums = <String>{};
+      for (final a in audioList) {
+        if (a.album?.isNotEmpty == true) {
+          uniqueAlbums.add(a.album!);
+        }
+      }
+      for (final albumName in uniqueAlbums) {
+        final sampleAudio = audioList.firstWhere((a) => a.album == albumName);
+        final artistId = sampleAudio.artist != null
+            ? artistNameToId[sampleAudio.artist!]
+            : null;
+        final key = '${artistId ?? ''}_$albumName';
+        if (!albumKeyToId.containsKey(key)) {
+          newAlbumCompanions.add(
+            AlbumTableCompanion.insert(name: albumName, artist: artistId ?? 0),
+          );
+        }
+      }
+      if (newAlbumCompanions.isNotEmpty) {
+        await _db.batch((batch) {
+          batch.insertAll(_db.albumTable, newAlbumCompanions);
+        });
+        final allAlbums = await _db.select(_db.albumTable).get();
+        albumKeyToId.clear();
+        for (final a in allAlbums) {
+          albumKeyToId['${a.artist}_${a.name}'] = a.id;
+        }
+      }
+
+      // ── 4. Tracks: batch-insert new ──
+      final pathQuery = _db.selectOnly(_db.trackTable)
+        ..addColumns([_db.trackTable.path]);
+      final pathRows = await pathQuery.get();
+      final existingPaths = pathRows
+          .map((r) => r.read(_db.trackTable.path)!)
+          .toSet();
+
+      final trackCompanions = <TrackTableCompanion>[];
+      final artCandidates = <(int, Audio)>[];
+
+      for (final audio in audioList) {
+        if (audio.path == null || existingPaths.contains(audio.path)) continue;
+
+        final artistId = audio.artist != null
+            ? artistNameToId[audio.artist!]
+            : null;
+        final albumArtistId = audio.albumArtist != null
+            ? artistNameToId[audio.albumArtist!]
+            : null;
+        final albumKey = '${artistId ?? ''}_${audio.album ?? ''}';
+        final albumId = audio.album != null ? albumKeyToId[albumKey] : null;
+        final genreId = audio.genre?.trim().isNotEmpty == true
+            ? genreNameToId[audio.genre!.trim()]
+            : null;
+
+        trackCompanions.add(
+          TrackTableCompanion.insert(
+            name: audio.title ?? audio.path!,
+            path: audio.path!,
+            album: Value(albumId),
+            artist: Value(artistId),
+            albumArtist: Value(albumArtistId),
+            discNumber: Value(audio.discNumber),
+            discTotal: Value(audio.discTotal),
+            durationMs: Value(audio.durationMs),
+            genre: Value(genreId),
+            trackNumber: Value(audio.trackNumber),
+            year: Value(audio.year),
+            lyrics: Value(audio.lyrics),
+          ),
+        );
+
+        if (albumId != null &&
+            audio.pictureData != null &&
+            audio.pictureMimeType != null) {
+          artCandidates.add((albumId, audio));
+        }
+      }
+
+      await _db.batch((batch) {
+        batch.insertAll(_db.trackTable, trackCompanions);
+      });
+
+      // ── 5. Album art: batch-insert (one per album) ──
+      final seenAlbumIds = <int>{};
+      final artCompanions = <AlbumArtTableCompanion>[];
+      for (final (albumId, audio) in artCandidates) {
+        if (seenAlbumIds.add(albumId)) {
+          artCompanions.add(
+            AlbumArtTableCompanion.insert(
+              album: albumId,
+              pictureData: audio.pictureData!,
+              pictureMimeType: audio.pictureMimeType!,
             ),
           );
-
-      // Insert album art if this track has picture data and no art exists yet
-      if (albumId != null &&
-          audio.pictureData != null &&
-          audio.pictureMimeType != null) {
-        await _db
-            .into(_db.albumArtTable)
-            .insert(
-              AlbumArtTableCompanion.insert(
-                album: albumId,
-                pictureData: audio.pictureData!,
-                pictureMimeType: audio.pictureMimeType!,
-              ),
-              mode: InsertMode.insertOrIgnore,
-            );
+        }
       }
-    }
+      if (artCompanions.isNotEmpty) {
+        await _db.batch((batch) {
+          batch.insertAll(
+            _db.albumArtTable,
+            artCompanions,
+            mode: InsertMode.insertOrIgnore,
+          );
+        });
+      }
+    });
+  }
+
+  // ── Helpers ──
+
+  Future<int?> _findTrackIdByPath(String? path) async {
+    if (path == null) return null;
+    final row = await (_db.select(
+      _db.trackTable,
+    )..where((t) => t.path.equals(path))).getSingleOrNull();
+    return row?.id;
+  }
+
+  List<Audio> _joinedRowsToAudios(List<TypedResult> rows) => rows.map((row) {
+    final track = row.readTable(_db.trackTable);
+    final albumRow = row.readTableOrNull(_db.albumTable);
+    final artistRow = row.readTableOrNull(_db.artistTable);
+    final genreRow = row.readTableOrNull(_db.genreTable);
+    return _trackToAudio(track, albumRow, artistRow, genreRow);
+  }).toList();
+
+  JoinedSelectStatement _trackJoin(SimpleSelectStatement base) => base.join([
+    innerJoin(
+      _db.trackTable,
+      _db.trackTable.id.equalsExp(_db.likedTrackTable.trackId),
+    ),
+    leftOuterJoin(
+      _db.albumTable,
+      _db.albumTable.id.equalsExp(_db.trackTable.album),
+    ),
+    leftOuterJoin(
+      _db.artistTable,
+      _db.artistTable.id.equalsExp(_db.trackTable.artist),
+    ),
+    leftOuterJoin(
+      _db.genreTable,
+      _db.genreTable.id.equalsExp(_db.trackTable.genre),
+    ),
+  ]);
+
+  // ── Local Audio Library ──
+
+  Future<void> _loadAndBuildLocalAudioLibrary() async {
+    await _loadCollectionsFromDb();
+    await _loadUserChangesFromDb();
+    _notify();
   }
 
   Future<void> _loadCollectionsFromDb() async {
-    // Load all tracks with joined artist/album names, album art and genre, ordered by title
+    // Load all tracks with joined artist/album names and genre, ordered by title
     final query = _db.select(_db.trackTable).join([
       leftOuterJoin(
         _db.albumTable,
@@ -515,10 +607,6 @@ class LocalAudioService {
       leftOuterJoin(
         _db.artistTable,
         _db.artistTable.id.equalsExp(_db.trackTable.artist),
-      ),
-      leftOuterJoin(
-        _db.albumArtTable,
-        _db.albumArtTable.album.equalsExp(_db.albumTable.id),
       ),
       leftOuterJoin(
         _db.genreTable,
@@ -532,9 +620,8 @@ class LocalAudioService {
       final track = row.readTable(_db.trackTable);
       final albumRow = row.readTableOrNull(_db.albumTable);
       final artistRow = row.readTableOrNull(_db.artistTable);
-      final albumArt = row.readTableOrNull(_db.albumArtTable);
       final genreRow = row.readTableOrNull(_db.genreTable);
-      return _trackToAudio(track, albumRow, artistRow, albumArt, genreRow);
+      return _trackToAudio(track, albumRow, artistRow, genreRow);
     }).toList();
 
     // Load all artists sorted
@@ -553,59 +640,19 @@ class LocalAudioService {
     findAllAlbumIDs();
   }
 
-  // ── Helpers ──
-
-  Future<int?> _findTrackIdByPath(String? path) async {
-    if (path == null) return null;
-    final row = await (_db.select(
-      _db.trackTable,
-    )..where((t) => t.path.equals(path))).getSingleOrNull();
-    return row?.id;
+  Future<void> _loadUserChangesFromDb() async {
+    await _loadLikedAudiosFromDb();
+    await _loadPlaylistsFromDb();
+    await _loadExternalPlaylistIDsFromDb();
+    await _loadPinnedAlbumsFromDb();
   }
 
-  List<Audio> _joinedRowsToAudios(List<TypedResult> rows) => rows.map((row) {
-    final track = row.readTable(_db.trackTable);
-    final albumRow = row.readTableOrNull(_db.albumTable);
-    final artistRow = row.readTableOrNull(_db.artistTable);
-    final albumArt = row.readTableOrNull(_db.albumArtTable);
-    final genreRow = row.readTableOrNull(_db.genreTable);
-    return _trackToAudio(track, albumRow, artistRow, albumArt, genreRow);
-  }).toList();
-
-  JoinedSelectStatement _trackJoin(SimpleSelectStatement base) => base.join([
-    innerJoin(
-      _db.trackTable,
-      _db.trackTable.id.equalsExp(_db.likedTrackTable.trackId),
-    ),
-    leftOuterJoin(
-      _db.albumTable,
-      _db.albumTable.id.equalsExp(_db.trackTable.album),
-    ),
-    leftOuterJoin(
-      _db.artistTable,
-      _db.artistTable.id.equalsExp(_db.trackTable.artist),
-    ),
-    leftOuterJoin(
-      _db.albumArtTable,
-      _db.albumArtTable.album.equalsExp(_db.albumTable.id),
-    ),
-    leftOuterJoin(
-      _db.genreTable,
-      _db.genreTable.id.equalsExp(_db.trackTable.genre),
-    ),
-  ]);
-
-  // ── Local Audio Library ──
-
-  Future<void> initLocalAudioLibrary() async {
-    await _loadLikedAudios();
-    await _loadPlaylists();
-    await _loadExternalPlaylistIDs();
-    await _loadPinnedAlbums();
-    _notify();
+  Future<void> wipeAndBuildLocalAudioLibrary() async {
+    await _wipeLocalAudioLibrary();
+    await _loadAndBuildLocalAudioLibrary();
   }
 
-  Future<void> wipeLocalAudioLibrary() async {
+  Future<void> _wipeLocalAudioLibrary() async {
     await _db.delete(_db.likedTrackTable).go();
     await _db.delete(_db.albumTable).go();
     await _db.delete(_db.playlistTrackTable).go();
@@ -613,7 +660,6 @@ class LocalAudioService {
     await _db.delete(_db.artistTable).go();
     await _db.delete(_db.albumArtTable).go();
     await _db.delete(_db.genreTable).go();
-    await initLocalAudioLibrary();
   }
 
   // ── Liked Audios ──
@@ -622,7 +668,7 @@ class LocalAudioService {
   List<Audio> get likedAudios => _likedAudios;
   int get likedAudiosLength => _likedAudios.length;
 
-  Future<void> _loadLikedAudios() async {
+  Future<void> _loadLikedAudiosFromDb() async {
     final rows = await _trackJoin(_db.select(_db.likedTrackTable)).get();
     _likedAudios = _joinedRowsToAudios(rows);
   }
@@ -727,7 +773,7 @@ class LocalAudioService {
   bool isPlaylistSaved(String? id) =>
       id == null ? false : _playlists.containsKey(id);
 
-  Future<void> _loadPlaylists() async {
+  Future<void> _loadPlaylistsFromDb() async {
     _playlists = {};
     final playlistRows = await _db.select(_db.playlistTable).get();
     for (final pl in playlistRows) {
@@ -743,10 +789,6 @@ class LocalAudioService {
         leftOuterJoin(
           _db.artistTable,
           _db.artistTable.id.equalsExp(_db.trackTable.artist),
-        ),
-        leftOuterJoin(
-          _db.albumArtTable,
-          _db.albumArtTable.album.equalsExp(_db.albumTable.id),
         ),
         leftOuterJoin(
           _db.genreTable,
@@ -987,21 +1029,11 @@ class LocalAudioService {
   List<String> _externalPlaylistIDs = [];
   List<String> get externalPlaylistIDs => _externalPlaylistIDs;
 
-  Future<void> _loadExternalPlaylistIDs() async {
+  Future<void> _loadExternalPlaylistIDsFromDb() async {
     final rows = await (_db.select(
       _db.playlistTable,
     )..where((t) => t.fromExternalSource.equals(true))).get();
     _externalPlaylistIDs = rows.map((r) => r.name).toList();
-  }
-
-  List<Audio> get externalPlaylistAudios {
-    if (_externalPlaylistIDs.isEmpty) return [];
-    return [for (var e in _externalPlaylistIDs) ...getPlaylistById(e) ?? []];
-  }
-
-  List<Audio> get playlistsAudios {
-    if (_playlists.isEmpty) return [];
-    return [for (var e in _playlists.entries) ...e.value];
   }
 
   // ── Pinned Albums ──
@@ -1009,7 +1041,7 @@ class LocalAudioService {
   List<int> _pinnedAlbums = [];
   List<int> get pinnedAlbums => _pinnedAlbums;
 
-  Future<void> _loadPinnedAlbums() async {
+  Future<void> _loadPinnedAlbumsFromDb() async {
     final rows = await (_db.select(
       _db.albumTable,
     )..where((t) => t.pinned.equals(true))).get();
@@ -1038,7 +1070,6 @@ class LocalAudioService {
     TrackTableData track,
     AlbumTableData? albumRow,
     ArtistTableData? artistRow,
-    AlbumArtTableData? albumArt,
     GenreTableData? genreRow,
   ) {
     return Audio(
@@ -1053,76 +1084,228 @@ class LocalAudioService {
       discTotal: track.discTotal,
       durationMs: track.durationMs,
       genre: genreRow?.name,
-      pictureData: albumArt?.pictureData,
-      pictureMimeType: albumArt?.pictureMimeType,
       trackNumber: track.trackNumber,
       year: track.year,
       lyrics: track.lyrics,
     );
   }
 
-  void changeMetadata(
+  Future<Audio?> changeMetadata(ChangeMetadataCapsule capsule) async {
+    Audio? updatedAudio;
+
+    if (capsule.audio.path == null) {
+      throw Exception('Cannot change metadata of audio without file path');
+    }
+
+    try {
+      await compute(
+        _updateMetadata,
+        ChangeMetadataCapsule(
+          audio: capsule.audio,
+          title: capsule.title,
+          artist: capsule.artist,
+          album: capsule.album,
+          genre: capsule.genre,
+          discTotal: capsule.discTotal,
+          discNumber: capsule.discNumber,
+          trackNumber: capsule.trackNumber,
+          durationMs: capsule.durationMs,
+          year: capsule.year,
+          pictures: capsule.pictures,
+        ),
+      );
+
+      final newAlbumDbId = await _updateSingleTrackInDb(
+        capsule.audio,
+        artist: capsule.artist,
+        album: capsule.album,
+        genre: capsule.genre,
+        title: capsule.title,
+        discNumber: capsule.discNumber,
+        trackNumber: capsule.trackNumber,
+        year: capsule.year,
+        pictures: capsule.pictures,
+      );
+
+      final old = audios?.firstWhereOrNull((a) => a.path == capsule.audio.path);
+
+      if (old != null) {
+        final updated = old.copyWith(
+          title: capsule.title ?? old.title,
+          artist: capsule.artist ?? old.artist,
+          album: capsule.album ?? old.album,
+          albumDbId: newAlbumDbId ?? old.albumDbId,
+          genre: capsule.genre ?? old.genre,
+          discNumber: capsule.discNumber != null
+              ? int.tryParse(capsule.discNumber!) ?? old.discNumber
+              : old.discNumber,
+          trackNumber: capsule.trackNumber != null
+              ? int.tryParse(capsule.trackNumber!) ?? old.trackNumber
+              : old.trackNumber,
+          year: capsule.year != null
+              ? int.tryParse(capsule.year!) ?? old.year
+              : old.year,
+          pictureData: capsule.pictures != null && capsule.pictures!.isNotEmpty
+              ? capsule.pictures!
+                        .firstWhereOrNull((e) => e.bytes.isNotEmpty)
+                        ?.bytes ??
+                    old.pictureData
+              : old.pictureData,
+          pictureMimeType:
+              capsule.pictures != null && capsule.pictures!.isNotEmpty
+              ? capsule.pictures!
+                        .firstWhereOrNull((e) => e.bytes.isNotEmpty)
+                        ?.mimetype ??
+                    old.pictureMimeType
+              : old.pictureMimeType,
+        );
+        final index = _audios?.indexOf(old);
+        if (index != null && index >= 0) {
+          _audios?[index] = updated;
+          updatedAudio = updated;
+
+          if (old.artist != capsule.artist || old.album != capsule.album) {
+            _albumCache.remove(old.albumDbId);
+            if (updated.albumDbId != null) {
+              await findAlbum(updated.albumDbId!);
+            }
+          }
+          if (old.artist != capsule.artist) {
+            _titlesOfArtistCache.remove(old.artist);
+            if (capsule.artist != null) {
+              await findTitlesOfArtist(capsule.artist!);
+            }
+          }
+          if (old.genre != capsule.genre) {
+            _albumIDsOfGenreCache.remove(old.genre);
+            if (capsule.genre != null) {
+              await findAlbumIDsOfGenre(capsule.genre!);
+            }
+          }
+          _notify();
+        }
+      }
+    } on Exception catch (e) {
+      printMessageInDebugMode(
+        'Failed to update metadata for ${capsule.audio.path}: $e',
+        tag: '$LocalAudioService',
+      );
+    }
+
+    return updatedAudio;
+  }
+
+  /// Returns the resolved album DB id if album or artist changed, or null.
+  Future<int?> _updateSingleTrackInDb(
     Audio audio, {
-    Function? onChange,
-    String? title,
     String? artist,
     String? album,
     String? genre,
-    String? discTotal,
+    String? title,
     String? discNumber,
     String? trackNumber,
-    String? durationMs,
     String? year,
     List<Picture>? pictures,
-  }) {
-    if (audio.path != null) {
-      final file = File(audio.path!);
-      if (file.existsSync()) {
-        updateMetadata(file, (metadata) {
-          try {
-            if (title != null) {
-              metadata.setTitle(title);
-            }
-            if (artist != null) {
-              metadata.setArtist(artist);
-            }
-            if (album != null) {
-              metadata.setAlbum(album);
-            }
-            if (genre != null) {
-              metadata.setGenres([genre]);
-            }
-            if (trackNumber != null && int.tryParse(trackNumber) != null) {
-              metadata.setTrackNumber(int.tryParse(trackNumber));
-            }
-            if (year != null && int.tryParse(year) != null) {
-              metadata.setYear(DateTime(int.parse(year)));
-            }
-            if (pictures?.isNotEmpty ?? false) {
-              metadata.setPictures(pictures!);
-            }
-
-            // Not supported yet
-            // if (discNumber != null) {
-            //   metadata.setDiscNumber(discNumber);
-            // }
-            // if (discTotal != null) {
-            //   metadata.setDiscTotal(discTotal);
-            // }
-            // if (durationMs != null) {
-            //   metadata.setDuration(durationMs);
-            // }
-            // if (albumArtist != null) {
-            //   metadata.setAlbumArtist(albumArtist);
-            // }
-
-            onChange?.call();
-          } on Exception catch (e) {
-            printMessageInDebugMode(e);
-          }
-        });
+  }) async {
+    final trackId = await _findTrackIdByPath(audio.path);
+    if (trackId != null) {
+      // Resolve FKs for changed fields
+      Value<int?> artistValue = const Value.absent();
+      if (artist != null) {
+        final existing = await (_db.select(
+          _db.artistTable,
+        )..where((t) => t.name.equals(artist))).getSingleOrNull();
+        final artistId =
+            existing?.id ??
+            await _db
+                .into(_db.artistTable)
+                .insert(ArtistTableCompanion.insert(name: artist));
+        artistValue = Value(artistId);
       }
+
+      Value<int?> albumValue = const Value.absent();
+      if (album != null) {
+        final artistId = artistValue.value;
+        final existing =
+            await (_db.select(_db.albumTable)..where(
+                  (t) => artistId != null
+                      ? t.name.equals(album) & t.artist.equals(artistId)
+                      : t.name.equals(album),
+                ))
+                .getSingleOrNull();
+        final albumId =
+            existing?.id ??
+            await _db
+                .into(_db.albumTable)
+                .insert(
+                  AlbumTableCompanion.insert(
+                    name: album,
+                    artist: artistId ?? 0,
+                  ),
+                );
+        albumValue = Value(albumId);
+      }
+
+      Value<int?> genreValue = const Value.absent();
+      if (genre != null) {
+        final existing = await (_db.select(
+          _db.genreTable,
+        )..where((t) => t.name.equals(genre))).getSingleOrNull();
+        final genreId =
+            existing?.id ??
+            await _db
+                .into(_db.genreTable)
+                .insert(GenreTableCompanion.insert(name: genre));
+        genreValue = Value(genreId);
+      }
+
+      final companion = TrackTableCompanion(
+        name: title != null ? Value(title) : const Value.absent(),
+        album: albumValue,
+        artist: artistValue,
+        genre: genreValue,
+        discNumber: discNumber != null
+            ? Value(int.tryParse(discNumber))
+            : const Value.absent(),
+        trackNumber: trackNumber != null
+            ? Value(int.tryParse(trackNumber))
+            : const Value.absent(),
+        year: year != null ? Value(int.tryParse(year)) : const Value.absent(),
+      );
+      await (_db.update(
+        _db.trackTable,
+      )..where((t) => t.id.equals(trackId))).write(companion);
+
+      // Update album art if pictures were provided
+      if (pictures != null && pictures.isNotEmpty) {
+        final resolvedAlbumId = albumValue.present
+            ? albumValue.value
+            : audio.albumDbId;
+        if (resolvedAlbumId != null) {
+          final pictureData = pictures
+              .firstWhereOrNull((e) => e.bytes.isNotEmpty)
+              ?.bytes;
+          final pictureMimeType = pictures.first.mimetype;
+          if (pictureData != null) {
+            // Remove existing art for this album, then insert new
+            await (_db.delete(
+              _db.albumArtTable,
+            )..where((t) => t.album.equals(resolvedAlbumId))).go();
+            await _db
+                .into(_db.albumArtTable)
+                .insert(
+                  AlbumArtTableCompanion.insert(
+                    album: resolvedAlbumId,
+                    pictureData: pictureData,
+                    pictureMimeType: pictureMimeType,
+                  ),
+                );
+          }
+        }
+      }
+      return albumValue.present ? albumValue.value : null;
     }
+    return null;
   }
 }
 
@@ -1159,3 +1342,33 @@ FutureOr<ImportResult> _readAudiosFromDirectory(String? directory) async {
 }
 
 typedef ImportResult = ({List<String> failedImports, List<Audio> audios});
+
+void _updateMetadata(ChangeMetadataCapsule capsule) {
+  if (capsule.audio.path == null) {
+    throw Exception('Audio path is null, cannot update metadata');
+  }
+  updateMetadata(File(capsule.audio.path!), (metadata) {
+    if (capsule.title != null) {
+      metadata.setTitle(capsule.title);
+    }
+    if (capsule.artist != null) {
+      metadata.setArtist(capsule.artist);
+    }
+    if (capsule.album != null) {
+      metadata.setAlbum(capsule.album);
+    }
+    if (capsule.genre != null) {
+      metadata.setGenres([capsule.genre!]);
+    }
+    if (capsule.trackNumber != null &&
+        int.tryParse(capsule.trackNumber!) != null) {
+      metadata.setTrackNumber(int.tryParse(capsule.trackNumber!));
+    }
+    if (capsule.year != null && int.tryParse(capsule.year!) != null) {
+      metadata.setYear(DateTime(int.parse(capsule.year!)));
+    }
+    if (capsule.pictures?.isNotEmpty ?? false) {
+      metadata.setPictures(capsule.pictures!);
+    }
+  });
+}
