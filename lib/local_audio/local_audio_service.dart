@@ -298,7 +298,7 @@ class LocalAudioService {
     Function(double progress)? updateProgress,
   }) async {
     List<String> failedImports = [];
-    updateProgress?.call(0.1);
+    updateProgress?.call(0.25);
     await Future<void>.delayed(Duration.zero);
 
     await _lock.synchronized(() async {

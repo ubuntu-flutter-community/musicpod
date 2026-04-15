@@ -2198,6 +2198,18 @@ class AppLocalizationsEu extends AppLocalizations {
   String get loadingPleaseWait => 'Kargatzen, itxaron mesedez ...';
 
   @override
+  String get parsingLocalAudioFilesMetadataPleaseWait =>
+      'Parsing local audio files metadata, please wait ...';
+
+  @override
+  String get persistingLocalAudioFilesMetadataPleaseWait =>
+      'Persisting local audio files metadata, please wait ...';
+
+  @override
+  String get buildingLocalAudioLibraryPleaseWait =>
+      'Building local audio library, please wait ...';
+
+  @override
   String get importingPodcastsPleaseWait =>
       'Zure podcast-ak inportatzen, itxaron mesedez ...';
 

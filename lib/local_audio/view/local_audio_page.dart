@@ -65,6 +65,7 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
     final index = watchPropertyValue((SettingsModel m) => m.localAudioindex);
     final localAudioView = LocalAudioView.values[index];
 
+    final l10n = context.l10n;
     return Scaffold(
       appBar: HeaderBar(
         adaptive: true,
@@ -88,7 +89,21 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
         title: Text(context.l10n.localAudio),
       ),
       body: audios == null || isRunning
-          ? Center(child: Progress(value: progress))
+          ? Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                spacing: kLargestSpace,
+                children: [
+                  Text(switch (progress) {
+                    0.25 => l10n.parsingLocalAudioFilesMetadataPleaseWait,
+                    0.5 => l10n.persistingLocalAudioFilesMetadataPleaseWait,
+                    0.75 => l10n.buildingLocalAudioLibraryPleaseWait,
+                    _ => l10n.loadingPleaseWait,
+                  }),
+                  Progress(value: progress, adaptive: false),
+                ],
+              ),
+            )
           : SliverBody(
               controlPanel: const LocalAudioControlPanel(),
               contentBuilder: (context, constraints) => audios.isEmpty
@@ -96,7 +111,7 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
                       message: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(context.l10n.noLocalTitlesFound),
+                          Text(l10n.noLocalTitlesFound),
                           const SizedBox(height: kLargestSpace),
                           const SettingsButton.important(scrollIndex: 2),
                         ],

@@ -4305,6 +4305,24 @@ abstract class AppLocalizations {
   /// **'Loading, please wait ...'**
   String get loadingPleaseWait;
 
+  /// No description provided for @parsingLocalAudioFilesMetadataPleaseWait.
+  ///
+  /// In en, this message translates to:
+  /// **'Parsing local audio files metadata, please wait ...'**
+  String get parsingLocalAudioFilesMetadataPleaseWait;
+
+  /// No description provided for @persistingLocalAudioFilesMetadataPleaseWait.
+  ///
+  /// In en, this message translates to:
+  /// **'Persisting local audio files metadata, please wait ...'**
+  String get persistingLocalAudioFilesMetadataPleaseWait;
+
+  /// No description provided for @buildingLocalAudioLibraryPleaseWait.
+  ///
+  /// In en, this message translates to:
+  /// **'Building local audio library, please wait ...'**
+  String get buildingLocalAudioLibraryPleaseWait;
+
   /// No description provided for @importingPodcastsPleaseWait.
   ///
   /// In en, this message translates to:
