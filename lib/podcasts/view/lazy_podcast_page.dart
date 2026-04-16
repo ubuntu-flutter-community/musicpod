@@ -32,8 +32,6 @@ class LazyPodcastPage extends StatelessWidget with WatchItMixin {
       (ConnectivityManager m) => m.connectivityCommand,
     );
 
-    final showDownloadsOnly = watchValue((PodcastManager m) => m.downloadsOnly);
-
     final feedUrl = this.feedUrl ?? podcastItem?.feedUrl;
 
     if (feedUrl == null) {
@@ -94,7 +92,6 @@ class LazyPodcastPage extends StatelessWidget with WatchItMixin {
           episodes: episodes,
           feedUrl: feedUrl,
           title: title,
-          showDownloadsOnly: showDownloadsOnly,
         );
       },
     );

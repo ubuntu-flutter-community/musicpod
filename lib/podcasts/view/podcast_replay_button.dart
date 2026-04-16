@@ -19,19 +19,27 @@ class PodcastReplayButton extends StatelessWidget with WatchItMixin {
       (PodcastManager m) => m.getEpisodesCommand(feedUrl),
     );
 
+    final markingDone = watchValue(
+      (PlayerModel m) => m.markProgressCompleteCommand.isRunning,
+    );
+
+    final unmarking = watchValue(
+      (PlayerModel m) => m.removeLastPositionsCommand.isRunning,
+    );
+
+    final isRunning = markingDone || unmarking;
+
     return Stack(
       alignment: Alignment.center,
       children: [
         IconButton(
           tooltip: context.l10n.replayAllEpisodes,
-          onPressed: () =>
-              di<PlayerModel>().removeLastPositionsCommand(podcast),
+          onPressed: isRunning
+              ? null
+              : () => di<PlayerModel>().removeLastPositionsCommand.run(podcast),
           icon: Icon(Iconz.replay),
         ),
-        if (watchValue(
-          (PlayerModel m) => m.removeLastPositionsCommand.isRunning,
-        ))
-          const PodcastIconButtonProgress(),
+        if (isRunning) const PodcastIconButtonProgress(),
       ],
     );
   }
@@ -44,18 +52,28 @@ class PodcastEpisodeResetProgressButton extends StatelessWidget
   final Audio audio;
 
   @override
-  Widget build(BuildContext context) => Stack(
-    alignment: Alignment.center,
-    children: [
-      IconButton(
-        tooltip: context.l10n.replayEpisode,
-        onPressed: audio.url == null
-            ? null
-            : () => di<PlayerModel>().removeLastPositionsCommand.run([audio]),
-        icon: Icon(Iconz.replay),
-      ),
-      if (watchValue((PlayerModel m) => m.removeLastPositionsCommand.isRunning))
-        const PodcastIconButtonProgress(),
-    ],
-  );
+  Widget build(BuildContext context) {
+    final markingDone = watchValue(
+      (PlayerModel m) => m.markProgressCompleteCommand.isRunning,
+    );
+
+    final unmarking = watchValue(
+      (PlayerModel m) => m.removeLastPositionsCommand.isRunning,
+    );
+
+    final isRunning = markingDone || unmarking;
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        IconButton(
+          tooltip: context.l10n.replayEpisode,
+          onPressed: audio.url == null || isRunning
+              ? null
+              : () => di<PlayerModel>().removeLastPositionsCommand.run([audio]),
+          icon: Icon(Iconz.replay),
+        ),
+        if (isRunning) const PodcastIconButtonProgress(),
+      ],
+    );
+  }
 }

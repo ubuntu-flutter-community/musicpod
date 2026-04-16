@@ -8,6 +8,7 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
 import '../download_manager.dart';
+import '../podcast_manager.dart';
 
 class DownloadButton extends StatelessWidget with WatchItMixin {
   const DownloadButton({
@@ -15,13 +16,11 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
     this.iconSize,
     required this.audio,
     required this.addPodcast,
-    required this.hasDownload,
   });
 
   final double? iconSize;
   final Audio? audio;
   final void Function()? addPodcast;
-  final bool hasDownload;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +28,9 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
     final manager = di<DownloadManager>();
     final value = watchPropertyValue(
       (DownloadManager m) => m.getValue(audio?.url),
+    );
+    final hasDownload = watchPropertyValue(
+      (PodcastManager m) => m.getDownload(audio?.url) != null,
     );
 
     return Stack(

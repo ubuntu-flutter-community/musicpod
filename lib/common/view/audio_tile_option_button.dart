@@ -70,6 +70,7 @@ class AudioTileOptionButton extends StatelessWidget {
           playlistId.isNotEmpty,
       itemBuilder: (context) {
         final hideCompletedEpisodes = di<SettingsModel>().hideCompletedEpisodes;
+        final showDownloadsOnly = di<PodcastManager>().downloadsOnly.value;
         final playerModel = di<PlayerModel>();
         final currentAudio = playerModel.audio;
         final currentlyLocalPlaying =
@@ -204,13 +205,20 @@ class AudioTileOptionButton extends StatelessWidget {
           if (audios.every((e) => e.isPodcast)) ...[
             PopupMenuItem(
               onTap: di<SettingsModel>().toggleHideCompletedEpisodes,
-              child: ListTile(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-                leading: Icon(hideCompletedEpisodes ? Iconz.show : Iconz.hide),
-                title: Text(
-                  hideCompletedEpisodes
-                      ? l10n.showCompletedEpisodes
-                      : l10n.hideCompletedEpisodes,
+              child: IgnorePointer(
+                child: ListTile(
+                  selectedTileColor: Colors.transparent,
+                  selectedColor: theme.colorScheme.primary,
+                  selected: hideCompletedEpisodes,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                  leading: Icon(
+                    !hideCompletedEpisodes ? Iconz.show : Iconz.hide,
+                  ),
+                  title: Text(
+                    !hideCompletedEpisodes
+                        ? l10n.showCompletedEpisodes
+                        : l10n.hideCompletedEpisodes,
+                  ),
                 ),
               ),
             ),
@@ -220,19 +228,27 @@ class AudioTileOptionButton extends StatelessWidget {
                 onTap: () => di<PodcastManager>()
                     .getEpisodesCommand(audios.first.feedUrl!)
                     .runAsync((feedUrl: audios.first.feedUrl!, item: null)),
-                child: ListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-                  title: Text(context.l10n.checkForUpdates),
-                  leading: Icon(Iconz.refresh),
+                child: IgnorePointer(
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                    title: Text(context.l10n.checkForUpdates),
+                    leading: Icon(Iconz.refresh),
+                  ),
                 ),
               ),
             PopupMenuItem(
               onTap: di<PodcastManager>().toggleDownloadsOnly,
-              child: ListTile(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-                title: Text(context.l10n.downloadsOnly),
-                selected: di<PodcastManager>().downloadsOnly.value,
-                leading: Icon(Iconz.download),
+              child: IgnorePointer(
+                child: ListTile(
+                  selectedTileColor: Colors.transparent,
+                  selectedColor: theme.colorScheme.primary,
+                  selected: showDownloadsOnly,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                  title: Text(context.l10n.downloadsOnly),
+                  leading: Icon(
+                    showDownloadsOnly ? Iconz.downloadFilled : Iconz.download,
+                  ),
+                ),
               ),
             ),
           ],

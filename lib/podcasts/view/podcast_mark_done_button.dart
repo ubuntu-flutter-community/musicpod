@@ -19,19 +19,28 @@ class PodcastMarkDoneButton extends StatelessWidget with WatchItMixin {
       (PodcastManager m) => m.getEpisodesCommand(feedUrl),
     );
 
+    final markingDone = watchValue(
+      (PlayerModel m) => m.markProgressCompleteCommand.isRunning,
+    );
+
+    final unmarking = watchValue(
+      (PlayerModel m) => m.removeLastPositionsCommand.isRunning,
+    );
+
+    final isRunning = markingDone || unmarking;
+
     return Stack(
       alignment: Alignment.center,
       children: [
         IconButton(
           tooltip: context.l10n.markAllEpisodesAsDone,
-          onPressed: () =>
-              di<PlayerModel>().markProgressCompleteCommand.run(podcast),
+          onPressed: isRunning
+              ? null
+              : () =>
+                    di<PlayerModel>().markProgressCompleteCommand.run(podcast),
           icon: Icon(Iconz.markAllRead),
         ),
-        if (watchValue(
-          (PlayerModel m) => m.markProgressCompleteCommand.isRunning,
-        ))
-          const PodcastIconButtonProgress(),
+        if (isRunning) const PodcastIconButtonProgress(),
       ],
     );
   }
@@ -55,23 +64,33 @@ class EpisodeMarkDownButton extends StatelessWidget with WatchItMixin {
       return audio == episode;
     });
 
+    final markingDone = watchValue(
+      (PlayerModel m) => m.markProgressCompleteCommand.isRunning,
+    );
+
+    final unmarking = watchValue(
+      (PlayerModel m) => m.removeLastPositionsCommand.isRunning,
+    );
+
+    final isRunning = markingDone || unmarking;
+
     return Stack(
       alignment: Alignment.center,
       children: [
         IconButton(
           tooltip: context.l10n.markEpisodeAsDone,
           isSelected: isCompleted,
-          onPressed: () =>
-              di<PlayerModel>().markProgressCompleteCommand.run([episode]),
+          onPressed: isRunning
+              ? null
+              : () => di<PlayerModel>().markProgressCompleteCommand.run([
+                  episode,
+                ]),
           icon: Icon(
             Iconz.markAllRead,
             color: isCompleted && !isPlaying ? Colors.green : null,
           ),
         ),
-        if (watchValue(
-          (PlayerModel m) => m.markProgressCompleteCommand.isRunning,
-        ))
-          const PodcastIconButtonProgress(),
+        if (isRunning) const PodcastIconButtonProgress(),
       ],
     );
   }

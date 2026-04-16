@@ -27,14 +27,12 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
     required this.feedUrl,
     required this.episodes,
     required this.title,
-    required this.showDownloadsOnly,
   });
 
   final String feedUrl;
   final String? imageUrl;
   final String title;
   final List<Audio> episodes;
-  final bool showDownloadsOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +40,8 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
       (PodcastManager m) => m.showPodcastAscending(feedUrl),
     );
 
-    watchPropertyValue((PlayerModel m) => m.lastPositions?.hashCode);
+    final showDownloadsOnly = watchValue((PodcastManager m) => m.downloadsOnly);
+
     final showSearch = watchValue((PodcastManager m) => m.showSearch);
     final searchQuery = watchValue((PodcastManager m) => m.searchQuery);
 
@@ -51,7 +50,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
     );
 
     final filter = watchValue((PodcastManager m) => m.filter);
-    final episodesWithDownloads = episodes
+    final filteredEpisodes = episodes
         .where((e) => e.title != null && e.episodeDescription != null)
         .where(
           (e) => (searchQuery == null || searchQuery.trim().isEmpty)
@@ -74,11 +73,16 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
               di<PlayerModel>().getLastPosition(e.url)?.inMilliseconds !=
                   e.durationMs?.toInt();
         })
+        .where(
+          (e) => showDownloadsOnly
+              ? di<PodcastManager>().getDownload(e.url) != null
+              : true,
+        )
         .toList();
 
     sortListByAudioFilter(
       audioFilter: AudioFilter.year,
-      audios: episodesWithDownloads,
+      audios: filteredEpisodes,
       descending: !showPodcastsAscending,
     );
 
@@ -110,17 +114,14 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
           header: PodcastPageHeader(
             title: title,
             imageUrl: imageUrl,
-            episodes: episodes,
+            episodes: filteredEpisodes,
             showFallbackIcon: true,
           ),
-          sliverBody: (constraints) => SliverPodcastPageList(
-            audios: episodesWithDownloads,
-            pageId: feedUrl,
-            showDownloadsOnly: showDownloadsOnly,
-          ),
+          sliverBody: (constraints) =>
+              SliverPodcastPageList(audios: filteredEpisodes, pageId: feedUrl),
           controlPanel: PodcastPageControlPanel(
             feedUrl: feedUrl,
-            audios: episodesWithDownloads,
+            audios: filteredEpisodes,
             title: title,
             imageUrl: imageUrl,
           ),

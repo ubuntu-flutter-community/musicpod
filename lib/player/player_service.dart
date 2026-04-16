@@ -543,21 +543,26 @@ class PlayerService {
   }
 
   Future<void> markAudiosProgressComplete(List<Audio> audios) async {
-    await _db.transaction(() async {
-      for (final e in audios) {
-        if (e.url != null && e.durationMs != null) {
-          await (_db.podcastEpisodeTable.update()
-                ..where((t) => t.contentUrl.equals(e.url!)))
-              .write(
-                PodcastEpisodeTableCompanion(
-                  durationMs: Value(e.durationMs!.toInt()),
-                  positionMs: Value(e.durationMs!.toInt()),
-                ),
-              );
-        }
+    final valid = audios
+        .where((e) => e.url != null && e.durationMs != null)
+        .toList();
+    if (valid.isEmpty) return;
+
+    await _db.batch((batch) {
+      for (final e in valid) {
+        batch.update(
+          _db.podcastEpisodeTable,
+          PodcastEpisodeTableCompanion(
+            durationMs: Value(e.durationMs!.toInt()),
+            positionMs: Value(e.durationMs!.toInt()),
+          ),
+          where: (t) => t.contentUrl.equals(e.url!),
+        );
       }
     });
-    await _loadLastPositions();
+    for (final e in valid) {
+      _lastPositions[e.url!] = Duration(milliseconds: e.durationMs!.toInt());
+    }
     _propertiesChangedController.add(true);
   }
 
