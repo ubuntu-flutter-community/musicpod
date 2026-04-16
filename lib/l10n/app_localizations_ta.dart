@@ -2240,6 +2240,11 @@ class AppLocalizationsTa extends AppLocalizations {
       'உங்கள் பிளேலிச்ட்களை ஏற்றுமதி செய்கிறது, காத்திருக்கவும்...';
 
   @override
+  String checkingForUpdatesPleaseWait(int progress) {
+    return 'Checking for updates $progress%';
+  }
+
+  @override
   String get author => 'நூலாசிரியர்';
 
   @override

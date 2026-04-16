@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/connectivity_manager.dart';
@@ -46,25 +45,22 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
                     di<PodcastManager>().podcastsLength.toString(),
                   ),
                 ),
-                onConfirm: () => di<PodcastManager>().checkForUpdates(
-                  updateMessage: context.l10n.newEpisodeAvailable,
-                  multiUpdateMessage: (length) => context.mounted
-                      ? context.l10n.newEpisodesAvailableFor(length)
-                      : context.l10n.newEpisodeAvailable,
-                ),
+                onConfirm: () => di<PodcastManager>()
+                    .checkForUpdateAndRefreshIfNeededCommand
+                    .runAsync((
+                      feedUrls: di<PodcastManager>().podcastFeedUrls,
+                      multiUpdateMessage: (length) => context.mounted
+                          ? context.l10n.newEpisodesAvailableFor(length)
+                          : context.l10n.newEpisodeAvailable,
+                    )),
               );
             } else {
-              showFutureLoadingDialog(
-                context: context,
-                backLabel: context.l10n.back,
-                title: context.l10n.loadingPleaseWait,
-                future: () => di<PodcastManager>().checkForUpdates(
-                  updateMessage: context.l10n.newEpisodeAvailable,
-                  multiUpdateMessage: (length) => context.mounted
-                      ? context.l10n.newEpisodesAvailableFor(length)
-                      : context.l10n.newEpisodeAvailable,
-                ),
-              );
+              di<PodcastManager>().checkForUpdateAndRefreshIfNeededCommand.run((
+                feedUrls: di<PodcastManager>().podcastFeedUrls,
+                multiUpdateMessage: (length) => context.mounted
+                    ? context.l10n.newEpisodesAvailableFor(length)
+                    : context.l10n.newEpisodeAvailable,
+              ));
             }
             manager.setUpdatesOnly(true);
             manager.setDownloadsOnly(false);

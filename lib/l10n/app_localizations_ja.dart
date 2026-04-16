@@ -2168,6 +2168,11 @@ class AppLocalizationsJa extends AppLocalizations {
   String get exportingPlaylistsPleaseWait => 'プレイリストをエクスポート中、お待ちください...';
 
   @override
+  String checkingForUpdatesPleaseWait(int progress) {
+    return 'Checking for updates $progress%';
+  }
+
+  @override
   String get author => '作者';
 
   @override

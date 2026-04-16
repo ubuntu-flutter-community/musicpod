@@ -2237,6 +2237,11 @@ class AppLocalizationsFr extends AppLocalizations {
       'Exportation de vos listes de lecture, veuillez patienter…';
 
   @override
+  String checkingForUpdatesPleaseWait(int progress) {
+    return 'Checking for updates $progress%';
+  }
+
+  @override
   String get author => 'Auteur';
 
   @override

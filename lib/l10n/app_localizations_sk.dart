@@ -2223,6 +2223,11 @@ class AppLocalizationsSk extends AppLocalizations {
       'Exportujú sa vaše playlisty, prosím čakajte ...';
 
   @override
+  String checkingForUpdatesPleaseWait(int progress) {
+    return 'Checking for updates $progress%';
+  }
+
+  @override
   String get author => 'Autor';
 
   @override

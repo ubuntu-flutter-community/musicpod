@@ -2214,6 +2214,11 @@ class AppLocalizationsAr extends AppLocalizations {
       'جاري تصدير قوائم التشغيل، يرجى الانتظار...';
 
   @override
+  String checkingForUpdatesPleaseWait(int progress) {
+    return 'Checking for updates $progress%';
+  }
+
+  @override
   String get author => 'المؤلف';
 
   @override

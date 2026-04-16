@@ -34,18 +34,6 @@ class PodcastManager extends SafeChangeNotifier {
             _podcastService.initSearchProvider(forceInit: param.forceInit),
       );
 
-  Future<void> checkForUpdates({
-    required String updateMessage,
-    required String Function(int length) multiUpdateMessage,
-    // Note: because the podcasts can be modified to include downloads
-    // this needs a map and not only the feedurl
-    Set<String>? feedUrls,
-  }) async => _podcastService.checkForUpdates(
-    updateMessage: updateMessage,
-    multiUpdateMessage: multiUpdateMessage,
-    feedUrls: feedUrls,
-  );
-
   final updatesOnly = SafeValueNotifier<bool>(false);
   void setUpdatesOnly(bool value) {
     if (updatesOnly.value == value) return;
@@ -77,18 +65,24 @@ class PodcastManager extends SafeChangeNotifier {
     };
   }
 
-  late final Command<String, void> checkForUpdateAndRefreshIfNeededCommand =
-      Command.createAsyncNoResult((feedUrl) async {
+  late final Command<
+    ({List<String> feedUrls, String Function(int length) multiUpdateMessage}),
+    void
+  >
+  checkForUpdateAndRefreshIfNeededCommand =
+      Command.createAsyncNoResultWithProgress((param, handle) async {
         final updates = await _podcastService.checkForUpdates(
-          feedUrls: {feedUrl},
-          updateMessage: '',
-          multiUpdateMessage: (length) => '',
+          feedUrls: param.feedUrls.toSet(),
+          multiUpdateMessage: param.multiUpdateMessage,
+          updateProgress: handle.updateProgress,
         );
-        if (updates.contains(feedUrl)) {
-          await getEpisodesCommand(
-            feedUrl,
-            forceRefresh: true,
-          ).runAsync((feedUrl: feedUrl, item: null));
+        for (final feedUrl in param.feedUrls) {
+          if (updates.contains(feedUrl)) {
+            await getEpisodesCommand(
+              feedUrl,
+              forceRefresh: true,
+            ).runAsync((feedUrl: feedUrl, item: null));
+          }
         }
       });
 

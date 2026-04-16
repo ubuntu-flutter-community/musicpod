@@ -2218,6 +2218,11 @@ class AppLocalizationsSv extends AppLocalizations {
       'Exporterar dina spellistor, vänligen vänta ...';
 
   @override
+  String checkingForUpdatesPleaseWait(int progress) {
+    return 'Checking for updates $progress%';
+  }
+
+  @override
   String get author => 'Upphovsman';
 
   @override

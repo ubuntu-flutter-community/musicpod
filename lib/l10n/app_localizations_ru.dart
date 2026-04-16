@@ -2226,6 +2226,11 @@ class AppLocalizationsRu extends AppLocalizations {
       'Экспорт ваших плейлистов, пожалуйста, подождите...';
 
   @override
+  String checkingForUpdatesPleaseWait(int progress) {
+    return 'Checking for updates $progress%';
+  }
+
+  @override
   String get author => 'Автор';
 
   @override

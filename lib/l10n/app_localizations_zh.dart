@@ -2156,6 +2156,11 @@ class AppLocalizationsZh extends AppLocalizations {
       'Exporting your playlists, please wait ...';
 
   @override
+  String checkingForUpdatesPleaseWait(int progress) {
+    return 'Checking for updates $progress%';
+  }
+
+  @override
   String get author => 'Author';
 
   @override

@@ -12,10 +12,12 @@ import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/offline_page.dart';
+import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/sliver_body.dart';
 import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
+import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
@@ -50,6 +52,13 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
       (PodcastManager m) => m.feedsWithDownloadsLength,
     );
 
+    final checkingForUpdates = watchValue(
+      (PodcastManager m) => m.checkForUpdateAndRefreshIfNeededCommand.isRunning,
+    );
+    final progress = watchValue(
+      (PodcastManager m) => m.checkForUpdateAndRefreshIfNeededCommand.progress,
+    );
+
     final itemCount = updatesOnly
         ? updatesLength
         : (downloadsOnly ? feedsWithDownloadLength : subsLength);
@@ -66,21 +75,41 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
             content: Text(
               context.l10n.checkForUpdatesConfirm(subsLength.toString()),
             ),
-            onConfirm: () => di<PodcastManager>().checkForUpdates(
-              updateMessage: context.l10n.newEpisodeAvailable,
-              multiUpdateMessage: (length) =>
-                  context.l10n.newEpisodesAvailableFor(length),
-            ),
+            onConfirm: () => di<PodcastManager>()
+                .checkForUpdateAndRefreshIfNeededCommand
+                .runAsync((
+                  feedUrls: di<PodcastManager>().podcastFeedUrls,
+
+                  multiUpdateMessage: (length) =>
+                      context.l10n.newEpisodesAvailableFor(length),
+                )),
           );
         } else {
-          di<PodcastManager>().checkForUpdates(
-            updateMessage: context.l10n.newEpisodeAvailable,
-            multiUpdateMessage: (length) =>
-                context.l10n.newEpisodesAvailableFor(length),
-          );
+          di<PodcastManager>().checkForUpdateAndRefreshIfNeededCommand
+              .runAsync((
+                feedUrls: di<PodcastManager>().podcastFeedUrls,
+                multiUpdateMessage: (length) =>
+                    context.l10n.newEpisodesAvailableFor(length),
+              ));
         }
       },
-      contentBuilder: (context, constraints) => (subsLength == 0)
+      contentBuilder: (context, constraints) => checkingForUpdates
+          ? SliverFillRemaining(
+              hasScrollBody: false,
+              child: Column(
+                spacing: kLargestSpace,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    context.l10n.checkingForUpdatesPleaseWait(
+                      (progress * 100).toInt(),
+                    ),
+                  ),
+                  Progress(value: progress, adaptive: false),
+                ],
+              ),
+            )
+          : (subsLength == 0)
           ? SliverNoSearchResultPage(
               message: Column(
                 mainAxisSize: MainAxisSize.min,

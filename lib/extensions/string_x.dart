@@ -49,6 +49,7 @@ extension NullableStringX on String? {
     return other.year == ts.year &&
         other.month == ts.month &&
         other.day == ts.day &&
+        other.hour == ts.hour &&
         other.minute == ts.minute;
   }
 

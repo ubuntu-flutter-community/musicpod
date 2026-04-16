@@ -4359,6 +4359,12 @@ abstract class AppLocalizations {
   /// **'Exporting your playlists, please wait ...'**
   String get exportingPlaylistsPleaseWait;
 
+  /// No description provided for @checkingForUpdatesPleaseWait.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking for updates {progress}%'**
+  String checkingForUpdatesPleaseWait(int progress);
+
   /// No description provided for @author.
   ///
   /// In en, this message translates to:

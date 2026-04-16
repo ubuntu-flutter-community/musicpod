@@ -10,6 +10,7 @@ import '../../common/view/audio_filter.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
+import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
@@ -108,7 +109,12 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
         onRefresh: di<PodcastManager>().isPodcastSubscribed(feedUrl)
             ? () async => di<PodcastManager>()
                   .checkForUpdateAndRefreshIfNeededCommand
-                  .runAsync(feedUrl)
+                  .runAsync((
+                    feedUrls: [feedUrl],
+                    multiUpdateMessage: (length) => context.mounted
+                        ? context.l10n.newEpisodesAvailableFor(length)
+                        : context.l10n.updateAvailable,
+                  ))
             : () async {},
         child: AdaptiveMultiLayoutBody(
           header: PodcastPageHeader(

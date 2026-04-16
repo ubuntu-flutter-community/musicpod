@@ -159,20 +159,20 @@ class PodcastService {
   final _syncLock = Lock();
   Future<List<String>> checkForUpdates({
     Set<String>? feedUrls,
-    required String updateMessage,
     required String Function(int length) multiUpdateMessage,
+    void Function(double progress)? updateProgress,
   }) => _syncLock.synchronized(
     () => _checkForUpdates(
       feedUrls: feedUrls,
-      updateMessage: updateMessage,
       multiUpdateMessage: multiUpdateMessage,
+      updateProgress: updateProgress,
     ),
   );
 
   Future<List<String>> _checkForUpdates({
     Set<String>? feedUrls,
-    required String updateMessage,
     required String Function(int length) multiUpdateMessage,
+    void Function(double progress)? updateProgress,
   }) async {
     final newUpdateFeedUrls = <String>{};
 
@@ -201,13 +201,18 @@ class PodcastService {
       if (!storedTimeStamp.isSamePodcastTimeStamp(feedLastUpdated)) {
         await addPodcastLastUpdated(
           feedUrl: feedUrl,
-          timestamp: feedLastUpdated.toPodcastTimeStamp,
+          lastUpdated: feedLastUpdated,
         );
         await findEpisodes(feedUrl: feedUrl);
         await addPodcastUpdate(feedUrl, feedLastUpdated);
 
         newUpdateFeedUrls.add(feedUrl);
       }
+
+      updateProgress?.call(
+        newUpdateFeedUrls.length / (feedUrls?.length ?? _podcasts.length),
+      );
+      await Future<void>.delayed(Duration.zero);
     }
 
     if (newUpdateFeedUrls.isNotEmpty) {
@@ -506,16 +511,14 @@ class PodcastService {
 
   Future<void> addPodcastLastUpdated({
     required String feedUrl,
-    required String timestamp,
+    required DateTime lastUpdated,
   }) async {
-    final dt =
-        DateTime.tryParse(timestamp.replaceAll('_', '-')) ?? DateTime.now();
     await (_db.update(_db.podcastTable)
           ..where((t) => t.feedUrl.equals(feedUrl)))
-        .write(PodcastTableCompanion(lastUpdated: Value(dt)));
+        .write(PodcastTableCompanion(lastUpdated: Value(lastUpdated)));
     final cached = _podcastCache[feedUrl];
     if (cached != null) {
-      _podcastCache[feedUrl] = cached.copyWith(lastUpdated: dt);
+      _podcastCache[feedUrl] = cached.copyWith(lastUpdated: lastUpdated);
     }
     _notify();
   }

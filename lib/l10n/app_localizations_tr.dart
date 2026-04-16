@@ -2225,6 +2225,11 @@ class AppLocalizationsTr extends AppLocalizations {
       'Çalma listeleriniz dışa aktarılıyor, lütfen bekleyin...';
 
   @override
+  String checkingForUpdatesPleaseWait(int progress) {
+    return 'Checking for updates $progress%';
+  }
+
+  @override
   String get author => 'Yazar';
 
   @override

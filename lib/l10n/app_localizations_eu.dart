@@ -2234,6 +2234,11 @@ class AppLocalizationsEu extends AppLocalizations {
       'Zure erreprodukzio-zerrendak esportatzen, itxaron mesedez ...';
 
   @override
+  String checkingForUpdatesPleaseWait(int progress) {
+    return 'Checking for updates $progress%';
+  }
+
+  @override
   String get author => 'Egilea';
 
   @override

@@ -2239,6 +2239,11 @@ class AppLocalizationsEl extends AppLocalizations {
       'Γίνεται εξαγωγή των λιστών αναπαραγωγής σου, παρακαλώ περίμενε ...';
 
   @override
+  String checkingForUpdatesPleaseWait(int progress) {
+    return 'Checking for updates $progress%';
+  }
+
+  @override
   String get author => 'Συγγραφέας';
 
   @override

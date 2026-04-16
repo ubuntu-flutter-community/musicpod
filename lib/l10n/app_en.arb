@@ -752,6 +752,14 @@
     "exportingStationsPleaseWait": "Exporting your stations, please wait ...",
     "importingPlaylistsPleaseWait": "Importing your playlists, please wait ...",
     "exportingPlaylistsPleaseWait": "Exporting your playlists, please wait ...",
+    "checkingForUpdatesPleaseWait": "Checking for updates {progress}%",
+    "@checkingForUpdatesPleaseWait": {
+        "placeholders": {
+            "progress": {
+                "type": "int"
+            }
+        }
+    },
     "author": "Author",
     "rating": "Rating",
     "keywords": "Keywords",

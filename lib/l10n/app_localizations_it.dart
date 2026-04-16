@@ -2215,6 +2215,11 @@ class AppLocalizationsIt extends AppLocalizations {
   String get exportingPlaylistsPleaseWait => 'Esportazione playlist...';
 
   @override
+  String checkingForUpdatesPleaseWait(int progress) {
+    return 'Checking for updates $progress%';
+  }
+
+  @override
   String get author => 'Autore';
 
   @override

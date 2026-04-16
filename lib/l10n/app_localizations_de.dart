@@ -2228,6 +2228,11 @@ class AppLocalizationsDe extends AppLocalizations {
       'Ihre Wiedergabelisten werden exportiert, bitte warten ...';
 
   @override
+  String checkingForUpdatesPleaseWait(int progress) {
+    return 'Checking for updates $progress%';
+  }
+
+  @override
   String get author => 'Autor';
 
   @override

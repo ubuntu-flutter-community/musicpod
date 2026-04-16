@@ -2226,6 +2226,11 @@ class AppLocalizationsEt extends AppLocalizations {
       'Ekspordin sinu esitusloendeid, palun oota...';
 
   @override
+  String checkingForUpdatesPleaseWait(int progress) {
+    return 'Checking for updates $progress%';
+  }
+
+  @override
   String get author => 'Autor';
 
   @override
