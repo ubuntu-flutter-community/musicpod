@@ -14,6 +14,7 @@ import '../../l10n/l10n.dart';
 import '../../player/player_service.dart';
 import '../../podcasts/download_manager.dart';
 import '../../podcasts/podcast_manager.dart';
+import '../../search/search_model.dart';
 import '../settings_model.dart';
 import '../shared_preferences_keys.dart';
 
@@ -72,15 +73,10 @@ class _PodcastSectionState extends State<PodcastSection> {
             title: Text(l10n.usePodcastIndex),
             trailing: CommonSwitch(
               value: usePodcastIndex,
-              onChanged: (v) async {
-                await model.setUsePodcastIndex(v);
-                if (context.mounted) {
-                  di<PodcastManager>().initSearchCommand.run((forceInit: true));
-                }
-              },
+              onChanged: model.setUsePodcastIndex,
             ),
           ),
-          if (usePodcastIndex)
+          if (usePodcastIndex) ...[
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
@@ -103,7 +99,6 @@ class _PodcastSectionState extends State<PodcastSection> {
                 ),
               ),
             ),
-          if (usePodcastIndex)
             Padding(
               padding: const EdgeInsets.only(
                 left: 8,
@@ -130,6 +125,20 @@ class _PodcastSectionState extends State<PodcastSection> {
                 ),
               ),
             ),
+            ElevatedButton(
+              onPressed: () => ConfirmationDialog.show(
+                context: context,
+                title: Text(l10n.usePodcastIndex + '?'),
+                onConfirm: () async {
+                  di<PodcastManager>().initSearchCommand.run((forceInit: true));
+                  await di<SearchModel>().loadPodcastGenresCommand.runAsync((
+                    force: true,
+                  ));
+                },
+              ),
+              child: Text(context.l10n.confirm),
+            ),
+          ],
         ],
       ),
     );

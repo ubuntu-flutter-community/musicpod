@@ -87,8 +87,8 @@ class PodcastService {
 
   List<PodcastGenre> get cachedPodcastGenres => _podcastGenreCache;
   List<PodcastGenre> _podcastGenreCache = [];
-  Future<List<PodcastGenre>> loadGenres() async {
-    if (_podcastGenreCache.isNotEmpty) {
+  Future<List<PodcastGenre>> loadGenres({bool force = false}) async {
+    if (_podcastGenreCache.isNotEmpty && !force) {
       return _podcastGenreCache;
     }
 
@@ -139,9 +139,14 @@ class PodcastService {
         );
       }
     } catch (e) {
-      printMessageInDebugMode(e);
+      printMessageInDebugMode('Podcast search error: $e');
       return _searchResult;
     }
+    printMessageInDebugMode(
+      'Podcast search result: successful=${result?.successful}, '
+      'itemCount=${result?.items.length}, '
+      'query=$searchQuery',
+    );
 
     if (result != null &&
         result.successful &&

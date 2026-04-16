@@ -28,7 +28,7 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
         isSelected: result.map((e) => e == podcastGenre).toList(),
         onSelected: (i) => di<SearchModel>()
           ..setSearchQuery(null)
-          ..setPodcastGenre(PodcastGenre.values.elementAt(i))
+          ..setPodcastGenre(result[i])
           ..search(),
       ),
     );
