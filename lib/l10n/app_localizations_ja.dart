@@ -2138,6 +2138,18 @@ class AppLocalizationsJa extends AppLocalizations {
   String get loadingPleaseWait => '読み込み中、お待ちください...';
 
   @override
+  String get parsingLocalAudioFilesMetadataPleaseWait =>
+      'Parsing local audio files metadata, please wait ...';
+
+  @override
+  String get persistingLocalAudioFilesMetadataPleaseWait =>
+      'Persisting local audio files metadata, please wait ...';
+
+  @override
+  String get buildingLocalAudioLibraryPleaseWait =>
+      'Building local audio library, please wait ...';
+
+  @override
   String get importingPodcastsPleaseWait => 'ポッドキャストをインポート中、お待ちください...';
 
   @override

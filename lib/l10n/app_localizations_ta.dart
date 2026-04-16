@@ -2204,6 +2204,18 @@ class AppLocalizationsTa extends AppLocalizations {
   String get loadingPleaseWait => 'ஏற்றுகிறது, காத்திருக்கவும்...';
 
   @override
+  String get parsingLocalAudioFilesMetadataPleaseWait =>
+      'Parsing local audio files metadata, please wait ...';
+
+  @override
+  String get persistingLocalAudioFilesMetadataPleaseWait =>
+      'Persisting local audio files metadata, please wait ...';
+
+  @override
+  String get buildingLocalAudioLibraryPleaseWait =>
+      'Building local audio library, please wait ...';
+
+  @override
   String get importingPodcastsPleaseWait =>
       'உங்கள் பாட்காச்ட்களை இறக்குமதி செய்கிறது, காத்திருக்கவும்...';
 
