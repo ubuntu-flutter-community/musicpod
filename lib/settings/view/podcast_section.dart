@@ -73,7 +73,25 @@ class _PodcastSectionState extends State<PodcastSection> {
             title: Text(l10n.usePodcastIndex),
             trailing: CommonSwitch(
               value: usePodcastIndex,
-              onChanged: model.setUsePodcastIndex,
+              onChanged: (v) {
+                if (!v) {
+                  ConfirmationDialog.show(
+                    context: context,
+                    title: Text(l10n.iTunes + '?'),
+                    onConfirm: () async {
+                      await model.setUsePodcastIndex(v);
+                      di<PodcastManager>().initSearchCommand.run((
+                        forceInit: true,
+                      ));
+                      await di<SearchModel>().loadPodcastGenresCommand.runAsync(
+                        (force: true),
+                      );
+                    },
+                  );
+                } else {
+                  model.setUsePodcastIndex(v);
+                }
+              },
             ),
           ),
           if (usePodcastIndex) ...[
@@ -125,18 +143,22 @@ class _PodcastSectionState extends State<PodcastSection> {
                 ),
               ),
             ),
-            ElevatedButton(
-              onPressed: () => ConfirmationDialog.show(
-                context: context,
-                title: Text(l10n.usePodcastIndex + '?'),
-                onConfirm: () async {
-                  di<PodcastManager>().initSearchCommand.run((forceInit: true));
-                  await di<SearchModel>().loadPodcastGenresCommand.runAsync((
-                    force: true,
-                  ));
-                },
+            ListTile(
+              trailing: ElevatedButton(
+                onPressed: () => ConfirmationDialog.show(
+                  context: context,
+                  title: Text(l10n.usePodcastIndex + '?'),
+                  onConfirm: () async {
+                    di<PodcastManager>().initSearchCommand.run((
+                      forceInit: true,
+                    ));
+                    await di<SearchModel>().loadPodcastGenresCommand.runAsync((
+                      force: true,
+                    ));
+                  },
+                ),
+                child: Text(context.l10n.confirm),
               ),
-              child: Text(context.l10n.confirm),
             ),
           ],
         ],
