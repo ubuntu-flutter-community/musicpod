@@ -16,6 +16,7 @@ class ConfirmationDialog<T> extends StatefulWidget {
     this.onCancel,
     this.additionalActions,
     this.title,
+    this.constraints,
     this.content,
     this.showCancel = true,
     this.showCloseIcon = true,
@@ -37,6 +38,7 @@ class ConfirmationDialog<T> extends StatefulWidget {
   final String? cancelLabel;
   final EdgeInsetsGeometry? contentPadding;
   final EdgeInsetsGeometry? titlePadding;
+  final BoxConstraints? constraints;
 
   static Future<T?> show<T>({
     required BuildContext context,
@@ -50,8 +52,10 @@ class ConfirmationDialog<T> extends StatefulWidget {
     bool scrollable = false,
     List<Widget>? additionalActions,
     EdgeInsetsGeometry? contentPadding,
+    EdgeInsetsGeometry? titlePadding,
     Future<T> Function()? onCancel,
     bool showCancel = true,
+    BoxConstraints? constraints,
   }) => showDialog(
     context: context,
     barrierDismissible: barrierDismissible,
@@ -67,6 +71,8 @@ class ConfirmationDialog<T> extends StatefulWidget {
       contentPadding: contentPadding,
       onCancel: onCancel,
       showCancel: showCancel,
+      titlePadding: titlePadding,
+      constraints: constraints,
     ),
   );
 
@@ -82,6 +88,7 @@ class _ConfirmationDialogState<T> extends State<ConfirmationDialog<T>> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return AlertDialog(
+      constraints: widget.constraints,
       titlePadding: widget.titlePadding ?? EdgeInsets.zero,
       title: YaruDialogTitleBar(
         backgroundColor: Colors.transparent,

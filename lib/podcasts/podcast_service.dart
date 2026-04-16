@@ -203,10 +203,19 @@ class PodcastService {
           feedUrl: feedUrl,
           lastUpdated: feedLastUpdated,
         );
-        await findEpisodes(feedUrl: feedUrl);
-        await addPodcastUpdate(feedUrl, feedLastUpdated);
 
-        newUpdateFeedUrls.add(feedUrl);
+        // Compare actual episode URLs to detect genuinely new episodes,
+        // since Last-Modified can change without new episodes being added.
+        final storedUrls = await _getStoredEpisodeUrls(feedUrl);
+        final episodes = await findEpisodes(feedUrl: feedUrl);
+        final hasNewEpisodes = episodes.any(
+          (e) => e.url != null && !storedUrls.contains(e.url),
+        );
+
+        if (hasNewEpisodes) {
+          await addPodcastUpdate(feedUrl, feedLastUpdated);
+          newUpdateFeedUrls.add(feedUrl);
+        }
       }
 
       updateProgress?.call(
@@ -290,6 +299,18 @@ class PodcastService {
     } on Exception catch (e) {
       printMessageInDebugMode('Error upserting episodes: $e');
     }
+  }
+
+  Future<Set<String>> _getStoredEpisodeUrls(String feedUrl) async {
+    final rows =
+        await (_db.selectOnly(_db.podcastEpisodeTable)
+              ..addColumns([_db.podcastEpisodeTable.contentUrl])
+              ..where(_db.podcastEpisodeTable.podcastFeedUrl.equals(feedUrl)))
+            .get();
+    return rows
+        .map((r) => r.read(_db.podcastEpisodeTable.contentUrl))
+        .whereType<String>()
+        .toSet();
   }
 
   // ── Downloads ──

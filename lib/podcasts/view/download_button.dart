@@ -1,14 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/data/audio.dart';
+import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
+import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
 import '../download_manager.dart';
 import '../podcast_manager.dart';
+import 'podcast_page_image.dart';
 
 class DownloadButton extends StatelessWidget with WatchItMixin {
   const DownloadButton({
@@ -20,7 +25,7 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
 
   final double? iconSize;
   final Audio? audio;
-  final void Function()? addPodcast;
+  final Future<void> Function() addPodcast;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +43,7 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
       children: [
         IconButton(
           isSelected: hasDownload,
-          tooltip: audio?.path != null
+          tooltip: hasDownload
               ? context.l10n.removeDownloadEpisode
               : context.l10n.downloadEpisode,
           icon: Icon(
@@ -49,16 +54,59 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
             if (hasDownload) {
               manager.deleteDownload(audio: audio);
             } else {
-              addPodcast?.call();
-              manager.startDownload(
-                finishedMessage: context.l10n.downloadFinished(
-                  audio?.title ?? '',
-                ),
-                canceledMessage: context.l10n.downloadCancelled(
-                  audio?.title ?? '',
-                ),
-                audio: audio,
-              );
+              if (di<PodcastManager>().isPodcastSubscribed(audio?.feedUrl)) {
+                manager.startDownload(
+                  finishedMessage: context.l10n.downloadFinished(
+                    audio?.title ?? '',
+                  ),
+                  canceledMessage: context.l10n.downloadCancelled(
+                    audio?.title ?? '',
+                  ),
+                  audio: audio,
+                );
+              } else {
+                ConfirmationDialog.show(
+                  context: context,
+                  title: Text(context.l10n.addToCollection),
+                  constraints: const BoxConstraints(
+                    maxWidth: 300,
+                    maxHeight: 250,
+                  ),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    spacing: kMediumSpace,
+
+                    children: [
+                      SizedBox.square(
+                        dimension: 80,
+                        child: PodcastPageImage(
+                          imageUrl: audio?.albumArtUrl ?? audio?.imageUrl,
+                          showFallbackIcon: true,
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          audio?.podcastTitle ?? context.l10n.unknown,
+                        ),
+                      ),
+                    ],
+                  ),
+                  onConfirm: () {
+                    unawaited(
+                      manager.startDownload(
+                        finishedMessage: context.l10n.downloadFinished(
+                          audio?.title ?? '',
+                        ),
+                        canceledMessage: context.l10n.downloadCancelled(
+                          audio?.title ?? '',
+                        ),
+                        audio: audio,
+                      ),
+                    );
+                    return addPodcast();
+                  },
+                );
+              }
             }
           },
           iconSize: iconSize,
