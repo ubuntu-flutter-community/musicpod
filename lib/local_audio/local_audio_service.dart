@@ -928,7 +928,6 @@ class LocalAudioService {
     for (final audio in audios) {
       var trackId = await _findTrackIdByPath(audio.path);
       if (trackId == null) {
-        await _persistAudios([audio]);
         trackId = await _findTrackIdByPath(audio.path);
       }
       if (trackId != null) {
@@ -944,6 +943,15 @@ class LocalAudioService {
     }
   }
 
+  Future<void> importAudiosAndAddToPlaylist({
+    required String id,
+    required List<Audio> newAudios,
+  }) async {
+    await _persistAudios(newAudios);
+    _notify();
+    await addAudiosToPlaylist(id: id, newAudios: newAudios);
+  }
+
   Future<void> addAudiosToPlaylist({
     required String id,
     required List<Audio> newAudios,
@@ -955,13 +963,12 @@ class LocalAudioService {
     }
 
     try {
-      final newList = List<Audio>.from(newAudios.where((e) => e.isLocal));
-      await _persistPlaylist(id, newList);
-      for (var audio in newList) {
+      for (var audio in List<Audio>.from(newAudios.where((e) => e.isLocal))) {
         if (!playlist.contains(audio)) {
           playlist.add(audio);
         }
       }
+      await _persistPlaylist(id, playlist);
       _notify();
     } on Exception catch (e, s) {
       printMessageInDebugMode(e, trace: s, tag: '$LocalAudioService');
@@ -979,12 +986,14 @@ class LocalAudioService {
     }
 
     try {
-      await _persistPlaylist(id, playlist.where((e) => e.isLocal).toList());
       for (var audio in audios) {
         if (playlist.contains(audio)) {
           playlist.remove(audio);
         }
       }
+      await _persistPlaylist(id, playlist);
+
+      _notify();
     } on Exception catch (e, s) {
       printMessageInDebugMode(e, trace: s, tag: '$LocalAudioService');
     }

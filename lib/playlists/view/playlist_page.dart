@@ -46,15 +46,16 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
     watchPropertyValue(
       (LocalAudioManager m) => m.getPlaylistById(pageId)?.hashCode,
     );
-
-    final playlist = di<LocalAudioManager>().getPlaylistById(pageId) ?? [];
+    final playlist = watchPropertyValue(
+      (LocalAudioManager m) => m.getPlaylistById(pageId) ?? [],
+    );
 
     return DropRegion(
       formats: Formats.standardFormats,
       hitTestBehavior: HitTestBehavior.opaque,
       onDropEnded: (e) async {
         Future.delayed(const Duration(milliseconds: 300)).then(
-          (_) => di<LocalAudioManager>().updatePlaylist(
+          (_) => di<LocalAudioManager>().importAudiosAndAddToPlaylist(
             id: pageId,
             audios: playlist,
           ),

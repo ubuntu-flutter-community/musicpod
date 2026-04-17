@@ -163,11 +163,6 @@ class LocalAudioManager extends SafeChangeNotifier {
     return _localAudioService.importExternalPlaylists(playlists: playlists);
   });
 
-  Future<void> updatePlaylist({
-    required String id,
-    required List<Audio> audios,
-    bool external = false,
-  }) async => _localAudioService.addAudiosToPlaylist(id: id, newAudios: audios);
   Future<void> removePlaylist(String id) =>
       _localAudioService.removePlaylist(id);
 
@@ -182,6 +177,13 @@ class LocalAudioManager extends SafeChangeNotifier {
     required List<Audio> audios,
   }) async =>
       _localAudioService.removeAudiosFromPlaylist(id: id, audios: audios);
+  Future<void> importAudiosAndAddToPlaylist({
+    required String id,
+    required List<Audio> audios,
+  }) async => _localAudioService.importAudiosAndAddToPlaylist(
+    id: id,
+    newAudios: audios,
+  );
 
   void clearPlaylist(String id) => _localAudioService.clearPlaylist(id);
   void moveAudioInPlaylist({
