@@ -32,7 +32,6 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
         (_) => di<LocalAudioManager>().initAudiosCommand.run((
           directory: null,
           forceInit: false,
-          extraAudios: const [],
         )),
       );
     }
@@ -94,13 +93,13 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
                 mainAxisSize: MainAxisSize.min,
                 spacing: kLargestSpace,
                 children: [
+                  Progress(value: progress, adaptive: false),
                   Text(switch (progress) {
                     0.25 => l10n.parsingLocalAudioFilesMetadataPleaseWait,
                     0.5 => l10n.persistingLocalAudioFilesMetadataPleaseWait,
                     0.75 => l10n.buildingLocalAudioLibraryPleaseWait,
                     _ => l10n.loadingPleaseWait,
                   }),
-                  Progress(value: progress, adaptive: false),
                 ],
               ),
             )

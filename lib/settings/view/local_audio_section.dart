@@ -38,7 +38,6 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
                   di<LocalAudioManager>().initAudiosCommand.run((
                     forceInit: true,
                     directory: directoryPath,
-                    extraAudios: const [],
                   ));
                 }
               },

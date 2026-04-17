@@ -235,7 +235,7 @@ class SettingsModel extends SafeChangeNotifier {
   late final Command<void, void> wipeAndInitLibraryCommand =
       Command.createAsyncNoParamNoResult(() async {
         await _podcastService.wipeAndBuildPodcastLibrary();
-        await _localAudioService.wipeAndBuildLocalAudioLibrary();
+        await _localAudioService.init(forceInit: true);
         await _radioService.wipeAndBuildRadioLibrary();
         await _playerService.resetPlayerState();
       });

@@ -294,7 +294,6 @@ class LocalAudioService {
   Future<({List<Audio> audios, List<String> failedImports})> init({
     String? newDirectory,
     bool forceInit = false,
-    List<Audio> extraAudios = const [],
     Function(double progress)? updateProgress,
   }) async {
     List<String> failedImports = [];
@@ -320,6 +319,8 @@ class LocalAudioService {
           updateProgress?.call(1);
           return;
         }
+      } else {
+        await _wipeLocalAudioCachesAndTables();
       }
 
       if (newDirectory != null &&
@@ -333,35 +334,22 @@ class LocalAudioService {
       await Future<void>.delayed(Duration.zero);
       failedImports = result.failedImports;
 
-      final allAudios = [...result.audios];
-      if (extraAudios.isNotEmpty) {
-        allAudios.addAll(extraAudios.where((e) => e.isLocal));
-      }
-
-      if (forceInit) {
-        _albumCache.clear();
-        _titlesOfArtistCache.clear();
-        _albumIDsOfGenreCache.clear();
-        await _db.delete(_db.trackTable).go();
-        await _db.delete(_db.albumArtTable).go();
-        await _db.delete(_db.albumTable).go();
-        await _db.delete(_db.artistTable).go();
-        await _db.delete(_db.genreTable).go();
-      }
-
-      await _persistAudios(allAudios);
+      await _persistAudios(result.audios);
       updateProgress?.call(0.75);
       await Future<void>.delayed(Duration.zero);
+
       await _loadAndBuildLocalAudioLibrary();
       updateProgress?.call(1);
+      await Future<void>.delayed(Duration.zero);
 
       _initialized = true;
     });
+
     return (audios: _audios ?? [], failedImports: failedImports);
   }
 
-  Future<void> _persistAudios(List<Audio> audioList) async {
-    await _db.transaction(() async {
+  Future<void> _persistAudios(List<Audio> audioList) => _db.transaction(
+    () async {
       // ── 1. Artists: batch-insert new, then bulk-load IDs ──
       final artistNameToId = <String, int>{};
 
@@ -549,8 +537,8 @@ class LocalAudioService {
           );
         });
       }
-    });
-  }
+    },
+  );
 
   // ── Helpers ──
 
@@ -592,12 +580,12 @@ class LocalAudioService {
   // ── Local Audio Library ──
 
   Future<void> _loadAndBuildLocalAudioLibrary() async {
-    await _loadCollectionsFromDb();
-    await _loadUserChangesFromDb();
+    await _loadCollectionsFromDbAndBuildCaches();
+    await _loadPlaylistsAndPinsFromDbAndBuildCaches();
     _notify();
   }
 
-  Future<void> _loadCollectionsFromDb() async {
+  Future<void> _loadCollectionsFromDbAndBuildCaches() async {
     // Load all tracks with joined artist/album names and genre, ordered by title
     final query = _db.select(_db.trackTable).join([
       leftOuterJoin(
@@ -640,26 +628,35 @@ class LocalAudioService {
     findAllAlbumIDs();
   }
 
-  Future<void> _loadUserChangesFromDb() async {
-    await _loadLikedAudiosFromDb();
-    await _loadPlaylistsFromDb();
-    await _loadExternalPlaylistIDsFromDb();
-    await _loadPinnedAlbumsFromDb();
+  Future<void> _loadPlaylistsAndPinsFromDbAndBuildCaches() async {
+    await _buildLikedAudiosFromDb();
+    await _buildPlaylistsFromDb();
+    await _buildExternalPlaylistIDsFromDb();
+    await _buildPinnedAlbumsFromDb();
   }
 
-  Future<void> wipeAndBuildLocalAudioLibrary() async {
-    await _wipeLocalAudioLibrary();
-    await _loadAndBuildLocalAudioLibrary();
-  }
-
-  Future<void> _wipeLocalAudioLibrary() async {
-    await _db.delete(_db.likedTrackTable).go();
-    await _db.delete(_db.albumTable).go();
-    await _db.delete(_db.playlistTrackTable).go();
-    await _db.delete(_db.playlistTable).go();
+  Future<void> _wipeLocalAudioCachesAndTables() async {
+    // clear all local caches, lists and maps:
+    _audios?.clear();
+    _allArtists?.clear();
+    _allGenres?.clear();
+    _allAlbumIDs?.clear();
+    _albumCache.clear();
+    _titlesOfArtistCache.clear();
+    _likedAudios.clear();
+    _playlists.clear();
+    _externalPlaylistIDs.clear();
+    _likedAudios.clear();
+    _pinnedAlbums.clear();
+    // then clear all related database tables:
     await _db.delete(_db.artistTable).go();
+    await _db.delete(_db.albumTable).go();
     await _db.delete(_db.albumArtTable).go();
     await _db.delete(_db.genreTable).go();
+    await _db.delete(_db.trackTable).go();
+    await _db.delete(_db.likedTrackTable).go();
+    await _db.delete(_db.playlistTrackTable).go();
+    await _db.delete(_db.playlistTable).go();
   }
 
   // ── Liked Audios ──
@@ -668,7 +665,7 @@ class LocalAudioService {
   List<Audio> get likedAudios => _likedAudios;
   int get likedAudiosLength => _likedAudios.length;
 
-  Future<void> _loadLikedAudiosFromDb() async {
+  Future<void> _buildLikedAudiosFromDb() async {
     final rows = await _trackJoin(_db.select(_db.likedTrackTable)).get();
     _likedAudios = _joinedRowsToAudios(rows);
   }
@@ -773,7 +770,7 @@ class LocalAudioService {
   bool isPlaylistSaved(String? id) =>
       id == null ? false : _playlists.containsKey(id);
 
-  Future<void> _loadPlaylistsFromDb() async {
+  Future<void> _buildPlaylistsFromDb() async {
     _playlists = {};
     final playlistRows = await _db.select(_db.playlistTable).get();
     for (final pl in playlistRows) {
@@ -800,104 +797,56 @@ class LocalAudioService {
     }
   }
 
-  Future<void> addPlaylist(String id, List<Audio> audios) async {
-    if (_playlists.containsKey(id)) return;
-    final localAudios = audios.where((e) => e.isLocal).toList();
-    _playlists[id] = localAudios;
-
-    final plId = await _db
-        .into(_db.playlistTable)
-        .insert(PlaylistTableCompanion.insert(name: id));
-    for (final audio in localAudios) {
-      final trackId = await _findTrackIdByPath(audio.path);
-      if (trackId != null) {
-        await _db
-            .into(_db.playlistTrackTable)
-            .insert(
-              PlaylistTrackTableCompanion.insert(
-                playlist: plId,
-                track: trackId,
-              ),
-            );
-      }
-    }
-    _notify();
-  }
-
-  Future<void> addExternalPlaylists({
-    required List<({String id, List<Audio> audios})> playlists,
-  }) async {
-    if (playlists.isEmpty) return;
-    for (var playlist in playlists) {
-      if (!_playlists.containsKey(playlist.id) &&
-          playlist.audios.any((e) => e.isLocal)) {
-        final localAudios = playlist.audios.where((e) => e.isLocal).toList();
-        _playlists[playlist.id] = localAudios;
-
-        final plId = await _db
-            .into(_db.playlistTable)
-            .insert(
-              PlaylistTableCompanion.insert(
-                name: playlist.id,
-                fromExternalSource: const Value(true),
-              ),
-            );
-        for (final audio in localAudios) {
-          final trackId = await _findTrackIdByPath(audio.path);
-          if (trackId != null) {
-            await _db
-                .into(_db.playlistTrackTable)
-                .insert(
-                  PlaylistTrackTableCompanion.insert(
-                    playlist: plId,
-                    track: trackId,
-                  ),
-                );
-          }
-        }
-      }
-    }
-    _notify();
-  }
-
-  Future<void> updatePlaylist({
+  Future<void> addPlaylist({
     required String id,
     required List<Audio> audios,
     bool external = false,
   }) async {
-    if (!_playlists.containsKey(id)) return;
-    final filteredAudios = audios
-        .where((e) => e.isLocal || e.isPodcast)
-        .toList();
-    _playlists[id] = filteredAudios;
+    if (_playlists.containsKey(id)) return;
+    final localAudios = audios.where((e) => e.isLocal).toList();
+    _playlists[id] = localAudios;
 
-    final plRow = await (_db.select(
-      _db.playlistTable,
-    )..where((t) => t.name.equals(id))).getSingleOrNull();
-    if (plRow == null) return;
+    await _persistAudios(localAudios);
 
-    if (external) {
-      await (_db.update(_db.playlistTable)..where((t) => t.id.equals(plRow.id)))
-          .write(const PlaylistTableCompanion(fromExternalSource: Value(true)));
-    }
+    await _db.transaction(() async {
+      final plId = await _db
+          .into(_db.playlistTable)
+          .insert(
+            PlaylistTableCompanion.insert(
+              name: id,
+              fromExternalSource: Value(external),
+            ),
+          );
 
-    await (_db.delete(
-      _db.playlistTrackTable,
-    )..where((t) => t.playlist.equals(plRow.id))).go();
-    for (final audio in filteredAudios) {
-      final trackId = await _findTrackIdByPath(audio.path);
-      if (trackId != null) {
-        await _db
-            .into(_db.playlistTrackTable)
-            .insert(
-              PlaylistTrackTableCompanion.insert(
-                playlist: plRow.id,
-                track: trackId,
-              ),
-            );
+      for (final audio in localAudios) {
+        final trackId = await _findTrackIdByPath(audio.path);
+        if (trackId != null) {
+          await _db
+              .into(_db.playlistTrackTable)
+              .insert(
+                PlaylistTrackTableCompanion.insert(
+                  playlist: plId,
+                  track: trackId,
+                ),
+              );
+        }
       }
-    }
+    });
+
+    findAllAlbumIDs(clean: true);
     _notify();
+  }
+
+  Future<void> importExternalPlaylists({
+    required List<({String id, List<Audio> audios})> playlists,
+  }) async {
+    for (var playlist in playlists) {
+      await addPlaylist(
+        id: playlist.id,
+        audios: playlist.audios,
+        external: true,
+      );
+    }
   }
 
   Future<void> removePlaylist(String id) async {
@@ -977,7 +926,11 @@ class LocalAudioService {
       _db.playlistTrackTable,
     )..where((t) => t.playlist.equals(plRow.id))).go();
     for (final audio in audios) {
-      final trackId = await _findTrackIdByPath(audio.path);
+      var trackId = await _findTrackIdByPath(audio.path);
+      if (trackId == null) {
+        await _persistAudios([audio]);
+        trackId = await _findTrackIdByPath(audio.path);
+      }
       if (trackId != null) {
         await _db
             .into(_db.playlistTrackTable)
@@ -991,31 +944,50 @@ class LocalAudioService {
     }
   }
 
-  void addAudiosToPlaylist({required String id, required List<Audio> audios}) {
+  Future<void> addAudiosToPlaylist({
+    required String id,
+    required List<Audio> newAudios,
+  }) async {
     final playlist = _playlists[id];
     if (playlist == null) return;
-
-    for (var audio in audios) {
-      if (audio.isLocal && !playlist.contains(audio)) {
-        playlist.add(audio);
-      }
+    if (playlist.toSet().containsAll(newAudios)) {
+      return;
     }
-    _persistPlaylist(id, playlist).then((_) => _notify());
+
+    try {
+      final newList = List<Audio>.from(newAudios.where((e) => e.isLocal));
+      await _persistPlaylist(id, newList);
+      for (var audio in newList) {
+        if (!playlist.contains(audio)) {
+          playlist.add(audio);
+        }
+      }
+      _notify();
+    } on Exception catch (e, s) {
+      printMessageInDebugMode(e, trace: s, tag: '$LocalAudioService');
+    }
   }
 
-  void removeAudiosFromPlaylist({
+  Future<void> removeAudiosFromPlaylist({
     required String id,
     required List<Audio> audios,
-  }) {
+  }) async {
     final playlist = _playlists[id];
     if (playlist == null) return;
-
-    for (var audio in audios) {
-      if (playlist.contains(audio)) {
-        playlist.remove(audio);
-      }
+    if (playlist.toSet().intersection(audios.toSet()).isEmpty) {
+      return;
     }
-    _persistPlaylist(id, playlist).then((_) => _notify());
+
+    try {
+      await _persistPlaylist(id, playlist.where((e) => e.isLocal).toList());
+      for (var audio in audios) {
+        if (playlist.contains(audio)) {
+          playlist.remove(audio);
+        }
+      }
+    } on Exception catch (e, s) {
+      printMessageInDebugMode(e, trace: s, tag: '$LocalAudioService');
+    }
   }
 
   void clearPlaylist(String id) {
@@ -1029,7 +1001,7 @@ class LocalAudioService {
   List<String> _externalPlaylistIDs = [];
   List<String> get externalPlaylistIDs => _externalPlaylistIDs;
 
-  Future<void> _loadExternalPlaylistIDsFromDb() async {
+  Future<void> _buildExternalPlaylistIDsFromDb() async {
     final rows = await (_db.select(
       _db.playlistTable,
     )..where((t) => t.fromExternalSource.equals(true))).get();
@@ -1041,7 +1013,7 @@ class LocalAudioService {
   List<int> _pinnedAlbums = [];
   List<int> get pinnedAlbums => _pinnedAlbums;
 
-  Future<void> _loadPinnedAlbumsFromDb() async {
+  Future<void> _buildPinnedAlbumsFromDb() async {
     final rows = await (_db.select(
       _db.albumTable,
     )..where((t) => t.pinned.equals(true))).get();

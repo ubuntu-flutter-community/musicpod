@@ -51,11 +51,7 @@ class LocalAudioManager extends SafeChangeNotifier {
     if (value == showPlaylistAddAudios.value) return;
     showPlaylistAddAudios.value = value;
     if (showPlaylistAddAudios.value && audios == null) {
-      initAudiosCommand.run((
-        directory: null,
-        forceInit: false,
-        extraAudios: const [],
-      ));
+      initAudiosCommand.run((directory: null, forceInit: false));
     }
   }
 
@@ -85,11 +81,7 @@ class LocalAudioManager extends SafeChangeNotifier {
       albumId,
       () => Command.createAsync((audioFilter) async {
         if (initAudiosCommand.value == null) {
-          await initAudiosCommand.runAsync((
-            directory: null,
-            forceInit: false,
-            extraAudios: const [],
-          ));
+          await initAudiosCommand.runAsync((directory: null, forceInit: false));
         }
 
         return _localAudioService.getCachedAlbum(albumId) ??
@@ -120,7 +112,7 @@ class LocalAudioManager extends SafeChangeNotifier {
       _localAudioService.findAllAlbumIDs(artist: artist, clean: clean);
 
   late final Command<
-    ({bool forceInit, String? directory, List<Audio> extraAudios}),
+    ({bool forceInit, String? directory}),
     ({List<Audio> audios, List<String> failedImports})?
   >
   initAudiosCommand = Command.createAsyncWithProgress((param, handle) async {
@@ -130,7 +122,6 @@ class LocalAudioManager extends SafeChangeNotifier {
     final localAudioResult = await _localAudioService.init(
       forceInit: param.forceInit,
       newDirectory: param.directory,
-      extraAudios: param.extraAudios,
       updateProgress: handle.updateProgress,
     );
     return localAudioResult;
@@ -165,27 +156,27 @@ class LocalAudioManager extends SafeChangeNotifier {
 
   bool isPlaylistSaved(String? id) => _localAudioService.isPlaylistSaved(id);
   Future<void> addPlaylist(String name, List<Audio> audios) async =>
-      _localAudioService.addPlaylist(name, audios);
-  Future<void> addExternalPlaylists(
-    List<({String id, List<Audio> audios})> playlists,
-  ) async => _localAudioService.addExternalPlaylists(playlists: playlists);
+      _localAudioService.addPlaylist(id: name, audios: audios);
+
+  late final Command<List<({String id, List<Audio> audios})>, void>
+  importExternalPlaylistsCommand = Command.createAsyncNoResult((playlists) {
+    return _localAudioService.importExternalPlaylists(playlists: playlists);
+  });
 
   Future<void> updatePlaylist({
     required String id,
     required List<Audio> audios,
     bool external = false,
-  }) async => _localAudioService.updatePlaylist(
-    id: id,
-    audios: audios,
-    external: external,
-  );
+  }) async => _localAudioService.addAudiosToPlaylist(id: id, newAudios: audios);
   Future<void> removePlaylist(String id) =>
       _localAudioService.removePlaylist(id);
 
   Future<void> updatePlaylistName(String oldName, String newName) async =>
       _localAudioService.updatePlaylistName(oldName, newName);
-  void addAudiosToPlaylist({required String id, required List<Audio> audios}) =>
-      _localAudioService.addAudiosToPlaylist(id: id, audios: audios);
+  Future<void> addAudiosToPlaylist({
+    required String id,
+    required List<Audio> audios,
+  }) => _localAudioService.addAudiosToPlaylist(id: id, newAudios: audios);
   Future<void> removeAudiosFromPlaylist({
     required String id,
     required List<Audio> audios,

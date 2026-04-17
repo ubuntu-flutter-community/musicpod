@@ -340,18 +340,23 @@ class RadioService {
 
   void addStarredStations(List<String?> uuids) {
     if (uuids.isEmpty) return;
-    for (var uuid in uuids) {
-      if (uuid != null && uuid.isNotEmpty && !_starredStations.contains(uuid)) {
-        _starredStations.add(uuid);
-        _db
-            .into(_db.starredStationTable)
-            .insert(
+    final newUuids = uuids
+        .whereType<String>()
+        .where((uuid) => uuid.isNotEmpty && !_starredStations.contains(uuid))
+        .toList();
+    if (newUuids.isEmpty) return;
+    _starredStations.addAll(newUuids);
+    _db
+        .batch((batch) {
+          for (final uuid in newUuids) {
+            batch.insert(
+              _db.starredStationTable,
               StarredStationTableCompanion.insert(uuid: uuid),
               mode: InsertMode.insertOrIgnore,
             );
-      }
-    }
-    _notify();
+          }
+        })
+        .then((_) => _notify());
   }
 
   void removeStarredStation(String uuid) {
@@ -409,8 +414,10 @@ class RadioService {
   Future<void> _wipeRadioLibrary() async {
     _favRadioTags.clear();
     _starredStations.clear();
-    await _db.delete(_db.starredStationTable).go();
-    await _db.delete(_db.favoriteRadioTagTable).go();
+    await Future.wait([
+      _db.delete(_db.starredStationTable).go(),
+      _db.delete(_db.favoriteRadioTagTable).go(),
+    ]);
     _notify();
   }
 }

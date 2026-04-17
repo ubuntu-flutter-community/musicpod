@@ -479,33 +479,38 @@ class PodcastService {
     podcasts,
   ) async {
     if (podcasts.isEmpty) return;
-    for (var p in podcasts) {
-      if (!_podcasts.contains(p.feedUrl)) {
-        _podcasts.add(p.feedUrl);
-        final now = DateTime.now();
-        await _db
-            .into(_db.podcastTable)
-            .insert(
-              PodcastTableCompanion.insert(
-                feedUrl: p.feedUrl,
-                name: p.name,
-                artist: p.artist,
-                description: '',
-                imageUrl: Value(p.imageUrl),
-                lastUpdated: now,
-              ),
-              mode: InsertMode.insertOrIgnore,
-            );
-        _podcastCache[p.feedUrl] = PodcastTableData(
-          feedUrl: p.feedUrl,
-          name: p.name,
-          artist: p.artist,
-          description: '',
-          imageUrl: p.imageUrl,
-          lastUpdated: now,
-          ascending: false,
+    final newPodcasts = podcasts
+        .where((p) => !_podcasts.contains(p.feedUrl))
+        .toList();
+    if (newPodcasts.isEmpty) return;
+    final now = DateTime.now();
+    await _db.batch((batch) {
+      for (final p in newPodcasts) {
+        batch.insert(
+          _db.podcastTable,
+          PodcastTableCompanion.insert(
+            feedUrl: p.feedUrl,
+            name: p.name,
+            artist: p.artist,
+            description: '',
+            imageUrl: Value(p.imageUrl),
+            lastUpdated: now,
+          ),
+          mode: InsertMode.insertOrIgnore,
         );
       }
+    });
+    for (final p in newPodcasts) {
+      _podcasts.add(p.feedUrl);
+      _podcastCache[p.feedUrl] = PodcastTableData(
+        feedUrl: p.feedUrl,
+        name: p.name,
+        artist: p.artist,
+        description: '',
+        imageUrl: p.imageUrl,
+        lastUpdated: now,
+        ascending: false,
+      );
     }
     _notify();
   }
@@ -593,8 +598,10 @@ class PodcastService {
     _podcasts.clear();
     _podcastUpdates?.clear();
     _podcastCache.clear();
-    await _db.delete(_db.podcastUpdateTable).go();
-    await _db.delete(_db.podcastTable).go();
+    await Future.wait([
+      _db.delete(_db.podcastUpdateTable).go(),
+      _db.delete(_db.podcastTable).go(),
+    ]);
     _notify();
   }
 
