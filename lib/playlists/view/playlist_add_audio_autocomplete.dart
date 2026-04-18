@@ -63,13 +63,6 @@ class _PlaylistAddAudioAutoCompleteState
 
   @override
   Widget build(BuildContext context) {
-    callOnceAfterThisBuild(
-      (_) => di<LocalAudioManager>().initAudiosCommand.run((
-        directory: null,
-        forceInit: false,
-      )),
-    );
-
     final theme = context.theme;
     final colorScheme = context.colorScheme;
     final fallBackTextStyle = theme.textTheme.bodyMedium?.copyWith(

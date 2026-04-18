@@ -294,6 +294,7 @@ class LocalAudioService {
   Future<({List<Audio> audios, List<String> failedImports})> init({
     String? newDirectory,
     bool forceInit = false,
+    bool forceDbOnly = false,
     Function(double progress)? updateProgress,
   }) async {
     List<String> failedImports = [];
@@ -310,10 +311,10 @@ class LocalAudioService {
         return;
       }
 
-      if (!forceInit) {
+      if (!forceInit || forceDbOnly) {
         // Try loading from database first
         final trackCount = await _db.trackTable.count().getSingle();
-        if (trackCount > 0) {
+        if (trackCount > 0 || forceDbOnly) {
           await _loadAndBuildLocalAudioLibrary();
           _initialized = true;
           updateProgress?.call(1);

@@ -51,7 +51,11 @@ class LocalAudioManager extends SafeChangeNotifier {
     if (value == showPlaylistAddAudios.value) return;
     showPlaylistAddAudios.value = value;
     if (showPlaylistAddAudios.value && audios == null) {
-      initAudiosCommand.run((directory: null, forceInit: false));
+      initAudiosCommand.run((
+        directory: null,
+        forceInit: false,
+        forceDbOnly: false,
+      ));
     }
   }
 
@@ -81,7 +85,11 @@ class LocalAudioManager extends SafeChangeNotifier {
       albumId,
       () => Command.createAsync((audioFilter) async {
         if (initAudiosCommand.value == null) {
-          await initAudiosCommand.runAsync((directory: null, forceInit: false));
+          await initAudiosCommand.runAsync((
+            directory: null,
+            forceInit: false,
+            forceDbOnly: false,
+          ));
         }
 
         return _localAudioService.getCachedAlbum(albumId) ??
@@ -112,7 +120,7 @@ class LocalAudioManager extends SafeChangeNotifier {
       _localAudioService.findAllAlbumIDs(artist: artist, clean: clean);
 
   late final Command<
-    ({bool forceInit, String? directory}),
+    ({bool forceInit, String? directory, bool forceDbOnly}),
     ({List<Audio> audios, List<String> failedImports})?
   >
   initAudiosCommand = Command.createAsyncWithProgress((param, handle) async {
@@ -122,6 +130,7 @@ class LocalAudioManager extends SafeChangeNotifier {
     final localAudioResult = await _localAudioService.init(
       forceInit: param.forceInit,
       newDirectory: param.directory,
+      forceDbOnly: param.forceDbOnly,
       updateProgress: handle.updateProgress,
     );
     return localAudioResult;
