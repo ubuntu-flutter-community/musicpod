@@ -27,21 +27,15 @@ class ConnectivityManager {
           ));
         });
 
-    _initCommand.run();
+    connectivityCommand.run((
+      isOnline: true,
+      wasOnline: _internetConnection.lastTryResults == InternetStatus.connected,
+    ));
   }
 
   final PlayerService _playerService;
   final InternetConnection _internetConnection;
   StreamSubscription<InternetStatus>? _internetConnectionSubscription;
-
-  late final Command<void, void> _initCommand =
-      Command.createAsyncNoParamNoResult(() async {
-        connectivityCommand.run((
-          isOnline: await _internetConnection.hasInternetAccess,
-          wasOnline:
-              _internetConnection.lastTryResults == InternetStatus.connected,
-        ));
-      });
 
   late final Command<
     ({bool isOnline, bool wasOnline}),
