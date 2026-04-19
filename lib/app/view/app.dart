@@ -7,14 +7,18 @@ import '../../common/view/theme.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../player/player_model.dart';
 import '../../settings/settings_model.dart';
+import 'common_handlers_and_commands.dart';
 import 'desktop_musicpod_app.dart';
 import 'mobile_musicpod_app.dart';
 
-class YaruMusicPodApp extends StatelessWidget with WatchItMixin {
+class YaruMusicPodApp extends StatelessWidget
+    with WatchItMixin, CommonHandlersAndCommandsMixin {
   const YaruMusicPodApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    setupCommonHandlersAndCommands(context);
+
     final useCustomThemeColor = watchPropertyValue(
       (SettingsModel m) => m.useCustomThemeColor,
     );
@@ -56,11 +60,14 @@ class YaruMusicPodApp extends StatelessWidget with WatchItMixin {
   }
 }
 
-class MaterialMusicPodApp extends StatelessWidget with WatchItMixin {
+class MaterialMusicPodApp extends StatelessWidget
+    with WatchItMixin, CommonHandlersAndCommandsMixin {
   const MaterialMusicPodApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    setupCommonHandlersAndCommands(context);
+
     final useCustomThemeColor = watchPropertyValue(
       (SettingsModel m) => m.useCustomThemeColor,
     );

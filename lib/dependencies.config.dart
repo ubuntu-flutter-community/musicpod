@@ -162,13 +162,14 @@ extension GetItInjectableX on _i174.GetIt {
         settingsService: gh<_i763.SettingsService>(),
       ),
     );
-    gh.lazySingleton<_i438.LocalAudioService>(
-      () => _i438.LocalAudioService(
+    await gh.singletonAsync<_i438.LocalAudioService>(() {
+      final i = _i438.LocalAudioService(
         localCoverService: gh<_i57.LocalCoverService>(),
         settingsService: gh<_i763.SettingsService>(),
         database: gh<_i115.Database>(),
-      ),
-    );
+      );
+      return i.initFromDb().then((_) => i);
+    }, preResolve: true);
     await gh.singletonAsync<_i721.PodcastService>(
       () {
         final i = _i721.PodcastService(

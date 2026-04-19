@@ -21,7 +21,7 @@ import 'data/change_metadata_capsule.dart';
 import 'local_cover_service.dart';
 import 'local_search_result.dart';
 
-@lazySingleton
+@singleton
 class LocalAudioService {
   final SettingsService _settingsService;
   final Database _db;
@@ -289,6 +289,12 @@ class LocalAudioService {
       playlists: [],
     );
   }
+
+  // Note: initializing from db only is needed for when the users has created
+  // playlists that were selected before the app closed
+  @PostConstruct(preResolve: true)
+  Future<void> initFromDb() =>
+      init(newDirectory: null, forceInit: false, forceDbOnly: true);
 
   final Lock _lock = Lock();
   Future<({List<Audio> audios, List<String> failedImports})> init({

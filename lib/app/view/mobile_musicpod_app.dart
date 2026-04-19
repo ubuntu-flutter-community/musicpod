@@ -18,6 +18,7 @@ import '../../local_audio/local_audio_manager.dart';
 import '../../player/player_model.dart';
 import '../../radio/radio_model.dart';
 import '../../settings/settings_model.dart';
+import 'common_handlers_and_commands.dart';
 import 'create_master_items.dart';
 import 'mobile_page.dart';
 import '../routing_manager.dart';
@@ -31,7 +32,8 @@ class MobileMusicPodApp extends StatefulWidget with WatchItStatefulWidgetMixin {
   State<MobileMusicPodApp> createState() => _MobileMusicPodAppState();
 }
 
-class _MobileMusicPodAppState extends State<MobileMusicPodApp> {
+class _MobileMusicPodAppState extends State<MobileMusicPodApp>
+    with CommonHandlersAndCommandsMixin {
   late final AppLifecycleListener _listener;
   @override
   void initState() {
@@ -71,6 +73,8 @@ class _MobileMusicPodAppState extends State<MobileMusicPodApp> {
     final phoenixDarkWithFont = isLinux
         ? phoenix.darkTheme
         : applyChineseFontToPhoenixDarkTheme(darkTheme: phoenix.darkTheme);
+
+    setupCommonHandlersAndCommands(context);
 
     return MaterialApp(
       navigatorKey: routingManager.masterNavigatorKey,
