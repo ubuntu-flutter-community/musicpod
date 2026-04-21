@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
@@ -411,7 +412,9 @@ class PodcastService {
   Map<String, PodcastTableData> _podcastCache = {};
 
   Future<void> _loadPodcastCache() async {
-    final rows = await _db.select(_db.podcastTable).get();
+    final rows = await (_db.select(
+      _db.podcastTable,
+    )..orderBy([(t) => OrderingTerm(expression: t.name)])).get();
     _podcastCache = {for (final r in rows) r.feedUrl: r};
     _podcasts = rows.map((r) => r.feedUrl).toSet();
   }

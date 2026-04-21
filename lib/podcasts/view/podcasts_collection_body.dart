@@ -96,17 +96,19 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
       contentBuilder: (context, constraints) => checkingForUpdates
           ? SliverFillRemaining(
               hasScrollBody: false,
-              child: Column(
-                spacing: kLargestSpace,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    context.l10n.checkingForUpdatesPleaseWait(
-                      (progress * 100).toInt(),
+              child: Center(
+                child: Column(
+                  spacing: kLargestSpace,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Progress(value: progress, adaptive: false),
+                    Text(
+                      context.l10n.checkingForUpdatesPleaseWait(
+                        (progress * 100).toInt(),
+                      ),
                     ),
-                  ),
-                  Progress(value: progress, adaptive: false),
-                ],
+                  ],
+                ),
               ),
             )
           : (subsLength == 0)
