@@ -19,7 +19,7 @@ class MusicPod extends StatefulWidget {
 }
 
 class _MusicPodState extends State<MusicPod> {
-  late final Future<void> _allReady;
+  late Future<void> _allReady;
 
   @override
   void initState() {
