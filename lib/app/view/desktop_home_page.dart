@@ -7,9 +7,11 @@ import '../../player/view/player_view.dart';
 import '../../podcasts/download_manager.dart';
 import '../../settings/settings_model.dart';
 import '../app_manager.dart';
+import 'common_handlers_and_commands.dart';
 import 'master_detail_page.dart';
 
-class DesktopHomePage extends StatelessWidget with WatchItMixin {
+class DesktopHomePage extends StatelessWidget
+    with WatchItMixin, CommonHandlersAndCommandsMixin {
   const DesktopHomePage({super.key});
 
   @override
@@ -28,6 +30,8 @@ class DesktopHomePage extends StatelessWidget with WatchItMixin {
       select: (DownloadManager m) => m.messageStream,
       handler: downloadMessageStreamHandler,
     );
+
+    setupCommonHandlersAndCommands(context);
 
     // This scaffold is mainly used to have a unified place for snackbars
     return Scaffold(

@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../page_ids.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -11,17 +10,22 @@ import '../../player/view/player_main_controls.dart';
 import '../../player/view/player_view.dart';
 import '../../podcasts/download_manager.dart';
 import '../app_manager.dart';
+import '../page_ids.dart';
+import '../routing_manager.dart';
+import 'common_handlers_and_commands.dart';
 import 'create_master_items.dart';
 import 'mobile_bottom_bar.dart';
-import '../routing_manager.dart';
 
-class MobilePage extends StatelessWidget with WatchItMixin {
+class MobilePage extends StatelessWidget
+    with WatchItMixin, CommonHandlersAndCommandsMixin {
   const MobilePage({super.key, required this.page});
 
   final Widget page;
 
   @override
   Widget build(BuildContext context) {
+    setupCommonHandlersAndCommands(context);
+
     final fullWindowMode =
         watchValue((AppManager m) => m.fullWindowMode) ?? false;
 

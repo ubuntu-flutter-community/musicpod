@@ -328,18 +328,10 @@ class LocalAudioService {
       final dir = newDirectory ?? _settingsService.getString(SPKeys.directory);
 
       if (!forceInit || forceDbOnly) {
-        // Try loading from database first if the files on disk match the database count
-        final trackCount = await _db.trackTable.count().getSingle();
-        final mediaFiles = dir == null
-            ? <File>[]
-            : (await findMediaFiles(dir, failedImports));
-
-        if (trackCount == mediaFiles.length || forceDbOnly) {
-          await _loadAndBuildLocalAudioLibrary();
-          _initialized = true;
-          updateProgress?.call(1);
-          return;
-        }
+        await _loadAndBuildLocalAudioLibrary();
+        _initialized = true;
+        updateProgress?.call(1);
+        return;
       } else {
         await _wipeLocalAudioCachesAndTables();
       }
@@ -361,6 +353,17 @@ class LocalAudioService {
     });
 
     return (audios: _audios ?? [], failedImports: failedImports);
+  }
+
+  Future<bool> areTracksSynced({
+    List<String> failedImports = const [],
+    String? newDir,
+  }) async {
+    final dir = newDir ?? _settingsService.getString(SPKeys.directory);
+    if (dir == null) return false;
+    final trackCount = await _db.trackTable.count().getSingle();
+    final mediaFiles = await findMediaFiles(dir, failedImports);
+    return trackCount == mediaFiles.length;
   }
 
   Future<void> _persistAudios(List<Audio> audioList) => _db.transaction(

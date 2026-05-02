@@ -2,26 +2,25 @@ import 'dart:ui';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:phoenix_theme/phoenix_theme.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:phoenix_theme/phoenix_theme.dart';
 import 'package:yaru/yaru.dart';
 
-import '../app_config.dart';
-import '../page_ids.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../l10n/app_localizations.dart';
 import '../../l10n/l10n.dart';
-import '../../podcasts/podcast_manager.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../player/player_model.dart';
+import '../../podcasts/podcast_manager.dart';
 import '../../radio/radio_model.dart';
 import '../../settings/settings_model.dart';
-import 'common_handlers_and_commands.dart';
+import '../app_config.dart';
+import '../page_ids.dart';
+import '../routing_manager.dart';
 import 'create_master_items.dart';
 import 'mobile_page.dart';
-import '../routing_manager.dart';
 
 class MobileMusicPodApp extends StatefulWidget with WatchItStatefulWidgetMixin {
   const MobileMusicPodApp({super.key, this.accent});
@@ -32,8 +31,7 @@ class MobileMusicPodApp extends StatefulWidget with WatchItStatefulWidgetMixin {
   State<MobileMusicPodApp> createState() => _MobileMusicPodAppState();
 }
 
-class _MobileMusicPodAppState extends State<MobileMusicPodApp>
-    with CommonHandlersAndCommandsMixin {
+class _MobileMusicPodAppState extends State<MobileMusicPodApp> {
   late final AppLifecycleListener _listener;
   @override
   void initState() {
@@ -73,8 +71,6 @@ class _MobileMusicPodAppState extends State<MobileMusicPodApp>
     final phoenixDarkWithFont = isLinux
         ? phoenix.darkTheme
         : applyChineseFontToPhoenixDarkTheme(darkTheme: phoenix.darkTheme);
-
-    setupCommonHandlersAndCommands(context);
 
     return MaterialApp(
       navigatorKey: routingManager.masterNavigatorKey,

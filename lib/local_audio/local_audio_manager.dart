@@ -127,8 +127,13 @@ class LocalAudioManager extends SafeChangeNotifier {
     if (param.forceInit) {
       _findAlbumCommands.clear();
     }
+
+    final areTracksSynced = await _localAudioService.areTracksSynced(
+      newDir: param.directory,
+    );
+
     final localAudioResult = await _localAudioService.init(
-      forceInit: param.forceInit,
+      forceInit: param.forceInit || !areTracksSynced,
       newDirectory: param.directory,
       forceDbOnly: param.forceDbOnly,
       updateProgress: handle.updateProgress,

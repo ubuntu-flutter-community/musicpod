@@ -94,7 +94,8 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
                 mainAxisSize: MainAxisSize.min,
                 spacing: kLargestSpace,
                 children: [
-                  Progress(value: progress, adaptive: false),
+                  const Progress(adaptive: false),
+                  SizedBox(width: 500, child: LinearProgress(value: progress)),
                   Text(switch (progress) {
                     0.25 => l10n.parsingLocalAudioFilesMetadataPleaseWait,
                     0.5 => l10n.persistingLocalAudioFilesMetadataPleaseWait,
