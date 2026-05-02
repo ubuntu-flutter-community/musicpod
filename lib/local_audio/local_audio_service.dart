@@ -321,10 +321,20 @@ class LocalAudioService {
         return;
       }
 
+      if (newDirectory != null &&
+          newDirectory != _settingsService.getString(SPKeys.directory)) {
+        await _settingsService.setValue(SPKeys.directory, newDirectory);
+      }
+      final dir = newDirectory ?? _settingsService.getString(SPKeys.directory);
+
       if (!forceInit || forceDbOnly) {
-        // Try loading from database first
+        // Try loading from database first if the files on disk match the database count
         final trackCount = await _db.trackTable.count().getSingle();
-        if (trackCount > 0 || forceDbOnly) {
+        final mediaFiles = dir == null
+            ? <File>[]
+            : (await findMediaFiles(dir, failedImports));
+
+        if (trackCount == mediaFiles.length || forceDbOnly) {
           await _loadAndBuildLocalAudioLibrary();
           _initialized = true;
           updateProgress?.call(1);
@@ -333,12 +343,6 @@ class LocalAudioService {
       } else {
         await _wipeLocalAudioCachesAndTables();
       }
-
-      if (newDirectory != null &&
-          newDirectory != _settingsService.getString(SPKeys.directory)) {
-        await _settingsService.setValue(SPKeys.directory, newDirectory);
-      }
-      final dir = newDirectory ?? _settingsService.getString(SPKeys.directory);
 
       final result = await compute(_readAudiosFromDirectory, dir);
       updateProgress?.call(0.5);
@@ -1307,21 +1311,14 @@ FutureOr<ImportResult> _readAudiosFromDirectory(String? directory) async {
   final List<String> failedImports = [];
 
   if (directory != null && Directory(directory).existsSync()) {
-    final files =
-        (await Directory(directory)
-                .list(recursive: true, followLinks: false)
-                .handleError((e) => failedImports.add(e.toString()))
-                .toList())
-            .whereType<File>();
+    final files = await findMediaFiles(directory, failedImports);
 
     for (final e in files) {
-      if (e.isPlayable) {
-        try {
-          newAudios.add(Audio.local(e, onError: (p) => failedImports.add(p)));
-        } on Exception catch (ex) {
-          failedImports.add(e.path);
-          printMessageInDebugMode(ex);
-        }
+      try {
+        newAudios.add(Audio.local(e, onError: (p) => failedImports.add(p)));
+      } on Exception catch (ex) {
+        failedImports.add(e.path);
+        printMessageInDebugMode(ex);
       }
     }
   }
@@ -1332,6 +1329,18 @@ FutureOr<ImportResult> _readAudiosFromDirectory(String? directory) async {
   );
 
   return (audios: newAudios, failedImports: failedImports);
+}
+
+Future<Iterable<File>> findMediaFiles(
+  String directory,
+  List<String> failedImports,
+) async {
+  return (await Directory(directory)
+          .list(recursive: true, followLinks: false)
+          .handleError((e) => failedImports.add(e.toString()))
+          .toList())
+      .whereType<File>()
+      .where((file) => file.isPlayable);
 }
 
 typedef ImportResult = ({List<String> failedImports, List<Audio> audios});
