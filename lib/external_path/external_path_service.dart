@@ -12,7 +12,7 @@ class ExternalPathService {
 
   Future<String?> getPathOfDirectory() async {
     if (isMobile && await _androidPermissionsGranted()) {
-      return FilePicker.platform.getDirectoryPath();
+      return FilePicker.getDirectoryPath();
     }
 
     if (isMacOS || isLinux || isWindows) {
@@ -23,7 +23,7 @@ class ExternalPathService {
 
   Future<String?> getPathOfFile() async {
     if (isMobile && await _androidPermissionsGranted()) {
-      return (await FilePicker.platform.pickFiles(
+      return (await FilePicker.pickFiles(
         allowMultiple: false,
       ))?.files.firstOrNull?.path;
     }
@@ -36,9 +36,7 @@ class ExternalPathService {
 
   Future<List<String>> getPathsOfFiles() async {
     if (isMobile && await _androidPermissionsGranted()) {
-      final filePickerResult = await FilePicker.platform.pickFiles(
-        allowMultiple: true,
-      );
+      final filePickerResult = await FilePicker.pickFiles(allowMultiple: true);
 
       if (filePickerResult == null) {
         return [];
