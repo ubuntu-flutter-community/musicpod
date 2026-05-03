@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
@@ -15,7 +13,7 @@ import 'modals.dart';
 import 'snackbars.dart';
 import 'ui_constants.dart';
 
-class MetaDataContent extends StatefulWidget {
+class MetaDataContent extends StatelessWidget {
   const MetaDataContent.dialog({
     super.key,
     required this.audio,
@@ -35,29 +33,6 @@ class MetaDataContent extends StatefulWidget {
   static const double dimension = 300.0;
 
   @override
-  State<MetaDataContent> createState() => _MetaDataContentState();
-}
-
-class _MetaDataContentState extends State<MetaDataContent> {
-  late Audio audio;
-
-  @override
-  void initState() {
-    super.initState();
-    setAudio();
-  }
-
-  void setAudio() {
-    if (widget.audio.path != null) {
-      audio = widget.audio.isLocal && widget.audio.path != null
-          ? Audio.local(File(widget.audio.path!))
-          : widget.audio;
-    } else {
-      audio = widget.audio;
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
@@ -66,7 +41,7 @@ class _MetaDataContentState extends State<MetaDataContent> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (audio.isLocal && audio.path != null && audio.albumId != null)
+          if (audio.isLocal && audio.path != null && audio.albumDbId != null)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: kLargestSpace),
               child: SizedBox.square(
@@ -79,7 +54,7 @@ class _MetaDataContentState extends State<MetaDataContent> {
       ),
     );
 
-    return switch (widget._mode) {
+    return switch (_mode) {
       ModalMode.dialog => AlertDialog(
         title: YaruDialogTitleBar(
           title: Text(l10n.metadata),

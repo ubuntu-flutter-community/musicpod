@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:podcast_search/podcast_search.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:podcast_search/podcast_search.dart';
 
-import '../../app/connectivity_model.dart';
-import '../../common/data/audio.dart';
-import '../../common/logging.dart';
+import '../../app/connectivity_manager.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
-import '../podcast_model.dart';
+import '../podcast_manager.dart';
 import 'lazy_podcast_loading_page.dart';
 import 'podcast_page.dart';
 
-class LazyPodcastPage extends StatefulWidget with WatchItStatefulWidgetMixin {
+class LazyPodcastPage extends StatelessWidget with WatchItMixin {
   const LazyPodcastPage({
     super.key,
     this.podcastItem,
@@ -30,119 +27,71 @@ class LazyPodcastPage extends StatefulWidget with WatchItStatefulWidgetMixin {
   final String Function(int length) multiUpdateMessage;
 
   @override
-  State<LazyPodcastPage> createState() => _LazyPodcastPageState();
-}
+  Widget build(BuildContext context) {
+    final connectivityCommand = watchValue(
+      (ConnectivityManager m) => m.connectivityCommand,
+    );
 
-class _LazyPodcastPageState extends State<LazyPodcastPage> {
-  late Future<List<Audio>?> _episodes;
-  String? url;
+    final feedUrl = this.feedUrl ?? podcastItem?.feedUrl;
 
-  @override
-  void initState() {
-    super.initState();
-    url = widget.feedUrl ?? widget.podcastItem?.feedUrl;
-    if (url == null) {
-      printMessageInDebugMode('Feed url missing - cannot load episodes!');
-      _episodes = Future.value(<Audio>[]);
-    } else {
-      _episodes = _findEpisodes(url!);
-    }
-  }
-
-  Future<List<Audio>?> _findEpisodes(String url) async {
-    final podcastModel = di<PodcastModel>();
-    final libraryModel = di<LibraryModel>();
-    if (libraryModel.isPodcastSubscribed(url) &&
-        podcastModel.getPodcastEpisodesFromCache(url) == null) {
-      await podcastModel.checkForUpdates(
-        feedUrls: {url},
-        updateMessage: widget.updateMessage,
-        multiUpdateMessage: widget.multiUpdateMessage,
+    if (feedUrl == null) {
+      return LazyPodcastLoadingPage(
+        title: context.l10n.podcast,
+        imageUrl: this.imageUrl,
+        child: NoSearchResultPage(
+          message: Text(context.l10n.podcastFeedIsEmpty),
+        ),
       );
     }
 
-    final episodes = await podcastModel.findEpisodes(
-      feedUrl: url,
-      loadFromCache:
-          !(podcastModel.getPodcastEpisodesFromCache(url) == null ||
-              podcastModel.getPodcastEpisodesFromCache(url)!.isEmpty),
-    );
-    await libraryModel.removePodcastUpdate(url);
-
-    return episodes;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final isOnline = watchPropertyValue((ConnectivityModel m) {
-      final isOnline = m.isOnline;
-      if (isOnline && url != null) {
-        _episodes = _findEpisodes(url!);
-      }
-      return isOnline;
-    });
-    final showDownloadsOnly = watchPropertyValue(
-      (PodcastModel m) => m.downloadsOnly,
+    callOnceAfterThisBuild(
+      (context) => di<PodcastManager>().removePodcastUpdate(feedUrl),
     );
 
-    return FutureBuilder(
-      key: ValueKey('${showDownloadsOnly}_${isOnline}'),
-      future: _episodes,
-      builder: (context, snapshot) {
-        final feedUrl = widget.feedUrl ?? widget.podcastItem?.feedUrl;
-        final title =
-            (feedUrl == null
-                ? null
-                : di<LibraryModel>().getSubscribedPodcastName(feedUrl)) ??
-            widget.podcastItem?.collectionName ??
-            widget.podcastItem?.trackName ??
-            context.l10n.podcast;
-        final imageUrl =
-            widget.imageUrl ??
-            widget.podcastItem?.artworkUrl600 ??
-            widget.podcastItem?.artworkUrl ??
-            snapshot.data?.firstOrNull?.albumArtUrl ??
-            snapshot.data?.firstOrNull?.imageUrl;
+    if (di<PodcastManager>().shouldRunCommand(feedUrl) &&
+            connectivityCommand.isOnline ||
+        !connectivityCommand.wasOnline && connectivityCommand.isOnline) {
+      di<PodcastManager>().getEpisodesCommand(feedUrl).run((
+        feedUrl: feedUrl,
+        item: podcastItem,
+      ));
+    }
 
-        if (!snapshot.hasData) {
-          return LazyPodcastLoadingPage(
-            title: title,
-            imageUrl: imageUrl,
-            child: const Center(child: Progress()),
-          );
-        }
+    final title =
+        di<PodcastManager>().getSubscribedPodcastName(feedUrl) ??
+        podcastItem?.collectionName ??
+        podcastItem?.trackName ??
+        context.l10n.podcast;
 
-        if (snapshot.hasError) {
-          return LazyPodcastLoadingPage(
-            title: title,
-            imageUrl: imageUrl,
-            child: NoSearchResultPage(message: Text(snapshot.error.toString())),
-          );
-        }
+    final imageUrl =
+        this.imageUrl ?? podcastItem?.artworkUrl600 ?? podcastItem?.artworkUrl;
 
-        final episodes = snapshot.data!;
+    return watchValue(
+      (PodcastManager m) => m.getEpisodesCommand(feedUrl).results,
+    ).toWidget(
+      whileRunning: (lastResult, param) => LazyPodcastLoadingPage(
+        title: title,
+        imageUrl: imageUrl,
+        child: const Center(child: Progress()),
+      ),
+      onError: (error, lastResult, param) => LazyPodcastLoadingPage(
+        title: title,
+        imageUrl: imageUrl,
+        child: NoSearchResultPage(message: Text(error.toString())),
+      ),
+      onData: (result, param) {
+        final episodes = result;
 
-        if (feedUrl == null || episodes.isEmpty) {
-          return LazyPodcastLoadingPage(
-            title: title,
-            imageUrl: imageUrl,
-            child: NoSearchResultPage(
-              message: Text(
-                !isOnline
-                    ? context.l10n.offlineDescription
-                    : context.l10n.podcastFeedIsEmpty,
-              ),
-            ),
-          );
-        }
+        final newImageUrl =
+            imageUrl ??
+            episodes.firstOrNull?.albumArtUrl ??
+            episodes.firstOrNull?.imageUrl;
 
         return PodcastPage(
-          imageUrl: imageUrl,
+          imageUrl: newImageUrl,
           episodes: episodes,
           feedUrl: feedUrl,
           title: title,
-          isOnline: isOnline,
-          showDownloadsOnly: showDownloadsOnly,
         );
       },
     );

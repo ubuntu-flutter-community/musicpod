@@ -1,5 +1,4 @@
 import 'package:html/parser.dart';
-import '../common/data/audio.dart';
 
 extension StringExtension on String {
   String get capitalized {
@@ -41,11 +40,6 @@ extension StringExtension on String {
     }
     return (songName: songName, artist: artist);
   }
-
-  String get albumOfId => (split(Audio.albumIdSplitter).lastOrNull ?? '')
-      .replaceAll(Audio.albumIdReplacer, Audio.albumIdReplacement);
-  String get artistOfId => (split(Audio.albumIdSplitter).firstOrNull ?? '')
-      .replaceAll(Audio.albumIdReplacer, Audio.albumIdReplacement);
 }
 
 extension NullableStringX on String? {
@@ -55,6 +49,7 @@ extension NullableStringX on String? {
     return other.year == ts.year &&
         other.month == ts.month &&
         other.day == ts.day &&
+        other.hour == ts.hour &&
         other.minute == ts.minute;
   }
 

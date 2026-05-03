@@ -2190,6 +2190,18 @@ class AppLocalizationsEt extends AppLocalizations {
   String get loadingPleaseWait => 'Laadin, palun oota...';
 
   @override
+  String get parsingLocalAudioFilesMetadataPleaseWait =>
+      'Parsing local audio files metadata, please wait ...';
+
+  @override
+  String get persistingLocalAudioFilesMetadataPleaseWait =>
+      'Persisting local audio files metadata, please wait ...';
+
+  @override
+  String get buildingLocalAudioLibraryPleaseWait =>
+      'Building local audio library, please wait ...';
+
+  @override
   String get importingPodcastsPleaseWait =>
       'Impordin sinu taskuhäälinguid, palun oota...';
 
@@ -2212,6 +2224,11 @@ class AppLocalizationsEt extends AppLocalizations {
   @override
   String get exportingPlaylistsPleaseWait =>
       'Ekspordin sinu esitusloendeid, palun oota...';
+
+  @override
+  String checkingForUpdatesPleaseWait(int progress) {
+    return 'Checking for updates $progress%';
+  }
 
   @override
   String get author => 'Autor';
@@ -2307,4 +2324,13 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String get tosLinkText => 'Loe Geniuse kasutustingimusi';
+
+  @override
+  String get oopsSomethingWentWrong => 'Oops, something went wrong!';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get reportIssue => 'Report this issue';
 }

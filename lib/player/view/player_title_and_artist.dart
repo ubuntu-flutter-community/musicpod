@@ -14,7 +14,6 @@ import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
-import '../../podcasts/podcast_model.dart';
 import '../../podcasts/view/lazy_podcast_page.dart';
 import '../../radio/view/station_page.dart';
 import '../../settings/settings_model.dart';
@@ -31,6 +30,11 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
+
+    final localAudioIsInitializing = watchValue(
+      (LocalAudioManager m) => m.initAudiosCommand.isRunning,
+    );
+
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
 
     final icyTitle = watchValue(
@@ -40,12 +44,6 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     final showPositionDuration = watchPropertyValue(
       (SettingsModel m) => m.showPositionDuration,
     );
-
-    final appManager = di<AppManager>();
-    final routingManager = di<RoutingManager>();
-    final localAudioManager = di<LocalAudioManager>();
-    final playerModel = di<PlayerModel>();
-    final podcastModel = di<PodcastModel>();
 
     final hoverColor = theme.colorScheme.primary.withValues(alpha: 0.3);
     return Column(
@@ -74,16 +72,12 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
               PlayerPosition.bottom => BorderRadius.circular(4),
               _ => BorderRadius.circular(10),
             },
-            onTap: audio == null
+            onTap: localAudioIsInitializing || audio == null
                 ? null
                 : () => _onTitleTap(
                     audio: audio,
                     text: icyTitle,
                     context: context,
-                    routingManager: routingManager,
-                    playerModel: playerModel,
-                    localAudioManager: localAudioManager,
-                    appManager: appManager,
                   ),
             child: Tooltip(
               message: _title(audio: audio, icyTitle: icyTitle),
@@ -112,16 +106,9 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
               PlayerPosition.bottom => BorderRadius.circular(4),
               _ => BorderRadius.circular(8),
             },
-            onTap: audio == null
+            onTap: localAudioIsInitializing || audio == null
                 ? null
-                : () => _onArtistTap(
-                    context: context,
-                    audio: audio,
-                    routingManager: routingManager,
-                    localAudioManager: localAudioManager,
-                    appManager: appManager,
-                    podcastModel: podcastModel,
-                  ),
+                : () => _onArtistTap(context: context, audio: audio),
             child: Tooltip(
               message: _subTitle(audio),
               child: Text(
@@ -199,16 +186,12 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
       : (audio?.title?.isNotEmpty == true ? audio!.title! : '').trim();
 
   void _onTitleTap({
-    Audio? audio,
+    required Audio audio,
     String? text,
     required BuildContext context,
-    required PlayerModel playerModel,
-    required RoutingManager routingManager,
-    required LocalAudioManager localAudioManager,
-    required AppManager appManager,
   }) {
-    if (text?.isNotEmpty == true && audio?.audioType == AudioType.radio ||
-        audio?.audioType == null) {
+    if (text?.isNotEmpty == true && audio.audioType == AudioType.radio ||
+        audio.audioType == null) {
       showSnackBar(
         context: context,
         content: CopyClipboardContent(text: text!),
@@ -216,23 +199,17 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
       return;
     }
 
-    switch (audio?.audioType) {
+    switch (audio.audioType) {
       case AudioType.local:
-        _onLocalAudioTitleTap(
-          context: context,
-          audio: audio!,
-          appManager: appManager,
-          routingManager: routingManager,
-          localAudioManager: localAudioManager,
-        );
+        _onLocalAudioTitleTap(context: context, audio: audio);
         return;
       case AudioType.radio:
       case AudioType.podcast:
-        if (audio?.url == null) return;
+        if (audio.url == null) return;
         showSnackBar(
           context: context,
           content: CopyClipboardContent(
-            text: audio!.url!,
+            text: audio.url!,
             onSearch: () => launchUrl(Uri.parse(audio.url!)),
           ),
         );
@@ -242,44 +219,37 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     }
   }
 
-  void _onLocalAudioTitleTap({
+  Future<void> _onLocalAudioTitleTap({
     required BuildContext context,
     required Audio audio,
-    required AppManager appManager,
-    required RoutingManager routingManager,
-    required LocalAudioManager localAudioManager,
-  }) {
-    if (audio.albumId == null) {
+  }) async {
+    final id =
+        audio.albumDbId ??
+        di<LocalAudioManager>().findAlbumId(
+          artist: audio.artist!,
+          album: audio.album!,
+        );
+
+    if (id == null) {
       showSnackBar(context: context, content: Text(context.l10n.albumNotFound));
       return;
     }
 
-    appManager.setFullWindowMode(false);
-    routingManager.push(
-      builder: (_) => AlbumPage(id: audio.albumId!),
-      pageId: audio.albumId!,
+    di<AppManager>().setFullWindowMode(false);
+    di<RoutingManager>().push(
+      builder: (_) => AlbumPage(id: id),
+      pageId: id.toString(),
     );
   }
 
-  void _onArtistTap({
-    required BuildContext context,
-    required Audio audio,
-    required PodcastModel podcastModel,
-    required LocalAudioManager localAudioManager,
-    required RoutingManager routingManager,
-    required AppManager appManager,
-  }) {
+  void _onArtistTap({required BuildContext context, required Audio audio}) {
+    final routingManager = di<RoutingManager>();
     switch (audio.audioType) {
       case AudioType.local:
-        _onLocalAudioArtistTap(
-          audio: audio,
-          appManager: appManager,
-          libraryModel: routingManager,
-          localAudioManager: localAudioManager,
-        );
+        _onLocalAudioArtistTap(audio: audio);
         return;
       case AudioType.radio:
-        _onRadioArtistTap(audio: audio, routingManager: routingManager);
+        _onRadioArtistTap(audio: audio);
         return;
       case AudioType.podcast:
         if (audio.feedUrl != null &&
@@ -303,10 +273,8 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     }
   }
 
-  void _onRadioArtistTap({
-    required Audio audio,
-    required RoutingManager routingManager,
-  }) {
+  void _onRadioArtistTap({required Audio audio}) {
+    final routingManager = di<RoutingManager>();
     if (audio.url == null ||
         audio.uuid == null ||
         routingManager.selectedPageId == audio.uuid) {
@@ -318,16 +286,11 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     );
   }
 
-  void _onLocalAudioArtistTap({
-    required Audio audio,
-    required LocalAudioManager localAudioManager,
-    required AppManager appManager,
-    required RoutingManager libraryModel,
-  }) {
+  void _onLocalAudioArtistTap({required Audio audio}) {
     final artistId = audio.artist;
     if (artistId == null) return;
-    appManager.setFullWindowMode(false);
-    libraryModel.push(
+    di<AppManager>().setFullWindowMode(false);
+    di<RoutingManager>().push(
       builder: (_) => ArtistPage(pageId: artistId),
       pageId: artistId,
     );

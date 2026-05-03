@@ -11,7 +11,7 @@ import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
-import '../../podcasts/podcast_model.dart';
+import '../../podcasts/podcast_manager.dart';
 import '../../podcasts/view/lazy_podcast_page.dart';
 
 class PodcastCard extends StatelessWidget with WatchItMixin {
@@ -39,7 +39,9 @@ class PodcastCard extends StatelessWidget with WatchItMixin {
                   barrierDismissible: true,
                   title: context.l10n.loadingPodcastFeed,
                   context: context,
-                  future: () => di<PodcastModel>().findEpisodes(item: item),
+                  future: () => di<PodcastManager>()
+                      .getEpisodesCommand(feedUrl)
+                      .runAsync((item: item, feedUrl: feedUrl)),
                 ).then((res) {
                   if (res.isValue) {
                     di<PlayerModel>().startPlaylist(

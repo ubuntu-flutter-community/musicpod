@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../app/connectivity_model.dart';
+import '../app/connectivity_manager.dart';
 import '../app/routing_manager.dart';
 import '../common/data/audio_type.dart';
 import '../app/page_ids.dart';
@@ -13,7 +13,7 @@ import '../common/view/ui_constants.dart';
 import '../extensions/build_context_x.dart';
 import '../extensions/country_x.dart';
 import '../l10n/l10n.dart';
-import '../library/library_model.dart';
+import '../local_audio/local_audio_manager.dart';
 import '../local_audio/local_audio_view.dart';
 import '../local_audio/view/playlists_view.dart';
 import '../search/search_model.dart';
@@ -28,7 +28,9 @@ class HomePage extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final playlists = watchPropertyValue((LibraryModel m) => m.playlistIDs);
+    final playlists = watchPropertyValue(
+      (LocalAudioManager m) => m.playlistIDs,
+    );
     const textPadding = EdgeInsets.only(
       right: kMediumSpace,
       left: kSmallestSpace,
@@ -40,7 +42,10 @@ class HomePage extends StatelessWidget with WatchItMixin {
     const padding = kGridPadding;
     final textStyle = context.textTheme.bodyLarge;
 
-    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
+    final isOnline = watchValue(
+      (ConnectivityManager m) =>
+          m.connectivityCommand.select((p) => p.isOnline),
+    );
 
     return Scaffold(
       appBar: HeaderBar(

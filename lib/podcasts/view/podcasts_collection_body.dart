@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:future_loading_dialog/future_loading_dialog.dart';
 
-import '../../app/connectivity_model.dart';
+import '../../app/connectivity_manager.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../app/page_ids.dart';
@@ -12,17 +12,18 @@ import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/offline_page.dart';
+import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/sliver_body.dart';
 import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
+import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../settings/view/settings_action.dart';
-import '../podcast_model.dart';
+import '../podcast_manager.dart';
 import 'podcast_collection_control_panel.dart';
 
 class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
@@ -31,21 +32,31 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
+    final isOnline = watchValue(
+      (ConnectivityManager m) =>
+          m.connectivityCommand.select((p) => p.isOnline),
+    );
     if (!isOnline) return const OfflineBody();
 
-    final subs = watchPropertyValue((LibraryModel m) => m.podcastFeedUrls);
-    final libraryModel = di<LibraryModel>();
+    final subs = watchPropertyValue((PodcastManager m) => m.podcastFeedUrls);
+    final podcastManager = di<PodcastManager>();
     final updatesLength = watchPropertyValue(
-      (LibraryModel m) => m.podcastUpdatesLength,
+      (PodcastManager m) => m.podcastUpdatesLength,
     );
-    final updatesOnly = watchPropertyValue((PodcastModel m) => m.updatesOnly);
-    final downloadsOnly = watchPropertyValue(
-      (PodcastModel m) => m.downloadsOnly,
+    final updatesOnly = watchValue((PodcastManager m) => m.updatesOnly);
+    final downloadsOnly = watchValue((PodcastManager m) => m.downloadsOnly);
+    final subsLength = watchPropertyValue(
+      (PodcastManager m) => m.podcastsLength,
     );
-    final subsLength = watchPropertyValue((LibraryModel m) => m.podcastsLength);
     final feedsWithDownloadLength = watchPropertyValue(
-      (LibraryModel m) => m.feedsWithDownloadsLength,
+      (PodcastManager m) => m.feedsWithDownloadsLength,
+    );
+
+    final checkingForUpdates = watchValue(
+      (PodcastManager m) => m.checkForUpdateAndRefreshIfNeededCommand.isRunning,
+    );
+    final progress = watchValue(
+      (PodcastManager m) => m.checkForUpdateAndRefreshIfNeededCommand.progress,
     );
 
     final itemCount = updatesOnly
@@ -64,21 +75,43 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
             content: Text(
               context.l10n.checkForUpdatesConfirm(subsLength.toString()),
             ),
-            onConfirm: () => di<PodcastModel>().checkForUpdates(
-              updateMessage: context.l10n.newEpisodeAvailable,
-              multiUpdateMessage: (length) =>
-                  context.l10n.newEpisodesAvailableFor(length),
-            ),
+            onConfirm: () => di<PodcastManager>()
+                .checkForUpdateAndRefreshIfNeededCommand
+                .runAsync((
+                  feedUrls: di<PodcastManager>().podcastFeedUrls,
+
+                  multiUpdateMessage: (length) =>
+                      context.l10n.newEpisodesAvailableFor(length),
+                )),
           );
         } else {
-          di<PodcastModel>().checkForUpdates(
-            updateMessage: context.l10n.newEpisodeAvailable,
-            multiUpdateMessage: (length) =>
-                context.l10n.newEpisodesAvailableFor(length),
-          );
+          di<PodcastManager>().checkForUpdateAndRefreshIfNeededCommand
+              .runAsync((
+                feedUrls: di<PodcastManager>().podcastFeedUrls,
+                multiUpdateMessage: (length) =>
+                    context.l10n.newEpisodesAvailableFor(length),
+              ));
         }
       },
-      contentBuilder: (context, constraints) => (subsLength == 0)
+      contentBuilder: (context, constraints) => checkingForUpdates
+          ? SliverFillRemaining(
+              hasScrollBody: false,
+              child: Center(
+                child: Column(
+                  spacing: kLargestSpace,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Progress(value: progress, adaptive: false),
+                    Text(
+                      context.l10n.checkingForUpdatesPleaseWait(
+                        (progress * 100).toInt(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          : (subsLength == 0)
           ? SliverNoSearchResultPage(
               message: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -105,11 +138,11 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                 final String? feedUrl;
                 if (updatesOnly) {
                   feedUrl = subs
-                      .where((e) => libraryModel.podcastUpdateAvailable(e))
+                      .where((e) => podcastManager.podcastUpdateAvailable(e))
                       .elementAtOrNull(index);
                 } else if (downloadsOnly) {
                   feedUrl = subs
-                      .where((e) => libraryModel.feedHasDownload(e))
+                      .where((e) => podcastManager.feedHasDownload(e))
                       .elementAtOrNull(index);
                 } else {
                   feedUrl = subs.elementAtOrNull(index);
@@ -122,14 +155,16 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                 return AudioCard(
                   key: ValueKey(feedUrl),
                   image: SafeNetworkImage(
-                    url: di<LibraryModel>().getSubscribedPodcastImage(feedUrl),
+                    url: di<PodcastManager>().getSubscribedPodcastImage(
+                      feedUrl,
+                    ),
                     fit: BoxFit.cover,
                     height: audioCardDimension,
                     width: audioCardDimension,
                     fallBackIcon: Icon(Iconz.podcast, size: 70),
                   ),
                   bottom: AudioCardBottom(
-                    style: libraryModel.podcastUpdateAvailable(feedUrl)
+                    style: podcastManager.podcastUpdateAvailable(feedUrl)
                         ? theme.textTheme.bodyMedium?.copyWith(
                                 color: theme.colorScheme.primary,
                                 fontWeight: FontWeight.bold,
@@ -139,15 +174,18 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                                 fontWeight: FontWeight.bold,
                               )
                         : null,
-                    text: di<LibraryModel>().getSubscribedPodcastName(feedUrl),
+                    text: di<PodcastManager>().getSubscribedPodcastName(
+                      feedUrl,
+                    ),
                   ),
                   onPlay: () =>
                       showFutureLoadingDialog(
                         barrierDismissible: true,
                         title: context.l10n.loadingPodcastFeed,
                         context: context,
-                        future: () =>
-                            di<PodcastModel>().findEpisodes(feedUrl: feedUrl),
+                        future: () => di<PodcastManager>()
+                            .getEpisodesCommand(feedUrl!)
+                            .runAsync((item: null, feedUrl: feedUrl)),
                       ).then((res) {
                         if (res.isValue) {
                           di<PlayerModel>().startPlaylist(

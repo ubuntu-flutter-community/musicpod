@@ -8,7 +8,6 @@ import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../custom_content/custom_content_model.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../radio/radio_model.dart';
 
 class RadioSection extends StatelessWidget with WatchItMixin {
@@ -72,7 +71,7 @@ class RadioSection extends StatelessWidget with WatchItMixin {
                         child: Text(l10n.removeAllStarredStationsDescription),
                       ),
                       onConfirm: () async =>
-                          di<LibraryModel>().unStarAllStations(),
+                          di<RadioManager>().unStarAllStations(),
                     ),
                   ),
                 ),

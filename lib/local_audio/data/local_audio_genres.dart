@@ -1,4 +1,4 @@
-const tagGenres = <String, String>{
+const localAudioGenres = <String, String>{
   '00': 'Blues',
   '01': 'Classic rock',
   '02': 'Country',

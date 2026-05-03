@@ -6,7 +6,7 @@ import 'app_localizations.dart';
 
 /// The translations for Japanese (`ja`).
 class AppLocalizationsJa extends AppLocalizations {
-  AppLocalizationsEn([String locale = 'ja']) : super(locale);
+  AppLocalizationsJa([String locale = 'ja']) : super(locale);
 
   @override
   String get home => 'ホーム';
@@ -75,8 +75,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get localAudio => 'ローカルオーディオ';
 
   @override
-  String get localAudioDescription =>
-      'あなたのコンピュータに保存されている音楽コレクションです。';
+  String get localAudioDescription => 'あなたのコンピュータに保存されている音楽コレクションです。';
 
   @override
   String get localAudioSubtitle => 'インターネット接続は不要です';
@@ -97,8 +96,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get likedSongs => 'いいね！した曲';
 
   @override
-  String get likedSongsDescription =>
-      'いいね！したすべてのオーディオ (ローカルまたはインターネット上)';
+  String get likedSongsDescription => 'いいね！したすべてのオーディオ (ローカルまたはインターネット上)';
 
   @override
   String get likedSongsSubtitle => 'ハートボタンを押してタイトルを追加してください。';
@@ -209,16 +207,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get search => '検索';
 
   @override
-  String get noPodcastFound =>
-      '申し訳ありません。その検索条件に一致するポッドキャストは見つかりませんでした。';
+  String get noPodcastFound => '申し訳ありません。その検索条件に一致するポッドキャストは見つかりませんでした。';
 
   @override
-  String get noPodcastChartsFound =>
-      '申し訳ありません。この国またはカテゴリのチャートは見つかりませんでした。';
+  String get noPodcastChartsFound => '申し訳ありません。この国またはカテゴリのチャートは見つかりませんでした。';
 
   @override
-  String get noPodcastSubsFound =>
-      'まだポッドキャストの購読はありません。';
+  String get noPodcastSubsFound => 'まだポッドキャストの購読はありません。';
 
   @override
   String get charts => 'チャート';
@@ -287,15 +282,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get offline => 'オフライン';
 
   @override
-  String get offlineDescription =>
-      'コンピュータがインターネットに接続されていないようです。';
+  String get offlineDescription => 'コンピュータがインターネットに接続されていないようです。';
 
   @override
-  String get newEpisodeAvailable => '新しいエピソードが利用可能です:';
+  String get newEpisodeAvailable => '新しいエピソードが利用可能です :';
 
   @override
-  String get noStationFound =>
-      '申し訳ありません。その検索条件に一致するラジオ局は見つかりませんでした。';
+  String get noStationFound => '申し訳ありません。その検索条件に一致するラジオ局は見つかりませんでした。';
 
   @override
   String get nothingFound => '見つかりませんでした';
@@ -352,16 +345,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get ok => 'OK';
 
   @override
-  String get noLocalTitlesFound =>
-      'ローカルの音楽コレクションは空のようです。設定でライブラリの場所を確認してください。';
+  String get noLocalTitlesFound => 'ローカルの音楽コレクションは空のようです。設定でライブラリの場所を確認してください。';
 
   @override
-  String get noLocalSearchFound =>
-      '申し訳ありません。その検索条件に一致するローカル音楽は見つかりませんでした。';
+  String get noLocalSearchFound => '申し訳ありません。その検索条件に一致するローカル音楽は見つかりませんでした。';
 
   @override
-  String get buyMusicOnline =>
-      '購入したい音楽が見つかるかもしれません :';
+  String get buyMusicOnline => '購入したい音楽が見つかるかもしれません :';
 
   @override
   String get settings => '設定';
@@ -400,11 +390,11 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String insertedIntoQueue(String name) {
-    return 'キューに挿入しました: $name';
+    return 'キューに挿入しました : $name';
   }
 
   @override
-  String get about => 'このアプリについて';
+  String get about => 'MusicPod について';
 
   @override
   String localAudioCacheSuggestion(String length) {
@@ -437,7 +427,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String downloadStarted(String name) {
-    return 'ダウンロードを開始しました: $name';
+    return 'ダウンロードを開始しました : $name';
   }
 
   @override
@@ -496,8 +486,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get enableDataSafeModeSettingTitle => 'データセーフモード';
 
   @override
-  String get dataSafeModeEnabled =>
-      'モバイル接続: データセーフモードが有効です。';
+  String get dataSafeModeEnabled => 'モバイル接続 : データセーフモードが有効です。';
 
   @override
   String get dataSafeModeDisabled => 'Wifi/有線LAN : データセーフモードが無効です。';
@@ -513,8 +502,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get notifyMeAboutDataSafeModeTitle => 'データセーフモードの通知';
 
   @override
-  String get notifyMeAboutDataSafeModeDescription =>
-      'データセーフモードについて通知する';
+  String get notifyMeAboutDataSafeModeDescription => 'データセーフモードについて通知する';
 
   @override
   String get resourceSectionTitle => 'デバイスリソース';
@@ -567,8 +555,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get removeFrom => '削除元';
 
   @override
-  String get noCountryFound =>
-      'この名前の国は見つかりません。+49などの電話番号の国際 prefixes も使用できます。';
+  String get noCountryFound => 'この名前の国は見つかりません。+49などの電話番号の国際 prefixes も使用できます。';
 
   @override
   String get noStarredTags => 'まだスターを付けたタグはありません';
@@ -592,15 +579,14 @@ class AppLocalizationsJa extends AppLocalizations {
   String get theme => 'テーマ';
 
   @override
-  String get useMoreAnimationsTitle => 'アニメーションを多く使用する';
+  String get useMoreAnimationsTitle => 'アニメーションをさらに使用する';
 
   @override
   String get useMoreAnimationsDescription =>
       'これにより CPU使用率がわずかに増加します。古いハードウェアでは望ましくない可能性があります。';
 
   @override
-  String get showPositionDurationTitle =>
-      '下部プレーヤーに再生位置/時間を表示';
+  String get showPositionDurationTitle => '下部プレーヤーに再生位置/時間を表示';
 
   @override
   String get showPositionDurationDescription =>
@@ -955,12 +941,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get hearingHistory => '再生履歴';
 
   @override
-  String get emptyHearingHistory =>
-      'このアプリセッションではまだラジオを聴いていません';
+  String get emptyHearingHistory => 'このアプリセッションではまだラジオを聴いていません';
 
   @override
-  String get searchForRadioStationsWithGenreName =>
-      'このジャンルのラジオ局を検索';
+  String get searchForRadioStationsWithGenreName => 'このジャンルのラジオ局を検索';
 
   @override
   String get clearPlaylist => 'プレイリストからすべてのメディアを削除';
@@ -987,8 +971,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get loadFromFileOptional => 'ファイルから読み込む (オプション)';
 
   @override
-  String get exportPinnedAlbumsToM3UFiles =>
-      'ピン留めしたアルバムを M3Uファイルにエクスポート';
+  String get exportPinnedAlbumsToM3UFiles => 'ピン留めしたアルバムを M3Uファイルにエクスポート';
 
   @override
   String get exportPinnedAlbumToM3UFile => 'ピン留めしたアルバムを M3Uファイルにエクスポート';
@@ -1007,19 +990,16 @@ class AppLocalizationsJa extends AppLocalizations {
   String get importPodcastsFromOpmlFile => 'ポッドキャストを OPMLファイルからインポート';
 
   @override
-  String get exportStarredStationsToOpmlFile =>
-      'スター付きラジオ局を OPMLファイルにエクスポート';
+  String get exportStarredStationsToOpmlFile => 'スター付きラジオ局を OPMLファイルにエクスポート';
 
   @override
-  String get importStarredStationsFromOpmlFile =>
-      'スター付きラジオ局を OPMLファイルからインポート';
+  String get importStarredStationsFromOpmlFile => 'スター付きラジオ局を OPMLファイルからインポート';
 
   @override
   String get removeAllStarredStations => 'すべてのスター付きラジオ局を削除';
 
   @override
-  String get removeAllStarredStationsConfirm =>
-      '本当にすべてのスター付きラジオ局を削除しますか？';
+  String get removeAllStarredStationsConfirm => '本当にすべてのスター付きラジオ局を削除しますか？';
 
   @override
   String get removeAllStarredStationsDescription =>
@@ -1029,8 +1009,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get removeAllPodcasts => 'すべてのポッドキャストを削除';
 
   @override
-  String get removeAllPodcastsConfirm =>
-      '本当にすべてのポッドキャストを削除しますか？';
+  String get removeAllPodcastsConfirm => '本当にすべてのポッドキャストを削除しますか？';
 
   @override
   String get removeAllPodcastsDescription =>
@@ -1044,8 +1023,7 @@ class AppLocalizationsJa extends AppLocalizations {
       'ラジオブラウザやポッドキャスト検索機能を使用したくない場合は、ここに独自のコンテンツを追加したり、空のプレイリストを作成したり、M3UファイルやPLSファイルからプレイリストをインポートしたりできます。';
 
   @override
-  String get setPlaylistNameAndAddMoreLater =>
-      'プレイリスト名を設定し、後でタイトルを追加する';
+  String get setPlaylistNameAndAddMoreLater => 'プレイリスト名を設定し、後でタイトルを追加する';
 
   @override
   String get or => 'または';
@@ -1079,12 +1057,10 @@ class AppLocalizationsJa extends AppLocalizations {
       'ステーションが音楽ジャンルと一致しないタグを送信することがあります。MusicPod はコンテンツについて責任を負いません！';
 
   @override
-  String get podcastFeedLoadingTimeout =>
-      'ポッドキャストフィードの読み込みに通常より時間がかかっています...';
+  String get podcastFeedLoadingTimeout => 'ポッドキャストフィードの読み込みに通常より時間がかかっています...';
 
   @override
-  String get gitHubClientConnectError =>
-      'GitHub からオンラインバージョンを読み込めませんでした。';
+  String get gitHubClientConnectError => 'GitHub からオンラインバージョンを読み込めませんでした。';
 
   @override
   String get replayEpisode => 'エピソードを再再生';
@@ -1127,8 +1103,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get closeMusicPod => 'MusicPod を終了しますか？';
 
   @override
-  String get confirmCloseOrHideTip =>
-      'アプリケーションを終了するか、非表示にするかを確認してください';
+  String get confirmCloseOrHideTip => 'アプリケーションを終了するか、非表示にするかを確認してください';
 
   @override
   String get doNotAskAgain => '次回から確認しない';
@@ -1194,8 +1169,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get listenBrainzApiKeyEmpty => 'APIキーを入力してください';
 
   @override
-  String get featureDisabledOnPlatform =>
-      'この機能は、このオペレーティングシステムでは現在無効になっています。';
+  String get featureDisabledOnPlatform => 'この機能は、このオペレーティングシステムでは現在無効になっています。';
 
   @override
   String get regionNone => '指定なし';
@@ -1297,8 +1271,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get regionBrazil => 'ブラジル';
 
   @override
-  String get regionBritishindianoceanterrirory =>
-      'イギリス領インド洋地域';
+  String get regionBritishindianoceanterrirory => 'イギリス領インド洋地域';
 
   @override
   String get regionBritishvirginislands => 'イギリス領ヴァージン諸島';
@@ -1358,8 +1331,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get regionCongo => 'コンゴ';
 
   @override
-  String get regionCongodemocraticrepublicof =>
-      'コンゴ民主共和国';
+  String get regionCongodemocraticrepublicof => 'コンゴ民主共和国';
 
   @override
   String get regionCookislands => 'クック諸島';
@@ -1494,8 +1466,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get regionHaiti => 'ハイチ';
 
   @override
-  String get regionHeardislandandmcdonaldislands =>
-      'ハード島とマクドナルド諸島';
+  String get regionHeardislandandmcdonaldislands => 'ハード島とマクドナルド諸島';
 
   @override
   String get regionHonduras => 'ホンジュラス';
@@ -1771,8 +1742,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get regionSaintpierreandmiquelon => 'サンピエール島・ミクロン島';
 
   @override
-  String get regionSaintvincentandthegrenadines =>
-      'セントビンセント・グレナディーン';
+  String get regionSaintvincentandthegrenadines => 'セントビンセント・グレナディーン';
 
   @override
   String get regionSamoa => 'サモア';
@@ -1914,8 +1884,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get regionUnitedstates => 'アメリカ合衆国';
 
   @override
-  String get regionUnitedstatesminoroutlyingislands =>
-      'アメリカ合衆国領有小離島';
+  String get regionUnitedstatesminoroutlyingislands => 'アメリカ合衆国領有小離島';
 
   @override
   String get regionUruguay => 'ウルグアイ';
@@ -1954,24 +1923,21 @@ class AppLocalizationsJa extends AppLocalizations {
   String get regionZimbabwe => 'ジンバブエ';
 
   @override
-  String get failedToReadMetadata =>
-      '以下のメディアファイルのメタデータの読み込みに失敗しました :';
+  String get failedToReadMetadata => '以下のメディアファイルのメタデータの読み込みに失敗しました :';
 
   @override
   String get failedToReadMetadataDescription =>
       'このファイルのメタデータを読み取れませんでした。これは通常、コーデックがないか、ファイルが破損していることが原因です。';
 
   @override
-  String get breakingChangesPleaseBackupTitle =>
-      '互換性のない変更 : バックアップしてください！';
+  String get breakingChangesPleaseBackupTitle => '互換性のない変更 : バックアップしてください！';
 
   @override
   String get breakingChangesPleaseBackupDescription =>
-      '次期バージョンの MusicPod には互換性を破る変更が含まれます。アップデート前にプレイリスト、ポッドキャストの購読、ピン留めしたアルバムをバックアップしてください。';
+      '次期バージョンの MusicPod には互換性のない変更が含まれます。アップデート前にプレイリスト、ポッドキャストの購読、ピン留めしたアルバムをバックアップしてください。';
 
   @override
-  String get breakingChangesPleaseBackupConfirmation =>
-      '以下の項目のバックアップの確認 :';
+  String get breakingChangesPleaseBackupConfirmation => '以下の項目のバックアップの確認 :';
 
   @override
   String get pinnedAlbumsAndPlaylists => 'ピン留めしたアルバムとプレイリスト';
@@ -2002,8 +1968,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get localAudioWatchDialogTitle => 'ローカルオーディオディレクトリが変更されました';
 
   @override
-  String get localAudioWatchDialogDescription =>
-      'ローカルオーディオディレクトリを再読み込みしますか？';
+  String get localAudioWatchDialogDescription => 'ローカルオーディオディレクトリを再読み込みしますか？';
 
   @override
   String get external => '外部';
@@ -2063,8 +2028,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get localPictureTypeDuringPerformance => '演奏中';
 
   @override
-  String get localPictureTypeMovieVideoScreenCapture =>
-      '映画/ビデオのスクリーンキャプチャ';
+  String get localPictureTypeMovieVideoScreenCapture => '映画/ビデオのスクリーンキャプチャ';
 
   @override
   String get localPictureTypeBrightColouredFish => '鮮やかな色の魚';
@@ -2076,16 +2040,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get localPictureTypebandArtistLogotype => 'バンド/アーティストのロゴタイプ';
 
   @override
-  String get localPictureTypepublisherStudioLogotype =>
-      '出版社/スタジオのロゴタイプ';
+  String get localPictureTypepublisherStudioLogotype => '出版社/スタジオのロゴタイプ';
 
   @override
-  String get cantPinEmptyAlbum =>
-      'アルバムメタデータが空のアルバムはピン留めできません！';
+  String get cantPinEmptyAlbum => 'アルバムメタデータが空のアルバムはピン留めできません！';
 
   @override
-  String get cantUnpinEmptyAlbum =>
-      'アルバムメタデータが空のアルバムのピン留めは解除できません！';
+  String get cantUnpinEmptyAlbum => 'アルバムメタデータが空のアルバムのピン留めは解除できません！';
 
   @override
   String get path => 'パス';
@@ -2095,8 +2056,7 @@ class AppLocalizationsJa extends AppLocalizations {
       'このアルバムは存在しないか、読み込み元の外部プレイリスト (M3U/PLSファイル) が削除されています。';
 
   @override
-  String get stationNotFound =>
-      'このラジオ局は存在しないか、ラジオブラウザサーバーから削除されています。';
+  String get stationNotFound => 'このラジオ局は存在しないか、ラジオブラウザサーバーから削除されています。';
 
   @override
   String get onlyLocalAudioForPlaylists =>
@@ -2138,7 +2098,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get usePlayerColorDescription =>
-      '現在のアートワーク(利用可能な場合)から抽出され主要な色をアプリ全体で使用します。';
+      '現在のアートワーク(利用可能な場合)から抽出された主要な色をアプリ全体で使用します。';
 
   @override
   String get selectColor => '色を選択';
@@ -2160,8 +2120,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get saveWindowSizeTitle => 'ウィンドウサイズを保存する';
 
   @override
-  String get saveWindowSizeDescription =>
-      'アプリケーションのウィンドウサイズと位置を保存します。';
+  String get saveWindowSizeDescription => 'アプリケーションのウィンドウサイズと位置を保存します。';
 
   @override
   String downloadsOfLatestRelease(String latestRelease) {
@@ -2179,28 +2138,39 @@ class AppLocalizationsJa extends AppLocalizations {
   String get loadingPleaseWait => '読み込み中、お待ちください...';
 
   @override
-  String get importingPodcastsPleaseWait =>
-      'ポッドキャストをインポート中、お待ちください...';
+  String get parsingLocalAudioFilesMetadataPleaseWait =>
+      'Parsing local audio files metadata, please wait ...';
 
   @override
-  String get exportingPodcastsPleaseWait =>
-      'ポッドキャストをエクスポート中、お待ちください...';
+  String get persistingLocalAudioFilesMetadataPleaseWait =>
+      'Persisting local audio files metadata, please wait ...';
 
   @override
-  String get importingStationsPleaseWait =>
-      'ラジオ局をインポート中、お待ちください...';
+  String get buildingLocalAudioLibraryPleaseWait =>
+      'Building local audio library, please wait ...';
 
   @override
-  String get exportingStationsPleaseWait =>
-      'ラジオ局をエクスポート中、お待ちください...';
+  String get importingPodcastsPleaseWait => 'ポッドキャストをインポート中、お待ちください...';
 
   @override
-  String get importingPlaylistsPleaseWait =>
-      'プレイリストをインポート中、お待ちください...';
+  String get exportingPodcastsPleaseWait => 'ポッドキャストをエクスポート中、お待ちください...';
 
   @override
-  String get exportingPlaylistsPleaseWait =>
-      'プレイリストをエクスポート中、お待ちください...';
+  String get importingStationsPleaseWait => 'ラジオ局をインポート中、お待ちください...';
+
+  @override
+  String get exportingStationsPleaseWait => 'ラジオ局をエクスポート中、お待ちください...';
+
+  @override
+  String get importingPlaylistsPleaseWait => 'プレイリストをインポート中、お待ちください...';
+
+  @override
+  String get exportingPlaylistsPleaseWait => 'プレイリストをエクスポート中、お待ちください...';
+
+  @override
+  String checkingForUpdatesPleaseWait(int progress) {
+    return 'Checking for updates $progress%';
+  }
 
   @override
   String get author => '作者';
@@ -2229,8 +2199,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get genericErrorTitle => 'エラーが発生しました';
 
   @override
-  String get genericErrorDescription =>
-      '予期せぬエラーが発生しました。後でもう一度お試しください。';
+  String get genericErrorDescription => '予期せぬエラーが発生しました。後でもう一度お試しください。';
 
   @override
   String errorDetails(String details) {
@@ -2268,20 +2237,18 @@ class AppLocalizationsJa extends AppLocalizations {
   String get autoMovePlayerTitle => 'プレーヤーを自動移動';
 
   @override
-  String get autoMovePlayerDescription =>
-      '十分な水平スペースがある場合、プレーヤーを右側に移動します';
+  String get autoMovePlayerDescription => '十分な水平スペースがある場合、プレーヤーを右側に移動します';
 
   @override
-  String get onlineLyricsNotSetup =>
-      'Geniusから歌詞を取得する場合は、設定でAPIキーを提供してください。';
+  String get onlineLyricsNotSetup => 'Genius から歌詞を取得する場合は、設定で APIキーを提供してください。';
 
   @override
   String get settingsGeniusDisclaimer =>
-      'MusicPod、その貢献者、および Genius APIは、APIキーの誤用について一切の責任を負いません。APIキーを提供することにより、責任を持って、Genius の利用規約に従って使用することに同意したものとみなされます。\n\n';
+      'MusicPod、その貢献者、およびGenius APIは、APIキーの誤用について一切の責任を負いません。APIキーを提供することにより、責任を持って、Genius の利用規約に従って使用することに同意したものとみなされます。\n\n';
 
   @override
   String get settingsGeniusDescription =>
-      'Genius から歌詞を取得するには、Genius APIキーを提供する必要があります。Genius でアカウントを作成し、アプリケーションを登録してアクセストークンを取得することで、APIキーを入手できます。';
+      'Genius から歌詞を取得するには、Genius APIキーを提供する必要があります。Geniusでアカウントを作成し、アプリケーションを登録してアクセストークンを取得することで、APIキーを入手できます。';
 
   @override
   String get settingsDoNotAskForGeniusTitle =>
@@ -2296,4 +2263,13 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get tosLinkText => 'Genius の利用規約を読む';
+
+  @override
+  String get oopsSomethingWentWrong => 'Oops, something went wrong!';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get reportIssue => 'Report this issue';
 }

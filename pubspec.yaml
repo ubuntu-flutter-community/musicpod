@@ -25,6 +25,8 @@ dependencies:
   collection: ^1.19.1
   cupertino_icons: ^1.0.8
   dio: ^5.9.1
+  drift: ^2.32.1
+  drift_flutter: ^0.3.0
   file: ^7.0.1
   file_picker: ^10.3.10
   file_selector: ^1.1.0
@@ -101,7 +103,8 @@ dependencies:
   yaru_window_linux: ^0.2.2
 
 dev_dependencies:
-  build_runner: ^2.11.1
+  build_runner: ^2.13.1
+  drift_dev: ^2.32.1
   flutter_launcher_icons: ^0.14.4
   flutter_lints: ^6.0.0
   flutter_test:

@@ -1,9 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
 import 'package:musicpod/common/data/audio.dart';
+import 'package:musicpod/common/persistence/database.dart';
 import 'package:musicpod/radio/radio_service.dart';
+
+import 'radio_service_test.mocks.dart';
 
 const Audio sixFortyStation = Audio(url: 'http://radio.6forty.com:8000/6forty');
 
+@GenerateMocks([Database])
 Future<void> main() async {
   late RadioService service;
 
@@ -11,9 +16,9 @@ Future<void> main() async {
 
   group('radio tests', () {
     setUpAll(() async {
-      service = RadioService();
+      service = RadioService(database: MockDatabase());
 
-      await service.init();
+      await service.initSearch();
       host = service.connectedHost;
     });
 

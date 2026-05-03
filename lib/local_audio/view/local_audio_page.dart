@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
+import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
-import '../../app/page_ids.dart';
+import '../../common/view/confirm.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
@@ -12,7 +13,6 @@ import '../../common/view/sliver_body.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import '../../settings/settings_model.dart';
@@ -33,10 +33,28 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
         (_) => di<LocalAudioManager>().initAudiosCommand.run((
           directory: null,
           forceInit: false,
-          extraAudios: [],
+          forceDbOnly: false,
         )),
       );
     }
+
+    registerHandler(
+      select: (LocalAudioManager m) => m.areTracksSyncedCommand,
+      handler: (context, newValue, cancel) {
+        if (newValue == false) {
+          ConfirmationDialog.show(
+            context: context,
+            title: Text(context.l10n.localAudioWatchDialogTitle),
+            content: Text(context.l10n.localAudioWatchDialogDescription),
+            onConfirm: () => di<LocalAudioManager>().initAudiosCommand.run((
+              directory: null,
+              forceInit: true,
+              forceDbOnly: false,
+            )),
+          );
+        }
+      },
+    );
 
     registerHandler(
       select: (LocalAudioManager m) => m.initAudiosCommand,
@@ -50,15 +68,23 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
       },
     );
 
-    final audios = watchValue(
-      (LocalAudioManager m) => m.initAudiosCommand.select((r) => r?.audios),
+    final audiosResults = watchValue(
+      (LocalAudioManager m) => m.initAudiosCommand.results,
     );
+    final progress = watchValue(
+      (LocalAudioManager m) => m.initAudiosCommand.progress,
+    );
+    final audios = audiosResults.data?.audios;
+    final isRunning = audiosResults.isRunning;
     final localAudioManager = di<LocalAudioManager>();
 
-    final playlists = watchPropertyValue((LibraryModel m) => m.playlistIDs);
+    final playlists = watchPropertyValue(
+      (LocalAudioManager m) => m.playlistIDs,
+    );
     final index = watchPropertyValue((SettingsModel m) => m.localAudioindex);
     final localAudioView = LocalAudioView.values[index];
 
+    final l10n = context.l10n;
     return Scaffold(
       appBar: HeaderBar(
         adaptive: true,
@@ -81,8 +107,24 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
         ],
         title: Text(context.l10n.localAudio),
       ),
-      body: audios == null
-          ? const Center(child: Progress())
+      body: audios == null || isRunning
+          ? Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                spacing: kLargestSpace,
+                children: [
+                  const Progress(adaptive: false),
+                  Text(
+                    '${'${(progress * 100).toStringAsFixed(0)}%'} ... ${switch (progress) {
+                      0.25 => l10n.parsingLocalAudioFilesMetadataPleaseWait,
+                      0.5 => l10n.persistingLocalAudioFilesMetadataPleaseWait,
+                      0.75 => l10n.buildingLocalAudioLibraryPleaseWait,
+                      _ => l10n.loadingPleaseWait,
+                    }}',
+                  ),
+                ],
+              ),
+            )
           : SliverBody(
               controlPanel: const LocalAudioControlPanel(),
               contentBuilder: (context, constraints) => audios.isEmpty
@@ -90,7 +132,7 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
                       message: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(context.l10n.noLocalTitlesFound),
+                          Text(l10n.noLocalTitlesFound),
                           const SizedBox(height: kLargestSpace),
                           const SettingsButton.important(scrollIndex: 2),
                         ],

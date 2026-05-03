@@ -1,20 +1,39 @@
 import 'dart:async';
 
+import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
+import '../local_audio/local_audio_service.dart';
+import '../player/player_service.dart';
+import '../podcasts/podcast_service.dart';
+import '../radio/radio_service.dart';
 import 'settings_service.dart';
 import 'shared_preferences_keys.dart';
 
 @lazySingleton
 class SettingsModel extends SafeChangeNotifier {
-  SettingsModel({required SettingsService service}) : _service = service {
+  SettingsModel({
+    required SettingsService service,
+    required PodcastService podcastService,
+    required LocalAudioService localAudioService,
+    required RadioService radioService,
+    required PlayerService playerService,
+  }) : _service = service,
+       _podcastService = podcastService,
+       _localAudioService = localAudioService,
+       _radioService = radioService,
+       _playerService = playerService {
     _propertiesChangedSub ??= _service.propertiesChanged.listen(
       (_) => notifyListeners(),
     );
   }
 
   final SettingsService _service;
+  final PodcastService _podcastService;
+  final LocalAudioService _localAudioService;
+  final RadioService _radioService;
+  final PlayerService _playerService;
 
   int _scrollIndex = 0;
   int get scrollIndex => _scrollIndex;
@@ -133,6 +152,8 @@ class SettingsModel extends SafeChangeNotifier {
       _service.getBool(SPKeys.hideCompletedEpisodes) ?? false;
   Future<void> setHideCompletedEpisodes(bool value) =>
       _service.setValue(SPKeys.hideCompletedEpisodes, value);
+  Future<void> toggleHideCompletedEpisodes() =>
+      setHideCompletedEpisodes(!hideCompletedEpisodes);
 
   bool get showPlayerLyrics =>
       _service.getBool(SPKeys.showPlayerLyrics) ?? false;
@@ -158,7 +179,66 @@ class SettingsModel extends SafeChangeNotifier {
   Future<void> setNeverAskAgainForGeniusToken(bool value) =>
       _service.setValue(SPKeys.neverAskAgainForGeniusToken, value);
 
-  Future<void> wipeAllSettings() async => _service.wipeAllSettings();
+  String? get lastCountryCode => _service.getString(SPKeys.lastCountryCode);
+  void setLastCountryCode(String value) {
+    _service.setValue(SPKeys.lastCountryCode, value);
+  }
+
+  String? get lastLanguageCode => _service.getString(SPKeys.lastLanguageCode);
+  void setLastLanguageCode(String value) {
+    _service.setValue(SPKeys.lastLanguageCode, value);
+  }
+
+  Set<String> get favoriteLanguageCode =>
+      _service.getStringList(SPKeys.favLanguageCodes)?.toSet() ?? {};
+  int get favoriteLanguageCodeLength => favoriteLanguageCode.length;
+  bool isFavCountryCode(String value) => favoriteCountryCode.contains(value);
+  void addFavoriteLanguageCode(String value) {
+    final current = favoriteLanguageCode;
+    if (!current.contains(value)) {
+      current.add(value);
+      _service.setValue(SPKeys.favLanguageCodes, current.toList());
+    }
+  }
+
+  void removeFavoriteLanguageCode(String value) {
+    final current = favoriteLanguageCode;
+    if (current.contains(value)) {
+      current.remove(value);
+      _service.setValue(SPKeys.favLanguageCodes, current.toList());
+    }
+  }
+
+  Set<String> get favoriteCountryCode =>
+      _service.getStringList(SPKeys.favCountryCodes)?.toSet() ?? {};
+  int get favoriteCountryCodeLength => favoriteCountryCode.length;
+  bool isFavLanguageCode(String value) => favoriteLanguageCode.contains(value);
+  void addFavoriteCountryCode(String value) {
+    final current = favoriteCountryCode;
+    if (!current.contains(value)) {
+      current.add(value);
+      _service.setValue(SPKeys.favCountryCodes, current.toList());
+    }
+  }
+
+  void removeFavoriteCountryCode(String value) {
+    final current = favoriteCountryCode;
+    if (current.contains(value)) {
+      current.remove(value);
+      _service.setValue(SPKeys.favCountryCodes, current.toList());
+    }
+  }
+
+  late final Command<void, void> wipeAllSettingsCommand =
+      Command.createAsyncNoParamNoResult(_service.wipeAllSettings);
+
+  late final Command<void, void> wipeAndInitLibraryCommand =
+      Command.createAsyncNoParamNoResult(() async {
+        await _podcastService.wipeAndBuildPodcastLibrary();
+        await _localAudioService.init(forceInit: true);
+        await _radioService.wipeAndBuildRadioLibrary();
+        await _playerService.resetPlayerState();
+      });
 
   @override
   Future<void> dispose() async {

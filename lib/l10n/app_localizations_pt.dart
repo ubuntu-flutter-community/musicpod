@@ -2189,6 +2189,18 @@ class AppLocalizationsPt extends AppLocalizations {
   String get loadingPleaseWait => 'Loading, please wait ...';
 
   @override
+  String get parsingLocalAudioFilesMetadataPleaseWait =>
+      'Parsing local audio files metadata, please wait ...';
+
+  @override
+  String get persistingLocalAudioFilesMetadataPleaseWait =>
+      'Persisting local audio files metadata, please wait ...';
+
+  @override
+  String get buildingLocalAudioLibraryPleaseWait =>
+      'Building local audio library, please wait ...';
+
+  @override
   String get importingPodcastsPleaseWait =>
       'Importing your podcasts, please wait ...';
 
@@ -2211,6 +2223,11 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get exportingPlaylistsPleaseWait =>
       'Exporting your playlists, please wait ...';
+
+  @override
+  String checkingForUpdatesPleaseWait(int progress) {
+    return 'Checking for updates $progress%';
+  }
 
   @override
   String get author => 'Author';
@@ -2306,6 +2323,15 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get tosLinkText => 'Read Genius\'s Terms of Service';
+
+  @override
+  String get oopsSomethingWentWrong => 'Oops, something went wrong!';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get reportIssue => 'Report this issue';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).

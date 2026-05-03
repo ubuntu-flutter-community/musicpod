@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/connectivity_model.dart';
+import '../../app/connectivity_manager.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
@@ -21,7 +21,10 @@ class StationPageIcon extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    watchPropertyValue((ConnectivityModel m) => m.isOnline);
+    watchValue(
+      (ConnectivityManager m) =>
+          m.connectivityCommand.select((p) => p.isOnline),
+    );
     callOnceAfterThisBuild(
       (_) => di<RadioManager>().getStationByUUIDCommand(uuid).run(),
     );

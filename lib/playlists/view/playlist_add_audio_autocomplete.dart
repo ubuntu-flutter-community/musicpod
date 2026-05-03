@@ -10,7 +10,6 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../settings/settings_model.dart';
 
@@ -64,14 +63,6 @@ class _PlaylistAddAudioAutoCompleteState
 
   @override
   Widget build(BuildContext context) {
-    callOnceAfterThisBuild(
-      (_) => di<LocalAudioManager>().initAudiosCommand.run((
-        directory: null,
-        forceInit: false,
-        extraAudios: [],
-      )),
-    );
-
     final theme = context.theme;
     final colorScheme = context.colorScheme;
     final fallBackTextStyle = theme.textTheme.bodyMedium?.copyWith(
@@ -87,7 +78,7 @@ class _PlaylistAddAudioAutoCompleteState
     final isRunning = allAudiosResults.isRunning;
     final error = allAudiosResults.error;
     final playlist = watchPropertyValue(
-      (LibraryModel m) => m.getPlaylistById(widget.pageId) ?? [],
+      (LocalAudioManager m) => m.getPlaylistById(widget.pageId) ?? [],
     );
 
     return Padding(
@@ -239,10 +230,8 @@ class _PlaylistAddAudioAutoCompleteState
                     ),
                   );
                 },
-                onSelected: (option) => di<LibraryModel>().addAudiosToPlaylist(
-                  id: widget.pageId,
-                  audios: [option],
-                ),
+                onSelected: (option) => di<LocalAudioManager>()
+                    .addAudiosToPlaylist(id: widget.pageId, audios: [option]),
               ),
       ),
     );

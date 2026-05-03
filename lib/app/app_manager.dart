@@ -8,7 +8,6 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../extensions/taget_platform_x.dart';
-import '../library/library_service.dart';
 import '../local_audio/local_audio_service.dart';
 import '../settings/settings_service.dart';
 import '../settings/shared_preferences_keys.dart';
@@ -21,7 +20,6 @@ class AppManager {
     required SettingsService settingsService,
     required GitHub gitHub,
     required LocalAudioService localAudioService,
-    required LibraryService libraryService,
     required InternetConnection internetConnection,
   }) : _countryCode = WidgetsBinding
            .instance
@@ -33,11 +31,9 @@ class AppManager {
        _settingsService = settingsService,
        _packageInfo = packageInfo,
        _localAudioService = localAudioService,
-       _libraryService = libraryService,
        _internetConnection = internetConnection;
 
   final LocalAudioService _localAudioService;
-  final LibraryService _libraryService;
   final InternetConnection _internetConnection;
   final GitHub _gitHub;
   final SettingsService _settingsService;
@@ -134,8 +130,8 @@ class AppManager {
       Command.createAsyncNoParam(() async {
         final needed =
             (_localAudioService.audios?.isNotEmpty ?? false) &&
-            _libraryService.playlistIDs.isNotEmpty &&
-            _libraryService.favoriteAlbums.isNotEmpty &&
+            _localAudioService.playlistIDs.isNotEmpty &&
+            _localAudioService.pinnedAlbums.isNotEmpty &&
             isCurrentVersionLowerThan(
               const String.fromEnvironment(
                 'FORCED_UPDATE_THRESHOLD',

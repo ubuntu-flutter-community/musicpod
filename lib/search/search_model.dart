@@ -10,12 +10,13 @@ import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
 import '../common/view/languages.dart';
 import '../extensions/string_x.dart';
-import '../library/library_service.dart';
 import '../local_audio/local_audio_service.dart';
 import '../local_audio/local_search_result.dart';
 import '../podcasts/data/podcast_genre.dart';
 import '../podcasts/podcast_service.dart';
 import '../radio/radio_service.dart';
+import '../settings/settings_service.dart';
+import '../settings/shared_preferences_keys.dart';
 import 'search_type.dart';
 
 const _initialAudioType = AudioType.podcast;
@@ -25,28 +26,27 @@ class SearchModel extends SafeChangeNotifier {
   SearchModel({
     required RadioService radioService,
     required PodcastService podcastService,
-    required LibraryService libraryService,
     required LocalAudioService localAudioService,
+    required SettingsService settingsService,
   }) : _radioService = radioService,
+
        _podcastService = podcastService,
-       _libraryService = libraryService,
        _localAudioService = localAudioService {
     _country ??= Country.values.firstWhereOrNull(
       (c) =>
           c.code ==
-          (libraryService.lastCountryCode ??
+          (settingsService.getString(SPKeys.lastCountryCode) ??
               WidgetsBinding.instance.platformDispatcher.locale.countryCode
                   ?.toLowerCase()),
     );
 
     _language ??= Languages.defaultLanguages.firstWhereOrNull(
-      (c) => c.isoCode == libraryService.lastLanguageCode,
+      (c) => c.isoCode == settingsService.getString(SPKeys.lastLanguageCode),
     );
   }
 
   final RadioService _radioService;
   final PodcastService _podcastService;
-  final LibraryService _libraryService;
   final LocalAudioService _localAudioService;
 
   Set<SearchType> _searchTypes = searchTypesFromAudioType(_initialAudioType);
@@ -117,11 +117,11 @@ class SearchModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  late final Command<void, List<PodcastGenre>> loadPodcastGenresCommand =
-      Command.createAsyncNoParam(
-        _podcastService.loadGenres,
-        initialValue: _podcastService.cachedPodcastGenres,
-      );
+  late final Command<({bool force})?, List<PodcastGenre>>
+  loadPodcastGenresCommand = Command.createAsync(
+    (param) => _podcastService.loadGenres(force: param?.force ?? false),
+    initialValue: _podcastService.cachedPodcastGenres,
+  );
 
   List<Audio>? _radioSearchResult;
   List<Audio>? get radioSearchResult => _radioSearchResult;
@@ -145,7 +145,7 @@ class SearchModel extends SafeChangeNotifier {
       albums: search?.albums,
       genres: search?.genres,
       playlists: (query != null && query.isNotEmpty)
-          ? _libraryService.playlistIDs
+          ? _localAudioService.playlistIDs
                 .where((e) => e.toLowerCase().contains(query.toLowerCase()))
                 .toList()
           : null,

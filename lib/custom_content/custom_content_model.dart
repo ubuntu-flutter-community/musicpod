@@ -13,26 +13,26 @@ import '../common/data/audio_type.dart';
 import '../common/logging.dart';
 import '../extensions/media_file_x.dart';
 import '../external_path/external_path_service.dart';
-import '../library/library_service.dart';
 import '../local_audio/local_audio_service.dart';
 import '../podcasts/podcast_service.dart';
+import '../radio/radio_service.dart';
 
 @lazySingleton
 class CustomContentModel extends SafeChangeNotifier {
   CustomContentModel({
     required ExternalPathService externalPathService,
-    required LibraryService libraryService,
     required LocalAudioService localAudioService,
     required PodcastService podcastService,
+    required RadioService radioService,
   }) : _externalPathService = externalPathService,
-       _libraryService = libraryService,
        _podcastService = podcastService,
-       _localAudioService = localAudioService;
+       _localAudioService = localAudioService,
+       _radioService = radioService;
 
   final ExternalPathService _externalPathService;
-  final LibraryService _libraryService;
   final PodcastService _podcastService;
   final LocalAudioService _localAudioService;
+  final RadioService _radioService;
 
   List<({List<Audio> audios, String id})> _playlists = [];
   List<({List<Audio> audios, String id})> get playlists => _playlists;
@@ -81,17 +81,20 @@ class CustomContentModel extends SafeChangeNotifier {
   }
 
   bool get isExportingPlaylistsAndPinnedAlbumsToM3UsNeeded =>
-      _libraryService.playlistIDs.isNotEmpty ||
-      _libraryService.favoriteAlbums.isNotEmpty;
+      _localAudioService.playlistIDs.isNotEmpty ||
+      _localAudioService.pinnedAlbums.isNotEmpty;
   Future<bool> exportPlaylistsAndPinnedAlbumsToM3Us() async {
     final albums = <({String id, List<Audio> audios})>[];
-    for (var e in _libraryService.favoriteAlbums) {
-      albums.add((id: e, audios: await _localAudioService.findAlbum(e) ?? []));
+    for (var e in _localAudioService.pinnedAlbums) {
+      albums.add((
+        id: e.toString(),
+        audios: await _localAudioService.findAlbum(e) ?? [],
+      ));
     }
 
     final List<({String id, List<Audio> audios})> list = [
-      ..._libraryService.playlistIDs.map(
-        (e) => (id: e, audios: _libraryService.getPlaylistById(e) ?? []),
+      ..._localAudioService.playlistIDs.map(
+        (e) => (id: e, audios: _localAudioService.getPlaylistById(e) ?? []),
       ),
       ...albums,
     ];
@@ -165,7 +168,7 @@ class CustomContentModel extends SafeChangeNotifier {
     }
 
     if (podcasts.isNotEmpty) {
-      await _libraryService.addPodcasts(podcasts);
+      await _podcastService.addPodcasts(podcasts);
     }
   }
 
@@ -206,9 +209,9 @@ class CustomContentModel extends SafeChangeNotifier {
     final body = <OpmlOutline>[];
     final category = OpmlOutlineBuilder();
 
-    for (var podcast in _libraryService.podcasts) {
-      final name = _libraryService.getSubscribedPodcastName(podcast);
-      final artist = _libraryService.getSubscribedPodcastArtist(podcast);
+    for (var podcast in _podcastService.podcasts) {
+      final name = _podcastService.getSubscribedPodcastName(podcast);
+      final artist = _podcastService.getSubscribedPodcastArtist(podcast);
       final builder = OpmlOutlineBuilder().type('rss').xmlUrl(podcast);
       if (name != null) {
         builder.title(name);
@@ -242,7 +245,7 @@ class CustomContentModel extends SafeChangeNotifier {
     final body = <OpmlOutline>[];
     final category = OpmlOutlineBuilder();
 
-    for (var station in _libraryService.starredStations) {
+    for (var station in _radioService.starredStations) {
       category.addChild(OpmlOutlineBuilder().text(station).build());
     }
 
@@ -275,7 +278,7 @@ class CustomContentModel extends SafeChangeNotifier {
         starredStations.add(feed.text!);
       }
       if (starredStations.isNotEmpty) {
-        _libraryService.addStarredStations(starredStations);
+        _radioService.addStarredStations(starredStations);
       }
     }
   }

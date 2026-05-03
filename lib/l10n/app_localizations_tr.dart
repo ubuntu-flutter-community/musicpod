@@ -2189,6 +2189,18 @@ class AppLocalizationsTr extends AppLocalizations {
   String get loadingPleaseWait => 'Yükleniyor, lütfen bekleyin...';
 
   @override
+  String get parsingLocalAudioFilesMetadataPleaseWait =>
+      'Parsing local audio files metadata, please wait ...';
+
+  @override
+  String get persistingLocalAudioFilesMetadataPleaseWait =>
+      'Persisting local audio files metadata, please wait ...';
+
+  @override
+  String get buildingLocalAudioLibraryPleaseWait =>
+      'Building local audio library, please wait ...';
+
+  @override
   String get importingPodcastsPleaseWait =>
       'Podcastleriniz içe aktarılıyor, lütfen bekleyin...';
 
@@ -2211,6 +2223,11 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get exportingPlaylistsPleaseWait =>
       'Çalma listeleriniz dışa aktarılıyor, lütfen bekleyin...';
+
+  @override
+  String checkingForUpdatesPleaseWait(int progress) {
+    return 'Checking for updates $progress%';
+  }
 
   @override
   String get author => 'Yazar';
@@ -2306,4 +2323,13 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get tosLinkText => 'Read Genius\'s Terms of Service';
+
+  @override
+  String get oopsSomethingWentWrong => 'Oops, something went wrong!';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get reportIssue => 'Report this issue';
 }

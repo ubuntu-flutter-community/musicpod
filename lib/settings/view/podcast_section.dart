@@ -3,22 +3,20 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../common/file_names.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../custom_content/custom_content_model.dart';
 import '../../extensions/build_context_x.dart';
-import '../shared_preferences_keys.dart';
 import '../../extensions/string_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
-import '../../common/persistence_utils.dart';
 import '../../player/player_service.dart';
-import '../../podcasts/download_model.dart';
-import '../../podcasts/podcast_model.dart';
+import '../../podcasts/download_manager.dart';
+import '../../podcasts/podcast_manager.dart';
+import '../../search/search_model.dart';
 import '../settings_model.dart';
+import '../shared_preferences_keys.dart';
 
 class PodcastSection extends StatefulWidget with WatchItStatefulWidgetMixin {
   const PodcastSection({super.key});
@@ -75,15 +73,28 @@ class _PodcastSectionState extends State<PodcastSection> {
             title: Text(l10n.usePodcastIndex),
             trailing: CommonSwitch(
               value: usePodcastIndex,
-              onChanged: (v) async {
-                await model.setUsePodcastIndex(v);
-                if (context.mounted) {
-                  di<PodcastModel>().initSearchCommand.run((forceInit: true));
+              onChanged: (v) {
+                if (!v) {
+                  ConfirmationDialog.show(
+                    context: context,
+                    title: Text(l10n.iTunes + '?'),
+                    onConfirm: () async {
+                      await model.setUsePodcastIndex(v);
+                      di<PodcastManager>().initSearchCommand.run((
+                        forceInit: true,
+                      ));
+                      await di<SearchModel>().loadPodcastGenresCommand.runAsync(
+                        (force: true),
+                      );
+                    },
+                  );
+                } else {
+                  model.setUsePodcastIndex(v);
                 }
               },
             ),
           ),
-          if (usePodcastIndex)
+          if (usePodcastIndex) ...[
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
@@ -106,7 +117,6 @@ class _PodcastSectionState extends State<PodcastSection> {
                 ),
               ),
             ),
-          if (usePodcastIndex)
             Padding(
               padding: const EdgeInsets.only(
                 left: 8,
@@ -133,6 +143,24 @@ class _PodcastSectionState extends State<PodcastSection> {
                 ),
               ),
             ),
+            ListTile(
+              trailing: ElevatedButton(
+                onPressed: () => ConfirmationDialog.show(
+                  context: context,
+                  title: Text(l10n.usePodcastIndex + '?'),
+                  onConfirm: () async {
+                    di<PodcastManager>().initSearchCommand.run((
+                      forceInit: true,
+                    ));
+                    await di<SearchModel>().loadPodcastGenresCommand.runAsync((
+                      force: true,
+                    ));
+                  },
+                ),
+                child: Text(context.l10n.confirm),
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -187,10 +215,8 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
               confirmLabel: context.l10n.ok,
               cancelLabel: context.l10n.cancel,
               onConfirm: () async {
-                await di<LibraryModel>().removeAllPodcasts();
-                di<PlayerService>().clearAllLastPositions();
-                wipeCustomSettings(filename: FileNames.podcastUpdates);
-                wipeCustomSettings(filename: FileNames.lastPositions);
+                await di<PodcastManager>().removeAllPodcasts();
+                await di<PlayerService>().clearAllLastPositions();
               },
             ),
           ),
@@ -213,7 +239,7 @@ class _DownloadsTileState extends State<_DownloadsTile> {
     final l10n = context.l10n;
 
     final downloadsDirResults = watchValue(
-      (DownloadModel m) => m.downloadsDirCommand.results,
+      (DownloadManager m) => m.downloadsDirCommand.results,
     );
     final error = downloadsDirResults.error;
     final downloadsDir = downloadsDirResults.data;
@@ -233,9 +259,8 @@ class _DownloadsTileState extends State<_DownloadsTile> {
                   style: context.textTheme.bodyLarge,
                 ),
               ),
-              onConfirm: () => di<DownloadModel>().downloadsDirCommand.runAsync(
-                (setNewDir: true),
-              ),
+              onConfirm: () => di<DownloadManager>().downloadsDirCommand
+                  .runAsync((setNewDir: true)),
             ),
           );
         },

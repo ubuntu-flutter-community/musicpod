@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/app_manager.dart';
-import '../../app/connectivity_model.dart';
+import '../../app/connectivity_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
@@ -35,7 +35,10 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
 
     final model = di<PlayerModel>();
     final appManager = di<AppManager>();
-    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
+    final isOnline = watchValue(
+      (ConnectivityManager m) =>
+          m.connectivityCommand.select((p) => p.isOnline),
+    );
 
     final active = audio?.path != null || isOnline;
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../library/library_model.dart';
+import '../../local_audio/local_audio_manager.dart';
 import '../data/audio.dart';
 import 'animated_like_icon.dart';
 
@@ -13,13 +13,13 @@ class LikeAllIconButton extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final liked = watchPropertyValue(
-      (LibraryModel m) => m.isLikedAudios(audios),
+      (LocalAudioManager m) => m.isLikedAudios(audios),
     );
-    final libraryModel = di<LibraryModel>();
+    final localAudioManager = di<LocalAudioManager>();
     return IconButton(
       onPressed: () => liked
-          ? libraryModel.removeLikedAudios(audios)
-          : libraryModel.addLikedAudios(audios),
+          ? localAudioManager.removeLikedAudios(audios)
+          : localAudioManager.addLikedAudios(audios),
       icon: AnimatedHeart(liked: liked),
     );
   }

@@ -1,34 +1,36 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:podcast_search/podcast_search.dart';
+import 'package:podcast_search/podcast_search.dart' hide Value;
 import 'package:synchronized/synchronized.dart';
 
 import '../common/data/audio.dart';
 import '../common/logging.dart';
+import '../common/persistence/database.dart';
 import '../common/view/audio_filter.dart';
 import '../common/view/languages.dart';
 import '../extensions/date_time_x.dart';
 import '../extensions/string_x.dart';
-import '../library/library_service.dart';
 import '../notifications/notifications_service.dart';
 import '../settings/settings_service.dart';
 import '../settings/shared_preferences_keys.dart';
 import 'data/podcast_genre.dart';
 
-@lazySingleton
+@singleton
 class PodcastService {
   final NotificationsService _notificationsService;
   final SettingsService _settingsService;
-  final LibraryService _libraryService;
+  final Database _db;
   PodcastService({
     required NotificationsService notificationsService,
     required SettingsService settingsService,
-    required LibraryService libraryService,
+    required Database database,
   }) : _notificationsService = notificationsService,
        _settingsService = settingsService,
-       _libraryService = libraryService {
+       _db = database {
     _search = Search(
       searchProvider:
           _settingsService.getBool(SPKeys.usePodcastIndex) == true &&
@@ -42,10 +44,30 @@ class PodcastService {
     );
   }
 
+  final _propertiesChangedController = StreamController<bool>.broadcast();
+  Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
+
+  void _notify() {
+    if (_propertiesChangedController.hasListener) {
+      _propertiesChangedController.add(true);
+    }
+  }
+
+  @PostConstruct(preResolve: true)
+  Future<void> initService() async {
+    await _loadPodcastCache();
+    await _loadPodcastUpdates();
+    await _loadDownloads();
+    _notify();
+  }
+
+  @disposeMethod
+  Future<void> dispose() => _propertiesChangedController.close();
+
   SearchResult? _searchResult;
   Search? _search;
 
-  void init({bool forceInit = false}) {
+  void initSearchProvider({bool forceInit = false}) {
     if (_search == null || forceInit) {
       _search = Search(
         searchProvider:
@@ -65,8 +87,8 @@ class PodcastService {
 
   List<PodcastGenre> get cachedPodcastGenres => _podcastGenreCache;
   List<PodcastGenre> _podcastGenreCache = [];
-  Future<List<PodcastGenre>> loadGenres() async {
-    if (_podcastGenreCache.isNotEmpty) {
+  Future<List<PodcastGenre>> loadGenres({bool force = false}) async {
+    if (_podcastGenreCache.isNotEmpty && !force) {
       return _podcastGenreCache;
     }
 
@@ -117,9 +139,14 @@ class PodcastService {
         );
       }
     } catch (e) {
-      printMessageInDebugMode(e);
+      printMessageInDebugMode('Podcast search error: $e');
       return _searchResult;
     }
+    printMessageInDebugMode(
+      'Podcast search result: successful=${result?.successful}, '
+      'itemCount=${result?.items.length}, '
+      'query=$searchQuery',
+    );
 
     if (result != null &&
         result.successful &&
@@ -135,28 +162,28 @@ class PodcastService {
   }
 
   final _syncLock = Lock();
-  Future<void> checkForUpdates({
+  Future<List<String>> checkForUpdates({
     Set<String>? feedUrls,
-    required String updateMessage,
     required String Function(int length) multiUpdateMessage,
-  }) => _syncLock.synchronized(() async {
-    await _checkForUpdates(
+    void Function(double progress)? updateProgress,
+  }) => _syncLock.synchronized(
+    () => _checkForUpdates(
       feedUrls: feedUrls,
-      updateMessage: updateMessage,
       multiUpdateMessage: multiUpdateMessage,
-    );
-  });
+      updateProgress: updateProgress,
+    ),
+  );
 
-  Future<void> _checkForUpdates({
+  Future<List<String>> _checkForUpdates({
     Set<String>? feedUrls,
-    required String updateMessage,
     required String Function(int length) multiUpdateMessage,
+    void Function(double progress)? updateProgress,
   }) async {
     final newUpdateFeedUrls = <String>{};
 
-    for (final feedUrl in (feedUrls ?? _libraryService.podcasts)) {
-      final storedTimeStamp = _libraryService.getPodcastLastUpdated(feedUrl);
-      final name = _libraryService.getSubscribedPodcastName(feedUrl);
+    for (final feedUrl in (feedUrls ?? _podcasts)) {
+      final storedTimeStamp = getPodcastLastUpdated(feedUrl);
+      final name = getSubscribedPodcastName(feedUrl);
 
       printMessageInDebugMode('checking update for: ${name ?? feedUrl} ');
       printMessageInDebugMode(
@@ -177,35 +204,39 @@ class PodcastService {
       if (feedLastUpdated == null) continue;
 
       if (!storedTimeStamp.isSamePodcastTimeStamp(feedLastUpdated)) {
-        await _libraryService.addPodcastLastUpdated(
+        await addPodcastLastUpdated(
           feedUrl: feedUrl,
-          timestamp: feedLastUpdated.toPodcastTimeStamp,
+          lastUpdated: feedLastUpdated,
         );
-        await findEpisodes(feedUrl: feedUrl, loadFromCache: false);
-        await _libraryService.addPodcastUpdate(feedUrl, feedLastUpdated);
 
-        newUpdateFeedUrls.add(feedUrl);
+        // Compare actual episode URLs to detect genuinely new episodes,
+        // since Last-Modified can change without new episodes being added.
+        final storedUrls = await _getStoredEpisodeUrls(feedUrl);
+        final episodes = await findEpisodes(feedUrl: feedUrl);
+        final hasNewEpisodes = episodes.any(
+          (e) => e.url != null && !storedUrls.contains(e.url),
+        );
+
+        if (hasNewEpisodes) {
+          await addPodcastUpdate(feedUrl, feedLastUpdated);
+          newUpdateFeedUrls.add(feedUrl);
+        }
       }
+
+      updateProgress?.call(
+        newUpdateFeedUrls.length / (feedUrls?.length ?? _podcasts.length),
+      );
+      await Future<void>.delayed(Duration.zero);
     }
 
     if (newUpdateFeedUrls.isNotEmpty) {
-      final msg = newUpdateFeedUrls.length == 1
-          ? updateMessage +
-                '${_episodeCache[newUpdateFeedUrls.first]?.firstOrNull?.podcastTitle != null ? ' ${_episodeCache[newUpdateFeedUrls.first]?.firstOrNull?.podcastTitle}' : ''}'
-          : multiUpdateMessage(newUpdateFeedUrls.length);
+      final msg = multiUpdateMessage(newUpdateFeedUrls.length);
       _notificationsService.notify(message: msg);
     }
+    return newUpdateFeedUrls.toList();
   }
 
-  List<Audio>? getPodcastEpisodesFromCache(String? feedUrl) =>
-      _episodeCache[feedUrl];
-  Map<String, List<Audio>> _episodeCache = {};
-
-  Future<List<Audio>> findEpisodes({
-    Item? item,
-    String? feedUrl,
-    bool loadFromCache = true,
-  }) async {
+  Future<List<Audio>> findEpisodes({Item? item, String? feedUrl}) async {
     if (item == null && item?.feedUrl == null && feedUrl == null) {
       printMessageInDebugMode('findEpisodes called without feedUrl or item');
       return Future.value([]);
@@ -213,25 +244,9 @@ class PodcastService {
 
     final url = feedUrl ?? item!.feedUrl!;
 
-    if (_episodeCache.containsKey(url) && loadFromCache) {
-      if (_episodeCache[url]?.firstOrNull?.albumArtUrl != null ||
-          _episodeCache[url]?.firstOrNull?.imageUrl != null) {
-        _libraryService.addSubscribedPodcastImage(
-          feedUrl: url,
-          imageUrl:
-              _episodeCache[url]?.firstOrNull?.albumArtUrl ??
-              _episodeCache[url]!.firstOrNull!.imageUrl!,
-        );
-      }
-      return _episodeCache[url]!;
-    }
-
     final Podcast? podcast = await compute(loadPodcast, url);
     if (podcast?.image != null) {
-      _libraryService.addSubscribedPodcastImage(
-        feedUrl: url,
-        imageUrl: podcast!.image!,
-      );
+      addSubscribedPodcastImage(feedUrl: url, imageUrl: podcast!.image!);
     }
     final episodes =
         podcast?.episodes
@@ -253,9 +268,349 @@ class PodcastService {
       descending: true,
     );
 
-    _episodeCache[url] = episodes;
+    await _upsertEpisodes(feedUrl: url, podcast: podcast, episodes: episodes);
 
     return episodes;
+  }
+
+  Future<void> _upsertEpisodes({
+    required String feedUrl,
+    required Podcast? podcast,
+    required List<Audio> episodes,
+  }) async {
+    if (episodes.isEmpty) return;
+    try {
+      await _db.batch((batch) {
+        for (final e in episodes) {
+          if (e.url == null) continue;
+          batch.insert(
+            _db.podcastEpisodeTable,
+            PodcastEpisodeTableCompanion.insert(
+              podcastFeedUrl: feedUrl,
+              title: e.title ?? '',
+              episodeDescription: e.episodeDescription ?? '',
+              podcastDescription: podcast?.description ?? '',
+              contentUrl: e.url!,
+              publicationDate: e.publicationDate != null
+                  ? DateTime.fromMillisecondsSinceEpoch(e.publicationDate!)
+                  : DateTime.now(),
+              durationMs: Value(e.durationMs?.toInt()),
+              imageUrl: Value(e.imageUrl),
+            ),
+            mode: InsertMode.insertOrReplace,
+          );
+        }
+      });
+    } on Exception catch (e) {
+      printMessageInDebugMode('Error upserting episodes: $e');
+    }
+  }
+
+  Future<Set<String>> _getStoredEpisodeUrls(String feedUrl) async {
+    final rows =
+        await (_db.selectOnly(_db.podcastEpisodeTable)
+              ..addColumns([_db.podcastEpisodeTable.contentUrl])
+              ..where(_db.podcastEpisodeTable.podcastFeedUrl.equals(feedUrl)))
+            .get();
+    return rows
+        .map((r) => r.read(_db.podcastEpisodeTable.contentUrl))
+        .whereType<String>()
+        .toSet();
+  }
+
+  // ── Downloads ──
+
+  Map<String, String> _downloads = {};
+  Map<String, String> get downloads => _downloads;
+  String? getDownload(String? url) => _downloads[url];
+
+  Set<String> _feedsWithDownloads = {};
+  bool feedHasDownloads(String feedUrl) =>
+      _feedsWithDownloads.contains(feedUrl);
+  int get feedsWithDownloadsLength => _feedsWithDownloads.length;
+
+  Future<void> _loadDownloads() async {
+    final rows = await _db.select(_db.downloadTable).get();
+    _downloads = {for (final r in rows) r.url: r.filePath};
+    _feedsWithDownloads = rows.map((r) => r.feedUrl).toSet();
+  }
+
+  Future<void> addDownload({
+    required String url,
+    required String path,
+    required String feedUrl,
+  }) async {
+    if (_downloads.containsKey(url)) return;
+    _downloads[url] = path;
+    _feedsWithDownloads.add(feedUrl);
+    await _db
+        .into(_db.downloadTable)
+        .insert(
+          DownloadTableCompanion.insert(
+            url: url,
+            filePath: path,
+            feedUrl: feedUrl,
+          ),
+          mode: InsertMode.insertOrIgnore,
+        );
+    _notify();
+  }
+
+  Future<void> removeDownload({
+    required String url,
+    required String feedUrl,
+  }) async {
+    _deleteDownload(url);
+
+    if (_downloads.containsKey(url)) {
+      _downloads.remove(url);
+      _feedsWithDownloads.remove(feedUrl);
+      await (_db.delete(
+        _db.downloadTable,
+      )..where((t) => t.url.equals(url))).go();
+      _notify();
+    }
+  }
+
+  void _deleteDownload(String url) {
+    final path = _downloads[url];
+    if (path != null) {
+      final file = File(path);
+      if (file.existsSync()) {
+        file.deleteSync();
+      }
+    }
+  }
+
+  Future<void> removeAllDownloads() async {
+    for (var download in _downloads.entries) {
+      _deleteDownload(download.key);
+    }
+    _downloads.clear();
+    _feedsWithDownloads.clear();
+    await _db.delete(_db.downloadTable).go();
+    _notify();
+  }
+
+  void _removeFeedWithDownload(String feedUrl) {
+    if (!_feedsWithDownloads.contains(feedUrl)) return;
+    _feedsWithDownloads.remove(feedUrl);
+    (_db.delete(
+      _db.downloadTable,
+    )..where((t) => t.feedUrl.equals(feedUrl))).go().then((_) => _notify());
+  }
+
+  // ── Podcasts ──
+
+  Set<String> _podcasts = {};
+  bool isPodcastSubscribed(String feedUrl) => _podcasts.contains(feedUrl);
+  List<String> get podcastFeedUrls => _podcasts.toList();
+  Set<String> get podcasts => _podcasts;
+  int get podcastsLength => _podcasts.length;
+
+  Map<String, PodcastTableData> _podcastCache = {};
+
+  Future<void> _loadPodcastCache() async {
+    final rows = await (_db.select(
+      _db.podcastTable,
+    )..orderBy([(t) => OrderingTerm(expression: t.name)])).get();
+    _podcastCache = {for (final r in rows) r.feedUrl: r};
+    _podcasts = rows.map((r) => r.feedUrl).toSet();
+  }
+
+  String? getSubscribedPodcastImage(String feedUrl) =>
+      _podcastCache[feedUrl]?.imageUrl;
+
+  void addSubscribedPodcastImage({
+    required String feedUrl,
+    required String imageUrl,
+  }) {
+    (_db.update(_db.podcastTable)..where((t) => t.feedUrl.equals(feedUrl)))
+        .write(PodcastTableCompanion(imageUrl: Value(imageUrl)))
+        .then((_) {
+          final cached = _podcastCache[feedUrl];
+          if (cached != null) {
+            _podcastCache[feedUrl] = cached.copyWith(imageUrl: Value(imageUrl));
+          }
+          _notify();
+        });
+  }
+
+  String? getSubscribedPodcastName(String feedUrl) =>
+      _podcastCache[feedUrl]?.name;
+
+  String? getSubscribedPodcastArtist(String feedUrl) =>
+      _podcastCache[feedUrl]?.artist;
+
+  Future<void> addPodcast({
+    required String feedUrl,
+    required String? imageUrl,
+    required String name,
+    required String artist,
+  }) async {
+    if (isPodcastSubscribed(feedUrl)) return;
+    _podcasts.add(feedUrl);
+    final now = DateTime.now();
+    await _db
+        .into(_db.podcastTable)
+        .insert(
+          PodcastTableCompanion.insert(
+            feedUrl: feedUrl,
+            name: name,
+            artist: artist,
+            description: '',
+            imageUrl: Value(imageUrl),
+            lastUpdated: now,
+          ),
+          mode: InsertMode.insertOrIgnore,
+        );
+    _podcastCache[feedUrl] = PodcastTableData(
+      feedUrl: feedUrl,
+      name: name,
+      artist: artist,
+      description: '',
+      imageUrl: imageUrl,
+      lastUpdated: now,
+      ascending: false,
+    );
+    _notify();
+  }
+
+  Future<void> addPodcasts(
+    List<({String feedUrl, String? imageUrl, String name, String artist})>
+    podcasts,
+  ) async {
+    if (podcasts.isEmpty) return;
+    final newPodcasts = podcasts
+        .where((p) => !_podcasts.contains(p.feedUrl))
+        .toList();
+    if (newPodcasts.isEmpty) return;
+    final now = DateTime.now();
+    await _db.batch((batch) {
+      for (final p in newPodcasts) {
+        batch.insert(
+          _db.podcastTable,
+          PodcastTableCompanion.insert(
+            feedUrl: p.feedUrl,
+            name: p.name,
+            artist: p.artist,
+            description: '',
+            imageUrl: Value(p.imageUrl),
+            lastUpdated: now,
+          ),
+          mode: InsertMode.insertOrIgnore,
+        );
+      }
+    });
+    for (final p in newPodcasts) {
+      _podcasts.add(p.feedUrl);
+      _podcastCache[p.feedUrl] = PodcastTableData(
+        feedUrl: p.feedUrl,
+        name: p.name,
+        artist: p.artist,
+        description: '',
+        imageUrl: p.imageUrl,
+        lastUpdated: now,
+        ascending: false,
+      );
+    }
+    _notify();
+  }
+
+  bool showPodcastAscending(String feedUrl) =>
+      _podcastCache[feedUrl]?.ascending ?? false;
+
+  Future<void> reorderPodcast({
+    required String feedUrl,
+    required bool ascending,
+  }) async {
+    await (_db.update(_db.podcastTable)
+          ..where((t) => t.feedUrl.equals(feedUrl)))
+        .write(PodcastTableCompanion(ascending: Value(ascending)));
+    final cached = _podcastCache[feedUrl];
+    if (cached != null) {
+      _podcastCache[feedUrl] = cached.copyWith(ascending: ascending);
+    }
+    _notify();
+  }
+
+  Set<String>? _podcastUpdates;
+  int? get podcastUpdatesLength => _podcastUpdates?.length;
+
+  Future<void> _loadPodcastUpdates() async {
+    final rows = await _db.select(_db.podcastUpdateTable).get();
+    _podcastUpdates = rows.map((r) => r.podcastFeedUrl).toSet();
+  }
+
+  Future<void> addPodcastLastUpdated({
+    required String feedUrl,
+    required DateTime lastUpdated,
+  }) async {
+    await (_db.update(_db.podcastTable)
+          ..where((t) => t.feedUrl.equals(feedUrl)))
+        .write(PodcastTableCompanion(lastUpdated: Value(lastUpdated)));
+    final cached = _podcastCache[feedUrl];
+    if (cached != null) {
+      _podcastCache[feedUrl] = cached.copyWith(lastUpdated: lastUpdated);
+    }
+    _notify();
+  }
+
+  String? getPodcastLastUpdated(String feedUrl) =>
+      _podcastCache[feedUrl]?.lastUpdated.toPodcastTimeStamp;
+
+  bool podcastUpdateAvailable(String feedUrl) =>
+      _podcastUpdates?.contains(feedUrl) == true;
+
+  Future<void> addPodcastUpdate(String feedUrl, DateTime lastUpdated) async {
+    if (_podcastUpdates?.contains(feedUrl) == true) return;
+    _podcastUpdates?.add(feedUrl);
+    await _db
+        .into(_db.podcastUpdateTable)
+        .insert(
+          PodcastUpdateTableCompanion.insert(podcastFeedUrl: feedUrl),
+          mode: InsertMode.insertOrIgnore,
+        );
+    _notify();
+  }
+
+  Future<void> removePodcastUpdate(String feedUrl) async {
+    if (_podcastUpdates?.isNotEmpty == false) return;
+    _podcastUpdates?.remove(feedUrl);
+    await (_db.delete(
+      _db.podcastUpdateTable,
+    )..where((t) => t.podcastFeedUrl.equals(feedUrl))).go();
+    _notify();
+  }
+
+  void removePodcast(String feedUrl) {
+    if (!isPodcastSubscribed(feedUrl)) return;
+    _podcasts.remove(feedUrl);
+    _podcastCache.remove(feedUrl);
+    _removeFeedWithDownload(feedUrl);
+    (_db.delete(
+      _db.podcastUpdateTable,
+    )..where((t) => t.podcastFeedUrl.equals(feedUrl))).go();
+    (_db.delete(
+      _db.podcastTable,
+    )..where((t) => t.feedUrl.equals(feedUrl))).go().then((_) => _notify());
+  }
+
+  Future<void> removeAllPodcasts() async {
+    _podcasts.clear();
+    _podcastUpdates?.clear();
+    _podcastCache.clear();
+    await Future.wait([
+      _db.delete(_db.podcastUpdateTable).go(),
+      _db.delete(_db.podcastTable).go(),
+    ]);
+    _notify();
+  }
+
+  Future<void> wipeAndBuildPodcastLibrary() async {
+    await removeAllDownloads();
+    await removeAllPodcasts();
+    await initService();
   }
 }
 

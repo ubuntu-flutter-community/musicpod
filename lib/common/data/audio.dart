@@ -4,17 +4,15 @@ import 'dart:io';
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
-import 'package:path/path.dart';
+import 'package:path/path.dart' as p;
 import 'package:podcast_search/podcast_search.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 
-import '../../app/app_config.dart';
 import '../../extensions/media_file_x.dart';
 import '../../extensions/string_x.dart';
-import '../../extensions/taget_platform_x.dart';
+import '../../local_audio/data/local_audio_genres.dart';
 import '../logging.dart';
 import 'audio_type.dart';
-import 'genres.dart';
 
 class Audio {
   /// The local path if available.
@@ -120,6 +118,9 @@ class Audio {
   /// The publication date of the podcast episode in milliseconds since epoch.
   final int? publicationDate;
 
+  /// The database album ID for local audio.
+  final int? albumDbId;
+
   const Audio({
     this.path,
     this.url,
@@ -155,6 +156,7 @@ class Audio {
     this.podcastDescription,
     this.episodeDescription,
     this.publicationDate,
+    this.albumDbId,
   });
 
   Audio copyWith({
@@ -193,6 +195,7 @@ class Audio {
     String? podcastDescription,
     String? episodeDescription,
     int? publicationDate,
+    int? albumDbId,
   }) {
     return Audio(
       path: path ?? this.path,
@@ -229,6 +232,7 @@ class Audio {
       podcastDescription: podcastDescription ?? this.podcastDescription,
       episodeDescription: episodeDescription ?? this.episodeDescription,
       publicationDate: publicationDate ?? this.publicationDate,
+      albumDbId: albumDbId ?? this.albumDbId,
     );
   }
 
@@ -337,6 +341,9 @@ class Audio {
     if (publicationDate != null) {
       result.addAll({'publicationDate': publicationDate});
     }
+    if (albumDbId != null) {
+      result.addAll({'albumDbId': albumDbId});
+    }
 
     return result;
   }
@@ -381,6 +388,7 @@ class Audio {
       podcastDescription: map['podcastDescription'],
       episodeDescription: map['episodeDescription'],
       publicationDate: map['publicationDate']?.toInt(),
+      albumDbId: map['albumDbId']?.toInt(),
     );
   }
 
@@ -446,7 +454,7 @@ class Audio {
         ? null
         : data.genres.firstOrNull?.startsWith('(') == true &&
               data.genres.firstOrNull?.endsWith(')') == true
-        ? tagGenres[data.genres.firstOrNull
+        ? localAudioGenres[data.genres.firstOrNull
               ?.replaceAll('(', '')
               .replaceAll(')', '')]
         : data.genres.firstOrNull;
@@ -476,7 +484,7 @@ class Audio {
 
   factory Audio._localWithoutMetadata({required String path}) => Audio(
     path: path,
-    title: basenameWithoutExtension(path),
+    title: p.basenameWithoutExtension(path),
     album: 'Unknown',
     artist: 'Unknown',
     albumArtist: 'Unknown',
@@ -527,38 +535,17 @@ class Audio {
     );
   }
 
-  String? get albumId {
-    final albumName = album;
-    final artistName = artist;
-    return albumName == null && artistName == null
-        ? null
-        : createAlbumId(artistName, albumName);
-  }
-
-  static String createAlbumId(String? artistName, String? albumName) {
-    final id = '${artistName ?? ''}$albumIdSplitter${albumName ?? ''}'
-        .replaceAll(albumIdReplacement, albumIdReplacer);
-
-    if (isMobile) {
-      return id.replaceAll(':', '');
-    }
-
-    return id;
-  }
-
-  // Note this assumes that no artist or no album includes ___ on their own =)
-  static const String albumIdSplitter =
-      '$albumIdReplacer${AppConfig.appId}$albumIdReplacer';
-  static const String albumIdReplacer = '___';
-  static const String albumIdReplacement = ' ';
-
-  bool get canHaveLocalCover =>
-      albumId != null &&
-      albumId!.isNotEmpty &&
-      path != null &&
-      audioType == AudioType.local;
+  bool get canHaveLocalCover => albumDbId != null && path != null && isLocal;
 
   bool get isLocal => audioType == AudioType.local;
   bool get isPodcast => audioType == AudioType.podcast;
   bool get isRadio => audioType == AudioType.radio;
+
+  String get podcastDownloadId {
+    final urlExtension = p.extension(url ?? '').split('?').firstOrNull ?? '';
+    final baseString =
+        '${copyright ?? ''}_${title ?? ''}_${durationMs ?? ''}_${publicationDate ?? ''})'
+            .replaceAll(RegExp(r'[^a-zA-Z0-9_]'), '_');
+    return '$baseString$urlExtension';
+  }
 }

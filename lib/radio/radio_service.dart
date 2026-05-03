@@ -3,21 +3,46 @@ import 'dart:math';
 
 import 'package:basic_utils/basic_utils.dart';
 import 'package:collection/collection.dart';
+import 'package:drift/drift.dart';
 import 'package:injectable/injectable.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 
 import '../common/data/audio.dart';
 import '../common/logging.dart';
+import '../common/persistence/database.dart';
 
-@lazySingleton
+@singleton
 class RadioService {
+  RadioService({required Database database}) : _db = database;
+
+  final Database _db;
+
+  final _propertiesChangedController = StreamController<bool>.broadcast();
+  Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
+
+  void _notify() {
+    if (_propertiesChangedController.hasListener) {
+      _propertiesChangedController.add(true);
+    }
+  }
+
+  @PostConstruct(preResolve: true)
+  Future<void> initService() async {
+    await _loadStarredStations();
+    await _loadFavRadioTags();
+    _notify();
+  }
+
+  @disposeMethod
+  Future<void> dispose() => _propertiesChangedController.close();
+
   static const _kRadioBrowserBaseUrl = 'all.api.radio-browser.info';
 
   RadioBrowserApi? _radioBrowserApi;
   String? get connectedHost =>
       _tags == null || _tags!.isEmpty ? null : _radioBrowserApi?.host;
 
-  Future<String?> init() async {
+  Future<String?> initSearch() async {
     if (_radioBrowserApi?.host != null && _tags?.isNotEmpty == true) {
       return _radioBrowserApi?.host;
     }
@@ -72,7 +97,7 @@ class RadioService {
 
   Future<Station?> getStationByUUID(String uuid) async {
     if (_radioBrowserApi == null) {
-      await init();
+      await initSearch();
       if (connectedHost == null) {
         return null;
       }
@@ -94,7 +119,7 @@ class RadioService {
 
   Future<Station?> getStationByUrl(String url) async {
     if (_radioBrowserApi == null) {
-      await init();
+      await initSearch();
       if (connectedHost == null) {
         return null;
       }
@@ -127,7 +152,7 @@ class RadioService {
     required int limit,
   }) async {
     if (_radioBrowserApi == null) {
-      await init();
+      await initSearch();
       if (connectedHost == null) {
         return [];
       }
@@ -288,5 +313,111 @@ class RadioService {
       4 || 5 || 6 || 7 || 8 || 9 || 10 => matches.length >= 2,
       _ => matches.length >= 3,
     };
+  }
+
+  // ── Starred stations ──
+
+  List<String> _starredStations = [];
+  List<String> get starredStations => _starredStations;
+  int get starredStationsLength => _starredStations.length;
+
+  Future<void> _loadStarredStations() async {
+    final rows = await _db.select(_db.starredStationTable).get();
+    _starredStations = rows.map((r) => r.uuid).toList();
+  }
+
+  void addStarredStation(String uuid) {
+    if (_starredStations.contains(uuid)) return;
+    _starredStations.add(uuid);
+    _db
+        .into(_db.starredStationTable)
+        .insert(
+          StarredStationTableCompanion.insert(uuid: uuid),
+          mode: InsertMode.insertOrIgnore,
+        )
+        .then((_) => _notify());
+  }
+
+  void addStarredStations(List<String?> uuids) {
+    if (uuids.isEmpty) return;
+    final newUuids = uuids
+        .whereType<String>()
+        .where((uuid) => uuid.isNotEmpty && !_starredStations.contains(uuid))
+        .toList();
+    if (newUuids.isEmpty) return;
+    _starredStations.addAll(newUuids);
+    _db
+        .batch((batch) {
+          for (final uuid in newUuids) {
+            batch.insert(
+              _db.starredStationTable,
+              StarredStationTableCompanion.insert(uuid: uuid),
+              mode: InsertMode.insertOrIgnore,
+            );
+          }
+        })
+        .then((_) => _notify());
+  }
+
+  void removeStarredStation(String uuid) {
+    if (!_starredStations.contains(uuid)) return;
+    _starredStations.remove(uuid);
+    (_db.delete(
+      _db.starredStationTable,
+    )..where((t) => t.uuid.equals(uuid))).go().then((_) => _notify());
+  }
+
+  void unStarAllStations() {
+    if (_starredStations.isEmpty) return;
+    _starredStations.clear();
+    _db.delete(_db.starredStationTable).go().then((_) => _notify());
+  }
+
+  bool isStarredStation(String? uuid) => _starredStations.contains(uuid);
+
+  // ── Fav radio tags ──
+
+  Set<String> _favRadioTags = {};
+  Set<String> get favRadioTags => _favRadioTags;
+  bool isFavTag(String value) => _favRadioTags.contains(value);
+
+  Future<void> _loadFavRadioTags() async {
+    final rows = await _db.select(_db.favoriteRadioTagTable).get();
+    _favRadioTags = rows.map((r) => r.name).toSet();
+  }
+
+  void addFavRadioTag(String name) {
+    if (_favRadioTags.contains(name)) return;
+    _favRadioTags.add(name);
+    _db
+        .into(_db.favoriteRadioTagTable)
+        .insert(
+          FavoriteRadioTagTableCompanion.insert(name: name),
+          mode: InsertMode.insertOrIgnore,
+        )
+        .then((_) => _notify());
+  }
+
+  void removeFavRadioTag(String name) {
+    if (!_favRadioTags.contains(name)) return;
+    _favRadioTags.remove(name);
+    (_db.delete(
+      _db.favoriteRadioTagTable,
+    )..where((t) => t.name.equals(name))).go().then((_) => _notify());
+  }
+
+  Future<void> wipeAndBuildRadioLibrary() async {
+    await _wipeRadioLibrary();
+    await initService();
+  }
+
+  Future<void> _wipeRadioLibrary() async {
+    _favRadioTags.clear();
+    _starredStations.clear();
+    await Future.wait([
+      _db.delete(_db.starredStationTable).go(),
+      _db.delete(_db.favoriteRadioTagTable).go(),
+    ]);
+    _notify();
   }
 }

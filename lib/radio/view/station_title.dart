@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/connectivity_model.dart';
+import '../../app/connectivity_manager.dart';
 import '../../l10n/l10n.dart';
 import '../radio_model.dart';
 
@@ -12,7 +12,10 @@ class StationTitle extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    watchPropertyValue((ConnectivityModel m) => m.isOnline);
+    watchValue(
+      (ConnectivityManager m) =>
+          m.connectivityCommand.select((p) => p.isOnline),
+    );
     final stationResults = watchValue(
       (RadioManager m) => m.getStationByUUIDCommand(uuid).results,
     );

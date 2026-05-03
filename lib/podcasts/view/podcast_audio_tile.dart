@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
-import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/data/audio.dart';
@@ -15,11 +14,11 @@ import '../../extensions/duration_x.dart';
 import '../../extensions/int_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../settings/settings_model.dart';
 import 'download_button.dart';
 import 'podcast_mark_done_button.dart';
+import 'podcast_replay_button.dart';
 import 'podcast_tile_play_button.dart';
 
 class PodcastAudioTile extends StatelessWidget with WatchItMixin {
@@ -31,27 +30,19 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
     this.isExpanded = false,
     this.isOnline = true,
     required this.addPodcast,
-    required this.showDownloadsOnly,
   });
 
   final Audio audio;
   final bool selected;
 
   final void Function()? startPlaylist;
-  final void Function()? addPodcast;
+  final Future<void> Function() addPodcast;
 
   final bool isExpanded;
   final bool isOnline;
-  final bool showDownloadsOnly;
 
   @override
   Widget build(BuildContext context) {
-    watchPropertyValue((LibraryModel m) => m.downloadsLength);
-    final download = di<LibraryModel>().getDownload(audio.url);
-    if ((!isOnline || showDownloadsOnly) && download == null) {
-      return const SizedBox.shrink();
-    }
-
     final date = audio.publicationDate.unixTimeToDateString;
     final duration = audio.durationMs != null
         ? Duration(milliseconds: audio.durationMs!.toInt()).formattedTime
@@ -69,8 +60,6 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
             ? 42
             : 38) /
         2;
-
-    final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
 
     return YaruExpandable(
       isExpanded: isExpanded,
@@ -120,11 +109,7 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
                   child: Row(
                     children: space(
                       children: [
-                        DownloadButton(
-                          audio: audio,
-                          addPodcast: addPodcast,
-                          hasDownload: download != null,
-                        ),
+                        DownloadButton(audio: audio, addPodcast: addPodcast),
                         ShareButton(active: true, audio: audio),
                         IconButton(
                           tooltip: context.l10n.insertIntoQueue,
@@ -141,24 +126,7 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
                           },
                           icon: Icon(Iconz.insertIntoQueue),
                         ),
-                        IconButton(
-                          tooltip: context.l10n.replayEpisode,
-                          onPressed: audio.url == null
-                              ? null
-                              : () => showFutureLoadingDialog(
-                                  context: context,
-                                  future: () async {
-                                    await playerModel.removeLastPosition(
-                                      audio.url!,
-                                    );
-                                    if (audio == currentAudio) {
-                                      playerModel.setPosition(Duration.zero);
-                                      await playerModel.seek();
-                                    }
-                                  },
-                                ),
-                          icon: Icon(Iconz.replay),
-                        ),
+                        PodcastEpisodeResetProgressButton(audio: audio),
                         EpisodeMarkDownButton(episode: audio),
                       ],
                     ),

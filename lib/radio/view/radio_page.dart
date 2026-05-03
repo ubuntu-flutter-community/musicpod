@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/connectivity_model.dart';
+import '../../app/connectivity_manager.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../app/page_ids.dart';
@@ -19,7 +19,10 @@ class RadioPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
+    final isOnline = watchValue(
+      (ConnectivityManager m) =>
+          m.connectivityCommand.select((p) => p.isOnline),
+    );
     if (!isOnline) return const OfflinePage();
 
     return Scaffold(

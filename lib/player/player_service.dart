@@ -1,25 +1,26 @@
+// ignore_for_file: unnecessary_parenthesis
+
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:media_kit/media_kit.dart' hide PlayerState;
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:path/path.dart' as p;
 import 'package:yaru/yaru.dart';
 
 import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
-import '../common/file_names.dart';
 import '../common/logging.dart';
+import '../common/persistence/database.dart';
 import '../expose/expose_service.dart';
 import '../extensions/media_file_x.dart';
 import '../extensions/string_x.dart';
 import '../extensions/taget_platform_x.dart';
-import '../library/library_service.dart';
+import '../podcasts/podcast_service.dart';
 import '../local_audio/local_cover_service.dart';
-import '../common/persistence_utils.dart';
-import 'data/player_state.dart';
 
 typedef Queue = ({String name, List<Audio> audios});
 
@@ -29,17 +30,20 @@ class PlayerService {
     required VideoController controller,
     required ExposeService exposeService,
     required LocalCoverService localCoverService,
-    required LibraryService libraryService,
+    required PodcastService podcastService,
+    required Database database,
   }) : _controller = controller,
        _exposeService = exposeService,
        _localCoverService = localCoverService,
-       _libraryService = libraryService;
+       _podcastService = podcastService,
+       _db = database;
 
   // External dependencies
   final ExposeService _exposeService;
   final LocalCoverService _localCoverService;
   final VideoController _controller;
-  final LibraryService _libraryService;
+  final PodcastService _podcastService;
+  final Database _db;
 
   // MediaKit getters
   VideoController get controller => _controller;
@@ -113,7 +117,9 @@ class PlayerService {
       }
     });
 
-    await _setPlayerState();
+    await _loadPlayerState();
+
+    await _loadLastPositions();
   }
 
   /// All subscriptions, native media trays and the pause timer need to be closed and disposed
@@ -280,7 +286,7 @@ class PlayerService {
 
       if (_audio!.url != null && _audio!.isPodcast) {
         _audio = audio?.copyWith(
-          path: _libraryService.getDownload(_audio!.url!),
+          path: _podcastService.getDownload(_audio!.url!),
         );
       }
 
@@ -481,9 +487,12 @@ class PlayerService {
   Future<void> _setLocalColor(Audio audio) async {
     try {
       if (audio.canHaveLocalCover) {
-        var maybeData = _localCoverService.get(audio.albumId);
+        var maybeData = await _localCoverService.getCover(
+          albumId: audio.albumDbId!,
+          path: audio.path!,
+        );
         maybeData ??= await _localCoverService.getCover(
-          albumId: audio.albumId!,
+          albumId: audio.albumDbId!,
           path: audio.path!,
         );
 
@@ -499,55 +508,6 @@ class PlayerService {
     }
   }
 
-  Future<void> _setPlayerState() async {
-    final playerState = await _readPlayerState();
-
-    await _loadLastPositions();
-
-    if (playerState?.audio != null) {
-      _setAudio(playerState!.audio!);
-      setRemoteImageUrl(playerState.audio!.imageUrl);
-
-      if (playerState.duration != null) {
-        setDuration(playerState.duration!.parsedDuration);
-      }
-      if (playerState.position != null) {
-        setPosition(playerState.position!.parsedDuration);
-      }
-
-      if (playerState.queue?.isNotEmpty == true &&
-          playerState.queueName?.isNotEmpty == true) {
-        setQueue((name: playerState.queueName!, audios: playerState.queue!));
-      }
-
-      if (playerState.volume != null) {
-        setVolume(double.tryParse(playerState.volume!) ?? 100.0);
-      }
-
-      if (playerState.rate != null) {
-        setRate(double.tryParse(playerState.rate!) ?? 1.0);
-      }
-
-      _estimateNext();
-
-      await setMediaControlsMetaData(audio: playerState.audio!);
-    }
-  }
-
-  // TODO: convert this nonesense to a table in the database
-  Future<void> _loadLastPositions() async {
-    try {
-      _lastPositions = (await getCustomSettings(FileNames.lastPositions)).map(
-        (key, value) => MapEntry(key, value.parsedDuration ?? Duration.zero),
-      );
-    } on Exception catch (_) {
-      printMessageInDebugMode(
-        'Error while loading last positions, clearing all last positions to prevent further errors.',
-      );
-      _lastPositions = {};
-    }
-  }
-
   //
   // Last Positions used when the app re-opens and for podcasts
   //
@@ -555,62 +515,78 @@ class PlayerService {
   Map<String, Duration> _lastPositions = {};
   Map<String, Duration> get lastPositions => _lastPositions;
   Future<void> addLastPosition(String key, Duration lastPosition) async {
-    try {
-      await writeCustomSetting(
-        key: key,
-        value: lastPosition.toString(),
-        filename: FileNames.lastPositions,
-      );
-    } on Exception catch (_) {
-      printMessageInDebugMode(
-        'Error while saving last position for $key, clearing all last positions to prevent further errors.',
-      );
-      await wipeCustomSettings(filename: FileNames.lastPositions);
-    }
-    if (_lastPositions.containsKey(key)) {
-      _lastPositions.update(key, (value) => lastPosition);
-    } else {
-      _lastPositions.putIfAbsent(key, () => lastPosition);
-    }
+    await (_db.podcastEpisodeTable.update()
+          ..where((t) => t.contentUrl.equals(key)))
+        .write(
+          PodcastEpisodeTableCompanion(
+            positionMs: Value(lastPosition.inMilliseconds),
+          ),
+        );
+    _lastPositions[key] = lastPosition;
     _propertiesChangedController.add(true);
   }
 
-  Future<void> safeAllLastPositions(List<Audio> audios) async {
-    await writeCustomSettings(
-      entries: audios
-          .where((e) => e.url != null && e.durationMs != null)
-          .map(
-            (e) => MapEntry(
-              e.url!,
-              Duration(milliseconds: e.durationMs!.toInt()).toString(),
-            ),
-          )
-          .toList(),
-      filename: FileNames.lastPositions,
-    );
-    await _loadLastPositions();
+  Future<void> _loadLastPositions() async {
+    try {
+      final rows =
+          await (_db.podcastEpisodeTable.select()
+                ..where((t) => t.positionMs.isBiggerThanValue(0)))
+              .get();
+      _lastPositions = {
+        for (final row in rows)
+          row.contentUrl: Duration(milliseconds: row.positionMs),
+      };
+    } on Exception catch (_) {
+      printMessageInDebugMode('Error while loading last positions.');
+      _lastPositions = {};
+    }
+  }
 
+  Future<void> markAudiosProgressComplete(List<Audio> audios) async {
+    final valid = audios
+        .where((e) => e.url != null && e.durationMs != null)
+        .toList();
+    if (valid.isEmpty) return;
+
+    await _db.batch((batch) {
+      for (final e in valid) {
+        batch.update(
+          _db.podcastEpisodeTable,
+          PodcastEpisodeTableCompanion(
+            durationMs: Value(e.durationMs!.toInt()),
+            positionMs: Value(e.durationMs!.toInt()),
+          ),
+          where: (t) => t.contentUrl.equals(e.url!),
+        );
+      }
+    });
+    for (final e in valid) {
+      _lastPositions[e.url!] = Duration(milliseconds: e.durationMs!.toInt());
+    }
     _propertiesChangedController.add(true);
   }
 
   Future<void> removeLastPosition(String key) async {
-    await removeCustomSetting(key: key, filename: FileNames.lastPositions);
+    await (_db.podcastEpisodeTable.update()
+          ..where((t) => t.contentUrl.equals(key)))
+        .write(const PodcastEpisodeTableCompanion(positionMs: Value(0)));
     _lastPositions.remove(key);
     _propertiesChangedController.add(true);
   }
 
   Future<void> removeLastPositions(List<Audio> audios) async {
-    await removeCustomSettings(
-      keys: audios.where((e) => e.url != null).map((e) => e.url!).toList(),
-      filename: FileNames.lastPositions,
-    );
-
+    final urls = audios.where((e) => e.url != null).map((e) => e.url!).toList();
+    await (_db.podcastEpisodeTable.update()
+          ..where((t) => t.contentUrl.isIn(urls)))
+        .write(const PodcastEpisodeTableCompanion(positionMs: Value(0)));
     await _loadLastPositions();
-
     _propertiesChangedController.add(true);
   }
 
-  void clearAllLastPositions() {
+  Future<void> clearAllLastPositions() async {
+    await (_db.podcastEpisodeTable.update()).write(
+      const PodcastEpisodeTableCompanion(positionMs: Value(0)),
+    );
     _lastPositions.clear();
     _propertiesChangedController.add(true);
   }
@@ -618,7 +594,7 @@ class PlayerService {
   Duration? getLastPosition(String? url) => _lastPositions[url];
 
   Future<void> safeLastPosition() async {
-    if (_audio?.audioType == AudioType.radio ||
+    if (_audio?.audioType != AudioType.podcast ||
         _audio?.url == null ||
         _position == null) {
       return;
@@ -685,48 +661,100 @@ class PlayerService {
 
   Future<void> persistPlayerState() async {
     try {
-      await safeLastPosition();
       await _writePlayerState();
+      await safeLastPosition();
     } on Exception catch (e) {
       printMessageInDebugMode('Error while persisting player state: $e');
     }
   }
 
-  Future<void> _writePlayerState() async {
-    final playerState = PlayerState(
-      audio: _audio,
-      duration: _duration?.toString(),
-      position: _position?.toString(),
-      queue: _queue.audios.length > 100
-          ? _queue.audios.take(100).toList()
-          : _queue.audios,
-      queueName: _queue.name,
-      volume: _volume.toString(),
-      rate: _rate.toString(),
-    );
+  Future<void> _loadPlayerState() async {
+    try {
+      final row = await (_db.select(
+        _db.playerStateTable,
+      )..where((t) => t.id.equals(1))).getSingleOrNull();
+      if (row == null) return;
 
-    await writeJsonToFile(playerState.toMap(), FileNames.playerState);
+      Audio? audio;
+      if (row.audioJson != null) {
+        audio = Audio.fromMap(json.decode(row.audioJson!));
+      }
+      if (audio == null) return;
+
+      _setAudio(audio);
+      setRemoteImageUrl(audio.imageUrl);
+
+      if (row.duration != null) {
+        setDuration(row.duration!.parsedDuration);
+      }
+      if (row.position != null) {
+        setPosition(row.position!.parsedDuration);
+      }
+
+      if (row.volume != null) {
+        setVolume(double.tryParse(row.volume!) ?? 100.0);
+      }
+
+      if (row.rate != null) {
+        setRate(double.tryParse(row.rate!) ?? 1.0);
+      }
+
+      _estimateNext();
+
+      await setMediaControlsMetaData(audio: audio);
+    } on Exception catch (e) {
+      printMessageInDebugMode('Error loading player state: $e');
+    }
+  }
+
+  Future<void> _writePlayerState() async {
+    final audioJson = _audio != null ? json.encode(_audio!.toMap()) : null;
+
+    await _db
+        .into(_db.playerStateTable)
+        .insertOnConflictUpdate(
+          PlayerStateTableCompanion.insert(
+            id: const Value(1),
+            audioJson: Value(audioJson),
+            position: Value(_position?.toString()),
+            duration: Value(_duration?.toString()),
+            volume: Value(_volume?.toString()),
+            rate: Value(_rate.toString()),
+          ),
+        );
     printMessageInDebugMode(
-      'Player state saved, audio: ${playerState.audio?.title}, position: ${playerState.position}, queue length: ${playerState.queue?.length}, volume: ${playerState.volume}, rate: ${playerState.rate},',
+      'Player state saved, audio: ${_audio?.title}, position: $_position, volume: $_volume, rate: $_rate,',
     );
   }
 
-  Future<PlayerState?> _readPlayerState() async {
+  Future<void> _wipePlayerState() async {
     try {
-      final workingDir = await getWorkingDir();
-      final file = File(p.join(workingDir, FileNames.playerState));
-
-      if (file.existsSync()) {
-        final jsonStr = await file.readAsString();
-
-        return PlayerState.fromJson(jsonStr);
-      } else {
-        return null;
-      }
+      await _db.delete(_db.playerStateTable).go();
     } on Exception catch (e) {
-      printMessageInDebugMode(e);
-      return null;
+      printMessageInDebugMode('Error while wiping player state: $e');
     }
+  }
+
+  Future<void> resetPlayerState() async {
+    await player.stop();
+    await _wipePlayerState();
+    _audio = null;
+    _nextAudio = null;
+    _queue = (name: '', audios: []);
+    _position = Duration.zero;
+    _duration = null;
+    _buffer = null;
+    _isPlaying = false;
+    _playlistMode = PlaylistMode.none;
+    _shuffle = false;
+    setRemoteImageUrl(null);
+    _setColor(null);
+    await _exposeService.exposeTitleOnline(
+      title: '',
+      artist: '',
+      additionalInfo: '',
+    );
+    _propertiesChangedController.add(true);
   }
 
   void playPath([String? path]) {

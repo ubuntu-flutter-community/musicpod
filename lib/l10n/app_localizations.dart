@@ -16,6 +16,7 @@ import 'app_localizations_et.dart';
 import 'app_localizations_eu.dart';
 import 'app_localizations_fr.dart';
 import 'app_localizations_it.dart';
+import 'app_localizations_ja.dart';
 import 'app_localizations_kk.dart';
 import 'app_localizations_nl.dart';
 import 'app_localizations_pl.dart';
@@ -124,6 +125,7 @@ abstract class AppLocalizations {
     Locale('eu'),
     Locale('fr'),
     Locale('it'),
+    Locale('ja'),
     Locale('kk'),
     Locale('nl'),
     Locale('pl'),
@@ -4303,6 +4305,24 @@ abstract class AppLocalizations {
   /// **'Loading, please wait ...'**
   String get loadingPleaseWait;
 
+  /// No description provided for @parsingLocalAudioFilesMetadataPleaseWait.
+  ///
+  /// In en, this message translates to:
+  /// **'Parsing local audio files metadata, please wait ...'**
+  String get parsingLocalAudioFilesMetadataPleaseWait;
+
+  /// No description provided for @persistingLocalAudioFilesMetadataPleaseWait.
+  ///
+  /// In en, this message translates to:
+  /// **'Persisting local audio files metadata, please wait ...'**
+  String get persistingLocalAudioFilesMetadataPleaseWait;
+
+  /// No description provided for @buildingLocalAudioLibraryPleaseWait.
+  ///
+  /// In en, this message translates to:
+  /// **'Building local audio library, please wait ...'**
+  String get buildingLocalAudioLibraryPleaseWait;
+
   /// No description provided for @importingPodcastsPleaseWait.
   ///
   /// In en, this message translates to:
@@ -4338,6 +4358,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Exporting your playlists, please wait ...'**
   String get exportingPlaylistsPleaseWait;
+
+  /// No description provided for @checkingForUpdatesPleaseWait.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking for updates {progress}%'**
+  String checkingForUpdatesPleaseWait(int progress);
 
   /// No description provided for @author.
   ///
@@ -4494,6 +4520,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Read Genius\'s Terms of Service'**
   String get tosLinkText;
+
+  /// No description provided for @oopsSomethingWentWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Oops, something went wrong!'**
+  String get oopsSomethingWentWrong;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @reportIssue.
+  ///
+  /// In en, this message translates to:
+  /// **'Report this issue'**
+  String get reportIssue;
 }
 
 class _AppLocalizationsDelegate
@@ -4518,6 +4562,7 @@ class _AppLocalizationsDelegate
     'eu',
     'fr',
     'it',
+    'ja',
     'kk',
     'nl',
     'pl',
@@ -4581,6 +4626,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsFr();
     case 'it':
       return AppLocalizationsIt();
+    case 'ja':
+      return AppLocalizationsJa();
     case 'kk':
       return AppLocalizationsKk();
     case 'nl':

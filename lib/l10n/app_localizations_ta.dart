@@ -2204,6 +2204,18 @@ class AppLocalizationsTa extends AppLocalizations {
   String get loadingPleaseWait => 'ஏற்றுகிறது, காத்திருக்கவும்...';
 
   @override
+  String get parsingLocalAudioFilesMetadataPleaseWait =>
+      'Parsing local audio files metadata, please wait ...';
+
+  @override
+  String get persistingLocalAudioFilesMetadataPleaseWait =>
+      'Persisting local audio files metadata, please wait ...';
+
+  @override
+  String get buildingLocalAudioLibraryPleaseWait =>
+      'Building local audio library, please wait ...';
+
+  @override
   String get importingPodcastsPleaseWait =>
       'உங்கள் பாட்காச்ட்களை இறக்குமதி செய்கிறது, காத்திருக்கவும்...';
 
@@ -2226,6 +2238,11 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get exportingPlaylistsPleaseWait =>
       'உங்கள் பிளேலிச்ட்களை ஏற்றுமதி செய்கிறது, காத்திருக்கவும்...';
+
+  @override
+  String checkingForUpdatesPleaseWait(int progress) {
+    return 'Checking for updates $progress%';
+  }
 
   @override
   String get author => 'நூலாசிரியர்';
@@ -2321,4 +2338,13 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get tosLinkText => 'சீனியசின் பணி விதிமுறைகளைப் படிக்கவும்';
+
+  @override
+  String get oopsSomethingWentWrong => 'Oops, something went wrong!';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get reportIssue => 'Report this issue';
 }

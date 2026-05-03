@@ -5,7 +5,7 @@ import '../../app/routing_manager.dart';
 import '../../common/view/snackbars.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
-import '../../podcasts/podcast_model.dart';
+import '../../podcasts/podcast_manager.dart';
 import '../../podcasts/view/lazy_podcast_page.dart';
 
 class CustomPodcastSection extends StatefulWidget {
@@ -56,8 +56,12 @@ class _CustomPodcastSectionState extends State<CustomPodcastSection> {
                           !_urlController.text.startsWith('http')
                       ? null
                       : () {
-                          di<PodcastModel>()
-                              .findEpisodes(feedUrl: _urlController.text)
+                          di<PodcastManager>()
+                              .getEpisodesCommand(_urlController.text)
+                              .runAsync((
+                                item: null,
+                                feedUrl: _urlController.text,
+                              ))
                               .then((v) {
                                 if (v.isEmpty && context.mounted) {
                                   showSnackBar(

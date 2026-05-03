@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/app_manager.dart';
-import '../../app/connectivity_model.dart';
+import '../../app/connectivity_manager.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../app/page_ids.dart';
@@ -54,7 +54,10 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
     final showQueue = watchPropertyValue((PlayerModel m) => m.showQueue);
 
     final appManager = di<AppManager>();
-    final isOnline = watchPropertyValue((ConnectivityModel m) => m.isOnline);
+    final isOnline = watchValue(
+      (ConnectivityManager m) =>
+          m.connectivityCommand.select((p) => p.isOnline),
+    );
     final active = audio?.path != null || isOnline;
 
     Future<void> onFullHeightButtonPressed() async {
@@ -84,8 +87,8 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
                 di<RoutingManager>().push(pageId: PageIDs.searchPage);
               },
             ),
-          if (audio?.audioType == AudioType.local && audio?.albumId != null)
-            PinAlbumButton(albumId: audio!.albumId!),
+          if (audio?.audioType == AudioType.local && audio?.albumDbId != null)
+            PinAlbumButton(albumId: audio!.albumDbId!),
           if (audio?.audioType != AudioType.podcast)
             switch (audio?.audioType) {
               AudioType.local => LikeIconButton(audio: audio, color: iconColor),

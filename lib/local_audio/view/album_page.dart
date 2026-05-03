@@ -25,7 +25,7 @@ import 'pin_album_button.dart';
 class AlbumPage extends StatelessWidget with WatchItMixin {
   const AlbumPage({super.key, required this.id});
 
-  final String id;
+  final int id;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,7 @@ class AlbumPage extends StatelessWidget with WatchItMixin {
         }
 
         return SliverAudioPage(
-          pageId: id,
+          pageId: id.toString(),
           audioPageType: AudioPageType.album,
           audios: album,
           image: AlbumPageImage(audio: album.firstOrNull),
@@ -74,17 +74,60 @@ class AlbumPage extends StatelessWidget with WatchItMixin {
   );
 }
 
+class AlbumPageSideBarName extends StatelessWidget with WatchItMixin {
+  const AlbumPageSideBarName({super.key, required this.albumId});
+
+  final int albumId;
+
+  @override
+  Widget build(BuildContext context) {
+    final albumName = watchValue(
+      (LocalAudioManager m) => m
+          .findAlbumCommand(albumId)
+          .select(
+            (r) => di<LocalAudioManager>().findAlbumName(albumId) ?? '...',
+          ),
+    );
+    return Text(albumName, maxLines: 1, overflow: TextOverflow.ellipsis);
+  }
+}
+
+class AlbumPageSideBarArtist extends StatelessWidget with WatchItMixin {
+  const AlbumPageSideBarArtist({super.key, required this.albumId});
+
+  final int albumId;
+
+  @override
+  Widget build(BuildContext context) {
+    final artistName = watchValue(
+      (LocalAudioManager m) => m
+          .findAlbumCommand(albumId)
+          .select(
+            (r) => di<LocalAudioManager>().findArtistOfAlbum(albumId) ?? '...',
+          ),
+    );
+    return Text(artistName, maxLines: 1, overflow: TextOverflow.ellipsis);
+  }
+}
+
 class AlbumPageSideBarIcon extends StatelessWidget with WatchItMixin {
   const AlbumPageSideBarIcon({super.key, required this.albumId});
 
-  final String albumId;
+  final int albumId;
 
   @override
   Widget build(BuildContext context) {
     callOnceAfterThisBuild(
       (context) => di<LocalAudioManager>().findAlbumCommand(albumId).run(),
     );
-    final alphabetColor = getAlphabetColor(albumId);
+    final albumName =
+        watchValue(
+          (LocalAudioManager m) => m
+              .findAlbumCommand(albumId)
+              .select((r) => di<LocalAudioManager>().findAlbumName(albumId)),
+        ) ??
+        albumId.toString();
+    final alphabetColor = getAlphabetColor(albumName);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
@@ -108,7 +151,7 @@ class AlbumPageSideBarIcon extends StatelessWidget with WatchItMixin {
             ),
             onData: (album, param) {
               final path = album
-                  ?.firstWhereOrNull((e) => e.albumId == albumId)
+                  ?.firstWhereOrNull((e) => e.albumDbId == albumId)
                   ?.path;
               return path == null
                   ? SideBarFallBackImage(
@@ -142,21 +185,21 @@ class AlbumPageImage extends StatelessWidget with WatchItMixin {
       child: audio != null && audio!.canHaveLocalCover
           ? watchValue(
               (LocalAudioManager m) =>
-                  m.findAlbumCommand(audio!.albumId!).results,
+                  m.findAlbumCommand(audio!.albumDbId!).results,
             ).toWidget(
               whileRunning: (lastResult, param) => Shimmer.fromColors(
                 child: const SizedBox.square(
                   dimension: kMaxAudioPageHeaderHeight,
                 ),
-                baseColor: getAlphabetColor(audio!.albumId!),
+                baseColor: getAlphabetColor(audio!.album ?? ''),
                 highlightColor: getAlphabetColor(
-                  audio!.albumId!,
+                  audio!.album ?? '',
                 ).withValues(alpha: 0.5),
               ),
               onError: (error, lastResult, param) =>
                   const CoverBackground(dimension: kMaxAudioPageHeaderHeight),
               onData: (album, param) => LocalCover(
-                albumId: audio!.albumId!,
+                albumId: audio!.albumDbId!,
                 path: audio!.path!,
                 dimension: kMaxAudioPageHeaderHeight,
                 fallback: const CoverBackground(
@@ -176,7 +219,7 @@ class AlbumPageControlPanel extends StatelessWidget {
     required this.album,
   });
 
-  final String id;
+  final int id;
   final List<Audio> album;
 
   @override
@@ -187,10 +230,10 @@ class AlbumPageControlPanel extends StatelessWidget {
       children: space(
         children: [
           PinAlbumButton(albumId: id),
-          AvatarPlayButton(audios: album, pageId: id),
+          AvatarPlayButton(audios: album, pageId: id.toString()),
           AudioTileOptionButton(
             audios: album,
-            playlistId: id,
+            playlistId: id.toString(),
             allowRemove: false,
             searchTerm:
                 '${album.firstOrNull?.artist} - ${album.firstOrNull?.album}',

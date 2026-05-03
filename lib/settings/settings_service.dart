@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../common/file_names.dart';
 import '../common/logging.dart';
 import '../common/persistence_utils.dart';
+import '../extensions/taget_platform_x.dart';
+import 'shared_preferences_keys.dart';
 
 @lazySingleton
 class SettingsService {
@@ -87,8 +88,10 @@ class SettingsService {
       for (final name in FileNames.all) wipeCustomSettings(filename: name),
       _sharedPreferences.clear(),
     ]);
-    exit(0);
   }
+
+  Future<String?> get downloadsDirOrDefault async =>
+      getString(SPKeys.downloads) ?? await PlatformX.downloadsDefaultDir;
 
   @disposeMethod
   Future<void> dispose() async => _propertiesChangedController.close();

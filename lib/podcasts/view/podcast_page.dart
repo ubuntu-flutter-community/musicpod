@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
-import 'package:future_loading_dialog/future_loading_dialog.dart';
 
+import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
-import '../../app/page_ids.dart';
 import '../../common/view/adaptive_multi_layout_body.dart';
 import '../../common/view/audio_filter.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import '../../settings/settings_model.dart';
-import '../podcast_model.dart';
+import '../podcast_manager.dart';
 import 'podcast_page_control_panel.dart';
 import 'podcast_page_header.dart';
 import 'podcast_page_search_field.dart';
@@ -30,48 +28,30 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
     required this.feedUrl,
     required this.episodes,
     required this.title,
-    this.isOnline = true,
-    required this.showDownloadsOnly,
   });
 
   final String feedUrl;
   final String? imageUrl;
   final String title;
   final List<Audio> episodes;
-  final bool isOnline;
-  final bool showDownloadsOnly;
 
   @override
   Widget build(BuildContext context) {
     final showPodcastsAscending = watchPropertyValue(
-      (LibraryModel m) => m.showPodcastAscending(feedUrl),
+      (PodcastManager m) => m.showPodcastAscending(feedUrl),
     );
-    watchPropertyValue((LibraryModel m) => m.podcastUpdatesLength);
 
-    watchPropertyValue(
-      (PodcastModel m) => m.getPodcastEpisodesFromCache(feedUrl)?.length,
-    );
-    watchPropertyValue(
-      (PodcastModel m) => m.getPodcastEpisodesFromCache(feedUrl)?.hashCode,
-    );
-    final episodes =
-        di<PodcastModel>().getPodcastEpisodesFromCache(feedUrl) ??
-        this.episodes;
+    final showDownloadsOnly = watchValue((PodcastManager m) => m.downloadsOnly);
 
-    watchPropertyValue((PlayerModel m) => m.lastPositions?.length);
-    final showSearch = watchPropertyValue(
-      (PodcastModel m) => m.getShowSearch(feedUrl),
-    );
-    final searchQuery = watchPropertyValue(
-      (PodcastModel m) => m.getSearchQuery(feedUrl),
-    );
+    final showSearch = watchValue((PodcastManager m) => m.showSearch);
+    final searchQuery = watchValue((PodcastManager m) => m.searchQuery);
 
     final hideCompletedEpisodes = watchPropertyValue(
       (SettingsModel m) => m.hideCompletedEpisodes,
     );
 
-    final filter = watchPropertyValue((PodcastModel m) => m.filter);
-    final episodesWithDownloads = episodes
+    final filter = watchValue((PodcastManager m) => m.filter);
+    final filteredEpisodes = episodes
         .where((e) => e.title != null && e.episodeDescription != null)
         .where(
           (e) => (searchQuery == null || searchQuery.trim().isEmpty)
@@ -92,13 +72,18 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
 
           return e.durationMs != null &&
               di<PlayerModel>().getLastPosition(e.url)?.inMilliseconds !=
-                  e.durationMs;
+                  e.durationMs?.toInt();
         })
+        .where(
+          (e) => showDownloadsOnly
+              ? di<PodcastManager>().getDownload(e.url) != null
+              : true,
+        )
         .toList();
 
     sortListByAudioFilter(
       audioFilter: AudioFilter.year,
-      audios: episodesWithDownloads,
+      audios: filteredEpisodes,
       descending: !showPodcastsAscending,
     );
 
@@ -121,33 +106,28 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
         ],
       ),
       body: RefreshIndicator(
-        onRefresh: () async => showFutureLoadingDialog(
-          barrierDismissible: true,
-          context: context,
-          title: context.l10n.loadingPodcastFeed,
-          future: () => di<PodcastModel>().checkForUpdates(
-            feedUrls: {feedUrl},
-            updateMessage: context.l10n.newEpisodeAvailable,
-            multiUpdateMessage: (length) =>
-                context.l10n.newEpisodesAvailableFor(length),
-          ),
-        ),
+        onRefresh: di<PodcastManager>().isPodcastSubscribed(feedUrl)
+            ? () async => di<PodcastManager>()
+                  .checkForUpdateAndRefreshIfNeededCommand
+                  .runAsync((
+                    feedUrls: [feedUrl],
+                    multiUpdateMessage: (length) => context.mounted
+                        ? context.l10n.newEpisodesAvailableFor(length)
+                        : context.l10n.updateAvailable,
+                  ))
+            : () async {},
         child: AdaptiveMultiLayoutBody(
           header: PodcastPageHeader(
             title: title,
             imageUrl: imageUrl,
-            episodes: episodes,
+            episodes: filteredEpisodes,
             showFallbackIcon: true,
           ),
-          sliverBody: (constraints) => SliverPodcastPageList(
-            audios: episodesWithDownloads,
-            pageId: feedUrl,
-            isOnline: isOnline,
-            showDownloadsOnly: showDownloadsOnly,
-          ),
+          sliverBody: (constraints) =>
+              SliverPodcastPageList(audios: filteredEpisodes, pageId: feedUrl),
           controlPanel: PodcastPageControlPanel(
             feedUrl: feedUrl,
-            audios: episodesWithDownloads,
+            audios: filteredEpisodes,
             title: title,
             imageUrl: imageUrl,
           ),

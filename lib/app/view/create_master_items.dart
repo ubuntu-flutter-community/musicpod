@@ -6,11 +6,11 @@ import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
 import '../../custom_content/view/custom_content_page.dart';
-import '../../extensions/string_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../home/home_page.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
+import '../../podcasts/podcast_manager.dart';
+import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/local_audio_page.dart';
 import '../../playlists/view/liked_audio_page.dart';
@@ -19,6 +19,7 @@ import '../../podcasts/view/lazy_podcast_page.dart';
 import '../../podcasts/view/podcast_page_side_bar_icon.dart';
 import '../../podcasts/view/podcast_page_title.dart';
 import '../../podcasts/view/podcasts_page.dart';
+import '../../radio/radio_model.dart';
 import '../../radio/view/radio_page.dart';
 import '../../radio/view/station_page.dart';
 import '../../radio/view/station_page_icon.dart';
@@ -30,13 +31,15 @@ import 'master_item.dart';
 
 Iterable<MasterItem> getAllMasterItems(
   BuildContext context,
-  LibraryModel libraryModel,
+  PodcastManager podcastManager,
+  LocalAudioManager localAudioManager,
+  RadioManager radioManager,
 ) => [
   ...permanentMasterItems,
-  ...createPlaylistMasterItems(libraryModel),
-  ...createPodcastMasterItems(context, libraryModel),
-  ...createFavoriteAlbumsMasterItems(libraryModel),
-  ...createStarredStationsMasterItems(libraryModel),
+  ...createPlaylistMasterItems(localAudioManager),
+  ...createPodcastMasterItems(context, podcastManager),
+  ...createPinnedAlbumsMasterItems(localAudioManager),
+  ...createStarredStationsMasterItems(radioManager),
 ];
 
 Iterable<MasterItem> permanentMasterItems = [
@@ -96,23 +99,24 @@ Iterable<MasterItem> permanentMasterItems = [
   ),
 ];
 
-Iterable<MasterItem> createPlaylistMasterItems(LibraryModel libraryModel) =>
-    libraryModel.playlistIDs.map(
-      (id) => MasterItem(
-        titleBuilder: (context) => Text(id),
-        subtitleBuilder: (context) => Text(context.l10n.playlist),
-        pageId: id,
-        pageBuilder: (_) => PlaylistPage(pageId: id),
-        iconBuilder: (selected) => SideBarFallBackImage(
-          color: getAlphabetColor(id),
-          child: Icon(Iconz.playlist),
-        ),
-      ),
-    );
+Iterable<MasterItem> createPlaylistMasterItems(
+  LocalAudioManager localAudioManager,
+) => localAudioManager.playlistIDs.map(
+  (id) => MasterItem(
+    titleBuilder: (context) => Text(id),
+    subtitleBuilder: (context) => Text(context.l10n.playlist),
+    pageId: id,
+    pageBuilder: (_) => PlaylistPage(pageId: id),
+    iconBuilder: (selected) => SideBarFallBackImage(
+      color: getAlphabetColor(id),
+      child: Icon(Iconz.playlist),
+    ),
+  ),
+);
 
 Iterable<MasterItem> createStarredStationsMasterItems(
-  LibraryModel libraryModel,
-) => libraryModel.starredStations.map(
+  RadioManager radioManager,
+) => radioManager.starredStations.map(
   (uuid) => MasterItem(
     titleBuilder: (_) => StationTitle(uuid: uuid),
     subtitleBuilder: (context) => Text(context.l10n.station),
@@ -122,13 +126,13 @@ Iterable<MasterItem> createStarredStationsMasterItems(
   ),
 );
 
-Iterable<MasterItem> createFavoriteAlbumsMasterItems(
-  LibraryModel libraryModel,
-) => libraryModel.favoriteAlbums.map(
+Iterable<MasterItem> createPinnedAlbumsMasterItems(
+  LocalAudioManager localAudioManager,
+) => localAudioManager.pinnedAlbums.map(
   (id) => MasterItem(
-    titleBuilder: (context) => Text(id.albumOfId),
-    subtitleBuilder: (context) => Text(id.artistOfId),
-    pageId: id,
+    titleBuilder: (context) => AlbumPageSideBarName(albumId: id),
+    subtitleBuilder: (context) => AlbumPageSideBarArtist(albumId: id),
+    pageId: id.toString(),
     pageBuilder: (_) => AlbumPage(id: id),
     iconBuilder: (selected) => AlbumPageSideBarIcon(albumId: id),
   ),
@@ -136,8 +140,8 @@ Iterable<MasterItem> createFavoriteAlbumsMasterItems(
 
 Iterable<MasterItem> createPodcastMasterItems(
   BuildContext context,
-  LibraryModel libraryModel,
-) => libraryModel.podcastFeedUrls.map(
+  PodcastManager podcastManager,
+) => podcastManager.podcastFeedUrls.map(
   (feedUrl) => MasterItem(
     titleBuilder: (_) => PodcastPageTitle(feedUrl: feedUrl),
     subtitleBuilder: (_) => PodcastPageSubTitle(feedUrl: feedUrl),

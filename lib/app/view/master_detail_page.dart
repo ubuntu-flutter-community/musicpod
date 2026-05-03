@@ -8,7 +8,9 @@ import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../library/library_model.dart';
+import '../../podcasts/podcast_manager.dart';
+import '../../local_audio/local_audio_manager.dart';
+import '../../radio/radio_model.dart';
 import 'create_master_items.dart';
 import 'master_panel.dart';
 import '../routing_manager.dart';
@@ -60,7 +62,9 @@ class MasterDetailPage extends StatelessWidget {
               onGenerateRoute: (settings) {
                 final masterItems = getAllMasterItems(
                   context,
-                  di<LibraryModel>(),
+                  di<PodcastManager>(),
+                  di<LocalAudioManager>(),
+                  di<RadioManager>(),
                 );
                 final page =
                     (masterItems.firstWhereOrNull(

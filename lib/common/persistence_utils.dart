@@ -6,8 +6,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:xdg_directories/xdg_directories.dart';
 
 import '../app/app_config.dart';
-import 'data/audio.dart';
-import 'logging.dart';
 import '../extensions/taget_platform_x.dart';
 
 String? _workingDir;
@@ -159,116 +157,8 @@ Future<void> wipeCustomSettings({required String filename}) async {
   }
 }
 
-Future<void> writeStringIterable({
-  required Iterable<String> iterable,
-  required String filename,
-}) async {
-  final workingDir = await getWorkingDir();
-  final file = File('$workingDir/$filename');
-  if (!file.existsSync()) {
-    await file.create();
-  }
-  await file.writeAsString(iterable.join('\n'));
-}
-
-Future<Iterable<String>?> readStringIterable({required String filename}) async {
-  final workingDir = await getWorkingDir();
-  final file = File(p.join(workingDir, filename));
-
-  if (!file.existsSync()) return Future.value(null);
-
-  final content = await file.readAsLines();
-
-  return content;
-}
-
-Future<void> writeAudioMap({
-  required Map<String, List<Audio>> map,
-  required String fileName,
-}) async {
-  final dynamicMap = map.map(
-    (key, value) => MapEntry<String, List<dynamic>>(
-      key,
-      value.map((audio) => audio.toMap()).toList(),
-    ),
-  );
-
-  await writeJsonToFile(dynamicMap, fileName);
-}
-
 Future<void> writeJsonToFile(Map<String, dynamic> json, String fileName) async {
   final jsonStr = jsonEncode(json);
-
-  final workingDir = await getWorkingDir();
-
-  final file = File(p.join(workingDir, fileName));
-
-  if (!file.existsSync()) {
-    file.createSync();
-  }
-
-  await file.writeAsString(jsonStr);
-}
-
-Future<Map<String, List<Audio>>> readAudioMap(String fileName) async {
-  final workingDir = await getWorkingDir();
-
-  try {
-    final file = File(p.join(workingDir, fileName));
-
-    if (file.existsSync()) {
-      final jsonStr = await file.readAsString();
-
-      final map = jsonDecode(jsonStr) as Map<String, dynamic>;
-
-      final m = map.map(
-        (key, value) => MapEntry<String, List<Audio>>(
-          key,
-          List.from((value as List<dynamic>).map((e) => Audio.fromMap(e))),
-        ),
-      );
-
-      return m;
-    } else {
-      return <String, List<Audio>>{};
-    }
-  } on Exception catch (e) {
-    printMessageInDebugMode(e);
-    return <String, List<Audio>>{};
-  }
-}
-
-Future<Map<String, String>> readStringMap(String fileName) async {
-  final workingDir = await getWorkingDir();
-
-  try {
-    final file = File(p.join(workingDir, fileName));
-
-    if (file.existsSync()) {
-      final jsonStr = await file.readAsString();
-
-      final map = jsonDecode(jsonStr) as Map<String, dynamic>;
-
-      final m = map.map(
-        (key, value) => MapEntry<String, String>(key, value as String),
-      );
-
-      return m;
-    } else {
-      return <String, String>{};
-    }
-  } on Exception catch (e) {
-    printMessageInDebugMode(e);
-    return <String, String>{};
-  }
-}
-
-Future<void> writeStringMap(Map<String, String> map, String fileName) async {
-  final dynamicMap = map.map(
-    (key, value) => MapEntry<String, String>(key, value as dynamic),
-  );
-
-  final jsonStr = jsonEncode(dynamicMap);
 
   final workingDir = await getWorkingDir();
 

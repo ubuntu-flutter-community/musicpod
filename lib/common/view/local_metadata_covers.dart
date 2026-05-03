@@ -1,15 +1,17 @@
 import 'dart:io';
 
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:mime/mime.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:mime/mime.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../extensions/picture_type_x.dart';
 import '../../external_path/external_path_service.dart';
 import '../../l10n/l10n.dart';
+import '../../local_audio/data/change_metadata_capsule.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/view/local_cover.dart';
 import '../data/audio.dart';
@@ -17,7 +19,8 @@ import 'icons.dart';
 import 'meta_data_dialog.dart';
 import 'ui_constants.dart';
 
-class LocalMetadataCovers extends StatefulWidget {
+class LocalMetadataCovers extends StatefulWidget
+    with WatchItStatefulWidgetMixin {
   const LocalMetadataCovers({super.key, required this.audio});
 
   final Audio audio;
@@ -29,26 +32,45 @@ class LocalMetadataCovers extends StatefulWidget {
 class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
   AudioMetadata? _data;
   String? _error;
+  bool _loading = false;
+
   @override
   void initState() {
     super.initState();
     _readMetadata();
   }
 
-  void _readMetadata() {
-    if (widget.audio.path != null) {
-      try {
-        _error = null;
-        _data = readMetadata(File(widget.audio.path!), getImage: true);
-      } on Exception catch (e) {
-        _error = e.toString();
-      }
+  Future<void> _readMetadata() async {
+    if (widget.audio.path == null) return;
+    setState(() => _loading = true);
+    try {
+      _error = null;
+      _data = await compute(_readMetadataInIsolate, widget.audio.path!);
+    } on Exception catch (e) {
+      _error = e.toString();
     }
+    if (mounted) setState(() => _loading = false);
   }
 
   @override
   Widget build(BuildContext context) {
     const dimension = MetaDataContent.dimension;
+
+    registerHandler(
+      select: (LocalAudioManager m) => m.changeMetadataCommand,
+      handler: (context, newValue, cancel) {
+        if (newValue != null && newValue.path == widget.audio.path) {
+          _readMetadata();
+        }
+      },
+    );
+
+    if (_loading) {
+      return const SizedBox.square(
+        dimension: dimension,
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
 
     if (_error != null) {
       return Padding(
@@ -67,11 +89,11 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
         child: Stack(
           children: [
             _data == null || _data!.pictures.isEmpty
-                ? widget.audio.path == null || widget.audio.albumId == null
+                ? widget.audio.path == null || widget.audio.albumDbId == null
                       ? const SizedBox.shrink()
                       : LocalCover(
                           path: widget.audio.path!,
-                          albumId: widget.audio.albumId!,
+                          albumId: widget.audio.albumDbId!,
                           fallback: Icon(Iconz.musicNote, size: dimension / 2),
                           dimension: dimension,
                         )
@@ -134,30 +156,33 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
                                         )
                                         .toList(),
                                     onChanged: (v) {
-                                      di<LocalAudioManager>().changeMetadata(
-                                        widget.audio,
-                                        pictures: [
-                                          if (_data?.pictures != null)
-                                            ..._data!.pictures.map((e) {
-                                              if (v != null &&
-                                                  e.pictureType != v &&
-                                                  File.fromRawPath(
+                                      di<LocalAudioManager>()
+                                          .changeMetadataCommand(
+                                            ChangeMetadataCapsule(
+                                              audio: widget.audio,
+                                              pictures: [
+                                                if (_data?.pictures != null)
+                                                  ..._data!.pictures.map((e) {
+                                                    if (v != null &&
+                                                        e.pictureType != v &&
+                                                        File.fromRawPath(
+                                                              e.bytes,
+                                                            ).path ==
+                                                            File.fromRawPath(
+                                                              picture.bytes,
+                                                            ).path) {
+                                                      return Picture(
                                                         e.bytes,
-                                                      ).path ==
-                                                      File.fromRawPath(
-                                                        picture.bytes,
-                                                      ).path) {
-                                                return Picture(
-                                                  e.bytes,
-                                                  e.mimetype,
-                                                  v,
-                                                );
-                                              } else {
-                                                return e;
-                                              }
-                                            }),
-                                        ],
-                                      );
+                                                        e.mimetype,
+                                                        v,
+                                                      );
+                                                    } else {
+                                                      return e;
+                                                    }
+                                                  }),
+                                              ],
+                                            ),
+                                          );
                                       _readMetadata();
                                       setState(() {});
                                     },
@@ -177,18 +202,20 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
                 onPressed: () async {
                   final paths = await di<ExternalPathService>()
                       .getPathsOfFiles();
-                  di<LocalAudioManager>().changeMetadata(
-                    widget.audio,
-                    pictures: [
-                      if (_data?.pictures != null) ..._data!.pictures,
-                      ...paths.map(
-                        (e) => Picture(
-                          File(e).readAsBytesSync(),
-                          lookupMimeType(e) ?? '',
-                          PictureType.coverFront,
+                  di<LocalAudioManager>().changeMetadataCommand(
+                    ChangeMetadataCapsule(
+                      audio: widget.audio,
+                      pictures: [
+                        if (_data?.pictures != null) ..._data!.pictures,
+                        ...paths.map(
+                          (e) => Picture(
+                            File(e).readAsBytesSync(),
+                            lookupMimeType(e) ?? '',
+                            PictureType.coverFront,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   );
                   _readMetadata();
                   setState(() {});
@@ -203,17 +230,19 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
                 onPressed: () async {
                   final paths = await di<ExternalPathService>()
                       .getPathsOfFiles();
-                  di<LocalAudioManager>().changeMetadata(
-                    widget.audio,
-                    pictures: [
-                      ...paths.map(
-                        (e) => Picture(
-                          File(e).readAsBytesSync(),
-                          lookupMimeType(e) ?? '',
-                          PictureType.illustration,
+                  di<LocalAudioManager>().changeMetadataCommand(
+                    ChangeMetadataCapsule(
+                      audio: widget.audio,
+                      pictures: [
+                        ...paths.map(
+                          (e) => Picture(
+                            File(e).readAsBytesSync(),
+                            lookupMimeType(e) ?? '',
+                            PictureType.illustration,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   );
                   _readMetadata();
                   setState(() {});
@@ -226,3 +255,6 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
     );
   }
 }
+
+AudioMetadata _readMetadataInIsolate(String path) =>
+    readMetadata(File(path), getImage: true);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
+import '../../radio/radio_model.dart';
 import '../data/audio.dart';
 import 'animated_like_icon.dart';
 
@@ -13,11 +13,11 @@ class StaredStationIconButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final libraryModel = di<LibraryModel>();
+    final radioManager = di<RadioManager>();
 
-    watchPropertyValue((LibraryModel m) => m.starredStations.length);
+    watchPropertyValue((RadioManager m) => m.starredStations.length);
 
-    final isStarredStation = libraryModel.isStarredStation(audio?.uuid);
+    final isStarredStation = radioManager.isStarredStation(audio?.uuid);
 
     final void Function()? onLike;
     if (audio == null && audio?.uuid == null) {
@@ -25,8 +25,8 @@ class StaredStationIconButton extends StatelessWidget with WatchItMixin {
     } else {
       onLike = () {
         isStarredStation
-            ? libraryModel.unStarStation(audio!.uuid!)
-            : libraryModel.addStarredStation(audio!.uuid!);
+            ? radioManager.unStarStation(audio!.uuid!)
+            : radioManager.addStarredStation(audio!.uuid!);
       };
     }
 

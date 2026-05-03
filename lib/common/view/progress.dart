@@ -3,7 +3,6 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
-import '../../extensions/taget_platform_x.dart';
 import '../../settings/settings_model.dart';
 
 class Progress extends StatelessWidget with WatchItMixin {
@@ -37,36 +36,29 @@ class Progress extends StatelessWidget with WatchItMixin {
     final useYaruTheme = watchPropertyValue(
       (SettingsModel m) => m.useYaruTheme,
     );
-    return useYaruTheme && isLinux
+    return useYaruTheme
         ? YaruCircularProgressIndicator(
             strokeWidth: strokeWidth,
             value: value,
             color: color,
             trackColor: backgroundColor,
           )
-        : Padding(
-            padding: padding ?? const EdgeInsets.all(4),
-            child: adaptive
-                ? CircularProgressIndicator.adaptive(
-                    strokeWidth: strokeWidth,
-                    value: value,
-                    backgroundColor: value == null
-                        ? null
-                        : (backgroundColor ??
-                              context.theme.colorScheme.primary.withValues(
-                                alpha: 0.3,
-                              )),
-                  )
-                : CircularProgressIndicator(
-                    strokeWidth: strokeWidth,
-                    value: value,
-                    backgroundColor: value == null
-                        ? null
-                        : (backgroundColor ??
-                              context.theme.colorScheme.primary.withValues(
-                                alpha: 0.3,
-                              )),
-                  ),
+        : adaptive
+        ? CircularProgressIndicator.adaptive(
+            strokeWidth: strokeWidth,
+            value: value,
+            backgroundColor: value == null
+                ? null
+                : (backgroundColor ??
+                      context.theme.colorScheme.primary.withValues(alpha: 0.3)),
+          )
+        : CircularProgressIndicator(
+            strokeWidth: strokeWidth,
+            value: value,
+            backgroundColor: value == null
+                ? null
+                : (backgroundColor ??
+                      context.theme.colorScheme.primary.withValues(alpha: 0.3)),
           );
   }
 }

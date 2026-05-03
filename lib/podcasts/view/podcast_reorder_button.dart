@@ -5,7 +5,7 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/icons.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
+import '../podcast_manager.dart';
 
 class PodcastReorderButton extends StatelessWidget with WatchItMixin {
   const PodcastReorderButton({super.key, required this.feedUrl});
@@ -15,17 +15,17 @@ class PodcastReorderButton extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final ascending = watchPropertyValue(
-      (LibraryModel m) => m.showPodcastAscending(feedUrl),
+      (PodcastManager m) => m.showPodcastAscending(feedUrl),
     );
 
     final podcastSubscribed = watchPropertyValue(
-      (LibraryModel m) => m.isPodcastSubscribed(feedUrl),
+      (PodcastManager m) => m.isPodcastSubscribed(feedUrl),
     );
 
     return IconButton(
       tooltip: context.l10n.reorder,
       onPressed: podcastSubscribed
-          ? () => di<LibraryModel>().reorderPodcast(
+          ? () => di<PodcastManager>().reorderPodcast(
               feedUrl: feedUrl,
               ascending: !ascending,
             )

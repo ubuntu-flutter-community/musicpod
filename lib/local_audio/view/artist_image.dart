@@ -74,10 +74,10 @@ class _ArtistImage extends StatelessWidget {
           ? []
           : di<LocalAudioManager>()
                 .findUniqueAlbumAudios(artistAudios)
-                .where((e) => e.albumId != null && e.path != null)
+                .where((e) => e.albumDbId != null && e.path != null)
                 .map(
                   (e) => LocalCover(
-                    albumId: e.albumId!,
+                    albumId: e.albumDbId!,
                     path: e.path!,
                     fallback: ColoredBox(color: theme.cardColor),
                     fit: BoxFit.fill,

@@ -1,14 +1,16 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
+import 'package:flutter/foundation.dart';
 import 'package:collection/collection.dart';
+import 'package:drift/drift.dart';
 import 'package:injectable/injectable.dart';
 import 'package:path/path.dart' as p;
 
 import '../common/data/audio.dart';
 import '../common/logging.dart';
+import '../common/persistence/database.dart';
 import '../extensions/media_file_x.dart';
 import '../extensions/string_x.dart';
 import '../extensions/taget_platform_x.dart';
@@ -16,31 +18,36 @@ import '../common/persistence_utils.dart';
 
 @lazySingleton
 class LocalCoverService {
-  final _propertiesChangedController = StreamController<bool>.broadcast();
-  Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
+  final Database _db;
 
-  final _store = <String, Uint8List?>{};
-  int get storeLength => _store.length;
+  LocalCoverService({required Database database}) : _db = database;
+
+  Future<Map<int, Uint8List?>> init() async {
+    final _cache = <int, Uint8List?>{};
+
+    final existing = await _db.select(_db.albumArtTable).get();
+    for (final row in existing) {
+      _cache[row.album] = row.pictureData;
+    }
+    return _cache;
+  }
 
   Future<Uint8List?> getCover({
-    required String albumId,
-    required String? path,
+    required int albumId,
+    required String path,
   }) async {
-    if (path == null) return null;
+    // Check database
+    final dbCover = await getFromDb(albumId);
+    if (dbCover != null) {
+      return dbCover;
+    }
+
     final file = File(path);
-    if (file.existsSync() && file.isPlayable && albumId.isNotEmpty == true) {
+    if (file.existsSync() && file.isPlayable) {
       Uint8List? bytesFromMetadata;
 
       try {
-        final metadata = readMetadata(file, getImage: true);
-        bytesFromMetadata = metadata.pictures
-            .firstWhereOrNull(
-              (e) =>
-                  (e.bytes.isNotEmpty &&
-                      e.pictureType == PictureType.coverFront) ||
-                  e.bytes.isNotEmpty,
-            )
-            ?.bytes;
+        bytesFromMetadata = await compute(_readCoverFromFile, path);
 
         if (bytesFromMetadata == null) {
           final maybeImageInFolder = _getImageInFolder(file);
@@ -54,13 +61,39 @@ class LocalCoverService {
 
       if (bytesFromMetadata == null) return null;
 
-      final cover = _put(albumId: albumId, data: bytesFromMetadata);
-      if (cover != null) {
-        _propertiesChangedController.add(true);
-      }
-      return cover;
+      await _persistToDb(albumId, bytesFromMetadata);
+      return bytesFromMetadata;
     }
     return null;
+  }
+
+  Future<Uint8List?> getFromDb(int albumId) async {
+    final row = await (_db.select(
+      _db.albumArtTable,
+    )..where((t) => t.album.equals(albumId))).getSingleOrNull();
+    return row?.pictureData;
+  }
+
+  Future<void> _persistToDb(int albumId, Uint8List data) async {
+    final existing = await (_db.select(
+      _db.albumArtTable,
+    )..where((t) => t.album.equals(albumId))).getSingleOrNull();
+
+    if (existing == null) {
+      await _db
+          .into(_db.albumArtTable)
+          .insert(
+            AlbumArtTableCompanion.insert(
+              album: albumId,
+              pictureData: data,
+              pictureMimeType: 'image/png',
+            ),
+          );
+    } else {
+      await (_db.update(_db.albumArtTable)
+            ..where((t) => t.album.equals(albumId)))
+          .write(AlbumArtTableCompanion(pictureData: Value(data)));
+    }
   }
 
   String? _getImageInFolder(File file) =>
@@ -94,36 +127,19 @@ class LocalCoverService {
     required String suffix,
   }) => Directory(p.join(file.parent.path, suffix)).existsSync();
 
-  Uint8List? _put({required String albumId, Uint8List? data}) {
-    return _store.containsKey(albumId)
-        ? _store.update(albumId, (value) => data)
-        : _store.putIfAbsent(albumId, () => data);
-  }
-
-  Uint8List? get(String? albumId) => albumId == null ? null : _store[albumId];
-
-  Future<void> dispose() async => _propertiesChangedController.close();
-
   Future<Uri?> createMediaControlsArtUri({Audio? audio}) async {
     if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
       return Uri.tryParse(audio?.imageUrl ?? audio!.albumArtUrl!);
     } else if (audio?.canHaveLocalCover == true &&
         File(audio!.path!).existsSync()) {
-      final maybeData = get(audio.albumId);
-      if (maybeData != null) {
-        final File newFile = await _safeTempCover(maybeData);
+      final newData = await getCover(
+        albumId: audio.albumDbId!,
+        path: audio.path!,
+      );
+      if (newData != null) {
+        final File newFile = await _safeTempCover(newData);
 
         return Uri.file(newFile.path, windows: isWindows);
-      } else {
-        final newData = await getCover(
-          albumId: audio.albumId!,
-          path: audio.path!,
-        );
-        if (newData != null) {
-          final File newFile = await _safeTempCover(newData);
-
-          return Uri.file(newFile.path, windows: isWindows);
-        }
       }
     }
 
@@ -147,4 +163,15 @@ class LocalCoverService {
     final newFile = await file.writeAsBytes(maybeData);
     return newFile;
   }
+}
+
+Uint8List? _readCoverFromFile(String path) {
+  final metadata = readMetadata(File(path), getImage: true);
+  return metadata.pictures
+      .firstWhereOrNull(
+        (e) =>
+            (e.bytes.isNotEmpty && e.pictureType == PictureType.coverFront) ||
+            e.bytes.isNotEmpty,
+      )
+      ?.bytes;
 }

@@ -35,21 +35,18 @@ class MockLocalCoverService extends _i1.Mock implements _i2.LocalCoverService {
   }
 
   @override
-  _i3.Stream<bool> get propertiesChanged =>
+  _i3.Future<Map<int, _i4.Uint8List?>> init() =>
       (super.noSuchMethod(
-            Invocation.getter(#propertiesChanged),
-            returnValue: _i3.Stream<bool>.empty(),
+            Invocation.method(#init, []),
+            returnValue: _i3.Future<Map<int, _i4.Uint8List?>>.value(
+              <int, _i4.Uint8List?>{},
+            ),
           )
-          as _i3.Stream<bool>);
-
-  @override
-  int get storeLength =>
-      (super.noSuchMethod(Invocation.getter(#storeLength), returnValue: 0)
-          as int);
+          as _i3.Future<Map<int, _i4.Uint8List?>>);
 
   @override
   _i3.Future<_i4.Uint8List?> getCover({
-    required String? albumId,
+    required int? albumId,
     required String? path,
   }) =>
       (super.noSuchMethod(
@@ -59,13 +56,12 @@ class MockLocalCoverService extends _i1.Mock implements _i2.LocalCoverService {
           as _i3.Future<_i4.Uint8List?>);
 
   @override
-  _i3.Future<void> dispose() =>
+  _i3.Future<_i4.Uint8List?> getFromDb(int? albumId) =>
       (super.noSuchMethod(
-            Invocation.method(#dispose, []),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
+            Invocation.method(#getFromDb, [albumId]),
+            returnValue: _i3.Future<_i4.Uint8List?>.value(),
           )
-          as _i3.Future<void>);
+          as _i3.Future<_i4.Uint8List?>);
 
   @override
   _i3.Future<Uri?> createMediaControlsArtUri({_i5.Audio? audio}) =>
@@ -91,6 +87,14 @@ class MockSettingsService extends _i1.Mock implements _i6.SettingsService {
             returnValue: _i3.Stream<bool>.empty(),
           )
           as _i3.Stream<bool>);
+
+  @override
+  _i3.Future<String?> get downloadsDirOrDefault =>
+      (super.noSuchMethod(
+            Invocation.getter(#downloadsDirOrDefault),
+            returnValue: _i3.Future<String?>.value(),
+          )
+          as _i3.Future<String?>);
 
   @override
   bool notify(bool? saved) =>

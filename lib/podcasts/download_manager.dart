@@ -10,27 +10,26 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
 import '../common/view/snackbars.dart';
-import '../extensions/taget_platform_x.dart';
 import '../external_path/external_path_service.dart';
-import '../library/library_service.dart';
 import '../settings/settings_service.dart';
 import '../settings/shared_preferences_keys.dart';
+import 'podcast_service.dart';
 
 @lazySingleton
-class DownloadModel extends SafeChangeNotifier {
-  DownloadModel({
-    required LibraryService libraryService,
+class DownloadManager extends SafeChangeNotifier {
+  DownloadManager({
+    required PodcastService podcastService,
     required SettingsService settingsService,
     required Dio dio,
     required ExternalPathService externalPathService,
-  }) : _libraryService = libraryService,
+  }) : _podcastService = podcastService,
        _settingsService = settingsService,
        _dio = dio,
        _externalPathService = externalPathService {
     downloadsDirCommand.run((setNewDir: false));
   }
 
-  final LibraryService _libraryService;
+  final PodcastService _podcastService;
   final SettingsService _settingsService;
   final Dio _dio;
   final ExternalPathService _externalPathService;
@@ -48,7 +47,7 @@ class DownloadModel extends SafeChangeNotifier {
   Stream<String> get messageStream => _messageStreamController.stream;
 
   double? getValue(String? url) => _values[url];
-  void setValue({
+  void _setValue({
     required int received,
     required int total,
     required String url,
@@ -65,7 +64,7 @@ class DownloadModel extends SafeChangeNotifier {
   late final Command<({bool setNewDir}), String?> downloadsDirCommand =
       Command.createAsync((param) async {
         if (!param.setNewDir) {
-          return _downloadsDirOrDefault;
+          return _settingsService.downloadsDirOrDefault;
         }
 
         final dir = await setDownloadsCustomDir();
@@ -79,9 +78,9 @@ class DownloadModel extends SafeChangeNotifier {
 
     try {
       directoryPath = await _externalPathService.getPathOfDirectory();
-      if (directoryPath == null) return _downloadsDirOrDefault;
+      if (directoryPath == null) return _settingsService.downloadsDirOrDefault;
       final maybeDir = Directory(directoryPath);
-      if (!maybeDir.existsSync()) return _downloadsDirOrDefault;
+      if (!maybeDir.existsSync()) return _settingsService.downloadsDirOrDefault;
       maybeDir.statSync();
       File(p.join(directoryPath, 'test'))
         ..createSync()
@@ -95,22 +94,18 @@ class DownloadModel extends SafeChangeNotifier {
     } else {
       if (directoryPath != null) {
         await _settingsService.setValue(SPKeys.downloads, directoryPath);
-        return _downloadsDirOrDefault;
+        return _settingsService.downloadsDirOrDefault;
       }
     }
 
     return null;
   }
 
-  Future<String?> get _downloadsDirOrDefault async =>
-      _settingsService.getString(SPKeys.downloads) ??
-      await PlatformX.downloadsDefaultDir;
-
   Future<void> deleteDownload({required Audio? audio}) async {
     if (audio?.url != null &&
         (downloadsDirCommand.value) != null &&
         audio?.feedUrl != null) {
-      _libraryService.removeDownload(url: audio!.url!, feedUrl: audio.feedUrl!);
+      _podcastService.removeDownload(url: audio!.url!, feedUrl: audio.feedUrl!);
       if (_values.containsKey(audio.url)) {
         _values.update(audio.url!, (value) => null);
       }
@@ -121,7 +116,7 @@ class DownloadModel extends SafeChangeNotifier {
 
   Future<void> deleteAllDownloads() async {
     if ((downloadsDirCommand.value) != null) {
-      _libraryService.removeAllDownloads();
+      _podcastService.removeAllDownloads();
       _values.clear();
 
       notifyListeners();
@@ -158,15 +153,15 @@ class DownloadModel extends SafeChangeNotifier {
       Directory(downloadsDir).createSync();
     }
 
-    final path = p.join(downloadsDir, _createAudioDownloadId(audio));
+    final path = p.join(downloadsDir, audio.podcastDownloadId);
     await _download(
       canceledMessage: canceledMessage,
       url: url,
       path: path,
       name: audio.title ?? '',
-    ).then((response) {
+    ).then((response) async {
       if (response?.statusCode == 200 && audio.feedUrl != null) {
-        _libraryService.addDownload(
+        await _podcastService.addDownload(
           url: url,
           path: path,
           feedUrl: audio.feedUrl!,
@@ -178,12 +173,6 @@ class DownloadModel extends SafeChangeNotifier {
             : _cancelTokens.putIfAbsent(url, () => null);
       }
     });
-  }
-
-  String _createAudioDownloadId(Audio audio) {
-    final now = DateTime.now().toUtc().toString();
-    return '${audio.copyright ?? ''}${audio.title ?? ''}${audio.durationMs ?? ''}${audio.publicationDate ?? ''})$now'
-        .replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
   }
 
   Future<Response<dynamic>?> _download({
@@ -200,7 +189,7 @@ class DownloadModel extends SafeChangeNotifier {
         url,
         path,
         onReceiveProgress: (count, total) =>
-            setValue(received: count, total: total, url: url),
+            _setValue(received: count, total: total, url: url),
         cancelToken: _cancelTokens[url],
       );
     } catch (e) {

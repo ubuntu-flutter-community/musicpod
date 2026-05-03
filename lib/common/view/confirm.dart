@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
@@ -10,22 +12,22 @@ import 'ui_constants.dart';
 class ConfirmationDialog<T> extends StatefulWidget {
   const ConfirmationDialog({
     super.key,
-    this.onConfirm,
+    required this.onConfirm,
     this.onCancel,
     this.additionalActions,
     this.title,
+    this.constraints,
     this.content,
     this.showCancel = true,
     this.showCloseIcon = true,
     this.scrollable = false,
     this.confirmLabel,
     this.cancelLabel,
-    this.confirmEnabled = true,
     this.contentPadding,
     this.titlePadding,
   });
-  final Future<T> Function()? onConfirm;
-  final Future<T> Function()? onCancel;
+  final dynamic Function()? onConfirm;
+  final dynamic Function()? onCancel;
   final List<Widget>? additionalActions;
   final Widget? title;
   final Widget? content;
@@ -35,12 +37,12 @@ class ConfirmationDialog<T> extends StatefulWidget {
   final String? confirmLabel;
   final String? cancelLabel;
   final EdgeInsetsGeometry? contentPadding;
-  final bool confirmEnabled;
   final EdgeInsetsGeometry? titlePadding;
+  final BoxConstraints? constraints;
 
   static Future<T?> show<T>({
     required BuildContext context,
-    required Future<T> Function() onConfirm,
+    required dynamic Function() onConfirm,
     Widget? title,
     Widget? content,
     String? confirmLabel,
@@ -50,8 +52,10 @@ class ConfirmationDialog<T> extends StatefulWidget {
     bool scrollable = false,
     List<Widget>? additionalActions,
     EdgeInsetsGeometry? contentPadding,
-    Future<T> Function()? onCancel,
+    EdgeInsetsGeometry? titlePadding,
+    dynamic Function()? onCancel,
     bool showCancel = true,
+    BoxConstraints? constraints,
   }) => showDialog(
     context: context,
     barrierDismissible: barrierDismissible,
@@ -62,12 +66,13 @@ class ConfirmationDialog<T> extends StatefulWidget {
       confirmLabel: confirmLabel,
       cancelLabel: cancelLabel,
       showCloseIcon: barrierDismissible,
-      confirmEnabled: confirmEnabled,
       scrollable: scrollable,
       additionalActions: additionalActions,
       contentPadding: contentPadding,
       onCancel: onCancel,
       showCancel: showCancel,
+      titlePadding: titlePadding,
+      constraints: constraints,
     ),
   );
 
@@ -83,6 +88,7 @@ class _ConfirmationDialogState<T> extends State<ConfirmationDialog<T>> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return AlertDialog(
+      constraints: widget.constraints,
       titlePadding: widget.titlePadding ?? EdgeInsets.zero,
       title: YaruDialogTitleBar(
         backgroundColor: Colors.transparent,
@@ -163,36 +169,33 @@ class _ConfirmationDialogState<T> extends State<ConfirmationDialog<T>> {
                       ),
                     ...?widget.additionalActions,
                     ElevatedButton(
-                      onPressed: _loading
+                      onPressed: _loading || widget.onConfirm == null
                           ? null
-                          : widget.confirmEnabled
-                          ? () {
-                              if (widget.onConfirm != null) {
-                                if (widget.onConfirm is Future<T> Function()) {
-                                  setState(() => _loading = true);
-                                  widget.onConfirm!()
-                                      .then((_) {
-                                        if (context.mounted &&
-                                            Navigator.of(context).canPop()) {
-                                          Navigator.of(context).pop();
-                                        }
-                                      })
-                                      .catchError((error) {
-                                        setState(() {
-                                          _loading = false;
-                                          _error = error.toString();
-                                        });
+                          : () {
+                              if (widget.onConfirm is Future<T> Function()) {
+                                setState(() => _loading = true);
+                                widget.onConfirm!()
+                                    .then((_) {
+                                      if (context.mounted &&
+                                          Navigator.of(context).canPop()) {
+                                        Navigator.of(context).pop();
+                                      }
+                                    })
+                                    .catchError((error) {
+                                      setState(() {
+                                        _loading = false;
+                                        _error = error.toString();
                                       });
-                                } else {
-                                  widget.onConfirm!();
-                                  setState(() => _loading = false);
+                                    });
+                              } else {
+                                widget.onConfirm!();
+                                setState(() => _loading = false);
+                                if (context.mounted &&
+                                    Navigator.of(context).canPop()) {
+                                  Navigator.of(context).pop();
                                 }
-                              } else if (context.mounted &&
-                                  Navigator.of(context).canPop()) {
-                                Navigator.of(context).pop();
                               }
-                            }
-                          : null,
+                            },
                       child: Text(widget.confirmLabel ?? l10n.ok),
                     ),
                   ],

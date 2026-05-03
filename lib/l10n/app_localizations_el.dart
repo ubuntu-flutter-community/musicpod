@@ -2203,6 +2203,18 @@ class AppLocalizationsEl extends AppLocalizations {
   String get loadingPleaseWait => 'Φόρτωση, παρακαλώ περιμένετε ...';
 
   @override
+  String get parsingLocalAudioFilesMetadataPleaseWait =>
+      'Parsing local audio files metadata, please wait ...';
+
+  @override
+  String get persistingLocalAudioFilesMetadataPleaseWait =>
+      'Persisting local audio files metadata, please wait ...';
+
+  @override
+  String get buildingLocalAudioLibraryPleaseWait =>
+      'Building local audio library, please wait ...';
+
+  @override
   String get importingPodcastsPleaseWait =>
       'Γίνεται εισαγωγή των podcast σου, παρακαλώ περίμενε ...';
 
@@ -2225,6 +2237,11 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get exportingPlaylistsPleaseWait =>
       'Γίνεται εξαγωγή των λιστών αναπαραγωγής σου, παρακαλώ περίμενε ...';
+
+  @override
+  String checkingForUpdatesPleaseWait(int progress) {
+    return 'Checking for updates $progress%';
+  }
 
   @override
   String get author => 'Συγγραφέας';
@@ -2320,4 +2337,13 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get tosLinkText => 'Διάβασε τους Όρους Υπηρεσίας του Genius';
+
+  @override
+  String get oopsSomethingWentWrong => 'Oops, something went wrong!';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get reportIssue => 'Report this issue';
 }

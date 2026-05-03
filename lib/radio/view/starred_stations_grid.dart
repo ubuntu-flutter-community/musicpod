@@ -5,7 +5,7 @@ import '../../common/view/no_search_result_page.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
-import '../../library/library_model.dart';
+import '../../radio/radio_model.dart';
 import '../../search/search_type.dart';
 import 'open_radio_discover_page_button.dart';
 import 'station_card.dart';
@@ -15,9 +15,9 @@ class StarredStationsGrid extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final stations = watchPropertyValue((LibraryModel m) => m.starredStations);
+    final stations = watchPropertyValue((RadioManager m) => m.starredStations);
     final length = watchPropertyValue(
-      (LibraryModel m) => m.starredStationsLength,
+      (RadioManager m) => m.starredStationsLength,
     );
 
     if (length == 0) {

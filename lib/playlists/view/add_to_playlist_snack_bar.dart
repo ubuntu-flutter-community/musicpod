@@ -14,6 +14,7 @@ showAddedToPlaylistSnackBar({
   ScaffoldMessenger.of(context).clearSnackBars();
   return ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
+      showCloseIcon: true,
       content: Text(
         '${context.l10n.addedTo} ${id == PageIDs.likedAudios ? context.l10n.likedSongs : id}',
         maxLines: 1,
