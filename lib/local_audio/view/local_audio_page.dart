@@ -4,6 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
+import '../../common/view/confirm.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
@@ -36,6 +37,24 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
         )),
       );
     }
+
+    registerHandler(
+      select: (LocalAudioManager m) => m.areTracksSyncedCommand,
+      handler: (context, newValue, cancel) {
+        if (newValue == false) {
+          ConfirmationDialog.show(
+            context: context,
+            title: Text(context.l10n.localAudioWatchDialogTitle),
+            content: Text(context.l10n.localAudioWatchDialogDescription),
+            onConfirm: () => di<LocalAudioManager>().initAudiosCommand.run((
+              directory: null,
+              forceInit: true,
+              forceDbOnly: false,
+            )),
+          );
+        }
+      },
+    );
 
     registerHandler(
       select: (LocalAudioManager m) => m.initAudiosCommand,
@@ -95,13 +114,14 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
                 spacing: kLargestSpace,
                 children: [
                   const Progress(adaptive: false),
-                  SizedBox(width: 500, child: LinearProgress(value: progress)),
-                  Text(switch (progress) {
-                    0.25 => l10n.parsingLocalAudioFilesMetadataPleaseWait,
-                    0.5 => l10n.persistingLocalAudioFilesMetadataPleaseWait,
-                    0.75 => l10n.buildingLocalAudioLibraryPleaseWait,
-                    _ => l10n.loadingPleaseWait,
-                  }),
+                  Text(
+                    '${'${(progress * 100).toStringAsFixed(0)}%'} ... ${switch (progress) {
+                      0.25 => l10n.parsingLocalAudioFilesMetadataPleaseWait,
+                      0.5 => l10n.persistingLocalAudioFilesMetadataPleaseWait,
+                      0.75 => l10n.buildingLocalAudioLibraryPleaseWait,
+                      _ => l10n.loadingPleaseWait,
+                    }}',
+                  ),
                 ],
               ),
             )

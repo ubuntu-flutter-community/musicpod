@@ -42,7 +42,7 @@ class ConfirmationDialog<T> extends StatefulWidget {
 
   static Future<T?> show<T>({
     required BuildContext context,
-    required Future<T> Function() onConfirm,
+    required dynamic Function() onConfirm,
     Widget? title,
     Widget? content,
     String? confirmLabel,
@@ -53,7 +53,7 @@ class ConfirmationDialog<T> extends StatefulWidget {
     List<Widget>? additionalActions,
     EdgeInsetsGeometry? contentPadding,
     EdgeInsetsGeometry? titlePadding,
-    Future<T> Function()? onCancel,
+    dynamic Function()? onCancel,
     bool showCancel = true,
     BoxConstraints? constraints,
   }) => showDialog(
@@ -190,6 +190,10 @@ class _ConfirmationDialogState<T> extends State<ConfirmationDialog<T>> {
                               } else {
                                 widget.onConfirm!();
                                 setState(() => _loading = false);
+                                if (context.mounted &&
+                                    Navigator.of(context).canPop()) {
+                                  Navigator.of(context).pop();
+                                }
                               }
                             },
                       child: Text(widget.confirmLabel ?? l10n.ok),

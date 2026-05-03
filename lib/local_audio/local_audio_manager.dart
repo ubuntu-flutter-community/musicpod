@@ -119,6 +119,12 @@ class LocalAudioManager extends SafeChangeNotifier {
   List<int>? findAllAlbumIDs({String? artist, bool clean = true}) =>
       _localAudioService.findAllAlbumIDs(artist: artist, clean: clean);
 
+  late final Command<void, bool> areTracksSyncedCommand =
+      Command.createAsyncNoParam(
+        _localAudioService.areTracksSynced,
+        initialValue: true,
+      );
+
   late final Command<
     ({bool forceInit, String? directory, bool forceDbOnly}),
     ({List<Audio> audios, List<String> failedImports})?
@@ -128,16 +134,15 @@ class LocalAudioManager extends SafeChangeNotifier {
       _findAlbumCommands.clear();
     }
 
-    final areTracksSynced = await _localAudioService.areTracksSynced(
-      newDir: param.directory,
-    );
-
     final localAudioResult = await _localAudioService.init(
-      forceInit: param.forceInit || !areTracksSynced,
+      forceInit: param.forceInit,
       newDirectory: param.directory,
       forceDbOnly: param.forceDbOnly,
       updateProgress: handle.updateProgress,
     );
+
+    await areTracksSyncedCommand.runAsync();
+
     return localAudioResult;
   }, initialValue: null);
 
