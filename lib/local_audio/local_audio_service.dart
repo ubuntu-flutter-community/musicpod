@@ -327,7 +327,8 @@ class LocalAudioService {
       }
       final dir = newDirectory ?? _settingsService.getString(SPKeys.directory);
 
-      if (!forceInit || forceDbOnly) {
+      if (((await _db.trackTable.count().getSingle()) > 0) && !forceInit ||
+          forceDbOnly) {
         await _loadAndBuildLocalAudioLibrary();
         _initialized = true;
         updateProgress?.call(1);
