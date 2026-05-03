@@ -47,7 +47,7 @@ dependencies:
   gtk: ^2.1.0
   handy_window: ^0.4.2
   injectable: ^2.7.1+4
-  injectable_generator: ^2.12.1
+  injectable_generator: ^3.0.0
   internet_connection_checker_plus: ^2.9.1+2
   intl: ^0.20.2
   lastfm: ^0.0.6
