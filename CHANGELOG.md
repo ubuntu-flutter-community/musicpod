@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.0.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.16.0...v3.0.0) (2026-05-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* use drift for persistence ([#1493](https://github.com/ubuntu-flutter-community/musicpod/issues/1493))
+
+### Features
+
+* add Japanese app_ja.arb,app_localizations_ja.dart ([#1494](https://github.com/ubuntu-flutter-community/musicpod/issues/1494)) ([b2d02c1](https://github.com/ubuntu-flutter-community/musicpod/commit/b2d02c17107576ea30f0f133989f3b85034000ac))
+* use drift for persistence ([#1493](https://github.com/ubuntu-flutter-community/musicpod/issues/1493)) ([5aa3453](https://github.com/ubuntu-flutter-community/musicpod/commit/5aa34530c854b0a89463fded0d5c53913b42d9ce))
+
 ## [2.16.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.15.1...v2.16.0) (2026-04-03)
 
 
