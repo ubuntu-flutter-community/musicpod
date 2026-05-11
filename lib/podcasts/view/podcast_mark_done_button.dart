@@ -19,15 +19,9 @@ class PodcastMarkDoneButton extends StatelessWidget with WatchItMixin {
       (PodcastManager m) => m.getEpisodesCommand(feedUrl),
     );
 
-    final markingDone = watchValue(
-      (PlayerModel m) => m.markProgressCompleteCommand.isRunning,
+    final isRunning = watchValue(
+      (PlayerModel m) => m.toggleAudiosProgressCommand.isRunning,
     );
-
-    final unmarking = watchValue(
-      (PlayerModel m) => m.removeLastPositionsCommand.isRunning,
-    );
-
-    final isRunning = markingDone || unmarking;
 
     return Stack(
       alignment: Alignment.center,
@@ -36,8 +30,10 @@ class PodcastMarkDoneButton extends StatelessWidget with WatchItMixin {
           tooltip: context.l10n.markAllEpisodesAsDone,
           onPressed: isRunning
               ? null
-              : () =>
-                    di<PlayerModel>().markProgressCompleteCommand.run(podcast),
+              : () => di<PlayerModel>().toggleAudiosProgressCommand.run((
+                  audios: podcast,
+                  markComplete: true,
+                )),
           icon: Icon(Iconz.markAllRead),
         ),
         if (isRunning) const PodcastIconButtonProgress(),
@@ -53,10 +49,10 @@ class EpisodeMarkDownButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final isCompleted = watchPropertyValue(
-      (PlayerModel m) =>
-          m.getLastPosition(episode.url)?.inMilliseconds ==
-          episode.durationMs?.toInt(),
+    final isCompleted = watchValue(
+      (PlayerModel m) => m.toggleAudiosProgressCommand.select(
+        (m) => m?[episode.url]?.inMilliseconds == episode.durationMs?.toInt(),
+      ),
     );
 
     final isPlaying = watchPropertyValue((PlayerModel m) {
@@ -64,15 +60,9 @@ class EpisodeMarkDownButton extends StatelessWidget with WatchItMixin {
       return audio == episode;
     });
 
-    final markingDone = watchValue(
-      (PlayerModel m) => m.markProgressCompleteCommand.isRunning,
+    final isRunning = watchValue(
+      (PlayerModel m) => m.toggleAudiosProgressCommand.isRunning,
     );
-
-    final unmarking = watchValue(
-      (PlayerModel m) => m.removeLastPositionsCommand.isRunning,
-    );
-
-    final isRunning = markingDone || unmarking;
 
     return Stack(
       alignment: Alignment.center,
@@ -82,9 +72,10 @@ class EpisodeMarkDownButton extends StatelessWidget with WatchItMixin {
           isSelected: isCompleted,
           onPressed: isRunning
               ? null
-              : () => di<PlayerModel>().markProgressCompleteCommand.run([
-                  episode,
-                ]),
+              : () => di<PlayerModel>().toggleAudiosProgressCommand.run((
+                  audios: [episode],
+                  markComplete: true,
+                )),
           icon: Icon(
             Iconz.markAllRead,
             color: isCompleted && !isPlaying ? Colors.green : null,

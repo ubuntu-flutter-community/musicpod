@@ -73,8 +73,10 @@ class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
               padding: const EdgeInsets.all(1.5),
               child: PodcastTileProgress(
                 selected: selected,
-                lastPosition: watchPropertyValue(
-                  (PlayerModel m) => m.getLastPosition(audio.url),
+                lastPosition: watchValue(
+                  (PlayerModel m) => m.toggleAudiosProgressCommand.select(
+                    (m) => m?[audio.url],
+                  ),
                 ),
                 duration: audio.durationMs == null
                     ? null

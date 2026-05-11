@@ -117,24 +117,22 @@ class PlayerModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Map<String, Duration>? get lastPositions => _playerService.lastPositions;
-  Duration? getLastPosition(String? url) => _playerService.getLastPosition(url);
   Future<void> safeLastPosition() => _playerService.safeLastPosition();
   Future<void> persistPlayerState() => _playerService.persistPlayerState();
 
-  late final Command<List<Audio>, void> markProgressCompleteCommand =
-      Command.createAsyncNoResult(
-        (audios) => _playerService.markAudiosProgressComplete(audios),
+  late final Command<
+    ({List<Audio> audios, bool markComplete})?,
+    Map<String, Duration>?
+  >
+  toggleAudiosProgressCommand = Command.createAsync((params) async {
+    if (params != null) {
+      await _playerService.toggleAudiosProgress(
+        params.audios,
+        markComplete: params.markComplete,
       );
-
-  late final Command<List<Audio>, void> removeLastPositionsCommand =
-      Command.createAsyncNoResult((audios) async {
-        await _playerService.removeLastPositions(audios);
-        if (audio == this.audio) {
-          setPosition(Duration.zero);
-          await seek();
-        }
-      });
+    }
+    return _playerService.lastPositions;
+  }, initialValue: _playerService.lastPositions);
 
   void setTimer(Duration duration) => _playerService.setPauseTimer(duration);
 

@@ -19,15 +19,9 @@ class PodcastReplayButton extends StatelessWidget with WatchItMixin {
       (PodcastManager m) => m.getEpisodesCommand(feedUrl),
     );
 
-    final markingDone = watchValue(
-      (PlayerModel m) => m.markProgressCompleteCommand.isRunning,
+    final isRunning = watchValue(
+      (PlayerModel m) => m.toggleAudiosProgressCommand.isRunning,
     );
-
-    final unmarking = watchValue(
-      (PlayerModel m) => m.removeLastPositionsCommand.isRunning,
-    );
-
-    final isRunning = markingDone || unmarking;
 
     return Stack(
       alignment: Alignment.center,
@@ -36,7 +30,10 @@ class PodcastReplayButton extends StatelessWidget with WatchItMixin {
           tooltip: context.l10n.replayAllEpisodes,
           onPressed: isRunning
               ? null
-              : () => di<PlayerModel>().removeLastPositionsCommand.run(podcast),
+              : () => di<PlayerModel>().toggleAudiosProgressCommand.run((
+                  audios: podcast,
+                  markComplete: false,
+                )),
           icon: Icon(Iconz.replay),
         ),
         if (isRunning) const PodcastIconButtonProgress(),
@@ -53,15 +50,10 @@ class PodcastEpisodeResetProgressButton extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    final markingDone = watchValue(
-      (PlayerModel m) => m.markProgressCompleteCommand.isRunning,
+    final isRunning = watchValue(
+      (PlayerModel m) => m.toggleAudiosProgressCommand.isRunning,
     );
 
-    final unmarking = watchValue(
-      (PlayerModel m) => m.removeLastPositionsCommand.isRunning,
-    );
-
-    final isRunning = markingDone || unmarking;
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -69,7 +61,10 @@ class PodcastEpisodeResetProgressButton extends StatelessWidget
           tooltip: context.l10n.replayEpisode,
           onPressed: audio.url == null || isRunning
               ? null
-              : () => di<PlayerModel>().removeLastPositionsCommand.run([audio]),
+              : () => di<PlayerModel>().toggleAudiosProgressCommand.run((
+                  audios: [audio],
+                  markComplete: false,
+                )),
           icon: Icon(Iconz.replay),
         ),
         if (isRunning) const PodcastIconButtonProgress(),

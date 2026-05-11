@@ -19,6 +19,7 @@ class PodcastUpdateTable extends Table {
   late final podcastFeedUrl = text().references(PodcastTable, #feedUrl)();
 }
 
+@TableIndex(name: 'podcast_episode_content_url', columns: {#contentUrl})
 class PodcastEpisodeTable extends Table {
   late final id = integer().autoIncrement()();
   @ReferenceName('episodesByFeedUrl')

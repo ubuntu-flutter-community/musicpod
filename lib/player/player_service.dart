@@ -542,7 +542,15 @@ class PlayerService {
     }
   }
 
-  Future<void> markAudiosProgressComplete(List<Audio> audios) async {
+  Future<void> toggleAudiosProgress(
+    List<Audio> audios, {
+    bool markComplete = true,
+  }) async {
+    if (!markComplete) {
+      await _removeLastPositions(audios);
+      return;
+    }
+
     final valid = audios
         .where((e) => e.url != null && e.durationMs != null)
         .toList();
@@ -563,24 +571,17 @@ class PlayerService {
     for (final e in valid) {
       _lastPositions[e.url!] = Duration(milliseconds: e.durationMs!.toInt());
     }
-    _propertiesChangedController.add(true);
   }
 
-  Future<void> removeLastPosition(String key) async {
-    await (_db.podcastEpisodeTable.update()
-          ..where((t) => t.contentUrl.equals(key)))
-        .write(const PodcastEpisodeTableCompanion(positionMs: Value(0)));
-    _lastPositions.remove(key);
-    _propertiesChangedController.add(true);
-  }
-
-  Future<void> removeLastPositions(List<Audio> audios) async {
+  Future<void> _removeLastPositions(List<Audio> audios) async {
     final urls = audios.where((e) => e.url != null).map((e) => e.url!).toList();
+    if (urls.isEmpty) return;
     await (_db.podcastEpisodeTable.update()
           ..where((t) => t.contentUrl.isIn(urls)))
         .write(const PodcastEpisodeTableCompanion(positionMs: Value(0)));
-    await _loadLastPositions();
-    _propertiesChangedController.add(true);
+    for (final url in urls) {
+      _lastPositions.remove(url);
+    }
   }
 
   Future<void> clearAllLastPositions() async {
