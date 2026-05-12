@@ -29,9 +29,8 @@ class PodcastPageImage extends StatelessWidget {
       child: imageUrl == null && !showFallbackIcon
           ? const SizedBox.shrink()
           : safeNetworkImage,
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) => SimpleDialog(
+      onTap: () => context.dialog(
+        (context) => SimpleDialog(
           titlePadding: EdgeInsets.zero,
           contentPadding: EdgeInsets.zero,
           children: [

@@ -42,9 +42,8 @@ class PlaylistsView extends StatelessWidget {
         final yaruSelectableContainer = YaruSelectableContainer(
           selected: false,
           onTap: () => id == PageIDs.customContent
-              ? showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
+              ? context.dialog(
+                  (context) => AlertDialog(
                     titlePadding: EdgeInsets.zero,
                     title: YaruDialogTitleBar(
                       title: Text(context.l10n.createNewPlaylist),

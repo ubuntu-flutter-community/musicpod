@@ -10,6 +10,7 @@ import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../custom_content/custom_content_model.dart';
+import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/local_audio_view.dart';
@@ -89,8 +90,8 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
                   TextButton.icon(
                     icon: Icon(Iconz.remove),
                     onPressed: () {
-                      if (context.mounted && Navigator.of(context).canPop()) {
-                        Navigator.of(context).pop();
+                      if (context.mounted && context.canPop()) {
+                        context.pop();
                       }
                       di<SettingsModel>().setLocalAudioindex(
                         LocalAudioView.playlists.index,

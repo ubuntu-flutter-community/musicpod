@@ -21,7 +21,6 @@ import 'audio_tile_bottom_sheet.dart';
 import 'icons.dart';
 import 'meta_data_dialog.dart';
 import 'modals.dart';
-import 'snackbars.dart';
 import 'stream_provider_share_button.dart';
 
 class AudioTileOptionButton extends StatelessWidget {
@@ -83,10 +82,8 @@ class AudioTileOptionButton extends StatelessWidget {
               onTap: () {
                 if (currentlyLocalPlaying) {
                   playerModel.insertIntoQueue(audios);
-                  showSnackBar(
-                    context: context,
-                    duration: const Duration(seconds: 2),
-                    content: Text('${l10n.addedTo} ${l10n.queue}: $searchTerm'),
+                  context.toast(
+                    Text('${l10n.addedTo} ${l10n.queue}: $searchTerm'),
                   );
                 } else {
                   playerModel.startPlaylist(
@@ -121,9 +118,8 @@ class AudioTileOptionButton extends StatelessWidget {
               audios.none((e) => e.audioType == AudioType.radio) &&
               audios.none((e) => e.audioType == AudioType.podcast))
             PopupMenuItem(
-              onTap: () => showDialog(
-                context: context,
-                builder: (context) => AddToPlaylistDialog(audios: audios),
+              onTap: () => context.dialog(
+                (context) => AddToPlaylistDialog(audios: audios),
               ),
               child: YaruTile(
                 leading: Icon(Iconz.plus),
@@ -171,9 +167,8 @@ class AudioTileOptionButton extends StatelessWidget {
           if (audios.none((e) => e.audioType == AudioType.podcast) &&
               audios.length == 1)
             PopupMenuItem(
-              onTap: () => showDialog(
-                context: context,
-                builder: (context) => MetaDataContent.dialog(
+              onTap: () => context.dialog(
+                (context) => MetaDataContent.dialog(
                   audio: audios.first,
                   pageId: playlistId,
                 ),

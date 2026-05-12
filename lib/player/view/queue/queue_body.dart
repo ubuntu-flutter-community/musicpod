@@ -121,9 +121,8 @@ class _QueueBodyState extends State<QueueBody>
                           '${l10n.queue} ${DateTime.now()}',
                           List.from(queue.where((e) => e.isLocal)),
                         );
-                        if (widget.shownInDialog &&
-                            Navigator.of(context).canPop()) {
-                          Navigator.of(context).pop();
+                        if (widget.shownInDialog && context.canPop()) {
+                          context.pop();
                         }
                       },
                 label: Text(l10n.createNewPlaylist),

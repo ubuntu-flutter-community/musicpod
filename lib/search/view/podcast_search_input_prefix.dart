@@ -143,7 +143,7 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
               di<SettingsModel>().removeFavoriteLanguageCode(language!.isoCode);
             },
             onSelected: (language) {
-              Navigator.of(context).pop();
+              context.pop();
               searchModel.setLanguage(language);
               if (language?.isoCode != null) {
                 di<SettingsModel>().setLastLanguageCode(language!.isoCode);
@@ -171,7 +171,7 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
               ),
             ]..remove(Country.none),
             onSelected: (country) {
-              Navigator.of(context).pop();
+              context.pop();
               setCountry(country);
               searchModel.search();
             },

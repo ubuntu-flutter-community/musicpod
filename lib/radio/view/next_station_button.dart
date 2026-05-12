@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/icons.dart';
-import '../../common/view/snackbars.dart';
+import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
@@ -26,10 +26,7 @@ class NextStationButton extends StatelessWidget with WatchItMixin {
             listName: newValue.uuid!,
           );
         } else {
-          showSnackBar(
-            context: context,
-            content: Text(context.l10n.nothingFound),
-          );
+          context.toast(Text(context.l10n.nothingFound));
         }
       },
     );

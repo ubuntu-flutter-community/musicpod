@@ -249,9 +249,8 @@ class _DownloadsTileState extends State<_DownloadsTile> {
       subtitle: Text(error?.toString() ?? downloadsDir ?? ''),
       trailing: ElevatedButton(
         onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) => ConfirmationDialog(
+          context.dialog(
+            (context) => ConfirmationDialog(
               content: SizedBox(
                 width: 300,
                 child: Text(

@@ -225,9 +225,15 @@ class LocalAudioManager extends SafeChangeNotifier {
 
   bool isPinnedAlbum(int id) => _localAudioService.isPinnedAlbum(id);
 
-  void pinAlbum(int id, {required Function() onFail}) =>
-      _localAudioService.pinAlbum(id, onFail: onFail);
+  void pinAlbum(
+    int id, {
+    // TODO: replace with command and sideeffect
+    required Function() onFail,
+  }) => _localAudioService.pinAlbum(id, onFail: onFail);
 
-  void unpinAlbum(int id, {required Function() onFail}) =>
-      _localAudioService.unpinAlbum(id, onFail: onFail);
+  void unpinAlbum(
+    int id, {
+    // TODO: replace with command and sideeffect
+    required Function() onFail,
+  }) => _localAudioService.unpinAlbum(id, onFail: onFail);
 }

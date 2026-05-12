@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 
+import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/logging.dart';
-import '../../app/page_ids.dart';
 import '../../common/view/adaptive_multi_layout_body.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/audio_page_type.dart';
@@ -17,9 +17,9 @@ import '../../common/view/genre_bar.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/sliver_audio_tile_list.dart';
-import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
+import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/view/album_page.dart';
@@ -127,10 +127,7 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
           ),
           onAlbumTap: (audio) {
             if (audio.albumDbId == null) {
-              showSnackBar(
-                context: context,
-                content: Text(context.l10n.nothingFound),
-              );
+              context.toast(Text(context.l10n.nothingFound));
               return;
             }
             di<RoutingManager>().push(
@@ -258,10 +255,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
               constraints: constraints,
               onSubSubTitleTab: (Audio audio) {
                 if (audio.album == null || audio.artist == null) {
-                  showSnackBar(
-                    context: context,
-                    content: Text(context.l10n.nothingFound),
-                  );
+                  context.toast(Text(context.l10n.nothingFound));
                   return;
                 }
                 final id = di<LocalAudioManager>().findAlbumId(
@@ -270,10 +264,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
                 );
 
                 if (id == null) {
-                  showSnackBar(
-                    context: context,
-                    content: Text(context.l10n.nothingFound),
-                  );
+                  context.toast(Text(context.l10n.nothingFound));
                   return;
                 }
 

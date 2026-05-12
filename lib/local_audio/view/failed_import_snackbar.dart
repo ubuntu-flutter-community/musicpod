@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../common/view/snackbars.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../settings/settings_model.dart';
@@ -17,9 +16,8 @@ showFailedImportsSnackBarIfNotBlocked({
   final settingsModel = di<SettingsModel>();
   final l10n = context.l10n;
   if (settingsModel.neverShowFailedImports) return null;
-  return showSnackBar(
-    context: context,
-    content: _Content(
+  return context.toast(
+    _Content(
       message: failedToImport ? l10n.failedToImport : l10n.failedToReadMetadata,
       failedImports: failedImports,
       onNeverShowFailedImports: () =>

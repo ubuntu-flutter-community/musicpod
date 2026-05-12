@@ -4,7 +4,6 @@ import 'package:yaru/yaru.dart';
 
 import '../../common/view/icons.dart';
 import '../../common/view/modals.dart';
-import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -53,7 +52,7 @@ class _DialogState extends State<_Dialog> {
       ),
       actions: [
         TextButton(
-          onPressed: Navigator.of(context).pop,
+          onPressed: () => context.pop(),
           child: Text(context.l10n.cancel),
         ),
         ElevatedButton(
@@ -63,16 +62,15 @@ class _DialogState extends State<_Dialog> {
               minutes: _timeOfDay.minute - TimeOfDay.now().minute,
             );
             di<PlayerModel>().setTimer(duration);
-            showSnackBar(
-              context: context,
-              content: Text(
+            context.toast(
+              Text(
                 context.l10n.playbackWillStopIn(
                   duration.formattedTime,
                   _timeOfDay.format(context),
                 ),
               ),
             );
-            Navigator.of(context).pop();
+            context.pop();
           },
           child: Text(context.l10n.ok),
         ),
@@ -122,7 +120,7 @@ class _BottomSheetState extends State<_BottomSheet> {
                           expandAll: true,
                           children: [
                             TextButton(
-                              onPressed: Navigator.of(context).pop,
+                              onPressed: () => context.pop(),
                               child: Text(context.l10n.cancel),
                             ),
                             ElevatedButton(
@@ -134,16 +132,15 @@ class _BottomSheetState extends State<_BottomSheet> {
                                       TimeOfDay.now().minute,
                                 );
                                 di<PlayerModel>().setTimer(duration);
-                                showSnackBar(
-                                  context: context,
-                                  content: Text(
+                                context.toast(
+                                  Text(
                                     context.l10n.playbackWillStopIn(
                                       duration.formattedTime,
                                       _timeOfDay.format(context),
                                     ),
                                   ),
                                 );
-                                Navigator.of(context).pop();
+                                context.pop();
                               },
                               child: Text(context.l10n.ok),
                             ),

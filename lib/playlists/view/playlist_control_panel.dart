@@ -5,6 +5,7 @@ import '../../common/data/audio.dart';
 import '../../common/view/avatar_play_button.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
+import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_manager.dart';
 import 'edit_playlist_dialog.dart';
@@ -31,9 +32,8 @@ class PlaylistControlPanel extends StatelessWidget with WatchItMixin {
           IconButton(
             tooltip: l10n.editPlaylist,
             icon: Icon(Iconz.pen),
-            onPressed: () => showDialog(
-              context: context,
-              builder: (context) => EditPlaylistDialog(
+            onPressed: () => context.dialog(
+              (context) => EditPlaylistDialog(
                 audios: audios,
                 playlistName: pageId,
                 initialValue: pageId,

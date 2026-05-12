@@ -9,6 +9,7 @@ import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
+import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../search/search_model.dart';
@@ -33,8 +34,8 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
     final playlists = di<CustomContentModel>().playlists;
     final onPressed = (playlistName?.isNotEmpty ?? false)
         ? () async {
-            if (shownInDialog && Navigator.of(context).canPop()) {
-              Navigator.of(context).pop();
+            if (shownInDialog && context.canPop()) {
+              context.pop();
             }
 
             await localAudioManager.addPlaylist(playlistName!, []);
@@ -147,8 +148,8 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
                     playlists.isNotEmpty &&
                         playlists.any((e) => e.audios.any((e) => e.isLocal))
                     ? () async {
-                        if (shownInDialog && Navigator.of(context).canPop()) {
-                          Navigator.of(context).pop();
+                        if (shownInDialog && context.canPop()) {
+                          context.pop();
                         }
 
                         localAudioManager.importExternalPlaylistsCommand.run(

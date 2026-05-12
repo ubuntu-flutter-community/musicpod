@@ -7,7 +7,6 @@ import '../../app/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/copy_clipboard_content.dart';
-import '../../common/view/snackbars.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
 import '../../l10n/l10n.dart';
@@ -192,10 +191,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
   }) {
     if (text?.isNotEmpty == true && audio.audioType == AudioType.radio ||
         audio.audioType == null) {
-      showSnackBar(
-        context: context,
-        content: CopyClipboardContent(text: text!),
-      );
+      context.toast(CopyClipboardContent(text: text!));
       return;
     }
 
@@ -206,9 +202,8 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
       case AudioType.radio:
       case AudioType.podcast:
         if (audio.url == null) return;
-        showSnackBar(
-          context: context,
-          content: CopyClipboardContent(
+        context.toast(
+          CopyClipboardContent(
             text: audio.url!,
             onSearch: () => launchUrl(Uri.parse(audio.url!)),
           ),
@@ -231,7 +226,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
         );
 
     if (id == null) {
-      showSnackBar(context: context, content: Text(context.l10n.albumNotFound));
+      context.toast(Text(context.l10n.albumNotFound));
       return;
     }
 

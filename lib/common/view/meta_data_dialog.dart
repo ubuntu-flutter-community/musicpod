@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../radio/view/radio_page_tag_bar.dart';
 import '../data/audio.dart';
@@ -10,7 +11,6 @@ import 'copy_clipboard_content.dart';
 import 'local_metadata_covers.dart';
 import 'local_metadata_tile.dart';
 import 'modals.dart';
-import 'snackbars.dart';
 import 'ui_constants.dart';
 
 class MetaDataContent extends StatelessWidget {
@@ -101,9 +101,8 @@ class MetaDataContent extends StatelessWidget {
         ListTile(
           title: Text(l10n.url),
           subtitle: Text(audio.url ?? ''),
-          onTap: () => showSnackBar(
-            context: context,
-            content: CopyClipboardContent(
+          onTap: () => context.toast(
+            CopyClipboardContent(
               text: audio.title ?? '',
               onSearch: () => launchUrl(Uri.parse(audio.url!)),
             ),
@@ -129,10 +128,7 @@ class MetaDataContent extends StatelessWidget {
                 icon: const Icon(Icons.copy),
                 onPressed: () {
                   if (audio.path != null) {
-                    showSnackBar(
-                      context: context,
-                      content: CopyClipboardContent(text: audio.path!),
-                    );
+                    context.toast(CopyClipboardContent(text: audio.path!));
                   }
                 },
               ),

@@ -56,10 +56,8 @@ class ConfirmationDialog<T> extends StatefulWidget {
     dynamic Function()? onCancel,
     bool showCancel = true,
     BoxConstraints? constraints,
-  }) => showDialog(
-    context: context,
-    barrierDismissible: barrierDismissible,
-    builder: (context) => ConfirmationDialog<T>(
+  }) => context.dialog(
+    (context) => ConfirmationDialog<T>(
       title: title,
       content: content,
       onConfirm: onConfirm,
@@ -74,6 +72,7 @@ class ConfirmationDialog<T> extends StatefulWidget {
       titlePadding: titlePadding,
       constraints: constraints,
     ),
+    barrierDismissible: barrierDismissible,
   );
 
   @override
@@ -129,8 +128,8 @@ class _ConfirmationDialogState<T> extends State<ConfirmationDialog<T>> {
                 ? [
                     OutlinedButton(
                       onPressed: () {
-                        if (context.mounted && Navigator.of(context).canPop()) {
-                          Navigator.of(context).pop();
+                        if (context.mounted && context.canPop()) {
+                          context.pop();
                         }
                       },
                       child: Text(l10n.ok),
@@ -147,8 +146,8 @@ class _ConfirmationDialogState<T> extends State<ConfirmationDialog<T>> {
                                   widget.onCancel!()
                                       .then((_) {
                                         if (context.mounted &&
-                                            Navigator.of(context).canPop()) {
-                                          Navigator.of(context).pop();
+                                            context.canPop()) {
+                                          context.pop();
                                         }
                                       })
                                       .catchError((error) {
@@ -159,9 +158,8 @@ class _ConfirmationDialogState<T> extends State<ConfirmationDialog<T>> {
                                       });
                                 } else {
                                   widget.onCancel?.call();
-                                  if (context.mounted &&
-                                      Navigator.of(context).canPop()) {
-                                    Navigator.of(context).pop();
+                                  if (context.mounted && context.canPop()) {
+                                    context.pop();
                                   }
                                 }
                               },
@@ -176,9 +174,8 @@ class _ConfirmationDialogState<T> extends State<ConfirmationDialog<T>> {
                                 setState(() => _loading = true);
                                 widget.onConfirm!()
                                     .then((_) {
-                                      if (context.mounted &&
-                                          Navigator.of(context).canPop()) {
-                                        Navigator.of(context).pop();
+                                      if (context.mounted && context.canPop()) {
+                                        context.pop();
                                       }
                                     })
                                     .catchError((error) {
@@ -190,9 +187,8 @@ class _ConfirmationDialogState<T> extends State<ConfirmationDialog<T>> {
                               } else {
                                 widget.onConfirm!();
                                 setState(() => _loading = false);
-                                if (context.mounted &&
-                                    Navigator.of(context).canPop()) {
-                                  Navigator.of(context).pop();
+                                if (context.mounted && context.canPop()) {
+                                  context.pop();
                                 }
                               }
                             },

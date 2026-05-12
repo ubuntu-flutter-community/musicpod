@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/progress.dart';
-import '../../common/view/snackbars.dart';
+import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../radio_model.dart';
 
@@ -13,10 +13,8 @@ mixin RadioConnectMixin {
       handler: (context, results, cancel) {
         final connectedHost = results.data;
         final isRunning = results.isRunning;
-        showSnackBar(
-          context: context,
-          duration: const Duration(seconds: 3),
-          content: isRunning
+        context.toast(
+          isRunning
               ? const Progress()
               : Text(
                   connectedHost != null

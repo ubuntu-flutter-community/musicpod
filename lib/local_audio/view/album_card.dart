@@ -8,9 +8,9 @@ import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/audio_card_vignette.dart';
 import '../../common/view/cover_background.dart';
 import '../../common/view/icons.dart';
-import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
+import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
@@ -56,10 +56,8 @@ class AlbumCard extends StatelessWidget with WatchItMixin {
               iconData: Iconz.pinFilled,
               onTap: () => di<LocalAudioManager>().unpinAlbum(
                 id,
-                onFail: () => showSnackBar(
-                  context: context,
-                  content: Text(context.l10n.cantUnpinEmptyAlbum),
-                ),
+                onFail: () =>
+                    context.toast(Text(context.l10n.cantUnpinEmptyAlbum)),
               ),
             ),
           ),

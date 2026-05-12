@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:podcast_search/podcast_search.dart';
-import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/routing_manager.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/safe_network_image.dart';
-import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
+import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../../podcasts/podcast_manager.dart';
@@ -49,10 +49,7 @@ class PodcastCard extends StatelessWidget with WatchItMixin {
                       listName: feedUrl,
                     );
                   } else {
-                    showSnackBar(
-                      context: context,
-                      content: Text(context.l10n.podcastFeedIsEmpty),
-                    );
+                    context.toast(Text(context.l10n.podcastFeedIsEmpty));
                   }
                 }),
       onTap: feedUrl == null

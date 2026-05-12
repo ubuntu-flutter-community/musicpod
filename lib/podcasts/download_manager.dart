@@ -9,7 +9,7 @@ import 'package:path/path.dart' as p;
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
-import '../common/view/snackbars.dart';
+import '../extensions/build_context_x.dart';
 import '../external_path/external_path_service.dart';
 import '../settings/settings_service.dart';
 import '../settings/shared_preferences_keys.dart';
@@ -219,6 +219,6 @@ void downloadMessageStreamHandler(
   void Function() cancel,
 ) {
   if (snapshot.hasData) {
-    showSnackBar(context: context, content: Text(snapshot.data ?? ''));
+    context.toast(Text(snapshot.data ?? ''));
   }
 }

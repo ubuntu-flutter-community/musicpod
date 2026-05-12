@@ -179,7 +179,7 @@ class _NewViewState extends State<_NewView> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      context.pop();
                       localAudioManager.addPlaylist(
                         _controller.text,
                         widget.audios,

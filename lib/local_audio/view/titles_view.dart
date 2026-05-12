@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_it/flutter_it.dart';
 
+import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio.dart';
-import '../../app/page_ids.dart';
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/sliver_audio_tile_list.dart';
 import '../../common/view/sliver_fill_remaining_progress.dart';
-import '../../common/view/snackbars.dart';
+import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../local_audio_manager.dart';
 import 'album_page.dart';
@@ -56,10 +56,7 @@ class TitlesView extends StatelessWidget with WatchItMixin {
       ),
       onSubSubTitleTab: (Audio audio) {
         if (audio.album == null || audio.artist == null) {
-          showSnackBar(
-            context: context,
-            content: Text(context.l10n.nothingFound),
-          );
+          context.toast(Text(context.l10n.nothingFound));
           return;
         }
         final id = di<LocalAudioManager>().findAlbumId(
@@ -68,10 +65,7 @@ class TitlesView extends StatelessWidget with WatchItMixin {
         );
 
         if (id == null) {
-          showSnackBar(
-            context: context,
-            content: Text(context.l10n.nothingFound),
-          );
+          context.toast(Text(context.l10n.nothingFound));
           return;
         }
 

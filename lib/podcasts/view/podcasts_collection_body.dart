@@ -15,7 +15,6 @@ import '../../common/view/offline_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/sliver_body.dart';
-import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -193,10 +192,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                             listName: feedUrl!,
                           );
                         } else {
-                          showSnackBar(
-                            context: context,
-                            content: Text(context.l10n.podcastFeedIsEmpty),
-                          );
+                          context.toast(Text(context.l10n.podcastFeedIsEmpty));
                         }
                       }),
                   onTap: () => di<RoutingManager>().push(pageId: feedUrl!),

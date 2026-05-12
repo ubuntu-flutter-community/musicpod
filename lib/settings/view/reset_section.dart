@@ -36,14 +36,10 @@ class ResetSection extends StatelessWidget {
               child: Text(l10n.exportYourDataDescription),
             ),
             trailing: ElevatedButton(
-              onPressed: () => showDialog(
-                barrierDismissible: false,
-                context: context,
-                builder: (context) {
-                  di<AppManager>().resetBackupSettings();
-                  return const BackupDialog(breakingChange: false);
-                },
-              ),
+              onPressed: () => context.dialog((context) {
+                di<AppManager>().resetBackupSettings();
+                return const BackupDialog(breakingChange: false);
+              }, barrierDismissible: false),
               child: Text(l10n.export),
             ),
           ),
@@ -54,10 +50,9 @@ class ResetSection extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: theme.colorScheme.error,
               ),
-              onPressed: () => showDialog(
+              onPressed: () => context.dialog(
+                (context) => const WipeConfirmDialog(),
                 barrierDismissible: false,
-                context: context,
-                builder: (context) => const WipeConfirmDialog(),
               ),
               child: Text(
                 l10n.reset,

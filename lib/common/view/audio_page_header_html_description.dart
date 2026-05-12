@@ -29,9 +29,8 @@ class AudioPageHeaderHtmlDescription extends StatelessWidget {
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(kYaruButtonRadius),
-          onTap: () => showDialog(
-            context: context,
-            builder: (context) => _HtmlDialog(
+          onTap: () => context.dialog(
+            (context) => _HtmlDialog(
               title: title,
               description: description,
               descriptionStyle: descriptionStyle,

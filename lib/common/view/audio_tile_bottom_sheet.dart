@@ -17,7 +17,6 @@ import 'audio_tile_image.dart';
 import 'icons.dart';
 import 'like_all_icon_button.dart';
 import 'meta_data_dialog.dart';
-import 'snackbars.dart';
 import 'spaced_divider.dart';
 import 'stared_station_icon_button.dart';
 import 'stream_provider_share_button.dart';
@@ -99,10 +98,9 @@ class AudioTileBottomSheet extends StatelessWidget {
                               _Button(
                                 icon: Icon(Iconz.plus),
                                 onPressed: () {
-                                  Navigator.of(context).pop();
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) =>
+                                  context.pop();
+                                  context.dialog(
+                                    (context) =>
                                         AddToPlaylistDialog(audios: audios),
                                   );
                                 },
@@ -116,13 +114,13 @@ class AudioTileBottomSheet extends StatelessWidget {
                               _Button(
                                 onPressed: () {
                                   di<PlayerModel>().insertIntoQueue(audios);
-                                  Navigator.of(context).pop();
-                                  showSnackBar(
-                                    context: context,
-                                    content: Text(
-                                      '${l10n.addedTo} ${l10n.queue}: $searchTerm',
-                                    ),
-                                  );
+                                  context
+                                    ..pop()
+                                    ..toast(
+                                      Text(
+                                        '${l10n.addedTo} ${l10n.queue}: $searchTerm',
+                                      ),
+                                    );
                                 },
                                 icon: Icon(Iconz.insertIntoQueue),
                               ),
@@ -143,7 +141,7 @@ class AudioTileBottomSheet extends StatelessWidget {
                                               id: playlistId,
                                               audios: audios,
                                             );
-                                  Navigator.of(context).pop();
+                                  context.pop();
                                 },
                                 icon: Icon(Iconz.remove),
                               ),
@@ -158,15 +156,14 @@ class AudioTileBottomSheet extends StatelessWidget {
                             children: [
                               _Button(
                                 onPressed: () {
-                                  Navigator.of(context).pop();
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) =>
-                                        MetaDataContent.dialog(
-                                          audio: audios.first,
-                                          pageId: playlistId,
-                                        ),
-                                  );
+                                  context
+                                    ..pop()
+                                    ..dialog(
+                                      (context) => MetaDataContent.dialog(
+                                        audio: audios.first,
+                                        pageId: playlistId,
+                                      ),
+                                    );
                                 },
                                 icon: Icon(Iconz.info),
                               ),

@@ -7,6 +7,7 @@ import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../custom_content/custom_content_model.dart';
+import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../radio/radio_model.dart';
 
@@ -61,9 +62,8 @@ class RadioSection extends StatelessWidget with WatchItMixin {
                     semanticLabel: l10n.removeAllStarredStations,
                   ),
                   tooltip: context.l10n.removeAllStarredStations,
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) => ConfirmationDialog(
+                  onPressed: () => context.dialog(
+                    (context) => ConfirmationDialog(
                       showCloseIcon: false,
                       title: Text(l10n.removeAllStarredStationsConfirm),
                       content: SizedBox(

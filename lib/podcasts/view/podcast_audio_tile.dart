@@ -6,7 +6,6 @@ import '../../common/data/audio.dart';
 import '../../common/view/html_text.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/share_button.dart';
-import '../../common/view/snackbars.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -117,11 +116,8 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
                             final text =
                                 '${audio.title != null ? '${audio.podcastTitle} - ' : ''}${audio.title ?? ''}';
                             playerModel.insertIntoQueue([audio]);
-                            showSnackBar(
-                              context: context,
-                              content: Text(
-                                context.l10n.insertedIntoQueue(text),
-                              ),
+                            context.toast(
+                              Text(context.l10n.insertedIntoQueue(text)),
                             );
                           },
                           icon: Icon(Iconz.insertIntoQueue),
@@ -198,9 +194,8 @@ class _Description extends StatelessWidget with WatchItMixin {
     final theme = context.theme;
     return InkWell(
       borderRadius: BorderRadius.circular(8),
-      onTap: () => showDialog(
-        context: context,
-        builder: (c) => SimpleDialog(
+      onTap: () => context.dialog(
+        (c) => SimpleDialog(
           titlePadding: EdgeInsets.zero,
           title: YaruDialogTitleBar(
             backgroundColor: theme.dialogTheme.backgroundColor,

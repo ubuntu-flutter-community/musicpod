@@ -111,7 +111,7 @@ class AudioTypeFilterBottomSheetButton extends StatelessWidget
                     child: ListTile(
                       leading: Icon(e.iconData),
                       onTap: () async {
-                        Navigator.of(context).pop();
+                        context.pop();
                         searchModel
                           ..setAudioType(e)
                           ..search(clear: true);

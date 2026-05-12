@@ -6,6 +6,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../app/app_manager.dart';
 import '../app/app_config.dart';
 import '../common/view/progress.dart';
+import '../extensions/build_context_x.dart';
 import '../l10n/l10n.dart';
 
 class PatchNotesDialog extends StatefulWidget {
@@ -51,7 +52,7 @@ class _PatchNotesDialogState extends State<PatchNotesDialog> {
         TextButton(
           onPressed: () {
             launchUrl(Uri.parse(AppConfig.sponsorLink));
-            if (context.mounted) Navigator.of(context).pop();
+            if (context.mounted) context.pop();
             widget.onClose?.call();
           },
           child: const Text('Sponsor Me'),
@@ -59,7 +60,7 @@ class _PatchNotesDialogState extends State<PatchNotesDialog> {
         ElevatedButton(
           onPressed: () async {
             await di<AppManager>().disposePatchNotes();
-            if (context.mounted) Navigator.of(context).pop();
+            if (context.mounted) context.pop();
             widget.onClose?.call();
           },
           child: Text(context.l10n.ok),

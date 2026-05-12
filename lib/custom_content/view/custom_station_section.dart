@@ -5,8 +5,8 @@ import 'package:yaru/yaru.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../app/page_ids.dart';
-import '../../common/view/snackbars.dart';
 import '../../common/view/ui_constants.dart';
+import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../radio/radio_model.dart';
 import '../../search/search_model.dart';
@@ -87,11 +87,8 @@ class _AddStationDialogState extends State<CustomStationSection> {
                                 .then((v) {
                                   if (v?.uuid == null) {
                                     if (context.mounted) {
-                                      showSnackBar(
-                                        context: context,
-                                        content: Text(
-                                          context.l10n.noStationFound,
-                                        ),
+                                      context.toast(
+                                        Text(context.l10n.noStationFound),
                                       );
                                     }
 

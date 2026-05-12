@@ -7,7 +7,6 @@ import '../../common/view/copy_clipboard_content.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/modals.dart';
 import '../../common/view/mpv_metadata_dialog.dart';
-import '../../common/view/snackbars.dart';
 import '../../common/view/tapable_text.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -88,10 +87,7 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
           overflow: TextOverflow.visible,
           maxLines: 10,
           text: icyTitle,
-          onTap: () => showSnackBar(
-            context: context,
-            content: CopyClipboardContent(text: icyTitle),
-          ),
+          onTap: () => context.toast(CopyClipboardContent(text: icyTitle)),
         ),
         subtitle: TapAbleText(
           text: icyName ?? context.l10n.station,
@@ -136,10 +132,7 @@ class _SimpleRadioHistoryTile extends StatelessWidget {
         overflow: TextOverflow.visible,
         maxLines: 10,
         text: icyTitle,
-        onTap: () => showSnackBar(
-          context: context,
-          content: CopyClipboardContent(text: icyTitle),
-        ),
+        onTap: () => context.toast(CopyClipboardContent(text: icyTitle)),
       ),
       subtitle: Text(
         di<MpvMetadataManager>().getMetadata(icyTitle)?.icyName ??

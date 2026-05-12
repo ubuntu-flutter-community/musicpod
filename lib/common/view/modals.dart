@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 
 Future<void> showModal({
@@ -14,16 +15,15 @@ Future<void> showModal({
 
   switch (mode) {
     case ModalMode.bottomSheet:
-      showModalBottomSheet(
+      context.bottomSheet(
+        builder,
         isScrollControlled: isScrollControlled,
-        context: context,
-        builder: builder,
         enableDrag: enableDrag,
         showDragHandle: showDragHandle,
       );
 
     case ModalMode.dialog:
-      showDialog(context: context, builder: builder);
+      context.dialog(builder);
   }
 }
 

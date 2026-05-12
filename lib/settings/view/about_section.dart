@@ -92,10 +92,7 @@ class _AboutTile extends StatelessWidget with WatchItMixin {
               ),
             ),
       trailing: OutlinedButton(
-        onPressed: () => showDialog(
-          context: context,
-          builder: (context) => const AboutDialog(),
-        ),
+        onPressed: () => context.dialog((context) => const AboutDialog()),
         child: Text(context.l10n.contributors),
       ),
     );
@@ -110,10 +107,7 @@ class _LicenseTile extends StatelessWidget {
     return YaruTile(
       title: TapAbleText(text: '${context.l10n.license}: GPL3'),
       trailing: OutlinedButton(
-        onPressed: () => showDialog(
-          context: context,
-          builder: (context) => const LicensesDialog(),
-        ),
+        onPressed: () => context.dialog((context) => const LicensesDialog()),
         child: Text(context.l10n.dependencies),
       ),
       enabled: true,
