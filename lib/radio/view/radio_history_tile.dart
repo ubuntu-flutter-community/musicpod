@@ -88,7 +88,7 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
               icon: Icon(Iconz.info),
             ),
             IconButton(
-              tooltip: context.l10n.removeFromCollection,
+              tooltip: context.l10n.ignoreThisTitleInHearingHistory,
               onPressed: () =>
                   di<MpvMetadataManager>().editBlockedIcyTitleCommand.run((
                     title: icyTitle,
