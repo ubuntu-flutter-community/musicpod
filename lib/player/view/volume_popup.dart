@@ -17,9 +17,7 @@ class VolumeSliderPopup extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final playerModel = di<PlayerModel>();
     final volume = watchPropertyValue((PlayerModel m) => m.volume);
-    final setVolume = playerModel.setVolume;
     IconData iconData;
     if (volume != null && volume <= 0) {
       iconData = Iconz.speakerMutedFilled;
@@ -39,35 +37,32 @@ class VolumeSliderPopup extends StatelessWidget with WatchItMixin {
       tooltip: context.l10n.volume,
       icon: Icon(iconData, color: color ?? theme.colorScheme.onSurface),
       itemBuilder: (context) {
-        return [
-          PopupMenuItem(enabled: false, child: _Slider(setVolume: setVolume)),
-        ];
+        return [const PopupMenuItem(enabled: false, child: VolumeSlider())];
       },
     );
   }
 }
 
-class _Slider extends StatelessWidget with WatchItMixin {
-  const _Slider({required this.setVolume});
+class VolumeSlider extends StatelessWidget with WatchItMixin {
+  const VolumeSlider({this.direction = Axis.vertical, super.key});
 
-  final Future<void> Function(double value) setVolume;
+  final Axis direction;
 
   @override
   Widget build(BuildContext context) {
     final volume = watchPropertyValue((PlayerModel m) => m.volume);
-    return RotatedBox(
-      quarterTurns: 3,
-      child: SliderTheme(
-        data: context.theme.sliderTheme.copyWith(
-          trackShape: CustomTrackShape(),
-        ),
-        child: Slider(
-          value: volume ?? 100.0,
-          onChanged: setVolume,
-          max: 100,
-          min: 0,
-        ),
+    final slider = SliderTheme(
+      data: context.theme.sliderTheme.copyWith(trackShape: CustomTrackShape()),
+      child: Slider(
+        value: volume ?? 100.0,
+        onChanged: di<PlayerModel>().setVolume,
+        max: 100,
+        min: 0,
       ),
     );
+
+    return direction == Axis.vertical
+        ? RotatedBox(quarterTurns: 3, child: slider)
+        : slider;
   }
 }

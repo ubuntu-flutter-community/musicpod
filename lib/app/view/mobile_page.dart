@@ -26,8 +26,7 @@ class MobilePage extends StatelessWidget
   Widget build(BuildContext context) {
     setupCommonHandlersAndCommands(context);
 
-    final fullWindowMode =
-        watchValue((AppManager m) => m.fullWindowMode) ?? false;
+    final fullWindowMode = watchValue((AppManager m) => m.fullWindowMode);
 
     registerStreamHandler(
       select: (DownloadManager m) => m.messageStream,

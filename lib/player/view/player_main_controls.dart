@@ -118,6 +118,7 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
               : () => di<PlayerModel>().playNext(),
           icon: Icon(Iconz.skipForward, color: defaultColor),
         ),
+
       switch (audio?.audioType) {
         AudioType.local => PlaylistModeButton(
           active: active,

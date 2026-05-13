@@ -10,6 +10,7 @@ import '../../common/view/audio_filter.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
+import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
@@ -92,7 +93,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
 
     return Scaffold(
       appBar: HeaderBar(
-        title: Text(title),
+        title: isMobile ? null : Text(title),
         adaptive: true,
         actions: [
           Padding(

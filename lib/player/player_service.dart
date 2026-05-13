@@ -155,14 +155,14 @@ class PlayerService {
 
   Audio? _audio;
   Audio? get audio => _audio;
-  void _setAudio(Audio value) async {
+  void _setAudio(Audio? value) async {
     if (value == _audio) return;
-    if (_color != null && value.audioType != AudioType.local) {
+    if (_color != null && value?.audioType != AudioType.local) {
       _setColor(null);
     }
-    if (value.audioType != _audio?.audioType) {
+    if (value?.audioType != _audio?.audioType) {
       _shuffle = false;
-      if (value.isRadio) {
+      if (value?.isRadio ?? false) {
         // NOTE: this is when the radio stream might stop/stutter/end, so it should start again immediately
         _playlistMode = PlaylistMode.loop;
       } else {
@@ -171,7 +171,7 @@ class PlayerService {
       setRate(1);
     }
     _audio = value;
-    _setLocalColor(_audio!);
+    _setLocalColor(_audio);
     _propertiesChangedController.add(true);
   }
 
@@ -286,6 +286,7 @@ class PlayerService {
 
       if (_audio!.url != null && _audio!.isPodcast) {
         _audio = audio?.copyWith(
+          // TODO: check if download actually exists and throw if saved in lib without existing
           path: _podcastService.getDownload(_audio!.url!),
         );
       }
@@ -484,8 +485,12 @@ class PlayerService {
     _propertiesChangedController.add(true);
   }
 
-  Future<void> _setLocalColor(Audio audio) async {
+  Future<void> _setLocalColor(Audio? audio) async {
     try {
+      if (audio == null) {
+        _setColor(null);
+        return;
+      }
       if (audio.canHaveLocalCover) {
         var maybeData = await _localCoverService.getCover(
           albumId: audio.albumDbId!,
@@ -774,5 +779,10 @@ class PlayerService {
     } on Exception catch (e) {
       printMessageInDebugMode(e);
     }
+  }
+
+  Future<void> stop() {
+    _setAudio(null);
+    return player.stop();
   }
 }

@@ -15,14 +15,15 @@ import '../../settings/view/settings_action.dart';
 import '../player_model.dart';
 
 class PlayerLyrics extends StatelessWidget with WatchItMixin {
-  const PlayerLyrics({super.key, required this.audio, this.title, this.artist});
+  const PlayerLyrics({super.key, this.title, this.artist});
 
-  final Audio audio;
   final String? title;
   final String? artist;
 
   @override
   Widget build(BuildContext context) {
+    final audio = watchPropertyValue((PlayerModel m) => m.audio);
+
     final geniusAccessToken = watchPropertyValue(
       (SettingsModel m) => m.lyricsGeniusAccessToken,
     );
@@ -33,6 +34,10 @@ class PlayerLyrics extends StatelessWidget with WatchItMixin {
     if ((geniusAccessToken == null || geniusAccessToken.isEmpty) &&
         !neverAskAgainForGeniusToken)
       return const _OnlineLyricsNotSetup();
+
+    if (audio == null) {
+      return const NoLyricsFound();
+    }
 
     return _PlayerLyrics(
       key: ValueKey(

@@ -88,6 +88,7 @@ class LocalCoverService {
               pictureData: data,
               pictureMimeType: 'image/png',
             ),
+            mode: InsertMode.insertOrReplace,
           );
     } else {
       await (_db.update(_db.albumArtTable)

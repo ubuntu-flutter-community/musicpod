@@ -6,9 +6,12 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
+import '../common/logging.dart';
 import '../expose/expose_service.dart';
 import '../extensions/string_x.dart';
 import '../radio/online_art_service.dart';
+import '../settings/settings_service.dart';
+import '../settings/shared_preferences_keys.dart';
 import 'data/mpv_meta_data.dart';
 import 'observe_property.dart';
 import 'player_service.dart';
@@ -19,13 +22,21 @@ class MpvMetadataManager {
     required PlayerService playerService,
     required OnlineArtService onlineArtService,
     required ExposeService exposeService,
+    required SettingsService settingsService,
   }) : _playerService = playerService,
        _onlineArtService = onlineArtService,
-       _exposeService = exposeService;
+       _exposeService = exposeService,
+       _settingsService = settingsService {
+    editBlockedIcyTitleCommand.run((
+      title: '',
+      addOrRemove: EditIcyTitleInHistory.init,
+    ));
+  }
 
   final PlayerService _playerService;
   final OnlineArtService _onlineArtService;
   final ExposeService _exposeService;
+  final SettingsService _settingsService;
 
   @PostConstruct(preResolve: true)
   Future<void> init() => observeProperty(
@@ -75,25 +86,74 @@ class MpvMetadataManager {
     return null;
   }
 
-  final _blockedIcyTitles = <String>{
-    'Unknown',
-    'Untitled',
-    'No Title',
-    'No Artist - No Title',
-    ' - ',
+  final _defaultBlockedIcyTitles = <String>{
+    '.westlotto.de',
+    'lidl',
+    'kaufland',
     'Verbraucherinformation',
     'Werbung',
     'Advertisement',
   };
+
+  Set<String> get blockedIcyTitles {
+    final set = _settingsService
+        .getStringList(SPKeys.blockedIcyTitles)
+        ?.toSet();
+    return set ?? {};
+  }
+
+  late final Command<
+    ({String title, EditIcyTitleInHistory addOrRemove}),
+    Set<String>
+  >
+  editBlockedIcyTitleCommand = Command.createAsync((param) async {
+    final title = param.title;
+    final addOrRemove = param.addOrRemove;
+    if (addOrRemove == EditIcyTitleInHistory.add) {
+      await _addBlockedIcyTitles([title]);
+      _removeMpvMetaDataHistoryElement(title);
+    } else if (addOrRemove == EditIcyTitleInHistory.remove) {
+      await _removeBlockedIcyTitle(title);
+    } else if (addOrRemove == EditIcyTitleInHistory.init) {
+      if (_settingsService.getStringList(SPKeys.blockedIcyTitles) == null ||
+          _settingsService.getStringList(SPKeys.blockedIcyTitles)!.isEmpty) {
+        await _settingsService.setValue(
+          SPKeys.blockedIcyTitles,
+          _defaultBlockedIcyTitles.toList(),
+        );
+      }
+    }
+    return blockedIcyTitles;
+  }, initialValue: blockedIcyTitles);
+
+  Future<void> _removeBlockedIcyTitle(String title) async {
+    final current = _settingsService.getStringList(SPKeys.blockedIcyTitles);
+    if (current == null || !current.contains(title)) {
+      return;
+    }
+    final newList = current.where((t) => t != title).toList();
+    await _settingsService.setValue(SPKeys.blockedIcyTitles, newList);
+  }
+
+  Future<void> _addBlockedIcyTitles(List<String> blockedTitles) async {
+    final current =
+        _settingsService.getStringList(SPKeys.blockedIcyTitles) ?? [];
+    final newList = {...current, ...blockedTitles}.toList();
+    await _settingsService.setValue(SPKeys.blockedIcyTitles, newList);
+  }
 
   bool _isValidHistoryElement(MpvMetaData? data) {
     final icyTitle = data?.icyTitle;
     if (icyTitle == null || icyTitle.isEmpty) {
       return false;
     }
-    if (_blockedIcyTitles.any(
-      (e) => e.toLowerCase().contains(icyTitle.toLowerCase()),
+    if (blockedIcyTitles.any(
+      (b) => icyTitle.toLowerCase().contains(b.toLowerCase()),
     )) {
+      printMessageInDebugMode('Blocked icy-title: $icyTitle');
+      printMessageInDebugMode(
+        'Blocked because it contains: ${blockedIcyTitles.firstWhere((b) => icyTitle.toLowerCase().contains(b.toLowerCase()))}',
+      );
       return false;
     }
 
@@ -155,6 +215,11 @@ class MpvMetadataManager {
     }
   }
 
+  void _removeMpvMetaDataHistoryElement(String icyTitle) {
+    final newMap = {...mpvMetadataHistory.value}..remove(icyTitle);
+    mpvMetadataHistory.value = newMap;
+  }
+
   String getMpvMetaDataHistoryList({String? filter}) =>
       filteredMpvMetaDataHistory(
         filter: filter,
@@ -171,3 +236,5 @@ class MpvMetadataManager {
         : e.value.icyName.contains(filter) || filter.contains(e.value.icyName),
   );
 }
+
+enum EditIcyTitleInHistory { add, remove, init }

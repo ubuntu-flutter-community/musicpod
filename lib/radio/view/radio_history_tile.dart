@@ -64,24 +64,39 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
           width: useYaruTheme ? 34 : 40,
           icyTitle: icyTitle,
         ),
-        trailing: IconButton(
-          tooltip: context.l10n.metadata,
-          onPressed: () {
-            final imageUrl = di<OnlineArtModel>().getCover(icyTitle);
-            final metadata = di<MpvMetadataManager>().getMetadata(icyTitle);
-            if (metadata == null) return;
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: kSmallestSpace,
+          children: [
+            IconButton(
+              tooltip: context.l10n.metadata,
+              onPressed: () {
+                final imageUrl = di<OnlineArtModel>().getCover(icyTitle);
+                final metadata = di<MpvMetadataManager>().getMetadata(icyTitle);
+                if (metadata == null) return;
 
-            showModal(
-              mode: ModalMode.platformModalMode,
-              context: context,
-              content: MpvMetadataDialog(
-                mode: ModalMode.platformModalMode,
-                image: imageUrl,
-                mpvMetaData: metadata,
-              ),
-            );
-          },
-          icon: Icon(Iconz.info),
+                showModal(
+                  mode: ModalMode.platformModalMode,
+                  context: context,
+                  content: MpvMetadataDialog(
+                    mode: ModalMode.platformModalMode,
+                    image: imageUrl,
+                    mpvMetaData: metadata,
+                  ),
+                );
+              },
+              icon: Icon(Iconz.info),
+            ),
+            IconButton(
+              tooltip: context.l10n.removeFromCollection,
+              onPressed: () =>
+                  di<MpvMetadataManager>().editBlockedIcyTitleCommand.run((
+                    title: icyTitle,
+                    addOrRemove: EditIcyTitleInHistory.add,
+                  )),
+              icon: Icon(Iconz.remove),
+            ),
+          ],
         ),
         title: TapAbleText(
           overflow: TextOverflow.visible,

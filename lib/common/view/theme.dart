@@ -294,7 +294,7 @@ double getInputHeight() => isMobile ? 40 : 36;
 
 double get audioCardDimension => kAudioCardDimension - (isMobile ? 15 : 0);
 
-double get bottomPlayerDefaultHeight => isMobile ? 76.0 : 90.0;
+double get bottomPlayerDefaultHeight => isMobile ? 90.0 : 90.0;
 
 double get navigationBarHeight => bottomPlayerDefaultHeight;
 

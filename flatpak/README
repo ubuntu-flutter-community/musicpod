@@ -1,3 +1,0 @@
-Most of the stuff the flatpak should automatically find and update. Make sure someone with Flatpak tests each change before merging
-
-When you update the snap in the other repo make sure to make a PR over there updating the version number and its release date. Just copy the last release and paste it above with the new information.

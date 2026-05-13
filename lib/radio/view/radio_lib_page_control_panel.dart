@@ -22,6 +22,7 @@ class RadioLibPageControlPanel extends StatelessWidget with WatchItMixin {
         Text(context.l10n.stations),
         Text(context.l10n.tags),
         Text(context.l10n.hearingHistory),
+        Text(context.l10n.ignoredHearyHistoryTitlesTitle),
       ],
       isSelected: RadioCollectionView.values
           .map((e) => e == radioCollectionView)

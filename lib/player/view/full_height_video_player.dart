@@ -165,28 +165,30 @@ class _LinuxFullHeightPlayerState extends State<LinuxFullHeightPlayer> {
             child: FullHeightPlayerTopControls(
               iconColor: widget.iconColor,
               playerPosition: widget.playerPosition,
+              showFullScreenButton: true,
             ),
           ),
         ),
-        Positioned(
-          bottom: 0,
-          child: AnimatedOpacity(
-            duration: const Duration(milliseconds: 200),
-            opacity: _hovered ? 1 : 0,
-            child: const Padding(
-              padding: EdgeInsets.only(
-                bottom: kLargestSpace,
-                left: kLargestSpace,
-                right: kLargestSpace,
-              ),
-              child: SizedBox(
-                height: kLargestSpace,
-                width: 600,
-                child: PlayerTrack(),
+        if (isFullscreen(context))
+          Positioned(
+            bottom: 0,
+            child: AnimatedOpacity(
+              duration: const Duration(milliseconds: 200),
+              opacity: _hovered ? 1 : 0,
+              child: const Padding(
+                padding: EdgeInsets.only(
+                  bottom: kLargestSpace,
+                  left: kLargestSpace,
+                  right: kLargestSpace,
+                ),
+                child: SizedBox(
+                  height: kLargestSpace,
+                  width: 600,
+                  child: PlayerTrack(),
+                ),
               ),
             ),
           ),
-        ),
       ],
     ),
   );

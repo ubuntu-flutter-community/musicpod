@@ -279,6 +279,7 @@ extension GetItInjectableX on _i174.GetIt {
           playerService: gh<_i38.PlayerService>(),
           onlineArtService: gh<_i328.OnlineArtService>(),
           exposeService: gh<_i820.ExposeService>(),
+          settingsService: gh<_i763.SettingsService>(),
         );
         return i.init().then((_) => i);
       },

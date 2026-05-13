@@ -58,4 +58,5 @@ class SPKeys {
   static const lyricsGeniusAccessToken = 'lyricsGeniusAccessToken';
   static const enableLyricsGenius = 'enableLyricsGenius';
   static const neverAskAgainForGeniusToken = 'neverAskAgainForGeniusToken';
+  static const blockedIcyTitles = 'blockedIcyTitles';
 }

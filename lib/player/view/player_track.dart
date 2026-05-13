@@ -6,7 +6,6 @@ import '../../common/view/custom_track_shape.dart';
 import '../../common/view/progress.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';
-import '../../extensions/taget_platform_x.dart';
 import '../../settings/settings_model.dart';
 import '../player_model.dart';
 
@@ -67,9 +66,7 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
         ? const RectangularSliderTrackShape()
         : CustomTrackShape();
 
-    final trackHeight = useYaruTheme && !bottomPlayer
-        ? 5.0
-        : (isMobile ? 2.0 : 4.0);
+    final trackHeight = useYaruTheme && !bottomPlayer ? 5.0 : 4.0;
 
     final slider =
         (duration?.inSeconds != null && duration!.inSeconds < 10) &&

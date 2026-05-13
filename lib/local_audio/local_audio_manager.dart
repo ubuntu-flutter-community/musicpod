@@ -123,6 +123,7 @@ class LocalAudioManager extends SafeChangeNotifier {
       Command.createAsyncNoParam(
         _localAudioService.areTracksSynced,
         initialValue: true,
+        errorFilter: NoErrorFilter(),
       );
 
   late final Command<
@@ -236,4 +237,10 @@ class LocalAudioManager extends SafeChangeNotifier {
     // TODO: replace with command and sideeffect
     required Function() onFail,
   }) => _localAudioService.unpinAlbum(id, onFail: onFail);
+}
+
+class NoErrorFilter extends ErrorFilter {
+  @override
+  ErrorReaction filter(Object error, StackTrace stackTrace) =>
+      ErrorReaction.throwException;
 }

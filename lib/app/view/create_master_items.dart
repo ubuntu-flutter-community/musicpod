@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 
 import '../../common/data/audio_type.dart';
-import '../page_ids.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
 import '../../custom_content/view/custom_content_page.dart';
-import '../../extensions/taget_platform_x.dart';
-import '../../home/home_page.dart';
 import '../../l10n/l10n.dart';
-import '../../podcasts/podcast_manager.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/local_audio_page.dart';
 import '../../playlists/view/liked_audio_page.dart';
 import '../../playlists/view/playlist_page.dart';
+import '../../podcasts/podcast_manager.dart';
 import '../../podcasts/view/lazy_podcast_page.dart';
 import '../../podcasts/view/podcast_page_side_bar_icon.dart';
 import '../../podcasts/view/podcast_page_title.dart';
@@ -26,6 +23,7 @@ import '../../radio/view/station_page_icon.dart';
 import '../../radio/view/station_title.dart';
 import '../../search/view/search_page.dart';
 import '../../settings/view/settings_page.dart';
+import '../page_ids.dart';
 import 'main_page_icon.dart';
 import 'master_item.dart';
 
@@ -49,13 +47,6 @@ Iterable<MasterItem> permanentMasterItems = [
     iconBuilder: (_) => Icon(Iconz.search),
     pageId: PageIDs.searchPage,
   ),
-  if (isMobile)
-    MasterItem(
-      titleBuilder: (context) => Text(context.l10n.home),
-      iconBuilder: (selected) => Icon(selected ? Iconz.homeFilled : Iconz.home),
-      pageBuilder: (_) => const HomePage(),
-      pageId: PageIDs.homePage,
-    ),
   MasterItem(
     titleBuilder: (context) => Text(context.l10n.local),
     pageBuilder: (_) => const LocalAudioPage(),
@@ -146,12 +137,7 @@ Iterable<MasterItem> createPodcastMasterItems(
     titleBuilder: (_) => PodcastPageTitle(feedUrl: feedUrl),
     subtitleBuilder: (_) => PodcastPageSubTitle(feedUrl: feedUrl),
     pageId: feedUrl,
-    pageBuilder: (context) => LazyPodcastPage(
-      feedUrl: feedUrl,
-      updateMessage: context.l10n.newEpisodeAvailable,
-      multiUpdateMessage: (length) =>
-          context.l10n.newEpisodesAvailableFor(length),
-    ),
+    pageBuilder: (_) => LazyPodcastPage(feedUrl: feedUrl),
     iconBuilder: (selected) => PodcastPageSideBarIcon(feedUrl: feedUrl),
   ),
 );

@@ -2320,4 +2320,19 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get reportIssue => 'Report this issue';
+
+  @override
+  String get ignoreThisTitleInHearingHistory =>
+      'Ignore this title in hearing history';
+
+  @override
+  String get removeFromIgnoredHearyHistoryTitles =>
+      'Remove from ignored titles';
+
+  @override
+  String get ignoredHearyHistoryTitlesTitle => 'Ignored titles';
+
+  @override
+  String get ignoredHearyHistoryTitlesDescription =>
+      'These titles will be ignored in the hearing history and will not be shown in the recently played list.';
 }
