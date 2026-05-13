@@ -41,7 +41,7 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
         mediaQuerySize.width > 1000;
 
     final queueOrHistory = Padding(
-      padding: EdgeInsets.only(top: isMobile ? 20 : 50, bottom: 20),
+      padding: EdgeInsets.only(top: isMobile ? 90 : 50, bottom: 20),
       child: SizedBox(
         width: 500,
         child: PlayerExplorer(selectedColor: theme.colorScheme.onSurface),

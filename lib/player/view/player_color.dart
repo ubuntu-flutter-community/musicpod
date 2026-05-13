@@ -37,14 +37,14 @@ class PlayerColor extends StatelessWidget with WatchItMixin {
       return _BlurredPlayerColor(size: size);
     }
 
-    final baseColor = watchPropertyValue(
-      (PlayerModel m) => m.color?.withValues(
-        alpha:
-            theme.isLight ||
-                theme.scaffoldBackgroundColor != kMobileScaffoldBackgroundColor
-            ? 0.4
-            : 1,
-      ),
+    final playerColor = watchPropertyValue((PlayerModel m) => m.color);
+
+    final baseColor = playerColor?.withValues(
+      alpha:
+          theme.isLight ||
+              theme.scaffoldBackgroundColor != kMobileScaffoldBackgroundColor
+          ? 0.4
+          : 1,
     );
 
     final color =

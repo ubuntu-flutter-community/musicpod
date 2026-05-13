@@ -49,12 +49,10 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
     );
     return switch (_variant) {
       _RadioHistoryTileVariant.simple => _SimpleRadioHistoryTile(
-        key: ValueKey(icyTitle),
         icyTitle: icyTitle,
         selected: selected,
       ),
       _RadioHistoryTileVariant.regular => ListTile(
-        key: ValueKey(icyTitle),
         selected: selected,
         selectedColor: context.theme.contrastyPrimary,
         contentPadding: const EdgeInsets.symmetric(horizontal: kLargestSpace),
@@ -127,7 +125,6 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
 
 class _SimpleRadioHistoryTile extends StatelessWidget {
   const _SimpleRadioHistoryTile({
-    super.key,
     required this.icyTitle,
     required this.selected,
   });

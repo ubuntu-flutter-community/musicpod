@@ -459,10 +459,13 @@ class PlayerService {
   String? _remoteImageUrl;
   String? get remoteImageUrl => _remoteImageUrl;
   void setRemoteImageUrl(String? url) {
-    if (_color != null) {
-      _setColor(null);
-    }
+    if (url == _remoteImageUrl) return;
+    _setColor(null);
+
     _remoteImageUrl = url;
+    if (url != null) {
+      setRemoteColorFromImageProvider(NetworkImage(url));
+    }
     _propertiesChangedController.add(true);
   }
 
@@ -781,8 +784,19 @@ class PlayerService {
     }
   }
 
-  Future<void> stop() {
+  Future<void> stop() async {
     _setAudio(null);
-    return player.stop();
+    _nextAudio = null;
+    _queue = (name: '', audios: []);
+    _position = Duration.zero;
+    _duration = null;
+    _buffer = null;
+    _isPlaying = false;
+    _playlistMode = PlaylistMode.none;
+    _shuffle = false;
+    setRemoteImageUrl(null);
+    _setColor(null);
+    await player.stop();
+    _propertiesChangedController.add(true);
   }
 }

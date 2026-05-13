@@ -165,7 +165,6 @@ class _LinuxFullHeightPlayerState extends State<LinuxFullHeightPlayer> {
             child: FullHeightPlayerTopControls(
               iconColor: widget.iconColor,
               playerPosition: widget.playerPosition,
-              showFullScreenButton: true,
             ),
           ),
         ),

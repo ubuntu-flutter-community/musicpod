@@ -122,7 +122,9 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
-      height: audio == null ? 0 : bottomPlayerDefaultHeight,
+      height: audio == null || (isVideo && fullWindowMode)
+          ? 0
+          : bottomPlayerDefaultHeight,
       child: Material(
         color: theme.cardColor,
         child: Stack(
@@ -133,11 +135,11 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                 alpha: 0.2,
                 size: Size(double.infinity, bottomPlayerDefaultHeight),
               ),
-            if (audio != null)
-              Column(
-                children: (isMobile ? trackAndPlayer.reversed : trackAndPlayer)
-                    .toList(),
-              ),
+            Column(
+              children: isMobile
+                  ? trackAndPlayer.reversed.toList()
+                  : trackAndPlayer,
+            ),
           ],
         ),
       ),
