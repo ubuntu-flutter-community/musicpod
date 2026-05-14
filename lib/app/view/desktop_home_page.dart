@@ -49,7 +49,10 @@ class DesktopHomePage extends StatelessWidget
           if (isInFullWindowMode) const PlayerView.fullWindow(),
         ],
       ),
-      bottomNavigationBar: const PlayerView.bottom(),
+      bottomNavigationBar:
+          !autoMovePlayer || !playerToTheRight || isInFullWindowMode
+          ? const PlayerView.bottom()
+          : null,
     );
   }
 }
