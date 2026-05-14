@@ -133,7 +133,7 @@ class _AudioTileState extends State<AudioTile> {
         selectedTileColor: isMobile
             ? theme.colorScheme.onSurface.withValues(alpha: 0.05)
             : Colors.transparent,
-        contentPadding: audioTilePadding.copyWith(left: 5, right: 5),
+        contentPadding: audioTilePadding,
         onTap: isMobile ? widget.onTap : null,
         title: Row(
           spacing: kLargestSpace,
