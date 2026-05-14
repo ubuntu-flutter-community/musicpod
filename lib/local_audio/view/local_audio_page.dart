@@ -40,9 +40,13 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
     }
 
     registerHandler(
-      select: (LocalAudioManager m) => m.areTracksSyncedCommand,
+      select: (LocalAudioManager m) => m.areTracksSyncedCommand.results,
       handler: (context, newValue, cancel) {
-        if (newValue == false) {
+        if (newValue.isRunning)
+          return;
+        else if (newValue.hasError) {
+          context.toast(Text(newValue.error.toString()));
+        } else if (newValue.data == false) {
           ConfirmationDialog.show(
             context: context,
             title: Text(context.l10n.localAudioWatchDialogTitle),

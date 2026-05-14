@@ -356,12 +356,9 @@ class LocalAudioService {
     return (audios: _audios ?? [], failedImports: failedImports);
   }
 
-  Future<bool> areTracksSynced({
-    List<String> failedImports = const [],
-    String? newDir,
-  }) async {
+  Future<bool> areTracksSynced({String? newDir}) async {
     final dir = newDir ?? _settingsService.getString(SPKeys.directory);
-    if (dir == null) return false;
+    if (dir == null || dir.isEmpty) return true;
     final trackCount = await _db.trackTable.count().getSingle();
     final results = await findMediaFiles(dir);
     return trackCount == results.files.length;
