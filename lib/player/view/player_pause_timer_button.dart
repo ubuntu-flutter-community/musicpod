@@ -12,6 +12,25 @@ import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../player_model.dart';
 
+Duration durationUntilNextTimeOfDay({
+  required TimeOfDay targetTime,
+  required DateTime now,
+}) {
+  var targetDateTime = DateTime(
+    now.year,
+    now.month,
+    now.day,
+    targetTime.hour,
+    targetTime.minute,
+  );
+
+  if (!targetDateTime.isAfter(now)) {
+    targetDateTime = targetDateTime.add(const Duration(days: 1));
+  }
+
+  return targetDateTime.difference(now);
+}
+
 class PlayerPauseTimerButton extends StatelessWidget {
   const PlayerPauseTimerButton({super.key, this.iconColor});
 
@@ -57,9 +76,9 @@ class _DialogState extends State<_Dialog> {
         ),
         ElevatedButton(
           onPressed: () {
-            final duration = Duration(
-              hours: _timeOfDay.hour - TimeOfDay.now().hour,
-              minutes: _timeOfDay.minute - TimeOfDay.now().minute,
+            final duration = durationUntilNextTimeOfDay(
+              targetTime: _timeOfDay,
+              now: DateTime.now(),
             );
             di<PlayerModel>().setTimer(duration);
             context.toast(
@@ -125,11 +144,9 @@ class _BottomSheetState extends State<_BottomSheet> {
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                final duration = Duration(
-                                  hours: _timeOfDay.hour - TimeOfDay.now().hour,
-                                  minutes:
-                                      _timeOfDay.minute -
-                                      TimeOfDay.now().minute,
+                                final duration = durationUntilNextTimeOfDay(
+                                  targetTime: _timeOfDay,
+                                  now: DateTime.now(),
                                 );
                                 di<PlayerModel>().setTimer(duration);
                                 context.toast(
