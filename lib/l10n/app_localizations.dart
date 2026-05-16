@@ -4562,6 +4562,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'These titles will be ignored in the hearing history and will not be shown in the recently played list.'**
   String get ignoredHearyHistoryTitlesDescription;
+
+  /// No description provided for @playingMediaTimedOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Playing media timed out. This might be caused by a network error or server issues.'**
+  String get playingMediaTimedOut;
 }
 
 class _AppLocalizationsDelegate

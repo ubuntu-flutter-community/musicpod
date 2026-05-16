@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app/app_manager.dart';
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../extensions/build_context_x.dart';
@@ -84,6 +85,11 @@ class AudioTileOptionButton extends StatelessWidget {
                   playerModel.insertIntoQueue(audios);
                   context.toast(
                     Text('${l10n.addedTo} ${l10n.queue}: $searchTerm'),
+                    action: SnackBarAction(
+                      label: l10n.queue,
+                      onPressed: () => di<AppManager>().setFullWindowMode(true),
+                    ),
+                    showCloseIcon: true,
                   );
                 } else {
                   playerModel.startPlaylist(

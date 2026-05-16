@@ -2278,6 +2278,10 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get ignoredHearyHistoryTitlesDescription =>
       'These titles will be ignored in the hearing history and will not be shown in the recently played list.';
+
+  @override
+  String get playingMediaTimedOut =>
+      'Playing media timed out. This might be caused by a network error or server issues.';
 }
 
 /// The translations for Chinese, as used in Hong Kong (`zh_HK`).

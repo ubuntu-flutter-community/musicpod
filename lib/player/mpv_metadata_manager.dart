@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
@@ -187,11 +188,15 @@ class MpvMetadataManager {
               artist: songInfo.artist,
             );
     await _playerService.setMediaControlsMetaData(audio: mergedAudio);
-    _playerService.setRemoteImageUrl(
-      albumArt ??
-          _playerService.audio?.imageUrl ??
-          _playerService.audio?.albumArtUrl,
-    );
+    final url2 =
+        albumArt ??
+        _playerService.audio?.imageUrl ??
+        _playerService.audio?.albumArtUrl;
+    _playerService.setRemoteImageUrl(url2);
+
+    if (url2 != null) {
+      await _playerService.setRemoteColorFromImageProvider(NetworkImage(url2));
+    }
 
     await _exposeService.exposeTitleOnline(
       title: songInfo.songName ?? '',

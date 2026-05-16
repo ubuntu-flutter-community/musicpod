@@ -10,8 +10,8 @@ class ThemeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const height = 100.0;
-    const width = 150.0;
+    const height = 50.0;
+    const width = 75.0;
     final borderRadius2 = BorderRadius.circular(12);
     final lightContainer = Container(
       decoration: BoxDecoration(

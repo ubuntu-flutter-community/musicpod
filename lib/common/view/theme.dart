@@ -295,11 +295,7 @@ double? get bottomPlayerPageGap => isMobile
 
 EdgeInsets get playerTopControlsPadding => EdgeInsets.only(
   right: isMacOS ? kSmallestSpace : kLargestSpace,
-  top: isMacOS
-      ? 0
-      : isMobile
-      ? 2 * kLargestSpace
-      : kLargestSpace,
+  top: isDesktop ? 0 : 2 * kLargestSpace,
 );
 
 NavigationBarThemeData navigationBarTheme({required ThemeData theme}) =>

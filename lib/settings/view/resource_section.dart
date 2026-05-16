@@ -4,7 +4,6 @@ import 'package:yaru/yaru.dart';
 
 import '../../app/app_config.dart';
 import '../../common/view/common_widgets.dart';
-import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../../player/mpv_metadata_manager.dart';
 import '../settings_model.dart';
@@ -16,11 +15,6 @@ class ResourceSection extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return YaruSection(
-      margin: const EdgeInsets.only(
-        left: kLargestSpace,
-        top: kLargestSpace,
-        right: kLargestSpace,
-      ),
       headline: Text(l10n.resourceSectionTitle),
       child: Column(
         children: [

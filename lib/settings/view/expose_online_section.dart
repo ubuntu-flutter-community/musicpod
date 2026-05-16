@@ -5,7 +5,6 @@ import 'package:yaru/yaru.dart';
 
 import '../../common/view/common_widgets.dart';
 import '../../common/view/theme.dart';
-import '../../common/view/ui_constants.dart';
 import '../../expose/data/last_fm_credentials.dart';
 import '../../expose/expose_manager.dart';
 import '../../l10n/l10n.dart';
@@ -61,7 +60,6 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
 
     return YaruSection(
       headline: Text(l10n.exposeOnlineHeadline),
-      margin: const EdgeInsets.symmetric(horizontal: kLargestSpace),
       child: Column(
         children: [
           YaruTile(

@@ -5,7 +5,6 @@ import 'package:yaru/yaru.dart';
 import '../../app/app_manager.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
-import '../../common/view/ui_constants.dart';
 import '../../custom_content/view/backup_dialog.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
@@ -20,11 +19,6 @@ class ResetSection extends StatelessWidget {
     final l10n = context.l10n;
     final theme = context.theme;
     return YaruSection(
-      margin: const EdgeInsets.only(
-        left: kLargestSpace,
-        top: kLargestSpace,
-        right: kLargestSpace,
-      ),
       headline: Text(l10n.resetAllSettings),
       child: Column(
         children: [

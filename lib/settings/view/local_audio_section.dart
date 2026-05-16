@@ -24,7 +24,6 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
     );
     return YaruSection(
       headline: Text(l10n.localAudio),
-      margin: const EdgeInsets.symmetric(horizontal: kLargestSpace),
       child: Column(
         children: [
           YaruTile(

@@ -33,6 +33,8 @@ class PlayerModel extends SafeChangeNotifier {
 
   StreamSubscription<bool>? _propertiesChangedSub;
 
+  Stream<Exception> get errorStream => _playerService.errorStream;
+
   Stream<String?> get onlineArtError => _onlineArtService.error;
 
   String? get queueName => _playerService.queue.name;

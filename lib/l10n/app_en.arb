@@ -832,5 +832,6 @@
     "ignoreThisTitleInHearingHistory": "Ignore this title in hearing history",
     "removeFromIgnoredHearyHistoryTitles": "Remove from ignored titles",
     "ignoredHearyHistoryTitlesTitle": "Ignored titles",
-    "ignoredHearyHistoryTitlesDescription": "These titles will be ignored in the hearing history and will not be shown in the recently played list."
+    "ignoredHearyHistoryTitlesDescription": "These titles will be ignored in the hearing history and will not be shown in the recently played list.",
+    "playingMediaTimedOut": "Playing media timed out. This might be caused by a network error or server issues."
 }

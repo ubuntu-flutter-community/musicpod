@@ -29,6 +29,7 @@ class PlayerRemoteSourceImage extends StatelessWidget with WatchItMixin {
     final remoteImageUrl = watchPropertyValue(
       (PlayerModel m) => m.remoteImageUrl,
     );
+
     return Container(
       color: theme.cardColor.scale(lightness: theme.isLight ? -0.15 : 0.3),
       height: height,
