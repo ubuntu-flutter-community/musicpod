@@ -36,13 +36,13 @@ class MouseAndKeyboardCommandWrapper extends StatelessWidget {
             final currentPageId = di<RoutingManager>().selectedPageId;
 
             if (currentPageId == PageIDs.searchPage) {
-              if (di<AppManager>().fullWindowMode.value ?? false) {
+              if (di<AppManager>().fullWindowMode.value) {
                 di<AppManager>().setFullWindowMode(false);
               } else {
                 di<RoutingManager>().pop();
               }
             } else {
-              if (di<AppManager>().fullWindowMode.value ?? false) {
+              if (di<AppManager>().fullWindowMode.value) {
                 di<AppManager>().setFullWindowMode(false);
               }
               di<SearchModel>().setAudioType(switch (currentPageId) {
@@ -58,7 +58,7 @@ class MouseAndKeyboardCommandWrapper extends StatelessWidget {
         ),
         _SettingsIntent: CallbackAction<_SettingsIntent>(
           onInvoke: (intent) {
-            if (di<AppManager>().fullWindowMode.value ?? false) {
+            if (di<AppManager>().fullWindowMode.value) {
               di<AppManager>().setFullWindowMode(false);
             }
             di<RoutingManager>().push(pageId: PageIDs.settings);
@@ -67,7 +67,7 @@ class MouseAndKeyboardCommandWrapper extends StatelessWidget {
         ),
         _BackIntent: CallbackAction<_BackIntent>(
           onInvoke: (intent) {
-            if (di<AppManager>().fullWindowMode.value ?? false) {
+            if (di<AppManager>().fullWindowMode.value) {
               di<AppManager>().setFullWindowMode(false);
             }
             di<RoutingManager>().pop();

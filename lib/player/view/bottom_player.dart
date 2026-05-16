@@ -15,9 +15,7 @@ import 'bottom_player_image.dart';
 import 'bottom_player_like_and_star_button.dart';
 import 'play_button.dart';
 import 'playback_rate_button.dart';
-import 'player_color.dart';
 import 'player_main_controls.dart';
-import 'player_pause_timer_button.dart';
 import 'player_title_and_artist.dart';
 import 'player_track.dart';
 import 'player_view.dart';
@@ -32,9 +30,9 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
     final smallWindow = context.smallWindow;
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
     final isVideo = watchPropertyValue((PlayerModel m) => m.isVideo);
+    final fullWindowMode = watchValue((AppManager m) => m.fullWindowMode);
 
     final model = di<PlayerModel>();
-    final appManager = di<AppManager>();
     final isOnline = watchValue(
       (ConnectivityManager m) =>
           m.connectivityCommand.select((p) => p.isOnline),
@@ -44,97 +42,90 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
 
     final trackAndPlayer = [
       PlayerTrack(active: active, bottomPlayer: true),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 10, right: kLargestSpace),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: BottomPlayerImage(
-                  audio: audio,
-                  size: bottomPlayerDefaultHeight - 24,
-                  videoController: model.controller,
-                  isVideo: isVideo,
-                  isOnline: isOnline,
+      Flexible(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 10, right: kLargestSpace),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: BottomPlayerImage(
+                    audio: audio,
+                    size: bottomPlayerDefaultHeight - 24,
+                    videoController: model.controller,
+                    isVideo: isVideo,
+                    isOnline: isOnline,
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              flex: 4,
-              child: Row(
-                children: [
-                  const Flexible(
-                    flex: 5,
-                    child: PlayerTitleAndArtist(
-                      playerPosition: PlayerPosition.bottom,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  if (!smallWindow) BottomPlayerLikeAndStarButton(audio: audio),
-                ],
-              ),
-            ),
-            if (!smallWindow)
-              Expanded(flex: 6, child: PlayerMainControls(active: active)),
-            if (!smallWindow)
-              Flexible(
+              Expanded(
                 flex: 4,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    if (audio?.audioType == AudioType.podcast)
-                      const PlaybackRateButton(),
-                    if (!isMobile) const VolumeSliderPopup(),
-                    const PlayerPauseTimerButton(),
-                    IconButton(
-                      tooltip: context.l10n.fullWindow,
-                      icon: Icon(
-                        Iconz.fullWindow,
-                        color: theme.colorScheme.onSurface,
+                    const Flexible(
+                      flex: 5,
+                      child: PlayerTitleAndArtist(
+                        playerPosition: PlayerPosition.bottom,
                       ),
-                      onPressed: () => appManager.setFullWindowMode(true),
                     ),
+                    const SizedBox(width: 10),
+                    if (!smallWindow)
+                      BottomPlayerLikeAndStarButton(audio: audio),
                   ],
                 ),
-              )
-            else ...[
-              BottomPlayerLikeAndStarButton(audio: audio),
+              ),
+              if (!smallWindow)
+                Expanded(flex: 6, child: PlayerMainControls(active: active)),
+              if (!smallWindow)
+                Flexible(
+                  flex: 4,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      if (audio?.audioType == AudioType.podcast)
+                        const PlaybackRateButton(),
+                      if (!isMobile) const VolumeSliderPopup(),
+                      IconButton(
+                        tooltip: context.l10n.stop,
+                        onPressed: () {
+                          di<AppManager>().setFullWindowMode(false);
+                          di<PlayerModel>().stop();
+                        },
+                        icon: Icon(Iconz.stopFilled),
+                        color: theme.iconTheme.color,
+                      ),
+                    ],
+                  ),
+                )
+              else ...[
+                BottomPlayerLikeAndStarButton(audio: audio),
+                const SizedBox(width: 10),
+                if (isMobile)
+                  PlayButton(active: active)
+                else
+                  PlayerMainControls(
+                    active: active,
+                    avatarPlayButton: false,
+                    iconColor: context.colorScheme.onSurface,
+                  ),
+              ],
               const SizedBox(width: 10),
-              PlayButton(active: active),
             ],
-            const SizedBox(width: 10),
-          ],
+          ),
         ),
       ),
     ];
 
-    final player = SizedBox(
-      height: bottomPlayerDefaultHeight,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      height: audio == null || (isVideo && fullWindowMode)
+          ? 0
+          : bottomPlayerDefaultHeight,
       child: Column(
-        children: (isMobile ? trackAndPlayer.reversed : trackAndPlayer)
-            .toList(),
-      ),
-    );
-
-    if (isVideo == true) {
-      return player;
-    }
-
-    return Material(
-      color: theme.cardColor,
-      child: Stack(
-        children: [
-          if (!isMobile)
-            PlayerColor(
-              position: PlayerPosition.bottom,
-              alpha: 0.2,
-              size: Size(double.infinity, bottomPlayerDefaultHeight),
-            ),
-          player,
-        ],
+        children: isMobile ? trackAndPlayer.reversed.toList() : trackAndPlayer,
       ),
     );
   }

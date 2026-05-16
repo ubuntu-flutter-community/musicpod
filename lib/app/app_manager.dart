@@ -50,9 +50,9 @@ class AppManager {
     showWindowControls.value = value;
   }
 
-  final fullWindowMode = SafeValueNotifier<bool?>(null);
+  final fullWindowMode = SafeValueNotifier<bool>(false);
   Future<void> setFullWindowMode(bool? value) async {
-    if (value == null || value == fullWindowMode.value) return;
+    if (value == null) return;
     fullWindowMode.value = value;
 
     if (isMobile) {
@@ -68,13 +68,16 @@ class AppManager {
     }
   }
 
+  Future<void> toggleFullWindowMode() =>
+      setFullWindowMode(!fullWindowMode.value);
+
   final PackageInfo _packageInfo;
   String get version => _packageInfo.version;
 
   final onlineVersion = SafeValueNotifier<String?>(null);
 
-  late final Command<void, bool> checkForUpdateCommand =
-      Command.createAsyncNoParam(_checkForUpdate, initialValue: false);
+  late final Command<void, bool?> checkForUpdateCommand =
+      Command.createAsyncNoParam(_checkForUpdate, initialValue: null);
 
   Future<bool> _checkForUpdate() async {
     var _updateAvailable = false;

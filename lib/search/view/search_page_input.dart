@@ -18,7 +18,6 @@ import '../../settings/settings_model.dart';
 import '../search_model.dart';
 import '../search_type.dart';
 import 'audio_type_filter_button.dart';
-import 'podcast_search_attribute_popup_button.dart';
 import 'podcast_search_input_prefix.dart';
 
 class SearchPageInput extends StatelessWidget with WatchItMixin {
@@ -59,13 +58,7 @@ class SearchPageInput extends StatelessWidget with WatchItMixin {
               mode: OverlayMode.platformModalMode,
             ),
             prefixIcon: audioType == AudioType.podcast
-                ? const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const PodcastSearchInputPrefix(),
-                      PodcastSearchAttributePopupButton(),
-                    ],
-                  )
+                ? const PodcastSearchInputPrefix()
                 : null,
           ),
         },

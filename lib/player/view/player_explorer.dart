@@ -4,11 +4,11 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/string_x.dart';
+import '../../l10n/l10n.dart';
 import '../../radio/view/radio_history_list.dart';
 import '../../settings/settings_model.dart';
 import '../mpv_metadata_manager.dart';
 import '../player_model.dart';
-import 'audio_visualizer.dart';
 import 'player_lyrics.dart';
 import 'queue/queue_body.dart';
 
@@ -48,17 +48,6 @@ class _PlayerExplorerState extends State<PlayerExplorer>
 
   @override
   Widget build(BuildContext context) {
-    final showPlayerLyrics = watchPropertyValue(
-      (SettingsModel m) => m.showPlayerLyrics,
-    );
-    if (showPlayerLyrics) {
-      setState(() => _controller.index = 1);
-    }
-
-    final showAudioVisualizer = watchPropertyValue(
-      (PlayerModel m) => m.showAudioVisualizer,
-    );
-
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
 
     final splitByDash = watchValue(
@@ -66,38 +55,44 @@ class _PlayerExplorerState extends State<PlayerExplorer>
           m.mpvMetaDataCommand.select((cmd) => cmd?.icyTitle.splitByDash),
     );
 
-    return Padding(
-      padding: const EdgeInsets.only(top: kLargestSpace),
-      child: Builder(
-        builder: (context) {
-          if (showAudioVisualizer) {
-            return const AudioVisualizer(height: 200);
-          }
-
-          if (showPlayerLyrics)
-            return audio == null
-                ? const SizedBox.shrink()
-                : audio.audioType == AudioType.podcast
-                ? const NoLyricsFound()
-                : PlayerLyrics(
-                    key: ValueKey(audio.toString() + splitByDash.toString()),
-                    title: audio.audioType != AudioType.radio
-                        ? null
-                        : splitByDash?.songName,
-                    artist: audio.audioType != AudioType.radio
-                        ? null
-                        : splitByDash?.artist,
-                    audio: audio,
-                  );
-
-          return audio?.audioType == AudioType.radio
-              ? const RadioHistoryList(simpleList: true)
-              : QueueBody(
-                  selectedColor: widget.selectedColor,
-                  shownInDialog: widget.shownInDialog,
-                );
-        },
-      ),
+    return Column(
+      children: [
+        TabBar(
+          controller: _controller,
+          tabs: [
+            Tab(
+              text: audio?.isRadio == true
+                  ? context.l10n.hearingHistory
+                  : context.l10n.queue,
+            ),
+            Tab(text: context.l10n.lyrics),
+          ],
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(top: kLargestSpace),
+            child: TabBarView(
+              controller: _controller,
+              children: [
+                if (audio?.audioType == AudioType.radio) ...[
+                  const RadioHistoryList(simpleList: true),
+                ] else ...[
+                  const QueueBody(),
+                ],
+                PlayerLyrics(
+                  key: ValueKey(audio.toString() + splitByDash.toString()),
+                  title: audio?.audioType != AudioType.radio
+                      ? null
+                      : splitByDash?.songName,
+                  artist: audio?.audioType != AudioType.radio
+                      ? null
+                      : splitByDash?.artist,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

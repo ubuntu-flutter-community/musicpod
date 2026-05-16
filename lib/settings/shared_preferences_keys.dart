@@ -46,7 +46,6 @@ class SPKeys {
   static const usePlayerColor = 'usePlayerColor';
   static const iconSetIndex = 'iconSetIndex';
   static const saveWindowSize = 'saveWindowSize';
-  static const blurredPlayerBackground = 'blurredPlayerBackground';
   static const podcastFeedUrls = 'podcastFeedUrls';
   static const podcastImageUrlSuffix = '_imageUrl';
   static const podcastNameSuffix = '_name';
@@ -58,4 +57,5 @@ class SPKeys {
   static const lyricsGeniusAccessToken = 'lyricsGeniusAccessToken';
   static const enableLyricsGenius = 'enableLyricsGenius';
   static const neverAskAgainForGeniusToken = 'neverAskAgainForGeniusToken';
+  static const blockedIcyTitles = 'blockedIcyTitles';
 }

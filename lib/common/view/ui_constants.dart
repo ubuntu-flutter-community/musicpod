@@ -12,23 +12,15 @@ const kTinyButtonIconSize = 13.0;
 
 const kDesktopSearchBarWidth = 335.0;
 
-const kMobileSearchBarWidth = 270.0;
-
-const kSnackBarWidth = 500.0;
+const kMobileSearchBarWidth = 300.0;
 
 const fullHeightPlayerImageSize = 300.0;
 
 const kMaxAudioPageHeaderHeight = 200.0;
 
-const kMinAudioPageHeaderHeight = 0.0;
-
 const kSnackBarDuration = Duration(seconds: 10);
 
-const kAudioTilePadding = EdgeInsets.symmetric(horizontal: 10);
-
-const kAudioTileTrackPadding = EdgeInsets.only(right: kLargestSpace);
-
-const kAudioTileSpacing = EdgeInsets.only(right: 10.0);
+const kAudioTilePadding = EdgeInsets.zero;
 
 const kAudioTrackWidth = 40.0;
 
@@ -41,19 +33,6 @@ const kGridPadding = EdgeInsets.only(
   bottom: kLargestSpace,
   left: kLargestSpace,
   right: kLargestSpace,
-);
-const kMobileGridPadding = EdgeInsets.only(
-  top: 0,
-  bottom: kLargestSpace,
-  left: kLargestSpace - 5,
-  right: kLargestSpace - 5,
-);
-
-const kHeaderPadding = EdgeInsets.only(
-  top: kLargestSpace,
-  left: kLargestSpace,
-  right: kLargestSpace,
-  bottom: kLargestSpace - 5,
 );
 
 const kAudioCardDimension = 130.0;

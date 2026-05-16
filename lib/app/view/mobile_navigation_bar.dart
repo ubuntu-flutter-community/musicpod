@@ -31,12 +31,12 @@ class MobileNavigationBar extends StatelessWidget with WatchItMixin {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
-              isSelected: selectedPageId == PageIDs.homePage,
-              selectedIcon: Icon(Iconz.homeFilled, semanticLabel: l10n.home),
-              icon: Icon(Iconz.home, semanticLabel: l10n.home),
-              tooltip: l10n.home,
+              isSelected: selectedPageId == PageIDs.searchPage,
+              selectedIcon: Icon(Iconz.search, semanticLabel: l10n.search),
+              icon: Icon(Iconz.search, semanticLabel: l10n.search),
+              tooltip: l10n.search,
               onPressed: () =>
-                  di<RoutingManager>().push(pageId: PageIDs.homePage),
+                  di<RoutingManager>().push(pageId: PageIDs.searchPage),
             ),
             IconButton(
               isSelected: selectedPageId == PageIDs.localAudio,

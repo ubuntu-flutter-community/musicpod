@@ -1,6 +1,5 @@
 class PageIDs {
   static const settings = 'settings';
-  static const homePage = 'homePage';
   static const localAudio = 'localAudio';
   static const podcasts = 'podcasts';
   static const radio = 'radio';
@@ -8,10 +7,9 @@ class PageIDs {
   static const likedAudios = 'likedAudios';
   static const searchPage = 'searchPageId';
 
-  static const replacers = {homePage, localAudio, podcasts, radio};
+  static const replacers = {localAudio, podcasts, radio};
 
   static const permanent = {
-    homePage,
     searchPage,
     likedAudios,
     localAudio,

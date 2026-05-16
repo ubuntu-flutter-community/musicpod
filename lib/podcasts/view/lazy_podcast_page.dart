@@ -16,15 +16,11 @@ class LazyPodcastPage extends StatelessWidget with WatchItMixin {
     this.podcastItem,
     this.feedUrl,
     this.imageUrl,
-    required this.updateMessage,
-    required this.multiUpdateMessage,
   });
 
   final Item? podcastItem;
   final String? feedUrl;
   final String? imageUrl;
-  final String updateMessage;
-  final String Function(int length) multiUpdateMessage;
 
   @override
   Widget build(BuildContext context) {

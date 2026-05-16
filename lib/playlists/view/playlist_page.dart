@@ -28,6 +28,7 @@ import '../../local_audio/view/failed_import_snackbar.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
+import '../../settings/settings_model.dart';
 import 'playlist_add_audio_autocomplete.dart';
 import 'playlist_control_panel.dart';
 import 'playlist_header_image.dart';
@@ -167,6 +168,9 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
     final localAudioManager = di<LocalAudioManager>();
     final playerModel = di<PlayerModel>();
+    final autoMovePlayer = watchPropertyValue(
+      (SettingsModel m) => m.autoMovePlayer,
+    );
     final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
 
     final audioPageHeader = AudioPageHeader(
@@ -194,86 +198,101 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
         padding: const EdgeInsets.only(top: kLargestSpace),
         child: PlaylistAddAudioAutoCompleteOrShrink(pageId: pageId),
       ),
-      sliverBody: (constraints) => allowReorder
-          ? SliverReorderableList(
-              itemCount: audios.length,
-              itemBuilder: (BuildContext context, int index) {
-                final audio = audios.elementAt(index);
-                final audioSelected = currentAudio == audio;
+      sliverBody: (constraints) {
+        final mqSize = constraints.maxWidth;
+        final playerToTheRight = mqSize > kSideBarThreshHold;
 
-                return ReorderableDragStartListener(
-                  key: ValueKey(audio.path ?? audio.url),
-                  index: index,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 5),
-                    child: AudioTile(
-                      allowLeadingImage: audios.length < kShowLeadingThreshold,
-                      onSubTitleTap: onArtistTap,
-                      onSubSubTitleTap: onAlbumTap,
-                      key: ValueKey(audio.path ?? audio.url),
-                      isPlayerPlaying: isPlaying,
-                      onTap: () {
-                        if (audioSelected) {
-                          if (isPlaying) {
-                            playerModel.pause();
+        final width = autoMovePlayer && playerToTheRight
+            ? mqSize - kSideBarPlayerWidth
+            : mqSize;
+        return allowReorder
+            ? SliverReorderableList(
+                itemCount: audios.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final audio = audios.elementAt(index);
+                  final audioSelected = currentAudio == audio;
+
+                  return ReorderableDragStartListener(
+                    key: ValueKey(audio.path ?? audio.url),
+                    index: index,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 5),
+                      child: AudioTile(
+                        showSubSubTitle: width > 1200,
+                        showDuration: width > 1000,
+                        showSubTitle: width > 500,
+                        style: width <= 500
+                            ? AudioTileStyle.normal
+                            : AudioTileStyle.compact,
+                        allowLeadingImage:
+                            audios.length < kShowLeadingThreshold,
+                        onSubTitleTap: onArtistTap,
+                        onSubSubTitleTap: onAlbumTap,
+                        key: ValueKey(audio.path ?? audio.url),
+                        isPlayerPlaying: isPlaying,
+                        onTap: () {
+                          if (audioSelected) {
+                            if (isPlaying) {
+                              playerModel.pause();
+                            } else {
+                              playerModel.resume();
+                            }
                           } else {
-                            playerModel.resume();
+                            playerModel.startPlaylist(
+                              audios: audios,
+                              listName: pageId,
+                              index: index,
+                            );
                           }
-                        } else {
-                          playerModel.startPlaylist(
-                            audios: audios,
-                            listName: pageId,
-                            index: index,
-                          );
-                        }
-                      },
-                      selected: audioSelected,
-                      audio: audio,
-                      pageId: pageId,
-                      audioPageType: AudioPageType.playlist,
+                        },
+                        selected: audioSelected,
+                        audio: audio,
+                        pageId: pageId,
+                        audioPageType: AudioPageType.playlist,
+                      ),
                     ),
-                  ),
-                );
-              },
-              onReorder: (oldIndex, newIndex) {
-                if (playerModel.queueName == pageId) {
-                  playerModel.moveAudioInQueue(oldIndex, newIndex);
-                }
+                  );
+                },
+                onReorder: (oldIndex, newIndex) {
+                  if (playerModel.queueName == pageId) {
+                    playerModel.moveAudioInQueue(oldIndex, newIndex);
+                  }
 
-                localAudioManager.moveAudioInPlaylist(
-                  oldIndex: oldIndex,
-                  newIndex: newIndex,
-                  id: pageId,
-                );
-              },
-            )
-          : SliverAudioTileList(
-              audios: audios,
-              pageId: pageId,
-              audioPageType: AudioPageType.playlist,
-              onSubTitleTab: onArtistTap,
-              constraints: constraints,
-              onSubSubTitleTab: (Audio audio) {
-                if (audio.album == null || audio.artist == null) {
-                  context.toast(Text(context.l10n.nothingFound));
-                  return;
-                }
-                final id = di<LocalAudioManager>().findAlbumId(
-                  artist: audio.artist!,
-                  album: audio.album!,
-                );
+                  localAudioManager.moveAudioInPlaylist(
+                    oldIndex: oldIndex,
+                    newIndex: newIndex,
+                    id: pageId,
+                  );
+                },
+              )
+            : SliverAudioTileList(
+                audios: audios,
+                pageId: pageId,
+                audioPageType: AudioPageType.playlist,
+                onSubTitleTab: onArtistTap,
+                constraints: constraints,
+                onSubSubTitleTab: (Audio audio) {
+                  if (audio.album == null || audio.artist == null) {
+                    context.toast(Text(context.l10n.nothingFound));
+                    return;
+                  }
+                  final id = di<LocalAudioManager>().findAlbumId(
+                    artist: audio.artist!,
+                    album: audio.album!,
+                  );
 
-                if (id == null) {
-                  context.toast(Text(context.l10n.nothingFound));
-                  return;
-                }
+                  if (id == null) {
+                    context.toast(Text(context.l10n.nothingFound));
+                    return;
+                  }
 
-                di<RoutingManager>().push(
-                  builder: (_) => AlbumPage(id: id),
-                  pageId: id.toString(),
-                );
-              },
-            ),
+                  di<RoutingManager>().push(
+                    builder: (_) => AlbumPage(id: id),
+                    pageId: id.toString(),
+                  );
+                },
+              );
+      },
     );
   }
 }

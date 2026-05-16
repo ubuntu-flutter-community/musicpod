@@ -47,43 +47,40 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
       (SettingsModel m) => m.iconSetIndex,
     );
     return YaruSection(
-      margin: const EdgeInsets.only(
-        left: kLargestSpace,
-        top: kLargestSpace,
-        right: kLargestSpace,
-      ),
       headline: Text(l10n.theme),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(top: kLargestSpace),
-              child: Wrap(
-                spacing: kLargestSpace,
-                children: [
-                  for (var i = 0; i < ThemeMode.values.length; ++i)
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        YaruSelectableContainer(
-                          padding: const EdgeInsets.all(1),
-                          borderRadius: BorderRadius.circular(15),
-                          selected: themeIndex == i,
-                          onTap: () => model.setThemeIndex(i),
-                          selectionColor: context.theme.colorScheme.primary,
-                          child: ThemeTile(ThemeMode.values[i]),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            ThemeMode.values[i].localize(context.l10n),
-                          ),
-                        ),
-                      ],
-                    ),
-                ],
-              ),
+          Padding(
+            padding: const EdgeInsets.only(
+              top: kLargestSpace,
+              left: kMediumSpace,
+            ),
+            child: Wrap(
+              alignment: WrapAlignment.start,
+              spacing: kLargestSpace,
+              children: [
+                for (var i = 0; i < ThemeMode.values.length; ++i)
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      YaruSelectableContainer(
+                        padding: const EdgeInsets.all(1),
+                        borderRadius: BorderRadius.circular(15),
+                        selected: themeIndex == i,
+                        onTap: () => model.setThemeIndex(i),
+                        selectionColor: context.theme.colorScheme.primary,
+                        child: ThemeTile(ThemeMode.values[i]),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(ThemeMode.values[i].localize(context.l10n)),
+                      ),
+                    ],
+                  ),
+              ],
             ),
           ),
           if (!isMobile) ...[

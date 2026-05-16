@@ -23,8 +23,7 @@ class DesktopHomePage extends StatelessWidget
     final playerToTheRight =
         autoMovePlayer && context.mediaQuerySize.width > kSideBarThreshHold;
 
-    final isInFullWindowMode =
-        watchValue((AppManager m) => m.fullWindowMode) ?? false;
+    final isInFullWindowMode = watchValue((AppManager m) => m.fullWindowMode);
 
     registerStreamHandler(
       select: (DownloadManager m) => m.messageStream,
@@ -50,7 +49,8 @@ class DesktopHomePage extends StatelessWidget
           if (isInFullWindowMode) const PlayerView.fullWindow(),
         ],
       ),
-      bottomNavigationBar: !playerToTheRight && !isInFullWindowMode
+      bottomNavigationBar:
+          !autoMovePlayer || !playerToTheRight || isInFullWindowMode
           ? const PlayerView.bottom()
           : null,
     );

@@ -5,7 +5,6 @@ import 'package:yaru/yaru.dart';
 
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
-import '../../common/view/ui_constants.dart';
 import '../../custom_content/custom_content_model.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
@@ -20,7 +19,6 @@ class RadioSection extends StatelessWidget with WatchItMixin {
     watchValue((RadioManager m) => m.radioCollectionView);
 
     return YaruSection(
-      margin: const EdgeInsets.all(kLargestSpace),
       headline: Text(l10n.radio),
       child: Column(
         children: [

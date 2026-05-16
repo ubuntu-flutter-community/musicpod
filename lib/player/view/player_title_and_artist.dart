@@ -137,7 +137,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
               _ => 0,
             },
           ),
-      ],
+      ].map((e) => Flexible(child: e)).toList(),
     );
   }
 
@@ -256,9 +256,6 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
             builder: (context) => LazyPodcastPage(
               feedUrl: feedUrl,
               imageUrl: audio.imageUrl ?? audio.albumArtUrl,
-              updateMessage: context.l10n.newEpisodeAvailable,
-              multiUpdateMessage: (length) =>
-                  context.l10n.newEpisodesAvailableFor(length),
             ),
           );
         }

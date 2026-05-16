@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/routing_manager.dart';
+import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
@@ -60,7 +61,7 @@ class SliverAudioPage extends StatelessWidget {
     return Scaffold(
       appBar: HeaderBar(
         adaptive: true,
-        title: Text(pageTitle ?? ''),
+        title: isMobile ? null : Text(pageTitle ?? ''),
         actions: [
           Padding(
             padding: appBarSingleActionSpacing,

@@ -115,13 +115,15 @@ class RadioManager extends SafeChangeNotifier {
 enum RadioCollectionView {
   stations,
   tags,
-  history;
+  history,
+  ignoredIcyTitles;
 
   String localize(AppLocalizations l10n) {
     return switch (this) {
       stations => l10n.stations,
       tags => l10n.tags,
       history => l10n.history,
+      ignoredIcyTitles => l10n.ignoredHearyHistoryTitlesTitle,
     };
   }
 }

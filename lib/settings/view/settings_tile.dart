@@ -63,9 +63,11 @@ class _UpdateButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    callOnceAfterThisBuild(
-      (context) => di<AppManager>().checkForUpdateCommand.run(),
-    );
+    if (!di<AppManager>().checkForUpdateCommand.results.value.hasData) {
+      callOnceAfterThisBuild(
+        (context) => di<AppManager>().checkForUpdateCommand.run(),
+      );
+    }
 
     final useYaruTheme = watchPropertyValue(
       (SettingsModel m) => m.useYaruTheme,
@@ -103,7 +105,7 @@ class _UpdateButton extends StatelessWidget with WatchItMixin {
             color: context.theme.colorScheme.success,
           ),
         ),
-        false => const SizedBox.shrink(),
+        _ => const SizedBox.shrink(),
       },
     );
   }

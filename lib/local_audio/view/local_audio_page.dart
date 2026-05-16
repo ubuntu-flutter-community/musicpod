@@ -12,6 +12,7 @@ import '../../common/view/search_button.dart';
 import '../../common/view/sliver_body.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
+import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
@@ -39,9 +40,13 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
     }
 
     registerHandler(
-      select: (LocalAudioManager m) => m.areTracksSyncedCommand,
+      select: (LocalAudioManager m) => m.areTracksSyncedCommand.results,
       handler: (context, newValue, cancel) {
-        if (newValue == false) {
+        if (newValue.isRunning)
+          return;
+        else if (newValue.hasError) {
+          context.toast(Text(newValue.error.toString()));
+        } else if (newValue.data == false) {
           ConfirmationDialog.show(
             context: context,
             title: Text(context.l10n.localAudioWatchDialogTitle),
@@ -57,11 +62,16 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
     );
 
     registerHandler(
-      select: (LocalAudioManager m) => m.initAudiosCommand,
-      handler: (context, newValue, cancel) {
-        if (newValue?.failedImports.isNotEmpty ?? false) {
+      select: (LocalAudioManager m) => m.initAudiosCommand.results,
+      handler: (context, results, cancel) {
+        if (results.isRunning)
+          return;
+        else if (results.hasError) {
+          context.toast(Text(results.error.toString()));
+        } else if (results.hasData &&
+            results.data?.failedImports.isNotEmpty == true) {
           showFailedImportsSnackBarIfNotBlocked(
-            failedImports: newValue!.failedImports,
+            failedImports: results.data!.failedImports,
             context: context,
           );
         }

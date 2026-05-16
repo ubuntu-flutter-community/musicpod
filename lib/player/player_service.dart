@@ -126,6 +126,7 @@ class PlayerService {
   @disposeMethod
   Future<void> dispose() async {
     await _propertiesChangedController.close();
+    await _errorController.close();
     await _isPlayingSub?.cancel();
     await _positionSub?.cancel();
     await _durationSub?.cancel();
@@ -155,14 +156,14 @@ class PlayerService {
 
   Audio? _audio;
   Audio? get audio => _audio;
-  void _setAudio(Audio value) async {
+  void _setAudio(Audio? value) async {
     if (value == _audio) return;
-    if (_color != null && value.audioType != AudioType.local) {
+    if (_color != null && value?.audioType != AudioType.local) {
       _setColor(null);
     }
-    if (value.audioType != _audio?.audioType) {
+    if (value?.audioType != _audio?.audioType) {
       _shuffle = false;
-      if (value.isRadio) {
+      if (value?.isRadio ?? false) {
         // NOTE: this is when the radio stream might stop/stutter/end, so it should start again immediately
         _playlistMode = PlaylistMode.loop;
       } else {
@@ -171,7 +172,7 @@ class PlayerService {
       setRate(1);
     }
     _audio = value;
-    _setLocalColor(_audio!);
+    _setLocalColor(_audio);
     _propertiesChangedController.add(true);
   }
 
@@ -274,6 +275,9 @@ class PlayerService {
     await player.setRate(value);
   }
 
+  final _errorController = StreamController<Exception>.broadcast();
+  Stream<Exception> get errorStream => _errorController.stream.map((e) => e);
+
   /// To not mess up with the queue, this method is private
   /// Use [startPlaylist] instead
   bool _firstPlay = true;
@@ -286,6 +290,7 @@ class PlayerService {
 
       if (_audio!.url != null && _audio!.isPodcast) {
         _audio = audio?.copyWith(
+          // TODO: check if download actually exists and throw if saved in lib without existing
           path: _podcastService.getDownload(_audio!.url!),
         );
       }
@@ -295,21 +300,26 @@ class PlayerService {
           : (audio!.url != null)
           ? Media(audio!.url!)
           : null;
-      if (media == null) return;
-      player.open(media).then((_) {
-        player.state.tracks;
-      });
+
+      if (media == null)
+        throw Exception(
+          'No valid media source found for audio: ${audio!.title}',
+        );
+
+      await player
+          .open(media)
+          .timeout(
+            const Duration(seconds: 15),
+            onTimeout: () => throw PlayTimeoutException(),
+          );
+      player.state.tracks; // trigger tracks stream to check if it's a video
+
       if (newPosition != null && _audio!.audioType != AudioType.radio) {
         final tempVol = _volume;
-        player
-            .setVolume(0)
-            .then(
-              (_) => Future.delayed(const Duration(seconds: 3)).then(
-                (_) => player
-                    .seek(newPosition)
-                    .then((_) => player.setVolume(tempVol ?? 100.0)),
-              ),
-            );
+        await player.setVolume(0);
+        await Future.delayed(const Duration(seconds: 3));
+        await player.seek(newPosition);
+        await player.setVolume(tempVol ?? 100.0);
       }
       setRemoteImageUrl(_audio?.imageUrl ?? _audio?.albumArtUrl);
 
@@ -322,6 +332,7 @@ class PlayerService {
       );
       _firstPlay = false;
     } on Exception catch (e) {
+      _errorController.add(e);
       printMessageInDebugMode(e);
     }
   }
@@ -365,12 +376,17 @@ class PlayerService {
   }
 
   void _insertAudioIntoQueue(Audio newAudio) {
-    if (_queue.audios.isNotEmpty &&
-        !_queue.audios.contains(newAudio) &&
-        _audio != null) {
+    if (_queue.audios.isEmpty) {
+      startPlaylist(audios: [newAudio], listName: newAudio.toString());
+    } else if (_audio != null) {
       final currentIndex = queue.audios.indexOf(_audio!);
-      _queue.audios.insert(currentIndex + 1, newAudio);
-      nextAudio = newAudio;
+      if (_queue.audios.contains(newAudio)) {
+        final indexOfTitleInQueue = _queue.audios.indexOf(newAudio);
+        moveAudioInQueue(indexOfTitleInQueue, currentIndex + 1);
+      } else {
+        _queue.audios.insert(currentIndex + 1, newAudio);
+        nextAudio = newAudio;
+      }
     }
   }
 
@@ -458,10 +474,11 @@ class PlayerService {
   String? _remoteImageUrl;
   String? get remoteImageUrl => _remoteImageUrl;
   void setRemoteImageUrl(String? url) {
-    if (_color != null) {
-      _setColor(null);
-    }
+    if (url == _remoteImageUrl) return;
+    _setColor(null);
+
     _remoteImageUrl = url;
+
     _propertiesChangedController.add(true);
   }
 
@@ -484,8 +501,12 @@ class PlayerService {
     _propertiesChangedController.add(true);
   }
 
-  Future<void> _setLocalColor(Audio audio) async {
+  Future<void> _setLocalColor(Audio? audio) async {
     try {
+      if (audio == null) {
+        _setColor(null);
+        return;
+      }
       if (audio.canHaveLocalCover) {
         var maybeData = await _localCoverService.getCover(
           albumId: audio.albumDbId!,
@@ -775,4 +796,25 @@ class PlayerService {
       printMessageInDebugMode(e);
     }
   }
+
+  Future<void> stop() async {
+    _setAudio(null);
+    _nextAudio = null;
+    _queue = (name: '', audios: []);
+    _position = Duration.zero;
+    _duration = null;
+    _buffer = null;
+    _isPlaying = false;
+    _playlistMode = PlaylistMode.none;
+    _shuffle = false;
+    setRemoteImageUrl(null);
+    _setColor(null);
+    await player.stop();
+    _propertiesChangedController.add(true);
+  }
+}
+
+class PlayTimeoutException implements Exception {
+  @override
+  String toString() => 'Failed to open media: Operation timed out';
 }

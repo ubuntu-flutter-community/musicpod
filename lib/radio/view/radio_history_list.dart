@@ -51,6 +51,9 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin {
               .elementAt(reversedIndex);
           return simpleList
               ? RadioHistoryTile.simple(
+                  key: ValueKey(
+                    e.key,
+                  ), // Force rebuild when remote image changes
                   icyTitle: e.key,
                   selected:
                       current?.icyTitle != null &&
@@ -59,6 +62,9 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin {
               : Padding(
                   padding: const EdgeInsets.only(bottom: 5),
                   child: RadioHistoryTile(
+                    key: ValueKey(
+                      e.key,
+                    ), // Force rebuild when remote image changes
                     icyTitle: e.key,
                     selected:
                         current?.icyTitle != null &&
@@ -96,6 +102,7 @@ class SliverRadioHistoryList extends StatelessWidget with WatchItMixin {
     );
 
     final current = watchValue((MpvMetadataManager m) => m.mpvMetaDataCommand);
+
     if (length == 0) {
       return SliverToBoxAdapter(
         child: NoSearchResultPage(
@@ -111,6 +118,7 @@ class SliverRadioHistoryList extends StatelessWidget with WatchItMixin {
             .filteredMpvMetaDataHistory(filter: filter)
             .elementAt(reversedIndex);
         return RadioHistoryTile(
+          key: ValueKey(e.key),
           icyTitle: e.key,
           selected:
               current?.icyTitle != null &&

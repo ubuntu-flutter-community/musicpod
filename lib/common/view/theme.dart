@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:chinese_font_library/chinese_font_library.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
@@ -65,17 +67,6 @@ IconButtonThemeData iconButtonTheme(ThemeData? data) {
 }
 
 const yaruFixDarkDividerColor = Color.fromARGB(19, 255, 255, 255);
-
-Color getPlayerBg(Color? surfaceTintColor, Color fallbackColor) {
-  if (surfaceTintColor != null) {
-    return Color.alphaBlend(
-      surfaceTintColor.withValues(alpha: 0.15),
-      fallbackColor,
-    );
-  } else {
-    return fallbackColor;
-  }
-}
 
 const alphabetColors = {
   'A': Colors.red,
@@ -294,7 +285,7 @@ double getInputHeight() => isMobile ? 40 : 36;
 
 double get audioCardDimension => kAudioCardDimension - (isMobile ? 15 : 0);
 
-double get bottomPlayerDefaultHeight => isMobile ? 76.0 : 90.0;
+double get bottomPlayerDefaultHeight => isMobile ? 90.0 : 90.0;
 
 double get navigationBarHeight => bottomPlayerDefaultHeight;
 
@@ -303,12 +294,8 @@ double? get bottomPlayerPageGap => isMobile
     : null;
 
 EdgeInsets get playerTopControlsPadding => EdgeInsets.only(
-  right: kLargestSpace,
-  top: isMacOS
-      ? 0
-      : isMobile
-      ? 2 * kLargestSpace
-      : kLargestSpace,
+  right: isMacOS ? kSmallestSpace : kLargestSpace,
+  top: isDesktop ? 0 : 2 * kLargestSpace,
 );
 
 NavigationBarThemeData navigationBarTheme({required ThemeData theme}) =>
@@ -466,4 +453,39 @@ ThemeData applyChineseFontToPhoenixDarkTheme({required ThemeData darkTheme}) {
       Brightness.dark,
     ),
   );
+}
+
+Color blendColor(Color baseColor, Color blendColor, double amount) {
+  return Color.fromARGB(
+    (baseColor.alpha * (1 - amount) + blendColor.alpha * amount).round(),
+    (baseColor.red * (1 - amount) + blendColor.red * amount).round(),
+    (baseColor.green * (1 - amount) + blendColor.green * amount).round(),
+    (baseColor.blue * (1 - amount) + blendColor.blue * amount).round(),
+  );
+}
+
+Color getPlayerBg(
+  ThemeData theme,
+  Color? playerAccent, {
+  double blendAmount = 0.3,
+  double saturation = -0.5,
+}) {
+  final colorScheme = theme.colorScheme;
+  final isLight = colorScheme.isLight;
+  final bgBaseColor = isLight ? colorScheme.surface : Colors.black;
+  final accent =
+      playerAccent?.scale(saturation: saturation) ?? theme.colorScheme.primary;
+
+  return blendColor(bgBaseColor, accent, blendAmount);
+}
+
+Color getPlayerIconColor(ThemeData theme) {
+  final colorScheme = theme.colorScheme;
+  final isLight = colorScheme.isLight;
+
+  if (isLight) {
+    return colorScheme.onSurface;
+  } else {
+    return Colors.white;
+  }
 }

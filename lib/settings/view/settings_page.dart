@@ -63,7 +63,6 @@ class _SettingsPageState extends State<SettingsPage> {
         width: 700,
         child: ListView(
           controller: _scrollController,
-          padding: kGridPadding.copyWith(bottom: bottomPlayerPageGap),
           children:
               const [
                     ThemeSection(),
@@ -81,7 +80,14 @@ class _SettingsPageState extends State<SettingsPage> {
                       key: ValueKey(i),
                       controller: _scrollController,
                       index: i,
-                      child: e,
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          bottom: kLargestSpace,
+                          left: kLargestSpace,
+                          right: kLargestSpace,
+                        ),
+                        child: e,
+                      ),
                     ),
                   )
                   .toList(),

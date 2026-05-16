@@ -88,6 +88,7 @@ class LocalCoverService {
               pictureData: data,
               pictureMimeType: 'image/png',
             ),
+            mode: InsertMode.insertOrReplace,
           );
     } else {
       await (_db.update(_db.albumArtTable)
@@ -129,7 +130,8 @@ class LocalCoverService {
 
   Future<Uri?> createMediaControlsArtUri({Audio? audio}) async {
     if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
-      return Uri.tryParse(audio?.imageUrl ?? audio!.albumArtUrl!);
+      final uri = Uri.tryParse(audio?.imageUrl ?? audio!.albumArtUrl!);
+      if (uri != null && uri.hasScheme && uri.host.isNotEmpty) return uri;
     } else if (audio?.canHaveLocalCover == true &&
         File(audio!.path!).existsSync()) {
       final newData = await getCover(

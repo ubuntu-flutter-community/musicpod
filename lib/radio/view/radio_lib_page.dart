@@ -5,6 +5,7 @@ import '../../common/view/progress.dart';
 import '../../common/view/sliver_body.dart';
 import '../../settings/view/settings_action.dart';
 import '../radio_model.dart';
+import 'blocked_heariny_history_list.dart';
 import 'favorite_radio_tags_grid.dart';
 import 'radio_connect_mixin.dart';
 import 'radio_history_list.dart';
@@ -39,6 +40,8 @@ class RadioLibPage extends StatelessWidget
                     RadioCollectionView.tags => const FavoriteRadioTagsGrid(),
                     RadioCollectionView.history =>
                       const SliverRadioHistoryList(),
+                    RadioCollectionView.ignoredIcyTitles =>
+                      const BlockedHearinyHistoryList(),
                   },
             ),
     );

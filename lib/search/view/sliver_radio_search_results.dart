@@ -108,7 +108,7 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
                             ? Text(context.l10n.station)
                             : RadioPageTagBar(
                                 station: station,
-                                tagLimit: 3,
+                                tagLimit: 2,
                                 style:
                                     theme.listTileTheme.subtitleTextStyle ??
                                     theme.textTheme.bodyMedium?.copyWith(

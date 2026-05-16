@@ -63,7 +63,6 @@ class _PodcastSectionState extends State<PodcastSection> {
     );
 
     return YaruSection(
-      margin: const EdgeInsets.all(kLargestSpace),
       headline: Text(l10n.podcasts),
       child: Column(
         children: [

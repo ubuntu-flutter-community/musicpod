@@ -12,6 +12,7 @@ import '../data/audio_type.dart';
 import 'audio_page_type.dart';
 import 'audio_tile_image.dart';
 import 'audio_tile_option_button.dart';
+import 'icons.dart';
 import 'like_icon_button.dart';
 import 'tapable_text.dart';
 import 'theme.dart';
@@ -27,6 +28,7 @@ class AudioTile extends StatefulWidget {
     this.onSubTitleTap,
     this.onSubSubTitleTap,
     required this.onTap,
+    required this.style,
     required this.audioPageType,
     required this.allowLeadingImage,
     this.selectedColor,
@@ -48,6 +50,7 @@ class AudioTile extends StatefulWidget {
   final void Function(Audio audio)? onSubSubTitleTap;
   final bool allowLeadingImage, showDuration, showSubTitle, showSubSubTitle;
   final Color? selectedColor;
+  final AudioTileStyle style;
 
   @override
   State<AudioTile> createState() => _AudioTileState();
@@ -105,7 +108,7 @@ class _AudioTileState extends State<AudioTile> {
                       }),
           );
 
-    const notTitleFlex = 2;
+    const notTitleFlex = 3;
 
     return MouseRegion(
       key: ObjectKey(widget.audio),
@@ -116,6 +119,7 @@ class _AudioTileState extends State<AudioTile> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         minLeadingWidth: kAudioTrackWidth,
         leading: _AudioTileLeading(
+          style: widget.style,
           audioPageType: widget.audioPageType,
           audio: widget.audio,
           dimension: kAudioTrackWidth,
@@ -124,7 +128,7 @@ class _AudioTileState extends State<AudioTile> {
           isPlayerPlaying: widget.isPlayerPlaying,
           hovered: _hovered,
           onTap: widget.onTap,
-          hideIfNotSelected: !widget.allowLeadingImage,
+          dontKnowImage: !widget.allowLeadingImage,
         ),
         selected: widget.selected,
         selectedColor: widget.isPlayerPlaying
@@ -133,36 +137,39 @@ class _AudioTileState extends State<AudioTile> {
         selectedTileColor: isMobile
             ? theme.colorScheme.onSurface.withValues(alpha: 0.05)
             : Colors.transparent,
-        contentPadding: audioTilePadding.copyWith(left: 5, right: 5),
+        contentPadding: audioTilePadding,
         onTap: isMobile ? widget.onTap : null,
         title: Row(
           spacing: kLargestSpace,
           children: [
             Expanded(flex: 5, child: title),
-            if (widget.showSubTitle)
-              Expanded(flex: notTitleFlex, child: subTitle),
-            if ((widget.audioPageType == AudioPageType.allTitlesView ||
-                    widget.audioPageType == AudioPageType.playlist) &&
-                widget.showSubSubTitle &&
-                widget.audio.album != null)
-              Expanded(
-                flex: notTitleFlex,
-                child: TapAbleText(
-                  text: widget.audio.album!,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  onTap: widget.onSubSubTitleTap != null
-                      ? () => widget.onSubSubTitleTap!.call(widget.audio)
-                      : null,
+            if (widget.style == AudioTileStyle.compact) ...[
+              if (widget.showSubTitle)
+                Expanded(flex: notTitleFlex, child: subTitle),
+              if ((widget.audioPageType == AudioPageType.allTitlesView ||
+                      widget.audioPageType == AudioPageType.playlist) &&
+                  widget.showSubSubTitle &&
+                  widget.audio.album != null)
+                Expanded(
+                  flex: notTitleFlex,
+                  child: TapAbleText(
+                    text: widget.audio.album!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    onTap: widget.onSubSubTitleTap != null
+                        ? () => widget.onSubSubTitleTap!.call(widget.audio)
+                        : null,
+                  ),
                 ),
-              ),
-            if (widget.showDuration)
-              SizedBox(
-                width: 65,
-                child: _AudioTileDuration(splitter: '', audio: widget.audio),
-              ),
+              if (widget.showDuration)
+                SizedBox(
+                  width: 65,
+                  child: _AudioTileDuration(splitter: '', audio: widget.audio),
+                ),
+            ],
           ],
         ),
+        subtitle: widget.style == AudioTileStyle.normal ? subTitle : null,
         trailing: _AudioTileTrailing(
           hovered: _hovered,
           audio: widget.audio,
@@ -264,7 +271,8 @@ class _AudioTileLeading extends StatelessWidget {
     required this.dimension,
     required this.hovered,
     required this.onTap,
-    this.hideIfNotSelected = true,
+    required this.dontKnowImage,
+    required this.style,
   });
 
   final Audio audio;
@@ -277,7 +285,8 @@ class _AudioTileLeading extends StatelessWidget {
   final double dimension;
   final bool hovered;
   final VoidCallback onTap;
-  final bool hideIfNotSelected;
+  final bool dontKnowImage;
+  final AudioTileStyle style;
 
   @override
   Widget build(BuildContext context) => SizedBox.square(
@@ -292,8 +301,11 @@ class _AudioTileLeading extends StatelessWidget {
               (false, false) => const Icon(Icons.play_arrow),
             },
           )
-        : hideIfNotSelected
-        ? null
+        : dontKnowImage
+        ? Icon(switch (audio.audioType) {
+            AudioType.radio => Iconz.radio,
+            _ => Iconz.musicNote,
+          }, color: color)
         : switch (audioPageType) {
             AudioPageType.album => _AlbumTileLead(
               trackNumber: audio.trackNumber,
@@ -305,7 +317,9 @@ class _AudioTileLeading extends StatelessWidget {
                   AudioType.radio => ValueKey(audio.uuid),
                   _ => null,
                 },
-                size: dimension * 0.5,
+                size: style == AudioTileStyle.normal
+                    ? dimension * 0.95
+                    : dimension * 0.7,
                 audio: audio,
               ),
             ),
@@ -330,3 +344,5 @@ class _AlbumTileLead extends StatelessWidget {
     ),
   );
 }
+
+enum AudioTileStyle { normal, compact }

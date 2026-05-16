@@ -56,9 +56,7 @@ class _LyricsSectionState extends State<LyricsSection> {
     );
 
     return YaruSection(
-      headline: const Text('Lyrics Settings'),
-
-      margin: const EdgeInsets.all(kLargestSpace),
+      headline: Text(context.l10n.lyrics),
       child: Column(
         children: [
           Align(

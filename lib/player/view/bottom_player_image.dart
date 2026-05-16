@@ -36,12 +36,23 @@ class _BottomPlayerImageState extends State<BottomPlayerImage> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.isVideo == true) {
-      return RepaintBoundary(
+    final fullWindowMode = watchValue((AppManager m) => m.fullWindowMode);
+
+    Widget child;
+
+    final fallBackImage = PlayerFallBackImage(
+      audioType: widget.audio?.audioType,
+      height: widget.size,
+      width: widget.size,
+    );
+    if (fullWindowMode == true) {
+      child = SizedBox.square(dimension: widget.size);
+    } else if (widget.isVideo == true) {
+      child = RepaintBoundary(
         child: MouseRegion(
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
-            onTap: () => di<AppManager>().setFullWindowMode(true),
+            onTap: () => di<AppManager>().toggleFullWindowMode(),
             child: Video(
               height: widget.size,
               width: widget.size,
@@ -54,17 +65,7 @@ class _BottomPlayerImageState extends State<BottomPlayerImage> {
           ),
         ),
       );
-    }
-
-    Widget child;
-
-    final fallBackImage = PlayerFallBackImage(
-      audioType: widget.audio?.audioType,
-      height: widget.size,
-      width: widget.size,
-    );
-
-    if (widget.audio?.canHaveLocalCover == true) {
+    } else if (widget.audio?.canHaveLocalCover == true) {
       child = LocalCover(
         key: ValueKey(widget.audio!.path),
         albumId: widget.audio!.albumDbId!,
@@ -111,14 +112,19 @@ class _BottomPlayerImageState extends State<BottomPlayerImage> {
                 ),
               ),
             ),
-          if (_hovered && widget.isOnline)
+          if (_hovered || fullWindowMode)
             Positioned.fill(
               child: Container(
-                color: Colors.black45,
+                color: fullWindowMode
+                    ? Colors.transparent
+                    : const Color.fromARGB(192, 0, 0, 0),
                 child: Center(
                   child: IconButton(
-                    onPressed: () => di<AppManager>().setFullWindowMode(true),
-                    icon: Icon(Iconz.fullScreen, color: Colors.white),
+                    onPressed: () => di<AppManager>().toggleFullWindowMode(),
+                    icon: Icon(
+                      Iconz.fullScreen,
+                      color: fullWindowMode ? null : Colors.white,
+                    ),
                   ),
                 ),
               ),

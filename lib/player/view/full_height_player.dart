@@ -8,7 +8,6 @@ import '../../player/player_model.dart';
 import 'full_height_player_audio_body.dart';
 import 'full_height_player_header_bar.dart';
 import 'full_height_video_player.dart';
-import 'player_color.dart';
 import 'player_view.dart';
 
 class FullHeightPlayer extends StatelessWidget with WatchItMixin {
@@ -19,7 +18,6 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final size = context.mediaQuerySize;
     final isOnline = watchValue(
       (ConnectivityManager m) =>
           m.connectivityCommand.select((p) => p.isOnline),
@@ -52,20 +50,17 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
       );
     }
 
-    return Material(
-      color: theme.cardColor,
-      child: Stack(
-        children: [
-          if (!isVideo)
-            PlayerColor(alpha: 0.4, size: size, position: playerPosition),
-          Column(
-            children: [
-              if (!isMobile) FullHeightPlayerHeaderBar(isVideo: isVideo),
-              Expanded(child: body),
-            ],
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        if (!isMobile)
+          FullHeightPlayerHeaderBar(
+            isVideo: isVideo,
+            playerPosition: playerPosition,
+          )
+        else
+          const SizedBox(height: 40),
+        Expanded(child: body),
+      ],
     );
   }
 }

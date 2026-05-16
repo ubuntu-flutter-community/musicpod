@@ -106,44 +106,47 @@ class _QueueBodyState extends State<QueueBody>
               onReorder: di<PlayerModel>().moveAudioInQueue,
             ),
           ),
-          Row(
-            spacing: kMediumSpace,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextButton.icon(
-                style: TextButton.styleFrom(
-                  foregroundColor: colorScheme.onSurface,
+          Padding(
+            padding: const EdgeInsets.only(left: 3 * kLargestSpace),
+            child: Row(
+              spacing: kMediumSpace,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                TextButton.icon(
+                  style: TextButton.styleFrom(
+                    foregroundColor: colorScheme.onSurface,
+                  ),
+                  onPressed: queue.where((e) => e.isLocal).isEmpty
+                      ? null
+                      : () {
+                          di<LocalAudioManager>().addPlaylist(
+                            '${l10n.queue} ${DateTime.now()}',
+                            List.from(queue.where((e) => e.isLocal)),
+                          );
+                          if (widget.shownInDialog && context.canPop()) {
+                            context.pop();
+                          }
+                        },
+                  label: Text(l10n.createNewPlaylist),
+                  icon: Icon(
+                    Iconz.playlist,
+                    color: queue.where((e) => e.isLocal).isEmpty
+                        ? theme.disabledColor
+                        : widget.selectedColor,
+                  ),
                 ),
-                onPressed: queue.where((e) => e.isLocal).isEmpty
-                    ? null
-                    : () {
-                        di<LocalAudioManager>().addPlaylist(
-                          '${l10n.queue} ${DateTime.now()}',
-                          List.from(queue.where((e) => e.isLocal)),
-                        );
-                        if (widget.shownInDialog && context.canPop()) {
-                          context.pop();
-                        }
-                      },
-                label: Text(l10n.createNewPlaylist),
-                icon: Icon(
-                  Iconz.playlist,
-                  color: queue.where((e) => e.isLocal).isEmpty
-                      ? theme.disabledColor
-                      : widget.selectedColor,
+                IconButton(
+                  icon: Icon(Iconz.clearAll, semanticLabel: l10n.clearQueue),
+                  tooltip: l10n.clearQueue,
+                  onPressed:
+                      queue.isEmpty ||
+                          di<PlayerModel>().queueName == null ||
+                          di<PlayerModel>().audio == null
+                      ? null
+                      : () => di<PlayerModel>().clearQueue(),
                 ),
-              ),
-              IconButton(
-                icon: Icon(Iconz.clearAll, semanticLabel: l10n.clearQueue),
-                tooltip: l10n.clearQueue,
-                onPressed:
-                    queue.isEmpty ||
-                        di<PlayerModel>().queueName == null ||
-                        di<PlayerModel>().audio == null
-                    ? null
-                    : () => di<PlayerModel>().clearQueue(),
-              ),
-            ],
+              ],
+            ),
           ),
           const SizedBox(height: kLargestSpace),
         ],

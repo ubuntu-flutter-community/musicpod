@@ -4538,6 +4538,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Report this issue'**
   String get reportIssue;
+
+  /// No description provided for @ignoreThisTitleInHearingHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Ignore this title in hearing history'**
+  String get ignoreThisTitleInHearingHistory;
+
+  /// No description provided for @removeFromIgnoredHearyHistoryTitles.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from ignored titles'**
+  String get removeFromIgnoredHearyHistoryTitles;
+
+  /// No description provided for @ignoredHearyHistoryTitlesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ignored titles'**
+  String get ignoredHearyHistoryTitlesTitle;
+
+  /// No description provided for @ignoredHearyHistoryTitlesDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'These titles will be ignored in the hearing history and will not be shown in the recently played list.'**
+  String get ignoredHearyHistoryTitlesDescription;
+
+  /// No description provided for @playingMediaTimedOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Playing media timed out. This might be caused by a network error or server issues.'**
+  String get playingMediaTimedOut;
 }
 
 class _AppLocalizationsDelegate

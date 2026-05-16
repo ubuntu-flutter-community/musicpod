@@ -356,15 +356,12 @@ class LocalAudioService {
     return (audios: _audios ?? [], failedImports: failedImports);
   }
 
-  Future<bool> areTracksSynced({
-    List<String> failedImports = const [],
-    String? newDir,
-  }) async {
+  Future<bool> areTracksSynced({String? newDir}) async {
     final dir = newDir ?? _settingsService.getString(SPKeys.directory);
-    if (dir == null) return false;
+    if (dir == null || dir.isEmpty) return true;
     final trackCount = await _db.trackTable.count().getSingle();
-    final mediaFiles = await findMediaFiles(dir, failedImports);
-    return trackCount == mediaFiles.length;
+    final results = await findMediaFiles(dir);
+    return trackCount == results.files.length;
   }
 
   Future<void> _persistAudios(List<Audio> audioList) => _db.transaction(
@@ -1315,9 +1312,10 @@ FutureOr<ImportResult> _readAudiosFromDirectory(String? directory) async {
   final List<String> failedImports = [];
 
   if (directory != null && Directory(directory).existsSync()) {
-    final files = await findMediaFiles(directory, failedImports);
+    final results = await findMediaFiles(directory);
+    failedImports.addAll(results.failedImports);
 
-    for (final e in files) {
+    for (final e in results.files) {
       try {
         newAudios.add(Audio.local(e, onError: (p) => failedImports.add(p)));
       } on Exception catch (ex) {
@@ -1335,16 +1333,20 @@ FutureOr<ImportResult> _readAudiosFromDirectory(String? directory) async {
   return (audios: newAudios, failedImports: failedImports);
 }
 
-Future<Iterable<File>> findMediaFiles(
+Future<({Iterable<File> files, List<String> failedImports})> findMediaFiles(
   String directory,
-  List<String> failedImports,
 ) async {
-  return (await Directory(directory)
-          .list(recursive: true, followLinks: false)
-          .handleError((e) => failedImports.add(e.toString()))
-          .toList())
-      .whereType<File>()
-      .where((file) => file.isPlayable);
+  final failedImports = <String>[];
+
+  final files =
+      (await Directory(directory)
+              .list(recursive: true, followLinks: false)
+              .handleError((e) => failedImports.add(e.toString()))
+              .toList())
+          .whereType<File>()
+          .where((file) => file.isPlayable);
+
+  return (files: files, failedImports: failedImports);
 }
 
 typedef ImportResult = ({List<String> failedImports, List<Audio> audios});

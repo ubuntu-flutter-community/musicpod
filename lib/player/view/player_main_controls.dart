@@ -118,6 +118,7 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
               : () => di<PlayerModel>().playNext(),
           icon: Icon(Iconz.skipForward, color: defaultColor),
         ),
+
       switch (audio?.audioType) {
         AudioType.local => PlaylistModeButton(
           active: active,
@@ -164,8 +165,9 @@ class PlayerCompactControls extends StatelessWidget with WatchItMixin {
     final theme = context.theme;
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
 
-    final isOnline = watchPropertyValue(
-      (ConnectivityManager m) => m.connectivityCommand.value.isOnline,
+    final isOnline = watchValue(
+      (ConnectivityManager m) =>
+          m.connectivityCommand.select((p) => p.isOnline),
     );
     final active = audio?.path != null || isOnline;
 

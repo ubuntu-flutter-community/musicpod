@@ -12,7 +12,7 @@ extension MediaFileX on File {
 extension _ValidPathX on String {
   bool get isPlayable {
     final fileName = p.basename(this);
-    if (fileName.startsWith('._')) {
+    if (blackListed(fileName)) {
       return false;
     }
 
@@ -27,6 +27,9 @@ extension _ValidPathX on String {
     return (mime?.contains('audio') ?? false) ||
         (mime?.contains('video') ?? false);
   }
+
+  bool blackListed(String fileName) =>
+      fileName.startsWith('._') || fileName.endsWith('.m3u');
 }
 
 enum _SpecialMimeTypes {

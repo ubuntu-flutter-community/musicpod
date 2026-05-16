@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/connectivity_manager.dart';
+import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
-import '../../app/page_ids.dart';
 import '../../common/view/adaptive_multi_layout_body.dart';
 import '../../common/view/audio_fall_back_icon.dart';
 import '../../common/view/audio_page_header.dart';
@@ -19,6 +19,7 @@ import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
@@ -63,9 +64,11 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
     return Scaffold(
       appBar: HeaderBar(
         adaptive: true,
-        title: station != null
-            ? Text(station.title ?? station.uuid ?? '')
-            : Text(context.l10n.station),
+        title: isMobile
+            ? null
+            : (station != null
+                  ? Text(station.title ?? station.uuid ?? '')
+                  : Text(context.l10n.station)),
         actions: [
           Padding(
             padding: appBarSingleActionSpacing,
