@@ -21,6 +21,10 @@ Iterable<Audio> splitByDiscs(Iterable<Audio> audios) {
   return audios;
 }
 
+int _compareCaseInsensitive(String a, String b) {
+  return compareNatural(a.toLowerCase(), b.toLowerCase());
+}
+
 void sortListByAudioFilter({
   required AudioFilter audioFilter,
   required List<Audio> audios,
@@ -31,8 +35,8 @@ void sortListByAudioFilter({
       audios.sort((a, b) {
         if (a.artist != null && b.artist != null) {
           return descending
-              ? compareNatural(b.artist!, a.artist!)
-              : compareNatural(a.artist!, b.artist!);
+              ? _compareCaseInsensitive(b.artist!, a.artist!)
+              : _compareCaseInsensitive(a.artist!, b.artist!);
         }
         return 0;
       });
@@ -40,8 +44,8 @@ void sortListByAudioFilter({
       audios.sort((a, b) {
         if (a.title != null && b.title != null) {
           return descending
-              ? compareNatural(b.title!, a.title!)
-              : compareNatural(a.title!, b.title!);
+              ? _compareCaseInsensitive(b.title!, a.title!)
+              : _compareCaseInsensitive(a.title!, b.title!);
         }
         return 0;
       });
@@ -58,8 +62,8 @@ void sortListByAudioFilter({
       audios.sort((a, b) {
         if (a.album != null && b.album != null) {
           final albumComp = descending
-              ? compareNatural(b.album!, a.album!)
-              : compareNatural(a.album!, b.album!);
+              ? _compareCaseInsensitive(b.album!, a.album!)
+              : _compareCaseInsensitive(a.album!, b.album!);
           if (albumComp == 0 &&
               a.trackNumber != null &&
               b.trackNumber != null) {
@@ -86,8 +90,8 @@ void sortListByAudioFilter({
       audios.sort((a, b) {
         if (a.genre != null && b.genre != null) {
           return descending
-              ? compareNatural(b.genre!, a.genre!)
-              : compareNatural(a.genre!, b.genre!);
+              ? _compareCaseInsensitive(b.genre!, a.genre!)
+              : _compareCaseInsensitive(a.genre!, b.genre!);
         }
         return 0;
       });

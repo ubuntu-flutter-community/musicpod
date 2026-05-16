@@ -66,7 +66,7 @@ class LocalAudioService {
     for (var a in theAudios.sorted(
       (a, b) => a.album == null || b.album == null
           ? 0
-          : compareNatural(a.album!, b.album!),
+          : compareNatural(a.album!.toLowerCase(), b.album!.toLowerCase()),
     )) {
       final id = a.albumDbId;
       if (id != null && albumsResult.none((e) => e == id)) {
