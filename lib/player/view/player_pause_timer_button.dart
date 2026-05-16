@@ -31,21 +31,28 @@ Duration durationUntilNextTimeOfDay({
   return targetDateTime.difference(now);
 }
 
-class PlayerPauseTimerButton extends StatelessWidget {
+class PlayerPauseTimerButton extends StatelessWidget with WatchItMixin {
   const PlayerPauseTimerButton({super.key, this.iconColor});
 
   final Color? iconColor;
 
   @override
-  Widget build(BuildContext context) => IconButton(
-    tooltip: context.l10n.schedulePlaybackStopTimer,
-    onPressed: () => showModal(
-      context: context,
-      mode: ModalMode.platformModalMode,
-      content: isMobile ? const _BottomSheet() : const _Dialog(),
-    ),
-    icon: Icon(Iconz.sleep, color: iconColor),
-  );
+  Widget build(BuildContext context) {
+    final timer = watchPropertyValue((PlayerModel m) => m.timer);
+    return IconButton(
+      isSelected: timer != null,
+      tooltip: context.l10n.schedulePlaybackStopTimer,
+      onPressed: () => showModal(
+        context: context,
+        mode: ModalMode.platformModalMode,
+        content: isMobile ? const _BottomSheet() : const _Dialog(),
+      ),
+      icon: Icon(
+        timer != null ? Iconz.sleepFilled : Iconz.sleep,
+        color: iconColor,
+      ),
+    );
+  }
 }
 
 class _Dialog extends StatefulWidget {
@@ -71,7 +78,13 @@ class _DialogState extends State<_Dialog> {
       ),
       actions: [
         TextButton(
-          onPressed: () => context.pop(),
+          onPressed: () {
+            di<PlayerModel>().setTimer(
+              null,
+              message: context.l10n.playbackTimerCancelled,
+            );
+            context.pop();
+          },
           child: Text(context.l10n.cancel),
         ),
         ElevatedButton(
@@ -80,7 +93,10 @@ class _DialogState extends State<_Dialog> {
               targetTime: _timeOfDay,
               now: DateTime.now(),
             );
-            di<PlayerModel>().setTimer(duration);
+            di<PlayerModel>().setTimer(
+              duration,
+              message: context.l10n.playbackWasPausedByTimer,
+            );
             context.toast(
               Text(
                 context.l10n.playbackWillStopIn(
@@ -139,7 +155,13 @@ class _BottomSheetState extends State<_BottomSheet> {
                           expandAll: true,
                           children: [
                             TextButton(
-                              onPressed: () => context.pop(),
+                              onPressed: () {
+                                di<PlayerModel>().setTimer(
+                                  null,
+                                  message: context.l10n.playbackTimerCancelled,
+                                );
+                                context.pop();
+                              },
                               child: Text(context.l10n.cancel),
                             ),
                             ElevatedButton(
@@ -148,7 +170,11 @@ class _BottomSheetState extends State<_BottomSheet> {
                                   targetTime: _timeOfDay,
                                   now: DateTime.now(),
                                 );
-                                di<PlayerModel>().setTimer(duration);
+                                di<PlayerModel>().setTimer(
+                                  duration,
+                                  message:
+                                      context.l10n.playbackWasPausedByTimer,
+                                );
                                 context.toast(
                                   Text(
                                     context.l10n.playbackWillStopIn(

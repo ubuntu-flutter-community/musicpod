@@ -10,6 +10,7 @@ import '../../common/view/audio_filter.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
+import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
@@ -40,6 +41,19 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final showPodcastsAscending = watchPropertyValue(
       (PodcastManager m) => m.showPodcastAscending(feedUrl),
+    );
+
+    registerHandler(
+      select: (PlayerModel m) => m.toggleAudiosProgressCommand.results,
+      handler: (context, results, cancel) {
+        if (results.paramData?.audios.any((a) => a.durationMs == null) ==
+            true) {
+          context.toast(
+            Text(context.l10n.podcastDoesNotSendEpisodeDuration),
+            duration: const Duration(seconds: 5),
+          );
+        }
+      },
     );
 
     final showDownloadsOnly = watchValue((PodcastManager m) => m.downloadsOnly);

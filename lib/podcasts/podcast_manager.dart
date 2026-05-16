@@ -163,6 +163,9 @@ class PodcastManager extends SafeChangeNotifier {
       _podcastService.showPodcastAscending(feedUrl);
 
   Future<void> removeAllPodcasts() async => _podcastService.removeAllPodcasts();
+
+  Future<void> updateAudioDuration(Audio audio) =>
+      _podcastService.updateAudioDuration(audio);
 }
 
 enum PodcastEpisodeFilter {

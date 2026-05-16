@@ -4,9 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../app/app_manager.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
 import '../player_model.dart';
-import '../player_service.dart';
 import 'bottom_player.dart';
 import 'full_height_player.dart';
 
@@ -50,22 +48,11 @@ class _PlayerViewState extends State<PlayerView> {
 
   @override
   Widget build(BuildContext context) {
-    registerStreamHandler(
-      select: (PlayerModel m) => m.errorStream,
-      handler: (context, newValue, cancel) => context.toast(
-        Text(switch (newValue) {
-          final PlayTimeoutException _ => context.l10n.playingMediaTimedOut,
-          final Exception e => e.toString(),
-          _ => 'Unknown error',
-        }),
-      ),
-    );
-
     final theme = context.theme;
     final playerBg = getPlayerBg(
       theme,
       watchPropertyValue((PlayerModel m) => m.color ?? theme.cardColor),
-      blendAmount: widget._position == PlayerPosition.bottom ? 0.1 : 0.3,
+      blendAmount: widget._position == PlayerPosition.bottom ? 0.2 : 0.3,
       saturation: widget._position == PlayerPosition.bottom ? -0.3 : -0.4,
     );
     return RepaintBoundary(

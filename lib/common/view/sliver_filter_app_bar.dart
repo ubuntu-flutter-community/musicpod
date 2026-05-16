@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../extensions/build_context_x.dart';
+import '../../extensions/taget_platform_x.dart';
 
 class SliverFilterAppBar extends StatelessWidget {
   const SliverFilterAppBar({
@@ -25,7 +26,7 @@ class SliverFilterAppBar extends StatelessWidget {
         elevation: 0,
         backgroundColor: context.theme.scaffoldBackgroundColor,
         automaticallyImplyLeading: false,
-        pinned: true,
+        pinned: isDesktop,
         centerTitle: true,
         titleSpacing: 0,
         stretch: true,

@@ -7,6 +7,7 @@ import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
+import '../podcast_manager.dart';
 import 'podcast_tile_progress.dart';
 
 class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
@@ -54,6 +55,9 @@ class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
                   child: Icon(Iconz.playFilled, semanticLabel: label),
                 ),
           onPressed: () {
+            // let's update the database episode duration in case it is not set
+            // for podcasts that do not send episode duration:
+            di<PodcastManager>().updateAudioDuration(audio);
             if (selected) {
               if (isPlayerPlaying) {
                 playerModel.pause();

@@ -51,7 +51,9 @@ class EpisodeMarkDownButton extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final isCompleted = watchValue(
       (PlayerModel m) => m.toggleAudiosProgressCommand.select(
-        (m) => m?[episode.url]?.inMilliseconds == episode.durationMs?.toInt(),
+        (m) =>
+            m?[episode.url]?.inMilliseconds == episode.durationMs?.toInt() &&
+            episode.durationMs != null,
       ),
     );
 
@@ -68,9 +70,11 @@ class EpisodeMarkDownButton extends StatelessWidget with WatchItMixin {
       alignment: Alignment.center,
       children: [
         IconButton(
-          tooltip: context.l10n.markEpisodeAsDone,
+          tooltip: episode.durationMs == null
+              ? context.l10n.podcastDoesNotSendEpisodeDuration
+              : context.l10n.markEpisodeAsDone,
           isSelected: isCompleted,
-          onPressed: isRunning
+          onPressed: isRunning || episode.durationMs == null
               ? null
               : () => di<PlayerModel>().toggleAudiosProgressCommand.run((
                   audios: [episode],

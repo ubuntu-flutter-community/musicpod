@@ -541,6 +541,11 @@ class Iconz {
       : cupertino
       ? CupertinoIcons.moon
       : Icons.mode_night_rounded;
+  static IconData get sleepFilled => yaru
+      ? YaruIcons.clear_night_filled
+      : cupertino
+      ? CupertinoIcons.moon_fill
+      : Icons.mode_night_rounded;
   static IconData get markAllRead => yaru
       ? YaruIcons.ok_filled
       : cupertino

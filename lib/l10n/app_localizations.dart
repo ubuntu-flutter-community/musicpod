@@ -4568,6 +4568,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Playing media timed out. This might be caused by a network error or server issues.'**
   String get playingMediaTimedOut;
+
+  /// No description provided for @playbackWasPausedByTimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Playback was paused by timer'**
+  String get playbackWasPausedByTimer;
+
+  /// No description provided for @playbackTimerCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Playback timer cancelled'**
+  String get playbackTimerCancelled;
+
+  /// No description provided for @podcastDoesNotSendEpisodeDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'This podcast does not send episode duration. The mark done feature might not work as expected.'**
+  String get podcastDoesNotSendEpisodeDuration;
 }
 
 class _AppLocalizationsDelegate

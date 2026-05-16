@@ -19,8 +19,6 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final playerModel = di<PlayerModel>();
-    final podcastManager = di<PodcastManager>();
     final selectedAudio = watchPropertyValue((PlayerModel m) => m.audio);
     final isOnline = watchValue(
       (ConnectivityManager m) =>
@@ -38,7 +36,7 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
           key: ValueKey('${episode.path ?? episode.url}-$isOnline'),
           audio: episode,
           isOnline: isOnline,
-          addPodcast: () async => podcastManager.addPodcast(
+          addPodcast: () async => di<PodcastManager>().addPodcast(
             feedUrl: episode.feedUrl!,
             imageUrl: episode.albumArtUrl ?? episode.imageUrl ?? '',
             name: episode.podcastTitle ?? '',
@@ -46,7 +44,7 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
           ),
           isExpanded: episode == selectedAudio,
           selected: episode == selectedAudio,
-          startPlaylist: () => playerModel.startPlaylist(
+          startPlaylist: () => di<PlayerModel>().startPlaylist(
             audios: audios,
             listName: pageId,
             index: index,

@@ -127,6 +127,7 @@ class PlayerService {
   Future<void> dispose() async {
     await _propertiesChangedController.close();
     await _errorController.close();
+    await _messageController.close();
     await _isPlayingSub?.cancel();
     await _positionSub?.cancel();
     await _durationSub?.cancel();
@@ -277,6 +278,8 @@ class PlayerService {
 
   final _errorController = StreamController<Exception>.broadcast();
   Stream<Exception> get errorStream => _errorController.stream.map((e) => e);
+  final _messageController = StreamController<String>.broadcast();
+  Stream<String> get messageStream => _messageController.stream.map((e) => e);
 
   /// To not mess up with the queue, this method is private
   /// Use [startPlaylist] instead
@@ -346,8 +349,21 @@ class PlayerService {
   }
 
   Timer? _timer;
-  void setPauseTimer(Duration duration) {
-    _timer = Timer(duration, () => pause());
+  Timer? get timer => _timer;
+  void setPauseTimer(Duration? duration, {required String message}) {
+    _timer?.cancel();
+    if (duration == null) {
+      _timer = null;
+      _messageController.add(message);
+    } else {
+      _timer = Timer(duration, () async {
+        await pause();
+        _timer = null;
+        _propertiesChangedController.add(true);
+        _messageController.add(message);
+      });
+    }
+    _propertiesChangedController.add(true);
   }
 
   Future<void> seek() async {

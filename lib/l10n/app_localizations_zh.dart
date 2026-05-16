@@ -2282,6 +2282,16 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get playingMediaTimedOut =>
       'Playing media timed out. This might be caused by a network error or server issues.';
+
+  @override
+  String get playbackWasPausedByTimer => 'Playback was paused by timer';
+
+  @override
+  String get playbackTimerCancelled => 'Playback timer cancelled';
+
+  @override
+  String get podcastDoesNotSendEpisodeDuration =>
+      'This podcast does not send episode duration. The mark done feature might not work as expected.';
 }
 
 /// The translations for Chinese, as used in Hong Kong (`zh_HK`).

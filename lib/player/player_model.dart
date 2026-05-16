@@ -34,6 +34,7 @@ class PlayerModel extends SafeChangeNotifier {
   StreamSubscription<bool>? _propertiesChangedSub;
 
   Stream<Exception> get errorStream => _playerService.errorStream;
+  Stream<String> get messageStream => _playerService.messageStream;
 
   Stream<String?> get onlineArtError => _onlineArtService.error;
 
@@ -137,7 +138,9 @@ class PlayerModel extends SafeChangeNotifier {
     return _playerService.lastPositions;
   }, initialValue: _playerService.lastPositions);
 
-  void setTimer(Duration duration) => _playerService.setPauseTimer(duration);
+  Timer? get timer => _playerService.timer;
+  void setTimer(Duration? duration, {required String message}) =>
+      _playerService.setPauseTimer(duration, message: message);
 
   @disposeMethod
   @override

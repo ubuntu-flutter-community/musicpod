@@ -3,6 +3,9 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../l10n/l10n.dart';
+import '../../player/player_model.dart';
+import '../../player/player_service.dart';
 import '../../player/view/player_view.dart';
 import '../../podcasts/download_manager.dart';
 import '../../settings/settings_model.dart';
@@ -28,6 +31,26 @@ class DesktopHomePage extends StatelessWidget
     registerStreamHandler(
       select: (DownloadManager m) => m.messageStream,
       handler: downloadMessageStreamHandler,
+    );
+
+    registerStreamHandler(
+      select: (PlayerModel m) => m.errorStream,
+      handler: (context, newValue, cancel) {
+        if (newValue.hasData)
+          context.toast(
+            Text(switch (newValue.data!) {
+              final PlayTimeoutException _ => context.l10n.playingMediaTimedOut,
+              final Exception e => e.toString(),
+            }),
+          );
+      },
+    );
+
+    registerStreamHandler(
+      select: (PlayerModel m) => m.messageStream,
+      handler: (context, newValue, cancel) {
+        if (newValue.hasData) context.toast(Text(newValue.data!));
+      },
     );
 
     setupCommonHandlersAndCommands(context);

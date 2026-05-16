@@ -612,6 +612,16 @@ class PodcastService {
     await removeAllPodcasts();
     await initService();
   }
+
+  Future<void> updateAudioDuration(Audio audio) async {
+    await (_db.update(
+      _db.podcastEpisodeTable,
+    )..where((t) => t.contentUrl.equals(audio.url ?? ''))).write(
+      PodcastEpisodeTableCompanion(
+        durationMs: Value(audio.durationMs?.toInt()),
+      ),
+    );
+  }
 }
 
 Future<Podcast?> loadPodcast(String url) async {

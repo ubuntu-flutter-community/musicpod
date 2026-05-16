@@ -5,6 +5,7 @@ import '../../app/app_manager.dart';
 import '../../app/connectivity_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
+import '../../common/view/share_button.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -16,6 +17,7 @@ import 'bottom_player_like_and_star_button.dart';
 import 'play_button.dart';
 import 'playback_rate_button.dart';
 import 'player_main_controls.dart';
+import 'player_pause_timer_button.dart';
 import 'player_title_and_artist.dart';
 import 'player_track.dart';
 import 'player_view.dart';
@@ -26,7 +28,6 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.theme;
     final smallWindow = context.smallWindow;
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
     final isVideo = watchPropertyValue((PlayerModel m) => m.isVideo);
@@ -88,6 +89,10 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                       if (audio?.audioType == AudioType.podcast)
                         const PlaybackRateButton(),
                       if (!isMobile) const VolumeSliderPopup(),
+                      if (!fullWindowMode) ...[
+                        const PlayerPauseTimerButton(),
+                        ShareButton(audio: audio, active: active),
+                      ],
                       IconButton(
                         tooltip: context.l10n.stop,
                         onPressed: () {
@@ -95,7 +100,6 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                           di<PlayerModel>().stop();
                         },
                         icon: Icon(Iconz.stopFilled),
-                        color: theme.iconTheme.color,
                       ),
                     ],
                   ),
