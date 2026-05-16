@@ -35,16 +35,6 @@ class ResourceSection extends StatelessWidget with WatchItMixin {
             ),
           ),
           YaruTile(
-            title: Text(l10n.useBlurredPlayerBackgroundTitle),
-            subtitle: Text(l10n.useBlurredPlayerBackgroundDescription),
-            trailing: CommonSwitch(
-              onChanged: di<SettingsModel>().setBlurredPlayerBackground,
-              value: watchPropertyValue(
-                (SettingsModel m) => m.blurredPlayerBackground,
-              ),
-            ),
-          ),
-          YaruTile(
             title: Text(l10n.enableDataSafeModeSettingTitle),
             subtitle: Text(l10n.enableDataSafeModeSettingDescription),
             trailing: CommonSwitch(

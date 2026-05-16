@@ -8,7 +8,6 @@ import '../../extensions/taget_platform_x.dart';
 import '../player_model.dart';
 import 'bottom_player_like_and_star_button.dart';
 import 'full_height_player_image.dart';
-import 'full_height_player_top_controls.dart';
 import 'player_explorer.dart';
 import 'player_main_controls.dart';
 import 'player_title_and_artist.dart';
@@ -98,47 +97,33 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
       ],
     );
 
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Center(
-          child: playerWithSidePanel
-              ? Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(width: 490, child: column),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 3 * kLargestSpace),
-                      child: queueOrHistory,
-                    ),
-                  ],
-                )
-              : isMobile && !context.isPortrait
-              ? Row(
-                  spacing: kLargestSpace,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Hero(
-                      tag: 'FullHeightPlayerImageInLandscape',
-                      child: FullHeightPlayerImage(height: 200, width: 200),
-                    ),
-                    SizedBox(width: 400, child: column),
-                  ],
-                )
-              : column,
-        ),
-        Positioned(
-          top: 0,
-          right: 0,
-          child: FullHeightPlayerTopControls(
-            showQueueButon: !playerWithSidePanel,
-            iconColor: iconColor,
-            playerPosition: playerPosition,
-          ),
-        ),
-      ],
+    return Center(
+      child: playerWithSidePanel
+          ? Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(width: 490, child: column),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 3 * kLargestSpace),
+                  child: queueOrHistory,
+                ),
+              ],
+            )
+          : isMobile && !context.isPortrait
+          ? Row(
+              spacing: kLargestSpace,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Hero(
+                  tag: 'FullHeightPlayerImageInLandscape',
+                  child: FullHeightPlayerImage(height: 200, width: 200),
+                ),
+                SizedBox(width: 400, child: column),
+              ],
+            )
+          : column,
     );
   }
 }

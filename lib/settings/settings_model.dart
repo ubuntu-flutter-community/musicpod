@@ -93,11 +93,6 @@ class SettingsModel extends SafeChangeNotifier {
   void setUseMoreAnimations(bool value) =>
       _service.setValue(SPKeys.useMoreAnimations, value);
 
-  bool get blurredPlayerBackground =>
-      _service.getBool(SPKeys.blurredPlayerBackground) ?? false;
-  void setBlurredPlayerBackground(bool value) =>
-      _service.setValue(SPKeys.blurredPlayerBackground, value);
-
   bool get saveWindowSize => _service.getBool(SPKeys.saveWindowSize) ?? false;
   void setSaveWindowSize(bool value) =>
       _service.setValue(SPKeys.saveWindowSize, value);

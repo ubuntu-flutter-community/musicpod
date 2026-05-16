@@ -106,16 +106,26 @@ class FullHeightVideoPlayer extends StatelessWidget {
     required IconData icon,
   }) => [
     const Spacer(),
-    FullHeightPlayerTopControls(
-      iconColor: baseColor,
-      playerPosition: playerPosition,
-      padding: EdgeInsets.zero,
-    ),
-    if (AppConfig.allowVideoFullScreen)
-      Tooltip(
-        message: context.l10n.fullScreen,
-        child: MaterialFullscreenButton(icon: Icon(icon, color: baseColor)),
+    OverlayContainer(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FullHeightPlayerTopControls(
+            iconColor: baseColor,
+            playerPosition: playerPosition,
+            padding: EdgeInsets.zero,
+            showFullWindowButton: true,
+          ),
+          if (AppConfig.allowVideoFullScreen)
+            Tooltip(
+              message: context.l10n.fullScreen,
+              child: MaterialFullscreenButton(
+                icon: Icon(icon, color: baseColor),
+              ),
+            ),
+        ],
       ),
+    ),
   ];
 }
 
@@ -162,9 +172,12 @@ class _LinuxFullHeightPlayerState extends State<LinuxFullHeightPlayer> {
           child: AnimatedOpacity(
             duration: const Duration(milliseconds: 200),
             opacity: _hovered ? 1 : 0,
-            child: FullHeightPlayerTopControls(
-              iconColor: widget.iconColor,
-              playerPosition: widget.playerPosition,
+            child: OverlayContainer(
+              child: FullHeightPlayerTopControls(
+                iconColor: widget.iconColor,
+                playerPosition: widget.playerPosition,
+                showFullWindowButton: true,
+              ),
             ),
           ),
         ),
@@ -205,4 +218,22 @@ class SimpleFullHeightVideoPlayer extends StatelessWidget {
         : EdgeInsets.zero,
     child: Video(controller: di<PlayerModel>().controller, controls: controls),
   );
+}
+
+class OverlayContainer extends StatelessWidget {
+  const OverlayContainer({super.key, this.child});
+
+  final Widget? child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(kSmallestSpace),
+      decoration: BoxDecoration(
+        color: Colors.black54,
+        borderRadius: BorderRadius.circular(90),
+      ),
+      child: child,
+    );
+  }
 }

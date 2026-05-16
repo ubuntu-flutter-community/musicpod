@@ -75,7 +75,7 @@ class _PlayerExplorerState extends State<PlayerExplorer>
               controller: _controller,
               children: [
                 if (audio?.audioType == AudioType.radio) ...[
-                  const RadioHistoryList(),
+                  const RadioHistoryList(simpleList: true),
                 ] else ...[
                   const QueueBody(),
                 ],

@@ -15,7 +15,6 @@ import 'bottom_player_image.dart';
 import 'bottom_player_like_and_star_button.dart';
 import 'play_button.dart';
 import 'playback_rate_button.dart';
-import 'player_color.dart';
 import 'player_main_controls.dart';
 import 'player_title_and_artist.dart';
 import 'player_track.dart';
@@ -88,7 +87,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                     children: [
                       if (audio?.audioType == AudioType.podcast)
                         const PlaybackRateButton(),
-                      if (!fullWindowMode) const VolumeSliderPopup(),
+                      if (!isMobile) const VolumeSliderPopup(),
                       IconButton(
                         tooltip: context.l10n.stop,
                         onPressed: () {
@@ -125,23 +124,8 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
       height: audio == null || (isVideo && fullWindowMode)
           ? 0
           : bottomPlayerDefaultHeight,
-      child: Material(
-        color: theme.cardColor,
-        child: Stack(
-          children: [
-            if (!isMobile && !isVideo)
-              PlayerColor(
-                position: PlayerPosition.bottom,
-                alpha: 0.2,
-                size: Size(double.infinity, bottomPlayerDefaultHeight),
-              ),
-            Column(
-              children: isMobile
-                  ? trackAndPlayer.reversed.toList()
-                  : trackAndPlayer,
-            ),
-          ],
-        ),
+      child: Column(
+        children: isMobile ? trackAndPlayer.reversed.toList() : trackAndPlayer,
       ),
     );
   }
