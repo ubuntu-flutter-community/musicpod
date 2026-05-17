@@ -13,6 +13,7 @@ import '../../common/view/avatar_play_button.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/offline_page.dart';
+import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
@@ -129,7 +130,7 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
               sliverBody: (_) => isRunning
                   ? const SliverFillRemaining(
                       hasScrollBody: false,
-                      child: Center(child: CircularProgressIndicator()),
+                      child: Center(child: Progress()),
                     )
                   : SliverNoSearchResultPage(
                       message: Text(
