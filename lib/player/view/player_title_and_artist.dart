@@ -230,8 +230,8 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
       return;
     }
 
-    di<AppManager>().setFullWindowMode(false);
-    di<RoutingManager>().push(
+    await di<AppManager>().setFullWindowMode(false);
+    await di<RoutingManager>().push(
       builder: (_) => AlbumPage(id: id),
       pageId: id.toString(),
     );

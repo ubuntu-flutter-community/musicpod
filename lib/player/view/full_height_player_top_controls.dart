@@ -83,7 +83,7 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
                 di<SearchModel>()
                   ..setSearchQuery('')
                   ..setAudioType(audio?.audioType);
-                di<RoutingManager>().push(pageId: PageIDs.searchPage);
+                await di<RoutingManager>().push(pageId: PageIDs.searchPage);
               },
             ),
           if (!playerWithSidePanel)

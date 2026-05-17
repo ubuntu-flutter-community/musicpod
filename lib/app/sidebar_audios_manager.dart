@@ -30,16 +30,17 @@ class SidebarAudiosManager {
         final audios = await _getAudiosById(pageId);
 
         if (audios?.firstOrNull?.audioType == AudioType.radio) {
-          _radioManager.clickStation(audios?.firstOrNull);
+          await _radioManager.clickStation(audios?.firstOrNull);
         }
         final isEnQueued =
             _playerModel.queueName != null && _playerModel.queueName == pageId;
         if (isEnQueued) {
-          _playerModel.isPlaying ? _playerModel.pause() : _playerModel.resume();
+          _playerModel.isPlaying
+              ? await _playerModel.pause()
+              : await _playerModel.resume();
         } else if (audios != null) {
-          _playerModel
-              .startPlaylist(audios: audios, listName: pageId)
-              .then((_) => _podcastModel.removePodcastUpdate(pageId));
+          await _playerModel.startPlaylist(audios: audios, listName: pageId);
+          await _podcastModel.removePodcastUpdate(pageId);
         }
       });
 
@@ -52,7 +53,7 @@ class SidebarAudiosManager {
     }
 
     if (_podcastModel.isPodcastSubscribed(pageId)) {
-      final episodes = _podcastModel.getEpisodesCommand(pageId).runAsync((
+      final episodes = await _podcastModel.getEpisodesCommand(pageId).runAsync((
         item: null,
         feedUrl: pageId,
       ));

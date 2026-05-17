@@ -41,7 +41,7 @@ class PodcastSubButton extends StatelessWidget with WatchItMixin {
       ),
       onPressed: disabled
           ? null
-          : () async {
+          : () {
               if (subscribed) {
                 podcastManager.removePodcast(pageId);
                 di<RoutingManager>().pop();

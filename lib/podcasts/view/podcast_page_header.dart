@@ -72,12 +72,12 @@ class PodcastPageHeader extends StatelessWidget {
           e.id.toLowerCase() == text.toLowerCase() ||
           e.name.toLowerCase() == text.toLowerCase(),
     );
-    di<RoutingManager>().push(pageId: PageIDs.searchPage);
+    await di<RoutingManager>().push(pageId: PageIDs.searchPage);
     if (genreOrNull != null) {
       di<SearchModel>()
         ..setAudioType(AudioType.podcast)
-        ..setPodcastGenre(genreOrNull)
-        ..search();
+        ..setPodcastGenre(genreOrNull);
+      await di<SearchModel>().search();
     } else {
       _onArtistTap(l10n: l10n, text: text);
     }

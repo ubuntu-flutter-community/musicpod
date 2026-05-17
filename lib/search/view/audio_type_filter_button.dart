@@ -110,7 +110,7 @@ class AudioTypeFilterBottomSheetButton extends StatelessWidget
                     padding: const EdgeInsets.only(bottom: 10),
                     child: ListTile(
                       leading: Icon(e.iconData),
-                      onTap: () async {
+                      onTap: () {
                         context.pop();
                         searchModel
                           ..setAudioType(e)

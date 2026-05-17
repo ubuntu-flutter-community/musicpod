@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
@@ -157,9 +159,11 @@ class AudioTileOptionButton extends StatelessWidget {
                       .findAlbumCommand(albumId)
                       .runAsync();
                   if (albumAudios != null) {
-                    di<RoutingManager>().push(
-                      pageId: albumId.toString(),
-                      builder: (context) => AlbumPage(id: albumId),
+                    unawaited(
+                      di<RoutingManager>().push(
+                        pageId: albumId.toString(),
+                        builder: (context) => AlbumPage(id: albumId),
+                      ),
                     );
                   }
                 }

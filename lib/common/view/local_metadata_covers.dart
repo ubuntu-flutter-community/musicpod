@@ -217,7 +217,7 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
                       ],
                     ),
                   );
-                  _readMetadata();
+                  await _readMetadata();
                   setState(() {});
                 },
               ),
@@ -244,7 +244,7 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
                       ],
                     ),
                   );
-                  _readMetadata();
+                  await _readMetadata();
                   setState(() {});
                 },
               ),

@@ -67,7 +67,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
       controlPanelSuffix: const SettingsButton.icon(scrollIndex: 1),
       onStretchTrigger: () async {
         if (subsLength > 10) {
-          ConfirmationDialog.show(
+          await ConfirmationDialog.show(
             context: context,
             title: Text(context.l10n.checkForUpdates),
             confirmLabel: context.l10n.checkForUpdates,
@@ -84,7 +84,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                 )),
           );
         } else {
-          di<PodcastManager>().checkForUpdateAndRefreshIfNeededCommand
+          await di<PodcastManager>().checkForUpdateAndRefreshIfNeededCommand
               .runAsync((
                 feedUrls: di<PodcastManager>().podcastFeedUrls,
                 multiUpdateMessage: (length) =>

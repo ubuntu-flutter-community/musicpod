@@ -15,6 +15,6 @@ class NotificationsService {
   Future<void> notify({required String message}) async {
     if (!isDesktop) return;
     final notification = LocalNotification(title: message);
-    notification.show();
+    await notification.show();
   }
 }

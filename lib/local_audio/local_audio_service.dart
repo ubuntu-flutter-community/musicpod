@@ -863,7 +863,7 @@ class LocalAudioService {
         external: true,
       );
     }
-    _loadAndBuildLocalAudioLibrary();
+    await _loadAndBuildLocalAudioLibrary();
   }
 
   Future<void> removePlaylist(String id) async {

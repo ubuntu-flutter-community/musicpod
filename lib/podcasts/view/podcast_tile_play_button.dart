@@ -65,7 +65,7 @@ class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
                 playerModel.resume();
               }
             } else {
-              playerModel.safeLastPosition().then((value) {
+              playerModel.safeCurrentAudioPosition().then((value) {
                 startPlaylist?.call();
               });
             }

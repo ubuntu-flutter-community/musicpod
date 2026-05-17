@@ -54,14 +54,13 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
     return DropRegion(
       formats: Formats.standardFormats,
       hitTestBehavior: HitTestBehavior.opaque,
-      onDropEnded: (e) async {
-        Future.delayed(const Duration(milliseconds: 300)).then(
-          (_) => di<LocalAudioManager>().importAudiosAndAddToPlaylist(
-            id: pageId,
-            audios: playlist,
+      onDropEnded: (e) =>
+          Future.delayed(const Duration(milliseconds: 300)).then(
+            (_) => di<LocalAudioManager>().importAudiosAndAddToPlaylist(
+              id: pageId,
+              audios: playlist,
+            ),
           ),
-        );
-      },
       onPerformDrop: (e) async {
         for (var item in e.session.items.take(100)) {
           item.dataReader?.getValue(Formats.fileUri, (value) async {

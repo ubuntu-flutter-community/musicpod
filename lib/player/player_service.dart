@@ -87,7 +87,7 @@ class PlayerService {
     _isCompletedSub ??= player.stream.completed.listen((value) async {
       if (value) {
         if (_playlistMode == PlaylistMode.single) {
-          _play(newAudio: _audio);
+          await _play(newAudio: _audio);
         } else if (_playlistMode == PlaylistMode.loop ||
             _audio != null &&
                 queue.audios.contains(_audio) &&
@@ -157,7 +157,7 @@ class PlayerService {
 
   Audio? _audio;
   Audio? get audio => _audio;
-  void _setAudio(Audio? value) async {
+  Future<void> _setAudio(Audio? value) async {
     if (value == _audio) return;
     if (_color != null && value?.audioType != AudioType.local) {
       _setColor(null);
@@ -170,10 +170,10 @@ class PlayerService {
       } else {
         _playlistMode = PlaylistMode.none;
       }
-      setRate(1);
+      await setRate(1);
     }
     _audio = value;
-    _setLocalColor(_audio);
+    await _setLocalColor(_audio);
     _propertiesChangedController.add(true);
   }
 
@@ -287,7 +287,7 @@ class PlayerService {
   Future<void> _play({Duration? newPosition, Audio? newAudio}) async {
     try {
       if (newAudio != null) {
-        _setAudio(newAudio);
+        await _setAudio(newAudio);
       }
       if (audio == null) return;
 
@@ -353,8 +353,10 @@ class PlayerService {
   void setPauseTimer(Duration? duration, {required String message}) {
     _timer?.cancel();
     if (duration == null) {
-      _timer = null;
-      _messageController.add(message);
+      if (_timer != null) {
+        _timer = null;
+        _messageController.add(message);
+      }
     } else {
       _timer = Timer(duration, () async {
         await pause();
@@ -377,10 +379,10 @@ class PlayerService {
   }
 
   Future<void> playNext() async {
-    await safeLastPosition();
+    await safeCurrentAudioPosition();
     if (nextAudio != null) {
-      _setAudio(nextAudio!);
-      _estimateNext();
+      await _setAudio(nextAudio!);
+      await _estimateNext();
     }
     await _play();
   }
@@ -406,7 +408,7 @@ class PlayerService {
     }
   }
 
-  void moveAudioInQueue(int oldIndex, int newIndex) {
+  Future<void> moveAudioInQueue(int oldIndex, int newIndex) async {
     if (_queue.audios.isNotEmpty && newIndex < _queue.audios.length) {
       if (oldIndex < newIndex) {
         newIndex -= 1;
@@ -415,19 +417,19 @@ class PlayerService {
       final audio = _queue.audios.removeAt(oldIndex);
       _queue.audios.insert(newIndex, audio);
 
-      _estimateNext();
+      await _estimateNext();
 
       _propertiesChangedController.add(true);
     }
   }
 
-  void remove(Audio deleteMe) {
+  Future<void> remove(Audio deleteMe) async {
     _queue.audios.remove(deleteMe);
-    _estimateNext();
+    await _estimateNext();
     _propertiesChangedController.add(true);
   }
 
-  void _estimateNext() {
+  Future<void> _estimateNext() async {
     if (audio == null) return;
 
     if (queue.audios.isNotEmpty && queue.audios.contains(audio)) {
@@ -455,8 +457,8 @@ class PlayerService {
         }
         final mightBePrevious = queue.audios.elementAtOrNull(currentIndex - 1);
         if (mightBePrevious == null) return;
-        _setAudio(mightBePrevious);
-        _estimateNext();
+        await _setAudio(mightBePrevious);
+        await _estimateNext();
         await _play();
       }
     }
@@ -472,18 +474,18 @@ class PlayerService {
         listName == _queue.name &&
         index != null &&
         audios.elementAtOrNull(index) != null) {
-      _setAudio(audios.elementAtOrNull(index)!);
+      await _setAudio(audios.elementAtOrNull(index)!);
     } else {
       setShuffle(false);
       setQueue((name: listName, audios: audios.toList()));
-      _setAudio(
+      await _setAudio(
         (index != null && audios.elementAtOrNull(index) != null)
             ? audios.elementAtOrNull(index)!
             : audios.first,
       );
     }
     _position = getLastPosition(_audio?.url);
-    _estimateNext();
+    await _estimateNext();
     await _play(newPosition: _position);
   }
 
@@ -552,15 +554,19 @@ class PlayerService {
   Map<String, Duration> _lastPositions = {};
   Map<String, Duration> get lastPositions => _lastPositions;
   Future<void> addLastPosition(String key, Duration lastPosition) async {
-    await (_db.podcastEpisodeTable.update()
-          ..where((t) => t.contentUrl.equals(key)))
-        .write(
-          PodcastEpisodeTableCompanion(
-            positionMs: Value(lastPosition.inMilliseconds),
-          ),
-        );
-    _lastPositions[key] = lastPosition;
-    _propertiesChangedController.add(true);
+    try {
+      await (_db.podcastEpisodeTable.update()
+            ..where((t) => t.contentUrl.equals(key)))
+          .write(
+            PodcastEpisodeTableCompanion(
+              positionMs: Value(lastPosition.inMilliseconds),
+            ),
+          );
+      _lastPositions[key] = lastPosition;
+      _propertiesChangedController.add(true);
+    } on Exception catch (e, st) {
+      printMessageInDebugMode(e, trace: st);
+    }
   }
 
   Future<void> _loadLastPositions() async {
@@ -631,7 +637,7 @@ class PlayerService {
 
   Duration? getLastPosition(String? url) => _lastPositions[url];
 
-  Future<void> safeLastPosition() async {
+  Future<void> safeCurrentAudioPosition() async {
     if (_audio?.audioType != AudioType.podcast ||
         _audio?.url == null ||
         _position == null) {
@@ -698,12 +704,8 @@ class PlayerService {
   }
 
   Future<void> persistPlayerState() async {
-    try {
-      await _writePlayerState();
-      await safeLastPosition();
-    } on Exception catch (e) {
-      printMessageInDebugMode('Error while persisting player state: $e');
-    }
+    await _writePlayerState();
+    await safeCurrentAudioPosition();
   }
 
   Future<void> _loadPlayerState() async {
@@ -719,7 +721,7 @@ class PlayerService {
       }
       if (audio == null) return;
 
-      _setAudio(audio);
+      await _setAudio(audio);
       setRemoteImageUrl(audio.imageUrl);
 
       if (row.duration != null) {
@@ -730,14 +732,14 @@ class PlayerService {
       }
 
       if (row.volume != null) {
-        setVolume(double.tryParse(row.volume!) ?? 100.0);
+        await setVolume(double.tryParse(row.volume!) ?? 100.0);
       }
 
       if (row.rate != null) {
-        setRate(double.tryParse(row.rate!) ?? 1.0);
+        await setRate(double.tryParse(row.rate!) ?? 1.0);
       }
 
-      _estimateNext();
+      await _estimateNext();
 
       await setMediaControlsMetaData(audio: audio);
     } on Exception catch (e) {
@@ -746,23 +748,27 @@ class PlayerService {
   }
 
   Future<void> _writePlayerState() async {
-    final audioJson = _audio != null ? json.encode(_audio!.toMap()) : null;
+    try {
+      final audioJson = _audio != null ? json.encode(_audio!.toMap()) : null;
 
-    await _db
-        .into(_db.playerStateTable)
-        .insertOnConflictUpdate(
-          PlayerStateTableCompanion.insert(
-            id: const Value(1),
-            audioJson: Value(audioJson),
-            position: Value(_position?.toString()),
-            duration: Value(_duration?.toString()),
-            volume: Value(_volume?.toString()),
-            rate: Value(_rate.toString()),
-          ),
-        );
-    printMessageInDebugMode(
-      'Player state saved, audio: ${_audio?.title}, position: $_position, volume: $_volume, rate: $_rate,',
-    );
+      await _db
+          .into(_db.playerStateTable)
+          .insertOnConflictUpdate(
+            PlayerStateTableCompanion.insert(
+              id: const Value(1),
+              audioJson: Value(audioJson),
+              position: Value(_position?.toString()),
+              duration: Value(_duration?.toString()),
+              volume: Value(_volume?.toString()),
+              rate: Value(_rate.toString()),
+            ),
+          );
+      printMessageInDebugMode(
+        'Player state saved, audio: ${_audio?.title}, position: $_position, volume: $_volume, rate: $_rate,',
+      );
+    } on Exception catch (e, st) {
+      printMessageInDebugMode('Error writing player state: $e', trace: st);
+    }
   }
 
   Future<void> _wipePlayerState() async {
@@ -814,7 +820,7 @@ class PlayerService {
   }
 
   Future<void> stop() async {
-    _setAudio(null);
+    await _setAudio(null);
     _nextAudio = null;
     _queue = (name: '', audios: []);
     _position = Duration.zero;

@@ -106,7 +106,7 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
           text: icyName ?? context.l10n.station,
           onTap: !allowNavigation || icyName == null
               ? null
-              : () async {
+              : () {
                   di<SearchModel>().radioNameSearch(icyName).then((v) {
                     if (v?.firstOrNull?.stationUUID != null) {
                       di<RoutingManager>().push(

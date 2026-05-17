@@ -14,7 +14,6 @@ class PlaybackRateButton extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final theme = context.theme;
     final rate = watchPropertyValue((PlayerModel m) => m.rate);
-    final setRate = di<PlayerModel>().setRate;
 
     return PopupMenuButton(
       icon: Icon(
@@ -32,7 +31,10 @@ class PlaybackRateButton extends StatelessWidget with WatchItMixin {
       initialValue: rate,
       itemBuilder: (context) => PlayerModel.rateValues
           .map(
-            (e) => PopupMenuItem(onTap: () => setRate(e), child: Text('x$e')),
+            (e) => PopupMenuItem(
+              onTap: () => di<PlayerModel>().setRate(e),
+              child: Text('x$e'),
+            ),
           )
           .toList(),
     );

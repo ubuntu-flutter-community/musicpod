@@ -84,7 +84,7 @@ class LastfmService {
     await _settingsService.setValue(SPKeys.lastFmSecret, apiSecret);
 
     final lastfmua = LastFMUnauthorized(apiKey, apiSecret);
-    launchUrl(Uri.parse(await lastfmua.authorizeDesktop()));
+    await launchUrl(Uri.parse(await lastfmua.authorizeDesktop()));
 
     const maxWaitDuration = Duration(minutes: 2); // Customize as needed
     final startTime = DateTime.now();

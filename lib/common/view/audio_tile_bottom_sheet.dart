@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
@@ -215,9 +217,12 @@ class AudioTileBottomSheet extends StatelessWidget {
                                   .findAlbumCommand(albumId)
                                   .runAsync();
                               if (albumAudios != null) {
-                                routingManager.push(
-                                  pageId: albumId.toString(),
-                                  builder: (context) => AlbumPage(id: albumId),
+                                unawaited(
+                                  routingManager.push(
+                                    pageId: albumId.toString(),
+                                    builder: (context) =>
+                                        AlbumPage(id: albumId),
+                                  ),
                                 );
                               }
                             }

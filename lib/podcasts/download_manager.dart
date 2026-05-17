@@ -105,7 +105,10 @@ class DownloadManager extends SafeChangeNotifier {
     if (audio?.url != null &&
         (downloadsDirCommand.value) != null &&
         audio?.feedUrl != null) {
-      _podcastService.removeDownload(url: audio!.url!, feedUrl: audio.feedUrl!);
+      await _podcastService.removeDownload(
+        url: audio!.url!,
+        feedUrl: audio.feedUrl!,
+      );
       if (_values.containsKey(audio.url)) {
         _values.update(audio.url!, (value) => null);
       }
@@ -116,7 +119,7 @@ class DownloadManager extends SafeChangeNotifier {
 
   Future<void> deleteAllDownloads() async {
     if ((downloadsDirCommand.value) != null) {
-      _podcastService.removeAllDownloads();
+      await _podcastService.removeAllDownloads();
       _values.clear();
 
       notifyListeners();

@@ -88,7 +88,7 @@ class WindowSizeToSettingsListener implements WindowListener {
     if (isLinux || isWindows) {
       if (_debounce?.isActive ?? false) _debounce?.cancel();
       _debounce = Timer(const Duration(seconds: 5), () {
-        WindowManager.instance.getSize().then((v) async {
+        WindowManager.instance.getSize().then((v) {
           if (_sp.getBool(SPKeys.saveWindowSize) ?? false) {
             _sp
                 .setInt(SPKeys.windowHeight, v.height.toInt())
@@ -102,7 +102,7 @@ class WindowSizeToSettingsListener implements WindowListener {
   @override
   void onWindowResized() {
     if (isMacOS) {
-      WindowManager.instance.getSize().then((v) async {
+      WindowManager.instance.getSize().then((v) {
         if (_sp.getBool(SPKeys.saveWindowSize) ?? false) {
           _sp
               .setInt(SPKeys.windowHeight, v.height.toInt())

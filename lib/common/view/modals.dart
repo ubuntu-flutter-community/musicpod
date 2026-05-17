@@ -15,7 +15,7 @@ Future<void> showModal({
 
   switch (mode) {
     case ModalMode.bottomSheet:
-      context.bottomSheet(
+      await context.bottomSheet(
         builder,
         isScrollControlled: isScrollControlled,
         enableDrag: enableDrag,
@@ -23,7 +23,7 @@ Future<void> showModal({
       );
 
     case ModalMode.dialog:
-      context.dialog(builder);
+      await context.dialog(builder);
   }
 }
 

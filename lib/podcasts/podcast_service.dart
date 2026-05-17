@@ -231,7 +231,7 @@ class PodcastService {
 
     if (newUpdateFeedUrls.isNotEmpty) {
       final msg = multiUpdateMessage(newUpdateFeedUrls.length);
-      _notificationsService.notify(message: msg);
+      unawaited(_notificationsService.notify(message: msg));
     }
     return newUpdateFeedUrls.toList();
   }

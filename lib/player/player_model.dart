@@ -121,7 +121,8 @@ class PlayerModel extends SafeChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> safeLastPosition() => _playerService.safeLastPosition();
+  Future<void> safeCurrentAudioPosition() =>
+      _playerService.safeCurrentAudioPosition();
   Future<void> persistPlayerState() => _playerService.persistPlayerState();
 
   late final Command<
