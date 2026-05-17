@@ -71,7 +71,7 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
                 Flexible(
                   child: PlayerTitleAndArtist(playerPosition: playerPosition),
                 ),
-                BottomPlayerLikeAndStarButton(audio: audio),
+                const BottomPlayerLikeAndStarButton(),
               ],
             ),
           ),

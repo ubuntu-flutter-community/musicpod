@@ -73,8 +73,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                       ),
                     ),
                     const SizedBox(width: 10),
-                    if (!smallWindow)
-                      BottomPlayerLikeAndStarButton(audio: audio),
+                    if (!smallWindow) const BottomPlayerLikeAndStarButton(),
                   ],
                 ),
               ),
@@ -105,7 +104,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                   ),
                 )
               else ...[
-                BottomPlayerLikeAndStarButton(audio: audio),
+                const BottomPlayerLikeAndStarButton(),
                 const SizedBox(width: 10),
                 if (isMobile)
                   PlayButton(active: active)

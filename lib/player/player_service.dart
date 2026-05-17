@@ -173,8 +173,8 @@ class PlayerService {
       await setRate(1);
     }
     _audio = value;
-    await _setLocalColor(_audio);
     _propertiesChangedController.add(true);
+    await _setLocalColor(_audio);
   }
 
   bool _isVideo = false;
