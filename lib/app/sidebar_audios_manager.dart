@@ -61,7 +61,7 @@ class SidebarAudiosManager {
     }
 
     if (_localAudioManager.isPlaylistSaved(pageId)) {
-      return _localAudioManager.getPlaylistById(pageId);
+      return _localAudioManager.playlistCommand(pageId).value;
     }
 
     final albumId = int.tryParse(pageId);

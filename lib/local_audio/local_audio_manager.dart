@@ -8,6 +8,7 @@ import '../common/data/audio.dart';
 import '../common/view/audio_filter.dart';
 import 'data/change_metadata_capsule.dart';
 import 'local_audio_service.dart';
+import 'playlist_action.dart';
 
 @lazySingleton
 class LocalAudioManager extends SafeChangeNotifier {
@@ -167,56 +168,40 @@ class LocalAudioManager extends SafeChangeNotifier {
   //
   // Playlists
   //
-  List<String> get playlistIDs => _localAudioService.playlistIDs;
-  int get playlistsLength => playlistIDs.length;
-  List<Audio>? getPlaylistById(String id) =>
-      _localAudioService.getPlaylistById(id);
-  bool isPlaylistExternal(String id) =>
-      _localAudioService.externalPlaylistIDs.contains(id);
 
-  bool isPlaylistSaved(String? id) => _localAudioService.isPlaylistSaved(id);
-  Future<void> addPlaylist(String name, List<Audio> audios) async =>
-      _localAudioService.addPlaylist(id: name, audios: audios);
+  final _playlistCommands = <String, Command<PlaylistChange, List<Audio>?>>{};
+  Command<PlaylistChange, List<Audio>?> playlistCommand(String id) =>
+      _playlistCommands.putIfAbsent(
+        id,
+        () => Command.createAsync((param) async {
+          await _localAudioService.createOrChangePlaylist(param);
+
+          return _localAudioService.getPlaylistById(id);
+        }, initialValue: _localAudioService.getPlaylistById(id)),
+      );
+
+  List<String> get playlistIDs => _localAudioService.playlistIDs;
+
+  bool isPlaylistSaved(String? id) => _playlistCommands.containsKey(id);
 
   late final Command<List<({String id, List<Audio> audios})>, void>
-  importExternalPlaylistsCommand = Command.createAsyncNoResult((playlists) {
-    return _localAudioService.importExternalPlaylists(playlists: playlists);
+  importExternalPlaylistsCommand = Command.createAsyncNoResult((
+    playlists,
+  ) async {
+    for (final playlist in playlists) {
+      await _localAudioService.createOrChangePlaylist(
+        PlaylistChange(
+          id: playlist.id,
+          audios: playlist.audios,
+          action: PlaylistAction.create,
+          external: true,
+        ),
+      );
+    }
   });
 
   Future<void> removePlaylist(String id) =>
       _localAudioService.removePlaylist(id);
-
-  Future<void> updatePlaylistName(String oldName, String newName) async =>
-      _localAudioService.updatePlaylistName(oldName, newName);
-  Future<void> addAudiosToPlaylist({
-    required String id,
-    required List<Audio> audios,
-  }) => _localAudioService.addAudiosToPlaylist(id: id, newAudios: audios);
-  Future<void> removeAudiosFromPlaylist({
-    required String id,
-    required List<Audio> audios,
-  }) async =>
-      _localAudioService.removeAudiosFromPlaylist(id: id, audios: audios);
-  Future<void> importAudiosAndAddToPlaylist({
-    required String id,
-    required List<Audio> audios,
-  }) async => _localAudioService.importAudiosAndAddToPlaylist(
-    id: id,
-    newAudios: audios,
-  );
-
-  void clearPlaylist(String id) => _localAudioService.clearPlaylist(id);
-  void moveAudioInPlaylist({
-    required int oldIndex,
-    required int newIndex,
-    required String id,
-  }) {
-    _localAudioService.moveAudioInPlaylist(
-      oldIndex: oldIndex,
-      newIndex: newIndex,
-      id: id,
-    );
-  }
 
   //
   // Pinned Albums

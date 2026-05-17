@@ -14,6 +14,7 @@ import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/local_audio_view.dart';
+import '../../local_audio/playlist_action.dart';
 import '../../settings/settings_model.dart';
 
 class EditPlaylistDialog extends StatefulWidget
@@ -117,10 +118,15 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
         await di<SettingsModel>().setLocalAudioindex(
           LocalAudioView.playlists.index,
         );
-        await localAudioManager.updatePlaylistName(
-          widget.playlistName!,
-          _controller.text,
-        );
+        localAudioManager
+            .playlistCommand(widget.playlistName!)
+            .run(
+              PlaylistChange(
+                id: widget.playlistName!,
+                action: PlaylistAction.updateName,
+                newName: _controller.text,
+              ),
+            );
       },
     );
   }

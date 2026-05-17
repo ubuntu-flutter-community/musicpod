@@ -11,6 +11,7 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_manager.dart';
+import '../../local_audio/playlist_action.dart';
 import '../../settings/settings_model.dart';
 
 class PlaylistAddAudioAutoCompleteOrShrink extends StatelessWidget
@@ -77,9 +78,10 @@ class _PlaylistAddAudioAutoCompleteState
     final allAudios = allAudiosResults.data?.audios ?? [];
     final isRunning = allAudiosResults.isRunning;
     final error = allAudiosResults.error;
-    final playlist = watchPropertyValue(
-      (LocalAudioManager m) => m.getPlaylistById(widget.pageId) ?? [],
+    final playListResult = watchValue(
+      (LocalAudioManager m) => m.playlistCommand(widget.pageId).results,
     );
+    final playlist = playListResult.data ?? [];
 
     return Padding(
       padding: const EdgeInsets.only(bottom: kMediumSpace),
@@ -231,7 +233,14 @@ class _PlaylistAddAudioAutoCompleteState
                   );
                 },
                 onSelected: (option) => di<LocalAudioManager>()
-                    .addAudiosToPlaylist(id: widget.pageId, audios: [option]),
+                    .playlistCommand(widget.pageId)
+                    .run(
+                      PlaylistChange(
+                        id: widget.pageId,
+                        audios: [option],
+                        action: PlaylistAction.addTo,
+                      ),
+                    ),
               ),
       ),
     );

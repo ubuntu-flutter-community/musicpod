@@ -12,6 +12,7 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_manager.dart';
+import '../../local_audio/playlist_action.dart';
 import '../../search/search_model.dart';
 import '../custom_content_model.dart';
 
@@ -38,7 +39,16 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
               context.pop();
             }
 
-            await localAudioManager.addPlaylist(playlistName!, []);
+            localAudioManager
+                .playlistCommand(playlistName!)
+                .run(
+                  PlaylistChange(
+                    id: playlistName,
+                    action: PlaylistAction.create,
+                    external: true,
+                  ),
+                );
+
             await Future.delayed(
               const Duration(milliseconds: 200),
               () =>
@@ -151,13 +161,8 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
                         if (shownInDialog && context.canPop()) {
                           context.pop();
                         }
-
                         localAudioManager.importExternalPlaylistsCommand.run(
                           playlists,
-                        );
-                        await Future.delayed(
-                          const Duration(milliseconds: 200),
-                          () => routingManager.push(pageId: playlists.first.id),
                         );
 
                         customContentModel.reset();

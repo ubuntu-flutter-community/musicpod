@@ -8,6 +8,7 @@ import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_manager.dart';
+import '../../local_audio/playlist_action.dart';
 import 'edit_playlist_dialog.dart';
 
 class PlaylistControlPanel extends StatelessWidget with WatchItMixin {
@@ -43,7 +44,15 @@ class PlaylistControlPanel extends StatelessWidget with WatchItMixin {
           IconButton(
             tooltip: l10n.clearPlaylist,
             icon: Icon(Iconz.clearAll),
-            onPressed: () => localAudioManager.clearPlaylist(pageId),
+            onPressed: () => localAudioManager
+                .playlistCommand(pageId)
+                .run(
+                  PlaylistChange(
+                    id: pageId,
+                    audios: [],
+                    action: PlaylistAction.replaceWith,
+                  ),
+                ),
           ),
           AvatarPlayButton(audios: audios, pageId: pageId),
           IconButton(

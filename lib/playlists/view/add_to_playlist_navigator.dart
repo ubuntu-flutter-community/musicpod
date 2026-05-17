@@ -11,6 +11,7 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_manager.dart';
+import '../../local_audio/playlist_action.dart';
 import 'add_to_playlist_snack_bar.dart';
 
 class AddToPlaylistNavigator extends StatelessWidget {
@@ -113,7 +114,15 @@ class _PlaylistTile extends StatelessWidget {
         if (playlistId == PageIDs.likedAudios) {
           localAudioManager.addLikedAudios(audios);
         } else {
-          localAudioManager.addAudiosToPlaylist(id: playlistId, audios: audios);
+          localAudioManager
+              .playlistCommand(playlistId)
+              .run(
+                PlaylistChange(
+                  id: playlistId,
+                  audios: audios,
+                  action: PlaylistAction.addTo,
+                ),
+              );
         }
 
         Navigator.of(context, rootNavigator: true).maybePop();
@@ -180,10 +189,15 @@ class _NewViewState extends State<_NewView> {
                   ElevatedButton(
                     onPressed: () {
                       context.pop();
-                      localAudioManager.addPlaylist(
-                        _controller.text,
-                        widget.audios,
-                      );
+                      localAudioManager
+                          .playlistCommand(_controller.text)
+                          .run(
+                            PlaylistChange(
+                              id: _controller.text,
+                              audios: widget.audios,
+                              action: PlaylistAction.create,
+                            ),
+                          );
                       showAddedToPlaylistSnackBar(
                         context: context,
                         id: _controller.text,

@@ -8,6 +8,7 @@ import '../../../common/view/ui_constants.dart';
 import '../../../extensions/build_context_x.dart';
 import '../../../l10n/l10n.dart';
 import '../../../local_audio/local_audio_manager.dart';
+import '../../../local_audio/playlist_action.dart';
 import '../../player_model.dart';
 
 class QueueBody extends StatefulWidget with WatchItStatefulWidgetMixin {
@@ -119,10 +120,19 @@ class _QueueBodyState extends State<QueueBody>
                   onPressed: queue.where((e) => e.isLocal).isEmpty
                       ? null
                       : () {
-                          di<LocalAudioManager>().addPlaylist(
-                            '${l10n.queue} ${DateTime.now()}',
-                            List.from(queue.where((e) => e.isLocal)),
-                          );
+                          di<LocalAudioManager>()
+                              .playlistCommand(
+                                '${l10n.queue} ${DateTime.now()}',
+                              )
+                              .run(
+                                PlaylistChange(
+                                  id: '${l10n.queue} ${DateTime.now()}',
+                                  audios: List.from(
+                                    queue.where((e) => e.isLocal),
+                                  ),
+                                  action: PlaylistAction.create,
+                                ),
+                              );
                           if (widget.shownInDialog && context.canPop()) {
                             context.pop();
                           }

@@ -22,6 +22,7 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_manager.dart';
+import '../../local_audio/playlist_action.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../local_audio/view/failed_import_snackbar.dart';
@@ -40,48 +41,81 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    // This is needed to be notified about both size changes and also reordering
-    watchPropertyValue(
-      (LocalAudioManager m) => m.getPlaylistById(pageId)?.length,
+    final isInitializing = watchValue(
+      (LocalAudioManager m) => m.initAudiosCommand.isRunning,
     );
-    watchPropertyValue(
-      (LocalAudioManager m) => m.getPlaylistById(pageId)?.hashCode,
+
+    callOnceAfterThisBuild((context) {
+      final initAudiosCommand = di<LocalAudioManager>().initAudiosCommand;
+      if (!isInitializing && initAudiosCommand.value == null) {
+        initAudiosCommand.run((
+          directory: null,
+          forceInit: false,
+          forceDbOnly: false,
+        ));
+      }
+    });
+
+    registerHandler(
+      select: (LocalAudioManager m) => m.playlistCommand(pageId).results,
+      handler: (context, results, cancel) {
+        if (results.isRunning) return;
+        if (results.hasError) {
+          showFailedImportsSnackBarIfNotBlocked(
+            failedImports:
+                results.paramData?.audios
+                    ?.map((e) => e.path ?? e.url ?? 'unknown')
+                    .toList() ??
+                [],
+            context: context,
+            failedToImport: true,
+          );
+        }
+      },
     );
-    final playlist = watchPropertyValue(
-      (LocalAudioManager m) => m.getPlaylistById(pageId) ?? [],
+
+    final playlistResult = watchValue(
+      (LocalAudioManager m) => m.playlistCommand(pageId).results,
     );
+
+    final playlist = playlistResult.data ?? [];
 
     return DropRegion(
       formats: Formats.standardFormats,
       hitTestBehavior: HitTestBehavior.opaque,
-      onDropEnded: (e) =>
-          Future.delayed(const Duration(milliseconds: 300)).then(
-            (_) => di<LocalAudioManager>().importAudiosAndAddToPlaylist(
-              id: pageId,
-              audios: playlist,
-            ),
-          ),
+
       onPerformDrop: (e) async {
         for (var item in e.session.items.take(100)) {
           item.dataReader?.getValue(Formats.fileUri, (value) async {
             if (value == null) return;
             try {
               final file = File.fromUri(value);
-              playlist.add(
-                Audio.local(
-                  file,
-                  getImage: true,
-                  onError: (path) => showFailedImportsSnackBarIfNotBlocked(
-                    failedImports: [path],
-                    context: context,
-                    failedToImport: true,
-                  ),
-                  onParseError: (path) => showFailedImportsSnackBarIfNotBlocked(
-                    failedImports: [path],
-                    context: context,
-                  ),
-                ),
-              );
+
+              di<LocalAudioManager>()
+                  .playlistCommand(pageId)
+                  .run(
+                    PlaylistChange(
+                      id: pageId,
+                      action: PlaylistAction.addTo,
+                      audios: [
+                        Audio.local(
+                          file,
+                          onError: (path) =>
+                              showFailedImportsSnackBarIfNotBlocked(
+                                failedImports: [path],
+                                context: context,
+                                failedToImport: true,
+                              ),
+                          onParseError: (path) =>
+                              showFailedImportsSnackBarIfNotBlocked(
+                                failedImports: [path],
+                                context: context,
+                              ),
+                        ),
+                      ],
+                      external: false,
+                    ),
+                  );
             } on Exception catch (e) {
               printMessageInDebugMode(e);
               showFailedImportsSnackBarIfNotBlocked(
@@ -120,25 +154,27 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
             ),
           ],
         ),
-        body: _PlaylistPageBody(
-          onArtistTap: (text) => di<RoutingManager>().push(
-            builder: (_) => ArtistPage(pageId: text),
-            pageId: text,
-          ),
-          onAlbumTap: (audio) {
-            if (audio.albumDbId == null) {
-              context.toast(Text(context.l10n.nothingFound));
-              return;
-            }
-            di<RoutingManager>().push(
-              builder: (_) => AlbumPage(id: audio.albumDbId!),
-              pageId: audio.albumDbId!.toString(),
-            );
-          },
-          image: PlaylistHeaderImage(pageId: pageId),
-          audios: playlist,
-          pageId: pageId,
-        ),
+        body: isInitializing
+            ? const Center(child: CircularProgressIndicator())
+            : _PlaylistPageBody(
+                onArtistTap: (text) => di<RoutingManager>().push(
+                  builder: (_) => ArtistPage(pageId: text),
+                  pageId: text,
+                ),
+                onAlbumTap: (audio) {
+                  if (audio.albumDbId == null) {
+                    context.toast(Text(context.l10n.nothingFound));
+                    return;
+                  }
+                  di<RoutingManager>().push(
+                    builder: (_) => AlbumPage(id: audio.albumDbId!),
+                    pageId: audio.albumDbId!.toString(),
+                  );
+                },
+                image: PlaylistHeaderImage(pageId: pageId),
+                audios: playlist,
+                pageId: pageId,
+              ),
       ),
     );
   }
@@ -176,9 +212,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
       title: pageId,
       subTitle: '${audios.length} ${l10n.titles}',
       image: image,
-      label: di<LocalAudioManager>().isPlaylistExternal(pageId)
-          ? '${l10n.playlist} (${l10n.external})'
-          : l10n.playlist,
+      label: l10n.playlist,
       description: GenreBar(audios: audios),
     );
 
@@ -257,11 +291,17 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
                     playerModel.moveAudioInQueue(oldIndex, newIndex);
                   }
 
-                  localAudioManager.moveAudioInPlaylist(
-                    oldIndex: oldIndex,
-                    newIndex: newIndex,
-                    id: pageId,
-                  );
+                  localAudioManager
+                      .playlistCommand(pageId)
+                      .run(
+                        PlaylistChange(
+                          id: pageId,
+                          audios: [],
+                          action: PlaylistAction.moveWithin,
+                          oldIndex: oldIndex,
+                          newIndex: newIndex,
+                        ),
+                      );
                 },
               )
             : SliverAudioTileList(
