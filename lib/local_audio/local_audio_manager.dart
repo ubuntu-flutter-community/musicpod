@@ -156,9 +156,15 @@ class LocalAudioManager {
       audios: audios,
     ),
   );
-  late final Command<PlaylistChange, List<Audio>> likedAudiosCommand =
+  late final Command<PlaylistChange?, List<Audio>> likedAudiosCommand =
       Command.createAsync((param) async {
-        await _localAudioService.createOrChangeLikedAudios(param);
+        if (param != null) {
+          await _localAudioService.createOrChangeLikedAudios(param);
+        }
+
+        if (_localAudioService.likedAudios.isEmpty) {
+          await _localAudioService.loadLikedAudiosFromDb();
+        }
 
         return _localAudioService.likedAudios;
       }, initialValue: _localAudioService.likedAudios);

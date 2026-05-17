@@ -633,7 +633,7 @@ class LocalAudioService {
   }
 
   Future<void> _loadPlaylistsAndPinsFromDbAndBuildCaches() async {
-    await _buildLikedAudiosFromDb();
+    await loadLikedAudiosFromDb();
     await loadPlaylistsFromDb();
     await loadPinnedAlbumsFromDb();
   }
@@ -667,7 +667,7 @@ class LocalAudioService {
   List<Audio> get likedAudios => _likedAudios;
   int get likedAudiosLength => _likedAudios.length;
 
-  Future<void> _buildLikedAudiosFromDb() async {
+  Future<void> loadLikedAudiosFromDb() async {
     final rows = await _trackJoin(_db.select(_db.likedTrackTable)).get();
     _likedAudios = _joinedRowsToAudios(rows);
   }

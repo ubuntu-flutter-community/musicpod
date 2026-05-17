@@ -19,6 +19,12 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
+    if (di<LocalAudioManager>().likedAudiosCommand.value.isEmpty) {
+      callOnceAfterThisBuild((context) {
+        di<LocalAudioManager>().likedAudiosCommand.run();
+      });
+    }
+
     final likedAudios = watchValue(
       (LocalAudioManager m) => m.likedAudiosCommand,
     );
