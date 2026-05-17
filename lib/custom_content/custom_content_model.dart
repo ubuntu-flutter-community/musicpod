@@ -278,7 +278,7 @@ class CustomContentModel extends SafeChangeNotifier {
         starredStations.add(feed.text!);
       }
       if (starredStations.isNotEmpty) {
-        _radioService.addStarredStations(starredStations);
+        await _radioService.addStarredStations(starredStations);
       }
     }
   }

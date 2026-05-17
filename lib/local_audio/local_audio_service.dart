@@ -23,7 +23,7 @@ import 'local_cover_service.dart';
 import 'local_search_result.dart';
 import 'playlist_action.dart';
 
-@singleton
+@lazySingleton
 class LocalAudioService {
   final SettingsService _settingsService;
   final Database _db;
@@ -36,15 +36,6 @@ class LocalAudioService {
        _db = database;
 
   bool _initialized = false;
-
-  final _propertiesChangedController = StreamController<bool>.broadcast();
-  Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
-
-  void _notify() {
-    if (_propertiesChangedController.hasListener) {
-      _propertiesChangedController.add(true);
-    }
-  }
 
   List<Audio>? _audios;
   List<Audio>? get audios => _audios;
@@ -295,12 +286,6 @@ class LocalAudioService {
       playlists: [],
     );
   }
-
-  // Note: initializing from db only is needed for when the users has created
-  // playlists that were selected before the app closed
-  @PostConstruct(preResolve: true)
-  Future<void> initFromDb() =>
-      init(newDirectory: null, forceInit: false, forceDbOnly: true);
 
   final Lock _lock = Lock();
   Future<({List<Audio> audios, List<String> failedImports})> init({
@@ -602,7 +587,6 @@ class LocalAudioService {
   Future<void> _loadAndBuildLocalAudioLibrary() async {
     await _loadCollectionsFromDbAndBuildCaches();
     await _loadPlaylistsAndPinsFromDbAndBuildCaches();
-    _notify();
   }
 
   Future<void> _loadCollectionsFromDbAndBuildCaches() async {
@@ -650,8 +634,8 @@ class LocalAudioService {
 
   Future<void> _loadPlaylistsAndPinsFromDbAndBuildCaches() async {
     await _buildLikedAudiosFromDb();
-    await _buildPlaylistsFromDb();
-    await _buildPinnedAlbumsFromDb();
+    await loadPlaylistsFromDb();
+    await loadPinnedAlbumsFromDb();
   }
 
   Future<void> _wipeLocalAudioCachesAndTables() async {
@@ -688,27 +672,31 @@ class LocalAudioService {
     _likedAudios = _joinedRowsToAudios(rows);
   }
 
-  void addLikedAudio(Audio audio) {
-    if (_likedAudios.contains(audio)) return;
-    _likedAudios.add(audio);
-    _findTrackIdByPath(audio.path).then((trackId) {
-      if (trackId != null) {
-        _db
-            .into(_db.likedTrackTable)
-            .insert(
-              LikedTrackTableCompanion.insert(trackId: trackId),
-              mode: InsertMode.insertOrIgnore,
-            )
-            .then((_) => _notify());
-      }
-    });
+  Future<void> createOrChangeLikedAudios(PlaylistChange change) async {
+    if (change.audios != null &&
+        change.audios!.isNotEmpty &&
+        (change.action == PlaylistAction.addTo ||
+            change.action == PlaylistAction.replaceWith ||
+            change.action == PlaylistAction.create)) {
+      await _persistAudios(change.audios!);
+    }
+    if (change.action == PlaylistAction.addTo && change.audios != null) {
+      await addLikedAudios(change.audios!);
+    } else if (change.action == PlaylistAction.replaceWith &&
+        change.audios != null) {
+      await removeLikedAudios(_likedAudios.toList());
+      await addLikedAudios(change.audios!);
+    } else if (change.action == PlaylistAction.removeFrom &&
+        change.audios != null) {
+      await removeLikedAudios(change.audios!);
+    }
   }
 
-  void addLikedAudios(List<Audio> audios) {
+  Future<void> addLikedAudios(List<Audio> audios) async {
     for (var audio in audios) {
       _likedAudios.add(audio);
     }
-    Future.wait(
+    await Future.wait(
       audios.map((audio) async {
         final trackId = await _findTrackIdByPath(audio.path);
         if (trackId != null) {
@@ -720,7 +708,7 @@ class LocalAudioService {
               );
         }
       }),
-    ).then((_) => _notify());
+    );
   }
 
   bool isLiked(Audio audio) => _likedAudios.contains(audio);
@@ -733,25 +721,22 @@ class LocalAudioService {
     return true;
   }
 
-  void removeLikedAudio(Audio audio, [bool notify = true]) {
+  Future<void> removeLikedAudio(Audio audio) async {
     _likedAudios.remove(audio);
-    if (notify) {
-      _findTrackIdByPath(audio.path).then((trackId) {
-        if (trackId != null) {
-          (_db.delete(_db.likedTrackTable)
-                ..where((t) => t.trackId.equals(trackId)))
-              .go()
-              .then((_) => _notify());
-        }
-      });
+
+    final trackId = await _findTrackIdByPath(audio.path);
+    if (trackId != null) {
+      await (_db.delete(
+        _db.likedTrackTable,
+      )..where((t) => t.trackId.equals(trackId))).go();
     }
   }
 
-  void removeLikedAudios(List<Audio> audios) {
+  Future<void> removeLikedAudios(List<Audio> audios) async {
     for (var audio in audios) {
-      removeLikedAudio(audio, false);
+      await removeLikedAudio(audio);
     }
-    Future.wait(
+    await Future.wait(
       audios.map((audio) async {
         final trackId = await _findTrackIdByPath(audio.path);
         if (trackId != null) {
@@ -760,7 +745,7 @@ class LocalAudioService {
           )..where((t) => t.trackId.equals(trackId))).go();
         }
       }),
-    ).then((_) => _notify());
+    );
   }
 
   Future<void> _persistLikedAudios() async {
@@ -823,13 +808,13 @@ class LocalAudioService {
       } else if (change.action == PlaylistAction.updateName &&
           change.newName != null) {
         await _updatePlaylistName(change.id, change.newName!);
+      } else if (change.action == PlaylistAction.delete) {
+        await removePlaylist(change.id);
       }
     }
-
-    _notify();
   }
 
-  Future<void> _buildPlaylistsFromDb() async {
+  Future<void> loadPlaylistsFromDb() async {
     _playlists = {};
     final playlistRows = await _db.select(_db.playlistTable).get();
     for (final pl in playlistRows) {
@@ -891,7 +876,6 @@ class LocalAudioService {
     });
 
     findAllAlbumIDs(clean: true);
-    _notify();
   }
 
   Future<void> removePlaylist(String id) async {
@@ -909,7 +893,6 @@ class LocalAudioService {
         _db.playlistTable,
       )..where((t) => t.id.equals(plRow.id))).go();
     }
-    _notify();
   }
 
   Future<void> _updatePlaylistName(String oldName, String newName) async {
@@ -927,7 +910,6 @@ class LocalAudioService {
               ..where((t) => t.id.equals(plRow.id)))
             .write(PlaylistTableCompanion(name: Value(newName)));
       }
-      _notify();
     }
   }
 
@@ -954,10 +936,10 @@ class LocalAudioService {
     if (id == PageIDs.likedAudios) {
       _likedAudios.clear();
       _likedAudios.addAll(list);
-      _persistLikedAudios().then((_) => _notify());
+      _persistLikedAudios();
     } else {
       _playlists[id] = list;
-      _persistPlaylist(id, list).then((_) => _notify());
+      _persistPlaylist(id, list);
     }
   }
 
@@ -1010,7 +992,6 @@ class LocalAudioService {
         }
       }
       await _persistPlaylist(id, playlist);
-      _notify();
     } on Exception catch (e, s) {
       printMessageInDebugMode(e, trace: s, tag: '$LocalAudioService');
     }
@@ -1033,8 +1014,6 @@ class LocalAudioService {
         }
       }
       await _persistPlaylist(id, playlist);
-
-      _notify();
     } on Exception catch (e, s) {
       printMessageInDebugMode(e, trace: s, tag: '$LocalAudioService');
     }
@@ -1045,7 +1024,7 @@ class LocalAudioService {
   List<int> _pinnedAlbums = [];
   List<int> get pinnedAlbums => _pinnedAlbums;
 
-  Future<void> _buildPinnedAlbumsFromDb() async {
+  Future<void> loadPinnedAlbumsFromDb() async {
     final rows = await (_db.select(
       _db.albumTable,
     )..where((t) => t.pinned.equals(true))).get();
@@ -1054,20 +1033,20 @@ class LocalAudioService {
 
   bool isPinnedAlbum(int id) => _pinnedAlbums.contains(id);
 
-  void pinAlbum(int id, {required Function() onFail}) {
+  Future<void> pinAlbum(int id) async {
     if (_pinnedAlbums.contains(id)) return;
     _pinnedAlbums.add(id);
-    (_db.update(_db.albumTable)..where((t) => t.id.equals(id)))
-        .write(const AlbumTableCompanion(pinned: Value(true)))
-        .then((_) => _notify());
+    await (_db.update(_db.albumTable)..where((t) => t.id.equals(id))).write(
+      const AlbumTableCompanion(pinned: Value(true)),
+    );
   }
 
-  void unpinAlbum(int id, {required Function() onFail}) {
+  Future<void> unpinAlbum(int id) async {
     if (!_pinnedAlbums.contains(id)) return;
     _pinnedAlbums.remove(id);
-    (_db.update(_db.albumTable)..where((t) => t.id.equals(id)))
-        .write(const AlbumTableCompanion(pinned: Value(false)))
-        .then((_) => _notify());
+    await (_db.update(_db.albumTable)..where((t) => t.id.equals(id))).write(
+      const AlbumTableCompanion(pinned: Value(false)),
+    );
   }
 
   Audio _trackToAudio(
@@ -1186,7 +1165,6 @@ class LocalAudioService {
               await findAlbumIDsOfGenre(capsule.genre!);
             }
           }
-          _notify();
         }
       }
     } on Exception catch (e) {

@@ -19,9 +19,10 @@ class LikeIconButton extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final localAudioManager = di<LocalAudioManager>();
 
-    watchPropertyValue((LocalAudioManager m) => m.likedAudiosLength);
-
-    final liked = localAudioManager.isLikedAudio(audio);
+    final liked = watchValue(
+      (LocalAudioManager m) =>
+          m.likedAudiosCommand.select((e) => e.contains(audio)),
+    );
 
     final void Function()? onLike;
     if (audio == null) {
@@ -29,9 +30,9 @@ class LikeIconButton extends StatelessWidget with WatchItMixin {
     } else {
       onLike = () {
         if (liked) {
-          localAudioManager.removeLikedAudio(audio!);
+          localAudioManager.removeLikedAudios([audio!]);
         } else {
-          localAudioManager.addLikedAudio(audio!);
+          localAudioManager.addLikedAudios([audio!]);
           showAddedToPlaylistSnackBar(
             context: context,
             id: PageIDs.likedAudios,

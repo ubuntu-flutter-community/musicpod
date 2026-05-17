@@ -45,7 +45,7 @@ class SidebarAudiosManager {
       });
 
   Future<List<Audio>?> _getAudiosById(String pageId) async {
-    if (_radioManager.isStarredStation(pageId)) {
+    if (_radioManager.toggleStarStationCommand.value.contains(pageId)) {
       final audio = await _radioManager
           .getStationByUUIDCommand(pageId)
           .runAsync();

@@ -10,9 +10,7 @@ import '../../common/view/cover_background.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
-import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../local_audio_manager.dart';
 import 'album_page.dart';
@@ -29,8 +27,9 @@ class AlbumCard extends StatelessWidget with WatchItMixin {
       (context) => di<LocalAudioManager>().findAlbumCommand(id).run(),
     );
 
-    final pinned = watchPropertyValue(
-      (LocalAudioManager m) => m.isPinnedAlbum(id),
+    final pinned = watchValue(
+      (LocalAudioManager m) =>
+          m.togglePinnedAlbumCommand.select((e) => e.contains(id)),
     );
 
     return Stack(
@@ -54,11 +53,8 @@ class AlbumCard extends StatelessWidget with WatchItMixin {
             bottom: kAudioCardBottomHeight + (isMobile ? 25 : 13),
             child: AudioCardVignette(
               iconData: Iconz.pinFilled,
-              onTap: () => di<LocalAudioManager>().unpinAlbum(
-                id,
-                onFail: () =>
-                    context.toast(Text(context.l10n.cantUnpinEmptyAlbum)),
-              ),
+              onTap: () =>
+                  di<LocalAudioManager>().togglePinnedAlbumCommand.run(id),
             ),
           ),
       ],

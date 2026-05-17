@@ -820,6 +820,7 @@ class PlayerService {
   }
 
   Future<void> stop() async {
+    await persistPlayerState();
     await _setAudio(null);
     _nextAudio = null;
     _queue = (name: '', audios: []);

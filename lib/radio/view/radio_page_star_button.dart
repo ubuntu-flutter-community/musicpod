@@ -14,8 +14,9 @@ class RadioPageStarButton extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final radioManager = di<RadioManager>();
-    final isStarred = watchPropertyValue(
-      (RadioManager m) => m.isStarredStation(station.uuid),
+    final isStarred = watchValue(
+      (RadioManager m) =>
+          m.toggleStarStationCommand.select((p) => p.contains(station.uuid)),
     );
 
     return IconButton(
@@ -25,9 +26,7 @@ class RadioPageStarButton extends StatelessWidget with WatchItMixin {
           : context.l10n.addToCollection,
       onPressed: station.uuid == null
           ? null
-          : isStarred
-          ? () => radioManager.unStarStation(station.uuid!)
-          : () => radioManager.addStarredStation(station.uuid!),
+          : () => radioManager.toggleStarStationCommand.run(station.uuid!),
       icon: AnimatedStar(isStarred: isStarred),
     );
   }

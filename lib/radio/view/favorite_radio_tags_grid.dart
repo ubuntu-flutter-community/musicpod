@@ -21,10 +21,12 @@ class FavoriteRadioTagsGrid extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final favTagsLength = watchPropertyValue(
-      (RadioManager m) => m.favRadioTags.length,
+    callOnceAfterThisBuild(
+      (context) => di<RadioManager>().toggleFavRadioTagCommand.run(),
     );
-    final favTags = watchPropertyValue((RadioManager m) => m.favRadioTags);
+
+    final favTags = watchValue((RadioManager m) => m.toggleFavRadioTagCommand);
+    final favTagsLength = favTags.length;
 
     if (favTagsLength == 0) {
       return SliverNoSearchResultPage(
@@ -54,7 +56,7 @@ class FavoriteRadioTagsGrid extends StatelessWidget with WatchItMixin {
               ..setSearchType(SearchType.radioTag)
               ..setTag(Tag(name: tag.toLowerCase(), stationCount: 1))
               ..setAudioType(AudioType.radio)
-              ..search();
+              ..search(clear: true);
           },
           borderRadius: BorderRadius.circular(300),
           child: Stack(

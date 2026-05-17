@@ -47,6 +47,7 @@ class PodcastService {
   final _propertiesChangedController = StreamController<bool>.broadcast();
   Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
 
+  // TODO: remove and fully rely on commands
   void _notify() {
     if (_propertiesChangedController.hasListener) {
       _propertiesChangedController.add(true);

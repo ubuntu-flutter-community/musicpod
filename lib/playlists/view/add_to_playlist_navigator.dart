@@ -44,8 +44,8 @@ class _PlaylistTilesList extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final playlistNames = watchPropertyValue(
-      (LocalAudioManager m) => m.playlistIDs,
+    final playlistNames = watchValue(
+      (LocalAudioManager m) => m.allPlaylistsCommand,
     );
 
     final children = [

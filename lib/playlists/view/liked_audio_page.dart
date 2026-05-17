@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/routing_manager.dart';
-import '../../common/data/audio.dart';
 import '../../app/page_ids.dart';
+import '../../app/routing_manager.dart';
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/fall_back_header_image.dart';
 import '../../common/view/icons.dart';
@@ -15,30 +14,14 @@ import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/view/artist_page.dart';
 
-class LikedAudioPage extends StatefulWidget with WatchItStatefulWidgetMixin {
+class LikedAudioPage extends StatelessWidget with WatchItMixin {
   const LikedAudioPage({super.key});
 
   @override
-  State<LikedAudioPage> createState() => _LikedAudioPageState();
-}
-
-class _LikedAudioPageState extends State<LikedAudioPage> {
-  late List<Audio> _likedAudios;
-
-  @override
-  void initState() {
-    super.initState();
-    getLikedAudios();
-  }
-
-  void getLikedAudios() => _likedAudios = di<LocalAudioManager>().likedAudios;
-
-  @override
   Widget build(BuildContext context) {
-    final likedAudiosLength = watchPropertyValue((LocalAudioManager m) {
-      setState(() => getLikedAudios());
-      return m.likedAudiosLength;
-    });
+    final likedAudios = watchValue(
+      (LocalAudioManager m) => m.likedAudiosCommand,
+    );
 
     return SliverAudioPage(
       onPageLabelTab: (text) => di<RoutingManager>().push(
@@ -46,12 +29,12 @@ class _LikedAudioPageState extends State<LikedAudioPage> {
         pageId: text,
       ),
       noSearchResultMessage: Text(context.l10n.likedSongsSubtitle),
-      audios: _likedAudios,
+      audios: likedAudios,
       audioPageType: AudioPageType.likedAudio,
       pageId: PageIDs.likedAudios,
       pageTitle: context.l10n.likedSongs,
       pageLabel: context.l10n.playlist,
-      pageSubTitle: '$likedAudiosLength ${context.l10n.titles}',
+      pageSubTitle: '${likedAudios.length} ${context.l10n.titles}',
       description: Text(
         context.l10n.likedSongsSubtitle,
         style: context.theme.pageHeaderDescription,

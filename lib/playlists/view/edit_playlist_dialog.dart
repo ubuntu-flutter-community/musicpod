@@ -101,7 +101,14 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
                         pageId: PageIDs.localAudio,
                         replace: true,
                       );
-                      localAudioManager.removePlaylist(widget.playlistName!);
+                      localAudioManager
+                          .playlistCommand(widget.playlistName!)
+                          .run(
+                            PlaylistChange(
+                              id: widget.playlistName!,
+                              action: PlaylistAction.delete,
+                            ),
+                          );
                     },
                     label: Text(context.l10n.deletePlaylist),
                   ),

@@ -31,8 +31,9 @@ class AlbumsView extends StatelessWidget with WatchItMixin {
       );
     }
 
-    watchPropertyValue((LocalAudioManager m) => m.pinnedAlbumsLength);
-    final pinnedAlbumIDs = di<LocalAudioManager>().pinnedAlbums;
+    final pinnedAlbumIDs = watchValue(
+      (LocalAudioManager m) => m.togglePinnedAlbumCommand,
+    );
 
     final pinned = albumIDs?.where((e) => pinnedAlbumIDs.contains(e)) ?? [];
     final notPinned = albumIDs?.where((e) => !pinnedAlbumIDs.contains(e)) ?? [];

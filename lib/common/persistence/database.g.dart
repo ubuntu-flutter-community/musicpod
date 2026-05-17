@@ -5141,6 +5141,10 @@ abstract class _$Database extends GeneratedDatabase {
   late final $PlayerStateTableTable playerStateTable = $PlayerStateTableTable(
     this,
   );
+  late final Index podcastEpisodeContentUrl = Index(
+    'podcast_episode_content_url',
+    'CREATE INDEX podcast_episode_content_url ON podcast_episode_table (content_url)',
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -5162,6 +5166,7 @@ abstract class _$Database extends GeneratedDatabase {
     downloadedPodcastEpisodeTable,
     downloadTable,
     playerStateTable,
+    podcastEpisodeContentUrl,
   ];
 }
 

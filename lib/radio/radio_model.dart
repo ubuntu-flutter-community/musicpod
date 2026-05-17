@@ -11,21 +11,12 @@ import 'radio_service.dart';
 @lazySingleton
 class RadioManager extends SafeChangeNotifier {
   final RadioService _radioService;
-  StreamSubscription<bool>? _propertiesChangedSub;
 
   RadioManager({required RadioService radioService})
     : _radioService = radioService {
-    _propertiesChangedSub = _radioService.propertiesChanged.listen(
-      (_) => notifyListeners(),
-    );
     connectCommand.run();
-  }
-
-  @disposeMethod
-  @override
-  Future<void> dispose() async {
-    await _propertiesChangedSub?.cancel();
-    super.dispose();
+    toggleFavRadioTagCommand.run();
+    toggleStarStationCommand.run();
   }
 
   final _stationCache = <String, Audio>{};
@@ -39,7 +30,7 @@ class RadioManager extends SafeChangeNotifier {
       _getStationByUUIDCommands.putIfAbsent(
         uuid,
         () => Command.createAsyncNoParam(
-          () => _getStationByUUID(uuid),
+          () => _getStationByUUID(uuid).timeout(const Duration(seconds: 10)),
           initialValue: null,
         ),
       );
@@ -92,24 +83,44 @@ class RadioManager extends SafeChangeNotifier {
   // Starred stations
   //
 
-  List<String> get starredStations => _radioService.starredStations;
-  int get starredStationsLength => _radioService.starredStationsLength;
-  void addStarredStation(String uuid) => _radioService.addStarredStation(uuid);
-  void unStarStation(String uuid) => _radioService.removeStarredStation(uuid);
-  void unStarAllStations() => _radioService.unStarAllStations();
+  late final Command<String?, List<String>> toggleStarStationCommand =
+      Command.createAsync((uuid) async {
+        if (uuid != null) {
+          if (_radioService.starredStations.contains(uuid)) {
+            await _radioService.removeStarredStation(uuid);
+          } else {
+            await _radioService.addStarredStation(uuid);
+          }
+        }
+        if (_radioService.starredStations.isEmpty) {
+          await _radioService.loadStarredStations();
+        }
+        return _radioService.starredStations;
+      }, initialValue: _radioService.starredStations);
 
-  bool isStarredStation(String? uuid) =>
-      uuid?.isNotEmpty == false ? false : _radioService.isStarredStation(uuid);
+  late final Command<void, void> wipeCommand =
+      Command.createAsyncNoParamNoResult(
+        _radioService.wipeAndBuildRadioLibrary,
+      );
 
   //
   // Fav radio tags
   //
 
-  void addFavRadioTag(String value) => _radioService.addFavRadioTag(value);
-  void removeRadioFavTag(String value) =>
-      _radioService.removeFavRadioTag(value);
-  Set<String> get favRadioTags => _radioService.favRadioTags;
-  int get favRadioTagsLength => _radioService.favRadioTags.length;
+  late final Command<String?, Set<String>> toggleFavRadioTagCommand =
+      Command.createAsync((tag) async {
+        if (tag != null) {
+          if (_radioService.favRadioTags.contains(tag)) {
+            await _radioService.removeFavRadioTag(tag);
+          } else {
+            await _radioService.addFavRadioTag(tag);
+          }
+        }
+        if (_radioService.favRadioTags.isEmpty) {
+          await _radioService.loadFavRadioTags();
+        }
+        return _radioService.favRadioTags;
+      }, initialValue: _radioService.favRadioTags);
 }
 
 enum RadioCollectionView {
@@ -118,12 +129,10 @@ enum RadioCollectionView {
   history,
   ignoredIcyTitles;
 
-  String localize(AppLocalizations l10n) {
-    return switch (this) {
-      stations => l10n.stations,
-      tags => l10n.tags,
-      history => l10n.history,
-      ignoredIcyTitles => l10n.ignoredHearyHistoryTitlesTitle,
-    };
-  }
+  String localize(AppLocalizations l10n) => switch (this) {
+    stations => l10n.stations,
+    tags => l10n.tags,
+    history => l10n.history,
+    ignoredIcyTitles => l10n.ignoredHearyHistoryTitlesTitle,
+  };
 }

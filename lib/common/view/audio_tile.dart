@@ -211,8 +211,9 @@ class _AudioTileTrailing extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final liked = watchPropertyValue(
-      (LocalAudioManager m) => m.isLikedAudio(audio),
+    final liked = watchValue(
+      (LocalAudioManager m) =>
+          m.likedAudiosCommand.select((e) => e.contains(audio)),
     );
 
     return Row(

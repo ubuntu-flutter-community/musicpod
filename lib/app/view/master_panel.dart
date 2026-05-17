@@ -79,8 +79,10 @@ class PlaylistList extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    watchPropertyValue((LocalAudioManager m) => m.playlistIDs.length);
-    final masterItems = createPlaylistMasterItems(di<LocalAudioManager>());
+    final playlistIDs = watchValue(
+      (LocalAudioManager m) => m.allPlaylistsCommand,
+    );
+    final masterItems = createPlaylistMasterItems(playlistIDs);
     final selectedPageId = watchPropertyValue(
       (RoutingManager m) => m.selectedPageId,
     );
@@ -119,8 +121,10 @@ class StationsList extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    watchPropertyValue((RadioManager m) => m.starredStationsLength);
-    final masterItems = createStarredStationsMasterItems(di<RadioManager>());
+    final starredStationIDs = watchValue(
+      (RadioManager m) => m.toggleStarStationCommand,
+    );
+    final masterItems = createStarredStationsMasterItems(starredStationIDs);
     final selectedPageId = watchPropertyValue(
       (RoutingManager m) => m.selectedPageId,
     );
@@ -139,8 +143,10 @@ class AlbumsList extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    watchPropertyValue((LocalAudioManager m) => m.pinnedAlbumsLength);
-    final masterItems = createPinnedAlbumsMasterItems(di<LocalAudioManager>());
+    final pinnedAlbums = watchValue(
+      (LocalAudioManager m) => m.togglePinnedAlbumCommand,
+    );
+    final masterItems = createPinnedAlbumsMasterItems(pinnedAlbums);
     final selectedPageId = watchPropertyValue(
       (RoutingManager m) => m.selectedPageId,
     );

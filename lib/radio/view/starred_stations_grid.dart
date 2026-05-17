@@ -15,10 +15,8 @@ class StarredStationsGrid extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final stations = watchPropertyValue((RadioManager m) => m.starredStations);
-    final length = watchPropertyValue(
-      (RadioManager m) => m.starredStationsLength,
-    );
+    final stations = watchValue((RadioManager m) => m.toggleStarStationCommand);
+    final length = stations.length;
 
     if (length == 0) {
       return SliverNoSearchResultPage(

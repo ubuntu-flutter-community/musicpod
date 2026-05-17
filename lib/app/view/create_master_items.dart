@@ -34,10 +34,14 @@ Iterable<MasterItem> getAllMasterItems(
   RadioManager radioManager,
 ) => [
   ...permanentMasterItems,
-  ...createPlaylistMasterItems(localAudioManager),
+  ...createPlaylistMasterItems(localAudioManager.allPlaylistsCommand.value),
   ...createPodcastMasterItems(context, podcastManager),
-  ...createPinnedAlbumsMasterItems(localAudioManager),
-  ...createStarredStationsMasterItems(radioManager),
+  ...createPinnedAlbumsMasterItems(
+    localAudioManager.togglePinnedAlbumCommand.value,
+  ),
+  ...createStarredStationsMasterItems(
+    radioManager.toggleStarStationCommand.value,
+  ),
 ];
 
 Iterable<MasterItem> permanentMasterItems = [
@@ -90,24 +94,23 @@ Iterable<MasterItem> permanentMasterItems = [
   ),
 ];
 
-Iterable<MasterItem> createPlaylistMasterItems(
-  LocalAudioManager localAudioManager,
-) => localAudioManager.playlistIDs.map(
-  (id) => MasterItem(
-    titleBuilder: (context) => Text(id),
-    subtitleBuilder: (context) => Text(context.l10n.playlist),
-    pageId: id,
-    pageBuilder: (_) => PlaylistPage(pageId: id),
-    iconBuilder: (selected) => SideBarFallBackImage(
-      color: getAlphabetColor(id),
-      child: Icon(Iconz.playlist),
-    ),
-  ),
-);
+Iterable<MasterItem> createPlaylistMasterItems(List<String> playlistIDs) =>
+    playlistIDs.map(
+      (id) => MasterItem(
+        titleBuilder: (context) => Text(id),
+        subtitleBuilder: (context) => Text(context.l10n.playlist),
+        pageId: id,
+        pageBuilder: (_) => PlaylistPage(pageId: id),
+        iconBuilder: (selected) => SideBarFallBackImage(
+          color: getAlphabetColor(id),
+          child: Icon(Iconz.playlist),
+        ),
+      ),
+    );
 
 Iterable<MasterItem> createStarredStationsMasterItems(
-  RadioManager radioManager,
-) => radioManager.starredStations.map(
+  List<String> starredStationIDs,
+) => starredStationIDs.map(
   (uuid) => MasterItem(
     titleBuilder: (_) => StationTitle(uuid: uuid),
     subtitleBuilder: (context) => Text(context.l10n.station),
@@ -117,17 +120,16 @@ Iterable<MasterItem> createStarredStationsMasterItems(
   ),
 );
 
-Iterable<MasterItem> createPinnedAlbumsMasterItems(
-  LocalAudioManager localAudioManager,
-) => localAudioManager.pinnedAlbums.map(
-  (id) => MasterItem(
-    titleBuilder: (context) => AlbumPageSideBarName(albumId: id),
-    subtitleBuilder: (context) => AlbumPageSideBarArtist(albumId: id),
-    pageId: id.toString(),
-    pageBuilder: (_) => AlbumPage(id: id),
-    iconBuilder: (selected) => AlbumPageSideBarIcon(albumId: id),
-  ),
-);
+Iterable<MasterItem> createPinnedAlbumsMasterItems(List<int> pinnedAlbums) =>
+    pinnedAlbums.map(
+      (id) => MasterItem(
+        titleBuilder: (context) => AlbumPageSideBarName(albumId: id),
+        subtitleBuilder: (context) => AlbumPageSideBarArtist(albumId: id),
+        pageId: id.toString(),
+        pageBuilder: (_) => AlbumPage(id: id),
+        iconBuilder: (selected) => AlbumPageSideBarIcon(albumId: id),
+      ),
+    );
 
 Iterable<MasterItem> createPodcastMasterItems(
   BuildContext context,

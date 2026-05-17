@@ -4,6 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
+import '../app/page_ids.dart';
 import '../common/data/audio.dart';
 import '../common/view/audio_filter.dart';
 import 'data/change_metadata_capsule.dart';
@@ -11,23 +12,14 @@ import 'local_audio_service.dart';
 import 'playlist_action.dart';
 
 @lazySingleton
-class LocalAudioManager extends SafeChangeNotifier {
+class LocalAudioManager {
   LocalAudioManager({required LocalAudioService localAudioService})
     : _localAudioService = localAudioService {
-    _propertiesChangedSub ??= _localAudioService.propertiesChanged.listen(
-      (_) => notifyListeners(),
-    );
+    togglePinnedAlbumCommand.run();
+    allPlaylistsCommand.run();
   }
 
   final LocalAudioService _localAudioService;
-  StreamSubscription<bool>? _propertiesChangedSub;
-
-  @disposeMethod
-  @override
-  Future<void> dispose() async {
-    await _propertiesChangedSub?.cancel();
-    super.dispose();
-  }
 
   late final Command<ChangeMetadataCapsule, Audio?> changeMetadataCommand =
       Command.createAsync(
@@ -51,7 +43,7 @@ class LocalAudioManager extends SafeChangeNotifier {
   void setShowPlaylistAddAudios(bool value) {
     if (value == showPlaylistAddAudios.value) return;
     showPlaylistAddAudios.value = value;
-    if (showPlaylistAddAudios.value && audios == null) {
+    if (showPlaylistAddAudios.value && _localAudioService.audios == null) {
       initAudiosCommand.run((
         directory: null,
         forceInit: false,
@@ -60,7 +52,6 @@ class LocalAudioManager extends SafeChangeNotifier {
     }
   }
 
-  List<Audio>? get audios => _localAudioService.audios;
   List<String>? get allArtists => _localAudioService.allArtists;
   List<String>? get allGenres => _localAudioService.allGenres;
   List<int>? get allAlbumIDs => _localAudioService.allAlbumIDs;
@@ -151,19 +142,26 @@ class LocalAudioManager extends SafeChangeNotifier {
   //
   // Liked Audios
   //
-  int get likedAudiosLength => _localAudioService.likedAudiosLength;
-  List<Audio> get likedAudios => _localAudioService.likedAudios;
-  void addLikedAudio(Audio audio) => _localAudioService.addLikedAudio(audio);
-  void addLikedAudios(List<Audio> audios) =>
-      _localAudioService.addLikedAudios(audios);
-  void removeLikedAudios(List<Audio> audios) =>
-      _localAudioService.removeLikedAudios(audios);
-  bool isLikedAudio(Audio? audio) =>
-      audio == null ? false : _localAudioService.isLiked(audio);
-  bool isLikedAudios(List<Audio> audios) =>
-      _localAudioService.isLikedAudios(audios);
-  void removeLikedAudio(Audio audio, [bool notify = true]) =>
-      _localAudioService.removeLikedAudio(audio, notify);
+  void addLikedAudios(List<Audio> audios) => likedAudiosCommand.run(
+    PlaylistChange(
+      id: PageIDs.likedAudios,
+      action: PlaylistAction.addTo,
+      audios: audios,
+    ),
+  );
+  void removeLikedAudios(List<Audio> audios) => likedAudiosCommand.run(
+    PlaylistChange(
+      id: PageIDs.likedAudios,
+      action: PlaylistAction.removeFrom,
+      audios: audios,
+    ),
+  );
+  late final Command<PlaylistChange, List<Audio>> likedAudiosCommand =
+      Command.createAsync((param) async {
+        await _localAudioService.createOrChangeLikedAudios(param);
+
+        return _localAudioService.likedAudios;
+      }, initialValue: _localAudioService.likedAudios);
 
   //
   // Playlists
@@ -175,12 +173,18 @@ class LocalAudioManager extends SafeChangeNotifier {
         id,
         () => Command.createAsync((param) async {
           await _localAudioService.createOrChangePlaylist(param);
-
+          await allPlaylistsCommand.runAsync();
           return _localAudioService.getPlaylistById(id);
         }, initialValue: _localAudioService.getPlaylistById(id)),
       );
 
-  List<String> get playlistIDs => _localAudioService.playlistIDs;
+  late final Command<void, List<String>> allPlaylistsCommand =
+      Command.createAsyncNoParam(() async {
+        if (_localAudioService.playlistIDs.isEmpty) {
+          await _localAudioService.loadPlaylistsFromDb();
+        }
+        return _localAudioService.playlistIDs;
+      }, initialValue: _localAudioService.playlistIDs);
 
   bool isPlaylistSaved(String? id) => _playlistCommands.containsKey(id);
 
@@ -197,31 +201,30 @@ class LocalAudioManager extends SafeChangeNotifier {
           external: true,
         ),
       );
+      await allPlaylistsCommand.runAsync();
     }
   });
-
-  Future<void> removePlaylist(String id) =>
-      _localAudioService.removePlaylist(id);
 
   //
   // Pinned Albums
   //
-  List<int> get pinnedAlbums => _localAudioService.pinnedAlbums;
-  int get pinnedAlbumsLength => _localAudioService.pinnedAlbums.length;
 
-  bool isPinnedAlbum(int id) => _localAudioService.isPinnedAlbum(id);
+  late final Command<int?, List<int>> togglePinnedAlbumCommand =
+      Command.createAsync((id) async {
+        if (id != null) {
+          if (_localAudioService.pinnedAlbums.contains(id)) {
+            await _localAudioService.unpinAlbum(id);
+          } else {
+            await _localAudioService.pinAlbum(id);
+          }
+        }
 
-  void pinAlbum(
-    int id, {
-    // TODO: replace with command and sideeffect
-    required Function() onFail,
-  }) => _localAudioService.pinAlbum(id, onFail: onFail);
+        if (_localAudioService.pinnedAlbums.isEmpty) {
+          await _localAudioService.loadPinnedAlbumsFromDb();
+        }
 
-  void unpinAlbum(
-    int id, {
-    // TODO: replace with command and sideeffect
-    required Function() onFail,
-  }) => _localAudioService.unpinAlbum(id, onFail: onFail);
+        return _localAudioService.pinnedAlbums;
+      }, initialValue: _localAudioService.pinnedAlbums);
 }
 
 class NoErrorFilter extends ErrorFilter {

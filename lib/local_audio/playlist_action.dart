@@ -2,6 +2,7 @@ import '../common/data/audio.dart';
 
 enum PlaylistAction {
   create,
+  delete,
   replaceWith,
   addTo,
   removeFrom,

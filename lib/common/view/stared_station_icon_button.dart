@@ -15,19 +15,16 @@ class StaredStationIconButton extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final radioManager = di<RadioManager>();
 
-    watchPropertyValue((RadioManager m) => m.starredStations.length);
-
-    final isStarredStation = radioManager.isStarredStation(audio?.uuid);
+    final isStarredStation = watchValue(
+      (RadioManager m) =>
+          m.toggleStarStationCommand.select((p) => p.contains(audio?.uuid)),
+    );
 
     final void Function()? onLike;
-    if (audio == null && audio?.uuid == null) {
+    if (audio == null || audio?.uuid == null) {
       onLike = null;
     } else {
-      onLike = () {
-        isStarredStation
-            ? radioManager.unStarStation(audio!.uuid!)
-            : radioManager.addStarredStation(audio!.uuid!);
-      };
+      onLike = () => radioManager.toggleStarStationCommand.run(audio!.uuid!);
     }
 
     return IconButton(

@@ -17,25 +17,6 @@ class RadioService {
 
   final Database _db;
 
-  final _propertiesChangedController = StreamController<bool>.broadcast();
-  Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
-
-  void _notify() {
-    if (_propertiesChangedController.hasListener) {
-      _propertiesChangedController.add(true);
-    }
-  }
-
-  @PostConstruct(preResolve: true)
-  Future<void> initService() async {
-    await _loadStarredStations();
-    await _loadFavRadioTags();
-    _notify();
-  }
-
-  @disposeMethod
-  Future<void> dispose() => _propertiesChangedController.close();
-
   static const _kRadioBrowserBaseUrl = 'all.api.radio-browser.info';
 
   RadioBrowserApi? _radioBrowserApi;
@@ -321,24 +302,23 @@ class RadioService {
   List<String> get starredStations => _starredStations;
   int get starredStationsLength => _starredStations.length;
 
-  Future<void> _loadStarredStations() async {
+  Future<void> loadStarredStations() async {
     final rows = await _db.select(_db.starredStationTable).get();
     _starredStations = rows.map((r) => r.uuid).toList();
   }
 
-  void addStarredStation(String uuid) {
+  Future<void> addStarredStation(String uuid) async {
     if (_starredStations.contains(uuid)) return;
     _starredStations.add(uuid);
-    _db
+    await _db
         .into(_db.starredStationTable)
         .insert(
           StarredStationTableCompanion.insert(uuid: uuid),
           mode: InsertMode.insertOrIgnore,
-        )
-        .then((_) => _notify());
+        );
   }
 
-  void addStarredStations(List<String?> uuids) {
+  Future<void> addStarredStations(List<String?> uuids) async {
     if (uuids.isEmpty) return;
     final newUuids = uuids
         .whereType<String>()
@@ -346,31 +326,23 @@ class RadioService {
         .toList();
     if (newUuids.isEmpty) return;
     _starredStations.addAll(newUuids);
-    _db
-        .batch((batch) {
-          for (final uuid in newUuids) {
-            batch.insert(
-              _db.starredStationTable,
-              StarredStationTableCompanion.insert(uuid: uuid),
-              mode: InsertMode.insertOrIgnore,
-            );
-          }
-        })
-        .then((_) => _notify());
+    await _db.batch((batch) {
+      for (final uuid in newUuids) {
+        batch.insert(
+          _db.starredStationTable,
+          StarredStationTableCompanion.insert(uuid: uuid),
+          mode: InsertMode.insertOrIgnore,
+        );
+      }
+    });
   }
 
-  void removeStarredStation(String uuid) {
+  Future<void> removeStarredStation(String uuid) async {
     if (!_starredStations.contains(uuid)) return;
     _starredStations.remove(uuid);
-    (_db.delete(
+    await (_db.delete(
       _db.starredStationTable,
-    )..where((t) => t.uuid.equals(uuid))).go().then((_) => _notify());
-  }
-
-  void unStarAllStations() {
-    if (_starredStations.isEmpty) return;
-    _starredStations.clear();
-    _db.delete(_db.starredStationTable).go().then((_) => _notify());
+    )..where((t) => t.uuid.equals(uuid))).go();
   }
 
   bool isStarredStation(String? uuid) => _starredStations.contains(uuid);
@@ -381,34 +353,34 @@ class RadioService {
   Set<String> get favRadioTags => _favRadioTags;
   bool isFavTag(String value) => _favRadioTags.contains(value);
 
-  Future<void> _loadFavRadioTags() async {
+  Future<void> loadFavRadioTags() async {
     final rows = await _db.select(_db.favoriteRadioTagTable).get();
     _favRadioTags = rows.map((r) => r.name).toSet();
   }
 
-  void addFavRadioTag(String name) {
+  Future<void> addFavRadioTag(String name) async {
     if (_favRadioTags.contains(name)) return;
     _favRadioTags.add(name);
-    _db
+    await _db
         .into(_db.favoriteRadioTagTable)
         .insert(
           FavoriteRadioTagTableCompanion.insert(name: name),
           mode: InsertMode.insertOrIgnore,
-        )
-        .then((_) => _notify());
+        );
   }
 
-  void removeFavRadioTag(String name) {
+  Future<void> removeFavRadioTag(String name) async {
     if (!_favRadioTags.contains(name)) return;
     _favRadioTags.remove(name);
-    (_db.delete(
+    await (_db.delete(
       _db.favoriteRadioTagTable,
-    )..where((t) => t.name.equals(name))).go().then((_) => _notify());
+    )..where((t) => t.name.equals(name))).go();
   }
 
   Future<void> wipeAndBuildRadioLibrary() async {
     await _wipeRadioLibrary();
-    await initService();
+    await loadStarredStations();
+    await loadFavRadioTags();
   }
 
   Future<void> _wipeRadioLibrary() async {
@@ -418,6 +390,5 @@ class RadioService {
       _db.delete(_db.starredStationTable).go(),
       _db.delete(_db.favoriteRadioTagTable).go(),
     ]);
-    _notify();
   }
 }

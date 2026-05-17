@@ -118,30 +118,30 @@ class TagAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
     final radioManager = di<RadioManager>();
     final model = di<SearchModel>();
     final tag = watchPropertyValue((SearchModel m) => m.tag);
-    watchPropertyValue((RadioManager m) => m.favRadioTags);
+    final favRadioTags = watchValue(
+      (RadioManager m) => m.toggleFavRadioTagCommand,
+    );
     return TagAutoComplete(
       suffixIcon: AudioTypeFilterButton(mode: OverlayMode.platformModalMode),
       value: tag,
       addFav: (tag) {
         if (tag?.name == null) return;
-        radioManager.addFavRadioTag(tag!.name);
+        radioManager.toggleFavRadioTagCommand.run(tag!.name);
       },
       removeFav: (tag) {
         if (tag?.name == null) return;
-        radioManager.removeRadioFavTag(tag!.name);
+        radioManager.toggleFavRadioTagCommand.run(tag!.name);
       },
-      favs: radioManager.favRadioTags,
+      favs: favRadioTags,
       onSelected: (v) {
         model.setTag(v);
         model.search();
       },
       tags: [
+        ...[...?model.tags].where((e) => favRadioTags.contains(e.name) == true),
         ...[
           ...?model.tags,
-        ].where((e) => radioManager.favRadioTags.contains(e.name) == true),
-        ...[
-          ...?model.tags,
-        ].where((e) => radioManager.favRadioTags.contains(e.name) == false),
+        ].where((e) => favRadioTags.contains(e.name) == false),
       ],
     );
   }

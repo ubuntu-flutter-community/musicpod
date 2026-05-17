@@ -28,11 +28,7 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
     _podcastPropertiesChangedSub ??= _podcastService.propertiesChanged.listen(
       (_) => notifyListeners(),
     );
-    _localAudioPropertiesChangedSub ??= _localAudioService.propertiesChanged
-        .listen((_) => notifyListeners());
-    _radioPropertiesChangedSub ??= _radioService.propertiesChanged.listen(
-      (_) => notifyListeners(),
-    );
+
     _settingsChangedChangedSub ??= _settingsService.propertiesChanged.listen(
       (_) => notifyListeners(),
     );
@@ -43,16 +39,12 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
   final RadioService _radioService;
   final SettingsService _settingsService;
   StreamSubscription<bool>? _podcastPropertiesChangedSub;
-  StreamSubscription<bool>? _localAudioPropertiesChangedSub;
-  StreamSubscription<bool>? _radioPropertiesChangedSub;
   StreamSubscription<bool>? _settingsChangedChangedSub;
 
   @disposeMethod
   @override
   Future<void> dispose() async {
     await _podcastPropertiesChangedSub?.cancel();
-    await _localAudioPropertiesChangedSub?.cancel();
-    await _radioPropertiesChangedSub?.cancel();
     await _settingsChangedChangedSub?.cancel();
     super.dispose();
   }
