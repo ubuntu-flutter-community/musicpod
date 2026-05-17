@@ -9,7 +9,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
 import '../../player/player_model.dart';
-import '../radio_model.dart';
+import '../radio_manager.dart';
 import 'station_page.dart';
 
 class StationCard extends StatelessWidget with WatchItMixin {

@@ -12,7 +12,7 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../podcasts/data/podcast_genre.dart';
-import '../../radio/radio_model.dart';
+import '../../radio/radio_manager.dart';
 import '../../radio/view/tag_auto_complete.dart';
 import '../../settings/settings_model.dart';
 import '../search_model.dart';

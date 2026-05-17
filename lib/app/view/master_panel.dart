@@ -9,7 +9,7 @@ import '../../common/view/header_bar.dart';
 import '../../common/view/ui_constants.dart';
 import '../../podcasts/podcast_manager.dart';
 import '../../local_audio/local_audio_manager.dart';
-import '../../radio/radio_model.dart';
+import '../../radio/radio_manager.dart';
 import '../../settings/view/settings_action.dart';
 import 'create_master_items.dart';
 import 'master_tile.dart';

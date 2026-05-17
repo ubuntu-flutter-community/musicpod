@@ -47,7 +47,7 @@ import 'podcasts/podcast_manager.dart' as _i351;
 import 'podcasts/podcast_service.dart' as _i721;
 import 'radio/online_art_model.dart' as _i620;
 import 'radio/online_art_service.dart' as _i328;
-import 'radio/radio_model.dart' as _i798;
+import 'radio/radio_manager.dart' as _i749;
 import 'radio/radio_service.dart' as _i811;
 import 'search/search_model.dart' as _i544;
 import 'settings/settings_model.dart' as _i338;
@@ -139,8 +139,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i57.NotificationsService>(
       () => _i57.NotificationsService(localNotifier: gh<_i526.LocalNotifier>()),
     );
-    gh.lazySingleton<_i798.RadioManager>(
-      () => _i798.RadioManager(radioService: gh<_i811.RadioService>()),
+    gh.lazySingleton<_i749.RadioManager>(
+      () => _i749.RadioManager(radioService: gh<_i811.RadioService>()),
     );
     gh.lazySingleton<_i820.LastfmService>(
       () => _i820.LastfmService(settingsService: gh<_i763.SettingsService>()),
@@ -302,7 +302,7 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i190.SidebarAudiosManager(
         podcastManager: gh<_i351.PodcastManager>(),
         localAudioManager: gh<_i688.LocalAudioManager>(),
-        radioManager: gh<_i798.RadioManager>(),
+        radioManager: gh<_i749.RadioManager>(),
         playerModel: gh<_i1025.PlayerModel>(),
       ),
     );

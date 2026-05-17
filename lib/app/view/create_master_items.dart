@@ -16,7 +16,7 @@ import '../../podcasts/view/lazy_podcast_page.dart';
 import '../../podcasts/view/podcast_page_side_bar_icon.dart';
 import '../../podcasts/view/podcast_page_title.dart';
 import '../../podcasts/view/podcasts_page.dart';
-import '../../radio/radio_model.dart';
+import '../../radio/radio_manager.dart';
 import '../../radio/view/radio_page.dart';
 import '../../radio/view/station_page.dart';
 import '../../radio/view/station_page_icon.dart';

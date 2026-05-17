@@ -3,7 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/connectivity_manager.dart';
 import '../../l10n/l10n.dart';
-import '../radio_model.dart';
+import '../radio_manager.dart';
 
 class StationTitle extends StatelessWidget with WatchItMixin {
   const StationTitle({super.key, required this.uuid});

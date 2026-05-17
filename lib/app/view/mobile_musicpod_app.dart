@@ -14,7 +14,7 @@ import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../player/player_model.dart';
 import '../../podcasts/podcast_manager.dart';
-import '../../radio/radio_model.dart';
+import '../../radio/radio_manager.dart';
 import '../../settings/settings_model.dart';
 import '../app_config.dart';
 import '../page_ids.dart';

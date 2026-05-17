@@ -6,7 +6,7 @@ import '../common/data/audio_type.dart';
 import '../local_audio/local_audio_manager.dart';
 import '../player/player_model.dart';
 import '../podcasts/podcast_manager.dart';
-import '../radio/radio_model.dart';
+import '../radio/radio_manager.dart';
 
 @lazySingleton
 class SidebarAudiosManager {

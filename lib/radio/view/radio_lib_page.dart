@@ -4,7 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/sliver_body.dart';
 import '../../settings/view/settings_action.dart';
-import '../radio_model.dart';
+import '../radio_manager.dart';
 import 'blocked_heariny_history_list.dart';
 import 'favorite_radio_tags_grid.dart';
 import 'radio_connect_mixin.dart';

@@ -10,7 +10,7 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../podcasts/podcast_manager.dart';
 import '../../local_audio/local_audio_manager.dart';
-import '../../radio/radio_model.dart';
+import '../../radio/radio_manager.dart';
 import 'create_master_items.dart';
 import 'master_panel.dart';
 import '../routing_manager.dart';

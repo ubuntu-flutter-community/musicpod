@@ -4,7 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/animated_like_icon.dart';
 import '../../l10n/l10n.dart';
-import '../../radio/radio_model.dart';
+import '../radio_manager.dart';
 
 class RadioPageStarButton extends StatelessWidget with WatchItMixin {
   const RadioPageStarButton({super.key, required this.station});

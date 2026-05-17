@@ -4,7 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/view/progress.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
-import '../radio_model.dart';
+import '../radio_manager.dart';
 
 mixin RadioConnectMixin {
   void registerRadioConnectHandler(BuildContext context) {

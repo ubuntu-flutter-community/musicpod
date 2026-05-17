@@ -24,7 +24,7 @@ import '../../l10n/l10n.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import '../../settings/settings_model.dart';
-import '../radio_model.dart';
+import '../radio_manager.dart';
 import 'radio_connect_mixin.dart';
 import 'radio_history_list.dart';
 import 'radio_page_copy_histoy_button.dart';

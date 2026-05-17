@@ -7,7 +7,7 @@ import '../../common/view/safe_network_image.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../radio_model.dart';
+import '../radio_manager.dart';
 
 class StationPageIcon extends StatelessWidget with WatchItMixin {
   const StationPageIcon({
