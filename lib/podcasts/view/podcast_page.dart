@@ -72,30 +72,31 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
 
     final filter = watchValue((PodcastManager m) => m.filter);
     final filteredEpisodes = episodes
-        .where((e) => e.title != null && e.episodeDescription != null)
+        .where((a) => a.title != null && a.episodeDescription != null)
         .where(
-          (e) => (searchQuery == null || searchQuery.trim().isEmpty)
+          (a) => (searchQuery == null || searchQuery.trim().isEmpty)
               ? true
               : switch (filter) {
-                  PodcastEpisodeFilter.title => e.title!.toLowerCase().contains(
+                  PodcastEpisodeFilter.title => a.title!.toLowerCase().contains(
                     searchQuery.toLowerCase(),
                   ),
                   PodcastEpisodeFilter.description =>
-                    e.episodeDescription!.toLowerCase().contains(
+                    a.episodeDescription!.toLowerCase().contains(
                       searchQuery.toLowerCase(),
                     ),
                 },
         )
-        .where((e) {
+        .where((audio) {
           if (!hideCompletedEpisodes) return true;
-          if (e.url == null) return false;
+          if (audio.url == null) return false;
 
-          return e.durationMs != null &&
-              lastPositions?[e.url]?.inMilliseconds != e.durationMs?.toInt();
+          return audio.durationMs != null &&
+              lastPositions?[audio.url]?.inMilliseconds !=
+                  audio.durationMs?.toInt();
         })
         .where(
-          (e) => showDownloadsOnly
-              ? di<PodcastManager>().downloadCommands.values.contains(e)
+          (audio) => showDownloadsOnly
+              ? di<PodcastManager>().hadDownload(audio)
               : true,
         )
         .toList();

@@ -217,6 +217,7 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.singleton<_i351.PodcastManager>(
       () => _i351.PodcastManager(podcastService: gh<_i721.PodcastService>()),
+      dispose: (i) => i.dispose(),
     );
     await gh.singletonAsync<_i517.WindowSizeToSettingsListener>(() {
       final i = _i517.WindowSizeToSettingsListener(

@@ -182,6 +182,14 @@
             }
         }
     },
+    "downloadRemoved": "Download removed: {name}",
+    "@downloadRemoved": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
     "markAllEpisodesAsDone": "Mark all episodes as done",
     "markEpisodeAsDone": "Mark episode as done",
     "hideCompletedEpisodes": "Hide completed episodes",

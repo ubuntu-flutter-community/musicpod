@@ -452,6 +452,11 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String downloadRemoved(String name) {
+    return 'Download removed: $name';
+  }
+
+  @override
   String get markAllEpisodesAsDone => 'Segna tutti gli episodi come completati';
 
   @override

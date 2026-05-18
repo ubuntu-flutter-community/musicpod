@@ -6,6 +6,7 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../app/page_ids.dart';
 import '../common/data/audio.dart';
+import '../common/no_error_filter.dart';
 import '../common/view/audio_filter.dart';
 import 'data/change_metadata_capsule.dart';
 import 'local_audio_service.dart';
@@ -241,10 +242,4 @@ class LocalAudioManager {
     _playlistCommands.clear();
     importExternalPlaylistsCommand.value = [];
   }
-}
-
-class NoErrorFilter extends ErrorFilter {
-  @override
-  ErrorReaction filter(Object error, StackTrace stackTrace) =>
-      ErrorReaction.throwException;
 }

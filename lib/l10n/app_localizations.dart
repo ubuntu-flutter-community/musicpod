@@ -981,6 +981,12 @@ abstract class AppLocalizations {
   /// **'Download finished: {name}'**
   String downloadFinished(String name);
 
+  /// No description provided for @downloadRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Download removed: {name}'**
+  String downloadRemoved(String name);
+
   /// No description provided for @markAllEpisodesAsDone.
   ///
   /// In en, this message translates to:

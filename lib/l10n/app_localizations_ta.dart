@@ -457,6 +457,11 @@ class AppLocalizationsTa extends AppLocalizations {
   }
 
   @override
+  String downloadRemoved(String name) {
+    return 'Download removed: $name';
+  }
+
+  @override
   String get markAllEpisodesAsDone =>
       'செய்தபடியே எல்லா அத்தியாயங்களையும் குறிக்கவும்';
 

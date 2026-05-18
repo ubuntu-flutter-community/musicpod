@@ -451,6 +451,11 @@ class AppLocalizationsDa extends AppLocalizations {
   }
 
   @override
+  String downloadRemoved(String name) {
+    return 'Download removed: $name';
+  }
+
+  @override
   String get markAllEpisodesAsDone => 'Markér alle episoder som færdige';
 
   @override

@@ -48,13 +48,13 @@ class _RecentDownloadsButtonState extends State<RecentDownloadsButton>
     );
 
     final activeDownloads = downloadCommands.values.where(
-      (v) => v.value == null,
+      (v) => v.value?.path == null,
     );
     final activeKeys = downloadCommands.keys;
     final hasActiveDownloads = activeDownloads.isNotEmpty;
 
     final recentDownloads = downloadCommands.values.where(
-      (v) => v.value != null,
+      (v) => v.value?.path != null,
     );
     final hasRecentDownloads = recentDownloads.isNotEmpty;
 

@@ -452,6 +452,11 @@ class AppLocalizationsSk extends AppLocalizations {
   }
 
   @override
+  String downloadRemoved(String name) {
+    return 'Download removed: $name';
+  }
+
+  @override
   String get markAllEpisodesAsDone => 'Označiť všetky epizódy ako dokončené';
 
   @override

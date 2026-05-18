@@ -7,7 +7,6 @@ import 'package:podcast_search/podcast_search.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
-import '../common/logging.dart';
 import '../l10n/app_localizations.dart';
 import 'podcast_service.dart';
 
@@ -17,11 +16,7 @@ class PodcastManager {
     : _podcastService = podcastService {
     togglePodcastCommand.run();
     feedsWithDownloadsCommand.run();
-    Command.globalExceptionHandler = (e, s) {
-      if (e is! DioException || !e.toString().contains('cancelled')) {
-        printMessageInDebugMode(e.error, trace: s);
-      }
-    };
+    Command.globalExceptionHandler = (e, s) {};
   }
 
   final PodcastService _podcastService;
@@ -184,45 +179,80 @@ class PodcastManager {
         return _podcastService.feedsWithDownloads;
       }, initialValue: _podcastService.feedsWithDownloads);
 
-  final downloadCommands = MapNotifier<Audio, Command<void, String?>>();
+  final downloadCommands =
+      MapNotifier<Audio, Command<void, PodcastDownloadResult?>>(
+        notificationMode: CustomNotifierMode.manual,
+      );
 
-  Command<void, String?> getDownloadCommand(Audio media) =>
+  bool hadDownload(Audio audio) =>
+      _podcastService.getDownload(audio.url) != null;
+
+  Command<void, PodcastDownloadResult?> getDownloadCommand(Audio media) =>
       downloadCommands.putIfAbsent(media, () => _createDownloadCommand(media));
 
-  Command<void, String?> _createDownloadCommand(Audio media) {
-    final command = Command.createAsyncNoParamWithProgress((handle) async {
-      final cancelToken = CancelToken();
+  Command<void, PodcastDownloadResult> _createDownloadCommand(Audio media) {
+    final Command<void, PodcastDownloadResult> command =
+        Command.createAsyncNoParamWithProgress(
+          (handle) async {
+            final cancelToken = CancelToken();
 
-      if (_podcastService.getDownload(media.url) == null) {
-        handle.isCanceled.listen((canceled, subscription) {
-          if (canceled) {
-            handle.updateProgress(0.0);
-            cancelToken.cancel();
-            subscription.cancel();
-          }
-        });
+            try {
+              if (_podcastService.getDownload(media.url) == null) {
+                handle.isCanceled.listen((canceled, subscription) {
+                  if (canceled) {
+                    handle.updateProgress(0.0);
+                    cancelToken.cancel();
+                    subscription.cancel();
+                  }
+                });
+                final podcastDownloadResult = PodcastDownloadResult(
+                  status: PodcastDownloadStatus.downloaded,
+                  audio: media,
+                  path: await _podcastService.download(
+                    episode: media,
+                    cancelToken: cancelToken,
+                    onProgress: (received, total) {
+                      handle.updateProgress(received / total);
+                    },
+                  ),
+                );
+                _downloadController.add(podcastDownloadResult);
+                return podcastDownloadResult;
+              } else {
+                await _podcastService.removeDownload(
+                  url: media.url!,
+                  feedUrl: media.feedUrl!,
+                );
+                final podcastDownloadResult = PodcastDownloadResult(
+                  status: PodcastDownloadStatus.removed,
+                  audio: media,
+                  path: null,
+                );
 
-        await _podcastService.download(
-          episode: media,
-          cancelToken: cancelToken,
-          onProgress: (received, total) {
-            handle.updateProgress(received / total);
+                _downloadController.add(podcastDownloadResult);
+                return podcastDownloadResult;
+              }
+            } on Exception catch (_) {
+              final podcastDownloadResult = PodcastDownloadResult(
+                status: PodcastDownloadStatus.cancelled,
+                audio: media,
+                path: null,
+              );
+              _downloadController.add(podcastDownloadResult);
+              return podcastDownloadResult;
+            } finally {
+              downloadCommands.notifyListeners();
+            }
           },
+
+          initialValue: PodcastDownloadResult(
+            status: _podcastService.getDownload(media.url) != null
+                ? PodcastDownloadStatus.downloaded
+                : PodcastDownloadStatus.removed,
+            audio: media,
+            path: _podcastService.getDownload(media.url),
+          ),
         );
-      }
-
-      final download = _podcastService.getDownload(media.url);
-
-      if (download != null) {
-        await feedsWithDownloadsCommand.runAsync();
-      }
-
-      return download;
-    }, initialValue: _podcastService.getDownload(media.url));
-
-    if (_podcastService.getDownload(media.url) != null) {
-      command.resetProgress(progress: 1.0);
-    } else {}
 
     return command;
   }
@@ -235,6 +265,16 @@ class PodcastManager {
         await togglePodcastCommand.runAsync();
         await feedsWithDownloadsCommand.runAsync();
       });
+
+  final _downloadController =
+      StreamController<PodcastDownloadResult>.broadcast();
+  Stream<PodcastDownloadResult> get downloadStream =>
+      _downloadController.stream;
+
+  @disposeMethod
+  Future<void> dispose() async {
+    await _downloadController.close();
+  }
 }
 
 enum PodcastEpisodeFilter {
@@ -267,5 +307,19 @@ class PodcastToggleCapsule {
     this.imageUrl,
     this.name,
     this.artist,
+  });
+}
+
+enum PodcastDownloadStatus { removed, downloaded, cancelled }
+
+class PodcastDownloadResult {
+  final PodcastDownloadStatus status;
+  final Audio audio;
+  final String? path;
+
+  const PodcastDownloadResult({
+    required this.status,
+    required this.audio,
+    required this.path,
   });
 }

@@ -27,12 +27,14 @@ class PodcastPageTitle extends StatelessWidget with WatchItMixin {
   }
 }
 
-class PodcastPageSubTitle extends StatelessWidget {
+class PodcastPageSubTitle extends StatelessWidget with WatchItMixin {
   const PodcastPageSubTitle({super.key, required this.feedUrl});
 
   final String feedUrl;
 
   @override
-  Widget build(BuildContext context) =>
-      Text(di<PodcastManager>().getSubscribedPodcastArtist(feedUrl) ?? '');
+  Widget build(BuildContext context) {
+    watchValue((PodcastManager m) => m.togglePodcastCommand);
+    return Text(di<PodcastManager>().getSubscribedPodcastArtist(feedUrl) ?? '');
+  }
 }

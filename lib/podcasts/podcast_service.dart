@@ -330,7 +330,13 @@ class PodcastService {
 
   Map<String, String> _downloads = {};
   Map<String, String> get downloads => _downloads;
-  String? getDownload(String? url) => _downloads[url];
+  String? getDownload(String? url) {
+    if (url == null) return null;
+    final download = _downloads[url];
+    return download != null && File(download).existsSync()
+        ? _downloads[url]
+        : null;
+  }
 
   Set<String> feedsWithDownloads = {};
 

@@ -441,6 +441,11 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String downloadRemoved(String name) {
+    return 'Download removed: $name';
+  }
+
+  @override
   String get markAllEpisodesAsDone => '将所有剧集标记为已完成';
 
   @override

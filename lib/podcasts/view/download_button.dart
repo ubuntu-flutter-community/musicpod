@@ -25,14 +25,16 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final theme = context.theme;
 
-    final value = watchValue(
+    final progress = watchValue(
       (PodcastManager m) => m.getDownloadCommand(audio).progress,
     );
-    final hasDownload = value == 1.0;
-
-    final isRunning = watchValue(
-      (PodcastManager m) => m.getDownloadCommand(audio).isRunning,
+    final results = watchValue(
+      (PodcastManager m) => m.getDownloadCommand(audio).results,
     );
+    final result = results.data;
+    final isRunning = results.isRunning;
+
+    final hasDownload = result?.path != null;
 
     return Stack(
       alignment: Alignment.center,
@@ -47,29 +49,17 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
             color: hasDownload ? theme.colorScheme.primary : null,
           ),
           onPressed: () {
-            if (hasDownload) {
-              // manager.deleteDownload(audio: audio);
-            } else {
-              if (!di<PodcastManager>().isPodcastSubscribed(audio.feedUrl)) {
-                addPodcast();
-              }
-              final downloadCommand = di<PodcastManager>().getDownloadCommand(
-                audio,
-              );
+            final downloadCommand = di<PodcastManager>().getDownloadCommand(
+              audio,
+            );
+            if (!di<PodcastManager>().isPodcastSubscribed(audio.feedUrl)) {
+              addPodcast();
+            }
 
-              if (downloadCommand.isRunning.value) {
-                downloadCommand.cancel();
-              } else {
-                downloadCommand.run(
-                  // finishedMessage: context.l10n.downloadFinished(
-                  //   audio.title ?? '',
-                  // ),
-                  // canceledMessage: context.l10n.downloadCancelled(
-                  //   audio.title ?? '',
-                  // ),
-                  // audio: audio,
-                );
-              }
+            if (downloadCommand.isRunning.value) {
+              downloadCommand.cancel();
+            } else {
+              downloadCommand.run(audio);
             }
           },
           iconSize: iconSize,
@@ -85,7 +75,7 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
                 child: Progress(
                   adaptive: false,
                   padding: EdgeInsets.zero,
-                  value: value == 1.0 ? 0 : value,
+                  value: progress == 1.0 ? 0 : progress,
                   backgroundColor: Colors.transparent,
                 ),
               ),

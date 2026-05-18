@@ -8,7 +8,6 @@ import '../../extensions/build_context_x.dart';
 import '../../player/player_model.dart';
 import '../../player/view/player_main_controls.dart';
 import '../../player/view/player_view.dart';
-import '../../podcasts/download_manager.dart';
 import '../app_manager.dart';
 import '../page_ids.dart';
 import '../routing_manager.dart';
@@ -27,11 +26,6 @@ class MobilePage extends StatelessWidget
     setupCommonHandlersAndCommands(context);
 
     final fullWindowMode = watchValue((AppManager m) => m.fullWindowMode);
-
-    registerStreamHandler(
-      select: (DownloadManager m) => m.messageStream,
-      handler: downloadMessageStreamHandler,
-    );
 
     return PopScope(
       canPop: !fullWindowMode,
