@@ -11,7 +11,7 @@ import 'data/change_metadata_capsule.dart';
 import 'local_audio_service.dart';
 import 'playlist_action.dart';
 
-@lazySingleton
+@singleton
 class LocalAudioManager {
   LocalAudioManager({required LocalAudioService localAudioService})
     : _localAudioService = localAudioService {
@@ -124,7 +124,7 @@ class LocalAudioManager {
   >
   initAudiosCommand = Command.createAsyncWithProgress((param, handle) async {
     if (param.forceInit) {
-      _findAlbumCommands.clear();
+      _reset();
     }
 
     final localAudioResult = await _localAudioService.init(
@@ -231,6 +231,16 @@ class LocalAudioManager {
 
         return _localAudioService.pinnedAlbums;
       }, initialValue: _localAudioService.pinnedAlbums);
+
+  void _reset() {
+    changeMetadataCommand.value = null;
+    likedAudiosCommand.value = [];
+    allPlaylistsCommand.value = [];
+    togglePinnedAlbumCommand.value = [];
+    _findAlbumCommands.clear();
+    _playlistCommands.clear();
+    importExternalPlaylistsCommand.value = [];
+  }
 }
 
 class NoErrorFilter extends ErrorFilter {

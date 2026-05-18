@@ -3,8 +3,8 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/connectivity_manager.dart';
 import '../../common/data/audio.dart';
-import '../podcast_manager.dart';
 import '../../player/player_model.dart';
+import '../podcast_manager.dart';
 import 'podcast_audio_tile.dart';
 
 class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
@@ -36,11 +36,13 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
           key: ValueKey('${episode.path ?? episode.url}-$isOnline'),
           audio: episode,
           isOnline: isOnline,
-          addPodcast: () async => di<PodcastManager>().addPodcast(
-            feedUrl: episode.feedUrl!,
-            imageUrl: episode.albumArtUrl ?? episode.imageUrl ?? '',
-            name: episode.podcastTitle ?? '',
-            artist: episode.copyright ?? '',
+          addPodcast: () => di<PodcastManager>().togglePodcastCommand.run(
+            PodcastToggleCapsule(
+              feedUrl: episode.feedUrl!,
+              imageUrl: episode.albumArtUrl ?? episode.imageUrl ?? '',
+              name: episode.podcastTitle ?? '',
+              artist: episode.copyright ?? '',
+            ),
           ),
           isExpanded: episode == selectedAudio,
           selected: episode == selectedAudio,

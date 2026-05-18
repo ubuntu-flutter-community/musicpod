@@ -9,6 +9,8 @@ import '../../custom_content/view/backup_dialog.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_manager.dart';
+import '../../podcasts/podcast_manager.dart';
+import '../../radio/radio_manager.dart';
 import '../settings_model.dart';
 
 class ResetSection extends StatelessWidget {
@@ -72,6 +74,8 @@ class WipeConfirmDialog extends StatelessWidget {
       title: Text(l10n.confirm),
       content: SizedBox(width: 350, child: Text(l10n.resetAllSettingsConfirm)),
       onConfirm: () async {
+        await di<PodcastManager>().wipeCommand.runAsync();
+        await di<RadioManager>().wipeCommand.runAsync();
         await di<SettingsModel>().wipeAllSettingsCommand.runAsync();
         await di<LocalAudioManager>().initAudiosCommand.runAsync((
           directory: null,

@@ -8,7 +8,7 @@ import '../common/data/audio.dart';
 import '../l10n/app_localizations.dart';
 import 'radio_service.dart';
 
-@lazySingleton
+@singleton
 class RadioManager extends SafeChangeNotifier {
   final RadioService _radioService;
 
@@ -85,6 +85,9 @@ class RadioManager extends SafeChangeNotifier {
 
   late final Command<String?, List<String>> toggleStarStationCommand =
       Command.createAsync((uuid) async {
+        if (_radioService.starredStations.isEmpty) {
+          await _radioService.loadStarredStations();
+        }
         if (uuid != null) {
           if (_radioService.starredStations.contains(uuid)) {
             await _radioService.removeStarredStation(uuid);
@@ -92,16 +95,17 @@ class RadioManager extends SafeChangeNotifier {
             await _radioService.addStarredStation(uuid);
           }
         }
-        if (_radioService.starredStations.isEmpty) {
-          await _radioService.loadStarredStations();
-        }
+
         return _radioService.starredStations;
       }, initialValue: _radioService.starredStations);
 
   late final Command<void, void> wipeCommand =
-      Command.createAsyncNoParamNoResult(
-        _radioService.wipeAndBuildRadioLibrary,
-      );
+      Command.createAsyncNoParamNoResult(() async {
+        await _radioService.wipeAndBuildRadioLibrary();
+        await toggleFavRadioTagCommand.runAsync();
+        await toggleStarStationCommand.runAsync();
+        _stationCache.clear();
+      });
 
   //
   // Fav radio tags
@@ -109,6 +113,9 @@ class RadioManager extends SafeChangeNotifier {
 
   late final Command<String?, Set<String>> toggleFavRadioTagCommand =
       Command.createAsync((tag) async {
+        if (_radioService.favRadioTags.isEmpty) {
+          await _radioService.loadFavRadioTags();
+        }
         if (tag != null) {
           if (_radioService.favRadioTags.contains(tag)) {
             await _radioService.removeFavRadioTag(tag);
@@ -116,9 +123,7 @@ class RadioManager extends SafeChangeNotifier {
             await _radioService.addFavRadioTag(tag);
           }
         }
-        if (_radioService.favRadioTags.isEmpty) {
-          await _radioService.loadFavRadioTags();
-        }
+
         return _radioService.favRadioTags;
       }, initialValue: _radioService.favRadioTags);
 }

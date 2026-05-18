@@ -1,10 +1,10 @@
+import 'package:dio/dio.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:musicpod/common/data/audio.dart';
 import 'package:musicpod/common/persistence/database.dart';
-import 'package:musicpod/notifications/notifications_service.dart';
 import 'package:musicpod/podcasts/data/podcast_genre.dart';
 import 'package:musicpod/podcasts/podcast_service.dart';
 import 'package:musicpod/settings/settings_service.dart';
@@ -21,15 +21,14 @@ const Audio episodeOneAudio = Audio(
       'Introduction to Flying High with Flutter - Flying High with Flutter #1',
 );
 
-@GenerateMocks([NotificationsService, SettingsService])
+@GenerateMocks([SettingsService, Dio])
 Future<void> main() async {
-  final mockNotificationsService = MockNotificationsService();
   final mockSettingsService = MockSettingsService();
 
   when(mockSettingsService.getBool(any)).thenAnswer((realInvocation) => false);
 
   final service = PodcastService(
-    notificationsService: mockNotificationsService,
+    dio: MockDio(),
     settingsService: mockSettingsService,
     database: Database(NativeDatabase.memory()),
   );

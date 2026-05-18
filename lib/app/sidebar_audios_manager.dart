@@ -10,7 +10,7 @@ import '../radio/radio_manager.dart';
 
 @lazySingleton
 class SidebarAudiosManager {
-  final PodcastManager _podcastModel;
+  final PodcastManager _podcastManager;
   final LocalAudioManager _localAudioManager;
   final RadioManager _radioManager;
   final PlayerModel _playerModel;
@@ -21,7 +21,7 @@ class SidebarAudiosManager {
     required RadioManager radioManager,
     required PlayerModel playerModel,
   }) : _localAudioManager = localAudioManager,
-       _podcastModel = podcastManager,
+       _podcastManager = podcastManager,
        _radioManager = radioManager,
        _playerModel = playerModel;
 
@@ -40,7 +40,12 @@ class SidebarAudiosManager {
               : await _playerModel.resume();
         } else if (audios != null) {
           await _playerModel.startPlaylist(audios: audios, listName: pageId);
-          await _podcastModel.removePodcastUpdate(pageId);
+          await _podcastManager.updatesCommand.runAsync(
+            PodcastUpdateCapsule(
+              type: PodcastUpdateCapsuleType.remove,
+              feedUrls: [pageId],
+            ),
+          );
         }
       });
 
@@ -52,11 +57,10 @@ class SidebarAudiosManager {
       return audio == null ? [] : [audio];
     }
 
-    if (_podcastModel.isPodcastSubscribed(pageId)) {
-      final episodes = await _podcastModel.getEpisodesCommand(pageId).runAsync((
-        item: null,
-        feedUrl: pageId,
-      ));
+    if (_podcastManager.isPodcastSubscribed(pageId)) {
+      final episodes = await _podcastManager
+          .getEpisodesCommand(pageId)
+          .runAsync((item: null, feedUrl: pageId));
       return episodes;
     }
 

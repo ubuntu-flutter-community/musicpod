@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/routing_manager.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
@@ -25,8 +24,9 @@ class PodcastSubButton extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final podcastManager = di<PodcastManager>();
 
-    final subscribed = watchPropertyValue(
-      (PodcastManager m) => m.isPodcastSubscribed(pageId),
+    final subscribed = watchValue(
+      (PodcastManager m) =>
+          m.togglePodcastCommand.select((v) => v.contains(pageId)),
     );
 
     final disabled = pageId.isEmpty;
@@ -39,21 +39,14 @@ class PodcastSubButton extends StatelessWidget with WatchItMixin {
         subscribed ? Iconz.removeFromLibrary : Iconz.addToLibrary,
         color: subscribed || disabled ? null : context.colorScheme.primary,
       ),
-      onPressed: disabled
-          ? null
-          : () {
-              if (subscribed) {
-                podcastManager.removePodcast(pageId);
-                di<RoutingManager>().pop();
-              } else {
-                podcastManager.addPodcast(
-                  feedUrl: pageId,
-                  imageUrl: imageUrl,
-                  name: name,
-                  artist: artist,
-                );
-              }
-            },
+      onPressed: () => podcastManager.togglePodcastCommand.run(
+        PodcastToggleCapsule(
+          feedUrl: pageId,
+          imageUrl: imageUrl,
+          name: name,
+          artist: artist,
+        ),
+      ),
     );
   }
 }

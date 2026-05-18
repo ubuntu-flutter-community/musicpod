@@ -15,6 +15,7 @@ import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../../settings/settings_model.dart';
+import '../podcast_manager.dart';
 import 'download_button.dart';
 import 'podcast_mark_done_button.dart';
 import 'podcast_replay_button.dart';
@@ -35,7 +36,7 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
   final bool selected;
 
   final void Function()? startPlaylist;
-  final Future<void> Function() addPodcast;
+  final void Function() addPodcast;
 
   final bool isExpanded;
   final bool isOnline;
@@ -59,6 +60,15 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
             ? 42
             : 38) /
         2;
+
+    registerHandler(
+      select: (PodcastManager m) => m.getDownloadCommand(audio),
+      handler: (context, path, cancel) {
+        if (path != null) {
+          context.toast(Text(context.l10n.downloadFinished(audio.title ?? '')));
+        }
+      },
+    );
 
     return YaruExpandable(
       isExpanded: isExpanded,

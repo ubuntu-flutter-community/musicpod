@@ -53,6 +53,16 @@ class DesktopHomePage extends StatelessWidget
       },
     );
 
+    registerStreamHandler<Stream<CommandError>, CommandError>(
+      target: Command.globalErrors,
+      handler: (context, snapshot, cancel) {
+        if (snapshot.hasData) {
+          final error = snapshot.data!;
+          context.toast(Text('Download error: ${error.error}'));
+        }
+      },
+    );
+
     setupCommonHandlersAndCommands(context);
 
     // This scaffold is mainly used to have a unified place for snackbars

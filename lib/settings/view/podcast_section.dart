@@ -214,7 +214,7 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
               confirmLabel: context.l10n.ok,
               cancelLabel: context.l10n.cancel,
               onConfirm: () async {
-                await di<PodcastManager>().removeAllPodcasts();
+                await di<PodcastManager>().wipeCommand.runAsync();
                 await di<PlayerService>().clearAllLastPositions();
               },
             ),

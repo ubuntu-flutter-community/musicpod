@@ -39,8 +39,9 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final showPodcastsAscending = watchPropertyValue(
-      (PodcastManager m) => m.showPodcastAscending(feedUrl),
+    final showPodcastsAscending = watchValue(
+      (PodcastManager m) =>
+          m.reorderPodcastCommand.select((v) => v.contains(feedUrl)),
     );
 
     registerHandler(
@@ -94,7 +95,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
         })
         .where(
           (e) => showDownloadsOnly
-              ? di<PodcastManager>().getDownload(e.url) != null
+              ? di<PodcastManager>().downloadCommands.values.contains(e)
               : true,
         )
         .toList();
@@ -125,14 +126,12 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
       ),
       body: RefreshIndicator(
         onRefresh: di<PodcastManager>().isPodcastSubscribed(feedUrl)
-            ? () async => di<PodcastManager>()
-                  .checkForUpdateAndRefreshIfNeededCommand
-                  .runAsync((
-                    feedUrls: [feedUrl],
-                    multiUpdateMessage: (length) => context.mounted
-                        ? context.l10n.newEpisodesAvailableFor(length)
-                        : context.l10n.updateAvailable,
-                  ))
+            ? () async => di<PodcastManager>().updatesCommand.runAsync(
+                PodcastUpdateCapsule(
+                  feedUrls: [feedUrl],
+                  type: PodcastUpdateCapsuleType.update,
+                ),
+              )
             : () async {},
         child: AdaptiveMultiLayoutBody(
           header: PodcastPageHeader(

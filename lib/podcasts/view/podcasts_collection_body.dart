@@ -3,9 +3,9 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:future_loading_dialog/future_loading_dialog.dart';
 
 import '../../app/connectivity_manager.dart';
+import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
-import '../../app/page_ids.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/confirm.dart';
@@ -37,29 +37,26 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
     );
     if (!isOnline) return const OfflineBody();
 
-    final subs = watchPropertyValue((PodcastManager m) => m.podcastFeedUrls);
+    final subs = watchValue((PodcastManager m) => m.togglePodcastCommand);
     final podcastManager = di<PodcastManager>();
-    final updatesLength = watchPropertyValue(
-      (PodcastManager m) => m.podcastUpdatesLength,
-    );
+    final updates = watchValue((PodcastManager m) => m.updatesCommand);
     final updatesOnly = watchValue((PodcastManager m) => m.updatesOnly);
     final downloadsOnly = watchValue((PodcastManager m) => m.downloadsOnly);
-    final subsLength = watchPropertyValue(
-      (PodcastManager m) => m.podcastsLength,
+    final subsLength = subs.length;
+    final feedsWithDownloads = watchValue(
+      (PodcastManager m) => m.feedsWithDownloadsCommand,
     );
-    final feedsWithDownloadLength = watchPropertyValue(
-      (PodcastManager m) => m.feedsWithDownloadsLength,
-    );
+    final feedsWithDownloadLength = feedsWithDownloads.length;
 
     final checkingForUpdates = watchValue(
-      (PodcastManager m) => m.checkForUpdateAndRefreshIfNeededCommand.isRunning,
+      (PodcastManager m) => m.updatesCommand.isRunning,
     );
     final progress = watchValue(
-      (PodcastManager m) => m.checkForUpdateAndRefreshIfNeededCommand.progress,
+      (PodcastManager m) => m.updatesCommand.progress,
     );
 
     final itemCount = updatesOnly
-        ? updatesLength
+        ? updates.length
         : (downloadsOnly ? feedsWithDownloadLength : subsLength);
 
     return SliverBody(
@@ -74,22 +71,10 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
             content: Text(
               context.l10n.checkForUpdatesConfirm(subsLength.toString()),
             ),
-            onConfirm: () => di<PodcastManager>()
-                .checkForUpdateAndRefreshIfNeededCommand
-                .runAsync((
-                  feedUrls: di<PodcastManager>().podcastFeedUrls,
-
-                  multiUpdateMessage: (length) =>
-                      context.l10n.newEpisodesAvailableFor(length),
-                )),
+            onConfirm: () => di<PodcastManager>().updatesCommand.runAsync(),
           );
         } else {
-          await di<PodcastManager>().checkForUpdateAndRefreshIfNeededCommand
-              .runAsync((
-                feedUrls: di<PodcastManager>().podcastFeedUrls,
-                multiUpdateMessage: (length) =>
-                    context.l10n.newEpisodesAvailableFor(length),
-              ));
+          await di<PodcastManager>().updatesCommand.runAsync();
         }
       },
       contentBuilder: (context, constraints) => checkingForUpdates
@@ -137,11 +122,15 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                 final String? feedUrl;
                 if (updatesOnly) {
                   feedUrl = subs
-                      .where((e) => podcastManager.podcastUpdateAvailable(e))
+                      .toSet()
+                      .intersection(updates)
                       .elementAtOrNull(index);
                 } else if (downloadsOnly) {
                   feedUrl = subs
-                      .where((e) => podcastManager.feedHasDownload(e))
+                      .where(
+                        (e) => podcastManager.feedsWithDownloadsCommand.value
+                            .contains(e),
+                      )
                       .elementAtOrNull(index);
                 } else {
                   feedUrl = subs.elementAtOrNull(index);
@@ -163,7 +152,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                     fallBackIcon: Icon(Iconz.podcast, size: 70),
                   ),
                   bottom: AudioCardBottom(
-                    style: podcastManager.podcastUpdateAvailable(feedUrl)
+                    style: updates.contains(feedUrl)
                         ? theme.textTheme.bodyMedium?.copyWith(
                                 color: theme.colorScheme.primary,
                                 fontWeight: FontWeight.bold,

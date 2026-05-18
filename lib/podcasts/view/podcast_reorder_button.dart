@@ -14,21 +14,23 @@ class PodcastReorderButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final ascending = watchPropertyValue(
-      (PodcastManager m) => m.showPodcastAscending(feedUrl),
+    final ascending = watchValue(
+      (PodcastManager m) =>
+          m.reorderPodcastCommand.select((v) => v.contains(feedUrl)),
     );
 
-    final podcastSubscribed = watchPropertyValue(
-      (PodcastManager m) => m.isPodcastSubscribed(feedUrl),
+    final podcastSubscribed = watchValue(
+      (PodcastManager m) =>
+          m.togglePodcastCommand.select((v) => v.contains(feedUrl)),
     );
 
     return IconButton(
       tooltip: context.l10n.reorder,
       onPressed: podcastSubscribed
-          ? () => di<PodcastManager>().reorderPodcast(
+          ? () => di<PodcastManager>().reorderPodcastCommand.run((
               feedUrl: feedUrl,
               ascending: !ascending,
-            )
+            ))
           : null,
       icon: Iconz.ascending == Iconz.materialAscending && ascending
           ? Transform.flip(

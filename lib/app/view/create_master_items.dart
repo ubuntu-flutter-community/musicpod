@@ -35,7 +35,7 @@ Iterable<MasterItem> getAllMasterItems(
 ) => [
   ...permanentMasterItems,
   ...createPlaylistMasterItems(localAudioManager.allPlaylistsCommand.value),
-  ...createPodcastMasterItems(context, podcastManager),
+  ...createPodcastMasterItems(podcastManager.togglePodcastCommand.value),
   ...createPinnedAlbumsMasterItems(
     localAudioManager.togglePinnedAlbumCommand.value,
   ),
@@ -131,15 +131,13 @@ Iterable<MasterItem> createPinnedAlbumsMasterItems(List<int> pinnedAlbums) =>
       ),
     );
 
-Iterable<MasterItem> createPodcastMasterItems(
-  BuildContext context,
-  PodcastManager podcastManager,
-) => podcastManager.podcastFeedUrls.map(
-  (feedUrl) => MasterItem(
-    titleBuilder: (_) => PodcastPageTitle(feedUrl: feedUrl),
-    subtitleBuilder: (_) => PodcastPageSubTitle(feedUrl: feedUrl),
-    pageId: feedUrl,
-    pageBuilder: (_) => LazyPodcastPage(feedUrl: feedUrl),
-    iconBuilder: (selected) => PodcastPageSideBarIcon(feedUrl: feedUrl),
-  ),
-);
+Iterable<MasterItem> createPodcastMasterItems(List<String> podcastFeedUrls) =>
+    podcastFeedUrls.map(
+      (feedUrl) => MasterItem(
+        titleBuilder: (_) => PodcastPageTitle(feedUrl: feedUrl),
+        subtitleBuilder: (_) => PodcastPageSubTitle(feedUrl: feedUrl),
+        pageId: feedUrl,
+        pageBuilder: (_) => LazyPodcastPage(feedUrl: feedUrl),
+        iconBuilder: (selected) => PodcastPageSideBarIcon(feedUrl: feedUrl),
+      ),
+    );
