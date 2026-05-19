@@ -43,7 +43,7 @@ class LazyPodcastPage extends StatelessWidget with WatchItMixin {
     callOnceAfterThisBuild(
       (context) => di<PodcastManager>().updatesCommand.run(
         PodcastUpdateCapsule(
-          type: PodcastUpdateCapsuleType.remove,
+          type: PodcastUpdateType.remove,
           feedUrls: [feedUrl],
         ),
       ),

@@ -28,6 +28,8 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
     this.mainAxisAlignment,
     this.mainAxisSize = MainAxisSize.max,
     this.avatarPlayButton = true,
+    this.leading,
+    this.trailing,
   });
 
   final bool active;
@@ -35,16 +37,14 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
   final MainAxisAlignment? mainAxisAlignment;
   final MainAxisSize mainAxisSize;
   final bool avatarPlayButton;
+  final Widget? leading;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final isOnline = watchValue(
-      (ConnectivityManager m) =>
-          m.connectivityCommand.select((p) => p.isOnline),
-    );
+
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
-    final active = audio?.path != null || isOnline;
     final defaultColor =
         iconColor ??
         (!active ? theme.disabledColor : theme.colorScheme.onSurface);
@@ -84,6 +84,7 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
         : rawPlayButton;
 
     final children = <Widget>[
+      ?leading,
       switch (audio?.audioType) {
         AudioType.local => ShuffleButton(
           active: active,
@@ -134,6 +135,7 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
         ),
         _ => const SizedBox.shrink(),
       },
+      ?trailing,
     ];
 
     return Row(

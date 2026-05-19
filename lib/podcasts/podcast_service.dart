@@ -148,19 +148,19 @@ class PodcastService {
     required Iterable<String> feedUrls,
     void Function(double progress)? updateProgress,
   }) => _syncLock.synchronized(
-    () => _checkForUpdates(feedUrls: feedUrls, updateProgress: updateProgress),
+    () => _checkForUpdates(
+      toCheckFeedUrls: feedUrls.isEmpty ? podcastFeedUrls : feedUrls,
+      updateProgress: updateProgress,
+    ),
   );
 
   Future<Set<String>> _checkForUpdates({
-    required Iterable<String> feedUrls,
+    required Iterable<String> toCheckFeedUrls,
     void Function(double progress)? updateProgress,
   }) async {
     await loadPodcastUpdatesFromDb();
-    final newUpdateFeedUrls = Set<String>.from(
-      podcastUpdates.intersection(feedUrls.toSet()),
-    );
 
-    for (final feedUrl in newUpdateFeedUrls) {
+    for (final feedUrl in toCheckFeedUrls) {
       final storedTimeStamp = getPodcastLastUpdated(feedUrl);
       final name = getSubscribedPodcastName(feedUrl);
 
@@ -192,20 +192,22 @@ class PodcastService {
         // since Last-Modified can change without new episodes being added.
         final storedUrls = await _getStoredEpisodeUrls(feedUrl);
         final episodes = await findEpisodes(feedUrl: feedUrl);
-        final hasNewEpisodes = episodes.any(
-          (e) => e.url != null && !storedUrls.contains(e.url),
-        );
+
+        final newEpisodes = episodes
+            .where((e) => e.url != null && !storedUrls.contains(e.url))
+            .toSet();
+        final hasNewEpisodes = newEpisodes.isNotEmpty;
 
         if (hasNewEpisodes) {
           await _addPodcastUpdate(feedUrl, feedLastUpdated);
         }
       }
 
-      updateProgress?.call(newUpdateFeedUrls.length / feedUrls.length);
+      updateProgress?.call(toCheckFeedUrls.length / toCheckFeedUrls.length);
       await Future<void>.delayed(Duration.zero);
     }
 
-    return newUpdateFeedUrls;
+    return podcastUpdates;
   }
 
   Future<List<Audio>> findEpisodes({Item? item, String? feedUrl}) async {
@@ -574,8 +576,22 @@ class PodcastService {
         );
   }
 
+  Future<void> removePodcastUpdates({
+    Iterable<String>? feedUrls,
+    required void Function(double) updateProgress,
+  }) async {
+    if (podcastUpdates.isEmpty) {
+      await loadPodcastUpdatesFromDb();
+    }
+    final urls = feedUrls ?? podcastFeedUrls;
+    for (final (index, url) in urls.indexed) {
+      await removePodcastUpdate(url);
+      updateProgress((index + 1) / urls.length);
+    }
+  }
+
   Future<void> removePodcastUpdate(String feedUrl) async {
-    if (podcastUpdates.isNotEmpty == false) return;
+    if (podcastUpdates.isEmpty) return;
     podcastUpdates.remove(feedUrl);
     await (_db.delete(
       _db.podcastUpdateTable,
@@ -633,4 +649,11 @@ Future<Podcast?> loadPodcast(String url) async {
     printMessageInDebugMode(e);
     return null;
   }
+}
+
+class PodcastUpdate {
+  final String feedUrl;
+  final List<Audio> episodes;
+
+  const PodcastUpdate({required this.feedUrl, required this.episodes});
 }

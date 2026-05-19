@@ -2,24 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
-import '../../app/app_config.dart';
 import '../../app/app_manager.dart';
-import '../../app/connectivity_manager.dart';
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/search_button.dart';
-import '../../common/view/share_button.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import 'playback_rate_button.dart';
 import 'player_pause_timer_button.dart';
 import 'player_view.dart';
+import 'volume_popup.dart';
 
 class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
   const FullHeightPlayerTopControls({
@@ -27,15 +26,13 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
     required this.iconColor,
     required this.playerPosition,
     this.padding,
-    this.showFullScreenButton = false,
-    this.showFullWindowButton = false,
+    this.video = false,
   });
 
   final Color iconColor;
   final PlayerPosition playerPosition;
   final EdgeInsetsGeometry? padding;
-  final bool showFullScreenButton;
-  final bool showFullWindowButton;
+  final bool video;
 
   @override
   Widget build(BuildContext context) {
@@ -53,11 +50,6 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
     final showQueue = watchPropertyValue((PlayerModel m) => m.showQueue);
 
     final appManager = di<AppManager>();
-    final isOnline = watchValue(
-      (ConnectivityManager m) =>
-          m.connectivityCommand.select((p) => p.isOnline),
-    );
-    final active = audio?.path != null || isOnline;
 
     Future<void> onFullHeightButtonPressed() async {
       await appManager.setFullWindowMode(
@@ -75,18 +67,7 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
         alignment: WrapAlignment.end,
         spacing: 5.0,
         children: [
-          if (playerPosition == PlayerPosition.fullWindow)
-            SearchButton(
-              iconColor: iconColor,
-              onPressed: () async {
-                await onFullHeightButtonPressed();
-                di<SearchModel>()
-                  ..setSearchQuery('')
-                  ..setAudioType(audio?.audioType);
-                await di<RoutingManager>().push(pageId: PageIDs.searchPage);
-              },
-            ),
-          if (!playerWithSidePanel)
+          if (!playerWithSidePanel && !video)
             IconButton(
               tooltip: audio?.isRadio == true
                   ? context.l10n.hearingHistory
@@ -99,11 +80,22 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
               color: iconColor,
               onPressed: di<PlayerModel>().toggleShowQueue,
             ),
-          PlayerPauseTimerButton(iconColor: iconColor),
-          ShareButton(audio: audio, active: active, color: iconColor),
-          if (audio?.audioType == AudioType.podcast)
+          if (playerPosition == PlayerPosition.fullWindow)
+            SearchButton(
+              iconColor: iconColor,
+              onPressed: () async {
+                await onFullHeightButtonPressed();
+                di<SearchModel>()
+                  ..setSearchQuery('')
+                  ..setAudioType(audio?.audioType);
+                await di<RoutingManager>().push(pageId: PageIDs.searchPage);
+              },
+            ),
+          if (audio?.audioType == AudioType.podcast && video)
             PlaybackRateButton(color: iconColor),
-          if (showFullWindowButton)
+          if (video && !isMobile) VolumeSliderPopup(color: iconColor),
+          if (video) PlayerPauseTimerButton(iconColor: iconColor),
+          if (video && !isFullScreen)
             IconButton(
               tooltip: playerPosition == PlayerPosition.fullWindow
                   ? context.l10n.leaveFullWindow
@@ -115,18 +107,6 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
                 color: iconColor,
               ),
               onPressed: onFullHeightButtonPressed,
-            ),
-          if (AppConfig.allowVideoFullScreen && showFullScreenButton)
-            Tooltip(
-              message: isFullScreen
-                  ? context.l10n.leaveFullScreen
-                  : context.l10n.fullScreen,
-              child: MaterialFullscreenButton(
-                icon: Icon(
-                  isFullScreen ? Iconz.fullWindowExit : Iconz.fullWindow,
-                  color: iconColor,
-                ),
-              ),
             ),
         ],
       ),

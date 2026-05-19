@@ -2,17 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/data/audio.dart';
+import '../../common/data/audio_type.dart';
+import '../../common/view/share_button.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../player_model.dart';
 import 'bottom_player_like_and_star_button.dart';
 import 'full_height_player_image.dart';
+import 'playback_rate_button.dart';
 import 'player_explorer.dart';
 import 'player_main_controls.dart';
+import 'player_pause_timer_button.dart';
 import 'player_title_and_artist.dart';
 import 'player_track.dart';
 import 'player_view.dart';
+import 'stop_button.dart';
+import 'volume_popup.dart';
 
 class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
   const FullHeightPlayerAudioBody({
@@ -92,6 +98,20 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
               ),
               child: PlayerMainControls(active: active),
             ),
+          ),
+          const SizedBox(height: kLargestSpace),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            spacing: kMediumSpace,
+            children: [
+              if (audio?.audioType == AudioType.podcast)
+                PlaybackRateButton(color: iconColor),
+              if (!isMobile) VolumeSliderPopup(color: iconColor),
+              PlayerPauseTimerButton(iconColor: iconColor),
+              ShareButton(active: active),
+              StopButton(active: active),
+            ],
           ),
         ],
       ],

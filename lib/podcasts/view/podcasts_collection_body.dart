@@ -71,10 +71,14 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
             content: Text(
               context.l10n.checkForUpdatesConfirm(subsLength.toString()),
             ),
-            onConfirm: () => di<PodcastManager>().updatesCommand.runAsync(),
+            onConfirm: () => di<PodcastManager>().updatesCommand.runAsync(
+              const PodcastUpdateCapsule.updateAll(),
+            ),
           );
         } else {
-          await di<PodcastManager>().updatesCommand.runAsync();
+          await di<PodcastManager>().updatesCommand.runAsync(
+            const PodcastUpdateCapsule.updateAll(),
+          );
         }
       },
       contentBuilder: (context, constraints) => checkingForUpdates

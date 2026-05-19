@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../extensions/build_context_x.dart';
 import '../../common/view/icons.dart';
+import '../../extensions/build_context_x.dart';
 import '../player_model.dart';
 
 class PlaybackRateButton extends StatelessWidget with WatchItMixin {
@@ -16,6 +16,7 @@ class PlaybackRateButton extends StatelessWidget with WatchItMixin {
     final rate = watchPropertyValue((PlayerModel m) => m.rate);
 
     return PopupMenuButton(
+      tooltip: 'x$rate',
       icon: Icon(
         switch (rate) {
           2.0 => Iconz.levelHigh,

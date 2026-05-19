@@ -24,7 +24,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
     );
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
     final isVideo = watchPropertyValue((PlayerModel m) => m.isVideo == true);
-    final active = audio?.path != null || isOnline;
+    final active = audio != null && (audio.path != null || isOnline);
     final iconColor = isVideo ? Colors.white : theme.colorScheme.onSurface;
 
     final Widget body;

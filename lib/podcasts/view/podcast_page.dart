@@ -130,7 +130,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
             ? () async => di<PodcastManager>().updatesCommand.runAsync(
                 PodcastUpdateCapsule(
                   feedUrls: [feedUrl],
-                  type: PodcastUpdateCapsuleType.update,
+                  type: PodcastUpdateType.update,
                 ),
               )
             : () async {},

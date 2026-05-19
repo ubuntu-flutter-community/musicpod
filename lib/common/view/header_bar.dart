@@ -24,6 +24,7 @@ class HeaderBar extends StatelessWidget
     required this.adaptive,
     this.includeBackButton = true,
     this.includeSidebarButton = true,
+    this.leading,
   });
 
   final Widget? title;
@@ -35,25 +36,26 @@ class HeaderBar extends StatelessWidget
   final bool adaptive;
   final bool includeBackButton;
   final bool includeSidebarButton;
+  final Widget? leading;
 
   @override
   Widget build(BuildContext context) {
     final useSidebarButton = isMobile ? false : includeSidebarButton;
     final useBackButton = isMobile ? true : includeBackButton;
 
-    Widget? leading;
+    Widget? defaultLeading;
 
     final canPop = watchPropertyValue((RoutingManager m) => m.canPop);
 
     if (useSidebarButton &&
         !context.showMasterPanel &&
         masterScaffoldKey.currentState?.isDrawerOpen == false) {
-      leading = const SidebarButton();
+      defaultLeading = const SidebarButton();
     } else {
       if (useBackButton && canPop) {
-        leading = const NavBackButton();
+        defaultLeading = const NavBackButton();
       } else {
-        leading = isMobile ? const SizedBox(width: 60) : null;
+        defaultLeading = isMobile ? const SizedBox(width: 60) : null;
       }
     }
 
@@ -66,6 +68,7 @@ class HeaderBar extends StatelessWidget
         actions: actions,
         foregroundColor: foregroundColor,
         automaticallyImplyLeading: includeBackButton,
+        leading: leading ?? defaultLeading,
       );
     }
 
@@ -85,11 +88,16 @@ class HeaderBar extends StatelessWidget
       child: YaruWindowTitleBar(
         titleSpacing: titleSpacing,
         actions: [
-          if ((!context.showMasterPanel && isMacOS) && leading != null)
-            Padding(padding: const EdgeInsets.only(left: 10), child: leading),
+          if ((!context.showMasterPanel && isMacOS) && defaultLeading != null)
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: defaultLeading,
+            ),
           ...?actions,
         ],
-        leading: !context.showMasterPanel && isMacOS ? null : leading,
+        leading:
+            leading ??
+            (!context.showMasterPanel && isMacOS ? null : defaultLeading),
         title: title ?? const Text(''),
         border: BorderSide.none,
         backgroundColor:

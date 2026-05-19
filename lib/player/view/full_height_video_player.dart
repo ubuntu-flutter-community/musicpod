@@ -114,7 +114,7 @@ class FullHeightVideoPlayer extends StatelessWidget {
             iconColor: baseColor,
             playerPosition: playerPosition,
             padding: EdgeInsets.zero,
-            showFullWindowButton: true,
+            video: true,
           ),
           if (AppConfig.allowVideoFullScreen)
             Tooltip(
@@ -176,7 +176,7 @@ class _LinuxFullHeightPlayerState extends State<LinuxFullHeightPlayer> {
               child: FullHeightPlayerTopControls(
                 iconColor: widget.iconColor,
                 playerPosition: widget.playerPosition,
-                showFullWindowButton: true,
+                video: true,
               ),
             ),
           ),

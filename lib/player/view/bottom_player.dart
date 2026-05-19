@@ -4,13 +4,11 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../app/app_manager.dart';
 import '../../app/connectivity_manager.dart';
 import '../../common/data/audio_type.dart';
-import '../../common/view/icons.dart';
 import '../../common/view/share_button.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import 'bottom_player_image.dart';
 import 'bottom_player_like_and_star_button.dart';
@@ -21,6 +19,7 @@ import 'player_pause_timer_button.dart';
 import 'player_title_and_artist.dart';
 import 'player_track.dart';
 import 'player_view.dart';
+import 'stop_button.dart';
 import 'volume_popup.dart';
 
 class BottomPlayer extends StatelessWidget with WatchItMixin {
@@ -88,18 +87,9 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                       if (audio?.audioType == AudioType.podcast)
                         const PlaybackRateButton(),
                       if (!isMobile) const VolumeSliderPopup(),
-                      if (!fullWindowMode) ...[
-                        const PlayerPauseTimerButton(),
-                        ShareButton(audio: audio, active: active),
-                      ],
-                      IconButton(
-                        tooltip: context.l10n.stop,
-                        onPressed: () {
-                          di<AppManager>().setFullWindowMode(false);
-                          di<PlayerModel>().stop();
-                        },
-                        icon: Icon(Iconz.stopFilled),
-                      ),
+                      const PlayerPauseTimerButton(),
+                      ShareButton(audio: audio, active: active),
+                      StopButton(active: active),
                     ],
                   ),
                 )

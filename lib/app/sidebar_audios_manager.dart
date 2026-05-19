@@ -42,7 +42,7 @@ class SidebarAudiosManager {
           await _playerModel.startPlaylist(audios: audios, listName: pageId);
           await _podcastManager.updatesCommand.runAsync(
             PodcastUpdateCapsule(
-              type: PodcastUpdateCapsuleType.remove,
+              type: PodcastUpdateType.remove,
               feedUrls: [pageId],
             ),
           );

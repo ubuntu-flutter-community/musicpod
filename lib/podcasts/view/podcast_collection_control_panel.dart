@@ -35,20 +35,22 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
           if (updatesOnly) {
             manager.setUpdatesOnly(false);
           } else {
-            if (di<PodcastManager>().updatesCommand.value.length > 10) {
+            final subLength =
+                di<PodcastManager>().togglePodcastCommand.value.length;
+            if (subLength > 10) {
               ConfirmationDialog.show(
                 context: context,
                 title: Text(context.l10n.checkForUpdates),
                 confirmLabel: context.l10n.checkForUpdates,
-                content: Text(
-                  context.l10n.checkForUpdatesConfirm(
-                    di<PodcastManager>().updatesCommand.value.length.toString(),
-                  ),
+                content: Text(context.l10n.checkForUpdatesConfirm(subLength)),
+                onConfirm: () => di<PodcastManager>().updatesCommand.runAsync(
+                  const PodcastUpdateCapsule.updateAll(),
                 ),
-                onConfirm: () => di<PodcastManager>().updatesCommand.runAsync(),
               );
             } else {
-              di<PodcastManager>().updatesCommand.run();
+              di<PodcastManager>().updatesCommand.run(
+                const PodcastUpdateCapsule.updateAll(),
+              );
             }
             manager.setUpdatesOnly(true);
             manager.setDownloadsOnly(false);

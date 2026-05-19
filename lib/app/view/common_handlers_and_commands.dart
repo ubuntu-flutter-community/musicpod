@@ -42,7 +42,7 @@ mixin CommonHandlersAndCommandsMixin {
         } else {
           di<NotificationsService>().notify(
             message: feedsWithUpdates.length == 1
-                ? '{$context.l10n.newEpisodeAvailable} ${di<PodcastManager>().getSubscribedPodcastName(feedsWithUpdates.first)} }'
+                ? '${context.l10n.newEpisodeAvailable} ${di<PodcastManager>().getSubscribedPodcastName(feedsWithUpdates.first)}'
                 : '${context.l10n.newEpisodesAvailableFor(feedsWithUpdates.length)}',
           );
         }

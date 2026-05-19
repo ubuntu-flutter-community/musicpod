@@ -58,26 +58,24 @@ class PodcastManager {
     };
   }
 
-  late final Command<PodcastUpdateCapsule?, Set<String>> updatesCommand =
-      Command.createAsyncWithProgress((param, handle) async {
-        final feedUrls = param?.feedUrls ?? _podcastService.podcastFeedUrls;
-
-        if (_podcastService.podcastUpdates.isEmpty) {
-          await _podcastService.loadPodcastUpdatesFromDb();
-        }
-
-        if (param?.type == PodcastUpdateCapsuleType.remove) {
-          for (final url in feedUrls) {
-            await _podcastService.removePodcastUpdate(url);
-          }
+  late final Command<PodcastUpdateCapsule, Set<String>> updatesCommand =
+      Command.createAsyncWithProgress((capsule, handle) async {
+        if (capsule.type == PodcastUpdateType.remove) {
+          await _podcastService.removePodcastUpdates(
+            feedUrls: capsule.feedUrls,
+            updateProgress: handle.updateProgress,
+          );
           return _podcastService.podcastUpdates;
         }
 
         final updates = await _podcastService.checkForUpdates(
-          feedUrls: feedUrls,
+          feedUrls: capsule.feedUrls,
           updateProgress: handle.updateProgress,
         );
-        for (final feedUrl in feedUrls) {
+        for (final feedUrl
+            in (capsule.feedUrls.isEmpty
+                ? _podcastService.podcastFeedUrls
+                : capsule.feedUrls)) {
           if (updates.contains(feedUrl)) {
             await getEpisodesCommand(
               feedUrl,
@@ -287,13 +285,19 @@ enum PodcastEpisodeFilter {
   };
 }
 
-enum PodcastUpdateCapsuleType { remove, update }
+enum PodcastUpdateType { remove, update }
 
 class PodcastUpdateCapsule {
-  final PodcastUpdateCapsuleType type;
-  final List<String>? feedUrls;
+  final PodcastUpdateType type;
+  final List<String> feedUrls;
 
-  PodcastUpdateCapsule({required this.type, this.feedUrls});
+  const PodcastUpdateCapsule({required this.type, required this.feedUrls});
+
+  const PodcastUpdateCapsule.updateAll()
+    : this(type: PodcastUpdateType.update, feedUrls: const []);
+
+  const PodcastUpdateCapsule.removeAll()
+    : this(type: PodcastUpdateType.remove, feedUrls: const []);
 }
 
 class PodcastToggleCapsule {

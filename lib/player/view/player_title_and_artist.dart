@@ -141,28 +141,22 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     );
   }
 
-  TextAlign _textAlign() {
-    return switch (playerPosition) {
-      PlayerPosition.bottom => TextAlign.start,
-      _ => TextAlign.center,
-    };
-  }
+  TextAlign _textAlign() => switch (playerPosition) {
+    PlayerPosition.bottom => TextAlign.start,
+    _ => TextAlign.center,
+  };
 
-  TextStyle _fullHeightTitleTextStyle(ThemeData theme) {
-    return TextStyle(
-      fontWeight: FontWeight.normal,
-      fontSize: 26,
-      color: theme.colorScheme.onSurface,
-    );
-  }
+  TextStyle _fullHeightTitleTextStyle(ThemeData theme) => TextStyle(
+    fontWeight: FontWeight.normal,
+    fontSize: 20,
+    color: theme.colorScheme.onSurface,
+  );
 
-  TextStyle _fullHeightArtistTextStyle(ThemeData theme) {
-    return TextStyle(
-      fontWeight: FontWeight.normal,
-      fontSize: 20,
-      color: theme.colorScheme.onSurface,
-    );
-  }
+  TextStyle _fullHeightArtistTextStyle(ThemeData theme) => TextStyle(
+    fontWeight: FontWeight.normal,
+    fontSize: 16,
+    color: theme.colorScheme.onSurface,
+  );
 
   TextStyle _bottomTitleTextStyle() =>
       const TextStyle(fontWeight: FontWeight.w400, fontSize: 14);
