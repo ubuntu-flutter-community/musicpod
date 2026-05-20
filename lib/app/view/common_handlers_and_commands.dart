@@ -9,7 +9,7 @@ import '../../patch_notes/patch_notes_dialog.dart';
 import '../../player/player_model.dart';
 import '../../player/player_service.dart';
 import '../../podcasts/data/podcast_download.dart';
-import '../../podcasts/download_manager.dart';
+import '../../podcasts/download_manager_master.dart';
 import '../../podcasts/podcast_manager.dart';
 import '../app_manager.dart';
 
@@ -18,18 +18,17 @@ mixin CommonHandlersAndCommandsMixin {
     registerStreamHandler(
       select: (DownloadManagerMaster m) => m.downloadStream,
       handler: (context, asyncData, cancel) {
-        if (!asyncData.hasData) return;
+        if (!asyncData.hasData ||
+            asyncData.data?.status == DownloadStatus.inProgress)
+          return;
         final result = asyncData.data!;
         context.toast(
           Text(switch (result) {
-            final PodcastDownload r
-                when r.status == PodcastDownloadStatus.downloaded =>
+            final PodcastDownload r when r.status == DownloadStatus.completed =>
               context.l10n.downloadFinished(r.audio.title ?? ''),
-            final PodcastDownload r
-                when r.status == PodcastDownloadStatus.removed =>
+            final PodcastDownload r when r.status == DownloadStatus.removed =>
               context.l10n.downloadRemoved(r.audio.title ?? ''),
-            final PodcastDownload r
-                when r.status == PodcastDownloadStatus.cancelled =>
+            final PodcastDownload r when r.status == DownloadStatus.cancelled =>
               context.l10n.downloadCancelled(r.audio.title ?? ''),
             _ => '',
           }),

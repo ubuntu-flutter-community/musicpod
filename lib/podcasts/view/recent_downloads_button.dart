@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../common/data/audio.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../data/podcast_download.dart';
+import '../download_manager.dart';
+import '../download_manager_master.dart';
 import 'download_button.dart';
 
 class RecentDownloadsButton extends StatefulWidget
@@ -44,16 +45,18 @@ class _RecentDownloadsButtonState extends State<RecentDownloadsButton>
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final downloadCommands = <Audio, Command<void, PodcastDownload>>{};
+    final lastDownload = watchStream(
+      (DownloadManagerMaster m) => m.downloadStream,
+      initialValue: di<DownloadManagerMaster>().lastDownload,
+    ).data;
+    final downloadCommands = watchValue((DownloadManager m) => m.downloads);
 
-    final activeDownloads = downloadCommands.values.where(
-      (v) => v.value.path == null,
-    );
-    final activeKeys = downloadCommands.keys;
-    final hasActiveDownloads = activeDownloads.isNotEmpty;
+    final hasActiveDownloads =
+        lastDownload?.status == DownloadStatus.inProgress;
 
     final recentDownloads = downloadCommands.values.where(
-      (v) => v.value.path != null,
+      (v) =>
+          v.value?.status == DownloadStatus.completed && v.value?.path != null,
     );
     final hasRecentDownloads = recentDownloads.isNotEmpty;
 
@@ -85,7 +88,7 @@ class _RecentDownloadsButtonState extends State<RecentDownloadsButton>
               ),
         onPressed: () => showDialog(
           context: context,
-          builder: (context) => AlertDialog(
+          builder: (context) => const AlertDialog(
             titlePadding: EdgeInsets.zero,
             title: const YaruDialogTitleBar(
               title: Text('Recent Downloads'),
@@ -95,62 +98,41 @@ class _RecentDownloadsButtonState extends State<RecentDownloadsButton>
             content: SizedBox(
               width: 400,
               height: 400,
-              child: CustomScrollView(
-                slivers: [
-                  SliverList.builder(
-                    itemCount: activeDownloads.length,
-                    itemBuilder: (context, index) {
-                      final episode = activeKeys.elementAt(index);
-                      final progress = activeDownloads
-                          .elementAt(index)
-                          .progress
-                          .value;
-                      return ListTile(
-                        onTap: () {
-                          if (progress == 1.0) {
-                            di<PlayerModel>().startPlaylist(
-                              audios: [episode],
-                              listName: 'Recent Downloads',
-                              index: 0,
-                            );
-                          }
-                        },
-                        title: Text(episode.title ?? context.l10n.unknown),
-                        subtitle: Text(episode.artist ?? context.l10n.unknown),
-                        trailing: DownloadButton(
-                          audio: episode,
-                          addPodcast: () async {},
-                        ),
-                      );
-                    },
-                  ),
-                  SliverList.builder(
-                    itemBuilder: (context, index) {
-                      final episode = activeKeys.elementAt(index);
-                      return ListTile(
-                        onTap: () {
-                          di<PlayerModel>().startPlaylist(
-                            audios: [episode],
-                            listName: 'Recent Downloads',
-                            index: 0,
-                          );
-                        },
-                        title: Text(episode.title ?? context.l10n.unknown),
-                        subtitle: Text(episode.artist ?? context.l10n.unknown),
-                        trailing: DownloadButton(
-                          audio: episode,
-                          addPodcast: () async {},
-                        ),
-                      );
-                    },
-                    itemCount: recentDownloads.length,
-                  ),
-                ],
-              ),
+              child: CustomScrollView(slivers: [RecentDownloads()]),
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class RecentDownloads extends StatelessWidget with WatchItMixin {
+  const RecentDownloads({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final downloadCommands = watchValue((DownloadManager m) => m.downloads);
+    final downloads = downloadCommands.keys.where(
+      (audio) => di<DownloadManager>().hasDownload(audio),
+    );
+    return SliverList.builder(
+      itemBuilder: (context, index) {
+        final episode = downloads.elementAt(index);
+        return ListTile(
+          onTap: () {
+            di<PlayerModel>().startPlaylist(
+              audios: [episode],
+              listName: 'Recent Downloads',
+              index: 0,
+            );
+          },
+          title: Text(episode.title ?? context.l10n.unknown),
+          subtitle: Text(episode.artist ?? context.l10n.unknown),
+          trailing: DownloadButton(audio: episode, addPodcast: () async {}),
+        );
+      },
+      itemCount: downloads.length,
     );
   }
 }

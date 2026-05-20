@@ -43,6 +43,8 @@ import 'player/mpv_metadata_manager.dart' as _i112;
 import 'player/player_model.dart' as _i1025;
 import 'player/player_service.dart' as _i38;
 import 'podcasts/download_manager.dart' as _i388;
+import 'podcasts/download_manager_master.dart' as _i611;
+import 'podcasts/download_service.dart' as _i616;
 import 'podcasts/podcast_manager.dart' as _i351;
 import 'podcasts/podcast_service.dart' as _i721;
 import 'radio/online_art_model.dart' as _i620;
@@ -108,10 +110,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i546.LocalLyricsService>(
       () => _i546.LocalLyricsService(),
-    );
-    gh.lazySingleton<_i388.DownloadManagerMaster>(
-      () => _i388.DownloadManagerMaster(),
-      dispose: (i) => i.dispose(),
     );
     gh.lazySingleton<_i1009.LicenseStore>(() => _i1009.LicenseStore());
     gh.lazySingleton<_i115.Database>(() => databaseModule.database);
@@ -193,17 +191,21 @@ extension GetItInjectableX on _i174.GetIt {
         radioService: gh<_i811.RadioService>(),
       ),
     );
+    gh.lazySingleton<_i616.DownloadService>(
+      () => _i616.DownloadService(
+        externalPathService: gh<_i551.ExternalPathService>(),
+        settingsService: gh<_i763.SettingsService>(),
+      ),
+    );
     gh.lazySingleton<_i987.ExposeManager>(
       () => _i987.ExposeManager(exposeService: gh<_i820.ExposeService>()),
     );
-    gh.factoryCached<_i388.DownloadManager>(
-      () => _i388.DownloadManager(
+    gh.lazySingleton<_i611.DownloadManagerMaster>(
+      () => _i611.DownloadManagerMaster(
         podcastService: gh<_i721.PodcastService>(),
-        settingsService: gh<_i763.SettingsService>(),
-        dio: gh<_i361.Dio>(),
-        externalPathService: gh<_i551.ExternalPathService>(),
-        master: gh<_i388.DownloadManagerMaster>(),
+        downloadService: gh<_i616.DownloadService>(),
       ),
+      dispose: (i) => i.dispose(),
     );
     await gh.singletonAsync<_i38.PlayerService>(
       () {
@@ -219,7 +221,7 @@ extension GetItInjectableX on _i174.GetIt {
       preResolve: true,
       dispose: (i) => i.dispose(),
     );
-    gh.factoryCached<_i351.PodcastManager>(
+    gh.singleton<_i351.PodcastManager>(
       () => _i351.PodcastManager(podcastService: gh<_i721.PodcastService>()),
     );
     await gh.singletonAsync<_i517.WindowSizeToSettingsListener>(() {
@@ -230,6 +232,12 @@ extension GetItInjectableX on _i174.GetIt {
       );
       return i.init().then((_) => i);
     }, preResolve: true);
+    gh.factoryCached<_i388.DownloadManager>(
+      () => _i388.DownloadManager(
+        podcastService: gh<_i721.PodcastService>(),
+        master: gh<_i611.DownloadManagerMaster>(),
+      ),
+    );
     gh.lazySingleton<_i971.RoutingManager>(
       () => _i971.RoutingManager(
         podcastService: gh<_i721.PodcastService>(),

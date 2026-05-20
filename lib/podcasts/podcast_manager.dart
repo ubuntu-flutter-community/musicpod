@@ -11,7 +11,9 @@ import 'data/podcast_toggle_capsule.dart';
 import 'data/podcast_update_capsule.dart';
 import 'podcast_service.dart';
 
-@Injectable(cache: true)
+// Note: we need to see the subbed podcasts at the start
+// thus we can't make this a lazy singleton or factory
+@singleton
 class PodcastManager {
   PodcastManager({required PodcastService podcastService})
     : _podcastService = podcastService {

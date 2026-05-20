@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../podcasts/view/recent_downloads_button.dart';
 import '../app_config.dart';
 import '../page_ids.dart';
 import '../../common/view/header_bar.dart';
@@ -24,6 +25,12 @@ class MasterPanel extends StatelessWidget {
     child: Column(
       children: [
         HeaderBar(
+          actions: [
+            Padding(
+              padding: EdgeInsets.only(right: kSmallestSpace),
+              child: const RecentDownloadsButton(),
+            ),
+          ],
           includeBackButton: false,
           includeSidebarButton: false,
           backgroundColor: Colors.transparent,

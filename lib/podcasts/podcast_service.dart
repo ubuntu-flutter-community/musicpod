@@ -330,13 +330,13 @@ class PodcastService {
     return null;
   }
 
-  Map<String, String> _downloads = {};
-  Map<String, String> get downloads => _downloads;
-  String? getDownload(String? url) {
+  Map<String, String> _downloadedFilePaths = {};
+  Map<String, String> get downloadedFilePaths => _downloadedFilePaths;
+  String? getDownloadFilePaths(String? url) {
     if (url == null) return null;
-    final download = _downloads[url];
+    final download = _downloadedFilePaths[url];
     return download != null && File(download).existsSync()
-        ? _downloads[url]
+        ? _downloadedFilePaths[url]
         : null;
   }
 
@@ -344,7 +344,7 @@ class PodcastService {
 
   Future<void> loadDownloadsFromDb() async {
     final rows = await _db.select(_db.downloadTable).get();
-    _downloads = {for (final r in rows) r.url: r.filePath};
+    _downloadedFilePaths = {for (final r in rows) r.url: r.filePath};
     feedsWithDownloads = rows.map((r) => r.feedUrl).toSet();
   }
 
@@ -353,8 +353,8 @@ class PodcastService {
     required String path,
     required String feedUrl,
   }) async {
-    if (_downloads.containsKey(url)) return;
-    _downloads[url] = path;
+    if (_downloadedFilePaths.containsKey(url)) return;
+    _downloadedFilePaths[url] = path;
     feedsWithDownloads.add(feedUrl);
     await _db
         .into(_db.downloadTable)
@@ -374,8 +374,8 @@ class PodcastService {
   }) async {
     _deleteDownload(url);
 
-    if (_downloads.containsKey(url)) {
-      _downloads.remove(url);
+    if (_downloadedFilePaths.containsKey(url)) {
+      _downloadedFilePaths.remove(url);
       feedsWithDownloads.remove(feedUrl);
       await (_db.delete(
         _db.downloadTable,
@@ -384,7 +384,7 @@ class PodcastService {
   }
 
   void _deleteDownload(String url) {
-    final path = _downloads[url];
+    final path = _downloadedFilePaths[url];
     if (path != null) {
       final file = File(path);
       if (file.existsSync()) {
@@ -394,10 +394,10 @@ class PodcastService {
   }
 
   Future<void> removeAllDownloads() async {
-    for (var download in _downloads.entries) {
+    for (var download in _downloadedFilePaths.entries) {
       _deleteDownload(download.key);
     }
-    _downloads.clear();
+    _downloadedFilePaths.clear();
     feedsWithDownloads.clear();
     await _db.delete(_db.downloadTable).go();
   }

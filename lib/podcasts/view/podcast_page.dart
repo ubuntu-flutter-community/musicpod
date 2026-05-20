@@ -73,6 +73,8 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
       (PlayerModel m) => m.toggleAudiosProgressCommand,
     );
 
+    watchValue((DownloadManager m) => m.downloads);
+
     final filter = watchValue((PodcastManager m) => m.filter);
     final filteredEpisodes = episodes
         .where((a) => a.title != null && a.episodeDescription != null)
@@ -97,11 +99,11 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
               lastPositions?[audio.url]?.inMilliseconds !=
                   audio.durationMs?.toInt();
         })
-        .where(
-          (audio) => showDownloadsOnly
-              ? di<DownloadManager>(param1: audio).hadDownload(audio)
-              : true,
-        )
+        .where((audio) {
+          if (!showDownloadsOnly) return true;
+
+          return di<DownloadManager>().hasDownload(audio);
+        })
         .toList();
 
     sortListByAudioFilter(
