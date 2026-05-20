@@ -47,10 +47,10 @@ class PodcastService {
   }
 
   SearchResult? _searchResult;
-  Search? _search;
+  late Search _search;
 
-  void initSearchProvider({bool forceInit = false}) {
-    if (_search == null || forceInit) {
+  SearchProvider initSearchProvider({bool forceInit = false}) {
+    if (forceInit) {
       _search = Search(
         searchProvider:
             _settingsService.getBool(SPKeys.usePodcastIndex) == true &&
@@ -65,6 +65,7 @@ class PodcastService {
             : const ITunesProvider(),
       );
     }
+    return _search.searchProvider;
   }
 
   List<PodcastGenre> get cachedPodcastGenres => _podcastGenreCache;
@@ -76,7 +77,7 @@ class PodcastService {
 
     var genres = <String>{};
     try {
-      genres = await _search?.genres().toSet() ?? <String>{};
+      genres = await _search.genres().toSet();
     } on Exception catch (e) {
       printMessageInDebugMode(e);
     }
@@ -101,7 +102,7 @@ class PodcastService {
     SearchResult? result;
     try {
       if (searchQuery == null || searchQuery.isEmpty == true) {
-        result = await _search?.charts(
+        result = await _search.charts(
           genre: podcastGenre == PodcastGenre.all ? '' : podcastGenre.id,
           limit: limit,
           country: country ?? Country.none,
@@ -110,7 +111,7 @@ class PodcastService {
               : language!.isoCode,
         );
       } else {
-        result = await _search?.search(
+        result = await _search.search(
           searchQuery,
           country: country ?? Country.none,
           language: country != null || language?.isoCode == null
@@ -125,13 +126,12 @@ class PodcastService {
       return _searchResult;
     }
     printMessageInDebugMode(
-      'Podcast search result: successful=${result?.successful}, '
-      'itemCount=${result?.items.length}, '
+      'Podcast search result: successful=${result.successful}, '
+      'itemCount=${result.items.length}, '
       'query=$searchQuery',
     );
 
-    if (result != null &&
-        result.successful &&
+    if (result.successful &&
         (searchQuery == null ||
             _previousQuery != searchQuery ||
             (_previousQuery == searchQuery &&
@@ -216,6 +216,11 @@ class PodcastService {
       return Future.value([]);
     }
 
+    printMessageInDebugMode(
+      'Finding episodes for feedUrl: ${feedUrl ?? item!.feedUrl}, '
+      'item: ${item != null ? item.trackName ?? item.collectionName : 'null'}',
+    );
+
     final url = feedUrl ?? item!.feedUrl!;
 
     final Podcast? podcast = await compute(loadPodcast, url);
@@ -242,9 +247,20 @@ class PodcastService {
       descending: true,
     );
 
+    // optimistically upsert episodes after finding them, so they are available faster when opening the podcast page
     await _upsertEpisodes(feedUrl: url, podcast: podcast, episodes: episodes);
 
     return episodes;
+  }
+
+  // For unsubscribed podcasts, we clean up episodes after some time to avoid filling up the database with old episodes of podcasts the user is no longer interested in.
+  Future<void> cleanUpEpisodesOfUnsubscribedPodcast(String feedUrl) async {
+    printMessageInDebugMode(
+      'Cleaning up episodes of unsubscribed podcast: $feedUrl',
+    );
+    await (_db.delete(
+      _db.podcastEpisodeTable,
+    )..where((t) => t.podcastFeedUrl.equals(feedUrl))).go();
   }
 
   Future<void> _upsertEpisodes({
@@ -332,7 +348,8 @@ class PodcastService {
 
   Map<String, String> _downloadedFilePaths = {};
   Map<String, String> get downloadedFilePaths => _downloadedFilePaths;
-  String? getDownloadFilePaths(String? url) {
+  String? getDownloadPath(Audio? audio) {
+    final url = audio?.url;
     if (url == null) return null;
     final download = _downloadedFilePaths[url];
     return download != null && File(download).existsSync()
@@ -346,6 +363,55 @@ class PodcastService {
     final rows = await _db.select(_db.downloadTable).get();
     _downloadedFilePaths = {for (final r in rows) r.url: r.filePath};
     feedsWithDownloads = rows.map((r) => r.feedUrl).toSet();
+    await _cleanUpDownloadMismatches(rows);
+  }
+
+  Future<void> _cleanUpDownloadMismatches(List<DownloadTableData> rows) async {
+    final nonExisting = <DownloadTableData>[];
+    for (final entry in rows) {
+      if (!File(entry.filePath).existsSync()) {
+        printMessageInDebugMode(
+          'Cleaning non-existing download:  [${entry.filePath} for URL: ${entry.url}]',
+        );
+        nonExisting.add(entry);
+      }
+    }
+
+    if (nonExisting.isNotEmpty) {
+      final urlsToDelete = nonExisting.map((e) => e.url).toList();
+      await (_db.delete(
+        _db.downloadTable,
+      )..where((t) => t.url.isIn(urlsToDelete))).go();
+      for (final entry in nonExisting) {
+        _downloadedFilePaths.remove(entry.url);
+      }
+
+      final remainingRows = rows
+          .where((r) => !urlsToDelete.contains(r.url))
+          .toList();
+      feedsWithDownloads = remainingRows.map((r) => r.feedUrl).toSet();
+    }
+
+    final downloadsDir = await _settingsService.downloadsDirOrDefault;
+    final realDownloadFilePaths = downloadsDir != null
+        ? Directory(
+            downloadsDir,
+          ).listSync().whereType<File>().map((f) => f.path).toSet()
+        : <String>{};
+
+    // delete files that do not have a corresponding entry in the database
+    for (final filePath in realDownloadFilePaths) {
+      if (!_downloadedFilePaths.containsValue(filePath)) {
+        printMessageInDebugMode(
+          'Deleting file without database entry: $filePath',
+        );
+        try {
+          File(filePath).deleteSync();
+        } on Exception catch (e) {
+          printMessageInDebugMode('Error deleting file: $e');
+        }
+      }
+    }
   }
 
   Future<void> addDownload({

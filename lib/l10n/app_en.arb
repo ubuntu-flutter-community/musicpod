@@ -844,5 +844,6 @@
     "playingMediaTimedOut": "Playing media timed out. This might be caused by a network error or server issues.",
     "playbackWasPausedByTimer": "Playback was paused by timer",
     "playbackTimerCancelled": "Playback timer cancelled",
-    "podcastDoesNotSendEpisodeDuration": "This podcast does not send episode duration. The mark done feature might not work as expected."
+    "podcastDoesNotSendEpisodeDuration": "This podcast does not send episode duration. The mark done feature might not work as expected.",
+    "cleanedUpEpisodesOfUnsubscribedPodcast": "Cleaned up episodes of unsubscribed podcast: {podcastName}"
 }

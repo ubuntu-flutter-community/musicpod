@@ -115,6 +115,17 @@ class PodcastManager {
   bool shouldRunCommand(String feedUrl) =>
       di<PodcastManager>().getEpisodesCommand(feedUrl).value.isEmpty;
 
+  late final Command<({String feedUrl, String name}), String?> cleanUpCommand =
+      Command.createAsync((param) async {
+        if (_podcastService.isPodcastSubscribed(param.feedUrl)) return null;
+
+        await _podcastService.cleanUpEpisodesOfUnsubscribedPodcast(
+          param.feedUrl,
+        );
+        _episodesCommands.remove(param.feedUrl);
+        return param.name;
+      }, initialValue: null);
+
   String? getSubscribedPodcastImage(String feedUrl) =>
       _podcastService.getSubscribedPodcastImage(feedUrl);
   String? getSubscribedPodcastName(String feedUrl) =>

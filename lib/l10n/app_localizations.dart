@@ -4592,6 +4592,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This podcast does not send episode duration. The mark done feature might not work as expected.'**
   String get podcastDoesNotSendEpisodeDuration;
+
+  /// No description provided for @cleanedUpEpisodesOfUnsubscribedPodcast.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleaned up episodes of unsubscribed podcast: {podcastName}'**
+  String cleanedUpEpisodesOfUnsubscribedPodcast(Object podcastName);
 }
 
 class _AppLocalizationsDelegate

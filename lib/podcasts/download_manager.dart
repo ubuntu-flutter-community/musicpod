@@ -26,22 +26,19 @@ class DownloadManager extends SafeChangeNotifier {
     notificationMode: CustomNotifierMode.manual,
   );
 
-  bool hasDownload(Audio audio) {
-    final downloadCommand = getCommand(audio);
-    return downloadCommand.value?.status == DownloadStatus.completed &&
-        downloadCommand.value?.path != null;
-  }
+  bool hasDownload(Audio audio) =>
+      getCommand(audio).value?.isDownload(audio) ?? false;
 
-  Command<void, PodcastDownload?> getCommand(Audio media) =>
-      commands.putIfAbsent(media, () => _createDownloadCommand(media));
+  Command<void, PodcastDownload?> getCommand(Audio audio) =>
+      commands.putIfAbsent(audio, () => _createDownloadCommand(audio));
 
-  Command<void, PodcastDownload> _createDownloadCommand(Audio media) =>
+  Command<void, PodcastDownload> _createDownloadCommand(Audio audio) =>
       Command.createAsyncNoParamWithProgress(
         (handle) async {
           final cancelToken = CancelToken();
 
           try {
-            if (_podcastService.getDownloadFilePaths(media.url) == null) {
+            if (_podcastService.getDownloadPath(audio) == null) {
               handle.isCanceled.listen((canceled, subscription) {
                 if (canceled) {
                   handle.updateProgress(0.0);
@@ -52,12 +49,12 @@ class DownloadManager extends SafeChangeNotifier {
               _master.update(
                 PodcastDownload(
                   status: DownloadStatus.inProgress,
-                  audio: media,
+                  audio: audio,
                   path: null,
                 ),
               );
               final download = await _podcastService.download(
-                episode: media,
+                episode: audio,
                 cancelToken: cancelToken,
                 onProgress: (received, total) {
                   handle.updateProgress(received / total);
@@ -66,20 +63,20 @@ class DownloadManager extends SafeChangeNotifier {
               return _master.update(
                 PodcastDownload(
                   status: DownloadStatus.completed,
-                  audio: media,
+                  audio: audio,
                   path: download,
                 ),
               );
             } else {
               await _podcastService.removeDownload(
-                url: media.url!,
-                feedUrl: media.feedUrl!,
+                url: audio.url!,
+                feedUrl: audio.feedUrl!,
               );
 
               return _master.update(
                 PodcastDownload(
                   status: DownloadStatus.removed,
-                  audio: media,
+                  audio: audio,
                   path: null,
                 ),
               );
@@ -88,7 +85,7 @@ class DownloadManager extends SafeChangeNotifier {
             return _master.update(
               PodcastDownload(
                 status: DownloadStatus.cancelled,
-                audio: media,
+                audio: audio,
                 path: null,
               ),
             );
@@ -96,13 +93,9 @@ class DownloadManager extends SafeChangeNotifier {
             commands.notifyListeners();
           }
         },
-
-        initialValue: PodcastDownload(
-          status: _podcastService.getDownloadFilePaths(media.url) != null
-              ? DownloadStatus.completed
-              : DownloadStatus.removed,
-          audio: media,
-          path: _podcastService.getDownloadFilePaths(media.url),
+        initialValue: PodcastDownload.initial(
+          audio: audio,
+          path: _podcastService.getDownloadPath(audio),
         ),
       );
 }

@@ -11,6 +11,12 @@ class PodcastDownload {
     required this.path,
   });
 
+  const PodcastDownload.initial({required this.audio, required this.path})
+    : status = path != null ? DownloadStatus.completed : DownloadStatus.removed;
+
+  bool isDownload(Audio audio) =>
+      status == DownloadStatus.completed && audio == this.audio && path != null;
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;

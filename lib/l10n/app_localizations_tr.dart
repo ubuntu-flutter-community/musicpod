@@ -2366,4 +2366,9 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get podcastDoesNotSendEpisodeDuration =>
       'This podcast does not send episode duration. The mark done feature might not work as expected.';
+
+  @override
+  String cleanedUpEpisodesOfUnsubscribedPodcast(Object podcastName) {
+    return 'Cleaned up episodes of unsubscribed podcast: $podcastName';
+  }
 }

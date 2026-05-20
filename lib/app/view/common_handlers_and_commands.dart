@@ -70,6 +70,19 @@ mixin CommonHandlersAndCommandsMixin {
       },
     );
 
+    registerHandler(
+      select: (PodcastManager m) => m.cleanUpCommand,
+      handler: (context, name, cancel) {
+        if (name != null) {
+          context.toast(
+            Text(
+              '${context.l10n.cleanedUpEpisodesOfUnsubscribedPodcast(name)}',
+            ),
+          );
+        }
+      },
+    );
+
     callOnceAfterThisBuild((context) {
       final appManager = di<AppManager>();
       appManager.backupNeededCommand.run();

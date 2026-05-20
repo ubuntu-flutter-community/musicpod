@@ -292,10 +292,7 @@ class PlayerService {
       if (audio == null) return;
 
       if (_audio!.url != null && _audio!.isPodcast) {
-        _audio = audio?.copyWith(
-          // TODO: check if download actually exists and throw if saved in lib without existing
-          path: _podcastService.getDownloadFilePaths(_audio!.url!),
-        );
+        _audio = audio?.copyWith(path: _podcastService.getDownloadPath(_audio));
       }
 
       final Media? media = audio!.path != null

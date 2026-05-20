@@ -42,6 +42,10 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
+    onDispose(() {
+      di<PodcastManager>().cleanUpCommand.run((feedUrl: feedUrl, name: title));
+    });
+
     final showPodcastsAscending = watchValue(
       (PodcastManager m) =>
           m.reorderPodcastCommand.select((v) => v.contains(feedUrl)),
