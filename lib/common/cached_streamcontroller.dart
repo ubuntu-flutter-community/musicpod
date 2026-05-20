@@ -17,7 +17,7 @@ class CachedStreamController<T> {
   }
 
   void addError(Object error, [StackTrace? stackTrace]) {
-    _lastError = value;
+    _lastError = error;
     _streamController.addError(error, stackTrace);
   }
 
