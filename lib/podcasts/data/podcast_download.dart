@@ -1,11 +1,11 @@
 import '../../common/data/audio.dart';
 
-class PodcastDownloadResult {
+class PodcastDownload {
   final PodcastDownloadStatus status;
   final Audio audio;
   final String? path;
 
-  const PodcastDownloadResult({
+  const PodcastDownload({
     required this.status,
     required this.audio,
     required this.path,

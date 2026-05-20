@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../common/data/audio.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
-import '../download_manager.dart';
+import '../data/podcast_download.dart';
 import 'download_button.dart';
 
 class RecentDownloadsButton extends StatefulWidget
@@ -43,18 +44,16 @@ class _RecentDownloadsButtonState extends State<RecentDownloadsButton>
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final downloadCommands = watchValue(
-      (DownloadManager m) => m.downloadCommands,
-    );
+    final downloadCommands = <Audio, Command<void, PodcastDownload>>{};
 
     final activeDownloads = downloadCommands.values.where(
-      (v) => v.value?.path == null,
+      (v) => v.value.path == null,
     );
     final activeKeys = downloadCommands.keys;
     final hasActiveDownloads = activeDownloads.isNotEmpty;
 
     final recentDownloads = downloadCommands.values.where(
-      (v) => v.value?.path != null,
+      (v) => v.value.path != null,
     );
     final hasRecentDownloads = recentDownloads.isNotEmpty;
 

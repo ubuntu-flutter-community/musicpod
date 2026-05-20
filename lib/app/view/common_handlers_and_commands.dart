@@ -8,7 +8,7 @@ import '../../notifications/notifications_service.dart';
 import '../../patch_notes/patch_notes_dialog.dart';
 import '../../player/player_model.dart';
 import '../../player/player_service.dart';
-import '../../podcasts/data/podcast_download_result.dart';
+import '../../podcasts/data/podcast_download.dart';
 import '../../podcasts/download_manager.dart';
 import '../../podcasts/podcast_manager.dart';
 import '../app_manager.dart';
@@ -16,19 +16,19 @@ import '../app_manager.dart';
 mixin CommonHandlersAndCommandsMixin {
   void setupCommonHandlersAndCommands(BuildContext context) {
     registerStreamHandler(
-      select: (DownloadManager m) => m.downloadStream,
+      select: (DownloadManagerMaster m) => m.downloadStream,
       handler: (context, asyncData, cancel) {
         if (!asyncData.hasData) return;
         final result = asyncData.data!;
         context.toast(
           Text(switch (result) {
-            final PodcastDownloadResult r
+            final PodcastDownload r
                 when r.status == PodcastDownloadStatus.downloaded =>
               context.l10n.downloadFinished(r.audio.title ?? ''),
-            final PodcastDownloadResult r
+            final PodcastDownload r
                 when r.status == PodcastDownloadStatus.removed =>
               context.l10n.downloadRemoved(r.audio.title ?? ''),
-            final PodcastDownloadResult r
+            final PodcastDownload r
                 when r.status == PodcastDownloadStatus.cancelled =>
               context.l10n.downloadCancelled(r.audio.title ?? ''),
             _ => '',

@@ -9,12 +9,24 @@ import 'package:path/path.dart' as p;
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
+import '../common/logging.dart';
 import '../extensions/build_context_x.dart';
 import '../external_path/external_path_service.dart';
 import '../settings/settings_service.dart';
 import '../settings/shared_preferences_keys.dart';
-import 'data/podcast_download_result.dart';
+import 'data/podcast_download.dart';
 import 'podcast_service.dart';
+
+@lazySingleton
+class DownloadManagerMaster {
+  final _downloadController = StreamController<PodcastDownload>.broadcast();
+  void addDownloadResult(PodcastDownload result) =>
+      _downloadController.add(result);
+  Stream<PodcastDownload> get downloadStream => _downloadController.stream;
+
+  @disposeMethod
+  Future<void> dispose() => _downloadController.close();
+}
 
 @Injectable(cache: true)
 class DownloadManager extends SafeChangeNotifier {
@@ -23,35 +35,32 @@ class DownloadManager extends SafeChangeNotifier {
     required SettingsService settingsService,
     required Dio dio,
     required ExternalPathService externalPathService,
+    required DownloadManagerMaster master,
   }) : _podcastService = podcastService,
        _settingsService = settingsService,
-
+       _master = master,
        _externalPathService = externalPathService {
     downloadsDirCommand.run((setNewDir: false));
+    printMessageInDebugMode('Initialized', tag: '$DownloadManager');
   }
 
   final PodcastService _podcastService;
   final SettingsService _settingsService;
   final ExternalPathService _externalPathService;
+  final DownloadManagerMaster _master;
 
-  final downloadCommands =
-      MapNotifier<Audio, Command<void, PodcastDownloadResult?>>(
-        notificationMode: CustomNotifierMode.manual,
-      );
-
-  final _downloadController =
-      StreamController<PodcastDownloadResult>.broadcast();
-  Stream<PodcastDownloadResult> get downloadStream =>
-      _downloadController.stream;
+  final downloadCommands = MapNotifier<Audio, Command<void, PodcastDownload?>>(
+    notificationMode: CustomNotifierMode.manual,
+  );
 
   bool hadDownload(Audio audio) =>
       _podcastService.getDownload(audio.url) != null;
 
-  Command<void, PodcastDownloadResult?> getDownloadCommand(Audio media) =>
+  Command<void, PodcastDownload?> getDownloadCommand(Audio media) =>
       downloadCommands.putIfAbsent(media, () => _createDownloadCommand(media));
 
-  Command<void, PodcastDownloadResult> _createDownloadCommand(Audio media) {
-    final Command<void, PodcastDownloadResult> command =
+  Command<void, PodcastDownload> _createDownloadCommand(Audio media) {
+    final Command<void, PodcastDownload> command =
         Command.createAsyncNoParamWithProgress(
           (handle) async {
             final cancelToken = CancelToken();
@@ -65,7 +74,7 @@ class DownloadManager extends SafeChangeNotifier {
                     subscription.cancel();
                   }
                 });
-                final podcastDownloadResult = PodcastDownloadResult(
+                final podcastDownloadResult = PodcastDownload(
                   status: PodcastDownloadStatus.downloaded,
                   audio: media,
                   path: await _podcastService.download(
@@ -76,36 +85,34 @@ class DownloadManager extends SafeChangeNotifier {
                     },
                   ),
                 );
-                _downloadController.add(podcastDownloadResult);
+                _master.addDownloadResult(podcastDownloadResult);
                 return podcastDownloadResult;
               } else {
                 await _podcastService.removeDownload(
                   url: media.url!,
                   feedUrl: media.feedUrl!,
                 );
-                final podcastDownloadResult = PodcastDownloadResult(
+                final podcastDownloadResult = PodcastDownload(
                   status: PodcastDownloadStatus.removed,
                   audio: media,
                   path: null,
                 );
 
-                _downloadController.add(podcastDownloadResult);
+                _master.addDownloadResult(podcastDownloadResult);
                 return podcastDownloadResult;
               }
             } on Exception catch (_) {
-              final podcastDownloadResult = PodcastDownloadResult(
+              final podcastDownloadResult = PodcastDownload(
                 status: PodcastDownloadStatus.cancelled,
                 audio: media,
                 path: null,
               );
-              _downloadController.add(podcastDownloadResult);
+              _master.addDownloadResult(podcastDownloadResult);
               return podcastDownloadResult;
-            } finally {
-              downloadCommands.notifyListeners();
             }
           },
 
-          initialValue: PodcastDownloadResult(
+          initialValue: PodcastDownload(
             status: _podcastService.getDownload(media.url) != null
                 ? PodcastDownloadStatus.downloaded
                 : PodcastDownloadStatus.removed,

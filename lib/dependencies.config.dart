@@ -109,6 +109,10 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i546.LocalLyricsService>(
       () => _i546.LocalLyricsService(),
     );
+    gh.lazySingleton<_i388.DownloadManagerMaster>(
+      () => _i388.DownloadManagerMaster(),
+      dispose: (i) => i.dispose(),
+    );
     gh.lazySingleton<_i1009.LicenseStore>(() => _i1009.LicenseStore());
     gh.lazySingleton<_i115.Database>(() => databaseModule.database);
     gh.lazySingleton<_i328.OnlineArtService>(
@@ -198,6 +202,7 @@ extension GetItInjectableX on _i174.GetIt {
         settingsService: gh<_i763.SettingsService>(),
         dio: gh<_i361.Dio>(),
         externalPathService: gh<_i551.ExternalPathService>(),
+        master: gh<_i388.DownloadManagerMaster>(),
       ),
     );
     await gh.singletonAsync<_i38.PlayerService>(

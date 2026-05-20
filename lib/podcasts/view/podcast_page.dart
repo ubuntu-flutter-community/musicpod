@@ -99,7 +99,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
         })
         .where(
           (audio) => showDownloadsOnly
-              ? di<DownloadManager>().hadDownload(audio)
+              ? di<DownloadManager>(param1: audio).hadDownload(audio)
               : true,
         )
         .toList();
