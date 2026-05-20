@@ -49,16 +49,15 @@ class _RecentDownloadsButtonState extends State<RecentDownloadsButton>
       (DownloadManagerMaster m) => m.downloadStream,
       initialValue: di<DownloadManagerMaster>().lastDownload,
     ).data;
-    final downloadCommands = watchValue((DownloadManager m) => m.downloads);
+    final downloadCommands = watchValue((DownloadManager m) => m.commands);
+    final downloads = downloadCommands.keys.where(
+      (audio) => di<DownloadManager>().hasDownload(audio),
+    );
 
     final hasActiveDownloads =
         lastDownload?.status == DownloadStatus.inProgress;
 
-    final recentDownloads = downloadCommands.values.where(
-      (v) =>
-          v.value?.status == DownloadStatus.completed && v.value?.path != null,
-    );
-    final hasRecentDownloads = recentDownloads.isNotEmpty;
+    final hasRecentDownloads = downloads.isNotEmpty;
 
     if (hasActiveDownloads) {
       if (!_controller.isAnimating) {
@@ -112,7 +111,7 @@ class RecentDownloads extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final downloadCommands = watchValue((DownloadManager m) => m.downloads);
+    final downloadCommands = watchValue((DownloadManager m) => m.commands);
     final downloads = downloadCommands.keys.where(
       (audio) => di<DownloadManager>().hasDownload(audio),
     );

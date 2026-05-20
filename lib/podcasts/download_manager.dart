@@ -22,18 +22,18 @@ class DownloadManager extends SafeChangeNotifier {
   final PodcastService _podcastService;
   final DownloadManagerMaster _master;
 
-  final downloads = MapNotifier<Audio, Command<void, PodcastDownload?>>(
+  final commands = MapNotifier<Audio, Command<void, PodcastDownload?>>(
     notificationMode: CustomNotifierMode.manual,
   );
 
   bool hasDownload(Audio audio) {
-    final downloadCommand = getDownloadCommand(audio);
+    final downloadCommand = getCommand(audio);
     return downloadCommand.value?.status == DownloadStatus.completed &&
         downloadCommand.value?.path != null;
   }
 
-  Command<void, PodcastDownload?> getDownloadCommand(Audio media) =>
-      downloads.putIfAbsent(media, () => _createDownloadCommand(media));
+  Command<void, PodcastDownload?> getCommand(Audio media) =>
+      commands.putIfAbsent(media, () => _createDownloadCommand(media));
 
   Command<void, PodcastDownload> _createDownloadCommand(Audio media) =>
       Command.createAsyncNoParamWithProgress(
@@ -93,7 +93,7 @@ class DownloadManager extends SafeChangeNotifier {
               ),
             );
           } finally {
-            downloads.notifyListeners();
+            commands.notifyListeners();
           }
         },
 

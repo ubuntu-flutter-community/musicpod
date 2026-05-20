@@ -27,10 +27,10 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
     final theme = context.theme;
 
     final progress = watchValue(
-      (DownloadManager m) => m.getDownloadCommand(audio).progress,
+      (DownloadManager m) => m.getCommand(audio).progress,
     );
     final results = watchValue(
-      (DownloadManager m) => m.getDownloadCommand(audio).results,
+      (DownloadManager m) => m.getCommand(audio).results,
     );
     final result = results.data;
     final isRunning = results.isRunning;
@@ -50,14 +50,12 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
             color: hasDownload ? theme.colorScheme.primary : null,
           ),
           onPressed: () {
-            final downloadCommand = di<DownloadManager>().getDownloadCommand(
-              audio,
-            );
+            final downloadCommand = di<DownloadManager>().getCommand(audio);
             if (!di<PodcastManager>().isPodcastSubscribed(audio.feedUrl)) {
               addPodcast();
             }
 
-            if (downloadCommand.isRunning.value) {
+            if (isRunning) {
               downloadCommand.cancel();
             } else {
               downloadCommand.run(audio);

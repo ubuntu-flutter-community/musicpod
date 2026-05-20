@@ -73,7 +73,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
       (PlayerModel m) => m.toggleAudiosProgressCommand,
     );
 
-    watchValue((DownloadManager m) => m.downloads);
+    watchValue((DownloadManager m) => m.commands);
 
     final filter = watchValue((PodcastManager m) => m.filter);
     final filteredEpisodes = episodes
