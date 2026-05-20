@@ -22,6 +22,7 @@ import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../settings/view/settings_action.dart';
+import '../data/podcast_update_capsule.dart';
 import '../podcast_manager.dart';
 import 'podcast_collection_control_panel.dart';
 

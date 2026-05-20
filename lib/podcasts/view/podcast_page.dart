@@ -17,6 +17,9 @@ import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
 import '../../settings/settings_model.dart';
+import '../data/podcast_episode_filter.dart';
+import '../data/podcast_update_capsule.dart';
+import '../download_manager.dart';
 import '../podcast_manager.dart';
 import 'podcast_page_control_panel.dart';
 import 'podcast_page_header.dart';
@@ -96,7 +99,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
         })
         .where(
           (audio) => showDownloadsOnly
-              ? di<PodcastManager>().hadDownload(audio)
+              ? di<DownloadManager>().hadDownload(audio)
               : true,
         )
         .toList();

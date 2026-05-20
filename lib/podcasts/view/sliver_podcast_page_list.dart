@@ -4,6 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../app/connectivity_manager.dart';
 import '../../common/data/audio.dart';
 import '../../player/player_model.dart';
+import '../data/podcast_toggle_capsule.dart';
 import '../podcast_manager.dart';
 import 'podcast_audio_tile.dart';
 

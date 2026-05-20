@@ -5,7 +5,7 @@ import 'package:yaru/yaru.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
-import '../podcast_manager.dart';
+import '../download_manager.dart';
 import 'download_button.dart';
 
 class RecentDownloadsButton extends StatefulWidget
@@ -44,7 +44,7 @@ class _RecentDownloadsButtonState extends State<RecentDownloadsButton>
   Widget build(BuildContext context) {
     final theme = context.theme;
     final downloadCommands = watchValue(
-      (PodcastManager m) => m.downloadCommands,
+      (DownloadManager m) => m.downloadCommands,
     );
 
     final activeDownloads = downloadCommands.values.where(

@@ -6,6 +6,7 @@ import '../../app/connectivity_manager.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
 import '../../l10n/l10n.dart';
+import '../data/podcast_update_capsule.dart';
 import '../podcast_manager.dart';
 import 'lazy_podcast_loading_page.dart';
 import 'podcast_page.dart';

@@ -8,13 +8,15 @@ import '../../notifications/notifications_service.dart';
 import '../../patch_notes/patch_notes_dialog.dart';
 import '../../player/player_model.dart';
 import '../../player/player_service.dart';
+import '../../podcasts/data/podcast_download_result.dart';
+import '../../podcasts/download_manager.dart';
 import '../../podcasts/podcast_manager.dart';
 import '../app_manager.dart';
 
 mixin CommonHandlersAndCommandsMixin {
   void setupCommonHandlersAndCommands(BuildContext context) {
     registerStreamHandler(
-      select: (PodcastManager m) => m.downloadStream,
+      select: (DownloadManager m) => m.downloadStream,
       handler: (context, asyncData, cancel) {
         if (!asyncData.hasData) return;
         final result = asyncData.data!;

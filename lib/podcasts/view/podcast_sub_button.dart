@@ -4,6 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
+import '../data/podcast_toggle_capsule.dart';
 import '../podcast_manager.dart';
 
 class PodcastSubButton extends StatelessWidget with WatchItMixin {
@@ -39,14 +40,16 @@ class PodcastSubButton extends StatelessWidget with WatchItMixin {
         subscribed ? Iconz.removeFromLibrary : Iconz.addToLibrary,
         color: subscribed || disabled ? null : context.colorScheme.primary,
       ),
-      onPressed: () => podcastManager.togglePodcastCommand.run(
-        PodcastToggleCapsule(
-          feedUrl: pageId,
-          imageUrl: imageUrl,
-          name: name,
-          artist: artist,
-        ),
-      ),
+      onPressed: disabled
+          ? null
+          : () => podcastManager.togglePodcastCommand.run(
+              PodcastToggleCapsule(
+                feedUrl: pageId,
+                imageUrl: imageUrl,
+                name: name,
+                artist: artist,
+              ),
+            ),
     );
   }
 }

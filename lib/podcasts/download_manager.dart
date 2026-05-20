@@ -13,9 +13,10 @@ import '../extensions/build_context_x.dart';
 import '../external_path/external_path_service.dart';
 import '../settings/settings_service.dart';
 import '../settings/shared_preferences_keys.dart';
+import 'data/podcast_download_result.dart';
 import 'podcast_service.dart';
 
-@lazySingleton
+@Injectable(cache: true)
 class DownloadManager extends SafeChangeNotifier {
   DownloadManager({
     required PodcastService podcastService,
@@ -24,41 +25,96 @@ class DownloadManager extends SafeChangeNotifier {
     required ExternalPathService externalPathService,
   }) : _podcastService = podcastService,
        _settingsService = settingsService,
-       _dio = dio,
+
        _externalPathService = externalPathService {
     downloadsDirCommand.run((setNewDir: false));
   }
 
   final PodcastService _podcastService;
   final SettingsService _settingsService;
-  final Dio _dio;
   final ExternalPathService _externalPathService;
 
-  final _values = <String, double?>{};
-  final _cancelTokens = <String, CancelToken?>{};
-  final _messageStreamController = StreamController<String>.broadcast();
-  String _lastMessage = '';
-  void _addMessage(String message) {
-    if (message == _lastMessage) return;
-    _lastMessage = message;
-    _messageStreamController.add(message);
-  }
+  final downloadCommands =
+      MapNotifier<Audio, Command<void, PodcastDownloadResult?>>(
+        notificationMode: CustomNotifierMode.manual,
+      );
 
-  Stream<String> get messageStream => _messageStreamController.stream;
+  final _downloadController =
+      StreamController<PodcastDownloadResult>.broadcast();
+  Stream<PodcastDownloadResult> get downloadStream =>
+      _downloadController.stream;
 
-  double? getValue(String? url) => _values[url];
-  void _setValue({
-    required int received,
-    required int total,
-    required String url,
-  }) {
-    if (total <= 0) return;
-    final v = received / total;
-    _values.containsKey(url)
-        ? _values.update(url, (value) => v)
-        : _values.putIfAbsent(url, () => v);
+  bool hadDownload(Audio audio) =>
+      _podcastService.getDownload(audio.url) != null;
 
-    notifyListeners();
+  Command<void, PodcastDownloadResult?> getDownloadCommand(Audio media) =>
+      downloadCommands.putIfAbsent(media, () => _createDownloadCommand(media));
+
+  Command<void, PodcastDownloadResult> _createDownloadCommand(Audio media) {
+    final Command<void, PodcastDownloadResult> command =
+        Command.createAsyncNoParamWithProgress(
+          (handle) async {
+            final cancelToken = CancelToken();
+
+            try {
+              if (_podcastService.getDownload(media.url) == null) {
+                handle.isCanceled.listen((canceled, subscription) {
+                  if (canceled) {
+                    handle.updateProgress(0.0);
+                    cancelToken.cancel();
+                    subscription.cancel();
+                  }
+                });
+                final podcastDownloadResult = PodcastDownloadResult(
+                  status: PodcastDownloadStatus.downloaded,
+                  audio: media,
+                  path: await _podcastService.download(
+                    episode: media,
+                    cancelToken: cancelToken,
+                    onProgress: (received, total) {
+                      handle.updateProgress(received / total);
+                    },
+                  ),
+                );
+                _downloadController.add(podcastDownloadResult);
+                return podcastDownloadResult;
+              } else {
+                await _podcastService.removeDownload(
+                  url: media.url!,
+                  feedUrl: media.feedUrl!,
+                );
+                final podcastDownloadResult = PodcastDownloadResult(
+                  status: PodcastDownloadStatus.removed,
+                  audio: media,
+                  path: null,
+                );
+
+                _downloadController.add(podcastDownloadResult);
+                return podcastDownloadResult;
+              }
+            } on Exception catch (_) {
+              final podcastDownloadResult = PodcastDownloadResult(
+                status: PodcastDownloadStatus.cancelled,
+                audio: media,
+                path: null,
+              );
+              _downloadController.add(podcastDownloadResult);
+              return podcastDownloadResult;
+            } finally {
+              downloadCommands.notifyListeners();
+            }
+          },
+
+          initialValue: PodcastDownloadResult(
+            status: _podcastService.getDownload(media.url) != null
+                ? PodcastDownloadStatus.downloaded
+                : PodcastDownloadStatus.removed,
+            audio: media,
+            path: _podcastService.getDownload(media.url),
+          ),
+        );
+
+    return command;
   }
 
   late final Command<({bool setNewDir}), String?> downloadsDirCommand =
@@ -68,7 +124,7 @@ class DownloadManager extends SafeChangeNotifier {
         }
 
         final dir = await setDownloadsCustomDir();
-        await deleteAllDownloads();
+        await _podcastService.removeAllDownloads();
         return dir;
       }, initialValue: null);
 
@@ -99,120 +155,6 @@ class DownloadManager extends SafeChangeNotifier {
     }
 
     return null;
-  }
-
-  Future<void> deleteDownload({required Audio? audio}) async {
-    if (audio?.url != null &&
-        (downloadsDirCommand.value) != null &&
-        audio?.feedUrl != null) {
-      await _podcastService.removeDownload(
-        url: audio!.url!,
-        feedUrl: audio.feedUrl!,
-      );
-      if (_values.containsKey(audio.url)) {
-        _values.update(audio.url!, (value) => null);
-      }
-
-      notifyListeners();
-    }
-  }
-
-  Future<void> deleteAllDownloads() async {
-    if ((downloadsDirCommand.value) != null) {
-      await _podcastService.removeAllDownloads();
-      _values.clear();
-
-      notifyListeners();
-    }
-  }
-
-  Future<void> startDownload({
-    required Audio? audio,
-    required String canceledMessage,
-    required String finishedMessage,
-  }) async {
-    final downloadsDir = downloadsDirCommand.value;
-    if (downloadsDir == null) {
-      _addMessage('No downloads directory set');
-      return;
-    }
-    if (audio?.url == null) return;
-    final url = audio!.url!;
-
-    if (_cancelTokens[url] != null) {
-      _cancelTokens[url]?.cancel();
-      _values.containsKey(url)
-          ? _values.update(url, (value) => null)
-          : _values.putIfAbsent(url, () => null);
-      _cancelTokens.update(url, (value) => null);
-      notifyListeners();
-      return;
-    }
-
-    _dio.interceptors.add(LogInterceptor());
-    _dio.options.headers = {HttpHeaders.acceptEncodingHeader: '*'};
-
-    if (!Directory(downloadsDir).existsSync()) {
-      Directory(downloadsDir).createSync();
-    }
-
-    final path = p.join(downloadsDir, audio.podcastDownloadId);
-    await _download(
-      canceledMessage: canceledMessage,
-      url: url,
-      path: path,
-      name: audio.title ?? '',
-    ).then((response) async {
-      if (response?.statusCode == 200 && audio.feedUrl != null) {
-        await _podcastService.addDownload(
-          url: url,
-          path: path,
-          feedUrl: audio.feedUrl!,
-        );
-        _addMessage(finishedMessage);
-
-        _cancelTokens.containsKey(url)
-            ? _cancelTokens.update(url, (value) => null)
-            : _cancelTokens.putIfAbsent(url, () => null);
-      }
-    });
-  }
-
-  Future<Response<dynamic>?> _download({
-    required String url,
-    required String path,
-    required String name,
-    required String canceledMessage,
-  }) async {
-    _cancelTokens.containsKey(url)
-        ? _cancelTokens.update(url, (value) => CancelToken())
-        : _cancelTokens.putIfAbsent(url, () => CancelToken());
-    try {
-      return await _dio.download(
-        url,
-        path,
-        onReceiveProgress: (count, total) =>
-            _setValue(received: count, total: total, url: url),
-        cancelToken: _cancelTokens[url],
-      );
-    } catch (e) {
-      _cancelTokens[url]?.cancel();
-
-      String? message;
-      if (e.toString().contains('[request cancelled]')) {
-        message = canceledMessage;
-      }
-
-      _addMessage(message ?? e.toString());
-      return null;
-    }
-  }
-
-  @disposeMethod
-  @override
-  Future<void> dispose() async {
-    await _messageStreamController.close();
-    super.dispose();
   }
 }
 

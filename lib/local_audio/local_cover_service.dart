@@ -22,16 +22,6 @@ class LocalCoverService {
 
   LocalCoverService({required Database database}) : _db = database;
 
-  Future<Map<int, Uint8List?>> init() async {
-    final _cache = <int, Uint8List?>{};
-
-    final existing = await _db.select(_db.albumArtTable).get();
-    for (final row in existing) {
-      _cache[row.album] = row.pictureData;
-    }
-    return _cache;
-  }
-
   Future<Uint8List?> getCover({
     required int albumId,
     required String path,

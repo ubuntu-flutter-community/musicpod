@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../common/view/adaptive_multi_layout_body.dart';
 import '../../common/view/header_bar.dart';
-import 'podcast_page_control_panel.dart';
 import 'podcast_page_header.dart';
 
 class LazyPodcastLoadingPage extends StatelessWidget {
@@ -27,13 +26,8 @@ class LazyPodcastLoadingPage extends StatelessWidget {
         episodes: [],
         showFallbackIcon: false,
       ),
-      sliverBody: (constraints) =>
-          SliverFillRemaining(hasScrollBody: false, child: child),
-      controlPanel: const PodcastPageControlPanel(
-        feedUrl: '',
-        audios: [],
-        title: '',
-      ),
+      sliverBody: (constraints) => SliverToBoxAdapter(child: child),
+      controlPanel: const SizedBox.shrink(),
     ),
   );
 }

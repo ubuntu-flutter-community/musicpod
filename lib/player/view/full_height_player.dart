@@ -52,13 +52,11 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
 
     return Column(
       children: [
-        if (!isMobile)
-          FullHeightPlayerHeaderBar(
-            isVideo: isVideo,
-            playerPosition: playerPosition,
-          )
-        else
-          const SizedBox(height: 40),
+        FullHeightPlayerHeaderBar(
+          isVideo: isVideo,
+          playerPosition: playerPosition,
+        ),
+        const SizedBox(height: 40),
         Expanded(child: body),
       ],
     );

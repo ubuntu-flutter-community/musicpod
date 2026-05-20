@@ -6,6 +6,7 @@ import '../../common/view/common_control_panel.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/offline_page.dart';
 import '../../l10n/l10n.dart';
+import '../data/podcast_update_capsule.dart';
 import '../podcast_manager.dart';
 
 class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {

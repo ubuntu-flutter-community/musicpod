@@ -7,6 +7,7 @@ import '../../common/view/progress.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
+import '../download_manager.dart';
 import '../podcast_manager.dart';
 
 class DownloadButton extends StatelessWidget with WatchItMixin {
@@ -26,10 +27,10 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
     final theme = context.theme;
 
     final progress = watchValue(
-      (PodcastManager m) => m.getDownloadCommand(audio).progress,
+      (DownloadManager m) => m.getDownloadCommand(audio).progress,
     );
     final results = watchValue(
-      (PodcastManager m) => m.getDownloadCommand(audio).results,
+      (DownloadManager m) => m.getDownloadCommand(audio).results,
     );
     final result = results.data;
     final isRunning = results.isRunning;
@@ -49,7 +50,7 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
             color: hasDownload ? theme.colorScheme.primary : null,
           ),
           onPressed: () {
-            final downloadCommand = di<PodcastManager>().getDownloadCommand(
+            final downloadCommand = di<DownloadManager>().getDownloadCommand(
               audio,
             );
             if (!di<PodcastManager>().isPodcastSubscribed(audio.feedUrl)) {

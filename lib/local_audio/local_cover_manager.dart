@@ -3,22 +3,17 @@ import 'dart:typed_data';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
+import '../common/logging.dart';
 import 'local_cover_service.dart';
 
-@lazySingleton
+@Injectable(cache: true)
 class LocalCoverManager {
   LocalCoverManager({required LocalCoverService localCoverService})
     : _localCoverService = localCoverService {
-    initCommand.run();
+    printMessageInDebugMode('Instance created', tag: '$LocalCoverManager');
   }
 
   final LocalCoverService _localCoverService;
-
-  late final Command<void, Map<int, Uint8List?>> initCommand =
-      Command.createAsyncNoParam(
-        () => _localCoverService.init(),
-        initialValue: {},
-      );
 
   final _getCoverCommands = <int, Command<String, Uint8List?>>{};
 
@@ -33,7 +28,7 @@ class LocalCoverManager {
         albumId,
         () => Command.createAsync(
           (path) => _localCoverService.getCover(albumId: albumId, path: path),
-          initialValue: initCommand.results.value.data?[albumId],
+          initialValue: null,
         ),
       );
 }

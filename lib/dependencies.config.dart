@@ -131,7 +131,7 @@ extension GetItInjectableX on _i174.GetIt {
       ),
       dispose: (i) => i.dispose(),
     );
-    gh.lazySingleton<_i439.LocalCoverManager>(
+    gh.factoryCached<_i439.LocalCoverManager>(
       () => _i439.LocalCoverManager(
         localCoverService: gh<_i57.LocalCoverService>(),
       ),
@@ -192,14 +192,13 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i987.ExposeManager>(
       () => _i987.ExposeManager(exposeService: gh<_i820.ExposeService>()),
     );
-    gh.lazySingleton<_i388.DownloadManager>(
+    gh.factoryCached<_i388.DownloadManager>(
       () => _i388.DownloadManager(
         podcastService: gh<_i721.PodcastService>(),
         settingsService: gh<_i763.SettingsService>(),
         dio: gh<_i361.Dio>(),
         externalPathService: gh<_i551.ExternalPathService>(),
       ),
-      dispose: (i) => i.dispose(),
     );
     await gh.singletonAsync<_i38.PlayerService>(
       () {
@@ -215,9 +214,8 @@ extension GetItInjectableX on _i174.GetIt {
       preResolve: true,
       dispose: (i) => i.dispose(),
     );
-    gh.singleton<_i351.PodcastManager>(
+    gh.factoryCached<_i351.PodcastManager>(
       () => _i351.PodcastManager(podcastService: gh<_i721.PodcastService>()),
-      dispose: (i) => i.dispose(),
     );
     await gh.singletonAsync<_i517.WindowSizeToSettingsListener>(() {
       final i = _i517.WindowSizeToSettingsListener(
