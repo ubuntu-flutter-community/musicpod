@@ -45,10 +45,12 @@ class _RecentDownloadsButtonState extends State<RecentDownloadsButton>
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
+
     final lastDownload = watchStream(
       (DownloadManagerMaster m) => m.downloadStream,
       initialValue: di<DownloadManagerMaster>().lastDownload,
     ).data;
+
     final downloadCommands = watchValue((DownloadManager m) => m.commands);
     final downloads = downloadCommands.keys.where(
       (audio) => di<DownloadManager>().hasDownload(audio),

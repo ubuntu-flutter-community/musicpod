@@ -10,6 +10,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:dio/dio.dart' as _i361;
+import 'package:genius_lyrics/genius_lyrics.dart' as _i1015;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:github/github.dart' as _i535;
 import 'package:injectable/injectable.dart' as _i526;
@@ -37,6 +38,7 @@ import 'local_audio/local_audio_manager.dart' as _i688;
 import 'local_audio/local_audio_service.dart' as _i438;
 import 'local_audio/local_cover_manager.dart' as _i439;
 import 'local_audio/local_cover_service.dart' as _i57;
+import 'lyrics/lyrics_manager.dart' as _i23;
 import 'lyrics/lyrics_service.dart' as _i546;
 import 'notifications/notifications_service.dart' as _i57;
 import 'player/mpv_metadata_manager.dart' as _i112;
@@ -58,6 +60,7 @@ import 'settings/view/licenses_dialog.dart' as _i1009;
 import 'third_party/audio_service_module.dart' as _i739;
 import 'third_party/database_module.dart' as _i440;
 import 'third_party/dio_module.dart' as _i1039;
+import 'third_party/genius_module.dart' as _i264;
 import 'third_party/github_module.dart' as _i207;
 import 'third_party/internet_connection_module.dart' as _i132;
 import 'third_party/local_notifier_module.dart' as _i8;
@@ -82,6 +85,7 @@ extension GetItInjectableX on _i174.GetIt {
     final sharedPreferencesModule = _$SharedPreferencesModule();
     final windowManagerModule = _$WindowManagerModule();
     final databaseModule = _$DatabaseModule();
+    final geniusModule = _$GeniusModule();
     final audioServiceModule = _$AudioServiceModule();
     gh.factory<_i361.Dio>(() => dioModule.create());
     gh.factory<_i535.GitHub>(() => githubModule.gitHub);
@@ -141,6 +145,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i57.NotificationsService>(
       () => _i57.NotificationsService(localNotifier: gh<_i526.LocalNotifier>()),
     );
+    gh.factoryCachedParam<_i1015.Genius, String, dynamic>(
+      (accessToken, _) => geniusModule.genius(accessToken: accessToken),
+    );
     gh.singleton<_i749.RadioManager>(
       () => _i749.RadioManager(radioService: gh<_i811.RadioService>()),
     );
@@ -156,6 +163,12 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i546.OnlineLyricsService(
         localLyricsService: gh<_i546.LocalLyricsService>(),
         settingsService: gh<_i763.SettingsService>(),
+      ),
+    );
+    gh.factoryCached<_i23.LyricsManager>(
+      () => _i23.LyricsManager(
+        localLyricsService: gh<_i546.LocalLyricsService>(),
+        onlineLyricsService: gh<_i546.OnlineLyricsService>(),
       ),
     );
     gh.lazySingleton<_i438.LocalAudioService>(
@@ -333,5 +346,7 @@ class _$SharedPreferencesModule extends _i357.SharedPreferencesModule {}
 class _$WindowManagerModule extends _i271.WindowManagerModule {}
 
 class _$DatabaseModule extends _i440.DatabaseModule {}
+
+class _$GeniusModule extends _i264.GeniusModule {}
 
 class _$AudioServiceModule extends _i739.AudioServiceModule {}

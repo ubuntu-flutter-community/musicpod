@@ -9,6 +9,7 @@ import '../../common/data/audio.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/l10n.dart';
+import '../../lyrics/lyrics_manager.dart';
 import '../../lyrics/lyrics_service.dart';
 import '../../settings/settings_model.dart';
 import '../../settings/view/settings_action.dart';
@@ -76,7 +77,7 @@ class _OnlineLyricsNotSetup extends StatelessWidget {
   );
 }
 
-class _PlayerLyrics extends StatefulWidget with WatchItStatefulWidgetMixin {
+class _PlayerLyrics extends StatelessWidget with WatchItMixin {
   const _PlayerLyrics({
     super.key,
     required this.audio,
@@ -89,79 +90,55 @@ class _PlayerLyrics extends StatefulWidget with WatchItStatefulWidgetMixin {
   final String? artist;
 
   @override
-  State<_PlayerLyrics> createState() => __PlayerLyricsState();
-}
-
-class __PlayerLyricsState extends State<_PlayerLyrics> {
-  late final Future<({String? outputString, List<LrcLine>? outputLrcLines})?>
-  _lyricsFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _lyricsFuture = _getLyrics();
-  }
-
-  Future<({String? outputString, List<LrcLine>? outputLrcLines})?>
-  _getLyrics() async {
-    final local = di<LocalLyricsService>().parseLocalLyrics(
-      filePath: widget.audio.path,
-      inputString: widget.audio.lyrics,
-    );
-
-    if (local?.outputLrcLines?.isNotEmpty ?? false) {
-      return local;
-    }
-    if (local?.outputString?.isNotEmpty ?? false) {
-      return local;
-    }
-
-    return di<OnlineLyricsService>().fetchLyricsFromGenius(
-      title: widget.title ?? widget.audio.title ?? '',
-      artist: widget.artist ?? widget.audio.artist,
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return FutureBuilder<
-      ({String? outputString, List<LrcLine>? outputLrcLines})?
-    >(
-      future: _lyricsFuture,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          if (snapshot.error is GeniusNotSetupException) {
-            return const _OnlineLyricsNotSetup();
-          }
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(kLargestSpace),
-              child: Text(snapshot.error.toString()),
-            ),
-          );
-        }
+    callAfterEveryBuild((_, _) {
+      di<LyricsManager>().maybeRunCommand(
+        audio: audio,
+        title: title,
+        artist: artist,
+      );
+    });
 
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        final data = snapshot.data;
-        final lrcLines = data?.outputLrcLines;
-        if (lrcLines?.isNotEmpty ?? false) {
-          return _LrcLineViewer(lrc: lrcLines!);
-        }
-
-        final lyricsString = data?.outputString;
-        if (lyricsString?.isNotEmpty ?? false) {
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(kLargestSpace),
-            child: Text(lyricsString!),
-          );
-        }
-
-        return const NoLyricsFound();
-      },
+    final lyricsGeniusAccessToken = watchPropertyValue(
+      (SettingsModel m) => m.lyricsGeniusAccessToken,
     );
+    if (lyricsGeniusAccessToken?.isEmpty ?? true) {
+      return const _OnlineLyricsNotSetup();
+    }
+
+    final results = watchValue((LyricsManager m) => m.command.results);
+
+    if (results.hasError) {
+      if (results.error is GeniusNotSetupException) {
+        return const _OnlineLyricsNotSetup();
+      }
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(kLargestSpace),
+          child: Text(results.error.toString()),
+        ),
+      );
+    }
+
+    if (results.isRunning) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    final data = results.data;
+    final lrcLines = data?.outputLrcLines;
+    if (lrcLines?.isNotEmpty ?? false) {
+      return _LrcLineViewer(lrc: lrcLines!);
+    }
+
+    final lyricsString = data?.outputString;
+    if (lyricsString?.isNotEmpty ?? false) {
+      return SingleChildScrollView(
+        padding: const EdgeInsets.all(kLargestSpace),
+        child: Text(lyricsString!),
+      );
+    }
+
+    return const NoLyricsFound();
   }
 }
 

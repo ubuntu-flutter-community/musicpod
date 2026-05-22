@@ -3,18 +3,14 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
 import '../../app/app_manager.dart';
-import '../../app/page_ids.dart';
-import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
-import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
-import '../../search/search_model.dart';
 import 'playback_rate_button.dart';
 import 'player_pause_timer_button.dart';
 import 'player_view.dart';
@@ -80,17 +76,12 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
               color: iconColor,
               onPressed: di<PlayerModel>().toggleShowQueue,
             ),
-          if (playerPosition == PlayerPosition.fullWindow)
-            SearchButton(
-              iconColor: iconColor,
-              onPressed: () async {
-                await onFullHeightButtonPressed();
-                di<SearchModel>()
-                  ..setSearchQuery('')
-                  ..setAudioType(audio?.audioType);
-                await di<RoutingManager>().push(pageId: PageIDs.searchPage);
-              },
-            ),
+          IconButton(
+            tooltip: context.l10n.leaveFullWindow,
+            icon: Icon(Iconz.fullWindowExit, color: iconColor),
+            color: iconColor,
+            onPressed: onFullHeightButtonPressed,
+          ),
           if (audio?.audioType == AudioType.podcast && video)
             PlaybackRateButton(color: iconColor),
           if (video && !isMobile) VolumeSliderPopup(color: iconColor),

@@ -24,7 +24,17 @@ class LocalLyricsService {
       if (inputString.isValidLrc) {
         outputLrcLines = Lrc.parse(inputString).lyrics;
       } else {
-        outputString = inputString;
+        final splitter = inputString.contains(' Read More ')
+            ? ' Read More '
+            : inputString.contains('Lyrics')
+            ? 'Lyrics'
+            : inputString.contains('Contributors')
+            ? 'Contributors'
+            : 'Contributor';
+        final cleanedLyrics =
+            (inputString.split(splitter).elementAtOrNull(1) ?? inputString)
+                .replaceFirst('[', '\n\n[');
+        outputString = cleanedLyrics;
       }
     } else {
       if (filePath != null) {
@@ -50,44 +60,28 @@ class LocalLyricsService {
 @lazySingleton
 class OnlineLyricsService {
   OnlineLyricsService({
-    @ignoreParam Genius? genius,
     required LocalLyricsService localLyricsService,
     required SettingsService settingsService,
-  }) : _genius = genius,
-       _localLyricsService = localLyricsService,
-       _settingsService = settingsService;
+  }) : _localLyricsService = localLyricsService,
+       _settingsService = settingsService {
+    const fromEnv = String.fromEnvironment('GENIUS_ACCESS_TOKEN');
+    _genius = di.get<Genius>(
+      param1: fromEnv.isNotEmpty
+          ? fromEnv
+          : _settingsService.getString(SPKeys.lyricsGeniusAccessToken) ?? '',
+    );
+  }
 
   // Note: the genius API is actually capable of much more than just fetching lyrics,
   // but because genius needs an API token, and musicbrainz doesn't, and musicpod should
   // be able to provide artwork without API tokens,
   // we only use it for lyrics for now.
-  final Genius? _genius;
+  late final Genius _genius;
 
   final LocalLyricsService _localLyricsService;
   final SettingsService _settingsService;
 
   static bool get isRegistered => di.isRegistered<OnlineLyricsService>();
-
-  // Since Genius has a very long TOS
-  // we let the user decide whether to use it or not
-  // with his own access token.
-  static OnlineLyricsService registerWithDependencies({
-    required LocalLyricsService localLyricsService,
-    required SettingsService settingsService,
-  }) {
-    final maybeGeniusAccessToken =
-        settingsService.getString(SPKeys.lyricsGeniusAccessToken) ??
-        // this is only for development purposes, users should provide their own token
-        const String.fromEnvironment('GENIUS_ACCESS_TOKEN');
-
-    return OnlineLyricsService(
-      genius: maybeGeniusAccessToken.isNotEmpty
-          ? Genius(accessToken: maybeGeniusAccessToken)
-          : null,
-      localLyricsService: localLyricsService,
-      settingsService: settingsService,
-    );
-  }
 
   static Future<void> refreshRegistration(String token) async {
     if (di.isRegistered<OnlineLyricsService>()) {
@@ -103,8 +97,8 @@ class OnlineLyricsService {
       throw GeniusNotSetupException();
     }
 
-    di.registerSingleton(
-      OnlineLyricsService.registerWithDependencies(
+    di.registerLazySingleton(
+      () => OnlineLyricsService(
         localLyricsService: di<LocalLyricsService>(),
         settingsService: di<SettingsService>(),
       ),
@@ -121,10 +115,6 @@ class OnlineLyricsService {
   fetchLyricsFromGenius({required String title, String? artist}) {
     if (_settingsService.getBool(SPKeys.neverAskAgainForGeniusToken) ?? false) {
       return Future.value(null);
-    }
-
-    if (_genius == null) {
-      return Future.error(GeniusNotSetupException());
     }
 
     final cacheKey = '${artist ?? ''} - $title'.toLowerCase();
@@ -146,6 +136,7 @@ class OnlineLyricsService {
         printMessageInDebugMode(
           'Fetching lyrics from Genius for "$artist - $title"',
         );
+
         final song = await _genius.searchSong(artist: artist, title: title);
         if (song != null) {
           final lyrics = await song.lyrics;
@@ -153,6 +144,7 @@ class OnlineLyricsService {
           final result = _localLyricsService.parseLocalLyrics(
             inputString: lyrics,
           );
+
           if (result != null) {
             _cache[cacheKey] = result;
           }
