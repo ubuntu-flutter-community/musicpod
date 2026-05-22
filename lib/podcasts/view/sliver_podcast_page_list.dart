@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/connectivity_manager.dart';
 import '../../common/data/audio.dart';
 import '../../player/player_model.dart';
 import '../data/podcast_toggle_capsule.dart';
@@ -21,10 +20,6 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final selectedAudio = watchPropertyValue((PlayerModel m) => m.audio);
-    final isOnline = watchValue(
-      (ConnectivityManager m) =>
-          m.connectivityCommand.select((p) => p.isOnline),
-    );
 
     return SliverList(
       delegate: SliverChildBuilderDelegate(childCount: audios.length, (
@@ -34,9 +29,8 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
         final episode = audios.elementAt(index);
 
         return PodcastAudioTile(
-          key: ValueKey('${episode.path ?? episode.url}-$isOnline'),
+          key: ValueKey('${episode.path ?? episode.url}'),
           audio: episode,
-          isOnline: isOnline,
           addPodcast: () => di<PodcastManager>().togglePodcastCommand.run(
             PodcastToggleCapsule(
               feedUrl: episode.feedUrl!,

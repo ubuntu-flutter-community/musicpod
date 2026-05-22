@@ -4598,6 +4598,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cleaned up episodes of unsubscribed podcast: {podcastName}'**
   String cleanedUpEpisodesOfUnsubscribedPodcast(Object podcastName);
+
+  /// No description provided for @findEpisodesTimeoutMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding episodes takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.'**
+  String findEpisodesTimeoutMessage(String podcastName);
+
+  /// No description provided for @findStationsTimeoutMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding (this) station(s) takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.'**
+  String get findStationsTimeoutMessage;
+
+  /// No description provided for @retryInSeconds.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry in {seconds} seconds'**
+  String retryInSeconds(String seconds);
+
+  /// No description provided for @retryngInSeconds.
+  ///
+  /// In en, this message translates to:
+  /// **'Retryng in {seconds} seconds'**
+  String retryngInSeconds(String seconds);
+
+  /// No description provided for @playerCouldNotOpenRemoteMedia.
+  ///
+  /// In en, this message translates to:
+  /// **'The player could not open remote media \'{media}\'. Are you connected to the internet? If yes, this might be a server issue.'**
+  String playerCouldNotOpenRemoteMedia(String media);
 }
 
 class _AppLocalizationsDelegate

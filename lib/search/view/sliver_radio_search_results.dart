@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/connectivity_manager.dart';
 import '../../app/routing_manager.dart';
 import '../../common/view/audio_tile_image.dart';
 import '../../common/view/no_search_result_page.dart';
-import '../../common/view/offline_page.dart';
 import '../../common/view/stared_station_icon_button.dart';
 import '../../common/view/tapable_text.dart';
 import '../../common/view/ui_constants.dart';
@@ -26,17 +24,6 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final isOnline = watchValue(
-      (ConnectivityManager m) =>
-          m.connectivityCommand.select((p) => p.isOnline),
-    );
-    if (!isOnline) {
-      return const SliverFillRemaining(
-        hasScrollBody: false,
-        child: OfflineBody(),
-      );
-    }
-
     final theme = context.theme;
 
     final connectedHost = watchValue((RadioManager m) => m.connectCommand);

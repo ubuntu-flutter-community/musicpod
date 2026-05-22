@@ -14,8 +14,6 @@ import 'package:genius_lyrics/genius_lyrics.dart' as _i1015;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:github/github.dart' as _i535;
 import 'package:injectable/injectable.dart' as _i526;
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart'
-    as _i161;
 import 'package:local_notifier/local_notifier.dart' as _i526;
 import 'package:media_kit_video/media_kit_video.dart' as _i150;
 import 'package:package_info_plus/package_info_plus.dart' as _i655;
@@ -23,7 +21,6 @@ import 'package:shared_preferences/shared_preferences.dart' as _i460;
 import 'package:window_manager/window_manager.dart' as _i740;
 
 import 'app/app_manager.dart' as _i369;
-import 'app/connectivity_manager.dart' as _i1035;
 import 'app/routing_manager.dart' as _i971;
 import 'app/sidebar_audios_manager.dart' as _i190;
 import 'app/window_size_to_settings_listener.dart' as _i517;
@@ -62,7 +59,6 @@ import 'third_party/database_module.dart' as _i440;
 import 'third_party/dio_module.dart' as _i1039;
 import 'third_party/genius_module.dart' as _i264;
 import 'third_party/github_module.dart' as _i207;
-import 'third_party/internet_connection_module.dart' as _i132;
 import 'third_party/local_notifier_module.dart' as _i8;
 import 'third_party/media_kit_module.dart' as _i94;
 import 'third_party/package_info_module.dart' as _i855;
@@ -78,7 +74,6 @@ extension GetItInjectableX on _i174.GetIt {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final dioModule = _$DioModule();
     final githubModule = _$GithubModule();
-    final internetConnectionModule = _$InternetConnectionModule();
     final localNotifierModule = _$LocalNotifierModule();
     final mediaKitModule = _$MediaKitModule();
     final packageInfoModule = _$PackageInfoModule();
@@ -89,9 +84,6 @@ extension GetItInjectableX on _i174.GetIt {
     final audioServiceModule = _$AudioServiceModule();
     gh.factory<_i361.Dio>(() => dioModule.create());
     gh.factory<_i535.GitHub>(() => githubModule.gitHub);
-    gh.factory<_i161.InternetConnection>(
-      () => internetConnectionModule.internetConnection,
-    );
     await gh.factoryAsync<_i526.LocalNotifier>(
       () => localNotifierModule.create,
       preResolve: true,
@@ -213,6 +205,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i987.ExposeManager>(
       () => _i987.ExposeManager(exposeService: gh<_i820.ExposeService>()),
     );
+    gh.lazySingleton<_i369.AppManager>(
+      () => _i369.AppManager(
+        packageInfo: gh<_i655.PackageInfo>(),
+        settingsService: gh<_i763.SettingsService>(),
+        gitHub: gh<_i535.GitHub>(),
+        localAudioService: gh<_i438.LocalAudioService>(),
+      ),
+    );
     gh.lazySingleton<_i611.DownloadManagerMaster>(
       () => _i611.DownloadManagerMaster(
         podcastService: gh<_i721.PodcastService>(),
@@ -259,22 +259,6 @@ extension GetItInjectableX on _i174.GetIt {
         settingsService: gh<_i763.SettingsService>(),
       ),
       dispose: (i) => i.dispose(),
-    );
-    gh.singleton<_i1035.ConnectivityManager>(
-      () => _i1035.ConnectivityManager(
-        playerService: gh<_i38.PlayerService>(),
-        internetConnection: gh<_i161.InternetConnection>(),
-      ),
-      dispose: (i) => i.dispose(),
-    );
-    gh.lazySingleton<_i369.AppManager>(
-      () => _i369.AppManager(
-        packageInfo: gh<_i655.PackageInfo>(),
-        settingsService: gh<_i763.SettingsService>(),
-        gitHub: gh<_i535.GitHub>(),
-        localAudioService: gh<_i438.LocalAudioService>(),
-        internetConnection: gh<_i161.InternetConnection>(),
-      ),
     );
     gh.lazySingleton<_i544.SearchModel>(
       () => _i544.SearchModel(
@@ -332,8 +316,6 @@ extension GetItInjectableX on _i174.GetIt {
 class _$DioModule extends _i1039.DioModule {}
 
 class _$GithubModule extends _i207.GithubModule {}
-
-class _$InternetConnectionModule extends _i132.InternetConnectionModule {}
 
 class _$LocalNotifierModule extends _i8.LocalNotifierModule {}
 

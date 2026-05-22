@@ -708,18 +708,21 @@ class PodcastService {
   bool isPodcastSubscribed(String pageId) => _podcasts.contains(pageId);
 }
 
-Future<Podcast?> loadPodcast(String url) async {
-  try {
-    return await Feed.loadFeed(url: url);
-  } catch (e) {
-    printMessageInDebugMode(e);
-    return null;
-  }
-}
+Future<Podcast?> loadPodcast(String url) => Feed.loadFeed(url: url);
 
 class PodcastUpdate {
   final String feedUrl;
   final List<Audio> episodes;
 
   const PodcastUpdate({required this.feedUrl, required this.episodes});
+}
+
+class FindEpisodesTimeoutException implements Exception {
+  final String? message;
+
+  FindEpisodesTimeoutException({this.message});
+
+  @override
+  String toString() =>
+      message ?? 'Timeout while fetching episodes for the podcast';
 }

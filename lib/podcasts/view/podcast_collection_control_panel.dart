@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/connectivity_manager.dart';
 import '../../common/view/common_control_panel.dart';
 import '../../common/view/confirm.dart';
-import '../../common/view/offline_page.dart';
 import '../../l10n/l10n.dart';
 import '../data/podcast_update_capsule.dart';
 import '../podcast_manager.dart';
@@ -15,12 +13,6 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final manager = di<PodcastManager>();
-
-    final isOnline = watchValue(
-      (ConnectivityManager m) =>
-          m.connectivityCommand.select((p) => p.isOnline),
-    );
-    if (!isOnline) return const OfflineBody();
 
     final updatesOnly = watchValue((PodcastManager m) => m.updatesOnly);
     final downloadsOnly = watchValue((PodcastManager m) => m.downloadsOnly);

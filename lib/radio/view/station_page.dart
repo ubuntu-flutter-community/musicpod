@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/connectivity_manager.dart';
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio.dart';
@@ -12,7 +11,6 @@ import '../../common/view/audio_page_header.dart';
 import '../../common/view/avatar_play_button.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/no_search_result_page.dart';
-import '../../common/view/offline_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/search_button.dart';
@@ -38,16 +36,10 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
 
   @override
   Widget build(BuildContext context) {
-    final isOnline = watchValue(
-      (ConnectivityManager m) =>
-          m.connectivityCommand.select((p) => p.isOnline),
-    );
-    if (!isOnline) return const OfflinePage();
-
     registerRadioConnectHandler(context);
 
-    callOnceAfterThisBuild(
-      (_) => di<RadioManager>().getStationByUUIDCommand(uuid).run(),
+    callAfterEveryBuild(
+      (_, cancel) => di<RadioManager>().maybeRunStationByUUIDCommand(uuid),
     );
 
     registerHandler(
@@ -56,13 +48,17 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
         if (results.isRunning) return;
         if (results.hasError) {
           context.toast(
-            Text(context.l10n.noStationFound),
+            Text(results.error.toString()),
             action: SnackBarAction(
               label: context.l10n.retry,
-              onPressed: () =>
-                  di<RadioManager>().getStationByUUIDCommand(uuid).run(),
+              onPressed: () => di<RadioManager>().maybeRunStationByUUIDCommand(
+                uuid,
+                clearErrors: true,
+              ),
             ),
           );
+        } else if (results.hasData) {
+          context.clearToasts();
         }
       },
     );
@@ -78,6 +74,7 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
       (SettingsModel m) => m.useYaruTheme,
     );
     final radioHistoryListPadding = getRadioHistoryListPadding(useYaruTheme);
+    final cooldown = watchValue((RadioManager m) => m.cooldown);
 
     return Scaffold(
       appBar: HeaderBar(
@@ -110,7 +107,20 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
         builder: (context) {
           if (error != null) {
             return NoSearchResultPage(
-              message: Text(context.l10n.stationNotFound),
+              icon: FilledButton(
+                onPressed: isRunning
+                    ? null
+                    : () => di<RadioManager>().maybeRunStationByUUIDCommand(
+                        uuid,
+                        clearErrors: true,
+                      ),
+                child: Text(
+                  cooldown == 0
+                      ? context.l10n.retry
+                      : context.l10n.retryngInSeconds(cooldown.toString()),
+                ),
+              ),
+              message: Text(context.l10n.findStationsTimeoutMessage),
             );
           }
 

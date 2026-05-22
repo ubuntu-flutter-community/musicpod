@@ -5,7 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/app_manager.dart';
-import '../../app/connectivity_manager.dart';
+
 import '../../app/routing_manager.dart';
 import '../../app/app_config.dart';
 import '../../app/page_ids.dart';
@@ -21,13 +21,9 @@ class SettingsTile extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final isOnline = watchValue(
-      (ConnectivityManager m) =>
-          m.connectivityCommand.select((p) => p.isOnline),
-    );
     Widget? trailing;
     // To not show any progress for Snap/Flatpak
-    if (isOnline && di<AppManager>().allowManualUpdate) {
+    if (di<AppManager>().allowManualUpdate) {
       trailing = const _UpdateButton();
     }
 

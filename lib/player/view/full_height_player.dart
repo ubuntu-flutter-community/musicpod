@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/connectivity_manager.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../player/player_model.dart';
@@ -18,13 +17,10 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final isOnline = watchValue(
-      (ConnectivityManager m) =>
-          m.connectivityCommand.select((p) => p.isOnline),
-    );
+
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
     final isVideo = watchPropertyValue((PlayerModel m) => m.isVideo == true);
-    final active = audio != null && (audio.path != null || isOnline);
+    final active = audio != null;
     final iconColor = isVideo ? Colors.white : theme.colorScheme.onSurface;
 
     final Widget body;

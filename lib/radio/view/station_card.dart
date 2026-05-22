@@ -20,7 +20,7 @@ class StationCard extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     callOnceAfterThisBuild(
-      (_) => di<RadioManager>().getStationByUUIDCommand(uuid).run(),
+      (_) => di<RadioManager>().maybeRunStationByUUIDCommand(uuid),
     );
 
     final isSelected = watchPropertyValue(

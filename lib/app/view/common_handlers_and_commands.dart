@@ -51,22 +51,24 @@ mixin CommonHandlersAndCommandsMixin {
     );
 
     registerStreamHandler(
-      select: (PlayerModel m) => m.errorStream,
-      handler: (context, newValue, cancel) {
-        if (newValue.hasData)
-          context.toast(
-            Text(switch (newValue.data!) {
-              final PlayTimeoutException _ => context.l10n.playingMediaTimedOut,
-              final Exception e => e.toString(),
-            }),
-          );
-      },
-    );
-
-    registerStreamHandler(
       select: (PlayerModel m) => m.messageStream,
       handler: (context, newValue, cancel) {
-        if (newValue.hasData) context.toast(Text(newValue.data!));
+        if (newValue.hasError) {
+          final audio = di<PlayerModel>().audio;
+
+          context.toast(
+            Text(
+              (newValue.error is PlayTimeoutException) || audio?.url != null
+                  ? context.l10n.playerCouldNotOpenRemoteMedia(
+                      audio?.title ?? '',
+                    )
+                  : newValue.error.toString(),
+            ),
+            duration: const Duration(seconds: 5),
+          );
+        } else if (newValue.hasData) {
+          context.toast(Text(newValue.data!));
+        }
       },
     );
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/app_manager.dart';
-import '../../app/connectivity_manager.dart';
+
 import '../../common/data/audio_type.dart';
 import '../../common/view/share_button.dart';
 import '../../common/view/theme.dart';
@@ -33,12 +33,8 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
     final fullWindowMode = watchValue((AppManager m) => m.fullWindowMode);
 
     final model = di<PlayerModel>();
-    final isOnline = watchValue(
-      (ConnectivityManager m) =>
-          m.connectivityCommand.select((p) => p.isOnline),
-    );
 
-    final active = audio?.path != null || isOnline;
+    final active = audio != null;
 
     final trackAndPlayer = [
       PlayerTrack(active: active, bottomPlayer: true),
@@ -57,7 +53,6 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                     size: bottomPlayerDefaultHeight - 24,
                     videoController: model.controller,
                     isVideo: isVideo,
-                    isOnline: isOnline,
                   ),
                 ),
               ),

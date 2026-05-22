@@ -19,6 +19,10 @@ class RadioLibPage extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
+    callOnceAfterThisBuild(
+      (_) => di<RadioManager>().maybeConnect(clearErrors: false),
+    );
+
     registerRadioConnectHandler(context);
 
     final radioCollectionView = watchValue(
@@ -27,10 +31,14 @@ class RadioLibPage extends StatelessWidget
 
     return watchValue((RadioManager m) => m.connectCommand.results).toWidget(
       whileRunning: (lastResult, param) => const Center(child: Progress()),
-      onError: (error, lastResult, param) =>
-          const Center(child: RadioReconnectButton()),
+      onError: (error, lastResult, param) => const SliverFillRemaining(
+        hasScrollBody: false,
+        child: const Center(child: RadioReconnectButton()),
+      ),
       onData: (connectedHost, param) => connectedHost == null
-          ? const Center(child: RadioReconnectButton())
+          ? const SliverFillRemaining(
+              child: Center(child: RadioReconnectButton()),
+            )
           : SliverBody(
               controlPanel: const RadioLibPageControlPanel(),
               controlPanelSuffix: const SettingsButton.icon(scrollIndex: 3),

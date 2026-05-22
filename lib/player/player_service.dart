@@ -19,8 +19,8 @@ import '../expose/expose_service.dart';
 import '../extensions/media_file_x.dart';
 import '../extensions/string_x.dart';
 import '../extensions/taget_platform_x.dart';
-import '../podcasts/podcast_service.dart';
 import '../local_audio/local_cover_service.dart';
+import '../podcasts/podcast_service.dart';
 
 typedef Queue = ({String name, List<Audio> audios});
 
@@ -58,6 +58,7 @@ class PlayerService {
   StreamSubscription<double>? _volumeSub;
   StreamSubscription<Tracks>? _tracksSub;
   StreamSubscription<double>? _rateSub;
+  StreamSubscription<String>? _errorSub;
 
   // Used to notify whoever is listening
   final _propertiesChangedController = StreamController<bool>.broadcast();
@@ -68,6 +69,11 @@ class PlayerService {
   Future<void> init() async {
     _isPlayingSub ??= player.stream.playing.listen((value) {
       setIsPlaying(value);
+    });
+
+    player.stream.error.listen((event) {
+      pause();
+      _messageController.addError(event);
     });
 
     _durationSub ??= player.stream.duration.listen((newDuration) {
@@ -126,7 +132,6 @@ class PlayerService {
   @disposeMethod
   Future<void> dispose() async {
     await _propertiesChangedController.close();
-    await _errorController.close();
     await _messageController.close();
     await _isPlayingSub?.cancel();
     await _positionSub?.cancel();
@@ -136,6 +141,7 @@ class PlayerService {
     await _tracksSub?.cancel();
     await _rateSub?.cancel();
     await _bufferSub?.cancel();
+    await _errorSub?.cancel();
     _timer?.cancel();
     await player.dispose();
   }
@@ -276,8 +282,6 @@ class PlayerService {
     await player.setRate(value);
   }
 
-  final _errorController = StreamController<Exception>.broadcast();
-  Stream<Exception> get errorStream => _errorController.stream.map((e) => e);
   final _messageController = StreamController<String>.broadcast();
   Stream<String> get messageStream => _messageController.stream.map((e) => e);
 
@@ -310,7 +314,9 @@ class PlayerService {
           .open(media)
           .timeout(
             const Duration(seconds: 15),
-            onTimeout: () => throw PlayTimeoutException(),
+            onTimeout: () {
+              throw PlayTimeoutException();
+            },
           );
       player.state.tracks; // trigger tracks stream to check if it's a video
 
@@ -332,7 +338,7 @@ class PlayerService {
       );
       _firstPlay = false;
     } on Exception catch (e) {
-      _errorController.add(e);
+      _messageController.addError(e);
       printMessageInDebugMode(e);
     }
   }

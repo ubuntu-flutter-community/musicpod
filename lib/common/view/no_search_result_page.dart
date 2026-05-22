@@ -32,6 +32,7 @@ class NoSearchResultPage extends StatelessWidget {
             textAlign: TextAlign.center,
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              spacing: kLargestSpace,
               children: [
                 message ??
                     Text(
@@ -39,7 +40,7 @@ class NoSearchResultPage extends StatelessWidget {
                       style: style,
                       textAlign: TextAlign.center,
                     ),
-                const SizedBox(height: kLargestSpace),
+                ?icon,
               ],
             ),
           ),

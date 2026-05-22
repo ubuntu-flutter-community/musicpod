@@ -6,7 +6,6 @@ import 'package:yaru/yaru.dart';
 
 import '../../app/app_config.dart';
 import '../../app/app_manager.dart';
-import '../../app/connectivity_manager.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/tapable_text.dart';
 import '../../extensions/build_context_x.dart';
@@ -48,6 +47,7 @@ class _AboutTile extends StatelessWidget with WatchItMixin {
     final updateAvailableResults = watchValue(
       (AppManager m) => m.checkForUpdateCommand.results,
     );
+    final error = updateAvailableResults.error;
     final updateAvailable = updateAvailableResults.data == true;
     final onlineVersion = watchValue((AppManager m) => m.onlineVersion);
     final downloads = watchValue(
@@ -55,15 +55,11 @@ class _AboutTile extends StatelessWidget with WatchItMixin {
     );
     final currentVersion = di<AppManager>().version;
 
-    final isOnline = watchValue(
-      (ConnectivityManager m) =>
-          m.connectivityCommand.select((p) => p.isOnline),
-    );
     return YaruTile(
       subtitle: Text(
         context.l10n.downloadsOfLatestRelease(downloads.toString()),
       ),
-      title: !isOnline || !appManager.allowManualUpdate
+      title: error != null || !appManager.allowManualUpdate
           ? Text(di<AppManager>().version)
           : updateAvailableResults.isRunning
           ? const SizedBox.square(

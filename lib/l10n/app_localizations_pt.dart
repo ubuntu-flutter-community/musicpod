@@ -2371,6 +2371,30 @@ class AppLocalizationsPt extends AppLocalizations {
   String cleanedUpEpisodesOfUnsubscribedPodcast(Object podcastName) {
     return 'Cleaned up episodes of unsubscribed podcast: $podcastName';
   }
+
+  @override
+  String findEpisodesTimeoutMessage(String podcastName) {
+    return 'Finding episodes takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+  }
+
+  @override
+  String get findStationsTimeoutMessage =>
+      'Finding (this) station(s) takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+
+  @override
+  String retryInSeconds(String seconds) {
+    return 'Retry in $seconds seconds';
+  }
+
+  @override
+  String retryngInSeconds(String seconds) {
+    return 'Retryng in $seconds seconds';
+  }
+
+  @override
+  String playerCouldNotOpenRemoteMedia(String media) {
+    return 'The player could not open remote media \'$media\'. Are you connected to the internet? If yes, this might be a server issue.';
+  }
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).

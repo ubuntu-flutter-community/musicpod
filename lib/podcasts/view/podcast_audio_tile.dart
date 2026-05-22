@@ -27,7 +27,6 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
     required this.selected,
     required this.startPlaylist,
     this.isExpanded = false,
-    this.isOnline = true,
     required this.addPodcast,
   });
 
@@ -38,7 +37,6 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
   final void Function() addPodcast;
 
   final bool isExpanded;
-  final bool isOnline;
 
   @override
   Widget build(BuildContext context) {

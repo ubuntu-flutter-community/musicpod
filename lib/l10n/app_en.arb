@@ -845,5 +845,38 @@
     "playbackWasPausedByTimer": "Playback was paused by timer",
     "playbackTimerCancelled": "Playback timer cancelled",
     "podcastDoesNotSendEpisodeDuration": "This podcast does not send episode duration. The mark done feature might not work as expected.",
-    "cleanedUpEpisodesOfUnsubscribedPodcast": "Cleaned up episodes of unsubscribed podcast: {podcastName}"
+    "cleanedUpEpisodesOfUnsubscribedPodcast": "Cleaned up episodes of unsubscribed podcast: {podcastName}",
+    "findEpisodesTimeoutMessage": "Finding episodes takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.",
+    "@findEpisodesTimeoutMessage": {
+        "placeholders": {
+            "podcastName": {
+                "type": "String"
+            }
+        }
+    },
+    "findStationsTimeoutMessage": "Finding (this) station(s) takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.",
+    "retryInSeconds": "Retry in {seconds} seconds",
+    "@retryInSeconds": {
+        "placeholders": {
+            "seconds": {
+                "type": "String"
+            }
+        }
+    },
+    "retryngInSeconds": "Retryng in {seconds} seconds",
+    "@retryngInSeconds": {
+        "placeholders": {
+            "seconds": {
+                "type": "String"
+            }
+        }
+    },
+    "playerCouldNotOpenRemoteMedia": "The player could not open remote media '{media}'. Are you connected to the internet? If yes, this might be a server issue.",
+    "@playerCouldNotOpenRemoteMedia": {
+        "placeholders": {
+            "media": {
+                "type": "String"
+            }
+        }
+    }
 }

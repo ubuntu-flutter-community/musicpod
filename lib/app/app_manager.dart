@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:github/github.dart';
 import 'package:injectable/injectable.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
@@ -20,7 +19,6 @@ class AppManager {
     required SettingsService settingsService,
     required GitHub gitHub,
     required LocalAudioService localAudioService,
-    required InternetConnection internetConnection,
   }) : _countryCode = WidgetsBinding
            .instance
            .platformDispatcher
@@ -30,11 +28,9 @@ class AppManager {
        _gitHub = gitHub,
        _settingsService = settingsService,
        _packageInfo = packageInfo,
-       _localAudioService = localAudioService,
-       _internetConnection = internetConnection;
+       _localAudioService = localAudioService;
 
   final LocalAudioService _localAudioService;
-  final InternetConnection _internetConnection;
   final GitHub _gitHub;
   final SettingsService _settingsService;
 
@@ -81,10 +77,6 @@ class AppManager {
 
   Future<bool> _checkForUpdate() async {
     var _updateAvailable = false;
-
-    if (await _internetConnection.internetStatus != InternetStatus.connected) {
-      return _updateAvailable;
-    }
 
     onlineVersion.value = await getOnlineVersion();
     final onlineVersionInt = getExtendedVersionNumber(onlineVersion.value) ?? 0;

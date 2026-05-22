@@ -8,6 +8,8 @@ import '../common/data/audio.dart';
 import '../l10n/app_localizations.dart';
 import 'radio_service.dart';
 
+const _cooldownMaxSeconds = 20;
+
 @singleton
 class RadioManager extends SafeChangeNotifier {
   final RadioService _radioService;
@@ -25,15 +27,80 @@ class RadioManager extends SafeChangeNotifier {
     initialValue: null,
   );
 
+  void maybeConnect({required bool clearErrors}) {
+    _clearConnect(clearErrors);
+    if (_shouldTryToConnect) {
+      connectCommand.run();
+    }
+  }
+
+  Future<void> maybeConnectAsync({required bool clearErrors}) async {
+    _clearConnect(clearErrors);
+    if (_shouldTryToConnect) {
+      await connectCommand.runAsync();
+    }
+  }
+
+  bool get _shouldTryToConnect =>
+      connectCommand.errors.value == null && connectCommand.value == null;
+
+  void _clearConnect(bool clearErrors) {
+    if (clearErrors) {
+      connectCommand.cancel();
+      connectCommand.clearErrors();
+    }
+  }
+
   final _getStationByUUIDCommands = <String, Command<void, Audio?>>{};
   Command<void, Audio?> getStationByUUIDCommand(String uuid) =>
       _getStationByUUIDCommands.putIfAbsent(
         uuid,
         () => Command.createAsyncNoParam(
-          () => _getStationByUUID(uuid).timeout(const Duration(seconds: 10)),
+          () => _getStationByUUID(uuid)
+              .timeout(const Duration(seconds: 5))
+              .catchError((error) {
+                if (error is TimeoutException ||
+                    error is RadioBrowserApiNotConnectedException) {
+                  throw FindStationTimeoutException(
+                    message: di<AppLocalizations>().findStationsTimeoutMessage,
+                  );
+                }
+                throw error;
+              }),
           initialValue: null,
         ),
       );
+
+  final cooldown = SafeValueNotifier<int>(_cooldownMaxSeconds);
+  Timer? _cooldownTimer;
+
+  void maybeRunStationByUUIDCommand(String uuid, {bool clearErrors = false}) {
+    final command = getStationByUUIDCommand(uuid);
+
+    if (clearErrors) {
+      command.clearErrors();
+    }
+
+    if (command.value == null && command.errors.value == null) {
+      command.run();
+      return;
+    }
+
+    if (command.errors.value != null && _cooldownTimer == null) {
+      cooldown.value = _cooldownMaxSeconds;
+
+      _cooldownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (cooldown.value > 0) {
+          cooldown.value--;
+        } else {
+          _cooldownTimer?.cancel();
+          _cooldownTimer = null;
+          command.clearErrors();
+          maybeRunStationByUUIDCommand(uuid, clearErrors: true);
+        }
+      });
+    }
+  }
 
   Future<Audio?> _getStationByUUID(String pageId) async {
     if (_stationCache.containsKey(pageId)) {
@@ -41,7 +108,7 @@ class RadioManager extends SafeChangeNotifier {
     }
 
     if (connectCommand.value == null) {
-      await connectCommand.runAsync();
+      // await maybeConnectAsync(clearErrors: false);
     }
 
     final stationByUUID = await _radioService.getStationByUUID(pageId);
@@ -126,6 +193,17 @@ class RadioManager extends SafeChangeNotifier {
 
         return _radioService.favRadioTags;
       }, initialValue: _radioService.favRadioTags);
+}
+
+class FindStationTimeoutException implements Exception {
+  final String? message;
+
+  FindStationTimeoutException({this.message});
+
+  @override
+  String toString() =>
+      message ??
+      'Finding (this) station(s) takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
 }
 
 enum RadioCollectionView {

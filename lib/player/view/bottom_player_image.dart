@@ -19,13 +19,11 @@ class BottomPlayerImage extends StatefulWidget with WatchItStatefulWidgetMixin {
     required this.size,
     this.isVideo,
     required this.videoController,
-    required this.isOnline,
   });
   final Audio? audio;
   final double size;
   final bool? isVideo;
   final VideoController videoController;
-  final bool isOnline;
 
   @override
   State<BottomPlayerImage> createState() => _BottomPlayerImageState();

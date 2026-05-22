@@ -27,6 +27,7 @@ class SearchPage extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final audioType = watchPropertyValue((SearchModel m) => m.audioType);
     final loading = watchPropertyValue((SearchModel m) => m.loading);
+    // TODO: care for timeouts
 
     final useYaruTheme = watchPropertyValue(
       (SettingsModel m) => m.useYaruTheme,

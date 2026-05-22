@@ -80,7 +80,7 @@ class RadioService {
     if (_radioBrowserApi == null) {
       await initSearch();
       if (connectedHost == null) {
-        return null;
+        throw RadioBrowserApiNotConnectedException();
       }
     }
 
@@ -102,7 +102,7 @@ class RadioService {
     if (_radioBrowserApi == null) {
       await initSearch();
       if (connectedHost == null) {
-        return null;
+        throw RadioBrowserApiNotConnectedException();
       }
     }
     try {
@@ -135,7 +135,7 @@ class RadioService {
     if (_radioBrowserApi == null) {
       await initSearch();
       if (connectedHost == null) {
-        return [];
+        throw RadioBrowserApiNotConnectedException();
       }
     }
 
@@ -391,4 +391,13 @@ class RadioService {
       _db.delete(_db.favoriteRadioTagTable).go(),
     ]);
   }
+}
+
+class RadioBrowserApiNotConnectedException implements Exception {
+  final String? message;
+
+  RadioBrowserApiNotConnectedException({this.message});
+
+  @override
+  String toString() => message ?? '$RadioBrowserApi not connected';
 }

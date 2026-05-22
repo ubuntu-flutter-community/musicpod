@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:future_loading_dialog/future_loading_dialog.dart';
 
-import '../../app/connectivity_manager.dart';
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/confirm.dart';
+import '../../common/view/error_page.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/no_search_result_page.dart';
-import '../../common/view/offline_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/sliver_body.dart';
@@ -32,13 +31,11 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final isOnline = watchValue(
-      (ConnectivityManager m) =>
-          m.connectivityCommand.select((p) => p.isOnline),
-    );
-    if (!isOnline) return const OfflineBody();
 
-    final subs = watchValue((PodcastManager m) => m.togglePodcastCommand);
+    final subsResults = watchValue(
+      (PodcastManager m) => m.togglePodcastCommand.results,
+    );
+    final subs = subsResults.data ?? [];
     final podcastManager = di<PodcastManager>();
     final updates = watchValue((PodcastManager m) => m.updatesCommand);
     final updatesOnly = watchValue((PodcastManager m) => m.updatesOnly);
@@ -55,6 +52,16 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
     final progress = watchValue(
       (PodcastManager m) => m.updatesCommand.progress,
     );
+
+    if (subsResults.hasError) {
+      return SliverFillRemaining(
+        hasScrollBody: false,
+        child: ErrorBody(
+          error: subsResults.error!,
+          onRetry: () => di<PodcastManager>().togglePodcastCommand.run(),
+        ),
+      );
+    }
 
     final itemCount = updatesOnly
         ? updates.length

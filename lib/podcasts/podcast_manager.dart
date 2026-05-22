@@ -112,8 +112,43 @@ class PodcastManager {
     );
   }
 
-  bool shouldRunCommand(String feedUrl) =>
-      di<PodcastManager>().getEpisodesCommand(feedUrl).value.isEmpty;
+  final cooldown = SafeValueNotifier<int>(_cooldownMaxSeconds);
+  Timer? _cooldownTimer;
+  void maybeRunEpisodesCommand({
+    required String feedUrl,
+    Item? podcastItem,
+    bool clearErrors = false,
+  }) {
+    final command = getEpisodesCommand(feedUrl);
+
+    if (clearErrors) {
+      command.clearErrors();
+    }
+
+    if (command.value.isEmpty && command.errors.value == null) {
+      command.run((feedUrl: feedUrl, item: podcastItem));
+      return;
+    }
+
+    if (command.errors.value != null && _cooldownTimer == null) {
+      cooldown.value = _cooldownMaxSeconds;
+
+      _cooldownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (cooldown.value > 0) {
+          cooldown.value--;
+        } else {
+          _cooldownTimer?.cancel();
+          _cooldownTimer = null;
+          command.clearErrors();
+          maybeRunEpisodesCommand(
+            feedUrl: feedUrl,
+            podcastItem: podcastItem,
+            clearErrors: true,
+          );
+        }
+      });
+    }
+  }
 
   late final Command<({String feedUrl, String name}), String?> cleanUpCommand =
       Command.createAsync((param) async {
@@ -195,3 +230,5 @@ class PodcastManager {
         await feedsWithDownloadsCommand.runAsync();
       });
 }
+
+const _cooldownMaxSeconds = 20;

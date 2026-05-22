@@ -10,11 +10,13 @@ class LazyPodcastLoadingPage extends StatelessWidget {
     required this.title,
     required this.imageUrl,
     required this.child,
+    this.expandChild = false,
   });
 
   final String title;
   final String? imageUrl;
   final Widget child;
+  final bool expandChild;
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -26,7 +28,9 @@ class LazyPodcastLoadingPage extends StatelessWidget {
         episodes: [],
         showFallbackIcon: false,
       ),
-      sliverBody: (constraints) => SliverToBoxAdapter(child: child),
+      sliverBody: (constraints) => expandChild
+          ? SliverFillRemaining(hasScrollBody: false, child: child)
+          : SliverToBoxAdapter(child: child),
       controlPanel: const SizedBox.shrink(),
     ),
   );

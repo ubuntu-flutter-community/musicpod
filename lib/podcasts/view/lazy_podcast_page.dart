@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:podcast_search/podcast_search.dart';
 
-import '../../app/connectivity_manager.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
+import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../data/podcast_update_capsule.dart';
 import '../podcast_manager.dart';
@@ -25,10 +25,6 @@ class LazyPodcastPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final connectivityCommand = watchValue(
-      (ConnectivityManager m) => m.connectivityCommand,
-    );
-
     final feedUrl = this.feedUrl ?? podcastItem?.feedUrl;
 
     if (feedUrl == null) {
@@ -50,52 +46,85 @@ class LazyPodcastPage extends StatelessWidget with WatchItMixin {
       ),
     );
 
-    if (di<PodcastManager>().shouldRunCommand(feedUrl) &&
-            connectivityCommand.isOnline ||
-        !connectivityCommand.wasOnline && connectivityCommand.isOnline) {
-      di<PodcastManager>().getEpisodesCommand(feedUrl).run((
-        feedUrl: feedUrl,
-        item: podcastItem,
-      ));
-    }
+    final cooldown = watchValue((PodcastManager m) => m.cooldown);
 
-    final title =
-        di<PodcastManager>().getSubscribedPodcastName(feedUrl) ??
-        podcastItem?.collectionName ??
-        podcastItem?.trackName ??
-        context.l10n.podcast;
-
-    final imageUrl =
-        this.imageUrl ?? podcastItem?.artworkUrl600 ?? podcastItem?.artworkUrl;
+    di<PodcastManager>().maybeRunEpisodesCommand(
+      feedUrl: feedUrl,
+      podcastItem: podcastItem,
+      clearErrors: false,
+    );
 
     return watchValue(
       (PodcastManager m) => m.getEpisodesCommand(feedUrl).results,
     ).toWidget(
       whileRunning: (lastResult, param) => LazyPodcastLoadingPage(
-        title: title,
-        imageUrl: imageUrl,
+        title: _getTitle(feedUrl, context),
+        imageUrl: _imageUrl(),
         child: const Center(child: Progress()),
       ),
-      onError: (error, lastResult, param) => LazyPodcastLoadingPage(
-        title: title,
-        imageUrl: imageUrl,
-        child: NoSearchResultPage(message: Text(error.toString())),
-      ),
+      onError: (error, lastResult, param) =>
+          _errorBody(feedUrl, context, cooldown),
       onData: (result, param) {
         final episodes = result;
 
         final newImageUrl =
-            imageUrl ??
+            _imageUrl() ??
             episodes.firstOrNull?.albumArtUrl ??
             episodes.firstOrNull?.imageUrl;
+
+        if (episodes.isEmpty) {
+          return _errorBody(feedUrl, context, cooldown);
+        }
 
         return PodcastPage(
           imageUrl: newImageUrl,
           episodes: episodes,
           feedUrl: feedUrl,
-          title: title,
+          title: _getTitle(feedUrl, context),
         );
       },
     );
+  }
+
+  LazyPodcastLoadingPage _errorBody(
+    String feedUrl,
+    BuildContext context,
+    int cooldown,
+  ) {
+    return LazyPodcastLoadingPage(
+      title: _getTitle(feedUrl, context),
+      imageUrl: imageUrl,
+      expandChild: true,
+      child: Center(
+        child: Column(
+          spacing: kLargestSpace,
+          children: [
+            Text(
+              context.l10n.findEpisodesTimeoutMessage(
+                _getTitle(feedUrl, context),
+              ),
+            ),
+            FilledButton.icon(
+              onPressed: () => di<PodcastManager>().maybeRunEpisodesCommand(
+                feedUrl: feedUrl,
+                podcastItem: podcastItem,
+                clearErrors: true,
+              ),
+              label: Text(context.l10n.retryngInSeconds(cooldown.toString())),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String? _imageUrl() =>
+      this.imageUrl ?? podcastItem?.artworkUrl600 ?? podcastItem?.artworkUrl;
+
+  String _getTitle(String feedUrl, BuildContext context) {
+    return di<PodcastManager>().getSubscribedPodcastName(feedUrl) ??
+        podcastItem?.collectionName ??
+        podcastItem?.trackName ??
+        context.l10n.podcast;
   }
 }
