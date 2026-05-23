@@ -33,7 +33,6 @@ apps:
     plugs:
       - network
       - audio-playback
-      - network-manager-observe
       - home
       - removable-media
     slots:

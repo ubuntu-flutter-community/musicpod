@@ -66,33 +66,52 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
           mainAxisSize: MainAxisSize.min,
           spacing: kSmallestSpace,
           children: [
-            IconButton(
-              tooltip: context.l10n.metadata,
-              onPressed: () {
-                final imageUrl = di<OnlineArtModel>().getCover(icyTitle);
-                final metadata = di<MpvMetadataManager>().getMetadata(icyTitle);
-                if (metadata == null) return;
+            PopupMenuButton<RadioHistoryTileOption>(
+              icon: Icon(Iconz.viewMore),
+              onSelected: (v) {
+                switch (v) {
+                  case RadioHistoryTileOption.showMetadata:
+                    final imageUrl = di<OnlineArtModel>().getCover(icyTitle);
+                    final metadata = di<MpvMetadataManager>().getMetadata(
+                      icyTitle,
+                    );
+                    if (metadata == null) return;
 
-                showModal(
-                  mode: ModalMode.platformModalMode,
-                  context: context,
-                  content: MpvMetadataDialog(
-                    mode: ModalMode.platformModalMode,
-                    image: imageUrl,
-                    mpvMetaData: metadata,
-                  ),
-                );
+                    showModal(
+                      mode: ModalMode.platformModalMode,
+                      context: context,
+                      content: MpvMetadataDialog(
+                        mode: ModalMode.platformModalMode,
+                        image: imageUrl,
+                        mpvMetaData: metadata,
+                      ),
+                    );
+                  case RadioHistoryTileOption.ignoreTitle:
+                    di<MpvMetadataManager>().editBlockedIcyTitleCommand.run((
+                      title: icyTitle,
+                      addOrRemove: EditIcyTitleInHistory.add,
+                    ));
+                }
               },
-              icon: Icon(Iconz.info),
-            ),
-            IconButton(
-              tooltip: context.l10n.ignoreThisTitleInHearingHistory,
-              onPressed: () =>
-                  di<MpvMetadataManager>().editBlockedIcyTitleCommand.run((
-                    title: icyTitle,
-                    addOrRemove: EditIcyTitleInHistory.add,
-                  )),
-              icon: Icon(Iconz.remove),
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  child: Row(
+                    spacing: kSmallestSpace,
+                    children: [Icon(Iconz.info), Text(context.l10n.metadata)],
+                  ),
+                  value: RadioHistoryTileOption.showMetadata,
+                ),
+                PopupMenuItem(
+                  child: Row(
+                    spacing: kMediumSpace,
+                    children: [
+                      Icon(Iconz.remove),
+                      Text(context.l10n.ignoreThisTitleInHearingHistory),
+                    ],
+                  ),
+                  value: RadioHistoryTileOption.ignoreTitle,
+                ),
+              ],
             ),
           ],
         ),
@@ -122,6 +141,8 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
     };
   }
 }
+
+enum RadioHistoryTileOption { showMetadata, ignoreTitle }
 
 class _SimpleRadioHistoryTile extends StatelessWidget {
   const _SimpleRadioHistoryTile({
