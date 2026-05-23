@@ -165,7 +165,7 @@ class PodcastService {
   }) async {
     await loadPodcastUpdatesFromDb();
 
-    for (final feedUrl in toCheckFeedUrls) {
+    for (final (index, feedUrl) in toCheckFeedUrls.indexed) {
       final storedTimeStamp = getPodcastLastUpdated(feedUrl);
       final name = getSubscribedPodcastName(feedUrl);
 
@@ -208,7 +208,7 @@ class PodcastService {
         }
       }
 
-      updateProgress?.call(toCheckFeedUrls.length / toCheckFeedUrls.length);
+      updateProgress?.call((index + 1) / toCheckFeedUrls.length);
       await Future<void>.delayed(Duration.zero);
     }
 
