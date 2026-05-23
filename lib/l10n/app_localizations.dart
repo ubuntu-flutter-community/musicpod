@@ -4628,6 +4628,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The player could not open remote media \'{media}\'. Are you connected to the internet? If yes, this might be a server issue.'**
   String playerCouldNotOpenRemoteMedia(String media);
+
+  /// No description provided for @searchTimeoutMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Searching takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.'**
+  String get searchTimeoutMessage;
 }
 
 class _AppLocalizationsDelegate

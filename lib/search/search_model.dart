@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
@@ -17,6 +19,7 @@ import '../podcasts/podcast_service.dart';
 import '../radio/radio_service.dart';
 import '../settings/settings_service.dart';
 import '../settings/shared_preferences_keys.dart';
+import 'search_timeout_exception.dart';
 import 'search_type.dart';
 
 const _initialAudioType = AudioType.podcast;
@@ -48,6 +51,16 @@ class SearchModel extends SafeChangeNotifier {
   final RadioService _radioService;
   final PodcastService _podcastService;
   final LocalAudioService _localAudioService;
+
+  final _messageController = StreamController<String>.broadcast();
+  Stream<String> get messageStream => _messageController.stream;
+
+  @disposeMethod
+  @override
+  Future<void> dispose() {
+    super.dispose();
+    return _messageController.close();
+  }
 
   Set<SearchType> _searchTypes = searchTypesFromAudioType(_initialAudioType);
   Set<SearchType> get searchTypes => _searchTypes;
@@ -205,14 +218,34 @@ class SearchModel extends SafeChangeNotifier {
                     : v?.map(Audio.fromStation).toList(),
               ),
             )
-            .then((_) => _loading = false),
+            .then((_) => _loading = false)
+            .timeout(
+              const Duration(seconds: _searchTimeoutSeconds),
+              onTimeout: () {
+                throw SearchTimeoutException();
+              },
+            )
+            .onError((error, stackTrace) {
+              _messageController.addError(SearchTimeoutException());
+              return loading;
+            }),
       SearchType.radioTag =>
         await _radioService
             .search(tag: _tag?.name, limit: _radioLimit)
             .then(
               (v) => setRadioSearchResult(v?.map(Audio.fromStation).toList()),
             )
-            .then((_) => _loading = false),
+            .then((_) => _loading = false)
+            .timeout(
+              const Duration(seconds: _searchTimeoutSeconds),
+              onTimeout: () {
+                throw SearchTimeoutException();
+              },
+            )
+            .onError((error, stackTrace) {
+              _messageController.addError(SearchTimeoutException());
+              return loading;
+            }),
       SearchType.radioCountry =>
         await _radioService
             .search(country: _country?.name.camelToSentence, limit: _radioLimit)
@@ -221,14 +254,34 @@ class SearchModel extends SafeChangeNotifier {
                 v?.map((e) => Audio.fromStation(e)).toList(),
               ),
             )
-            .then((_) => _loading = false),
+            .then((_) => _loading = false)
+            .timeout(
+              const Duration(seconds: _searchTimeoutSeconds),
+              onTimeout: () {
+                throw SearchTimeoutException();
+              },
+            )
+            .onError((error, stackTrace) {
+              _messageController.addError(SearchTimeoutException());
+              return loading;
+            }),
       SearchType.radioLanguage =>
         await _radioService
             .search(language: _language?.name.toLowerCase(), limit: _radioLimit)
             .then(
               (v) => setRadioSearchResult(v?.map(Audio.fromStation).toList()),
             )
-            .then((_) => _loading = false),
+            .then((_) => _loading = false)
+            .timeout(
+              const Duration(seconds: _searchTimeoutSeconds),
+              onTimeout: () {
+                throw SearchTimeoutException();
+              },
+            )
+            .onError((error, stackTrace) {
+              _messageController.addError(SearchTimeoutException());
+              return loading;
+            }),
       SearchType.podcastTitle =>
         await _podcastService
             .search(
@@ -240,6 +293,16 @@ class SearchModel extends SafeChangeNotifier {
               attribute: _podcastSearchAttribute,
             )
             .then((v) => setPodcastSearchResult(v))
+            .timeout(
+              const Duration(seconds: _searchTimeoutSeconds),
+              onTimeout: () {
+                throw SearchTimeoutException();
+              },
+            )
+            .onError((error, stackTrace) {
+              _messageController.addError(SearchTimeoutException());
+              return loading;
+            })
             .then((_) => _loading = false),
       _ =>
         await localSearch(_searchQuery)
@@ -264,7 +327,18 @@ class SearchModel extends SafeChangeNotifier {
                 }
               }
             })
-            .then((_) => _loading = false),
+            .then((_) => _loading = false)
+            .timeout(
+              const Duration(seconds: _searchTimeoutSeconds),
+              onTimeout: () {
+                throw SearchTimeoutException();
+              },
+            )
+            .onError((error, stackTrace) {
+              _loading = false;
+              _messageController.addError(SearchTimeoutException());
+              return loading;
+            }),
     };
   }
 
@@ -291,3 +365,5 @@ class SearchModel extends SafeChangeNotifier {
     notifyListeners();
   }
 }
+
+const _searchTimeoutSeconds = 10;

@@ -96,23 +96,26 @@ class LazyPodcastPage extends StatelessWidget with WatchItMixin {
       imageUrl: imageUrl,
       expandChild: true,
       child: Center(
-        child: Column(
-          spacing: kLargestSpace,
-          children: [
-            Text(
-              context.l10n.findEpisodesTimeoutMessage(
-                _getTitle(feedUrl, context),
+        child: SizedBox(
+          width: 300,
+          child: Column(
+            spacing: kLargestSpace,
+            children: [
+              Text(
+                context.l10n.findEpisodesTimeoutMessage(
+                  _getTitle(feedUrl, context),
+                ),
               ),
-            ),
-            FilledButton.icon(
-              onPressed: () => di<PodcastManager>().maybeRunEpisodesCommand(
-                feedUrl: feedUrl,
-                podcastItem: podcastItem,
-                clearErrors: true,
+              FilledButton.icon(
+                onPressed: () => di<PodcastManager>().maybeRunEpisodesCommand(
+                  feedUrl: feedUrl,
+                  podcastItem: podcastItem,
+                  clearErrors: true,
+                ),
+                label: Text(context.l10n.retryngInSeconds(cooldown.toString())),
               ),
-              label: Text(context.l10n.retryngInSeconds(cooldown.toString())),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

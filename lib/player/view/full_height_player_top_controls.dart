@@ -76,12 +76,13 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
               color: iconColor,
               onPressed: di<PlayerModel>().toggleShowQueue,
             ),
-          IconButton(
-            tooltip: context.l10n.leaveFullWindow,
-            icon: Icon(Iconz.fullWindowExit, color: iconColor),
-            color: iconColor,
-            onPressed: onFullHeightButtonPressed,
-          ),
+          if (playerPosition == PlayerPosition.fullWindow)
+            IconButton(
+              tooltip: context.l10n.leaveFullWindow,
+              icon: Icon(Iconz.fullWindowExit, color: iconColor),
+              color: iconColor,
+              onPressed: onFullHeightButtonPressed,
+            ),
           if (audio?.audioType == AudioType.podcast && video)
             PlaybackRateButton(color: iconColor),
           if (video && !isMobile) VolumeSliderPopup(color: iconColor),

@@ -11,6 +11,8 @@ import '../../player/player_service.dart';
 import '../../podcasts/data/podcast_download.dart';
 import '../../podcasts/download_manager_master.dart';
 import '../../podcasts/podcast_manager.dart';
+import '../../search/search_model.dart';
+import '../../search/search_timeout_exception.dart';
 import '../app_manager.dart';
 
 mixin CommonHandlersAndCommandsMixin {
@@ -64,10 +66,28 @@ mixin CommonHandlersAndCommandsMixin {
                     )
                   : newValue.error.toString(),
             ),
-            duration: const Duration(seconds: 5),
+            duration: const Duration(seconds: 8),
+            showCloseIcon: true,
           );
         } else if (newValue.hasData) {
           context.toast(Text(newValue.data!));
+        }
+      },
+    );
+
+    registerStreamHandler(
+      select: (SearchModel m) => m.messageStream,
+      handler: (context, newValue, cancel) {
+        if (newValue.hasError) {
+          context.toast(
+            Text(
+              newValue.error is SearchTimeoutException
+                  ? context.l10n.searchTimeoutMessage
+                  : newValue.error.toString(),
+            ),
+            duration: const Duration(seconds: 8),
+            showCloseIcon: true,
+          );
         }
       },
     );

@@ -2387,4 +2387,8 @@ class AppLocalizationsCs extends AppLocalizations {
   String playerCouldNotOpenRemoteMedia(String media) {
     return 'The player could not open remote media \'$media\'. Are you connected to the internet? If yes, this might be a server issue.';
   }
+
+  @override
+  String get searchTimeoutMessage =>
+      'Searching takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
 }

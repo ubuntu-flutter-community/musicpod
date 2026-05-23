@@ -72,8 +72,8 @@ class PlayerService {
     });
 
     player.stream.error.listen((event) {
-      pause();
       _messageController.addError(event);
+      stop();
     });
 
     _durationSub ??= player.stream.duration.listen((newDuration) {

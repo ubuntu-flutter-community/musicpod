@@ -123,13 +123,18 @@ class PodcastService {
       }
     } catch (e) {
       printMessageInDebugMode('Podcast search error: $e');
-      return _searchResult;
+      rethrow;
     }
+
     printMessageInDebugMode(
       'Podcast search result: successful=${result.successful}, '
       'itemCount=${result.items.length}, '
       'query=$searchQuery',
     );
+
+    if (!result.successful) {
+      throw result.lastError;
+    }
 
     if (result.successful &&
         (searchQuery == null ||
