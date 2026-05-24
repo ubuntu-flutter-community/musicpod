@@ -12,6 +12,7 @@ class StreamProviderShareButton extends StatelessWidget {
   const StreamProviderShareButton({
     super.key,
     this.onSearch,
+    this.onTap,
     required this.text,
     required this.streamProvider,
     this.color,
@@ -19,6 +20,7 @@ class StreamProviderShareButton extends StatelessWidget {
   });
 
   final void Function()? onSearch;
+  final void Function()? onTap;
   final String? text;
   final StreamProvider streamProvider;
   final Color? color;
@@ -64,7 +66,12 @@ class StreamProviderShareButton extends StatelessWidget {
       tooltip: onSearch != null
           ? context.l10n.search
           : '$tooltip ${context.l10n.search}',
-      onPressed: onSearch ?? () => launchUrl(Uri.parse(address)),
+      onPressed:
+          onSearch ??
+          () {
+            launchUrl(Uri.parse(address));
+            onTap?.call();
+          },
       icon: Padding(
         padding: const EdgeInsets.only(bottom: 2),
         child: Icon(onSearch != null ? Iconz.globe : iconData, color: color),
@@ -117,6 +124,7 @@ class StreamProviderRow extends StatelessWidget {
     super.key,
     this.text,
     this.onSearch,
+    this.onTap,
     this.spacing = 0.0,
     this.iconColor,
     this.mainAxisSize = MainAxisSize.max,
@@ -125,6 +133,7 @@ class StreamProviderRow extends StatelessWidget {
 
   final String? text;
   final void Function()? onSearch;
+  final void Function()? onTap;
 
   final double spacing;
   final Color? iconColor;
@@ -140,6 +149,7 @@ class StreamProviderRow extends StatelessWidget {
         StreamProviderShareButton(
           color: iconColor,
           onSearch: onSearch,
+          onTap: onTap,
           text: text,
           streamProvider: StreamProvider.youTubeMusic,
         ),
@@ -147,6 +157,7 @@ class StreamProviderRow extends StatelessWidget {
         if (onSearch == null)
           StreamProviderShareButton(
             color: iconColor,
+            onTap: onTap,
             text: text,
             streamProvider: StreamProvider.spotify,
           ),
@@ -155,18 +166,21 @@ class StreamProviderRow extends StatelessWidget {
           StreamProviderShareButton(
             color: iconColor,
             text: text,
+            onTap: onTap,
             streamProvider: StreamProvider.appleMusic,
           ),
         if (onSearch == null)
           StreamProviderShareButton(
             color: iconColor,
             text: text,
+            onTap: onTap,
             streamProvider: StreamProvider.amazonMusic,
           ),
         if (onSearch == null)
           StreamProviderShareButton(
             color: iconColor,
             text: text,
+            onTap: onTap,
             streamProvider: StreamProvider.amazon,
           ),
       ],

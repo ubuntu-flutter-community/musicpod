@@ -267,6 +267,7 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioService: gh<_i438.LocalAudioService>(),
         settingsService: gh<_i763.SettingsService>(),
       ),
+      dispose: (i) => i.dispose(),
     );
     await gh.singletonAsync<_i112.MpvMetadataManager>(
       () {

@@ -7,6 +7,7 @@ import '../../common/view/copy_clipboard_content.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/modals.dart';
 import '../../common/view/mpv_metadata_dialog.dart';
+import '../../common/view/stream_provider_share_button.dart';
 import '../../common/view/tapable_text.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -70,6 +71,8 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
               icon: Icon(Iconz.viewMore),
               onSelected: (v) {
                 switch (v) {
+                  case RadioHistoryTileOption.streamprovider:
+                    break;
                   case RadioHistoryTileOption.showMetadata:
                     final imageUrl = di<OnlineArtModel>().getCover(icyTitle);
                     final metadata = di<MpvMetadataManager>().getMetadata(
@@ -95,19 +98,36 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
               },
               itemBuilder: (context) => [
                 PopupMenuItem(
-                  child: Row(
-                    spacing: kSmallestSpace,
-                    children: [Icon(Iconz.info), Text(context.l10n.metadata)],
+                  child: StreamProviderRow(text: icyTitle, onTap: context.pop),
+                  value: RadioHistoryTileOption.streamprovider,
+                ),
+                PopupMenuItem(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Row(
+                      spacing: kMediumSpace,
+                      children: [
+                        Icon(Iconz.info),
+                        Expanded(child: Text(context.l10n.metadata)),
+                      ],
+                    ),
                   ),
                   value: RadioHistoryTileOption.showMetadata,
                 ),
                 PopupMenuItem(
-                  child: Row(
-                    spacing: kMediumSpace,
-                    children: [
-                      Icon(Iconz.remove),
-                      Text(context.l10n.ignoreThisTitleInHearingHistory),
-                    ],
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Row(
+                      spacing: kMediumSpace,
+                      children: [
+                        Icon(Iconz.remove),
+                        Expanded(
+                          child: Text(
+                            context.l10n.ignoreThisTitleInHearingHistory,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   value: RadioHistoryTileOption.ignoreTitle,
                 ),
@@ -142,7 +162,7 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
   }
 }
 
-enum RadioHistoryTileOption { showMetadata, ignoreTitle }
+enum RadioHistoryTileOption { showMetadata, ignoreTitle, streamprovider }
 
 class _SimpleRadioHistoryTile extends StatelessWidget {
   const _SimpleRadioHistoryTile({
