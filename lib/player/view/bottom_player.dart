@@ -34,8 +34,6 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
     final isVideo = watchPropertyValue((PlayerModel m) => m.isVideo);
     final fullWindowMode = watchValue((AppManager m) => m.fullWindowMode);
 
-    final model = di<PlayerModel>();
-
     final active = audio != null;
 
     final trackAndPlayer = [
@@ -53,7 +51,6 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                   child: BottomPlayerImage(
                     audio: audio,
                     size: bottomPlayerDefaultHeight - 24,
-                    videoController: model.controller,
                     isVideo: isVideo,
                   ),
                 ),
@@ -116,13 +113,19 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
       ),
     ];
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      height: audio == null || (isVideo && fullWindowMode)
-          ? 0
-          : bottomPlayerDefaultHeight,
-      child: Column(
-        children: isMobile ? trackAndPlayer.reversed.toList() : trackAndPlayer,
+    return AnimatedCrossFade(
+      crossFadeState: audio == null || (isVideo && fullWindowMode)
+          ? CrossFadeState.showFirst
+          : CrossFadeState.showSecond,
+      firstChild: const SizedBox.shrink(),
+      duration: const Duration(milliseconds: 100),
+      secondChild: SizedBox(
+        height: bottomPlayerDefaultHeight,
+        child: Column(
+          children: isMobile
+              ? trackAndPlayer.reversed.toList()
+              : trackAndPlayer,
+        ),
       ),
     );
   }

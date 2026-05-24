@@ -18,12 +18,10 @@ class BottomPlayerImage extends StatefulWidget with WatchItStatefulWidgetMixin {
     this.audio,
     required this.size,
     this.isVideo,
-    required this.videoController,
   });
   final Audio? audio;
   final double size;
   final bool? isVideo;
-  final VideoController videoController;
 
   @override
   State<BottomPlayerImage> createState() => _BottomPlayerImageState();
@@ -55,7 +53,7 @@ class _BottomPlayerImageState extends State<BottomPlayerImage> {
               height: widget.size,
               width: widget.size,
               filterQuality: FilterQuality.medium,
-              controller: widget.videoController,
+              controller: di<PlayerModel>().controller,
               controls: (state) {
                 return const SizedBox.shrink();
               },
