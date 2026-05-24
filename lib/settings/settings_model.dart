@@ -121,7 +121,7 @@ class SettingsModel extends SafeChangeNotifier {
   void setUseCustomThemeColor(bool value) =>
       _service.setValue(SPKeys.useCustomThemeColor, value);
 
-  bool get usePlayerColor => _service.getBool(SPKeys.usePlayerColor) ?? false;
+  bool get usePlayerColor => _service.getBool(SPKeys.usePlayerColor) ?? true;
   Future<void> setUsePlayerColor(bool value) =>
       _service.setValue(SPKeys.usePlayerColor, value);
 

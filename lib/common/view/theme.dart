@@ -294,7 +294,7 @@ double? get bottomPlayerPageGap => isMobile
     : null;
 
 EdgeInsets get playerTopControlsPadding => EdgeInsets.only(
-  right: isMacOS ? kSmallestSpace : kLargestSpace,
+  right: isMacOS ? kSmallestSpace : kMediumSpace,
   top: isDesktop ? 0 : 2 * kLargestSpace,
 );
 
