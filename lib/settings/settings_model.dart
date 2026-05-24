@@ -155,10 +155,6 @@ class SettingsModel extends SafeChangeNotifier {
   Future<void> setShowPlayerLyrics(bool value) =>
       _service.setValue(SPKeys.showPlayerLyrics, value);
 
-  bool get autoMovePlayer => _service.getBool(SPKeys.autoMovePlayer) ?? false;
-  Future<void> setAutoMovePlayer(bool value) =>
-      _service.setValue(SPKeys.autoMovePlayer, value);
-
   bool get enableLyricsGenius =>
       _service.getBool(SPKeys.enableLyricsGenius) ?? false;
   Future<void> setEnableLyricsGenius(bool value) =>

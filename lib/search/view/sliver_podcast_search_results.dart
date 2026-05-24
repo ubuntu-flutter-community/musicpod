@@ -4,7 +4,6 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
-import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
 import '../search_model.dart';
 import 'podcast_card.dart';
@@ -60,55 +59,6 @@ class _SliverPodcastSearchResultsState
         final item = searchResultItems.elementAt(index);
         return PodcastCard(key: ValueKey(item.feedUrl ?? index), item: item);
       },
-    );
-  }
-}
-
-class SliverPodcastSearchCountryChartsResults extends StatefulWidget
-    with WatchItStatefulWidgetMixin {
-  const SliverPodcastSearchCountryChartsResults({super.key});
-
-  @override
-  State<SliverPodcastSearchCountryChartsResults> createState() =>
-      _SliverPodcastSearchCountryChartsResultsState();
-}
-
-class _SliverPodcastSearchCountryChartsResultsState
-    extends State<SliverPodcastSearchCountryChartsResults> {
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      di<SearchModel>().fetchPodcastChartsPeak();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final loading = watchPropertyValue((SearchModel m) => m.loading);
-
-    final results = watchPropertyValue(
-      (SearchModel m) => m.podcastChartsPeak?.items,
-    );
-
-    if (results == null || loading) {
-      return const Center(child: Progress());
-    } else if (results.isEmpty) {
-      return const NoSearchResultPage();
-    }
-
-    return SizedBox(
-      height: kAudioCardDimension + kAudioCardBottomHeight,
-      child: ListView.separated(
-        itemCount: results.length,
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) {
-          final item = results.elementAt(index);
-          return PodcastCard(key: ValueKey(item.feedUrl ?? index), item: item);
-        },
-        separatorBuilder: (context, index) =>
-            const SizedBox(width: kMediumSpace),
-      ),
     );
   }
 }

@@ -26,9 +26,7 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
     final useYaruTheme = watchPropertyValue(
       (SettingsModel m) => m.useYaruTheme,
     );
-    final autoMovePlayer = watchPropertyValue(
-      (SettingsModel m) => m.autoMovePlayer,
-    );
+
     final useCustomThemeColor = watchPropertyValue(
       (SettingsModel m) => m.useCustomThemeColor,
     );
@@ -201,14 +199,6 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
               value: watchPropertyValue(
                 (SettingsModel m) => m.showPositionDuration,
               ),
-            ),
-          ),
-          YaruTile(
-            title: Text(l10n.autoMovePlayerTitle),
-            subtitle: Text(l10n.autoMovePlayerDescription),
-            trailing: CommonSwitch(
-              onChanged: model.setAutoMovePlayer,
-              value: autoMovePlayer,
             ),
           ),
         ],

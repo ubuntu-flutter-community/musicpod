@@ -22,14 +22,12 @@ class FullHeightPlayerHeaderBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return HeaderBar(
-      leading: playerPosition == PlayerPosition.sideBar || isMobile
+      leading: isMobile
           ? Center(
               child: IconButton(
                 tooltip: context.l10n.fullWindow,
                 icon: Icon(Iconz.fullScreen),
-                onPressed: () => di<AppManager>().setFullWindowMode(
-                  playerPosition == PlayerPosition.sideBar,
-                ),
+                onPressed: () => di<AppManager>().setFullWindowMode(true),
               ),
             )
           : null,

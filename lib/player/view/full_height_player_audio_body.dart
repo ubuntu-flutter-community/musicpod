@@ -67,7 +67,7 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
             ),
           const SizedBox(height: kLargestSpace),
         ],
-        if (isMobile || playerPosition == PlayerPosition.sideBar) ...[
+        if (isMobile) ...[
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child: Row(

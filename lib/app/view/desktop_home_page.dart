@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../common/view/ui_constants.dart';
-import '../../extensions/build_context_x.dart';
 import '../../player/view/player_view.dart';
-import '../../settings/settings_model.dart';
 import '../app_manager.dart';
 import 'common_handlers_and_commands.dart';
 import 'master_detail_page.dart';
@@ -15,13 +12,6 @@ class DesktopHomePage extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    final autoMovePlayer = watchPropertyValue(
-      (SettingsModel m) => m.autoMovePlayer,
-    );
-
-    final playerToTheRight =
-        autoMovePlayer && context.mediaQuerySize.width > kSideBarThreshHold;
-
     final isInFullWindowMode = watchValue((AppManager m) => m.fullWindowMode);
 
     setupCommonHandlersAndCommands(context);
@@ -30,23 +20,11 @@ class DesktopHomePage extends StatelessWidget
     return Scaffold(
       body: Stack(
         children: [
-          Row(
-            children: [
-              const Expanded(child: const MasterDetailPage()),
-              if (playerToTheRight)
-                const SizedBox(
-                  width: kSideBarPlayerWidth,
-                  child: PlayerView.sideBar(),
-                ),
-            ],
-          ),
+          const MasterDetailPage(),
           if (isInFullWindowMode) const PlayerView.fullWindow(),
         ],
       ),
-      bottomNavigationBar:
-          !autoMovePlayer || !playerToTheRight || isInFullWindowMode
-          ? const PlayerView.bottom()
-          : null,
+      bottomNavigationBar: const PlayerView.bottom(),
     );
   }
 }

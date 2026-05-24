@@ -6,7 +6,6 @@ import '../../app/app_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
-import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
@@ -38,9 +37,7 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
     final playerWithSidePanel =
         playerPosition == PlayerPosition.fullWindow &&
         mediaQuerySize.width > 1000;
-    final playerToTheRight = mediaQuerySize.width > kSideBarThreshHold;
 
-    final fullWindowMode = watchValue((AppManager m) => m.fullWindowMode);
     final isFullScreen = isFullscreen(context);
 
     final showQueue = watchPropertyValue((PlayerModel m) => m.showQueue);
@@ -50,10 +47,6 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
     Future<void> onFullHeightButtonPressed() async {
       await appManager.setFullWindowMode(
         playerPosition == PlayerPosition.fullWindow ? false : true,
-      );
-
-      appManager.setShowWindowControls(
-        (fullWindowMode && playerToTheRight) ? false : true,
       );
     }
 
@@ -80,9 +73,7 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
             PlaybackRateButton(color: iconColor),
           if (video && !isMobile) VolumeSliderPopup(color: iconColor),
           if (video) PlayerPauseTimerButton(iconColor: iconColor),
-          if (playerPosition != PlayerPosition.sideBar &&
-              !isMobile &&
-              !isFullScreen)
+          if (!isMobile && !isFullScreen)
             IconButton(
               tooltip: playerPosition == PlayerPosition.fullWindow
                   ? context.l10n.leaveFullWindow

@@ -210,7 +210,8 @@ class SearchModel extends SafeChangeNotifier {
 
     return switch (_searchType) {
       SearchType.radioName =>
-        await radioNameSearch(_searchQuery)
+        await _radioService
+            .search(name: searchQuery, limit: _radioLimit)
             .then(
               (v) => setRadioSearchResult(
                 _searchQuery == null || _searchQuery!.isEmpty
@@ -344,26 +345,6 @@ class SearchModel extends SafeChangeNotifier {
 
   Future<List<Station>?> radioNameSearch(String? searchQuery) async =>
       _radioService.search(name: searchQuery, limit: _radioLimit);
-
-  List<Station>? _radioCountryChartsPeak;
-  List<Station>? get radioCountryChartsPeak => _radioCountryChartsPeak;
-  Future<void> radioCountrySearch({int limit = 10}) async {
-    _radioCountryChartsPeak = await _radioService.search(
-      country: _country?.name,
-      limit: limit,
-    );
-    notifyListeners();
-  }
-
-  SearchResult? _podcastChartsPeak;
-  SearchResult? get podcastChartsPeak => _podcastChartsPeak;
-  Future<void> fetchPodcastChartsPeak({int limit = 10}) async {
-    _podcastChartsPeak = await _podcastService.search(
-      country: _country,
-      limit: limit,
-    );
-    notifyListeners();
-  }
 }
 
 const _searchTimeoutSeconds = 10;

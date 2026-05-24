@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/app_manager.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
@@ -10,43 +9,13 @@ import '../player_model.dart';
 import 'bottom_player.dart';
 import 'full_height_player.dart';
 
-class PlayerView extends StatefulWidget with WatchItStatefulWidgetMixin {
+class PlayerView extends StatelessWidget with WatchItMixin {
   const PlayerView.bottom({super.key}) : _position = PlayerPosition.bottom;
-
-  const PlayerView.sideBar({super.key}) : _position = PlayerPosition.sideBar;
 
   const PlayerView.fullWindow({super.key})
     : _position = PlayerPosition.fullWindow;
 
   final PlayerPosition _position;
-
-  @override
-  State<PlayerView> createState() => _PlayerViewState();
-}
-
-class _PlayerViewState extends State<PlayerView> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (!mounted) return;
-      di<AppManager>().setShowWindowControls(
-        widget._position != PlayerPosition.sideBar,
-      );
-    });
-  }
-
-  @override
-  void didUpdateWidget(covariant PlayerView oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (!mounted) return;
-      di<AppManager>().setShowWindowControls(
-        widget._position != PlayerPosition.sideBar,
-      );
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,20 +29,20 @@ class _PlayerViewState extends State<PlayerView> {
         : getPlayerBg(
             theme,
             watchPropertyValue((PlayerModel m) => m.color ?? baseColor),
-            blendAmount: widget._position == PlayerPosition.bottom
+            blendAmount: _position == PlayerPosition.bottom
                 ? (theme.isLight ? 0.2 : 0.3)
                 : 0.3,
-            saturation: widget._position == PlayerPosition.bottom ? -0.3 : -0.4,
+            saturation: _position == PlayerPosition.bottom ? -0.3 : -0.4,
           );
     return RepaintBoundary(
       child: Material(
         child: Container(
           decoration: BoxDecoration(
-            color: widget._position != PlayerPosition.bottom ? null : playerBg,
-            gradient: widget._position.getGradient(playerBg),
+            color: _position != PlayerPosition.bottom ? null : playerBg,
+            gradient: _position.getGradient(playerBg),
           ),
-          child: widget._position != PlayerPosition.bottom
-              ? FullHeightPlayer(playerPosition: widget._position)
+          child: _position != PlayerPosition.bottom
+              ? FullHeightPlayer(playerPosition: _position)
               : const BottomPlayer(),
         ),
       ),
@@ -83,7 +52,6 @@ class _PlayerViewState extends State<PlayerView> {
 
 enum PlayerPosition {
   bottom,
-  sideBar,
   fullWindow;
 
   LinearGradient getGradient(Color color) {
@@ -93,11 +61,6 @@ enum PlayerPosition {
         colors: colors,
         begin: Alignment.centerLeft,
         end: Alignment.centerRight,
-      ),
-      PlayerPosition.sideBar => LinearGradient(
-        colors: colors,
-        begin: Alignment.topRight,
-        end: Alignment.bottomLeft,
       ),
       PlayerPosition.fullWindow => LinearGradient(
         colors: colors,

@@ -3,6 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/routing_manager.dart';
 import '../../common/data/audio.dart';
+import '../../common/data/audio_type.dart';
 import '../../common/view/copy_clipboard_content.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/modals.dart';
@@ -15,6 +16,7 @@ import '../../extensions/theme_data_x.dart';
 import '../../l10n/l10n.dart';
 import '../../player/mpv_metadata_manager.dart';
 import '../../search/search_model.dart';
+import '../../search/search_type.dart';
 import '../../settings/settings_model.dart';
 import '../online_art_model.dart';
 import 'radio_history_tile_image.dart';
@@ -145,8 +147,11 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
           text: icyName ?? context.l10n.station,
           onTap: !allowNavigation || icyName == null
               ? null
-              : () {
-                  di<SearchModel>().radioNameSearch(icyName).then((v) {
+              : () => di<SearchModel>()
+                  ..setSearchType(SearchType.radioName)
+                  ..setSearchQuery(icyName)
+                  ..setAudioType(AudioType.radio)
+                  ..radioNameSearch(icyName).then((v) {
                     if (v?.firstOrNull?.stationUUID != null) {
                       di<RoutingManager>().push(
                         builder: (_) =>
@@ -154,8 +159,7 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
                         pageId: v!.first.stationUUID,
                       );
                     }
-                  });
-                },
+                  }),
         ),
       ),
     };

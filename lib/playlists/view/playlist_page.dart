@@ -29,7 +29,6 @@ import '../../local_audio/view/failed_import_snackbar.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
-import '../../settings/settings_model.dart';
 import 'playlist_add_audio_autocomplete.dart';
 import 'playlist_control_panel.dart';
 import 'playlist_header_image.dart';
@@ -203,9 +202,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
     final localAudioManager = di<LocalAudioManager>();
     final playerModel = di<PlayerModel>();
-    final autoMovePlayer = watchPropertyValue(
-      (SettingsModel m) => m.autoMovePlayer,
-    );
+
     final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
 
     final audioPageHeader = AudioPageHeader(
@@ -233,11 +230,8 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
       ),
       sliverBody: (constraints) {
         final mqSize = constraints.maxWidth;
-        final playerToTheRight = mqSize > kSideBarThreshHold;
 
-        final width = autoMovePlayer && playerToTheRight
-            ? mqSize - kSideBarPlayerWidth
-            : mqSize;
+        final width = mqSize;
         return allowReorder
             ? SliverReorderableList(
                 itemCount: audios.length,

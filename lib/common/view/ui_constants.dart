@@ -24,8 +24,6 @@ const kAudioTilePadding = EdgeInsets.zero;
 
 const kAudioTrackWidth = 40.0;
 
-const kSideBarThreshHold = 1500.0;
-
 const kSideBarPlayerWidth = 500.0;
 
 const kGridPadding = EdgeInsets.only(

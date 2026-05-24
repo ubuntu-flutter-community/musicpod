@@ -40,12 +40,6 @@ class AppManager {
   final String? _countryCode;
   String? get countryCode => _countryCode;
 
-  final showWindowControls = SafeValueNotifier<bool>(!isMobile);
-  void setShowWindowControls(bool value) {
-    if (value == showWindowControls.value) return;
-    showWindowControls.value = value;
-  }
-
   final fullWindowMode = SafeValueNotifier<bool>(false);
   Future<void> setFullWindowMode(bool? value) async {
     if (value == null) return;
