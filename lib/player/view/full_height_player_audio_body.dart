@@ -113,6 +113,7 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
               StopButton(active: active),
             ],
           ),
+          const SizedBox(height: kLargestSpace),
         ],
       ],
     );
