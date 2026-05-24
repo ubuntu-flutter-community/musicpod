@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/data/audio_type.dart';
+import '../../player/player_model.dart';
 import '../page_ids.dart';
 import '../../search/search_model.dart';
 import '../app_manager.dart';
@@ -28,6 +29,11 @@ class MouseAndKeyboardCommandWrapper extends StatelessWidget {
           const _BackIntent(),
       LogicalKeySet(LogicalKeyboardKey.alt, LogicalKeyboardKey.backspace):
           const _BackIntent(),
+      LogicalKeySet(LogicalKeyboardKey.enter, LogicalKeyboardKey.alt):
+          const _FullWindowIntent(),
+      LogicalKeySet(LogicalKeyboardKey.enter, LogicalKeyboardKey.meta):
+          const _FullWindowIntent(),
+      LogicalKeySet(LogicalKeyboardKey.space): const _PlayPauseIntent(),
     },
     child: Actions(
       actions: <Type, Action<Intent>>{
@@ -74,6 +80,18 @@ class MouseAndKeyboardCommandWrapper extends StatelessWidget {
             return null;
           },
         ),
+        _FullWindowIntent: CallbackAction<_FullWindowIntent>(
+          onInvoke: (intent) {
+            di<AppManager>().toggleFullWindowMode();
+            return null;
+          },
+        ),
+        _PlayPauseIntent: CallbackAction<_PlayPauseIntent>(
+          onInvoke: (intent) {
+            di<PlayerModel>().playOrPause();
+            return null;
+          },
+        ),
       },
       child: RawGestureDetector(
         gestures: <Type, GestureRecognizerFactory>{
@@ -101,6 +119,14 @@ class _SettingsIntent extends Intent {
 
 class _BackIntent extends Intent {
   const _BackIntent();
+}
+
+class _FullWindowIntent extends Intent {
+  const _FullWindowIntent();
+}
+
+class _PlayPauseIntent extends Intent {
+  const _PlayPauseIntent();
 }
 
 class _MouseBackButtonRecognizer extends BaseTapGestureRecognizer {
