@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
+import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../player/player_model.dart';
@@ -47,12 +48,12 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
     }
 
     return Column(
+      spacing: kMediumSpace,
       children: [
         FullHeightPlayerHeaderBar(
           isVideo: isVideo,
           playerPosition: playerPosition,
         ),
-        const SizedBox(height: 40),
         Expanded(child: body),
       ],
     );
