@@ -21,7 +21,9 @@ class RadioLibPage extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    callOnceAfterThisBuild((_) => di<RadioManager>().connectCommand.run());
+    callOnceAfterThisBuild(
+      (_) => di<RadioManager>().maybeConnect(clearErrors: false),
+    );
 
     registerRadioConnectHandler(context);
 
@@ -35,7 +37,7 @@ class RadioLibPage extends StatelessWidget
       whileRunning: (lastResult, param) => const Center(child: Progress()),
       onError: (error, lastResult, param) => NoSearchResultPage(
         icon: FilledButton(
-          onPressed: () => di<RadioManager>().connectCommand.run(),
+          onPressed: () => di<RadioManager>().maybeConnect(clearErrors: true),
           child: Text(
             cooldown == 0
                 ? context.l10n.retry
