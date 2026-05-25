@@ -45,7 +45,6 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
     registerHandler(
       select: (RadioManager m) => m.getStationByUUIDCommand(uuid).results,
       handler: (context, results, cancel) {
-        if (results.isRunning) return;
         if (results.hasError) {
           context.toast(
             Text(results.error.toString()),
@@ -119,7 +118,7 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
                       : context.l10n.retryngInSeconds(cooldown.toString()),
                 ),
               ),
-              message: Text(context.l10n.findStationsTimeoutMessage),
+              message: Text(error.toString()),
             );
           }
 

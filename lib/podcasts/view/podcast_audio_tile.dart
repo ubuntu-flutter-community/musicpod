@@ -100,7 +100,7 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
           alignment: Alignment.centerLeft,
           child: Padding(
             padding: isMobile
-                ? const EdgeInsets.symmetric(horizontal: 10)
+                ? const EdgeInsets.symmetric(horizontal: kMediumPlusSpace)
                 : EdgeInsets.only(left: (radius * 2) + 30, right: 60),
             child: Column(
               children: [

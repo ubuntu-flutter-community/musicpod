@@ -2372,6 +2372,10 @@ class AppLocalizationsPl extends AppLocalizations {
   }
 
   @override
+  String get radioBrowserSeverUnavailable =>
+      'The radio browser server is currently unavailable. This might be a temporary issue. Please try again later.';
+
+  @override
   String get findStationsTimeoutMessage =>
       'Finding (this) station(s) takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
 

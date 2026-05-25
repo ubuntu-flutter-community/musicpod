@@ -34,7 +34,10 @@ class StationCard extends StatelessWidget with WatchItMixin {
     final station = stationResult.data;
     final error = stationResult.error;
 
-    if (error != null) return AudioCard(image: Icon(Iconz.imageMissing));
+    if (error != null)
+      return AudioCard(
+        image: Center(child: Icon(Iconz.imageMissing, size: 70)),
+      );
 
     if (station == null) return const AudioCard();
 

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
+import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/sliver_body.dart';
+import '../../l10n/l10n.dart';
 import '../../settings/view/settings_action.dart';
 import '../radio_manager.dart';
 import 'blocked_heariny_history_list.dart';
@@ -19,9 +21,7 @@ class RadioLibPage extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    callOnceAfterThisBuild(
-      (_) => di<RadioManager>().maybeConnect(clearErrors: false),
-    );
+    callOnceAfterThisBuild((_) => di<RadioManager>().connectCommand.run());
 
     registerRadioConnectHandler(context);
 
@@ -29,15 +29,24 @@ class RadioLibPage extends StatelessWidget
       (RadioManager m) => m.radioCollectionView,
     );
 
+    final cooldown = watchValue((RadioManager m) => m.cooldown);
+
     return watchValue((RadioManager m) => m.connectCommand.results).toWidget(
       whileRunning: (lastResult, param) => const Center(child: Progress()),
-      onError: (error, lastResult, param) => const SliverFillRemaining(
-        hasScrollBody: false,
-        child: const Center(child: RadioReconnectButton()),
+      onError: (error, lastResult, param) => NoSearchResultPage(
+        icon: FilledButton(
+          onPressed: () => di<RadioManager>().connectCommand.run(),
+          child: Text(
+            cooldown == 0
+                ? context.l10n.retry
+                : context.l10n.retryngInSeconds(cooldown.toString()),
+          ),
+        ),
+        message: Text(error.toString()),
       ),
       onData: (connectedHost, param) => connectedHost == null
           ? const SliverFillRemaining(
-              child: Center(child: RadioReconnectButton()),
+              child: SizedBox(width: 100, child: RadioReconnectButton()),
             )
           : SliverBody(
               controlPanel: const RadioLibPageControlPanel(),

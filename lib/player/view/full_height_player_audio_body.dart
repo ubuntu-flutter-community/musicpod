@@ -9,7 +9,9 @@ import '../player_model.dart';
 import 'full_height_player_image.dart';
 import 'player_explorer.dart';
 import 'player_main_controls.dart';
+import 'player_title_and_artist.dart';
 import 'player_track.dart';
+import 'player_view.dart';
 
 class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
   const FullHeightPlayerAudioBody({
@@ -68,6 +70,12 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
           if (!isMobile) const SizedBox(height: 4 * kLargestSpace),
           if (isMobile) ...[
             const Spacer(flex: 4),
+            const Padding(
+              padding: EdgeInsets.all(kLargestSpace + kMediumPlusSpace),
+              child: PlayerTitleAndArtist(
+                playerPosition: PlayerPosition.fullWindow,
+              ),
+            ),
             const Padding(
               padding: EdgeInsets.only(
                 bottom: 3 * kLargestSpace,

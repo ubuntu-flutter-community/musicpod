@@ -9,6 +9,7 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/copy_clipboard_content.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
+import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/view/album_page.dart';
@@ -52,11 +53,11 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
       },
       mainAxisAlignment: switch (playerPosition) {
         PlayerPosition.bottom => MainAxisAlignment.center,
-        _ => MainAxisAlignment.start,
+        _ => isMobile ? MainAxisAlignment.start : MainAxisAlignment.center,
       },
       crossAxisAlignment: switch (playerPosition) {
         PlayerPosition.bottom => CrossAxisAlignment.start,
-        _ => CrossAxisAlignment.center,
+        _ => isMobile ? CrossAxisAlignment.start : CrossAxisAlignment.center,
       },
       children: [
         Material(
@@ -143,7 +144,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
 
   TextAlign _textAlign() => switch (playerPosition) {
     PlayerPosition.bottom => TextAlign.start,
-    _ => TextAlign.center,
+    _ => isMobile ? TextAlign.start : TextAlign.center,
   };
 
   TextStyle _fullHeightTitleTextStyle(ThemeData theme) => TextStyle(

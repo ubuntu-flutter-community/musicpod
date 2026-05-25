@@ -4605,6 +4605,12 @@ abstract class AppLocalizations {
   /// **'Finding episodes takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.'**
   String findEpisodesTimeoutMessage(String podcastName);
 
+  /// No description provided for @radioBrowserSeverUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The radio browser server is currently unavailable. This might be a temporary issue. Please try again later.'**
+  String get radioBrowserSeverUnavailable;
+
   /// No description provided for @findStationsTimeoutMessage.
   ///
   /// In en, this message translates to:

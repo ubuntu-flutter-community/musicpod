@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../extensions/taget_platform_x.dart';
 import 'sliver_audio_page_control_panel.dart';
 import 'ui_constants.dart';
 
@@ -34,9 +35,9 @@ class AdaptiveMultiLayoutBody extends StatelessWidget {
           child: _SingleLayout(
             header: header,
             sliverBody: SliverPadding(
-              padding: const EdgeInsets.only(
-                left: kLargestSpace,
-                right: kLargestSpace,
+              padding: EdgeInsets.only(
+                left: isMobile ? 0 : kLargestSpace,
+                right: isMobile ? 0 : kLargestSpace,
                 bottom: kLargestSpace,
               ),
               sliver: sliverBody(constraints),

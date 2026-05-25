@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
+import '../common/logging.dart';
 import '../l10n/app_localizations.dart';
 import 'radio_service.dart';
 
@@ -23,7 +24,16 @@ class RadioManager extends SafeChangeNotifier {
 
   final _stationCache = <String, Audio>{};
   late final Command<void, String?> connectCommand = Command.createAsyncNoParam(
-    () => _radioService.initSearch(),
+    () async {
+      try {
+        return await _radioService.initSearch();
+      } catch (e) {
+        printMessageInDebugMode(e, tag: 'RadioManager');
+        throw RadioBrowserServerUnavailableException(
+          message: di<AppLocalizations>().radioBrowserSeverUnavailable,
+        );
+      }
+    },
     initialValue: null,
   );
 
@@ -65,7 +75,9 @@ class RadioManager extends SafeChangeNotifier {
                     message: di<AppLocalizations>().findStationsTimeoutMessage,
                   );
                 }
-                throw error;
+                throw RadioBrowserServerUnavailableException(
+                  message: di<AppLocalizations>().radioBrowserSeverUnavailable,
+                );
               }),
           initialValue: null,
         ),

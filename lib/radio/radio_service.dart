@@ -32,11 +32,9 @@ class RadioService {
     try {
       hosts = await _findHosts().timeout(const Duration(seconds: 15));
     } on TimeoutException catch (_) {
-      printMessageInDebugMode('Timeout while trying to find a host.');
-      return null;
-    } on Exception catch (e) {
-      printMessageInDebugMode(e);
-      return null;
+      rethrow;
+    } on Exception {
+      rethrow;
     }
     for (var host in hosts) {
       try {
@@ -45,8 +43,8 @@ class RadioService {
         if (_radioBrowserApi?.host != null && _tags?.isNotEmpty == true) {
           break;
         }
-      } on Exception catch (e) {
-        printMessageInDebugMode(e);
+      } on Exception {
+        rethrow;
       }
     }
 
@@ -91,11 +89,9 @@ class RadioService {
       }
       final station = response.items.first;
       return station;
-    } on Exception catch (e) {
-      printMessageInDebugMode(e);
+    } on Exception {
+      rethrow;
     }
-
-    return null;
   }
 
   Future<Station?> getStationByUrl(String url) async {
@@ -110,11 +106,9 @@ class RadioService {
       final station = response.items.firstOrNull;
 
       return station;
-    } on Exception catch (e) {
-      printMessageInDebugMode(e);
+    } on Exception {
+      rethrow;
     }
-
-    return null;
   }
 
   RadioBrowserListResponse<Station>? _response;
@@ -181,8 +175,8 @@ class RadioService {
           parameters: parameters,
         );
       }
-    } on Exception catch (e) {
-      printMessageInDebugMode(e);
+    } on Exception {
+      rethrow;
     }
 
     _country = country;
@@ -213,15 +207,10 @@ class RadioService {
               reverse: true,
             ),
           )
-          .timeout(const Duration(seconds: 3));
+          .timeout(const Duration(seconds: 15));
       _tags = response.items;
-    } on TimeoutException catch (_) {
-      printMessageInDebugMode(
-        'Timeout while trying to load tags from ${_radioBrowserApi?.host}.',
-      );
-      return null;
-    } on Exception catch (e) {
-      printMessageInDebugMode(e);
+    } on Exception {
+      rethrow;
     }
     return _tags;
   }
@@ -400,4 +389,13 @@ class RadioBrowserApiNotConnectedException implements Exception {
 
   @override
   String toString() => message ?? '$RadioBrowserApi not connected';
+}
+
+class RadioBrowserServerUnavailableException implements Exception {
+  final String? message;
+
+  RadioBrowserServerUnavailableException({this.message});
+
+  @override
+  String toString() => message ?? 'RadioBrowser server is unavailable';
 }

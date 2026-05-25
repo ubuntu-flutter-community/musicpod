@@ -11,6 +11,9 @@ mixin RadioConnectMixin {
     registerHandler(
       select: (RadioManager m) => m.connectCommand.results,
       handler: (context, results, cancel) {
+        if (!results.hasData) {
+          return;
+        }
         final connectedHost = results.data;
         final isRunning = results.isRunning;
         context.toast(
