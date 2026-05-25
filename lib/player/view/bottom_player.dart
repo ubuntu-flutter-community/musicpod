@@ -29,6 +29,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final smallWindow = context.smallWindow;
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
     final isVideo = watchPropertyValue((PlayerModel m) => m.isVideo);
@@ -84,13 +85,19 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                       const PlayerPauseTimerButton(),
                       ShareButton(audio: audio, active: active),
                       if (!isMobile) const VolumeSliderPopup(),
-                      if (!fullWindowMode)
-                        IconButton(
-                          tooltip: context.l10n.fullWindow,
-                          icon: Icon(Iconz.fullWindow),
-                          onPressed: () =>
-                              di<AppManager>().setFullWindowMode(true),
+
+                      IconButton(
+                        isSelected: fullWindowMode,
+                        tooltip: audio == null || !audio.isRadio
+                            ? l10n.queue
+                            : l10n.hearingHistory,
+                        icon: Icon(
+                          audio == null || !audio.isRadio
+                              ? Iconz.playlist
+                              : Iconz.radioHistory,
                         ),
+                        onPressed: di<AppManager>().toggleFullWindowMode,
+                      ),
                     ],
                   ),
                 )

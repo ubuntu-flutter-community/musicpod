@@ -45,14 +45,9 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
         children: [
           if (!playerWithSidePanel && !video)
             IconButton(
-              tooltip: audio?.isRadio == true
-                  ? context.l10n.hearingHistory
-                  : context.l10n.queue,
-              icon: Icon(
-                audio?.isRadio == true ? Iconz.radioHistory : Iconz.playlist,
-                color: iconColor,
-              ),
-              isSelected: showQueue,
+              tooltip: context.l10n.arts,
+              icon: Icon(Iconz.image, color: iconColor),
+              isSelected: !showQueue,
               color: iconColor,
               onPressed: di<PlayerModel>().toggleShowQueue,
             ),
