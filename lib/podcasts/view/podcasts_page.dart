@@ -19,7 +19,6 @@ class PodcastsPage extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
     appBar: HeaderBar(
       titleSpacing: 0,
-      adaptive: true,
       actions: [
         Padding(
           padding: appBarSingleActionSpacing,

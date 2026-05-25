@@ -49,7 +49,6 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: HeaderBar(
-      adaptive: true,
       title: Text(context.l10n.settings),
       actions: [
         Padding(

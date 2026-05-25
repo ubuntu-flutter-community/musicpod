@@ -10,9 +10,18 @@ import '../extensions/build_context_x.dart';
 import '../l10n/l10n.dart';
 
 class PatchNotesDialog extends StatefulWidget {
-  const PatchNotesDialog({super.key, this.onClose});
+  const PatchNotesDialog({
+    super.key,
+    this.onClose,
+    this.contentPadding,
+    this.actionsPadding,
+    this.insetPadding,
+  });
 
   final VoidCallback? onClose;
+  final EdgeInsetsGeometry? contentPadding;
+  final EdgeInsetsGeometry? actionsPadding;
+  final EdgeInsets? insetPadding;
 
   @override
   State<PatchNotesDialog> createState() => _PatchNotesDialogState();
@@ -30,6 +39,8 @@ class _PatchNotesDialogState extends State<PatchNotesDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      contentPadding: widget.contentPadding,
+      insetPadding: widget.insetPadding,
       scrollable: true,
       content: FutureBuilder(
         future: _markdown,
@@ -47,7 +58,7 @@ class _PatchNotesDialogState extends State<PatchNotesDialog> {
               )
             : const Center(child: Progress()),
       ),
-      actionsPadding: const EdgeInsets.all(20),
+      actionsPadding: widget.actionsPadding ?? const EdgeInsets.all(20),
       actions: [
         TextButton(
           onPressed: () {

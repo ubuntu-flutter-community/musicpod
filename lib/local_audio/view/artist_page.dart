@@ -78,7 +78,6 @@ class _ArtistPageState extends State<ArtistPage> {
     return Scaffold(
       appBar: HeaderBar(
         title: Text(widget.pageId),
-        adaptive: true,
         actions: [
           Padding(
             padding: appBarSingleActionSpacing,

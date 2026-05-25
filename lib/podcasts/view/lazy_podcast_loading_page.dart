@@ -20,7 +20,7 @@ class LazyPodcastLoadingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: const HeaderBar(adaptive: true),
+    appBar: const HeaderBar(),
     body: AdaptiveMultiLayoutBody(
       header: PodcastPageHeader(
         title: title,

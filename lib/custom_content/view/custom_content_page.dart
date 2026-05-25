@@ -17,7 +17,6 @@ class CustomContentPage extends StatelessWidget {
     return Scaffold(
       appBar: HeaderBar(
         title: Text(l10n.customContentTitle),
-        adaptive: true,
         actions: [const SizedBox(width: 10)],
       ),
       body: Padding(

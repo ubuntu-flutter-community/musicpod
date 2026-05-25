@@ -17,31 +17,30 @@ class FullHeightPlayerHeaderBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return HeaderBar(
+      heroTag: 'fullHeightPlayerHeaderBar',
       leading: isMobile
           ? Center(
               child: IconButton(
-                tooltip: context.l10n.fullWindow,
-                icon: Icon(Iconz.fullScreen),
-                onPressed: () => di<AppManager>().setFullWindowMode(true),
+                tooltip: context.l10n.leaveFullWindow,
+                icon: Icon(
+                  Iconz.fullWindowExit,
+                  color: isVideo == true ? Colors.white : null,
+                ),
+                onPressed: () => di<AppManager>().setFullWindowMode(false),
               ),
             )
           : null,
-      adaptive: false,
       includeBackButton: false,
       includeSidebarButton: false,
       title: const Text('', maxLines: 1, overflow: TextOverflow.ellipsis),
       foregroundColor: isVideo == true ? Colors.white : null,
       backgroundColor: isVideo == true ? Colors.black : Colors.transparent,
-      actions: isVideo
-          ? null
-          : [
-              FullHeightPlayerTopControls(
-                iconColor: isVideo
-                    ? Colors.white
-                    : context.colorScheme.onSurface,
-                video: isVideo,
-              ),
-            ],
+      actions: [
+        FullHeightPlayerTopControls(
+          iconColor: isVideo ? Colors.white : context.colorScheme.onSurface,
+          video: isVideo,
+        ),
+      ],
     );
   }
 }

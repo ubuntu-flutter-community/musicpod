@@ -20,10 +20,10 @@ class HeaderBar extends StatelessWidget
     this.titleSpacing = 0,
     this.backgroundColor,
     this.foregroundColor,
-    required this.adaptive,
     this.includeBackButton = true,
     this.includeSidebarButton = true,
     this.leading,
+    this.heroTag,
   });
 
   final Widget? title;
@@ -32,10 +32,10 @@ class HeaderBar extends StatelessWidget
   final double? titleSpacing;
   final Color? foregroundColor;
   final Color? backgroundColor;
-  final bool adaptive;
   final bool includeBackButton;
   final bool includeSidebarButton;
   final Widget? leading;
+  final Object? heroTag;
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +78,7 @@ class HeaderBar extends StatelessWidget
         ).copyWith(scrolledUnderElevation: 0),
       ),
       child: YaruWindowTitleBar(
+        heroTag: heroTag,
         titleSpacing: titleSpacing,
         actions: [
           if ((!context.showMasterPanel && isMacOS) && defaultLeading != null)

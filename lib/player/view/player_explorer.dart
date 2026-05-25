@@ -28,26 +28,16 @@ class PlayerExplorer extends StatefulWidget with WatchItStatefulWidgetMixin {
 
 class _PlayerExplorerState extends State<PlayerExplorer>
     with TickerProviderStateMixin {
-  late final TabController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TabController(
-      length: 2,
-      vsync: this,
-      initialIndex: di<SettingsModel>().showPlayerLyrics ? 1 : 0,
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  late final TabController _controller = TabController(
+    length: 2,
+    vsync: this,
+    initialIndex: di<SettingsModel>().showPlayerLyrics ? 1 : 0,
+  );
 
   @override
   Widget build(BuildContext context) {
+    onDispose(_controller.dispose);
+
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
 
     final splitByDash = watchValue(
@@ -56,6 +46,7 @@ class _PlayerExplorerState extends State<PlayerExplorer>
     );
 
     return Column(
+      spacing: kLargestSpace,
       children: [
         TabBar(
           controller: _controller,
@@ -69,27 +60,24 @@ class _PlayerExplorerState extends State<PlayerExplorer>
           ],
         ),
         Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(top: kLargestSpace),
-            child: TabBarView(
-              controller: _controller,
-              children: [
-                if (audio?.audioType == AudioType.radio) ...[
-                  const RadioHistoryList(simpleList: true),
-                ] else ...[
-                  const QueueBody(),
-                ],
-                PlayerLyrics(
-                  key: ValueKey(audio.toString() + splitByDash.toString()),
-                  title: audio?.audioType != AudioType.radio
-                      ? null
-                      : splitByDash?.songName,
-                  artist: audio?.audioType != AudioType.radio
-                      ? null
-                      : splitByDash?.artist,
-                ),
+          child: TabBarView(
+            controller: _controller,
+            children: [
+              if (audio?.audioType == AudioType.radio) ...[
+                const RadioHistoryList(simpleList: true),
+              ] else ...[
+                const QueueBody(),
               ],
-            ),
+              PlayerLyrics(
+                key: ValueKey(audio.toString() + splitByDash.toString()),
+                title: audio?.audioType != AudioType.radio
+                    ? null
+                    : splitByDash?.songName,
+                artist: audio?.audioType != AudioType.radio
+                    ? null
+                    : splitByDash?.artist,
+              ),
+            ],
           ),
         ),
       ],

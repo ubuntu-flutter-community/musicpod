@@ -97,7 +97,6 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
     final l10n = context.l10n;
     return Scaffold(
       appBar: HeaderBar(
-        adaptive: true,
         titleSpacing: 0,
         actions: [
           Padding(

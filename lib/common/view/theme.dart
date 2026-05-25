@@ -293,10 +293,8 @@ double? get bottomPlayerPageGap => isMobile
     ? bottomPlayerDefaultHeight + navigationBarHeight + kLargestSpace
     : null;
 
-EdgeInsets get playerTopControlsPadding => EdgeInsets.only(
-  right: isMacOS ? kSmallestSpace : kMediumSpace,
-  top: isDesktop ? 0 : 2 * kLargestSpace,
-);
+EdgeInsets get playerTopControlsPadding =>
+    EdgeInsets.only(right: isMacOS ? kSmallestSpace : kMediumSpace);
 
 NavigationBarThemeData navigationBarTheme({required ThemeData theme}) =>
     theme.navigationBarTheme.copyWith(

@@ -25,7 +25,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
     final iconColor = isVideo ? Colors.white : theme.colorScheme.onSurface;
 
     final Widget body;
-    if (isVideo) {
+    if (isVideo || isMobile && !context.isPortrait) {
       body = isLinux
           // Note: for some reason the video widget crashes if we use the built in controls, so we replicate this with a stack
           ? LinuxFullHeightPlayer(
@@ -47,9 +47,11 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
     }
 
     return Column(
-      spacing: kMediumSpace,
+      spacing: isVideo || (isMobile && !context.isPortrait) ? 0 : kMediumSpace,
       children: [
-        FullHeightPlayerHeaderBar(isVideo: isVideo),
+        FullHeightPlayerHeaderBar(
+          isVideo: isVideo || (isMobile && !context.isPortrait),
+        ),
         Expanded(child: body),
       ],
     );

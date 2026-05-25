@@ -35,7 +35,6 @@ class MasterPanel extends StatelessWidget {
           includeSidebarButton: false,
           backgroundColor: Colors.transparent,
           style: YaruTitleBarStyle.undecorated,
-          adaptive: false,
           title: Text(AppConfig.appTitle),
         ),
         Expanded(child: MasterList()),

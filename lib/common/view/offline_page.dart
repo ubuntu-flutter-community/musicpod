@@ -14,7 +14,6 @@ class OfflinePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: HeaderBar(
-        adaptive: true,
         title: Text(context.l10n.offline),
         backgroundColor: Colors.transparent,
       ),

@@ -60,7 +60,6 @@ class SliverAudioPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: HeaderBar(
-        adaptive: true,
         title: isMobile ? null : Text(pageTitle ?? ''),
         actions: [
           Padding(

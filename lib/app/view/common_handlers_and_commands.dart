@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
+import '../../common/view/ui_constants.dart';
 import '../../custom_content/view/backup_dialog.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/taget_platform_x.dart';
 import '../../l10n/l10n.dart';
 import '../../notifications/notifications_service.dart';
 import '../../patch_notes/patch_notes_dialog.dart';
@@ -115,7 +117,17 @@ mixin CommonHandlersAndCommandsMixin {
       select: (AppManager m) => m.recentPatchNotesDisposedCommand,
       handler: (context, newValue, cancel) {
         if (newValue == false) {
-          context.dialog((context) => const PatchNotesDialog());
+          if (isMobile) {
+            context.bottomSheet(
+              (context) => const PatchNotesDialog(
+                insetPadding: EdgeInsets.all(kMediumSpace),
+                contentPadding: EdgeInsets.all(kMediumSpace),
+                actionsPadding: EdgeInsets.all(kMediumSpace),
+              ),
+            );
+          } else {
+            context.dialog((context) => const PatchNotesDialog());
+          }
         }
       },
     );

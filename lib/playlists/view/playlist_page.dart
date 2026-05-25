@@ -136,7 +136,7 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
       child: Scaffold(
         appBar: HeaderBar(
           title: Text(pageId),
-          adaptive: true,
+
           actions: [
             Padding(
               padding: appBarSingleActionSpacing,

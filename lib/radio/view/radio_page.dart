@@ -18,7 +18,6 @@ class RadioPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: HeaderBar(
-      adaptive: true,
       actions: [
         Flexible(
           child: Padding(

@@ -37,17 +37,17 @@ class AlbumPage extends StatelessWidget with WatchItMixin {
       (LocalAudioManager m) => m.findAlbumCommand(id).results,
     ).toWidget(
       onError: (error, lastResult, param) => Scaffold(
-        appBar: const HeaderBar(adaptive: true),
+        appBar: const HeaderBar(),
         body: Center(child: Text(error.toString())),
       ),
       whileRunning: (lastResult, param) => const Scaffold(
-        appBar: HeaderBar(adaptive: true),
+        appBar: HeaderBar(),
         body: Center(child: Progress()),
       ),
       onData: (album, param) {
         if (album == null) {
           return Scaffold(
-            appBar: const HeaderBar(adaptive: true),
+            appBar: const HeaderBar(),
             body: Center(child: Text(context.l10n.albumNotFound)),
           );
         }

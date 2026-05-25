@@ -47,6 +47,7 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
             IconButton(
               tooltip: context.l10n.arts,
               icon: Icon(Iconz.image, color: iconColor),
+              selectedIcon: Icon(Iconz.imageFilled, color: iconColor),
               isSelected: !showQueue,
               color: iconColor,
               onPressed: di<PlayerModel>().toggleShowQueue,

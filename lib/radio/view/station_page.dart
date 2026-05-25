@@ -78,7 +78,6 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
 
     return Scaffold(
       appBar: HeaderBar(
-        adaptive: true,
         title: isMobile
             ? null
             : (station != null

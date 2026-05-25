@@ -77,7 +77,13 @@ class Iconz {
       ? YaruIcons.image
       : cupertino
       ? CupertinoIcons.photo
-      : Icons.image_not_supported;
+      : Icons.image_outlined;
+
+  static IconData get imageFilled => yaru
+      ? YaruIcons.image_filled
+      : cupertino
+      ? CupertinoIcons.photo_fill
+      : Icons.image_rounded;
 
   static IconData get warning => yaru
       ? YaruIcons.warning_filled

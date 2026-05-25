@@ -42,7 +42,6 @@ class _GenrePageState extends State<GenrePage> {
 
     return Scaffold(
       appBar: HeaderBar(
-        adaptive: true,
         titleSpacing: 0,
         title: Row(
           mainAxisSize: MainAxisSize.min,

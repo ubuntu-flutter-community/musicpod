@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:media_kit_video/media_kit_video.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 
-import '../../app/app_config.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
@@ -107,22 +106,9 @@ class FullHeightVideoPlayer extends StatelessWidget {
   }) => [
     const Spacer(),
     OverlayContainer(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          FullHeightPlayerTopControls(
-            iconColor: baseColor,
-            padding: EdgeInsets.zero,
-            video: true,
-          ),
-          if (AppConfig.allowVideoFullScreen)
-            Tooltip(
-              message: context.l10n.fullScreen,
-              child: MaterialFullscreenButton(
-                icon: Icon(icon, color: baseColor),
-              ),
-            ),
-        ],
+      child: Tooltip(
+        message: context.l10n.fullScreen,
+        child: MaterialFullscreenButton(icon: Icon(icon, color: baseColor)),
       ),
     ),
   ];
