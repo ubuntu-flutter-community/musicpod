@@ -112,7 +112,6 @@ class FullHeightVideoPlayer extends StatelessWidget {
         children: [
           FullHeightPlayerTopControls(
             iconColor: baseColor,
-            playerPosition: playerPosition,
             padding: EdgeInsets.zero,
             video: true,
           ),
@@ -175,7 +174,6 @@ class _LinuxFullHeightPlayerState extends State<LinuxFullHeightPlayer> {
             child: OverlayContainer(
               child: FullHeightPlayerTopControls(
                 iconColor: widget.iconColor,
-                playerPosition: widget.playerPosition,
                 video: true,
               ),
             ),

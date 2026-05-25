@@ -24,14 +24,12 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
   const FullHeightPlayerAudioBody({
     super.key,
     this.audio,
-    required this.playerPosition,
     required this.active,
     required this.iconColor,
   });
 
   final Audio? audio;
   final bool active;
-  final PlayerPosition playerPosition;
   final Color iconColor;
 
   @override
@@ -41,14 +39,18 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
 
     final showQueue = watchPropertyValue((PlayerModel m) => m.showQueue);
 
-    final playerWithSidePanel =
-        playerPosition == PlayerPosition.fullWindow &&
-        mediaQuerySize.width > 1000;
+    final playerWithSidePanel = mediaQuerySize.width > 2 * kPlayerExplorerWidth;
 
     final queueOrHistory = Padding(
-      padding: EdgeInsets.only(top: isMobile ? 90 : 50, bottom: 20),
-      child: SizedBox(
-        width: 500,
+      padding: EdgeInsets.only(
+        top: isMobile ? 90 : kLargestSpace,
+        bottom: kLargestSpace,
+      ),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: kPlayerExplorerWidth,
+          maxHeight: mediaQuerySize.height - 0.3 * mediaQuerySize.height,
+        ),
         child: PlayerExplorer(selectedColor: theme.colorScheme.onSurface),
       ),
     );
@@ -68,14 +70,16 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
           const SizedBox(height: kLargestSpace),
         ],
         if (isMobile) ...[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30),
             child: Row(
               spacing: 10,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Flexible(
-                  child: PlayerTitleAndArtist(playerPosition: playerPosition),
+                  child: PlayerTitleAndArtist(
+                    playerPosition: PlayerPosition.fullWindow,
+                  ),
                 ),
                 const BottomPlayerLikeAndStarButton(),
               ],
@@ -84,12 +88,12 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
           const SizedBox(height: kLargestSpace),
           SizedBox(
             height: kLargestSpace,
-            width: playerWithSidePanel ? 500 : 350,
+            width: playerWithSidePanel ? kPlayerExplorerWidth : 350,
             child: const PlayerTrack(),
           ),
           const SizedBox(height: kLargestSpace),
           SizedBox(
-            width: playerWithSidePanel ? 500 : 320,
+            width: playerWithSidePanel ? kPlayerExplorerWidth : 320,
             child: Padding(
               padding: EdgeInsets.only(
                 bottom: showQueue && !playerWithSidePanel
@@ -124,7 +128,7 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(width: 490, child: column),
+                SizedBox(width: kPlayerExplorerWidth, child: column),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 3 * kLargestSpace),
                   child: queueOrHistory,
@@ -139,9 +143,9 @@ class FullHeightPlayerAudioBody extends StatelessWidget with WatchItMixin {
               children: [
                 const Hero(
                   tag: 'FullHeightPlayerImageInLandscape',
-                  child: FullHeightPlayerImage(height: 200, width: 200),
+                  child: FullHeightPlayerImage(),
                 ),
-                SizedBox(width: 400, child: column),
+                SizedBox(width: kPlayerExplorerWidth, child: column),
               ],
             )
           : column,

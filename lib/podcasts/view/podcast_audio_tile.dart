@@ -58,76 +58,86 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
             : 38) /
         2;
 
-    return YaruExpandable(
-      isExpanded: isExpanded,
-      expandIconPadding: const EdgeInsets.only(right: 5, bottom: 15),
-      gapHeight: 0,
-      header: MouseRegion(
-        cursor: SystemMouseCursors.click,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 15, bottom: 10, left: 10),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              PodcastTilePlayButton(
-                selected: selected,
-                audio: audio,
-                startPlaylist: startPlaylist,
-              ),
-              SizedBox(width: isMobile ? 15 : 25),
-              Expanded(
-                child: _Center(
+    return Padding(
+      padding: const EdgeInsets.only(bottom: kMediumSpace),
+      child: YaruExpandable(
+        isExpanded: isExpanded,
+        expandIconPadding: const EdgeInsets.only(
+          right: kSmallestSpace,
+          bottom: kMediumPlusSpace,
+        ),
+        gapHeight: 0,
+        header: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              top: 0,
+              bottom: kMediumPlusSpace,
+              left: kMediumPlusSpace,
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                PodcastTilePlayButton(
                   selected: selected,
-                  title: audio.title ?? '',
-                  label: label,
+                  audio: audio,
+                  startPlaylist: startPlaylist,
                 ),
-              ),
-            ],
+                SizedBox(width: isMobile ? 15 : 25),
+                Expanded(
+                  child: _Center(
+                    selected: selected,
+                    title: audio.title ?? '',
+                    label: label,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Padding(
-          padding: isMobile
-              ? const EdgeInsets.symmetric(horizontal: 10)
-              : EdgeInsets.only(left: (radius * 2) + 30, right: 60),
-          child: Column(
-            children: [
-              _Description(
-                description: audio.episodeDescription,
-                title: audio.title,
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: Row(
-                    children: space(
-                      children: [
-                        DownloadButton(audio: audio, addPodcast: addPodcast),
-                        ShareButton(active: true, audio: audio),
-                        IconButton(
-                          tooltip: context.l10n.insertIntoQueue,
-                          onPressed: () {
-                            final text =
-                                '${audio.title != null ? '${audio.podcastTitle} - ' : ''}${audio.title ?? ''}';
-                            playerModel.insertIntoQueue([audio]);
-                            context.toast(
-                              Text(context.l10n.insertedIntoQueue(text)),
-                            );
-                          },
-                          icon: Icon(Iconz.insertIntoQueue),
-                        ),
-                        PodcastEpisodeResetProgressButton(audio: audio),
-                        EpisodeMarkDownButton(episode: audio),
-                      ],
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: isMobile
+                ? const EdgeInsets.symmetric(horizontal: 10)
+                : EdgeInsets.only(left: (radius * 2) + 30, right: 60),
+            child: Column(
+              children: [
+                _Description(
+                  description: audio.episodeDescription,
+                  title: audio.title,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: Row(
+                      children: space(
+                        children: [
+                          DownloadButton(audio: audio, addPodcast: addPodcast),
+                          ShareButton(active: true, audio: audio),
+                          IconButton(
+                            tooltip: context.l10n.insertIntoQueue,
+                            onPressed: () {
+                              final text =
+                                  '${audio.title != null ? '${audio.podcastTitle} - ' : ''}${audio.title ?? ''}';
+                              playerModel.insertIntoQueue([audio]);
+                              context.toast(
+                                Text(context.l10n.insertedIntoQueue(text)),
+                              );
+                            },
+                            icon: Icon(Iconz.insertIntoQueue),
+                          ),
+                          PodcastEpisodeResetProgressButton(audio: audio),
+                          EpisodeMarkDownButton(episode: audio),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

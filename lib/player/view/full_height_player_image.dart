@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/ui_constants.dart';
-import '../../extensions/build_context_x.dart';
-import '../../extensions/taget_platform_x.dart';
 import '../../local_audio/view/local_cover.dart';
 import '../player_model.dart';
 import 'player_fall_back_image.dart';
@@ -28,19 +26,11 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
 
-    final size = context.isPortrait
-        ? fullHeightPlayerImageSize
-        : isMobile
-        ? fullHeightPlayerImageSize / 3
-        : fullHeightPlayerImageSize;
-    final theHeight = height ?? size;
-    final theWidth = width ?? size;
-
     final fallBackImage = PlayerFallBackImage(
       noIcon: emptyFallBack,
       audioType: audio?.audioType,
-      height: theHeight,
-      width: theWidth,
+      height: kFullHeightPlayerImageSize,
+      width: kFullHeightPlayerImageSize,
     );
 
     Widget image;
@@ -49,29 +39,25 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
         key: ValueKey(audio!.albumDbId!),
         albumId: audio.albumDbId!,
         path: audio.path!,
-        dimension: theWidth,
+        dimension: kFullHeightPlayerImageSize,
         fit: fit ?? BoxFit.fitHeight,
         fallback: fallBackImage,
       );
     } else {
       image = PlayerRemoteSourceImage(
-        height: theHeight,
-        width: theWidth,
+        height: kFullHeightPlayerImageSize,
+        width: kFullHeightPlayerImageSize,
         fit: fit,
         fallBackIcon: fallBackImage,
         errorIcon: fallBackImage,
       );
     }
 
-    return SizedBox(
-      height: theHeight,
-      width: theWidth,
-      child: ClipRRect(
-        borderRadius: borderRadius ?? BorderRadius.circular(10),
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 200),
-          child: image,
-        ),
+    return ClipRRect(
+      borderRadius: borderRadius ?? BorderRadius.circular(10),
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 200),
+        child: image,
       ),
     );
   }

@@ -4,6 +4,8 @@ const kLargestSpace = 20.0;
 
 const kMediumSpace = 10.0;
 
+const kMediumPlusSpace = 15.0;
+
 const kSmallestSpace = 5.0;
 
 const kTinyButtonSize = 30.0;
@@ -14,7 +16,9 @@ const kDesktopSearchBarWidth = 335.0;
 
 const kMobileSearchBarWidth = 300.0;
 
-const fullHeightPlayerImageSize = 300.0;
+const kFullHeightPlayerImageSize = 300.0;
+
+const kPlayerExplorerWidth = 500.0;
 
 const kMaxAudioPageHeaderHeight = 200.0;
 
@@ -23,8 +27,6 @@ const kSnackBarDuration = Duration(seconds: 10);
 const kAudioTilePadding = EdgeInsets.zero;
 
 const kAudioTrackWidth = 40.0;
-
-const kSideBarPlayerWidth = 500.0;
 
 const kGridPadding = EdgeInsets.only(
   top: 0,

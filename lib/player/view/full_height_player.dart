@@ -42,7 +42,6 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
       body = FullHeightPlayerAudioBody(
         active: active,
         iconColor: iconColor,
-        playerPosition: playerPosition,
         audio: audio,
       );
     }
@@ -50,10 +49,7 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
     return Column(
       spacing: kMediumSpace,
       children: [
-        FullHeightPlayerHeaderBar(
-          isVideo: isVideo,
-          playerPosition: playerPosition,
-        ),
+        FullHeightPlayerHeaderBar(isVideo: isVideo),
         Expanded(child: body),
       ],
     );

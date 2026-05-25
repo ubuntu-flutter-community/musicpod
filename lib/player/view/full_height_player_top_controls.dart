@@ -12,20 +12,17 @@ import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import 'playback_rate_button.dart';
 import 'player_pause_timer_button.dart';
-import 'player_view.dart';
 import 'volume_popup.dart';
 
 class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
   const FullHeightPlayerTopControls({
     super.key,
     required this.iconColor,
-    required this.playerPosition,
     this.padding,
     this.video = false,
   });
 
   final Color iconColor;
-  final PlayerPosition playerPosition;
   final EdgeInsetsGeometry? padding;
   final bool video;
 
@@ -34,21 +31,11 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
 
     final mediaQuerySize = context.mediaQuerySize;
-    final playerWithSidePanel =
-        playerPosition == PlayerPosition.fullWindow &&
-        mediaQuerySize.width > 1000;
+    final playerWithSidePanel = mediaQuerySize.width > 1000;
 
     final isFullScreen = isFullscreen(context);
 
     final showQueue = watchPropertyValue((PlayerModel m) => m.showQueue);
-
-    final appManager = di<AppManager>();
-
-    Future<void> onFullHeightButtonPressed() async {
-      await appManager.setFullWindowMode(
-        playerPosition == PlayerPosition.fullWindow ? false : true,
-      );
-    }
 
     return Padding(
       padding: padding ?? playerTopControlsPadding,
@@ -75,16 +62,9 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
           if (video) PlayerPauseTimerButton(iconColor: iconColor),
           if (!isMobile && !isFullScreen)
             IconButton(
-              tooltip: playerPosition == PlayerPosition.fullWindow
-                  ? context.l10n.leaveFullWindow
-                  : context.l10n.fullWindow,
-              icon: Icon(
-                playerPosition == PlayerPosition.fullWindow
-                    ? Iconz.fullWindowExit
-                    : Iconz.fullWindow,
-                color: iconColor,
-              ),
-              onPressed: onFullHeightButtonPressed,
+              tooltip: context.l10n.leaveFullWindow,
+              icon: Icon(Iconz.fullWindowExit, color: iconColor),
+              onPressed: () => di<AppManager>().setFullWindowMode(false),
             ),
         ],
       ),
