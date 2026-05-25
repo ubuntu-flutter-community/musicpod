@@ -33,8 +33,12 @@ class MouseAndKeyboardCommandWrapper extends StatelessWidget {
           const _FullWindowIntent(),
       LogicalKeySet(LogicalKeyboardKey.enter, LogicalKeyboardKey.meta):
           const _FullWindowIntent(),
-      LogicalKeySet(LogicalKeyboardKey.space, LogicalKeyboardKey.control):
+      LogicalKeySet(LogicalKeyboardKey.space, LogicalKeyboardKey.alt):
           const _PlayPauseIntent(),
+      LogicalKeySet(LogicalKeyboardKey.arrowRight, LogicalKeyboardKey.alt):
+          const _PlayNextIntent(),
+      LogicalKeySet(LogicalKeyboardKey.arrowLeft, LogicalKeyboardKey.alt):
+          const _PlayPreviousIntent(),
     },
     child: Actions(
       actions: <Type, Action<Intent>>{
@@ -93,6 +97,36 @@ class MouseAndKeyboardCommandWrapper extends StatelessWidget {
             return null;
           },
         ),
+        _PlayNextIntent: CallbackAction<_PlayNextIntent>(
+          onInvoke: (intent) {
+            final playerModel = di<PlayerModel>();
+
+            final audio = playerModel.audio;
+            if (audio == null) return;
+
+            if (audio.isRadio) {
+              di<SearchModel>().findSimilarStationCommand.run(audio);
+            } else {
+              playerModel.playNext();
+            }
+            return null;
+          },
+        ),
+        _PlayPreviousIntent: CallbackAction<_PlayPreviousIntent>(
+          onInvoke: (intent) {
+            final playerModel = di<PlayerModel>();
+
+            final audio = playerModel.audio;
+            if (audio == null) return;
+
+            if (audio.isRadio) {
+              playerModel.playNext();
+            } else {
+              playerModel.playPrevious();
+            }
+            return null;
+          },
+        ),
       },
       child: RawGestureDetector(
         gestures: <Type, GestureRecognizerFactory>{
@@ -128,6 +162,14 @@ class _FullWindowIntent extends Intent {
 
 class _PlayPauseIntent extends Intent {
   const _PlayPauseIntent();
+}
+
+class _PlayNextIntent extends Intent {
+  const _PlayNextIntent();
+}
+
+class _PlayPreviousIntent extends Intent {
+  const _PlayPreviousIntent();
 }
 
 class _MouseBackButtonRecognizer extends BaseTapGestureRecognizer {

@@ -132,6 +132,7 @@ class PlayerService {
   @disposeMethod
   Future<void> dispose() async {
     await _propertiesChangedController.close();
+    await _newAudioControllerStream.close();
     await _messageController.close();
     await _isPlayingSub?.cancel();
     await _positionSub?.cancel();
@@ -155,12 +156,22 @@ class PlayerService {
     _propertiesChangedController.add(true);
   }
 
+  bool _queueAutoScroll = true;
+  bool get queueAutoScroll => _queueAutoScroll;
+  void toggleQueueAutoScroll() {
+    _queueAutoScroll = !_queueAutoScroll;
+    _propertiesChangedController.add(true);
+  }
+
   void clearQueue() {
     _queue.audios.removeWhere((e) => e != _audio);
     _nextAudio = _audio;
     _propertiesChangedController.add(true);
   }
 
+  StreamController<Audio?> _newAudioControllerStream =
+      StreamController<Audio?>.broadcast();
+  Stream<Audio?> get newAudioStream => _newAudioControllerStream.stream;
   Audio? _audio;
   Audio? get audio => _audio;
   Future<void> _setAudio(Audio? value) async {
@@ -180,6 +191,7 @@ class PlayerService {
     }
     _audio = value;
     _propertiesChangedController.add(true);
+    _newAudioControllerStream.add(_audio);
     await _setLocalColor(_audio);
   }
 

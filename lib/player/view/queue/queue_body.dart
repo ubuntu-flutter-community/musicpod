@@ -3,6 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../../../common/data/audio.dart';
+import '../../../common/view/confirm.dart';
 import '../../../common/view/icons.dart';
 import '../../../common/view/ui_constants.dart';
 import '../../../extensions/build_context_x.dart';
@@ -23,15 +24,7 @@ class QueueBody extends StatefulWidget with WatchItStatefulWidgetMixin {
 
 class _QueueBodyState extends State<QueueBody>
     with AutomaticKeepAliveClientMixin {
-  late AutoScrollController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AutoScrollController();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) => _jump());
-  }
+  final AutoScrollController _controller = AutoScrollController();
 
   void _jump() {
     final model = di<PlayerModel>();
@@ -48,26 +41,36 @@ class _QueueBodyState extends State<QueueBody>
   }
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     super.build(context);
+
     final l10n = context.l10n;
     final theme = context.theme;
     final colorScheme = theme.colorScheme;
+
+    final queueAutoScroll = watchPropertyValue(
+      (PlayerModel m) => m.queueAutoScroll,
+    );
+
+    callOnceAfterThisBuild((_) {
+      if (queueAutoScroll) {
+        _jump();
+      }
+    });
+    onDispose(_controller.dispose);
+
+    registerStreamHandler(
+      select: (PlayerModel m) => m.newAudioStream,
+      handler: (context, snapshot, cancel) {
+        if (!snapshot.hasData) return;
+        if (queueAutoScroll) {
+          _jump();
+        }
+      },
+    );
+
     final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
     final queueLength = watchPropertyValue((PlayerModel m) => m.queue.length);
-    watchPropertyValue((PlayerModel m) {
-      final i = m.queue.length > 0
-          ? m.queue.indexWhere((a) => a == m.audio)
-          : -1;
-      _jump();
-      return i;
-    });
 
     final queue = di<PlayerModel>().queue;
     final queueName = di<PlayerModel>().queueName;
@@ -113,33 +116,45 @@ class _QueueBodyState extends State<QueueBody>
               spacing: kMediumSpace,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                TextButton.icon(
-                  style: TextButton.styleFrom(
-                    foregroundColor: colorScheme.onSurface,
-                  ),
+                IconButton(
+                  tooltip: l10n.createNewPlaylist,
                   onPressed: queue.where((e) => e.isLocal).isEmpty
                       ? null
-                      : () {
-                          di<LocalAudioManager>()
-                              .playlistCommand(
-                                '${l10n.queue} ${DateTime.now()}',
-                              )
-                              .run(
-                                PlaylistChange(
-                                  id: '${l10n.queue} ${DateTime.now()}',
-                                  audios: List.from(
-                                    queue.where((e) => e.isLocal),
+                      : () => ConfirmationDialog.show(
+                          context: context,
+                          title: Text(l10n.createNewPlaylist + '?'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            spacing: kMediumSpace,
+                            children: [
+                              Text(
+                                '"${l10n.queue} ${DateTime.now()}"',
+                                style: theme.textTheme.titleMedium,
+                              ),
+                              Text(l10n.youCanEditTheNameLater),
+                            ],
+                          ),
+                          onConfirm: () {
+                            di<LocalAudioManager>()
+                                .playlistCommand(
+                                  '${l10n.queue} ${DateTime.now()}',
+                                )
+                                .run(
+                                  PlaylistChange(
+                                    id: '${l10n.queue} ${DateTime.now()}',
+                                    audios: List.from(
+                                      queue.where((e) => e.isLocal),
+                                    ),
+                                    action: PlaylistAction.create,
                                   ),
-                                  action: PlaylistAction.create,
-                                ),
-                              );
-                          if (widget.shownInDialog && context.canPop()) {
-                            context.pop();
-                          }
-                        },
-                  label: Text(l10n.createNewPlaylist),
+                                );
+                            if (widget.shownInDialog && context.canPop()) {
+                              context.pop();
+                            }
+                          },
+                        ),
                   icon: Icon(
-                    Iconz.playlist,
+                    Iconz.createPlaylist,
                     color: queue.where((e) => e.isLocal).isEmpty
                         ? theme.disabledColor
                         : widget.selectedColor,
@@ -154,6 +169,15 @@ class _QueueBodyState extends State<QueueBody>
                           di<PlayerModel>().audio == null
                       ? null
                       : () => di<PlayerModel>().clearQueue(),
+                ),
+                IconButton(
+                  tooltip: l10n.autoScrolling,
+                  isSelected: queueAutoScroll,
+                  icon: Icon(Iconz.autoScrollOn),
+                  onPressed: () {
+                    if (!di<PlayerModel>().queueAutoScroll) _jump();
+                    di<PlayerModel>().toggleQueueAutoScroll();
+                  },
                 ),
               ],
             ),

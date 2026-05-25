@@ -294,6 +294,11 @@ class Iconz {
       : cupertino
       ? CupertinoIcons.plus
       : Icons.add;
+  static IconData get createPlaylist => yaru
+      ? YaruIcons.plus
+      : cupertino
+      ? CupertinoIcons.rectangle_stack_fill_badge_plus
+      : Icons.playlist_add_rounded;
   static IconData get removeFromLibrary => yaru
       ? YaruIcons.minus
       : cupertino
@@ -509,6 +514,11 @@ class Iconz {
       : cupertino
       ? CupertinoIcons.move
       : Icons.move_down_rounded;
+  static IconData get autoScrollOn => yaru
+      ? YaruIcons.go_jump
+      : cupertino
+      ? CupertinoIcons.arrow_right_to_line
+      : Icons.subdirectory_arrow_right_rounded;
   static IconData get materialAscending => Icons.sort_rounded;
   static IconData get ascending => yaru
       ? YaruIcons.sort_ascending

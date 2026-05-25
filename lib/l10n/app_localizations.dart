@@ -4634,6 +4634,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Searching takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.'**
   String get searchTimeoutMessage;
+
+  /// No description provided for @youCanEditTheNameLater.
+  ///
+  /// In en, this message translates to:
+  /// **'You can edit the name later.'**
+  String get youCanEditTheNameLater;
 }
 
 class _AppLocalizationsDelegate

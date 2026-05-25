@@ -2330,6 +2330,9 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get searchTimeoutMessage =>
       'Searching takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+
+  @override
+  String get youCanEditTheNameLater => 'You can edit the name later.';
 }
 
 /// The translations for Chinese, as used in Hong Kong (`zh_HK`).

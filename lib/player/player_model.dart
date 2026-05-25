@@ -42,6 +42,11 @@ class PlayerModel extends SafeChangeNotifier {
   List<Audio> get queue => _playerService.queue.audios;
   void clearQueue() => _playerService.clearQueue();
 
+  bool get queueAutoScroll => _playerService.queueAutoScroll;
+  void toggleQueueAutoScroll() => _playerService.toggleQueueAutoScroll();
+
+  Stream<Audio?> get newAudioStream => _playerService.newAudioStream;
+
   Audio? get audio => _playerService.audio;
 
   Color? get color => _playerService.color;
