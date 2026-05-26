@@ -82,7 +82,8 @@ class PodcastManager {
           if (updates.contains(feedUrl)) {
             await getEpisodesCommand(
               feedUrl,
-              forceRefresh: true,
+              clearCache: true,
+              loadFresh: true,
             ).runAsync((feedUrl: feedUrl, item: null));
           }
         }
@@ -95,9 +96,10 @@ class PodcastManager {
       <String, Command<({Item? item, String? feedUrl}), List<Audio>>>{};
   Command<({Item? item, String? feedUrl}), List<Audio>> getEpisodesCommand(
     String feedUrl, {
-    bool forceRefresh = false,
+    bool clearCache = false,
+    bool loadFresh = false,
   }) {
-    if (forceRefresh) {
+    if (clearCache) {
       _episodesCommands.remove(feedUrl);
     }
 
@@ -105,7 +107,11 @@ class PodcastManager {
       feedUrl,
       () => Command.createAsync(
         (param) => _podcastService
-            .findEpisodes(item: param.item, feedUrl: param.feedUrl)
+            .findEpisodes(
+              item: param.item,
+              feedUrl: param.feedUrl,
+              loadFresh: loadFresh,
+            )
             .timeout(const Duration(seconds: 30)),
         initialValue: [],
       ),
@@ -204,7 +210,7 @@ class PodcastManager {
     );
     getEpisodesCommand(
       param.feedUrl,
-      forceRefresh: true,
+      clearCache: true,
     ).run((feedUrl: param.feedUrl, item: null));
 
     return _podcastService.ascendingPodcasts;

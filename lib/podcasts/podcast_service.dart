@@ -215,7 +215,39 @@ class PodcastService {
     return podcastUpdates;
   }
 
-  Future<List<Audio>> findEpisodes({Item? item, String? feedUrl}) async {
+  Future<bool> hasPodcastEpisodesInDB(String feedUrl) async {
+    final count =
+        await (_db.selectOnly(_db.podcastEpisodeTable)
+              ..addColumns([_db.podcastEpisodeTable.contentUrl])
+              ..where(_db.podcastEpisodeTable.podcastFeedUrl.equals(feedUrl)))
+            .get()
+            .then((rows) => rows.length);
+    return count > 0;
+  }
+
+  Future<List<Audio>> _loadEpisodesFromDb(String feedUrl) async {
+    // Load episodes from DB WITHOUT loading the feed from the internet
+    final rows = await (_db.select(
+      _db.podcastEpisodeTable,
+    )..where((t) => t.podcastFeedUrl.equals(feedUrl))).get();
+    return rows
+        .map(
+          (r) => getEpisodeFromTableEntry(
+            r,
+            feedUrl: feedUrl,
+            podcastTitle: getSubscribedPodcastName(feedUrl),
+            podcastImage: getSubscribedPodcastImage(feedUrl),
+          ),
+        )
+        .toSet()
+        .toList();
+  }
+
+  Future<List<Audio>> findEpisodes({
+    Item? item,
+    String? feedUrl,
+    bool loadFresh = false,
+  }) async {
     if (item == null && item?.feedUrl == null && feedUrl == null) {
       printMessageInDebugMode('findEpisodes called without feedUrl or item');
       return Future.value([]);
@@ -227,6 +259,16 @@ class PodcastService {
     );
 
     final url = feedUrl ?? item!.feedUrl!;
+
+    final hasEpisodesInDb =
+        await hasPodcastEpisodesInDB(url) && isPodcastSubscribed(url);
+
+    if (!loadFresh && hasEpisodesInDb) {
+      printMessageInDebugMode(
+        'Skipping episode load from network for $url, loading from DB instead',
+      );
+      return _loadEpisodesFromDb(url);
+    }
 
     final Podcast? podcast = await compute(loadPodcast, url);
     if (podcast?.image != null) {
@@ -711,6 +753,26 @@ class PodcastService {
   }
 
   bool isPodcastSubscribed(String pageId) => _podcasts.contains(pageId);
+
+  Audio getEpisodeFromTableEntry(
+    PodcastEpisodeTableData data, {
+    required String feedUrl,
+    String? podcastTitle,
+    String? podcastImage,
+  }) {
+    return Audio(
+      url: data.contentUrl,
+      title: data.title,
+      episodeDescription: data.episodeDescription,
+      podcastDescription: data.podcastDescription,
+      publicationDate: data.publicationDate.millisecondsSinceEpoch,
+      durationMs: data.durationMs?.toDouble(),
+      imageUrl: data.imageUrl,
+      albumArtUrl: podcastImage,
+      podcastTitle: podcastTitle,
+      feedUrl: feedUrl,
+    );
+  }
 }
 
 Future<Podcast?> loadPodcast(String url) => Feed.loadFeed(url: url);
