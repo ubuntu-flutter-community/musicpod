@@ -105,11 +105,11 @@ class LocalAudioService {
       ),
       leftOuterJoin(
         _db.artistTable,
-        _db.artistTable.id.equalsExp(_db.trackTable.artist),
+        _db.artistTable.name.equalsExp(_db.trackTable.artist),
       ),
       leftOuterJoin(
         _db.genreTable,
-        _db.genreTable.id.equalsExp(_db.trackTable.genre),
+        _db.genreTable.name.equalsExp(_db.trackTable.genre),
       ),
     ]);
 
@@ -150,11 +150,11 @@ class LocalAudioService {
       ),
       innerJoin(
         _db.artistTable,
-        _db.artistTable.id.equalsExp(_db.trackTable.artist),
+        _db.artistTable.name.equalsExp(_db.trackTable.artist),
       ),
       leftOuterJoin(
         _db.genreTable,
-        _db.genreTable.id.equalsExp(_db.trackTable.genre),
+        _db.genreTable.name.equalsExp(_db.trackTable.genre),
       ),
     ]);
     query.where(_db.artistTable.name.equals(artist));
@@ -356,12 +356,12 @@ class LocalAudioService {
   Future<void> _persistAudios(List<Audio> audioList) => _db.transaction(
     () async {
       // ── 1. Artists: batch-insert new, then bulk-load IDs ──
-      final artistNameToId = <String, int>{};
+      final artistNameToId = <String, String>{};
 
       // Load existing artists
       final existingArtists = await _db.select(_db.artistTable).get();
       for (final a in existingArtists) {
-        artistNameToId[a.name] = a.id;
+        artistNameToId[a.name] = a.name;
       }
 
       // Collect & batch-insert new artists
@@ -389,16 +389,16 @@ class LocalAudioService {
         final allArtists = await _db.select(_db.artistTable).get();
         artistNameToId.clear();
         for (final a in allArtists) {
-          artistNameToId[a.name] = a.id;
+          artistNameToId[a.name] = a.name;
         }
       }
 
       // ── 2. Genres: batch-insert new, then bulk-load IDs ──
-      final genreNameToId = <String, int>{};
+      final genreNameToId = <String, String>{};
 
       final existingGenres = await _db.select(_db.genreTable).get();
       for (final g in existingGenres) {
-        genreNameToId[g.name] = g.id;
+        genreNameToId[g.name] = g.name;
       }
 
       final newGenreNames = <String>[];
@@ -423,7 +423,7 @@ class LocalAudioService {
         final allGenres = await _db.select(_db.genreTable).get();
         genreNameToId.clear();
         for (final g in allGenres) {
-          genreNameToId[g.name] = g.id;
+          genreNameToId[g.name] = g.name;
         }
       }
 
@@ -450,7 +450,7 @@ class LocalAudioService {
         final key = '${artistId ?? ''}_$albumName';
         if (!albumKeyToId.containsKey(key)) {
           newAlbumCompanions.add(
-            AlbumTableCompanion.insert(name: albumName, artist: artistId ?? 0),
+            AlbumTableCompanion.insert(name: albumName, artist: artistId ?? ''),
           );
         }
       }
@@ -547,12 +547,12 @@ class LocalAudioService {
 
   // ── Helpers ──
 
-  Future<int?> _findTrackIdByPath(String? path) async {
+  Future<String?> _findTrackIdByPath(String? path) async {
     if (path == null) return null;
     final row = await (_db.select(
       _db.trackTable,
     )..where((t) => t.path.equals(path))).getSingleOrNull();
-    return row?.id;
+    return row?.path;
   }
 
   List<Audio> _joinedRowsToAudios(List<TypedResult> rows) => rows.map((row) {
@@ -566,7 +566,7 @@ class LocalAudioService {
   JoinedSelectStatement _trackJoin(SimpleSelectStatement base) => base.join([
     innerJoin(
       _db.trackTable,
-      _db.trackTable.id.equalsExp(_db.likedTrackTable.trackId),
+      _db.trackTable.path.equalsExp(_db.likedTrackTable.trackId),
     ),
     leftOuterJoin(
       _db.albumTable,
@@ -574,11 +574,11 @@ class LocalAudioService {
     ),
     leftOuterJoin(
       _db.artistTable,
-      _db.artistTable.id.equalsExp(_db.trackTable.artist),
+      _db.artistTable.name.equalsExp(_db.trackTable.artist),
     ),
     leftOuterJoin(
       _db.genreTable,
-      _db.genreTable.id.equalsExp(_db.trackTable.genre),
+      _db.genreTable.name.equalsExp(_db.trackTable.genre),
     ),
   ]);
 
@@ -598,11 +598,11 @@ class LocalAudioService {
       ),
       leftOuterJoin(
         _db.artistTable,
-        _db.artistTable.id.equalsExp(_db.trackTable.artist),
+        _db.artistTable.name.equalsExp(_db.trackTable.artist),
       ),
       leftOuterJoin(
         _db.genreTable,
-        _db.genreTable.id.equalsExp(_db.trackTable.genre),
+        _db.genreTable.name.equalsExp(_db.trackTable.genre),
       ),
     ]);
     query.orderBy([OrderingTerm.asc(_db.trackTable.name)]);
@@ -821,7 +821,7 @@ class LocalAudioService {
       final trackRows = await (_db.select(_db.playlistTrackTable).join([
         innerJoin(
           _db.trackTable,
-          _db.trackTable.id.equalsExp(_db.playlistTrackTable.track),
+          _db.trackTable.path.equalsExp(_db.playlistTrackTable.track),
         ),
         leftOuterJoin(
           _db.albumTable,
@@ -829,11 +829,11 @@ class LocalAudioService {
         ),
         leftOuterJoin(
           _db.artistTable,
-          _db.artistTable.id.equalsExp(_db.trackTable.artist),
+          _db.artistTable.name.equalsExp(_db.trackTable.artist),
         ),
         leftOuterJoin(
           _db.genreTable,
-          _db.genreTable.id.equalsExp(_db.trackTable.genre),
+          _db.genreTable.name.equalsExp(_db.trackTable.genre),
         ),
       ])..where(_db.playlistTrackTable.playlist.equals(pl.id))).get();
 
@@ -1177,7 +1177,7 @@ class LocalAudioService {
     return updatedAudio;
   }
 
-  /// Returns the resolved album DB id if album or artist changed, or null.
+  // TODO: implement
   Future<int?> _updateSingleTrackInDb(
     Audio audio, {
     String? artist,
@@ -1189,105 +1189,9 @@ class LocalAudioService {
     String? year,
     List<Picture>? pictures,
   }) async {
-    final trackId = await _findTrackIdByPath(audio.path);
-    if (trackId != null) {
-      // Resolve FKs for changed fields
-      Value<int?> artistValue = const Value.absent();
-      if (artist != null) {
-        final existing = await (_db.select(
-          _db.artistTable,
-        )..where((t) => t.name.equals(artist))).getSingleOrNull();
-        final artistId =
-            existing?.id ??
-            await _db
-                .into(_db.artistTable)
-                .insert(ArtistTableCompanion.insert(name: artist));
-        artistValue = Value(artistId);
-      }
-
-      Value<int?> albumValue = const Value.absent();
-      if (album != null) {
-        final artistId = artistValue.value;
-        final existing =
-            await (_db.select(_db.albumTable)..where(
-                  (t) => artistId != null
-                      ? t.name.equals(album) & t.artist.equals(artistId)
-                      : t.name.equals(album),
-                ))
-                .getSingleOrNull();
-        final albumId =
-            existing?.id ??
-            await _db
-                .into(_db.albumTable)
-                .insert(
-                  AlbumTableCompanion.insert(
-                    name: album,
-                    artist: artistId ?? 0,
-                  ),
-                );
-        albumValue = Value(albumId);
-      }
-
-      Value<int?> genreValue = const Value.absent();
-      if (genre != null) {
-        final existing = await (_db.select(
-          _db.genreTable,
-        )..where((t) => t.name.equals(genre))).getSingleOrNull();
-        final genreId =
-            existing?.id ??
-            await _db
-                .into(_db.genreTable)
-                .insert(GenreTableCompanion.insert(name: genre));
-        genreValue = Value(genreId);
-      }
-
-      final companion = TrackTableCompanion(
-        name: title != null ? Value(title) : const Value.absent(),
-        album: albumValue,
-        artist: artistValue,
-        genre: genreValue,
-        discNumber: discNumber != null
-            ? Value(int.tryParse(discNumber))
-            : const Value.absent(),
-        trackNumber: trackNumber != null
-            ? Value(int.tryParse(trackNumber))
-            : const Value.absent(),
-        year: year != null ? Value(int.tryParse(year)) : const Value.absent(),
-      );
-      await (_db.update(
-        _db.trackTable,
-      )..where((t) => t.id.equals(trackId))).write(companion);
-
-      // Update album art if pictures were provided
-      if (pictures != null && pictures.isNotEmpty) {
-        final resolvedAlbumId = albumValue.present
-            ? albumValue.value
-            : audio.albumDbId;
-        if (resolvedAlbumId != null) {
-          final pictureData = pictures
-              .firstWhereOrNull((e) => e.bytes.isNotEmpty)
-              ?.bytes;
-          final pictureMimeType = pictures.first.mimetype;
-          if (pictureData != null) {
-            // Remove existing art for this album, then insert new
-            await (_db.delete(
-              _db.albumArtTable,
-            )..where((t) => t.album.equals(resolvedAlbumId))).go();
-            await _db
-                .into(_db.albumArtTable)
-                .insert(
-                  AlbumArtTableCompanion.insert(
-                    album: resolvedAlbumId,
-                    pictureData: pictureData,
-                    pictureMimeType: pictureMimeType,
-                  ),
-                );
-          }
-        }
-      }
-      return albumValue.present ? albumValue.value : null;
-    }
-    return null;
+    throw UnimplementedError(
+      'Updating single track in DB is not implemented yet',
+    );
   }
 }
 

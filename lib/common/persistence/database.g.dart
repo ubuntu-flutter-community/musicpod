@@ -9,19 +9,6 @@ class $ArtistTableTable extends ArtistTable
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $ArtistTableTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
@@ -32,7 +19,7 @@ class $ArtistTableTable extends ArtistTable
     requiredDuringInsert: true,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, name];
+  List<GeneratedColumn> get $columns => [name];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -45,9 +32,6 @@ class $ArtistTableTable extends ArtistTable
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
     if (data.containsKey('name')) {
       context.handle(
         _nameMeta,
@@ -60,15 +44,11 @@ class $ArtistTableTable extends ArtistTable
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => {name};
   @override
   ArtistTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return ArtistTableData(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
       name: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}name'],
@@ -83,19 +63,17 @@ class $ArtistTableTable extends ArtistTable
 }
 
 class ArtistTableData extends DataClass implements Insertable<ArtistTableData> {
-  final int id;
   final String name;
-  const ArtistTableData({required this.id, required this.name});
+  const ArtistTableData({required this.name});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
     return map;
   }
 
   ArtistTableCompanion toCompanion(bool nullToAbsent) {
-    return ArtistTableCompanion(id: Value(id), name: Value(name));
+    return ArtistTableCompanion(name: Value(name));
   }
 
   factory ArtistTableData.fromJson(
@@ -103,25 +81,18 @@ class ArtistTableData extends DataClass implements Insertable<ArtistTableData> {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ArtistTableData(
-      id: serializer.fromJson<int>(json['id']),
-      name: serializer.fromJson<String>(json['name']),
-    );
+    return ArtistTableData(name: serializer.fromJson<String>(json['name']));
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'name': serializer.toJson<String>(name),
-    };
+    return <String, dynamic>{'name': serializer.toJson<String>(name)};
   }
 
-  ArtistTableData copyWith({int? id, String? name}) =>
-      ArtistTableData(id: id ?? this.id, name: name ?? this.name);
+  ArtistTableData copyWith({String? name}) =>
+      ArtistTableData(name: name ?? this.name);
   ArtistTableData copyWithCompanion(ArtistTableCompanion data) {
     return ArtistTableData(
-      id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
     );
   }
@@ -129,55 +100,55 @@ class ArtistTableData extends DataClass implements Insertable<ArtistTableData> {
   @override
   String toString() {
     return (StringBuffer('ArtistTableData(')
-          ..write('id: $id, ')
           ..write('name: $name')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name);
+  int get hashCode => name.hashCode;
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ArtistTableData &&
-          other.id == this.id &&
-          other.name == this.name);
+      (other is ArtistTableData && other.name == this.name);
 }
 
 class ArtistTableCompanion extends UpdateCompanion<ArtistTableData> {
-  final Value<int> id;
   final Value<String> name;
+  final Value<int> rowid;
   const ArtistTableCompanion({
-    this.id = const Value.absent(),
     this.name = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   ArtistTableCompanion.insert({
-    this.id = const Value.absent(),
     required String name,
+    this.rowid = const Value.absent(),
   }) : name = Value(name);
   static Insertable<ArtistTableData> custom({
-    Expression<int>? id,
     Expression<String>? name,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
       if (name != null) 'name': name,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
-  ArtistTableCompanion copyWith({Value<int>? id, Value<String>? name}) {
-    return ArtistTableCompanion(id: id ?? this.id, name: name ?? this.name);
+  ArtistTableCompanion copyWith({Value<String>? name, Value<int>? rowid}) {
+    return ArtistTableCompanion(
+      name: name ?? this.name,
+      rowid: rowid ?? this.rowid,
+    );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
@@ -185,8 +156,8 @@ class ArtistTableCompanion extends UpdateCompanion<ArtistTableData> {
   @override
   String toString() {
     return (StringBuffer('ArtistTableCompanion(')
-          ..write('id: $id, ')
-          ..write('name: $name')
+          ..write('name: $name, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -222,14 +193,14 @@ class $AlbumTableTable extends AlbumTable
   );
   static const VerificationMeta _artistMeta = const VerificationMeta('artist');
   @override
-  late final GeneratedColumn<int> artist = GeneratedColumn<int>(
+  late final GeneratedColumn<String> artist = GeneratedColumn<String>(
     'artist',
     aliasedName,
     false,
-    type: DriftSqlType.int,
+    type: DriftSqlType.string,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES artist_table (id)',
+      'REFERENCES artist_table (name)',
     ),
   );
   static const VerificationMeta _pinnedMeta = const VerificationMeta('pinned');
@@ -302,7 +273,7 @@ class $AlbumTableTable extends AlbumTable
         data['${effectivePrefix}name'],
       )!,
       artist: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}artist'],
       )!,
       pinned: attachedDatabase.typeMapping.read(
@@ -321,7 +292,7 @@ class $AlbumTableTable extends AlbumTable
 class AlbumTableData extends DataClass implements Insertable<AlbumTableData> {
   final int id;
   final String name;
-  final int artist;
+  final String artist;
   final bool pinned;
   const AlbumTableData({
     required this.id,
@@ -334,7 +305,7 @@ class AlbumTableData extends DataClass implements Insertable<AlbumTableData> {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
-    map['artist'] = Variable<int>(artist);
+    map['artist'] = Variable<String>(artist);
     map['pinned'] = Variable<bool>(pinned);
     return map;
   }
@@ -356,7 +327,7 @@ class AlbumTableData extends DataClass implements Insertable<AlbumTableData> {
     return AlbumTableData(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
-      artist: serializer.fromJson<int>(json['artist']),
+      artist: serializer.fromJson<String>(json['artist']),
       pinned: serializer.fromJson<bool>(json['pinned']),
     );
   }
@@ -366,18 +337,22 @@ class AlbumTableData extends DataClass implements Insertable<AlbumTableData> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
-      'artist': serializer.toJson<int>(artist),
+      'artist': serializer.toJson<String>(artist),
       'pinned': serializer.toJson<bool>(pinned),
     };
   }
 
-  AlbumTableData copyWith({int? id, String? name, int? artist, bool? pinned}) =>
-      AlbumTableData(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        artist: artist ?? this.artist,
-        pinned: pinned ?? this.pinned,
-      );
+  AlbumTableData copyWith({
+    int? id,
+    String? name,
+    String? artist,
+    bool? pinned,
+  }) => AlbumTableData(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    artist: artist ?? this.artist,
+    pinned: pinned ?? this.pinned,
+  );
   AlbumTableData copyWithCompanion(AlbumTableCompanion data) {
     return AlbumTableData(
       id: data.id.present ? data.id.value : this.id,
@@ -413,7 +388,7 @@ class AlbumTableData extends DataClass implements Insertable<AlbumTableData> {
 class AlbumTableCompanion extends UpdateCompanion<AlbumTableData> {
   final Value<int> id;
   final Value<String> name;
-  final Value<int> artist;
+  final Value<String> artist;
   final Value<bool> pinned;
   const AlbumTableCompanion({
     this.id = const Value.absent(),
@@ -424,14 +399,14 @@ class AlbumTableCompanion extends UpdateCompanion<AlbumTableData> {
   AlbumTableCompanion.insert({
     this.id = const Value.absent(),
     required String name,
-    required int artist,
+    required String artist,
     this.pinned = const Value.absent(),
   }) : name = Value(name),
        artist = Value(artist);
   static Insertable<AlbumTableData> custom({
     Expression<int>? id,
     Expression<String>? name,
-    Expression<int>? artist,
+    Expression<String>? artist,
     Expression<bool>? pinned,
   }) {
     return RawValuesInsertable({
@@ -445,7 +420,7 @@ class AlbumTableCompanion extends UpdateCompanion<AlbumTableData> {
   AlbumTableCompanion copyWith({
     Value<int>? id,
     Value<String>? name,
-    Value<int>? artist,
+    Value<String>? artist,
     Value<bool>? pinned,
   }) {
     return AlbumTableCompanion(
@@ -466,7 +441,7 @@ class AlbumTableCompanion extends UpdateCompanion<AlbumTableData> {
       map['name'] = Variable<String>(name.value);
     }
     if (artist.present) {
-      map['artist'] = Variable<int>(artist.value);
+      map['artist'] = Variable<String>(artist.value);
     }
     if (pinned.present) {
       map['pinned'] = Variable<bool>(pinned.value);
@@ -815,19 +790,6 @@ class $GenreTableTable extends GenreTable
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $GenreTableTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
@@ -838,7 +800,7 @@ class $GenreTableTable extends GenreTable
     requiredDuringInsert: true,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, name];
+  List<GeneratedColumn> get $columns => [name];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -851,9 +813,6 @@ class $GenreTableTable extends GenreTable
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
     if (data.containsKey('name')) {
       context.handle(
         _nameMeta,
@@ -866,15 +825,11 @@ class $GenreTableTable extends GenreTable
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => {name};
   @override
   GenreTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return GenreTableData(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
       name: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}name'],
@@ -889,19 +844,17 @@ class $GenreTableTable extends GenreTable
 }
 
 class GenreTableData extends DataClass implements Insertable<GenreTableData> {
-  final int id;
   final String name;
-  const GenreTableData({required this.id, required this.name});
+  const GenreTableData({required this.name});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
     return map;
   }
 
   GenreTableCompanion toCompanion(bool nullToAbsent) {
-    return GenreTableCompanion(id: Value(id), name: Value(name));
+    return GenreTableCompanion(name: Value(name));
   }
 
   factory GenreTableData.fromJson(
@@ -909,25 +862,18 @@ class GenreTableData extends DataClass implements Insertable<GenreTableData> {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return GenreTableData(
-      id: serializer.fromJson<int>(json['id']),
-      name: serializer.fromJson<String>(json['name']),
-    );
+    return GenreTableData(name: serializer.fromJson<String>(json['name']));
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'name': serializer.toJson<String>(name),
-    };
+    return <String, dynamic>{'name': serializer.toJson<String>(name)};
   }
 
-  GenreTableData copyWith({int? id, String? name}) =>
-      GenreTableData(id: id ?? this.id, name: name ?? this.name);
+  GenreTableData copyWith({String? name}) =>
+      GenreTableData(name: name ?? this.name);
   GenreTableData copyWithCompanion(GenreTableCompanion data) {
     return GenreTableData(
-      id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
     );
   }
@@ -935,55 +881,55 @@ class GenreTableData extends DataClass implements Insertable<GenreTableData> {
   @override
   String toString() {
     return (StringBuffer('GenreTableData(')
-          ..write('id: $id, ')
           ..write('name: $name')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name);
+  int get hashCode => name.hashCode;
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is GenreTableData &&
-          other.id == this.id &&
-          other.name == this.name);
+      (other is GenreTableData && other.name == this.name);
 }
 
 class GenreTableCompanion extends UpdateCompanion<GenreTableData> {
-  final Value<int> id;
   final Value<String> name;
+  final Value<int> rowid;
   const GenreTableCompanion({
-    this.id = const Value.absent(),
     this.name = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   GenreTableCompanion.insert({
-    this.id = const Value.absent(),
     required String name,
+    this.rowid = const Value.absent(),
   }) : name = Value(name);
   static Insertable<GenreTableData> custom({
-    Expression<int>? id,
     Expression<String>? name,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
       if (name != null) 'name': name,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
-  GenreTableCompanion copyWith({Value<int>? id, Value<String>? name}) {
-    return GenreTableCompanion(id: id ?? this.id, name: name ?? this.name);
+  GenreTableCompanion copyWith({Value<String>? name, Value<int>? rowid}) {
+    return GenreTableCompanion(
+      name: name ?? this.name,
+      rowid: rowid ?? this.rowid,
+    );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
@@ -991,8 +937,8 @@ class GenreTableCompanion extends UpdateCompanion<GenreTableData> {
   @override
   String toString() {
     return (StringBuffer('GenreTableCompanion(')
-          ..write('id: $id, ')
-          ..write('name: $name')
+          ..write('name: $name, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -1004,19 +950,6 @@ class $TrackTableTable extends TrackTable
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $TrackTableTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
@@ -1049,28 +982,28 @@ class $TrackTableTable extends TrackTable
   );
   static const VerificationMeta _artistMeta = const VerificationMeta('artist');
   @override
-  late final GeneratedColumn<int> artist = GeneratedColumn<int>(
+  late final GeneratedColumn<String> artist = GeneratedColumn<String>(
     'artist',
     aliasedName,
     true,
-    type: DriftSqlType.int,
+    type: DriftSqlType.string,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES artist_table (id)',
+      'REFERENCES artist_table (name)',
     ),
   );
   static const VerificationMeta _albumArtistMeta = const VerificationMeta(
     'albumArtist',
   );
   @override
-  late final GeneratedColumn<int> albumArtist = GeneratedColumn<int>(
+  late final GeneratedColumn<String> albumArtist = GeneratedColumn<String>(
     'album_artist',
     aliasedName,
     true,
-    type: DriftSqlType.int,
+    type: DriftSqlType.string,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES artist_table (id)',
+      'REFERENCES artist_table (name)',
     ),
   );
   static const VerificationMeta _discNumberMeta = const VerificationMeta(
@@ -1108,14 +1041,14 @@ class $TrackTableTable extends TrackTable
   );
   static const VerificationMeta _genreMeta = const VerificationMeta('genre');
   @override
-  late final GeneratedColumn<int> genre = GeneratedColumn<int>(
+  late final GeneratedColumn<String> genre = GeneratedColumn<String>(
     'genre',
     aliasedName,
     true,
-    type: DriftSqlType.int,
+    type: DriftSqlType.string,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES genre_table (id)',
+      'REFERENCES genre_table (name)',
     ),
   );
   static const VerificationMeta _trackNumberMeta = const VerificationMeta(
@@ -1149,7 +1082,6 @@ class $TrackTableTable extends TrackTable
   );
   @override
   List<GeneratedColumn> get $columns => [
-    id,
     name,
     path,
     album,
@@ -1175,9 +1107,6 @@ class $TrackTableTable extends TrackTable
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
     if (data.containsKey('name')) {
       context.handle(
         _nameMeta,
@@ -1264,15 +1193,11 @@ class $TrackTableTable extends TrackTable
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => {path};
   @override
   TrackTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return TrackTableData(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
       name: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}name'],
@@ -1286,11 +1211,11 @@ class $TrackTableTable extends TrackTable
         data['${effectivePrefix}album'],
       ),
       artist: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}artist'],
       ),
       albumArtist: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}album_artist'],
       ),
       discNumber: attachedDatabase.typeMapping.read(
@@ -1306,7 +1231,7 @@ class $TrackTableTable extends TrackTable
         data['${effectivePrefix}duration_ms'],
       ),
       genre: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}genre'],
       ),
       trackNumber: attachedDatabase.typeMapping.read(
@@ -1331,21 +1256,19 @@ class $TrackTableTable extends TrackTable
 }
 
 class TrackTableData extends DataClass implements Insertable<TrackTableData> {
-  final int id;
   final String name;
   final String path;
   final int? album;
-  final int? artist;
-  final int? albumArtist;
+  final String? artist;
+  final String? albumArtist;
   final int? discNumber;
   final int? discTotal;
   final double? durationMs;
-  final int? genre;
+  final String? genre;
   final int? trackNumber;
   final int? year;
   final String? lyrics;
   const TrackTableData({
-    required this.id,
     required this.name,
     required this.path,
     this.album,
@@ -1362,17 +1285,16 @@ class TrackTableData extends DataClass implements Insertable<TrackTableData> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
     map['path'] = Variable<String>(path);
     if (!nullToAbsent || album != null) {
       map['album'] = Variable<int>(album);
     }
     if (!nullToAbsent || artist != null) {
-      map['artist'] = Variable<int>(artist);
+      map['artist'] = Variable<String>(artist);
     }
     if (!nullToAbsent || albumArtist != null) {
-      map['album_artist'] = Variable<int>(albumArtist);
+      map['album_artist'] = Variable<String>(albumArtist);
     }
     if (!nullToAbsent || discNumber != null) {
       map['disc_number'] = Variable<int>(discNumber);
@@ -1384,7 +1306,7 @@ class TrackTableData extends DataClass implements Insertable<TrackTableData> {
       map['duration_ms'] = Variable<double>(durationMs);
     }
     if (!nullToAbsent || genre != null) {
-      map['genre'] = Variable<int>(genre);
+      map['genre'] = Variable<String>(genre);
     }
     if (!nullToAbsent || trackNumber != null) {
       map['track_number'] = Variable<int>(trackNumber);
@@ -1400,7 +1322,6 @@ class TrackTableData extends DataClass implements Insertable<TrackTableData> {
 
   TrackTableCompanion toCompanion(bool nullToAbsent) {
     return TrackTableCompanion(
-      id: Value(id),
       name: Value(name),
       path: Value(path),
       album: album == null && nullToAbsent
@@ -1440,16 +1361,15 @@ class TrackTableData extends DataClass implements Insertable<TrackTableData> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return TrackTableData(
-      id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       path: serializer.fromJson<String>(json['path']),
       album: serializer.fromJson<int?>(json['album']),
-      artist: serializer.fromJson<int?>(json['artist']),
-      albumArtist: serializer.fromJson<int?>(json['albumArtist']),
+      artist: serializer.fromJson<String?>(json['artist']),
+      albumArtist: serializer.fromJson<String?>(json['albumArtist']),
       discNumber: serializer.fromJson<int?>(json['discNumber']),
       discTotal: serializer.fromJson<int?>(json['discTotal']),
       durationMs: serializer.fromJson<double?>(json['durationMs']),
-      genre: serializer.fromJson<int?>(json['genre']),
+      genre: serializer.fromJson<String?>(json['genre']),
       trackNumber: serializer.fromJson<int?>(json['trackNumber']),
       year: serializer.fromJson<int?>(json['year']),
       lyrics: serializer.fromJson<String?>(json['lyrics']),
@@ -1459,16 +1379,15 @@ class TrackTableData extends DataClass implements Insertable<TrackTableData> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
       'path': serializer.toJson<String>(path),
       'album': serializer.toJson<int?>(album),
-      'artist': serializer.toJson<int?>(artist),
-      'albumArtist': serializer.toJson<int?>(albumArtist),
+      'artist': serializer.toJson<String?>(artist),
+      'albumArtist': serializer.toJson<String?>(albumArtist),
       'discNumber': serializer.toJson<int?>(discNumber),
       'discTotal': serializer.toJson<int?>(discTotal),
       'durationMs': serializer.toJson<double?>(durationMs),
-      'genre': serializer.toJson<int?>(genre),
+      'genre': serializer.toJson<String?>(genre),
       'trackNumber': serializer.toJson<int?>(trackNumber),
       'year': serializer.toJson<int?>(year),
       'lyrics': serializer.toJson<String?>(lyrics),
@@ -1476,21 +1395,19 @@ class TrackTableData extends DataClass implements Insertable<TrackTableData> {
   }
 
   TrackTableData copyWith({
-    int? id,
     String? name,
     String? path,
     Value<int?> album = const Value.absent(),
-    Value<int?> artist = const Value.absent(),
-    Value<int?> albumArtist = const Value.absent(),
+    Value<String?> artist = const Value.absent(),
+    Value<String?> albumArtist = const Value.absent(),
     Value<int?> discNumber = const Value.absent(),
     Value<int?> discTotal = const Value.absent(),
     Value<double?> durationMs = const Value.absent(),
-    Value<int?> genre = const Value.absent(),
+    Value<String?> genre = const Value.absent(),
     Value<int?> trackNumber = const Value.absent(),
     Value<int?> year = const Value.absent(),
     Value<String?> lyrics = const Value.absent(),
   }) => TrackTableData(
-    id: id ?? this.id,
     name: name ?? this.name,
     path: path ?? this.path,
     album: album.present ? album.value : this.album,
@@ -1506,7 +1423,6 @@ class TrackTableData extends DataClass implements Insertable<TrackTableData> {
   );
   TrackTableData copyWithCompanion(TrackTableCompanion data) {
     return TrackTableData(
-      id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
       path: data.path.present ? data.path.value : this.path,
       album: data.album.present ? data.album.value : this.album,
@@ -1533,7 +1449,6 @@ class TrackTableData extends DataClass implements Insertable<TrackTableData> {
   @override
   String toString() {
     return (StringBuffer('TrackTableData(')
-          ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('path: $path, ')
           ..write('album: $album, ')
@@ -1552,7 +1467,6 @@ class TrackTableData extends DataClass implements Insertable<TrackTableData> {
 
   @override
   int get hashCode => Object.hash(
-    id,
     name,
     path,
     album,
@@ -1570,7 +1484,6 @@ class TrackTableData extends DataClass implements Insertable<TrackTableData> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is TrackTableData &&
-          other.id == this.id &&
           other.name == this.name &&
           other.path == this.path &&
           other.album == this.album &&
@@ -1586,21 +1499,20 @@ class TrackTableData extends DataClass implements Insertable<TrackTableData> {
 }
 
 class TrackTableCompanion extends UpdateCompanion<TrackTableData> {
-  final Value<int> id;
   final Value<String> name;
   final Value<String> path;
   final Value<int?> album;
-  final Value<int?> artist;
-  final Value<int?> albumArtist;
+  final Value<String?> artist;
+  final Value<String?> albumArtist;
   final Value<int?> discNumber;
   final Value<int?> discTotal;
   final Value<double?> durationMs;
-  final Value<int?> genre;
+  final Value<String?> genre;
   final Value<int?> trackNumber;
   final Value<int?> year;
   final Value<String?> lyrics;
+  final Value<int> rowid;
   const TrackTableCompanion({
-    this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.path = const Value.absent(),
     this.album = const Value.absent(),
@@ -1613,9 +1525,9 @@ class TrackTableCompanion extends UpdateCompanion<TrackTableData> {
     this.trackNumber = const Value.absent(),
     this.year = const Value.absent(),
     this.lyrics = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   TrackTableCompanion.insert({
-    this.id = const Value.absent(),
     required String name,
     required String path,
     this.album = const Value.absent(),
@@ -1628,25 +1540,25 @@ class TrackTableCompanion extends UpdateCompanion<TrackTableData> {
     this.trackNumber = const Value.absent(),
     this.year = const Value.absent(),
     this.lyrics = const Value.absent(),
+    this.rowid = const Value.absent(),
   }) : name = Value(name),
        path = Value(path);
   static Insertable<TrackTableData> custom({
-    Expression<int>? id,
     Expression<String>? name,
     Expression<String>? path,
     Expression<int>? album,
-    Expression<int>? artist,
-    Expression<int>? albumArtist,
+    Expression<String>? artist,
+    Expression<String>? albumArtist,
     Expression<int>? discNumber,
     Expression<int>? discTotal,
     Expression<double>? durationMs,
-    Expression<int>? genre,
+    Expression<String>? genre,
     Expression<int>? trackNumber,
     Expression<int>? year,
     Expression<String>? lyrics,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
       if (name != null) 'name': name,
       if (path != null) 'path': path,
       if (album != null) 'album': album,
@@ -1659,26 +1571,26 @@ class TrackTableCompanion extends UpdateCompanion<TrackTableData> {
       if (trackNumber != null) 'track_number': trackNumber,
       if (year != null) 'year': year,
       if (lyrics != null) 'lyrics': lyrics,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   TrackTableCompanion copyWith({
-    Value<int>? id,
     Value<String>? name,
     Value<String>? path,
     Value<int?>? album,
-    Value<int?>? artist,
-    Value<int?>? albumArtist,
+    Value<String?>? artist,
+    Value<String?>? albumArtist,
     Value<int?>? discNumber,
     Value<int?>? discTotal,
     Value<double?>? durationMs,
-    Value<int?>? genre,
+    Value<String?>? genre,
     Value<int?>? trackNumber,
     Value<int?>? year,
     Value<String?>? lyrics,
+    Value<int>? rowid,
   }) {
     return TrackTableCompanion(
-      id: id ?? this.id,
       name: name ?? this.name,
       path: path ?? this.path,
       album: album ?? this.album,
@@ -1691,15 +1603,13 @@ class TrackTableCompanion extends UpdateCompanion<TrackTableData> {
       trackNumber: trackNumber ?? this.trackNumber,
       year: year ?? this.year,
       lyrics: lyrics ?? this.lyrics,
+      rowid: rowid ?? this.rowid,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
@@ -1710,10 +1620,10 @@ class TrackTableCompanion extends UpdateCompanion<TrackTableData> {
       map['album'] = Variable<int>(album.value);
     }
     if (artist.present) {
-      map['artist'] = Variable<int>(artist.value);
+      map['artist'] = Variable<String>(artist.value);
     }
     if (albumArtist.present) {
-      map['album_artist'] = Variable<int>(albumArtist.value);
+      map['album_artist'] = Variable<String>(albumArtist.value);
     }
     if (discNumber.present) {
       map['disc_number'] = Variable<int>(discNumber.value);
@@ -1725,7 +1635,7 @@ class TrackTableCompanion extends UpdateCompanion<TrackTableData> {
       map['duration_ms'] = Variable<double>(durationMs.value);
     }
     if (genre.present) {
-      map['genre'] = Variable<int>(genre.value);
+      map['genre'] = Variable<String>(genre.value);
     }
     if (trackNumber.present) {
       map['track_number'] = Variable<int>(trackNumber.value);
@@ -1736,13 +1646,15 @@ class TrackTableCompanion extends UpdateCompanion<TrackTableData> {
     if (lyrics.present) {
       map['lyrics'] = Variable<String>(lyrics.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
   @override
   String toString() {
     return (StringBuffer('TrackTableCompanion(')
-          ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('path: $path, ')
           ..write('album: $album, ')
@@ -1754,7 +1666,8 @@ class TrackTableCompanion extends UpdateCompanion<TrackTableData> {
           ..write('genre: $genre, ')
           ..write('trackNumber: $trackNumber, ')
           ..write('year: $year, ')
-          ..write('lyrics: $lyrics')
+          ..write('lyrics: $lyrics, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -2054,14 +1967,14 @@ class $PlaylistTrackTableTable extends PlaylistTrackTable
   );
   static const VerificationMeta _trackMeta = const VerificationMeta('track');
   @override
-  late final GeneratedColumn<int> track = GeneratedColumn<int>(
+  late final GeneratedColumn<String> track = GeneratedColumn<String>(
     'track',
     aliasedName,
     false,
-    type: DriftSqlType.int,
+    type: DriftSqlType.string,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES track_table (id)',
+      'REFERENCES track_table (path)',
     ),
   );
   @override
@@ -2115,7 +2028,7 @@ class $PlaylistTrackTableTable extends PlaylistTrackTable
         data['${effectivePrefix}playlist'],
       )!,
       track: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}track'],
       )!,
     );
@@ -2131,7 +2044,7 @@ class PlaylistTrackTableData extends DataClass
     implements Insertable<PlaylistTrackTableData> {
   final int id;
   final int playlist;
-  final int track;
+  final String track;
   const PlaylistTrackTableData({
     required this.id,
     required this.playlist,
@@ -2142,7 +2055,7 @@ class PlaylistTrackTableData extends DataClass
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['playlist'] = Variable<int>(playlist);
-    map['track'] = Variable<int>(track);
+    map['track'] = Variable<String>(track);
     return map;
   }
 
@@ -2162,7 +2075,7 @@ class PlaylistTrackTableData extends DataClass
     return PlaylistTrackTableData(
       id: serializer.fromJson<int>(json['id']),
       playlist: serializer.fromJson<int>(json['playlist']),
-      track: serializer.fromJson<int>(json['track']),
+      track: serializer.fromJson<String>(json['track']),
     );
   }
   @override
@@ -2171,11 +2084,11 @@ class PlaylistTrackTableData extends DataClass
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'playlist': serializer.toJson<int>(playlist),
-      'track': serializer.toJson<int>(track),
+      'track': serializer.toJson<String>(track),
     };
   }
 
-  PlaylistTrackTableData copyWith({int? id, int? playlist, int? track}) =>
+  PlaylistTrackTableData copyWith({int? id, int? playlist, String? track}) =>
       PlaylistTrackTableData(
         id: id ?? this.id,
         playlist: playlist ?? this.playlist,
@@ -2214,7 +2127,7 @@ class PlaylistTrackTableCompanion
     extends UpdateCompanion<PlaylistTrackTableData> {
   final Value<int> id;
   final Value<int> playlist;
-  final Value<int> track;
+  final Value<String> track;
   const PlaylistTrackTableCompanion({
     this.id = const Value.absent(),
     this.playlist = const Value.absent(),
@@ -2223,13 +2136,13 @@ class PlaylistTrackTableCompanion
   PlaylistTrackTableCompanion.insert({
     this.id = const Value.absent(),
     required int playlist,
-    required int track,
+    required String track,
   }) : playlist = Value(playlist),
        track = Value(track);
   static Insertable<PlaylistTrackTableData> custom({
     Expression<int>? id,
     Expression<int>? playlist,
-    Expression<int>? track,
+    Expression<String>? track,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2241,7 +2154,7 @@ class PlaylistTrackTableCompanion
   PlaylistTrackTableCompanion copyWith({
     Value<int>? id,
     Value<int>? playlist,
-    Value<int>? track,
+    Value<String>? track,
   }) {
     return PlaylistTrackTableCompanion(
       id: id ?? this.id,
@@ -2260,7 +2173,7 @@ class PlaylistTrackTableCompanion
       map['playlist'] = Variable<int>(playlist.value);
     }
     if (track.present) {
-      map['track'] = Variable<int>(track.value);
+      map['track'] = Variable<String>(track.value);
     }
     return map;
   }
@@ -2299,14 +2212,14 @@ class $LikedTrackTableTable extends LikedTrackTable
     'trackId',
   );
   @override
-  late final GeneratedColumn<int> trackId = GeneratedColumn<int>(
+  late final GeneratedColumn<String> trackId = GeneratedColumn<String>(
     'track_id',
     aliasedName,
     false,
-    type: DriftSqlType.int,
+    type: DriftSqlType.string,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES track_table (id)',
+      'REFERENCES track_table (path)',
     ),
   );
   @override
@@ -2348,7 +2261,7 @@ class $LikedTrackTableTable extends LikedTrackTable
         data['${effectivePrefix}id'],
       )!,
       trackId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}track_id'],
       )!,
     );
@@ -2363,13 +2276,13 @@ class $LikedTrackTableTable extends LikedTrackTable
 class LikedTrackTableData extends DataClass
     implements Insertable<LikedTrackTableData> {
   final int id;
-  final int trackId;
+  final String trackId;
   const LikedTrackTableData({required this.id, required this.trackId});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
-    map['track_id'] = Variable<int>(trackId);
+    map['track_id'] = Variable<String>(trackId);
     return map;
   }
 
@@ -2384,7 +2297,7 @@ class LikedTrackTableData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return LikedTrackTableData(
       id: serializer.fromJson<int>(json['id']),
-      trackId: serializer.fromJson<int>(json['trackId']),
+      trackId: serializer.fromJson<String>(json['trackId']),
     );
   }
   @override
@@ -2392,11 +2305,11 @@ class LikedTrackTableData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
-      'trackId': serializer.toJson<int>(trackId),
+      'trackId': serializer.toJson<String>(trackId),
     };
   }
 
-  LikedTrackTableData copyWith({int? id, int? trackId}) =>
+  LikedTrackTableData copyWith({int? id, String? trackId}) =>
       LikedTrackTableData(id: id ?? this.id, trackId: trackId ?? this.trackId);
   LikedTrackTableData copyWithCompanion(LikedTrackTableCompanion data) {
     return LikedTrackTableData(
@@ -2426,18 +2339,18 @@ class LikedTrackTableData extends DataClass
 
 class LikedTrackTableCompanion extends UpdateCompanion<LikedTrackTableData> {
   final Value<int> id;
-  final Value<int> trackId;
+  final Value<String> trackId;
   const LikedTrackTableCompanion({
     this.id = const Value.absent(),
     this.trackId = const Value.absent(),
   });
   LikedTrackTableCompanion.insert({
     this.id = const Value.absent(),
-    required int trackId,
+    required String trackId,
   }) : trackId = Value(trackId);
   static Insertable<LikedTrackTableData> custom({
     Expression<int>? id,
-    Expression<int>? trackId,
+    Expression<String>? trackId,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2445,7 +2358,7 @@ class LikedTrackTableCompanion extends UpdateCompanion<LikedTrackTableData> {
     });
   }
 
-  LikedTrackTableCompanion copyWith({Value<int>? id, Value<int>? trackId}) {
+  LikedTrackTableCompanion copyWith({Value<int>? id, Value<String>? trackId}) {
     return LikedTrackTableCompanion(
       id: id ?? this.id,
       trackId: trackId ?? this.trackId,
@@ -2459,7 +2372,7 @@ class LikedTrackTableCompanion extends UpdateCompanion<LikedTrackTableData> {
       map['id'] = Variable<int>(id.value);
     }
     if (trackId.present) {
-      map['track_id'] = Variable<int>(trackId.value);
+      map['track_id'] = Variable<String>(trackId.value);
     }
     return map;
   }
@@ -2650,19 +2563,6 @@ class $FavoriteRadioTagTableTable extends FavoriteRadioTagTable
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $FavoriteRadioTagTableTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
@@ -2673,7 +2573,7 @@ class $FavoriteRadioTagTableTable extends FavoriteRadioTagTable
     requiredDuringInsert: true,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, name];
+  List<GeneratedColumn> get $columns => [name];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -2686,9 +2586,6 @@ class $FavoriteRadioTagTableTable extends FavoriteRadioTagTable
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
     if (data.containsKey('name')) {
       context.handle(
         _nameMeta,
@@ -2701,7 +2598,7 @@ class $FavoriteRadioTagTableTable extends FavoriteRadioTagTable
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => {name};
   @override
   FavoriteRadioTagTableData map(
     Map<String, dynamic> data, {
@@ -2709,10 +2606,6 @@ class $FavoriteRadioTagTableTable extends FavoriteRadioTagTable
   }) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return FavoriteRadioTagTableData(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
       name: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}name'],
@@ -2728,19 +2621,17 @@ class $FavoriteRadioTagTableTable extends FavoriteRadioTagTable
 
 class FavoriteRadioTagTableData extends DataClass
     implements Insertable<FavoriteRadioTagTableData> {
-  final int id;
   final String name;
-  const FavoriteRadioTagTableData({required this.id, required this.name});
+  const FavoriteRadioTagTableData({required this.name});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
     return map;
   }
 
   FavoriteRadioTagTableCompanion toCompanion(bool nullToAbsent) {
-    return FavoriteRadioTagTableCompanion(id: Value(id), name: Value(name));
+    return FavoriteRadioTagTableCompanion(name: Value(name));
   }
 
   factory FavoriteRadioTagTableData.fromJson(
@@ -2749,26 +2640,21 @@ class FavoriteRadioTagTableData extends DataClass
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return FavoriteRadioTagTableData(
-      id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'name': serializer.toJson<String>(name),
-    };
+    return <String, dynamic>{'name': serializer.toJson<String>(name)};
   }
 
-  FavoriteRadioTagTableData copyWith({int? id, String? name}) =>
-      FavoriteRadioTagTableData(id: id ?? this.id, name: name ?? this.name);
+  FavoriteRadioTagTableData copyWith({String? name}) =>
+      FavoriteRadioTagTableData(name: name ?? this.name);
   FavoriteRadioTagTableData copyWithCompanion(
     FavoriteRadioTagTableCompanion data,
   ) {
     return FavoriteRadioTagTableData(
-      id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
     );
   }
@@ -2776,62 +2662,59 @@ class FavoriteRadioTagTableData extends DataClass
   @override
   String toString() {
     return (StringBuffer('FavoriteRadioTagTableData(')
-          ..write('id: $id, ')
           ..write('name: $name')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name);
+  int get hashCode => name.hashCode;
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is FavoriteRadioTagTableData &&
-          other.id == this.id &&
-          other.name == this.name);
+      (other is FavoriteRadioTagTableData && other.name == this.name);
 }
 
 class FavoriteRadioTagTableCompanion
     extends UpdateCompanion<FavoriteRadioTagTableData> {
-  final Value<int> id;
   final Value<String> name;
+  final Value<int> rowid;
   const FavoriteRadioTagTableCompanion({
-    this.id = const Value.absent(),
     this.name = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   FavoriteRadioTagTableCompanion.insert({
-    this.id = const Value.absent(),
     required String name,
+    this.rowid = const Value.absent(),
   }) : name = Value(name);
   static Insertable<FavoriteRadioTagTableData> custom({
-    Expression<int>? id,
     Expression<String>? name,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
       if (name != null) 'name': name,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   FavoriteRadioTagTableCompanion copyWith({
-    Value<int>? id,
     Value<String>? name,
+    Value<int>? rowid,
   }) {
     return FavoriteRadioTagTableCompanion(
-      id: id ?? this.id,
       name: name ?? this.name,
+      rowid: rowid ?? this.rowid,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
@@ -2839,8 +2722,8 @@ class FavoriteRadioTagTableCompanion
   @override
   String toString() {
     return (StringBuffer('FavoriteRadioTagTableCompanion(')
-          ..write('id: $id, ')
-          ..write('name: $name')
+          ..write('name: $name, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -3546,19 +3429,6 @@ class $PodcastEpisodeTableTable extends PodcastEpisodeTable
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $PodcastEpisodeTableTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
   static const VerificationMeta _podcastFeedUrlMeta = const VerificationMeta(
     'podcastFeedUrl',
   );
@@ -3666,7 +3536,6 @@ class $PodcastEpisodeTableTable extends PodcastEpisodeTable
   );
   @override
   List<GeneratedColumn> get $columns => [
-    id,
     podcastFeedUrl,
     title,
     episodeDescription,
@@ -3689,9 +3558,6 @@ class $PodcastEpisodeTableTable extends PodcastEpisodeTable
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
     if (data.containsKey('podcast_feed_url')) {
       context.handle(
         _podcastFeedUrlMeta,
@@ -3774,7 +3640,7 @@ class $PodcastEpisodeTableTable extends PodcastEpisodeTable
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => {contentUrl};
   @override
   PodcastEpisodeTableData map(
     Map<String, dynamic> data, {
@@ -3782,10 +3648,6 @@ class $PodcastEpisodeTableTable extends PodcastEpisodeTable
   }) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return PodcastEpisodeTableData(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
       podcastFeedUrl: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}podcast_feed_url'],
@@ -3833,7 +3695,6 @@ class $PodcastEpisodeTableTable extends PodcastEpisodeTable
 
 class PodcastEpisodeTableData extends DataClass
     implements Insertable<PodcastEpisodeTableData> {
-  final int id;
   final String podcastFeedUrl;
   final String title;
   final String episodeDescription;
@@ -3844,7 +3705,6 @@ class PodcastEpisodeTableData extends DataClass
   final int positionMs;
   final String? imageUrl;
   const PodcastEpisodeTableData({
-    required this.id,
     required this.podcastFeedUrl,
     required this.title,
     required this.episodeDescription,
@@ -3858,7 +3718,6 @@ class PodcastEpisodeTableData extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
     map['podcast_feed_url'] = Variable<String>(podcastFeedUrl);
     map['title'] = Variable<String>(title);
     map['episode_description'] = Variable<String>(episodeDescription);
@@ -3877,7 +3736,6 @@ class PodcastEpisodeTableData extends DataClass
 
   PodcastEpisodeTableCompanion toCompanion(bool nullToAbsent) {
     return PodcastEpisodeTableCompanion(
-      id: Value(id),
       podcastFeedUrl: Value(podcastFeedUrl),
       title: Value(title),
       episodeDescription: Value(episodeDescription),
@@ -3900,7 +3758,6 @@ class PodcastEpisodeTableData extends DataClass
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return PodcastEpisodeTableData(
-      id: serializer.fromJson<int>(json['id']),
       podcastFeedUrl: serializer.fromJson<String>(json['podcastFeedUrl']),
       title: serializer.fromJson<String>(json['title']),
       episodeDescription: serializer.fromJson<String>(
@@ -3920,7 +3777,6 @@ class PodcastEpisodeTableData extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
       'podcastFeedUrl': serializer.toJson<String>(podcastFeedUrl),
       'title': serializer.toJson<String>(title),
       'episodeDescription': serializer.toJson<String>(episodeDescription),
@@ -3934,7 +3790,6 @@ class PodcastEpisodeTableData extends DataClass
   }
 
   PodcastEpisodeTableData copyWith({
-    int? id,
     String? podcastFeedUrl,
     String? title,
     String? episodeDescription,
@@ -3945,7 +3800,6 @@ class PodcastEpisodeTableData extends DataClass
     int? positionMs,
     Value<String?> imageUrl = const Value.absent(),
   }) => PodcastEpisodeTableData(
-    id: id ?? this.id,
     podcastFeedUrl: podcastFeedUrl ?? this.podcastFeedUrl,
     title: title ?? this.title,
     episodeDescription: episodeDescription ?? this.episodeDescription,
@@ -3958,7 +3812,6 @@ class PodcastEpisodeTableData extends DataClass
   );
   PodcastEpisodeTableData copyWithCompanion(PodcastEpisodeTableCompanion data) {
     return PodcastEpisodeTableData(
-      id: data.id.present ? data.id.value : this.id,
       podcastFeedUrl: data.podcastFeedUrl.present
           ? data.podcastFeedUrl.value
           : this.podcastFeedUrl,
@@ -3988,7 +3841,6 @@ class PodcastEpisodeTableData extends DataClass
   @override
   String toString() {
     return (StringBuffer('PodcastEpisodeTableData(')
-          ..write('id: $id, ')
           ..write('podcastFeedUrl: $podcastFeedUrl, ')
           ..write('title: $title, ')
           ..write('episodeDescription: $episodeDescription, ')
@@ -4004,7 +3856,6 @@ class PodcastEpisodeTableData extends DataClass
 
   @override
   int get hashCode => Object.hash(
-    id,
     podcastFeedUrl,
     title,
     episodeDescription,
@@ -4019,7 +3870,6 @@ class PodcastEpisodeTableData extends DataClass
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is PodcastEpisodeTableData &&
-          other.id == this.id &&
           other.podcastFeedUrl == this.podcastFeedUrl &&
           other.title == this.title &&
           other.episodeDescription == this.episodeDescription &&
@@ -4033,7 +3883,6 @@ class PodcastEpisodeTableData extends DataClass
 
 class PodcastEpisodeTableCompanion
     extends UpdateCompanion<PodcastEpisodeTableData> {
-  final Value<int> id;
   final Value<String> podcastFeedUrl;
   final Value<String> title;
   final Value<String> episodeDescription;
@@ -4043,8 +3892,8 @@ class PodcastEpisodeTableCompanion
   final Value<int?> durationMs;
   final Value<int> positionMs;
   final Value<String?> imageUrl;
+  final Value<int> rowid;
   const PodcastEpisodeTableCompanion({
-    this.id = const Value.absent(),
     this.podcastFeedUrl = const Value.absent(),
     this.title = const Value.absent(),
     this.episodeDescription = const Value.absent(),
@@ -4054,9 +3903,9 @@ class PodcastEpisodeTableCompanion
     this.durationMs = const Value.absent(),
     this.positionMs = const Value.absent(),
     this.imageUrl = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   PodcastEpisodeTableCompanion.insert({
-    this.id = const Value.absent(),
     required String podcastFeedUrl,
     required String title,
     required String episodeDescription,
@@ -4066,6 +3915,7 @@ class PodcastEpisodeTableCompanion
     this.durationMs = const Value.absent(),
     this.positionMs = const Value.absent(),
     this.imageUrl = const Value.absent(),
+    this.rowid = const Value.absent(),
   }) : podcastFeedUrl = Value(podcastFeedUrl),
        title = Value(title),
        episodeDescription = Value(episodeDescription),
@@ -4073,7 +3923,6 @@ class PodcastEpisodeTableCompanion
        contentUrl = Value(contentUrl),
        publicationDate = Value(publicationDate);
   static Insertable<PodcastEpisodeTableData> custom({
-    Expression<int>? id,
     Expression<String>? podcastFeedUrl,
     Expression<String>? title,
     Expression<String>? episodeDescription,
@@ -4083,9 +3932,9 @@ class PodcastEpisodeTableCompanion
     Expression<int>? durationMs,
     Expression<int>? positionMs,
     Expression<String>? imageUrl,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
       if (podcastFeedUrl != null) 'podcast_feed_url': podcastFeedUrl,
       if (title != null) 'title': title,
       if (episodeDescription != null) 'episode_description': episodeDescription,
@@ -4095,11 +3944,11 @@ class PodcastEpisodeTableCompanion
       if (durationMs != null) 'duration_ms': durationMs,
       if (positionMs != null) 'position_ms': positionMs,
       if (imageUrl != null) 'image_url': imageUrl,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   PodcastEpisodeTableCompanion copyWith({
-    Value<int>? id,
     Value<String>? podcastFeedUrl,
     Value<String>? title,
     Value<String>? episodeDescription,
@@ -4109,9 +3958,9 @@ class PodcastEpisodeTableCompanion
     Value<int?>? durationMs,
     Value<int>? positionMs,
     Value<String?>? imageUrl,
+    Value<int>? rowid,
   }) {
     return PodcastEpisodeTableCompanion(
-      id: id ?? this.id,
       podcastFeedUrl: podcastFeedUrl ?? this.podcastFeedUrl,
       title: title ?? this.title,
       episodeDescription: episodeDescription ?? this.episodeDescription,
@@ -4121,15 +3970,13 @@ class PodcastEpisodeTableCompanion
       durationMs: durationMs ?? this.durationMs,
       positionMs: positionMs ?? this.positionMs,
       imageUrl: imageUrl ?? this.imageUrl,
+      rowid: rowid ?? this.rowid,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
     if (podcastFeedUrl.present) {
       map['podcast_feed_url'] = Variable<String>(podcastFeedUrl.value);
     }
@@ -4157,13 +4004,15 @@ class PodcastEpisodeTableCompanion
     if (imageUrl.present) {
       map['image_url'] = Variable<String>(imageUrl.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
   @override
   String toString() {
     return (StringBuffer('PodcastEpisodeTableCompanion(')
-          ..write('id: $id, ')
           ..write('podcastFeedUrl: $podcastFeedUrl, ')
           ..write('title: $title, ')
           ..write('episodeDescription: $episodeDescription, ')
@@ -4172,7 +4021,8 @@ class PodcastEpisodeTableCompanion
           ..write('publicationDate: $publicationDate, ')
           ..write('durationMs: $durationMs, ')
           ..write('positionMs: $positionMs, ')
-          ..write('imageUrl: $imageUrl')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -4205,14 +4055,14 @@ class $DownloadedPodcastEpisodeTableTable extends DownloadedPodcastEpisodeTable
     'episodeId',
   );
   @override
-  late final GeneratedColumn<int> episodeId = GeneratedColumn<int>(
+  late final GeneratedColumn<String> episodeId = GeneratedColumn<String>(
     'episode_id',
     aliasedName,
     false,
-    type: DriftSqlType.int,
+    type: DriftSqlType.string,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES podcast_episode_table (id)',
+      'REFERENCES podcast_episode_table (content_url)',
     ),
   );
   static const VerificationMeta _filePathMeta = const VerificationMeta(
@@ -4276,7 +4126,7 @@ class $DownloadedPodcastEpisodeTableTable extends DownloadedPodcastEpisodeTable
         data['${effectivePrefix}id'],
       )!,
       episodeId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
+        DriftSqlType.string,
         data['${effectivePrefix}episode_id'],
       )!,
       filePath: attachedDatabase.typeMapping.read(
@@ -4295,7 +4145,7 @@ class $DownloadedPodcastEpisodeTableTable extends DownloadedPodcastEpisodeTable
 class DownloadedPodcastEpisodeTableData extends DataClass
     implements Insertable<DownloadedPodcastEpisodeTableData> {
   final int id;
-  final int episodeId;
+  final String episodeId;
   final String filePath;
   const DownloadedPodcastEpisodeTableData({
     required this.id,
@@ -4306,7 +4156,7 @@ class DownloadedPodcastEpisodeTableData extends DataClass
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
-    map['episode_id'] = Variable<int>(episodeId);
+    map['episode_id'] = Variable<String>(episodeId);
     map['file_path'] = Variable<String>(filePath);
     return map;
   }
@@ -4326,7 +4176,7 @@ class DownloadedPodcastEpisodeTableData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return DownloadedPodcastEpisodeTableData(
       id: serializer.fromJson<int>(json['id']),
-      episodeId: serializer.fromJson<int>(json['episodeId']),
+      episodeId: serializer.fromJson<String>(json['episodeId']),
       filePath: serializer.fromJson<String>(json['filePath']),
     );
   }
@@ -4335,14 +4185,14 @@ class DownloadedPodcastEpisodeTableData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
-      'episodeId': serializer.toJson<int>(episodeId),
+      'episodeId': serializer.toJson<String>(episodeId),
       'filePath': serializer.toJson<String>(filePath),
     };
   }
 
   DownloadedPodcastEpisodeTableData copyWith({
     int? id,
-    int? episodeId,
+    String? episodeId,
     String? filePath,
   }) => DownloadedPodcastEpisodeTableData(
     id: id ?? this.id,
@@ -4383,7 +4233,7 @@ class DownloadedPodcastEpisodeTableData extends DataClass
 class DownloadedPodcastEpisodeTableCompanion
     extends UpdateCompanion<DownloadedPodcastEpisodeTableData> {
   final Value<int> id;
-  final Value<int> episodeId;
+  final Value<String> episodeId;
   final Value<String> filePath;
   const DownloadedPodcastEpisodeTableCompanion({
     this.id = const Value.absent(),
@@ -4392,13 +4242,13 @@ class DownloadedPodcastEpisodeTableCompanion
   });
   DownloadedPodcastEpisodeTableCompanion.insert({
     this.id = const Value.absent(),
-    required int episodeId,
+    required String episodeId,
     required String filePath,
   }) : episodeId = Value(episodeId),
        filePath = Value(filePath);
   static Insertable<DownloadedPodcastEpisodeTableData> custom({
     Expression<int>? id,
-    Expression<int>? episodeId,
+    Expression<String>? episodeId,
     Expression<String>? filePath,
   }) {
     return RawValuesInsertable({
@@ -4410,7 +4260,7 @@ class DownloadedPodcastEpisodeTableCompanion
 
   DownloadedPodcastEpisodeTableCompanion copyWith({
     Value<int>? id,
-    Value<int>? episodeId,
+    Value<String>? episodeId,
     Value<String>? filePath,
   }) {
     return DownloadedPodcastEpisodeTableCompanion(
@@ -4427,7 +4277,7 @@ class DownloadedPodcastEpisodeTableCompanion
       map['id'] = Variable<int>(id.value);
     }
     if (episodeId.present) {
-      map['episode_id'] = Variable<int>(episodeId.value);
+      map['episode_id'] = Variable<String>(episodeId.value);
     }
     if (filePath.present) {
       map['file_path'] = Variable<String>(filePath.value);
@@ -5171,9 +5021,9 @@ abstract class _$Database extends GeneratedDatabase {
 }
 
 typedef $$ArtistTableTableCreateCompanionBuilder =
-    ArtistTableCompanion Function({Value<int> id, required String name});
+    ArtistTableCompanion Function({required String name, Value<int> rowid});
 typedef $$ArtistTableTableUpdateCompanionBuilder =
-    ArtistTableCompanion Function({Value<int> id, Value<String> name});
+    ArtistTableCompanion Function({Value<String> name, Value<int> rowid});
 
 final class $$ArtistTableTableReferences
     extends BaseReferences<_$Database, $ArtistTableTable, ArtistTableData> {
@@ -5182,14 +5032,14 @@ final class $$ArtistTableTableReferences
   static MultiTypedResultKey<$AlbumTableTable, List<AlbumTableData>>
   _albumTableRefsTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.albumTable,
-    aliasName: $_aliasNameGenerator(db.artistTable.id, db.albumTable.artist),
+    aliasName: $_aliasNameGenerator(db.artistTable.name, db.albumTable.artist),
   );
 
   $$AlbumTableTableProcessedTableManager get albumTableRefs {
     final manager = $$AlbumTableTableTableManager(
       $_db,
       $_db.albumTable,
-    ).filter((f) => f.artist.id.sqlEquals($_itemColumn<int>('id')!));
+    ).filter((f) => f.artist.name.sqlEquals($_itemColumn<String>('name')!));
 
     final cache = $_typedResult.readTableOrNull(_albumTableRefsTable($_db));
     return ProcessedTableManager(
@@ -5200,14 +5050,14 @@ final class $$ArtistTableTableReferences
   static MultiTypedResultKey<$TrackTableTable, List<TrackTableData>>
   _tracksByArtistTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.trackTable,
-    aliasName: $_aliasNameGenerator(db.artistTable.id, db.trackTable.artist),
+    aliasName: $_aliasNameGenerator(db.artistTable.name, db.trackTable.artist),
   );
 
   $$TrackTableTableProcessedTableManager get tracksByArtist {
     final manager = $$TrackTableTableTableManager(
       $_db,
       $_db.trackTable,
-    ).filter((f) => f.artist.id.sqlEquals($_itemColumn<int>('id')!));
+    ).filter((f) => f.artist.name.sqlEquals($_itemColumn<String>('name')!));
 
     final cache = $_typedResult.readTableOrNull(_tracksByArtistTable($_db));
     return ProcessedTableManager(
@@ -5219,16 +5069,15 @@ final class $$ArtistTableTableReferences
   _tracksByAlbumArtistTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.trackTable,
     aliasName: $_aliasNameGenerator(
-      db.artistTable.id,
+      db.artistTable.name,
       db.trackTable.albumArtist,
     ),
   );
 
   $$TrackTableTableProcessedTableManager get tracksByAlbumArtist {
-    final manager = $$TrackTableTableTableManager(
-      $_db,
-      $_db.trackTable,
-    ).filter((f) => f.albumArtist.id.sqlEquals($_itemColumn<int>('id')!));
+    final manager = $$TrackTableTableTableManager($_db, $_db.trackTable).filter(
+      (f) => f.albumArtist.name.sqlEquals($_itemColumn<String>('name')!),
+    );
 
     final cache = $_typedResult.readTableOrNull(
       _tracksByAlbumArtistTable($_db),
@@ -5248,11 +5097,6 @@ class $$ArtistTableTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get name => $composableBuilder(
     column: $table.name,
     builder: (column) => ColumnFilters(column),
@@ -5263,7 +5107,7 @@ class $$ArtistTableTableFilterComposer
   ) {
     final $$AlbumTableTableFilterComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.id,
+      getCurrentColumn: (t) => t.name,
       referencedTable: $db.albumTable,
       getReferencedColumn: (t) => t.artist,
       builder:
@@ -5288,7 +5132,7 @@ class $$ArtistTableTableFilterComposer
   ) {
     final $$TrackTableTableFilterComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.id,
+      getCurrentColumn: (t) => t.name,
       referencedTable: $db.trackTable,
       getReferencedColumn: (t) => t.artist,
       builder:
@@ -5313,7 +5157,7 @@ class $$ArtistTableTableFilterComposer
   ) {
     final $$TrackTableTableFilterComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.id,
+      getCurrentColumn: (t) => t.name,
       referencedTable: $db.trackTable,
       getReferencedColumn: (t) => t.albumArtist,
       builder:
@@ -5343,11 +5187,6 @@ class $$ArtistTableTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get name => $composableBuilder(
     column: $table.name,
     builder: (column) => ColumnOrderings(column),
@@ -5363,9 +5202,6 @@ class $$ArtistTableTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
@@ -5374,7 +5210,7 @@ class $$ArtistTableTableAnnotationComposer
   ) {
     final $$AlbumTableTableAnnotationComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.id,
+      getCurrentColumn: (t) => t.name,
       referencedTable: $db.albumTable,
       getReferencedColumn: (t) => t.artist,
       builder:
@@ -5399,7 +5235,7 @@ class $$ArtistTableTableAnnotationComposer
   ) {
     final $$TrackTableTableAnnotationComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.id,
+      getCurrentColumn: (t) => t.name,
       referencedTable: $db.trackTable,
       getReferencedColumn: (t) => t.artist,
       builder:
@@ -5424,7 +5260,7 @@ class $$ArtistTableTableAnnotationComposer
   ) {
     final $$TrackTableTableAnnotationComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.id,
+      getCurrentColumn: (t) => t.name,
       referencedTable: $db.trackTable,
       getReferencedColumn: (t) => t.albumArtist,
       builder:
@@ -5477,12 +5313,14 @@ class $$ArtistTableTableTableManager
               $$ArtistTableTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
-              }) => ArtistTableCompanion(id: id, name: name),
+                Value<int> rowid = const Value.absent(),
+              }) => ArtistTableCompanion(name: name, rowid: rowid),
           createCompanionCallback:
-              ({Value<int> id = const Value.absent(), required String name}) =>
-                  ArtistTableCompanion.insert(id: id, name: name),
+              ({
+                required String name,
+                Value<int> rowid = const Value.absent(),
+              }) => ArtistTableCompanion.insert(name: name, rowid: rowid),
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
@@ -5524,7 +5362,7 @@ class $$ArtistTableTableTableManager
                               ).albumTableRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
-                                (e) => e.artist == item.id,
+                                (e) => e.artist == item.name,
                               ),
                           typedResults: items,
                         ),
@@ -5545,7 +5383,7 @@ class $$ArtistTableTableTableManager
                               ).tracksByArtist,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
-                                (e) => e.artist == item.id,
+                                (e) => e.artist == item.name,
                               ),
                           typedResults: items,
                         ),
@@ -5566,7 +5404,7 @@ class $$ArtistTableTableTableManager
                               ).tracksByAlbumArtist,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
-                                (e) => e.albumArtist == item.id,
+                                (e) => e.albumArtist == item.name,
                               ),
                           typedResults: items,
                         ),
@@ -5600,14 +5438,14 @@ typedef $$AlbumTableTableCreateCompanionBuilder =
     AlbumTableCompanion Function({
       Value<int> id,
       required String name,
-      required int artist,
+      required String artist,
       Value<bool> pinned,
     });
 typedef $$AlbumTableTableUpdateCompanionBuilder =
     AlbumTableCompanion Function({
       Value<int> id,
       Value<String> name,
-      Value<int> artist,
+      Value<String> artist,
       Value<bool> pinned,
     });
 
@@ -5617,16 +5455,16 @@ final class $$AlbumTableTableReferences
 
   static $ArtistTableTable _artistTable(_$Database db) =>
       db.artistTable.createAlias(
-        $_aliasNameGenerator(db.albumTable.artist, db.artistTable.id),
+        $_aliasNameGenerator(db.albumTable.artist, db.artistTable.name),
       );
 
   $$ArtistTableTableProcessedTableManager get artist {
-    final $_column = $_itemColumn<int>('artist')!;
+    final $_column = $_itemColumn<String>('artist')!;
 
     final manager = $$ArtistTableTableTableManager(
       $_db,
       $_db.artistTable,
-    ).filter((f) => f.id.sqlEquals($_column));
+    ).filter((f) => f.name.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_artistTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
@@ -5700,7 +5538,7 @@ class $$AlbumTableTableFilterComposer
       composer: this,
       getCurrentColumn: (t) => t.artist,
       referencedTable: $db.artistTable,
-      getReferencedColumn: (t) => t.id,
+      getReferencedColumn: (t) => t.name,
       builder:
           (
             joinBuilder, {
@@ -5798,7 +5636,7 @@ class $$AlbumTableTableOrderingComposer
       composer: this,
       getCurrentColumn: (t) => t.artist,
       referencedTable: $db.artistTable,
-      getReferencedColumn: (t) => t.id,
+      getReferencedColumn: (t) => t.name,
       builder:
           (
             joinBuilder, {
@@ -5840,7 +5678,7 @@ class $$AlbumTableTableAnnotationComposer
       composer: this,
       getCurrentColumn: (t) => t.artist,
       referencedTable: $db.artistTable,
-      getReferencedColumn: (t) => t.id,
+      getReferencedColumn: (t) => t.name,
       builder:
           (
             joinBuilder, {
@@ -5943,7 +5781,7 @@ class $$AlbumTableTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
-                Value<int> artist = const Value.absent(),
+                Value<String> artist = const Value.absent(),
                 Value<bool> pinned = const Value.absent(),
               }) => AlbumTableCompanion(
                 id: id,
@@ -5955,7 +5793,7 @@ class $$AlbumTableTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 required String name,
-                required int artist,
+                required String artist,
                 Value<bool> pinned = const Value.absent(),
               }) => AlbumTableCompanion.insert(
                 id: id,
@@ -6009,7 +5847,7 @@ class $$AlbumTableTableTableManager
                                     referencedColumn:
                                         $$AlbumTableTableReferences
                                             ._artistTable(db)
-                                            .id,
+                                            .name,
                                   )
                                   as T;
                         }
@@ -6389,9 +6227,9 @@ typedef $$AlbumArtTableTableProcessedTableManager =
       PrefetchHooks Function({bool album})
     >;
 typedef $$GenreTableTableCreateCompanionBuilder =
-    GenreTableCompanion Function({Value<int> id, required String name});
+    GenreTableCompanion Function({required String name, Value<int> rowid});
 typedef $$GenreTableTableUpdateCompanionBuilder =
-    GenreTableCompanion Function({Value<int> id, Value<String> name});
+    GenreTableCompanion Function({Value<String> name, Value<int> rowid});
 
 final class $$GenreTableTableReferences
     extends BaseReferences<_$Database, $GenreTableTable, GenreTableData> {
@@ -6400,14 +6238,14 @@ final class $$GenreTableTableReferences
   static MultiTypedResultKey<$TrackTableTable, List<TrackTableData>>
   _tracksByGenreTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.trackTable,
-    aliasName: $_aliasNameGenerator(db.genreTable.id, db.trackTable.genre),
+    aliasName: $_aliasNameGenerator(db.genreTable.name, db.trackTable.genre),
   );
 
   $$TrackTableTableProcessedTableManager get tracksByGenre {
     final manager = $$TrackTableTableTableManager(
       $_db,
       $_db.trackTable,
-    ).filter((f) => f.genre.id.sqlEquals($_itemColumn<int>('id')!));
+    ).filter((f) => f.genre.name.sqlEquals($_itemColumn<String>('name')!));
 
     final cache = $_typedResult.readTableOrNull(_tracksByGenreTable($_db));
     return ProcessedTableManager(
@@ -6425,11 +6263,6 @@ class $$GenreTableTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get name => $composableBuilder(
     column: $table.name,
     builder: (column) => ColumnFilters(column),
@@ -6440,7 +6273,7 @@ class $$GenreTableTableFilterComposer
   ) {
     final $$TrackTableTableFilterComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.id,
+      getCurrentColumn: (t) => t.name,
       referencedTable: $db.trackTable,
       getReferencedColumn: (t) => t.genre,
       builder:
@@ -6470,11 +6303,6 @@ class $$GenreTableTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get name => $composableBuilder(
     column: $table.name,
     builder: (column) => ColumnOrderings(column),
@@ -6490,9 +6318,6 @@ class $$GenreTableTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
@@ -6501,7 +6326,7 @@ class $$GenreTableTableAnnotationComposer
   ) {
     final $$TrackTableTableAnnotationComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.id,
+      getCurrentColumn: (t) => t.name,
       referencedTable: $db.trackTable,
       getReferencedColumn: (t) => t.genre,
       builder:
@@ -6550,12 +6375,14 @@ class $$GenreTableTableTableManager
               $$GenreTableTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
-              }) => GenreTableCompanion(id: id, name: name),
+                Value<int> rowid = const Value.absent(),
+              }) => GenreTableCompanion(name: name, rowid: rowid),
           createCompanionCallback:
-              ({Value<int> id = const Value.absent(), required String name}) =>
-                  GenreTableCompanion.insert(id: id, name: name),
+              ({
+                required String name,
+                Value<int> rowid = const Value.absent(),
+              }) => GenreTableCompanion.insert(name: name, rowid: rowid),
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
@@ -6587,7 +6414,7 @@ class $$GenreTableTableTableManager
                             p0,
                           ).tracksByGenre,
                       referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.genre == item.id),
+                          referencedItems.where((e) => e.genre == item.name),
                       typedResults: items,
                     ),
                 ];
@@ -6614,35 +6441,35 @@ typedef $$GenreTableTableProcessedTableManager =
     >;
 typedef $$TrackTableTableCreateCompanionBuilder =
     TrackTableCompanion Function({
-      Value<int> id,
       required String name,
       required String path,
       Value<int?> album,
-      Value<int?> artist,
-      Value<int?> albumArtist,
+      Value<String?> artist,
+      Value<String?> albumArtist,
       Value<int?> discNumber,
       Value<int?> discTotal,
       Value<double?> durationMs,
-      Value<int?> genre,
+      Value<String?> genre,
       Value<int?> trackNumber,
       Value<int?> year,
       Value<String?> lyrics,
+      Value<int> rowid,
     });
 typedef $$TrackTableTableUpdateCompanionBuilder =
     TrackTableCompanion Function({
-      Value<int> id,
       Value<String> name,
       Value<String> path,
       Value<int?> album,
-      Value<int?> artist,
-      Value<int?> albumArtist,
+      Value<String?> artist,
+      Value<String?> albumArtist,
       Value<int?> discNumber,
       Value<int?> discTotal,
       Value<double?> durationMs,
-      Value<int?> genre,
+      Value<String?> genre,
       Value<int?> trackNumber,
       Value<int?> year,
       Value<String?> lyrics,
+      Value<int> rowid,
     });
 
 final class $$TrackTableTableReferences
@@ -6668,16 +6495,16 @@ final class $$TrackTableTableReferences
 
   static $ArtistTableTable _artistTable(_$Database db) =>
       db.artistTable.createAlias(
-        $_aliasNameGenerator(db.trackTable.artist, db.artistTable.id),
+        $_aliasNameGenerator(db.trackTable.artist, db.artistTable.name),
       );
 
   $$ArtistTableTableProcessedTableManager? get artist {
-    final $_column = $_itemColumn<int>('artist');
+    final $_column = $_itemColumn<String>('artist');
     if ($_column == null) return null;
     final manager = $$ArtistTableTableTableManager(
       $_db,
       $_db.artistTable,
-    ).filter((f) => f.id.sqlEquals($_column));
+    ).filter((f) => f.name.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_artistTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
@@ -6687,16 +6514,16 @@ final class $$TrackTableTableReferences
 
   static $ArtistTableTable _albumArtistTable(_$Database db) =>
       db.artistTable.createAlias(
-        $_aliasNameGenerator(db.trackTable.albumArtist, db.artistTable.id),
+        $_aliasNameGenerator(db.trackTable.albumArtist, db.artistTable.name),
       );
 
   $$ArtistTableTableProcessedTableManager? get albumArtist {
-    final $_column = $_itemColumn<int>('album_artist');
+    final $_column = $_itemColumn<String>('album_artist');
     if ($_column == null) return null;
     final manager = $$ArtistTableTableTableManager(
       $_db,
       $_db.artistTable,
-    ).filter((f) => f.id.sqlEquals($_column));
+    ).filter((f) => f.name.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_albumArtistTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
@@ -6704,16 +6531,18 @@ final class $$TrackTableTableReferences
     );
   }
 
-  static $GenreTableTable _genreTable(_$Database db) => db.genreTable
-      .createAlias($_aliasNameGenerator(db.trackTable.genre, db.genreTable.id));
+  static $GenreTableTable _genreTable(_$Database db) =>
+      db.genreTable.createAlias(
+        $_aliasNameGenerator(db.trackTable.genre, db.genreTable.name),
+      );
 
   $$GenreTableTableProcessedTableManager? get genre {
-    final $_column = $_itemColumn<int>('genre');
+    final $_column = $_itemColumn<String>('genre');
     if ($_column == null) return null;
     final manager = $$GenreTableTableTableManager(
       $_db,
       $_db.genreTable,
-    ).filter((f) => f.id.sqlEquals($_column));
+    ).filter((f) => f.name.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_genreTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
@@ -6728,7 +6557,7 @@ final class $$TrackTableTableReferences
   _playlistTrackTableRefsTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.playlistTrackTable,
     aliasName: $_aliasNameGenerator(
-      db.trackTable.id,
+      db.trackTable.path,
       db.playlistTrackTable.track,
     ),
   );
@@ -6737,7 +6566,7 @@ final class $$TrackTableTableReferences
     final manager = $$PlaylistTrackTableTableTableManager(
       $_db,
       $_db.playlistTrackTable,
-    ).filter((f) => f.track.id.sqlEquals($_itemColumn<int>('id')!));
+    ).filter((f) => f.track.path.sqlEquals($_itemColumn<String>('path')!));
 
     final cache = $_typedResult.readTableOrNull(
       _playlistTrackTableRefsTable($_db),
@@ -6751,7 +6580,7 @@ final class $$TrackTableTableReferences
   _likedTrackTableRefsTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.likedTrackTable,
     aliasName: $_aliasNameGenerator(
-      db.trackTable.id,
+      db.trackTable.path,
       db.likedTrackTable.trackId,
     ),
   );
@@ -6760,7 +6589,7 @@ final class $$TrackTableTableReferences
     final manager = $$LikedTrackTableTableTableManager(
       $_db,
       $_db.likedTrackTable,
-    ).filter((f) => f.trackId.id.sqlEquals($_itemColumn<int>('id')!));
+    ).filter((f) => f.trackId.path.sqlEquals($_itemColumn<String>('path')!));
 
     final cache = $_typedResult.readTableOrNull(
       _likedTrackTableRefsTable($_db),
@@ -6780,11 +6609,6 @@ class $$TrackTableTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get name => $composableBuilder(
     column: $table.name,
     builder: (column) => ColumnFilters(column),
@@ -6853,7 +6677,7 @@ class $$TrackTableTableFilterComposer
       composer: this,
       getCurrentColumn: (t) => t.artist,
       referencedTable: $db.artistTable,
-      getReferencedColumn: (t) => t.id,
+      getReferencedColumn: (t) => t.name,
       builder:
           (
             joinBuilder, {
@@ -6876,7 +6700,7 @@ class $$TrackTableTableFilterComposer
       composer: this,
       getCurrentColumn: (t) => t.albumArtist,
       referencedTable: $db.artistTable,
-      getReferencedColumn: (t) => t.id,
+      getReferencedColumn: (t) => t.name,
       builder:
           (
             joinBuilder, {
@@ -6899,7 +6723,7 @@ class $$TrackTableTableFilterComposer
       composer: this,
       getCurrentColumn: (t) => t.genre,
       referencedTable: $db.genreTable,
-      getReferencedColumn: (t) => t.id,
+      getReferencedColumn: (t) => t.name,
       builder:
           (
             joinBuilder, {
@@ -6922,7 +6746,7 @@ class $$TrackTableTableFilterComposer
   ) {
     final $$PlaylistTrackTableTableFilterComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.id,
+      getCurrentColumn: (t) => t.path,
       referencedTable: $db.playlistTrackTable,
       getReferencedColumn: (t) => t.track,
       builder:
@@ -6947,7 +6771,7 @@ class $$TrackTableTableFilterComposer
   ) {
     final $$LikedTrackTableTableFilterComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.id,
+      getCurrentColumn: (t) => t.path,
       referencedTable: $db.likedTrackTable,
       getReferencedColumn: (t) => t.trackId,
       builder:
@@ -6977,11 +6801,6 @@ class $$TrackTableTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get name => $composableBuilder(
     column: $table.name,
     builder: (column) => ColumnOrderings(column),
@@ -7050,7 +6869,7 @@ class $$TrackTableTableOrderingComposer
       composer: this,
       getCurrentColumn: (t) => t.artist,
       referencedTable: $db.artistTable,
-      getReferencedColumn: (t) => t.id,
+      getReferencedColumn: (t) => t.name,
       builder:
           (
             joinBuilder, {
@@ -7073,7 +6892,7 @@ class $$TrackTableTableOrderingComposer
       composer: this,
       getCurrentColumn: (t) => t.albumArtist,
       referencedTable: $db.artistTable,
-      getReferencedColumn: (t) => t.id,
+      getReferencedColumn: (t) => t.name,
       builder:
           (
             joinBuilder, {
@@ -7096,7 +6915,7 @@ class $$TrackTableTableOrderingComposer
       composer: this,
       getCurrentColumn: (t) => t.genre,
       referencedTable: $db.genreTable,
-      getReferencedColumn: (t) => t.id,
+      getReferencedColumn: (t) => t.name,
       builder:
           (
             joinBuilder, {
@@ -7124,9 +6943,6 @@ class $$TrackTableTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
@@ -7185,7 +7001,7 @@ class $$TrackTableTableAnnotationComposer
       composer: this,
       getCurrentColumn: (t) => t.artist,
       referencedTable: $db.artistTable,
-      getReferencedColumn: (t) => t.id,
+      getReferencedColumn: (t) => t.name,
       builder:
           (
             joinBuilder, {
@@ -7208,7 +7024,7 @@ class $$TrackTableTableAnnotationComposer
       composer: this,
       getCurrentColumn: (t) => t.albumArtist,
       referencedTable: $db.artistTable,
-      getReferencedColumn: (t) => t.id,
+      getReferencedColumn: (t) => t.name,
       builder:
           (
             joinBuilder, {
@@ -7231,7 +7047,7 @@ class $$TrackTableTableAnnotationComposer
       composer: this,
       getCurrentColumn: (t) => t.genre,
       referencedTable: $db.genreTable,
-      getReferencedColumn: (t) => t.id,
+      getReferencedColumn: (t) => t.name,
       builder:
           (
             joinBuilder, {
@@ -7255,7 +7071,7 @@ class $$TrackTableTableAnnotationComposer
     final $$PlaylistTrackTableTableAnnotationComposer composer =
         $composerBuilder(
           composer: this,
-          getCurrentColumn: (t) => t.id,
+          getCurrentColumn: (t) => t.path,
           referencedTable: $db.playlistTrackTable,
           getReferencedColumn: (t) => t.track,
           builder:
@@ -7280,7 +7096,7 @@ class $$TrackTableTableAnnotationComposer
   ) {
     final $$LikedTrackTableTableAnnotationComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.id,
+      getCurrentColumn: (t) => t.path,
       referencedTable: $db.likedTrackTable,
       getReferencedColumn: (t) => t.trackId,
       builder:
@@ -7336,21 +7152,20 @@ class $$TrackTableTableTableManager
               $$TrackTableTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String> path = const Value.absent(),
                 Value<int?> album = const Value.absent(),
-                Value<int?> artist = const Value.absent(),
-                Value<int?> albumArtist = const Value.absent(),
+                Value<String?> artist = const Value.absent(),
+                Value<String?> albumArtist = const Value.absent(),
                 Value<int?> discNumber = const Value.absent(),
                 Value<int?> discTotal = const Value.absent(),
                 Value<double?> durationMs = const Value.absent(),
-                Value<int?> genre = const Value.absent(),
+                Value<String?> genre = const Value.absent(),
                 Value<int?> trackNumber = const Value.absent(),
                 Value<int?> year = const Value.absent(),
                 Value<String?> lyrics = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => TrackTableCompanion(
-                id: id,
                 name: name,
                 path: path,
                 album: album,
@@ -7363,24 +7178,24 @@ class $$TrackTableTableTableManager
                 trackNumber: trackNumber,
                 year: year,
                 lyrics: lyrics,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
                 required String name,
                 required String path,
                 Value<int?> album = const Value.absent(),
-                Value<int?> artist = const Value.absent(),
-                Value<int?> albumArtist = const Value.absent(),
+                Value<String?> artist = const Value.absent(),
+                Value<String?> albumArtist = const Value.absent(),
                 Value<int?> discNumber = const Value.absent(),
                 Value<int?> discTotal = const Value.absent(),
                 Value<double?> durationMs = const Value.absent(),
-                Value<int?> genre = const Value.absent(),
+                Value<String?> genre = const Value.absent(),
                 Value<int?> trackNumber = const Value.absent(),
                 Value<int?> year = const Value.absent(),
                 Value<String?> lyrics = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => TrackTableCompanion.insert(
-                id: id,
                 name: name,
                 path: path,
                 album: album,
@@ -7393,6 +7208,7 @@ class $$TrackTableTableTableManager
                 trackNumber: trackNumber,
                 year: year,
                 lyrics: lyrics,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -7457,7 +7273,7 @@ class $$TrackTableTableTableManager
                                     referencedColumn:
                                         $$TrackTableTableReferences
                                             ._artistTable(db)
-                                            .id,
+                                            .name,
                                   )
                                   as T;
                         }
@@ -7471,7 +7287,7 @@ class $$TrackTableTableTableManager
                                     referencedColumn:
                                         $$TrackTableTableReferences
                                             ._albumArtistTable(db)
-                                            .id,
+                                            .name,
                                   )
                                   as T;
                         }
@@ -7485,7 +7301,7 @@ class $$TrackTableTableTableManager
                                     referencedColumn:
                                         $$TrackTableTableReferences
                                             ._genreTable(db)
-                                            .id,
+                                            .name,
                                   )
                                   as T;
                         }
@@ -7511,7 +7327,7 @@ class $$TrackTableTableTableManager
                               ).playlistTrackTableRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
-                                (e) => e.track == item.id,
+                                (e) => e.track == item.path,
                               ),
                           typedResults: items,
                         ),
@@ -7532,7 +7348,7 @@ class $$TrackTableTableTableManager
                               ).likedTrackTableRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
-                                (e) => e.trackId == item.id,
+                                (e) => e.trackId == item.path,
                               ),
                           typedResults: items,
                         ),
@@ -7843,13 +7659,13 @@ typedef $$PlaylistTrackTableTableCreateCompanionBuilder =
     PlaylistTrackTableCompanion Function({
       Value<int> id,
       required int playlist,
-      required int track,
+      required String track,
     });
 typedef $$PlaylistTrackTableTableUpdateCompanionBuilder =
     PlaylistTrackTableCompanion Function({
       Value<int> id,
       Value<int> playlist,
-      Value<int> track,
+      Value<String> track,
     });
 
 final class $$PlaylistTrackTableTableReferences
@@ -7889,16 +7705,16 @@ final class $$PlaylistTrackTableTableReferences
 
   static $TrackTableTable _trackTable(_$Database db) =>
       db.trackTable.createAlias(
-        $_aliasNameGenerator(db.playlistTrackTable.track, db.trackTable.id),
+        $_aliasNameGenerator(db.playlistTrackTable.track, db.trackTable.path),
       );
 
   $$TrackTableTableProcessedTableManager get track {
-    final $_column = $_itemColumn<int>('track')!;
+    final $_column = $_itemColumn<String>('track')!;
 
     final manager = $$TrackTableTableTableManager(
       $_db,
       $_db.trackTable,
-    ).filter((f) => f.id.sqlEquals($_column));
+    ).filter((f) => f.path.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_trackTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
@@ -7949,7 +7765,7 @@ class $$PlaylistTrackTableTableFilterComposer
       composer: this,
       getCurrentColumn: (t) => t.track,
       referencedTable: $db.trackTable,
-      getReferencedColumn: (t) => t.id,
+      getReferencedColumn: (t) => t.path,
       builder:
           (
             joinBuilder, {
@@ -8010,7 +7826,7 @@ class $$PlaylistTrackTableTableOrderingComposer
       composer: this,
       getCurrentColumn: (t) => t.track,
       referencedTable: $db.trackTable,
-      getReferencedColumn: (t) => t.id,
+      getReferencedColumn: (t) => t.path,
       builder:
           (
             joinBuilder, {
@@ -8069,7 +7885,7 @@ class $$PlaylistTrackTableTableAnnotationComposer
       composer: this,
       getCurrentColumn: (t) => t.track,
       referencedTable: $db.trackTable,
-      getReferencedColumn: (t) => t.id,
+      getReferencedColumn: (t) => t.path,
       builder:
           (
             joinBuilder, {
@@ -8123,7 +7939,7 @@ class $$PlaylistTrackTableTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<int> playlist = const Value.absent(),
-                Value<int> track = const Value.absent(),
+                Value<String> track = const Value.absent(),
               }) => PlaylistTrackTableCompanion(
                 id: id,
                 playlist: playlist,
@@ -8133,7 +7949,7 @@ class $$PlaylistTrackTableTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 required int playlist,
-                required int track,
+                required String track,
               }) => PlaylistTrackTableCompanion.insert(
                 id: id,
                 playlist: playlist,
@@ -8193,7 +8009,7 @@ class $$PlaylistTrackTableTableTableManager
                                 referencedColumn:
                                     $$PlaylistTrackTableTableReferences
                                         ._trackTable(db)
-                                        .id,
+                                        .path,
                               )
                               as T;
                     }
@@ -8224,9 +8040,9 @@ typedef $$PlaylistTrackTableTableProcessedTableManager =
       PrefetchHooks Function({bool playlist, bool track})
     >;
 typedef $$LikedTrackTableTableCreateCompanionBuilder =
-    LikedTrackTableCompanion Function({Value<int> id, required int trackId});
+    LikedTrackTableCompanion Function({Value<int> id, required String trackId});
 typedef $$LikedTrackTableTableUpdateCompanionBuilder =
-    LikedTrackTableCompanion Function({Value<int> id, Value<int> trackId});
+    LikedTrackTableCompanion Function({Value<int> id, Value<String> trackId});
 
 final class $$LikedTrackTableTableReferences
     extends
@@ -8239,16 +8055,16 @@ final class $$LikedTrackTableTableReferences
 
   static $TrackTableTable _trackIdTable(_$Database db) =>
       db.trackTable.createAlias(
-        $_aliasNameGenerator(db.likedTrackTable.trackId, db.trackTable.id),
+        $_aliasNameGenerator(db.likedTrackTable.trackId, db.trackTable.path),
       );
 
   $$TrackTableTableProcessedTableManager get trackId {
-    final $_column = $_itemColumn<int>('track_id')!;
+    final $_column = $_itemColumn<String>('track_id')!;
 
     final manager = $$TrackTableTableTableManager(
       $_db,
       $_db.trackTable,
-    ).filter((f) => f.id.sqlEquals($_column));
+    ).filter((f) => f.path.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_trackIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
@@ -8276,7 +8092,7 @@ class $$LikedTrackTableTableFilterComposer
       composer: this,
       getCurrentColumn: (t) => t.trackId,
       referencedTable: $db.trackTable,
-      getReferencedColumn: (t) => t.id,
+      getReferencedColumn: (t) => t.path,
       builder:
           (
             joinBuilder, {
@@ -8314,7 +8130,7 @@ class $$LikedTrackTableTableOrderingComposer
       composer: this,
       getCurrentColumn: (t) => t.trackId,
       referencedTable: $db.trackTable,
-      getReferencedColumn: (t) => t.id,
+      getReferencedColumn: (t) => t.path,
       builder:
           (
             joinBuilder, {
@@ -8350,7 +8166,7 @@ class $$LikedTrackTableTableAnnotationComposer
       composer: this,
       getCurrentColumn: (t) => t.trackId,
       referencedTable: $db.trackTable,
-      getReferencedColumn: (t) => t.id,
+      getReferencedColumn: (t) => t.path,
       builder:
           (
             joinBuilder, {
@@ -8398,11 +8214,13 @@ class $$LikedTrackTableTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                Value<int> trackId = const Value.absent(),
+                Value<String> trackId = const Value.absent(),
               }) => LikedTrackTableCompanion(id: id, trackId: trackId),
           createCompanionCallback:
-              ({Value<int> id = const Value.absent(), required int trackId}) =>
-                  LikedTrackTableCompanion.insert(id: id, trackId: trackId),
+              ({
+                Value<int> id = const Value.absent(),
+                required String trackId,
+              }) => LikedTrackTableCompanion.insert(id: id, trackId: trackId),
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
@@ -8442,7 +8260,7 @@ class $$LikedTrackTableTableTableManager
                                 referencedColumn:
                                     $$LikedTrackTableTableReferences
                                         ._trackIdTable(db)
-                                        .id,
+                                        .path,
                               )
                               as T;
                     }
@@ -8609,13 +8427,13 @@ typedef $$StarredStationTableTableProcessedTableManager =
     >;
 typedef $$FavoriteRadioTagTableTableCreateCompanionBuilder =
     FavoriteRadioTagTableCompanion Function({
-      Value<int> id,
       required String name,
+      Value<int> rowid,
     });
 typedef $$FavoriteRadioTagTableTableUpdateCompanionBuilder =
     FavoriteRadioTagTableCompanion Function({
-      Value<int> id,
       Value<String> name,
+      Value<int> rowid,
     });
 
 class $$FavoriteRadioTagTableTableFilterComposer
@@ -8627,11 +8445,6 @@ class $$FavoriteRadioTagTableTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get name => $composableBuilder(
     column: $table.name,
     builder: (column) => ColumnFilters(column),
@@ -8647,11 +8460,6 @@ class $$FavoriteRadioTagTableTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get name => $composableBuilder(
     column: $table.name,
     builder: (column) => ColumnOrderings(column),
@@ -8667,9 +8475,6 @@ class $$FavoriteRadioTagTableTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 }
@@ -8720,12 +8525,17 @@ class $$FavoriteRadioTagTableTableTableManager
               ),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
-              }) => FavoriteRadioTagTableCompanion(id: id, name: name),
+                Value<int> rowid = const Value.absent(),
+              }) => FavoriteRadioTagTableCompanion(name: name, rowid: rowid),
           createCompanionCallback:
-              ({Value<int> id = const Value.absent(), required String name}) =>
-                  FavoriteRadioTagTableCompanion.insert(id: id, name: name),
+              ({
+                required String name,
+                Value<int> rowid = const Value.absent(),
+              }) => FavoriteRadioTagTableCompanion.insert(
+                name: name,
+                rowid: rowid,
+              ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
@@ -9612,7 +9422,6 @@ typedef $$PodcastUpdateTableTableProcessedTableManager =
     >;
 typedef $$PodcastEpisodeTableTableCreateCompanionBuilder =
     PodcastEpisodeTableCompanion Function({
-      Value<int> id,
       required String podcastFeedUrl,
       required String title,
       required String episodeDescription,
@@ -9622,10 +9431,10 @@ typedef $$PodcastEpisodeTableTableCreateCompanionBuilder =
       Value<int?> durationMs,
       Value<int> positionMs,
       Value<String?> imageUrl,
+      Value<int> rowid,
     });
 typedef $$PodcastEpisodeTableTableUpdateCompanionBuilder =
     PodcastEpisodeTableCompanion Function({
-      Value<int> id,
       Value<String> podcastFeedUrl,
       Value<String> title,
       Value<String> episodeDescription,
@@ -9635,6 +9444,7 @@ typedef $$PodcastEpisodeTableTableUpdateCompanionBuilder =
       Value<int?> durationMs,
       Value<int> positionMs,
       Value<String?> imageUrl,
+      Value<int> rowid,
     });
 
 final class $$PodcastEpisodeTableTableReferences
@@ -9702,17 +9512,22 @@ final class $$PodcastEpisodeTableTableReferences
       MultiTypedResultKey.fromTable(
         db.downloadedPodcastEpisodeTable,
         aliasName: $_aliasNameGenerator(
-          db.podcastEpisodeTable.id,
+          db.podcastEpisodeTable.contentUrl,
           db.downloadedPodcastEpisodeTable.episodeId,
         ),
       );
 
   $$DownloadedPodcastEpisodeTableTableProcessedTableManager
   get downloadedPodcastEpisodeTableRefs {
-    final manager = $$DownloadedPodcastEpisodeTableTableTableManager(
-      $_db,
-      $_db.downloadedPodcastEpisodeTable,
-    ).filter((f) => f.episodeId.id.sqlEquals($_itemColumn<int>('id')!));
+    final manager =
+        $$DownloadedPodcastEpisodeTableTableTableManager(
+          $_db,
+          $_db.downloadedPodcastEpisodeTable,
+        ).filter(
+          (f) => f.episodeId.contentUrl.sqlEquals(
+            $_itemColumn<String>('content_url')!,
+          ),
+        );
 
     final cache = $_typedResult.readTableOrNull(
       _downloadedPodcastEpisodeTableRefsTable($_db),
@@ -9732,11 +9547,6 @@ class $$PodcastEpisodeTableTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get title => $composableBuilder(
     column: $table.title,
     builder: (column) => ColumnFilters(column),
@@ -9827,7 +9637,7 @@ class $$PodcastEpisodeTableTableFilterComposer
     final $$DownloadedPodcastEpisodeTableTableFilterComposer composer =
         $composerBuilder(
           composer: this,
-          getCurrentColumn: (t) => t.id,
+          getCurrentColumn: (t) => t.contentUrl,
           referencedTable: $db.downloadedPodcastEpisodeTable,
           getReferencedColumn: (t) => t.episodeId,
           builder:
@@ -9857,11 +9667,6 @@ class $$PodcastEpisodeTableTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get title => $composableBuilder(
     column: $table.title,
     builder: (column) => ColumnOrderings(column),
@@ -9953,9 +9758,6 @@ class $$PodcastEpisodeTableTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
   GeneratedColumn<String> get title =>
       $composableBuilder(column: $table.title, builder: (column) => column);
 
@@ -10042,7 +9844,7 @@ class $$PodcastEpisodeTableTableAnnotationComposer
     final $$DownloadedPodcastEpisodeTableTableAnnotationComposer composer =
         $composerBuilder(
           composer: this,
-          getCurrentColumn: (t) => t.id,
+          getCurrentColumn: (t) => t.contentUrl,
           referencedTable: $db.downloadedPodcastEpisodeTable,
           getReferencedColumn: (t) => t.episodeId,
           builder:
@@ -10103,7 +9905,6 @@ class $$PodcastEpisodeTableTableTableManager
               ),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
                 Value<String> podcastFeedUrl = const Value.absent(),
                 Value<String> title = const Value.absent(),
                 Value<String> episodeDescription = const Value.absent(),
@@ -10113,8 +9914,8 @@ class $$PodcastEpisodeTableTableTableManager
                 Value<int?> durationMs = const Value.absent(),
                 Value<int> positionMs = const Value.absent(),
                 Value<String?> imageUrl = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => PodcastEpisodeTableCompanion(
-                id: id,
                 podcastFeedUrl: podcastFeedUrl,
                 title: title,
                 episodeDescription: episodeDescription,
@@ -10124,10 +9925,10 @@ class $$PodcastEpisodeTableTableTableManager
                 durationMs: durationMs,
                 positionMs: positionMs,
                 imageUrl: imageUrl,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
                 required String podcastFeedUrl,
                 required String title,
                 required String episodeDescription,
@@ -10137,8 +9938,8 @@ class $$PodcastEpisodeTableTableTableManager
                 Value<int?> durationMs = const Value.absent(),
                 Value<int> positionMs = const Value.absent(),
                 Value<String?> imageUrl = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => PodcastEpisodeTableCompanion.insert(
-                id: id,
                 podcastFeedUrl: podcastFeedUrl,
                 title: title,
                 episodeDescription: episodeDescription,
@@ -10148,6 +9949,7 @@ class $$PodcastEpisodeTableTableTableManager
                 durationMs: durationMs,
                 positionMs: positionMs,
                 imageUrl: imageUrl,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -10237,7 +10039,7 @@ class $$PodcastEpisodeTableTableTableManager
                               ).downloadedPodcastEpisodeTableRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
-                                (e) => e.episodeId == item.id,
+                                (e) => e.episodeId == item.contentUrl,
                               ),
                           typedResults: items,
                         ),
@@ -10270,13 +10072,13 @@ typedef $$PodcastEpisodeTableTableProcessedTableManager =
 typedef $$DownloadedPodcastEpisodeTableTableCreateCompanionBuilder =
     DownloadedPodcastEpisodeTableCompanion Function({
       Value<int> id,
-      required int episodeId,
+      required String episodeId,
       required String filePath,
     });
 typedef $$DownloadedPodcastEpisodeTableTableUpdateCompanionBuilder =
     DownloadedPodcastEpisodeTableCompanion Function({
       Value<int> id,
-      Value<int> episodeId,
+      Value<String> episodeId,
       Value<String> filePath,
     });
 
@@ -10297,17 +10099,17 @@ final class $$DownloadedPodcastEpisodeTableTableReferences
       db.podcastEpisodeTable.createAlias(
         $_aliasNameGenerator(
           db.downloadedPodcastEpisodeTable.episodeId,
-          db.podcastEpisodeTable.id,
+          db.podcastEpisodeTable.contentUrl,
         ),
       );
 
   $$PodcastEpisodeTableTableProcessedTableManager get episodeId {
-    final $_column = $_itemColumn<int>('episode_id')!;
+    final $_column = $_itemColumn<String>('episode_id')!;
 
     final manager = $$PodcastEpisodeTableTableTableManager(
       $_db,
       $_db.podcastEpisodeTable,
-    ).filter((f) => f.id.sqlEquals($_column));
+    ).filter((f) => f.contentUrl.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_episodeIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
@@ -10340,7 +10142,7 @@ class $$DownloadedPodcastEpisodeTableTableFilterComposer
       composer: this,
       getCurrentColumn: (t) => t.episodeId,
       referencedTable: $db.podcastEpisodeTable,
-      getReferencedColumn: (t) => t.id,
+      getReferencedColumn: (t) => t.contentUrl,
       builder:
           (
             joinBuilder, {
@@ -10384,7 +10186,7 @@ class $$DownloadedPodcastEpisodeTableTableOrderingComposer
           composer: this,
           getCurrentColumn: (t) => t.episodeId,
           referencedTable: $db.podcastEpisodeTable,
-          getReferencedColumn: (t) => t.id,
+          getReferencedColumn: (t) => t.contentUrl,
           builder:
               (
                 joinBuilder, {
@@ -10424,7 +10226,7 @@ class $$DownloadedPodcastEpisodeTableTableAnnotationComposer
           composer: this,
           getCurrentColumn: (t) => t.episodeId,
           referencedTable: $db.podcastEpisodeTable,
-          getReferencedColumn: (t) => t.id,
+          getReferencedColumn: (t) => t.contentUrl,
           builder:
               (
                 joinBuilder, {
@@ -10486,7 +10288,7 @@ class $$DownloadedPodcastEpisodeTableTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                Value<int> episodeId = const Value.absent(),
+                Value<String> episodeId = const Value.absent(),
                 Value<String> filePath = const Value.absent(),
               }) => DownloadedPodcastEpisodeTableCompanion(
                 id: id,
@@ -10496,7 +10298,7 @@ class $$DownloadedPodcastEpisodeTableTableTableManager
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                required int episodeId,
+                required String episodeId,
                 required String filePath,
               }) => DownloadedPodcastEpisodeTableCompanion.insert(
                 id: id,
@@ -10542,7 +10344,7 @@ class $$DownloadedPodcastEpisodeTableTableTableManager
                                 referencedColumn:
                                     $$DownloadedPodcastEpisodeTableTableReferences
                                         ._episodeIdTable(db)
-                                        .id,
+                                        .contentUrl,
                               )
                               as T;
                     }

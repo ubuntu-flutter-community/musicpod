@@ -3,6 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/app_manager.dart';
+import '../../common/persistence/database.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../custom_content/view/backup_dialog.dart';
@@ -83,6 +84,7 @@ class WipeConfirmDialog extends StatelessWidget {
           forceDbOnly: false,
         ));
         await di<SettingsModel>().wipeAndInitLibraryCommand.runAsync();
+        await di<Database>().reclaimDiskSpace();
       },
     );
   }

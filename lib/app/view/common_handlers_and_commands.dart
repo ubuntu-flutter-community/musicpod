@@ -41,7 +41,7 @@ mixin CommonHandlersAndCommandsMixin {
     );
 
     registerHandler(
-      select: (PodcastManager m) => m.updatesCommand,
+      select: (PodcastManager m) => m.manageUpdatesCommand,
       handler: (context, feedsWithUpdates, cancel) {
         if (feedsWithUpdates.isEmpty) {
         } else {

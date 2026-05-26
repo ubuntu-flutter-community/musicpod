@@ -61,7 +61,7 @@ class PodcastManager {
     };
   }
 
-  late final Command<PodcastUpdateCapsule, Set<String>> updatesCommand =
+  late final Command<PodcastUpdateCapsule, Set<String>> manageUpdatesCommand =
       Command.createAsyncWithProgress((capsule, handle) async {
         if (capsule.type == PodcastUpdateType.remove) {
           await _podcastService.removePodcastUpdates(
@@ -79,13 +79,11 @@ class PodcastManager {
             in (capsule.feedUrls.isEmpty
                 ? _podcastService.podcastFeedUrls
                 : capsule.feedUrls)) {
-          if (updates.contains(feedUrl)) {
-            await getEpisodesCommand(
-              feedUrl,
-              clearCache: true,
-              loadFresh: true,
-            ).runAsync((feedUrl: feedUrl, item: null));
-          }
+          await getEpisodesCommand(
+            feedUrl,
+            clearCache: true,
+            loadFresh: true,
+          ).runAsync((feedUrl: feedUrl, item: null));
         }
         return updates;
       }, initialValue: _podcastService.podcastUpdates);
@@ -160,9 +158,7 @@ class PodcastManager {
       Command.createAsync((param) async {
         if (_podcastService.isPodcastSubscribed(param.feedUrl)) return null;
 
-        await _podcastService.cleanUpEpisodesOfUnsubscribedPodcast(
-          param.feedUrl,
-        );
+        await _podcastService.removePodcast(param.feedUrl);
         _episodesCommands.remove(param.feedUrl);
         return param.name;
       }, initialValue: null);

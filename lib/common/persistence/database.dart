@@ -4,6 +4,7 @@ import '../../local_audio/persistence/tables.dart';
 import '../../player/persistence/tables.dart';
 import '../../podcasts/persistence/tables.dart';
 import '../../radio/persistence/tables.dart';
+import '../logging.dart';
 
 part 'database.g.dart';
 
@@ -32,6 +33,16 @@ class Database extends _$Database {
 
   @override
   int get schemaVersion => 2;
+
+  Future<void> reclaimDiskSpace() async {
+    try {
+      printMessageInDebugMode('Reclaiming disk space...');
+      await customStatement('VACUUM;');
+      printMessageInDebugMode('Database defragmented and shrunk successfully.');
+    } catch (e) {
+      printMessageInDebugMode('Failed to vacuum database: $e');
+    }
+  }
 
   @override
   MigrationStrategy get migration => MigrationStrategy(

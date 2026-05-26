@@ -64,6 +64,17 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
       },
     );
 
+    registerHandler(
+      select: (PodcastManager m) => m.togglePodcastCommand.results,
+      handler: (context, result, cancel) {
+        if (result.hasData && result.data?.contains(feedUrl) == false) {
+          if (context.canPop()) {
+            context.pop();
+          }
+        }
+      },
+    );
+
     final showDownloadsOnly = watchValue((PodcastManager m) => m.downloadsOnly);
 
     final showSearch = watchValue((PodcastManager m) => m.showSearch);
@@ -136,7 +147,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
       ),
       body: RefreshIndicator(
         onRefresh: di<PodcastManager>().isPodcastSubscribed(feedUrl)
-            ? () async => di<PodcastManager>().updatesCommand.runAsync(
+            ? () async => di<PodcastManager>().manageUpdatesCommand.runAsync(
                 PodcastUpdateCapsule(
                   feedUrls: [feedUrl],
                   type: PodcastUpdateType.update,

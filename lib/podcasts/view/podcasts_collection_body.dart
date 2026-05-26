@@ -37,7 +37,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
     );
     final subs = subsResults.data ?? [];
     final podcastManager = di<PodcastManager>();
-    final updates = watchValue((PodcastManager m) => m.updatesCommand);
+    final updates = watchValue((PodcastManager m) => m.manageUpdatesCommand);
     final updatesOnly = watchValue((PodcastManager m) => m.updatesOnly);
     final downloadsOnly = watchValue((PodcastManager m) => m.downloadsOnly);
     final subsLength = subs.length;
@@ -47,10 +47,10 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
     final feedsWithDownloadLength = feedsWithDownloads.length;
 
     final checkingForUpdates = watchValue(
-      (PodcastManager m) => m.updatesCommand.isRunning,
+      (PodcastManager m) => m.manageUpdatesCommand.isRunning,
     );
     final progress = watchValue(
-      (PodcastManager m) => m.updatesCommand.progress,
+      (PodcastManager m) => m.manageUpdatesCommand.progress,
     );
 
     if (subsResults.hasError) {
@@ -79,12 +79,12 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
             content: Text(
               context.l10n.checkForUpdatesConfirm(subsLength.toString()),
             ),
-            onConfirm: () => di<PodcastManager>().updatesCommand.runAsync(
+            onConfirm: () => di<PodcastManager>().manageUpdatesCommand.runAsync(
               const PodcastUpdateCapsule.updateAll(),
             ),
           );
         } else {
-          await di<PodcastManager>().updatesCommand.runAsync(
+          await di<PodcastManager>().manageUpdatesCommand.runAsync(
             const PodcastUpdateCapsule.updateAll(),
           );
         }

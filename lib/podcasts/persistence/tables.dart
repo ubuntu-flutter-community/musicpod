@@ -21,7 +21,6 @@ class PodcastUpdateTable extends Table {
 
 @TableIndex(name: 'podcast_episode_content_url', columns: {#contentUrl})
 class PodcastEpisodeTable extends Table {
-  late final id = integer().autoIncrement()();
   @ReferenceName('episodesByFeedUrl')
   late final podcastFeedUrl = text().references(PodcastTable, #feedUrl)();
   late final title = text()();
@@ -32,6 +31,10 @@ class PodcastEpisodeTable extends Table {
     #description,
   )();
   late final contentUrl = text()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {contentUrl};
+
   late final publicationDate = dateTime()();
   late final durationMs = integer().nullable()();
   late final positionMs = integer().withDefault(const Constant(0))();
@@ -40,7 +43,7 @@ class PodcastEpisodeTable extends Table {
 
 class DownloadedPodcastEpisodeTable extends Table {
   late final id = integer().autoIncrement()();
-  late final episodeId = integer().references(PodcastEpisodeTable, #id)();
+  late final episodeId = text().references(PodcastEpisodeTable, #contentUrl)();
   late final filePath = text()();
 }
 

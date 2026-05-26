@@ -215,7 +215,7 @@ class PodcastService {
     return podcastUpdates;
   }
 
-  Future<bool> hasPodcastEpisodesInDB(String feedUrl) async {
+  Future<bool> _hasPodcastEpisodesInDB(String feedUrl) async {
     final count =
         await (_db.selectOnly(_db.podcastEpisodeTable)
               ..addColumns([_db.podcastEpisodeTable.contentUrl])
@@ -261,7 +261,7 @@ class PodcastService {
     final url = feedUrl ?? item!.feedUrl!;
 
     final hasEpisodesInDb =
-        await hasPodcastEpisodesInDB(url) && isPodcastSubscribed(url);
+        await _hasPodcastEpisodesInDB(url) && isPodcastSubscribed(url);
 
     if (!loadFresh && hasEpisodesInDb) {
       printMessageInDebugMode(
@@ -298,16 +298,6 @@ class PodcastService {
     await _upsertEpisodes(feedUrl: url, podcast: podcast, episodes: episodes);
 
     return episodes;
-  }
-
-  // For unsubscribed podcasts, we clean up episodes after some time to avoid filling up the database with old episodes of podcasts the user is no longer interested in.
-  Future<void> cleanUpEpisodesOfUnsubscribedPodcast(String feedUrl) async {
-    printMessageInDebugMode(
-      'Cleaning up episodes of unsubscribed podcast: $feedUrl',
-    );
-    await (_db.delete(
-      _db.podcastEpisodeTable,
-    )..where((t) => t.podcastFeedUrl.equals(feedUrl))).go();
   }
 
   Future<void> _upsertEpisodes({
@@ -713,15 +703,30 @@ class PodcastService {
 
   Future<void> removePodcast(String feedUrl) async {
     if (!podcastFeedUrls.contains(feedUrl)) return;
-    _podcasts.remove(feedUrl);
-    _podcastCache.remove(feedUrl);
+    printMessageInDebugMode('Cleaning up unsubscribed podcast: $feedUrl');
+
     await removeFeedWithDownload(feedUrl);
+    await removePodcastUpdate(feedUrl);
+    await removeFeedWithDownload(feedUrl);
+    await (_db.delete(
+      _db.podcastEpisodeTable,
+    )..where((t) => t.podcastFeedUrl.equals(feedUrl))).go();
+
     await (_db.delete(
       _db.podcastUpdateTable,
     )..where((t) => t.podcastFeedUrl.equals(feedUrl))).go();
     await (_db.delete(
       _db.podcastTable,
     )..where((t) => t.feedUrl.equals(feedUrl))).go();
+
+    await (_db.delete(
+      _db.downloadTable,
+    )..where((t) => t.feedUrl.equals(feedUrl))).go();
+
+    _podcasts.remove(feedUrl);
+    _podcastCache.remove(feedUrl);
+
+    await _db.reclaimDiskSpace();
   }
 
   Future<void> removeAllPodcasts() async {
@@ -769,7 +774,7 @@ class PodcastService {
       durationMs: data.durationMs?.toDouble(),
       imageUrl: data.imageUrl,
       albumArtUrl: podcastImage,
-      podcastTitle: podcastTitle,
+      podcastTitle: data.title,
       feedUrl: feedUrl,
     );
   }

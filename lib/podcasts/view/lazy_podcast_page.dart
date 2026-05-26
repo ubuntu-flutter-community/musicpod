@@ -6,7 +6,6 @@ import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/ui_constants.dart';
 import '../../l10n/l10n.dart';
-import '../data/podcast_update_capsule.dart';
 import '../podcast_manager.dart';
 import 'lazy_podcast_loading_page.dart';
 import 'podcast_page.dart';
@@ -36,15 +35,6 @@ class LazyPodcastPage extends StatelessWidget with WatchItMixin {
         ),
       );
     }
-
-    callOnceAfterThisBuild(
-      (context) => di<PodcastManager>().updatesCommand.run(
-        PodcastUpdateCapsule(
-          type: PodcastUpdateType.remove,
-          feedUrls: [feedUrl],
-        ),
-      ),
-    );
 
     final cooldown = watchValue((PodcastManager m) => m.cooldown);
 

@@ -36,12 +36,11 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
                 title: Text(context.l10n.checkForUpdates),
                 confirmLabel: context.l10n.checkForUpdates,
                 content: Text(context.l10n.checkForUpdatesConfirm(subLength)),
-                onConfirm: () => di<PodcastManager>().updatesCommand.runAsync(
-                  const PodcastUpdateCapsule.updateAll(),
-                ),
+                onConfirm: () => di<PodcastManager>().manageUpdatesCommand
+                    .runAsync(const PodcastUpdateCapsule.updateAll()),
               );
             } else {
-              di<PodcastManager>().updatesCommand.run(
+              di<PodcastManager>().manageUpdatesCommand.run(
                 const PodcastUpdateCapsule.updateAll(),
               );
             }

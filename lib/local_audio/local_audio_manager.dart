@@ -18,6 +18,7 @@ class LocalAudioManager {
     : _localAudioService = localAudioService {
     togglePinnedAlbumCommand.run();
     allPlaylistsCommand.run();
+    likedAudiosCommand.run();
   }
 
   final LocalAudioService _localAudioService;
