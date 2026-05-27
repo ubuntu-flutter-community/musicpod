@@ -10,12 +10,12 @@ import 'package:podcast_search/podcast_search.dart' hide Value;
 import 'package:synchronized/synchronized.dart';
 
 import '../common/data/audio.dart';
+import '../common/data/audio_type.dart';
 import '../common/logging.dart';
 import '../common/persistence/database.dart';
 import '../common/view/audio_filter.dart';
 import '../common/view/languages.dart';
 import '../extensions/date_time_x.dart';
-import '../extensions/string_x.dart';
 import '../settings/settings_service.dart';
 import '../settings/shared_preferences_keys.dart';
 import 'data/podcast_genre.dart';
@@ -174,38 +174,25 @@ class PodcastService {
         'storedTimeStamp: ${storedTimeStamp ?? 'no timestamp stored'}',
       );
 
-      DateTime? feedLastUpdated;
-      try {
-        feedLastUpdated = await Feed.feedLastUpdated(url: feedUrl);
-      } on Exception catch (e) {
-        printMessageInDebugMode(e);
-      }
-
-      printMessageInDebugMode(
-        'feedLastUpdated: ${feedLastUpdated?.toPodcastTimeStamp ?? 'Feed did not set "lastUpdated"'}',
+      await _addPodcastLastUpdated(
+        feedUrl: feedUrl,
+        lastUpdated: DateTime.now(),
       );
 
-      if (feedLastUpdated == null) continue;
+      // Compare actual episode URLs to detect genuinely new episodes,
+      // since Last-Modified can change without new episodes being added.
+      final storedUrls = await _getStoredEpisodeUrls(feedUrl);
+      final allFreshEpisodes = await findEpisodes(
+        feedUrl: feedUrl,
+        tryFromDbOnly: false,
+      );
 
-      if (!storedTimeStamp.isSamePodcastTimeStamp(feedLastUpdated)) {
-        await _addPodcastLastUpdated(
-          feedUrl: feedUrl,
-          lastUpdated: feedLastUpdated,
-        );
+      final newEpisodes = allFreshEpisodes
+          .where((e) => e.url != null && !storedUrls.contains(e.url))
+          .toSet();
 
-        // Compare actual episode URLs to detect genuinely new episodes,
-        // since Last-Modified can change without new episodes being added.
-        final storedUrls = await _getStoredEpisodeUrls(feedUrl);
-        final episodes = await findEpisodes(feedUrl: feedUrl);
-
-        final newEpisodes = episodes
-            .where((e) => e.url != null && !storedUrls.contains(e.url))
-            .toSet();
-        final hasNewEpisodes = newEpisodes.isNotEmpty;
-
-        if (hasNewEpisodes) {
-          await _addPodcastUpdate(feedUrl, feedLastUpdated);
-        }
+      if (newEpisodes.isNotEmpty) {
+        await _addPodcastUpdate(feedUrl);
       }
 
       updateProgress?.call((index + 1) / toCheckFeedUrls.length);
@@ -231,14 +218,7 @@ class PodcastService {
       _db.podcastEpisodeTable,
     )..where((t) => t.podcastFeedUrl.equals(feedUrl))).get();
     return rows
-        .map(
-          (r) => getEpisodeFromTableEntry(
-            r,
-            feedUrl: feedUrl,
-            podcastTitle: getSubscribedPodcastName(feedUrl),
-            podcastImage: getSubscribedPodcastImage(feedUrl),
-          ),
-        )
+        .map((r) => getEpisodeFromTableEntry(r, feedUrl: feedUrl))
         .toSet()
         .toList();
   }
@@ -246,34 +226,37 @@ class PodcastService {
   Future<List<Audio>> findEpisodes({
     Item? item,
     String? feedUrl,
-    bool loadFresh = false,
+    required bool tryFromDbOnly,
   }) async {
     if (item == null && item?.feedUrl == null && feedUrl == null) {
-      printMessageInDebugMode('findEpisodes called without feedUrl or item');
-      return Future.value([]);
+      throw Exception('findEpisodes called without feedUrl or item');
     }
-
-    printMessageInDebugMode(
-      'Finding episodes for feedUrl: ${feedUrl ?? item!.feedUrl}, '
-      'item: ${item != null ? item.trackName ?? item.collectionName : 'null'}',
-    );
 
     final url = feedUrl ?? item!.feedUrl!;
 
     final hasEpisodesInDb =
         await _hasPodcastEpisodesInDB(url) && isPodcastSubscribed(url);
 
-    if (!loadFresh && hasEpisodesInDb) {
+    if (tryFromDbOnly && hasEpisodesInDb) {
       printMessageInDebugMode(
         'Skipping episode load from network for $url, loading from DB instead',
       );
       return _loadEpisodesFromDb(url);
     }
 
+    printMessageInDebugMode(
+      'Fetching all episodes from ${_search.searchProvider is ITunesProvider ? 'iTunes' : 'podcastindex'} for feedUrl: ${feedUrl ?? item!.feedUrl}, '
+      'item: ${item != null ? item.trackName ?? item.collectionName : 'null'}',
+    );
     final Podcast? podcast = await compute(loadPodcast, url);
     if (podcast?.image != null) {
-      addSubscribedPodcastImage(feedUrl: url, imageUrl: podcast!.image!);
+      addSubscribedPodcastImage(
+        feedUrl: url,
+        imageUrl: podcast!.image!,
+        title: podcast.title ?? '',
+      );
     }
+
     final episodes =
         podcast?.episodes
             .where((e) => e.contentUrl != null)
@@ -536,13 +519,19 @@ class PodcastService {
   void addSubscribedPodcastImage({
     required String feedUrl,
     required String imageUrl,
+    required String title,
   }) {
     (_db.update(_db.podcastTable)..where((t) => t.feedUrl.equals(feedUrl)))
-        .write(PodcastTableCompanion(imageUrl: Value(imageUrl)))
+        .write(
+          PodcastTableCompanion(imageUrl: Value(imageUrl), name: Value(title)),
+        )
         .then((_) {
           final cached = _podcastCache[feedUrl];
           if (cached != null) {
-            _podcastCache[feedUrl] = cached.copyWith(imageUrl: Value(imageUrl));
+            _podcastCache[feedUrl] = cached.copyWith(
+              imageUrl: Value(imageUrl),
+              name: title,
+            );
           }
         });
   }
@@ -668,7 +657,7 @@ class PodcastService {
   bool podcastUpdateAvailable(String feedUrl) =>
       podcastUpdates.contains(feedUrl) == true;
 
-  Future<void> _addPodcastUpdate(String feedUrl, DateTime lastUpdated) async {
+  Future<void> _addPodcastUpdate(String feedUrl) async {
     if (podcastUpdates.contains(feedUrl) == true) return;
     podcastUpdates.add(feedUrl);
     await _db
@@ -762,20 +751,23 @@ class PodcastService {
   Audio getEpisodeFromTableEntry(
     PodcastEpisodeTableData data, {
     required String feedUrl,
-    String? podcastTitle,
-    String? podcastImage,
   }) {
+    // find podcast table data first:
+    final podcastData = _podcastCache[feedUrl];
+
     return Audio(
       url: data.contentUrl,
       title: data.title,
+      podcastTitle: podcastData?.name,
       episodeDescription: data.episodeDescription,
       podcastDescription: data.podcastDescription,
       publicationDate: data.publicationDate.millisecondsSinceEpoch,
       durationMs: data.durationMs?.toDouble(),
-      imageUrl: data.imageUrl,
-      albumArtUrl: podcastImage,
-      podcastTitle: data.title,
+      imageUrl: podcastData?.imageUrl ?? data.imageUrl,
+      albumArtUrl: podcastData?.imageUrl ?? data.imageUrl,
       feedUrl: feedUrl,
+      audioType: AudioType.podcast,
+      copyright: podcastData?.artist,
     );
   }
 }

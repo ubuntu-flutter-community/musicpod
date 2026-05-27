@@ -10,7 +10,6 @@ import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/sliver_audio_page.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/view/artist_page.dart';
 

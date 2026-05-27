@@ -10,7 +10,6 @@ import '../../common/view/progress.dart';
 import '../../common/view/tapable_text.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../../l10n/l10n.dart';
 import 'about_page.dart';
 import 'licenses_dialog.dart';
 

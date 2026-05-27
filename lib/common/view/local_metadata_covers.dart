@@ -10,7 +10,6 @@ import 'package:yaru/yaru.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/picture_type_x.dart';
 import '../../external_path/external_path_service.dart';
-import '../../l10n/l10n.dart';
 import '../../local_audio/data/change_metadata_capsule.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/view/local_cover.dart';

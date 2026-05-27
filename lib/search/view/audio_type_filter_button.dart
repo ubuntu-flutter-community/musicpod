@@ -7,7 +7,6 @@ import '../../common/view/modals.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
 import '../../settings/settings_model.dart';
 import '../search_model.dart';
 

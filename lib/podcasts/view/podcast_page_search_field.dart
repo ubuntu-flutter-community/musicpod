@@ -6,7 +6,6 @@ import '../../common/view/icons.dart';
 import '../../common/view/sliver_app_bar_bottom_space.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
 import '../podcast_manager.dart';
 
 class PodcastPageSearchField extends StatefulWidget

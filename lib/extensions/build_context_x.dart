@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
 import '../common/view/ui_constants.dart';
+import '../l10n/app_localizations.dart';
 import 'navigator_state_x.dart';
 
 extension BuildContextX on BuildContext {
+  AppLocalizations get l10n => AppLocalizations.of(this);
+
   ThemeData get theme => Theme.of(this);
   ColorScheme get colorScheme => theme.colorScheme;
   TextTheme get textTheme => theme.textTheme;
@@ -127,3 +130,8 @@ extension BuildContextX on BuildContext {
     requestFocus: requestFocus,
   );
 }
+
+final List<Locale> supportedLocales = {
+  const Locale('en'), // make sure 'en' comes first (#216)
+  ...List.of(AppLocalizations.supportedLocales)..remove(const Locale('en')),
+}.toList();

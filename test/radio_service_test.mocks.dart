@@ -570,6 +570,15 @@ class MockDatabase extends _i1.Mock implements _i3.Database {
           as _i2.DatabaseConnectionUser);
 
   @override
+  _i5.Future<void> reclaimDiskSpace() =>
+      (super.noSuchMethod(
+            Invocation.method(#reclaimDiskSpace, []),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
   _i2.Migrator createMigrator() =>
       (super.noSuchMethod(
             Invocation.method(#createMigrator, []),

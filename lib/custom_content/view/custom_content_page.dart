@@ -3,7 +3,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../common/view/header_bar.dart';
 import '../../common/view/ui_constants.dart';
-import '../../l10n/l10n.dart';
+import '../../extensions/build_context_x.dart';
 import 'custom_playlists_section.dart';
 import 'custom_podcast_section.dart';
 import 'custom_station_section.dart';

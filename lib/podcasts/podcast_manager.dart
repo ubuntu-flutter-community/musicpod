@@ -75,15 +75,10 @@ class PodcastManager {
           feedUrls: capsule.feedUrls,
           updateProgress: handle.updateProgress,
         );
-        for (final feedUrl
-            in (capsule.feedUrls.isEmpty
-                ? _podcastService.podcastFeedUrls
-                : capsule.feedUrls)) {
+        for (final feedUrl in updates) {
           await getEpisodesCommand(
             feedUrl,
-            clearCache: true,
-            loadFresh: true,
-          ).runAsync((feedUrl: feedUrl, item: null));
+          ).runAsync((feedUrl: feedUrl, item: null, tryFromDbOnly: true));
         }
         return updates;
       }, initialValue: _podcastService.podcastUpdates);
@@ -91,30 +86,27 @@ class PodcastManager {
   // Note: passing the item makes it easier to
   // always have the correct image without needing to persist every item
   final _episodesCommands =
-      <String, Command<({Item? item, String? feedUrl}), List<Audio>>>{};
-  Command<({Item? item, String? feedUrl}), List<Audio>> getEpisodesCommand(
-    String feedUrl, {
-    bool clearCache = false,
-    bool loadFresh = false,
-  }) {
-    if (clearCache) {
-      _episodesCommands.remove(feedUrl);
-    }
-
-    return _episodesCommands.putIfAbsent(
-      feedUrl,
-      () => Command.createAsync(
-        (param) => _podcastService
-            .findEpisodes(
-              item: param.item,
-              feedUrl: param.feedUrl,
-              loadFresh: loadFresh,
-            )
-            .timeout(const Duration(seconds: 30)),
-        initialValue: [],
-      ),
-    );
-  }
+      <
+        String,
+        Command<
+          ({Item? item, String? feedUrl, bool tryFromDbOnly}),
+          List<Audio>
+        >
+      >{};
+  Command<({Item? item, String? feedUrl, bool tryFromDbOnly}), List<Audio>>
+  getEpisodesCommand(String feedUrl) => _episodesCommands.putIfAbsent(
+    feedUrl,
+    () => Command.createAsync(
+      (param) => _podcastService
+          .findEpisodes(
+            item: param.item,
+            feedUrl: param.feedUrl,
+            tryFromDbOnly: param.tryFromDbOnly,
+          )
+          .timeout(const Duration(seconds: 30)),
+      initialValue: [],
+    ),
+  );
 
   final cooldown = SafeValueNotifier<int>(_cooldownMaxSeconds);
   Timer? _cooldownTimer;
@@ -130,7 +122,7 @@ class PodcastManager {
     }
 
     if (command.value.isEmpty && command.errors.value == null) {
-      command.run((feedUrl: feedUrl, item: podcastItem));
+      command.run((feedUrl: feedUrl, item: podcastItem, tryFromDbOnly: true));
       return;
     }
 
@@ -206,8 +198,7 @@ class PodcastManager {
     );
     getEpisodesCommand(
       param.feedUrl,
-      clearCache: true,
-    ).run((feedUrl: param.feedUrl, item: null));
+    ).run((feedUrl: param.feedUrl, item: null, tryFromDbOnly: true));
 
     return _podcastService.ascendingPodcasts;
   }, initialValue: _podcastService.ascendingPodcasts);

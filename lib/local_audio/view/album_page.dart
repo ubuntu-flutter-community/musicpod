@@ -16,7 +16,7 @@ import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/sliver_audio_page.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
-import '../../l10n/l10n.dart';
+import '../../extensions/build_context_x.dart';
 import '../local_audio_manager.dart';
 import 'artist_page.dart';
 import 'local_cover.dart';

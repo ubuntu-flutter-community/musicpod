@@ -5,7 +5,6 @@ import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../podcast_manager.dart';
 import 'podcast_tile_progress.dart';

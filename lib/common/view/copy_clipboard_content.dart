@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
 import 'stream_provider_share_button.dart';
 
 class CopyClipboardContent extends StatefulWidget {

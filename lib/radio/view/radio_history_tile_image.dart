@@ -6,8 +6,8 @@ import '../../common/view/modals.dart';
 import '../../common/view/mpv_metadata_dialog.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/ui_constants.dart';
+import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../l10n/l10n.dart';
 import '../../player/mpv_metadata_manager.dart';
 import '../online_art_model.dart';
 

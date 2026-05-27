@@ -13,7 +13,6 @@ import '../../common/view/tapable_text.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../../l10n/l10n.dart';
 import '../../player/mpv_metadata_manager.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';

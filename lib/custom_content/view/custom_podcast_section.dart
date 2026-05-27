@@ -4,7 +4,6 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../app/routing_manager.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
 import '../../podcasts/podcast_manager.dart';
 import '../../podcasts/view/lazy_podcast_page.dart';
 
@@ -61,6 +60,7 @@ class _CustomPodcastSectionState extends State<CustomPodcastSection> {
                               .runAsync((
                                 item: null,
                                 feedUrl: _urlController.text,
+                                tryFromDbOnly: false,
                               ))
                               .then((v) {
                                 if (v.isEmpty && context.mounted) {

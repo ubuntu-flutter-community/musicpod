@@ -6,7 +6,7 @@ import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
 
 import '../../common/view/custom_track_shape.dart';
-import '../../l10n/l10n.dart';
+
 import '../player_model.dart';
 
 class VolumeSliderPopup extends StatelessWidget with WatchItMixin {

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
 import '../../common/view/icons.dart';
+import '../../extensions/build_context_x.dart';
 import '../player_model.dart';
 
 class PlayButton extends StatelessWidget with WatchItMixin {

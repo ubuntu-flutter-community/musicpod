@@ -13,6 +13,22 @@ class PodcastTable extends Table {
   Set<Column<Object>> get primaryKey => {feedUrl};
 }
 
+class PodcastGenreTable extends Table {
+  late final id = text()();
+  late final name = text()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {id};
+}
+
+class PodcastGenreRelationTable extends Table {
+  late final feedUrl = text().references(PodcastTable, #feedUrl)();
+  late final genreId = text().references(PodcastGenreTable, #id)();
+
+  @override
+  Set<Column<Object>> get primaryKey => {feedUrl, genreId};
+}
+
 class PodcastUpdateTable extends Table {
   late final id = integer().autoIncrement()();
 

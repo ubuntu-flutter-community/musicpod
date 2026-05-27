@@ -4,7 +4,6 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
-import '../../l10n/l10n.dart';
 import '../../settings/settings_model.dart';
 import 'icons.dart';
 import 'languages.dart';

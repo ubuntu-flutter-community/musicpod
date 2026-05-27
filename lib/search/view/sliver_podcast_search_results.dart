@@ -4,7 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
-import '../../l10n/l10n.dart';
+import '../../extensions/build_context_x.dart';
 import '../search_model.dart';
 import 'podcast_card.dart';
 

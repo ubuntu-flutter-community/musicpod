@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
 import 'ui_constants.dart';
 
 class NoSearchResultPage extends StatelessWidget {

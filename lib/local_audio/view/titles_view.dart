@@ -10,7 +10,6 @@ import '../../common/view/no_search_result_page.dart';
 import '../../common/view/sliver_audio_tile_list.dart';
 import '../../common/view/sliver_fill_remaining_progress.dart';
 import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
 import '../local_audio_manager.dart';
 import 'album_page.dart';
 import 'artist_page.dart';

@@ -3,7 +3,6 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
-import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/adaptive_multi_layout_body.dart';
 import '../../common/view/audio_filter.dart';
@@ -12,7 +11,6 @@ import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../search/search_type.dart';
@@ -31,14 +29,12 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
     super.key,
     this.imageUrl,
     required this.feedUrl,
-    required this.episodes,
     required this.title,
   });
 
   final String feedUrl;
   final String? imageUrl;
   final String title;
-  final List<Audio> episodes;
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +42,13 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
       di<PodcastManager>().cleanUpCommand.run((feedUrl: feedUrl, name: title));
     });
 
-    final showPodcastsAscending = watchValue(
-      (PodcastManager m) =>
-          m.reorderPodcastCommand.select((v) => v.contains(feedUrl)),
+    callOnceAfterThisBuild(
+      (_) => di<PodcastManager>().manageUpdatesCommand.run(
+        PodcastUpdateCapsule(
+          feedUrls: [feedUrl],
+          type: PodcastUpdateType.remove,
+        ),
+      ),
     );
 
     registerHandler(
@@ -75,23 +75,32 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
       },
     );
 
-    final showDownloadsOnly = watchValue((PodcastManager m) => m.downloadsOnly);
-
     final showSearch = watchValue((PodcastManager m) => m.showSearch);
     final searchQuery = watchValue((PodcastManager m) => m.searchQuery);
 
+    final showDownloadsOnly = watchValue((PodcastManager m) => m.downloadsOnly);
     final hideCompletedEpisodes = watchPropertyValue(
       (SettingsModel m) => m.hideCompletedEpisodes,
+    );
+
+    final showPodcastsAscending = watchValue(
+      (PodcastManager m) =>
+          m.reorderPodcastCommand.select((v) => v.contains(feedUrl)),
     );
 
     final lastPositions = watchValue(
       (PlayerModel m) => m.toggleAudiosProgressCommand,
     );
 
+    final filter = watchValue((PodcastManager m) => m.filter);
+
     watchValue((DownloadManager m) => m.commands);
 
-    final filter = watchValue((PodcastManager m) => m.filter);
-    final filteredEpisodes = episodes
+    final freshEspidodes = watchValue(
+      (PodcastManager m) => m.getEpisodesCommand(feedUrl),
+    );
+
+    final filteredEpisodes = freshEspidodes
         .where((a) => a.title != null && a.episodeDescription != null)
         .where(
           (a) => (searchQuery == null || searchQuery.trim().isEmpty)

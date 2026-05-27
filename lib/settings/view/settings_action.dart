@@ -5,7 +5,8 @@ import '../../app/app_manager.dart';
 import '../../app/routing_manager.dart';
 import '../../app/page_ids.dart';
 import '../../common/view/icons.dart';
-import '../../l10n/l10n.dart';
+import '../../extensions/build_context_x.dart';
+
 import '../settings_model.dart';
 import 'settings_tile.dart';
 

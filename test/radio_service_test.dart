@@ -1,12 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:musicpod/common/data/audio.dart';
+import 'package:musicpod/common/data/audio_type.dart';
 import 'package:musicpod/common/persistence/database.dart';
 import 'package:musicpod/radio/radio_service.dart';
 
 import 'radio_service_test.mocks.dart';
 
-const Audio sixFortyStation = Audio(url: 'http://radio.6forty.com:8000/6forty');
+const Audio sixFortyStation = Audio(
+  url: 'http://radio.6forty.com:8000/6forty',
+  audioType: AudioType.radio,
+);
 
 @GenerateMocks([Database])
 Future<void> main() async {

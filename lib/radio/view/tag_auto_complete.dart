@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:radio_browser_api/radio_browser_api.dart' hide State;
 import 'package:flutter_it/flutter_it.dart';
+import 'package:radio_browser_api/radio_browser_api.dart' hide State;
 
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
 import '../../settings/settings_model.dart';
 
 class TagAutoComplete extends StatelessWidget with WatchItMixin {

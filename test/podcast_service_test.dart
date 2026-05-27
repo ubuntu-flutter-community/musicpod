@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:musicpod/common/data/audio.dart';
+import 'package:musicpod/common/data/audio_type.dart';
 import 'package:musicpod/common/persistence/database.dart';
 import 'package:musicpod/podcasts/data/podcast_genre.dart';
 import 'package:musicpod/podcasts/podcast_service.dart';
@@ -19,6 +20,7 @@ const Audio episodeOneAudio = Audio(
   copyright: 'Allen Wyma',
   title:
       'Introduction to Flying High with Flutter - Flying High with Flutter #1',
+  audioType: AudioType.podcast,
 );
 
 @GenerateMocks([SettingsService, Dio])
@@ -40,7 +42,10 @@ Future<void> main() async {
     final feedUrl = result?.items.first.feedUrl;
     List<Audio>? episodes;
     if (feedUrl != null) {
-      episodes = await service.findEpisodes(feedUrl: feedUrl);
+      episodes = await service.findEpisodes(
+        feedUrl: feedUrl,
+        tryFromDbOnly: false,
+      );
     }
 
     expect(episodes?.last.url == episodeOneAudio.url, true);

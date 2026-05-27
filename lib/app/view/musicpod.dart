@@ -45,7 +45,11 @@ class _MusicPodState extends State<MusicPod> {
         future: _allReady,
         builder: (context, snapshot) => snapshot.hasError
             ? SplashScreen(
-                body: ErrorBody(error: snapshot.error, addQuitButton: true),
+                body: ErrorBody(
+                  error: snapshot.error,
+                  stackTrace: snapshot.stackTrace,
+                  addQuitButton: true,
+                ),
               )
             : snapshot.hasData
             ? isLinux

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:media_kit_video/media_kit_video.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 
 import '../../app/app_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
-import '../../l10n/l10n.dart';
+import '../../extensions/build_context_x.dart';
 import '../../local_audio/view/local_cover.dart';
 import '../player_model.dart';
 import 'player_fall_back_image.dart';

@@ -4,14 +4,13 @@ import 'package:github/github.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app/app_manager.dart';
 import '../../app/app_config.dart';
+import '../../app/app_manager.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/tapable_text.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
 
 const _kTileSize = 50.0;
 

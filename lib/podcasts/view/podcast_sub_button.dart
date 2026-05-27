@@ -3,7 +3,6 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
 import '../data/podcast_toggle_capsule.dart';
 import '../podcast_manager.dart';
 

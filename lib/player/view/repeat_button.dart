@@ -3,7 +3,8 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:media_kit/media_kit.dart';
 
 import '../../common/view/icons.dart';
-import '../../l10n/l10n.dart';
+import '../../extensions/build_context_x.dart';
+
 import '../player_model.dart';
 
 class PlaylistModeButton extends StatelessWidget with WatchItMixin {

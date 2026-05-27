@@ -10,7 +10,6 @@ import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/playlist_action.dart';
 import '../../local_audio/view/album_page.dart';
@@ -213,7 +212,7 @@ class AudioTileOptionButton extends StatelessWidget {
                 ),
               ),
             ),
-          if (audios.every((e) => e.isPodcast)) ...[
+          if (audios.every((e) => e.audioType == AudioType.podcast)) ...[
             PopupMenuItem(
               onTap: di<SettingsModel>().toggleHideCompletedEpisodes,
               child: IgnorePointer(
@@ -238,7 +237,11 @@ class AudioTileOptionButton extends StatelessWidget {
               PopupMenuItem(
                 onTap: () => di<PodcastManager>()
                     .getEpisodesCommand(audios.first.feedUrl!)
-                    .runAsync((feedUrl: audios.first.feedUrl!, item: null)),
+                    .runAsync((
+                      feedUrl: audios.first.feedUrl!,
+                      item: null,
+                      tryFromDbOnly: false,
+                    )),
                 child: IgnorePointer(
                   child: ListTile(
                     contentPadding: const EdgeInsets.symmetric(horizontal: 10),

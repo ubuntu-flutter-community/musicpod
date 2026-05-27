@@ -10,7 +10,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
+
 import '../../lyrics/lyrics_service.dart';
 import '../settings_model.dart';
 

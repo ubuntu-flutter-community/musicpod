@@ -5,7 +5,6 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../data/audio.dart';
 import '../data/audio_type.dart';

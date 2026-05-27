@@ -17,7 +17,6 @@ import '../../common/view/sliver_body.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../../search/search_model.dart';
 import '../../settings/view/settings_action.dart';
@@ -58,6 +57,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
         hasScrollBody: false,
         child: ErrorBody(
           error: subsResults.error!,
+          stackTrace: subsResults.stackTrace,
           onRetry: () => di<PodcastManager>().togglePodcastCommand.run(),
         ),
       );
@@ -185,7 +185,11 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                         context: context,
                         future: () => di<PodcastManager>()
                             .getEpisodesCommand(feedUrl!)
-                            .runAsync((item: null, feedUrl: feedUrl)),
+                            .runAsync((
+                              item: null,
+                              feedUrl: feedUrl,
+                              tryFromDbOnly: true,
+                            )),
                       ).then((res) {
                         if (res.isValue) {
                           di<PlayerModel>().startPlaylist(

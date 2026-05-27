@@ -4,7 +4,6 @@ import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../l10n/app_localizations.dart';
-import '../../l10n/l10n.dart';
 import '../../local_audio/data/change_metadata_capsule.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../data/audio.dart';

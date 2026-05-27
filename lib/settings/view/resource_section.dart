@@ -4,7 +4,8 @@ import 'package:yaru/yaru.dart';
 
 import '../../app/app_config.dart';
 import '../../common/view/common_widgets.dart';
-import '../../l10n/l10n.dart';
+import '../../extensions/build_context_x.dart';
+
 import '../../player/mpv_metadata_manager.dart';
 import '../settings_model.dart';
 

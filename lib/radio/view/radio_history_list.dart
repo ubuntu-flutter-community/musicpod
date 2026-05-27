@@ -3,7 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/ui_constants.dart';
-import '../../l10n/l10n.dart';
+import '../../extensions/build_context_x.dart';
 import '../../player/mpv_metadata_manager.dart';
 import 'radio_history_tile.dart';
 

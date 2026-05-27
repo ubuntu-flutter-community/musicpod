@@ -22,7 +22,7 @@ class Audio {
   final String? url;
 
   /// The [AudioType]
-  final AudioType? audioType;
+  final AudioType audioType;
 
   /// The url of the image if remote.
   final String? imageUrl;
@@ -124,7 +124,7 @@ class Audio {
   const Audio({
     this.path,
     this.url,
-    this.audioType,
+    required this.audioType,
     this.imageUrl,
     this.description,
     this.website,
@@ -245,9 +245,9 @@ class Audio {
     if (url != null) {
       result.addAll({'url': url});
     }
-    if (audioType != null) {
-      result.addAll({'audioType': audioType!.name});
-    }
+
+    result.addAll({'audioType': audioType.name});
+
     if (imageUrl != null) {
       result.addAll({'imageUrl': imageUrl});
     }
@@ -352,9 +352,9 @@ class Audio {
     return Audio(
       path: map['path'],
       url: map['url'],
-      audioType: map['audioType'] != null
-          ? AudioType.values.byName(map['audioType'])
-          : null,
+      audioType: AudioType.values.byName(
+        map['audioType'] ?? AudioType.local.name,
+      ),
       imageUrl: map['imageUrl'],
       description: map['description'],
       website: map['website'],
@@ -397,9 +397,7 @@ class Audio {
     if (identical(this, other)) return true;
 
     if (other is Audio) {
-      if (other.audioType != null &&
-          other.audioType == AudioType.radio &&
-          audioType == AudioType.radio) {
+      if (other.audioType == AudioType.radio && audioType == AudioType.radio) {
         return other.uuid == uuid;
       }
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/common_control_panel.dart';
-import '../../l10n/l10n.dart';
+import '../../extensions/build_context_x.dart';
 import '../../local_audio/local_search_result.dart';
 import '../search_model.dart';
 import '../search_type.dart';

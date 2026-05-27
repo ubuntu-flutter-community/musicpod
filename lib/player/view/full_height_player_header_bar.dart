@@ -6,7 +6,6 @@ import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../l10n/l10n.dart';
 import 'full_height_player_top_controls.dart';
 
 class FullHeightPlayerHeaderBar extends StatelessWidget {

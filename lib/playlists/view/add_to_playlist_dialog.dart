@@ -4,7 +4,6 @@ import 'package:yaru/yaru.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
 import 'add_to_playlist_navigator.dart';
 
 class AddToPlaylistDialog extends StatelessWidget {

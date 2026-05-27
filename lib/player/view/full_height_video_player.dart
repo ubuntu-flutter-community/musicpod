@@ -9,7 +9,6 @@ import '../../common/view/progress.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../l10n/l10n.dart';
 import '../player_model.dart';
 import 'full_height_player_top_controls.dart';
 import 'player_main_controls.dart';

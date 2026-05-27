@@ -61,7 +61,7 @@ class SidebarAudiosManager {
     if (_podcastManager.isPodcastSubscribed(pageId)) {
       final episodes = await _podcastManager
           .getEpisodesCommand(pageId)
-          .runAsync((item: null, feedUrl: pageId));
+          .runAsync((item: null, feedUrl: pageId, tryFromDbOnly: true));
       return episodes;
     }
 

@@ -46,7 +46,7 @@ class AudioFallBackIcon extends StatelessWidget {
         ),
       ),
       child: Icon(
-        audio?.audioType?.iconData ?? Iconz.musicNote,
+        audio?.audioType.iconData ?? Iconz.musicNote,
         size: iconSize,
         color: contrastColor(gradientColor).withValues(alpha: 0.7),
       ),

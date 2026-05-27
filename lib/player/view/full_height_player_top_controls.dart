@@ -8,7 +8,6 @@ import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import 'playback_rate_button.dart';
 import 'player_pause_timer_button.dart';

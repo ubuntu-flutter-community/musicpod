@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:musicpod/common/data/audio.dart';
+import 'package:musicpod/common/data/audio_type.dart';
 import 'package:musicpod/common/persistence/database.dart';
 import 'package:musicpod/local_audio/local_cover_service.dart';
 import 'package:musicpod/local_audio/local_audio_service.dart';
@@ -14,6 +15,7 @@ import 'package:musicpod/settings/settings_service.dart';
 import 'local_audio_service_test.mocks.dart';
 
 const Audio testMp3 = Audio(
+  audioType: AudioType.local,
   title: 'test',
   artist: 'musicpod',
   genre: 'Black Metal',
@@ -21,6 +23,7 @@ const Audio testMp3 = Audio(
 );
 
 const Audio testOgg = Audio(
+  audioType: AudioType.local,
   title: 'Cold Stones',
   artist: 'Backslash Zero',
   album: 'DEMO2017',

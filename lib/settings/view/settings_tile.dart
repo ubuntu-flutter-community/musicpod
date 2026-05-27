@@ -13,7 +13,7 @@ import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
 import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
+
 import '../settings_model.dart';
 
 class SettingsTile extends StatelessWidget with WatchItMixin {

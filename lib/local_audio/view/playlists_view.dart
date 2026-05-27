@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app/routing_manager.dart';
 import '../../app/page_ids.dart';
+import '../../app/routing_manager.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/round_image_container.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../custom_content/view/custom_playlists_section.dart';
 import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
 import '../../playlists/view/playlist_page.dart';
 
 class PlaylistsView extends StatelessWidget {

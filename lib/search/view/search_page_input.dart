@@ -10,7 +10,6 @@ import '../../common/view/search_input.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../l10n/l10n.dart';
 import '../../podcasts/data/podcast_genre.dart';
 import '../../radio/radio_manager.dart';
 import '../../radio/view/tag_auto_complete.dart';

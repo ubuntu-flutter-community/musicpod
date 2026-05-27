@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_it/flutter_it.dart';
 
-import '../app/app_manager.dart';
 import '../app/app_config.dart';
+import '../app/app_manager.dart';
 import '../common/view/progress.dart';
 import '../extensions/build_context_x.dart';
-import '../l10n/l10n.dart';
 
 class PatchNotesDialog extends StatefulWidget {
   const PatchNotesDialog({

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
 import 'progress.dart';
 import 'theme.dart';
 import 'ui_constants.dart';

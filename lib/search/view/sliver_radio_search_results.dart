@@ -9,7 +9,6 @@ import '../../common/view/tapable_text.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../../radio/radio_manager.dart';
 import '../../radio/view/radio_page_tag_bar.dart';

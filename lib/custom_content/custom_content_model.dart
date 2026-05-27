@@ -179,7 +179,10 @@ class CustomContentModel extends SafeChangeNotifier {
     }
 
     // Only load the feed if the fields are not provided because this is expensive
-    final audios = await _podcastService.findEpisodes(feedUrl: feed);
+    final audios = await _podcastService.findEpisodes(
+      feedUrl: feed,
+      tryFromDbOnly: false,
+    );
     final artist = audios.first.copyright ?? '';
     final imageUrl = audios.first.albumArtUrl ?? audios.first.imageUrl;
     final name = audios.first.podcastTitle ?? '';

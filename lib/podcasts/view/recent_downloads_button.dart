@@ -3,7 +3,6 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
 import '../../player/player_model.dart';
 import '../data/podcast_download.dart';
 import '../download_manager.dart';

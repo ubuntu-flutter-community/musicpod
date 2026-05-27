@@ -7,7 +7,7 @@ import '../../common/view/common_widgets.dart';
 import '../../common/view/theme.dart';
 import '../../expose/data/last_fm_credentials.dart';
 import '../../expose/expose_manager.dart';
-import '../../l10n/l10n.dart';
+import '../../extensions/build_context_x.dart';
 import '../settings_model.dart';
 
 class ExposeOnlineSection extends StatefulWidget

@@ -6,7 +6,6 @@ import '../../common/view/avatar_play_button.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../../l10n/l10n.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/playlist_action.dart';
 import 'edit_playlist_dialog.dart';

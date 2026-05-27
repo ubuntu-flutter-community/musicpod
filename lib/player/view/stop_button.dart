@@ -3,7 +3,8 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/app_manager.dart';
 import '../../common/view/icons.dart';
-import '../../l10n/l10n.dart';
+import '../../extensions/build_context_x.dart';
+
 import '../player_model.dart';
 
 class StopButton extends StatelessWidget {

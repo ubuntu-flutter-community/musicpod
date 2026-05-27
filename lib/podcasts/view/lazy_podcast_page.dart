@@ -5,7 +5,7 @@ import 'package:podcast_search/podcast_search.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/ui_constants.dart';
-import '../../l10n/l10n.dart';
+import '../../extensions/build_context_x.dart';
 import '../podcast_manager.dart';
 import 'lazy_podcast_loading_page.dart';
 import 'podcast_page.dart';
@@ -26,7 +26,7 @@ class LazyPodcastPage extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final feedUrl = this.feedUrl ?? podcastItem?.feedUrl;
 
-    if (feedUrl == null) {
+    if (feedUrl == null || feedUrl.isEmpty) {
       return LazyPodcastLoadingPage(
         title: context.l10n.podcast,
         imageUrl: this.imageUrl,
@@ -68,7 +68,6 @@ class LazyPodcastPage extends StatelessWidget with WatchItMixin {
 
         return PodcastPage(
           imageUrl: newImageUrl,
-          episodes: episodes,
           feedUrl: feedUrl,
           title: _getTitle(feedUrl, context),
         );

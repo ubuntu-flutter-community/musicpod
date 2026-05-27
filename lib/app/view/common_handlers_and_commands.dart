@@ -5,7 +5,6 @@ import '../../common/view/ui_constants.dart';
 import '../../custom_content/view/backup_dialog.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../l10n/l10n.dart';
 import '../../notifications/notifications_service.dart';
 import '../../patch_notes/patch_notes_dialog.dart';
 import '../../player/player_model.dart';

@@ -2,11 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
+
 import '../../app/app_config.dart';
 import '../../common/view/ui_constants.dart';
-import '../../l10n/l10n.dart';
+import '../../extensions/build_context_x.dart';
+import '../logging.dart';
 
 class ErrorPage extends StatelessWidget {
   const ErrorPage({
@@ -15,9 +18,11 @@ class ErrorPage extends StatelessWidget {
     this.onRetry,
     this.onRetryLabel,
     this.addQuitButton = false,
+    this.stackTrace,
   });
 
   final Object? error;
+  final StackTrace? stackTrace;
   final void Function()? onRetry;
   final String? onRetryLabel;
   final bool addQuitButton;
@@ -32,6 +37,7 @@ class ErrorPage extends StatelessWidget {
       ),
       body: ErrorBody(
         error: error,
+        stackTrace: stackTrace,
         onRetryLabel: onRetryLabel,
         onRetry: onRetry,
         addQuitButton: addQuitButton,
@@ -40,22 +46,30 @@ class ErrorPage extends StatelessWidget {
   }
 }
 
-class ErrorBody extends StatelessWidget {
+class ErrorBody extends StatelessWidget with WatchItMixin {
   const ErrorBody({
     super.key,
     required this.error,
+    required this.stackTrace,
     this.onRetry,
     this.onRetryLabel,
     this.addQuitButton = false,
   });
 
   final Object? error;
+  final StackTrace? stackTrace;
   final void Function()? onRetry;
   final String? onRetryLabel;
   final bool addQuitButton;
 
   @override
   Widget build(BuildContext context) {
+    callOnceAfterThisBuild(
+      (_) => printMessageInDebugMode(
+        'ErrorPage: ${error.toString()} \n StackTrace: ${stackTrace.toString()}',
+        tag: '$ErrorPage',
+      ),
+    );
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(kLargestSpace),
