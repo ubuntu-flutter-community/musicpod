@@ -24,9 +24,11 @@ class LocalCover extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    callOnceAfterThisBuild((context) {
-      di<LocalCoverManager>().maybeRunCoverCommand(albumId, path);
-    });
+    if (di<LocalCoverManager>().shouldRequestCover(albumId, path)) {
+      callOnceAfterThisBuild((context) {
+        di<LocalCoverManager>().getCoverCommand(albumId).run(path!);
+      });
+    }
 
     return SizedBox.square(
       dimension: dimension,

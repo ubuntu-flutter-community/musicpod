@@ -26,13 +26,7 @@ class LocalCoverManager {
         ),
       );
 
-  void maybeRunCoverCommand(int albumId, String? path) {
-    if (_shouldRequestCover(albumId, path)) {
-      getCoverCommand(albumId).run(path!);
-    }
-  }
-
-  bool _shouldRequestCover(int? albumId, String? path) {
+  bool shouldRequestCover(int? albumId, String? path) {
     if (albumId == null) return false;
     final command = getCoverCommand(albumId);
     return !command.results.value.hasData && path != null;
