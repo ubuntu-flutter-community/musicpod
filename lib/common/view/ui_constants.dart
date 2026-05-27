@@ -16,7 +16,7 @@ const kDesktopSearchBarWidth = 335.0;
 
 const kMobileSearchBarWidth = 300.0;
 
-const kFullHeightPlayerImageSize = 300.0;
+const kFullWindowPlayerImageSize = 300.0;
 
 const kPlayerExplorerWidth = 500.0;
 

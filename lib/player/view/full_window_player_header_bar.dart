@@ -6,17 +6,17 @@ import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import 'full_height_player_top_controls.dart';
+import 'full_window_player_top_controls.dart';
 
-class FullHeightPlayerHeaderBar extends StatelessWidget {
-  const FullHeightPlayerHeaderBar({super.key, required this.isVideo});
+class FullWindowPlayerHeaderBar extends StatelessWidget {
+  const FullWindowPlayerHeaderBar({super.key, required this.isVideo});
 
   final bool isVideo;
 
   @override
   Widget build(BuildContext context) {
     return HeaderBar(
-      heroTag: 'fullHeightPlayerHeaderBar',
+      heroTag: 'fullWindowPlayerHeaderBar',
       leading: isMobile
           ? Center(
               child: IconButton(
@@ -35,7 +35,7 @@ class FullHeightPlayerHeaderBar extends StatelessWidget {
       foregroundColor: isVideo == true ? Colors.white : null,
       backgroundColor: isVideo == true ? Colors.black : Colors.transparent,
       actions: [
-        FullHeightPlayerTopControls(
+        FullWindowPlayerTopControls(
           iconColor: isVideo ? Colors.white : context.colorScheme.onSurface,
           video: isVideo,
         ),

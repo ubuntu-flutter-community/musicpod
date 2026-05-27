@@ -7,7 +7,7 @@ import '../../extensions/theme_data_x.dart';
 import '../../settings/settings_model.dart';
 import '../player_model.dart';
 import 'bottom_player.dart';
-import 'full_height_player.dart';
+import 'full_window_player.dart';
 
 class PlayerView extends StatelessWidget with WatchItMixin {
   const PlayerView.bottom({super.key}) : _position = PlayerPosition.bottom;
@@ -42,7 +42,7 @@ class PlayerView extends StatelessWidget with WatchItMixin {
             gradient: _position.getGradient(playerBg),
           ),
           child: _position != PlayerPosition.bottom
-              ? FullHeightPlayer(playerPosition: _position)
+              ? FullWindowPlayer(playerPosition: _position)
               : const BottomPlayer(),
         ),
       ),

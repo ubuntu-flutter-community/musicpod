@@ -5,13 +5,13 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../player/player_model.dart';
-import 'full_height_player_audio_body.dart';
-import 'full_height_player_header_bar.dart';
-import 'full_height_video_player.dart';
+import 'full_window_video_player.dart';
+import 'full_window_player_body.dart';
+import 'full_window_player_header_bar.dart';
 import 'player_view.dart';
 
-class FullHeightPlayer extends StatelessWidget with WatchItMixin {
-  const FullHeightPlayer({super.key, required this.playerPosition});
+class FullWindowPlayer extends StatelessWidget with WatchItMixin {
+  const FullWindowPlayer({super.key, required this.playerPosition});
 
   final PlayerPosition playerPosition;
 
@@ -28,28 +28,24 @@ class FullHeightPlayer extends StatelessWidget with WatchItMixin {
     if (isVideo || isMobile && !context.isPortrait) {
       body = isLinux
           // Note: for some reason the video widget crashes if we use the built in controls, so we replicate this with a stack
-          ? LinuxFullHeightPlayer(
+          ? LinuxFullWindowVideoPlayer(
               iconColor: iconColor,
               active: active,
               playerPosition: playerPosition,
             )
-          : FullHeightVideoPlayer(
+          : FullWindowVideoPlayer(
               playerPosition: playerPosition,
               audio: audio,
               controlsActive: active,
             );
     } else {
-      body = FullHeightPlayerAudioBody(
-        active: active,
-        iconColor: iconColor,
-        audio: audio,
-      );
+      body = FullWindowPlayerBody(active: active);
     }
 
     return Column(
       spacing: isVideo || (isMobile && !context.isPortrait) ? 0 : kMediumSpace,
       children: [
-        FullHeightPlayerHeaderBar(
+        FullWindowPlayerHeaderBar(
           isVideo: isVideo || (isMobile && !context.isPortrait),
         ),
         Expanded(child: body),

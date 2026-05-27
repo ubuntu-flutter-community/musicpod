@@ -10,13 +10,13 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../player_model.dart';
-import 'full_height_player_top_controls.dart';
+import 'full_window_player_top_controls.dart';
 import 'player_main_controls.dart';
 import 'player_track.dart';
 import 'player_view.dart';
 
-class FullHeightVideoPlayer extends StatelessWidget {
-  const FullHeightVideoPlayer({
+class FullWindowVideoPlayer extends StatelessWidget {
+  const FullWindowVideoPlayer({
     super.key,
     required this.playerPosition,
     this.audio,
@@ -113,8 +113,8 @@ class FullHeightVideoPlayer extends StatelessWidget {
   ];
 }
 
-class LinuxFullHeightPlayer extends StatefulWidget {
-  const LinuxFullHeightPlayer({
+class LinuxFullWindowVideoPlayer extends StatefulWidget {
+  const LinuxFullWindowVideoPlayer({
     super.key,
     required this.iconColor,
     required this.active,
@@ -126,10 +126,12 @@ class LinuxFullHeightPlayer extends StatefulWidget {
   final PlayerPosition playerPosition;
 
   @override
-  State<LinuxFullHeightPlayer> createState() => _LinuxFullHeightPlayerState();
+  State<LinuxFullWindowVideoPlayer> createState() =>
+      _LinuxFullWindowVideoPlayerState();
 }
 
-class _LinuxFullHeightPlayerState extends State<LinuxFullHeightPlayer> {
+class _LinuxFullWindowVideoPlayerState
+    extends State<LinuxFullWindowVideoPlayer> {
   bool _hovered = false;
 
   @override
@@ -157,7 +159,7 @@ class _LinuxFullHeightPlayerState extends State<LinuxFullHeightPlayer> {
             duration: const Duration(milliseconds: 200),
             opacity: _hovered ? 1 : 0,
             child: OverlayContainer(
-              child: FullHeightPlayerTopControls(
+              child: FullWindowPlayerTopControls(
                 iconColor: widget.iconColor,
                 video: true,
               ),

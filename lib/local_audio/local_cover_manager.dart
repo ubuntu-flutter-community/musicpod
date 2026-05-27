@@ -17,12 +17,6 @@ class LocalCoverManager {
 
   final _getCoverCommands = <int, Command<String, Uint8List?>>{};
 
-  bool shouldRequestCover(int? albumId, String? path) {
-    if (albumId == null) return false;
-    final command = getCoverCommand(albumId);
-    return !command.results.value.hasData && path != null;
-  }
-
   Command<String, Uint8List?> getCoverCommand(int albumId) =>
       _getCoverCommands.putIfAbsent(
         albumId,
@@ -31,4 +25,16 @@ class LocalCoverManager {
           initialValue: null,
         ),
       );
+
+  void maybeRunCoverCommand(int albumId, String? path) {
+    if (_shouldRequestCover(albumId, path)) {
+      getCoverCommand(albumId).run(path!);
+    }
+  }
+
+  bool _shouldRequestCover(int? albumId, String? path) {
+    if (albumId == null) return false;
+    final command = getCoverCommand(albumId);
+    return !command.results.value.hasData && path != null;
+  }
 }

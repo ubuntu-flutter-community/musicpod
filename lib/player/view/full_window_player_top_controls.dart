@@ -13,8 +13,8 @@ import 'playback_rate_button.dart';
 import 'player_pause_timer_button.dart';
 import 'volume_popup.dart';
 
-class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
-  const FullHeightPlayerTopControls({
+class FullWindowPlayerTopControls extends StatelessWidget with WatchItMixin {
+  const FullWindowPlayerTopControls({
     super.key,
     required this.iconColor,
     this.padding,
@@ -29,12 +29,7 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
 
-    final mediaQuerySize = context.mediaQuerySize;
-    final playerWithSidePanel = mediaQuerySize.width > 1000;
-
     final isFullScreen = isFullscreen(context);
-
-    final showQueue = watchPropertyValue((PlayerModel m) => m.showQueue);
 
     return Padding(
       padding: padding ?? playerTopControlsPadding,
@@ -42,15 +37,6 @@ class FullHeightPlayerTopControls extends StatelessWidget with WatchItMixin {
         alignment: WrapAlignment.end,
         spacing: 5.0,
         children: [
-          if (!playerWithSidePanel && !video)
-            IconButton(
-              tooltip: context.l10n.arts,
-              icon: Icon(Iconz.image, color: iconColor),
-              selectedIcon: Icon(Iconz.imageFilled, color: iconColor),
-              isSelected: !showQueue,
-              color: iconColor,
-              onPressed: di<PlayerModel>().toggleShowQueue,
-            ),
           if (audio?.audioType == AudioType.podcast && video)
             PlaybackRateButton(color: iconColor),
           if (video && !isMobile) VolumeSliderPopup(color: iconColor),

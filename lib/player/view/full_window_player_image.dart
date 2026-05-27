@@ -7,8 +7,8 @@ import '../player_model.dart';
 import 'player_fall_back_image.dart';
 import 'player_remote_source_image.dart';
 
-class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
-  const FullHeightPlayerImage({
+class FullWindowPlayerImage extends StatelessWidget with WatchItMixin {
+  const FullWindowPlayerImage({
     super.key,
     this.fit,
     this.height,
@@ -29,8 +29,8 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
     final fallBackImage = PlayerFallBackImage(
       noIcon: emptyFallBack,
       audioType: audio?.audioType,
-      height: kFullHeightPlayerImageSize,
-      width: kFullHeightPlayerImageSize,
+      height: kFullWindowPlayerImageSize,
+      width: kFullWindowPlayerImageSize,
     );
 
     Widget image;
@@ -39,14 +39,14 @@ class FullHeightPlayerImage extends StatelessWidget with WatchItMixin {
         key: ValueKey(audio!.albumDbId!),
         albumId: audio.albumDbId!,
         path: audio.path!,
-        dimension: kFullHeightPlayerImageSize,
+        dimension: kFullWindowPlayerImageSize,
         fit: fit ?? BoxFit.fitHeight,
         fallback: fallBackImage,
       );
     } else {
       image = PlayerRemoteSourceImage(
-        height: kFullHeightPlayerImageSize,
-        width: kFullHeightPlayerImageSize,
+        height: kFullWindowPlayerImageSize,
+        width: kFullWindowPlayerImageSize,
         fit: fit,
         fallBackIcon: fallBackImage,
         errorIcon: fallBackImage,
