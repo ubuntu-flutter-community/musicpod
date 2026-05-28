@@ -5,7 +5,7 @@ import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../extensions/build_context_x.dart';
-import '../../search/search_model.dart';
+import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
 
 class OpenRadioSearchButton extends StatelessWidget with WatchItMixin {
@@ -18,7 +18,7 @@ class OpenRadioSearchButton extends StatelessWidget with WatchItMixin {
     return ElevatedButton(
       onPressed: () {
         di<RoutingManager>().push(pageId: PageIDs.searchPage);
-        di<SearchModel>()
+        di<SearchManager>()
           ..setAudioType(AudioType.radio)
           ..setSearchType(searchType)
           ..search(clear: true);

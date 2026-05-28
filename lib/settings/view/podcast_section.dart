@@ -15,7 +15,7 @@ import '../../local_audio/local_audio_manager.dart';
 import '../../player/player_service.dart';
 import '../../podcasts/download_manager_master.dart';
 import '../../podcasts/podcast_manager.dart';
-import '../../search/search_model.dart';
+import '../../search/search_manager.dart';
 import '../settings_model.dart';
 import '../shared_preferences_keys.dart';
 
@@ -83,9 +83,8 @@ class _PodcastSectionState extends State<PodcastSection> {
                       di<PodcastManager>().initSearchCommand.run((
                         forceInit: true,
                       ));
-                      await di<SearchModel>().loadPodcastGenresCommand.runAsync(
-                        (force: true),
-                      );
+                      await di<SearchManager>().loadPodcastGenresCommand
+                          .runAsync((force: true));
                     },
                   );
                 } else {
@@ -152,9 +151,9 @@ class _PodcastSectionState extends State<PodcastSection> {
                     di<PodcastManager>().initSearchCommand.run((
                       forceInit: true,
                     ));
-                    await di<SearchModel>().loadPodcastGenresCommand.runAsync((
-                      force: true,
-                    ));
+                    await di<SearchManager>().loadPodcastGenresCommand.runAsync(
+                      (force: true),
+                    );
                   },
                 ),
                 child: Text(context.l10n.confirm),

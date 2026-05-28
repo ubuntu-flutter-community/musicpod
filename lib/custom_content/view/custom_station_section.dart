@@ -8,7 +8,7 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../radio/radio_manager.dart';
-import '../../search/search_model.dart';
+import '../../search/search_manager.dart';
 
 class CustomStationSection extends StatefulWidget {
   const CustomStationSection({super.key});
@@ -57,7 +57,7 @@ class _AddStationDialogState extends State<CustomStationSection> {
                 foregroundColor: YaruInfoType.warning.getColor(context),
               ),
               onPressed: () {
-                di<SearchModel>().setAudioType(AudioType.radio);
+                di<SearchManager>().setAudioType(AudioType.radio);
                 di<RoutingManager>().push(pageId: PageIDs.searchPage);
               },
               child: Text(l10n.search),

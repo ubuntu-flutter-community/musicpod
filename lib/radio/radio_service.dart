@@ -111,6 +111,7 @@ class RadioService {
     }
   }
 
+  static const radioSearchMaxLimit = 300;
   RadioBrowserListResponse<Station>? _response;
   String? _country;
   String? _name;
@@ -146,7 +147,7 @@ class RadioService {
     final parameters = InputParameters(
       hidebroken: true,
       order: 'stationcount',
-      limit: limit > 300 ? 300 : limit,
+      limit: limit > radioSearchMaxLimit ? radioSearchMaxLimit : limit,
     );
     try {
       if (name?.isEmpty == false) {

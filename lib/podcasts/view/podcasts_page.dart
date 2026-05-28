@@ -8,7 +8,7 @@ import '../../common/view/header_bar.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../../search/search_model.dart';
+import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
 import 'podcasts_collection_body.dart';
 
@@ -24,10 +24,10 @@ class PodcastsPage extends StatelessWidget {
           padding: appBarSingleActionSpacing,
           child: SearchButton(
             onPressed: () {
-              final searchModel = di<SearchModel>();
+              final searchManager = di<SearchManager>();
               di<RoutingManager>().push(pageId: PageIDs.searchPage);
-              if (searchModel.audioType != AudioType.podcast) {
-                searchModel
+              if (searchManager.audioType != AudioType.podcast) {
+                searchManager
                   ..setAudioType(AudioType.podcast)
                   ..setSearchType(SearchType.podcastTitle)
                   ..search();

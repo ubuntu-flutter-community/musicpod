@@ -50,7 +50,7 @@ import 'radio/online_art_model.dart' as _i620;
 import 'radio/online_art_service.dart' as _i328;
 import 'radio/radio_manager.dart' as _i749;
 import 'radio/radio_service.dart' as _i811;
-import 'search/search_model.dart' as _i544;
+import 'search/search_manager.dart' as _i807;
 import 'settings/settings_model.dart' as _i338;
 import 'settings/settings_service.dart' as _i763;
 import 'settings/view/licenses_dialog.dart' as _i1009;
@@ -260,8 +260,8 @@ extension GetItInjectableX on _i174.GetIt {
       ),
       dispose: (i) => i.dispose(),
     );
-    gh.lazySingleton<_i544.SearchModel>(
-      () => _i544.SearchModel(
+    gh.lazySingleton<_i807.SearchManager>(
+      () => _i807.SearchManager(
         radioService: gh<_i811.RadioService>(),
         podcastService: gh<_i721.PodcastService>(),
         localAudioService: gh<_i438.LocalAudioService>(),

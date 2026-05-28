@@ -4,7 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/view/common_control_panel.dart';
 import '../../extensions/build_context_x.dart';
 import '../../local_audio/local_search_result.dart';
-import '../search_model.dart';
+import '../search_manager.dart';
 import '../search_type.dart';
 
 class SearchTypeFilterBar extends StatelessWidget with WatchItMixin {
@@ -12,18 +12,18 @@ class SearchTypeFilterBar extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final searchModel = di<SearchModel>();
-    final searchType = watchPropertyValue((SearchModel m) => m.searchType);
-    final searchTypes = watchPropertyValue((SearchModel m) => m.searchTypes);
-    final localSearchResult = watchPropertyValue(
-      (SearchModel m) => m.localSearchResult,
+    final searchManager = di<SearchManager>();
+    final searchType = watchValue((SearchManager m) => m.searchType);
+    final searchTypes = watchValue((SearchManager m) => m.searchTypes);
+    final localSearchResult = watchValue(
+      (SearchManager m) => m.localSearchResult,
     );
-    final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
+    final searchQuery = watchValue((SearchManager m) => m.searchQuery);
 
     return CommonControlPanel(
       onSelected: (i) {
-        searchModel.setSearchType(searchTypes.elementAt(i));
-        searchModel.search(manualFilter: true);
+        searchManager.setSearchType(searchTypes.elementAt(i));
+        searchManager.search(manualFilter: true);
       },
       labels: searchTypes
           .map(

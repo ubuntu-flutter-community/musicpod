@@ -5,7 +5,7 @@ import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../search/search_model.dart';
+import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
 import '../data/audio.dart';
 import '../data/audio_type.dart';
@@ -67,9 +67,9 @@ class SliverAudioPage extends StatelessWidget {
             child: SearchButton(
               onPressed: () {
                 di<RoutingManager>().push(pageId: PageIDs.searchPage);
-                final searchModel = di<SearchModel>();
-                if (searchModel.audioType != AudioType.local) {
-                  searchModel
+                final searchManager = di<SearchManager>();
+                if (searchManager.audioType != AudioType.local) {
+                  searchManager
                     ..setAudioType(AudioType.local)
                     ..setSearchType(SearchType.localTitle)
                     ..setSearchQuery(null)

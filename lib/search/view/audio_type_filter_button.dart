@@ -8,7 +8,7 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../settings/settings_model.dart';
-import '../search_model.dart';
+import '../search_manager.dart';
 
 class AudioTypeFilterButton extends StatelessWidget {
   const AudioTypeFilterButton({super.key, required OverlayMode mode})
@@ -30,8 +30,8 @@ class AudioTypeFilterSwitcher extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = context.theme;
-    final searchModel = di<SearchModel>();
-    final audioType = watchPropertyValue((SearchModel m) => m.audioType);
+    final searchManager = di<SearchManager>();
+    final audioType = watchValue((SearchManager m) => m.audioType);
     final useYaruTheme = watchPropertyValue(
       (SettingsModel m) => m.useYaruTheme,
     );
@@ -62,7 +62,7 @@ class AudioTypeFilterSwitcher extends StatelessWidget with WatchItMixin {
           isSelected: selected,
           tooltip: e.localize(l10n),
           padding: EdgeInsets.zero,
-          onPressed: () => searchModel
+          onPressed: () => searchManager
             ..setAudioType(e)
             ..search(clear: true),
           icon: Padding(
@@ -91,8 +91,8 @@ class AudioTypeFilterBottomSheetButton extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final searchModel = di<SearchModel>();
-    final audioType = watchPropertyValue((SearchModel m) => m.audioType);
+    final searchManager = di<SearchManager>();
+    final audioType = watchValue((SearchManager m) => m.audioType);
 
     return IconButton(
       padding: EdgeInsets.zero,
@@ -111,7 +111,7 @@ class AudioTypeFilterBottomSheetButton extends StatelessWidget
                       leading: Icon(e.iconData),
                       onTap: () {
                         context.pop();
-                        searchModel
+                        searchManager
                           ..setAudioType(e)
                           ..search(clear: true);
                       },

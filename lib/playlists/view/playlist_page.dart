@@ -26,7 +26,7 @@ import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../local_audio/view/failed_import_snackbar.dart';
 import '../../player/player_model.dart';
-import '../../search/search_model.dart';
+import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
 import 'playlist_add_audio_autocomplete.dart';
 import 'playlist_control_panel.dart';
@@ -142,8 +142,8 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
               child: SearchButton(
                 onPressed: () {
                   di<RoutingManager>().push(pageId: PageIDs.searchPage);
-                  final searchmodel = di<SearchModel>();
-                  searchmodel
+                  final searchManager = di<SearchManager>();
+                  searchManager
                     ..setAudioType(AudioType.local)
                     ..setSearchType(SearchType.localTitle)
                     ..search();

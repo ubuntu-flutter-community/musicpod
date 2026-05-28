@@ -12,7 +12,7 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../settings/settings_model.dart';
-import '../search_model.dart';
+import '../search_manager.dart';
 import 'search_page_input.dart';
 import 'sliver_local_search_results.dart';
 import 'sliver_podcast_filter_bar.dart';
@@ -25,8 +25,8 @@ class SearchPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final audioType = watchPropertyValue((SearchModel m) => m.audioType);
-    final loading = watchPropertyValue((SearchModel m) => m.loading);
+    final audioType = watchValue((SearchManager m) => m.audioType);
+    final loading = watchValue((SearchManager m) => m.searchCommand.isRunning);
     // TODO: care for timeouts
 
     final useYaruTheme = watchPropertyValue(
@@ -75,7 +75,7 @@ class SearchPage extends StatelessWidget with WatchItMixin {
           onStretchTrigger: () async {
             WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
               if (context.mounted) {
-                return di<SearchModel>().search();
+                return di<SearchManager>().refresh();
               }
             });
           },
@@ -87,7 +87,7 @@ class SearchPage extends StatelessWidget with WatchItMixin {
                   notification.direction == ScrollDirection.reverse &&
                   notification.metrics.pixels >=
                       notification.metrics.maxScrollExtent * 0.6) {
-                di<SearchModel>()
+                di<SearchManager>()
                   ..incrementLimit(8)
                   ..search();
               }
@@ -96,7 +96,7 @@ class SearchPage extends StatelessWidget with WatchItMixin {
               if (metrics.atEdge) {
                 final isAtBottom = metrics.pixels != 0;
                 if (isAtBottom) {
-                  di<SearchModel>()
+                  di<SearchManager>()
                     ..incrementLimit(16)
                     ..search();
                 }

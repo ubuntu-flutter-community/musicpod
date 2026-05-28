@@ -11,7 +11,7 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../settings/settings_model.dart';
-import '../search_model.dart';
+import '../search_manager.dart';
 
 class PodcastSearchInputPrefix extends StatelessWidget with WatchItMixin {
   const PodcastSearchInputPrefix({super.key});
@@ -92,13 +92,13 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final searchModel = di<SearchModel>();
+    final searchManager = di<SearchManager>();
     watchPropertyValue((SettingsModel m) => m.favoriteLanguageCodeLength);
     watchPropertyValue((SettingsModel m) => m.favoriteCountryCodeLength);
-    final country = watchPropertyValue((SearchModel m) => m.country);
+    final country = watchValue((SearchManager m) => m.country);
 
     void setCountry(Country? country) {
-      searchModel.setCountry(country);
+      searchManager.setCountry(country);
       if (country?.code != null) {
         di<SettingsModel>().setLastCountryCode(country!.code);
       }
@@ -113,7 +113,7 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
       (SettingsModel m) => m.favoriteLanguageCode,
     );
 
-    final language = watchPropertyValue((SearchModel m) => m.language);
+    final language = watchValue((SearchManager m) => m.language);
 
     final theWidth = width ?? 250.0;
     final height = chipHeight;
@@ -143,11 +143,11 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
             },
             onSelected: (language) {
               context.pop();
-              searchModel.setLanguage(language);
+              searchManager.setLanguage(language);
               if (language?.isoCode != null) {
                 di<SettingsModel>().setLastLanguageCode(language!.isoCode);
               }
-              searchModel.search();
+              searchManager.search();
             },
           )
         : CountryAutoComplete(
@@ -172,7 +172,7 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
             onSelected: (country) {
               context.pop();
               setCountry(country);
-              searchModel.search();
+              searchManager.search();
             },
             value: country,
             addFav: (v) {

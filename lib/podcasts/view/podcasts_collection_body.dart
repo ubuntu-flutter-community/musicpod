@@ -18,7 +18,7 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../player/player_model.dart';
-import '../../search/search_model.dart';
+import '../../search/search_manager.dart';
 import '../../settings/view/settings_action.dart';
 import '../data/podcast_update_capsule.dart';
 import '../podcast_manager.dart';
@@ -117,7 +117,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                   ElevatedButton(
                     onPressed: () {
                       di<RoutingManager>().push(pageId: PageIDs.searchPage);
-                      di<SearchModel>()
+                      di<SearchManager>()
                         ..setAudioType(AudioType.podcast)
                         ..setSearchQuery(null)
                         ..search();

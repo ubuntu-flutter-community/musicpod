@@ -90,6 +90,7 @@ class PodcastService {
     return _podcastGenreCache;
   }
 
+  static const podcastMaxLimit = 50;
   String? _previousQuery;
   Future<SearchResult?> search({
     String? searchQuery,
@@ -104,7 +105,7 @@ class PodcastService {
       if (searchQuery == null || searchQuery.isEmpty == true) {
         result = await _search.charts(
           genre: podcastGenre == PodcastGenre.all ? '' : podcastGenre.id,
-          limit: limit,
+          limit: limit > podcastMaxLimit ? podcastMaxLimit : limit,
           country: country ?? Country.none,
           language: country != null || language?.isoCode == null
               ? ''
@@ -117,7 +118,7 @@ class PodcastService {
           language: country != null || language?.isoCode == null
               ? ''
               : language!.isoCode,
-          limit: limit,
+          limit: limit > podcastMaxLimit ? podcastMaxLimit : limit,
           attribute: attribute,
         );
       }

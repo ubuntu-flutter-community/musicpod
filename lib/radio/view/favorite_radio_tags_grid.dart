@@ -11,7 +11,7 @@ import '../../common/view/round_image_container.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../search/search_model.dart';
+import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
 import '../radio_manager.dart';
 import 'open_radio_discover_page_button.dart';
@@ -52,7 +52,7 @@ class FavoriteRadioTagsGrid extends StatelessWidget with WatchItMixin {
           selected: false,
           onTap: () {
             di<RoutingManager>().push(pageId: PageIDs.searchPage);
-            di<SearchModel>()
+            di<SearchManager>()
               ..setSearchType(SearchType.radioTag)
               ..setTag(Tag(name: tag.toLowerCase(), stationCount: 1))
               ..setAudioType(AudioType.radio)

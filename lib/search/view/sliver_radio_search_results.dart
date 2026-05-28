@@ -14,7 +14,7 @@ import '../../radio/radio_manager.dart';
 import '../../radio/view/radio_page_tag_bar.dart';
 import '../../radio/view/radio_reconnect_button.dart';
 import '../../radio/view/station_page.dart';
-import '../search_model.dart';
+import '../search_manager.dart';
 
 class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
   const SliverRadioSearchResults({super.key, required this.width});
@@ -34,13 +34,13 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
       );
     }
 
-    final radioSearchResult = watchPropertyValue(
-      (SearchModel m) => m.radioSearchResult,
+    final radioSearchResult = watchValue(
+      (SearchManager m) => m.radioSearchResult,
     )?.where((e) => e.uuid != null);
 
-    final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
-    final searchType = watchPropertyValue((SearchModel m) => m.searchType);
-    final loading = watchPropertyValue((SearchModel m) => m.loading);
+    final searchQuery = watchValue((SearchManager m) => m.searchQuery);
+    final searchType = watchValue((SearchManager m) => m.searchType);
+    final loading = watchValue((SearchManager m) => m.searchCommand.isRunning);
 
     if (radioSearchResult == null ||
         (searchQuery?.isEmpty == true && radioSearchResult.isEmpty == true)) {

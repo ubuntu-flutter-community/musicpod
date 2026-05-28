@@ -14,7 +14,7 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../player/mpv_metadata_manager.dart';
-import '../../search/search_model.dart';
+import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
 import '../../settings/settings_model.dart';
 import '../online_art_model.dart';
@@ -146,7 +146,7 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
           text: icyName ?? context.l10n.station,
           onTap: !allowNavigation || icyName == null
               ? null
-              : () => di<SearchModel>()
+              : () => di<SearchManager>()
                   ..setSearchType(SearchType.radioName)
                   ..setSearchQuery(icyName)
                   ..setAudioType(AudioType.radio)

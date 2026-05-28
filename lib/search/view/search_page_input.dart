@@ -14,7 +14,7 @@ import '../../podcasts/data/podcast_genre.dart';
 import '../../radio/radio_manager.dart';
 import '../../radio/view/tag_auto_complete.dart';
 import '../../settings/settings_model.dart';
-import '../search_model.dart';
+import '../search_manager.dart';
 import '../search_type.dart';
 import 'audio_type_filter_button.dart';
 import 'podcast_search_input_prefix.dart';
@@ -24,10 +24,10 @@ class SearchPageInput extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final searchModel = di<SearchModel>();
-    final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
-    final searchType = watchPropertyValue((SearchModel m) => m.searchType);
-    final audioType = watchPropertyValue((SearchModel m) => m.audioType);
+    final searchManager = di<SearchManager>();
+    final searchQuery = watchValue((SearchManager m) => m.searchQuery);
+    final searchType = watchValue((SearchManager m) => m.searchType);
+    final audioType = watchValue((SearchManager m) => m.audioType);
 
     return SizedBox(
       width: searchBarWidth,
@@ -46,12 +46,12 @@ class SearchPageInput extends StatelessWidget with WatchItMixin {
             autoFocus: !isMobile,
             text: searchQuery,
             hintText: audioType.localizedSearchHint(context.l10n),
-            onChanged: (v) async {
-              searchModel.setSearchQuery(v);
+            onChanged: (v) {
+              searchManager.setSearchQuery(v);
               if (v.isEmpty) {
-                searchModel.setPodcastGenre(PodcastGenre.all);
+                searchManager.setPodcastGenre(PodcastGenre.all);
               }
-              await searchModel.search();
+              searchManager.search();
             },
             suffixIcon: AudioTypeFilterButton(
               mode: OverlayMode.platformModalMode,
@@ -71,8 +71,8 @@ class CountryAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final searchModel = di<SearchModel>();
-    final country = watchPropertyValue((SearchModel m) => m.country);
+    final searchManager = di<SearchManager>();
+    final country = watchValue((SearchManager m) => m.country);
     watchPropertyValue((SettingsModel m) => m.favoriteCountryCodeLength);
     final favCountryCodes = watchPropertyValue(
       (SettingsModel m) => m.favoriteCountryCode,
@@ -88,12 +88,12 @@ class CountryAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
           ...Country.values,
         ].where((e) => favCountryCodes.contains(e.code) == false),
       ]..remove(Country.none),
-      onSelected: (c) async {
-        searchModel.setCountry(c);
+      onSelected: (c) {
+        searchManager.setCountry(c);
         if (c?.code != null) {
           di<SettingsModel>().setLastCountryCode(c!.code);
         }
-        await searchModel.search();
+        searchManager.search();
       },
       value: country,
       addFav: (v) {
@@ -115,8 +115,8 @@ class TagAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final radioManager = di<RadioManager>();
-    final model = di<SearchModel>();
-    final tag = watchPropertyValue((SearchModel m) => m.tag);
+    final model = di<SearchManager>();
+    final tag = watchValue((SearchManager m) => m.tag);
     final favRadioTags = watchValue(
       (RadioManager m) => m.toggleFavRadioTagCommand,
     );
@@ -151,7 +151,7 @@ class LanguageAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final language = watchPropertyValue((SearchModel m) => m.language);
+    final language = watchValue((SearchManager m) => m.language);
     watchPropertyValue((SettingsModel m) => m.favoriteLanguageCodeLength);
     final favLanguageCodes = watchPropertyValue(
       (SettingsModel m) => m.favoriteLanguageCode,
@@ -160,7 +160,7 @@ class LanguageAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
       suffixIcon: AudioTypeFilterButton(mode: OverlayMode.platformModalMode),
       value: language,
       onSelected: (language) {
-        di<SearchModel>()
+        di<SearchManager>()
           ..setLanguage(language)
           ..search();
         if (language?.isoCode != null) {

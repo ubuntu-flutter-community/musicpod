@@ -5,7 +5,7 @@ import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../search_model.dart';
+import '../search_manager.dart';
 import 'podcast_card.dart';
 
 class SliverPodcastSearchResults extends StatefulWidget
@@ -25,16 +25,16 @@ class _SliverPodcastSearchResultsState
   void didChangeDependencies() {
     super.didChangeDependencies();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      di<SearchModel>().search();
+      di<SearchManager>().search();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final loading = watchPropertyValue((SearchModel m) => m.loading);
+    final loading = watchValue((SearchManager m) => m.searchCommand.isRunning);
 
-    final results = watchPropertyValue(
-      (SearchModel m) => m.podcastSearchResult?.items,
+    final results = watchValue(
+      (SearchManager m) => m.podcastSearchResult.select((v) => v?.items),
     );
     final searchResultItems = widget.take != null
         ? results?.take(widget.take!)

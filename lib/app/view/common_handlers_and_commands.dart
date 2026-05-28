@@ -10,9 +10,10 @@ import '../../patch_notes/patch_notes_dialog.dart';
 import '../../player/player_model.dart';
 import '../../player/player_service.dart';
 import '../../podcasts/data/podcast_download.dart';
+import '../../podcasts/data/podcast_update_capsule.dart';
 import '../../podcasts/download_manager_master.dart';
 import '../../podcasts/podcast_manager.dart';
-import '../../search/search_model.dart';
+import '../../search/search_manager.dart';
 import '../../search/search_timeout_exception.dart';
 import '../app_manager.dart';
 
@@ -40,15 +41,24 @@ mixin CommonHandlersAndCommandsMixin {
     );
 
     registerHandler(
-      select: (PodcastManager m) => m.manageUpdatesCommand,
-      handler: (context, feedsWithUpdates, cancel) {
-        if (feedsWithUpdates.isEmpty) {
-        } else {
-          di<NotificationsService>().notify(
-            message: feedsWithUpdates.length == 1
-                ? '${context.l10n.newEpisodeAvailable} ${di<PodcastManager>().getSubscribedPodcastName(feedsWithUpdates.first)}'
-                : '${context.l10n.newEpisodesAvailableFor(feedsWithUpdates.length)}',
-          );
+      select: (PodcastManager m) => m.manageUpdatesCommand.results,
+      handler: (context, res, cancel) {
+        if (res.isRunning) {
+          return;
+        } else if (res.hasError) {
+          context.toast(Text(res.error.toString()));
+        } else if (res.paramData?.type == PodcastUpdateType.remove) {
+          return;
+        } else if (res.hasData) {
+          final feedsWithUpdates = res.data ?? {};
+          if (feedsWithUpdates.isEmpty) {
+          } else {
+            di<NotificationsService>().notify(
+              message: feedsWithUpdates.length == 1
+                  ? '${context.l10n.newEpisodeAvailable} ${di<PodcastManager>().getSubscribedPodcastName(feedsWithUpdates.first)}'
+                  : '${context.l10n.newEpisodesAvailableFor(feedsWithUpdates.length)}',
+            );
+          }
         }
       },
     );
@@ -77,7 +87,7 @@ mixin CommonHandlersAndCommandsMixin {
     );
 
     registerStreamHandler(
-      select: (SearchModel m) => m.messageStream,
+      select: (SearchManager m) => m.messageStream,
       handler: (context, newValue, cancel) {
         if (newValue.hasError) {
           context.toast(

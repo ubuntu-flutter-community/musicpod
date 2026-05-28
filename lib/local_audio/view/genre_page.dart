@@ -10,7 +10,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../search/search_model.dart';
+import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
 import '../local_audio_manager.dart';
 import 'album_view.dart';
@@ -50,7 +50,7 @@ class _GenrePageState extends State<GenrePage> {
               tooltip: context.l10n.searchForRadioStationsWithGenreName,
               onPressed: () {
                 di<RoutingManager>().push(pageId: PageIDs.searchPage);
-                di<SearchModel>()
+                di<SearchManager>()
                   ..setTag(
                     Tag(name: widget.genre.toLowerCase(), stationCount: 1),
                   )

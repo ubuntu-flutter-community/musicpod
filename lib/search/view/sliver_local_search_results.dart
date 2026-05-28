@@ -7,7 +7,7 @@ import '../../extensions/build_context_x.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/local_audio_view.dart';
 import '../../local_audio/view/local_audio_body.dart';
-import '../search_model.dart';
+import '../search_manager.dart';
 import '../search_type.dart';
 
 class SliverLocalSearchResult extends StatelessWidget with WatchItMixin {
@@ -28,33 +28,35 @@ class SliverLocalSearchResult extends StatelessWidget with WatchItMixin {
       );
     }
 
-    final localAudioView = watchPropertyValue(
-      (SearchModel m) => switch (m.searchType) {
-        SearchType.localAlbum => LocalAudioView.albums,
-        SearchType.localArtist => LocalAudioView.artists,
-        SearchType.localTitle => LocalAudioView.titles,
-        SearchType.localGenreName => LocalAudioView.genres,
-        _ => LocalAudioView.playlists,
-      },
+    final localAudioView = watchValue(
+      (SearchManager m) => m.searchType.select(
+        (audioType) => switch (audioType) {
+          SearchType.localAlbum => LocalAudioView.albums,
+          SearchType.localArtist => LocalAudioView.artists,
+          SearchType.localTitle => LocalAudioView.titles,
+          SearchType.localGenreName => LocalAudioView.genres,
+          _ => LocalAudioView.playlists,
+        },
+      ),
     );
 
-    final titles = watchPropertyValue(
-      (SearchModel m) => m.localSearchResult?.titles,
+    final titles = watchValue(
+      (SearchManager m) => m.localSearchResult.select((v) => v?.titles),
     );
-    final artists = watchPropertyValue(
-      (SearchModel m) => m.localSearchResult?.artists,
+    final artists = watchValue(
+      (SearchManager m) => m.localSearchResult.select((v) => v?.artists),
     );
-    final albums = watchPropertyValue(
-      (SearchModel m) => m.localSearchResult?.albums,
+    final albums = watchValue(
+      (SearchManager m) => m.localSearchResult.select((v) => v?.albums),
     );
-    final genresResult = watchPropertyValue(
-      (SearchModel m) => m.localSearchResult?.genres,
+    final genresResult = watchValue(
+      (SearchManager m) => m.localSearchResult.select((v) => v?.genres),
     );
-    final playlistsResult = watchPropertyValue(
-      (SearchModel m) => m.localSearchResult?.playlists,
+    final playlistsResult = watchValue(
+      (SearchManager m) => m.localSearchResult.select((v) => v?.playlists),
     );
 
-    final searchQuery = watchPropertyValue((SearchModel m) => m.searchQuery);
+    final searchQuery = watchValue((SearchManager m) => m.searchQuery);
 
     if (searchQuery == null || searchQuery.isEmpty == true) {
       return SliverNoSearchResultPage(message: Text(context.l10n.search));

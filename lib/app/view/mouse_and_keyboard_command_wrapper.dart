@@ -6,7 +6,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/data/audio_type.dart';
 import '../../player/player_model.dart';
 import '../page_ids.dart';
-import '../../search/search_model.dart';
+import '../../search/search_manager.dart';
 import '../app_manager.dart';
 import 'back_gesture.dart';
 import '../routing_manager.dart';
@@ -56,7 +56,7 @@ class MouseAndKeyboardCommandWrapper extends StatelessWidget {
               if (di<AppManager>().fullWindowMode.value) {
                 di<AppManager>().setFullWindowMode(false);
               }
-              di<SearchModel>().setAudioType(switch (currentPageId) {
+              di<SearchManager>().setAudioType(switch (currentPageId) {
                 PageIDs.localAudio => AudioType.local,
                 PageIDs.radio => AudioType.radio,
                 _ => AudioType.podcast,
@@ -105,7 +105,7 @@ class MouseAndKeyboardCommandWrapper extends StatelessWidget {
             if (audio == null) return;
 
             if (audio.isRadio) {
-              di<SearchModel>().findSimilarStationCommand.run(audio);
+              di<SearchManager>().findSimilarStationCommand.run(audio);
             } else {
               playerModel.playNext();
             }

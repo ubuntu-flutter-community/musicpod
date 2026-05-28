@@ -5,7 +5,7 @@ import 'package:podcast_search/podcast_search.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/app_localizations.dart';
-import '../search_model.dart';
+import '../search_manager.dart';
 
 class PodcastSearchAttributePopupButton extends StatelessWidget
     with WatchItMixin {
@@ -13,14 +13,12 @@ class PodcastSearchAttributePopupButton extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    final attribute = watchPropertyValue(
-      (SearchModel m) => m.podcastSearchAttribute,
-    );
+    final attribute = watchValue((SearchManager m) => m.podcastSearchAttribute);
     return PopupMenuButton<Attribute>(
       icon: Icon(attribute.iconData),
       style: IconButton.styleFrom(shape: const RoundedRectangleBorder()),
       initialValue: attribute,
-      onSelected: (value) => di<SearchModel>()
+      onSelected: (value) => di<SearchManager>()
         ..setPodcastSearchAttribute(value)
         ..search(clear: true),
       itemBuilder: (context) => Attribute.values

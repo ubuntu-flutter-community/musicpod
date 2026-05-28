@@ -18,7 +18,7 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../search/search_model.dart';
+import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
 import '../../settings/settings_model.dart';
 import '../radio_manager.dart';
@@ -87,9 +87,9 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
             child: SearchButton(
               onPressed: () {
                 di<RoutingManager>().push(pageId: PageIDs.searchPage);
-                final searchModel = di<SearchModel>();
-                if (searchModel.audioType != AudioType.radio) {
-                  searchModel
+                final searchManager = di<SearchManager>();
+                if (searchManager.audioType != AudioType.radio) {
+                  searchManager
                     ..setAudioType(AudioType.radio)
                     ..setSearchType(SearchType.radioName)
                     ..setSearchQuery('')

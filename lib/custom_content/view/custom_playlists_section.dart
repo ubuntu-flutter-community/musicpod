@@ -12,7 +12,7 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/playlist_action.dart';
-import '../../search/search_model.dart';
+import '../../search/search_manager.dart';
 import '../custom_content_model.dart';
 
 class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
@@ -138,7 +138,7 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
                   foregroundColor: YaruInfoType.warning.getColor(context),
                 ),
                 onPressed: () {
-                  di<SearchModel>().setAudioType(AudioType.radio);
+                  di<SearchManager>().setAudioType(AudioType.radio);
                   di<RoutingManager>().push(pageId: PageIDs.searchPage);
                 },
                 child: Text(l10n.search),

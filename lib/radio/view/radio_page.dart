@@ -8,7 +8,7 @@ import '../../common/view/header_bar.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../../search/search_model.dart';
+import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
 import 'radio_lib_page.dart';
 
@@ -26,9 +26,9 @@ class RadioPage extends StatelessWidget {
               active: false,
               onPressed: () {
                 di<RoutingManager>().push(pageId: PageIDs.searchPage);
-                final searchModel = di<SearchModel>();
-                if (searchModel.audioType != AudioType.radio) {
-                  searchModel
+                final searchManager = di<SearchManager>();
+                if (searchManager.audioType != AudioType.radio) {
+                  searchManager
                     ..setAudioType(AudioType.radio)
                     ..setSearchType(SearchType.radioName)
                     ..setSearchQuery('')
