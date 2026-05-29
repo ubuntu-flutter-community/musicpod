@@ -6,24 +6,34 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:yaru/constants.dart';
 
 import '../../common/data/audio.dart';
+import '../../common/data/audio_type.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-
+import '../../extensions/string_x.dart';
 import '../../lyrics/lyrics_manager.dart';
 import '../../lyrics/lyrics_service.dart';
 import '../../settings/settings_model.dart';
 import '../../settings/view/settings_action.dart';
+import '../mpv_metadata_manager.dart';
 import '../player_model.dart';
 
 class PlayerLyrics extends StatelessWidget with WatchItMixin {
-  const PlayerLyrics({super.key, this.title, this.artist});
-
-  final String? title;
-  final String? artist;
+  const PlayerLyrics({super.key});
 
   @override
   Widget build(BuildContext context) {
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
+    final splitByDash = watchValue(
+      (MpvMetadataManager m) =>
+          m.mpvMetaDataCommand.select((cmd) => cmd?.icyTitle.splitByDash),
+    );
+
+    final title = audio?.audioType != AudioType.radio
+        ? null
+        : splitByDash?.songName;
+    final artist = audio?.audioType != AudioType.radio
+        ? null
+        : splitByDash?.artist;
 
     final geniusAccessToken = watchPropertyValue(
       (SettingsModel m) => m.lyricsGeniusAccessToken,
@@ -32,22 +42,14 @@ class PlayerLyrics extends StatelessWidget with WatchItMixin {
       (SettingsModel m) => m.neverAskAgainForGeniusToken,
     );
 
-    if ((geniusAccessToken == null || geniusAccessToken.isEmpty) &&
-        !neverAskAgainForGeniusToken)
-      return const _OnlineLyricsNotSetup();
-
-    if (audio == null) {
+    if (neverAskAgainForGeniusToken || audio == null) {
       return const NoLyricsFound();
     }
 
-    return _PlayerLyrics(
-      key: ValueKey(
-        geniusAccessToken.toString() + neverAskAgainForGeniusToken.toString(),
-      ),
-      audio: audio,
-      title: title,
-      artist: artist,
-    );
+    if (geniusAccessToken == null || geniusAccessToken.isEmpty)
+      return const _OnlineLyricsNotSetup();
+
+    return _PlayerLyrics(audio: audio, title: title, artist: artist);
   }
 }
 
@@ -78,12 +80,7 @@ class _OnlineLyricsNotSetup extends StatelessWidget {
 }
 
 class _PlayerLyrics extends StatelessWidget with WatchItMixin {
-  const _PlayerLyrics({
-    super.key,
-    required this.audio,
-    this.title,
-    this.artist,
-  });
+  const _PlayerLyrics({required this.audio, this.title, this.artist});
 
   final Audio audio;
   final String? title;

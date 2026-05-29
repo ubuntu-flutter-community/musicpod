@@ -25,17 +25,26 @@ class _QueueBodyState extends State<QueueBody>
     with AutomaticKeepAliveClientMixin {
   final AutoScrollController _controller = AutoScrollController();
 
-  void _jump() {
+  void _jump({required bool isJumping, required bool autoScrollEnabled}) {
     final model = di<PlayerModel>();
     final currentAudio = model.audio;
-    if (currentAudio != null &&
+    if (!isJumping &&
+        autoScrollEnabled &&
+        currentAudio != null &&
         model.queue.isNotEmpty == true &&
         _controller.hasClients) {
-      _controller.scrollToIndex(
-        model.queue.indexOf(currentAudio),
-        preferPosition: AutoScrollPosition.middle,
-        duration: const Duration(milliseconds: 1),
-      );
+      model.setJumpingQueue(true);
+      _controller
+          .scrollToIndex(
+            model.queue.indexOf(currentAudio),
+            preferPosition: AutoScrollPosition.middle,
+            duration: const Duration(microseconds: 60),
+          )
+          .then(
+            (_) => model
+              ..setJumpingQueue(false)
+              ..setShowSpinnerWhileJumping(false),
+          );
     }
   }
 
@@ -47,13 +56,23 @@ class _QueueBodyState extends State<QueueBody>
     final theme = context.theme;
     final colorScheme = theme.colorScheme;
 
+    // Note: until we find a way to store the
+    // auto scroll controller offset, we have to use this workaround to prevent
+    // the auto scrolling to distract people in huge queues
+    // so we should
+    final jumping = watchPropertyValue((PlayerModel m) => m.jumpingQueue);
+    final loadingOnJump = watchPropertyValue(
+      (PlayerModel m) => m.showSpinnerWhileJumping,
+    );
+
     final queueAutoScroll = watchPropertyValue(
       (PlayerModel m) => m.queueAutoScroll,
     );
 
     callOnceAfterThisBuild((_) {
       if (queueAutoScroll) {
-        _jump();
+        di<PlayerModel>().setShowSpinnerWhileJumping(true);
+        _jump(isJumping: jumping, autoScrollEnabled: queueAutoScroll);
       }
     });
     onDispose(_controller.dispose);
@@ -63,7 +82,10 @@ class _QueueBodyState extends State<QueueBody>
       handler: (context, snapshot, cancel) {
         if (!snapshot.hasData) return;
         if (queueAutoScroll) {
-          _jump();
+          _jump(
+            isJumping: di<PlayerModel>().jumpingQueue,
+            autoScrollEnabled: di<PlayerModel>().queueAutoScroll,
+          );
         }
       },
     );
@@ -72,7 +94,6 @@ class _QueueBodyState extends State<QueueBody>
     final queueLength = watchPropertyValue((PlayerModel m) => m.queue.length);
 
     final queue = di<PlayerModel>().queue;
-    final queueName = di<PlayerModel>().queueName;
 
     return SizedBox(
       width: 400,
@@ -81,32 +102,41 @@ class _QueueBodyState extends State<QueueBody>
         spacing: kLargestSpace,
         children: [
           Expanded(
-            child: ReorderableListView.builder(
-              scrollController: _controller,
-              padding: const EdgeInsets.only(left: 25, right: 25),
-              buildDefaultDragHandles: false,
-              proxyDecorator: (child, index, animation) => Material(
-                color: colorScheme.onSurface.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(6),
-                child: child,
-              ),
-              itemBuilder: (context, index) {
-                final audio = queue.elementAt(index);
-                final selected = audio == currentAudio;
+            child: Stack(
+              children: [
+                if (jumping && loadingOnJump)
+                  const Center(child: CircularProgressIndicator()),
+                Opacity(
+                  opacity: jumping && loadingOnJump ? 0.0 : 1,
+                  child: ReorderableListView.builder(
+                    scrollController: _controller,
+                    padding: const EdgeInsets.only(left: 25, right: 25),
+                    buildDefaultDragHandles: false,
+                    proxyDecorator: (child, index, animation) => Material(
+                      color: colorScheme.onSurface.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(6),
+                      child: child,
+                    ),
+                    itemBuilder: (context, index) {
+                      final audio = queue.elementAt(index);
+                      final selected = audio == currentAudio;
 
-                return _QueueTile(
-                  key: ValueKey(index),
-                  index: index,
-                  controller: _controller,
-                  selectedColor: colorScheme.onSurface,
-                  queueName: queueName,
-                  queue: queue,
-                  audio: audio,
-                  selected: selected,
-                );
-              },
-              itemCount: queueLength,
-              onReorder: di<PlayerModel>().moveAudioInQueue,
+                      return _QueueTile(
+                        key: ValueKey(index),
+                        index: index,
+                        controller: _controller,
+                        selectedColor: colorScheme.onSurface,
+                        queueName: di<PlayerModel>().queueName,
+                        queue: queue,
+                        audio: audio,
+                        selected: selected,
+                      );
+                    },
+                    itemCount: queueLength,
+                    onReorder: di<PlayerModel>().moveAudioInQueue,
+                  ),
+                ),
+              ],
             ),
           ),
           Padding(
@@ -174,7 +204,8 @@ class _QueueBodyState extends State<QueueBody>
                   isSelected: queueAutoScroll,
                   icon: Icon(Iconz.autoScrollOn),
                   onPressed: () {
-                    if (!di<PlayerModel>().queueAutoScroll) _jump();
+                    if (!di<PlayerModel>().queueAutoScroll)
+                      _jump(isJumping: jumping, autoScrollEnabled: true);
                     di<PlayerModel>().toggleQueueAutoScroll();
                   },
                 ),

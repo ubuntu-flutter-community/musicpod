@@ -45,6 +45,22 @@ class PlayerModel extends SafeChangeNotifier {
   bool get queueAutoScroll => _playerService.queueAutoScroll;
   void toggleQueueAutoScroll() => _playerService.toggleQueueAutoScroll();
 
+  bool _jumpingQueue = false;
+  bool get jumpingQueue => _jumpingQueue;
+  void setJumpingQueue(bool value) {
+    if (value == _jumpingQueue) return;
+    _jumpingQueue = value;
+    notifyListeners();
+  }
+
+  bool _showSpinnerWhileJumping = false;
+  bool get showSpinnerWhileJumping => _showSpinnerWhileJumping;
+  void setShowSpinnerWhileJumping(bool value) {
+    if (value == _showSpinnerWhileJumping) return;
+    _showSpinnerWhileJumping = value;
+    notifyListeners();
+  }
+
   Stream<Audio?> get newAudioStream => _playerService.newAudioStream;
 
   Audio? get audio => _playerService.audio;

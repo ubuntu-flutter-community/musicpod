@@ -4,10 +4,8 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/string_x.dart';
 import '../../radio/view/radio_history_list.dart';
 import '../../settings/settings_model.dart';
-import '../mpv_metadata_manager.dart';
 import '../player_model.dart';
 import 'full_window_player_image.dart';
 import 'player_lyrics.dart';
@@ -56,11 +54,6 @@ class _PlayerExplorerState extends State<PlayerExplorer>
 
     final audio = watchPropertyValue((PlayerModel m) => m.audio);
 
-    final splitByDash = watchValue(
-      (MpvMetadataManager m) =>
-          m.mpvMetaDataCommand.select((cmd) => cmd?.icyTitle.splitByDash),
-    );
-
     return Column(
       spacing: kLargestSpace,
       children: [
@@ -81,20 +74,11 @@ class _PlayerExplorerState extends State<PlayerExplorer>
             controller: _controller,
             children: [
               if (widget.includeImage) const FullWindowPlayerImage(),
-              if (audio?.audioType == AudioType.radio) ...[
-                const RadioHistoryList(simpleList: true),
-              ] else ...[
-                const QueueBody(),
-              ],
-              PlayerLyrics(
-                key: ValueKey(audio.toString() + splitByDash.toString()),
-                title: audio?.audioType != AudioType.radio
-                    ? null
-                    : splitByDash?.songName,
-                artist: audio?.audioType != AudioType.radio
-                    ? null
-                    : splitByDash?.artist,
-              ),
+              if (audio?.audioType == AudioType.radio)
+                const RadioHistoryList(simpleList: true)
+              else
+                QueueBody(selectedColor: widget.selectedColor),
+              const PlayerLyrics(),
             ],
           ),
         ),
