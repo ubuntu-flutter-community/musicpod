@@ -27,26 +27,26 @@ class PlayerExplorer extends StatefulWidget with WatchItStatefulWidgetMixin {
 
 class _PlayerExplorerState extends State<PlayerExplorer>
     with TickerProviderStateMixin {
-  late TabController _controller = _createController(
-    length: widget.includeImage ? 3 : 2,
-    initialIndex: di<SettingsModel>().showPlayerLyrics ? 1 : 0,
-  );
+  late TabController _controller = _createController();
 
   @override
   void didUpdateWidget(covariant PlayerExplorer oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.includeImage != widget.includeImage) {
-      _controller = _createController(
-        length: widget.includeImage ? 3 : 2,
-        initialIndex: di<SettingsModel>().showPlayerLyrics ? 1 : 0,
-      );
+      _controller = _createController();
     }
   }
 
-  TabController _createController({
-    required int initialIndex,
-    required int length,
-  }) => TabController(length: length, vsync: this, initialIndex: initialIndex);
+  TabController _createController() {
+    final length = widget.includeImage ? 3 : 2;
+    final savedIndex = di<SettingsModel>().playerExplorerTabIndex;
+    final initialIndex = savedIndex < length ? savedIndex : savedIndex - 1;
+    return TabController(
+      vsync: this,
+      length: length,
+      initialIndex: initialIndex,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +58,13 @@ class _PlayerExplorerState extends State<PlayerExplorer>
       spacing: kLargestSpace,
       children: [
         TabBar(
+          onTap: (index) => di<SettingsModel>().setPlayerExplorerTabIndex(
+            widget.includeImage
+                ? index
+                : index > 2
+                ? 2
+                : index,
+          ),
           controller: _controller,
           tabs: [
             if (widget.includeImage) Tab(text: context.l10n.arts),

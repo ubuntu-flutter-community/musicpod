@@ -6,6 +6,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
+import '../../extensions/theme_data_x.dart';
 import 'icons.dart';
 import 'ui_constants.dart';
 
@@ -486,4 +487,24 @@ Color getPlayerIconColor(ThemeData theme) {
   } else {
     return Colors.white;
   }
+}
+
+TextStyle? getPlayerLyricsTextStyle({
+  required ThemeData theme,
+  int? index,
+  int? selectedIndex,
+}) {
+  return theme.textTheme.bodyLarge?.copyWith(
+    fontSize: selectedIndex != null && selectedIndex == index ? 18 : 15,
+    fontWeight: index == null
+        ? null
+        : selectedIndex == index
+        ? FontWeight.bold
+        : FontWeight.w300,
+    color: index == null
+        ? theme.colorScheme.onSurface
+        : selectedIndex == index
+        ? theme.contrastyPrimary
+        : null,
+  );
 }

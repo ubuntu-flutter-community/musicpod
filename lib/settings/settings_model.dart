@@ -129,6 +129,11 @@ class SettingsModel extends SafeChangeNotifier {
   void setIconSetIndex(int value) =>
       _service.setValue(SPKeys.iconSetIndex, value);
 
+  int get playerExplorerTabIndex =>
+      _service.getInt(SPKeys.playerExplorerTabIndex) ?? 0;
+  void setPlayerExplorerTabIndex(int value) =>
+      _service.setValue(SPKeys.playerExplorerTabIndex, value);
+
   String? get podcastIndexApiKey =>
       _service.getString(SPKeys.podcastIndexApiKey);
   void setPodcastIndexApiKey(String value) =>

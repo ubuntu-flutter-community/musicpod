@@ -7,9 +7,11 @@ import 'package:yaru/constants.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
+import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
+import '../../extensions/theme_data_x.dart';
 import '../../lyrics/lyrics_manager.dart';
 import '../../lyrics/lyrics_service.dart';
 import '../../settings/settings_model.dart';
@@ -131,7 +133,10 @@ class _PlayerLyrics extends StatelessWidget with WatchItMixin {
     if (lyricsString?.isNotEmpty ?? false) {
       return SingleChildScrollView(
         padding: const EdgeInsets.all(kLargestSpace),
-        child: Text(lyricsString!),
+        child: Text(
+          lyricsString!.trim(),
+          style: getPlayerLyricsTextStyle(theme: context.theme),
+        ),
       );
     }
 
@@ -200,9 +205,7 @@ class _LrcLineViewerState extends State<_LrcLineViewer> {
       );
     }
 
-    final color = watchPropertyValue(
-      (PlayerModel m) => m.color ?? context.colorScheme.primary,
-    );
+    final color = context.theme.contrastyPrimary;
 
     return Column(
       spacing: kLargestSpace,
@@ -228,12 +231,10 @@ class _LrcLineViewerState extends State<_LrcLineViewer> {
                     selectedColor: color,
                     title: Text(
                       widget.lrc.elementAt(index).lyrics,
-                      style: context.textTheme.bodyLarge?.copyWith(
-                        fontSize: _selectedIndex == index ? 18 : 15,
-                        fontWeight: _selectedIndex == index
-                            ? FontWeight.bold
-                            : FontWeight.w300,
-                        color: _selectedIndex == index ? color : null,
+                      style: getPlayerLyricsTextStyle(
+                        theme: context.theme,
+                        index: index,
+                        selectedIndex: _selectedIndex,
                       ),
                     ),
                   ),
@@ -242,23 +243,21 @@ class _LrcLineViewerState extends State<_LrcLineViewer> {
             ),
           ),
         ),
-        SizedBox(
-          width: 200,
-          child: TextButton.icon(
-            style: TextButton.styleFrom(
-              iconColor: _autoScroll ? color : context.colorScheme.onSurface,
-              foregroundColor: _autoScroll
-                  ? color
-                  : context.colorScheme.onSurface,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(kYaruButtonRadius),
-              ),
+        TextButton.icon(
+          style: TextButton.styleFrom(
+            iconColor: _autoScroll ? color : context.colorScheme.onSurface,
+            foregroundColor: _autoScroll
+                ? color
+                : context.colorScheme.onSurface,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(kYaruButtonRadius),
             ),
-            onPressed: () => setState(() => _autoScroll = !_autoScroll),
-            label: Text(context.l10n.autoScrolling, maxLines: 1),
-            icon: const Icon(Icons.auto_awesome),
           ),
+          onPressed: () => setState(() => _autoScroll = !_autoScroll),
+          label: Text(context.l10n.autoScrolling, maxLines: 1),
+          icon: const Icon(Icons.auto_awesome),
         ),
+        const SizedBox(height: kMediumSpace),
       ],
     );
   }
