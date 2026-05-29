@@ -61,7 +61,7 @@ class _QueueBodyState extends State<QueueBody>
     // the auto scrolling to distract people in huge queues
     // so we use a loading indicator while jumping
     final jumping = watchPropertyValue((PlayerModel m) => m.jumpingQueue);
-    final loadingOnJump = watchPropertyValue(
+    final showSpinnerWhileJumping = watchPropertyValue(
       (PlayerModel m) => m.showSpinnerWhileJumping,
     );
 
@@ -104,10 +104,10 @@ class _QueueBodyState extends State<QueueBody>
           Expanded(
             child: Stack(
               children: [
-                if (jumping && loadingOnJump)
+                if (jumping && showSpinnerWhileJumping)
                   const Center(child: CircularProgressIndicator()),
                 Opacity(
-                  opacity: jumping && loadingOnJump ? 0.0 : 1,
+                  opacity: jumping && showSpinnerWhileJumping ? 0.0 : 1,
                   child: ReorderableListView.builder(
                     scrollController: _controller,
                     padding: const EdgeInsets.only(left: 25, right: 25),
