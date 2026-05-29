@@ -133,7 +133,7 @@ class _PlayerLyrics extends StatelessWidget with WatchItMixin {
     if (lyricsString?.isNotEmpty ?? false) {
       return SingleChildScrollView(
         padding: const EdgeInsets.all(kLargestSpace),
-        child: Text(
+        child: SelectableText(
           lyricsString!.trim(),
           style: getPlayerLyricsTextStyle(theme: context.theme),
         ),
