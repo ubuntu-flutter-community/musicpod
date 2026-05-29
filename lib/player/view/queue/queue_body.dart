@@ -59,7 +59,7 @@ class _QueueBodyState extends State<QueueBody>
     // Note: until we find a way to store the
     // auto scroll controller offset, we have to use this workaround to prevent
     // the auto scrolling to distract people in huge queues
-    // so we should
+    // so we use a loading indicator while jumping
     final jumping = watchPropertyValue((PlayerModel m) => m.jumpingQueue);
     final loadingOnJump = watchPropertyValue(
       (PlayerModel m) => m.showSpinnerWhileJumping,
