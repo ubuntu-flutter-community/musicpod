@@ -4632,7 +4632,7 @@ abstract class AppLocalizations {
   /// No description provided for @playerCouldNotOpenRemoteMedia.
   ///
   /// In en, this message translates to:
-  /// **'The player could not open remote media \'{media}\'. Are you connected to the internet? If yes, this might be a server issue.'**
+  /// **'The player could not open or maintain to play remote media \'{media}\'. Are you connected to the internet? If yes, this might be a server issue.'**
   String playerCouldNotOpenRemoteMedia(String media);
 
   /// No description provided for @searchTimeoutMessage.

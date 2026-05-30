@@ -173,10 +173,17 @@ class MpvMetadataManager {
         !icyTitle.toLowerCase().contains(sanitizedDescription);
   }
 
+  bool get _geniusIsSetup {
+    final token = _settingsService.getString(SPKeys.lyricsGeniusAccessToken);
+    final geniusDisabled =
+        _settingsService.getBool(SPKeys.neverAskAgainForGeniusToken) ?? false;
+    return token != null && token.isNotEmpty && !geniusDisabled;
+  }
+
   Future<void> _processParsedIcyTitle(String parsedIcyTitle) async {
     final songInfo = parsedIcyTitle.splitByDash;
     String? albumArt;
-    if (!dataSafeMode.value) {
+    if (!dataSafeMode.value && !_geniusIsSetup) {
       albumArt = await _onlineArtService.fetchAlbumArt(parsedIcyTitle);
     }
 

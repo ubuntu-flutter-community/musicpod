@@ -2385,7 +2385,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String playerCouldNotOpenRemoteMedia(String media) {
-    return 'The player could not open remote media \'$media\'. Are you connected to the internet? If yes, this might be a server issue.';
+    return 'The player could not open or maintain to play remote media \'$media\'. Are you connected to the internet? If yes, this might be a server issue.';
   }
 
   @override

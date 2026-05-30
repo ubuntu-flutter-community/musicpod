@@ -151,18 +151,6 @@ extension GetItInjectableX on _i174.GetIt {
         settingsService: gh<_i763.SettingsService>(),
       ),
     );
-    gh.lazySingleton<_i546.OnlineLyricsService>(
-      () => _i546.OnlineLyricsService(
-        localLyricsService: gh<_i546.LocalLyricsService>(),
-        settingsService: gh<_i763.SettingsService>(),
-      ),
-    );
-    gh.factoryCached<_i23.LyricsManager>(
-      () => _i23.LyricsManager(
-        localLyricsService: gh<_i546.LocalLyricsService>(),
-        onlineLyricsService: gh<_i546.OnlineLyricsService>(),
-      ),
-    );
     gh.lazySingleton<_i438.LocalAudioService>(
       () => _i438.LocalAudioService(
         localCoverService: gh<_i57.LocalCoverService>(),
@@ -260,6 +248,13 @@ extension GetItInjectableX on _i174.GetIt {
       ),
       dispose: (i) => i.dispose(),
     );
+    gh.lazySingleton<_i546.OnlineLyricsService>(
+      () => _i546.OnlineLyricsService(
+        localLyricsService: gh<_i546.LocalLyricsService>(),
+        settingsService: gh<_i763.SettingsService>(),
+        playerService: gh<_i38.PlayerService>(),
+      ),
+    );
     gh.lazySingleton<_i807.SearchManager>(
       () => _i807.SearchManager(
         radioService: gh<_i811.RadioService>(),
@@ -301,6 +296,12 @@ extension GetItInjectableX on _i174.GetIt {
         onlineArtService: gh<_i328.OnlineArtService>(),
       ),
       dispose: (i) => i.dispose(),
+    );
+    gh.factoryCached<_i23.LyricsManager>(
+      () => _i23.LyricsManager(
+        localLyricsService: gh<_i546.LocalLyricsService>(),
+        onlineLyricsService: gh<_i546.OnlineLyricsService>(),
+      ),
     );
     gh.lazySingleton<_i190.SidebarAudiosManager>(
       () => _i190.SidebarAudiosManager(

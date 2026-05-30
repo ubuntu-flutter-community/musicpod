@@ -8,6 +8,7 @@ import 'package:lrc/lrc.dart';
 import 'package:path/path.dart' as p;
 
 import '../common/logging.dart';
+import '../player/player_service.dart';
 import '../settings/settings_service.dart';
 import '../settings/shared_preferences_keys.dart';
 
@@ -62,8 +63,10 @@ class OnlineLyricsService {
   OnlineLyricsService({
     required LocalLyricsService localLyricsService,
     required SettingsService settingsService,
+    required PlayerService playerService,
   }) : _localLyricsService = localLyricsService,
-       _settingsService = settingsService {
+       _settingsService = settingsService,
+       _playerService = playerService {
     const fromEnv = String.fromEnvironment('GENIUS_ACCESS_TOKEN');
     _genius = di.get<Genius>(
       param1: fromEnv.isNotEmpty
@@ -74,13 +77,14 @@ class OnlineLyricsService {
 
   // Note: the genius API is actually capable of much more than just fetching lyrics,
   // but because genius needs an API token, and musicbrainz doesn't, and musicpod should
-  // be able to provide artwork without API tokens,
-  // we only use it for lyrics for now.
+  // be able to provide artwork without API tokens.
+  // If this is set up, the MPV Metadata manager will not use musicbrainz anymore for fetching artwork,
+  // because genius provides more reliable results for artwork than musicbrainz
   late final Genius _genius;
 
   final LocalLyricsService _localLyricsService;
   final SettingsService _settingsService;
-
+  final PlayerService _playerService;
   static bool get isRegistered => di.isRegistered<OnlineLyricsService>();
 
   static Future<void> refreshRegistration(String token) async {
@@ -101,6 +105,7 @@ class OnlineLyricsService {
       () => OnlineLyricsService(
         localLyricsService: di<LocalLyricsService>(),
         settingsService: di<SettingsService>(),
+        playerService: di<PlayerService>(),
       ),
     );
   }
@@ -140,6 +145,11 @@ class OnlineLyricsService {
         final song = await _genius.searchSong(artist: artist, title: title);
         if (song != null) {
           final lyrics = await song.lyrics;
+
+          if (song.songArtImageUrl != null &&
+              _settingsService.getBool(SPKeys.notifyDataSafeMode) != true) {
+            _playerService.setRemoteImageUrl(song.songArtImageUrl!);
+          }
 
           final result = _localLyricsService.parseLocalLyrics(
             inputString: lyrics,
