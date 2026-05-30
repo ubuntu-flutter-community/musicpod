@@ -35,6 +35,8 @@ class MouseAndKeyboardCommandWrapper extends StatelessWidget {
           const _FullWindowIntent(),
       LogicalKeySet(LogicalKeyboardKey.space, LogicalKeyboardKey.alt):
           const _PlayPauseIntent(),
+      LogicalKeySet(LogicalKeyboardKey.space, LogicalKeyboardKey.control):
+          const _PlayPauseIntent(),
       LogicalKeySet(LogicalKeyboardKey.arrowRight, LogicalKeyboardKey.alt):
           const _PlayNextIntent(),
       LogicalKeySet(LogicalKeyboardKey.arrowLeft, LogicalKeyboardKey.alt):

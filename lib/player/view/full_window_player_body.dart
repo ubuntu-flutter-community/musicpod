@@ -17,33 +17,34 @@ class FullWindowPlayerBody extends StatelessWidget with WatchItMixin {
 
     final playerWithSidePanel = mediaQuerySize.width > 2 * kPlayerExplorerWidth;
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        if (playerWithSidePanel)
-          SizedBox(
-            width: kPlayerExplorerWidth,
-            child: FullWindowPlayerMainPanel(active: active),
-          ),
-        Padding(
-          padding: playerWithSidePanel
-              ? const EdgeInsets.only(bottom: 3 * kLargestSpace)
-              : EdgeInsets.zero,
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: kPlayerExplorerWidth,
-              maxHeight: playerWithSidePanel
-                  ? mediaQuerySize.height - 0.3 * mediaQuerySize.height
-                  : mediaQuerySize.height,
-            ),
-            child: PlayerExplorer(
-              selectedColor: context.colorScheme.onSurface,
-              includeImage: !playerWithSidePanel,
-            ),
-          ),
-        ),
-      ],
-    );
+    return playerWithSidePanel
+        ? Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: kPlayerExplorerWidth,
+                child: FullWindowPlayerMainPanel(active: active),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 3 * kLargestSpace),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: kPlayerExplorerWidth,
+                    maxHeight:
+                        mediaQuerySize.height - 0.3 * mediaQuerySize.height,
+                  ),
+                  child: PlayerExplorer(
+                    selectedColor: context.colorScheme.onSurface,
+                    includeImage: false,
+                  ),
+                ),
+              ),
+            ],
+          )
+        : PlayerExplorer(
+            selectedColor: context.colorScheme.onSurface,
+            includeImage: true,
+          );
   }
 }

@@ -61,26 +61,29 @@ class _OnlineLyricsNotSetup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Center(
-    child: SizedBox(
-      width: 300,
-      child: Column(
-        spacing: kMediumSpace,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: kMediumSpace),
-            child: Text(context.l10n.onlineLyricsNotSetup),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: kMediumSpace),
-            child: Text(context.l10n.geniusAlsoProvidesArt),
-          ),
-          const SettingsButton.important(scrollIndex: 7),
-          OutlinedButton(
-            onPressed: () =>
-                di<SettingsModel>().setNeverAskAgainForGeniusToken(true),
-            child: Text(context.l10n.doNotAskAgain),
-          ),
-        ].map((e) => SizedBox(width: double.infinity, child: e)).toList(),
+    child: Padding(
+      padding: const EdgeInsets.only(top: kLargestSpace),
+      child: SizedBox(
+        width: 300,
+        child: Column(
+          spacing: kMediumSpace,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: kMediumSpace),
+              child: Text(context.l10n.onlineLyricsNotSetup),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: kMediumSpace),
+              child: Text(context.l10n.geniusAlsoProvidesArt),
+            ),
+            const SettingsButton.important(scrollIndex: 7),
+            OutlinedButton(
+              onPressed: () =>
+                  di<SettingsModel>().setNeverAskAgainForGeniusToken(true),
+              child: Text(context.l10n.doNotAskAgain),
+            ),
+          ].map((e) => SizedBox(width: double.infinity, child: e)).toList(),
+        ),
       ),
     ),
   );
@@ -151,15 +154,10 @@ class NoLyricsFound extends StatelessWidget {
   const NoLyricsFound({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topCenter,
-      child: Padding(
-        padding: const EdgeInsets.all(kLargestSpace),
-        child: Text(context.l10n.noLyricsFound),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.all(kLargestSpace),
+    child: Text(context.l10n.noLyricsFound),
+  );
 }
 
 class _LrcLineViewer extends StatefulWidget with WatchItStatefulWidgetMixin {

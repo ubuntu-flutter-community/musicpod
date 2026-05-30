@@ -80,7 +80,11 @@ class _PlayerExplorerState extends State<PlayerExplorer>
           child: TabBarView(
             controller: _controller,
             children: [
-              if (widget.includeImage) const FullWindowPlayerImage(),
+              if (widget.includeImage)
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 2 * kLargestSpace),
+                  child: FullWindowPlayerImage(),
+                ),
               if (audio?.audioType == AudioType.radio)
                 const RadioHistoryList(simpleList: true)
               else

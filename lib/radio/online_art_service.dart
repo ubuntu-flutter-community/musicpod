@@ -46,12 +46,12 @@ class OnlineArtService {
   }) async {
     _errorController.add(null);
 
-    if (albumArtOverwrite != null) {
-      return albumArtOverwrite;
-    }
-
     if (icyTitle == null) {
       return null;
+    }
+
+    if (albumArtOverwrite != null) {
+      return put(key: icyTitle, url: albumArtOverwrite);
     }
 
     final albumArtUrl =
