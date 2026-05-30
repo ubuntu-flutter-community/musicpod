@@ -12,6 +12,7 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
 import '../../extensions/theme_data_x.dart';
+import '../../lyrics/data/lyrics_and_art_result_and_param.dart';
 import '../../lyrics/lyrics_manager.dart';
 import '../../lyrics/lyrics_service.dart';
 import '../../settings/settings_model.dart';
@@ -92,9 +93,7 @@ class _PlayerLyrics extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     callAfterEveryBuild((_, _) {
       di<LyricsManager>().maybeRunCommand(
-        audio: audio,
-        title: title,
-        artist: artist,
+        LyricsAndArtParam(audio: audio, title: title, artist: artist),
       );
     });
 
@@ -124,12 +123,12 @@ class _PlayerLyrics extends StatelessWidget with WatchItMixin {
     }
 
     final data = results.data;
-    final lrcLines = data?.outputLrcLines;
+    final lrcLines = data?.lrcLines;
     if (lrcLines?.isNotEmpty ?? false) {
       return _LrcLineViewer(lrc: lrcLines!);
     }
 
-    final lyricsString = data?.outputString;
+    final lyricsString = data?.lyricsString;
     if (lyricsString?.isNotEmpty ?? false) {
       return SingleChildScrollView(
         padding: const EdgeInsets.all(kLargestSpace),

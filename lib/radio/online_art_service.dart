@@ -37,8 +37,23 @@ class OnlineArtService {
     _propertiesChangedController.add(true);
   }
 
-  Future<String?> fetchAlbumArt(String icyTitle) async {
+  /// Fetches album art for a given [icyTitle]. If [albumArtOverwrite] is provided,
+  /// it will be returned directly without making any network requests.
+  /// If [icyTitle] is null, the method will return null.
+  Future<String?> fetchAlbumArt({
+    String? icyTitle,
+    String? albumArtOverwrite,
+  }) async {
     _errorController.add(null);
+
+    if (albumArtOverwrite != null) {
+      return albumArtOverwrite;
+    }
+
+    if (icyTitle == null) {
+      return null;
+    }
+
     final albumArtUrl =
         get(icyTitle) ??
         put(

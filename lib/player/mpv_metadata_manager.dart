@@ -10,6 +10,8 @@ import '../common/data/audio_type.dart';
 import '../common/logging.dart';
 import '../expose/expose_service.dart';
 import '../extensions/string_x.dart';
+import '../lyrics/data/lyrics_and_art_result_and_param.dart';
+import '../lyrics/lyrics_manager.dart';
 import '../radio/online_art_service.dart';
 import '../settings/settings_service.dart';
 import '../settings/shared_preferences_keys.dart';
@@ -24,10 +26,12 @@ class MpvMetadataManager {
     required OnlineArtService onlineArtService,
     required ExposeService exposeService,
     required SettingsService settingsService,
+    required LyricsManager lyricsManager,
   }) : _playerService = playerService,
        _onlineArtService = onlineArtService,
        _exposeService = exposeService,
-       _settingsService = settingsService {
+       _settingsService = settingsService,
+       _lyricsManager = lyricsManager {
     editBlockedIcyTitleCommand.run((
       title: '',
       addOrRemove: EditIcyTitleInHistory.init,
@@ -38,6 +42,7 @@ class MpvMetadataManager {
   final OnlineArtService _onlineArtService;
   final ExposeService _exposeService;
   final SettingsService _settingsService;
+  final LyricsManager _lyricsManager;
 
   @PostConstruct(preResolve: true)
   Future<void> init() => observeProperty(
@@ -183,8 +188,26 @@ class MpvMetadataManager {
   Future<void> _processParsedIcyTitle(String parsedIcyTitle) async {
     final songInfo = parsedIcyTitle.splitByDash;
     String? albumArt;
-    if (!dataSafeMode.value && !_geniusIsSetup) {
-      albumArt = await _onlineArtService.fetchAlbumArt(parsedIcyTitle);
+
+    if (!dataSafeMode.value) {
+      LyricsAndArtResult? lyricsAndArtResult;
+
+      // First we check if genius gives us lyrics and art if it is set up
+      if (_geniusIsSetup) {
+        lyricsAndArtResult = await _lyricsManager.maybeRunCommandAsync(
+          LyricsAndArtParam(
+            audio: _playerService.audio,
+            title: songInfo.songName,
+            artist: songInfo.artist,
+          ),
+        );
+      }
+
+      albumArt = await _onlineArtService.fetchAlbumArt(
+        // If genius gives us an artUrl, we use it. If not, we try to fetch it via the icyTitle
+        albumArtOverwrite: lyricsAndArtResult?.artUrl,
+        icyTitle: parsedIcyTitle,
+      );
     }
 
     final mergedAudio =

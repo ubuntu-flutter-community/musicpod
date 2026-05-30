@@ -8,13 +8,13 @@ import 'package:lrc/lrc.dart';
 import 'package:path/path.dart' as p;
 
 import '../common/logging.dart';
-import '../player/player_service.dart';
 import '../settings/settings_service.dart';
 import '../settings/shared_preferences_keys.dart';
+import 'data/lyrics_and_art_result_and_param.dart';
 
 @lazySingleton
 class LocalLyricsService {
-  ({String? outputString, List<LrcLine>? outputLrcLines})? parseLocalLyrics({
+  LyricsAndArtResult? parseLocalLyrics({
     String? filePath,
     String? inputString,
   }) {
@@ -54,7 +54,11 @@ class LocalLyricsService {
       }
     }
 
-    return (outputString: outputString, outputLrcLines: outputLrcLines);
+    return LyricsAndArtResult(
+      lyricsString: outputString,
+      lrcLines: outputLrcLines,
+      artUrl: null,
+    );
   }
 }
 
@@ -63,10 +67,8 @@ class OnlineLyricsService {
   OnlineLyricsService({
     required LocalLyricsService localLyricsService,
     required SettingsService settingsService,
-    required PlayerService playerService,
   }) : _localLyricsService = localLyricsService,
-       _settingsService = settingsService,
-       _playerService = playerService {
+       _settingsService = settingsService {
     const fromEnv = String.fromEnvironment('GENIUS_ACCESS_TOKEN');
     _genius = di.get<Genius>(
       param1: fromEnv.isNotEmpty
@@ -84,7 +86,6 @@ class OnlineLyricsService {
 
   final LocalLyricsService _localLyricsService;
   final SettingsService _settingsService;
-  final PlayerService _playerService;
   static bool get isRegistered => di.isRegistered<OnlineLyricsService>();
 
   static Future<void> refreshRegistration(String token) async {
@@ -105,27 +106,29 @@ class OnlineLyricsService {
       () => OnlineLyricsService(
         localLyricsService: di<LocalLyricsService>(),
         settingsService: di<SettingsService>(),
-        playerService: di<PlayerService>(),
       ),
     );
   }
 
-  final _cache =
-      <String, ({String? outputString, List<LrcLine>? outputLrcLines})>{};
+  final _cache = <String, LyricsAndArtResult>{};
   Timer? _debounceTimer;
-  Completer<({String? outputString, List<LrcLine>? outputLrcLines})?>?
-  _completer;
+  Completer<LyricsAndArtResult?>? _completer;
 
-  Future<({String? outputString, List<LrcLine>? outputLrcLines})?>
-  fetchLyricsFromGenius({required String title, String? artist}) {
+  Future<LyricsAndArtResult?> fetchLyricsFromGenius({
+    required String title,
+    String? artist,
+  }) {
     if (_settingsService.getBool(SPKeys.neverAskAgainForGeniusToken) ?? false) {
       return Future.value(null);
     }
 
     final cacheKey = '${artist ?? ''} - $title'.toLowerCase();
     if (_cache.containsKey(cacheKey)) {
-      printMessageInDebugMode('Returning cached lyrics for "$artist - $title"');
-      return Future.value(_cache[cacheKey]);
+      final value = _cache[cacheKey];
+      printMessageInDebugMode(
+        'Fetched lyrics from Genius for "$artist - $title": ${value?.lyricsString?.substring(0, 10)}..., artUrl: ${value?.artUrl}',
+      );
+      return Future.value(value);
     }
 
     _debounceTimer?.cancel();
@@ -133,33 +136,40 @@ class OnlineLyricsService {
       _completer?.complete(null);
     }
 
-    _completer =
-        Completer<({String? outputString, List<LrcLine>? outputLrcLines})?>();
+    _completer = Completer<LyricsAndArtResult?>();
 
     _debounceTimer = Timer(const Duration(seconds: 2), () async {
       try {
         printMessageInDebugMode(
-          'Fetching lyrics from Genius for "$artist - $title"',
+          'Trying to fetch lyrics and art from Genius for "$artist - $title"',
         );
 
         final song = await _genius.searchSong(artist: artist, title: title);
         if (song != null) {
           final lyrics = await song.lyrics;
 
-          if (song.songArtImageUrl != null &&
-              _settingsService.getBool(SPKeys.notifyDataSafeMode) != true) {
-            _playerService.setRemoteImageUrl(song.songArtImageUrl!);
-          }
-
-          final result = _localLyricsService.parseLocalLyrics(
+          final localParsed = _localLyricsService.parseLocalLyrics(
             inputString: lyrics,
           );
 
-          if (result != null) {
-            _cache[cacheKey] = result;
-          }
+          printMessageInDebugMode(
+            'Fetched lyrics from Genius for "$artist - $title": ${lyrics?.substring(0, 10)}..., artUrl: ${song.songArtImageUrl}',
+          );
+
+          _cache[cacheKey] = LyricsAndArtResult(
+            lyricsString: localParsed?.lyricsString ?? lyrics,
+            lrcLines: localParsed?.lrcLines,
+            artUrl: song.songArtImageUrl,
+          );
+
           if (_completer?.isCompleted == false) {
-            _completer?.complete(result);
+            _completer?.complete(
+              LyricsAndArtResult(
+                lyricsString: localParsed?.lyricsString,
+                lrcLines: localParsed?.lrcLines,
+                artUrl: song.songArtImageUrl,
+              ),
+            );
           }
         } else {
           if (_completer?.isCompleted == false) {
