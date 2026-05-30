@@ -116,28 +116,26 @@ class RadioManager extends SafeChangeNotifier {
       // await maybeConnectAsync(clearErrors: false);
     }
 
-    final stationByUUID = await _radioService.getStationByUUID(pageId);
+    final audioByUUID = await _radioService.getAudioByUUID(pageId);
 
-    if (stationByUUID == null) {
+    if (audioByUUID == null) {
       return null;
     }
 
-    final audio = Audio.fromStation(stationByUUID);
-    _stationCache[pageId] = audio;
-    return audio;
+    _stationCache[pageId] = audioByUUID;
+    return audioByUUID;
   }
 
   Future<Audio?> getStationByUrl(String url) async {
     if (_stationCache.containsKey(url)) {
       return _stationCache[url];
     }
-    final stationByUrl = await _radioService.getStationByUrl(url);
-    if (stationByUrl == null) {
+    final audioByUrl = await _radioService.getAudioByUrl(url);
+    if (audioByUrl == null) {
       return null;
     }
-    final audio = Audio.fromStation(stationByUrl);
-    _stationCache[url] = audio;
-    return audio;
+    _stationCache[url] = audioByUrl;
+    return audioByUrl;
   }
 
   Future<void> clickStation(Audio? station) =>
@@ -155,16 +153,16 @@ class RadioManager extends SafeChangeNotifier {
   // Starred stations
   //
 
-  late final Command<String?, List<String>> toggleStarStationCommand =
-      Command.createAsync((uuid) async {
+  late final Command<Audio?, List<String>> toggleStarStationCommand =
+      Command.createAsync((audio) async {
         if (_radioService.starredStations.isEmpty) {
           await _radioService.loadStarredStations();
         }
-        if (uuid != null) {
-          if (_radioService.starredStations.contains(uuid)) {
-            await _radioService.removeStarredStation(uuid);
+        if (audio?.uuid != null) {
+          if (_radioService.isStarredStation(audio!.uuid!)) {
+            await _radioService.removeStarredStation(audio.uuid!);
           } else {
-            await _radioService.addStarredStation(uuid);
+            await _radioService.addStarredStation(audio);
           }
         }
 

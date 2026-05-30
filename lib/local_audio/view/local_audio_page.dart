@@ -9,7 +9,7 @@ import '../../common/view/header_bar.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/search_button.dart';
-import '../../common/view/sliver_body.dart';
+import '../../common/view/default_page_body.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -133,9 +133,9 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
                 ],
               ),
             )
-          : SliverBody(
+          : DefaultPageBody(
               controlPanel: const LocalAudioControlPanel(),
-              contentBuilder: (context, constraints) => audios.isEmpty
+              sliverContentBuilder: (context, constraints) => audios.isEmpty
                   ? SliverNoSearchResultPage(
                       message: Column(
                         mainAxisSize: MainAxisSize.min,

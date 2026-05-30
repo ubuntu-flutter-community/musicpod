@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../common/view/no_search_result_page.dart';
+import '../../common/view/default_page_body.dart';
 import '../../common/view/progress.dart';
-import '../../common/view/sliver_body.dart';
-import '../../extensions/build_context_x.dart';
 import '../../settings/view/settings_action.dart';
 import '../radio_manager.dart';
+import '../radio_service.dart';
 import 'blocked_heariny_history_list.dart';
 import 'favorite_radio_tags_grid.dart';
 import 'radio_connect_mixin.dart';
+import 'radio_error_retry_body.dart';
 import 'radio_history_list.dart';
 import 'radio_lib_page_control_panel.dart';
-import 'radio_reconnect_button.dart';
 import 'starred_stations_grid.dart';
 
 class RadioLibPage extends StatelessWidget
@@ -31,29 +30,21 @@ class RadioLibPage extends StatelessWidget
       (RadioManager m) => m.radioCollectionView,
     );
 
-    final cooldown = watchValue((RadioManager m) => m.cooldown);
-
     return watchValue((RadioManager m) => m.connectCommand.results).toWidget(
       whileRunning: (lastResult, param) => const Center(child: Progress()),
-      onError: (error, lastResult, param) => NoSearchResultPage(
-        icon: FilledButton(
-          onPressed: () => di<RadioManager>().maybeConnect(clearErrors: true),
-          child: Text(
-            cooldown == 0
-                ? context.l10n.retry
-                : context.l10n.retryngInSeconds(cooldown.toString()),
-          ),
-        ),
-        message: Text(error.toString()),
+      onError: (error, lastResult, param) => RadioErrorRetryBody(
+        error: error,
+        onRetry: () => di<RadioManager>().maybeConnect(clearErrors: true),
       ),
       onData: (connectedHost, param) => connectedHost == null
-          ? const SliverFillRemaining(
-              child: SizedBox(width: 100, child: RadioReconnectButton()),
+          ? RadioErrorRetryBody(
+              error: RadioBrowserApiNotConnectedException(),
+              onRetry: () => di<RadioManager>().maybeConnect(clearErrors: true),
             )
-          : SliverBody(
+          : DefaultPageBody(
               controlPanel: const RadioLibPageControlPanel(),
               controlPanelSuffix: const SettingsButton.icon(scrollIndex: 3),
-              contentBuilder: (context, constraints) =>
+              sliverContentBuilder: (context, constraints) =>
                   switch (radioCollectionView) {
                     RadioCollectionView.stations => const StarredStationsGrid(),
                     RadioCollectionView.tags => const FavoriteRadioTagsGrid(),

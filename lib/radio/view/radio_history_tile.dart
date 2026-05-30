@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/routing_manager.dart';
-import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/copy_clipboard_content.dart';
 import '../../common/view/icons.dart';
@@ -151,11 +150,10 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
                   ..setSearchQuery(icyName)
                   ..setAudioType(AudioType.radio)
                   ..radioNameSearch(icyName).then((v) {
-                    if (v?.firstOrNull?.stationUUID != null) {
+                    if (v?.firstOrNull?.uuid != null) {
                       di<RoutingManager>().push(
-                        builder: (_) =>
-                            StationPage(uuid: Audio.fromStation(v.first).uuid!),
-                        pageId: v!.first.stationUUID,
+                        builder: (_) => StationPage(uuid: v.first.uuid!),
+                        pageId: v!.first.uuid!,
                       );
                     }
                   }),

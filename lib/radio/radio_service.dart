@@ -3,13 +3,13 @@ import 'dart:math';
 
 import 'package:basic_utils/basic_utils.dart';
 import 'package:collection/collection.dart';
-import 'package:drift/drift.dart';
 import 'package:injectable/injectable.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 
 import '../common/data/audio.dart';
 import '../common/logging.dart';
 import '../common/persistence/database.dart';
+import 'persistence/tables.dart';
 
 @singleton
 class RadioService {
@@ -74,7 +74,11 @@ class RadioService {
     return hosts;
   }
 
-  Future<Station?> getStationByUUID(String uuid) async {
+  Future<Audio?> getAudioByUUID(
+    String uuid, {
+    // TODO: implement storing stations offline
+    bool tryFromDbFirst = true,
+  }) async {
     if (_radioBrowserApi == null) {
       await initSearch();
       if (connectedHost == null) {
@@ -88,13 +92,13 @@ class RadioService {
         return null;
       }
       final station = response.items.first;
-      return station;
+      return Audio.fromStation(station);
     } on Exception {
       rethrow;
     }
   }
 
-  Future<Station?> getStationByUrl(String url) async {
+  Future<Audio?> getAudioByUrl(String url) async {
     if (_radioBrowserApi == null) {
       await initSearch();
       if (connectedHost == null) {
@@ -105,7 +109,7 @@ class RadioService {
       final response = await _radioBrowserApi!.getStationsByUrl(url: url);
       final station = response.items.firstOrNull;
 
-      return station;
+      return station != null ? Audio.fromStation(station) : null;
     } on Exception {
       rethrow;
     }
@@ -119,7 +123,7 @@ class RadioService {
   String? _tag;
   String? _language;
   int? _limit;
-  Future<List<Station>?> search({
+  Future<List<Audio>?> search({
     String? country,
     String? name,
     String? state,
@@ -141,7 +145,7 @@ class RadioService {
         _tag == tag &&
         _language == language &&
         _limit == limit) {
-      return _response?.items;
+      return _response?.items.map((e) => Audio.fromStation(e)).toList();
     }
 
     final parameters = InputParameters(
@@ -187,7 +191,7 @@ class RadioService {
     _language = language;
     _limit = limit;
 
-    return _response?.items ?? [];
+    return (_response?.items ?? []).map((e) => Audio.fromStation(e)).toList();
   }
 
   List<Tag>? _tags;
@@ -230,21 +234,21 @@ class RadioService {
   }
 
   Future<Audio?> findSimilarStation(Audio station) async {
-    final Station? maybe = await _findSimilarStation(station);
+    final Audio? maybe = await _findSimilarStation(station);
     if (maybe != null) {
-      return Audio.fromStation(maybe);
+      return maybe;
     }
 
     return null;
   }
 
   final noNumbers = RegExp(r'^[^0-9]+$');
-  Future<Station?> _findSimilarStation(Audio audio) async {
+  Future<Audio?> _findSimilarStation(Audio audio) async {
     final searchTags = audio.tags?.where((e) => noNumbers.hasMatch(e));
     if (searchTags == null || searchTags.isEmpty) {
       return null;
     }
-    Station? maybe;
+    Audio? maybe;
     int tries = audio.tags!.length;
     do {
       maybe =
@@ -255,15 +259,13 @@ class RadioService {
               ?.where(
                 (e) => _areTagsSimilar(
                   stationTags: searchTags,
-                  otherTags: (Audio.fromStation(e).tags ?? []).where(
-                    (e) => noNumbers.hasMatch(e),
-                  ),
+                  otherTags: (e.tags ?? []).where((e) => noNumbers.hasMatch(e)),
                 ),
               )
-              .lastWhereOrNull((e) => e.stationUUID != audio.uuid);
+              .lastWhereOrNull((e) => e.uuid != audio.uuid);
 
       tries--;
-    } while (tries > 0 && (maybe == null || audio == Audio.fromStation(maybe)));
+    } while (tries > 0 && (maybe == null || audio == maybe));
 
     return maybe;
   }
@@ -297,15 +299,12 @@ class RadioService {
     _starredStations = rows.map((r) => r.uuid).toList();
   }
 
-  Future<void> addStarredStation(String uuid) async {
-    if (_starredStations.contains(uuid)) return;
+  Future<void> addStarredStation(Audio audio) async {
+    final uuid = audio.uuid;
+    if (uuid == null || _starredStations.contains(uuid)) return;
+
+    await _db.insertStarredStation(uuid);
     _starredStations.add(uuid);
-    await _db
-        .into(_db.starredStationTable)
-        .insert(
-          StarredStationTableCompanion.insert(uuid: uuid),
-          mode: InsertMode.insertOrIgnore,
-        );
   }
 
   Future<void> addStarredStations(List<String?> uuids) async {
@@ -316,23 +315,14 @@ class RadioService {
         .toList();
     if (newUuids.isEmpty) return;
     _starredStations.addAll(newUuids);
-    await _db.batch((batch) {
-      for (final uuid in newUuids) {
-        batch.insert(
-          _db.starredStationTable,
-          StarredStationTableCompanion.insert(uuid: uuid),
-          mode: InsertMode.insertOrIgnore,
-        );
-      }
-    });
+    await _db.insertStarredStations(newUuids);
   }
 
   Future<void> removeStarredStation(String uuid) async {
     if (!_starredStations.contains(uuid)) return;
+
+    await _db.deleteStarredStation(uuid);
     _starredStations.remove(uuid);
-    await (_db.delete(
-      _db.starredStationTable,
-    )..where((t) => t.uuid.equals(uuid))).go();
   }
 
   bool isStarredStation(String? uuid) => _starredStations.contains(uuid);
@@ -351,20 +341,13 @@ class RadioService {
   Future<void> addFavRadioTag(String name) async {
     if (_favRadioTags.contains(name)) return;
     _favRadioTags.add(name);
-    await _db
-        .into(_db.favoriteRadioTagTable)
-        .insert(
-          FavoriteRadioTagTableCompanion.insert(name: name),
-          mode: InsertMode.insertOrIgnore,
-        );
+    await _db.insertFavoriteRadioTag(name);
   }
 
   Future<void> removeFavRadioTag(String name) async {
     if (!_favRadioTags.contains(name)) return;
     _favRadioTags.remove(name);
-    await (_db.delete(
-      _db.favoriteRadioTagTable,
-    )..where((t) => t.name.equals(name))).go();
+    await _db.deleteFavoriteRadioTag(name);
   }
 
   Future<void> wipeAndBuildRadioLibrary() async {
@@ -374,12 +357,9 @@ class RadioService {
   }
 
   Future<void> _wipeRadioLibrary() async {
+    await _db.deleteRadioTables();
     _favRadioTags.clear();
     _starredStations.clear();
-    await Future.wait([
-      _db.delete(_db.starredStationTable).go(),
-      _db.delete(_db.favoriteRadioTagTable).go(),
-    ]);
   }
 }
 

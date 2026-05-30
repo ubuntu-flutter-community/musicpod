@@ -11,8 +11,8 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../player/player_model.dart';
 import '../../radio/radio_manager.dart';
+import '../../radio/view/radio_error_retry_body.dart';
 import '../../radio/view/radio_page_tag_bar.dart';
-import '../../radio/view/radio_reconnect_button.dart';
 import '../../radio/view/station_page.dart';
 import '../search_manager.dart';
 
@@ -25,12 +25,15 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final theme = context.theme;
 
-    final connectedHost = watchValue((RadioManager m) => m.connectCommand);
+    final connectedHostResults = watchValue(
+      (RadioManager m) => m.connectCommand.results,
+    );
 
-    if (connectedHost == null) {
-      return const SliverFillRemaining(
-        hasScrollBody: false,
-        child: Center(child: RadioReconnectButton()),
+    if (!connectedHostResults.isRunning && connectedHostResults.hasError) {
+      return RadioErrorRetryBody(
+        sliver: true,
+        error: connectedHostResults.error!,
+        onRetry: () => di<RadioManager>().maybeConnect(clearErrors: true),
       );
     }
 

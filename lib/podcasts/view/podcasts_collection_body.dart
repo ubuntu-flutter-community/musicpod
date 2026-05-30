@@ -13,7 +13,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
-import '../../common/view/sliver_body.dart';
+import '../../common/view/default_page_body.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -67,7 +67,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
         ? updates.length
         : (downloadsOnly ? feedsWithDownloadLength : subsLength);
 
-    return SliverBody(
+    return DefaultPageBody(
       controlPanel: const PodcastCollectionControlPanel(),
       controlPanelSuffix: const SettingsButton.icon(scrollIndex: 1),
       onStretchTrigger: () async {
@@ -89,7 +89,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
           );
         }
       },
-      contentBuilder: (context, constraints) => checkingForUpdates
+      sliverContentBuilder: (context, constraints) => checkingForUpdates
           ? SliverFillRemaining(
               hasScrollBody: false,
               child: Center(

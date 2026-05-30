@@ -3,8 +3,8 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/data/audio_type.dart';
 import '../../common/view/like_icon_button.dart';
+import '../../common/view/stared_station_icon_button.dart';
 import '../../extensions/build_context_x.dart';
-import '../../radio/view/radio_page_star_button.dart';
 import '../player_model.dart';
 
 class BottomPlayerLikeAndStarButton extends StatelessWidget with WatchItMixin {
@@ -20,7 +20,7 @@ class BottomPlayerLikeAndStarButton extends StatelessWidget with WatchItMixin {
           audio: audio,
           color: context.colorScheme.onSurface,
         ),
-        AudioType.radio => RadioPageStarButton(station: audio!),
+        AudioType.radio => StaredStationIconButton(audio: audio!),
         _ => const SizedBox.shrink(),
       },
     );

@@ -7,7 +7,7 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/search_button.dart';
-import '../../common/view/sliver_body.dart';
+import '../../common/view/default_page_body.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/taget_platform_x.dart';
@@ -57,55 +57,51 @@ class SearchPage extends StatelessWidget with WatchItMixin {
           ),
         ],
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) => SliverBody(
-          controlPanel: switch (audioType) {
-            AudioType.podcast => const SliverPodcastFilterBar(),
-            _ => const SearchTypeFilterBar(),
-          },
-          contentBuilder: (context, constraints) => switch (audioType) {
-            AudioType.radio => SliverRadioSearchResults(
-              width: constraints.maxWidth,
-            ),
-            AudioType.podcast => const SliverPodcastSearchResults(),
-            AudioType.local => SliverLocalSearchResult(
-              constraints: constraints,
-            ),
-          },
-          onStretchTrigger: () async {
-            WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-              if (context.mounted) {
-                return di<SearchManager>().refresh();
-              }
-            });
-          },
-          onNotification: (ScrollNotification notification) {
-            if (audioType == AudioType.local) return true;
+      body: DefaultPageBody(
+        controlPanel: switch (audioType) {
+          AudioType.podcast => const SliverPodcastFilterBar(),
+          _ => const SearchTypeFilterBar(),
+        },
+        sliverContentBuilder: (context, constraints) => switch (audioType) {
+          AudioType.radio => SliverRadioSearchResults(
+            width: constraints.maxWidth,
+          ),
+          AudioType.podcast => const SliverPodcastSearchResults(),
+          AudioType.local => SliverLocalSearchResult(constraints: constraints),
+        },
+        onStretchTrigger: () async {
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+            if (context.mounted) {
+              return di<SearchManager>().refresh();
+            }
+          });
+        },
+        onNotification: (ScrollNotification notification) {
+          if (audioType == AudioType.local) return true;
 
-            if (notification is UserScrollNotification) {
-              if (notification.metrics.axisDirection == AxisDirection.down &&
-                  notification.direction == ScrollDirection.reverse &&
-                  notification.metrics.pixels >=
-                      notification.metrics.maxScrollExtent * 0.6) {
+          if (notification is UserScrollNotification) {
+            if (notification.metrics.axisDirection == AxisDirection.down &&
+                notification.direction == ScrollDirection.reverse &&
+                notification.metrics.pixels >=
+                    notification.metrics.maxScrollExtent * 0.6) {
+              di<SearchManager>()
+                ..incrementLimit(8)
+                ..search();
+            }
+          } else if (notification is ScrollEndNotification) {
+            final metrics = notification.metrics;
+            if (metrics.atEdge) {
+              final isAtBottom = metrics.pixels != 0;
+              if (isAtBottom) {
                 di<SearchManager>()
-                  ..incrementLimit(8)
+                  ..incrementLimit(16)
                   ..search();
               }
-            } else if (notification is ScrollEndNotification) {
-              final metrics = notification.metrics;
-              if (metrics.atEdge) {
-                final isAtBottom = metrics.pixels != 0;
-                if (isAtBottom) {
-                  di<SearchManager>()
-                    ..incrementLimit(16)
-                    ..search();
-                }
-              }
             }
+          }
 
-            return true;
-          },
-        ),
+          return true;
+        },
       ),
     );
   }

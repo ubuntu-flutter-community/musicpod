@@ -4,11 +4,11 @@ import 'sliver_filter_app_bar.dart';
 import 'theme.dart';
 import 'ui_constants.dart';
 
-class SliverBody extends StatelessWidget {
-  const SliverBody({
+class DefaultPageBody extends StatelessWidget {
+  const DefaultPageBody({
     super.key,
     required this.controlPanel,
-    required this.contentBuilder,
+    required this.sliverContentBuilder,
     this.onStretchTrigger,
     this.controlPanelSuffix,
     this.onNotification,
@@ -18,7 +18,7 @@ class SliverBody extends StatelessWidget {
   final Widget? controlPanelSuffix;
 
   final Widget Function(BuildContext context, BoxConstraints constraints)
-  contentBuilder;
+  sliverContentBuilder;
   final Future<void> Function()? onStretchTrigger;
   final bool Function(ScrollNotification event)? onNotification;
 
@@ -45,7 +45,7 @@ class SliverBody extends StatelessWidget {
           ),
           SliverPadding(
             padding: kGridPadding.copyWith(bottom: bottomPlayerPageGap),
-            sliver: contentBuilder(context, constraints),
+            sliver: sliverContentBuilder(context, constraints),
           ),
         ],
       ),

@@ -94,7 +94,7 @@ class _AddStationDialogState extends State<CustomStationSection> {
                                     return;
                                   } else {
                                     di<RadioManager>().toggleStarStationCommand
-                                        .run(v!.uuid!);
+                                        .run(v);
                                   }
                                 });
                           },

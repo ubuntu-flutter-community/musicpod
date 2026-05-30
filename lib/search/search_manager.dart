@@ -208,37 +208,27 @@ class SearchManager {
                   (v) => _setRadioSearchResult(
                     searchQuery.value == null || searchQuery.value!.isEmpty
                         ? null
-                        : v?.map(Audio.fromStation).toList(),
+                        : v,
                   ),
                 ),
           SearchType.radioTag =>
             _radioService
                 .search(tag: tag.value?.name, limit: _radioLimit)
-                .then(
-                  (v) =>
-                      _setRadioSearchResult(v?.map(Audio.fromStation).toList()),
-                ),
+                .then((v) => _setRadioSearchResult(v)),
           SearchType.radioCountry =>
             _radioService
                 .search(
                   country: country.value?.name.camelToSentence,
                   limit: _radioLimit,
                 )
-                .then(
-                  (v) => _setRadioSearchResult(
-                    v?.map((e) => Audio.fromStation(e)).toList(),
-                  ),
-                ),
+                .then((v) => _setRadioSearchResult(v)),
           SearchType.radioLanguage =>
             _radioService
                 .search(
                   language: language.value?.name.toLowerCase(),
                   limit: _radioLimit,
                 )
-                .then(
-                  (v) =>
-                      _setRadioSearchResult(v?.map(Audio.fromStation).toList()),
-                ),
+                .then((v) => _setRadioSearchResult(v)),
           SearchType.podcastTitle =>
             _podcastService
                 .search(
@@ -295,7 +285,7 @@ class SearchManager {
     podcastSearchResult.value = value;
   }
 
-  Future<List<Station>?> radioNameSearch(String? searchQuery) async =>
+  Future<List<Audio>?> radioNameSearch(String? searchQuery) async =>
       _radioService.search(name: searchQuery, limit: _radioLimit);
 }
 

@@ -37,14 +37,17 @@ Future<void> main() async {
     test('find6forty', () async {
       final result = await service.search(name: '6forty', limit: 10);
       expect(result?.isNotEmpty, true);
-      expect(result?.any((e) => e.name.contains('6forty')), true);
-      expect(result?.any((e) => e.urlResolved == sixFortyStation.url), true);
+      expect(result?.any((e) => e.title?.contains('6forty') ?? false), true);
+      expect(result?.any((e) => e.url == sixFortyStation.url), true);
     });
 
     test('findByName', () async {
       final result = await service.search(name: 'WDR', limit: 10);
       expect(result?.isNotEmpty, true);
-      expect(result?.any((e) => e.name.toLowerCase().contains('wdr')), true);
+      expect(
+        result?.any((e) => e.title?.toLowerCase().contains('wdr') ?? false),
+        true,
+      );
     });
 
     test('findByCountry', () async {

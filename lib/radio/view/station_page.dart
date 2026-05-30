@@ -14,6 +14,7 @@ import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/search_button.dart';
+import '../../common/view/stared_station_icon_button.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -24,9 +25,9 @@ import '../../settings/settings_model.dart';
 import '../radio_manager.dart';
 import '../radio_service.dart';
 import 'radio_connect_mixin.dart';
+import 'radio_error_retry_body.dart';
 import 'radio_history_list.dart';
 import 'radio_page_copy_histoy_button.dart';
-import 'radio_page_star_button.dart';
 import 'radio_page_tag_bar.dart';
 
 class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
@@ -81,7 +82,6 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
       (SettingsModel m) => m.useYaruTheme,
     );
     final radioHistoryListPadding = getRadioHistoryListPadding(useYaruTheme);
-    final cooldown = watchValue((RadioManager m) => m.cooldown);
 
     return Scaffold(
       appBar: HeaderBar(
@@ -112,21 +112,14 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
       body: Builder(
         builder: (context) {
           if (error != null) {
-            return NoSearchResultPage(
-              icon: FilledButton(
-                onPressed: isRunning
-                    ? null
-                    : () => di<RadioManager>().maybeRunStationByUUIDCommand(
-                        uuid,
-                        clearErrors: true,
-                      ),
-                child: Text(
-                  cooldown == 0
-                      ? context.l10n.retry
-                      : context.l10n.retryngInSeconds(cooldown.toString()),
-                ),
-              ),
-              message: Text(error.toString()),
+            return RadioErrorRetryBody(
+              error: error,
+              onRetry: isRunning
+                  ? null
+                  : () => di<RadioManager>().maybeRunStationByUUIDCommand(
+                      uuid,
+                      clearErrors: true,
+                    ),
             );
           }
 
@@ -206,7 +199,7 @@ class _StationPageControlPanel extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: space(
         children: [
-          RadioPageStarButton(station: station),
+          StaredStationIconButton(audio: station),
           if (station.uuid != null)
             AvatarPlayButton(audios: [station], pageId: station.uuid!),
           RadioPageCopyHistoryButton(station: station),
