@@ -22,6 +22,7 @@ import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
 import '../../settings/settings_model.dart';
 import '../radio_manager.dart';
+import '../radio_service.dart';
 import 'radio_connect_mixin.dart';
 import 'radio_history_list.dart';
 import 'radio_page_copy_histoy_button.dart';
@@ -46,7 +47,15 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
       handler: (context, results, cancel) {
         if (results.hasError) {
           context.toast(
-            Text(results.error.toString()),
+            Text(switch (results.error) {
+              final e when e is FindStationTimeoutException =>
+                context.l10n.findStationsTimeoutMessage,
+              final e when e is RadioBrowserServerUnavailableException =>
+                context.l10n.radioBrowserSeverUnavailable,
+              final e when e is RadioBrowserApiNotConnectedException =>
+                context.l10n.disconnectedFrom + ' RadioBrowser API',
+              _ => results.error.toString(),
+            }),
             action: SnackBarAction(
               label: context.l10n.retry,
               onPressed: () => di<RadioManager>().maybeRunStationByUUIDCommand(

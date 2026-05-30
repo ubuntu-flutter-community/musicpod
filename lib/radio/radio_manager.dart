@@ -29,9 +29,7 @@ class RadioManager extends SafeChangeNotifier {
         return await _radioService.initSearch();
       } catch (e) {
         printMessageInDebugMode(e, tag: 'RadioManager');
-        throw RadioBrowserServerUnavailableException(
-          message: di<AppLocalizations>().radioBrowserSeverUnavailable,
-        );
+        throw RadioBrowserServerUnavailableException();
       }
     },
     initialValue: null,
@@ -69,15 +67,10 @@ class RadioManager extends SafeChangeNotifier {
           () => _getStationByUUID(uuid)
               .timeout(const Duration(seconds: 5))
               .catchError((error) {
-                if (error is TimeoutException ||
-                    error is RadioBrowserApiNotConnectedException) {
-                  throw FindStationTimeoutException(
-                    message: di<AppLocalizations>().findStationsTimeoutMessage,
-                  );
+                if (error is TimeoutException) {
+                  throw FindStationTimeoutException();
                 }
-                throw RadioBrowserServerUnavailableException(
-                  message: di<AppLocalizations>().radioBrowserSeverUnavailable,
-                );
+                throw error;
               }),
           initialValue: null,
         ),
@@ -205,17 +198,6 @@ class RadioManager extends SafeChangeNotifier {
 
         return _radioService.favRadioTags;
       }, initialValue: _radioService.favRadioTags);
-}
-
-class FindStationTimeoutException implements Exception {
-  final String? message;
-
-  FindStationTimeoutException({this.message});
-
-  @override
-  String toString() =>
-      message ??
-      'Finding (this) station(s) takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
 }
 
 enum RadioCollectionView {

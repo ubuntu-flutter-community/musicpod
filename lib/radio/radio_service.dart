@@ -393,10 +393,16 @@ class RadioBrowserApiNotConnectedException implements Exception {
 }
 
 class RadioBrowserServerUnavailableException implements Exception {
-  final String? message;
-
-  RadioBrowserServerUnavailableException({this.message});
+  RadioBrowserServerUnavailableException();
 
   @override
-  String toString() => message ?? 'RadioBrowser server is unavailable';
+  String toString() => 'RadioBrowser server is unavailable';
+}
+
+class FindStationTimeoutException implements Exception {
+  FindStationTimeoutException();
+
+  @override
+  String toString() =>
+      'Finding (this) station(s) takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
 }

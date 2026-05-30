@@ -5,9 +5,7 @@ import 'package:gtk/gtk.dart';
 import '../../common/view/error_page.dart';
 import '../../dependencies.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../l10n/app_localizations.dart';
 import '../../player/player_service.dart';
-import '../routing_manager.dart';
 import 'app.dart';
 import 'splash_screen.dart';
 
@@ -26,15 +24,7 @@ class _MusicPodState extends State<MusicPod> {
   @override
   void initState() {
     super.initState();
-    _allReady = configureDependencies().then((value) {
-      di.registerCachedFactory<AppLocalizations>(
-        () => AppLocalizations.of(
-          di<RoutingManager>().masterNavigatorKey.currentContext!,
-        ),
-      );
-
-      return value;
-    });
+    _allReady = configureDependencies();
   }
 
   @override
