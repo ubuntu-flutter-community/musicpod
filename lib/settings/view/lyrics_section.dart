@@ -10,7 +10,6 @@ import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-
 import '../../lyrics/lyrics_service.dart';
 import '../settings_model.dart';
 
@@ -41,6 +40,11 @@ class _LyricsSectionState extends State<LyricsSection> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final theme = context.theme;
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+
     final lyricsGeniusAccessToken = watchPropertyValue((SettingsModel m) {
       final lyricsGeniusAccessToken = m.lyricsGeniusAccessToken;
       if (lyricsGeniusAccessToken != _geniusApiKeyController.text &&
@@ -56,7 +60,7 @@ class _LyricsSectionState extends State<LyricsSection> {
     );
 
     return YaruSection(
-      headline: Text(context.l10n.lyrics),
+      headline: Text(l10n.lyrics),
       child: Column(
         children: [
           Align(
@@ -64,15 +68,15 @@ class _LyricsSectionState extends State<LyricsSection> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                context.l10n.settingsGeniusDescription,
-                style: context.textTheme.bodyMedium,
+                l10n.settingsGeniusDescription,
+                style: textTheme.bodyMedium,
                 textAlign: TextAlign.left,
               ),
             ),
           ),
           YaruTile(
-            title: Text(context.l10n.settingsDoNotAskForGeniusTitle),
-            subtitle: Text(context.l10n.settingsDoNotAskForGeniusDescription),
+            title: Text(l10n.settingsDoNotAskForGeniusTitle),
+            subtitle: Text(l10n.settingsDoNotAskForGeniusDescription),
             trailing: CommonSwitch(
               value: neverAskAgainForGeniusToken,
               onChanged: di<SettingsModel>().setNeverAskAgainForGeniusToken,
@@ -83,20 +87,19 @@ class _LyricsSectionState extends State<LyricsSection> {
               spacing: kSmallestSpace,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Genius API Key'),
+                Text(l10n.enterYourGeniusApiKey),
                 RichText(
                   text: TextSpan(
-                    style: context.textTheme.bodySmall,
+                    style: textTheme.bodySmall,
                     children: [
-                      TextSpan(text: context.l10n.settingsGeniusDisclaimer),
+                      TextSpan(text: l10n.settingsGeniusDisclaimer),
                       TextSpan(
-                        text: context.l10n.tosLinkText,
+                        text: l10n.tosLinkText,
                         style: const TextStyle(
                           decoration: TextDecoration.underline,
                         ),
                         recognizer: TapGestureRecognizer()
-                          ..onTap = () =>
-                              launchUrl(Uri.parse(context.l10n.tosLink)),
+                          ..onTap = () => launchUrl(Uri.parse(l10n.tosLink)),
                       ),
                     ],
                   ),
@@ -109,7 +112,7 @@ class _LyricsSectionState extends State<LyricsSection> {
               obscureText: !_showToken,
               controller: _geniusApiKeyController,
               decoration: InputDecoration(
-                hintText: 'Enter your Genius API Key',
+                hintText: l10n.enterYourGeniusApiKey,
                 suffixIconConstraints: BoxConstraints(
                   minHeight: context.buttonHeight,
                 ),
@@ -117,7 +120,7 @@ class _LyricsSectionState extends State<LyricsSection> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     IconButton(
-                      tooltip: 'Save API Key',
+                      tooltip: l10n.saveYourApiKey,
                       style: getTextFieldSuffixStyle(context, false),
                       icon: AnimatedContainer(
                         duration: const Duration(milliseconds: 200),
@@ -126,12 +129,12 @@ class _LyricsSectionState extends State<LyricsSection> {
                           color:
                               lyricsGeniusAccessToken != null &&
                                   lyricsGeniusAccessToken.isNotEmpty
-                              ? context.colorScheme.success
-                              : context.colorScheme.error,
+                              ? colorScheme.success
+                              : colorScheme.error,
                         ),
                       ),
                       onPressed: () => showFutureLoadingDialog(
-                        title: context.l10n.loadingPleaseWait,
+                        title: l10n.loadingPleaseWait,
                         context: context,
                         future: () => OnlineLyricsService.refreshRegistration(
                           _geniusApiKeyController.text.trim(),

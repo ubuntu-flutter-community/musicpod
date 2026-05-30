@@ -58,4 +58,5 @@ class SPKeys {
   static const neverAskAgainForGeniusToken = 'neverAskAgainForGeniusToken';
   static const blockedIcyTitles = 'blockedIcyTitles';
   static const playerExplorerTabIndex = 'playerExplorerTabIndex';
+  static const selectedSearchAudioType = 'selectedSearchAudioType';
 }

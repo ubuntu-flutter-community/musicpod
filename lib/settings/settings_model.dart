@@ -175,6 +175,11 @@ class SettingsModel extends SafeChangeNotifier {
   Future<void> setNeverAskAgainForGeniusToken(bool value) =>
       _service.setValue(SPKeys.neverAskAgainForGeniusToken, value);
 
+  String get selectedSearchAudioType =>
+      _service.getString(SPKeys.selectedSearchAudioType) ?? 'podcast';
+  Future<void> setSelectedSearchAudioType(String value) =>
+      _service.setValue(SPKeys.selectedSearchAudioType, value);
+
   String? get lastCountryCode => _service.getString(SPKeys.lastCountryCode);
   void setLastCountryCode(String value) {
     _service.setValue(SPKeys.lastCountryCode, value);

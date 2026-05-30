@@ -881,5 +881,8 @@
         }
     },
     "searchTimeoutMessage": "Searching takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.",
-    "youCanEditTheNameLater": "You can edit the name later."
+    "youCanEditTheNameLater": "You can edit the name later.",
+    "geniusAlsoProvidesArt": "Genius also provides artwork for most songs. If you enable Genius to fetch lyrics, the online art in the player will also use Genius instead of MusicBrainz.",
+    "enterYourGeniusApiKey": "Enter your Genius API key",
+    "saveYourApiKey": "Save API Key"
 }

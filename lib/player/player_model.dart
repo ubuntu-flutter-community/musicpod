@@ -9,16 +9,11 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
 import '../extensions/taget_platform_x.dart';
-import '../radio/online_art_service.dart';
 import 'player_service.dart';
 
 @lazySingleton
 class PlayerModel extends SafeChangeNotifier {
-  PlayerModel({
-    required PlayerService service,
-    required OnlineArtService onlineArtService,
-  }) : _playerService = service,
-       _onlineArtService = onlineArtService {
+  PlayerModel({required PlayerService service}) : _playerService = service {
     _propertiesChangedSub ??= _playerService.propertiesChanged.listen(
       (_) => notifyListeners(),
     );
@@ -27,15 +22,12 @@ class PlayerModel extends SafeChangeNotifier {
   static const rateValues = [.75, 1.0, 1.25, 1.5, 1.75, 2.0];
 
   final PlayerService _playerService;
-  final OnlineArtService _onlineArtService;
 
   VideoController get controller => _playerService.controller;
 
   StreamSubscription<bool>? _propertiesChangedSub;
 
   Stream<String> get messageStream => _playerService.messageStream;
-
-  Stream<String?> get onlineArtError => _onlineArtService.error;
 
   String? get queueName => _playerService.queue.name;
 

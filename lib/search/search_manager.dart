@@ -22,8 +22,6 @@ import '../settings/shared_preferences_keys.dart';
 import 'search_timeout_exception.dart';
 import 'search_type.dart';
 
-const _initialAudioType = AudioType.podcast;
-
 @lazySingleton
 class SearchManager {
   SearchManager({
@@ -32,6 +30,7 @@ class SearchManager {
     required LocalAudioService localAudioService,
     required SettingsService settingsService,
   }) : _radioService = radioService,
+       _settingsService = settingsService,
 
        _podcastService = podcastService,
        _localAudioService = localAudioService {
@@ -46,11 +45,31 @@ class SearchManager {
     language.value ??= Languages.defaultLanguages.firstWhereOrNull(
       (c) => c.isoCode == settingsService.getString(SPKeys.lastLanguageCode),
     );
+
+    _initialAudioType =
+        AudioType.values.firstWhereOrNull(
+          (t) =>
+              t.name ==
+              settingsService.getString(SPKeys.selectedSearchAudioType),
+        ) ??
+        AudioType.podcast;
+
+    searchTypes = SafeValueNotifier(
+      searchTypesFromAudioType(_initialAudioType),
+    );
+
+    audioType = SafeValueNotifier(_initialAudioType);
+
+    searchType = SafeValueNotifier(
+      searchTypesFromAudioType(_initialAudioType).first,
+    );
   }
 
   final RadioService _radioService;
   final PodcastService _podcastService;
   final LocalAudioService _localAudioService;
+  final SettingsService _settingsService;
+  late AudioType _initialAudioType;
 
   final _messageController = StreamController<String>.broadcast();
   Stream<String> get messageStream => _messageController.stream;
@@ -58,20 +77,22 @@ class SearchManager {
   @disposeMethod
   Future<void> dispose() => _messageController.close();
 
-  SafeValueNotifier<Set<SearchType>> searchTypes = SafeValueNotifier(
-    searchTypesFromAudioType(_initialAudioType),
-  );
-  SafeValueNotifier<AudioType> audioType = SafeValueNotifier(_initialAudioType);
+  late SafeValueNotifier<Set<SearchType>> searchTypes;
+  late SafeValueNotifier<AudioType> audioType;
   void setAudioType(AudioType? value) {
     if (value == audioType.value || value == null) return;
     audioType.value = value;
+    unawaited(
+      _settingsService.setValue(
+        SPKeys.selectedSearchAudioType,
+        audioType.value.name,
+      ),
+    );
     searchTypes.value = searchTypesFromAudioType(audioType.value);
     setSearchType(searchTypes.value.first);
   }
 
-  final searchType = SafeValueNotifier(
-    searchTypesFromAudioType(_initialAudioType).first,
-  );
+  late SafeValueNotifier<SearchType> searchType;
   void setSearchType(SearchType value) {
     searchType.value = value;
   }

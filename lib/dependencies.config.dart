@@ -283,6 +283,10 @@ extension GetItInjectableX on _i174.GetIt {
       ),
       dispose: (i) => i.dispose(),
     );
+    gh.lazySingleton<_i1025.PlayerModel>(
+      () => _i1025.PlayerModel(service: gh<_i38.PlayerService>()),
+      dispose: (i) => i.dispose(),
+    );
     await gh.factoryAsync<_i739.AudioServiceHandler>(
       () => audioServiceModule.audioServiceHandler(gh<_i38.PlayerService>()),
       preResolve: true,
@@ -295,13 +299,6 @@ extension GetItInjectableX on _i174.GetIt {
         radioService: gh<_i811.RadioService>(),
         playerService: gh<_i38.PlayerService>(),
       ),
-    );
-    gh.lazySingleton<_i1025.PlayerModel>(
-      () => _i1025.PlayerModel(
-        service: gh<_i38.PlayerService>(),
-        onlineArtService: gh<_i328.OnlineArtService>(),
-      ),
-      dispose: (i) => i.dispose(),
     );
     gh.lazySingleton<_i190.SidebarAudiosManager>(
       () => _i190.SidebarAudiosManager(

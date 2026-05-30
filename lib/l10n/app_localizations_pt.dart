@@ -2406,6 +2406,16 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get youCanEditTheNameLater => 'You can edit the name later.';
+
+  @override
+  String get geniusAlsoProvidesArt =>
+      'Genius also provides artwork for most songs. If you enable Genius to fetch lyrics, the online art in the player will also use Genius instead of MusicBrainz.';
+
+  @override
+  String get enterYourGeniusApiKey => 'Enter your Genius API key';
+
+  @override
+  String get saveYourApiKey => 'Save API Key';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).

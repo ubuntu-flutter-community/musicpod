@@ -70,6 +70,10 @@ class _OnlineLyricsNotSetup extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: kMediumSpace),
             child: Text(context.l10n.onlineLyricsNotSetup),
           ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: kMediumSpace),
+            child: Text(context.l10n.geniusAlsoProvidesArt),
+          ),
           const SettingsButton.important(scrollIndex: 7),
           OutlinedButton(
             onPressed: () =>

@@ -4,9 +4,7 @@ import 'package:media_kit_video/media_kit_video.dart';
 
 import '../../app/app_manager.dart';
 import '../../common/data/audio.dart';
-import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
-import '../../extensions/build_context_x.dart';
 import '../../local_audio/view/local_cover.dart';
 import '../player_model.dart';
 import 'player_fall_back_image.dart';
@@ -41,7 +39,7 @@ class _BottomPlayerImageState extends State<BottomPlayerImage> {
       height: widget.size,
       width: widget.size,
     );
-    if (fullWindowMode == true) {
+    if (fullWindowMode) {
       child = SizedBox.square(dimension: widget.size);
     } else if (widget.isVideo == true) {
       child = RepaintBoundary(
@@ -89,25 +87,6 @@ class _BottomPlayerImageState extends State<BottomPlayerImage> {
             duration: const Duration(milliseconds: 200),
             child: child,
           ),
-          if (watchStream((PlayerModel s) => s.onlineArtError).data != null &&
-              widget.audio?.audioType == AudioType.radio)
-            Positioned(
-              bottom: 5,
-              right: 5,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 5),
-                child: Tooltip(
-                  message: context.l10n.onlineArtError,
-                  child: Icon(
-                    Iconz.imageMissingFilled,
-                    color: Colors.white,
-                    shadows: [
-                      const BoxShadow(offset: Offset(0, 1), blurRadius: 1),
-                    ],
-                  ),
-                ),
-              ),
-            ),
           if (_hovered || fullWindowMode)
             Positioned.fill(
               child: Container(
@@ -118,7 +97,7 @@ class _BottomPlayerImageState extends State<BottomPlayerImage> {
                   child: IconButton(
                     onPressed: () => di<AppManager>().toggleFullWindowMode(),
                     icon: Icon(
-                      Iconz.fullScreen,
+                      fullWindowMode ? Iconz.fullScreenExit : Iconz.fullScreen,
                       color: fullWindowMode ? null : Colors.white,
                     ),
                   ),

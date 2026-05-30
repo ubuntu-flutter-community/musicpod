@@ -4646,6 +4646,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You can edit the name later.'**
   String get youCanEditTheNameLater;
+
+  /// No description provided for @geniusAlsoProvidesArt.
+  ///
+  /// In en, this message translates to:
+  /// **'Genius also provides artwork for most songs. If you enable Genius to fetch lyrics, the online art in the player will also use Genius instead of MusicBrainz.'**
+  String get geniusAlsoProvidesArt;
+
+  /// No description provided for @enterYourGeniusApiKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your Genius API key'**
+  String get enterYourGeniusApiKey;
+
+  /// No description provided for @saveYourApiKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Save API Key'**
+  String get saveYourApiKey;
 }
 
 class _AppLocalizationsDelegate
