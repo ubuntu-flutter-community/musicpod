@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:podcast_search/podcast_search.dart';
 
 import '../../common/view/ui_constants.dart';
 import '../../custom_content/view/backup_dialog.dart';
@@ -91,11 +92,12 @@ mixin CommonHandlersAndCommandsMixin {
       handler: (context, newValue, cancel) {
         if (newValue.hasError) {
           context.toast(
-            Text(
-              newValue.error is SearchTimeoutException
-                  ? context.l10n.searchTimeoutMessage
-                  : newValue.error.toString(),
-            ),
+            Text(switch (newValue.error) {
+              SearchTimeoutException() => context.l10n.searchTimeoutMessage,
+              PodcastFailedException() =>
+                (newValue.error as PodcastFailedException).message,
+              _ => newValue.error.toString(),
+            }),
             duration: const Duration(seconds: 8),
             showCloseIcon: true,
           );

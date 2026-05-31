@@ -174,7 +174,7 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
             onSelected: (country) {
               context.pop();
               setCountry(country);
-              searchManager.search();
+              searchManager.search(clear: true);
             },
             value: country,
             addFav: (v) {

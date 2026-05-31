@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/no_search_result_page.dart';
-import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../search_manager.dart';
@@ -43,7 +42,7 @@ class _SliverPodcastSearchResultsState
     if (searchResultItems == null || searchResultItems.isEmpty) {
       return SliverNoSearchResultPage(
         message: loading
-            ? const Progress()
+            ? const SizedBox.shrink()
             : Text(
                 searchResultItems == null
                     ? context.l10n.search
