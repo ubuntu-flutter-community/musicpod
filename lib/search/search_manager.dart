@@ -264,12 +264,15 @@ class SearchManager {
           }),
         })
         .timeout(
-          const Duration(seconds: _searchTimeoutSeconds),
-          onTimeout: () => throw SearchTimeoutException(),
+          const Duration(seconds: SearchTimeoutException.searchTimeoutSeconds),
+          onTimeout: () {
+            throw SearchTimeoutException();
+          },
         )
-        .onError(
-          (e, st) => _messageController.addError(SearchTimeoutException.new),
-        );
+        .onError((e, st) {
+          if (e == null) return;
+          _messageController.addError(e);
+        });
   }
 
   final radioSearchResult = SafeValueNotifier<List<Audio>?>(null);
@@ -288,5 +291,3 @@ class SearchManager {
   Future<List<Audio>?> radioNameSearch(String? searchQuery) async =>
       _radioService.search(name: searchQuery, limit: _radioLimit);
 }
-
-const _searchTimeoutSeconds = 20;

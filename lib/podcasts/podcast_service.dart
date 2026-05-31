@@ -90,7 +90,7 @@ class PodcastService {
     return _podcastGenreCache;
   }
 
-  static const podcastMaxLimit = 50;
+  static const podcastMaxLimit = 80;
   String? _previousQuery;
   Future<SearchResult?> search({
     String? searchQuery,
@@ -784,6 +784,8 @@ class PodcastUpdate {
 
 class FindEpisodesTimeoutException implements Exception {
   final String? message;
+
+  static const Duration timeoutDuration = Duration(seconds: 30);
 
   FindEpisodesTimeoutException({this.message});
 

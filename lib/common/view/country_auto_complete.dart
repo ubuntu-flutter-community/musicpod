@@ -64,9 +64,11 @@ class CountryAutoComplete extends StatelessWidget with WatchItMixin {
           return Autocomplete<Country>(
             key: ValueKey(value?.name),
             initialValue: TextEditingValue(
-              text: value?.localize(context.l10n) ?? context.l10n.all,
+              text:
+                  '${value?.flag ?? ''} ${value?.localize(context.l10n) ?? ''}',
             ),
-            displayStringForOption: (option) => option.localize(context.l10n),
+            displayStringForOption: (option) =>
+                '${option.flag} ${option.localize(context.l10n)}',
             fieldViewBuilder:
                 (context, textEditingController, focusNode, onFieldSubmitted) {
                   textEditingController.selection = TextSelection(
@@ -233,7 +235,7 @@ class _CountryTile extends StatelessWidget {
       title: Tooltip(
         message: t.localize(context.l10n),
         child: Text(
-          t.localize(context.l10n),
+          '${t.flag} ${t.localize(context.l10n)}',
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),

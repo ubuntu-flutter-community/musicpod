@@ -4,14 +4,14 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
+import '../../common/view/default_page_body.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/search_button.dart';
-import '../../common/view/default_page_body.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
+import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../settings/settings_model.dart';
 import '../search_manager.dart';
 import 'search_page_input.dart';
 import 'sliver_local_search_results.dart';
@@ -29,10 +29,6 @@ class SearchPage extends StatelessWidget with WatchItMixin {
     final loading = watchValue((SearchManager m) => m.searchCommand.isRunning);
     // TODO: care for timeouts
 
-    final useYaruTheme = watchPropertyValue(
-      (SettingsModel m) => m.useYaruTheme,
-    );
-
     return Scaffold(
       appBar: HeaderBar(
         title: Padding(
@@ -47,61 +43,85 @@ class SearchPage extends StatelessWidget with WatchItMixin {
             child: SearchButton(
               active: true,
               onPressed: () => di<RoutingManager>().pop(),
-              icon: loading
-                  ? SizedBox.square(
-                      dimension: useYaruTheme ? 18 : 25,
-                      child: const Progress(strokeWidth: 2),
-                    )
-                  : null,
             ),
           ),
         ],
       ),
-      body: DefaultPageBody(
-        controlPanel: switch (audioType) {
-          AudioType.podcast => const SliverPodcastFilterBar(),
-          _ => const SearchTypeFilterBar(),
-        },
-        sliverContentBuilder: (context, constraints) => switch (audioType) {
-          AudioType.radio => SliverRadioSearchResults(
-            width: constraints.maxWidth,
-          ),
-          AudioType.podcast => const SliverPodcastSearchResults(),
-          AudioType.local => SliverLocalSearchResult(constraints: constraints),
-        },
-        onStretchTrigger: () async {
-          WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-            if (context.mounted) {
-              return di<SearchManager>().refresh();
-            }
-          });
-        },
-        onNotification: (ScrollNotification notification) {
-          if (audioType == AudioType.local) return true;
+      body: Stack(
+        alignment: Alignment.center,
+        children: [
+          DefaultPageBody(
+            controlPanel: switch (audioType) {
+              AudioType.podcast => const SliverPodcastFilterBar(),
+              _ => const SearchTypeFilterBar(),
+            },
+            sliverContentBuilder: (context, constraints) => switch (audioType) {
+              AudioType.radio => SliverRadioSearchResults(
+                width: constraints.maxWidth,
+              ),
+              AudioType.podcast => const SliverPodcastSearchResults(),
+              AudioType.local => SliverLocalSearchResult(
+                constraints: constraints,
+              ),
+            },
+            onStretchTrigger: () async {
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+                if (context.mounted) {
+                  return di<SearchManager>().refresh();
+                }
+              });
+            },
+            onNotification: (ScrollNotification notification) {
+              if (audioType == AudioType.local) return true;
 
-          if (notification is UserScrollNotification) {
-            if (notification.metrics.axisDirection == AxisDirection.down &&
-                notification.direction == ScrollDirection.reverse &&
-                notification.metrics.pixels >=
-                    notification.metrics.maxScrollExtent * 0.6) {
-              di<SearchManager>()
-                ..incrementLimit(8)
-                ..search();
-            }
-          } else if (notification is ScrollEndNotification) {
-            final metrics = notification.metrics;
-            if (metrics.atEdge) {
-              final isAtBottom = metrics.pixels != 0;
-              if (isAtBottom) {
-                di<SearchManager>()
-                  ..incrementLimit(16)
-                  ..search();
+              if (notification is UserScrollNotification) {
+                if (notification.metrics.axisDirection == AxisDirection.down &&
+                    notification.direction == ScrollDirection.reverse &&
+                    notification.metrics.pixels >=
+                        notification.metrics.maxScrollExtent * 0.6) {
+                  di<SearchManager>()
+                    ..incrementLimit(8)
+                    ..search();
+                }
+              } else if (notification is ScrollEndNotification) {
+                final metrics = notification.metrics;
+                if (metrics.atEdge) {
+                  final isAtBottom = metrics.pixels != 0;
+                  if (isAtBottom) {
+                    di<SearchManager>()
+                      ..incrementLimit(16)
+                      ..search();
+                  }
+                }
               }
-            }
-          }
 
-          return true;
-        },
+              return true;
+            },
+          ),
+          if (loading)
+            Positioned(
+              bottom: kLargestSpace,
+              child: Container(
+                padding: const EdgeInsets.all(kMediumSpace),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.black,
+                  border: Border.fromBorderSide(
+                    BorderSide(color: context.colorScheme.outline, width: 1),
+                  ),
+                ),
+                child: Center(
+                  child: SizedBox.square(
+                    dimension: 20,
+                    child: Progress(
+                      strokeWidth: 2,
+                      color: context.colorScheme.primary,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

@@ -103,7 +103,12 @@ class PodcastManager {
             feedUrl: param.feedUrl,
             tryFromDbOnly: param.tryFromDbOnly,
           )
-          .timeout(const Duration(seconds: 30)),
+          .timeout(
+            FindEpisodesTimeoutException.timeoutDuration,
+            onTimeout: () {
+              throw FindEpisodesTimeoutException();
+            },
+          ),
       initialValue: [],
     ),
   );

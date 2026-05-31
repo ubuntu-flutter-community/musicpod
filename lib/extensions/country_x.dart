@@ -3,6 +3,17 @@ import 'package:podcast_search/podcast_search.dart';
 import '../l10n/app_localizations.dart';
 
 extension CountryX on Country {
+  String get flag {
+    if (code.isEmpty || code.length != 2) {
+      return '';
+    }
+
+    final int firstChar = code.toUpperCase().codeUnitAt(0) - 65 + 0x1F1E6;
+    final int secondChar = code.toUpperCase().codeUnitAt(1) - 65 + 0x1F1E6;
+
+    return String.fromCharCode(firstChar) + String.fromCharCode(secondChar);
+  }
+
   String localize(AppLocalizations l10n) => switch (this) {
     Country.none => l10n.regionNone,
     Country.afghanistan => l10n.regionAfghanistan,

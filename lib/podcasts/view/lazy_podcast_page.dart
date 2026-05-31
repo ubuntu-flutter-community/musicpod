@@ -4,10 +4,10 @@ import 'package:podcast_search/podcast_search.dart';
 
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
-import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../podcast_manager.dart';
 import 'lazy_podcast_loading_page.dart';
+import 'podcast_error_page.dart';
 import 'podcast_page.dart';
 
 class LazyPodcastPage extends StatelessWidget with WatchItMixin {
@@ -36,8 +36,6 @@ class LazyPodcastPage extends StatelessWidget with WatchItMixin {
       );
     }
 
-    final cooldown = watchValue((PodcastManager m) => m.cooldown);
-
     di<PodcastManager>().maybeRunEpisodesCommand(
       feedUrl: feedUrl,
       podcastItem: podcastItem,
@@ -52,8 +50,13 @@ class LazyPodcastPage extends StatelessWidget with WatchItMixin {
         imageUrl: _imageUrl(),
         child: const Center(child: Progress()),
       ),
-      onError: (error, lastResult, param) =>
-          _errorBody(feedUrl, context, cooldown),
+      onError: (error, lastResult, param) => PodcastErrorPage(
+        error: error,
+        imageUrl: _imageUrl(),
+        title: _getTitle(feedUrl, context),
+        feedUrl: feedUrl,
+        podcastItem: podcastItem,
+      ),
       onData: (result, param) {
         final episodes = result;
 
@@ -63,7 +66,13 @@ class LazyPodcastPage extends StatelessWidget with WatchItMixin {
             episodes.firstOrNull?.imageUrl;
 
         if (episodes.isEmpty) {
-          return _errorBody(feedUrl, context, cooldown);
+          return LazyPodcastLoadingPage(
+            title: _getTitle(feedUrl, context),
+            imageUrl: newImageUrl,
+            child: NoSearchResultPage(
+              message: Text(context.l10n.podcastFeedIsEmpty),
+            ),
+          );
         }
 
         return PodcastPage(
@@ -72,41 +81,6 @@ class LazyPodcastPage extends StatelessWidget with WatchItMixin {
           title: _getTitle(feedUrl, context),
         );
       },
-    );
-  }
-
-  LazyPodcastLoadingPage _errorBody(
-    String feedUrl,
-    BuildContext context,
-    int cooldown,
-  ) {
-    return LazyPodcastLoadingPage(
-      title: _getTitle(feedUrl, context),
-      imageUrl: imageUrl,
-      expandChild: true,
-      child: Center(
-        child: SizedBox(
-          width: 300,
-          child: Column(
-            spacing: kLargestSpace,
-            children: [
-              Text(
-                context.l10n.findEpisodesTimeoutMessage(
-                  _getTitle(feedUrl, context),
-                ),
-              ),
-              FilledButton.icon(
-                onPressed: () => di<PodcastManager>().maybeRunEpisodesCommand(
-                  feedUrl: feedUrl,
-                  podcastItem: podcastItem,
-                  clearErrors: true,
-                ),
-                label: Text(context.l10n.retryngInSeconds(cooldown.toString())),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 

@@ -4,12 +4,12 @@ import 'package:podcast_search/podcast_search.dart';
 import 'package:yaru/constants.dart';
 
 import '../../common/view/country_auto_complete.dart';
-import '../../common/view/icons.dart';
 import '../../common/view/language_autocomplete.dart';
 import '../../common/view/modals.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/country_x.dart';
 import '../../settings/settings_model.dart';
 import '../search_manager.dart';
 
@@ -18,6 +18,8 @@ class PodcastSearchInputPrefix extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
+    final country = watchValue((SearchManager m) => m.country);
+    const flagTextStyle = TextStyle(fontSize: 20, height: 1.2);
     final usePodcastIndex = watchPropertyValue(
       (SettingsModel m) => m.usePodcastIndex,
     );
@@ -39,7 +41,7 @@ class PodcastSearchInputPrefix extends StatelessWidget with WatchItMixin {
         context: context,
         content: LocationFilterDialog(mode: ModalMode.platformModalMode),
       ),
-      icon: Icon(Iconz.globe, semanticLabel: tooltip),
+      icon: Text(' ${country?.flag ?? '🚩'}', style: flagTextStyle),
     );
   }
 }
