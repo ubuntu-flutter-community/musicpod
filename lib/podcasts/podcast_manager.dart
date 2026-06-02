@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
-import 'package:podcast_search/podcast_search.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
+import 'data/find_episodes_param.dart';
 import 'data/podcast_episode_filter.dart';
 import 'data/podcast_toggle_capsule.dart';
 import 'data/podcast_update_capsule.dart';
@@ -76,9 +76,13 @@ class PodcastManager {
           updateProgress: handle.updateProgress,
         );
         for (final feedUrl in updates) {
-          await getEpisodesCommand(
-            feedUrl,
-          ).runAsync((feedUrl: feedUrl, item: null, tryFromDbOnly: true));
+          await getEpisodesCommand(feedUrl).runAsync(
+            FindEpisodesParam(
+              feedUrl: feedUrl,
+              item: null,
+              tryFromDbOnly: true,
+            ),
+          );
         }
         return updates;
       }, initialValue: _podcastService.podcastUpdates);
@@ -86,70 +90,26 @@ class PodcastManager {
   // Note: passing the item makes it easier to
   // always have the correct image without needing to persist every item
   final _episodesCommands =
-      <
-        String,
-        Command<
-          ({Item? item, String? feedUrl, bool tryFromDbOnly}),
-          List<Audio>
-        >
-      >{};
-  Command<({Item? item, String? feedUrl, bool tryFromDbOnly}), List<Audio>>
-  getEpisodesCommand(String feedUrl) => _episodesCommands.putIfAbsent(
-    feedUrl,
-    () => Command.createAsync(
-      (param) => _podcastService
-          .findEpisodes(
-            item: param.item,
-            feedUrl: param.feedUrl,
-            tryFromDbOnly: param.tryFromDbOnly,
-          )
-          .timeout(
-            FindEpisodesTimeoutException.timeoutDuration,
-            onTimeout: () {
-              throw FindEpisodesTimeoutException();
-            },
-          ),
-      initialValue: [],
-    ),
-  );
-
-  final cooldown = SafeValueNotifier<int>(_cooldownMaxSeconds);
-  Timer? _cooldownTimer;
-  void maybeRunEpisodesCommand({
-    required String feedUrl,
-    Item? podcastItem,
-    bool clearErrors = false,
-  }) {
-    final command = getEpisodesCommand(feedUrl);
-
-    if (clearErrors) {
-      command.clearErrors();
-    }
-
-    if (command.value.isEmpty && command.errors.value == null) {
-      command.run((feedUrl: feedUrl, item: podcastItem, tryFromDbOnly: true));
-      return;
-    }
-
-    if (command.errors.value != null && _cooldownTimer == null) {
-      cooldown.value = _cooldownMaxSeconds;
-
-      _cooldownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        if (cooldown.value > 0) {
-          cooldown.value--;
-        } else {
-          _cooldownTimer?.cancel();
-          _cooldownTimer = null;
-          command.clearErrors();
-          maybeRunEpisodesCommand(
-            feedUrl: feedUrl,
-            podcastItem: podcastItem,
-            clearErrors: true,
-          );
-        }
-      });
-    }
-  }
+      <String, Command<FindEpisodesParam, List<Audio>?>>{};
+  Command<FindEpisodesParam, List<Audio>?> getEpisodesCommand(String feedUrl) =>
+      _episodesCommands.putIfAbsent(
+        feedUrl,
+        () => Command.createAsync(
+          (param) => _podcastService
+              .findEpisodes(
+                item: param.item,
+                feedUrl: param.feedUrl,
+                tryFromDbOnly: param.tryFromDbOnly,
+              )
+              .timeout(
+                FindEpisodesTimeoutException.timeoutDuration,
+                onTimeout: () {
+                  throw FindEpisodesTimeoutException();
+                },
+              ),
+          initialValue: null,
+        ),
+      );
 
   late final Command<({String feedUrl, String name}), String?> cleanUpCommand =
       Command.createAsync((param) async {
@@ -201,9 +161,13 @@ class PodcastManager {
       feedUrl: param.feedUrl,
       ascending: param.ascending,
     );
-    getEpisodesCommand(
-      param.feedUrl,
-    ).run((feedUrl: param.feedUrl, item: null, tryFromDbOnly: true));
+    getEpisodesCommand(param.feedUrl).run(
+      FindEpisodesParam(
+        feedUrl: param.feedUrl,
+        item: null,
+        tryFromDbOnly: true,
+      ),
+    );
 
     return _podcastService.ascendingPodcasts;
   }, initialValue: _podcastService.ascendingPodcasts);
@@ -228,5 +192,3 @@ class PodcastManager {
         await feedsWithDownloadsCommand.runAsync();
       });
 }
-
-const _cooldownMaxSeconds = 20;

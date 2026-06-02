@@ -55,7 +55,7 @@ Thank you [@tomassasovsky](https://github.com/tomassasovsky) for the [dart imple
 
 Thank you [@ClementBeal](https://github.com/ClementBeal) for the super fast, pure dart [Audio Metadata Reader](https://github.com/ClementBeal/audio_metadata_reader)!
 
-Thank you [@escamoteur](https://github.com/escamoteur) for creating [get_it](https://pub.dev/packages/get_it) and [watch_it](https://pub.dev/packages/watch_it), which made my application faster and the source code cleaner!
+Thank you [@escamoteur](https://github.com/escamoteur) for creating [get_it](https://pub.dev/packages/get_it), [watch_it](https://pub.dev/packages/watch_it), [command_it](https://pub.dev/packages/command_it) and [listen_it](https://pub.dev/packages/listen_it), which made my application faster and the source code cleaner!
 
 ## Contributing
 
@@ -96,11 +96,11 @@ I recommend the vscode extension [GitHub Pull Requests](https://marketplace.visu
 
 The dependencies and test mocks are generated with [build_runner](https://pub.dev/packages/build_runner). You need to run the `build_runner` command in order to re-generate dependencies, in case you changed the signatures of service methods, like this:
 
-`dart pub run build_runner build --delete-conflicting-outputs`
+`dart pub run build_runner build --force-jit`
 
 or if you use fvm:
 
-`fvm dart pub run build_runner build --delete-conflicting-outputs`
+`fvm dart pub run build_runner build --force-jit`
 
 ### Run
 
@@ -108,7 +108,7 @@ Now you can run the app with `flutter run` or `fvm flutter run` in the project d
 
 ## Release
 
-[The release please bot](https://github.com/googleapis/release-please) automatically creates a pull request when new changes after the last release are made with [sconventional commits](https://www.conventionalcommits.org/en/v1.0.0/).
+[The release please bot](https://github.com/googleapis/release-please) automatically creates a pull request when new changes after the last release are made with [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/).
 It force pushes those to its branch and updates the version string in pubspec.yaml and the changelog file.
 When the release please pull request is merged the version and changelog will be updated in main.
 
@@ -160,66 +160,17 @@ Test mocks are generated with [Mockito](https://github.com/dart-lang/mockito). Y
 
 MusicPod is basically a fancy front-end for [MPV](https://github.com/mpv-player/mpv)! Without it it would still look nice, but it wouldn't play any media :D!
 
-### Architecture: [model, view, viewmodel (MVVM)](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel)
+### Architecture
 
-MusicPod uses the MVVM architectural pattern, which fits the needs of this reactive app the most, and keeps all layers separated so we can exchange the implementation of one layer if we need to. [MVVM is also recommended by Flutter itself](https://docs.flutter.dev/get-started/fwe/state-management#using-mvvm-for-your-applications-architecture).
-
-The app, the player, the search and each main page have their own set of widgets, one or more view model, which depend on one or more services.
-
-All services and ViewModels are registered lazily via [get_it](https://pub.dev/packages/get_it), which means they are not instantiated until they are located for the first time via `di<XyzService>` or `di<ViewModel>`.
-
-```mermaid
-
-flowchart LR
-
-classDef view fill:#0e84207d
-classDef viewmodel fill:#e9542080
-classDef model fill:#77216f80
-
-View["`
-  **View**
-  (Widgets)
-`"]:::view--watchProperty-->ViewModel["`
-  **ViewModel**
-  (ChangeNotifier)
-`"]:::viewmodel--listen/get properties-->Model["`
-  **(Domain) Model**
-  (Service)
-`"]:::model
-
-ViewModel--notify-->View
-Model--changedProperties.add(true)-->ViewModel
-
-```
-
-The ViewModels have a dependencies to services which are given via their constructor, where they are located via the service locator [get_it](https://pub.dev/packages/get_it). This makes them easy to test since you can replace the services with mocked services.
-
-The ViewModels are [ChangeNotifiers](https://api.flutter.dev/flutter/foundation/ChangeNotifier-class.html). They can use the `notifyListener` method which makes listeners (concrete: UI classes) react (i.e. rebuild).
-
-The ViewModels hold (a) [StreamSubscription(s)](https://api.flutter.dev/flutter/dart-async/StreamSubscription-class.html) to (the) service(s) they depend on. If properties are only non-persistent UI state, they are hold inside the ViewModel. If they are more than that, they are just getters to service properties.
-So if a property of a service changes, the ViewModels will be notified via the propertiesChanged stream, and if we want the UI to take notice, inside the `listen` callback we will notify the UI (listeners).
+WIP - I need to update this section of the readme.
 
 ### Dependency choices, service locator and state management
 
 Regarding the packages to implement this architecture I've had quite a journey from [provider](https://pub.dev/packages/provider) to [riverpod](https://pub.dev/packages/riverpod).
 
-I found my personal favorite solution with [get_it](https://pub.dev/packages/get_it) plus its [watch_it](https://pub.dev/packages/watch_it) extension because this fits the need of this application and the [MVVM-architecture](https://docs.flutter.dev/get-started/fwe/state-management#using-mvvm-for-your-applications-architecture) the most without being too invasive into the API of the flutter widget tree.
+I found my personal favorite solution with [get_it](https://pub.dev/packages/get_it) plus [watch_it](https://pub.dev/packages/watch_it) plus [command_it](https://pub.dev/packages/command_it) and [listen_it](https://pub.dev/packages/listen_it) because this fits the need of this application and the best and I can write reactive code without the need of a lot of boilerplate code, while still keeping the layers of the application clearly separated and easy to re-implement.
 
-This way all layers are clearly separated, easy to re-implement and easy to follow, even if this brings a little bit of boilerplate code.
-
-## Watching the ViewModels inside the View (Widgets)
-
-If the Widgets want to be rebuilt once properties of ViewModels change, we use the `watchPropertyValue` method of the [watch_it](https://pub.dev/packages/watch_it) package:
-
-```dart
-final audio = watchPropertyValue((PlayerModel m) => m.audio);
-```
-
-This makes it easier, even though we could also just use flutters built in [ListenableBuilder](https://api.flutter.dev/flutter/widgets/ListenableBuilder-class.html).
-
-### Caching
-
-Both local covers and remote covers are cached in `LocalCoverService` and a `OnlineArtService` after they have been loaded/fetched.
+(all four packages can be obtained with [flutter_it](https://pub.dev/packages/flutter_it) which is a meta package for all of them.)
 
 ### Performance
 
@@ -227,4 +178,4 @@ Reading the local covers and fetching remote covers for radio data happens insid
 
 ### Persistence
 
-Preferences are stored with [shared_preferences](https://pub.dev/packages/shared_preferences), collections are stored inside basic json files on our computer.
+Preferences are stored with [shared_preferences](https://pub.dev/packages/shared_preferences), the rest is stored within [drift](https://pub.dev/packages/drift) in a local sqlite database. 

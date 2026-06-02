@@ -10,6 +10,7 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/command_x.dart';
 import '../../extensions/string_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../lyrics/data/lyrics_and_art_result_and_param.dart';
@@ -99,8 +100,9 @@ class _PlayerLyrics extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     callAfterEveryBuild((_, _) {
-      di<LyricsManager>().maybeRunCommand(
-        LyricsAndArtParam(audio: audio, title: title, artist: artist),
+      di<LyricsManager>().command.runRestricted(
+        param: LyricsAndArtParam(audio: audio, title: title, artist: artist),
+        runWhen: RunWhen.paramChanges,
       );
     });
 

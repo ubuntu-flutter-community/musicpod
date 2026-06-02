@@ -854,7 +854,7 @@
             }
         }
     },
-    "radioBrowserSeverUnavailable": "The radio browser server is currently unavailable. This might be a temporary issue. Please try again later.",
+    "radioBrowserServerUnavailable": "The radio browser server is currently unavailable. This might be a temporary issue. Please try again later.",
     "findStationsTimeoutMessage": "Finding (this) station(s) takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.",
     "retryInSeconds": "Retry in {seconds} seconds",
     "@retryInSeconds": {
@@ -884,5 +884,12 @@
     "youCanEditTheNameLater": "You can edit the name later.",
     "geniusAlsoProvidesArt": "Genius also provides artwork for most songs. If you enable Genius to fetch lyrics, the online art in the player will also use Genius instead of MusicBrainz.",
     "enterYourGeniusApiKey": "Enter your Genius API key",
-    "saveYourApiKey": "Save API Key"
+    "saveYourApiKey": "Save API Key",
+    "lookUpRadioBrowserHostsFailed": "Looking up radio browser hosts failed. Are you connected to the internet? If yes, this might be a server issue.",
+    "lookUpRadioBrowserHostsTimouted": "Finding Radio Browser hosts takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.",
+    "radioBrowserServerNotConnected": "You are not connected to any radio browser server",
+    "radioBrowserLoadingTagsFailed": "An error occurred while loading radio tags, the server might be unavailable.",
+    "radioBrowserLoadingTagsTimeouted": "Loading tags took longer than expected, are you connected to the internet? If yes, this might be a server issue",
+    "podcastSearchNotSuccessfull": "This podcast search was not successfull, are you connected to the internet? If yes this might be a server issue.",
+    "podcastFailedHostLookup": "Finding episodes was not successfull - could not connect to the server. Are you connected to the internet? If yes this might be a server issue."
 }

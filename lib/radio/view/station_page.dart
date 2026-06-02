@@ -18,6 +18,7 @@ import '../../common/view/stared_station_icon_button.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/command_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
@@ -25,7 +26,7 @@ import '../../settings/settings_model.dart';
 import '../radio_manager.dart';
 import '../radio_service.dart';
 import 'radio_connect_mixin.dart';
-import 'radio_error_retry_body.dart';
+import '../../common/view/error_retry_body.dart';
 import 'radio_history_list.dart';
 import 'radio_page_copy_histoy_button.dart';
 import 'radio_page_tag_bar.dart';
@@ -37,38 +38,8 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
 
   @override
   Widget build(BuildContext context) {
-    registerRadioConnectHandler(context);
-
-    callAfterEveryBuild(
-      (_, cancel) => di<RadioManager>().maybeRunStationByUUIDCommand(uuid),
-    );
-
-    registerHandler(
-      select: (RadioManager m) => m.getStationByUUIDCommand(uuid).results,
-      handler: (context, results, cancel) {
-        if (results.hasError) {
-          context.toast(
-            Text(switch (results.error) {
-              final e when e is FindStationTimeoutException =>
-                context.l10n.findStationsTimeoutMessage,
-              final e when e is RadioBrowserServerUnavailableException =>
-                context.l10n.radioBrowserSeverUnavailable,
-              final e when e is RadioBrowserApiNotConnectedException =>
-                context.l10n.disconnectedFrom + ' RadioBrowser API',
-              _ => results.error.toString(),
-            }),
-            action: SnackBarAction(
-              label: context.l10n.retry,
-              onPressed: () => di<RadioManager>().maybeRunStationByUUIDCommand(
-                uuid,
-                clearErrors: true,
-              ),
-            ),
-          );
-        } else if (results.hasData) {
-          context.clearToasts();
-        }
-      },
+    callOnceAfterThisBuild(
+      (_) => di<RadioManager>().getStationByUUIDCommand(uuid).runRestricted(),
     );
 
     final stationResult = watchValue(
@@ -112,14 +83,28 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
       body: Builder(
         builder: (context) {
           if (error != null) {
-            return RadioErrorRetryBody(
+            return ErrorRetryBody(
+              errorText: switch (error) {
+                LookUpRadioBrowserHostsException() =>
+                  context.l10n.lookUpRadioBrowserHostsFailed,
+                FindStationTimeoutException() =>
+                  context.l10n.findStationsTimeoutMessage,
+                RadioBrowserServerUnavailableException() =>
+                  context.l10n.radioBrowserServerUnavailable,
+                RadioBrowserApiNotConnectedException() =>
+                  '${context.l10n.disconnectedFrom} RadioBrowser API',
+                _ => error.toString(),
+              },
+              cooldown: di<RadioManager>()
+                  .getStationByUUIDCommand(uuid)
+                  .cooldown,
               error: error,
+
               onRetry: isRunning
                   ? null
-                  : () => di<RadioManager>().maybeRunStationByUUIDCommand(
-                      uuid,
-                      clearErrors: true,
-                    ),
+                  : () => di<RadioManager>()
+                        .getStationByUUIDCommand(uuid)
+                        .runRestricted(immediatelyClearErrors: true),
             );
           }
 

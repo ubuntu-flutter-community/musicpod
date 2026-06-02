@@ -4605,11 +4605,11 @@ abstract class AppLocalizations {
   /// **'Finding episodes takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.'**
   String findEpisodesTimeoutMessage(String podcastName);
 
-  /// No description provided for @radioBrowserSeverUnavailable.
+  /// No description provided for @radioBrowserServerUnavailable.
   ///
   /// In en, this message translates to:
   /// **'The radio browser server is currently unavailable. This might be a temporary issue. Please try again later.'**
-  String get radioBrowserSeverUnavailable;
+  String get radioBrowserServerUnavailable;
 
   /// No description provided for @findStationsTimeoutMessage.
   ///
@@ -4664,6 +4664,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save API Key'**
   String get saveYourApiKey;
+
+  /// No description provided for @lookUpRadioBrowserHostsFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking up radio browser hosts failed. Are you connected to the internet? If yes, this might be a server issue.'**
+  String get lookUpRadioBrowserHostsFailed;
+
+  /// No description provided for @lookUpRadioBrowserHostsTimouted.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding Radio Browser hosts takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.'**
+  String get lookUpRadioBrowserHostsTimouted;
+
+  /// No description provided for @radioBrowserServerNotConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'You are not connected to any radio browser server'**
+  String get radioBrowserServerNotConnected;
+
+  /// No description provided for @radioBrowserLoadingTagsFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred while loading radio tags, the server might be unavailable.'**
+  String get radioBrowserLoadingTagsFailed;
+
+  /// No description provided for @radioBrowserLoadingTagsTimeouted.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading tags took longer than expected, are you connected to the internet? If yes, this might be a server issue'**
+  String get radioBrowserLoadingTagsTimeouted;
+
+  /// No description provided for @podcastSearchNotSuccessfull.
+  ///
+  /// In en, this message translates to:
+  /// **'This podcast search was not successfull, are you connected to the internet? If yes this might be a server issue.'**
+  String get podcastSearchNotSuccessfull;
+
+  /// No description provided for @podcastFailedHostLookup.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding episodes was not successfull - could not connect to the server. Are you connected to the internet? If yes this might be a server issue.'**
+  String get podcastFailedHostLookup;
 }
 
 class _AppLocalizationsDelegate

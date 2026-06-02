@@ -2372,7 +2372,7 @@ class AppLocalizationsPl extends AppLocalizations {
   }
 
   @override
-  String get radioBrowserSeverUnavailable =>
+  String get radioBrowserServerUnavailable =>
       'The radio browser server is currently unavailable. This might be a temporary issue. Please try again later.';
 
   @override
@@ -2410,4 +2410,32 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get saveYourApiKey => 'Save API Key';
+
+  @override
+  String get lookUpRadioBrowserHostsFailed =>
+      'Looking up radio browser hosts failed. Are you connected to the internet? If yes, this might be a server issue.';
+
+  @override
+  String get lookUpRadioBrowserHostsTimouted =>
+      'Finding Radio Browser hosts takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+
+  @override
+  String get radioBrowserServerNotConnected =>
+      'You are not connected to any radio browser server';
+
+  @override
+  String get radioBrowserLoadingTagsFailed =>
+      'An error occurred while loading radio tags, the server might be unavailable.';
+
+  @override
+  String get radioBrowserLoadingTagsTimeouted =>
+      'Loading tags took longer than expected, are you connected to the internet? If yes, this might be a server issue';
+
+  @override
+  String get podcastSearchNotSuccessfull =>
+      'This podcast search was not successfull, are you connected to the internet? If yes this might be a server issue.';
+
+  @override
+  String get podcastFailedHostLookup =>
+      'Finding episodes was not successfull - could not connect to the server. Are you connected to the internet? If yes this might be a server issue.';
 }

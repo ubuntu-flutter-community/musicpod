@@ -4,6 +4,9 @@ import 'package:podcast_search/podcast_search.dart';
 
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/command_x.dart';
+import '../../extensions/object_x.dart';
+import '../data/find_episodes_param.dart';
 import '../podcast_manager.dart';
 import '../podcast_service.dart';
 import 'lazy_podcast_loading_page.dart';
@@ -26,7 +29,20 @@ class PodcastErrorPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final cooldown = watchValue((PodcastManager m) => m.cooldown);
+    callAfterEveryBuild((_, _) {
+      di<PodcastManager>()
+          .getEpisodesCommand(feedUrl)
+          .runRestricted(
+            param: FindEpisodesParam(
+              feedUrl: feedUrl,
+              item: podcastItem,
+              tryFromDbOnly: true,
+            ),
+          );
+    });
+
+    final command = di<PodcastManager>().getEpisodesCommand(feedUrl);
+    final cooldown = watch(command.cooldown).value;
     return LazyPodcastLoadingPage(
       title: title,
       imageUrl: imageUrl,
@@ -37,18 +53,16 @@ class PodcastErrorPage extends StatelessWidget with WatchItMixin {
           child: Column(
             spacing: kLargestSpace,
             children: [
-              Text(switch (error) {
-                FindEpisodesTimeoutException() =>
-                  context.l10n.findEpisodesTimeoutMessage(title),
-                PodcastFailedException() =>
-                  (error as PodcastFailedException).message,
-                _ => error.toString(),
-              }),
+              Text(error.localizedErrorMessage(context.l10n)),
               FilledButton.icon(
-                onPressed: () => di<PodcastManager>().maybeRunEpisodesCommand(
-                  feedUrl: feedUrl,
-                  podcastItem: podcastItem,
-                  clearErrors: true,
+                onPressed: () => command.runRestricted(
+                  runWhen: RunWhen.hasNoValueAndNoErrors,
+                  immediatelyClearErrors: true,
+                  param: FindEpisodesParam(
+                    feedUrl: feedUrl,
+                    item: podcastItem,
+                    tryFromDbOnly: false,
+                  ),
                 ),
                 label: Text(context.l10n.retryngInSeconds(cooldown.toString())),
               ),

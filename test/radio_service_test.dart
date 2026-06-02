@@ -22,8 +22,7 @@ Future<void> main() async {
     setUpAll(() async {
       service = RadioService(database: MockDatabase());
 
-      await service.initSearch();
-      host = service.connectedHost;
+      host = await service.connectToServer();
     });
 
     test('initRadioService', () {
@@ -63,6 +62,18 @@ Future<void> main() async {
     test('findByState', () async {
       final result = await service.search(state: 'nordrhein', limit: 10);
       expect(result?.isNotEmpty, true);
+    });
+
+    // a test to check if it throws an exception when the server is unavailable
+    test('serverUnavailable', () async {
+      final serviceWithInvalidHost = RadioService(database: MockDatabase());
+      try {
+        await serviceWithInvalidHost.connectToServer(
+          newHosts: ['http://invalidhost:8000'],
+        );
+      } catch (e) {
+        expect(e, isA<RadioBrowserServerUnavailableException>());
+      }
     });
   });
 }

@@ -188,6 +188,8 @@ class SearchManager {
             _search(clear: param.clear, manualFilter: param.manualFilter),
       );
 
+  final cooldown = SafeValueNotifier<int>(20);
+
   Future<void> _search({bool clear = false, bool manualFilter = false}) async {
     if (clear) {
       switch (audioType.value) {
@@ -201,78 +203,72 @@ class SearchManager {
     }
 
     return (switch (searchType.value) {
-          SearchType.radioName =>
-            _radioService
-                .search(name: searchQuery.value, limit: _radioLimit)
-                .then(
-                  (v) => _setRadioSearchResult(
-                    searchQuery.value == null || searchQuery.value!.isEmpty
-                        ? null
-                        : v,
-                  ),
-                ),
-          SearchType.radioTag =>
-            _radioService
-                .search(tag: tag.value?.name, limit: _radioLimit)
-                .then((v) => _setRadioSearchResult(v)),
-          SearchType.radioCountry =>
-            _radioService
-                .search(
-                  country: country.value?.name.camelToSentence,
-                  limit: _radioLimit,
-                )
-                .then((v) => _setRadioSearchResult(v)),
-          SearchType.radioLanguage =>
-            _radioService
-                .search(
-                  language: language.value?.name.toLowerCase(),
-                  limit: _radioLimit,
-                )
-                .then((v) => _setRadioSearchResult(v)),
-          SearchType.podcastTitle =>
-            _podcastService
-                .search(
-                  searchQuery: searchQuery.value,
-                  limit: _podcastLimit,
-                  country: country.value,
-                  language: language.value,
-                  podcastGenre: podcastGenre.value,
-                  attribute: podcastSearchAttribute.value,
-                )
-                .then((v) => _setPodcastSearchResult(v)),
-          _ => localSearch(searchQuery.value).then((v) {
-            _setLocalSearchResult(v);
+      SearchType.radioName =>
+        _radioService
+            .search(name: searchQuery.value, limit: _radioLimit)
+            .then(
+              (v) => _setRadioSearchResult(
+                searchQuery.value == null || searchQuery.value!.isEmpty
+                    ? null
+                    : v,
+              ),
+            ),
+      SearchType.radioTag =>
+        _radioService
+            .search(tag: tag.value?.name, limit: _radioLimit)
+            .then((v) => _setRadioSearchResult(v)),
+      SearchType.radioCountry =>
+        _radioService
+            .search(
+              country: country.value?.name.camelToSentence,
+              limit: _radioLimit,
+            )
+            .then((v) => _setRadioSearchResult(v)),
+      SearchType.radioLanguage =>
+        _radioService
+            .search(
+              language: language.value?.name.toLowerCase(),
+              limit: _radioLimit,
+            )
+            .then((v) => _setRadioSearchResult(v)),
+      SearchType.podcastTitle =>
+        _podcastService
+            .search(
+              searchQuery: searchQuery.value,
+              limit: _podcastLimit,
+              country: country.value,
+              language: language.value,
+              podcastGenre: podcastGenre.value,
+              attribute: podcastSearchAttribute.value,
+            )
+            .then((v) => _setPodcastSearchResult(v)),
+      _ => localSearch(searchQuery.value).then((v) {
+        _setLocalSearchResult(v);
 
-            if (!manualFilter) {
-              if (localSearchResult.value?.titles?.isNotEmpty == true) {
-                setSearchType(SearchType.localTitle);
-              } else if (localSearchResult.value?.albums?.isNotEmpty == true) {
-                setSearchType(SearchType.localAlbum);
-              } else if (localSearchResult.value?.artists?.isNotEmpty == true) {
-                setSearchType(SearchType.localArtist);
-              }
-              // else if (localSearchResult?.albumArtists?.isNotEmpty == true) {
-              //   setSearchType(SearchType.localAlbumArtist);
-              // }
-              else if (localSearchResult.value?.genres?.isNotEmpty == true) {
-                setSearchType(SearchType.localGenreName);
-              } else if (localSearchResult.value?.playlists?.isNotEmpty ==
-                  true) {
-                setSearchType(SearchType.localPlaylists);
-              }
-            }
-          }),
-        })
-        .timeout(
-          const Duration(seconds: SearchTimeoutException.searchTimeoutSeconds),
-          onTimeout: () {
-            throw SearchTimeoutException();
-          },
-        )
-        .onError((e, st) {
-          if (e == null) return;
-          _messageController.addError(e);
-        });
+        if (!manualFilter) {
+          if (localSearchResult.value?.titles?.isNotEmpty == true) {
+            setSearchType(SearchType.localTitle);
+          } else if (localSearchResult.value?.albums?.isNotEmpty == true) {
+            setSearchType(SearchType.localAlbum);
+          } else if (localSearchResult.value?.artists?.isNotEmpty == true) {
+            setSearchType(SearchType.localArtist);
+          }
+          // else if (localSearchResult?.albumArtists?.isNotEmpty == true) {
+          //   setSearchType(SearchType.localAlbumArtist);
+          // }
+          else if (localSearchResult.value?.genres?.isNotEmpty == true) {
+            setSearchType(SearchType.localGenreName);
+          } else if (localSearchResult.value?.playlists?.isNotEmpty == true) {
+            setSearchType(SearchType.localPlaylists);
+          }
+        }
+      }),
+    }).timeout(
+      const Duration(seconds: SearchTimeoutException.searchTimeoutSeconds),
+      onTimeout: () {
+        throw SearchTimeoutException();
+      },
+    );
   }
 
   final radioSearchResult = SafeValueNotifier<List<Audio>?>(null);

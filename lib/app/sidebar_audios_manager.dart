@@ -5,6 +5,7 @@ import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
 import '../local_audio/local_audio_manager.dart';
 import '../player/player_model.dart';
+import '../podcasts/data/find_episodes_param.dart';
 import '../podcasts/data/podcast_update_capsule.dart';
 import '../podcasts/podcast_manager.dart';
 import '../radio/radio_manager.dart';
@@ -61,7 +62,9 @@ class SidebarAudiosManager {
     if (_podcastManager.isPodcastSubscribed(pageId)) {
       final episodes = await _podcastManager
           .getEpisodesCommand(pageId)
-          .runAsync((item: null, feedUrl: pageId, tryFromDbOnly: true));
+          .runAsync(
+            FindEpisodesParam(item: null, feedUrl: pageId, tryFromDbOnly: true),
+          );
       return episodes;
     }
 

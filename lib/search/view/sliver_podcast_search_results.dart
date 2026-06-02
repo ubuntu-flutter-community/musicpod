@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
+import '../../common/view/audio_card.dart';
+import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
@@ -32,22 +34,31 @@ class _SliverPodcastSearchResultsState
   Widget build(BuildContext context) {
     final loading = watchValue((SearchManager m) => m.searchCommand.isRunning);
 
-    final results = watchValue(
+    final items = watchValue(
       (SearchManager m) => m.podcastSearchResult.select((v) => v?.items),
     );
+
     final searchResultItems = widget.take != null
-        ? results?.take(widget.take!)
-        : results;
+        ? items?.take(widget.take!)
+        : items;
 
     if (searchResultItems == null || searchResultItems.isEmpty) {
+      if (loading) {
+        return SliverGrid.builder(
+          itemCount: 50,
+          gridDelegate: audioCardGridDelegate,
+          itemBuilder: (context, index) {
+            return const AudioCard(bottom: AudioCardBottom(text: ''));
+          },
+        );
+      }
+
       return SliverNoSearchResultPage(
-        message: loading
-            ? const SizedBox.shrink()
-            : Text(
-                searchResultItems == null
-                    ? context.l10n.search
-                    : context.l10n.noPodcastFound,
-              ),
+        message: Text(
+          searchResultItems == null
+              ? context.l10n.search
+              : context.l10n.noPodcastFound,
+        ),
       );
     }
 

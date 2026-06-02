@@ -8,18 +8,19 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/confirm.dart';
+import '../../common/view/default_page_body.dart';
 import '../../common/view/error_page.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
-import '../../common/view/default_page_body.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../player/player_model.dart';
 import '../../search/search_manager.dart';
 import '../../settings/view/settings_action.dart';
+import '../data/find_episodes_param.dart';
 import '../data/podcast_update_capsule.dart';
 import '../podcast_manager.dart';
 import 'podcast_collection_control_panel.dart';
@@ -185,15 +186,19 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                         context: context,
                         future: () => di<PodcastManager>()
                             .getEpisodesCommand(feedUrl!)
-                            .runAsync((
-                              item: null,
-                              feedUrl: feedUrl,
-                              tryFromDbOnly: true,
-                            )),
+                            .runAsync(
+                              FindEpisodesParam(
+                                item: null,
+                                feedUrl: feedUrl,
+                                tryFromDbOnly: true,
+                              ),
+                            ),
                       ).then((res) {
-                        if (res.isValue) {
+                        if (res.isValue &&
+                            res.asValue!.value != null &&
+                            res.asValue!.value!.isNotEmpty) {
                           di<PlayerModel>().startPlaylist(
-                            audios: res.asValue!.value,
+                            audios: res.asValue?.value ?? [],
                             listName: feedUrl!,
                           );
                         } else {

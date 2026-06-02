@@ -31,7 +31,7 @@ class PodcastMarkDoneButton extends StatelessWidget with WatchItMixin {
           onPressed: isRunning
               ? null
               : () => di<PlayerModel>().toggleAudiosProgressCommand.run((
-                  audios: podcast,
+                  audios: podcast ?? [],
                   markComplete: true,
                 )),
           icon: Icon(Iconz.markAllRead),

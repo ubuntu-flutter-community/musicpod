@@ -50,23 +50,4 @@ class LyricsManager {
       artist: artist ?? audio?.artist,
     );
   }
-
-  void maybeRunCommand(LyricsAndArtParam param) {
-    if (_shouldRunCommand(param)) {
-      command.run(param);
-    }
-  }
-
-  Future<LyricsAndArtResult?> maybeRunCommandAsync(
-    LyricsAndArtParam param,
-  ) async {
-    if (_shouldRunCommand(param)) {
-      return command.runAsync(param);
-    }
-    return command.results.value.data;
-  }
-
-  bool _shouldRunCommand(LyricsAndArtParam param) {
-    return command.results.value.paramData != param;
-  }
 }

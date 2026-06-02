@@ -8,10 +8,11 @@ import '../../common/view/stared_station_icon_button.dart';
 import '../../common/view/tapable_text.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/command_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../player/player_model.dart';
 import '../../radio/radio_manager.dart';
-import '../../radio/view/radio_error_retry_body.dart';
+import '../../common/view/error_retry_body.dart';
 import '../../radio/view/radio_page_tag_bar.dart';
 import '../../radio/view/station_page.dart';
 import '../search_manager.dart';
@@ -30,10 +31,13 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
     );
 
     if (!connectedHostResults.isRunning && connectedHostResults.hasError) {
-      return RadioErrorRetryBody(
+      return ErrorRetryBody(
+        cooldown: di<RadioManager>().connectCommand.cooldown,
         sliver: true,
         error: connectedHostResults.error!,
-        onRetry: () => di<RadioManager>().maybeConnect(clearErrors: true),
+        onRetry: () => di<RadioManager>().connectCommand.runRestricted(
+          immediatelyClearErrors: true,
+        ),
       );
     }
 

@@ -134,7 +134,7 @@ class PodcastService {
     );
 
     if (!result.successful) {
-      throw result.lastError;
+      throw throw PodcastSearchNotSuccessfulException();
     }
 
     if (result.successful &&
@@ -792,4 +792,10 @@ class FindEpisodesTimeoutException implements Exception {
   @override
   String toString() =>
       message ?? 'Timeout while fetching episodes for the podcast';
+}
+
+class PodcastSearchNotSuccessfulException implements Exception {
+  @override
+  String toString() =>
+      'This podcast search was not successfull, are you connected to the internet? If yes this might be a server issue.';
 }

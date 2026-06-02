@@ -7,6 +7,7 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/adaptive_multi_layout_body.dart';
 import '../../common/view/audio_filter.dart';
 import '../../common/view/header_bar.dart';
+import '../../common/view/no_search_result_page.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
@@ -101,7 +102,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
     );
 
     final filteredEpisodes = freshEspidodes
-        .where((a) => a.title != null && a.episodeDescription != null)
+        ?.where((a) => a.title != null && a.episodeDescription != null)
         .where(
           (a) => (searchQuery == null || searchQuery.trim().isEmpty)
               ? true
@@ -132,7 +133,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
 
     sortListByAudioFilter(
       audioFilter: AudioFilter.year,
-      audios: filteredEpisodes,
+      audios: filteredEpisodes ?? [],
       descending: !showPodcastsAscending,
     );
 
@@ -170,20 +171,32 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
             episodes: filteredEpisodes,
             showFallbackIcon: true,
           ),
-          sliverBody: (constraints) =>
-              SliverPodcastPageList(audios: filteredEpisodes, pageId: feedUrl),
-          controlPanel: PodcastPageControlPanel(
-            feedUrl: feedUrl,
-            audios: filteredEpisodes,
-            title: title,
-            imageUrl: imageUrl,
-          ),
-          secondControlPanel: showSearch
-              ? PodcastPageSearchField(feedUrl: feedUrl, sliver: false)
-              : null,
-          secondSliverControlPanel: showSearch
-              ? PodcastPageSearchField(feedUrl: feedUrl, sliver: true)
-              : null,
+          sliverBody: (constraints) => (freshEspidodes?.isEmpty ?? true)
+              ? SliverNoSearchResultPage(
+                  message: Text(context.l10n.podcastFeedIsEmpty),
+                )
+              : SliverPodcastPageList(
+                  audios: filteredEpisodes ?? [],
+                  pageId: feedUrl,
+                ),
+          controlPanel: (freshEspidodes?.isEmpty ?? true)
+              ? const SizedBox.shrink()
+              : PodcastPageControlPanel(
+                  feedUrl: feedUrl,
+                  audios: filteredEpisodes ?? [],
+                  title: title,
+                  imageUrl: imageUrl,
+                ),
+          secondControlPanel: (freshEspidodes?.isEmpty ?? true)
+              ? const SizedBox.shrink()
+              : (showSearch
+                    ? PodcastPageSearchField(feedUrl: feedUrl, sliver: false)
+                    : null),
+          secondSliverControlPanel: (freshEspidodes?.isEmpty ?? true)
+              ? const SizedBox.shrink()
+              : (showSearch
+                    ? PodcastPageSearchField(feedUrl: feedUrl, sliver: true)
+                    : null),
         ),
 
         //

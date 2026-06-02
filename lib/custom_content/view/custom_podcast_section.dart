@@ -4,6 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../app/routing_manager.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../podcasts/data/find_episodes_param.dart';
 import '../../podcasts/podcast_manager.dart';
 import '../../podcasts/view/lazy_podcast_page.dart';
 
@@ -57,13 +58,15 @@ class _CustomPodcastSectionState extends State<CustomPodcastSection> {
                       : () {
                           di<PodcastManager>()
                               .getEpisodesCommand(_urlController.text)
-                              .runAsync((
-                                item: null,
-                                feedUrl: _urlController.text,
-                                tryFromDbOnly: false,
-                              ))
+                              .runAsync(
+                                FindEpisodesParam(
+                                  item: null,
+                                  feedUrl: _urlController.text,
+                                  tryFromDbOnly: false,
+                                ),
+                              )
                               .then((v) {
-                                if (v.isEmpty && context.mounted) {
+                                if (v?.isEmpty ?? true && context.mounted) {
                                   context.toast(
                                     Text(context.l10n.noPodcastFound),
                                   );
@@ -71,7 +74,6 @@ class _CustomPodcastSectionState extends State<CustomPodcastSection> {
                                   di<RoutingManager>().push(
                                     pageId: _urlController.text,
                                     builder: (context) => LazyPodcastPage(
-                                      imageUrl: v.firstOrNull?.imageUrl,
                                       feedUrl: _urlController.text,
                                     ),
                                   );

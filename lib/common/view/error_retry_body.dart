@@ -1,37 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-import '../../common/view/no_search_result_page.dart';
+import 'no_search_result_page.dart';
 import '../../extensions/build_context_x.dart';
-import '../radio_manager.dart';
 
-class RadioErrorRetryBody extends StatelessWidget with WatchItMixin {
-  const RadioErrorRetryBody({
+class ErrorRetryBody extends StatelessWidget with WatchItMixin {
+  const ErrorRetryBody({
     super.key,
     required this.error,
     required this.onRetry,
     this.sliver = false,
+    required this.cooldown,
+    this.errorText,
   });
 
   final Object error;
+  final String? errorText;
   final void Function()? onRetry;
   final bool sliver;
+  final SafeValueNotifier<int> cooldown;
 
   @override
   Widget build(BuildContext context) {
-    final cooldown = watchValue((RadioManager m) => m.cooldown);
-
+    final cooldownValue = watch(cooldown).value;
     if (sliver) {
       return SliverNoSearchResultPage(
         icon: FilledButton(
           onPressed: onRetry,
           child: Text(
-            cooldown == 0
+            cooldownValue == 0
                 ? context.l10n.retry
-                : context.l10n.retryngInSeconds(cooldown.toString()),
+                : context.l10n.retryngInSeconds(cooldownValue.toString()),
           ),
         ),
-        message: Text(error.toString()),
+        message: Text(errorText ?? error.toString()),
       );
     }
 
@@ -39,12 +42,12 @@ class RadioErrorRetryBody extends StatelessWidget with WatchItMixin {
       icon: FilledButton(
         onPressed: onRetry,
         child: Text(
-          cooldown == 0
+          cooldownValue == 0
               ? context.l10n.retry
-              : context.l10n.retryngInSeconds(cooldown.toString()),
+              : context.l10n.retryngInSeconds(cooldownValue.toString()),
         ),
       ),
-      message: Text(error.toString()),
+      message: Text(errorText ?? error.toString()),
     );
   }
 }

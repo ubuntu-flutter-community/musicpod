@@ -5,11 +5,8 @@ import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
-import '../common/logging.dart';
 import '../l10n/app_localizations.dart';
 import 'radio_service.dart';
-
-const _cooldownMaxSeconds = 20;
 
 @singleton
 class RadioManager extends SafeChangeNotifier {
@@ -24,40 +21,9 @@ class RadioManager extends SafeChangeNotifier {
 
   final _stationCache = <String, Audio>{};
   late final Command<void, String?> connectCommand = Command.createAsyncNoParam(
-    () async {
-      try {
-        return await _radioService.initSearch();
-      } catch (e) {
-        printMessageInDebugMode(e, tag: 'RadioManager');
-        throw RadioBrowserServerUnavailableException();
-      }
-    },
+    _radioService.connectToServer,
     initialValue: null,
   );
-
-  void maybeConnect({required bool clearErrors}) {
-    _clearConnect(clearErrors);
-    if (_shouldTryToConnect) {
-      connectCommand.run();
-    }
-  }
-
-  Future<void> maybeConnectAsync({required bool clearErrors}) async {
-    _clearConnect(clearErrors);
-    if (_shouldTryToConnect) {
-      await connectCommand.runAsync();
-    }
-  }
-
-  bool get _shouldTryToConnect =>
-      connectCommand.errors.value == null && connectCommand.value == null;
-
-  void _clearConnect(bool clearErrors) {
-    if (clearErrors) {
-      connectCommand.cancel();
-      connectCommand.clearErrors();
-    }
-  }
 
   final _getStationByUUIDCommands = <String, Command<void, Audio?>>{};
   Command<void, Audio?> getStationByUUIDCommand(String uuid) =>
@@ -76,44 +42,9 @@ class RadioManager extends SafeChangeNotifier {
         ),
       );
 
-  final cooldown = SafeValueNotifier<int>(_cooldownMaxSeconds);
-  Timer? _cooldownTimer;
-
-  void maybeRunStationByUUIDCommand(String uuid, {bool clearErrors = false}) {
-    final command = getStationByUUIDCommand(uuid);
-
-    if (clearErrors) {
-      command.clearErrors();
-    }
-
-    if (command.value == null && command.errors.value == null) {
-      command.run();
-      return;
-    }
-
-    if (command.errors.value != null && _cooldownTimer == null) {
-      cooldown.value = _cooldownMaxSeconds;
-
-      _cooldownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        if (cooldown.value > 0) {
-          cooldown.value--;
-        } else {
-          _cooldownTimer?.cancel();
-          _cooldownTimer = null;
-          command.clearErrors();
-          maybeRunStationByUUIDCommand(uuid, clearErrors: true);
-        }
-      });
-    }
-  }
-
   Future<Audio?> _getStationByUUID(String pageId) async {
     if (_stationCache.containsKey(pageId)) {
       return _stationCache[pageId];
-    }
-
-    if (connectCommand.value == null) {
-      // await maybeConnectAsync(clearErrors: false);
     }
 
     final audioByUUID = await _radioService.getAudioByUUID(pageId);

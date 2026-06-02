@@ -12,6 +12,7 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/country_x.dart';
 import '../../settings/settings_model.dart';
 import '../search_manager.dart';
+import 'flag_theme.dart';
 
 class PodcastSearchInputPrefix extends StatelessWidget with WatchItMixin {
   const PodcastSearchInputPrefix({super.key});
@@ -41,7 +42,9 @@ class PodcastSearchInputPrefix extends StatelessWidget with WatchItMixin {
         context: context,
         content: LocationFilterDialog(mode: ModalMode.platformModalMode),
       ),
-      icon: Text(' ${country?.flag ?? '🚩'}', style: flagTextStyle),
+      icon: FlagTheme(
+        child: Text(' ${country?.flag ?? '🚩'}', style: flagTextStyle),
+      ),
     );
   }
 }

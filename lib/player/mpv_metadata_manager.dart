@@ -9,6 +9,7 @@ import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
 import '../common/logging.dart';
 import '../expose/expose_service.dart';
+import '../extensions/command_x.dart';
 import '../extensions/string_x.dart';
 import '../lyrics/data/lyrics_and_art_result_and_param.dart';
 import '../lyrics/lyrics_manager.dart';
@@ -194,12 +195,13 @@ class MpvMetadataManager {
 
       // First we check if genius gives us lyrics and art if it is set up
       if (_geniusIsSetup) {
-        lyricsAndArtResult = await _lyricsManager.maybeRunCommandAsync(
-          LyricsAndArtParam(
+        lyricsAndArtResult = await _lyricsManager.command.runRestrictedAsync(
+          param: LyricsAndArtParam(
             audio: _playerService.audio,
             title: songInfo.songName,
             artist: songInfo.artist,
           ),
+          runWhen: RunWhen.paramChanges,
         );
       }
 

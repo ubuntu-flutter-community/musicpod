@@ -6,6 +6,7 @@ import '../../common/view/safe_network_image.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/command_x.dart';
 import '../radio_manager.dart';
 
 class StationPageIcon extends StatelessWidget with WatchItMixin {
@@ -21,7 +22,7 @@ class StationPageIcon extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     callAfterEveryBuild((_, _) {
-      di<RadioManager>().maybeRunStationByUUIDCommand(uuid);
+      di<RadioManager>().getStationByUUIDCommand(uuid).runRestricted();
     });
 
     final stationResults = watchValue(

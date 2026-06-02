@@ -20,32 +20,41 @@ class RadioService {
   static const _kRadioBrowserBaseUrl = 'all.api.radio-browser.info';
 
   RadioBrowserApi? _radioBrowserApi;
-  String? get connectedHost =>
-      _tags == null || _tags!.isEmpty ? null : _radioBrowserApi?.host;
 
-  Future<String?> initSearch() async {
+  Future<String?> connectToServer({List<String>? newHosts}) async {
     if (_radioBrowserApi?.host != null && _tags?.isNotEmpty == true) {
       return _radioBrowserApi?.host;
     }
 
-    List<String>? hosts;
-    try {
-      hosts = await _findHosts().timeout(const Duration(seconds: 15));
-    } on TimeoutException catch (_) {
-      rethrow;
-    } on Exception {
-      rethrow;
-    }
-    for (var host in hosts) {
+    final potentialHosts =
+        newHosts ??
+        await _findHosts().timeout(
+          FindRadioBrowserHostsTimeoutException.timeoutDuration,
+          onTimeout: () {
+            throw FindRadioBrowserHostsTimeoutException();
+          },
+        );
+
+    for (var host in potentialHosts) {
       try {
         _radioBrowserApi = RadioBrowserApi.fromHost(host);
+        // Having the API set up is not enough
+        // we need to make an actual request to check if the server is responsive
+        // so since we need the tags anyways from this point on
+        // we can just try to load them and if it works, we know the server is responsive and has the data we need
         _tags = await _loadTags();
         if (_radioBrowserApi?.host != null && _tags?.isNotEmpty == true) {
           break;
         }
-      } on Exception {
-        rethrow;
+      } on Exception catch (e) {
+        throw RadioBrowserServerUnavailableException(e.toString());
       }
+    }
+
+    if (_radioBrowserApi?.host == null || _tags?.isEmpty != false) {
+      _radioBrowserApi = null;
+      _tags = null;
+      throw RadioBrowserServerUnavailableException();
     }
 
     return _radioBrowserApi?.host;
@@ -69,7 +78,7 @@ class RadioService {
         }
       }
     } on Exception {
-      rethrow;
+      throw LookUpRadioBrowserHostsException();
     }
     return hosts;
   }
@@ -79,40 +88,27 @@ class RadioService {
     // TODO: implement storing stations offline
     bool tryFromDbFirst = true,
   }) async {
-    if (_radioBrowserApi == null) {
-      await initSearch();
-      if (connectedHost == null) {
-        throw RadioBrowserApiNotConnectedException();
-      }
+    if (await connectToServer() == null) {
+      throw RadioBrowserApiNotConnectedException();
     }
 
-    try {
-      final response = await _radioBrowserApi!.getStationsByUUID(uuids: [uuid]);
-      if (response.items.isEmpty) {
-        return null;
-      }
-      final station = response.items.first;
-      return Audio.fromStation(station);
-    } on Exception {
-      rethrow;
+    final response = await _radioBrowserApi?.getStationsByUUID(uuids: [uuid]);
+    if (response?.items.isEmpty != false) {
+      return null;
     }
+    final station = response!.items.first;
+    return Audio.fromStation(station);
   }
 
   Future<Audio?> getAudioByUrl(String url) async {
-    if (_radioBrowserApi == null) {
-      await initSearch();
-      if (connectedHost == null) {
-        throw RadioBrowserApiNotConnectedException();
-      }
+    if (await connectToServer() == null) {
+      throw RadioBrowserApiNotConnectedException();
     }
-    try {
-      final response = await _radioBrowserApi!.getStationsByUrl(url: url);
-      final station = response.items.firstOrNull;
 
-      return station != null ? Audio.fromStation(station) : null;
-    } on Exception {
-      rethrow;
-    }
+    final response = await _radioBrowserApi?.getStationsByUrl(url: url);
+    final station = response?.items.firstOrNull;
+
+    return station != null ? Audio.fromStation(station) : null;
   }
 
   static const radioSearchMaxLimit = 300;
@@ -131,11 +127,8 @@ class RadioService {
     String? language,
     required int limit,
   }) async {
-    if (_radioBrowserApi == null) {
-      await initSearch();
-      if (connectedHost == null) {
-        throw RadioBrowserApiNotConnectedException();
-      }
+    if (await connectToServer() == null) {
+      throw RadioBrowserApiNotConnectedException();
     }
 
     if (_response?.items != null &&
@@ -153,35 +146,32 @@ class RadioService {
       order: 'stationcount',
       limit: limit > radioSearchMaxLimit ? radioSearchMaxLimit : limit,
     );
-    try {
-      if (name?.isEmpty == false) {
-        _response = await _radioBrowserApi!.getStationsByName(
-          name: name!,
-          parameters: parameters,
-        );
-      } else if (country?.isEmpty == false) {
-        _response = await _radioBrowserApi!.getStationsByCountry(
-          country: country!,
-          parameters: parameters,
-        );
-      } else if (tag?.isEmpty == false) {
-        _response = await _radioBrowserApi!.getStationsByTag(
-          tag: tag!,
-          parameters: parameters,
-        );
-      } else if (state?.isEmpty == false) {
-        _response = await _radioBrowserApi!.getStationsByState(
-          state: state!,
-          parameters: parameters,
-        );
-      } else if (language?.isEmpty == false) {
-        _response = await _radioBrowserApi!.getStationsByLanguage(
-          language: language!,
-          parameters: parameters,
-        );
-      }
-    } on Exception {
-      rethrow;
+
+    if (name?.isEmpty == false) {
+      _response = await _radioBrowserApi?.getStationsByName(
+        name: name!,
+        parameters: parameters,
+      );
+    } else if (country?.isEmpty == false) {
+      _response = await _radioBrowserApi?.getStationsByCountry(
+        country: country!,
+        parameters: parameters,
+      );
+    } else if (tag?.isEmpty == false) {
+      _response = await _radioBrowserApi?.getStationsByTag(
+        tag: tag!,
+        parameters: parameters,
+      );
+    } else if (state?.isEmpty == false) {
+      _response = await _radioBrowserApi?.getStationsByState(
+        state: state!,
+        parameters: parameters,
+      );
+    } else if (language?.isEmpty == false) {
+      _response = await _radioBrowserApi?.getStationsByLanguage(
+        language: language!,
+        parameters: parameters,
+      );
     }
 
     _country = country;
@@ -212,11 +202,17 @@ class RadioService {
               reverse: true,
             ),
           )
-          .timeout(const Duration(seconds: 15));
+          .timeout(
+            LoadTagsTimeoutException.timeoutDuration,
+            onTimeout: () {
+              throw LoadTagsTimeoutException();
+            },
+          );
       _tags = response.items;
-    } on Exception {
-      rethrow;
+    } on Exception catch (e) {
+      throw LoadTagsFailedException(e.toString());
     }
+
     return _tags;
   }
 
@@ -229,21 +225,12 @@ class RadioService {
       await _radioBrowserApi?.clickStation(uuid: uuid);
       printMessageInDebugMode('Station clicked: $uuid');
     } on Exception catch (e) {
-      printMessageInDebugMode(e);
+      printMessageInDebugMode(e.toString());
     }
-  }
-
-  Future<Audio?> findSimilarStation(Audio station) async {
-    final Audio? maybe = await _findSimilarStation(station);
-    if (maybe != null) {
-      return maybe;
-    }
-
-    return null;
   }
 
   final noNumbers = RegExp(r'^[^0-9]+$');
-  Future<Audio?> _findSimilarStation(Audio audio) async {
+  Future<Audio?> findSimilarStation(Audio audio) async {
     final searchTags = audio.tags?.where((e) => noNumbers.hasMatch(e));
     if (searchTags == null || searchTags.isEmpty) {
       return null;
@@ -363,6 +350,24 @@ class RadioService {
   }
 }
 
+class FindRadioBrowserHostsTimeoutException implements Exception {
+  static const Duration timeoutDuration = Duration(seconds: 15);
+
+  FindRadioBrowserHostsTimeoutException();
+
+  @override
+  String toString() =>
+      'Finding Radio Browser hosts takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+}
+
+class LookUpRadioBrowserHostsException implements Exception {
+  LookUpRadioBrowserHostsException();
+
+  @override
+  String toString() =>
+      'Can not lookup any Radio Browser hosts, are you connected to the internet?';
+}
+
 class RadioBrowserApiNotConnectedException implements Exception {
   final String? message;
 
@@ -373,10 +378,12 @@ class RadioBrowserApiNotConnectedException implements Exception {
 }
 
 class RadioBrowserServerUnavailableException implements Exception {
-  RadioBrowserServerUnavailableException();
+  final String? message;
+
+  RadioBrowserServerUnavailableException([this.message]);
 
   @override
-  String toString() => 'RadioBrowser server is unavailable';
+  String toString() => message ?? 'RadioBrowser server is unavailable';
 }
 
 class FindStationTimeoutException implements Exception {
@@ -385,4 +392,24 @@ class FindStationTimeoutException implements Exception {
   @override
   String toString() =>
       'Finding (this) station(s) takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+}
+
+class LoadTagsTimeoutException implements Exception {
+  LoadTagsTimeoutException();
+
+  static const Duration timeoutDuration = Duration(seconds: 15);
+
+  @override
+  String toString() =>
+      'Loading radio tags takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+}
+
+class LoadTagsFailedException implements Exception {
+  final String message;
+
+  LoadTagsFailedException(this.message);
+
+  @override
+  String toString() =>
+      'An error occurred while loading radio tags, the server might be unavailable: $message';
 }
