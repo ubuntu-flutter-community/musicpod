@@ -9,27 +9,29 @@ class FlagTheme extends StatelessWidget {
   Widget build(BuildContext context) {
     const fallbackFonts = ['Noto Color Emoji', 'NotoEmoji'];
 
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
     return Theme(
-      data: Theme.of(context).copyWith(
-        textTheme: Theme.of(context).textTheme.copyWith(
-          bodyLarge: Theme.of(
-            context,
-          ).textTheme.bodyLarge?.copyWith(fontFamilyFallback: fallbackFonts),
-          bodyMedium: Theme.of(
-            context,
-          ).textTheme.bodyMedium?.copyWith(fontFamilyFallback: fallbackFonts),
-          bodySmall: Theme.of(
-            context,
-          ).textTheme.bodySmall?.copyWith(fontFamilyFallback: fallbackFonts),
-          titleLarge: Theme.of(
-            context,
-          ).textTheme.titleLarge?.copyWith(fontFamilyFallback: fallbackFonts),
-          titleMedium: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(fontFamilyFallback: fallbackFonts),
-          titleSmall: Theme.of(
-            context,
-          ).textTheme.titleSmall?.copyWith(fontFamilyFallback: fallbackFonts),
+      data: theme.copyWith(
+        textTheme: textTheme.copyWith(
+          bodyLarge: textTheme.bodyLarge?.copyWith(
+            fontFamilyFallback: fallbackFonts,
+          ),
+          bodyMedium: textTheme.bodyMedium?.copyWith(
+            fontFamilyFallback: fallbackFonts,
+          ),
+          bodySmall: textTheme.bodySmall?.copyWith(
+            fontFamilyFallback: fallbackFonts,
+          ),
+          titleLarge: textTheme.titleLarge?.copyWith(
+            fontFamilyFallback: fallbackFonts,
+          ),
+          titleMedium: textTheme.titleMedium?.copyWith(
+            fontFamilyFallback: fallbackFonts,
+          ),
+          titleSmall: textTheme.titleSmall?.copyWith(
+            fontFamilyFallback: fallbackFonts,
+          ),
         ),
       ),
       child: child,
