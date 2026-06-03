@@ -50,21 +50,27 @@ class DesktopMusicPodApp extends StatelessWidget with WatchItMixin {
         ? phoenix.darkTheme
         : applyChineseFontToPhoenixDarkTheme(darkTheme: phoenix.darkTheme);
 
+    // TODO: seriously we need to clean up the themes...
+    final theTheme =
+        lightTheme ??
+        (useYaruTheme
+            ? yaruLightWithTweaks(createYaruLightTheme(primaryColor: color))
+            : phoenixLightWithFont);
+    final theDarkTheme =
+        darkTheme ??
+        (useYaruTheme
+            ? yaruDarkWithTweaks(createYaruDarkTheme(primaryColor: color))
+            : phoenixDarkWithFont);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.values[themeIndex],
       highContrastTheme: highContrastTheme,
       highContrastDarkTheme: highContrastDarkTheme,
-      theme:
-          lightTheme ??
-          (useYaruTheme
-              ? yaruLightWithTweaks(createYaruLightTheme(primaryColor: color))
-              : phoenixLightWithFont),
-      darkTheme:
-          darkTheme ??
-          (useYaruTheme
-              ? yaruDarkWithTweaks(createYaruDarkTheme(primaryColor: color))
-              : phoenixDarkWithFont),
+      theme: theTheme?.copyWith(textTheme: textThemeWithEmojis(theTheme)),
+      darkTheme: theDarkTheme?.copyWith(
+        textTheme: textThemeWithEmojis(theDarkTheme),
+      ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: supportedLocales,
       onGenerateTitle: (context) => AppConfig.appTitle,

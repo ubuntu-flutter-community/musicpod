@@ -34,6 +34,8 @@ ThemeData? yaruDarkWithTweaks(ThemeData? darkTheme) {
   );
 }
 
+const fallbackFonts = ['Noto Color Emoji', 'NotoEmoji'];
+
 ThemeData? yaruLightWithTweaks(ThemeData? theme) {
   return theme?.copyWith(
     textTheme: isLinux
@@ -48,6 +50,81 @@ ThemeData? yaruLightWithTweaks(ThemeData? theme) {
     iconButtonTheme: iconButtonTheme(theme),
   );
 }
+
+TextTheme textThemeWithEmojis(ThemeData theme) => theme.textTheme.copyWith(
+  bodySmall: theme.textTheme.bodySmall?.copyWith(
+    fontFamilyFallback: [
+      ...?theme.textTheme.bodySmall?.fontFamilyFallback,
+      ...fallbackFonts,
+    ],
+  ),
+  bodyMedium: theme.textTheme.bodyMedium?.copyWith(
+    fontFamilyFallback: [
+      ...?theme.textTheme.bodyMedium?.fontFamilyFallback,
+      ...fallbackFonts,
+    ],
+  ),
+  bodyLarge: theme.textTheme.bodyLarge?.copyWith(
+    fontFamilyFallback: [
+      ...?theme.textTheme.bodyLarge?.fontFamilyFallback,
+      ...fallbackFonts,
+    ],
+  ),
+  labelSmall: theme.textTheme.labelSmall?.copyWith(
+    fontFamilyFallback: [
+      ...?theme.textTheme.labelSmall?.fontFamilyFallback,
+      ...fallbackFonts,
+    ],
+  ),
+  labelMedium: theme.textTheme.labelMedium?.copyWith(
+    fontFamilyFallback: [
+      ...?theme.textTheme.labelMedium?.fontFamilyFallback,
+      ...fallbackFonts,
+    ],
+  ),
+  labelLarge: theme.textTheme.labelLarge?.copyWith(
+    fontFamilyFallback: [
+      ...?theme.textTheme.labelLarge?.fontFamilyFallback,
+      ...fallbackFonts,
+    ],
+  ),
+  headlineSmall: theme.textTheme.headlineSmall?.copyWith(
+    fontFamilyFallback: [
+      ...?theme.textTheme.headlineSmall?.fontFamilyFallback,
+      ...fallbackFonts,
+    ],
+  ),
+  headlineMedium: theme.textTheme.headlineMedium?.copyWith(
+    fontFamilyFallback: [
+      ...?theme.textTheme.headlineMedium?.fontFamilyFallback,
+      ...fallbackFonts,
+    ],
+  ),
+  headlineLarge: theme.textTheme.headlineLarge?.copyWith(
+    fontFamilyFallback: [
+      ...?theme.textTheme.headlineLarge?.fontFamilyFallback,
+      ...fallbackFonts,
+    ],
+  ),
+  titleSmall: theme.textTheme.titleSmall?.copyWith(
+    fontFamilyFallback: [
+      ...?theme.textTheme.titleSmall?.fontFamilyFallback,
+      ...fallbackFonts,
+    ],
+  ),
+  titleMedium: theme.textTheme.titleMedium?.copyWith(
+    fontFamilyFallback: [
+      ...?theme.textTheme.titleMedium?.fontFamilyFallback,
+      ...fallbackFonts,
+    ],
+  ),
+  titleLarge: theme.textTheme.titleLarge?.copyWith(
+    fontFamilyFallback: [
+      ...?theme.textTheme.titleLarge?.fontFamilyFallback,
+      ...fallbackFonts,
+    ],
+  ),
+);
 
 IconButtonThemeData iconButtonTheme(ThemeData? data) {
   return IconButtonThemeData(

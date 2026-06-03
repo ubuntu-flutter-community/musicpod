@@ -4,7 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:phoenix_theme/phoenix_theme.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
@@ -55,9 +54,6 @@ class _MobileMusicPodAppState extends State<MobileMusicPodApp> {
   @override
   Widget build(BuildContext context) {
     final themeIndex = watchPropertyValue((SettingsModel m) => m.themeIndex);
-    final useYaruTheme = watchPropertyValue(
-      (SettingsModel m) => m.useYaruTheme,
-    );
 
     final phoenix = phoenixTheme(color: widget.accent ?? kMusicPodDefaultColor);
     final routingManager = di<RoutingManager>();
@@ -96,26 +92,16 @@ class _MobileMusicPodAppState extends State<MobileMusicPodApp> {
       },
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.values[themeIndex],
-      theme: (useYaruTheme && widget.accent != null
-          ? yaruLightWithTweaks(
-              createYaruLightTheme(primaryColor: widget.accent!),
-            )
-          : phoenixLightWithFont),
-      darkTheme:
-          (useYaruTheme && widget.accent != null
-                  ? yaruDarkWithTweaks(
-                      createYaruDarkTheme(primaryColor: widget.accent!),
-                    )
-                  : phoenixDarkWithFont)
-              ?.copyWith(
-                appBarTheme: phoenix.darkTheme.appBarTheme.copyWith(
-                  backgroundColor: Colors.black,
-                ),
-                colorScheme: phoenix.darkTheme.colorScheme.copyWith(
-                  surface: Colors.black,
-                ),
-                scaffoldBackgroundColor: Colors.black,
-              ),
+      theme: phoenixLightWithFont,
+      darkTheme: phoenixDarkWithFont.copyWith(
+        appBarTheme: phoenix.darkTheme.appBarTheme.copyWith(
+          backgroundColor: Colors.black,
+        ),
+        colorScheme: phoenix.darkTheme.colorScheme.copyWith(
+          surface: Colors.black,
+        ),
+        scaffoldBackgroundColor: Colors.black,
+      ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: supportedLocales,
       onGenerateTitle: (context) => AppConfig.appTitle,
