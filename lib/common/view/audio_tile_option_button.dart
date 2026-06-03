@@ -9,6 +9,7 @@ import '../../app/app_manager.dart';
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/command_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/playlist_action.dart';
@@ -163,7 +164,7 @@ class AudioTileOptionButton extends StatelessWidget {
                 if (albumId != null) {
                   final albumAudios = await di<LocalAudioManager>()
                       .findAlbumCommand(albumId)
-                      .runAsync();
+                      .runRestrictedAsync();
                   if (albumAudios != null) {
                     unawaited(
                       di<RoutingManager>().push(

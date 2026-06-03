@@ -17,6 +17,7 @@ import '../../common/view/sliver_audio_page.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/command_x.dart';
 import '../local_audio_manager.dart';
 import 'artist_page.dart';
 import 'local_cover.dart';
@@ -30,7 +31,7 @@ class AlbumPage extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     callOnceAfterThisBuild(
-      (context) => di<LocalAudioManager>().findAlbumCommand(id).run(),
+      (context) => di<LocalAudioManager>().findAlbumCommand(id).runRestricted(),
     );
 
     return watchValue(
@@ -118,7 +119,8 @@ class AlbumPageSideBarIcon extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     callOnceAfterThisBuild(
-      (context) => di<LocalAudioManager>().findAlbumCommand(albumId).run(),
+      (context) =>
+          di<LocalAudioManager>().findAlbumCommand(albumId).runRestricted(),
     );
     final albumName =
         watchValue(

@@ -3,6 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
+import '../../extensions/command_x.dart';
 import '../../l10n/app_localizations.dart';
 import '../../local_audio/data/change_metadata_capsule.dart';
 import '../../local_audio/local_audio_manager.dart';
@@ -161,7 +162,9 @@ class _LocalMetadataTileState extends State<LocalMetadataTile> {
     final manager = di<LocalAudioManager>();
 
     if (widget.audio.albumDbId != null) {
-      manager.findAlbumCommand(widget.audio.albumDbId!, force: true).run();
+      manager
+          .findAlbumCommand(widget.audio.albumDbId!, force: true)
+          .runRestricted();
     }
 
     return switch (widget.type) {

@@ -10,6 +10,7 @@ import '../../common/view/cover_background.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
+import '../../extensions/command_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../player/player_model.dart';
 import '../local_audio_manager.dart';
@@ -24,7 +25,7 @@ class AlbumCard extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     callOnceAfterThisBuild(
-      (context) => di<LocalAudioManager>().findAlbumCommand(id).run(),
+      (context) => di<LocalAudioManager>().findAlbumCommand(id).runRestricted(),
     );
 
     final pinned = watchValue(
@@ -85,7 +86,10 @@ class _AlbumCard extends StatelessWidget {
     ),
     onPlay: () async => di<PlayerModel>().startPlaylist(
       audios:
-          await di<LocalAudioManager>().findAlbumCommand(id).runAsync() ?? [],
+          await di<LocalAudioManager>()
+              .findAlbumCommand(id)
+              .runRestrictedAsync() ??
+          [],
       listName: id.toString(),
     ),
   );
