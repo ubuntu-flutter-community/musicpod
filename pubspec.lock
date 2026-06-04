@@ -94,7 +94,7 @@ packages:
     description:
       path: "."
       ref: oldworking
-      resolved-ref: "91e99b9823cdeb23d46f4d8d86377de47baa65c7"
+      resolved-ref: "8d6d9cb5fbe13e0c8d14f21883a489603dc90a5d"
       url: "https://github.com/Feichtmeier/audio-service-mpris"
     source: git
     version: "0.2.1"
