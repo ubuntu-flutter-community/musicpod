@@ -260,6 +260,13 @@ extension GetItInjectableX on _i174.GetIt {
       ),
       dispose: (i) => i.dispose(),
     );
+    await gh.factoryAsync<_i739.AudioServiceHandler>(
+      () => audioServiceModule.audioServiceHandler(
+        gh<_i38.PlayerService>(),
+        gh<_i740.WindowManager>(),
+      ),
+      preResolve: true,
+    );
     await gh.singletonAsync<_i112.MpvMetadataManager>(
       () {
         final i = _i112.MpvMetadataManager(
@@ -286,10 +293,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i1025.PlayerModel>(
       () => _i1025.PlayerModel(service: gh<_i38.PlayerService>()),
       dispose: (i) => i.dispose(),
-    );
-    await gh.factoryAsync<_i739.AudioServiceHandler>(
-      () => audioServiceModule.audioServiceHandler(gh<_i38.PlayerService>()),
-      preResolve: true,
     );
     gh.lazySingleton<_i338.SettingsModel>(
       () => _i338.SettingsModel(
