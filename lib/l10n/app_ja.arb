@@ -29,7 +29,7 @@
     "podcasts": "ポッドキャスト",
     "podcast": "ポッドキャスト",
     "likedSongs": "いいね！した曲",
-    "likedSongsDescription": "いいね！したすべてのオーディオ (ローカルまたはインターネット上)",
+    "likedSongsDescription": "いいね！したすべてのオーディオ (ローカルまたはインターネット上)。",
     "likedSongsSubtitle": "ハートボタンを押してタイトルを追加してください。",
     "cancel": "キャンセル",
     "add": "追加",
@@ -93,7 +93,7 @@
     "offline": "オフライン",
     "offlineDescription": "コンピュータがインターネットに接続されていないようです。",
     "newEpisodeAvailable": "新しいエピソードが利用可能です :",
-    "noStationFound": "申し訳ありません。その検索条件に一致するラジオ局は見つかりませんでした。",
+    "noStationFound": "申し訳ありません。その検索条件に一致するラジオ局は見つかりませんでした",
     "nothingFound": "見つかりませんでした",
     "noStarredStations": "まだスターを付けたラジオ局はありません。",
     "tags": "タグ",
@@ -197,7 +197,7 @@
     "isBackInWifiDialogBody": "WIFIまたは有線LANに接続されました。データセーフモードを無効にしますか？",
     "enableDataSafeModeSettingTitle": "データセーフモード",
     "dataSafeModeEnabled": "モバイル接続 : データセーフモードが有効です。",
-    "dataSafeModeDisabled": "Wifi/有線LAN : データセーフモードが無効です。",
+    "dataSafeModeDisabled": "Wifi/イーサネット : データセーフモードが無効です。",
     "enableDataSafeModeSettingDescription": "有効にすると、ラジオ局から送信されるタイトルのアートワークをダウンロードしなくなります。",
     "stopToNotifyAboutDataSafeMode": "通知しない",
     "notifyMeAboutDataSafeModeTitle": "データセーフモードの通知",
@@ -218,7 +218,7 @@
     "addToPlaylist": "プレイリストに追加",
     "open": "開く",
     "removeFrom": "削除元",
-    "noCountryFound": "この名前の国は見つかりません。+49などの電話番号の国際 prefixes も使用できます。",
+    "noCountryFound": "この名前の国は見つかりません。+49などの電話番号の国際 prefixes も使用できます",
     "noStarredTags": "まだスターを付けたタグはありません",
     "name": "名前",
     "state": "状態",
@@ -350,11 +350,11 @@
     "searchForRadioStationsWithGenreName": "このジャンルのラジオ局を検索",
     "clearPlaylist": "プレイリストからすべてのメディアを削除",
     "editPlaylist": "プレイリストを編集",
-    "stationUrl": "ラジオ局の URL",
-    "podcastFeedUrl": "ポッドキャストフィードの URL",
+    "stationUrl": "ラジオ局の Url",
+    "podcastFeedUrl": "ポッドキャストフィードの Url",
     "stationName": "ラジオ局名",
     "podcastName": "ポッドキャスト名",
-    "url": "URL",
+    "url": "Url",
     "loadFromFileOptional": "ファイルから読み込む (オプション)",
     "exportPinnedAlbumsToM3UFiles": "ピン留めしたアルバムを M3Uファイルにエクスポート",
     "exportPinnedAlbumToM3UFile": "ピン留めしたアルバムを M3Uファイルにエクスポート",
@@ -713,8 +713,8 @@
     "path": "パス",
     "albumNotFound": "このアルバムは存在しないか、読み込み元の外部プレイリスト (M3U/PLSファイル) が削除されています。",
     "stationNotFound": "このラジオ局は存在しないか、ラジオブラウザサーバーから削除されています。",
-    "onlyLocalAudioForPlaylists": "プレイリストのインポートでサポートされるのはローカルオーディオのみです！ラジオ機能でそれらを検索し、スター（お気に入り）ボタンでライブラリに追加してください。",
-    "customStationWarning": "指定されたURLはラジオブラウザサーバー上に存在する必要があります。存在しない場合、ライブラリに追加されません！理想的には、ラジオ機能でそれらを検索し、スター (お気に入り) ボタンでライブラリに追加してください。",
+    "onlyLocalAudioForPlaylists": "プレイリストのインポートでサポートされるのはローカルオーディオのみです！ラジオ機能でそれらを検索し、スター（お気に入り）ボタンでライブラリに追加してください!",
+    "customStationWarning": "指定されたURLはラジオブラウザサーバー上に存在する必要があります。存在しない場合、ライブラリに追加されません！理想的には、ラジオ機能でそれらを検索し、スター (お気に入り) ボタンでライブラリに追加してください!",
     "disc": "ディスク",
     "groupAlbumsOnlyByAlbumName": "アルバム名のみでアルバムをグループ化する",
     "groupAlbumsOnlyByAlbumNameDescription": "これにより、アルバムはアーティスト名+アルバム名ではなく、アルバム名のみでグループ化されます。これは、ライブラリ内でアルバム名が一意であることを前提としています！",
@@ -774,7 +774,6 @@
         }
     },
     "appendToQueue": "キューの最後に追加",
-    "@appendToQueue": {},
     "appendedToQueue": "キューの最後に追加しました : {title}",
     "@appendedToQueue": {
         "type": "text",
@@ -794,7 +793,6 @@
         }
     },
     "appendMediaToQueueTitle": "メディアをキューに追加",
-    "@appendMediaToQueueTitle": {},
     "appendMediaToQueue": "メディアをキューに追加 : {title}",
     "@appendMediaToQueue": {
         "type": "text",
@@ -814,5 +812,82 @@
     "settingsDoNotAskForGeniusTitle": "Genius を使用しない、または Genius APIキーの入力を今後求めない",
     "settingsDoNotAskForGeniusDescription": "これにより、アプリが今後 Genius APIキーを要求することを防ぎ、歌詞機能をローカルの LRCファイルまたはオーディオメタデータに埋め込まれた LRC文字列に完全に依存するようにします。",
     "tosLink": "https://genius.com/static/terms",
-    "tosLinkText": "Genius の利用規約を読む"
+    "tosLinkText": "Genius の利用規約を読む",
+    "downloadRemoved": "削除済みダウンロード : {name}",
+    "@downloadRemoved": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "parsingLocalAudioFilesMetadataPleaseWait": "ローカルオーディオファイルのメタデータを解析しています。お待ちください...",
+    "persistingLocalAudioFilesMetadataPleaseWait": "ローカルオーディオファイルのメタデータを保存しています。お待ちください ...",
+    "buildingLocalAudioLibraryPleaseWait": "ローカルオーディオライブラリを構築しています。お待ちください ...",
+    "checkingForUpdatesPleaseWait": "アップデートの確認中 {progress} %",
+    "@checkingForUpdatesPleaseWait": {
+        "placeholders": {
+            "progress": {
+                "type": "int"
+            }
+        }
+    },
+    "oopsSomethingWentWrong": "おっと、何か問題が発生しました！",
+    "retry": "再試行",
+    "reportIssue": "問題を報告",
+    "ignoreThisTitleInHearingHistory": "履歴でこのタイトルを無視する",
+    "removeFromIgnoredHearyHistoryTitles": "無視されたタイトルから削除",
+    "ignoredHearyHistoryTitlesTitle": "無視されたタイトル",
+    "ignoredHearyHistoryTitlesDescription": "これらのタイトルは再生履歴には記録されず、最近再生した曲のリストにも表示されません。",
+    "playingMediaTimedOut": "メディアの再生がタイムアウトしました。ネットワークエラーまたはサーバーの問題が原因である可能性があります。",
+    "playbackWasPausedByTimer": "タイマーにより再生が一時停止しました",
+    "playbackTimerCancelled": "再生タイマーがキャンセルされました",
+    "podcastDoesNotSendEpisodeDuration": "このポッドキャストはエピソードの長さを送信しません。完了マーク機能が正常に動作しない可能性があります。",
+    "cleanedUpEpisodesOfUnsubscribedPodcast": "登録解除されたポッドキャストのエピソードを整理 : {podcastName}",
+    "findEpisodesTimeoutMessage": "エピソードの検索に通常より時間がかかっています。インターネットに接続されていますか？接続されている場合、サーバー側の問題かもしれません。",
+    "@findEpisodesTimeoutMessage": {
+        "placeholders": {
+            "podcastName": {
+                "type": "String"
+            }
+        }
+    },
+    "radioBrowserServerUnavailable": "ラジオブラウザサーバーは現在利用できません。一時的な問題である可能性があります。しばらくしてからもう一度試してください。",
+    "findStationsTimeoutMessage": "(この)ステーションの検索に通常より時間がかかっています。インターネットに接続されていますか？接続されている場合、サーバー側の問題である可能性があります。",
+    "retryInSeconds": "{seconds} 秒後に再試行",
+    "@retryInSeconds": {
+        "placeholders": {
+            "seconds": {
+                "type": "String"
+            }
+        }
+    },
+    "retryngInSeconds": "{seconds} 秒後に再試行",
+    "@retryngInSeconds": {
+        "placeholders": {
+            "seconds": {
+                "type": "String"
+            }
+        }
+    },
+    "playerCouldNotOpenRemoteMedia": "プレーヤーがリモートメディア '{media}' を開いて再生することができませんでした。インターネットに接続されていますか？接続されている場合、サーバー側の問題である可能性があります。",
+    "@playerCouldNotOpenRemoteMedia": {
+        "placeholders": {
+            "media": {
+                "type": "String"
+            }
+        }
+    },
+    "searchTimeoutMessage": "検索に通常より時間がかかっています。インターネットに接続されていますか？接続されている場合、サーバー側の問題である可能性があります。",
+    "youCanEditTheNameLater": "名前は後で編集できます。",
+    "geniusAlsoProvidesArt": "Genius はほとんどの楽曲のアートワークも提供しています。Genius で歌詞を取得するように設定すると、プレーヤー内のオンラインアートワークも MusicBrainz ではなく Genius から取得されます。",
+    "enterYourGeniusApiKey": "Genius API キーの入力",
+    "saveYourApiKey": "API キーを保存",
+    "lookUpRadioBrowserHostsFailed": "ラジオブラウザのホスト検索に失敗しました。インターネットに接続されていますか？接続されている場合、サーバー側の問題である可能性があります。",
+    "lookUpRadioBrowserHostsTimouted": "Radio Browser のホストを見つけるのに通常より時間がかかっています。インターネットに接続されていますか？接続されている場合、サーバー側の問題である可能性があります。",
+    "radioBrowserServerNotConnected": "ラジオブラウザサーバーに接続されていません",
+    "radioBrowserLoadingTagsFailed": "ラジオタグの読み込み中にエラーが発生しました。サーバーが利用できない可能性があります。",
+    "radioBrowserLoadingTagsTimeouted": "タグの読み込みに予想以上に時間がかかりました。インターネットに接続されていますか？接続されている場合、サーバー側の問題である可能性があります",
+    "podcastSearchNotSuccessfull": "ポッドキャストの検索に失敗しました。インターネットに接続されていますか？接続されている場合、サーバー側の問題である可能性があります。",
+    "podcastFailedHostLookup": "エピソードの検索に失敗しました。サーバーに接続できませんでした。インターネットに接続されていますか？接続されている場合、サーバー側の問題である可能性があります。"
 }
