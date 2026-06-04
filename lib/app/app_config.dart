@@ -3,6 +3,8 @@ import '../extensions/taget_platform_x.dart';
 class AppConfig {
   static const appName = 'musicpod';
   static const appTitle = 'MusicPod';
+  static const snapDesktopEntry = '${appName}_${appName}';
+  static const desktopEntry = appName;
   static const appId = 'org.feichtmeier.Musicpod';
   static const androidAppId = 'org.feichtmeier.apps.musicpod';
   static const linuxDBusName = 'org.mpris.MediaPlayer2.musicpod';

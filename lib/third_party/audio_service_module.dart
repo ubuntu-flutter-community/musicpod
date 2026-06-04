@@ -1,9 +1,11 @@
 import 'package:audio_service/audio_service.dart';
+import 'package:audio_service_mpris/audio_service_mpris.dart';
 import 'package:injectable/injectable.dart';
 
 import '../app/app_config.dart';
 import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
+import '../common/snap_detector.dart';
 import '../extensions/taget_platform_x.dart';
 import '../player/player_service.dart';
 
@@ -14,6 +16,19 @@ abstract class AudioServiceModule {
     PlayerService playerService,
   ) async {
     final handler = await _registerAudioServiceHandler(playerService);
+
+    final mpris = Mpris();
+    mpris.identity = AppConfig.appTitle;
+    mpris.desktopEntry = SnapDetector.isSnap
+        ? AppConfig.snapDesktopEntry
+        : AppConfig.desktopEntry;
+    mpris.canGoNext = true;
+    mpris.canGoPrevious = true;
+    mpris.canPlay = true;
+    mpris.canPause = true;
+    mpris.canControl = true;
+    mpris.canRaise = true;
+
     return handler;
   }
 }
