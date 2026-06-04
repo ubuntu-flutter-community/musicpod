@@ -93,11 +93,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: old
-      resolved-ref: "50180e4491166158213b79971bd01855a9b14251"
+      ref: oldworking
+      resolved-ref: "91e99b9823cdeb23d46f4d8d86377de47baa65c7"
       url: "https://github.com/Feichtmeier/audio-service-mpris"
     source: git
-    version: "0.1.5"
+    version: "0.2.1"
   audio_service_platform_interface:
     dependency: transitive
     description:
