@@ -96,7 +96,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get likedSongs => 'いいね！した曲';
 
   @override
-  String get likedSongsDescription => 'いいね！したすべてのオーディオ (ローカルまたはインターネット上)';
+  String get likedSongsDescription => 'いいね！したすべてのオーディオ (ローカルまたはインターネット上)。';
 
   @override
   String get likedSongsSubtitle => 'ハートボタンを押してタイトルを追加してください。';
@@ -288,7 +288,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get newEpisodeAvailable => '新しいエピソードが利用可能です :';
 
   @override
-  String get noStationFound => '申し訳ありません。その検索条件に一致するラジオ局は見つかりませんでした。';
+  String get noStationFound => '申し訳ありません。その検索条件に一致するラジオ局は見つかりませんでした';
 
   @override
   String get nothingFound => '見つかりませんでした';
@@ -442,7 +442,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String downloadRemoved(String name) {
-    return 'Download removed: $name';
+    return '削除済みダウンロード : $name';
   }
 
   @override
@@ -494,7 +494,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get dataSafeModeEnabled => 'モバイル接続 : データセーフモードが有効です。';
 
   @override
-  String get dataSafeModeDisabled => 'Wifi/有線LAN : データセーフモードが無効です。';
+  String get dataSafeModeDisabled => 'Wifi/イーサネット : データセーフモードが無効です。';
 
   @override
   String get enableDataSafeModeSettingDescription =>
@@ -560,7 +560,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get removeFrom => '削除元';
 
   @override
-  String get noCountryFound => 'この名前の国は見つかりません。+49などの電話番号の国際 prefixes も使用できます。';
+  String get noCountryFound => 'この名前の国は見つかりません。+49などの電話番号の国際 prefixes も使用できます';
 
   @override
   String get noStarredTags => 'まだスターを付けたタグはありません';
@@ -958,10 +958,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get editPlaylist => 'プレイリストを編集';
 
   @override
-  String get stationUrl => 'ラジオ局の URL';
+  String get stationUrl => 'ラジオ局の Url';
 
   @override
-  String get podcastFeedUrl => 'ポッドキャストフィードの URL';
+  String get podcastFeedUrl => 'ポッドキャストフィードの Url';
 
   @override
   String get stationName => 'ラジオ局名';
@@ -970,7 +970,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get podcastName => 'ポッドキャスト名';
 
   @override
-  String get url => 'URL';
+  String get url => 'Url';
 
   @override
   String get loadFromFileOptional => 'ファイルから読み込む (オプション)';
@@ -2065,11 +2065,11 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get onlyLocalAudioForPlaylists =>
-      'プレイリストのインポートでサポートされるのはローカルオーディオのみです！ラジオ機能でそれらを検索し、スター（お気に入り）ボタンでライブラリに追加してください。';
+      'プレイリストのインポートでサポートされるのはローカルオーディオのみです！ラジオ機能でそれらを検索し、スター（お気に入り）ボタンでライブラリに追加してください!';
 
   @override
   String get customStationWarning =>
-      '指定されたURLはラジオブラウザサーバー上に存在する必要があります。存在しない場合、ライブラリに追加されません！理想的には、ラジオ機能でそれらを検索し、スター (お気に入り) ボタンでライブラリに追加してください。';
+      '指定されたURLはラジオブラウザサーバー上に存在する必要があります。存在しない場合、ライブラリに追加されません！理想的には、ラジオ機能でそれらを検索し、スター (お気に入り) ボタンでライブラリに追加してください!';
 
   @override
   String get disc => 'ディスク';
@@ -2144,15 +2144,15 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get parsingLocalAudioFilesMetadataPleaseWait =>
-      'Parsing local audio files metadata, please wait ...';
+      'ローカルオーディオファイルのメタデータを解析しています。お待ちください...';
 
   @override
   String get persistingLocalAudioFilesMetadataPleaseWait =>
-      'Persisting local audio files metadata, please wait ...';
+      'ローカルオーディオファイルのメタデータを保存しています。お待ちください ...';
 
   @override
   String get buildingLocalAudioLibraryPleaseWait =>
-      'Building local audio library, please wait ...';
+      'ローカルオーディオライブラリを構築しています。お待ちください ...';
 
   @override
   String get importingPodcastsPleaseWait => 'ポッドキャストをインポート中、お待ちください...';
@@ -2174,7 +2174,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String checkingForUpdatesPleaseWait(int progress) {
-    return 'Checking for updates $progress%';
+    return 'アップデートの確認中 $progress %';
   }
 
   @override
@@ -2270,118 +2270,115 @@ class AppLocalizationsJa extends AppLocalizations {
   String get tosLinkText => 'Genius の利用規約を読む';
 
   @override
-  String get oopsSomethingWentWrong => 'Oops, something went wrong!';
+  String get oopsSomethingWentWrong => 'おっと、何か問題が発生しました！';
 
   @override
-  String get retry => 'Retry';
+  String get retry => '再試行';
 
   @override
-  String get reportIssue => 'Report this issue';
+  String get reportIssue => '問題を報告';
 
   @override
-  String get ignoreThisTitleInHearingHistory =>
-      'Ignore this title in hearing history';
+  String get ignoreThisTitleInHearingHistory => '履歴でこのタイトルを無視する';
 
   @override
-  String get removeFromIgnoredHearyHistoryTitles =>
-      'Remove from ignored titles';
+  String get removeFromIgnoredHearyHistoryTitles => '無視されたタイトルから削除';
 
   @override
-  String get ignoredHearyHistoryTitlesTitle => 'Ignored titles';
+  String get ignoredHearyHistoryTitlesTitle => '無視されたタイトル';
 
   @override
   String get ignoredHearyHistoryTitlesDescription =>
-      'These titles will be ignored in the hearing history and will not be shown in the recently played list.';
+      'これらのタイトルは再生履歴には記録されず、最近再生した曲のリストにも表示されません。';
 
   @override
   String get playingMediaTimedOut =>
-      'Playing media timed out. This might be caused by a network error or server issues.';
+      'メディアの再生がタイムアウトしました。ネットワークエラーまたはサーバーの問題が原因である可能性があります。';
 
   @override
-  String get playbackWasPausedByTimer => 'Playback was paused by timer';
+  String get playbackWasPausedByTimer => 'タイマーにより再生が一時停止しました';
 
   @override
-  String get playbackTimerCancelled => 'Playback timer cancelled';
+  String get playbackTimerCancelled => '再生タイマーがキャンセルされました';
 
   @override
   String get podcastDoesNotSendEpisodeDuration =>
-      'This podcast does not send episode duration. The mark done feature might not work as expected.';
+      'このポッドキャストはエピソードの長さを送信しません。完了マーク機能が正常に動作しない可能性があります。';
 
   @override
   String cleanedUpEpisodesOfUnsubscribedPodcast(String podcastName) {
-    return 'Cleaned up episodes of unsubscribed podcast: $podcastName';
+    return '登録解除されたポッドキャストのエピソードを整理 : $podcastName';
   }
 
   @override
   String findEpisodesTimeoutMessage(String podcastName) {
-    return 'Finding episodes takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+    return 'エピソードの検索に通常より時間がかかっています。インターネットに接続されていますか？接続されている場合、サーバー側の問題かもしれません。';
   }
 
   @override
   String get radioBrowserServerUnavailable =>
-      'The radio browser server is currently unavailable. This might be a temporary issue. Please try again later.';
+      'ラジオブラウザサーバーは現在利用できません。一時的な問題である可能性があります。しばらくしてからもう一度試してください。';
 
   @override
   String get findStationsTimeoutMessage =>
-      'Finding (this) station(s) takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      '(この)ステーションの検索に通常より時間がかかっています。インターネットに接続されていますか？接続されている場合、サーバー側の問題である可能性があります。';
 
   @override
   String retryInSeconds(String seconds) {
-    return 'Retry in $seconds seconds';
+    return '$seconds 秒後に再試行';
   }
 
   @override
   String retryngInSeconds(String seconds) {
-    return 'Retryng in $seconds seconds';
+    return '$seconds 秒後に再試行';
   }
 
   @override
   String playerCouldNotOpenRemoteMedia(String media) {
-    return 'The player could not open or maintain to play remote media \'$media\'. Are you connected to the internet? If yes, this might be a server issue.';
+    return 'プレーヤーがリモートメディア \'$media\' を開いて再生することができませんでした。インターネットに接続されていますか？接続されている場合、サーバー側の問題である可能性があります。';
   }
 
   @override
   String get searchTimeoutMessage =>
-      'Searching takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      '検索に通常より時間がかかっています。インターネットに接続されていますか？接続されている場合、サーバー側の問題である可能性があります。';
 
   @override
-  String get youCanEditTheNameLater => 'You can edit the name later.';
+  String get youCanEditTheNameLater => '名前は後で編集できます。';
 
   @override
   String get geniusAlsoProvidesArt =>
-      'Genius also provides artwork for most songs. If you enable Genius to fetch lyrics, the online art in the player will also use Genius instead of MusicBrainz.';
+      'Genius はほとんどの楽曲のアートワークも提供しています。Genius で歌詞を取得するように設定すると、プレーヤー内のオンラインアートワークも MusicBrainz ではなく Genius から取得されます。';
 
   @override
-  String get enterYourGeniusApiKey => 'Enter your Genius API key';
+  String get enterYourGeniusApiKey => 'Genius API キーの入力';
 
   @override
-  String get saveYourApiKey => 'Save API Key';
+  String get saveYourApiKey => 'API キーを保存';
 
   @override
   String get lookUpRadioBrowserHostsFailed =>
-      'Looking up radio browser hosts failed. Are you connected to the internet? If yes, this might be a server issue.';
+      'ラジオブラウザのホスト検索に失敗しました。インターネットに接続されていますか？接続されている場合、サーバー側の問題である可能性があります。';
 
   @override
   String get lookUpRadioBrowserHostsTimouted =>
-      'Finding Radio Browser hosts takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      'Radio Browser のホストを見つけるのに通常より時間がかかっています。インターネットに接続されていますか？接続されている場合、サーバー側の問題である可能性があります。';
 
   @override
-  String get radioBrowserServerNotConnected =>
-      'You are not connected to any radio browser server';
+  String get radioBrowserServerNotConnected => 'ラジオブラウザサーバーに接続されていません';
 
   @override
   String get radioBrowserLoadingTagsFailed =>
-      'An error occurred while loading radio tags, the server might be unavailable.';
+      'ラジオタグの読み込み中にエラーが発生しました。サーバーが利用できない可能性があります。';
 
   @override
   String get radioBrowserLoadingTagsTimeouted =>
-      'Loading tags took longer than expected, are you connected to the internet? If yes, this might be a server issue';
+      'タグの読み込みに予想以上に時間がかかりました。インターネットに接続されていますか？接続されている場合、サーバー側の問題である可能性があります';
 
   @override
   String get podcastSearchNotSuccessfull =>
-      'This podcast search was not successfull, are you connected to the internet? If yes this might be a server issue.';
+      'ポッドキャストの検索に失敗しました。インターネットに接続されていますか？接続されている場合、サーバー側の問題である可能性があります。';
 
   @override
   String get podcastFailedHostLookup =>
-      'Finding episodes was not successfull - could not connect to the server. Are you connected to the internet? If yes this might be a server issue.';
+      'エピソードの検索に失敗しました。サーバーに接続できませんでした。インターネットに接続されていますか？接続されている場合、サーバー側の問題である可能性があります。';
 }

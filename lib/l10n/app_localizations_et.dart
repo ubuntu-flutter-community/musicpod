@@ -30,7 +30,7 @@ class AppLocalizationsEt extends AppLocalizations {
   String get repeatAll => 'Korda kõiki';
 
   @override
-  String get repeatOff => 'Repeat Off';
+  String get repeatOff => 'Kordus on väljas';
 
   @override
   String get next => 'Edasi';
@@ -454,7 +454,7 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String downloadRemoved(String name) {
-    return 'Download removed: $name';
+    return 'Allalaaditud on eemaldatud: $name';
   }
 
   @override
@@ -568,7 +568,7 @@ class AppLocalizationsEt extends AppLocalizations {
   String get addedTo => 'Lisatud:';
 
   @override
-  String get addToPlaylist => 'Lisatud esitusloendisse';
+  String get addToPlaylist => 'Lisa esitusloendisse';
 
   @override
   String get open => 'Ava';
@@ -2196,15 +2196,15 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String get parsingLocalAudioFilesMetadataPleaseWait =>
-      'Parsing local audio files metadata, please wait ...';
+      'Uurin kohalike helifailide metaandmeid, palun oota…';
 
   @override
   String get persistingLocalAudioFilesMetadataPleaseWait =>
-      'Persisting local audio files metadata, please wait ...';
+      'Jätkan kohalike helifailide metaandmete uurimist, palun oota…';
 
   @override
   String get buildingLocalAudioLibraryPleaseWait =>
-      'Building local audio library, please wait ...';
+      'Koostan kohalikest helifailidest muusikakogu, palun oota…';
 
   @override
   String get importingPodcastsPleaseWait =>
@@ -2232,7 +2232,7 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String checkingForUpdatesPleaseWait(int progress) {
-    return 'Checking for updates $progress%';
+    return 'Kontrollin uuenduste olemasolu $progress%';
   }
 
   @override
@@ -2331,118 +2331,118 @@ class AppLocalizationsEt extends AppLocalizations {
   String get tosLinkText => 'Loe Geniuse kasutustingimusi';
 
   @override
-  String get oopsSomethingWentWrong => 'Oops, something went wrong!';
+  String get oopsSomethingWentWrong => 'Vaat kus lops, midagi läks nüüd viltu!';
 
   @override
-  String get retry => 'Retry';
+  String get retry => 'Proovi uuesti';
 
   @override
-  String get reportIssue => 'Report this issue';
+  String get reportIssue => 'Teata sellest veast';
 
   @override
   String get ignoreThisTitleInHearingHistory =>
-      'Ignore this title in hearing history';
+      'Eira kuulamiste ajaloos seda saadet/jaama';
 
   @override
   String get removeFromIgnoredHearyHistoryTitles =>
-      'Remove from ignored titles';
+      'Eemalda eiratud saadete/jaamade loendist';
 
   @override
-  String get ignoredHearyHistoryTitlesTitle => 'Ignored titles';
+  String get ignoredHearyHistoryTitlesTitle => 'Eiratud saated/jaamad';
 
   @override
   String get ignoredHearyHistoryTitlesDescription =>
-      'These titles will be ignored in the hearing history and will not be shown in the recently played list.';
+      'Need saated/jaamad jäävad kuulamise ajaloost välja ja ei kuvata hiljuti kuulatus sisu seas.';
 
   @override
   String get playingMediaTimedOut =>
-      'Playing media timed out. This might be caused by a network error or server issues.';
+      'Meediumi esitamine aegus. Siin võib olla tegemist nii võrguühenduse, kui serveri veaga.';
 
   @override
-  String get playbackWasPausedByTimer => 'Playback was paused by timer';
+  String get playbackWasPausedByTimer => 'Taimer peatas taasesituse';
 
   @override
-  String get playbackTimerCancelled => 'Playback timer cancelled';
+  String get playbackTimerCancelled => 'Taasesituse taimeri töö on katkestatud';
 
   @override
   String get podcastDoesNotSendEpisodeDuration =>
-      'This podcast does not send episode duration. The mark done feature might not work as expected.';
+      'See taskuhääling ei teata osade kestusi. Kuulatuks märkimine ei pruugi korrektselt toimida.';
 
   @override
   String cleanedUpEpisodesOfUnsubscribedPodcast(String podcastName) {
-    return 'Cleaned up episodes of unsubscribed podcast: $podcastName';
+    return 'Kustutasin lõpetatud taskuhäälingu tellimuse osad: $podcastName';
   }
 
   @override
   String findEpisodesTimeoutMessage(String podcastName) {
-    return 'Finding episodes takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+    return 'Taskuhäälingu osade leidmine kestab kauem, kui peaks. Kas sinu arvuti või seadme internetiühendus ikka toimib? Kui jah, siis võib ka olla tegemist serveri veaga.';
   }
 
   @override
   String get radioBrowserServerUnavailable =>
-      'The radio browser server is currently unavailable. This might be a temporary issue. Please try again later.';
+      'Raadiojaamade kataloogi serveri pole hetkel saadaval. Tegemist võib olla ajutise veaga. palun proovi hiljem uuesti.';
 
   @override
   String get findStationsTimeoutMessage =>
-      'Finding (this) station(s) takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      'Selle raadiojaama (nende raadiojaamade) leidmine kestab kauem, kui peaks. Kas sinu arvuti või seadme internetiühendus ikka toimib? Kui jah, siis võib ka olla tegemist serveri veaga.';
 
   @override
   String retryInSeconds(String seconds) {
-    return 'Retry in $seconds seconds';
+    return 'Proovi uuesti $seconds sekundi möödudes';
   }
 
   @override
   String retryngInSeconds(String seconds) {
-    return 'Retryng in $seconds seconds';
+    return 'Proovin uuesti $seconds sekundi möödudes';
   }
 
   @override
   String playerCouldNotOpenRemoteMedia(String media) {
-    return 'The player could not open or maintain to play remote media \'$media\'. Are you connected to the internet? If yes, this might be a server issue.';
+    return 'Pleier ei suutnud esitada „$media“ voogedastust. Kas sinu arvuti või seadme internetiühendus ikka toimib? Kui jah, siis võib ka olla tegemist serveri veaga.';
   }
 
   @override
   String get searchTimeoutMessage =>
-      'Searching takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      'Otsimine kestab kauem, kui peaks. Kas sinu arvuti või seadme internetiühendus ikka toimib? Kui jah, siis võib ka olla tegemist serveri veaga.';
 
   @override
-  String get youCanEditTheNameLater => 'You can edit the name later.';
+  String get youCanEditTheNameLater => 'Sa võid nime hiljem muuta.';
 
   @override
   String get geniusAlsoProvidesArt =>
-      'Genius also provides artwork for most songs. If you enable Genius to fetch lyrics, the online art in the player will also use Genius instead of MusicBrainz.';
+      'Geniuse teenusest saad ka enamuse lugude kaanepildid. Kui kasutad Geniuse teenust laulusõnade laadimiseks, siis samast laaditakse MusicBrainzi asemel ka kaanepildid.';
 
   @override
-  String get enterYourGeniusApiKey => 'Enter your Genius API key';
+  String get enterYourGeniusApiKey => 'Sisesta oma Geniuse APi võti';
 
   @override
-  String get saveYourApiKey => 'Save API Key';
+  String get saveYourApiKey => 'Salvesta API võti';
 
   @override
   String get lookUpRadioBrowserHostsFailed =>
-      'Looking up radio browser hosts failed. Are you connected to the internet? If yes, this might be a server issue.';
+      'Raadiojaamade kataloogi serveri leidmine ei õnnestunud. Kas sinu arvuti või seadme internetiühendus ikka toimib? Kui jah, siis võib ka olla tegemist serveri veaga.';
 
   @override
   String get lookUpRadioBrowserHostsTimouted =>
-      'Finding Radio Browser hosts takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      'Raadiojaamade kataloogi serveri leidmine kestab kauem, kui peaks. Kas sinu arvuti või seadme internetiühendus ikka toimib? Kui jah, siis võib ka olla tegemist serveri veaga.';
 
   @override
   String get radioBrowserServerNotConnected =>
-      'You are not connected to any radio browser server';
+      'Rakendus pole ühendatud ühegi raadiojaamade kataloogi serveriga';
 
   @override
   String get radioBrowserLoadingTagsFailed =>
-      'An error occurred while loading radio tags, the server might be unavailable.';
+      'Raadiojaamade siltide laadimine ei õnnestunud, võib-olla server pole saadaval.';
 
   @override
   String get radioBrowserLoadingTagsTimeouted =>
-      'Loading tags took longer than expected, are you connected to the internet? If yes, this might be a server issue';
+      'Laadimine kestab kauem, kui peaks. Kas sinu arvuti või seadme internetiühendus ikka toimib? Kui jah, siis võib ka olla tegemist serveri veaga';
 
   @override
   String get podcastSearchNotSuccessfull =>
-      'This podcast search was not successfull, are you connected to the internet? If yes this might be a server issue.';
+      'Taskuhäälingu otsing ei õnnestunud. Kas sinu arvuti või seadme internetiühendus ikka toimib? Kui jah, siis võib ka olla tegemist serveri veaga.';
 
   @override
   String get podcastFailedHostLookup =>
-      'Finding episodes was not successfull - could not connect to the server. Are you connected to the internet? If yes this might be a server issue.';
+      'Kuna ühenduse loomine serveriga ei toiminud, siis taskuhäälingu osade leidmine ei õnnestunud. Kas sinu arvuti või seadme internetiühendus ikka toimib? Kui jah, siis võib ka olla tegemist serveri veaga.';
 }

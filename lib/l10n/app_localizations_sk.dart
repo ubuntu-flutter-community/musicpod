@@ -21,46 +21,46 @@ class AppLocalizationsSk extends AppLocalizations {
   String get stop => 'Zastaviť';
 
   @override
-  String get shuffle => 'Náhodný výber';
+  String get shuffle => 'Zamiešať';
 
   @override
-  String get repeat => 'Opakovanie';
+  String get repeat => 'Opakovať';
 
   @override
   String get repeatAll => 'Opakovať všetko';
 
   @override
-  String get repeatOff => 'Repeat Off';
+  String get repeatOff => 'Neopakovať';
 
   @override
-  String get next => 'Ďalšie';
+  String get next => 'Ďalší';
 
   @override
-  String get back => 'Naspäť';
+  String get back => 'Späť';
 
   @override
-  String get fastForward30 => 'Dopredu o 30 sekúnd';
+  String get fastForward30 => 'Posunúť o 30 sekúnd dopredu';
 
   @override
-  String get rewind10 => 'Dozadu o 10 sekúnd';
+  String get rewind10 => 'Posunúť o 10 sekúnd dozadu';
 
   @override
-  String get fullWindow => 'Režim celého okna';
+  String get fullWindow => 'Prejsť do režimu na celé okno';
 
   @override
-  String get leaveFullWindow => 'Ukončiť režim celého okna';
+  String get leaveFullWindow => 'Opustiť režim na celé okno';
 
   @override
-  String get fullScreen => 'Režim celej obrazovky';
+  String get fullScreen => 'Prejsť do režimu na celú obrazovku';
 
   @override
-  String get leaveFullScreen => 'Ukončiť režim celej obrazovky';
+  String get leaveFullScreen => 'Opustiť režim na celú obrazovku';
 
   @override
   String get playbackRate => 'Rýchlosť prehrávania';
 
   @override
-  String get addToFavorites => 'Pridať k obľúbeným';
+  String get addToFavorites => 'Pridať medzi obľúbené';
 
   @override
   String get removeFromFavorites => 'Odstrániť z obľúbených';
@@ -75,10 +75,11 @@ class AppLocalizationsSk extends AppLocalizations {
   String get localAudio => 'Lokálne audio';
 
   @override
-  String get localAudioDescription => 'Vaša audio zbierka uložená v počítači.';
+  String get localAudioDescription =>
+      'Vaša hudobná zbierka uložená v počítači.';
 
   @override
-  String get localAudioSubtitle => 'Nie je potrebné pripojenie k internetu';
+  String get localAudioSubtitle => 'Nie je potrebné pripojenie na internet';
 
   @override
   String get music => 'Hudba';
@@ -93,15 +94,15 @@ class AppLocalizationsSk extends AppLocalizations {
   String get podcast => 'Podcast';
 
   @override
-  String get likedSongs => 'Obľúbené';
+  String get likedSongs => 'Obľúbené skladby';
 
   @override
   String get likedSongsDescription =>
-      'Všetky audiá, ktoré sa vám páčili. Lokálne alebo z internetu.';
+      'Všetky zvukové súbory, ktoré sa vám páčili. Lokálne alebo z internetu.';
 
   @override
   String get likedSongsSubtitle =>
-      'Stlačením tlačidla srdca pridáte ďalšie tituly.';
+      'Stlačením tlačidla srdiečka pridáte ďalšie tituly.';
 
   @override
   String get cancel => 'Zrušiť';
@@ -110,10 +111,10 @@ class AppLocalizationsSk extends AppLocalizations {
   String get add => 'Pridať';
 
   @override
-  String get addTo => 'Pridať k:';
+  String get addTo => 'Pridať do:';
 
   @override
-  String get deletePlaylist => 'Odstrániť playlist';
+  String get deletePlaylist => 'Vymazať playlist';
 
   @override
   String get createNewPlaylist => 'Vytvoriť nový playlist';
@@ -131,19 +132,19 @@ class AppLocalizationsSk extends AppLocalizations {
   String get saveAndAuthorize => 'Uložiť a autorizovať';
 
   @override
-  String get title => 'Titul';
+  String get title => 'Názov';
 
   @override
-  String get titles => 'Tituly';
+  String get titles => 'Názvy';
 
   @override
   String get description => 'Popis';
 
   @override
-  String get artist => 'Umelec';
+  String get artist => 'Interpret';
 
   @override
-  String get artists => 'Umelci';
+  String get artists => 'Interpreti';
 
   @override
   String get showArtistPage => 'Zobraziť stránku interpreta';
@@ -176,19 +177,19 @@ class AppLocalizationsSk extends AppLocalizations {
   String get albumArtists => 'Interpreti albumu';
 
   @override
-  String get track => 'Stopa';
+  String get track => 'Skladba';
 
   @override
-  String get trackNumber => 'Číslo stopy';
+  String get trackNumber => 'Číslo skladby';
 
   @override
-  String get diskNumber => 'Číslo CD';
+  String get diskNumber => 'Číslo disku';
 
   @override
-  String get totalDisks => 'Diskov';
+  String get totalDisks => 'Disky';
 
   @override
-  String get searchLocalAudioHint => 'Vyhľadať lokálne audio';
+  String get searchLocalAudioHint => 'Hľadať lokálnu hudbu';
 
   @override
   String get library => 'Knižnica';
@@ -200,7 +201,7 @@ class AppLocalizationsSk extends AppLocalizations {
   String get playlist => 'Playlist';
 
   @override
-  String get discover => 'Objavte';
+  String get discover => 'Objavovať';
 
   @override
   String get forYou => 'Pre vás';
@@ -210,11 +211,11 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get noPodcastFound =>
-      'Ľutujeme, s týmto vyhľadávacím dopytom sa nenašiel žiadny podcast.';
+      'Ospravedlňujeme sa, s týmto vyhľadávacím výrazom sa nenašiel žiadny podcast.';
 
   @override
   String get noPodcastChartsFound =>
-      'Ľutujeme, pre túto krajinu alebo kategóriu nie sú k dispozícii žiadne rebríčky.';
+      'Ospravedlňujeme sa, pre túto krajinu alebo kategóriu nie sú k dispozícii rebríčky.';
 
   @override
   String get noPodcastSubsFound =>
@@ -224,10 +225,10 @@ class AppLocalizationsSk extends AppLocalizations {
   String get charts => 'Rebríčky';
 
   @override
-  String get upNext => 'Nasledujúce';
+  String get upNext => 'Nasleduje';
 
   @override
-  String get all => 'Všetky';
+  String get all => 'Všetko';
 
   @override
   String get arts => 'Umenie';
@@ -242,16 +243,16 @@ class AppLocalizationsSk extends AppLocalizations {
   String get education => 'Vzdelávanie';
 
   @override
-  String get fiction => 'Beletria';
+  String get fiction => 'Fikcia';
 
   @override
-  String get government => 'Vláda';
+  String get government => 'Politika';
 
   @override
   String get healthAndFitness => 'Zdravie a fitnes';
 
   @override
-  String get history => 'História';
+  String get history => 'Dejiny';
 
   @override
   String get kidsAndFamily => 'Deti a rodina';
@@ -263,7 +264,7 @@ class AppLocalizationsSk extends AppLocalizations {
   String get news => 'Správy';
 
   @override
-  String get religionAndSpirituality => 'Náboženstvo a spiritualita';
+  String get religionAndSpirituality => 'Náboženstvo a duchovno';
 
   @override
   String get science => 'Veda';
@@ -278,34 +279,33 @@ class AppLocalizationsSk extends AppLocalizations {
   String get tvAndFilm => 'TV a film';
 
   @override
-  String get technology => 'Technológia';
+  String get technology => 'Technológie';
 
   @override
-  String get trueCrime => 'Skutočný zločin';
+  String get trueCrime => 'Skutočná kriminalita';
 
   @override
   String get offline => 'bez pripojenia';
 
   @override
   String get offlineDescription =>
-      'Zdá sa, že váš počítač nie je pripojený k internetu.';
+      'Vyzerá to tak, že váš počítač nie je pripojený na internet.';
 
   @override
-  String get newEpisodeAvailable => 'Dostupná nová epizóda:';
+  String get newEpisodeAvailable => 'K dispozícii je nová epizóda:';
 
   @override
   String get noStationFound =>
-      'Ľutujeme, na tento vyhľadávací dopyt sa nenašli žiadne stanice';
+      'Ospravedlňujeme sa, s týmto vyhľadávacím výrazom sa nenašli žiadne stanice';
 
   @override
   String get nothingFound => 'Nič sa nenašlo';
 
   @override
-  String get noStarredStations =>
-      'Zatiaľ ste neoznačili žiadnu stanicu hviezdičkou.';
+  String get noStarredStations => 'Zatiaľ ste neoznačili žiadne stanice.';
 
   @override
-  String get tags => 'Označenia';
+  String get tags => 'Štítky';
 
   @override
   String get quality => 'Kvalita';
@@ -320,10 +320,10 @@ class AppLocalizationsSk extends AppLocalizations {
   String get country => 'Krajina';
 
   @override
-  String get tag => 'Označenie';
+  String get tag => 'Štítok';
 
   @override
-  String get failedToImport => 'Súbory, ktoré sa nepodarilo importovať:';
+  String get failedToImport => 'Nepodarilo sa importovať nasledujúce súbory:';
 
   @override
   String get unknown => 'Neznámy';
@@ -332,19 +332,20 @@ class AppLocalizationsSk extends AppLocalizations {
   String get volume => 'Hlasitosť';
 
   @override
-  String get queue => 'Poradie';
+  String get queue => 'Fronta';
 
   @override
-  String get clearQueue => 'Vymazať poradie';
+  String get clearQueue => 'Vymazať frontu';
 
   @override
   String get limit => 'Limit';
 
   @override
-  String get decreaseSearchLimit => 'Prosím znížte limit vyhľadávania pre';
+  String get decreaseSearchLimit => 'Prosím, znížte limit vyhľadávania pre';
 
   @override
-  String get podcastFeedIsEmpty => 'Ľutujeme, kanál podcastu je prázdny.';
+  String get podcastFeedIsEmpty =>
+      'Ospravedlňujeme sa, tento podcast nemá žiadne epizódy.';
 
   @override
   String get video => 'Video';
@@ -354,37 +355,37 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get noLocalTitlesFound =>
-      'Zdá sa, že vaša lokálna audio zbierka je prázdna. V nastaveniach skontrolujte umiestnenie knižnice.';
+      'Vyzerá to tak, že vaša lokálna hudobná zbierka je prázdna. Skontrolujte umiestnenie knižnice v nastaveniach.';
 
   @override
   String get noLocalSearchFound =>
-      'Ľutujeme, pre tento vyhľadávací dopyt sa nenašlo žiadne lokálne audio.';
+      'Ospravedlňujeme sa, s týmto vyhľadávacím výrazom sa nenašla žiadna lokálna hudba.';
 
   @override
   String get buyMusicOnline =>
-      'Možno tu nájdete hudbu, ktorú by ste si chceli kúpiť:';
+      'Možno tu nájdete hudbu, ktorú by ste si radi kúpili:';
 
   @override
   String get settings => 'Nastavenia';
 
   @override
-  String get findUsOnGitHub => 'Nájdete nás na GitHube';
+  String get findUsOnGitHub => 'Nájdite nás na GitHube';
 
   @override
-  String get musicPodSubTitle => 'Váš prehrávač hudby, rádia a podcastov';
+  String get musicPodSubTitle => 'Prehrávač hudby, rádia a podcastov';
 
   @override
-  String get pickMusicCollection => 'Vyberte svoju hudobnú zbierku';
+  String get pickMusicCollection => 'Vyberte si svoju hudobnú zbierku';
 
   @override
-  String get newEpisode => 'Nové';
+  String get newEpisode => 'Nová';
 
   @override
-  String get dontShowAgain => 'Nezobrazovať';
+  String get dontShowAgain => 'Už nezobrazovať';
 
   @override
   String queueConfirmMessage(String length) {
-    return 'Naozaj chcete zaradiť do poradia $length médií?';
+    return 'Naozaj chcete zaradiť $length médií do fronty?';
   }
 
   @override
@@ -394,14 +395,14 @@ class AppLocalizationsSk extends AppLocalizations {
   String get copiedToClipBoard => 'Skopírované do schránky:';
 
   @override
-  String get copyToClipBoard => 'Kopírovať do schránky';
+  String get copyToClipBoard => 'Skopírovať do schránky';
 
   @override
-  String get insertIntoQueue => 'Pridať do poradia';
+  String get insertIntoQueue => 'Vložiť do fronty';
 
   @override
   String insertedIntoQueue(String name) {
-    return 'Pridané do poradia: $name';
+    return 'Vložené do fronty: $name';
   }
 
   @override
@@ -409,17 +410,18 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String localAudioCacheSuggestion(String length) {
-    return 'Máte $length lokálnych audio súborov. Chcete vytvoriť medzipamäť na urýchlenie spustenia aplikácie?';
+    return 'Máte $length lokálnych audio súborov. Chcete vytvoriť medzipamäť na zlepšenie času spustenia?';
   }
 
   @override
   String get noThankYou => 'Nie, ďakujem.';
 
   @override
-  String get recreateLocalAudioCache => 'Obnoviť medzipamäť';
+  String get recreateLocalAudioCache =>
+      'Znovu vytvoriť lokálnu audio medzipamäť';
 
   @override
-  String get useALocalAudioCache => 'Použiť medzipamäť';
+  String get useALocalAudioCache => 'Použiť lokálnu audio medzipamäť';
 
   @override
   String get newEpisodes => 'Nové epizódy';
@@ -438,7 +440,7 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String downloadStarted(String name) {
-    return 'Sťahovanie začaté: $name';
+    return 'Sťahovanie začalo: $name';
   }
 
   @override
@@ -453,7 +455,7 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String downloadRemoved(String name) {
-    return 'Download removed: $name';
+    return 'Sťahovanie odstránené: $name';
   }
 
   @override
@@ -469,14 +471,14 @@ class AppLocalizationsSk extends AppLocalizations {
   String get showCompletedEpisodes => 'Zobraziť dokončené epizódy';
 
   @override
-  String get reset => 'Obnoviť';
+  String get reset => 'Resetovať';
 
   @override
-  String get resetAllSettings => 'Obnoviť všetky nastavenia';
+  String get resetAllSettings => 'Resetovať všetky nastavenia';
 
   @override
   String get resetAllSettingsConfirm =>
-      'Ste si naozaj istí, že chcete obnoviť všetky nastavenia, svoje odbery podcastov, históriu počúvania, obľúbené stanice a pripnuté albumy? Aplikácia sa po tomto zatvorí a bude potrebné ju znova otvoriť.';
+      'Ste si naozaj istí, že chcete resetovať všetky nastavenia, svoje odbery podcastov, históriu počúvania, obľúbené stanice a pripnuté albumy? Aplikácia sa po tomto zatvorí a bude potrebné ju znova otvoriť.';
 
   @override
   String get confirm => 'Potvrdiť';
@@ -485,53 +487,53 @@ class AppLocalizationsSk extends AppLocalizations {
   String get confirmation => 'Potvrdenie';
 
   @override
-  String get isMaybeLowBandwidthDialogTitle => 'Žiadne WiFi/Ethernet';
+  String get isMaybeLowBandwidthDialogTitle => 'Žiadne WIFI/Ethernet';
 
   @override
   String get isMaybeLowBandwidthDialogBody =>
-      'Nie ste pripojený k WiFi ani Ethernetu. Chcete zapnúť režim šetrenia dát?';
+      'Nie ste pripojení na WIFI alebo Ethernet. Chcete povoliť režim šetrenia dát?';
 
   @override
-  String get isBackInWifiDialogTitle => 'Späť na WiFi/Ethernet';
+  String get isBackInWifiDialogTitle => 'Späť na WIFI/Ethernet';
 
   @override
   String get isBackInWifiDialogBody =>
-      'Ste pripojený k WiFi alebo Ethernetu. Chcete vypnúť režim šetrenia dát?';
+      'Ste pripojení na WIFI alebo Ethernet. Chcete vypnúť režim šetrenia dát?';
 
   @override
   String get enableDataSafeModeSettingTitle => 'Režim šetrenia dát';
 
   @override
   String get dataSafeModeEnabled =>
-      'Mobilné pripojenie: Režim šetrenia dát je zapnutý.';
+      'Mobilné pripojenie: Režim šetrenia dát je povolený.';
 
   @override
   String get dataSafeModeDisabled =>
-      'WiFi/Ethernet: Režim šetrenia dát je vypnutý.';
+      'Wifi/Ethernet: Režim šetrenia dát je vypnutý.';
 
   @override
   String get enableDataSafeModeSettingDescription =>
-      'Keď je režim zapnutý, prehrávač nebude sťahovať obrázky titulov od rádiových staníc.';
+      'Keď je aktívny, prehrávač sa nebude snažiť sťahovať obaly titulov odoslaných z rádiových staníc.';
 
   @override
-  String get stopToNotifyAboutDataSafeMode => 'Prestať ma upozorňovať';
+  String get stopToNotifyAboutDataSafeMode => 'Ukončiť upozornenia';
 
   @override
   String get notifyMeAboutDataSafeModeTitle =>
-      'Upozornenia režimu šetrenia dát';
+      'Upozornenia na režim šetrenia dát';
 
   @override
   String get notifyMeAboutDataSafeModeDescription =>
       'Upozorniť ma na režim šetrenia dát';
 
   @override
-  String get resourceSectionTitle => 'Zdroje zariadenia';
+  String get resourceSectionTitle => 'Prostriedky zariadenia';
 
   @override
-  String get downloadsOnly => 'Iba stiahnuté';
+  String get downloadsOnly => 'Iba sťahovania';
 
   @override
-  String get downloadsDirectory => 'Umiestnenie stiahnutých súborov';
+  String get downloadsDirectory => 'Umiestnenie vašich sťahovaní';
 
   @override
   String get downloadsDirectoryDescription =>
@@ -539,13 +541,13 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get downloadsChangeWarning =>
-      'Zmenou priečinka sťahovania sa vymažú všetky aktuálne stiahnuté súbory. Chcete pokračovať?';
+      'Zmena priečinka sťahovaní vymaže všetky aktuálne sťahovania. Chcete pokračovať?';
 
   @override
   String get moreOptions => 'Viac možností';
 
   @override
-  String get noRadioServerFound => 'Rádiový server nenájdený';
+  String get noRadioServerFound => 'Nenašiel sa žiadny rádiový server';
 
   @override
   String get connectedTo => 'Pripojené k';
@@ -560,7 +562,7 @@ class AppLocalizationsSk extends AppLocalizations {
   String get disconnectedFromDiscord => 'Odpojené od Discordu';
 
   @override
-  String get tryReconnect => 'Skúsiť pripojiť';
+  String get tryReconnect => 'Skúsiť znovu pripojiť';
 
   @override
   String get addedTo => 'Pridané do';
@@ -576,11 +578,10 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get noCountryFound =>
-      'Žiadna krajina s týmto názvom sa nedá nájsť. Môžete použiť aj telefónne predvoľby ako napríklad +421';
+      'S týmto názvom sa nenašla žiadna krajina. Môžete použiť aj telefónne predvoľby, napr. +49';
 
   @override
-  String get noStarredTags =>
-      'Zatiaľ ste neoznačili hviezdičkou žiadne označenia';
+  String get noStarredTags => 'Zatiaľ ste neoznačili žiadne štítky';
 
   @override
   String get name => 'Názov';
@@ -598,18 +599,18 @@ class AppLocalizationsSk extends AppLocalizations {
   String get version => 'Verzia';
 
   @override
-  String get theme => 'Celkový vzhľad';
+  String get theme => 'Téma';
 
   @override
   String get useMoreAnimationsTitle => 'Použiť viac animácií';
 
   @override
   String get useMoreAnimationsDescription =>
-      'Toto mierne zvýši využitie procesora, čo môže byť nežiadúce na staršom hardvéri.';
+      'Toto mierne zvýši využitie CPU, čo môže byť nežiaduce na staršom hardvéri.';
 
   @override
   String get showPositionDurationTitle =>
-      'Zobraziť pozíciu / trvanie v spodnom prehrávači';
+      'Zobraziť pozíciu / dĺžku v dolnom prehrávači';
 
   @override
   String get showPositionDurationDescription =>
@@ -622,13 +623,13 @@ class AppLocalizationsSk extends AppLocalizations {
   String get dependencies => 'Závislosti';
 
   @override
-  String get light => 'Svetlý';
+  String get light => 'Svetlá';
 
   @override
-  String get system => 'Podľa systému';
+  String get system => 'Systém';
 
   @override
-  String get dark => 'Tmavý';
+  String get dark => 'Tmavá';
 
   @override
   String get podcastProvider => 'Poskytovateľ podcastov';
@@ -637,16 +638,16 @@ class AppLocalizationsSk extends AppLocalizations {
   String get iTunes => 'iTunes';
 
   @override
-  String get podcastIndex => 'Index podcastov';
+  String get podcastIndex => 'Podcast Index';
 
   @override
-  String get usePodcastIndex => 'Namiesto iTunes použiť index podcastov';
+  String get usePodcastIndex => 'Použiť Podcast Index namiesto iTunes';
 
   @override
   String get select => 'Vybrať';
 
   @override
-  String get requiresAppRestart => 'Vyžaduje sa reštart aplikácie';
+  String get requiresAppRestart => 'Vyžaduje reštart aplikácie';
 
   @override
   String get musicCollectionLocation => 'Umiestnenie hudobnej zbierky';
@@ -655,7 +656,7 @@ class AppLocalizationsSk extends AppLocalizations {
   String get astronomyXXXPodcastIndexOnly => 'Astronómia';
 
   @override
-  String get automotiveXXXPodcastIndexOnly => 'Automobilové';
+  String get automotiveXXXPodcastIndexOnly => 'Automobilizmus';
 
   @override
   String get aviationXXXPodcastIndexOnly => 'Lietanie';
@@ -700,13 +701,13 @@ class AppLocalizationsSk extends AppLocalizations {
   String get cricketXXXPodcastIndexOnly => 'Kriket';
 
   @override
-  String get cryptocurrencyXXXPodcastIndexOnly => 'Kryptomena';
+  String get cryptocurrencyXXXPodcastIndexOnly => 'Kryptomeny';
 
   @override
   String get cultureXXXPodcastIndexOnly => 'Kultúra';
 
   @override
-  String get dailyXXXPodcastIndexOnly => 'Denne';
+  String get dailyXXXPodcastIndexOnly => 'Denné';
 
   @override
   String get designXXXPodcastIndexOnly => 'Dizajn';
@@ -772,7 +773,7 @@ class AppLocalizationsSk extends AppLocalizations {
   String get homeXXXPodcastIndexOnly => 'Domov';
 
   @override
-  String get howToXXXPodcastIndexOnly => 'Ako to';
+  String get howToXXXPodcastIndexOnly => 'Ako na to';
 
   @override
   String get improvXXXPodcastIndexOnly => 'Improvizácia';
@@ -823,10 +824,10 @@ class AppLocalizationsSk extends AppLocalizations {
   String get mentalXXXPodcastIndexOnly => 'Duševné';
 
   @override
-  String get naturalXXXPodcastIndexOnly => 'Prirodzené';
+  String get naturalXXXPodcastIndexOnly => 'Prírodné';
 
   @override
-  String get natureXXXPodcastIndexOnly => 'Prírodné';
+  String get natureXXXPodcastIndexOnly => 'Príroda';
 
   @override
   String get nonProfitXXXPodcastIndexOnly => 'Neziskové';
@@ -877,7 +878,7 @@ class AppLocalizationsSk extends AppLocalizations {
   String get runningXXXPodcastIndexOnly => 'Beh';
 
   @override
-  String get selfImprovementXXXPodcastIndexOnly => 'Sebavylepšenie';
+  String get selfImprovementXXXPodcastIndexOnly => 'Sebarozvoj';
 
   @override
   String get sexualityXXXPodcastIndexOnly => 'Sexualita';
@@ -919,7 +920,7 @@ class AppLocalizationsSk extends AppLocalizations {
   String get videoGamesXXXPodcastIndexOnly => 'Videohry';
 
   @override
-  String get visualXXXPodcastIndexOnly => 'Vizuál';
+  String get visualXXXPodcastIndexOnly => 'Vizuálne';
 
   @override
   String get volleyballXXXPodcastIndexOnly => 'Volejbal';
@@ -931,10 +932,10 @@ class AppLocalizationsSk extends AppLocalizations {
   String get wildernessXXXPodcastIndexOnly => 'Divočina';
 
   @override
-  String get wrestlingXXXPodcastIndexOnly => 'Zápas';
+  String get wrestlingXXXPodcastIndexOnly => 'Zápasenie';
 
   @override
-  String get updateAvailable => 'Dostupná aktualizácia';
+  String get updateAvailable => 'K dispozícii je aktualizácia';
 
   @override
   String get showMetaData => 'Zobraziť metadáta';
@@ -946,7 +947,7 @@ class AppLocalizationsSk extends AppLocalizations {
   String get writeMetadata => 'Zapísať metadáta';
 
   @override
-  String get reorder => 'Preusporiadať';
+  String get reorder => 'Upraviť poradie';
 
   @override
   String get move => 'Presunúť';
@@ -965,20 +966,20 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get emptyHearingHistory =>
-      'V tejto relácii aplikácie ste ešte nepočúvali rozhlasové stanice';
+      'V tejto relácii ste v aplikácii nepočúvali rádio';
 
   @override
   String get searchForRadioStationsWithGenreName =>
-      'Vyhľadať rozhlasové stanice s týmto žánrom';
+      'Hľadať rádiové stanice podľa tohto žánra';
 
   @override
-  String get clearPlaylist => 'Odstrániť všetky médiá z playlistu';
+  String get clearPlaylist => 'Vymazať všetky médiá z playlistu';
 
   @override
   String get editPlaylist => 'Upraviť playlist';
 
   @override
-  String get stationUrl => 'Stanica Url';
+  String get stationUrl => 'Url stanice';
 
   @override
   String get podcastFeedUrl => 'Kanál podcastu Url';
@@ -997,66 +998,65 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get exportPinnedAlbumsToM3UFiles =>
-      'Export pripnutých albumov do súborov M3U';
+      'Exportovať pripnuté albumy do súborov M3U';
 
   @override
   String get exportPinnedAlbumToM3UFile =>
-      'Export pripnutých albumov do súboru M3U';
+      'Exportovať pripnuté albumy do súboru M3U';
 
   @override
-  String get exportPlaylistToM3UFile => 'Export playlistu do M3U';
+  String get exportPlaylistToM3UFile => 'Exportovať playlist do M3U';
 
   @override
   String get exportPlaylistsAndAlbumsToM3UFiles =>
-      'Export playlistov a albumov do súborov M3U';
+      'Exportovať playlisty a albumy do súborov M3U';
 
   @override
-  String get exportPodcastsToOpmlFile => 'Export podcastov do súboru OPML';
+  String get exportPodcastsToOpmlFile => 'Exportovať podcasty do súboru OPML';
 
   @override
-  String get importPodcastsFromOpmlFile => 'Import podcastov zo súboru OPML';
+  String get importPodcastsFromOpmlFile => 'Importovať podcasty zo súboru OPML';
 
   @override
   String get exportStarredStationsToOpmlFile =>
-      'Export staníc označených hviezdičkou do súboru OPML';
+      'Exportovať označené stanice do súboru OPML';
 
   @override
   String get importStarredStationsFromOpmlFile =>
-      'Import staníc označených hviezdičkou zo súboru OPML';
+      'Importovať označené stanice zo súboru OPML';
 
   @override
-  String get removeAllStarredStations =>
-      'Odstrániť všetky stanice označené hviezdičkou';
+  String get removeAllStarredStations => 'Odstrániť všetky označené stanice';
 
   @override
   String get removeAllStarredStationsConfirm =>
-      'Naozaj chcete odstrániť všetky stanice označené hviezdičkou?';
+      'Ste si istí, že chcete odstrániť všetky označené stanice?';
 
   @override
   String get removeAllStarredStationsDescription =>
-      'Týmto odstránite všetky stanice označené hviezdičkou.';
+      'Toto odstráni všetky vaše označené stanice.';
 
   @override
   String get removeAllPodcasts => 'Odstrániť všetky podcasty';
 
   @override
   String get removeAllPodcastsConfirm =>
-      'Naozaj chcete odstrániť všetky podcasty?';
+      'Ste si istí, že chcete odstrániť všetky podcasty?';
 
   @override
   String get removeAllPodcastsDescription =>
-      'Týmto sa odstránia všetky vaše odbery podcastov a aktuálny stav počúvania.';
+      'Toto odstráni všetky vaše predplatné podcastov a aktuálny stav počúvania.';
 
   @override
   String get customContentTitle => 'Pridať vlastný obsah';
 
   @override
   String get customContentDescription =>
-      'Ak nechcete používať rádioprehliadač alebo funkciu vyhľadávania podcastov, môžete sem pridať svoj vlastný obsah alebo môžete pridať prázdny playlist alebo importovať playlist zo súborov M3U a PLS.';
+      'Ak nechcete používať vyhľadávanie v radiobrowseri alebo podcastoch, môžete sem pridať vlastný obsah, alebo vytvoriť prázdne playlisty alebo importovať playlisty zo súborov M3U a PLS.';
 
   @override
   String get setPlaylistNameAndAddMoreLater =>
-      'Nastaviť názov playlistu a neskôr pridať ďalšie tituly';
+      'Nastaviť názov playlistu a pridať ďalšie tituly neskôr';
 
   @override
   String get or => 'alebo';
@@ -1065,7 +1065,7 @@ class AppLocalizationsSk extends AppLocalizations {
   String get loadMore => 'Načítať viac';
 
   @override
-  String get searchOnline => 'Vyhľadať online';
+  String get searchOnline => 'Hľadať online';
 
   @override
   String get shareThisEpisode => 'Zdieľať túto epizódu';
@@ -1083,32 +1083,32 @@ class AppLocalizationsSk extends AppLocalizations {
   String get duration => 'Trvanie';
 
   @override
-  String get radioTagDisclaimerTitle => 'Táto stanica vysiela veľa označení.';
+  String get radioTagDisclaimerTitle => 'Táto stanica posiela veľa štítkov.';
 
   @override
   String get radioTagDisclaimerSubTitle =>
-      'Niekedy stanice vysielajú označenia, ktoré nezodpovedajú žiadnemu žánru hudby. MusicPod nezodpovedá za obsah!';
+      'Niekedy stanice posielajú štítky, ktoré nezodpovedajú hudobným žánrom. MusicPod nezodpovedá za obsah!';
 
   @override
   String get podcastFeedLoadingTimeout =>
-      'Načítanie kanála podcastov trvá dlhšie ako zvyčajne…';
+      'Načítavanie kanála podcastov trvá dlhšie ako zvyčajne…';
 
   @override
   String get gitHubClientConnectError =>
       'Nepodarilo sa načítať online verziu z GitHubu.';
 
   @override
-  String get replayEpisode => 'Znova prehrať epizódu';
+  String get replayEpisode => 'Prehrať epizódu znova';
 
   @override
-  String get replayAllEpisodes => 'Znova prehrať všetky epizódy';
+  String get replayAllEpisodes => 'Prehrať všetky epizódy znova';
 
   @override
   String get checkForUpdates => 'Skontrolovať aktualizácie';
 
   @override
   String checkForUpdatesConfirm(String length) {
-    return 'Naozaj chcete skontrolovať aktualizácie pre $length podcastov?';
+    return 'Ste si istí, že chcete skontrolovať aktualizácie pre $length podcastov?';
   }
 
   @override
@@ -1121,97 +1121,98 @@ class AppLocalizationsSk extends AppLocalizations {
       'Naplánovať čas zastavenia prehrávania';
 
   @override
-  String get alwaysAsk => 'Vždy sa pýtať';
+  String get alwaysAsk => 'Vždy sa opýtať';
 
   @override
-  String get hideToTray => 'Skryť na panel úloh';
+  String get hideToTray => 'Skryť do lišty';
 
   @override
-  String get closeBtnAction => 'Správanie tlačidla Zavrieť';
+  String get closeBtnAction => 'Akcia tlačidla Zavrieť';
 
   @override
-  String get whenCloseBtnClicked => 'Po kliknutí na tlačidlo zavrieť';
+  String get whenCloseBtnClicked => 'Keď sa klikne na tlačidlo Zavrieť';
 
   @override
-  String get closeApp => 'Zatvoriť aplikáciu';
+  String get closeApp => 'Ukončiť aplikáciu';
 
   @override
-  String get closeMusicPod => 'Zatvoriť MusicPod?';
+  String get closeMusicPod => 'Ukončiť MusicPod?';
 
   @override
   String get confirmCloseOrHideTip =>
-      'Potvrďte prosím, či potrebujete aplikáciu zatvoriť alebo skryť';
+      'Prosím, potvrďte, či chcete aplikáciu ukončiť alebo skryť';
 
   @override
-  String get doNotAskAgain => 'Už sa nepýtaj';
+  String get doNotAskAgain => 'Už sa nepýtať';
 
   @override
-  String get skipToLivStream => 'Prejsť na živé vysielanie';
+  String get skipToLivStream => 'Preskočiť na živý stream';
 
   @override
-  String get searchSimilarStation => 'Vyhľadať podobnú stanicu';
+  String get searchSimilarStation => 'Hľadať podobnú stanicu';
 
   @override
   String get onlineArtError =>
-      'Online vyhľadávanie obrázkov albumov je momentálne nedostupné';
+      'Vyhľadávanie online obalov je momentálne nedostupné';
 
   @override
   String get clicks => 'kliknutí';
 
   @override
-  String get theClick => 'kliknutie';
+  String get theClick => 'klik';
 
   @override
-  String get toClick => 'kliknutia';
+  String get toClick => 'klik';
 
   @override
-  String get exposeOnlineHeadline => 'Odhaliť svoju aktivitu počúvania online';
+  String get exposeOnlineHeadline =>
+      'Zverejniť svoju počúvaciu aktivitu online';
 
   @override
   String get exposeToDiscordTitle => 'Discord';
 
   @override
   String get exposeToDiscordSubTitle =>
-      'Zdieľa sa interpret a názov skladby/stanice/podcastu, ktorý práve počúvate.';
+      'Interpret a názov skladby/stanice/podcastu, ktorý práve počúvate, sú zdieľané.';
 
   @override
   String get exposeToLastfmTitle => 'Last.fm';
 
   @override
   String get exposeToLastfmSubTitle =>
-      'Zdieľa sa interpret a názov skladby/stanice/podcastu, ktorý práve počúvate.';
+      'Interpret a názov skladby/stanice/podcastu, ktorý práve počúvate, sú zdieľané.';
 
   @override
-  String get lastfmApiKey => 'Last.fm API kľúč';
+  String get lastfmApiKey => 'API kľúč Last.fm';
 
   @override
-  String get lastfmSecret => 'Last.fm heslo';
+  String get lastfmSecret => 'Tajný kľúč Last.fm';
 
   @override
-  String get lastfmApiKeyEmpty => 'Zadajte prosím kľúč API';
+  String get lastfmApiKeyEmpty => 'Prosím, zadajte API kľúč';
 
   @override
-  String get lastfmSecretEmpty => 'Zadajte prosím zdieľané heslo';
+  String get lastfmSecretEmpty => 'Prosím, zadajte zdieľaný tajný kľúč';
 
   @override
   String get exposeToListenBrainzTitle => 'ListenBrainz';
 
   @override
   String get exposeToListenBrainzSubTitle =>
-      'Zdieľa sa interpret a názov skladby/stanice/podcastu, ktorý práve počúvate.';
+      'Interpret a názov skladby/stanice/podcastu, ktorý práve počúvate, sú zdieľané.';
 
   @override
-  String get listenBrainzApiKey => 'ListenBrainz API kľúč';
+  String get listenBrainzApiKey => 'API kľúč ListenBrainz';
 
   @override
-  String get listenBrainzApiKeyEmpty => 'Zadajte prosím kľúč API';
+  String get listenBrainzApiKeyEmpty => 'Prosím, zadajte API kľúč';
 
   @override
   String get featureDisabledOnPlatform =>
-      'Táto funkcia je momentálne pre tento operačný systém nedostupná.';
+      'Táto funkcia je momentálne na tomto operačnom systéme zakázaná.';
 
   @override
-  String get regionNone => 'Žiadny';
+  String get regionNone => 'Žiadna';
 
   @override
   String get regionAfghanistan => 'Afganistan';
@@ -1311,13 +1312,13 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get regionBritishindianoceanterrirory =>
-      'Britské indické oceánske územie';
+      'Britské indickooceánske územie';
 
   @override
   String get regionBritishvirginislands => 'Britské Panenské ostrovy';
 
   @override
-  String get regionBruneidarussalam => 'Brunej Darussalam';
+  String get regionBruneidarussalam => 'Brunej';
 
   @override
   String get regionBulgaria => 'Bulharsko';
@@ -1371,8 +1372,7 @@ class AppLocalizationsSk extends AppLocalizations {
   String get regionCongo => 'Kongo';
 
   @override
-  String get regionCongodemocraticrepublicof =>
-      'Konžská demokratická republika';
+  String get regionCongodemocraticrepublicof => 'Demokratická republika Kongo';
 
   @override
   String get regionCookislands => 'Cookove ostrovy';
@@ -1417,7 +1417,7 @@ class AppLocalizationsSk extends AppLocalizations {
   String get regionEgypt => 'Egypt';
 
   @override
-  String get regionElsalvador => 'El Salvador';
+  String get regionElsalvador => 'Salvádor';
 
   @override
   String get regionEquatorialguinea => 'Rovníková Guinea';
@@ -1507,13 +1507,14 @@ class AppLocalizationsSk extends AppLocalizations {
   String get regionHaiti => 'Haiti';
 
   @override
-  String get regionHeardislandandmcdonaldislands => 'Heardov ostrov';
+  String get regionHeardislandandmcdonaldislands =>
+      'Heardov ostrov a Macdonaldove ostrovy';
 
   @override
   String get regionHonduras => 'Honduras';
 
   @override
-  String get regionHongkong => 'HongKong';
+  String get regionHongkong => 'Hongkong';
 
   @override
   String get regionHungary => 'Maďarsko';
@@ -1600,7 +1601,7 @@ class AppLocalizationsSk extends AppLocalizations {
   String get regionLuxembourg => 'Luxembursko';
 
   @override
-  String get regionMacao => 'Makao';
+  String get regionMacao => 'Macao';
 
   @override
   String get regionMacedonia => 'Macedónsko';
@@ -1774,7 +1775,7 @@ class AppLocalizationsSk extends AppLocalizations {
   String get regionSaintkittsandnevis => 'Svätý Krištof a Nevis';
 
   @override
-  String get regionSaintlucia => 'Saint-Lucien';
+  String get regionSaintlucia => 'Svätá Lucia';
 
   @override
   String get regionSaintmartin => 'Svätý Martin';
@@ -1922,7 +1923,7 @@ class AppLocalizationsSk extends AppLocalizations {
   String get regionUnitedkingdom => 'Spojené kráľovstvo';
 
   @override
-  String get regionUnitedstates => 'Spojené štáty americké';
+  String get regionUnitedstates => 'Spojené štáty';
 
   @override
   String get regionUnitedstatesminoroutlyingislands =>
@@ -1974,21 +1975,21 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get breakingChangesPleaseBackupTitle =>
-      'Zásadné zmeny: Uistite sa, že máte zálohu!';
+      'Zásadné zmeny: Prosím, zálohujte!';
 
   @override
   String get breakingChangesPleaseBackupDescription =>
-      'Ďalšia verzia aplikácie MusicPod prinesie zásadné zmeny. Pred aktualizáciou si prosím zálohujte svoje playlisty, odbery podcastov a pripnuté albumy.';
+      'Nasledujúca verzia MusicPod bude mať zásadné zmeny. Pred aktualizáciou prosím zálohujte svoje playlisty, predplatné podcastov a pripnuté albumy.';
 
   @override
   String get breakingChangesPleaseBackupConfirmation =>
-      'Potvrdzujem, že som si zálohoval(a):';
+      'Potvrdzujem, že som zálohoval/a:';
 
   @override
   String get pinnedAlbumsAndPlaylists => 'Pripnuté albumy a playlisty';
 
   @override
-  String get starredStations => 'Stanice označené hviezdičkou';
+  String get starredStations => 'Označené stanice';
 
   @override
   String get podcastSubscriptions => 'Predplatné podcastov';
@@ -1997,27 +1998,28 @@ class AppLocalizationsSk extends AppLocalizations {
   String get pinnedAlbums => 'Pripnuté albumy';
 
   @override
-  String get export => 'Export';
+  String get export => 'Exportovať';
 
   @override
-  String get import => 'Import';
+  String get import => 'Importovať';
 
   @override
-  String get exportYourData => 'Exportovať svoje údaje';
+  String get exportYourData => 'Exportovať vaše údaje';
 
   @override
   String get exportYourDataDescription =>
-      'Exportujte svoje odbery podcastov, stanice označené hviezdičkou a pripnuté albumy.';
+      'Exportujte svoje predplatné podcastov, označené stanice a pripnuté albumy.';
 
   @override
-  String get localAudioWatchDialogTitle => 'Lokálny audio adresár bol upravený';
+  String get localAudioWatchDialogTitle =>
+      'Lokálny audio priečinok bol zmenený';
 
   @override
   String get localAudioWatchDialogDescription =>
-      'Chcete znova načítať lokálny audio adresár?';
+      'Chcete znovu načítať lokálny audio priečinok?';
 
   @override
-  String get external => 'externé';
+  String get external => 'externý';
 
   @override
   String get externalPlaylist => 'Externý playlist';
@@ -2026,31 +2028,31 @@ class AppLocalizationsSk extends AppLocalizations {
   String get pictures => 'Obrázky';
 
   @override
-  String get localPictureTypeOther => 'Iný';
+  String get localPictureTypeOther => 'Iné';
 
   @override
   String get localPictureTypeFileIcon32x32 => 'Ikona 32x32';
 
   @override
-  String get localPictureTypeOtherFileIcon => 'Iný súbor ikony';
+  String get localPictureTypeOtherFileIcon => 'Iná ikona súboru';
 
   @override
-  String get localPictureTypeCoverFront => 'Predná strana obalu';
+  String get localPictureTypeCoverFront => 'Predný obal';
 
   @override
-  String get localPictureTypeCoverBack => 'Zadná strana obalu';
+  String get localPictureTypeCoverBack => 'Zadný obal';
 
   @override
-  String get localPictureTypeLeafletPage => 'Stránka s plagátom';
+  String get localPictureTypeLeafletPage => 'Strana letáku';
 
   @override
-  String get localPictureTypeMediaLabelCD => 'Médiový štítok CD';
+  String get localPictureTypeMediaLabelCD => 'Nápis CD';
 
   @override
-  String get localPictureTypeLeadArtist => 'Hlavný umelec';
+  String get localPictureTypeLeadArtist => 'Hlavný interpret';
 
   @override
-  String get localPictureTypeArtistPerformer => 'Umelec/Interpret';
+  String get localPictureTypeArtistPerformer => 'Interpret/Výkonný umelec';
 
   @override
   String get localPictureTypeConductor => 'Dirigent';
@@ -2059,7 +2061,7 @@ class AppLocalizationsSk extends AppLocalizations {
   String get localPictureTypeBandOrchestra => 'Kapela/Orchester';
 
   @override
-  String get localPictureTypeComposer => 'Kompózitor';
+  String get localPictureTypeComposer => 'Skladateľ';
 
   @override
   String get localPictureTypeLyricistTextWriter => 'Textár/Autor textov';
@@ -2075,82 +2077,80 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get localPictureTypeMovieVideoScreenCapture =>
-      'Zachytenie obrazovky filmu/videa';
+      'Snímka obrazovky filmu/ videa';
 
   @override
-  String get localPictureTypeBrightColouredFish => 'Jasne sfarbené ryby';
+  String get localPictureTypeBrightColouredFish => 'Jasne sfarbená ryba';
 
   @override
   String get localPictureTypeIllustration => 'Ilustrácia';
 
   @override
-  String get localPictureTypebandArtistLogotype => 'Logo kapely/interpreta';
+  String get localPictureTypebandArtistLogotype => 'Logo kapely/umelca';
 
   @override
   String get localPictureTypepublisherStudioLogotype =>
-      'Logo vydavateľa/štúdia';
+      'Logo vydavateľa/stúdia';
 
   @override
-  String get cantPinEmptyAlbum =>
-      'Nemôžete pripnúť albumy bez prázdnych metadát albumu!';
+  String get cantPinEmptyAlbum => 'Albumy bez metadát nemožno pripnúť!';
 
   @override
-  String get cantUnpinEmptyAlbum =>
-      'Nemôžete odopnúť albumy bez prázdnych metadát albumu!';
+  String get cantUnpinEmptyAlbum => 'Albumy bez metadát nemožno odopnúť!';
 
   @override
   String get path => 'Cesta';
 
   @override
   String get albumNotFound =>
-      'Tento album neexistuje alebo ste odstránili externý playlist (M3U/PLS súbor), z ktorého bol načítaný.';
+      'Tento album neexistuje alebo ste odstránili externý playlist (súbor M3U/PLS), z ktorého bol načítaný.';
 
   @override
   String get stationNotFound =>
-      'Táto stanica neexistuje alebo bola odstránená z rádioprehliadačového servera.';
+      'Táto stanica neexistuje alebo bola odstránená zo servera radiobrowser.';
 
   @override
   String get onlyLocalAudioForPlaylists =>
-      'Pre import playlistu je podporované iba lokálne audio! Vyhľadajte ho prosím vo funkcii rádia a pridajte pomocou tlačidla hviezdičky do svojej knižnice!';
+      'Import playlistov podporuje iba lokálnu hudbu! Hľadajte ich v funkcii rádio a pridajte ich do knižnice pomocou tlačidla hviezdičky!';
 
   @override
   String get customStationWarning =>
-      'Zadaná adresa URL musí existovať na serveri rádioprehliadača, inak nebude pridaná do vašej knižnice! Najvhodnejšie je ju vyhľadať vo funkcii rádia a pridať pomocou tlačidla hviezdičky do svojej knižnice!';
+      'Poskytnutá URL musí existovať na serveri radiobrowser, inak sa nepridá do vašej knižnice! Ideálne ju nájdite vo funkcii rádio a pridajte do knižnice pomocou tlačidla hviezdičky!';
 
   @override
   String get disc => 'Disk';
 
   @override
   String get groupAlbumsOnlyByAlbumName =>
-      'Zoskupiť albumy iba podľa názvu albumu';
+      'Zoskupovať albumy iba podľa názvu albumu';
 
   @override
   String get groupAlbumsOnlyByAlbumNameDescription =>
-      'Toto zoskupí albumy iba podľa názvu albumu a nie podľa kombinácie meno interpreta + názov albumu, pričom sa predpokladá, že názov albumu je v rámci vašej knižnice jedinečný!';
+      'Toto zoskupí albumy iba podľa názvu albumu a nie podľa mena interpreta + názvu albumu, čo predpokladá, že názov albumu je vo vašej knižnici unikátny!';
 
   @override
   String get useYaruThemeTitle => 'Použiť tému Yaru';
 
   @override
   String get useYaruThemeDescription =>
-      'Týmto sa pre aplikáciu použije téma Yaru. Ide o predvolenú tému pre Ubuntu.';
+      'Toto použije tému Yaru pre aplikáciu. Toto je predvolená téma pre Ubuntu.';
 
   @override
   String get customThemeColor => 'Vlastná farba témy';
 
   @override
-  String get useCustomThemeColorTitle => 'Použiť vlastnú zvýrazňujúcu farbu';
+  String get useCustomThemeColorTitle => 'Použiť vlastnú akcentovú farbu';
 
   @override
   String get useCustomThemeColorDescription =>
-      'Toto vám umožní vybrať si vlastnú zvýrazňujúcu farbu pre aktuálnu tému.';
+      'Toto vám umožní vybrať si vlastnú akcentovú farbu pre aktuálnu tému.';
 
   @override
   String get usePlayerColorTitle => 'Použiť farbu prehrávača';
 
   @override
   String get usePlayerColorDescription =>
-      'Toto použije dominantnú farbu, ktorá bola (ak je dostupná) extrahovaná z aktuálneho obalu albumu pre celú aplikáciu.';
+      'Toto použije dominantnú farbu extrahovanú z aktuálneho obalu (ak je k dispozícii) pre celú aplikáciu.';
 
   @override
   String get selectColor => 'Vybrať farbu';
@@ -2166,18 +2166,18 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get selectIconThemeDescription =>
-      'Vyberte tému ikon pre aplikáciu. Predvolená téma závisí od vášho operačného systému. Toto reštartuje aplikáciu!';
+      'Vyberte si tému ikon pre aplikáciu. Predvolená téma závisí od vášho operačného systému. Toto reštartuje aplikáciu!';
 
   @override
   String get saveWindowSizeTitle => 'Uložiť veľkosť okna';
 
   @override
   String get saveWindowSizeDescription =>
-      'Aplikácia si zapamätá veľkosť a polohu okna, aby zostali rovnaké pri ďalšom otvorení.';
+      'Toto uloží veľkosť a pozíciu okna aplikácie.';
 
   @override
   String downloadsOfLatestRelease(String latestRelease) {
-    return 'Stiahnuté $latestRelease krát mimo Snap Store a Flathub';
+    return 'Stiahnuté $latestRelease krát mimo obchodu snapstore a flathub';
   }
 
   @override
@@ -2186,22 +2186,22 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get useBlurredPlayerBackgroundDescription =>
-      'Týmto sa rozmaže pozadie prehrávača. Na niektorých zariadeniach to môže viesť k nižšiemu výkonu.';
+      'Toto rozmaže pozadie prehrávača. Môže to viesť k nižšiemu výkonu na niektorých zariadeniach.';
 
   @override
   String get loadingPleaseWait => 'Načítava sa, prosím čakajte ...';
 
   @override
   String get parsingLocalAudioFilesMetadataPleaseWait =>
-      'Parsing local audio files metadata, please wait ...';
+      'Analyzujú sa metadáta lokálnych audio súborov, prosím čakajte ...';
 
   @override
   String get persistingLocalAudioFilesMetadataPleaseWait =>
-      'Persisting local audio files metadata, please wait ...';
+      'Ukladajú sa metadáta lokálnych audio súborov, prosím čakajte ...';
 
   @override
   String get buildingLocalAudioLibraryPleaseWait =>
-      'Building local audio library, please wait ...';
+      'Vytvára sa lokálna hudobná knižnica, prosím čakajte ...';
 
   @override
   String get importingPodcastsPleaseWait =>
@@ -2229,28 +2229,28 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String checkingForUpdatesPleaseWait(int progress) {
-    return 'Checking for updates $progress%';
+    return 'Kontrolujú sa aktualizácie $progress%';
   }
 
   @override
   String get author => 'Autor';
 
   @override
-  String get rating => 'Ohodnotenie';
+  String get rating => 'Hodnotenie';
 
   @override
   String get keywords => 'Kľúčové slová';
 
   @override
   String newEpisodesAvailableFor(int length) {
-    return 'Nové epizódy sú dostupné pre $length podcastov';
+    return 'K dispozícii sú nové epizódy pre $length podcastov';
   }
 
   @override
-  String get lyrics => 'Texty piesní';
+  String get lyrics => 'Texty';
 
   @override
-  String get noLyricsFound => 'Text piesne sa nenašiel';
+  String get noLyricsFound => 'Nenašli sa žiadne texty';
 
   @override
   String get autoScrolling => 'Automatické posúvanie';
@@ -2260,186 +2260,187 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get genericErrorDescription =>
-      'Nastala neočakávaná chyba. Skúste to znova neskôr.';
+      'Vyskytla sa neočakávaná chyba. Skúste to prosím neskôr.';
 
   @override
   String errorDetails(String details) {
-    return 'Podrobnosti o chybe: $details';
+    return 'Detaily chyby: $details';
   }
 
   @override
-  String get appendToQueue => 'Pridať do poradia';
+  String get appendToQueue => 'Pridať na koniec fronty';
 
   @override
   String appendedToQueue(String title) {
-    return 'Pridané do poradia: $title';
+    return 'Pridané na koniec fronty: $title';
   }
 
   @override
   String appendMediaToQueueDescription(String title) {
-    return '$title sa už nachádza vo fronte. Chcete ho pridať na koniec frontu?';
+    return '$title je už vo fronte. Chcete ho pridať na koniec fronty?';
   }
 
   @override
-  String get appendMediaToQueueTitle => 'Pridať médiá do poradia';
+  String get appendMediaToQueueTitle => 'Pridať médium do fronty';
 
   @override
   String appendMediaToQueue(String title) {
-    return 'Pridať do poradia: $title';
+    return 'Pridať médium do fronty: $title';
   }
 
   @override
-  String get explore => 'Explore';
+  String get explore => 'Preskúmať';
 
   @override
-  String get favorites => 'Favorites';
+  String get favorites => 'Obľúbené';
 
   @override
-  String get autoMovePlayerTitle => 'Automaticky presunúť prehrávač';
+  String get autoMovePlayerTitle => 'Automaticky presúvať prehrávač';
 
   @override
   String get autoMovePlayerDescription =>
-      'Presunie prehrávač doprava, ak je k dispozícii dostatok horizontálneho priestoru';
+      'Presunúť prehrávač doprava, ak je dostatok horizontálneho priestoru';
 
   @override
   String get onlineLyricsNotSetup =>
-      'Ak chcete získavať texty piesní z Geniusu, zadajte v nastaveniach svoj API kľúč.';
+      'Ak chcete sťahovať texty z Genius, zadajte prosím API kľúč v nastaveniach.';
 
   @override
   String get settingsGeniusDisclaimer =>
-      'MusicPod, jeho prispievatelia ani Genius API nenesú zodpovednosť za akékoľvek zneužitie vášho API kľúča. Poskytnutím API kľúča súhlasíte s jeho zodpovedným používaním v súlade s podmienkami služby Genius.\n\n';
+      'MusicPod, jeho prispievatelia a API Genius nezodpovedajú za akékoľvek zneužitie API kľúča. Poskytnutím vášho API kľúča súhlasíte s tým, že ho budete používať zodpovedne a v súlade s podmienkami služby Genius.\n\n';
 
   @override
   String get settingsGeniusDescription =>
-      'Na získavanie textov piesní z Geniusu musíte zadať svoj Genius API kľúč. API kľúč získate vytvorením účtu na Genius a registráciou aplikácie, čím získate svoj prístupový token.';
+      'Na získanie textov z Genius musíte poskytnúť API kľúč Genius. API kľúč môžete získať vytvorením účtu na stránke Genius a registráciou aplikácie pre získanie prístupového tokenu.';
 
   @override
   String get settingsDoNotAskForGeniusTitle =>
-      'Nepoužívať Genius ani znovu nežiadať o API kľúč';
+      'Nepoužívať Genius ani sa už nepýtať na API kľúč Genius';
 
   @override
   String get settingsDoNotAskForGeniusDescription =>
-      'Zabráni tomu, aby aplikácia v budúcnosti žiadala o Genius API kľúč, a funkcia textov piesní sa bude spoliehať výhradne na lokálne LRC súbory alebo LRC reťazce vložené v metadátach audia.';
+      'Toto zabráni aplikácii v budúcnosti pýtať sa na API kľúč Genius a úplne spoliehať funkciu textov na lokálne súbory LRC alebo reťazce LRC vložené do metadát audia.';
 
   @override
   String get tosLink => 'https://genius.com/static/terms';
 
   @override
-  String get tosLinkText => 'Read Genius\'s Terms of Service';
+  String get tosLinkText => 'Prečítať si Podmienky služby Genius';
 
   @override
-  String get oopsSomethingWentWrong => 'Oops, something went wrong!';
+  String get oopsSomethingWentWrong => 'Ups, niečo sa pokazilo!';
 
   @override
-  String get retry => 'Retry';
+  String get retry => 'Skúsiť znova';
 
   @override
-  String get reportIssue => 'Report this issue';
+  String get reportIssue => 'Nahlásiť tento problém';
 
   @override
   String get ignoreThisTitleInHearingHistory =>
-      'Ignore this title in hearing history';
+      'Ignorovať tento titul v histórii počúvania';
 
   @override
   String get removeFromIgnoredHearyHistoryTitles =>
-      'Remove from ignored titles';
+      'Odstrániť z ignorovaných titulov';
 
   @override
-  String get ignoredHearyHistoryTitlesTitle => 'Ignored titles';
+  String get ignoredHearyHistoryTitlesTitle => 'Ignorované tituly';
 
   @override
   String get ignoredHearyHistoryTitlesDescription =>
-      'These titles will be ignored in the hearing history and will not be shown in the recently played list.';
+      'Tieto tituly budú ignorované v histórii počúvania a nebudú zobrazené v zozname nedávno prehrávaných.';
 
   @override
   String get playingMediaTimedOut =>
-      'Playing media timed out. This might be caused by a network error or server issues.';
+      'Prehrávanie média vypršalo. Môže to byť spôsobené sieťovou chybou alebo problémami servera.';
 
   @override
-  String get playbackWasPausedByTimer => 'Playback was paused by timer';
+  String get playbackWasPausedByTimer =>
+      'Prehrávanie bolo pozastavené časovačom';
 
   @override
-  String get playbackTimerCancelled => 'Playback timer cancelled';
+  String get playbackTimerCancelled => 'Časovač prehrávania zrušený';
 
   @override
   String get podcastDoesNotSendEpisodeDuration =>
-      'This podcast does not send episode duration. The mark done feature might not work as expected.';
+      'Tento podcast neposiela trvanie epizódy. Funkcia označenia ako dokončené nemusí fungovať podľa očakávania.';
 
   @override
   String cleanedUpEpisodesOfUnsubscribedPodcast(String podcastName) {
-    return 'Cleaned up episodes of unsubscribed podcast: $podcastName';
+    return 'Vyčistené epizódy zrušeného podcastu: $podcastName';
   }
 
   @override
   String findEpisodesTimeoutMessage(String podcastName) {
-    return 'Finding episodes takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+    return 'Hľadanie epizód trvá dlhšie, než obvykle. Ste pripojení na internet? Ak áno, môže ísť o problém so serverom.';
   }
 
   @override
   String get radioBrowserServerUnavailable =>
-      'The radio browser server is currently unavailable. This might be a temporary issue. Please try again later.';
+      'Rádiový server je momentálne nedostupný. Môže ísť o dočasný problém. Skúste to prosím neskôr.';
 
   @override
   String get findStationsTimeoutMessage =>
-      'Finding (this) station(s) takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      'Hľadanie (týchto) staníc trvá dlhšie, než obvykle. Ste pripojení na internet? Ak áno, môže ísť o problém so serverom.';
 
   @override
   String retryInSeconds(String seconds) {
-    return 'Retry in $seconds seconds';
+    return 'Skúsiť znova o $seconds sekúnd';
   }
 
   @override
   String retryngInSeconds(String seconds) {
-    return 'Retryng in $seconds seconds';
+    return 'Opakujem o $seconds sekúnd';
   }
 
   @override
   String playerCouldNotOpenRemoteMedia(String media) {
-    return 'The player could not open or maintain to play remote media \'$media\'. Are you connected to the internet? If yes, this might be a server issue.';
+    return 'Prehrávač sa nepodarilo otvoriť alebo udržať prehrávanie vzdialeného média \'$media\'. Ste pripojení na internet? Ak áno, môže ísť o problém so serverom.';
   }
 
   @override
   String get searchTimeoutMessage =>
-      'Searching takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      'Vyhľadávanie trvá dlhšie, než obvykle. Ste pripojení na internet? Ak áno, môže ísť o problém so serverom.';
 
   @override
-  String get youCanEditTheNameLater => 'You can edit the name later.';
+  String get youCanEditTheNameLater => 'Názov môžete upraviť neskôr.';
 
   @override
   String get geniusAlsoProvidesArt =>
-      'Genius also provides artwork for most songs. If you enable Genius to fetch lyrics, the online art in the player will also use Genius instead of MusicBrainz.';
+      'Genius poskytuje aj obaly pre väčšinu skladieb. Ak povolíte Genius na získanie textov, online obaly v prehrávači budú tiež používať Genius namiesto MusicBrainz.';
 
   @override
-  String get enterYourGeniusApiKey => 'Enter your Genius API key';
+  String get enterYourGeniusApiKey => 'Zadajte svoj API kľúč Genius';
 
   @override
-  String get saveYourApiKey => 'Save API Key';
+  String get saveYourApiKey => 'Uložiť API kľúč';
 
   @override
   String get lookUpRadioBrowserHostsFailed =>
-      'Looking up radio browser hosts failed. Are you connected to the internet? If yes, this might be a server issue.';
+      'Vyhľadávanie hostiteľov rádiobrowser zlyhalo. Ste pripojení na internet? Ak áno, môže ísť o problém so serverom.';
 
   @override
   String get lookUpRadioBrowserHostsTimouted =>
-      'Finding Radio Browser hosts takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      'Hľadanie hostiteľov Radio Browser trvá dlhšie, než obvykle. Ste pripojení na internet? Ak áno, môže ísť o problém so serverom.';
 
   @override
   String get radioBrowserServerNotConnected =>
-      'You are not connected to any radio browser server';
+      'Nie ste pripojení k žiadnemu serveru rádiobrowser';
 
   @override
   String get radioBrowserLoadingTagsFailed =>
-      'An error occurred while loading radio tags, the server might be unavailable.';
+      'Vyskytla sa chyba pri načítavaní rádiových štítkov, server môže byť nedostupný.';
 
   @override
   String get radioBrowserLoadingTagsTimeouted =>
-      'Loading tags took longer than expected, are you connected to the internet? If yes, this might be a server issue';
+      'Načítavanie štítkov trvalo dlhšie, než sa očakávalo, ste pripojení na internet? Ak áno, môže ísť o problém so serverom';
 
   @override
   String get podcastSearchNotSuccessfull =>
-      'This podcast search was not successfull, are you connected to the internet? If yes this might be a server issue.';
+      'Toto vyhľadávanie podcastov nebolo úspešné, ste pripojení na internet? Ak áno, môže ísť o problém so serverom.';
 
   @override
   String get podcastFailedHostLookup =>
-      'Finding episodes was not successfull - could not connect to the server. Are you connected to the internet? If yes this might be a server issue.';
+      'Hľadanie epizód nebolo úspešné - nepodarilo sa pripojiť k serveru. Ste pripojení na internet? Ak áno, môže ísť o problém so serverom.';
 }
