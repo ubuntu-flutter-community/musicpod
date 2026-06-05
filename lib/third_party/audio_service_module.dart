@@ -18,8 +18,9 @@ abstract class AudioServiceModule {
     WindowManager windowManager,
   ) async {
     if (isLinux) {
-      await AudioServiceMpris.init(
+      final mpris = await AudioServiceMpris.init(
         dBusName: AppConfig.appName,
+        identity: AppConfig.appTitle,
         desktopEntry: SnapDetector.isSnap
             ? AppConfig.snapDesktopEntry
             : AppConfig.desktopEntry,
@@ -31,6 +32,9 @@ abstract class AudioServiceModule {
         enableLogging: false,
         onRaiseRequest: windowManager.show,
       );
+      mpris.desktopEntry = SnapDetector.isSnap
+          ? AppConfig.snapDesktopEntry
+          : AppConfig.desktopEntry;
     }
     final handler = await _registerAudioServiceHandler(playerService);
 
