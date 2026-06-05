@@ -2227,13 +2227,13 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Are you sure you want to check for updates for {length} podcasts?'**
-  String checkForUpdatesConfirm(Object length);
+  String checkForUpdatesConfirm(String length);
 
   /// No description provided for @playbackWillStopIn.
   ///
   /// In en, this message translates to:
   /// **'Playback will stop in: {duration} ({timeOfDay})'**
-  String playbackWillStopIn(Object duration, Object timeOfDay);
+  String playbackWillStopIn(String duration, String timeOfDay);
 
   /// No description provided for @schedulePlaybackStopTimer.
   ///
@@ -4597,7 +4597,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Cleaned up episodes of unsubscribed podcast: {podcastName}'**
-  String cleanedUpEpisodesOfUnsubscribedPodcast(Object podcastName);
+  String cleanedUpEpisodesOfUnsubscribedPodcast(String podcastName);
 
   /// No description provided for @findEpisodesTimeoutMessage.
   ///

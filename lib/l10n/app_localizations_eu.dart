@@ -1112,12 +1112,12 @@ class AppLocalizationsEu extends AppLocalizations {
   String get checkForUpdates => 'Eguneraketak bilatu';
 
   @override
-  String checkForUpdatesConfirm(Object length) {
+  String checkForUpdatesConfirm(String length) {
     return 'Ziur $length podcasten eguneratzeak bilatu nahi dituzula?';
   }
 
   @override
-  String playbackWillStopIn(Object duration, Object timeOfDay) {
+  String playbackWillStopIn(String duration, String timeOfDay) {
     return 'Erreprodukzioa epe honetan geldituko da: $duration ($timeOfDay)';
   }
 
@@ -2377,7 +2377,7 @@ class AppLocalizationsEu extends AppLocalizations {
       'This podcast does not send episode duration. The mark done feature might not work as expected.';
 
   @override
-  String cleanedUpEpisodesOfUnsubscribedPodcast(Object podcastName) {
+  String cleanedUpEpisodesOfUnsubscribedPodcast(String podcastName) {
     return 'Cleaned up episodes of unsubscribed podcast: $podcastName';
   }
 

@@ -1067,12 +1067,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get checkForUpdates => '检查更新';
 
   @override
-  String checkForUpdatesConfirm(Object length) {
+  String checkForUpdatesConfirm(String length) {
     return '您确定要检查 $length 个播客的更新吗？';
   }
 
   @override
-  String playbackWillStopIn(Object duration, Object timeOfDay) {
+  String playbackWillStopIn(String duration, String timeOfDay) {
     return '播放将在 $duration （$timeOfDay）后停止';
   }
 
@@ -2299,7 +2299,7 @@ class AppLocalizationsZh extends AppLocalizations {
       'This podcast does not send episode duration. The mark done feature might not work as expected.';
 
   @override
-  String cleanedUpEpisodesOfUnsubscribedPodcast(Object podcastName) {
+  String cleanedUpEpisodesOfUnsubscribedPodcast(String podcastName) {
     return 'Cleaned up episodes of unsubscribed podcast: $podcastName';
   }
 
@@ -3259,7 +3259,7 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
   String get checkForUpdates => '檢查更新';
 
   @override
-  String playbackWillStopIn(Object duration, Object timeOfDay) {
+  String playbackWillStopIn(String duration, String timeOfDay) {
     return '播放將在 $duration （$timeOfDay）後停止';
   }
 }
@@ -4145,7 +4145,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get checkForUpdates => '檢查更新';
 
   @override
-  String playbackWillStopIn(Object duration, Object timeOfDay) {
+  String playbackWillStopIn(String duration, String timeOfDay) {
     return '播放將在 $duration （$timeOfDay）後停止。';
   }
 }

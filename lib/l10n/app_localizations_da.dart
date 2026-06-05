@@ -452,7 +452,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String downloadRemoved(String name) {
-    return 'Download fjernet: ${name}';
+    return 'Download fjernet: $name';
   }
 
   @override
@@ -1104,12 +1104,12 @@ class AppLocalizationsDa extends AppLocalizations {
   String get checkForUpdates => 'Tjek efter opdateringer';
 
   @override
-  String checkForUpdatesConfirm(Object length) {
+  String checkForUpdatesConfirm(String length) {
     return 'Er du sikker på, at du vil søge efter opdateringer til $length podcasts?';
   }
 
   @override
-  String playbackWillStopIn(Object duration, Object timeOfDay) {
+  String playbackWillStopIn(String duration, String timeOfDay) {
     return 'Afspilningen stopper om: $duration ($timeOfDay)';
   }
 
@@ -1149,7 +1149,8 @@ class AppLocalizationsDa extends AppLocalizations {
   String get searchSimilarStation => 'Søg efter lignende station';
 
   @override
-  String get onlineArtError => 'Onlineopslag af cover er i øjeblikket ikke tilgængeligt';
+  String get onlineArtError =>
+      'Onlineopslag af cover er i øjeblikket ikke tilgængeligt';
 
   @override
   String get clicks => 'klik';
@@ -1449,7 +1450,8 @@ class AppLocalizationsDa extends AppLocalizations {
   String get regionFrenchpolynesia => 'Fransk Polynesien';
 
   @override
-  String get regionFrenchsouthernterritories => 'De Franske Sydlige og Antarktiske Områder';
+  String get regionFrenchsouthernterritories =>
+      'De Franske Sydlige og Antarktiske Områder';
 
   @override
   String get regionGabon => 'Gabon';
@@ -1503,8 +1505,7 @@ class AppLocalizationsDa extends AppLocalizations {
   String get regionHaiti => 'Haiti';
 
   @override
-  String get regionHeardislandandmcdonaldislands =>
-      'Heard- og McDonaldøerne';
+  String get regionHeardislandandmcdonaldislands => 'Heard- og McDonaldøerne';
 
   @override
   String get regionHonduras => 'Honduras';
@@ -1923,8 +1924,7 @@ class AppLocalizationsDa extends AppLocalizations {
   String get regionUnitedstates => 'USA';
 
   @override
-  String get regionUnitedstatesminoroutlyingislands =>
-      'USA\'s ydre småøer';
+  String get regionUnitedstatesminoroutlyingislands => 'USA\'s ydre småøer';
 
   @override
   String get regionUruguay => 'Uruguay';
@@ -1983,7 +1983,8 @@ class AppLocalizationsDa extends AppLocalizations {
       'Jeg bekræfter, at jeg har taget en sikkerhedskopi af mine:';
 
   @override
-  String get pinnedAlbumsAndPlaylists => 'Fastgjorte album og afspilningslister';
+  String get pinnedAlbumsAndPlaylists =>
+      'Fastgjorte album og afspilningslister';
 
   @override
   String get starredStations => 'Stjernemarkerede stationer';
@@ -2085,8 +2086,7 @@ class AppLocalizationsDa extends AppLocalizations {
   String get localPictureTypebandArtistLogotype => 'Band/Kunstner-logo';
 
   @override
-  String get localPictureTypepublisherStudioLogotype =>
-      'Udgiver/Studie-logo';
+  String get localPictureTypepublisherStudioLogotype => 'Udgiver/Studie-logo';
 
   @override
   String get cantPinEmptyAlbum =>
@@ -2174,7 +2174,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String downloadsOfLatestRelease(String latestRelease) {
-    return 'Downloadet ${latestRelease} gange uden for snapstore og flathub';
+    return 'Downloadet $latestRelease gange uden for snapstore og flathub';
   }
 
   @override
@@ -2225,7 +2225,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String checkingForUpdatesPleaseWait(int progress) {
-    return 'Søger efter opdateringer ${progress}%';
+    return 'Søger efter opdateringer $progress%';
   }
 
   @override
@@ -2239,7 +2239,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String newEpisodesAvailableFor(int length) {
-    return 'Nye episoder tilgængelige for ${length} podcasts';
+    return 'Nye episoder tilgængelige for $length podcasts';
   }
 
   @override
@@ -2260,7 +2260,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String errorDetails(String details) {
-    return 'Fejldetaljer: ${details}';
+    return 'Fejldetaljer: $details';
   }
 
   @override
@@ -2268,12 +2268,12 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String appendedToQueue(String title) {
-    return 'Føjet til kø: ${title}';
+    return 'Føjet til kø: $title';
   }
 
   @override
   String appendMediaToQueueDescription(String title) {
-    return '${title} er allerede i køen. Vil du føje det til slutningen af køen?';
+    return '$title er allerede i køen. Vil du føje det til slutningen af køen?';
   }
 
   @override
@@ -2281,7 +2281,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String appendMediaToQueue(String title) {
-    return 'Føj medie til kø: ${title}';
+    return 'Føj medie til kø: $title';
   }
 
   @override
@@ -2303,7 +2303,7 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get settingsGeniusDisclaimer =>
-      'MusicPod, its contributors, and the Genius API are not responsible for any misuse of the API key. By providing your API key, you agree to use it responsibly and in accordance with Genius terms of service.\n\n';
+      'MusicPod, its contributors, and the Genius API are not responsible for any misuse of the API key. By providing your API key, you agree to use it responsibly and in accordance with Genius terms of service.\\n\\n';
 
   @override
   String get settingsGeniusDescription =>
@@ -2352,7 +2352,8 @@ class AppLocalizationsDa extends AppLocalizations {
       'Afspilning af medie fik timeout. Dette kan skyldes en netværksfejl eller serverproblemer.';
 
   @override
-  String get playbackWasPausedByTimer => 'Afspilningen blev sat på pause af timeren';
+  String get playbackWasPausedByTimer =>
+      'Afspilningen blev sat på pause af timeren';
 
   @override
   String get playbackTimerCancelled => 'Afspilningstimer annulleret';
@@ -2362,8 +2363,8 @@ class AppLocalizationsDa extends AppLocalizations {
       'Denne podcast sender ikke episodevarighed. Funktionen “markér som færdig” fungerer muligvis ikke som forventet.';
 
   @override
-  String cleanedUpEpisodesOfUnsubscribedPodcast(Object podcastName) {
-    return 'Ryddede op i episoder fra ikke-abonneret podcast: ${podcastName}';
+  String cleanedUpEpisodesOfUnsubscribedPodcast(String podcastName) {
+    return 'Ryddede op i episoder fra ikke-abonneret podcast: $podcastName';
   }
 
   @override
@@ -2381,12 +2382,12 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String retryInSeconds(String seconds) {
-    return 'Prøv igen om ${seconds} sekunder';
+    return 'Prøv igen om $seconds sekunder';
   }
 
   @override
   String retryngInSeconds(String seconds) {
-    return 'Prøver igen om ${seconds} sekunder';
+    return 'Prøver igen om $seconds sekunder';
   }
 
   @override

@@ -397,7 +397,24 @@
     "replayAllEpisodes": "Replay all episodes",
     "checkForUpdates": "Check for updates",
     "checkForUpdatesConfirm": "Are you sure you want to check for updates for {length} podcasts?",
+    "@checkForUpdatesConfirm": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    },
     "playbackWillStopIn": "Playback will stop in: {duration} ({timeOfDay})",
+    "@playbackWillStopIn": {
+        "placeholders": {
+            "duration": {
+                "type": "String"
+            },
+            "timeOfDay": {
+                "type": "String"
+            }
+        }
+    },
     "schedulePlaybackStopTimer": "Schedule a time to stop playback",
     "alwaysAsk": "Always ask",
     "hideToTray": "Hide to tray",
@@ -846,6 +863,13 @@
     "playbackTimerCancelled": "Playback timer cancelled",
     "podcastDoesNotSendEpisodeDuration": "This podcast does not send episode duration. The mark done feature might not work as expected.",
     "cleanedUpEpisodesOfUnsubscribedPodcast": "Cleaned up episodes of unsubscribed podcast: {podcastName}",
+    "@cleanedUpEpisodesOfUnsubscribedPodcast": {
+        "placeholders": {
+            "podcastName": {
+                "type": "String"
+            }
+        }
+    },
     "findEpisodesTimeoutMessage": "Finding episodes takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.",
     "@findEpisodesTimeoutMessage": {
         "placeholders": {
