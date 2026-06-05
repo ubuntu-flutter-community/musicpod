@@ -115,7 +115,7 @@
     "pickMusicCollection": "Vyberte si svoju hudobnú zbierku",
     "newEpisode": "Nová",
     "dontShowAgain": "Už nezobrazovať",
-    "queueConfirmMessage": "{length, plural, one {Naozaj chcete zaradiť {length} médium do fronty?} few {Naozaj chcete zaradiť {length} médiá do fronty?} other {Naozaj chcete zaradiť {length} médií do fronty?}}",
+    "queueConfirmMessage": "Naozaj chcete zaradiť {length} médií do fronty?",
     "@queueConfirmMessage": {
         "placeholders": {
             "length": {
@@ -136,7 +136,7 @@
         }
     },
     "about": "O aplikácii",
-    "localAudioCacheSuggestion": "{length, plural, one {Máte {length} lokálny audio súbor. Chcete vytvoriť medzipamäť na zlepšenie času spustenia?} few {Máte {length} lokálne audio súbory. Chcete vytvoriť medzipamäť na zlepšenie času spustenia?} other {Máte {length} lokálnych audio súborov. Chcete vytvoriť medzipamäť na zlepšenie času spustenia?}}",
+    "localAudioCacheSuggestion": "Máte {length} lokálnych audio súborov. Chcete vytvoriť medzipamäť na zlepšenie času spustenia?",
     "@localAudioCacheSuggestion": {
         "placeholders": {
             "length": {
@@ -678,7 +678,7 @@
     "breakingChangesPleaseBackupDescription": "Nasledujúca verzia MusicPod bude mať zásadné zmeny. Pred aktualizáciou prosím zálohujte svoje playlisty, predplatné podcastov a pripnuté albumy.",
     "customContentDescription": "Ak nechcete používať vyhľadávanie v radiobrowseri alebo podcastoch, môžete sem pridať vlastný obsah, alebo vytvoriť prázdne playlisty alebo importovať playlisty zo súborov M3U a PLS.",
     "setPlaylistNameAndAddMoreLater": "Nastaviť názov playlistu a pridať ďalšie tituly neskôr",
-    "checkForUpdatesConfirm": "{length, plural, one {Ste si istí, že chcete skontrolovať aktualizácie pre {length} podcast?} few {Ste si istí, že chcete skontrolovať aktualizácie pre {length} podcasty?} other {Ste si istí, že chcete skontrolovať aktualizácie pre {length} podcastov?}}",
+    "checkForUpdatesConfirm": "Ste si istí, že chcete skontrolovať aktualizácie pre {length} podcastov?",
     "external": "externý",
     "externalPlaylist": "Externý playlist",
     "localPictureTypeCoverFront": "Predný obal",
@@ -726,7 +726,7 @@
     "reset": "Resetovať",
     "saveWindowSizeDescription": "Toto uloží veľkosť a pozíciu okna aplikácie.",
     "saveWindowSizeTitle": "Uložiť veľkosť okna",
-    "downloadsOfLatestRelease": "{latestRelease, plural, one {Stiahnuté {latestRelease} krát mimo obchodu snapstore a flathub} few {Stiahnuté {latestRelease} krát mimo obchodu snapstore a flathub} other {Stiahnuté {latestRelease} krát mimo obchodu snapstore a flathub}}",
+    "downloadsOfLatestRelease": "Stiahnuté {latestRelease} krát mimo obchodu snapstore a flathub",
     "@downloadsOfLatestRelease": {
         "placeholders": {
             "latestRelease": {
@@ -746,7 +746,7 @@
     "author": "Autor",
     "rating": "Hodnotenie",
     "keywords": "Kľúčové slová",
-    "newEpisodesAvailableFor": "{length, plural, one {K dispozícii je nová epizóda pre {length} podcast} few {K dispozícii sú nové epizódy pre {length} podcasty} other {K dispozícii sú nové epizódy pre {length} podcastov}}",
+    "newEpisodesAvailableFor": "K dispozícii sú nové epizódy pre {length} podcastov",
     "@newEpisodesAvailableFor": {
         "placeholders": {
             "length": {
@@ -854,7 +854,7 @@
     },
     "radioBrowserServerUnavailable": "Rádiový server je momentálne nedostupný. Môže ísť o dočasný problém. Skúste to prosím neskôr.",
     "findStationsTimeoutMessage": "Hľadanie (týchto) staníc trvá dlhšie, než obvykle. Ste pripojení na internet? Ak áno, môže ísť o problém so serverom.",
-    "retryInSeconds": "{seconds, plural, one {Skúsiť znova o {seconds} sekundu} few {Skúsiť znova o {seconds} sekundy} other {Skúsiť znova o {seconds} sekúnd}}",
+    "retryInSeconds": "Skúsiť znova o {seconds} sekúnd",
     "@retryInSeconds": {
         "placeholders": {
             "seconds": {
@@ -862,7 +862,7 @@
             }
         }
     },
-    "retryngInSeconds": "{seconds, plural, one {Opakujem o {seconds} sekundu} few {Opakujem o {seconds} sekundy} other {Opakujem o {seconds} sekúnd}}",
+    "retryngInSeconds": "Opakujem o {seconds} sekúnd",
     "@retryngInSeconds": {
         "placeholders": {
             "seconds": {
