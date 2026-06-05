@@ -3,15 +3,14 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  desktop_drop
   file_selector_linux
   gtk
   handy_window
-  irondash_engine_context
   local_notifier
   media_kit_libs_linux
   media_kit_video
   screen_retriever_linux
-  super_native_extensions
   system_theme
   url_launcher_linux
   window_manager

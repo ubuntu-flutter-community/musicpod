@@ -812,33 +812,54 @@ class LocalAudioService {
         await removePlaylist(change.id);
       }
     }
+
+    // Reload the playlist from the database so the in-memory audios carry
+    // their freshly persisted `albumDbId`, which is required to render local
+    // covers without an app restart.
+    if (change.action == PlaylistAction.addTo ||
+        change.action == PlaylistAction.replaceWith ||
+        change.action == PlaylistAction.create) {
+      await _reloadPlaylistFromDb(change.id);
+    }
   }
 
   Future<void> loadPlaylistsFromDb() async {
     _playlists = {};
     final playlistRows = await _db.select(_db.playlistTable).get();
     for (final pl in playlistRows) {
-      final trackRows = await (_db.select(_db.playlistTrackTable).join([
-        innerJoin(
-          _db.trackTable,
-          _db.trackTable.path.equalsExp(_db.playlistTrackTable.track),
-        ),
-        leftOuterJoin(
-          _db.albumTable,
-          _db.albumTable.id.equalsExp(_db.trackTable.album),
-        ),
-        leftOuterJoin(
-          _db.artistTable,
-          _db.artistTable.name.equalsExp(_db.trackTable.artist),
-        ),
-        leftOuterJoin(
-          _db.genreTable,
-          _db.genreTable.name.equalsExp(_db.trackTable.genre),
-        ),
-      ])..where(_db.playlistTrackTable.playlist.equals(pl.id))).get();
-
-      _playlists[pl.name] = _joinedRowsToAudios(trackRows);
+      _playlists[pl.name] = await _loadPlaylistTracksFromDb(pl.id);
     }
+  }
+
+  Future<void> _reloadPlaylistFromDb(String name) async {
+    final plRow = await (_db.select(
+      _db.playlistTable,
+    )..where((t) => t.name.equals(name))).getSingleOrNull();
+    if (plRow == null) return;
+    _playlists[name] = await _loadPlaylistTracksFromDb(plRow.id);
+  }
+
+  Future<List<Audio>> _loadPlaylistTracksFromDb(int playlistId) async {
+    final trackRows = await (_db.select(_db.playlistTrackTable).join([
+      innerJoin(
+        _db.trackTable,
+        _db.trackTable.path.equalsExp(_db.playlistTrackTable.track),
+      ),
+      leftOuterJoin(
+        _db.albumTable,
+        _db.albumTable.id.equalsExp(_db.trackTable.album),
+      ),
+      leftOuterJoin(
+        _db.artistTable,
+        _db.artistTable.name.equalsExp(_db.trackTable.artist),
+      ),
+      leftOuterJoin(
+        _db.genreTable,
+        _db.genreTable.name.equalsExp(_db.trackTable.genre),
+      ),
+    ])..where(_db.playlistTrackTable.playlist.equals(playlistId))).get();
+
+    return _joinedRowsToAudios(trackRows);
   }
 
   Future<void> _createPlaylist({

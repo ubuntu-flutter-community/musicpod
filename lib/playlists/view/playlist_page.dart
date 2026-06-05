@@ -1,14 +1,13 @@
 import 'dart:io';
 
+import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
-import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
-import '../../common/logging.dart';
 import '../../common/view/adaptive_multi_layout_body.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/audio_page_type.dart';
@@ -78,60 +77,34 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
 
     final playlist = playlistResult.data ?? [];
 
-    return DropRegion(
-      formats: Formats.standardFormats,
-      hitTestBehavior: HitTestBehavior.opaque,
-
-      onPerformDrop: (e) async {
-        for (var item in e.session.items.take(100)) {
-          item.dataReader?.getValue(Formats.fileUri, (value) async {
-            if (value == null) return;
-            try {
-              final file = File.fromUri(value);
-
-              di<LocalAudioManager>()
-                  .playlistCommand(pageId)
-                  .run(
-                    PlaylistChange(
-                      id: pageId,
-                      action: PlaylistAction.addTo,
-                      audios: [
-                        Audio.local(
-                          file,
-                          onError: (path) =>
-                              showFailedImportsSnackBarIfNotBlocked(
-                                failedImports: [path],
-                                context: context,
-                                failedToImport: true,
-                              ),
-                          onParseError: (path) =>
-                              showFailedImportsSnackBarIfNotBlocked(
-                                failedImports: [path],
-                                context: context,
-                              ),
-                        ),
-                      ],
-                      external: false,
+    return DropTarget(
+      onDragDone: (details) => di<LocalAudioManager>()
+          .playlistCommand(pageId)
+          .run(
+            PlaylistChange(
+              id: pageId,
+              action: PlaylistAction.addTo,
+              audios: details.files
+                  .map((xFile) => File(xFile.path))
+                  .map(
+                    (file) => Audio.local(
+                      file,
+                      onError: (path) => showFailedImportsSnackBarIfNotBlocked(
+                        failedImports: [path],
+                        context: context,
+                        failedToImport: true,
+                      ),
+                      onParseError: (path) =>
+                          showFailedImportsSnackBarIfNotBlocked(
+                            failedImports: [path],
+                            context: context,
+                          ),
                     ),
-                  );
-            } on Exception catch (e) {
-              printMessageInDebugMode(e);
-              showFailedImportsSnackBarIfNotBlocked(
-                failedImports: [value.toString()],
-                context: context,
-                failedToImport: true,
-              );
-            }
-          }, onError: (_) {});
-        }
-      },
-      onDropOver: (event) {
-        if (event.session.allowedOperations.contains(DropOperation.copy)) {
-          return DropOperation.copy;
-        } else {
-          return DropOperation.none;
-        }
-      },
+                  )
+                  .toList(),
+              external: false,
+            ),
+          ),
       child: Scaffold(
         appBar: HeaderBar(
           title: Text(pageId),
