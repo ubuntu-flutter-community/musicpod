@@ -30,7 +30,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get repeatAll => 'Opakovat vše';
 
   @override
-  String get repeatOff => 'Repeat Off';
+  String get repeatOff => 'Opakování vypnuto';
 
   @override
   String get next => 'Další';
@@ -454,23 +454,23 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String downloadRemoved(String name) {
-    return 'Download removed: $name';
+    return 'Stažení odstraněno: $name';
   }
 
   @override
   String get markAllEpisodesAsDone => 'Označit všechny epizody jako dokončené';
 
   @override
-  String get markEpisodeAsDone => 'Mark episode as done';
+  String get markEpisodeAsDone => 'Označit epizodu jako dokončenou';
 
   @override
-  String get hideCompletedEpisodes => 'Hide completed episodes';
+  String get hideCompletedEpisodes => 'Skrýt dokončené epizody';
 
   @override
-  String get showCompletedEpisodes => 'Show completed episodes';
+  String get showCompletedEpisodes => 'Zobrazit dokončené epizody';
 
   @override
-  String get reset => 'Reset';
+  String get reset => 'Resetovat';
 
   @override
   String get resetAllSettings => 'Resetovat všechna nastavení';
@@ -2111,329 +2111,332 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get customStationWarning =>
-      'Zadaná adresa URL musí existovat na serveru radiobrowser, jinak nebude přidána do vaší knihovny!\nIdeálně je vyhledejte ve funkci rádia a přidejte je do své knihovny pomocí tlačítka s hvězdičkou!';
+      'Zadaná adresa URL must existovat na serveru radiobrowser, jinak nebude přidána do vaší knihovny!\nIdeálně je vyhledejte ve funkci rádia a přidejte je do své knihovny pomocí tlačítka s hvězdičkou!';
 
   @override
-  String get disc => 'Disc';
+  String get disc => 'Disk';
 
   @override
-  String get groupAlbumsOnlyByAlbumName => 'Group albums only by album name';
+  String get groupAlbumsOnlyByAlbumName =>
+      'Seskupovat alba pouze podle názvu alba';
 
   @override
   String get groupAlbumsOnlyByAlbumNameDescription =>
-      'This will group albums only by album name and not by artist name + album name, which assumes that the album name is unique inside your library!';
+      'Bude seskupovat alba pouze podle jejich názvu a nikoli podle jména interpreta + názvu alba. To předpokládá, že název alba je ve vaší knihovně jedinečný!';
 
   @override
-  String get useYaruThemeTitle => 'Use Yaru theme';
+  String get useYaruThemeTitle => 'Použít motiv Yaru';
 
   @override
   String get useYaruThemeDescription =>
-      'This will use the Yaru theme for the application. This is the default theme for Ubuntu.';
+      'Aplikace bude používat motiv Yaru, což je výchozí vzhled v systému Ubuntu.';
 
   @override
-  String get customThemeColor => 'Custom theme color';
+  String get customThemeColor => 'Vlastní barva motivu';
 
   @override
-  String get useCustomThemeColorTitle => 'Use custom accent color';
+  String get useCustomThemeColorTitle => 'Použít vlastní barvu akcentu';
 
   @override
   String get useCustomThemeColorDescription =>
-      'This will let you chose a custom accent color for the current theme.';
+      'Tato možnost vám umožní vybrat si vlastní barvu akcentu pro aktuální motiv.';
 
   @override
-  String get usePlayerColorTitle => 'Use player color';
+  String get usePlayerColorTitle => 'Použít barvu přehrávače';
 
   @override
   String get usePlayerColorDescription =>
-      'This will use the dominant color has been extracted out of the current artwork (if available) for the whole app.';
+      'Pro celou aplikaci bude použita dominantní barva extrahovaná z obalu aktuálně přehrávané skladby (je-li k dispozici).';
 
   @override
-  String get selectColor => 'Select color';
+  String get selectColor => 'Vybrat barvu';
 
   @override
-  String get selectColorShade => 'Select color shade';
+  String get selectColorShade => 'Vybrat odstín barvy';
 
   @override
-  String get selectColorAndItsShades => 'Select color and its shades';
+  String get selectColorAndItsShades => 'Vybrat barvu a její odstíny';
 
   @override
-  String get selectIconThemeTitle => 'Select icon theme';
+  String get selectIconThemeTitle => 'Vybrat motiv ikon';
 
   @override
   String get selectIconThemeDescription =>
-      'Chose an icon theme for the application. The default theme depends on your operating system. This reloads the application!';
+      'Vyberte motiv ikon pro aplikaci. Výchozí motiv závisí na vašem operačním systému. Změna restartuje aplikaci!';
 
   @override
-  String get saveWindowSizeTitle => 'Save window size';
+  String get saveWindowSizeTitle => 'Uložit velikost okna';
 
   @override
   String get saveWindowSizeDescription =>
-      'This will save the window size and position of the application.';
+      'Uloží velikost a pozici okna aplikace.';
 
   @override
   String downloadsOfLatestRelease(String latestRelease) {
-    return 'Downloaded $latestRelease times outside of snapstore and flathub';
+    return 'Staženo ${latestRelease}krát mimo obchod Snap Store a FlatHub';
   }
 
   @override
-  String get useBlurredPlayerBackgroundTitle => 'Use blurred player background';
+  String get useBlurredPlayerBackgroundTitle =>
+      'Použít rozmazané pozadí přehrávače';
 
   @override
   String get useBlurredPlayerBackgroundDescription =>
-      'This will blur the background of the player. This might lead to lower performance on some devices.';
+      'Rozmaže pozadí přehrávače. To může na některých zařízeních vést k nižšímu výkonu.';
 
   @override
-  String get loadingPleaseWait => 'Loading, please wait ...';
+  String get loadingPleaseWait => 'Načítání, prosím čekejte ...';
 
   @override
   String get parsingLocalAudioFilesMetadataPleaseWait =>
-      'Parsing local audio files metadata, please wait ...';
+      'Analyzování metadat místních zvukových souborů, prosím čekejte ...';
 
   @override
   String get persistingLocalAudioFilesMetadataPleaseWait =>
-      'Persisting local audio files metadata, please wait ...';
+      'Ukládání metadat místních zvukových souborů, prosím čekejte ...';
 
   @override
   String get buildingLocalAudioLibraryPleaseWait =>
-      'Building local audio library, please wait ...';
+      'Sestavování místní hudební knihovny, prosím čekejte ...';
 
   @override
   String get importingPodcastsPleaseWait =>
-      'Importing your podcasts, please wait ...';
+      'Importování vašich podcastů, prosím čekejte ...';
 
   @override
   String get exportingPodcastsPleaseWait =>
-      'Exporting your podcasts, please wait ...';
+      'Exportování vašich podcastů, prosím čekejte ...';
 
   @override
   String get importingStationsPleaseWait =>
-      'Importing your stations, please wait ...';
+      'Importování vašich stanic, prosím čekejte ...';
 
   @override
   String get exportingStationsPleaseWait =>
-      'Exporting your stations, please wait ...';
+      'Exportování vašich stanic, prosím čekejte ...';
 
   @override
   String get importingPlaylistsPleaseWait =>
-      'Importing your playlists, please wait ...';
+      'Importování vašich playlistů, prosím čekejte ...';
 
   @override
   String get exportingPlaylistsPleaseWait =>
-      'Exporting your playlists, please wait ...';
+      'Exportování vašich playlistů, prosím čekejte ...';
 
   @override
   String checkingForUpdatesPleaseWait(int progress) {
-    return 'Checking for updates $progress%';
+    return 'Kontrola aktualizací $progress%';
   }
 
   @override
-  String get author => 'Author';
+  String get author => 'Autor';
 
   @override
-  String get rating => 'Rating';
+  String get rating => 'Hodnocení';
 
   @override
-  String get keywords => 'Keywords';
+  String get keywords => 'Klíčová slova';
 
   @override
   String newEpisodesAvailableFor(int length) {
-    return 'New episodes available for $length podcasts';
+    return 'Nové epizody jsou k dispozici pro $length podcastů';
   }
 
   @override
-  String get lyrics => 'Lyrics';
+  String get lyrics => 'Text písně';
 
   @override
-  String get noLyricsFound => 'No lyrics found';
+  String get noLyricsFound => 'Nebyl nalezen žádný text';
 
   @override
-  String get autoScrolling => 'Auto scroll';
+  String get autoScrolling => 'Automatické posouvání';
 
   @override
-  String get genericErrorTitle => 'An error occurred';
+  String get genericErrorTitle => 'Došlo k chybě';
 
   @override
   String get genericErrorDescription =>
-      'An unexpected error occurred. Please try again later.';
+      'Došlo k neočekávané chybě. Zkuste to prosím později.';
 
   @override
   String errorDetails(String details) {
-    return 'Error details: $details';
+    return 'Detaily chyby: $details';
   }
 
   @override
-  String get appendToQueue => 'Append to queue';
+  String get appendToQueue => 'Přidat na konec fronty';
 
   @override
   String appendedToQueue(String title) {
-    return 'Appended to queue: $title';
+    return 'Přidáno na konec fronty: $title';
   }
 
   @override
   String appendMediaToQueueDescription(String title) {
-    return '$title is already inside the queue. Do you want to append it to the end of the queue?';
+    return 'Médium $title již ve frontě je. Chcete jej přidat znovu na konec fronty?';
   }
 
   @override
-  String get appendMediaToQueueTitle => 'Append media to queue';
+  String get appendMediaToQueueTitle => 'Přidat médium do fronty';
 
   @override
   String appendMediaToQueue(String title) {
-    return 'Append media to queue: $title';
+    return 'Přidat médium do fronty: $title';
   }
 
   @override
-  String get explore => 'Explore';
+  String get explore => 'Objevovat';
 
   @override
-  String get favorites => 'Favorites';
+  String get favorites => 'Oblíbené';
 
   @override
-  String get autoMovePlayerTitle => 'Auto move player';
+  String get autoMovePlayerTitle => 'Automaticky přesunout přehrávač';
 
   @override
   String get autoMovePlayerDescription =>
-      'Move the player to the right if there is enough horizontal space';
+      'Přesune přehrávač doprava, pokud je k dispozici dostatek vodorovného prostoru';
 
   @override
   String get onlineLyricsNotSetup =>
-      'If you want to fetch lyrics from Genius, please provide an API key in the settings.';
+      'Chcete-li stahovat texty písní z Geniusu, zadejte v nastavení API klíč.';
 
   @override
   String get settingsGeniusDisclaimer =>
-      'MusicPod, its contributors, and the Genius API are not responsible for any misuse of the API key. By providing your API key, you agree to use it responsibly and in accordance with Genius terms of service.\n\n';
+      'MusicPod, jeho přispěvatelé a rozhraní Genius API nenesou odpovědnost za jakékoli zneužití tohoto klíče. Poskytnutím svého API klíče souhlasíte s jeho zodpovědným používáním v souladu s podmínkami služby Genius.\n\n';
 
   @override
   String get settingsGeniusDescription =>
-      'To fetch lyrics from Genius, you need to provide a Genius API Key. You can obtain an API key by creating an account on Genius and registering an application to get your access token.';
+      'Chcete-li načítat texty z Geniusu, musíte zadat API klíč Genius. Klíč získáte vytvořením účtu na webu Genius a registrací aplikace.';
 
   @override
   String get settingsDoNotAskForGeniusTitle =>
-      'Do not use Genius or ask for Genius API Key again';
+      'Nepoužívat Genius a znovu se neptat na API klíč Genius';
 
   @override
   String get settingsDoNotAskForGeniusDescription =>
-      'This prevents the app from prompting for the Genius API key in the future and makes the lyrics feature fully rely on local LRC files or LRC strings embedded in audio metadata.';
+      'Tím zabráníte aplikaci v budoucím dotazování na API klíč Genius a funkce textů písní se bude plně spoléhat na místní soubory LRC nebo LRC texty vložené v metadatech audia.';
 
   @override
   String get tosLink => 'https://genius.com/static/terms';
 
   @override
-  String get tosLinkText => 'Read Genius\'s Terms of Service';
+  String get tosLinkText => 'Přečtěte si smluvní podmínky služby Genius';
 
   @override
-  String get oopsSomethingWentWrong => 'Oops, something went wrong!';
+  String get oopsSomethingWentWrong => 'Jejda, něco se pokazilo!';
 
   @override
-  String get retry => 'Retry';
+  String get retry => 'Opakovat';
 
   @override
-  String get reportIssue => 'Report this issue';
+  String get reportIssue => 'Nahlásit tento problém';
 
   @override
   String get ignoreThisTitleInHearingHistory =>
-      'Ignore this title in hearing history';
+      'Ignorovat tento titul v historii poslechu';
 
   @override
   String get removeFromIgnoredHearyHistoryTitles =>
-      'Remove from ignored titles';
+      'Odebrat z ignorovaných titulů';
 
   @override
-  String get ignoredHearyHistoryTitlesTitle => 'Ignored titles';
+  String get ignoredHearyHistoryTitlesTitle => 'Ignorované tituly';
 
   @override
   String get ignoredHearyHistoryTitlesDescription =>
-      'These titles will be ignored in the hearing history and will not be shown in the recently played list.';
+      'Tyto tituly budou v historii poslechu ignorovány a nebudou se zobrazovat v seznamu naposledy přehrávaných skladeb.';
 
   @override
   String get playingMediaTimedOut =>
-      'Playing media timed out. This might be caused by a network error or server issues.';
+      'Vypršel časový limit pro přehrávání média. To může být způsobeno chybou sítě nebo problémy se serverem.';
 
   @override
-  String get playbackWasPausedByTimer => 'Playback was paused by timer';
+  String get playbackWasPausedByTimer =>
+      'Přehrávání bylo pozastaveno časovačem';
 
   @override
-  String get playbackTimerCancelled => 'Playback timer cancelled';
+  String get playbackTimerCancelled => 'Časovač přehrávání byl zrušen';
 
   @override
   String get podcastDoesNotSendEpisodeDuration =>
-      'This podcast does not send episode duration. The mark done feature might not work as expected.';
+      'Tento podcast neodesílá délku epizody. Funkce označení jako dokončené nemusí fungovat správně.';
 
   @override
   String cleanedUpEpisodesOfUnsubscribedPodcast(String podcastName) {
-    return 'Cleaned up episodes of unsubscribed podcast: $podcastName';
+    return 'Uklizené epizody odhlášeného podcastu: $podcastName';
   }
 
   @override
   String findEpisodesTimeoutMessage(String podcastName) {
-    return 'Finding episodes takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+    return 'Hledání epizod trvá déle než obvykle. Jste připojeni k internetu? Pokud ano, může jít o problém se serverem.';
   }
 
   @override
   String get radioBrowserServerUnavailable =>
-      'The radio browser server is currently unavailable. This might be a temporary issue. Please try again later.';
+      'Server vyhledávače rádií je momentálně nedostupný. Může jít o dočasný problém. Zkuste to prosím později znovu.';
 
   @override
   String get findStationsTimeoutMessage =>
-      'Finding (this) station(s) takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      'Hledání této stanice (stanic) trvá déle než obvykle. Jste připojeni k internetu? Pokud ano, může jít o problém se serverem.';
 
   @override
   String retryInSeconds(String seconds) {
-    return 'Retry in $seconds seconds';
+    return 'Zkusit znovu za $seconds sekund';
   }
 
   @override
   String retryngInSeconds(String seconds) {
-    return 'Retryng in $seconds seconds';
+    return 'Zkouším znovu za $seconds sekund';
   }
 
   @override
   String playerCouldNotOpenRemoteMedia(String media) {
-    return 'The player could not open or maintain to play remote media \'$media\'. Are you connected to the internet? If yes, this might be a server issue.';
+    return 'Přehrávači se nepodařilo otevřít nebo udržet přehrávání vzdáleného média \'$media\'. Jste připojeni k internetu? Pokud ano, může jít o problém se serverem.';
   }
 
   @override
   String get searchTimeoutMessage =>
-      'Searching takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      'Vyhledávání trvá déle než obvykle. Jste připojeni k internetu? Pokud ano, může jít o problém se serverem.';
 
   @override
-  String get youCanEditTheNameLater => 'You can edit the name later.';
+  String get youCanEditTheNameLater => 'Název můžete upravit později.';
 
   @override
   String get geniusAlsoProvidesArt =>
-      'Genius also provides artwork for most songs. If you enable Genius to fetch lyrics, the online art in the player will also use Genius instead of MusicBrainz.';
+      'Genius také poskytuje přebaly alb pro většinu skladeb. Pokud povolíte Genius pro načítání textů, online přebaly v přehrávači budou rovněž používat Genius namísto MusicBrainz.';
 
   @override
-  String get enterYourGeniusApiKey => 'Enter your Genius API key';
+  String get enterYourGeniusApiKey => 'Zadejte svůj API klíč Genius';
 
   @override
-  String get saveYourApiKey => 'Save API Key';
+  String get saveYourApiKey => 'Uložit API klíč';
 
   @override
   String get lookUpRadioBrowserHostsFailed =>
-      'Looking up radio browser hosts failed. Are you connected to the internet? If yes, this might be a server issue.';
+      'Vyhledání hostitelských serverů rádií selhalo. Jste připojeni k internetu? Pokud ano, může jít o problém se serverem.';
 
   @override
   String get lookUpRadioBrowserHostsTimouted =>
-      'Finding Radio Browser hosts takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      'Hledání hostitelských serverů rádií trvá déle než obvykle. Jste připojeni k internetu? Pokud ano, může jít o problém se serverem.';
 
   @override
   String get radioBrowserServerNotConnected =>
-      'You are not connected to any radio browser server';
+      'Nejste připojeni k žádnému serveru rádií';
 
   @override
   String get radioBrowserLoadingTagsFailed =>
-      'An error occurred while loading radio tags, the server might be unavailable.';
+      'Došlo k chybě při načítání štítků rádií, server může být nedostupný.';
 
   @override
   String get radioBrowserLoadingTagsTimeouted =>
-      'Loading tags took longer than expected, are you connected to the internet? If yes, this might be a server issue';
+      'Načítání štítků trvalo déle, než se očekávalo. Jste připojeni k internetu? Pokud ano, může jít o problém se serverem';
 
   @override
   String get podcastSearchNotSuccessfull =>
-      'This podcast search was not successfull, are you connected to the internet? If yes this might be a server issue.';
+      'Hledání podcastu nebylo úspěšné. Jste připojeni k internetu? Pokud ano, může jít o problém se serverem.';
 
   @override
   String get podcastFailedHostLookup =>
-      'Finding episodes was not successfull - could not connect to the server. Are you connected to the internet? If yes this might be a server issue.';
+      'Hledání epizod nebylo úspěšné - nepodařilo se připojit k serveru. Jste připojeni k internetu? Pokud ano, může jít o problém se serverem.';
 }

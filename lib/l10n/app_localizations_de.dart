@@ -454,7 +454,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String downloadRemoved(String name) {
-    return 'Download removed: $name';
+    return 'Heruntergeladene Datei entfernt: $name';
   }
 
   @override
@@ -478,7 +478,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get resetAllSettingsConfirm =>
-      'Sind Sie absolut sicher, dass Sie alle Einstellungen, Ihre Podcast-Abonnements, Ihren Podcast-Fortschritt, Ihre Lieblingssender und Ihre angehefteten Alben zurücksetzen möchten? Die App wird danach geschlossen und Sie müssen sie neu öffnen.';
+      'Bist du absolut sicher, dass du alle Einstellungen, deine Podcast-Abonnements, deinen Podcast-Fortschritt, deine Lieblingssender und deine angehefteten Alben zurücksetzen möchtest? Die App wird danach geschlossen und du musst sie neu öffnen.';
 
   @override
   String get confirm => 'Bestätigen';
@@ -491,14 +491,14 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get isMaybeLowBandwidthDialogBody =>
-      'Sie sind nicht mit WLAN oder Ethernet verbunden. Möchten Sie den Datensparmodus aktivieren?';
+      'Du bist nicht mit WLAN oder Ethernet verbunden. Möchtest du den Datensparmodus aktivieren?';
 
   @override
   String get isBackInWifiDialogTitle => 'Wiedervebunden mit WIFI/Ethernet';
 
   @override
   String get isBackInWifiDialogBody =>
-      'Sie sind mit WLAN oder Ethernet verbunden. Möchten Sie den Datensparmodus deaktivieren?';
+      'Du bist mit WLAN oder Ethernet verbunden. Möchtest du den Datensparmodus deaktivieren?';
 
   @override
   String get enableDataSafeModeSettingTitle => 'Datensparmodus';
@@ -1044,18 +1044,18 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get removeAllPodcastsConfirm =>
-      'Sind Sie sicher, dass Sie alle Podcasts entfernen möchten?';
+      'Bist du sicher, dass du alle Podcasts entfernen möchtest?';
 
   @override
   String get removeAllPodcastsDescription =>
-      'Dies löscht alle Ihre Podcast-Abonnements und Ihren Wiedergabefortschritt.';
+      'Dies löscht alle deine Podcast-Abonnements und deinen Wiedergabefortschritt.';
 
   @override
   String get customContentTitle => 'Füge eigenene Inhalte hinzu';
 
   @override
   String get customContentDescription =>
-      'Wenn Sie die Radiobrowser- oder Podcast-Suchfunktion nicht nutzen möchten, können Sie hier Ihre eigenen Inhalte hinzufügen oder leere Wiedergabelisten hinzufügen oder Wiedergabelisten aus M3U- und PLS-Dateien importieren.';
+      'Wenn du die Radiobrowser- oder Podcast-Suchfunktion nicht nutzen möchtest, kannst du hier deine eigenen Inhalte hinzufügen oder leere Wiedergabelisten hinzufügen oder Wiedergabelisten aus M3U- und PLS-Dateien importieren.';
 
   @override
   String get setPlaylistNameAndAddMoreLater =>
@@ -1142,7 +1142,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get confirmCloseOrHideTip =>
-      'Bitte bestätigen, ob Sie die Anwendung schließen oder ausblenden möchten';
+      'Bitte bestätige, ob du die Anwendung schließen oder ausblenden möchtest';
 
   @override
   String get doNotAskAgain => 'Nicht mehr fragen';
@@ -1200,7 +1200,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get exposeToListenBrainzSubTitle =>
-      'Der Künstler und Titel des Liedes/Senders/Podcasts, das/den Sie gerade hören, werden geteilt.';
+      'Der Künstler und Titel des Liedes/Senders/Podcasts, das/den du gerade hörst, werden geteilt.';
 
   @override
   String get listenBrainzApiKey => 'ListenBrainz API-Schlüssel';
@@ -1977,11 +1977,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get breakingChangesPleaseBackupTitle =>
-      'Wichtige Änderungen: Bitte sichern Sie Ihre Daten!';
+      'Wichtige Änderungen: Bitte sichere deine Daten!';
 
   @override
   String get breakingChangesPleaseBackupDescription =>
-      'Die nächste Version von MusicPod wird wichtige Änderungen enthalten. Bitte sichern Sie Ihre Playlists, Podcast-Abonnements und angehefteten Alben, bevor Sie das Update durchführen.';
+      'Die nächste Version von MusicPod wird wichtige Änderungen enthalten. Bitte sichere deine Playlists, Podcast-Abonnements und angehefteten Alben, bevor du das Update durchführst.';
 
   @override
   String get breakingChangesPleaseBackupConfirmation =>
@@ -2018,7 +2018,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get localAudioWatchDialogDescription =>
-      'Möchten Sie das lokale Audioverzeichnis neu laden?';
+      'Möchtest du das lokale Audioverzeichnis neu laden?';
 
   @override
   String get external => 'extern';
@@ -2198,43 +2198,43 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get parsingLocalAudioFilesMetadataPleaseWait =>
-      'Parsing local audio files metadata, please wait ...';
+      'Lese Metadaten lokaler Audiodateien ein, bitte warten ...';
 
   @override
   String get persistingLocalAudioFilesMetadataPleaseWait =>
-      'Persisting local audio files metadata, please wait ...';
+      'Speichere Metadaten lokaler Audiodateien ab, bitte warten ...';
 
   @override
   String get buildingLocalAudioLibraryPleaseWait =>
-      'Building local audio library, please wait ...';
+      'Erstelle Datenbank der lokalen Audiodateien, bitte warten ...';
 
   @override
   String get importingPodcastsPleaseWait =>
-      'Ihre Podcasts werden importiert, bitte warten ...';
+      'Deine Podcasts werden importiert, bitte warten ...';
 
   @override
   String get exportingPodcastsPleaseWait =>
-      'Ihre Podcasts werden exportiert, bitte warten ...';
+      'Deine Podcasts werden exportiert, bitte warten ...';
 
   @override
   String get importingStationsPleaseWait =>
-      'Ihre Sender werden importiert, bitte warten ...';
+      'Deine Sender werden importiert, bitte warten ...';
 
   @override
   String get exportingStationsPleaseWait =>
-      'Ihre Stationen werden exportiert, bitte warten ...';
+      'Deine Stationen werden exportiert, bitte warten ...';
 
   @override
   String get importingPlaylistsPleaseWait =>
-      'Ihre Wiedergabelisten werden importiert, bitte warten ...';
+      'Deine Wiedergabelisten werden importiert, bitte warten ...';
 
   @override
   String get exportingPlaylistsPleaseWait =>
-      'Ihre Wiedergabelisten werden exportiert, bitte warten ...';
+      'Deine Wiedergabelisten werden exportiert, bitte warten ...';
 
   @override
   String checkingForUpdatesPleaseWait(int progress) {
-    return 'Checking for updates $progress%';
+    return 'Prüfe auf Aktualisierungen $progress%';
   }
 
   @override
@@ -2313,11 +2313,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get settingsGeniusDisclaimer =>
-      'MusicPod, seine Mitwirkenden und die Genius-API übernehmen keine Haftung für jeglichen Missbrauch des API-Schlüssels. Mit der Bereitstellung Ihres API-Schlüssels erklären Sie sich damit einverstanden, diesen verantwortungsbewusst und in Übereinstimmung mit den Nutzungsbedingungen von Genius zu verwenden.\n\n';
+      'MusicPod, seine Mitwirkenden und die Genius-API übernehmen keine Haftung für jeglichen Missbrauch des API-Schlüssels. Mit der Bereitstellung deines API-Schlüssels erklärst du dich damit einverstanden, diesen verantwortungsbewusst und in Übereinstimmung mit den Nutzungsbedingungen von Genius zu verwenden.\n\n';
 
   @override
   String get settingsGeniusDescription =>
-      'Um Songtexte von Genius abzurufen, müssen Sie einen Genius-API-Schlüssel angeben. Sie können einen API-Schlüssel erhalten, indem Sie ein Konto bei Genius erstellen und eine Anwendung registrieren, um Ihr Zugriffs-Token zu erhalten.';
+      'Um Songtexte von Genius abzurufen, musst du einen Genius-API-Schlüssel angeben. Du kannst einen API-Schlüssel erhalten, indem du ein Konto bei Genius erstellst und eine Anwendung registrierst, um dein Zugriffs-Token zu erhalten.';
 
   @override
   String get settingsDoNotAskForGeniusTitle =>
@@ -2334,118 +2334,118 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tosLinkText => 'Die Nutzungsbedingungen von Genius lesen';
 
   @override
-  String get oopsSomethingWentWrong => 'Oops, something went wrong!';
+  String get oopsSomethingWentWrong => 'Ups, etwas ist schief gelaufen!';
 
   @override
-  String get retry => 'Retry';
+  String get retry => 'Wiederversuchen';
 
   @override
-  String get reportIssue => 'Report this issue';
+  String get reportIssue => 'Melde dieses Problem';
 
   @override
   String get ignoreThisTitleInHearingHistory =>
-      'Ignore this title in hearing history';
+      'Ignoriere diesen Titel im Hörverlauf';
 
   @override
   String get removeFromIgnoredHearyHistoryTitles =>
-      'Remove from ignored titles';
+      'Entferne aus ignorierten Titeln';
 
   @override
-  String get ignoredHearyHistoryTitlesTitle => 'Ignored titles';
+  String get ignoredHearyHistoryTitlesTitle => 'Ignorierte Titel';
 
   @override
   String get ignoredHearyHistoryTitlesDescription =>
-      'These titles will be ignored in the hearing history and will not be shown in the recently played list.';
+      'Diese Titel werden im Hörverlauf ignoriert.';
 
   @override
   String get playingMediaTimedOut =>
-      'Playing media timed out. This might be caused by a network error or server issues.';
+      'Zeitüberschreitung bei Abspielversuch des Mediums. Dies kann durch einen Verbindungsfehler verursacht worden sein oder es ist ein Serverproblem.';
 
   @override
-  String get playbackWasPausedByTimer => 'Playback was paused by timer';
+  String get playbackWasPausedByTimer => 'Abspielen durch Timer pausiert';
 
   @override
-  String get playbackTimerCancelled => 'Playback timer cancelled';
+  String get playbackTimerCancelled => 'Wiedergabepausierung abgebrochen';
 
   @override
   String get podcastDoesNotSendEpisodeDuration =>
-      'This podcast does not send episode duration. The mark done feature might not work as expected.';
+      'Dieser Podcast sendet keine Episodendauer. Die Abschlussmarkierungsfunktion funktioniert daher vermutlich nicht wie erwartet.';
 
   @override
   String cleanedUpEpisodesOfUnsubscribedPodcast(String podcastName) {
-    return 'Cleaned up episodes of unsubscribed podcast: $podcastName';
+    return 'Episoden eines nicht (mehr) abonnierten Podcasts wurden entfernt: $podcastName';
   }
 
   @override
   String findEpisodesTimeoutMessage(String podcastName) {
-    return 'Finding episodes takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+    return 'Das Laden von Episoden dauert länger als erwartet. Bist du mit dem Internet verbunden? Falls ja könnte es ein Serverproblem sein.';
   }
 
   @override
   String get radioBrowserServerUnavailable =>
-      'The radio browser server is currently unavailable. This might be a temporary issue. Please try again later.';
+      'Der Radio-Browser-Server ist momentan nicht erreichbar. Dies könnte ein temporäres Problem sein. Bitte versuche es später erneut.';
 
   @override
   String get findStationsTimeoutMessage =>
-      'Finding (this) station(s) takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      'Das Laden von (diesem) Radiosender(n) dauert länger als sonst. Bist du mit dem Internet verbunden? Falls ja könnte dies ein Serverproblem sein.';
 
   @override
   String retryInSeconds(String seconds) {
-    return 'Retry in $seconds seconds';
+    return 'Nächster Versuch in $seconds Sekunden';
   }
 
   @override
   String retryngInSeconds(String seconds) {
-    return 'Retryng in $seconds seconds';
+    return 'Wird in $seconds erneut versucht';
   }
 
   @override
   String playerCouldNotOpenRemoteMedia(String media) {
-    return 'The player could not open or maintain to play remote media \'$media\'. Are you connected to the internet? If yes, this might be a server issue.';
+    return 'Das Öffnen oder Abspielen des Mediums $media gelingt nicht. Bist du mit dem Internet verbunden? Falls ja könnte dies ein Serverproblem sein.';
   }
 
   @override
   String get searchTimeoutMessage =>
-      'Searching takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      'Die Suche dauert länger als gewöhnlich. Bist du mit dem Internet verbunden? Falls ja könnte dies ein Serverproblem sein.';
 
   @override
-  String get youCanEditTheNameLater => 'You can edit the name later.';
+  String get youCanEditTheNameLater => 'Du kannst den Namen später ändern.';
 
   @override
   String get geniusAlsoProvidesArt =>
-      'Genius also provides artwork for most songs. If you enable Genius to fetch lyrics, the online art in the player will also use Genius instead of MusicBrainz.';
+      'Genius bietet außerdem die Albumkunst der meisten Lieder an. Wenn du Genius für das Laden von Liedtexten aktivierst, kann die Albumkunst im Player ebenfalls Genius anstelle von MusicBrainz nutzen.';
 
   @override
-  String get enterYourGeniusApiKey => 'Enter your Genius API key';
+  String get enterYourGeniusApiKey => 'Gib deinen Genius API-Schlüssel ein';
 
   @override
-  String get saveYourApiKey => 'Save API Key';
+  String get saveYourApiKey => 'Speichere API Schlüssel';
 
   @override
   String get lookUpRadioBrowserHostsFailed =>
-      'Looking up radio browser hosts failed. Are you connected to the internet? If yes, this might be a server issue.';
+      'Das Aufsuchen von Radio-Browser-Servern ist fehlgeschlagen. Bist du mit dem Internet verbunden? Falls ja könnte dies ein Serverproblem sein.';
 
   @override
   String get lookUpRadioBrowserHostsTimouted =>
-      'Finding Radio Browser hosts takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      'Das Aufsuchen von Radio-Browser-Servern dauert länger als gewöhnlich. Bist du mit dem Internet verbunden? Falls ja könnte dies ein Serverproblem sein.';
 
   @override
   String get radioBrowserServerNotConnected =>
-      'You are not connected to any radio browser server';
+      'Du bist mit keinem Radio-Browser-Server verbunden';
 
   @override
   String get radioBrowserLoadingTagsFailed =>
-      'An error occurred while loading radio tags, the server might be unavailable.';
+      'Es ist ein Fehler beim Laden der Radio-Tags aufgetreten, der Server wird vermutlich nicht erreichbar sein.';
 
   @override
   String get radioBrowserLoadingTagsTimeouted =>
-      'Loading tags took longer than expected, are you connected to the internet? If yes, this might be a server issue';
+      'Das Laden von Radio-Tags dauert länger als gewöhnlich. Bist du mit dem Internet verbunden? Falls ja könnte dies ein Serverproblem sein';
 
   @override
   String get podcastSearchNotSuccessfull =>
-      'This podcast search was not successfull, are you connected to the internet? If yes this might be a server issue.';
+      'Die Podcast-Suche war nicht erfolgreich. Bist du mit dem Internet verbunden? Falls ja könnte dies ein Serverproblem sein.';
 
   @override
   String get podcastFailedHostLookup =>
-      'Finding episodes was not successfull - could not connect to the server. Are you connected to the internet? If yes this might be a server issue.';
+      'Das Laden der Episoden war nicht erfolgreich - der Server konnte nicht erreicht werden. Bist du mit dem Internet verbunden? Falls ja könnte dies ein Serverproblem sein.';
 }

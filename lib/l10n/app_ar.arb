@@ -182,6 +182,14 @@
             }
         }
     },
+    "downloadRemoved": "تمت إزالة التنزيل: {name}",
+    "@downloadRemoved": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
     "markAllEpisodesAsDone": "تحديد كل الحلقات كمكتملة",
     "markEpisodeAsDone": "تحديد الحلقة كمكتملة",
     "hideCompletedEpisodes": "إخفاء الحلقات المكتملة",
@@ -743,12 +751,23 @@
     "useBlurredPlayerBackgroundTitle": "استخدام خلفية مشغل مموهة",
     "useBlurredPlayerBackgroundDescription": "سيقوم هذا بتمويه خلفية المشغل، مما قد يؤدي لخفض الأداء على بعض الأجهزة.",
     "loadingPleaseWait": "جاري التحميل، يرجى الانتظار...",
+    "parsingLocalAudioFilesMetadataPleaseWait": "جاري تحليل البيانات الوصفية لملفات الصوت المحلية، يرجى الانتظار...",
+    "persistingLocalAudioFilesMetadataPleaseWait": "جاري حفظ البيانات الوصفية لملفات الصوت المحلية، يرجى الانتظار...",
+    "buildingLocalAudioLibraryPleaseWait": "جاري بناء مكتبة الصوتيات المحلية، يرجى الانتظار...",
     "importingPodcastsPleaseWait": "جاري استيراد البودكاست، يرجى الانتظار...",
     "exportingPodcastsPleaseWait": "جاري تصدير البودكاست، يرجى الانتظار...",
     "importingStationsPleaseWait": "جاري استيراد المحطات، يرجى الانتظار...",
     "exportingStationsPleaseWait": "جاري تصدير المحطات، يرجى الانتظار...",
     "importingPlaylistsPleaseWait": "جاري استيراد قوائم التشغيل، يرجى الانتظار...",
     "exportingPlaylistsPleaseWait": "جاري تصدير قوائم التشغيل، يرجى الانتظار...",
+    "checkingForUpdatesPleaseWait": "جاري التحقق من وجود تحديثات {progress}%",
+    "@checkingForUpdatesPleaseWait": {
+        "placeholders": {
+            "progress": {
+                "type": "int"
+            }
+        }
+    },
     "author": "المؤلف",
     "rating": "التقييم",
     "keywords": "الكلمات المفتاحية",
@@ -814,5 +833,70 @@
     "settingsDoNotAskForGeniusTitle": "لا تستخدم Genius أو تسأل عن المفتاح مرة أخرى",
     "settingsDoNotAskForGeniusDescription": "هذا يمنع التطبيق من المطالبة بمفتاح Genius في المستقبل ويجعل ميزة الكلمات تعتمد كلياً على ملفات LRC المحلية أو الكلمات المضمنة في بيانات الصوت.",
     "tosLink": "https://genius.com/static/terms",
-    "tosLinkText": "اقرأ شروط خدمة Genius"
+    "tosLinkText": "اقرأ شروط خدمة Genius",
+    "oopsSomethingWentWrong": "عذراً، حدث خطأ ما!",
+    "retry": "إعادة المحاولة",
+    "reportIssue": "الإبلاغ عن هذه المشكلة",
+    "ignoreThisTitleInHearingHistory": "تجاهل هذا العنوان في سجل الاستماع",
+    "removeFromIgnoredHearyHistoryTitles": "إزالة من العناوين المتجاهلة",
+    "ignoredHearyHistoryTitlesTitle": "العناوين المتجاهلة",
+    "ignoredHearyHistoryTitlesDescription": "سيتم تجاهل هذه العناوين في سجل الاستماع ولن تظهر في قائمة المقاطع المشغلة مؤخراً.",
+    "playingMediaTimedOut": "انتهت مهلة تشغيل الوسائط. قد يكون هذا بسبب خطأ في الشبكة أو مشاكل في الخادم.",
+    "playbackWasPausedByTimer": "تم إيقاف التشغيل مؤقتاً بواسطة المؤقت",
+    "playbackTimerCancelled": "تم إلغاء مؤقت التشغيل",
+    "podcastDoesNotSendEpisodeDuration": "هذا البودكاست لا يرسل مدة الحلقة. قد لا تعمل ميزة التحديد كمكتمل بالشكل المتوقع.",
+    "cleanedUpEpisodesOfUnsubscribedPodcast": "تمت إزالة حلقات البودكاست الذي تم إلغاء الاشتراك فيه: {podcastName}",
+    "@cleanedUpEpisodesOfUnsubscribedPodcast": {
+        "placeholders": {
+            "podcastName": {
+                "type": "String"
+            }
+        }
+    },
+    "findEpisodesTimeoutMessage": "يستغرق العثور على الحلقات وقتاً أطول من المعتاد. هل أنت متصل بالإنترنت؟ إذا كان الأمر كذلك، فقد تكون هذه مشكلة في الخادم.",
+    "@findEpisodesTimeoutMessage": {
+        "placeholders": {
+            "podcastName": {
+                "type": "String"
+            }
+        }
+    },
+    "radioBrowserServerUnavailable": "خادم متصفح الراديو غير متاح حالياً. قد تكون هذه مشكلة مؤقتة. يرجى المحاولة مرة أخرى لاحقاً.",
+    "findStationsTimeoutMessage": "يستغرق العثور على هذه المحطة (المحطات) وقتاً أطول من المعتاد. هل أنت متصل بالإنترنت؟ إذا كان الأمر كذلك، فقد تكون هذه مشكلة في الخادم.",
+    "retryInSeconds": "إعادة المحاولة بعد {seconds} ثانية",
+    "@retryInSeconds": {
+        "placeholders": {
+            "seconds": {
+                "type": "String"
+            }
+        }
+    },
+    "retryngInSeconds": "جاري إعادة المحاولة بعد {seconds} ثانية",
+    "@retryngInSeconds": {
+        "placeholders": {
+            "seconds": {
+                "type": "String"
+            }
+        }
+    },
+    "playerCouldNotOpenRemoteMedia": "تعذر على المشغل فتح أو الاستمرار في تشغيل الوسائط البعيدة '{media}'. هل أنت متصل بالإنترنت؟ إذا كان الأمر كذلك، فقد تكون هذه مشكلة في الخادم.",
+    "@playerCouldNotOpenRemoteMedia": {
+        "placeholders": {
+            "media": {
+                "type": "String"
+            }
+        }
+    },
+    "searchTimeoutMessage": "يستغرق البحث وقتاً أطول من المعتاد. هل أنت متصل بالإنترنت؟ إذا كان الأمر كذلك، فقد تكون هذه مشكلة في الخادم.",
+    "youCanEditTheNameLater": "يمكنك تعديل الاسم لاحقاً.",
+    "geniusAlsoProvidesArt": "يوفر Genius أيضاً صوراً لأغلب الأغاني. إذا قمت بتمكين Genius لجلب الكلمات، فإن غلاف الأغنية عبر الإنترنت في المشغل سيستخدم أيضاً Genius بدلاً من MusicBrainz.",
+    "enterYourGeniusApiKey": "أدخل مفتاح Genius API الخاص بك",
+    "saveYourApiKey": "حفظ مفتاح واجهة برمجة التطبيقات",
+    "lookUpRadioBrowserHostsFailed": "فشل البحث عن مضيفي متصفح الراديو. هل أنت متصل بالإنترنت؟ إذا كان الأمر كذلك، فقد تكون هذه مشكلة في الخادم.",
+    "lookUpRadioBrowserHostsTimouted": "يستغرق العثور على مضيفتي متصفح الراديو وقتاً أطول من المعتاد. هل أنت متصل بالإنترنت؟ إذا كان الأمر كذلك، فقد تكون هذه مشكلة في الخادم.",
+    "radioBrowserServerNotConnected": "أنت غير متصل بأي خادم لمتصفح الراديو",
+    "radioBrowserLoadingTagsFailed": "حدث خطأ أثناء تحميل وسوم الراديو، قد يكون الخادم غير متوفر.",
+    "radioBrowserLoadingTagsTimeouted": "استغرق تحميل الوسوم وقتاً أطول من المتوقع، هل أنت متصل بالإنترنت؟ إذا كان الأمر كذلك، فقد تكون هذه مشكلة في الخادم",
+    "podcastSearchNotSuccessfull": "لم ينجح البحث عن هذا البودكاست، هل أنت متصل بالإنترنت؟ إذا كان الأمر كذلك، فقد تكون هذه مشكلة في الخادم.",
+    "podcastFailedHostLookup": "لم ينجح العثور على الحلقات - تعذر الاتصال بالخادم. هل أنت متصل بالإنترنت؟ إذا كان الأمر كذلك، فقد تكون هذه مشكلة في الخادم."
 }

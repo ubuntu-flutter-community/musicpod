@@ -452,7 +452,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String downloadRemoved(String name) {
-    return 'Download removed: $name';
+    return 'تمت إزالة التنزيل: $name';
   }
 
   @override
@@ -2184,15 +2184,15 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get parsingLocalAudioFilesMetadataPleaseWait =>
-      'Parsing local audio files metadata, please wait ...';
+      'جاري تحليل البيانات الوصفية لملفات الصوت المحلية، يرجى الانتظار...';
 
   @override
   String get persistingLocalAudioFilesMetadataPleaseWait =>
-      'Persisting local audio files metadata, please wait ...';
+      'جاري حفظ البيانات الوصفية لملفات الصوت المحلية، يرجى الانتظار...';
 
   @override
   String get buildingLocalAudioLibraryPleaseWait =>
-      'Building local audio library, please wait ...';
+      'جاري بناء مكتبة الصوتيات المحلية، يرجى الانتظار...';
 
   @override
   String get importingPodcastsPleaseWait =>
@@ -2220,7 +2220,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String checkingForUpdatesPleaseWait(int progress) {
-    return 'Checking for updates $progress%';
+    return 'جاري التحقق من وجود تحديثات $progress%';
   }
 
   @override
@@ -2319,118 +2319,119 @@ class AppLocalizationsAr extends AppLocalizations {
   String get tosLinkText => 'اقرأ شروط خدمة Genius';
 
   @override
-  String get oopsSomethingWentWrong => 'Oops, something went wrong!';
+  String get oopsSomethingWentWrong => 'عذراً، حدث خطأ ما!';
 
   @override
-  String get retry => 'Retry';
+  String get retry => 'إعادة المحاولة';
 
   @override
-  String get reportIssue => 'Report this issue';
+  String get reportIssue => 'الإبلاغ عن هذه المشكلة';
 
   @override
   String get ignoreThisTitleInHearingHistory =>
-      'Ignore this title in hearing history';
+      'تجاهل هذا العنوان في سجل الاستماع';
 
   @override
   String get removeFromIgnoredHearyHistoryTitles =>
-      'Remove from ignored titles';
+      'إزالة من العناوين المتجاهلة';
 
   @override
-  String get ignoredHearyHistoryTitlesTitle => 'Ignored titles';
+  String get ignoredHearyHistoryTitlesTitle => 'العناوين المتجاهلة';
 
   @override
   String get ignoredHearyHistoryTitlesDescription =>
-      'These titles will be ignored in the hearing history and will not be shown in the recently played list.';
+      'سيتم تجاهل هذه العناوين في سجل الاستماع ولن تظهر في قائمة المقاطع المشغلة مؤخراً.';
 
   @override
   String get playingMediaTimedOut =>
-      'Playing media timed out. This might be caused by a network error or server issues.';
+      'انتهت مهلة تشغيل الوسائط. قد يكون هذا بسبب خطأ في الشبكة أو مشاكل في الخادم.';
 
   @override
-  String get playbackWasPausedByTimer => 'Playback was paused by timer';
+  String get playbackWasPausedByTimer =>
+      'تم إيقاف التشغيل مؤقتاً بواسطة المؤقت';
 
   @override
-  String get playbackTimerCancelled => 'Playback timer cancelled';
+  String get playbackTimerCancelled => 'تم إلغاء مؤقت التشغيل';
 
   @override
   String get podcastDoesNotSendEpisodeDuration =>
-      'This podcast does not send episode duration. The mark done feature might not work as expected.';
+      'هذا البودكاست لا يرسل مدة الحلقة. قد لا تعمل ميزة التحديد كمكتمل بالشكل المتوقع.';
 
   @override
   String cleanedUpEpisodesOfUnsubscribedPodcast(String podcastName) {
-    return 'Cleaned up episodes of unsubscribed podcast: $podcastName';
+    return 'تمت إزالة حلقات البودكاست الذي تم إلغاء الاشتراك فيه: $podcastName';
   }
 
   @override
   String findEpisodesTimeoutMessage(String podcastName) {
-    return 'Finding episodes takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+    return 'يستغرق العثور على الحلقات وقتاً أطول من المعتاد. هل أنت متصل بالإنترنت؟ إذا كان الأمر كذلك، فقد تكون هذه مشكلة في الخادم.';
   }
 
   @override
   String get radioBrowserServerUnavailable =>
-      'The radio browser server is currently unavailable. This might be a temporary issue. Please try again later.';
+      'خادم متصفح الراديو غير متاح حالياً. قد تكون هذه مشكلة مؤقتة. يرجى المحاولة مرة أخرى لاحقاً.';
 
   @override
   String get findStationsTimeoutMessage =>
-      'Finding (this) station(s) takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      'يستغرق العثور على هذه المحطة (المحطات) وقتاً أطول من المعتاد. هل أنت متصل بالإنترنت؟ إذا كان الأمر كذلك، فقد تكون هذه مشكلة في الخادم.';
 
   @override
   String retryInSeconds(String seconds) {
-    return 'Retry in $seconds seconds';
+    return 'إعادة المحاولة بعد $seconds ثانية';
   }
 
   @override
   String retryngInSeconds(String seconds) {
-    return 'Retryng in $seconds seconds';
+    return 'جاري إعادة المحاولة بعد $seconds ثانية';
   }
 
   @override
   String playerCouldNotOpenRemoteMedia(String media) {
-    return 'The player could not open or maintain to play remote media \'$media\'. Are you connected to the internet? If yes, this might be a server issue.';
+    return 'تعذر على المشغل فتح أو الاستمرار في تشغيل الوسائط البعيدة \'$media\'. هل أنت متصل بالإنترنت؟ إذا كان الأمر كذلك، فقد تكون هذه مشكلة في الخادم.';
   }
 
   @override
   String get searchTimeoutMessage =>
-      'Searching takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      'يستغرق البحث وقتاً أطول من المعتاد. هل أنت متصل بالإنترنت؟ إذا كان الأمر كذلك، فقد تكون هذه مشكلة في الخادم.';
 
   @override
-  String get youCanEditTheNameLater => 'You can edit the name later.';
+  String get youCanEditTheNameLater => 'يمكنك تعديل الاسم لاحقاً.';
 
   @override
   String get geniusAlsoProvidesArt =>
-      'Genius also provides artwork for most songs. If you enable Genius to fetch lyrics, the online art in the player will also use Genius instead of MusicBrainz.';
+      'يوفر Genius أيضاً صوراً لأغلب الأغاني. إذا قمت بتمكين Genius لجلب الكلمات، فإن غلاف الأغنية عبر الإنترنت في المشغل سيستخدم أيضاً Genius بدلاً من MusicBrainz.';
 
   @override
-  String get enterYourGeniusApiKey => 'Enter your Genius API key';
+  String get enterYourGeniusApiKey => 'أدخل مفتاح Genius API الخاص بك';
 
   @override
-  String get saveYourApiKey => 'Save API Key';
+  String get saveYourApiKey => 'حفظ مفتاح واجهة برمجة التطبيقات';
 
   @override
   String get lookUpRadioBrowserHostsFailed =>
-      'Looking up radio browser hosts failed. Are you connected to the internet? If yes, this might be a server issue.';
+      'فشل البحث عن مضيفي متصفح الراديو. هل أنت متصل بالإنترنت؟ إذا كان الأمر كذلك، فقد تكون هذه مشكلة في الخادم.';
 
   @override
   String get lookUpRadioBrowserHostsTimouted =>
-      'Finding Radio Browser hosts takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      'يستغرق العثور على مضيفتي متصفح الراديو وقتاً أطول من المعتاد. هل أنت متصل بالإنترنت؟ إذا كان الأمر كذلك، فقد تكون هذه مشكلة في الخادم.';
 
   @override
   String get radioBrowserServerNotConnected =>
-      'You are not connected to any radio browser server';
+      'أنت غير متصل بأي خادم لمتصفح الراديو';
 
   @override
   String get radioBrowserLoadingTagsFailed =>
-      'An error occurred while loading radio tags, the server might be unavailable.';
+      'حدث خطأ أثناء تحميل وسوم الراديو، قد يكون الخادم غير متوفر.';
 
   @override
   String get radioBrowserLoadingTagsTimeouted =>
-      'Loading tags took longer than expected, are you connected to the internet? If yes, this might be a server issue';
+      'استغرق تحميل الوسوم وقتاً أطول من المتوقع، هل أنت متصل بالإنترنت؟ إذا كان الأمر كذلك، فقد تكون هذه مشكلة في الخادم';
 
   @override
   String get podcastSearchNotSuccessfull =>
-      'This podcast search was not successfull, are you connected to the internet? If yes this might be a server issue.';
+      'لم ينجح البحث عن هذا البودكاست، هل أنت متصل بالإنترنت؟ إذا كان الأمر كذلك، فقد تكون هذه مشكلة في الخادم.';
 
   @override
   String get podcastFailedHostLookup =>
-      'Finding episodes was not successfull - could not connect to the server. Are you connected to the internet? If yes this might be a server issue.';
+      'لم ينجح العثور على الحلقات - تعذر الاتصال بالخادم. هل أنت متصل بالإنترنت؟ إذا كان الأمر كذلك، فقد تكون هذه مشكلة في الخادم.';
 }

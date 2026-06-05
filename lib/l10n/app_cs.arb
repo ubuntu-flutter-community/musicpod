@@ -7,6 +7,7 @@
     "shuffle": "Náhodně",
     "repeat": "Opakovat",
     "repeatAll": "Opakovat vše",
+    "repeatOff": "Opakování vypnuto",
     "next": "Další",
     "back": "Zpět",
     "fastForward30": "O 30 sekund vpřed",
@@ -181,7 +182,19 @@
             }
         }
     },
+    "downloadRemoved": "Stažení odstraněno: {name}",
+    "@downloadRemoved": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
     "markAllEpisodesAsDone": "Označit všechny epizody jako dokončené",
+    "markEpisodeAsDone": "Označit epizodu jako dokončenou",
+    "hideCompletedEpisodes": "Skrýt dokončené epizody",
+    "showCompletedEpisodes": "Zobrazit dokončené epizody",
+    "reset": "Resetovat",
     "resetAllSettings": "Resetovat všechna nastavení",
     "resetAllSettingsConfirm": "Jste si naprosto jisti, že chcete resetovat všechna nastavení, vaše odběry podcastů, váš pokrok v podcastech, vaše oblíbené stanice a vaše připnutá alba?\nAplikace se poté zavře a budete ji muset znovu otevřít.",
     "confirm": "Potvrdit",
@@ -709,5 +722,181 @@
     "albumNotFound": "Toto album neexistuje nebo jste odstranili externí playlist (soubor M3U/PLS), ze kterého bylo načteno.",
     "stationNotFound": "Tato stanice neexistuje nebo byla odstraněna ze serveru radiobrowser.",
     "onlyLocalAudioForPlaylists": "Pro import seznamů skladeb je podporováno pouze místní audio!\nVyhledejte je prosím ve funkci rádia a přidejte je do své knihovny pomocí tlačítka s hvězdičkou!",
-    "customStationWarning": "Zadaná adresa URL musí existovat na serveru radiobrowser, jinak nebude přidána do vaší knihovny!\nIdeálně je vyhledejte ve funkci rádia a přidejte je do své knihovny pomocí tlačítka s hvězdičkou!"
+    "customStationWarning": "Zadaná adresa URL must existovat na serveru radiobrowser, jinak nebude přidána do vaší knihovny!\nIdeálně je vyhledejte ve funkci rádia a přidejte je do své knihovny pomocí tlačítka s hvězdičkou!",
+    "disc": "Disk",
+    "groupAlbumsOnlyByAlbumName": "Seskupovat alba pouze podle názvu alba",
+    "groupAlbumsOnlyByAlbumNameDescription": "Bude seskupovat alba pouze podle jejich názvu a nikoli podle jména interpreta + názvu alba. To předpokládá, že název alba je ve vaší knihovně jedinečný!",
+    "useYaruThemeTitle": "Použít motiv Yaru",
+    "useYaruThemeDescription": "Aplikace bude používat motiv Yaru, což je výchozí vzhled v systému Ubuntu.",
+    "customThemeColor": "Vlastní barva motivu",
+    "useCustomThemeColorTitle": "Použít vlastní barvu akcentu",
+    "useCustomThemeColorDescription": "Tato možnost vám umožní vybrat si vlastní barvu akcentu pro aktuální motiv.",
+    "usePlayerColorTitle": "Použít barvu přehrávače",
+    "usePlayerColorDescription": "Pro celou aplikaci bude použita dominantní barva extrahovaná z obalu aktuálně přehrávané skladby (je-li k dispozici).",
+    "selectColor": "Vybrat barvu",
+    "selectColorShade": "Vybrat odstín barvy",
+    "selectColorAndItsShades": "Vybrat barvu a její odstíny",
+    "selectIconThemeTitle": "Vybrat motiv ikon",
+    "selectIconThemeDescription": "Vyberte motiv ikon pro aplikaci. Výchozí motiv závisí na vašem operačním systému. Změna restartuje aplikaci!",
+    "saveWindowSizeTitle": "Uložit velikost okna",
+    "saveWindowSizeDescription": "Uloží velikost a pozici okna aplikace.",
+    "downloadsOfLatestRelease": "Staženo {latestRelease}krát mimo obchod Snap Store a FlatHub",
+    "@downloadsOfLatestRelease": {
+        "placeholders": {
+            "latestRelease": {
+                "type": "String"
+            }
+        }
+    },
+    "useBlurredPlayerBackgroundTitle": "Použít rozmazané pozadí přehrávače",
+    "useBlurredPlayerBackgroundDescription": "Rozmaže pozadí přehrávače. To může na některých zařízeních vést k nižšímu výkonu.",
+    "loadingPleaseWait": "Načítání, prosím čekejte ...",
+    "parsingLocalAudioFilesMetadataPleaseWait": "Analyzování metadat místních zvukových souborů, prosím čekejte ...",
+    "persistingLocalAudioFilesMetadataPleaseWait": "Ukládání metadat místních zvukových souborů, prosím čekejte ...",
+    "buildingLocalAudioLibraryPleaseWait": "Sestavování místní hudební knihovny, prosím čekejte ...",
+    "importingPodcastsPleaseWait": "Importování vašich podcastů, prosím čekejte ...",
+    "exportingPodcastsPleaseWait": "Exportování vašich podcastů, prosím čekejte ...",
+    "importingStationsPleaseWait": "Importování vašich stanic, prosím čekejte ...",
+    "exportingStationsPleaseWait": "Exportování vašich stanic, prosím čekejte ...",
+    "importingPlaylistsPleaseWait": "Importování vašich playlistů, prosím čekejte ...",
+    "exportingPlaylistsPleaseWait": "Exportování vašich playlistů, prosím čekejte ...",
+    "checkingForUpdatesPleaseWait": "Kontrola aktualizací {progress}%",
+    "@checkingForUpdatesPleaseWait": {
+        "placeholders": {
+            "progress": {
+                "type": "int"
+            }
+        }
+    },
+    "author": "Autor",
+    "rating": "Hodnocení",
+    "keywords": "Klíčová slova",
+    "newEpisodesAvailableFor": "Nové epizody jsou k dispozici pro {length} podcastů",
+    "@newEpisodesAvailableFor": {
+        "placeholders": {
+            "length": {
+                "type": "int"
+            }
+        }
+    },
+    "lyrics": "Text písně",
+    "noLyricsFound": "Nebyl nalezen žádný text",
+    "autoScrolling": "Automatické posouvání",
+    "genericErrorTitle": "Došlo k chybě",
+    "genericErrorDescription": "Došlo k neočekávané chybě. Zkuste to prosím později.",
+    "errorDetails": "Detaily chyby: {details}",
+    "@errorDetails": {
+        "placeholders": {
+            "details": {
+                "type": "String"
+            }
+        }
+    },
+    "appendToQueue": "Přidat na konec fronty",
+    "@appendToQueue": {},
+    "appendedToQueue": "Přidáno na konec fronty: {title}",
+    "@appendedToQueue": {
+        "type": "text",
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "appendMediaToQueueDescription": "Médium {title} již ve frontě je. Chcete jej přidat znovu na konec fronty?",
+    "@appendMediaToQueueDescription": {
+        "type": "text",
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "appendMediaToQueueTitle": "Přidat médium do fronty",
+    "@appendMediaToQueueTitle": {},
+    "appendMediaToQueue": "Přidat médium do fronty: {title}",
+    "@appendMediaToQueue": {
+        "type": "text",
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "explore": "Objevovat",
+    "favorites": "Oblíbené",
+    "autoMovePlayerTitle": "Automaticky přesunout přehrávač",
+    "autoMovePlayerDescription": "Přesune přehrávač doprava, pokud je k dispozici dostatek vodorovného prostoru",
+    "onlineLyricsNotSetup": "Chcete-li stahovat texty písní z Geniusu, zadejte v nastavení API klíč.",
+    "settingsGeniusDisclaimer": "MusicPod, jeho přispěvatelé a rozhraní Genius API nenesou odpovědnost za jakékoli zneužití tohoto klíče. Poskytnutím svého API klíče souhlasíte s jeho zodpovědným používáním v souladu s podmínkami služby Genius.\n\n",
+    "settingsGeniusDescription": "Chcete-li načítat texty z Geniusu, musíte zadat API klíč Genius. Klíč získáte vytvořením účtu na webu Genius a registrací aplikace.",
+    "settingsDoNotAskForGeniusTitle": "Nepoužívat Genius a znovu se neptat na API klíč Genius",
+    "settingsDoNotAskForGeniusDescription": "Tím zabráníte aplikaci v budoucím dotazování na API klíč Genius a funkce textů písní se bude plně spoléhat na místní soubory LRC nebo LRC texty vložené v metadatech audia.",
+    "tosLink": "https://genius.com/static/terms",
+    "tosLinkText": "Přečtěte si smluvní podmínky služby Genius",
+    "oopsSomethingWentWrong": "Jejda, něco se pokazilo!",
+    "retry": "Opakovat",
+    "reportIssue": "Nahlásit tento problém",
+    "ignoreThisTitleInHearingHistory": "Ignorovat tento titul v historii poslechu",
+    "removeFromIgnoredHearyHistoryTitles": "Odebrat z ignorovaných titulů",
+    "ignoredHearyHistoryTitlesTitle": "Ignorované tituly",
+    "ignoredHearyHistoryTitlesDescription": "Tyto tituly budou v historii poslechu ignorovány a nebudou se zobrazovat v seznamu naposledy přehrávaných skladeb.",
+    "playingMediaTimedOut": "Vypršel časový limit pro přehrávání média. To může být způsobeno chybou sítě nebo problémy se serverem.",
+    "playbackWasPausedByTimer": "Přehrávání bylo pozastaveno časovačem",
+    "playbackTimerCancelled": "Časovač přehrávání byl zrušen",
+    "podcastDoesNotSendEpisodeDuration": "Tento podcast neodesílá délku epizody. Funkce označení jako dokončené nemusí fungovat správně.",
+    "cleanedUpEpisodesOfUnsubscribedPodcast": "Uklizené epizody odhlášeného podcastu: {podcastName}",
+    "@cleanedUpEpisodesOfUnsubscribedPodcast": {
+        "placeholders": {
+            "podcastName": {
+                "type": "String"
+            }
+        }
+    },
+    "findEpisodesTimeoutMessage": "Hledání epizod trvá déle než obvykle. Jste připojeni k internetu? Pokud ano, může jít o problém se serverem.",
+    "@findEpisodesTimeoutMessage": {
+        "placeholders": {
+            "podcastName": {
+                "type": "String"
+            }
+        }
+    },
+    "radioBrowserServerUnavailable": "Server vyhledávače rádií je momentálně nedostupný. Může jít o dočasný problém. Zkuste to prosím později znovu.",
+    "findStationsTimeoutMessage": "Hledání této stanice (stanic) trvá déle než obvykle. Jste připojeni k internetu? Pokud ano, může jít o problém se serverem.",
+    "retryInSeconds": "Zkusit znovu za {seconds} sekund",
+    "@retryInSeconds": {
+        "placeholders": {
+            "seconds": {
+                "type": "String"
+            }
+        }
+    },
+    "retryngInSeconds": "Zkouším znovu za {seconds} sekund",
+    "@retryngInSeconds": {
+        "placeholders": {
+            "seconds": {
+                "type": "String"
+            }
+        }
+    },
+    "playerCouldNotOpenRemoteMedia": "Přehrávači se nepodařilo otevřít nebo udržet přehrávání vzdáleného média '{media}'. Jste připojeni k internetu? Pokud ano, může jít o problém se serverem.",
+    "@playerCouldNotOpenRemoteMedia": {
+        "placeholders": {
+            "media": {
+                "type": "String"
+            }
+        }
+    },
+    "searchTimeoutMessage": "Vyhledávání trvá déle než obvykle. Jste připojeni k internetu? Pokud ano, může jít o problém se serverem.",
+    "youCanEditTheNameLater": "Název můžete upravit později.",
+    "geniusAlsoProvidesArt": "Genius také poskytuje přebaly alb pro většinu skladeb. Pokud povolíte Genius pro načítání textů, online přebaly v přehrávači budou rovněž používat Genius namísto MusicBrainz.",
+    "enterYourGeniusApiKey": "Zadejte svůj API klíč Genius",
+    "saveYourApiKey": "Uložit API klíč",
+    "lookUpRadioBrowserHostsFailed": "Vyhledání hostitelských serverů rádií selhalo. Jste připojeni k internetu? Pokud ano, může jít o problém se serverem.",
+    "lookUpRadioBrowserHostsTimouted": "Hledání hostitelských serverů rádií trvá déle než obvykle. Jste připojeni k internetu? Pokud ano, může jít o problém se serverem.",
+    "radioBrowserServerNotConnected": "Nejste připojeni k žádnému serveru rádií",
+    "radioBrowserLoadingTagsFailed": "Došlo k chybě při načítání štítků rádií, server může být nedostupný.",
+    "radioBrowserLoadingTagsTimeouted": "Načítání štítků trvalo déle, než se očekávalo. Jste připojeni k internetu? Pokud ano, může jít o problém se serverem",
+    "podcastSearchNotSuccessfull": "Hledání podcastu nebylo úspěšné. Jste připojeni k internetu? Pokud ano, může jít o problém se serverem.",
+    "podcastFailedHostLookup": "Hledání epizod nebylo úspěšné - nepodařilo se připojit k serveru. Jste připojeni k internetu? Pokud ano, může jít o problém se serverem."
 }
