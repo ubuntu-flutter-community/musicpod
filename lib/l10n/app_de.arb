@@ -815,5 +815,89 @@
     "settingsDoNotAskForGeniusTitle": "Genius nicht verwenden oder nicht erneut nach dem Genius-API-Schlüssel fragen",
     "settingsDoNotAskForGeniusDescription": "Dies verhindert, dass die App in Zukunft nach dem Genius-API-Schlüssel fragt, und sorgt dafür, dass die Songtext-Funktion vollständig auf lokalen LRC-Dateien oder in den Audio-Metadaten eingebetteten LRC-Zeichenfolgen basiert.",
     "tosLink": "https://genius.com/static/terms",
-    "tosLinkText": "Die Nutzungsbedingungen von Genius lesen"
+    "tosLinkText": "Die Nutzungsbedingungen von Genius lesen",
+    "downloadRemoved": "Heruntergeladene Datei entfernt: {name}",
+    "@downloadRemoved": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "parsingLocalAudioFilesMetadataPleaseWait": "Lese Metadaten lokaler Audiodateien ein, bitte warten ...",
+    "persistingLocalAudioFilesMetadataPleaseWait": "Speichere Metadaten lokaler Audiodateien ab, bitte warten ...",
+    "buildingLocalAudioLibraryPleaseWait": "Erstelle Datenbank der lokalen Audiodateien, bitte warten ...",
+    "checkingForUpdatesPleaseWait": "Prüfe auf Aktualisierungen {progress}%",
+    "@checkingForUpdatesPleaseWait": {
+        "placeholders": {
+            "progress": {
+                "type": "int"
+            }
+        }
+    },
+    "oopsSomethingWentWrong": "Ups, etwas ist schief gelaufen!",
+    "retry": "Wiederversuchen",
+    "reportIssue": "Melde dieses Problem",
+    "ignoreThisTitleInHearingHistory": "Ignoriere diesen Titel im Hörverlauf",
+    "removeFromIgnoredHearyHistoryTitles": "Entferne aus ignorierten Titeln",
+    "ignoredHearyHistoryTitlesTitle": "Ignorierte Titel",
+    "ignoredHearyHistoryTitlesDescription": "Diese Titel werden im Hörverlauf ignoriert.",
+    "playingMediaTimedOut": "Zeitüberschreitung bei Abspielversuch des Mediums. Dies kann durch einen Verbindungsfehler verursacht worden sein oder es ist ein Serverproblem.",
+    "playbackWasPausedByTimer": "Abspielen durch Timer pausiert",
+    "playbackTimerCancelled": "Wiedergabepausierung abgebrochen",
+    "podcastDoesNotSendEpisodeDuration": "Dieser Podcast sendet keine Episodendauer. Die Abschlussmarkierungsfunktion funktioniert daher vermutlich nicht wie erwartet.",
+    "cleanedUpEpisodesOfUnsubscribedPodcast": "Episoden eines nicht (mehr) abonnierten Podcasts wurden entfernt: {podcastName}",
+    "@cleanedUpEpisodesOfUnsubscribedPodcast": {
+        "placeholders": {
+            "podcastName": {
+                "type": "String"
+            }
+        }
+    },
+    "findEpisodesTimeoutMessage": "Das Laden von Episoden dauert länger als erwartet. Sind Sie mit dem Internet verbunden? Falls ja könnte es ein Serverproblem sein.",
+    "@findEpisodesTimeoutMessage": {
+        "placeholders": {
+            "podcastName": {
+                "type": "String"
+            }
+        }
+    },
+    "radioBrowserServerUnavailable": "Der Radio-Browser-Server ist momentan nicht erreichbar. Dies könnte ein temporäres Problem sein. Bitte versuchen Sie es später erneut.",
+    "findStationsTimeoutMessage": "Das Laden von (diesem) Radiosender(n) dauert länger als sonst. Bist du mit dem Internet verbunden? Falls ja könnte dies ein Serverproblem sein.",
+    "retryInSeconds": "Nächster Versuch in {seconds} Sekunden",
+    "@retryInSeconds": {
+        "placeholders": {
+            "seconds": {
+                "type": "String"
+            }
+        }
+    },
+    "retryngInSeconds": "Wird in {seconds} erneut versucht",
+    "@retryngInSeconds": {
+        "placeholders": {
+            "seconds": {
+                "type": "String"
+            }
+        }
+    },
+    "playerCouldNotOpenRemoteMedia": "Das Öffnen oder Abspielen des Mediums {media} gelingt nicht. Bist du mit dem Internet verbunden? Falls ja könnte dies ein Serverproblem sein.",
+    "@playerCouldNotOpenRemoteMedia": {
+        "placeholders": {
+            "media": {
+                "type": "String"
+            }
+        }
+    },
+    "searchTimeoutMessage": "Die Suche dauert länger als gewöhnlich. Bist du mit dem Internet verbunden? Falls ja könnte dies ein Serverproblem sein.",
+    "youCanEditTheNameLater": "Sie können den Namen später ändern.",
+    "geniusAlsoProvidesArt": "Genius bietet außerdem die Albumkunst der meisten Lieder an. Wenn Sie Genius für das Laden von Liedtexten aktivieren kann die Albumkunst im Player Genius anstelle von MusicBrainz nutzen.",
+    "enterYourGeniusApiKey": "Geben Sie Ihren Genius API-Schlüssel ein",
+    "saveYourApiKey": "Speichere API Schlüssel",
+    "lookUpRadioBrowserHostsFailed": "Das Aufsuchen von Radio-Browser-Servern ist fehlgeschlagen. Bist du mit dem Internet verbunden? Falls ja könnte dies ein Serverproblem sein.",
+    "lookUpRadioBrowserHostsTimouted": "Das Aufsuchen von Radio-Browser-Servern dauert länger als gewöhnlich. Bist du mit dem Internet verbunden? Falls ja könnte dies ein Serverproblem sein.",
+    "radioBrowserServerNotConnected": "Du bist mit keinem Radio-Browser-Server verbunden",
+    "radioBrowserLoadingTagsFailed": "Es ist ein Fehler beim Laden der Radio-Tags aufgetreten, der Server wird vermutlich nicht erreichbar sein.",
+    "radioBrowserLoadingTagsTimeouted": "Das Laden von Radio-Tags dauert länger als gewöhnlich. Bist du mit dem Internet verbunden? Falls ja könnte dies ein Serverproblem sein",
+    "podcastSearchNotSuccessfull": "Die Podcast-Suche war nicht erfolgreich. Bist du mit dem Internet verbunden? Falls ja könnte dies ein Serverproblem sein.",
+    "podcastFailedHostLookup": "Das Laden der Episoden war nicht erfolgreich - der Server konnte nicht erreicht werden. Bist du mit dem Internet verbunden? Falls ja könnte dies ein Serverproblem sein."
 }
