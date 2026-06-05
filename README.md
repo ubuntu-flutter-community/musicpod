@@ -85,7 +85,6 @@ I recommend the vscode extension [GitHub Pull Requests](https://marketplace.visu
 ### Prerequisites
 
 - for Linux desktop builds: `sudo apt install libmpv-dev mpv`
-- [install rust](https://www.rust-lang.org/tools/install) (for some dependencies)
 - [install flutter](https://docs.flutter.dev/get-started/install)
   - I suggest to install the flutter *sdk* with [FVM](https://fvm.app/) (this does not replace the native dependencies ofc!)
 - required for android builds: [install android-studio](https://developer.android.com/studio)
