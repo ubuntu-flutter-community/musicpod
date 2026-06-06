@@ -1,28 +1,31 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
-import 'package:safe_change_notifier/safe_change_notifier.dart';
 
+import '../common/cached_streamcontroller.dart';
 import '../common/data/audio.dart';
 import '../common/logging.dart';
 import 'data/podcast_download.dart';
-import 'download_manager_master.dart';
+import 'download_service.dart';
 import 'podcast_service.dart';
 
-@Injectable(cache: true)
-class DownloadManager extends SafeChangeNotifier {
+@lazySingleton
+class DownloadManager {
   DownloadManager({
     required PodcastService podcastService,
-    required DownloadManagerMaster master,
+    required DownloadService downloadService,
   }) : _podcastService = podcastService,
-       _master = master {
+       _downloadService = downloadService {
+    downloadsDirCommand.run((getDefault: true));
     printMessageInDebugMode('Initialized', tag: '$DownloadManager');
   }
 
   final PodcastService _podcastService;
-  final DownloadManagerMaster _master;
+  final DownloadService _downloadService;
 
-  final commands = MapNotifier<Audio, Command<void, PodcastDownload?>>(
+  final downloadCommands = MapNotifier<Audio, Command<void, PodcastDownload?>>(
     notificationMode: CustomNotifierMode.manual,
   );
 
@@ -30,7 +33,7 @@ class DownloadManager extends SafeChangeNotifier {
       getCommand(audio).value?.isDownload(audio) ?? false;
 
   Command<void, PodcastDownload?> getCommand(Audio audio) =>
-      commands.putIfAbsent(audio, () => _createDownloadCommand(audio));
+      downloadCommands.putIfAbsent(audio, () => _createDownloadCommand(audio));
 
   Command<void, PodcastDownload> _createDownloadCommand(Audio audio) =>
       Command.createAsyncNoParamWithProgress(
@@ -46,25 +49,25 @@ class DownloadManager extends SafeChangeNotifier {
                   subscription.cancel();
                 }
               });
-              _master.update(
+              _updateStream(
                 PodcastDownload(
                   status: DownloadStatus.inProgress,
                   audio: audio,
                   path: null,
                 ),
               );
-              final download = await _podcastService.download(
+              final theDownload = await this.download(
                 episode: audio,
                 cancelToken: cancelToken,
                 onProgress: (received, total) {
                   handle.updateProgress(received / total);
                 },
               );
-              return _master.update(
+              return _updateStream(
                 PodcastDownload(
                   status: DownloadStatus.completed,
                   audio: audio,
-                  path: download,
+                  path: theDownload,
                 ),
               );
             } else {
@@ -73,7 +76,7 @@ class DownloadManager extends SafeChangeNotifier {
                 feedUrl: audio.feedUrl!,
               );
 
-              return _master.update(
+              return _updateStream(
                 PodcastDownload(
                   status: DownloadStatus.removed,
                   audio: audio,
@@ -82,7 +85,7 @@ class DownloadManager extends SafeChangeNotifier {
               );
             }
           } on Exception catch (_) {
-            return _master.update(
+            return _updateStream(
               PodcastDownload(
                 status: DownloadStatus.cancelled,
                 audio: audio,
@@ -90,7 +93,7 @@ class DownloadManager extends SafeChangeNotifier {
               ),
             );
           } finally {
-            commands.notifyListeners();
+            downloadCommands.notifyListeners();
           }
         },
         initialValue: PodcastDownload.initial(
@@ -98,4 +101,59 @@ class DownloadManager extends SafeChangeNotifier {
           path: _podcastService.getDownloadPath(audio),
         ),
       );
+
+  late final Command<({bool getDefault}), String?> downloadsDirCommand =
+      Command.createAsync((param) async {
+        final dir = await _downloadService.setDownloadsDirectory(
+          getDefault: param.getDefault,
+        );
+
+        if (!param.getDefault) {
+          await _podcastService.removeAllDownloads();
+        }
+
+        return dir;
+      }, initialValue: null);
+
+  final _downloadController = CachedStreamController<PodcastDownload?>();
+  PodcastDownload _updateStream(PodcastDownload result) {
+    _downloadController.add(result);
+    return result;
+  }
+
+  Stream<PodcastDownload?> get downloadStream => _downloadController.stream;
+  PodcastDownload? get lastDownload => _downloadController.value;
+
+  Future<String?> download({
+    required Audio episode,
+    required CancelToken cancelToken,
+    required void Function(int received, int total) onProgress,
+  }) async {
+    final targetUrl = episode.url;
+    final feedUrl = episode.feedUrl;
+    if (targetUrl == null || feedUrl == null) {
+      throw Exception('Invalid media, missing URL or feed URL for download');
+    }
+
+    final path = await _downloadService.download(
+      targetUrl: targetUrl,
+      podcastDownloadId: episode.podcastDownloadId,
+      cancelToken: cancelToken,
+      onProgress: onProgress,
+    );
+
+    if (path != null) {
+      await _podcastService.addDownload(
+        url: targetUrl,
+        path: path,
+        feedUrl: feedUrl,
+      );
+      return path;
+    }
+
+    return null;
+  }
+
+  @disposeMethod
+  Future<void> dispose() => _downloadController.close();
 }

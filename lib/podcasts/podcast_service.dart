@@ -1,38 +1,30 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:dio/dio.dart';
-import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:path/path.dart' as p;
 import 'package:podcast_search/podcast_search.dart' hide Value;
 import 'package:synchronized/synchronized.dart';
 
 import '../common/data/audio.dart';
-import '../common/data/audio_type.dart';
 import '../common/logging.dart';
-import '../common/persistence/database.dart';
 import '../common/view/audio_filter.dart';
 import '../common/view/languages.dart';
-import '../extensions/date_time_x.dart';
 import '../settings/settings_service.dart';
 import '../settings/shared_preferences_keys.dart';
 import 'data/podcast_genre.dart';
+import 'persistence/podcast_dao.dart';
 
 @lazySingleton
 class PodcastService {
   final SettingsService _settingsService;
-  final Database _db;
-  final Dio _dio;
+  final PodcastDao _dao;
 
   PodcastService({
     required SettingsService settingsService,
-    required Database database,
-    required Dio dio,
+    required PodcastDao dao,
   }) : _settingsService = settingsService,
-       _db = database,
-       _dio = dio {
+       _dao = dao {
     _search = Search(
       searchProvider:
           _settingsService.getBool(SPKeys.usePodcastIndex) == true &&
@@ -164,7 +156,7 @@ class PodcastService {
     required Iterable<String> toCheckFeedUrls,
     void Function(double progress)? updateProgress,
   }) async {
-    await loadPodcastUpdatesFromDb();
+    await loadPodcastUpdates();
 
     for (final (index, feedUrl) in toCheckFeedUrls.indexed) {
       final storedTimeStamp = getPodcastLastUpdated(feedUrl);
@@ -182,7 +174,7 @@ class PodcastService {
 
       // Compare actual episode URLs to detect genuinely new episodes,
       // since Last-Modified can change without new episodes being added.
-      final storedUrls = await _getStoredEpisodeUrls(feedUrl);
+      final storedUrls = await _dao.getStoredEpisodeUrls(feedUrl);
       final allFreshEpisodes = await findEpisodes(
         feedUrl: feedUrl,
         tryFromDbOnly: false,
@@ -203,27 +195,6 @@ class PodcastService {
     return podcastUpdates;
   }
 
-  Future<bool> _hasPodcastEpisodesInDB(String feedUrl) async {
-    final count =
-        await (_db.selectOnly(_db.podcastEpisodeTable)
-              ..addColumns([_db.podcastEpisodeTable.contentUrl])
-              ..where(_db.podcastEpisodeTable.podcastFeedUrl.equals(feedUrl)))
-            .get()
-            .then((rows) => rows.length);
-    return count > 0;
-  }
-
-  Future<List<Audio>> _loadEpisodesFromDb(String feedUrl) async {
-    // Load episodes from DB WITHOUT loading the feed from the internet
-    final rows = await (_db.select(
-      _db.podcastEpisodeTable,
-    )..where((t) => t.podcastFeedUrl.equals(feedUrl))).get();
-    return rows
-        .map((r) => getEpisodeFromTableEntry(r, feedUrl: feedUrl))
-        .toSet()
-        .toList();
-  }
-
   Future<List<Audio>> findEpisodes({
     Item? item,
     String? feedUrl,
@@ -236,13 +207,13 @@ class PodcastService {
     final url = feedUrl ?? item!.feedUrl!;
 
     final hasEpisodesInDb =
-        await _hasPodcastEpisodesInDB(url) && isPodcastSubscribed(url);
+        await _dao.hasPodcastStoredEpisodes(url) && isPodcastSubscribed(url);
 
     if (tryFromDbOnly && hasEpisodesInDb) {
       printMessageInDebugMode(
         'Skipping episode load from network for $url, loading from DB instead',
       );
-      return _loadEpisodesFromDb(url);
+      return _dao.getEpisodes(url);
     }
 
     printMessageInDebugMode(
@@ -279,160 +250,45 @@ class PodcastService {
     );
 
     // optimistically upsert episodes after finding them, so they are available faster when opening the podcast page
-    await _upsertEpisodes(feedUrl: url, podcast: podcast, episodes: episodes);
+    await _dao.upsertEpisodes(
+      feedUrl: url,
+      podcastDescription: podcast?.description,
+      episodes: episodes,
+    );
 
     return episodes;
   }
 
-  Future<void> _upsertEpisodes({
-    required String feedUrl,
-    required Podcast? podcast,
-    required List<Audio> episodes,
-  }) async {
-    if (episodes.isEmpty) return;
-    try {
-      await _db.batch((batch) {
-        for (final e in episodes) {
-          if (e.url == null) continue;
-          batch.insert(
-            _db.podcastEpisodeTable,
-            PodcastEpisodeTableCompanion.insert(
-              podcastFeedUrl: feedUrl,
-              title: e.title ?? '',
-              episodeDescription: e.episodeDescription ?? '',
-              podcastDescription: podcast?.description ?? '',
-              contentUrl: e.url!,
-              publicationDate: e.publicationDate != null
-                  ? DateTime.fromMillisecondsSinceEpoch(e.publicationDate!)
-                  : DateTime.now(),
-              durationMs: Value(e.durationMs?.toInt()),
-              imageUrl: Value(e.imageUrl),
-            ),
-            mode: InsertMode.insertOrReplace,
-          );
-        }
-      });
-    } on Exception catch (e) {
-      printMessageInDebugMode('Error upserting episodes: $e');
-    }
-  }
-
-  Future<Set<String>> _getStoredEpisodeUrls(String feedUrl) async {
-    final rows =
-        await (_db.selectOnly(_db.podcastEpisodeTable)
-              ..addColumns([_db.podcastEpisodeTable.contentUrl])
-              ..where(_db.podcastEpisodeTable.podcastFeedUrl.equals(feedUrl)))
-            .get();
-    return rows
-        .map((r) => r.read(_db.podcastEpisodeTable.contentUrl))
-        .whereType<String>()
-        .toSet();
-  }
-
   // ── Downloads ──
 
-  Future<String?> download({
-    required Audio episode,
-    required CancelToken cancelToken,
-    required void Function(int received, int total) onProgress,
-  }) async {
-    final url = episode.url;
-    if (url == null) {
-      throw Exception('Invalid media, missing URL to download');
-    }
-
-    final downloadsDir = await _settingsService.downloadsDirOrDefault;
-    if (downloadsDir == null) {
-      throw Exception('Downloads directory not set');
-    }
-
-    if (!Directory(downloadsDir).existsSync()) {
-      Directory(downloadsDir).createSync(recursive: true);
-    }
-
-    final path = p.join(downloadsDir, episode.podcastDownloadId);
-
-    final response = await _dio.download(
-      url,
-      path,
-      onReceiveProgress: onProgress,
-      cancelToken: cancelToken,
-    );
-
-    if (response.statusCode == 200 && episode.feedUrl != null) {
-      await addDownload(url: url, path: path, feedUrl: episode.feedUrl!);
-      return path;
-    }
-
-    return null;
-  }
-
-  Map<String, String> _downloadedFilePaths = {};
-  Map<String, String> get downloadedFilePaths => _downloadedFilePaths;
+  Map<String, String> _downloadUrlsToFilePaths = {};
   String? getDownloadPath(Audio? audio) {
     final url = audio?.url;
     if (url == null) return null;
-    final download = _downloadedFilePaths[url];
+    final download = _downloadUrlsToFilePaths[url];
     return download != null && File(download).existsSync()
-        ? _downloadedFilePaths[url]
+        ? _downloadUrlsToFilePaths[url]
         : null;
   }
 
   Set<String> feedsWithDownloads = {};
 
-  Future<void> loadDownloadsFromDb() async {
-    final rows = await _db.select(_db.downloadTable).get();
-    _downloadedFilePaths = {for (final r in rows) r.url: r.filePath};
-    feedsWithDownloads = rows.map((r) => r.feedUrl).toSet();
-    await _cleanUpDownloadMismatches(rows);
+  Future<void> loadDownloads() async {
+    final res = await _dao.getDownloads();
+    _downloadUrlsToFilePaths = res.downloadFilePaths;
+    feedsWithDownloads = res.feedsWithDownloads;
+    await _cleanUpDownloadMismatches();
   }
 
-  Future<void> _cleanUpDownloadMismatches(List<DownloadTableData> rows) async {
-    final nonExisting = <DownloadTableData>[];
-    for (final entry in rows) {
-      if (!File(entry.filePath).existsSync()) {
-        printMessageInDebugMode(
-          'Cleaning non-existing download:  [${entry.filePath} for URL: ${entry.url}]',
-        );
-        nonExisting.add(entry);
-      }
-    }
+  Future<void> _cleanUpDownloadMismatches() async {
+    final res = await _dao.cleanUpDownloadMismatches(
+      downloadFilePaths: _downloadUrlsToFilePaths,
+      feedsWithDownloads: feedsWithDownloads,
+      downloadsDir: await _settingsService.downloadsDirOrDefault,
+    );
 
-    if (nonExisting.isNotEmpty) {
-      final urlsToDelete = nonExisting.map((e) => e.url).toList();
-      await (_db.delete(
-        _db.downloadTable,
-      )..where((t) => t.url.isIn(urlsToDelete))).go();
-      for (final entry in nonExisting) {
-        _downloadedFilePaths.remove(entry.url);
-      }
-
-      final remainingRows = rows
-          .where((r) => !urlsToDelete.contains(r.url))
-          .toList();
-      feedsWithDownloads = remainingRows.map((r) => r.feedUrl).toSet();
-    }
-
-    final downloadsDir = await _settingsService.downloadsDirOrDefault;
-    final realDownloadFilePaths = downloadsDir != null
-        ? Directory(
-            downloadsDir,
-          ).listSync().whereType<File>().map((f) => f.path).toSet()
-        : <String>{};
-
-    // delete files that do not have a corresponding entry in the database
-    for (final filePath in realDownloadFilePaths) {
-      if (!_downloadedFilePaths.containsValue(filePath)) {
-        printMessageInDebugMode(
-          'Deleting file without database entry: $filePath',
-        );
-        try {
-          File(filePath).deleteSync();
-        } on Exception catch (e) {
-          printMessageInDebugMode('Error deleting file: $e');
-        }
-      }
-    }
+    _downloadUrlsToFilePaths = res.newDownloadFilePaths;
+    feedsWithDownloads = res.newFeedsWithDownloads;
   }
 
   Future<void> addDownload({
@@ -440,108 +296,82 @@ class PodcastService {
     required String path,
     required String feedUrl,
   }) async {
-    if (_downloadedFilePaths.containsKey(url)) return;
-    _downloadedFilePaths[url] = path;
+    if (_downloadUrlsToFilePaths.containsKey(url)) return;
+    await _dao.addDownload(url: url, path: path, feedUrl: feedUrl);
+    _downloadUrlsToFilePaths[url] = path;
     feedsWithDownloads.add(feedUrl);
-    await _db
-        .into(_db.downloadTable)
-        .insert(
-          DownloadTableCompanion.insert(
-            url: url,
-            filePath: path,
-            feedUrl: feedUrl,
-          ),
-          mode: InsertMode.insertOrIgnore,
-        );
   }
 
   Future<void> removeDownload({
     required String url,
     required String feedUrl,
   }) async {
-    _deleteDownload(url);
+    await _deleteDownloadInFileSystem(url);
 
-    if (_downloadedFilePaths.containsKey(url)) {
-      _downloadedFilePaths.remove(url);
+    if (_downloadUrlsToFilePaths.containsKey(url)) {
+      await _dao.deleteDownload([url]);
+      _downloadUrlsToFilePaths.remove(url);
       feedsWithDownloads.remove(feedUrl);
-      await (_db.delete(
-        _db.downloadTable,
-      )..where((t) => t.url.equals(url))).go();
     }
   }
 
-  void _deleteDownload(String url) {
-    final path = _downloadedFilePaths[url];
+  Future<void> _deleteDownloadInFileSystem(String url) async {
+    final path = _downloadUrlsToFilePaths[url];
     if (path != null) {
       final file = File(path);
-      if (file.existsSync()) {
-        file.deleteSync();
+      if (await file.exists()) {
+        await file.delete();
       }
     }
   }
 
   Future<void> removeAllDownloads() async {
-    for (var download in _downloadedFilePaths.entries) {
-      _deleteDownload(download.key);
+    final successFullDeletes = <String>{};
+    for (var download in _downloadUrlsToFilePaths.entries) {
+      try {
+        await _deleteDownloadInFileSystem(download.key);
+        successFullDeletes.add(download.key);
+      } on Exception catch (e, st) {
+        printMessageInDebugMode(
+          'Error deleting download file for url ${download.key}: $e\n$st',
+        );
+      }
     }
-    _downloadedFilePaths.clear();
-    feedsWithDownloads.clear();
-    await _db.delete(_db.downloadTable).go();
-  }
 
-  Future<void> removeFeedWithDownload(String feedUrl) async {
-    if (!feedsWithDownloads.contains(feedUrl)) return;
-    feedsWithDownloads.remove(feedUrl);
-    await (_db.delete(
-      _db.downloadTable,
-    )..where((t) => t.feedUrl.equals(feedUrl))).go();
-  }
+    await _dao.deleteDownload(successFullDeletes.toList());
 
-  // ── Podcasts ──
+    await loadDownloads();
+  }
 
   Set<String> _podcasts = {};
+  bool isPodcastSubscribed(String pageId) => _podcasts.contains(pageId);
+
   List<String> get podcastFeedUrls => _podcasts.toList();
   Set<String> get podcasts => _podcasts;
   int get podcastsLength => _podcasts.length;
 
-  Map<String, PodcastTableData> _podcastCache = {};
-
-  Future<void> loadPodcastCacheFromDb() async {
-    final rows = await (_db.select(
-      _db.podcastTable,
-    )..orderBy([(t) => OrderingTerm(expression: t.name)])).get();
-    _podcastCache = {for (final r in rows) r.feedUrl: r};
-    _podcasts = rows.map((r) => r.feedUrl).toSet();
+  Future<void> loadPodcasts() async {
+    _podcasts = await _dao.getPodcasts();
   }
 
   String? getSubscribedPodcastImage(String feedUrl) =>
-      _podcastCache[feedUrl]?.imageUrl;
+      _dao.getSubscribedPodcastImage(feedUrl);
 
   void addSubscribedPodcastImage({
     required String feedUrl,
     required String imageUrl,
     required String title,
-  }) {
-    (_db.update(_db.podcastTable)..where((t) => t.feedUrl.equals(feedUrl)))
-        .write(
-          PodcastTableCompanion(imageUrl: Value(imageUrl), name: Value(title)),
-        )
-        .then((_) {
-          final cached = _podcastCache[feedUrl];
-          if (cached != null) {
-            _podcastCache[feedUrl] = cached.copyWith(
-              imageUrl: Value(imageUrl),
-              name: title,
-            );
-          }
-        });
-  }
+  }) => _dao.updateSubscribedPodcastImage(
+    feedUrl: feedUrl,
+    imageUrl: imageUrl,
+    title: title,
+  );
 
   String? getSubscribedPodcastName(String feedUrl) =>
-      _podcastCache[feedUrl]?.name;
+      _dao.getSubscribedPodcastName(feedUrl);
 
   String? getSubscribedPodcastArtist(String feedUrl) =>
-      _podcastCache[feedUrl]?.artist;
+      _dao.getSubscribedPodcastArtist(feedUrl);
 
   Future<void> addPodcast({
     required String feedUrl,
@@ -550,30 +380,14 @@ class PodcastService {
     required String artist,
   }) async {
     if (podcastFeedUrls.contains(feedUrl)) return;
-    _podcasts.add(feedUrl);
-    final now = DateTime.now();
-    await _db
-        .into(_db.podcastTable)
-        .insert(
-          PodcastTableCompanion.insert(
-            feedUrl: feedUrl,
-            name: name,
-            artist: artist,
-            description: '',
-            imageUrl: Value(imageUrl),
-            lastUpdated: now,
-          ),
-          mode: InsertMode.insertOrIgnore,
-        );
-    _podcastCache[feedUrl] = PodcastTableData(
+    await _dao.addPodcast(
       feedUrl: feedUrl,
+      imageUrl: imageUrl,
       name: name,
       artist: artist,
-      description: '',
-      imageUrl: imageUrl,
-      lastUpdated: now,
-      ascending: false,
     );
+
+    _podcasts.add(feedUrl);
   }
 
   Future<void> addPodcasts(
@@ -585,88 +399,42 @@ class PodcastService {
         .where((p) => !_podcasts.contains(p.feedUrl))
         .toList();
     if (newPodcasts.isEmpty) return;
-    final now = DateTime.now();
-    await _db.batch((batch) {
-      for (final p in newPodcasts) {
-        batch.insert(
-          _db.podcastTable,
-          PodcastTableCompanion.insert(
-            feedUrl: p.feedUrl,
-            name: p.name,
-            artist: p.artist,
-            description: '',
-            imageUrl: Value(p.imageUrl),
-            lastUpdated: now,
-          ),
-          mode: InsertMode.insertOrIgnore,
-        );
-      }
-    });
+
+    await _dao.addPodcasts(newPodcasts);
+
     for (final p in newPodcasts) {
       _podcasts.add(p.feedUrl);
-      _podcastCache[p.feedUrl] = PodcastTableData(
-        feedUrl: p.feedUrl,
-        name: p.name,
-        artist: p.artist,
-        description: '',
-        imageUrl: p.imageUrl,
-        lastUpdated: now,
-        ascending: false,
-      );
     }
   }
 
   Future<void> reorderPodcast({
     required String feedUrl,
     required bool ascending,
-  }) async {
-    await (_db.update(_db.podcastTable)
-          ..where((t) => t.feedUrl.equals(feedUrl)))
-        .write(PodcastTableCompanion(ascending: Value(ascending)));
-    final cached = _podcastCache[feedUrl];
-    if (cached != null) {
-      _podcastCache[feedUrl] = cached.copyWith(ascending: ascending);
-    }
-  }
+  }) => _dao.reorderPodcast(feedUrl: feedUrl, ascending: ascending);
 
-  Set<String> get ascendingPodcasts =>
-      _podcasts.where((p) => _podcastCache[p]?.ascending == true).toSet();
+  Set<String> get ascendingPodcasts => _dao.ascendingPodcasts;
 
   Set<String> podcastUpdates = {};
 
-  Future<void> loadPodcastUpdatesFromDb() async {
-    final rows = await _db.select(_db.podcastUpdateTable).get();
-    podcastUpdates = rows.map((r) => r.podcastFeedUrl).toSet();
+  Future<void> loadPodcastUpdates() async {
+    podcastUpdates = await _dao.getPodcastUpdates();
   }
 
   Future<void> _addPodcastLastUpdated({
     required String feedUrl,
     required DateTime lastUpdated,
-  }) async {
-    await (_db.update(_db.podcastTable)
-          ..where((t) => t.feedUrl.equals(feedUrl)))
-        .write(PodcastTableCompanion(lastUpdated: Value(lastUpdated)));
-    final cached = _podcastCache[feedUrl];
-    if (cached != null) {
-      _podcastCache[feedUrl] = cached.copyWith(lastUpdated: lastUpdated);
-    }
-  }
+  }) => _dao.addPodcastLastUpdated(feedUrl: feedUrl, lastUpdated: lastUpdated);
 
   String? getPodcastLastUpdated(String feedUrl) =>
-      _podcastCache[feedUrl]?.lastUpdated.toPodcastTimeStamp;
+      _dao.getPodcastLastUpdated(feedUrl);
 
   bool podcastUpdateAvailable(String feedUrl) =>
-      podcastUpdates.contains(feedUrl) == true;
+      podcastUpdates.contains(feedUrl);
 
   Future<void> _addPodcastUpdate(String feedUrl) async {
-    if (podcastUpdates.contains(feedUrl) == true) return;
+    if (podcastUpdates.contains(feedUrl)) return;
+    await _dao.addPodcastUpdate(feedUrl);
     podcastUpdates.add(feedUrl);
-    await _db
-        .into(_db.podcastUpdateTable)
-        .insert(
-          PodcastUpdateTableCompanion.insert(podcastFeedUrl: feedUrl),
-          mode: InsertMode.insertOrIgnore,
-        );
   }
 
   Future<void> removePodcastUpdates({
@@ -674,7 +442,7 @@ class PodcastService {
     required void Function(double) updateProgress,
   }) async {
     if (podcastUpdates.isEmpty) {
-      await loadPodcastUpdatesFromDb();
+      await loadPodcastUpdates();
     }
     final urls = feedUrls ?? podcastFeedUrls;
     for (final (index, url) in urls.indexed) {
@@ -685,91 +453,25 @@ class PodcastService {
 
   Future<void> removePodcastUpdate(String feedUrl) async {
     if (podcastUpdates.isEmpty) return;
+    await _dao.deletePodcastUpdate(feedUrl);
     podcastUpdates.remove(feedUrl);
-    await (_db.delete(
-      _db.podcastUpdateTable,
-    )..where((t) => t.podcastFeedUrl.equals(feedUrl))).go();
   }
 
   Future<void> removePodcast(String feedUrl) async {
     if (!podcastFeedUrls.contains(feedUrl)) return;
     printMessageInDebugMode('Cleaning up unsubscribed podcast: $feedUrl');
-
-    await removeFeedWithDownload(feedUrl);
-    await removePodcastUpdate(feedUrl);
-    await removeFeedWithDownload(feedUrl);
-    await (_db.delete(
-      _db.podcastEpisodeTable,
-    )..where((t) => t.podcastFeedUrl.equals(feedUrl))).go();
-
-    await (_db.delete(
-      _db.podcastUpdateTable,
-    )..where((t) => t.podcastFeedUrl.equals(feedUrl))).go();
-    await (_db.delete(
-      _db.podcastTable,
-    )..where((t) => t.feedUrl.equals(feedUrl))).go();
-
-    await (_db.delete(
-      _db.downloadTable,
-    )..where((t) => t.feedUrl.equals(feedUrl))).go();
-
+    await _dao.deletePodcast(feedUrl);
     _podcasts.remove(feedUrl);
-    _podcastCache.remove(feedUrl);
-
-    await _db.reclaimDiskSpace();
   }
 
-  Future<void> removeAllPodcasts() async {
-    _podcasts.clear();
-    podcastUpdates.clear();
-    _podcastCache.clear();
-    await Future.wait([
-      _db.delete(_db.podcastUpdateTable).go(),
-      _db.delete(_db.podcastTable).go(),
-    ]);
-  }
+  Future<void> updateAudioDuration(Audio audio) =>
+      _dao.updateAudioDuration(audio);
 
   Future<void> wipeAndBuildPodcastLibrary() async {
-    await removeAllDownloads();
-    await removeAllPodcasts();
-    await loadPodcastCacheFromDb();
-    await loadPodcastUpdatesFromDb();
-    await loadDownloadsFromDb();
-  }
-
-  Future<void> updateAudioDuration(Audio audio) async {
-    await (_db.update(
-      _db.podcastEpisodeTable,
-    )..where((t) => t.contentUrl.equals(audio.url ?? ''))).write(
-      PodcastEpisodeTableCompanion(
-        durationMs: Value(audio.durationMs?.toInt()),
-      ),
-    );
-  }
-
-  bool isPodcastSubscribed(String pageId) => _podcasts.contains(pageId);
-
-  Audio getEpisodeFromTableEntry(
-    PodcastEpisodeTableData data, {
-    required String feedUrl,
-  }) {
-    // find podcast table data first:
-    final podcastData = _podcastCache[feedUrl];
-
-    return Audio(
-      url: data.contentUrl,
-      title: data.title,
-      podcastTitle: podcastData?.name,
-      episodeDescription: data.episodeDescription,
-      podcastDescription: data.podcastDescription,
-      publicationDate: data.publicationDate.millisecondsSinceEpoch,
-      durationMs: data.durationMs?.toDouble(),
-      imageUrl: podcastData?.imageUrl ?? data.imageUrl,
-      albumArtUrl: podcastData?.imageUrl ?? data.imageUrl,
-      feedUrl: feedUrl,
-      audioType: AudioType.podcast,
-      copyright: podcastData?.artist,
-    );
+    await _dao.deleteAllPodcasts();
+    await loadPodcasts();
+    await loadPodcastUpdates();
+    await loadDownloads();
   }
 }
 

@@ -6,7 +6,6 @@ import '../../extensions/build_context_x.dart';
 import '../../player/player_model.dart';
 import '../data/podcast_download.dart';
 import '../download_manager.dart';
-import '../download_manager_master.dart';
 import 'download_button.dart';
 
 class RecentDownloadsButton extends StatefulWidget
@@ -46,11 +45,13 @@ class _RecentDownloadsButtonState extends State<RecentDownloadsButton>
     final theme = context.theme;
 
     final lastDownload = watchStream(
-      (DownloadManagerMaster m) => m.downloadStream,
-      initialValue: di<DownloadManagerMaster>().lastDownload,
+      (DownloadManager m) => m.downloadStream,
+      initialValue: di<DownloadManager>().lastDownload,
     ).data;
 
-    final downloadCommands = watchValue((DownloadManager m) => m.commands);
+    final downloadCommands = watchValue(
+      (DownloadManager m) => m.downloadCommands,
+    );
     final downloads = downloadCommands.keys.where(
       (audio) => di<DownloadManager>().hasDownload(audio),
     );
@@ -112,7 +113,9 @@ class RecentDownloads extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final downloadCommands = watchValue((DownloadManager m) => m.commands);
+    final downloadCommands = watchValue(
+      (DownloadManager m) => m.downloadCommands,
+    );
     final downloads = downloadCommands.keys.where(
       (audio) => di<DownloadManager>().hasDownload(audio),
     );

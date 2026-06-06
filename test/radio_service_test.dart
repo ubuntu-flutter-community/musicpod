@@ -3,6 +3,7 @@ import 'package:mockito/annotations.dart';
 import 'package:musicpod/common/data/audio.dart';
 import 'package:musicpod/common/data/audio_type.dart';
 import 'package:musicpod/common/persistence/database.dart';
+import 'package:musicpod/radio/persistence/radio_dao.dart';
 import 'package:musicpod/radio/radio_service.dart';
 
 import 'radio_service_test.mocks.dart';
@@ -20,7 +21,7 @@ Future<void> main() async {
 
   group('radio tests', () {
     setUpAll(() async {
-      service = RadioService(database: MockDatabase());
+      service = RadioService(dao: RadioDao(db: MockDatabase()));
 
       host = await service.connectToServer();
     });
@@ -66,7 +67,9 @@ Future<void> main() async {
 
     // a test to check if it throws an exception when the server is unavailable
     test('serverUnavailable', () async {
-      final serviceWithInvalidHost = RadioService(database: MockDatabase());
+      final serviceWithInvalidHost = RadioService(
+        dao: RadioDao(db: MockDatabase()),
+      );
       try {
         await serviceWithInvalidHost.connectToServer(
           newHosts: ['http://invalidhost:8000'],

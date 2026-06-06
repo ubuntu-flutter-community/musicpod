@@ -8,14 +8,13 @@ import 'package:radio_browser_api/radio_browser_api.dart';
 
 import '../common/data/audio.dart';
 import '../common/logging.dart';
-import '../common/persistence/database.dart';
-import 'persistence/tables.dart';
+import 'persistence/radio_dao.dart';
 
 @singleton
 class RadioService {
-  RadioService({required Database database}) : _db = database;
+  RadioService({required RadioDao dao}) : _dao = dao;
 
-  final Database _db;
+  final RadioDao _dao;
 
   static const _kRadioBrowserBaseUrl = 'all.api.radio-browser.info';
 
@@ -282,15 +281,14 @@ class RadioService {
   int get starredStationsLength => _starredStations.length;
 
   Future<void> loadStarredStations() async {
-    final rows = await _db.select(_db.starredStationTable).get();
-    _starredStations = rows.map((r) => r.uuid).toList();
+    _starredStations = await _dao.getStarredStations();
   }
 
   Future<void> addStarredStation(Audio audio) async {
     final uuid = audio.uuid;
     if (uuid == null || _starredStations.contains(uuid)) return;
 
-    await _db.insertStarredStation(uuid);
+    await _dao.insertStarredStation(uuid);
     _starredStations.add(uuid);
   }
 
@@ -302,13 +300,13 @@ class RadioService {
         .toList();
     if (newUuids.isEmpty) return;
     _starredStations.addAll(newUuids);
-    await _db.insertStarredStations(newUuids);
+    await _dao.insertStarredStations(newUuids);
   }
 
   Future<void> removeStarredStation(String uuid) async {
     if (!_starredStations.contains(uuid)) return;
 
-    await _db.deleteStarredStation(uuid);
+    await _dao.deleteStarredStation(uuid);
     _starredStations.remove(uuid);
   }
 
@@ -321,20 +319,19 @@ class RadioService {
   bool isFavTag(String value) => _favRadioTags.contains(value);
 
   Future<void> loadFavRadioTags() async {
-    final rows = await _db.select(_db.favoriteRadioTagTable).get();
-    _favRadioTags = rows.map((r) => r.name).toSet();
+    _favRadioTags = await _dao.getFavRadioTags();
   }
 
   Future<void> addFavRadioTag(String name) async {
     if (_favRadioTags.contains(name)) return;
     _favRadioTags.add(name);
-    await _db.insertFavoriteRadioTag(name);
+    await _dao.insertFavoriteRadioTag(name);
   }
 
   Future<void> removeFavRadioTag(String name) async {
     if (!_favRadioTags.contains(name)) return;
     _favRadioTags.remove(name);
-    await _db.deleteFavoriteRadioTag(name);
+    await _dao.deleteFavoriteRadioTag(name);
   }
 
   Future<void> wipeAndBuildRadioLibrary() async {
@@ -344,7 +341,7 @@ class RadioService {
   }
 
   Future<void> _wipeRadioLibrary() async {
-    await _db.deleteRadioTables();
+    await _dao.deleteRadioTables();
     _favRadioTags.clear();
     _starredStations.clear();
   }

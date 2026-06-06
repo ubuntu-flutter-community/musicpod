@@ -12,7 +12,7 @@ import '../../player/player_model.dart';
 import '../../player/player_service.dart';
 import '../../podcasts/data/podcast_download.dart';
 import '../../podcasts/data/podcast_update_capsule.dart';
-import '../../podcasts/download_manager_master.dart';
+import '../../podcasts/download_manager.dart';
 import '../../podcasts/podcast_manager.dart';
 import '../../search/search_manager.dart';
 import '../../search/search_timeout_exception.dart';
@@ -21,7 +21,7 @@ import '../app_manager.dart';
 mixin CommonHandlersAndCommandsMixin {
   void setupCommonHandlersAndCommands(BuildContext context) {
     registerStreamHandler(
-      select: (DownloadManagerMaster m) => m.downloadStream,
+      select: (DownloadManager m) => m.downloadStream,
       handler: (context, asyncData, cancel) {
         if (!asyncData.hasData ||
             asyncData.data?.status == DownloadStatus.inProgress)

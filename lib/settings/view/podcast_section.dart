@@ -13,7 +13,7 @@ import '../../extensions/string_x.dart';
 
 import '../../local_audio/local_audio_manager.dart';
 import '../../player/player_service.dart';
-import '../../podcasts/download_manager_master.dart';
+import '../../podcasts/download_manager.dart';
 import '../../podcasts/podcast_manager.dart';
 import '../../search/search_manager.dart';
 import '../settings_model.dart';
@@ -238,7 +238,7 @@ class _DownloadsTileState extends State<_DownloadsTile> {
     final l10n = context.l10n;
 
     final downloadsDirResults = watchValue(
-      (DownloadManagerMaster m) => m.downloadsDirCommand.results,
+      (DownloadManager m) => m.downloadsDirCommand.results,
     );
     final error = downloadsDirResults.error;
     final downloadsDir = downloadsDirResults.data;
@@ -264,8 +264,9 @@ class _DownloadsTileState extends State<_DownloadsTile> {
                     ?.audios
                     .firstOrNull;
                 if (firstAudio != null) {
-                  await di<DownloadManagerMaster>().downloadsDirCommand
-                      .runAsync((getDefault: false));
+                  await di<DownloadManager>().downloadsDirCommand.runAsync((
+                    getDefault: false,
+                  ));
                 }
               },
             ),

@@ -133,8 +133,8 @@ class PodcastManager {
   late final Command<PodcastToggleCapsule?, List<String>> togglePodcastCommand =
       Command.createAsync((param) async {
         if (_podcastService.podcastFeedUrls.isEmpty) {
-          await _podcastService.loadPodcastCacheFromDb();
-          await _podcastService.loadPodcastUpdatesFromDb();
+          await _podcastService.loadPodcasts();
+          await _podcastService.loadPodcastUpdates();
         }
 
         if (param?.feedUrl != null) {
@@ -178,7 +178,7 @@ class PodcastManager {
   late final Command<void, Set<String>> feedsWithDownloadsCommand =
       Command.createAsyncNoParam(() async {
         if (_podcastService.feedsWithDownloads.isEmpty) {
-          await _podcastService.loadDownloadsFromDb();
+          await _podcastService.loadDownloads();
         }
 
         return _podcastService.feedsWithDownloads;

@@ -3,15 +3,13 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i6;
+import 'dart:async' as _i5;
 
-import 'package:dio/dio.dart' as _i8;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:musicpod/common/data/audio.dart' as _i3;
-import 'package:musicpod/common/persistence/database.dart' as _i9;
-import 'package:musicpod/common/view/languages.dart' as _i7;
-import 'package:musicpod/podcasts/data/podcast_genre.dart' as _i5;
-import 'package:musicpod/podcasts/podcast_service.dart' as _i4;
+import 'package:musicpod/common/data/audio.dart' as _i7;
+import 'package:musicpod/common/view/languages.dart' as _i6;
+import 'package:musicpod/podcasts/data/podcast_genre.dart' as _i4;
+import 'package:musicpod/podcasts/podcast_service.dart' as _i3;
 import 'package:podcast_search/podcast_search.dart' as _i2;
 
 // ignore_for_file: type=lint
@@ -35,34 +33,21 @@ class _FakeSearchProvider_0 extends _i1.SmartFake
     : super(parent, parentInvocation);
 }
 
-class _FakeAudio_1 extends _i1.SmartFake implements _i3.Audio {
-  _FakeAudio_1(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
-}
-
 /// A class which mocks [PodcastService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockPodcastService extends _i1.Mock implements _i4.PodcastService {
+class MockPodcastService extends _i1.Mock implements _i3.PodcastService {
   MockPodcastService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  List<_i5.PodcastGenre> get cachedPodcastGenres =>
+  List<_i4.PodcastGenre> get cachedPodcastGenres =>
       (super.noSuchMethod(
             Invocation.getter(#cachedPodcastGenres),
-            returnValue: <_i5.PodcastGenre>[],
+            returnValue: <_i4.PodcastGenre>[],
           )
-          as List<_i5.PodcastGenre>);
-
-  @override
-  Map<String, String> get downloadedFilePaths =>
-      (super.noSuchMethod(
-            Invocation.getter(#downloadedFilePaths),
-            returnValue: <String, String>{},
-          )
-          as Map<String, String>);
+          as List<_i4.PodcastGenre>);
 
   @override
   Set<String> get feedsWithDownloads =>
@@ -132,21 +117,21 @@ class MockPodcastService extends _i1.Mock implements _i4.PodcastService {
           as _i2.SearchProvider);
 
   @override
-  _i6.Future<List<_i5.PodcastGenre>> loadGenres({bool? force = false}) =>
+  _i5.Future<List<_i4.PodcastGenre>> loadGenres({bool? force = false}) =>
       (super.noSuchMethod(
             Invocation.method(#loadGenres, [], {#force: force}),
-            returnValue: _i6.Future<List<_i5.PodcastGenre>>.value(
-              <_i5.PodcastGenre>[],
+            returnValue: _i5.Future<List<_i4.PodcastGenre>>.value(
+              <_i4.PodcastGenre>[],
             ),
           )
-          as _i6.Future<List<_i5.PodcastGenre>>);
+          as _i5.Future<List<_i4.PodcastGenre>>);
 
   @override
-  _i6.Future<_i2.SearchResult?> search({
+  _i5.Future<_i2.SearchResult?> search({
     String? searchQuery,
-    _i5.PodcastGenre? podcastGenre = _i5.PodcastGenre.all,
+    _i4.PodcastGenre? podcastGenre = _i4.PodcastGenre.all,
     _i2.Country? country,
-    _i7.SimpleLanguage? language,
+    _i6.SimpleLanguage? language,
     int? limit = 10,
     _i2.Attribute? attribute = _i2.Attribute.none,
   }) =>
@@ -159,12 +144,12 @@ class MockPodcastService extends _i1.Mock implements _i4.PodcastService {
               #limit: limit,
               #attribute: attribute,
             }),
-            returnValue: _i6.Future<_i2.SearchResult?>.value(),
+            returnValue: _i5.Future<_i2.SearchResult?>.value(),
           )
-          as _i6.Future<_i2.SearchResult?>);
+          as _i5.Future<_i2.SearchResult?>);
 
   @override
-  _i6.Future<Set<String>> checkForUpdates({
+  _i5.Future<Set<String>> checkForUpdates({
     required Iterable<String>? feedUrls,
     void Function(double)? updateProgress,
   }) =>
@@ -173,12 +158,12 @@ class MockPodcastService extends _i1.Mock implements _i4.PodcastService {
               #feedUrls: feedUrls,
               #updateProgress: updateProgress,
             }),
-            returnValue: _i6.Future<Set<String>>.value(<String>{}),
+            returnValue: _i5.Future<Set<String>>.value(<String>{}),
           )
-          as _i6.Future<Set<String>>);
+          as _i5.Future<Set<String>>);
 
   @override
-  _i6.Future<List<_i3.Audio>> findEpisodes({
+  _i5.Future<List<_i7.Audio>> findEpisodes({
     _i2.Item? item,
     String? feedUrl,
     required bool? tryFromDbOnly,
@@ -189,37 +174,21 @@ class MockPodcastService extends _i1.Mock implements _i4.PodcastService {
               #feedUrl: feedUrl,
               #tryFromDbOnly: tryFromDbOnly,
             }),
-            returnValue: _i6.Future<List<_i3.Audio>>.value(<_i3.Audio>[]),
+            returnValue: _i5.Future<List<_i7.Audio>>.value(<_i7.Audio>[]),
           )
-          as _i6.Future<List<_i3.Audio>>);
+          as _i5.Future<List<_i7.Audio>>);
 
   @override
-  _i6.Future<String?> download({
-    required _i3.Audio? episode,
-    required _i8.CancelToken? cancelToken,
-    required void Function(int, int)? onProgress,
-  }) =>
+  _i5.Future<void> loadDownloads() =>
       (super.noSuchMethod(
-            Invocation.method(#download, [], {
-              #episode: episode,
-              #cancelToken: cancelToken,
-              #onProgress: onProgress,
-            }),
-            returnValue: _i6.Future<String?>.value(),
+            Invocation.method(#loadDownloads, []),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i6.Future<String?>);
+          as _i5.Future<void>);
 
   @override
-  _i6.Future<void> loadDownloadsFromDb() =>
-      (super.noSuchMethod(
-            Invocation.method(#loadDownloadsFromDb, []),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<void> addDownload({
+  _i5.Future<void> addDownload({
     required String? url,
     required String? path,
     required String? feedUrl,
@@ -230,13 +199,13 @@ class MockPodcastService extends _i1.Mock implements _i4.PodcastService {
               #path: path,
               #feedUrl: feedUrl,
             }),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i6.Future<void>);
+          as _i5.Future<void>);
 
   @override
-  _i6.Future<void> removeDownload({
+  _i5.Future<void> removeDownload({
     required String? url,
     required String? feedUrl,
   }) =>
@@ -245,37 +214,36 @@ class MockPodcastService extends _i1.Mock implements _i4.PodcastService {
               #url: url,
               #feedUrl: feedUrl,
             }),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i6.Future<void>);
+          as _i5.Future<void>);
 
   @override
-  _i6.Future<void> removeAllDownloads() =>
+  _i5.Future<void> removeAllDownloads() =>
       (super.noSuchMethod(
             Invocation.method(#removeAllDownloads, []),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i6.Future<void>);
+          as _i5.Future<void>);
 
   @override
-  _i6.Future<void> removeFeedWithDownload(String? feedUrl) =>
+  bool isPodcastSubscribed(String? pageId) =>
       (super.noSuchMethod(
-            Invocation.method(#removeFeedWithDownload, [feedUrl]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
+            Invocation.method(#isPodcastSubscribed, [pageId]),
+            returnValue: false,
           )
-          as _i6.Future<void>);
+          as bool);
 
   @override
-  _i6.Future<void> loadPodcastCacheFromDb() =>
+  _i5.Future<void> loadPodcasts() =>
       (super.noSuchMethod(
-            Invocation.method(#loadPodcastCacheFromDb, []),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
+            Invocation.method(#loadPodcasts, []),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i6.Future<void>);
+          as _i5.Future<void>);
 
   @override
   String? getSubscribedPodcastImage(String? feedUrl) =>
@@ -313,7 +281,7 @@ class MockPodcastService extends _i1.Mock implements _i4.PodcastService {
           as String?);
 
   @override
-  _i6.Future<void> addPodcast({
+  _i5.Future<void> addPodcast({
     required String? feedUrl,
     required String? imageUrl,
     required String? name,
@@ -326,25 +294,25 @@ class MockPodcastService extends _i1.Mock implements _i4.PodcastService {
               #name: name,
               #artist: artist,
             }),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i6.Future<void>);
+          as _i5.Future<void>);
 
   @override
-  _i6.Future<void> addPodcasts(
+  _i5.Future<void> addPodcasts(
     List<({String artist, String feedUrl, String? imageUrl, String name})>?
     podcasts,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#addPodcasts, [podcasts]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i6.Future<void>);
+          as _i5.Future<void>);
 
   @override
-  _i6.Future<void> reorderPodcast({
+  _i5.Future<void> reorderPodcast({
     required String? feedUrl,
     required bool? ascending,
   }) =>
@@ -353,19 +321,19 @@ class MockPodcastService extends _i1.Mock implements _i4.PodcastService {
               #feedUrl: feedUrl,
               #ascending: ascending,
             }),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i6.Future<void>);
+          as _i5.Future<void>);
 
   @override
-  _i6.Future<void> loadPodcastUpdatesFromDb() =>
+  _i5.Future<void> loadPodcastUpdates() =>
       (super.noSuchMethod(
-            Invocation.method(#loadPodcastUpdatesFromDb, []),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
+            Invocation.method(#loadPodcastUpdates, []),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i6.Future<void>);
+          as _i5.Future<void>);
 
   @override
   String? getPodcastLastUpdated(String? feedUrl) =>
@@ -381,7 +349,7 @@ class MockPodcastService extends _i1.Mock implements _i4.PodcastService {
           as bool);
 
   @override
-  _i6.Future<void> removePodcastUpdates({
+  _i5.Future<void> removePodcastUpdates({
     Iterable<String>? feedUrls,
     required void Function(double)? updateProgress,
   }) =>
@@ -390,83 +358,44 @@ class MockPodcastService extends _i1.Mock implements _i4.PodcastService {
               #feedUrls: feedUrls,
               #updateProgress: updateProgress,
             }),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i6.Future<void>);
+          as _i5.Future<void>);
 
   @override
-  _i6.Future<void> removePodcastUpdate(String? feedUrl) =>
+  _i5.Future<void> removePodcastUpdate(String? feedUrl) =>
       (super.noSuchMethod(
             Invocation.method(#removePodcastUpdate, [feedUrl]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i6.Future<void>);
+          as _i5.Future<void>);
 
   @override
-  _i6.Future<void> removePodcast(String? feedUrl) =>
+  _i5.Future<void> removePodcast(String? feedUrl) =>
       (super.noSuchMethod(
             Invocation.method(#removePodcast, [feedUrl]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i6.Future<void>);
+          as _i5.Future<void>);
 
   @override
-  _i6.Future<void> removeAllPodcasts() =>
-      (super.noSuchMethod(
-            Invocation.method(#removeAllPodcasts, []),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<void> wipeAndBuildPodcastLibrary() =>
-      (super.noSuchMethod(
-            Invocation.method(#wipeAndBuildPodcastLibrary, []),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<void> updateAudioDuration(_i3.Audio? audio) =>
+  _i5.Future<void> updateAudioDuration(_i7.Audio? audio) =>
       (super.noSuchMethod(
             Invocation.method(#updateAudioDuration, [audio]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as _i6.Future<void>);
+          as _i5.Future<void>);
 
   @override
-  bool isPodcastSubscribed(String? pageId) =>
+  _i5.Future<void> wipeAndBuildPodcastLibrary() =>
       (super.noSuchMethod(
-            Invocation.method(#isPodcastSubscribed, [pageId]),
-            returnValue: false,
+            Invocation.method(#wipeAndBuildPodcastLibrary, []),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
           )
-          as bool);
-
-  @override
-  _i3.Audio getEpisodeFromTableEntry(
-    _i9.PodcastEpisodeTableData? data, {
-    required String? feedUrl,
-  }) =>
-      (super.noSuchMethod(
-            Invocation.method(
-              #getEpisodeFromTableEntry,
-              [data],
-              {#feedUrl: feedUrl},
-            ),
-            returnValue: _FakeAudio_1(
-              this,
-              Invocation.method(
-                #getEpisodeFromTableEntry,
-                [data],
-                {#feedUrl: feedUrl},
-              ),
-            ),
-          )
-          as _i3.Audio);
+          as _i5.Future<void>);
 }

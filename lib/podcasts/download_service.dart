@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:path/path.dart' as p;
 
@@ -12,11 +13,14 @@ class DownloadService {
   DownloadService({
     required ExternalPathService externalPathService,
     required SettingsService settingsService,
+    required Dio dio,
   }) : _externalPathService = externalPathService,
-       _settingsService = settingsService;
+       _settingsService = settingsService,
+       _dio = dio;
 
   final ExternalPathService _externalPathService;
   final SettingsService _settingsService;
+  final Dio _dio;
 
   Future<String?> setDownloadsDirectory({required bool getDefault}) async {
     String? dirError;
@@ -46,6 +50,37 @@ class DownloadService {
         await _settingsService.setValue(SPKeys.downloads, directoryPath);
         return _settingsService.downloadsDirOrDefault;
       }
+    }
+
+    return null;
+  }
+
+  Future<String?> download({
+    required String targetUrl,
+    required String podcastDownloadId,
+    required CancelToken cancelToken,
+    required void Function(int received, int total) onProgress,
+  }) async {
+    final downloadsDir = await _settingsService.downloadsDirOrDefault;
+    if (downloadsDir == null) {
+      throw Exception('Downloads directory not set');
+    }
+
+    if (!Directory(downloadsDir).existsSync()) {
+      Directory(downloadsDir).createSync(recursive: true);
+    }
+
+    final path = p.join(downloadsDir, podcastDownloadId);
+
+    final response = await _dio.download(
+      targetUrl,
+      path,
+      onReceiveProgress: onProgress,
+      cancelToken: cancelToken,
+    );
+
+    if (response.statusCode == 200) {
+      return path;
     }
 
     return null;
