@@ -24,6 +24,7 @@ import 'app/app_manager.dart' as _i369;
 import 'app/routing_manager.dart' as _i971;
 import 'app/sidebar_audios_manager.dart' as _i190;
 import 'app/window_size_to_settings_listener.dart' as _i517;
+import 'common/data/audio.dart' as _i537;
 import 'common/persistence/database.dart' as _i115;
 import 'custom_content/custom_content_model.dart' as _i55;
 import 'expose/expose_manager.dart' as _i987;
@@ -31,10 +32,12 @@ import 'expose/expose_service.dart' as _i820;
 import 'expose/lastfm_service.dart' as _i820;
 import 'expose/listenbrainz_service.dart' as _i348;
 import 'external_path/external_path_service.dart' as _i551;
+import 'local_audio/change_local_meta_data_manager.dart' as _i46;
 import 'local_audio/local_audio_manager.dart' as _i688;
 import 'local_audio/local_audio_service.dart' as _i438;
 import 'local_audio/local_cover_manager.dart' as _i439;
 import 'local_audio/local_cover_service.dart' as _i57;
+import 'local_audio/persistence/local_audio_dao.dart' as _i688;
 import 'lyrics/lyrics_manager.dart' as _i23;
 import 'lyrics/lyrics_service.dart' as _i546;
 import 'notifications/notifications_service.dart' as _i57;
@@ -120,6 +123,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i57.LocalCoverService>(
       () => _i57.LocalCoverService(database: gh<_i115.Database>()),
     );
+    gh.lazySingleton<_i688.LocalAudioDao>(
+      () => _i688.LocalAudioDao(database: gh<_i115.Database>()),
+    );
     gh.singleton<_i811.RadioService>(
       () => _i811.RadioService(database: gh<_i115.Database>()),
     );
@@ -129,13 +135,38 @@ extension GetItInjectableX on _i174.GetIt {
       ),
       dispose: (i) => i.dispose(),
     );
+    gh.lazySingleton<_i438.LocalAudioService>(
+      () => _i438.LocalAudioService(
+        localCoverService: gh<_i57.LocalCoverService>(),
+        settingsService: gh<_i763.SettingsService>(),
+        localAudioDao: gh<_i688.LocalAudioDao>(),
+      ),
+    );
     gh.factoryCached<_i439.LocalCoverManager>(
       () => _i439.LocalCoverManager(
         localCoverService: gh<_i57.LocalCoverService>(),
       ),
     );
+    gh.lazySingleton<_i369.AppManager>(
+      () => _i369.AppManager(
+        packageInfo: gh<_i655.PackageInfo>(),
+        settingsService: gh<_i763.SettingsService>(),
+        gitHub: gh<_i535.GitHub>(),
+        localAudioService: gh<_i438.LocalAudioService>(),
+      ),
+    );
     gh.lazySingleton<_i57.NotificationsService>(
       () => _i57.NotificationsService(localNotifier: gh<_i526.LocalNotifier>()),
+    );
+    gh.factoryCachedParam<
+      _i46.ChangeLocalMetaDataManager,
+      _i537.Audio,
+      dynamic
+    >(
+      (audio, _) => _i46.ChangeLocalMetaDataManager(
+        audio: audio,
+        localAudioService: gh<_i438.LocalAudioService>(),
+      ),
     );
     gh.factoryCachedParam<_i1015.Genius, String, dynamic>(
       (accessToken, _) => geniusModule.genius(accessToken: accessToken),
@@ -161,13 +192,6 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i23.LyricsManager(
         localLyricsService: gh<_i546.LocalLyricsService>(),
         onlineLyricsService: gh<_i546.OnlineLyricsService>(),
-      ),
-    );
-    gh.lazySingleton<_i438.LocalAudioService>(
-      () => _i438.LocalAudioService(
-        localCoverService: gh<_i57.LocalCoverService>(),
-        settingsService: gh<_i763.SettingsService>(),
-        database: gh<_i115.Database>(),
       ),
     );
     gh.singleton<_i688.LocalAudioManager>(
@@ -204,14 +228,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i987.ExposeManager>(
       () => _i987.ExposeManager(exposeService: gh<_i820.ExposeService>()),
-    );
-    gh.lazySingleton<_i369.AppManager>(
-      () => _i369.AppManager(
-        packageInfo: gh<_i655.PackageInfo>(),
-        settingsService: gh<_i763.SettingsService>(),
-        gitHub: gh<_i535.GitHub>(),
-        localAudioService: gh<_i438.LocalAudioService>(),
-      ),
     );
     gh.lazySingleton<_i611.DownloadManagerMaster>(
       () => _i611.DownloadManagerMaster(

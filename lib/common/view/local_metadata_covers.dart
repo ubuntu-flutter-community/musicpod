@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:mime/mime.dart';
@@ -11,7 +10,7 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/picture_type_x.dart';
 import '../../external_path/external_path_service.dart';
 import '../../local_audio/data/change_metadata_capsule.dart';
-import '../../local_audio/local_audio_manager.dart';
+import '../../local_audio/change_local_meta_data_manager.dart';
 import '../../local_audio/view/local_cover.dart';
 import '../data/audio.dart';
 import 'icons.dart';
@@ -29,57 +28,13 @@ class LocalMetadataCovers extends StatefulWidget
 }
 
 class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
-  AudioMetadata? _data;
-  String? _error;
-  bool _loading = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _readMetadata();
-  }
-
-  Future<void> _readMetadata() async {
-    if (widget.audio.path == null) return;
-    setState(() => _loading = true);
-    try {
-      _error = null;
-      _data = await compute(_readMetadataInIsolate, widget.audio.path!);
-    } on Exception catch (e) {
-      _error = e.toString();
-    }
-    if (mounted) setState(() => _loading = false);
-  }
-
   @override
   Widget build(BuildContext context) {
     const dimension = MetaDataContent.dimension;
 
-    registerHandler(
-      select: (LocalAudioManager m) => m.changeMetadataCommand,
-      handler: (context, newValue, cancel) {
-        if (newValue != null && newValue.path == widget.audio.path) {
-          _readMetadata();
-        }
-      },
-    );
+    final manager = di<ChangeLocalMetaDataManager>(param1: widget.audio);
 
-    if (_loading) {
-      return const SizedBox.square(
-        dimension: dimension,
-        child: Center(child: CircularProgressIndicator()),
-      );
-    }
-
-    if (_error != null) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: kMediumSpace),
-        child: Text(
-          context.l10n.failedToImport + ': ' + '${widget.audio.path ?? ''}',
-          style: TextStyle(color: context.colorScheme.error),
-        ),
-      );
-    }
+    final draft = watch(manager.draft).value;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: kLargestSpace),
@@ -87,7 +42,7 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
         borderRadius: BorderRadius.circular(kMediumSpace),
         child: Stack(
           children: [
-            _data == null || _data!.pictures.isEmpty
+            draft?.pictures?.isEmpty ?? true
                 ? widget.audio.path == null || widget.audio.albumDbId == null
                       ? const SizedBox.shrink()
                       : LocalCover(
@@ -103,95 +58,88 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
                     placeIndicator: false,
                     navigationControls: true,
                     controller: YaruCarouselController(viewportFraction: 1),
-                    children: _data!.pictures
-                        .map(
-                          (picture) => Stack(
-                            fit: StackFit.expand,
-                            alignment: Alignment.center,
-                            children: [
-                              Image.memory(
-                                picture.bytes,
-                                width: dimension,
-                                height: dimension,
-                                fit: BoxFit.cover,
-                              ),
-                              Positioned(
-                                bottom: kMediumSpace,
-                                child: Material(
-                                  shape: RoundedRectangleBorder(
-                                    side: BorderSide(
-                                      color: context.colorScheme.outline,
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(20),
+                    children:
+                        draft?.pictures
+                            ?.map(
+                              (picture) => Stack(
+                                fit: StackFit.expand,
+                                alignment: Alignment.center,
+                                children: [
+                                  Image.memory(
+                                    picture.bytes,
+                                    width: dimension,
+                                    height: dimension,
+                                    fit: BoxFit.cover,
                                   ),
-                                  child: DropdownButton(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: kMediumSpace,
-                                    ),
-                                    borderRadius: BorderRadius.circular(20),
-                                    isDense: true,
-                                    icon: Icon(Iconz.dropdown),
-                                    underline: const SizedBox.shrink(),
-                                    value: picture.pictureType,
-                                    items: PictureType.values
-                                        .map(
-                                          (e) => DropdownMenuItem(
-                                            value: e,
-                                            child: SizedBox(
-                                              width: dimension / 2,
-                                              child: Tooltip(
-                                                message: e.localize(
-                                                  context.l10n,
-                                                ),
-                                                child: Text(
-                                                  e.localize(context.l10n),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
+                                  Positioned(
+                                    bottom: kMediumSpace,
+                                    child: Material(
+                                      shape: RoundedRectangleBorder(
+                                        side: BorderSide(
+                                          color: context.colorScheme.outline,
+                                          width: 1,
+                                        ),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: DropdownButton(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: kMediumSpace,
+                                        ),
+                                        borderRadius: BorderRadius.circular(20),
+                                        isDense: true,
+                                        icon: Icon(Iconz.dropdown),
+                                        underline: const SizedBox.shrink(),
+                                        value: picture.pictureType,
+                                        items: PictureType.values
+                                            .map(
+                                              (e) => DropdownMenuItem(
+                                                value: e,
+                                                child: SizedBox(
+                                                  width: dimension / 2,
+                                                  child: Tooltip(
+                                                    message: e.localize(
+                                                      context.l10n,
+                                                    ),
+                                                    child: Text(
+                                                      e.localize(context.l10n),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ),
-                                        )
-                                        .toList(),
-                                    onChanged: (v) {
-                                      di<LocalAudioManager>()
-                                          .changeMetadataCommand(
-                                            ChangeMetadataCapsule(
-                                              audio: widget.audio,
-                                              pictures: [
-                                                if (_data?.pictures != null)
-                                                  ..._data!.pictures.map((e) {
-                                                    if (v != null &&
-                                                        e.pictureType != v &&
-                                                        File.fromRawPath(
-                                                              e.bytes,
-                                                            ).path ==
-                                                            File.fromRawPath(
-                                                              picture.bytes,
-                                                            ).path) {
-                                                      return Picture(
+                                            )
+                                            .toList(),
+                                        onChanged: (v) => manager.updateDraft(
+                                          ChangeMetadataCapsule(
+                                            pictures: draft.pictures!.map((e) {
+                                              if (v != null &&
+                                                  e.pictureType != v &&
+                                                  File.fromRawPath(
                                                         e.bytes,
-                                                        e.mimetype,
-                                                        v,
-                                                      );
-                                                    } else {
-                                                      return e;
-                                                    }
-                                                  }),
-                                              ],
-                                            ),
-                                          );
-                                      _readMetadata();
-                                      setState(() {});
-                                    },
+                                                      ).path ==
+                                                      File.fromRawPath(
+                                                        picture.bytes,
+                                                      ).path) {
+                                                return Picture(
+                                                  e.bytes,
+                                                  e.mimetype,
+                                                  v,
+                                                );
+                                              } else {
+                                                return e;
+                                              }
+                                            }).toList(),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
-                          ),
-                        )
-                        .toList(),
+                            )
+                            .toList() ??
+                        [],
                   ),
             Positioned(
               top: kMediumSpace,
@@ -201,23 +149,19 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
                 onPressed: () async {
                   final paths = await di<ExternalPathService>()
                       .getPathsOfFiles();
-                  di<LocalAudioManager>().changeMetadataCommand(
+                  manager.updateDraft(
                     ChangeMetadataCapsule(
-                      audio: widget.audio,
-                      pictures: [
-                        if (_data?.pictures != null) ..._data!.pictures,
-                        ...paths.map(
-                          (e) => Picture(
-                            File(e).readAsBytesSync(),
-                            lookupMimeType(e) ?? '',
-                            PictureType.coverFront,
-                          ),
-                        ),
-                      ],
+                      pictures: paths
+                          .map(
+                            (e) => Picture(
+                              File(e).readAsBytesSync(),
+                              lookupMimeType(e) ?? '',
+                              PictureType.coverFront,
+                            ),
+                          )
+                          .toList(),
                     ),
                   );
-                  await _readMetadata();
-                  setState(() {});
                 },
               ),
             ),
@@ -229,22 +173,19 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
                 onPressed: () async {
                   final paths = await di<ExternalPathService>()
                       .getPathsOfFiles();
-                  di<LocalAudioManager>().changeMetadataCommand(
+                  manager.updateDraft(
                     ChangeMetadataCapsule(
-                      audio: widget.audio,
                       pictures: [
                         ...paths.map(
                           (e) => Picture(
                             File(e).readAsBytesSync(),
                             lookupMimeType(e) ?? '',
-                            PictureType.illustration,
+                            PictureType.coverFront,
                           ),
                         ),
                       ],
                     ),
                   );
-                  await _readMetadata();
-                  setState(() {});
                 },
               ),
             ),
@@ -254,6 +195,3 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
     );
   }
 }
-
-AudioMetadata _readMetadataInIsolate(String path) =>
-    readMetadata(File(path), getImage: true);

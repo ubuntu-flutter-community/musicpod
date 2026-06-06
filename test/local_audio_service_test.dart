@@ -10,6 +10,7 @@ import 'package:musicpod/common/data/audio_type.dart';
 import 'package:musicpod/common/persistence/database.dart';
 import 'package:musicpod/local_audio/local_cover_service.dart';
 import 'package:musicpod/local_audio/local_audio_service.dart';
+import 'package:musicpod/local_audio/persistence/local_audio_dao.dart';
 import 'package:musicpod/settings/settings_service.dart';
 
 import 'local_audio_service_test.mocks.dart';
@@ -41,10 +42,11 @@ Future<void> main() async {
     when(mockSettingsService.getBool(any)).thenReturn(null);
     when(mockSettingsService.setValue(any, any)).thenAnswer((_) async => true);
 
+    final db = Database(NativeDatabase.memory());
     service = LocalAudioService(
       localCoverService: localCoverService,
       settingsService: mockSettingsService,
-      database: Database(NativeDatabase.memory()),
+      localAudioDao: LocalAudioDao(database: db),
     );
     await service?.init(newDirectory: Directory.current.path);
   });

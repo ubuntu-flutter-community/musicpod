@@ -8,7 +8,6 @@ import '../app/page_ids.dart';
 import '../common/data/audio.dart';
 import '../common/no_error_filter.dart';
 import '../common/view/audio_filter.dart';
-import 'data/change_metadata_capsule.dart';
 import 'local_audio_service.dart';
 import 'playlist_action.dart';
 
@@ -22,12 +21,6 @@ class LocalAudioManager {
   }
 
   final LocalAudioService _localAudioService;
-
-  late final Command<ChangeMetadataCapsule, Audio?> changeMetadataCommand =
-      Command.createAsync(
-        (param) => _localAudioService.changeMetadata(param),
-        initialValue: null,
-      );
 
   final allowReorder = SafeValueNotifier<bool>(false);
   void setAllowReorder(bool value) {
@@ -165,7 +158,7 @@ class LocalAudioManager {
         }
 
         if (_localAudioService.likedAudios.isEmpty) {
-          await _localAudioService.loadLikedAudiosFromDb();
+          await _localAudioService.loadLikedAudios();
         }
 
         return _localAudioService.likedAudios;
@@ -189,7 +182,7 @@ class LocalAudioManager {
   late final Command<void, List<String>> allPlaylistsCommand =
       Command.createAsyncNoParam(() async {
         if (_localAudioService.playlistIDs.isEmpty) {
-          await _localAudioService.loadPlaylistsFromDb();
+          await _localAudioService.loadPlaylists();
         }
         return _localAudioService.playlistIDs;
       }, initialValue: _localAudioService.playlistIDs);
@@ -228,14 +221,13 @@ class LocalAudioManager {
         }
 
         if (_localAudioService.pinnedAlbums.isEmpty) {
-          await _localAudioService.loadPinnedAlbumsFromDb();
+          await _localAudioService.loadPinnedAlbums();
         }
 
         return _localAudioService.pinnedAlbums;
       }, initialValue: _localAudioService.pinnedAlbums);
 
   void _reset() {
-    changeMetadataCommand.value = null;
     likedAudiosCommand.value = [];
     allPlaylistsCommand.value = [];
     togglePinnedAlbumCommand.value = [];

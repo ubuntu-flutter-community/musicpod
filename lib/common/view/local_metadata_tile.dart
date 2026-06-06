@@ -3,10 +3,9 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
-import '../../extensions/command_x.dart';
 import '../../l10n/app_localizations.dart';
+import '../../local_audio/change_local_meta_data_manager.dart';
 import '../../local_audio/data/change_metadata_capsule.dart';
-import '../../local_audio/local_audio_manager.dart';
 import '../data/audio.dart';
 import 'icons.dart';
 import 'ui_constants.dart';
@@ -52,7 +51,6 @@ class LocalMetadataTile extends StatefulWidget with WatchItStatefulWidgetMixin {
 
 class _LocalMetadataTileState extends State<LocalMetadataTile> {
   late TextEditingController _controller;
-  bool pendingLocalChange = false;
 
   @override
   void initState() {
@@ -80,42 +78,52 @@ class _LocalMetadataTileState extends State<LocalMetadataTile> {
   };
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    registerHandler(
-      select: (LocalAudioManager m) => m.changeMetadataCommand,
-      handler: (context, newValue, cancel) {
-        if (newValue != null &&
-            newValue.path == widget.audio.path &&
-            pendingLocalChange) {
-          _controller.text = _initText(newValue);
-          pendingLocalChange = false;
-          setState(() {});
-        }
-      },
-    );
+    final manager = di<ChangeLocalMetaDataManager>(param1: widget.audio);
 
-    final localAudioMetadataChanging = watchValue(
-      (LocalAudioManager m) => m.changeMetadataCommand.isRunning,
-    );
+    final changedAudio = watch(manager.command).value;
+
+    final audioChangePersisted =
+        changedAudio != null &&
+        switch (widget.type) {
+          LocalMetadataTileType.title =>
+            changedAudio.title != widget.audio.title &&
+                widget.audio.title != null,
+          LocalMetadataTileType.album =>
+            changedAudio.album != widget.audio.album &&
+                widget.audio.album != null,
+          LocalMetadataTileType.artist =>
+            changedAudio.artist != widget.audio.artist &&
+                widget.audio.artist != null,
+          LocalMetadataTileType.trackNumber =>
+            changedAudio.trackNumber != widget.audio.trackNumber &&
+                widget.audio.trackNumber != null,
+          LocalMetadataTileType.diskNumber =>
+            changedAudio.discNumber != widget.audio.discNumber &&
+                widget.audio.discNumber != null,
+          LocalMetadataTileType.totalDisks =>
+            changedAudio.discTotal != widget.audio.discTotal &&
+                widget.audio.discTotal != null,
+          LocalMetadataTileType.genre =>
+            changedAudio.genre != widget.audio.genre &&
+                widget.audio.genre != null,
+        };
+
+    onDispose(() {
+      _controller.dispose();
+    });
 
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: kLargestSpace),
       subtitle: TextField(
-        enabled: !localAudioMetadataChanging,
         controller: _controller,
-        onSubmitted: onSubmitted,
-        onChanged: (_) => setState(() => pendingLocalChange = true),
+        onSubmitted: (text) => updateDraft(text, manager),
+        onChanged: (text) => updateDraft(text, manager),
         decoration: InputDecoration(
           suffixIcon: ListenableBuilder(
             listenable: _controller,
             builder: (context, child) {
-              final wasChanged =
+              final thisFieldWasChanged =
                   _controller.text.isNotEmpty &&
                   _controller.text !=
                       switch (widget.type) {
@@ -139,16 +147,15 @@ class _LocalMetadataTileState extends State<LocalMetadataTile> {
                     ),
                   ),
                 ),
-                icon: pendingLocalChange
+                icon: thisFieldWasChanged && !audioChangePersisted
                     ? Icon(Iconz.download, color: context.colorScheme.primary)
                     : YaruAnimatedVectorIcon(
-                        key: ValueKey(pendingLocalChange),
                         YaruAnimatedIcons.ok_filled,
-                        color: wasChanged
+                        color: audioChangePersisted
                             ? context.colorScheme.success
                             : context.colorScheme.onSurface,
                       ),
-                onPressed: () => onSubmitted(_controller.text),
+                onPressed: manager.command.run,
               );
             },
           ),
@@ -158,36 +165,28 @@ class _LocalMetadataTileState extends State<LocalMetadataTile> {
     );
   }
 
-  void onSubmitted(String text) {
-    final manager = di<LocalAudioManager>();
-
-    if (widget.audio.albumDbId != null) {
-      manager
-          .findAlbumCommand(widget.audio.albumDbId!, force: true)
-          .runRestricted();
-    }
-
+  void updateDraft(String text, ChangeLocalMetaDataManager manager) {
     return switch (widget.type) {
-      LocalMetadataTileType.title => manager.changeMetadataCommand.run(
-        ChangeMetadataCapsule(audio: widget.audio, title: text),
+      LocalMetadataTileType.title => manager.updateDraft(
+        ChangeMetadataCapsule(title: text),
       ),
-      LocalMetadataTileType.album => manager.changeMetadataCommand.run(
-        ChangeMetadataCapsule(audio: widget.audio, album: text),
+      LocalMetadataTileType.album => manager.updateDraft(
+        ChangeMetadataCapsule(album: text),
       ),
-      LocalMetadataTileType.artist => manager.changeMetadataCommand.run(
-        ChangeMetadataCapsule(audio: widget.audio, artist: text),
+      LocalMetadataTileType.artist => manager.updateDraft(
+        ChangeMetadataCapsule(artist: text),
       ),
-      LocalMetadataTileType.trackNumber => manager.changeMetadataCommand.run(
-        ChangeMetadataCapsule(audio: widget.audio, trackNumber: text),
+      LocalMetadataTileType.trackNumber => manager.updateDraft(
+        ChangeMetadataCapsule(trackNumber: text),
       ),
-      LocalMetadataTileType.diskNumber => manager.changeMetadataCommand.run(
-        ChangeMetadataCapsule(audio: widget.audio, discNumber: text),
+      LocalMetadataTileType.diskNumber => manager.updateDraft(
+        ChangeMetadataCapsule(discNumber: text),
       ),
-      LocalMetadataTileType.totalDisks => manager.changeMetadataCommand.run(
-        ChangeMetadataCapsule(audio: widget.audio, discTotal: text),
+      LocalMetadataTileType.totalDisks => manager.updateDraft(
+        ChangeMetadataCapsule(discTotal: text),
       ),
-      LocalMetadataTileType.genre => manager.changeMetadataCommand.run(
-        ChangeMetadataCapsule(audio: widget.audio, genre: text),
+      LocalMetadataTileType.genre => manager.updateDraft(
+        ChangeMetadataCapsule(genre: text),
       ),
     };
   }
