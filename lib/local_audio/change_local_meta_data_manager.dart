@@ -27,18 +27,20 @@ class ChangeLocalMetaDataManager {
     null,
   );
   void updateDraft(ChangeMetadataCapsule newDraft) {
-    draft.value = newDraft.copyWith(
-      title: newDraft.title,
-      artist: newDraft.artist,
-      album: newDraft.album,
-      genre: newDraft.genre,
-      discTotal: newDraft.discTotal,
-      discNumber: newDraft.discNumber,
-      trackNumber: newDraft.trackNumber,
-      durationMs: newDraft.durationMs,
-      year: newDraft.year,
-      pictures: newDraft.pictures,
-    );
+    draft.value =
+        draft.value?.copyWith(
+          title: newDraft.title,
+          artist: newDraft.artist,
+          album: newDraft.album,
+          genre: newDraft.genre,
+          discTotal: newDraft.discTotal,
+          discNumber: newDraft.discNumber,
+          trackNumber: newDraft.trackNumber,
+          durationMs: newDraft.durationMs,
+          year: newDraft.year,
+          pictures: newDraft.pictures,
+        ) ??
+        newDraft;
   }
 
   late final Command<void, Audio?> command = Command.createAsyncNoParam(() {
