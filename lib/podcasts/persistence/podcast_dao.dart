@@ -209,10 +209,9 @@ class PodcastDao {
     return rows.map((r) => r.feedUrl).toSet();
   }
 
-  String? getSubscribedPodcastImage(String feedUrl) =>
-      _podcastCache[feedUrl]?.imageUrl;
+  String? getPodcastImage(String feedUrl) => _podcastCache[feedUrl]?.imageUrl;
 
-  void updateSubscribedPodcastImage({
+  void updatePodcastImage({
     required String feedUrl,
     required String imageUrl,
     required String title,
@@ -232,11 +231,9 @@ class PodcastDao {
         });
   }
 
-  String? getSubscribedPodcastName(String feedUrl) =>
-      _podcastCache[feedUrl]?.name;
+  String? getPodcastName(String feedUrl) => _podcastCache[feedUrl]?.name;
 
-  String? getSubscribedPodcastArtist(String feedUrl) =>
-      _podcastCache[feedUrl]?.artist;
+  String? getPodcastArtist(String feedUrl) => _podcastCache[feedUrl]?.artist;
 
   Future<void> addPodcast({
     required String feedUrl,
@@ -358,31 +355,40 @@ class PodcastDao {
     _db.podcastUpdateTable,
   )..where((t) => t.podcastFeedUrl.equals(feedUrl))).go();
 
-  Future<void> deletePodcast(String feedUrl) => _db.transaction(() async {
-    await _db.batch((batch) {
-      batch.deleteWhere(
-        _db.podcastEpisodeTable,
-        (t) => t.podcastFeedUrl.equals(feedUrl),
-      );
-      batch.deleteWhere(
-        _db.podcastUpdateTable,
-        (t) => t.podcastFeedUrl.equals(feedUrl),
-      );
-      batch.deleteWhere(_db.downloadTable, (t) => t.feedUrl.equals(feedUrl));
-      batch.deleteWhere(_db.podcastTable, (t) => t.feedUrl.equals(feedUrl));
+  Future<void> cleanup({required Set<String> deleteMeUrls}) async {
+    await _db.transaction(() async {
+      await _db.batch((batch) {
+        batch.deleteWhere(
+          _db.podcastEpisodeTable,
+          (t) => t.podcastFeedUrl.isIn(deleteMeUrls.toList()),
+        );
+        batch.deleteWhere(
+          _db.podcastUpdateTable,
+          (t) => t.podcastFeedUrl.isIn(deleteMeUrls.toList()),
+        );
+        batch.deleteWhere(
+          _db.downloadTable,
+          (t) => t.feedUrl.isIn(deleteMeUrls.toList()),
+        );
+      });
     });
-    await _db.reclaimDiskSpace();
-  });
 
-  Future<void> deleteAllPodcasts() => _db.transaction(() async {
-    await _db.batch((batch) {
-      batch.deleteAll(_db.podcastEpisodeTable);
-      batch.deleteAll(_db.podcastUpdateTable);
-      batch.deleteAll(_db.downloadTable);
-      batch.deleteAll(_db.podcastTable);
+    if (deleteMeUrls.isNotEmpty) {
+      await _db.reclaimDiskSpace();
+    }
+  }
+
+  Future<void> deleteAllPodcasts() async {
+    await _db.transaction(() async {
+      await _db.batch((batch) {
+        batch.deleteAll(_db.podcastEpisodeTable);
+        batch.deleteAll(_db.podcastUpdateTable);
+        batch.deleteAll(_db.downloadTable);
+        batch.deleteAll(_db.podcastTable);
+      });
     });
     await _db.reclaimDiskSpace();
-  });
+  }
 
   Future<void> updateAudioDuration(Audio audio) async {
     await (_db.update(

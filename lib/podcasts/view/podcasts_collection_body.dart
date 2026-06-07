@@ -1,9 +1,10 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
-import 'package:future_loading_dialog/future_loading_dialog.dart';
 
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
+import '../../app/sidebar_audios_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
@@ -17,10 +18,8 @@ import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/player_model.dart';
 import '../../search/search_manager.dart';
 import '../../settings/view/settings_action.dart';
-import '../data/find_episodes_param.dart';
 import '../data/podcast_update_capsule.dart';
 import '../podcast_manager.dart';
 import 'podcast_collection_control_panel.dart';
@@ -31,6 +30,30 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
+
+    callOnceAfterThisBuild(
+      (context) => di<PodcastManager>().cleanUpAllUnSubbedCommand.run(),
+    );
+
+    registerHandler(
+      select: (PodcastManager m) => m.cleanUpAllUnSubbedCommand.results,
+      handler: (context, results, cancel) {
+        if (results.isRunning) return;
+        if (results.hasError) {
+          context.toast(Text(results.error.toString()));
+        } else if (results.hasData &&
+            results.data != null &&
+            results.data!.isNotEmpty) {
+          final message = results.data!
+              .mapIndexed((index, name) => '${index + 1}. $name')
+              .join('\n');
+          context.toast(
+            Text(context.l10n.cleanedUpEpisodesOfUnsubscribedPodcast(message)),
+            duration: const Duration(seconds: 10),
+          );
+        }
+      },
+    );
 
     final subsResults = watchValue(
       (PodcastManager m) => m.togglePodcastCommand.results,
@@ -179,32 +202,8 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                       feedUrl,
                     ),
                   ),
-                  onPlay: () =>
-                      showFutureLoadingDialog(
-                        barrierDismissible: true,
-                        title: context.l10n.loadingPodcastFeed,
-                        context: context,
-                        future: () => di<PodcastManager>()
-                            .getEpisodesCommand(feedUrl!)
-                            .runAsync(
-                              FindEpisodesParam(
-                                item: null,
-                                feedUrl: feedUrl,
-                                tryFromDbOnly: true,
-                              ),
-                            ),
-                      ).then((res) {
-                        if (res.isValue &&
-                            res.asValue!.value != null &&
-                            res.asValue!.value!.isNotEmpty) {
-                          di<PlayerModel>().startPlaylist(
-                            audios: res.asValue?.value ?? [],
-                            listName: feedUrl!,
-                          );
-                        } else {
-                          context.toast(Text(context.l10n.podcastFeedIsEmpty));
-                        }
-                      }),
+                  onPlay: () => di<SidebarAudiosManager>().playAudiosByIdCommand
+                      .run((pageId: feedUrl!, podcastItem: null)),
                   onTap: () => di<RoutingManager>().push(pageId: feedUrl!),
                 );
               },

@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
-import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:podcast_search/podcast_search.dart';
 
 import '../../app/routing_manager.dart';
+import '../../app/sidebar_audios_manager.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/player_model.dart';
-import '../../podcasts/data/find_episodes_param.dart';
-import '../../podcasts/podcast_manager.dart';
 import '../../podcasts/view/lazy_podcast_page.dart';
 
 class PodcastCard extends StatelessWidget with WatchItMixin {
@@ -34,32 +31,10 @@ class PodcastCard extends StatelessWidget with WatchItMixin {
       ),
       onPlay: feedUrl == null
           ? null
-          : () =>
-                showFutureLoadingDialog(
-                  barrierDismissible: true,
-                  title: context.l10n.loadingPodcastFeed,
-                  context: context,
-                  future: () => di<PodcastManager>()
-                      .getEpisodesCommand(feedUrl)
-                      .runAsync(
-                        FindEpisodesParam(
-                          item: item,
-                          feedUrl: feedUrl,
-                          tryFromDbOnly: true,
-                        ),
-                      ),
-                ).then((res) {
-                  if (res.isValue &&
-                      res.asValue!.value != null &&
-                      res.asValue!.value!.isNotEmpty) {
-                    di<PlayerModel>().startPlaylist(
-                      audios: res.asValue?.value ?? [],
-                      listName: feedUrl,
-                    );
-                  } else {
-                    context.toast(Text(context.l10n.podcastFeedIsEmpty));
-                  }
-                }),
+          : () => di<SidebarAudiosManager>().playAudiosByIdCommand.run((
+              pageId: feedUrl,
+              podcastItem: item,
+            )),
       onTap: () {
         if (feedUrl == null) {
           context.toast(Text(context.l10n.podcastFeedIsEmpty));

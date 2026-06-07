@@ -41,12 +41,14 @@ class Progress extends StatelessWidget with WatchItMixin {
             strokeWidth: strokeWidth,
             value: value,
             color: color,
+            valueColor: valueColor,
             trackColor: backgroundColor,
           )
         : adaptive
         ? CircularProgressIndicator.adaptive(
             strokeWidth: strokeWidth,
             value: value,
+            valueColor: valueColor,
             backgroundColor: value == null
                 ? null
                 : (backgroundColor ??
@@ -55,6 +57,7 @@ class Progress extends StatelessWidget with WatchItMixin {
         : CircularProgressIndicator(
             strokeWidth: strokeWidth,
             value: value,
+            valueColor: valueColor,
             backgroundColor: value == null
                 ? null
                 : (backgroundColor ??

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:podcast_search/podcast_search.dart';
 
+import '../../common/view/progress.dart';
 import '../../common/view/ui_constants.dart';
 import '../../custom_content/view/backup_dialog.dart';
 import '../../extensions/build_context_x.dart';
@@ -17,6 +18,7 @@ import '../../podcasts/podcast_manager.dart';
 import '../../search/search_manager.dart';
 import '../../search/search_timeout_exception.dart';
 import '../app_manager.dart';
+import '../sidebar_audios_manager.dart';
 
 mixin CommonHandlersAndCommandsMixin {
   void setupCommonHandlersAndCommands(BuildContext context) {
@@ -83,6 +85,36 @@ mixin CommonHandlersAndCommandsMixin {
           );
         } else if (newValue.hasData) {
           context.toast(Text(newValue.data!));
+        }
+      },
+    );
+
+    registerHandler(
+      select: (SidebarAudiosManager m) => m.playAudiosByIdCommand.results,
+      handler: (context, results, cancel) {
+        if (results.isRunning) {
+          context.toast(
+            Row(
+              spacing: kMediumSpace,
+              children: [
+                const SizedBox.square(
+                  dimension: 16,
+                  child: Progress(adaptive: false, strokeWidth: 2),
+                ),
+                Text(context.l10n.loadingPleaseWait),
+              ],
+            ),
+            duration: const Duration(seconds: 99),
+          );
+        } else if (results.hasError) {
+          context.toast(Text(results.error.toString()));
+        } else if (results.hasData && results.data != null) {
+          final data = results.data!;
+          context.clearToasts();
+          di<PlayerModel>().startPlaylist(
+            audios: data.audios,
+            listName: data.pageId,
+          );
         }
       },
     );

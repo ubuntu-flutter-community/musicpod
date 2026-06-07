@@ -222,7 +222,7 @@ class PodcastService {
     );
     final Podcast? podcast = await compute(loadPodcast, url);
     if (podcast?.image != null) {
-      addSubscribedPodcastImage(
+      addPodcastImage(
         feedUrl: url,
         imageUrl: podcast!.image!,
         title: podcast.title ?? '',
@@ -236,6 +236,9 @@ class PodcastService {
               (e) => Audio.fromPodcast(
                 episode: e,
                 podcast: podcast,
+                // TODO: check if we stil need the podcast item artworks
+                // otherwise we could cache podcast genres
+                // and could stop to pass podcast items around like a caveman
                 itemImageUrl: item?.artworkUrl600 ?? item?.artworkUrl,
                 genre: item?.primaryGenreName,
               ),
@@ -355,23 +358,23 @@ class PodcastService {
   }
 
   String? getSubscribedPodcastImage(String feedUrl) =>
-      _dao.getSubscribedPodcastImage(feedUrl);
+      _dao.getPodcastImage(feedUrl);
 
-  void addSubscribedPodcastImage({
+  void addPodcastImage({
     required String feedUrl,
     required String imageUrl,
     required String title,
-  }) => _dao.updateSubscribedPodcastImage(
+  }) => _dao.updatePodcastImage(
     feedUrl: feedUrl,
     imageUrl: imageUrl,
     title: title,
   );
 
   String? getSubscribedPodcastName(String feedUrl) =>
-      _dao.getSubscribedPodcastName(feedUrl);
+      _dao.getPodcastName(feedUrl);
 
   String? getSubscribedPodcastArtist(String feedUrl) =>
-      _dao.getSubscribedPodcastArtist(feedUrl);
+      _dao.getPodcastArtist(feedUrl);
 
   Future<void> addPodcast({
     required String feedUrl,
@@ -458,10 +461,16 @@ class PodcastService {
   }
 
   Future<void> removePodcast(String feedUrl) async {
-    if (!podcastFeedUrls.contains(feedUrl)) return;
     printMessageInDebugMode('Cleaning up unsubscribed podcast: $feedUrl');
-    await _dao.deletePodcast(feedUrl);
-    _podcasts.remove(feedUrl);
+    await _dao.cleanup(deleteMeUrls: {feedUrl});
+
+    if (podcastFeedUrls.contains(feedUrl)) {
+      _podcasts.remove(feedUrl);
+    }
+  }
+
+  Future<void> cleanPodcasts(List<String> feedUrls) async {
+    await _dao.cleanup(deleteMeUrls: feedUrls.toSet());
   }
 
   Future<void> updateAudioDuration(Audio audio) =>

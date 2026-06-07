@@ -67,10 +67,14 @@ class DesktopMusicPodApp extends StatelessWidget with WatchItMixin {
       themeMode: ThemeMode.values[themeIndex],
       highContrastTheme: highContrastTheme,
       highContrastDarkTheme: highContrastDarkTheme,
-      theme: theTheme?.copyWith(textTheme: textThemeWithEmojis(theTheme)),
-      darkTheme: theDarkTheme?.copyWith(
-        textTheme: textThemeWithEmojis(theDarkTheme),
-      ),
+      // TODO: pin down why we need to apply the emoji font on Linux, and if we can do it in a cleaner way
+      // because this causes heavy lags if used on Windows and MacOS
+      theme: isLinux
+          ? theTheme?.copyWith(textTheme: textThemeWithEmojis(theTheme))
+          : theTheme,
+      darkTheme: isLinux
+          ? theDarkTheme?.copyWith(textTheme: textThemeWithEmojis(theDarkTheme))
+          : theDarkTheme,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: supportedLocales,
       onGenerateTitle: (context) => AppConfig.appTitle,

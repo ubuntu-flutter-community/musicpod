@@ -167,7 +167,7 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
                   onPressed: isRunning
                       ? null
                       : () => di<SidebarAudiosManager>().playAudiosByIdCommand
-                            .run(widget.pageId),
+                            .run((pageId: widget.pageId, podcastItem: null)),
                   icon: busy
                       ? const SizedBox(
                           width: 15,
