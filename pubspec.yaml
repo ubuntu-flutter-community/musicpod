@@ -124,6 +124,13 @@ flutter:
     - assets/images/tray_icon.png
     - assets/icon.png
     - CHANGELOG.md
+    - assets/fonts/NotoColorEmoji-Regular.ttf
+
+  fonts:
+    - family: NotoColorEmoji
+      fonts:
+        - asset: assets/fonts/NotoColorEmoji-Regular.ttf
+          style: normal
 
 dependency_overrides:
   media_kit_libs_android_video:

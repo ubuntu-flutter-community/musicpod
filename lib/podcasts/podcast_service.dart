@@ -306,7 +306,7 @@ class PodcastService {
     required String url,
     required String feedUrl,
   }) async {
-    await _deleteDownloadInFileSystem(url);
+    _deleteDownloadInFileSystem(url);
 
     if (_downloadUrlsToFilePaths.containsKey(url)) {
       await _dao.deleteDownload([url]);
@@ -315,12 +315,12 @@ class PodcastService {
     }
   }
 
-  Future<void> _deleteDownloadInFileSystem(String url) async {
+  void _deleteDownloadInFileSystem(String url) async {
     final path = _downloadUrlsToFilePaths[url];
     if (path != null) {
       final file = File(path);
-      if (await file.exists()) {
-        await file.delete();
+      if (file.existsSync()) {
+        file.deleteSync();
       }
     }
   }
@@ -329,7 +329,7 @@ class PodcastService {
     final successFullDeletes = <String>{};
     for (var download in _downloadUrlsToFilePaths.entries) {
       try {
-        await _deleteDownloadInFileSystem(download.key);
+        _deleteDownloadInFileSystem(download.key);
         successFullDeletes.add(download.key);
       } on Exception catch (e, st) {
         printMessageInDebugMode(

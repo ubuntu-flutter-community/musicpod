@@ -34,7 +34,7 @@ ThemeData? yaruDarkWithTweaks(ThemeData? darkTheme) {
   );
 }
 
-const fallbackFonts = ['Noto Color Emoji', 'NotoEmoji'];
+const fallbackFonts = ['NotoColorEmoji'];
 
 ThemeData? yaruLightWithTweaks(ThemeData? theme) {
   return theme?.copyWith(
