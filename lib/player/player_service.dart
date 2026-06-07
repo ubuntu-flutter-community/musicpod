@@ -303,21 +303,21 @@ class PlayerService {
       if (newAudio != null) {
         await _setAudio(newAudio);
       }
-      if (audio == null) return;
+      if (_audio == null) return;
 
       if (_audio!.url != null && _audio!.isPodcast) {
         _audio = audio?.copyWith(path: _podcastService.getDownloadPath(_audio));
       }
 
-      final Media? media = audio!.path != null
-          ? Media('file://${audio!.path!}')
-          : (audio!.url != null)
-          ? Media(audio!.url!)
+      final Media? media = _audio!.path != null
+          ? Media('file://${_audio!.path!}')
+          : (_audio!.url != null)
+          ? Media(_audio!.url!)
           : null;
 
       if (media == null)
         throw Exception(
-          'No valid media source found for audio: ${audio!.title}',
+          'No valid media source found for audio: ${_audio!.title}',
         );
 
       await player
@@ -339,12 +339,14 @@ class PlayerService {
       }
       setRemoteImageUrl(_audio?.imageUrl ?? _audio?.albumArtUrl);
 
-      await setMediaControlsMetaData(audio: audio!);
+      if (_audio != null) {
+        await setMediaControlsMetaData(audio: _audio!);
+      }
       await _exposeService.exposeTitleOnline(
-        title: audio?.title ?? '',
-        artist: audio?.artist ?? audio?.copyright ?? audio?.language ?? '',
-        additionalInfo: audio?.album ?? audio?.podcastTitle ?? '',
-        imageUrl: audio?.imageUrl ?? audio?.albumArtUrl,
+        title: _audio?.title ?? '',
+        artist: _audio?.artist ?? _audio?.copyright ?? _audio?.language ?? '',
+        additionalInfo: _audio?.album ?? _audio?.podcastTitle ?? '',
+        imageUrl: _audio?.imageUrl ?? _audio?.albumArtUrl,
       );
       _firstPlay = false;
     } on Exception catch (e) {

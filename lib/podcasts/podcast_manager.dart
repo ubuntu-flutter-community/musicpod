@@ -5,7 +5,6 @@ import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
-import '../common/logging.dart';
 import 'data/find_episodes_param.dart';
 import 'data/podcast_episode_filter.dart';
 import 'data/podcast_toggle_capsule.dart';
@@ -112,38 +111,23 @@ class PodcastManager {
         ),
       );
 
-  late final Command<void, Set<String>?>
-  cleanUpAllUnSubbedCommand = Command.createAsyncNoParam(() async {
-    final unsubbedFeedUrls = _episodesCommands.keys
-        .where((feedUrl) => !_podcastService.podcastFeedUrls.contains(feedUrl))
-        .toSet();
+  late final Command<void, Set<String>?> deleteOrphanEpisodesCommand =
+      Command.createAsyncNoParam(() async {
+        final unsubbedFeedUrls = await _podcastService.deleteOrphanEpisodes();
+        _episodesCommands.removeWhere(
+          (key, _) => unsubbedFeedUrls.contains(key),
+        );
 
-    if (unsubbedFeedUrls.isEmpty) {
-      return null;
-    }
-
-    printMessageInDebugMode(
-      'Trying to clean unsubbed feed urls: $unsubbedFeedUrls ...',
-    );
-
-    final toCleanUpNames = <String>{};
-    for (final feedUrl in unsubbedFeedUrls) {
-      toCleanUpNames.add(
-        _episodesCommands[feedUrl]?.value?.firstOrNull?.podcastTitle ?? feedUrl,
-      );
-    }
-
-    await _podcastService.cleanPodcasts(toCleanUpNames.toList());
-    _episodesCommands.removeWhere((key, _) => unsubbedFeedUrls.contains(key));
-
-    return toCleanUpNames;
-  }, initialValue: null);
+        return unsubbedFeedUrls;
+      }, initialValue: null);
 
   late final Command<({String feedUrl, String name}), String?> cleanUpCommand =
       Command.createAsync((param) async {
         if (_podcastService.isPodcastSubscribed(param.feedUrl)) return null;
 
-        await _podcastService.cleanPodcasts([param.feedUrl]);
+        await _podcastService.deletePodcastsWithUpdatesAndEpisodes([
+          param.feedUrl,
+        ]);
         _episodesCommands.remove(param.feedUrl);
         return param.name;
       }, initialValue: null);
@@ -167,7 +151,9 @@ class PodcastManager {
 
         if (param?.feedUrl != null) {
           if (_podcastService.podcastFeedUrls.contains(param!.feedUrl)) {
-            await _podcastService.removePodcast(param.feedUrl);
+            await _podcastService.removePodcastsWithUpdatesAndEpisodes(
+              param.feedUrl,
+            );
           } else if (param.name != null && param.artist != null) {
             await _podcastService.addPodcast(
               feedUrl: param.feedUrl,

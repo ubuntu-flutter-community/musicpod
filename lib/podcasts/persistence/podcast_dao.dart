@@ -355,7 +355,52 @@ class PodcastDao {
     _db.podcastUpdateTable,
   )..where((t) => t.podcastFeedUrl.equals(feedUrl))).go();
 
-  Future<void> cleanup({required Set<String> deleteMeUrls}) async {
+  Future<Set<String>> deleteOrphanEpisodes() async {
+    // Create the base query with the join
+    final query = _db.selectOnly(_db.podcastEpisodeTable).join([
+      leftOuterJoin(
+        _db.podcastTable,
+        _db.podcastTable.feedUrl.equalsExp(
+          _db.podcastEpisodeTable.podcastFeedUrl,
+        ),
+      ),
+    ]);
+
+    // Explicitly tell Drift what column to SELECT (Fixes the syntax error)
+    query.addColumns([_db.podcastEpisodeTable.podcastFeedUrl]);
+
+    // Filter for orphaned rows
+    query.where(_db.podcastTable.feedUrl.isNull());
+
+    // Fetch the data
+    final List<TypedResult> rows = await query.get();
+
+    final Set<String> feedUrlsToDelete = rows
+        .map((r) => r.read(_db.podcastEpisodeTable.podcastFeedUrl))
+        .whereType<String>()
+        .toSet();
+
+    // Early exit if nothing to delete
+    if (feedUrlsToDelete.isEmpty) {
+      printMessageInDebugMode('No orphaned episodes found to clean up.');
+      return <String>{};
+    }
+
+    // Delete the orphaned episodes
+    printMessageInDebugMode(
+      'Deleting episodes with feed URLs not in podcast table: $feedUrlsToDelete',
+    );
+
+    await (_db.delete(
+      _db.podcastEpisodeTable,
+    )..where((tbl) => tbl.podcastFeedUrl.isIn(feedUrlsToDelete))).go();
+
+    return feedUrlsToDelete;
+  }
+
+  Future<void> deletePodcastsWithUpdatesAndEpisodes({
+    required Set<String> deleteMeUrls,
+  }) async {
     await _db.transaction(() async {
       await _db.batch((batch) {
         batch.deleteWhere(

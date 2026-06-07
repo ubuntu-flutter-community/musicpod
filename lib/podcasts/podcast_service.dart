@@ -460,18 +460,24 @@ class PodcastService {
     podcastUpdates.remove(feedUrl);
   }
 
-  Future<void> removePodcast(String feedUrl) async {
+  Future<void> removePodcastsWithUpdatesAndEpisodes(String feedUrl) async {
     printMessageInDebugMode('Cleaning up unsubscribed podcast: $feedUrl');
-    await _dao.cleanup(deleteMeUrls: {feedUrl});
+    await _dao.deletePodcastsWithUpdatesAndEpisodes(deleteMeUrls: {feedUrl});
 
     if (podcastFeedUrls.contains(feedUrl)) {
       _podcasts.remove(feedUrl);
     }
   }
 
-  Future<void> cleanPodcasts(List<String> feedUrls) async {
-    await _dao.cleanup(deleteMeUrls: feedUrls.toSet());
+  Future<void> deletePodcastsWithUpdatesAndEpisodes(
+    List<String> feedUrls,
+  ) async {
+    await _dao.deletePodcastsWithUpdatesAndEpisodes(
+      deleteMeUrls: feedUrls.toSet(),
+    );
   }
+
+  Future<Set<String>> deleteOrphanEpisodes() => _dao.deleteOrphanEpisodes();
 
   Future<void> updateAudioDuration(Audio audio) =>
       _dao.updateAudioDuration(audio);

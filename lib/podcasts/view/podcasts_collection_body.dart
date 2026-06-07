@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/page_ids.dart';
@@ -32,15 +33,25 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
     final theme = context.theme;
 
     callOnceAfterThisBuild(
-      (context) => di<PodcastManager>().cleanUpAllUnSubbedCommand.run(),
+      (context) => di<PodcastManager>().deleteOrphanEpisodesCommand.run(),
     );
 
     registerHandler(
-      select: (PodcastManager m) => m.cleanUpAllUnSubbedCommand.results,
+      select: (PodcastManager m) => m.deleteOrphanEpisodesCommand.results,
       handler: (context, results, cancel) {
         if (results.isRunning) return;
         if (results.hasError) {
-          context.toast(Text(results.error.toString()));
+          context.toast(
+            Text(results.error.toString()),
+            duration: const Duration(seconds: 15),
+            showCloseIcon: true,
+            action: SnackBarAction(
+              label: '📋',
+              onPressed: () => Clipboard.setData(
+                ClipboardData(text: results.error.toString()),
+              ),
+            ),
+          );
         } else if (results.hasData &&
             results.data != null &&
             results.data!.isNotEmpty) {
@@ -48,7 +59,11 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
               .mapIndexed((index, name) => '${index + 1}. $name')
               .join('\n');
           context.toast(
-            Text(context.l10n.cleanedUpEpisodesOfUnsubscribedPodcast(message)),
+            Text(
+              context.l10n.cleanedUpEpisodesOfUnsubscribedPodcast(
+                '\n' + message,
+              ),
+            ),
             duration: const Duration(seconds: 10),
           );
         }
