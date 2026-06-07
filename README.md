@@ -84,7 +84,8 @@ I recommend the vscode extension [GitHub Pull Requests](https://marketplace.visu
 
 ### Prerequisites
 
-- for Linux desktop builds: `sudo apt install libmpv-dev mpv`
+- for Linux desktop builds: `sudo apt install libglib2.0-dev libgtk-3-dev curl git unzip xz-utils zip libglu1-mesa libmpv-dev mpv libnotify-dev`
+- for macos, windows and android please check the [official instructions](https://docs.flutter.dev/install/quick) for your target platform!
 - [install flutter](https://docs.flutter.dev/get-started/install)
   - I suggest to install the flutter *sdk* with [FVM](https://fvm.app/) (this does not replace the native dependencies ofc!)
 - required for android builds: [install android-studio](https://developer.android.com/studio)
@@ -177,4 +178,4 @@ Reading the local covers and fetching remote covers for radio data happens insid
 
 ### Persistence
 
-Preferences are stored with [shared_preferences](https://pub.dev/packages/shared_preferences), the rest is stored within [drift](https://pub.dev/packages/drift) in a local sqlite database. 
+Preferences are stored with [shared_preferences](https://pub.dev/packages/shared_preferences), the rest is stored within [drift](https://pub.dev/packages/drift) in a local sqlite database.

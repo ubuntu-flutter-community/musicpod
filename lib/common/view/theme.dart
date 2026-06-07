@@ -12,11 +12,9 @@ import 'ui_constants.dart';
 
 ThemeData? yaruDarkWithTweaks(ThemeData? darkTheme) {
   return darkTheme?.copyWith(
-    textTheme: isLinux
-        ? null
-        : createTextTheme(
-            darkTheme.colorScheme.onSurface,
-          ).useSystemChineseFont(Brightness.dark),
+    textTheme: createTextTheme(
+      darkTheme.colorScheme.onSurface,
+    ).useSystemChineseFont(Brightness.dark),
     actionIconTheme: ActionIconThemeData(
       backButtonIconBuilder: (context) => Icon(Iconz.goBack),
     ),
@@ -38,11 +36,9 @@ const fallbackFonts = ['NotoColorEmoji'];
 
 ThemeData? yaruLightWithTweaks(ThemeData? theme) {
   return theme?.copyWith(
-    textTheme: isLinux
-        ? null
-        : createTextTheme(
-            theme.colorScheme.onSurface,
-          ).useSystemChineseFont(Brightness.light),
+    textTheme: createTextTheme(
+      theme.colorScheme.onSurface,
+    ).useSystemChineseFont(Brightness.light),
     actionIconTheme: ActionIconThemeData(
       backButtonIconBuilder: (context) => Icon(Iconz.goBack),
     ),
