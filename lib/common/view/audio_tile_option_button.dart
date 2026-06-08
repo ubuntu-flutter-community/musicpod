@@ -17,7 +17,7 @@ import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../player/player_model.dart';
 import '../../playlists/view/add_to_playlist_dialog.dart';
-import '../../podcasts/data/find_episodes_param.dart';
+import '../../podcasts/episodes_manager.dart';
 import '../../podcasts/podcast_manager.dart';
 import '../../settings/settings_model.dart';
 import '../data/audio.dart';
@@ -237,15 +237,10 @@ class AudioTileOptionButton extends StatelessWidget {
             if (audios.firstOrNull?.feedUrl != null &&
                 di<PodcastManager>().isPodcastSubscribed(audios.first.feedUrl!))
               PopupMenuItem(
-                onTap: () => di<PodcastManager>()
-                    .getEpisodesCommand(audios.first.feedUrl!)
-                    .runAsync(
-                      FindEpisodesParam(
-                        feedUrl: audios.first.feedUrl!,
-                        item: null,
-                        tryFromDbOnly: false,
-                      ),
-                    ),
+                onTap: () => di<EpisodesManager>(
+                  param1: audios.first.feedUrl!,
+                  param2: null,
+                ).command.runAsync(),
                 child: IgnorePointer(
                   child: ListTile(
                     contentPadding: const EdgeInsets.symmetric(horizontal: 10),

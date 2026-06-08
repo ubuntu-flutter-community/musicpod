@@ -12,17 +12,20 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
 import '../../l10n/app_localizations.dart';
 import '../../search/search_manager.dart';
+import '../podcast_genre_manager.dart';
 import 'podcast_page_image.dart';
 
-class PodcastPageHeader extends StatelessWidget {
+class PodcastPageHeader extends StatelessWidget with WatchItMixin {
   const PodcastPageHeader({
     super.key,
+    this.feedUrl,
     required this.title,
     required this.episodes,
     this.imageUrl,
     required this.showFallbackIcon,
   });
 
+  final String? feedUrl;
   final String title;
   final String? imageUrl;
   final List<Audio>? episodes;
@@ -31,14 +34,19 @@ class PodcastPageHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+
+    final genre = feedUrl == null
+        ? null
+        : watch(
+            di<PodcastGenreManager>(param1: feedUrl).findPodcastGenreCommand,
+          ).value;
+
     return AudioPageHeader(
       image: PodcastPageImage(
         imageUrl: imageUrl,
         showFallbackIcon: showFallbackIcon,
       ),
-      label:
-          (episodes ?? []).firstWhereOrNull((e) => e.genre != null)?.genre ??
-          l10n.podcast,
+      label: genre ?? l10n.podcast,
       subTitle: episodes?.firstOrNull?.copyright?.trim(),
       description: episodes?.firstOrNull?.podcastDescription == null
           ? null
@@ -73,7 +81,7 @@ class PodcastPageHeader extends StatelessWidget {
           e.id.toLowerCase() == text.toLowerCase() ||
           e.name.toLowerCase() == text.toLowerCase(),
     );
-    await di<RoutingManager>().push(pageId: PageIDs.searchPage);
+
     if (genreOrNull != null) {
       di<SearchManager>()
         ..setAudioType(AudioType.podcast)
@@ -82,5 +90,9 @@ class PodcastPageHeader extends StatelessWidget {
     } else {
       _onArtistTap(l10n: l10n, text: text);
     }
+
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    await di<RoutingManager>().push(pageId: PageIDs.searchPage);
   }
 }

@@ -19,6 +19,8 @@ import '../../settings/settings_model.dart';
 import '../data/podcast_episode_filter.dart';
 import '../data/podcast_update_capsule.dart';
 import '../download_manager.dart';
+import '../episodes_manager.dart';
+import '../podcast_clean_manager.dart';
 import '../podcast_manager.dart';
 import 'podcast_page_control_panel.dart';
 import 'podcast_page_header.dart';
@@ -26,22 +28,14 @@ import 'podcast_page_search_field.dart';
 import 'sliver_podcast_page_list.dart';
 
 class PodcastPage extends StatelessWidget with WatchItMixin {
-  const PodcastPage({
-    super.key,
-    this.imageUrl,
-    required this.feedUrl,
-    required this.title,
-  });
+  const PodcastPage({super.key, this.imageUrl, required this.feedUrl});
 
   final String feedUrl;
   final String? imageUrl;
-  final String title;
 
   @override
   Widget build(BuildContext context) {
-    onDispose(() {
-      di<PodcastManager>().cleanUpCommand.run((feedUrl: feedUrl, name: title));
-    });
+    onDispose(di<PodcastCleanManager>().command);
 
     callOnceAfterThisBuild(
       (_) => di<PodcastManager>().manageUpdatesCommand.run(
@@ -97,9 +91,9 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
 
     watchValue((DownloadManager m) => m.downloadCommands);
 
-    final freshEspidodes = watchValue(
-      (PodcastManager m) => m.getEpisodesCommand(feedUrl),
-    );
+    final freshEspidodes = watch(
+      di<EpisodesManager>(param1: feedUrl, param2: null).command,
+    ).value;
 
     final filteredEpisodes = freshEspidodes
         ?.where((a) => a.title != null && a.episodeDescription != null)
@@ -137,6 +131,8 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
       descending: !showPodcastsAscending,
     );
 
+    final title =
+        freshEspidodes?.firstOrNull?.podcastTitle ?? context.l10n.podcast;
     return Scaffold(
       appBar: HeaderBar(
         title: isMobile ? null : Text(title),
@@ -166,6 +162,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
             : () async {},
         child: AdaptiveMultiLayoutBody(
           header: PodcastPageHeader(
+            feedUrl: feedUrl,
             title: title,
             imageUrl: imageUrl,
             episodes: filteredEpisodes,

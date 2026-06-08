@@ -17,6 +17,7 @@ extension ThemeDataX on ThemeData {
   TextStyle? get pageHeaderDescription =>
       textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w500);
 
-  TextStyle? get pageHeaderSubtitleStyle =>
-      textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w500);
+  TextStyle get pageHeaderSubtitleStyle =>
+      textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w500) ??
+      const TextStyle(fontSize: 14, fontWeight: FontWeight.w500);
 }

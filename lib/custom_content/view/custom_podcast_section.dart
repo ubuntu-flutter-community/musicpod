@@ -4,8 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../app/routing_manager.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../podcasts/data/find_episodes_param.dart';
-import '../../podcasts/podcast_manager.dart';
+import '../../podcasts/episodes_manager.dart';
 import '../../podcasts/view/lazy_podcast_page.dart';
 
 class CustomPodcastSection extends StatefulWidget {
@@ -56,29 +55,21 @@ class _CustomPodcastSectionState extends State<CustomPodcastSection> {
                           !_urlController.text.startsWith('http')
                       ? null
                       : () {
-                          di<PodcastManager>()
-                              .getEpisodesCommand(_urlController.text)
-                              .runAsync(
-                                FindEpisodesParam(
-                                  item: null,
+                          di<EpisodesManager>(
+                            param1: _urlController.text,
+                            param2: null,
+                          ).command.runAsync().then((v) {
+                            if (v?.isEmpty ?? true && context.mounted) {
+                              context.toast(Text(context.l10n.noPodcastFound));
+                            } else {
+                              di<RoutingManager>().push(
+                                pageId: _urlController.text,
+                                builder: (context) => LazyPodcastPage(
                                   feedUrl: _urlController.text,
-                                  tryFromDbOnly: false,
                                 ),
-                              )
-                              .then((v) {
-                                if (v?.isEmpty ?? true && context.mounted) {
-                                  context.toast(
-                                    Text(context.l10n.noPodcastFound),
-                                  );
-                                } else {
-                                  di<RoutingManager>().push(
-                                    pageId: _urlController.text,
-                                    builder: (context) => LazyPodcastPage(
-                                      feedUrl: _urlController.text,
-                                    ),
-                                  );
-                                }
-                              });
+                              );
+                            }
+                          });
                         },
                   child: Text(context.l10n.search),
                 ),

@@ -23,6 +23,8 @@ part 'database.g.dart';
     PodcastTable,
     PodcastUpdateTable,
     PodcastEpisodeTable,
+    PodcastGenreTable,
+    PodcastGenreRelationTable,
     DownloadedPodcastEpisodeTable,
     DownloadTable,
     PlayerStateTable,

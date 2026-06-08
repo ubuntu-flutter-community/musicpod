@@ -14,11 +14,8 @@ class PodcastTable extends Table {
 }
 
 class PodcastGenreTable extends Table {
-  late final id = text()();
+  late final id = integer().autoIncrement()();
   late final name = text()();
-
-  @override
-  Set<Column<Object>> get primaryKey => {id};
 }
 
 class PodcastGenreRelationTable extends Table {

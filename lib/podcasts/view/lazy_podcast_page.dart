@@ -1,69 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
-import 'package:podcast_search/podcast_search.dart';
 
 import '../../common/view/progress.dart';
-import '../../extensions/build_context_x.dart';
 import '../../extensions/command_x.dart';
-import '../data/find_episodes_param.dart';
-import '../podcast_manager.dart';
+import '../episodes_manager.dart';
 import 'lazy_podcast_loading_page.dart';
 import 'podcast_error_page.dart';
 import 'podcast_page.dart';
 
 class LazyPodcastPage extends StatelessWidget with WatchItMixin {
-  const LazyPodcastPage({super.key, this.podcastItem, required this.feedUrl});
+  const LazyPodcastPage({super.key, required this.feedUrl});
 
   final String feedUrl;
-  final Item? podcastItem;
 
   @override
   Widget build(BuildContext context) {
-    callOnceAfterThisBuild((_) {
-      di<PodcastManager>()
-          .getEpisodesCommand(feedUrl)
-          .runRestricted(
-            param: FindEpisodesParam(
-              feedUrl: feedUrl,
-              item: podcastItem,
-              tryFromDbOnly: true,
-            ),
-          );
-    });
+    final episodesManager = di<EpisodesManager>(param1: feedUrl, param2: null);
+    callOnceAfterThisBuild((_) => episodesManager.command.runRestricted());
 
-    return watchValue(
-      (PodcastManager m) => m.getEpisodesCommand(feedUrl).results,
-    ).toWidget(
-      whileRunning: (lastResult, param) => LazyPodcastLoadingPage(
-        title: _getTitle(feedUrl, context),
-        imageUrl: _itemImageUrl,
-        child: const Center(child: Progress()),
-      ),
-      onError: (error, lastResult, param) => PodcastErrorPage(
-        error: error,
-        imageUrl: _itemImageUrl,
-        title: _getTitle(feedUrl, context),
-        feedUrl: feedUrl,
-        podcastItem: podcastItem,
-      ),
-      onData: (episodes, param) => PodcastPage(
-        imageUrl:
-            _itemImageUrl ??
-            episodes?.firstOrNull?.albumArtUrl ??
-            episodes?.firstOrNull?.imageUrl,
-        feedUrl: feedUrl,
-        title: _getTitle(feedUrl, context),
-      ),
+    final results = watch(episodesManager.command.results).value;
+    final error = results.error;
+    final isRunning = results.isRunning;
+
+    if (isRunning) {
+      return const LazyPodcastLoadingPage(child: Center(child: Progress()));
+    }
+
+    if (error != null) {
+      return PodcastErrorPage(error: error, feedUrl: feedUrl);
+    }
+
+    final episodes = results.data;
+
+    return PodcastPage(
+      imageUrl:
+          episodes?.firstOrNull?.albumArtUrl ?? episodes?.firstOrNull?.imageUrl,
+      feedUrl: feedUrl,
     );
-  }
-
-  String? get _itemImageUrl =>
-      podcastItem?.artworkUrl600 ?? podcastItem?.artworkUrl;
-
-  String _getTitle(String feedUrl, BuildContext context) {
-    return di<PodcastManager>().getSubscribedPodcastName(feedUrl) ??
-        podcastItem?.collectionName ??
-        podcastItem?.trackName ??
-        context.l10n.podcast;
   }
 }

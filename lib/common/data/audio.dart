@@ -513,17 +513,14 @@ class Audio {
   factory Audio.fromPodcast({
     required Episode episode,
     required Podcast? podcast,
-    required String? itemImageUrl,
-    required String? genre,
   }) {
     return Audio(
       url: episode.contentUrl,
       audioType: AudioType.podcast,
       imageUrl: episode.imageUrl,
-      albumArtUrl: itemImageUrl ?? podcast?.image,
+      albumArtUrl: podcast?.image,
       title: episode.title,
       durationMs: episode.duration?.inMilliseconds.toDouble(),
-      genre: genre,
       feedUrl: podcast?.url,
       podcastTitle: podcast?.title,
       copyright: podcast?.copyright,

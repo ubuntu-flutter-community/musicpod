@@ -213,7 +213,7 @@ class CustomContentModel extends SafeChangeNotifier {
     final category = OpmlOutlineBuilder();
 
     for (var podcast in _podcastService.podcasts) {
-      final name = _podcastService.getSubscribedPodcastName(podcast);
+      final name = _podcastService.getPodcastName(podcast);
       final artist = _podcastService.getSubscribedPodcastArtist(podcast);
       final builder = OpmlOutlineBuilder().type('rss').xmlUrl(podcast);
       if (name != null) {

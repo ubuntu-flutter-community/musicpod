@@ -164,15 +164,15 @@ class MockPodcastService extends _i1.Mock implements _i3.PodcastService {
 
   @override
   _i5.Future<List<_i7.Audio>> findEpisodes({
-    _i2.Item? item,
-    String? feedUrl,
+    required String? feedUrl,
     required bool? tryFromDbOnly,
+    String? genre,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#findEpisodes, [], {
-              #item: item,
               #feedUrl: feedUrl,
               #tryFromDbOnly: tryFromDbOnly,
+              #genre: genre,
             }),
             returnValue: _i5.Future<List<_i7.Audio>>.value(<_i7.Audio>[]),
           )
@@ -253,12 +253,12 @@ class MockPodcastService extends _i1.Mock implements _i3.PodcastService {
           as String?);
 
   @override
-  void addSubscribedPodcastImage({
+  void addPodcastImage({
     required String? feedUrl,
     required String? imageUrl,
     required String? title,
   }) => super.noSuchMethod(
-    Invocation.method(#addSubscribedPodcastImage, [], {
+    Invocation.method(#addPodcastImage, [], {
       #feedUrl: feedUrl,
       #imageUrl: imageUrl,
       #title: title,
@@ -267,10 +267,8 @@ class MockPodcastService extends _i1.Mock implements _i3.PodcastService {
   );
 
   @override
-  String? getSubscribedPodcastName(String? feedUrl) =>
-      (super.noSuchMethod(
-            Invocation.method(#getSubscribedPodcastName, [feedUrl]),
-          )
+  String? getPodcastName(String? feedUrl) =>
+      (super.noSuchMethod(Invocation.method(#getPodcastName, [feedUrl]))
           as String?);
 
   @override
@@ -373,13 +371,21 @@ class MockPodcastService extends _i1.Mock implements _i3.PodcastService {
           as _i5.Future<void>);
 
   @override
-  _i5.Future<void> removePodcast(String? feedUrl) =>
+  _i5.Future<void> removePodcastsWithUpdatesAndEpisodes(String? feedUrl) =>
       (super.noSuchMethod(
-            Invocation.method(#removePodcast, [feedUrl]),
+            Invocation.method(#removePodcastsWithUpdatesAndEpisodes, [feedUrl]),
             returnValue: _i5.Future<void>.value(),
             returnValueForMissingStub: _i5.Future<void>.value(),
           )
           as _i5.Future<void>);
+
+  @override
+  _i5.Future<Set<String>> deleteOrphanEpisodes() =>
+      (super.noSuchMethod(
+            Invocation.method(#deleteOrphanEpisodes, []),
+            returnValue: _i5.Future<Set<String>>.value(<String>{}),
+          )
+          as _i5.Future<Set<String>>);
 
   @override
   _i5.Future<void> updateAudioDuration(_i7.Audio? audio) =>
@@ -394,6 +400,29 @@ class MockPodcastService extends _i1.Mock implements _i3.PodcastService {
   _i5.Future<void> wipeAndBuildPodcastLibrary() =>
       (super.noSuchMethod(
             Invocation.method(#wipeAndBuildPodcastLibrary, []),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
+  _i5.Future<String?> findPodcastGenre(String? feedUrl) =>
+      (super.noSuchMethod(
+            Invocation.method(#findPodcastGenre, [feedUrl]),
+            returnValue: _i5.Future<String?>.value(),
+          )
+          as _i5.Future<String?>);
+
+  @override
+  _i5.Future<void> addPodcastGenre({
+    required String? feedUrl,
+    required String? genreName,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#addPodcastGenre, [], {
+              #feedUrl: feedUrl,
+              #genreName: genreName,
+            }),
             returnValue: _i5.Future<void>.value(),
             returnValueForMissingStub: _i5.Future<void>.value(),
           )

@@ -1,14 +1,12 @@
-import 'package:podcast_search/podcast_search.dart';
-
 class FindEpisodesParam {
   final String feedUrl;
-  final Item? item;
   final bool tryFromDbOnly;
+  final String? genre;
 
   FindEpisodesParam({
     required this.feedUrl,
-    required this.item,
     required this.tryFromDbOnly,
+    this.genre,
   });
 
   @override
@@ -17,9 +15,9 @@ class FindEpisodesParam {
       other is FindEpisodesParam &&
           runtimeType == other.runtimeType &&
           feedUrl == other.feedUrl &&
-          item == other.item &&
+          genre == other.genre &&
           tryFromDbOnly == other.tryFromDbOnly;
 
   @override
-  int get hashCode => Object.hash(feedUrl, item, tryFromDbOnly);
+  int get hashCode => Object.hash(feedUrl, tryFromDbOnly, genre);
 }

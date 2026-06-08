@@ -70,7 +70,7 @@ class PlayerService {
       setIsPlaying(value);
     });
 
-    player.stream.error.listen((event) {
+    _errorSub = player.stream.error.listen((event) {
       _messageController.addError(event);
     });
 

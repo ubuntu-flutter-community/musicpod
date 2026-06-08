@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:podcast_search/podcast_search.dart';
@@ -9,6 +10,7 @@ import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
+import '../../podcasts/podcast_genre_manager.dart';
 import '../../podcasts/view/lazy_podcast_page.dart';
 
 class PodcastCard extends StatelessWidget with WatchItMixin {
@@ -33,16 +35,22 @@ class PodcastCard extends StatelessWidget with WatchItMixin {
           ? null
           : () => di<SidebarAudiosManager>().playAudiosByIdCommand.run((
               pageId: feedUrl,
-              podcastItem: item,
+              genre: item.primaryGenreName,
             )),
       onTap: () {
         if (feedUrl == null) {
           context.toast(Text(context.l10n.podcastFeedIsEmpty));
+
           return;
+        } else {
+          if ((item.primaryGenreName ?? item.genre?.firstOrNull) != null) {
+            di<PodcastGenreManager>(
+              param1: feedUrl,
+            ).updatePodcastGenreCommand.run((genre: item.primaryGenreName!));
+          }
         }
         di<RoutingManager>().push(
-          builder: (context) =>
-              LazyPodcastPage(podcastItem: item, feedUrl: feedUrl),
+          builder: (context) => LazyPodcastPage(feedUrl: feedUrl),
           pageId: feedUrl,
         );
       },

@@ -5,7 +5,7 @@ import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
 import '../../player/player_model.dart';
-import '../podcast_manager.dart';
+import '../episodes_manager.dart';
 import 'podcast_icon_button_progress.dart';
 
 class PodcastMarkDoneButton extends StatelessWidget with WatchItMixin {
@@ -15,11 +15,11 @@ class PodcastMarkDoneButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final podcast = watchValue(
-      (PodcastManager m) => m.getEpisodesCommand(feedUrl),
-    );
+    final podcast = watch(
+      di<EpisodesManager>(param1: feedUrl, param2: null).command,
+    ).value;
 
-    final isRunning = watchValue(
+    final isToggling = watchValue(
       (PlayerModel m) => m.toggleAudiosProgressCommand.isRunning,
     );
 
@@ -28,7 +28,7 @@ class PodcastMarkDoneButton extends StatelessWidget with WatchItMixin {
       children: [
         IconButton(
           tooltip: context.l10n.markAllEpisodesAsDone,
-          onPressed: isRunning
+          onPressed: isToggling
               ? null
               : () => di<PlayerModel>().toggleAudiosProgressCommand.run((
                   audios: podcast ?? [],
@@ -36,7 +36,7 @@ class PodcastMarkDoneButton extends StatelessWidget with WatchItMixin {
                 )),
           icon: Icon(Iconz.markAllRead),
         ),
-        if (isRunning) const PodcastIconButtonProgress(),
+        if (isToggling) const PodcastIconButtonProgress(),
       ],
     );
   }

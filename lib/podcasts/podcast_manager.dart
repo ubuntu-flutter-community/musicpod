@@ -5,10 +5,10 @@ import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
-import 'data/find_episodes_param.dart';
 import 'data/podcast_episode_filter.dart';
 import 'data/podcast_toggle_capsule.dart';
 import 'data/podcast_update_capsule.dart';
+import 'episodes_manager.dart';
 import 'podcast_service.dart';
 
 // Note: we need to see the subbed podcasts at the start
@@ -61,6 +61,17 @@ class PodcastManager {
     };
   }
 
+  String? getSubscribedPodcastImage(String feedUrl) =>
+      _podcastService.getSubscribedPodcastImage(feedUrl);
+  String? getPodcastName(String feedUrl) =>
+      _podcastService.getPodcastName(feedUrl);
+  String? getSubscribedPodcastArtist(String feedUrl) =>
+      _podcastService.getSubscribedPodcastArtist(feedUrl);
+  bool isPodcastSubscribed(String? feedUrl) =>
+      feedUrl == null ? false : _podcastService.isPodcastSubscribed(feedUrl);
+  Future<void> updateAudioDuration(Audio audio) =>
+      _podcastService.updateAudioDuration(audio);
+
   late final Command<PodcastUpdateCapsule, Set<String>> manageUpdatesCommand =
       Command.createAsyncWithProgress((capsule, handle) async {
         if (capsule.type == PodcastUpdateType.remove) {
@@ -76,71 +87,13 @@ class PodcastManager {
           updateProgress: handle.updateProgress,
         );
         for (final feedUrl in updates) {
-          await getEpisodesCommand(feedUrl).runAsync(
-            FindEpisodesParam(
-              feedUrl: feedUrl,
-              item: null,
-              tryFromDbOnly: true,
-            ),
-          );
+          await di<EpisodesManager>(
+            param1: feedUrl,
+            param2: null,
+          ).command.runAsync();
         }
         return updates;
       }, initialValue: _podcastService.podcastUpdates);
-
-  // Note: passing the item makes it easier to
-  // always have the correct image without needing to persist every item
-  final _episodesCommands =
-      <String, Command<FindEpisodesParam, List<Audio>?>>{};
-  Command<FindEpisodesParam, List<Audio>?> getEpisodesCommand(String feedUrl) =>
-      _episodesCommands.putIfAbsent(
-        feedUrl,
-        () => Command.createAsync(
-          (param) => _podcastService
-              .findEpisodes(
-                item: param.item,
-                feedUrl: param.feedUrl,
-                tryFromDbOnly: param.tryFromDbOnly,
-              )
-              .timeout(
-                FindEpisodesTimeoutException.timeoutDuration,
-                onTimeout: () {
-                  throw FindEpisodesTimeoutException();
-                },
-              ),
-          initialValue: null,
-        ),
-      );
-
-  late final Command<void, Set<String>?> deleteOrphanEpisodesCommand =
-      Command.createAsyncNoParam(() async {
-        final unsubbedFeedUrls = await _podcastService.deleteOrphanEpisodes();
-        _episodesCommands.removeWhere(
-          (key, _) => unsubbedFeedUrls.contains(key),
-        );
-
-        return unsubbedFeedUrls;
-      }, initialValue: null);
-
-  late final Command<({String feedUrl, String name}), String?> cleanUpCommand =
-      Command.createAsync((param) async {
-        if (_podcastService.isPodcastSubscribed(param.feedUrl)) return null;
-
-        await _podcastService.deletePodcastsWithUpdatesAndEpisodes([
-          param.feedUrl,
-        ]);
-        _episodesCommands.remove(param.feedUrl);
-        return param.name;
-      }, initialValue: null);
-
-  String? getSubscribedPodcastImage(String feedUrl) =>
-      _podcastService.getSubscribedPodcastImage(feedUrl);
-  String? getSubscribedPodcastName(String feedUrl) =>
-      _podcastService.getSubscribedPodcastName(feedUrl);
-  String? getSubscribedPodcastArtist(String feedUrl) =>
-      _podcastService.getSubscribedPodcastArtist(feedUrl);
-
-  bool isPodcastSubscribed(String? feedUrl) =>
-      feedUrl == null ? false : togglePodcastCommand.value.contains(feedUrl);
 
   late final Command<PodcastToggleCapsule?, List<String>> togglePodcastCommand =
       Command.createAsync((param) async {
@@ -175,19 +128,10 @@ class PodcastManager {
       feedUrl: param.feedUrl,
       ascending: param.ascending,
     );
-    getEpisodesCommand(param.feedUrl).run(
-      FindEpisodesParam(
-        feedUrl: param.feedUrl,
-        item: null,
-        tryFromDbOnly: true,
-      ),
-    );
+    di<EpisodesManager>(param1: param.feedUrl, param2: null).command.run();
 
     return _podcastService.ascendingPodcasts;
   }, initialValue: _podcastService.ascendingPodcasts);
-
-  Future<void> updateAudioDuration(Audio audio) =>
-      _podcastService.updateAudioDuration(audio);
 
   late final Command<void, Set<String>> feedsWithDownloadsCommand =
       Command.createAsyncNoParam(() async {
@@ -201,7 +145,6 @@ class PodcastManager {
   late final Command<void, void> wipeCommand =
       Command.createAsyncNoParamNoResult(() async {
         await _podcastService.wipeAndBuildPodcastLibrary();
-        _episodesCommands.clear();
         await togglePodcastCommand.runAsync();
         await feedsWithDownloadsCommand.runAsync();
       });

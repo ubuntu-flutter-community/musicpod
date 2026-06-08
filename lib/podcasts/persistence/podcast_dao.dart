@@ -366,7 +366,7 @@ class PodcastDao {
       ),
     ]);
 
-    // Explicitly tell Drift what column to SELECT (Fixes the syntax error)
+    // Explicitly tell Drift what column to SELECT
     query.addColumns([_db.podcastEpisodeTable.podcastFeedUrl]);
 
     // Filter for orphaned rows
@@ -398,7 +398,7 @@ class PodcastDao {
     return feedUrlsToDelete;
   }
 
-  Future<void> deletePodcastsWithUpdatesAndEpisodes({
+  Future<void> deletePodcastAndFriends({
     required Set<String> deleteMeUrls,
   }) async {
     await _db.transaction(() async {
@@ -415,6 +415,10 @@ class PodcastDao {
           _db.downloadTable,
           (t) => t.feedUrl.isIn(deleteMeUrls.toList()),
         );
+        batch.deleteWhere(
+          _db.podcastTable,
+          (t) => t.feedUrl.isIn(deleteMeUrls.toList()),
+        );
       });
     });
 
@@ -423,13 +427,30 @@ class PodcastDao {
     }
   }
 
+  Future<Set<String>> _existingTableNames() async {
+    final rows = await _db
+        .customSelect("SELECT name FROM sqlite_master WHERE type = 'table'")
+        .get();
+    return rows.map((r) => r.read<String>('name')).toSet();
+  }
+
   Future<void> deleteAllPodcasts() async {
+    final existingTables = await _existingTableNames();
+
+    final tables = <TableInfo>[
+      _db.podcastEpisodeTable,
+      _db.podcastUpdateTable,
+      _db.downloadTable,
+      _db.podcastTable,
+      _db.podcastGenreRelationTable,
+      _db.podcastGenreTable,
+    ].where((t) => existingTables.contains(t.actualTableName)).toList();
+
     await _db.transaction(() async {
       await _db.batch((batch) {
-        batch.deleteAll(_db.podcastEpisodeTable);
-        batch.deleteAll(_db.podcastUpdateTable);
-        batch.deleteAll(_db.downloadTable);
-        batch.deleteAll(_db.podcastTable);
+        for (final table in tables) {
+          batch.deleteAll(table);
+        }
       });
     });
     await _db.reclaimDiskSpace();
@@ -443,5 +464,66 @@ class PodcastDao {
         durationMs: Value(audio.durationMs?.toInt()),
       ),
     );
+  }
+
+  Future<void> insertPodcastGenre({
+    required String feedUrl,
+    required String genreName,
+  }) async {
+    printMessageInDebugMode(
+      'Upserting genre "$genreName" for feedUrl: $feedUrl',
+    );
+    await _db.transaction(() async {
+      final cleanName = genreName.trim();
+      int genreId;
+
+      // 1. Check if this genre name already exists in the master table
+      final existingGenre = await (_db.select(
+        _db.podcastGenreTable,
+      )..where((t) => t.name.equals(cleanName))).getSingleOrNull();
+
+      if (existingGenre != null) {
+        genreId = existingGenre.id;
+      } else {
+        // 2. If it doesn't exist, insert it.
+        // Drift returns the newly generated auto-incremented ID.
+        genreId = await _db
+            .into(_db.podcastGenreTable)
+            .insert(PodcastGenreTableCompanion.insert(name: cleanName));
+      }
+
+      // 3. Link the podcast feed to this genre ID
+      await _db
+          .into(_db.podcastGenreRelationTable)
+          .insertOnConflictUpdate(
+            PodcastGenreRelationTableCompanion.insert(
+              feedUrl: feedUrl,
+              genreId: genreId
+                  .toString(), // Cast to String if relation table still expects a text ID
+            ),
+          );
+    });
+  }
+
+  Future<String?> getPodcastGenre(String feedUrl) async {
+    // The query structure remains almost identical, but Drift handles
+    // the underlying SQLite type conversion automatically.
+    final query = _db.select(_db.podcastGenreRelationTable).join([
+      innerJoin(
+        _db.podcastGenreTable,
+        // If your relation table's genreId is now an integer, use .equalsExp() directly.
+        // If it's still a string, you may need to cast using .cast<String>() depending on your setup.
+        _db.podcastGenreTable.id.cast<String>().equalsExp(
+          _db.podcastGenreRelationTable.genreId,
+        ),
+      ),
+    ])..where(_db.podcastGenreRelationTable.feedUrl.equals(feedUrl));
+
+    query.limit(1);
+
+    final row = await query.getSingleOrNull();
+    if (row == null) return null;
+
+    return row.readTable(_db.podcastGenreTable).name;
   }
 }

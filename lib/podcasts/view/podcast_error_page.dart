@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
-import 'package:podcast_search/podcast_search.dart';
 
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/command_x.dart';
 import '../../extensions/object_x.dart';
 import '../data/find_episodes_param.dart';
-import '../podcast_manager.dart';
+import '../episodes_manager.dart';
 import 'lazy_podcast_loading_page.dart';
 
 class PodcastErrorPage extends StatelessWidget with WatchItMixin {
@@ -15,35 +14,24 @@ class PodcastErrorPage extends StatelessWidget with WatchItMixin {
     super.key,
     required this.error,
     this.imageUrl,
-    required this.title,
     required this.feedUrl,
-    this.podcastItem,
   });
 
   final Object error;
   final String? imageUrl;
-  final String title;
   final String feedUrl;
-  final Item? podcastItem;
 
   @override
   Widget build(BuildContext context) {
+    final manager = di<EpisodesManager>(param1: feedUrl, param2: null);
+
     callAfterEveryBuild((_, _) {
-      di<PodcastManager>()
-          .getEpisodesCommand(feedUrl)
-          .runRestricted(
-            param: FindEpisodesParam(
-              feedUrl: feedUrl,
-              item: podcastItem,
-              tryFromDbOnly: true,
-            ),
-          );
+      manager.command.runRestricted();
     });
 
-    final command = di<PodcastManager>().getEpisodesCommand(feedUrl);
-    final cooldown = watch(command.cooldown).value;
+    final cooldown = watch(manager.command.cooldown).value;
     return LazyPodcastLoadingPage(
-      title: title,
+      title: context.l10n.oopsSomethingWentWrong,
       imageUrl: imageUrl,
       expandChild: true,
       child: Center(
@@ -54,12 +42,11 @@ class PodcastErrorPage extends StatelessWidget with WatchItMixin {
             children: [
               Text(error.localizedErrorMessage(context.l10n)),
               FilledButton.icon(
-                onPressed: () => command.runRestricted(
+                onPressed: () => manager.command.runRestricted(
                   runWhen: RunWhen.hasNoValueAndNoErrors,
                   immediatelyClearErrors: true,
                   param: FindEpisodesParam(
                     feedUrl: feedUrl,
-                    item: podcastItem,
                     tryFromDbOnly: false,
                   ),
                 ),

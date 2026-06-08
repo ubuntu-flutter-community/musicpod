@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/page_ids.dart';
@@ -22,6 +21,7 @@ import '../../extensions/build_context_x.dart';
 import '../../search/search_manager.dart';
 import '../../settings/view/settings_action.dart';
 import '../data/podcast_update_capsule.dart';
+import '../podcast_clean_manager.dart';
 import '../podcast_manager.dart';
 import 'podcast_collection_control_panel.dart';
 
@@ -33,41 +33,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
     final theme = context.theme;
 
     callOnceAfterThisBuild(
-      (context) => di<PodcastManager>().deleteOrphanEpisodesCommand.run(),
-    );
-
-    registerHandler(
-      select: (PodcastManager m) => m.deleteOrphanEpisodesCommand.results,
-      handler: (context, results, cancel) {
-        if (results.isRunning) return;
-        if (results.hasError) {
-          context.toast(
-            Text(results.error.toString()),
-            duration: const Duration(seconds: 15),
-            showCloseIcon: true,
-            action: SnackBarAction(
-              label: '📋',
-              onPressed: () => Clipboard.setData(
-                ClipboardData(text: results.error.toString()),
-              ),
-            ),
-          );
-        } else if (results.hasData &&
-            results.data != null &&
-            results.data!.isNotEmpty) {
-          final message = results.data!
-              .mapIndexed((index, name) => '${index + 1}. $name')
-              .join('\n');
-          context.toast(
-            Text(
-              context.l10n.cleanedUpEpisodesOfUnsubscribedPodcast(
-                '\n' + message,
-              ),
-            ),
-            duration: const Duration(seconds: 10),
-          );
-        }
-      },
+      (context) => di<PodcastCleanManager>().command.run(),
     );
 
     final subsResults = watchValue(
@@ -213,12 +179,10 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                                 fontWeight: FontWeight.bold,
                               )
                         : null,
-                    text: di<PodcastManager>().getSubscribedPodcastName(
-                      feedUrl,
-                    ),
+                    text: di<PodcastManager>().getPodcastName(feedUrl),
                   ),
                   onPlay: () => di<SidebarAudiosManager>().playAudiosByIdCommand
-                      .run((pageId: feedUrl!, podcastItem: null)),
+                      .run((pageId: feedUrl!, genre: null)),
                   onTap: () => di<RoutingManager>().push(pageId: feedUrl!),
                 );
               },

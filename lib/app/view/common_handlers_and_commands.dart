@@ -1,4 +1,6 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:podcast_search/podcast_search.dart';
 
@@ -14,6 +16,7 @@ import '../../player/player_service.dart';
 import '../../podcasts/data/podcast_download.dart';
 import '../../podcasts/data/podcast_update_capsule.dart';
 import '../../podcasts/download_manager.dart';
+import '../../podcasts/podcast_clean_manager.dart';
 import '../../podcasts/podcast_manager.dart';
 import '../../search/search_manager.dart';
 import '../../search/search_timeout_exception.dart';
@@ -58,7 +61,7 @@ mixin CommonHandlersAndCommandsMixin {
           } else {
             di<NotificationsService>().notify(
               message: feedsWithUpdates.length == 1
-                  ? '${context.l10n.newEpisodeAvailable} ${di<PodcastManager>().getSubscribedPodcastName(feedsWithUpdates.first)}'
+                  ? '${context.l10n.newEpisodeAvailable} ${di<PodcastManager>().getPodcastName(feedsWithUpdates.first)}'
                   : '${context.l10n.newEpisodesAvailableFor(feedsWithUpdates.length)}',
             );
           }
@@ -138,13 +141,34 @@ mixin CommonHandlersAndCommandsMixin {
     );
 
     registerHandler(
-      select: (PodcastManager m) => m.cleanUpCommand,
-      handler: (context, name, cancel) {
-        if (name != null) {
+      select: (PodcastCleanManager m) => m.command.results,
+      handler: (context, results, cancel) {
+        if (results.isRunning) return;
+        if (results.hasError) {
+          context.toast(
+            Text(results.error.toString()),
+            duration: const Duration(seconds: 15),
+            showCloseIcon: true,
+            action: SnackBarAction(
+              label: '📋',
+              onPressed: () => Clipboard.setData(
+                ClipboardData(text: results.error.toString()),
+              ),
+            ),
+          );
+        } else if (results.hasData &&
+            results.data != null &&
+            results.data!.isNotEmpty) {
+          final message = results.data!
+              .mapIndexed((index, name) => '${index + 1}. $name')
+              .join('\n');
           context.toast(
             Text(
-              '${context.l10n.cleanedUpEpisodesOfUnsubscribedPodcast(name)}',
+              context.l10n.cleanedUpEpisodesOfUnsubscribedPodcast(
+                '\n' + message,
+              ),
             ),
+            duration: const Duration(seconds: 10),
           );
         }
       },

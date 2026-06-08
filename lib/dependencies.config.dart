@@ -47,7 +47,10 @@ import 'player/player_model.dart' as _i1025;
 import 'player/player_service.dart' as _i38;
 import 'podcasts/download_manager.dart' as _i388;
 import 'podcasts/download_service.dart' as _i616;
+import 'podcasts/episodes_manager.dart' as _i0;
 import 'podcasts/persistence/podcast_dao.dart' as _i597;
+import 'podcasts/podcast_clean_manager.dart' as _i425;
+import 'podcasts/podcast_genre_manager.dart' as _i973;
 import 'podcasts/podcast_manager.dart' as _i351;
 import 'podcasts/podcast_service.dart' as _i721;
 import 'radio/online_art_model.dart' as _i620;
@@ -258,6 +261,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i987.ExposeManager>(
       () => _i987.ExposeManager(exposeService: gh<_i820.ExposeService>()),
     );
+    gh.factoryCachedParam<_i973.PodcastGenreManager, String, dynamic>(
+      (feedUrl, _) => _i973.PodcastGenreManager(
+        feedUrl: feedUrl,
+        podcastService: gh<_i721.PodcastService>(),
+      ),
+    );
     gh.lazySingleton<_i388.DownloadManager>(
       () => _i388.DownloadManager(
         podcastService: gh<_i721.PodcastService>(),
@@ -274,8 +283,18 @@ extension GetItInjectableX on _i174.GetIt {
         playerService: gh<_i38.PlayerService>(),
       ),
     );
+    gh.factoryCachedParam<_i0.EpisodesManager, String, String?>(
+      (feedUrl, genre) => _i0.EpisodesManager(
+        feedUrl: feedUrl,
+        genre: genre,
+        podcastService: gh<_i721.PodcastService>(),
+      ),
+    );
     gh.singleton<_i351.PodcastManager>(
       () => _i351.PodcastManager(podcastService: gh<_i721.PodcastService>()),
+    );
+    gh.factoryCached<_i425.PodcastCleanManager>(
+      () => _i425.PodcastCleanManager(gh<_i721.PodcastService>()),
     );
     await gh.singletonAsync<_i517.WindowSizeToSettingsListener>(() {
       final i = _i517.WindowSizeToSettingsListener(
@@ -315,7 +334,7 @@ extension GetItInjectableX on _i174.GetIt {
       preResolve: true,
       dispose: (i) => i.dispose(),
     );
-    gh.lazySingleton<_i190.SidebarAudiosManager>(
+    gh.factoryCached<_i190.SidebarAudiosManager>(
       () => _i190.SidebarAudiosManager(
         podcastManager: gh<_i351.PodcastManager>(),
         localAudioManager: gh<_i688.LocalAudioManager>(),

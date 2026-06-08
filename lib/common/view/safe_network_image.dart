@@ -67,6 +67,11 @@ class SafeNetworkImage extends StatelessWidget {
       return CachedNetworkImage(
         cacheManager: isLinux ? XdgCacheManager() : null,
         imageUrl: url!,
+        memCacheHeight: height?.toInt(),
+        memCacheWidth: width?.toInt(),
+        httpHeaders: httpHeaders,
+        filterQuality: filterQuality,
+        fit: fit,
         imageBuilder: (context, imageProvider) {
           onImageLoaded?.call(imageProvider);
           return Image(

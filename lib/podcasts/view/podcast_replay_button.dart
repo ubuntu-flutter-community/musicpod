@@ -5,7 +5,7 @@ import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
 import '../../player/player_model.dart';
-import '../podcast_manager.dart';
+import '../episodes_manager.dart';
 import 'podcast_icon_button_progress.dart';
 
 class PodcastReplayButton extends StatelessWidget with WatchItMixin {
@@ -15,9 +15,9 @@ class PodcastReplayButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final podcast = watchValue(
-      (PodcastManager m) => m.getEpisodesCommand(feedUrl),
-    );
+    final podcast = watch(
+      di<EpisodesManager>(param1: feedUrl, param2: null).command,
+    ).value;
 
     final isRunning = watchValue(
       (PlayerModel m) => m.toggleAudiosProgressCommand.isRunning,

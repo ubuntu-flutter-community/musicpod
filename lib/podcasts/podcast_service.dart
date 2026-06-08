@@ -160,7 +160,7 @@ class PodcastService {
 
     for (final (index, feedUrl) in toCheckFeedUrls.indexed) {
       final storedTimeStamp = getPodcastLastUpdated(feedUrl);
-      final name = getSubscribedPodcastName(feedUrl);
+      final name = getPodcastName(feedUrl);
 
       printMessageInDebugMode('checking update for: ${name ?? feedUrl} ');
       printMessageInDebugMode(
@@ -196,53 +196,40 @@ class PodcastService {
   }
 
   Future<List<Audio>> findEpisodes({
-    Item? item,
-    String? feedUrl,
+    required String feedUrl,
     required bool tryFromDbOnly,
+    String? genre,
   }) async {
-    if (item == null && item?.feedUrl == null && feedUrl == null) {
-      throw Exception('findEpisodes called without feedUrl or item');
-    }
-
-    final url = feedUrl ?? item!.feedUrl!;
-
     final hasEpisodesInDb =
-        await _dao.hasPodcastStoredEpisodes(url) && isPodcastSubscribed(url);
+        await _dao.hasPodcastStoredEpisodes(feedUrl) &&
+        isPodcastSubscribed(feedUrl);
 
     if (tryFromDbOnly && hasEpisodesInDb) {
       printMessageInDebugMode(
-        'Skipping episode load from network for $url, loading from DB instead',
+        'Skipping episode load from network for $feedUrl, loading from DB instead',
       );
-      return _dao.getEpisodes(url);
+      return _dao.getEpisodes(feedUrl);
     }
 
     printMessageInDebugMode(
-      'Fetching all episodes from ${_search.searchProvider is ITunesProvider ? 'iTunes' : 'podcastindex'} for feedUrl: ${feedUrl ?? item!.feedUrl}, '
-      'item: ${item != null ? item.trackName ?? item.collectionName : 'null'}',
+      'Fetching all episodes from ${_search.searchProvider is ITunesProvider ? 'iTunes' : 'podcastindex'} for feedUrl: $feedUrl',
     );
-    final Podcast? podcast = await compute(loadPodcast, url);
+    final Podcast? podcast = await compute(loadPodcast, feedUrl);
     if (podcast?.image != null) {
       addPodcastImage(
-        feedUrl: url,
+        feedUrl: feedUrl,
         imageUrl: podcast!.image!,
         title: podcast.title ?? '',
       );
+    }
+    if (genre != null) {
+      await addPodcastGenre(feedUrl: feedUrl, genreName: genre);
     }
 
     final episodes =
         podcast?.episodes
             .where((e) => e.contentUrl != null)
-            .map(
-              (e) => Audio.fromPodcast(
-                episode: e,
-                podcast: podcast,
-                // TODO: check if we stil need the podcast item artworks
-                // otherwise we could cache podcast genres
-                // and could stop to pass podcast items around like a caveman
-                itemImageUrl: item?.artworkUrl600 ?? item?.artworkUrl,
-                genre: item?.primaryGenreName,
-              ),
-            )
+            .map((e) => Audio.fromPodcast(episode: e, podcast: podcast))
             .toList() ??
         <Audio>[];
 
@@ -254,7 +241,7 @@ class PodcastService {
 
     // optimistically upsert episodes after finding them, so they are available faster when opening the podcast page
     await _dao.upsertEpisodes(
-      feedUrl: url,
+      feedUrl: feedUrl,
       podcastDescription: podcast?.description,
       episodes: episodes,
     );
@@ -370,8 +357,7 @@ class PodcastService {
     title: title,
   );
 
-  String? getSubscribedPodcastName(String feedUrl) =>
-      _dao.getPodcastName(feedUrl);
+  String? getPodcastName(String feedUrl) => _dao.getPodcastName(feedUrl);
 
   String? getSubscribedPodcastArtist(String feedUrl) =>
       _dao.getPodcastArtist(feedUrl);
@@ -462,19 +448,11 @@ class PodcastService {
 
   Future<void> removePodcastsWithUpdatesAndEpisodes(String feedUrl) async {
     printMessageInDebugMode('Cleaning up unsubscribed podcast: $feedUrl');
-    await _dao.deletePodcastsWithUpdatesAndEpisodes(deleteMeUrls: {feedUrl});
+    await _dao.deletePodcastAndFriends(deleteMeUrls: {feedUrl});
 
     if (podcastFeedUrls.contains(feedUrl)) {
       _podcasts.remove(feedUrl);
     }
-  }
-
-  Future<void> deletePodcastsWithUpdatesAndEpisodes(
-    List<String> feedUrls,
-  ) async {
-    await _dao.deletePodcastsWithUpdatesAndEpisodes(
-      deleteMeUrls: feedUrls.toSet(),
-    );
   }
 
   Future<Set<String>> deleteOrphanEpisodes() => _dao.deleteOrphanEpisodes();
@@ -488,6 +466,14 @@ class PodcastService {
     await loadPodcastUpdates();
     await loadDownloads();
   }
+
+  Future<String?> findPodcastGenre(String feedUrl) =>
+      _dao.getPodcastGenre(feedUrl);
+
+  Future<void> addPodcastGenre({
+    required String feedUrl,
+    required String genreName,
+  }) => _dao.insertPodcastGenre(feedUrl: feedUrl, genreName: genreName);
 }
 
 Future<Podcast?> loadPodcast(String url) => Feed.loadFeed(url: url);

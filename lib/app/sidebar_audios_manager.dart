@@ -1,14 +1,13 @@
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
-import 'package:podcast_search/podcast_search.dart';
 
 import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
 import '../common/logging.dart';
 import '../local_audio/local_audio_manager.dart';
 import '../player/player_model.dart';
-import '../podcasts/data/find_episodes_param.dart';
 import '../podcasts/data/podcast_update_capsule.dart';
+import '../podcasts/episodes_manager.dart';
 import '../podcasts/podcast_manager.dart';
 import '../radio/radio_manager.dart';
 
@@ -32,13 +31,13 @@ class SidebarAudiosManager {
   }
 
   late final Command<
-    ({String pageId, Item? podcastItem}),
+    ({String pageId, String? genre}),
     ({String pageId, List<Audio> audios})?
   >
   playAudiosByIdCommand = Command.createAsync((param) async {
     final audios = await _getAudiosById(
       pageId: param.pageId,
-      podcastItem: param.podcastItem,
+      podcastGenre: param.genre,
     );
 
     if (audios?.firstOrNull?.audioType == AudioType.radio) {
@@ -66,7 +65,7 @@ class SidebarAudiosManager {
 
   Future<List<Audio>?> _getAudiosById({
     required String pageId,
-    required Item? podcastItem,
+    String? podcastGenre,
   }) async {
     if (_radioManager.toggleStarStationCommand.value.contains(pageId)) {
       final audio = await _radioManager
@@ -75,16 +74,11 @@ class SidebarAudiosManager {
       return audio == null ? [] : [audio];
     }
 
-    if (_podcastManager.isPodcastSubscribed(pageId) || podcastItem != null) {
-      return _podcastManager
-          .getEpisodesCommand(pageId)
-          .runAsync(
-            FindEpisodesParam(
-              item: podcastItem,
-              feedUrl: pageId,
-              tryFromDbOnly: true,
-            ),
-          );
+    if (_podcastManager.isPodcastSubscribed(pageId) || podcastGenre != null) {
+      return di<EpisodesManager>(
+        param1: pageId,
+        param2: podcastGenre,
+      ).command.runAsync();
     }
 
     if (_localAudioManager.isPlaylistSaved(pageId)) {
@@ -95,7 +89,6 @@ class SidebarAudiosManager {
     if (albumId != null) {
       return _localAudioManager.findAlbumCommand(albumId).runAsync();
     }
-
     return null;
   }
 }
