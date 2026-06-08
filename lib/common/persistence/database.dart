@@ -34,7 +34,7 @@ class Database extends _$Database {
   Database(super.e);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   Future<void> reclaimDiskSpace() async {
     try {
@@ -57,6 +57,10 @@ class Database extends _$Database {
                 ' ON podcast_episode_table (content_url)',
           ),
         );
+      }
+      if (from < 3) {
+        await m.createTable(podcastGenreTable);
+        await m.createTable(podcastGenreRelationTable);
       }
     },
   );
