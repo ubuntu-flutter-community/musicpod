@@ -18,6 +18,7 @@ class SafeNetworkImage extends StatelessWidget {
     this.onImageLoaded,
     this.cacheHeight,
     this.cacheWidth,
+    this.logType = LogType.warning,
   });
 
   final String? url;
@@ -31,6 +32,7 @@ class SafeNetworkImage extends StatelessWidget {
   final int? cacheWidth;
   final Map<String, String>? httpHeaders;
   final Function(ImageProvider imageProvider)? onImageLoaded;
+  final LogType logType;
 
   static final List<String> _failedUrls = [];
 
@@ -58,42 +60,50 @@ class SafeNetworkImage extends StatelessWidget {
           ),
     );
 
-    try {
-      return Image.network(
-        url!,
-        height: height,
-        width: width,
-        cacheHeight: cacheHeight,
-        cacheWidth: cacheWidth,
-        fit: fit,
-        filterQuality: filterQuality,
-        headers: httpHeaders,
-        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-          if (frame != null) {
-            onImageLoaded?.call(NetworkImage(url!));
-          }
-          if (wasSynchronouslyLoaded) {
-            return child;
-          }
-          return AnimatedOpacity(
-            opacity: frame == null ? 0 : 1,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-            child: child,
-          );
-        },
-        errorBuilder: (context, error, stackTrace) => errorWidget,
-      );
-    } on Exception catch (e, s) {
-      printErrorInDebugMode(
-        'Failed to load image: $url',
-        trace: s,
-        tag: '$SafeNetworkImage',
-      );
-      if (url != null) {
-        _failedUrls.add(url!);
-      }
-      return fallBack;
-    }
+    return Image.network(
+      url!,
+      height: height,
+      width: width,
+      cacheHeight: cacheHeight,
+      cacheWidth: cacheWidth,
+      fit: fit,
+      filterQuality: filterQuality,
+      headers: httpHeaders,
+      frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+        if (frame != null) {
+          onImageLoaded?.call(NetworkImage(url!));
+        }
+        if (wasSynchronouslyLoaded) {
+          return child;
+        }
+        return AnimatedOpacity(
+          opacity: frame == null ? 0 : 1,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          child: child,
+        );
+      },
+      errorBuilder: (context, error, _) {
+        final message = switch (error.runtimeType) {
+          final NetworkImageLoadException e => switch (e.statusCode) {
+            403 => 'Access forbidden to the resource.',
+            404 => 'Resource not found at $url.',
+            500 => 'Server error occurred while fetching the image.',
+            _ => 'Failed to load image: HTTP ${e.statusCode}.',
+          },
+          _ => 'Unknown error occurred: $error',
+        };
+        printMessageInDebugMode(
+          'Failed to load image: $url, error: $message',
+          trace: null,
+          tag: '$SafeNetworkImage',
+          logType: logType,
+        );
+        if (url != null) {
+          _failedUrls.add(url!);
+        }
+        return errorWidget;
+      },
+    );
   }
 }

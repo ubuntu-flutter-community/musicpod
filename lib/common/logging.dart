@@ -1,35 +1,44 @@
 import 'package:flutter/foundation.dart';
 
-void _printMessageInDebugMode(
+void printMessageInDebugMode(
   Object? object, {
   StackTrace? trace,
   String tag = '',
-  PrintLevel level = PrintLevel.info,
+  required LogType logType,
 }) {
   if (kDebugMode) {
     final message = object.toString();
-    switch (level) {
-      case PrintLevel.info:
+    switch (logType) {
+      case LogType.info:
         debugPrint(
           tag.isNotEmpty
-              ? '\x1B[32m${level.name}: [$tag] $message \x1B[0m'
-              : '\x1B[32m${level.name}: $message\x1B[0m',
+              ? '\x1B[32m${logType.name}: [$tag] $message \x1B[0m'
+              : '\x1B[32m${logType.name}: $message\x1B[0m',
         );
-      case PrintLevel.warning:
+      case LogType.warning:
         debugPrint(
           tag.isNotEmpty
-              ? '\x1B[33m${level.name}: [$tag] ⚠️ $message \x1B[0m'
-              : '\x1B[33m${level.name}: ⚠️ $message\x1B[0m',
+              ? '\x1B[33m${logType.name}: [$tag] ⚠️ $message \x1B[0m'
+              : '\x1B[33m${logType.name}: ⚠️ $message\x1B[0m',
         );
-      case PrintLevel.error:
+      case LogType.error:
         debugPrint(
           tag.isNotEmpty
-              ? '\x1B[31m${level.name}: [$tag] ❌ $message \x1B[0m'
-              : '\x1B[31m${level.name}: ❌ $message\x1B[0m',
+              ? '\x1B[31m${logType.name}: [$tag] ❌ $message \x1B[0m'
+              : '\x1B[31m${logType.name}: ❌ $message\x1B[0m',
+        );
+      case LogType.flutterError:
+        debugPrint(
+          tag.isNotEmpty
+              ? '\x1B[35m${logType.name}: [$tag] 👾 $message \x1B[0m'
+              : '\x1B[35m${logType.name}: 👾 $message\x1B[0m',
         );
     }
     if (trace != null) {
-      debugPrint(trace.toString());
+      debugPrintStack(
+        stackTrace: trace,
+        label: tag.isNotEmpty ? 'Stack trace for [$tag]' : 'Stack trace',
+      );
     }
   }
 }
@@ -39,11 +48,11 @@ void printInfoInDebugMode(
   StackTrace? trace,
   String tag = '',
 }) {
-  _printMessageInDebugMode(
+  printMessageInDebugMode(
     object,
     trace: trace,
     tag: tag,
-    level: PrintLevel.info,
+    logType: LogType.info,
   );
 }
 
@@ -52,11 +61,11 @@ void printWarningInDebugMode(
   StackTrace? trace,
   String tag = '',
 }) {
-  _printMessageInDebugMode(
+  printMessageInDebugMode(
     object,
     trace: trace,
     tag: tag,
-    level: PrintLevel.warning,
+    logType: LogType.warning,
   );
 }
 
@@ -65,12 +74,21 @@ void printErrorInDebugMode(
   required StackTrace? trace,
   String tag = '',
 }) {
-  _printMessageInDebugMode(
+  printMessageInDebugMode(
     object,
     trace: trace,
     tag: tag,
-    level: PrintLevel.error,
+    logType: LogType.error,
   );
 }
 
-enum PrintLevel { info, warning, error }
+void printFlutterErrorInDebugMode(FlutterErrorDetails details) {
+  printMessageInDebugMode(
+    details.exception,
+    trace: details.stack,
+    tag: 'FlutterError',
+    logType: LogType.flutterError,
+  );
+}
+
+enum LogType { info, warning, flutterError, error }

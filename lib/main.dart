@@ -14,9 +14,15 @@ Future<void> main(List<String> args) async {
     await YaruWindowTitleBar.ensureInitialized();
   }
 
+  FlutterError.onError = printFlutterErrorInDebugMode;
+
   Command.globalExceptionHandler =
       (CommandError<dynamic> error, StackTrace stackTrace) {
-        printErrorInDebugMode(error.error, trace: stackTrace);
+        printErrorInDebugMode(
+          error.error,
+          trace: stackTrace,
+          tag: 'CommandError',
+        );
       };
 
   if (isWindows) {

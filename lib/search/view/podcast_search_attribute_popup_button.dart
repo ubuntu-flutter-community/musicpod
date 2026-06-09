@@ -16,7 +16,6 @@ class PodcastSearchAttributePopupButton extends StatelessWidget
     final attribute = watchValue((SearchManager m) => m.podcastSearchAttribute);
     return PopupMenuButton<Attribute>(
       icon: Icon(attribute.iconData),
-      style: IconButton.styleFrom(shape: const RoundedRectangleBorder()),
       initialValue: attribute,
       onSelected: (value) => di<SearchManager>()
         ..setPodcastSearchAttribute(value)

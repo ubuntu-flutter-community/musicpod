@@ -191,7 +191,15 @@ Future<String?> _fetchAlbumArtUrlFromReleaseId({
       return url?.replaceAll('http://', 'https://');
     }
   } on Exception catch (e, s) {
-    printErrorInDebugMode(e, trace: s, tag: '$OnlineArtService');
+    printMessageInDebugMode(
+      e,
+      trace: s,
+      tag: '$OnlineArtService',
+      logType: switch (e.runtimeType) {
+        DioException => LogType.warning,
+        _ => LogType.error,
+      },
+    );
     return null;
   }
   return null;
