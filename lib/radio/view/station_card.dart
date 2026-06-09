@@ -69,8 +69,8 @@ class StationCard extends StatelessWidget with WatchItMixin {
             ),
       image: SizedBox.expand(
         child: SafeNetworkImage(
-          fallBackIcon: AudioFallBackIcon(audio: station, iconSize: 70),
-          errorIcon: AudioFallBackIcon(audio: station, iconSize: 70),
+          fallbackWidget: AudioFallBackIcon(audio: station, iconSize: 70),
+          errorWidget: AudioFallBackIcon(audio: station, iconSize: 70),
           url: station.imageUrl,
           fit: BoxFit.scaleDown,
           height: audioCardDimension,

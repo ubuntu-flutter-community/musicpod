@@ -208,7 +208,8 @@ class RadioService {
             },
           );
       _tags = response.items;
-    } on Exception catch (e) {
+    } on Exception catch (e, s) {
+      printErrorInDebugMode(e, trace: s, tag: '$RadioService');
       throw LoadTagsFailedException(e.toString());
     }
 
@@ -218,13 +219,16 @@ class RadioService {
   Future<void> clickStation(String? uuid) async {
     try {
       if (uuid == null) {
-        printMessageInDebugMode('Cannot click station with null uuid.');
+        printInfoInDebugMode(
+          'Cannot click station with null uuid.',
+          tag: '$RadioService',
+        );
         return;
       }
       await _radioBrowserApi?.clickStation(uuid: uuid);
-      printMessageInDebugMode('Station clicked: $uuid');
-    } on Exception catch (e) {
-      printMessageInDebugMode(e.toString());
+      printInfoInDebugMode('Station clicked: $uuid', tag: '$RadioService');
+    } on Exception catch (e, s) {
+      printErrorInDebugMode(e, trace: s, tag: '$RadioService');
     }
   }
 

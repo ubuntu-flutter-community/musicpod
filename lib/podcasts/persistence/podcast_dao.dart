@@ -134,8 +134,9 @@ class PodcastDao {
     final nonExisting = <DownloadTableData>[];
     for (final entry in rows) {
       if (!File(entry.filePath).existsSync()) {
-        printMessageInDebugMode(
+        printInfoInDebugMode(
           'Cleaning non-existing download:  [${entry.filePath} for URL: ${entry.url}]',
+          tag: '$PodcastDao',
         );
         nonExisting.add(entry);
       }
@@ -165,13 +166,15 @@ class PodcastDao {
     // delete files that do not have a corresponding entry in the database
     for (final filePath in realDownloadFilePaths) {
       if (!newDownloadFilePaths.containsValue(filePath)) {
-        printMessageInDebugMode(
+        printInfoInDebugMode(
           'Deleting file without database entry: $filePath',
+          tag: '$PodcastDao',
         );
         try {
           File(filePath).deleteSync();
-        } on Exception catch (e) {
-          printMessageInDebugMode('Error deleting file: $e');
+        } on Exception catch (e, s) {
+          printErrorInDebugMode(e, trace: s, tag: '$PodcastDao');
+          rethrow;
         }
       }
     }
@@ -382,13 +385,17 @@ class PodcastDao {
 
     // Early exit if nothing to delete
     if (feedUrlsToDelete.isEmpty) {
-      printMessageInDebugMode('No orphaned episodes found to clean up.');
+      printInfoInDebugMode(
+        'No orphaned episodes found to clean up.',
+        tag: '$PodcastDao',
+      );
       return <String>{};
     }
 
     // Delete the orphaned episodes
-    printMessageInDebugMode(
+    printInfoInDebugMode(
       'Deleting episodes with feed URLs not in podcast table: $feedUrlsToDelete',
+      tag: '$PodcastDao',
     );
 
     await (_db.delete(
@@ -470,8 +477,9 @@ class PodcastDao {
     required String feedUrl,
     required String genreName,
   }) async {
-    printMessageInDebugMode(
+    printInfoInDebugMode(
       'Upserting genre "$genreName" for feedUrl: $feedUrl',
+      tag: '$PodcastDao',
     );
     await _db.transaction(() async {
       final cleanName = genreName.trim();

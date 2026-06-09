@@ -26,7 +26,7 @@ class SettingsService {
     try {
       return _sharedPreferences.getString(key);
     } on Exception catch (e, s) {
-      printMessageInDebugMode(e, trace: s);
+      printErrorInDebugMode(e, trace: s, tag: '$SettingsService');
       return null;
     }
   }
@@ -35,7 +35,7 @@ class SettingsService {
     try {
       return _sharedPreferences.getBool(key);
     } on Exception catch (e, s) {
-      printMessageInDebugMode(e, trace: s);
+      printErrorInDebugMode(e, trace: s, tag: '$SettingsService');
       return null;
     }
   }
@@ -44,7 +44,7 @@ class SettingsService {
     try {
       return _sharedPreferences.getDouble(key);
     } on Exception catch (e, s) {
-      printMessageInDebugMode(e, trace: s);
+      printErrorInDebugMode(e, trace: s, tag: '$SettingsService');
       return null;
     }
   }
@@ -53,7 +53,7 @@ class SettingsService {
     try {
       return _sharedPreferences.getInt(key);
     } on Exception catch (e, s) {
-      printMessageInDebugMode(e, trace: s);
+      printErrorInDebugMode(e, trace: s, tag: '$SettingsService');
       return null;
     }
   }
@@ -62,7 +62,7 @@ class SettingsService {
     try {
       return _sharedPreferences.getStringList(key);
     } on Exception catch (e, s) {
-      printMessageInDebugMode(e, trace: s);
+      printErrorInDebugMode(e, trace: s, tag: '$SettingsService');
       return null;
     }
   }
@@ -78,7 +78,7 @@ class SettingsService {
         _ => Future.error('Unsupported value type: ${value.runtimeType}'),
       });
     } on Exception catch (e, s) {
-      printMessageInDebugMode(e, trace: s);
+      printErrorInDebugMode(e, trace: s, tag: '$SettingsService');
       return Future.error(e, s);
     }
   }

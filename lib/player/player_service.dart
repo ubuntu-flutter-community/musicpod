@@ -197,7 +197,7 @@ class PlayerService {
   bool get isVideo => _isVideo;
   void _setIsVideo(bool value) {
     if (value == _isVideo) return;
-    printMessageInDebugMode('Is video: $value');
+    printInfoInDebugMode('Loaded a video: $value', tag: '$PlayerService');
     _isVideo = value;
     _propertiesChangedController.add(true);
   }
@@ -349,9 +349,9 @@ class PlayerService {
         imageUrl: _audio?.imageUrl ?? _audio?.albumArtUrl,
       );
       _firstPlay = false;
-    } on Exception catch (e) {
+    } on Exception catch (e, s) {
       _messageController.addError(e);
-      printMessageInDebugMode(e);
+      printErrorInDebugMode(e, trace: s, tag: '$PlayerService');
     }
   }
 
@@ -521,8 +521,8 @@ class PlayerService {
         provider: provider,
       );
       _setColor(colorScheme.primary.scale(saturation: 1));
-    } on Exception catch (e) {
-      printMessageInDebugMode(e);
+    } on Exception catch (e, s) {
+      printErrorInDebugMode(e, trace: s, tag: '$PlayerService');
     }
   }
 
@@ -557,8 +557,8 @@ class PlayerService {
           _setColor(colorScheme.primary);
         }
       }
-    } on Exception catch (e) {
-      printMessageInDebugMode(e);
+    } on Exception catch (e, s) {
+      printErrorInDebugMode(e, trace: s, tag: '$PlayerService');
     }
   }
 
@@ -574,7 +574,7 @@ class PlayerService {
       _lastPositions[key] = lastPosition;
       _propertiesChangedController.add(true);
     } on Exception catch (e, st) {
-      printMessageInDebugMode(e, trace: st);
+      printErrorInDebugMode(e, trace: st, tag: '$PlayerService');
       _messageController.addError('Error while saving last position for $key');
     }
   }
@@ -582,8 +582,8 @@ class PlayerService {
   Future<void> _loadLastPositions() async {
     try {
       _lastPositions = await _dao.getLastPositions();
-    } on Exception catch (_) {
-      printMessageInDebugMode('Error while loading last positions.');
+    } on Exception catch (e, s) {
+      printErrorInDebugMode(e, trace: s, tag: '$PlayerService');
       _messageController.addError('Error while loading last positions.');
       _lastPositions = {};
     }
@@ -623,8 +623,9 @@ class PlayerService {
         _position == null) {
       return;
     }
-    printMessageInDebugMode(
+    printInfoInDebugMode(
       'Saving last position for ${_audio!.url}: $_position',
+      tag: '$PlayerService',
     );
     await addLastPosition(_audio!.url!, _position!);
   }
@@ -719,8 +720,8 @@ class PlayerService {
       await _estimateNext();
 
       await setMediaControlsMetaData(audio: audio);
-    } on Exception catch (e) {
-      printMessageInDebugMode('Error loading player state: $e');
+    } on Exception catch (e, s) {
+      printErrorInDebugMode(e, trace: s, tag: '$PlayerService');
     }
   }
 
@@ -735,19 +736,20 @@ class PlayerService {
         volume: _volume?.toString(),
         rate: _rate.toString(),
       );
-      printMessageInDebugMode(
+      printInfoInDebugMode(
         'Player state saved, audio: ${_audio?.title}, position: $_position, volume: $_volume, rate: $_rate,',
+        tag: '$PlayerService',
       );
     } on Exception catch (e, st) {
-      printMessageInDebugMode('Error writing player state: $e', trace: st);
+      printErrorInDebugMode(e, trace: st, tag: '$PlayerService');
     }
   }
 
   Future<void> _wipePlayerState() async {
     try {
       await _dao.deletePlayerState();
-    } on Exception catch (e) {
-      printMessageInDebugMode('Error while wiping player state: $e');
+    } on Exception catch (e, s) {
+      printErrorInDebugMode(e, trace: s, tag: '$PlayerService');
       _messageController.addError('Error while wiping player state.');
     }
   }
@@ -787,8 +789,8 @@ class PlayerService {
           audios: [Audio.local(file, getImage: true)],
         );
       }
-    } on Exception catch (e) {
-      printMessageInDebugMode(e);
+    } on Exception catch (e, s) {
+      printErrorInDebugMode(e, trace: s, tag: '$PlayerService');
     }
   }
 

@@ -46,7 +46,7 @@ class MpvMetadataDialog extends StatelessWidget {
             child: SizedBox(
               width: 250,
               child: SafeNetworkImage(
-                errorIcon: Icon(Iconz.imageMissing),
+                errorWidget: Icon(Iconz.imageMissing),
                 fit: BoxFit.fitHeight,
                 url: image,
               ),
@@ -65,8 +65,8 @@ class MpvMetadataDialog extends StatelessWidget {
                 url: image,
                 height: kAudioTrackWidth,
                 fit: BoxFit.cover,
-                fallBackIcon: Icon(Iconz.radio),
-                errorIcon: Icon(Iconz.radio),
+                fallbackWidget: Icon(Iconz.radio),
+                errorWidget: Icon(Iconz.radio),
               ),
             ),
           ),

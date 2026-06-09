@@ -17,8 +17,8 @@ class PodcastPageImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.theme;
     final safeNetworkImage = SafeNetworkImage(
-      fallBackIcon: Icon(Iconz.podcast, size: 80, color: theme.hintColor),
-      errorIcon: Icon(Iconz.podcast, size: 80, color: theme.hintColor),
+      fallbackWidget: Icon(Iconz.podcast, size: 80, color: theme.hintColor),
+      errorWidget: Icon(Iconz.podcast, size: 80, color: theme.hintColor),
       url: imageUrl,
       fit: BoxFit.fitHeight,
       filterQuality: FilterQuality.medium,

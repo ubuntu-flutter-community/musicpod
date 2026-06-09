@@ -7,8 +7,9 @@ import '../common/logging.dart';
 abstract class GeniusModule {
   @Injectable(cache: true)
   Genius genius({@factoryParam required String accessToken}) {
-    printMessageInDebugMode(
-      'Creating Genius instance with access token: $accessToken',
+    printInfoInDebugMode(
+      'Instance created with access token: $accessToken',
+      tag: '$GeniusModule',
     );
     return Genius(accessToken: accessToken);
   }

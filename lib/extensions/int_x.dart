@@ -18,8 +18,8 @@ extension IntX on int? {
         time = DateFormat.Hm(
           Platform.localeName == 'und' ? 'en_US' : Platform.localeName,
         ).format(dateTime);
-      } on Exception catch (e) {
-        printMessageInDebugMode(e);
+      } on Exception catch (e, s) {
+        printErrorInDebugMode(e, trace: s, tag: 'IntX');
         return date + ', ' + time;
       }
       return date + ', ' + time;

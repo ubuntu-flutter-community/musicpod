@@ -45,8 +45,8 @@ class LocalCoverService {
             bytesFromMetadata = File(maybeImageInFolder).readAsBytesSync();
           }
         }
-      } on Exception catch (e) {
-        printMessageInDebugMode(e);
+      } on Exception catch (e, s) {
+        printErrorInDebugMode(e, trace: s, tag: '$LocalCoverService');
       }
 
       if (bytesFromMetadata == null) return null;

@@ -35,8 +35,8 @@ class LastfmService {
           artist: artist,
           startTime: DateTime.now(),
         );
-      } on Exception catch (e) {
-        printMessageInDebugMode(e);
+      } on Exception catch (e, s) {
+        printErrorInDebugMode(e, trace: s, tag: '$LastfmService');
       }
     }
   }
@@ -93,8 +93,8 @@ class LastfmService {
       try {
         final lastfm = await lastfmua.finishAuthorizeDesktop();
         await init(lastFmAuthorized: lastfm);
-      } catch (e) {
-        printMessageInDebugMode(e);
+      } catch (e, s) {
+        printErrorInDebugMode(e, trace: s, tag: '$LastfmService');
         await Future.delayed(const Duration(seconds: 10));
       }
 

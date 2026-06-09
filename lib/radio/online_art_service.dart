@@ -63,7 +63,7 @@ class OnlineArtService {
                 _fetchAlbumArt,
                 _ComputeCapsule(icyTitle: icyTitle, dio: _dio),
               ).onError((e, s) {
-                printMessageInDebugMode(e.toString());
+                printErrorInDebugMode(e, trace: s, tag: '$OnlineArtService');
                 _errorController.add('$e : $s');
                 return null;
               }),
@@ -120,12 +120,16 @@ Future<String?> _fetchAlbumArt(_ComputeCapsule capsule) async {
         : firstRecording?['releases']?[0]?['id'];
 
     if (releaseId == null) {
-      printMessageInDebugMode('${capsule.icyTitle}: No release found}');
+      printInfoInDebugMode(
+        '${capsule.icyTitle}: No release found}',
+        tag: '$OnlineArtService',
+      );
       return null;
     }
 
-    printMessageInDebugMode(
+    printInfoInDebugMode(
       '${capsule.icyTitle}: Release ($releaseId) found, trying to find artwork ...',
+      tag: '$OnlineArtService',
     );
 
     final albumArtUrl = await _fetchAlbumArtUrlFromReleaseId(
@@ -134,18 +138,20 @@ Future<String?> _fetchAlbumArt(_ComputeCapsule capsule) async {
     );
 
     if (albumArtUrl != null) {
-      printMessageInDebugMode(
+      printInfoInDebugMode(
         '${capsule.icyTitle}: Resource ($albumArtUrl) found',
+        tag: '$OnlineArtService',
       );
     } else {
-      printMessageInDebugMode(
+      printInfoInDebugMode(
         '${capsule.icyTitle}: No resource found for ($releaseId)!',
+        tag: '$OnlineArtService',
       );
     }
 
     return albumArtUrl;
-  } on Exception {
-    printMessageInDebugMode('No release found!');
+  } on Exception catch (e, s) {
+    printErrorInDebugMode(e, trace: s, tag: '$OnlineArtService');
     return null;
   }
 }
@@ -184,8 +190,8 @@ Future<String?> _fetchAlbumArtUrlFromReleaseId({
 
       return url?.replaceAll('http://', 'https://');
     }
-  } on Exception catch (e) {
-    printMessageInDebugMode(e.toString());
+  } on Exception catch (e, s) {
+    printErrorInDebugMode(e, trace: s, tag: '$OnlineArtService');
     return null;
   }
   return null;

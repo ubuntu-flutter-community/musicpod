@@ -14,8 +14,9 @@ class ChangeLocalMetaDataManager {
     required LocalAudioService localAudioService,
   }) : _audio = audio,
        _localAudioService = localAudioService {
-    printMessageInDebugMode(
-      'Initializing ChangeLocalMetaDataManager for ${audio.path}',
+    printInfoInDebugMode(
+      'Instance created for ${audio.path}',
+      tag: '$ChangeLocalMetaDataManager',
     );
   }
 

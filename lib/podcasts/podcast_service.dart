@@ -70,8 +70,8 @@ class PodcastService {
     var genres = <String>{};
     try {
       genres = await _search.genres().toSet();
-    } on Exception catch (e) {
-      printMessageInDebugMode(e);
+    } on Exception catch (e, s) {
+      printErrorInDebugMode(e, trace: s, tag: '$PodcastService');
     }
 
     _podcastGenreCache = genres
@@ -114,15 +114,16 @@ class PodcastService {
           attribute: attribute,
         );
       }
-    } catch (e) {
-      printMessageInDebugMode('Podcast search error: $e');
+    } on Exception catch (e, s) {
+      printErrorInDebugMode(e, trace: s, tag: '$PodcastService');
       rethrow;
     }
 
-    printMessageInDebugMode(
+    printInfoInDebugMode(
       'Podcast search result: successful=${result.successful}, '
       'itemCount=${result.items.length}, '
       'query=$searchQuery',
+      tag: '$PodcastService',
     );
 
     if (!result.successful) {
@@ -162,9 +163,13 @@ class PodcastService {
       final storedTimeStamp = getPodcastLastUpdated(feedUrl);
       final name = getPodcastName(feedUrl);
 
-      printMessageInDebugMode('checking update for: ${name ?? feedUrl} ');
-      printMessageInDebugMode(
+      printInfoInDebugMode(
+        'checking update for: ${name ?? feedUrl}',
+        tag: '$PodcastService',
+      );
+      printInfoInDebugMode(
         'storedTimeStamp: ${storedTimeStamp ?? 'no timestamp stored'}',
+        tag: '$PodcastService',
       );
 
       await _addPodcastLastUpdated(
@@ -205,14 +210,16 @@ class PodcastService {
         isPodcastSubscribed(feedUrl);
 
     if (tryFromDbOnly && hasEpisodesInDb) {
-      printMessageInDebugMode(
+      printInfoInDebugMode(
         'Skipping episode load from network for $feedUrl, loading from DB instead',
+        tag: '$PodcastService',
       );
       return _dao.getEpisodes(feedUrl);
     }
 
-    printMessageInDebugMode(
+    printInfoInDebugMode(
       'Fetching all episodes from ${_search.searchProvider is ITunesProvider ? 'iTunes' : 'podcastindex'} for feedUrl: $feedUrl',
+      tag: '$PodcastService',
     );
     final Podcast? podcast = await compute(loadPodcast, feedUrl);
     if (podcast?.image != null) {
@@ -322,9 +329,8 @@ class PodcastService {
         _deleteDownloadInFileSystem(download.key);
         successFullDeletes.add(download.key);
       } on Exception catch (e, st) {
-        printMessageInDebugMode(
-          'Error deleting download file for url ${download.key}: $e\n$st',
-        );
+        printErrorInDebugMode(e, trace: st, tag: '$PodcastService');
+        rethrow;
       }
     }
 
@@ -447,7 +453,10 @@ class PodcastService {
   }
 
   Future<void> removePodcastsWithUpdatesAndEpisodes(String feedUrl) async {
-    printMessageInDebugMode('Cleaning up unsubscribed podcast: $feedUrl');
+    printInfoInDebugMode(
+      'Cleaning up unsubscribed podcast: $feedUrl',
+      tag: '$PodcastService',
+    );
     await _dao.deletePodcastAndFriends(deleteMeUrls: {feedUrl});
 
     if (podcastFeedUrls.contains(feedUrl)) {

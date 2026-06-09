@@ -24,7 +24,7 @@ class ListenBrainzService {
         _listenBrainz = ListenBrainz(apiKey);
       }
     } on Exception catch (e, st) {
-      printMessageInDebugMode(e, trace: st);
+      printErrorInDebugMode(e, trace: st, tag: '$ListenBrainzService');
       if (rethrowError) {
         rethrow;
       }
@@ -42,8 +42,8 @@ class ListenBrainzService {
         await _listenBrainz!.submitSingle(track, DateTime.now());
         await _listenBrainz!.submitPlayingNow(track);
       }
-    } on Exception catch (e) {
-      printMessageInDebugMode(e);
+    } on Exception catch (e, s) {
+      printErrorInDebugMode(e, trace: s, tag: '$ListenBrainzService');
     }
   }
 }

@@ -59,6 +59,8 @@ class LocalCover extends StatelessWidget with WatchItMixin {
                       fit: fit,
                       height: dimension,
                       width: dimension,
+                      cacheHeight: (dimension * 1.2).toInt(),
+                      cacheWidth: (dimension * 1.2).toInt(),
                     ),
             ),
       ),

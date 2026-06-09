@@ -145,12 +145,12 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
                 child: RadioPageTagBar(station: station),
               ),
               image: SafeNetworkImage(
-                fallBackIcon: AudioFallBackIcon(
+                fallbackWidget: AudioFallBackIcon(
                   iconSize: kMaxAudioPageHeaderHeight / 2,
                   audio: station,
                   color: getAlphabetColor(station.uuid ?? 'a'),
                 ),
-                errorIcon: AudioFallBackIcon(
+                errorWidget: AudioFallBackIcon(
                   iconSize: kMaxAudioPageHeaderHeight / 2,
                   audio: station,
                   color: getAlphabetColor(station.uuid ?? 'a'),

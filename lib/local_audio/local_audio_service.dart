@@ -223,7 +223,7 @@ class LocalAudioService {
 
     await _lock.synchronized(() async {
       if (!forceInit && _initialized) {
-        printMessageInDebugMode(
+        printInfoInDebugMode(
           'Already initialized, skipping',
           tag: '$LocalAudioService',
         );
@@ -541,7 +541,7 @@ class LocalAudioService {
       }
       await _persistPlaylist(id, playlist);
     } on Exception catch (e, s) {
-      printMessageInDebugMode(e, trace: s, tag: '$LocalAudioService');
+      printInfoInDebugMode(e, trace: s, tag: '$LocalAudioService');
     }
   }
 
@@ -563,7 +563,7 @@ class LocalAudioService {
       }
       await _persistPlaylist(id, playlist);
     } on Exception catch (e, s) {
-      printMessageInDebugMode(e, trace: s, tag: '$LocalAudioService');
+      printInfoInDebugMode(e, trace: s, tag: '$LocalAudioService');
     }
   }
 
@@ -686,11 +686,8 @@ class LocalAudioService {
           }
         }
       }
-    } on Exception catch (e) {
-      printMessageInDebugMode(
-        'Failed to update metadata for ${audio.path}: $e',
-        tag: '$LocalAudioService',
-      );
+    } on Exception catch (e, s) {
+      printErrorInDebugMode(e, trace: s, tag: '$LocalAudioService');
     }
 
     return updatedAudio;
@@ -708,14 +705,14 @@ FutureOr<ImportResult> _readAudiosFromDirectory(String? directory) async {
     for (final e in results.files) {
       try {
         newAudios.add(Audio.local(e, onError: (p) => failedImports.add(p)));
-      } on Exception catch (ex) {
+      } on Exception catch (ex, s) {
         failedImports.add(e.path);
-        printMessageInDebugMode(ex);
+        printErrorInDebugMode(ex, trace: s, tag: '$LocalAudioService');
       }
     }
   }
 
-  printMessageInDebugMode(
+  printInfoInDebugMode(
     'Finished reading audios from directory. Found ${newAudios.length} audios, with ${failedImports.length} failed imports.',
     tag: '$LocalAudioService',
   );

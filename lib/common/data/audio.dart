@@ -429,16 +429,16 @@ class Audio {
     try {
       final metadata = readMetadata(file, getImage: getImage);
       audio = Audio._fromMetadata(metadata);
-    } on MetadataParserException catch (error) {
-      printMessageInDebugMode(error);
+    } on MetadataParserException catch (error, stackTrace) {
+      printErrorInDebugMode(error, trace: stackTrace, tag: '$Audio');
       onParseError?.call(file.path);
       audio = Audio._localWithoutMetadata(path: file.path);
-    } on Exception catch (error) {
-      printMessageInDebugMode(error);
+    } on Exception catch (error, stackTrace) {
+      printErrorInDebugMode(error, trace: stackTrace, tag: '$Audio');
       onError?.call(file.path);
       audio = Audio._localWithoutMetadata(path: file.path);
-    } catch (error) {
-      printMessageInDebugMode(error);
+    } catch (error, stackTrace) {
+      printErrorInDebugMode(error, trace: stackTrace, tag: '$Audio');
       onError?.call(file.path);
       audio = Audio._localWithoutMetadata(path: file.path);
     }

@@ -75,7 +75,7 @@ class MasterDetailPage extends StatelessWidget {
 
                 return PageRouteBuilder(
                   settings: settings,
-                  maintainState: PageIDs.permanent.contains(settings.name),
+                  maintainState: false,
                   pageBuilder: (context, _, __) => page,
                 );
               },

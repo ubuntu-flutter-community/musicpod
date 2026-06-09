@@ -30,6 +30,8 @@ class PodcastCard extends StatelessWidget with WatchItMixin {
         fit: BoxFit.cover,
         height: audioCardDimension,
         width: audioCardDimension,
+        cacheHeight: (audioCardDimension * 1.2).toInt(),
+        cacheWidth: (audioCardDimension * 1.2).toInt(),
       ),
       onPlay: feedUrl == null
           ? null

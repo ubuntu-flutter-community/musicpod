@@ -60,7 +60,7 @@ class RadioHistoryTileImage extends StatelessWidget with WatchItMixin {
             width: width,
             child: SafeNetworkImage(
               url: imageUrl,
-              fallBackIcon: Icon(Iconz.radio),
+              fallbackWidget: Icon(Iconz.radio),
               filterQuality: FilterQuality.medium,
               fit: fit ?? BoxFit.fitHeight,
             ),

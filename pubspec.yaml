@@ -17,7 +17,6 @@ dependencies:
   audio_service_win: ^0.0.3
   basic_utils: ^5.8.2
   blur: ^4.0.2
-  cached_network_image: ^3.4.1
   chinese_font_library: ^1.2.0
   collection: ^1.19.1
   cupertino_icons: ^1.0.9
@@ -32,7 +31,6 @@ dependencies:
   flex_color_picker: ^3.8.0
   flutter:
     sdk: flutter
-  flutter_cache_manager: ^3.4.1
   flutter_it: ^2.1.2
   flutter_localizations:
     sdk: flutter

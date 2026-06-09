@@ -104,7 +104,7 @@ class _AboutPageState extends State<_AboutPage> {
                                   child: SafeNetworkImage(
                                     fit: BoxFit.cover,
                                     url: e.avatarUrl,
-                                    fallBackIcon: const YaruPlaceholderIcon(
+                                    fallbackWidget: const YaruPlaceholderIcon(
                                       borderRadius:
                                           BorderRadiusDirectional.vertical(
                                             top: radius,

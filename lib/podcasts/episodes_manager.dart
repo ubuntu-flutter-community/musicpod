@@ -14,8 +14,9 @@ class EpisodesManager {
   }) : _feedUrl = feedUrl,
        _genre = genre,
        _podcastService = podcastService {
-    printMessageInDebugMode(
-      '$EpisodesManager created for feedUrl: $feedUrl, genre: $genre',
+    printInfoInDebugMode(
+      'Instance created for feedUrl: $feedUrl, genre: $genre',
+      tag: '$EpisodesManager',
     );
     command.run();
   }

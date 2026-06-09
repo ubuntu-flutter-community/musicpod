@@ -64,8 +64,8 @@ class CustomContentModel extends SafeChangeNotifier {
           ));
         }
       }
-    } on Exception catch (e) {
-      printMessageInDebugMode(e);
+    } on Exception catch (e, s) {
+      printErrorInDebugMode(e, trace: s, tag: '$CustomContentModel');
     }
 
     return lists;
@@ -124,7 +124,11 @@ class CustomContentModel extends SafeChangeNotifier {
         m3uAsString.writeln(audio.path);
       }
     }
-    File(join(basePath, '$id.m3u')).writeAsStringSync(m3uAsString.toString());
+    try {
+      File(join(basePath, '$id.m3u')).writeAsStringSync(m3uAsString.toString());
+    } on Exception catch (e, s) {
+      printErrorInDebugMode(e, trace: s, tag: '$CustomContentModel');
+    }
   }
 
   Future<void> importPodcastsFromOpmlFile() async {

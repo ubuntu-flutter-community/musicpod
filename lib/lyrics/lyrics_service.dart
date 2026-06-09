@@ -125,8 +125,9 @@ class OnlineLyricsService {
     final cacheKey = '${artist ?? ''} - $title'.toLowerCase();
     if (_cache.containsKey(cacheKey)) {
       final value = _cache[cacheKey];
-      printMessageInDebugMode(
+      printInfoInDebugMode(
         'Fetched lyrics from Genius for "$artist - $title": ${value?.lyricsString?.substring(0, 10)}..., artUrl: ${value?.artUrl}',
+        tag: '$OnlineLyricsService',
       );
       return Future.value(value);
     }
@@ -140,8 +141,9 @@ class OnlineLyricsService {
 
     _debounceTimer = Timer(const Duration(seconds: 2), () async {
       try {
-        printMessageInDebugMode(
+        printInfoInDebugMode(
           'Trying to fetch lyrics and art from Genius for "$artist - $title"',
+          tag: '$OnlineLyricsService',
         );
 
         final song = await _genius.searchSong(artist: artist, title: title);
@@ -152,8 +154,9 @@ class OnlineLyricsService {
             inputString: lyrics,
           );
 
-          printMessageInDebugMode(
+          printInfoInDebugMode(
             'Fetched lyrics from Genius for "$artist - $title": ${lyrics?.substring(0, 10)}..., artUrl: ${song.songArtImageUrl}',
+            tag: '$OnlineLyricsService',
           );
 
           _cache[cacheKey] = LyricsAndArtResult(
@@ -176,7 +179,8 @@ class OnlineLyricsService {
             _completer?.complete(null);
           }
         }
-      } catch (e) {
+      } catch (e, s) {
+        printErrorInDebugMode(e, trace: s, tag: '$OnlineLyricsService');
         if (_completer?.isCompleted == false) {
           _completer?.completeError(e);
         }

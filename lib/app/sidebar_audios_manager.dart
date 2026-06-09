@@ -27,7 +27,10 @@ class SidebarAudiosManager {
        _podcastManager = podcastManager,
        _radioManager = radioManager,
        _playerModel = playerModel {
-    printMessageInDebugMode('$SidebarAudiosManager created');
+    printInfoInDebugMode(
+      '$SidebarAudiosManager created',
+      tag: '$SidebarAudiosManager',
+    );
   }
 
   late final Command<

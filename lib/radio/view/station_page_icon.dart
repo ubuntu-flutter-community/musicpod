@@ -40,11 +40,11 @@ class StationPageIcon extends StatelessWidget with WatchItMixin {
         height: sideBarImageSize,
         width: sideBarImageSize,
         child: SafeNetworkImage(
-          fallBackIcon: SideBarFallBackImage(
+          fallbackWidget: SideBarFallBackImage(
             color: fallBackColor,
             child: selected ? Icon(Iconz.starFilled) : Icon(Iconz.star),
           ),
-          errorIcon: SideBarFallBackImage(
+          errorWidget: SideBarFallBackImage(
             color: fallBackColor,
             child: selected ? Icon(Iconz.starFilled) : Icon(Iconz.star),
           ),

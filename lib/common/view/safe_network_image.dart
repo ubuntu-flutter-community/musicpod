@@ -1,15 +1,6 @@
-import 'dart:io';
-
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:file/file.dart' hide FileSystem;
-import 'package:file/local.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:path/path.dart' as p;
-import 'package:xdg_directories/xdg_directories.dart';
 
 import '../../extensions/build_context_x.dart';
-import '../../extensions/taget_platform_x.dart';
 import '../logging.dart';
 import 'icons.dart';
 
@@ -19,21 +10,25 @@ class SafeNetworkImage extends StatelessWidget {
     required this.url,
     this.filterQuality = FilterQuality.medium,
     this.fit = BoxFit.fitWidth,
-    this.fallBackIcon,
-    this.errorIcon,
+    this.fallbackWidget,
+    this.errorWidget,
     this.height,
     this.width,
     this.httpHeaders,
     this.onImageLoaded,
+    this.cacheHeight,
+    this.cacheWidth,
   });
 
   final String? url;
   final FilterQuality filterQuality;
   final BoxFit fit;
-  final Widget? fallBackIcon;
-  final Widget? errorIcon;
+  final Widget? fallbackWidget;
+  final Widget? errorWidget;
   final double? height;
   final double? width;
+  final int? cacheHeight;
+  final int? cacheWidth;
   final Map<String, String>? httpHeaders;
   final Function(ImageProvider imageProvider)? onImageLoaded;
 
@@ -43,7 +38,7 @@ class SafeNetworkImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final fallBack = Center(
       child:
-          fallBackIcon ??
+          fallbackWidget ??
           Icon(Iconz.musicNote, size: height != null ? height! * 0.7 : null),
     );
 
@@ -55,7 +50,7 @@ class SafeNetworkImage extends StatelessWidget {
 
     final errorWidget = Center(
       child:
-          errorIcon ??
+          this.errorWidget ??
           Icon(
             Iconz.imageMissing,
             size: height != null ? height! * 0.7 : null,
@@ -64,77 +59,41 @@ class SafeNetworkImage extends StatelessWidget {
     );
 
     try {
-      return CachedNetworkImage(
-        cacheManager: isLinux ? XdgCacheManager() : null,
-        imageUrl: url!,
-        memCacheHeight: height?.toInt(),
-        memCacheWidth: width?.toInt(),
-        httpHeaders: httpHeaders,
-        filterQuality: filterQuality,
+      return Image.network(
+        url!,
+        height: height,
+        width: width,
+        cacheHeight: cacheHeight,
+        cacheWidth: cacheWidth,
         fit: fit,
-        imageBuilder: (context, imageProvider) {
-          onImageLoaded?.call(imageProvider);
-          return Image(
-            image: imageProvider,
-            filterQuality: filterQuality,
-            fit: fit,
-            height: height,
-            width: width,
+        filterQuality: filterQuality,
+        headers: httpHeaders,
+        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+          if (frame != null) {
+            onImageLoaded?.call(NetworkImage(url!));
+          }
+          if (wasSynchronouslyLoaded) {
+            return child;
+          }
+          return AnimatedOpacity(
+            opacity: frame == null ? 0 : 1,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            child: child,
           );
         },
-        errorWidget: (context, url, _) => errorWidget,
-        errorListener: (e) {
-          printMessageInDebugMode('Failed to load image: $url');
-          if (url != null) {
-            _failedUrls.add(url!);
-          }
-        },
+        errorBuilder: (context, error, stackTrace) => errorWidget,
       );
-    } on Exception {
-      printMessageInDebugMode('Failed to load image: $url');
+    } on Exception catch (e, s) {
+      printErrorInDebugMode(
+        'Failed to load image: $url',
+        trace: s,
+        tag: '$SafeNetworkImage',
+      );
       if (url != null) {
         _failedUrls.add(url!);
       }
       return fallBack;
     }
   }
-}
-
-// Code by @d-loose
-class _XdgFileSystem implements FileSystem {
-  final Future<Directory> _fileDir;
-  final String _cacheKey;
-
-  _XdgFileSystem(this._cacheKey) : _fileDir = createDirectory(_cacheKey);
-
-  static Future<Directory> createDirectory(String key) async {
-    final baseDir = cacheHome;
-    final path = p.join(baseDir.path, key, 'images');
-
-    const fs = LocalFileSystem();
-    final directory = fs.directory(path);
-    await directory.create(recursive: true);
-    return directory;
-  }
-
-  @override
-  Future<File> createFile(String name) async {
-    final directory = await _fileDir;
-    if (!(await directory.exists())) {
-      await createDirectory(_cacheKey);
-    }
-    return directory.childFile(name);
-  }
-}
-
-class XdgCacheManager extends CacheManager with ImageCacheManager {
-  static final key = p.basename(Platform.resolvedExecutable);
-
-  static final XdgCacheManager _instance = XdgCacheManager._();
-
-  factory XdgCacheManager() {
-    return _instance;
-  }
-
-  XdgCacheManager._() : super(Config(key, fileSystem: _XdgFileSystem(key)));
 }

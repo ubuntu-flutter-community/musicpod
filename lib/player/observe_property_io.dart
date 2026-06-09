@@ -10,8 +10,8 @@ Future<void> observeProperty({
   NativePlayer? nativePlayer;
   try {
     nativePlayer = player.platform as NativePlayer;
-  } on Exception catch (e) {
-    printMessageInDebugMode(e);
+  } on Exception catch (e, s) {
+    printErrorInDebugMode(e, trace: s, tag: '$observeProperty');
   }
 
   if (nativePlayer == null) {

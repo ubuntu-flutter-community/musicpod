@@ -33,8 +33,8 @@ class AudioTileImage extends StatelessWidget {
         url: audio?.imageUrl ?? audio?.albumArtUrl,
         height: size,
         fit: BoxFit.cover,
-        fallBackIcon: fallbackIcon,
-        errorIcon: fallbackIcon,
+        fallbackWidget: fallbackIcon,
+        errorWidget: fallbackIcon,
       );
     }
 

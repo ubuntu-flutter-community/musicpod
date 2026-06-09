@@ -65,11 +65,13 @@ class ErrorBody extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     callOnceAfterThisBuild(
-      (_) => printMessageInDebugMode(
+      (_) => printErrorInDebugMode(
         'ErrorPage: ${error.toString()} \n StackTrace: ${stackTrace.toString()}',
         tag: '$ErrorPage',
+        trace: stackTrace,
       ),
     );
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(kLargestSpace),
