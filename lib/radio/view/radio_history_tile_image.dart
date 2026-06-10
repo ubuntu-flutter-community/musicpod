@@ -9,7 +9,7 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../player/mpv_metadata_manager.dart';
-import '../online_art_model.dart';
+import '../online_art_manager.dart';
 
 class RadioHistoryTileImage extends StatelessWidget with WatchItMixin {
   const RadioHistoryTileImage({
@@ -29,7 +29,7 @@ class RadioHistoryTileImage extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final bR = BorderRadius.circular(4);
     final imageUrl = watchPropertyValue(
-      (OnlineArtModel m) => m.getCover(icyTitle!),
+      (OnlineArtManager m) => m.getCover(icyTitle!),
     );
 
     return Tooltip(

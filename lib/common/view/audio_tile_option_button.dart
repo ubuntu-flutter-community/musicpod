@@ -15,11 +15,11 @@ import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/playlist_action.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
-import '../../player/player_model.dart';
+import '../../player/player_manager.dart';
 import '../../playlists/view/add_to_playlist_dialog.dart';
 import '../../podcasts/episodes_manager.dart';
 import '../../podcasts/podcast_manager.dart';
-import '../../settings/settings_model.dart';
+import '../../settings/settings_manager.dart';
 import '../data/audio.dart';
 import '../data/audio_type.dart';
 import 'audio_tile_bottom_sheet.dart';
@@ -73,10 +73,11 @@ class AudioTileOptionButton extends StatelessWidget {
           (audios.isNotEmpty || audios.every((e) => e.isPodcast)) &&
           playlistId.isNotEmpty,
       itemBuilder: (context) {
-        final hideCompletedEpisodes = di<SettingsModel>().hideCompletedEpisodes;
+        final hideCompletedEpisodes =
+            di<SettingsManager>().hideCompletedEpisodes;
         final showDownloadsOnly = di<PodcastManager>().downloadsOnly.value;
-        final playerModel = di<PlayerModel>();
-        final currentAudio = playerModel.audio;
+        final playerManager = di<PlayerManager>();
+        final currentAudio = playerManager.audio;
         final currentlyLocalPlaying =
             currentAudio != null && currentAudio.isLocal;
         return [
@@ -86,7 +87,7 @@ class AudioTileOptionButton extends StatelessWidget {
             PopupMenuItem(
               onTap: () {
                 if (currentlyLocalPlaying) {
-                  playerModel.insertIntoQueue(audios);
+                  playerManager.insertIntoQueue(audios);
                   context.toast(
                     Text('${l10n.addedTo} ${l10n.queue}: $searchTerm'),
                     action: SnackBarAction(
@@ -96,7 +97,7 @@ class AudioTileOptionButton extends StatelessWidget {
                     showCloseIcon: true,
                   );
                 } else {
-                  playerModel.startPlaylist(
+                  playerManager.startPlaylist(
                     audios: audios,
                     listName: playlistId,
                   );
@@ -216,7 +217,7 @@ class AudioTileOptionButton extends StatelessWidget {
             ),
           if (audios.every((e) => e.audioType == AudioType.podcast)) ...[
             PopupMenuItem(
-              onTap: di<SettingsModel>().toggleHideCompletedEpisodes,
+              onTap: di<SettingsManager>().toggleHideCompletedEpisodes,
               child: IgnorePointer(
                 child: ListTile(
                   selectedTileColor: Colors.transparent,

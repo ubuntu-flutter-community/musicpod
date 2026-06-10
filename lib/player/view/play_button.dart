@@ -3,7 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
-import '../player_model.dart';
+import '../player_manager.dart';
 
 class PlayButton extends StatelessWidget with WatchItMixin {
   const PlayButton({
@@ -19,10 +19,10 @@ class PlayButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final playerModel = di<PlayerModel>();
-    final pause = playerModel.pause;
-    final playOrPause = playerModel.playOrPause;
-    final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
+    final playerManager = di<PlayerManager>();
+    final pause = playerManager.pause;
+    final playOrPause = playerManager.playOrPause;
+    final isPlaying = watchPropertyValue((PlayerManager m) => m.isPlaying);
     final tooltip = isPlaying ? context.l10n.pause : context.l10n.play;
     return IconButton(
       style: buttonStyle,

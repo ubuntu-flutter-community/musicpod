@@ -12,10 +12,10 @@ import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../player/player_model.dart';
+import '../../player/player_manager.dart';
 import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
-import '../../settings/settings_model.dart';
+import '../../settings/settings_manager.dart';
 import '../data/podcast_episode_filter.dart';
 import '../data/podcast_update_capsule.dart';
 import '../download_manager.dart';
@@ -47,7 +47,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
     );
 
     registerHandler(
-      select: (PlayerModel m) => m.toggleAudiosProgressCommand.results,
+      select: (PlayerManager m) => m.toggleAudiosProgressCommand.results,
       handler: (context, results, cancel) {
         if (results.paramData?.audios.any((a) => a.durationMs == null) ==
             true) {
@@ -75,7 +75,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
 
     final showDownloadsOnly = watchValue((PodcastManager m) => m.downloadsOnly);
     final hideCompletedEpisodes = watchPropertyValue(
-      (SettingsModel m) => m.hideCompletedEpisodes,
+      (SettingsManager m) => m.hideCompletedEpisodes,
     );
 
     final showPodcastsAscending = watchValue(
@@ -84,7 +84,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
     );
 
     final lastPositions = watchValue(
-      (PlayerModel m) => m.toggleAudiosProgressCommand,
+      (PlayerManager m) => m.toggleAudiosProgressCommand,
     );
 
     final filter = watchValue((PodcastManager m) => m.filter);

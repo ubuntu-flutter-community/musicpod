@@ -8,7 +8,7 @@ import '../../common/view/common_widgets.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../custom_content_model.dart';
+import '../custom_content_manager.dart';
 
 class BackupDialog extends StatelessWidget with WatchItMixin {
   const BackupDialog({super.key, this.breakingChange = true});
@@ -102,7 +102,7 @@ class BackupDialog extends StatelessWidget with WatchItMixin {
                             YaruTile(
                               title: ElevatedButton(
                                 onPressed: () {
-                                  di<CustomContentModel>()
+                                  di<CustomContentManager>()
                                       .exportPlaylistsAndPinnedAlbumsToM3Us()
                                       .then(
                                         (v) =>
@@ -121,7 +121,7 @@ class BackupDialog extends StatelessWidget with WatchItMixin {
                             YaruTile(
                               title: ElevatedButton(
                                 child: Text(l10n.exportPodcastsToOpmlFile),
-                                onPressed: () => di<CustomContentModel>()
+                                onPressed: () => di<CustomContentManager>()
                                     .exportPodcastsToOpmlFile()
                                     .then(
                                       (v) => appManager.setPodcastBackup(v),
@@ -134,7 +134,7 @@ class BackupDialog extends StatelessWidget with WatchItMixin {
                           children: [
                             YaruTile(
                               title: ElevatedButton(
-                                onPressed: () => di<CustomContentModel>()
+                                onPressed: () => di<CustomContentManager>()
                                     .exportStarredStationsToOpmlFile()
                                     .then((v) => appManager.setRadioBackup(v)),
                                 child: Text(

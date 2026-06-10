@@ -5,8 +5,8 @@ import 'package:yaru/yaru.dart';
 
 import '../../common/view/theme.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../player/player_model.dart';
-import '../../settings/settings_model.dart';
+import '../../player/player_manager.dart';
+import '../../settings/settings_manager.dart';
 import 'desktop_musicpod_app.dart';
 import 'mobile_musicpod_app.dart';
 
@@ -16,19 +16,19 @@ class YaruMusicPodApp extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final useCustomThemeColor = watchPropertyValue(
-      (SettingsModel m) => m.useCustomThemeColor,
+      (SettingsManager m) => m.useCustomThemeColor,
     );
     final customThemeColor = watchPropertyValue(
-      (SettingsModel m) => m.customThemeColor,
+      (SettingsManager m) => m.customThemeColor,
     );
 
     final usePlayerColor = watchPropertyValue(
-      (SettingsModel m) => m.usePlayerColor,
+      (SettingsManager m) => m.usePlayerColor,
     );
-    final playerColor = watchPropertyValue((PlayerModel m) => m.color);
+    final playerColor = watchPropertyValue((PlayerManager m) => m.color);
 
     final useYaruTheme = watchPropertyValue(
-      (SettingsModel m) => m.useYaruTheme,
+      (SettingsManager m) => m.useYaruTheme,
     );
 
     return YaruTheme(
@@ -62,16 +62,16 @@ class MaterialMusicPodApp extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final useCustomThemeColor = watchPropertyValue(
-      (SettingsModel m) => m.useCustomThemeColor,
+      (SettingsManager m) => m.useCustomThemeColor,
     );
     final customThemeColor = watchPropertyValue(
-      (SettingsModel m) => m.customThemeColor,
+      (SettingsManager m) => m.customThemeColor,
     );
 
     final usePlayerColor = watchPropertyValue(
-      (SettingsModel m) => m.usePlayerColor,
+      (SettingsManager m) => m.usePlayerColor,
     );
-    final playerColor = watchPropertyValue((PlayerModel m) => m.color);
+    final playerColor = watchPropertyValue((PlayerManager m) => m.color);
 
     return SystemThemeBuilder(
       builder: (context, accent) {

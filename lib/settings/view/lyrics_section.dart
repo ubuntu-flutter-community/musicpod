@@ -11,7 +11,7 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../lyrics/lyrics_service.dart';
-import '../settings_model.dart';
+import '../settings_manager.dart';
 
 class LyricsSection extends StatefulWidget with WatchItStatefulWidgetMixin {
   const LyricsSection({super.key});
@@ -28,7 +28,7 @@ class _LyricsSectionState extends State<LyricsSection> {
   void initState() {
     super.initState();
     _geniusApiKeyController = TextEditingController(
-      text: di<SettingsModel>().lyricsGeniusAccessToken,
+      text: di<SettingsManager>().lyricsGeniusAccessToken,
     );
   }
 
@@ -45,7 +45,7 @@ class _LyricsSectionState extends State<LyricsSection> {
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
 
-    final lyricsGeniusAccessToken = watchPropertyValue((SettingsModel m) {
+    final lyricsGeniusAccessToken = watchPropertyValue((SettingsManager m) {
       final lyricsGeniusAccessToken = m.lyricsGeniusAccessToken;
       if (lyricsGeniusAccessToken != _geniusApiKeyController.text &&
           mounted &&
@@ -56,7 +56,7 @@ class _LyricsSectionState extends State<LyricsSection> {
     });
 
     final neverAskAgainForGeniusToken = watchPropertyValue(
-      (SettingsModel m) => m.neverAskAgainForGeniusToken,
+      (SettingsManager m) => m.neverAskAgainForGeniusToken,
     );
 
     return YaruSection(
@@ -79,7 +79,7 @@ class _LyricsSectionState extends State<LyricsSection> {
             subtitle: Text(l10n.settingsDoNotAskForGeniusDescription),
             trailing: CommonSwitch(
               value: neverAskAgainForGeniusToken,
-              onChanged: di<SettingsModel>().setNeverAskAgainForGeniusToken,
+              onChanged: di<SettingsManager>().setNeverAskAgainForGeniusToken,
             ),
           ),
           YaruTile(

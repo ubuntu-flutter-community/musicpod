@@ -12,8 +12,8 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';
 import '../../extensions/int_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../player/player_model.dart';
-import '../../settings/settings_model.dart';
+import '../../player/player_manager.dart';
+import '../../settings/settings_manager.dart';
 import 'download_button.dart';
 import 'podcast_mark_done_button.dart';
 import 'podcast_replay_button.dart';
@@ -45,9 +45,9 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
         : context.l10n.unknown;
     final label = '$date, ${context.l10n.duration}: $duration';
 
-    final playerModel = di<PlayerModel>();
+    final playerManager = di<PlayerManager>();
     final useYaruTheme = watchPropertyValue(
-      (SettingsModel m) => m.useYaruTheme,
+      (SettingsManager m) => m.useYaruTheme,
     );
     final radius =
         (useYaruTheme
@@ -121,7 +121,7 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
                             onPressed: () {
                               final text =
                                   '${audio.title != null ? '${audio.podcastTitle} - ' : ''}${audio.title ?? ''}';
-                              playerModel.insertIntoQueue([audio]);
+                              playerManager.insertIntoQueue([audio]);
                               context.toast(
                                 Text(context.l10n.insertedIntoQueue(text)),
                               );
@@ -196,7 +196,7 @@ class _Description extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final useYaruTheme = watchPropertyValue(
-      (SettingsModel m) => m.useYaruTheme,
+      (SettingsManager m) => m.useYaruTheme,
     );
     final theme = context.theme;
     return InkWell(

@@ -12,8 +12,8 @@ import '../extensions/taget_platform_x.dart';
 import 'player_service.dart';
 
 @lazySingleton
-class PlayerModel extends SafeChangeNotifier {
-  PlayerModel({required PlayerService service}) : _playerService = service {
+class PlayerManager extends SafeChangeNotifier {
+  PlayerManager({required PlayerService service}) : _playerService = service {
     _propertiesChangedSub ??= _playerService.propertiesChanged.listen(
       (_) => notifyListeners(),
     );

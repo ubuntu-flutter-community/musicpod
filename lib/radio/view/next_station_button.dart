@@ -3,7 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/player_model.dart';
+import '../../player/player_manager.dart';
 import '../../search/search_manager.dart';
 
 class NextStationButton extends StatelessWidget with WatchItMixin {
@@ -19,8 +19,8 @@ class NextStationButton extends StatelessWidget with WatchItMixin {
       handler: (context, newValue, cancel) {
         if (newValue != null &&
             newValue.uuid != null &&
-            newValue.uuid != di<PlayerModel>().audio?.uuid) {
-          di<PlayerModel>().startPlaylist(
+            newValue.uuid != di<PlayerManager>().audio?.uuid) {
+          di<PlayerManager>().startPlaylist(
             audios: [newValue],
             listName: newValue.uuid!,
           );
@@ -30,7 +30,7 @@ class NextStationButton extends StatelessWidget with WatchItMixin {
       },
     );
 
-    final audio = watchPropertyValue((PlayerModel m) => m.audio);
+    final audio = watchPropertyValue((PlayerManager m) => m.audio);
 
     final findingSimilarStation = watchValue(
       (SearchManager m) => m.findSimilarStationCommand.isRunning,

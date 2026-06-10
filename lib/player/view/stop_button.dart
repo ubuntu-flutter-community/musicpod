@@ -5,7 +5,7 @@ import '../../app/app_manager.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
 
-import '../player_model.dart';
+import '../player_manager.dart';
 
 class StopButton extends StatelessWidget {
   const StopButton({super.key, required this.active});
@@ -18,7 +18,7 @@ class StopButton extends StatelessWidget {
     onPressed: active
         ? () {
             di<AppManager>().setFullWindowMode(false);
-            di<PlayerModel>().stop();
+            di<PlayerManager>().stop();
           }
         : null,
     icon: Icon(Iconz.stopFilled),

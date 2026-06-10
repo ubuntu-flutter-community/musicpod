@@ -10,7 +10,7 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/command_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../../player/player_model.dart';
+import '../../player/player_manager.dart';
 import '../../radio/radio_manager.dart';
 import '../../common/view/error_retry_body.dart';
 import '../../radio/view/radio_page_tag_bar.dart';
@@ -63,8 +63,8 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
       );
     }
 
-    final playing = watchPropertyValue((PlayerModel m) => m.isPlaying);
-    final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
+    final playing = watchPropertyValue((PlayerManager m) => m.isPlaying);
+    final currentAudio = watchPropertyValue((PlayerManager m) => m.audio);
 
     return SliverList.builder(
       itemCount: radioSearchResult.length,
@@ -153,7 +153,7 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
                   : null,
             ),
             onTap: () {
-              di<PlayerModel>()
+              di<PlayerManager>()
                   .startPlaylist(audios: [station], listName: station.uuid!)
                   .then((_) => di<RadioManager>().clickStation(station));
             },

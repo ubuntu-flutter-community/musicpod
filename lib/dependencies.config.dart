@@ -26,7 +26,7 @@ import 'app/sidebar_audios_manager.dart' as _i190;
 import 'app/window_size_to_settings_listener.dart' as _i517;
 import 'common/data/audio.dart' as _i537;
 import 'common/persistence/database.dart' as _i115;
-import 'custom_content/custom_content_model.dart' as _i55;
+import 'custom_content/custom_content_manager.dart' as _i1028;
 import 'expose/expose_manager.dart' as _i987;
 import 'expose/expose_service.dart' as _i820;
 import 'expose/lastfm_service.dart' as _i820;
@@ -43,7 +43,7 @@ import 'lyrics/lyrics_service.dart' as _i546;
 import 'notifications/notifications_service.dart' as _i57;
 import 'player/mpv_metadata_manager.dart' as _i112;
 import 'player/persistence/player_dao.dart' as _i443;
-import 'player/player_model.dart' as _i1025;
+import 'player/player_manager.dart' as _i444;
 import 'player/player_service.dart' as _i38;
 import 'podcasts/download_manager.dart' as _i388;
 import 'podcasts/download_service.dart' as _i616;
@@ -53,13 +53,13 @@ import 'podcasts/podcast_clean_manager.dart' as _i425;
 import 'podcasts/podcast_genre_manager.dart' as _i973;
 import 'podcasts/podcast_manager.dart' as _i351;
 import 'podcasts/podcast_service.dart' as _i721;
-import 'radio/online_art_model.dart' as _i620;
+import 'radio/online_art_manager.dart' as _i635;
 import 'radio/online_art_service.dart' as _i328;
 import 'radio/persistence/radio_dao.dart' as _i414;
 import 'radio/radio_manager.dart' as _i749;
 import 'radio/radio_service.dart' as _i811;
 import 'search/search_manager.dart' as _i807;
-import 'settings/settings_model.dart' as _i338;
+import 'settings/settings_manager.dart' as _i651;
 import 'settings/settings_service.dart' as _i763;
 import 'settings/view/licenses_dialog.dart' as _i1009;
 import 'third_party/audio_service_module.dart' as _i739;
@@ -129,9 +129,10 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i414.RadioDao>(
       () => _i414.RadioDao(db: gh<_i115.Database>()),
     );
-    gh.lazySingleton<_i620.OnlineArtModel>(
-      () =>
-          _i620.OnlineArtModel(onlineArtService: gh<_i328.OnlineArtService>()),
+    gh.lazySingleton<_i635.OnlineArtManager>(
+      () => _i635.OnlineArtManager(
+        onlineArtService: gh<_i328.OnlineArtService>(),
+      ),
       dispose: (i) => i.dispose(),
     );
     gh.singleton<_i811.RadioService>(
@@ -211,8 +212,8 @@ extension GetItInjectableX on _i174.GetIt {
       preResolve: true,
       dispose: (i) => i.dispose(),
     );
-    gh.lazySingleton<_i1025.PlayerModel>(
-      () => _i1025.PlayerModel(service: gh<_i38.PlayerService>()),
+    gh.lazySingleton<_i444.PlayerManager>(
+      () => _i444.PlayerManager(service: gh<_i38.PlayerService>()),
       dispose: (i) => i.dispose(),
     );
     gh.lazySingleton<_i987.ExposeManager>(
@@ -261,8 +262,8 @@ extension GetItInjectableX on _i174.GetIt {
       ),
       dispose: (i) => i.dispose(),
     );
-    gh.lazySingleton<_i338.SettingsModel>(
-      () => _i338.SettingsModel(
+    gh.lazySingleton<_i651.SettingsManager>(
+      () => _i651.SettingsManager(
         service: gh<_i763.SettingsService>(),
         podcastService: gh<_i721.PodcastService>(),
         localAudioService: gh<_i438.LocalAudioService>(),
@@ -326,14 +327,6 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioService: gh<_i438.LocalAudioService>(),
       ),
     );
-    gh.factoryCached<_i190.SidebarAudiosManager>(
-      () => _i190.SidebarAudiosManager(
-        podcastManager: gh<_i351.PodcastManager>(),
-        localAudioManager: gh<_i688.LocalAudioManager>(),
-        radioManager: gh<_i749.RadioManager>(),
-        playerModel: gh<_i1025.PlayerModel>(),
-      ),
-    );
     gh.lazySingleton<_i807.SearchManager>(
       () => _i807.SearchManager(
         radioService: gh<_i811.RadioService>(),
@@ -343,12 +336,20 @@ extension GetItInjectableX on _i174.GetIt {
       ),
       dispose: (i) => i.dispose(),
     );
-    gh.lazySingleton<_i55.CustomContentModel>(
-      () => _i55.CustomContentModel(
+    gh.lazySingleton<_i1028.CustomContentManager>(
+      () => _i1028.CustomContentManager(
         externalPathService: gh<_i551.ExternalPathService>(),
         localAudioService: gh<_i438.LocalAudioService>(),
         podcastService: gh<_i721.PodcastService>(),
         radioService: gh<_i811.RadioService>(),
+      ),
+    );
+    gh.factoryCached<_i190.SidebarAudiosManager>(
+      () => _i190.SidebarAudiosManager(
+        podcastManager: gh<_i351.PodcastManager>(),
+        localAudioManager: gh<_i688.LocalAudioManager>(),
+        radioManager: gh<_i749.RadioManager>(),
+        playerManager: gh<_i444.PlayerManager>(),
       ),
     );
     return this;

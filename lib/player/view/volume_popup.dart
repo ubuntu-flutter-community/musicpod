@@ -7,7 +7,7 @@ import '../../extensions/build_context_x.dart';
 
 import '../../common/view/custom_track_shape.dart';
 
-import '../player_model.dart';
+import '../player_manager.dart';
 
 class VolumeSliderPopup extends StatelessWidget with WatchItMixin {
   const VolumeSliderPopup({super.key, this.color});
@@ -17,7 +17,7 @@ class VolumeSliderPopup extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final volume = watchPropertyValue((PlayerModel m) => m.volume);
+    final volume = watchPropertyValue((PlayerManager m) => m.volume);
     IconData iconData;
     if (volume != null && volume <= 0) {
       iconData = Iconz.speakerMutedFilled;
@@ -50,12 +50,12 @@ class VolumeSlider extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final volume = watchPropertyValue((PlayerModel m) => m.volume);
+    final volume = watchPropertyValue((PlayerManager m) => m.volume);
     final slider = SliderTheme(
       data: context.theme.sliderTheme.copyWith(trackShape: CustomTrackShape()),
       child: Slider(
         value: volume ?? 100.0,
-        onChanged: di<PlayerModel>().setVolume,
+        onChanged: di<PlayerManager>().setVolume,
         max: 100,
         min: 0,
       ),

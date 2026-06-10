@@ -8,7 +8,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../player/player_model.dart';
+import '../player_manager.dart';
 import 'playback_rate_button.dart';
 import 'player_pause_timer_button.dart';
 import 'volume_popup.dart';
@@ -27,7 +27,7 @@ class FullWindowPlayerTopControls extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final audio = watchPropertyValue((PlayerModel m) => m.audio);
+    final audio = watchPropertyValue((PlayerManager m) => m.audio);
 
     final isFullScreen = isFullscreen(context);
 

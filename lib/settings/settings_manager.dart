@@ -12,8 +12,8 @@ import 'settings_service.dart';
 import 'shared_preferences_keys.dart';
 
 @lazySingleton
-class SettingsModel extends SafeChangeNotifier {
-  SettingsModel({
+class SettingsManager extends SafeChangeNotifier {
+  SettingsManager({
     required SettingsService service,
     required PodcastService podcastService,
     required LocalAudioService localAudioService,

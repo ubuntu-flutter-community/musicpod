@@ -9,7 +9,7 @@ import '../../common/view/progress.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../player_model.dart';
+import '../player_manager.dart';
 import 'full_window_player_top_controls.dart';
 import 'player_main_controls.dart';
 import 'player_track.dart';
@@ -201,7 +201,10 @@ class SimpleFullHeightVideoPlayer extends StatelessWidget {
     padding: context.isPortrait && isMobile
         ? const EdgeInsets.only(bottom: 40)
         : EdgeInsets.zero,
-    child: Video(controller: di<PlayerModel>().controller, controls: controls),
+    child: Video(
+      controller: di<PlayerManager>().controller,
+      controls: controls,
+    ),
   );
 }
 

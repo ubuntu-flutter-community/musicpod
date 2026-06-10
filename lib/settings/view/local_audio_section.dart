@@ -8,7 +8,7 @@ import '../../extensions/build_context_x.dart';
 import '../../external_path/external_path_service.dart';
 
 import '../../local_audio/local_audio_manager.dart';
-import '../settings_model.dart';
+import '../settings_manager.dart';
 
 class LocalAudioSection extends StatelessWidget with WatchItMixin {
   const LocalAudioSection({super.key});
@@ -17,11 +17,11 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final directory = watchPropertyValue(
-      (SettingsModel m) => m.directory ?? '',
+      (SettingsManager m) => m.directory ?? '',
     );
 
     final groupAlbumsOnlyByAlbumName = watchPropertyValue(
-      (SettingsModel m) => m.groupAlbumsOnlyByAlbumName,
+      (SettingsManager m) => m.groupAlbumsOnlyByAlbumName,
     );
     return YaruSection(
       headline: Text(l10n.localAudio),
@@ -57,16 +57,16 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
             ),
             trailing: CommonSwitch(
               value: watchPropertyValue(
-                (SettingsModel m) => m.neverShowFailedImports,
+                (SettingsManager m) => m.neverShowFailedImports,
               ),
-              onChanged: di<SettingsModel>().setNeverShowFailedImports,
+              onChanged: di<SettingsManager>().setNeverShowFailedImports,
             ),
           ),
           YaruTile(
             title: Text(l10n.groupAlbumsOnlyByAlbumName),
             trailing: CommonSwitch(
               value: groupAlbumsOnlyByAlbumName,
-              onChanged: di<SettingsModel>().setGroupAlbumsOnlyByAlbumName,
+              onChanged: di<SettingsManager>().setGroupAlbumsOnlyByAlbumName,
             ),
           ),
           if (groupAlbumsOnlyByAlbumName)

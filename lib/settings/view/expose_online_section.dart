@@ -8,7 +8,7 @@ import '../../common/view/theme.dart';
 import '../../expose/data/last_fm_credentials.dart';
 import '../../expose/expose_manager.dart';
 import '../../extensions/build_context_x.dart';
-import '../settings_model.dart';
+import '../settings_manager.dart';
 
 class ExposeOnlineSection extends StatefulWidget
     with WatchItStatefulWidgetMixin {
@@ -29,7 +29,7 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
   void initState() {
     super.initState();
 
-    final model = di<SettingsModel>();
+    final model = di<SettingsManager>();
     _lastFmApiKeyController = TextEditingController(text: model.lastFmApiKey);
     _lastFmSecretController = TextEditingController(text: model.lastFmSecret);
     _listenBrainzApiKeyController = TextEditingController(
@@ -51,11 +51,11 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
     final l10n = context.l10n;
 
     final lastFmEnabled = watchPropertyValue(
-      (SettingsModel m) => m.enableLastFmScrobbling,
+      (SettingsManager m) => m.enableLastFmScrobbling,
     );
 
     final listenBrainzEnabled = watchPropertyValue(
-      (SettingsModel m) => m.enableListenBrainzScrobbling,
+      (SettingsManager m) => m.enableListenBrainzScrobbling,
     );
 
     return YaruSection(
@@ -78,7 +78,7 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
             trailing: CommonSwitch(
               value: lastFmEnabled,
               onChanged: (v) {
-                di<SettingsModel>().setEnableLastFmScrobbling(v);
+                di<SettingsManager>().setEnableLastFmScrobbling(v);
               },
             ),
           ),
@@ -110,7 +110,7 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
                             _lastFmFormKey.currentState?.validate(),
                         onFieldSubmitted: (value) async {
                           if (_lastFmFormKey.currentState!.validate()) {
-                            di<SettingsModel>().setLastFmApiKey(value);
+                            di<SettingsManager>().setLastFmApiKey(value);
                           }
                         },
                       ),
@@ -131,7 +131,7 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
                             _lastFmFormKey.currentState?.validate(),
                         onFieldSubmitted: (value) async {
                           if (_lastFmFormKey.currentState!.validate()) {
-                            di<SettingsModel>().setLastFmSecret(value);
+                            di<SettingsManager>().setLastFmSecret(value);
                           }
                         },
                       ),
@@ -165,7 +165,7 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
             subtitle: Text(l10n.exposeToListenBrainzSubTitle),
             trailing: CommonSwitch(
               value: listenBrainzEnabled,
-              onChanged: di<SettingsModel>().setEnableListenBrainzScrobbling,
+              onChanged: di<SettingsManager>().setEnableListenBrainzScrobbling,
             ),
           ),
           if (listenBrainzEnabled) ...[
@@ -199,7 +199,7 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
                             onFieldSubmitted: (value) async {
                               if (_listenBrainzFormKey.currentState!
                                   .validate()) {
-                                di<SettingsModel>().setListenBrainzApiKey(
+                                di<SettingsManager>().setListenBrainzApiKey(
                                   value,
                                 );
                               }

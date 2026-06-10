@@ -4,7 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/safe_network_image.dart';
 import '../../extensions/build_context_x.dart';
-import '../player_model.dart';
+import '../player_manager.dart';
 
 class PlayerRemoteSourceImage extends StatelessWidget with WatchItMixin {
   const PlayerRemoteSourceImage({
@@ -27,7 +27,7 @@ class PlayerRemoteSourceImage extends StatelessWidget with WatchItMixin {
     final theme = context.theme;
 
     final remoteImageUrl = watchPropertyValue(
-      (PlayerModel m) => m.remoteImageUrl,
+      (PlayerManager m) => m.remoteImageUrl,
     );
 
     return Container(
@@ -35,7 +35,7 @@ class PlayerRemoteSourceImage extends StatelessWidget with WatchItMixin {
       height: height,
       width: width,
       child: SafeNetworkImage(
-        onImageLoaded: di<PlayerModel>().setRemoteColorFromImageProvider,
+        onImageLoaded: di<PlayerManager>().setRemoteColorFromImageProvider,
         url: remoteImageUrl,
         filterQuality: FilterQuality.medium,
         fit: fit ?? BoxFit.scaleDown,

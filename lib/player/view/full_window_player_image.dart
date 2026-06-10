@@ -3,7 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/ui_constants.dart';
 import '../../local_audio/view/local_cover.dart';
-import '../player_model.dart';
+import '../player_manager.dart';
 import 'player_fall_back_image.dart';
 import 'player_remote_source_image.dart';
 
@@ -24,7 +24,7 @@ class FullWindowPlayerImage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final audio = watchPropertyValue((PlayerModel m) => m.audio);
+    final audio = watchPropertyValue((PlayerManager m) => m.audio);
 
     final fallBackImage = PlayerFallBackImage(
       noIcon: emptyFallBack,

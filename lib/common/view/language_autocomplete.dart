@@ -4,7 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
-import '../../settings/settings_model.dart';
+import '../../settings/settings_manager.dart';
 import 'icons.dart';
 import 'languages.dart';
 import 'theme.dart';
@@ -50,7 +50,7 @@ class LanguageAutoComplete extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final theme = context.theme;
     final useYaruTheme = watchPropertyValue(
-      (SettingsModel m) => m.useYaruTheme,
+      (SettingsManager m) => m.useYaruTheme,
     );
 
     return SizedBox(

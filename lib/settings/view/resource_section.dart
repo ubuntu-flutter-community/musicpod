@@ -5,9 +5,8 @@ import 'package:yaru/yaru.dart';
 import '../../app/app_config.dart';
 import '../../common/view/common_widgets.dart';
 import '../../extensions/build_context_x.dart';
-
 import '../../player/mpv_metadata_manager.dart';
-import '../settings_model.dart';
+import '../settings_manager.dart';
 
 class ResourceSection extends StatelessWidget with WatchItMixin {
   const ResourceSection({super.key});
@@ -23,9 +22,9 @@ class ResourceSection extends StatelessWidget with WatchItMixin {
             title: Text(l10n.useMoreAnimationsTitle),
             subtitle: Text(l10n.useMoreAnimationsDescription),
             trailing: CommonSwitch(
-              onChanged: di<SettingsModel>().setUseMoreAnimations,
+              onChanged: di<SettingsManager>().setUseMoreAnimations,
               value: watchPropertyValue(
-                (SettingsModel m) => m.useMoreAnimations,
+                (SettingsManager m) => m.useMoreAnimations,
               ),
             ),
           ),
@@ -43,9 +42,11 @@ class ResourceSection extends StatelessWidget with WatchItMixin {
             subtitle: Text(l10n.saveWindowSizeDescription),
             trailing: CommonSwitch(
               onChanged: AppConfig.windowManagerImplemented
-                  ? di<SettingsModel>().setSaveWindowSize
+                  ? di<SettingsManager>().setSaveWindowSize
                   : null,
-              value: watchPropertyValue((SettingsModel m) => m.saveWindowSize),
+              value: watchPropertyValue(
+                (SettingsManager m) => m.saveWindowSize,
+              ),
             ),
           ),
         ],

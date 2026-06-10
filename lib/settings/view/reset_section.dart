@@ -12,7 +12,7 @@ import '../../extensions/build_context_x.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../podcasts/podcast_manager.dart';
 import '../../radio/radio_manager.dart';
-import '../settings_model.dart';
+import '../settings_manager.dart';
 
 class ResetSection extends StatelessWidget {
   const ResetSection({super.key});
@@ -77,13 +77,13 @@ class WipeConfirmDialog extends StatelessWidget {
       onConfirm: () async {
         await di<PodcastManager>().wipeCommand.runAsync();
         await di<RadioManager>().wipeCommand.runAsync();
-        await di<SettingsModel>().wipeAllSettingsCommand.runAsync();
+        await di<SettingsManager>().wipeAllSettingsCommand.runAsync();
         await di<LocalAudioManager>().initAudiosCommand.runAsync((
           directory: null,
           forceInit: true,
           forceDbOnly: false,
         ));
-        await di<SettingsModel>().wipeAndInitLibraryCommand.runAsync();
+        await di<SettingsManager>().wipeAndInitLibraryCommand.runAsync();
         await di<Database>().reclaimDiskSpace();
       },
     );

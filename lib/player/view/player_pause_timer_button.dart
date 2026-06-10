@@ -10,7 +10,7 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';
 import '../../extensions/taget_platform_x.dart';
 
-import '../player_model.dart';
+import '../player_manager.dart';
 
 Duration durationUntilNextTimeOfDay({
   required TimeOfDay targetTime,
@@ -38,7 +38,7 @@ class PlayerPauseTimerButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final timer = watchPropertyValue((PlayerModel m) => m.timer);
+    final timer = watchPropertyValue((PlayerManager m) => m.timer);
     return IconButton(
       isSelected: timer != null,
       tooltip: context.l10n.schedulePlaybackStopTimer,
@@ -79,7 +79,7 @@ class _DialogState extends State<_Dialog> {
       actions: [
         TextButton(
           onPressed: () {
-            di<PlayerModel>().setTimer(
+            di<PlayerManager>().setTimer(
               null,
               message: context.l10n.playbackTimerCancelled,
             );
@@ -93,7 +93,7 @@ class _DialogState extends State<_Dialog> {
               targetTime: _timeOfDay,
               now: DateTime.now(),
             );
-            di<PlayerModel>().setTimer(
+            di<PlayerManager>().setTimer(
               duration,
               message: context.l10n.playbackWasPausedByTimer,
             );
@@ -156,7 +156,7 @@ class _BottomSheetState extends State<_BottomSheet> {
                           children: [
                             TextButton(
                               onPressed: () {
-                                di<PlayerModel>().setTimer(
+                                di<PlayerManager>().setTimer(
                                   null,
                                   message: context.l10n.playbackTimerCancelled,
                                 );
@@ -170,7 +170,7 @@ class _BottomSheetState extends State<_BottomSheet> {
                                   targetTime: _timeOfDay,
                                   now: DateTime.now(),
                                 );
-                                di<PlayerModel>().setTimer(
+                                di<PlayerManager>().setTimer(
                                   duration,
                                   message:
                                       context.l10n.playbackWasPausedByTimer,

@@ -5,7 +5,7 @@ import 'package:media_kit/media_kit.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
 
-import '../player_model.dart';
+import '../player_manager.dart';
 
 class PlaylistModeButton extends StatelessWidget with WatchItMixin {
   const PlaylistModeButton({super.key, required this.active, this.iconColor});
@@ -15,7 +15,9 @@ class PlaylistModeButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final playlistMode = watchPropertyValue((PlayerModel m) => m.playlistMode);
+    final playlistMode = watchPropertyValue(
+      (PlayerManager m) => m.playlistMode,
+    );
 
     return IconButton(
       isSelected: playlistMode != PlaylistMode.none,
@@ -30,7 +32,7 @@ class PlaylistModeButton extends StatelessWidget with WatchItMixin {
         PlaylistMode.single => Icon(Iconz.repeatSingle, color: iconColor),
         PlaylistMode.loop => Icon(Iconz.repeatAll, color: iconColor),
       },
-      onPressed: !active ? null : () => di<PlayerModel>().setPlaylistMode(),
+      onPressed: !active ? null : () => di<PlayerManager>().setPlaylistMode(),
     );
   }
 }

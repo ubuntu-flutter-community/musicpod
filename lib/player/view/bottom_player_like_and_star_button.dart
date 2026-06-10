@@ -5,14 +5,14 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/like_icon_button.dart';
 import '../../common/view/stared_station_icon_button.dart';
 import '../../extensions/build_context_x.dart';
-import '../player_model.dart';
+import '../player_manager.dart';
 
 class BottomPlayerLikeAndStarButton extends StatelessWidget with WatchItMixin {
   const BottomPlayerLikeAndStarButton({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final audio = watchPropertyValue((PlayerModel m) => m.audio);
+    final audio = watchPropertyValue((PlayerManager m) => m.audio);
     return Builder(
       key: ObjectKey(audio),
       builder: (context) => switch (audio?.audioType) {

@@ -3,7 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/routing_manager.dart';
-import '../../settings/settings_model.dart';
+import '../../settings/settings_manager.dart';
 import 'icons.dart';
 
 class NavBackButton extends StatelessWidget with WatchItMixin {
@@ -12,12 +12,12 @@ class NavBackButton extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     void onTap() {
-      di<SettingsModel>().scrollIndex = 0;
+      di<SettingsManager>().scrollIndex = 0;
       di<RoutingManager>().pop();
     }
 
     final useYaruTheme = watchPropertyValue(
-      (SettingsModel m) => m.useYaruTheme,
+      (SettingsManager m) => m.useYaruTheme,
     );
 
     if (useYaruTheme) {

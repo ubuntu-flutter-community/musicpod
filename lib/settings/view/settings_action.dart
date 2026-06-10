@@ -7,7 +7,7 @@ import '../../app/page_ids.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
 
-import '../settings_model.dart';
+import '../settings_manager.dart';
 import 'settings_tile.dart';
 
 enum _SettingsButtonMode { icon, important, tile }
@@ -31,7 +31,7 @@ class SettingsButton extends StatelessWidget {
     Future<void> onPressed() async {
       await di<AppManager>().setFullWindowMode(false);
       await Future.delayed(const Duration(milliseconds: 300));
-      di<SettingsModel>().scrollIndex = scrollIndex;
+      di<SettingsManager>().scrollIndex = scrollIndex;
       await di<RoutingManager>().push(pageId: PageIDs.settings);
     }
 

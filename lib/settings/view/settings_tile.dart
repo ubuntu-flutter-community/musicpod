@@ -14,41 +14,31 @@ import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
 import '../../extensions/build_context_x.dart';
 
-import '../settings_model.dart';
-
 class SettingsTile extends StatelessWidget with WatchItMixin {
   const SettingsTile({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Widget? trailing;
-    // To not show any progress for Snap/Flatpak
-    if (di<AppManager>().allowManualUpdate) {
-      trailing = const _UpdateButton();
-    }
-
     final selectedPageId = watchPropertyValue(
       (RoutingManager m) => m.selectedPageId,
     );
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: Stack(
-        children: [
-          YaruMasterTile(
-            selected: selectedPageId == PageIDs.settings,
-            leading: Icon(Iconz.settings),
-            title: Text(context.l10n.settings),
-            onTap: () {
-              masterScaffoldKey.currentState
-                ?..closeEndDrawer()
-                ..closeDrawer();
+      child: YaruMasterTile(
+        selected: selectedPageId == PageIDs.settings,
+        leading: Icon(Iconz.settings),
+        title: Text(context.l10n.settings),
+        onTap: () {
+          masterScaffoldKey.currentState
+            ?..closeEndDrawer()
+            ..closeDrawer();
 
-              di<RoutingManager>().push(pageId: PageIDs.settings);
-            },
-          ),
-          if (trailing != null) Positioned(right: 15, child: trailing),
-        ],
+          di<RoutingManager>().push(pageId: PageIDs.settings);
+        },
+        trailing: (di<AppManager>().allowManualUpdate)
+            ? const _UpdateButton()
+            : null,
       ),
     );
   }
@@ -65,18 +55,12 @@ class _UpdateButton extends StatelessWidget with WatchItMixin {
       );
     }
 
-    final useYaruTheme = watchPropertyValue(
-      (SettingsModel m) => m.useYaruTheme,
-    );
-
     return watchValue(
       (AppManager m) => m.checkForUpdateCommand.results,
     ).toWidget(
-      whileRunning: (lastResult, param) => Center(
-        child: SizedBox.square(
-          dimension: useYaruTheme ? kYaruTitleBarItemHeight : 40,
-          child: const Progress(padding: EdgeInsets.all(10)),
-        ),
+      whileRunning: (lastResult, param) => SizedBox.square(
+        dimension: context.buttonHeight * 0.6,
+        child: const Progress(),
       ),
       onError: (error, param, _) => IconButton(
         tooltip: error.toString(),

@@ -16,17 +16,17 @@ import '../../extensions/theme_data_x.dart';
 import '../../lyrics/data/lyrics_and_art_result_and_param.dart';
 import '../../lyrics/lyrics_manager.dart';
 import '../../lyrics/lyrics_service.dart';
-import '../../settings/settings_model.dart';
+import '../../settings/settings_manager.dart';
 import '../../settings/view/settings_action.dart';
 import '../mpv_metadata_manager.dart';
-import '../player_model.dart';
+import '../player_manager.dart';
 
 class PlayerLyrics extends StatelessWidget with WatchItMixin {
   const PlayerLyrics({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final audio = watchPropertyValue((PlayerModel m) => m.audio);
+    final audio = watchPropertyValue((PlayerManager m) => m.audio);
     final splitByDash = watchValue(
       (MpvMetadataManager m) =>
           m.mpvMetaDataCommand.select((cmd) => cmd?.icyTitle.splitByDash),
@@ -40,10 +40,10 @@ class PlayerLyrics extends StatelessWidget with WatchItMixin {
         : splitByDash?.artist;
 
     final geniusAccessToken = watchPropertyValue(
-      (SettingsModel m) => m.lyricsGeniusAccessToken,
+      (SettingsManager m) => m.lyricsGeniusAccessToken,
     );
     final neverAskAgainForGeniusToken = watchPropertyValue(
-      (SettingsModel m) => m.neverAskAgainForGeniusToken,
+      (SettingsManager m) => m.neverAskAgainForGeniusToken,
     );
 
     if (neverAskAgainForGeniusToken || audio == null) {
@@ -80,7 +80,7 @@ class _OnlineLyricsNotSetup extends StatelessWidget {
             const SettingsButton.important(scrollIndex: 7),
             OutlinedButton(
               onPressed: () =>
-                  di<SettingsModel>().setNeverAskAgainForGeniusToken(true),
+                  di<SettingsManager>().setNeverAskAgainForGeniusToken(true),
               child: Text(context.l10n.doNotAskAgain),
             ),
           ].map((e) => SizedBox(width: double.infinity, child: e)).toList(),
@@ -107,7 +107,7 @@ class _PlayerLyrics extends StatelessWidget with WatchItMixin {
     });
 
     final lyricsGeniusAccessToken = watchPropertyValue(
-      (SettingsModel m) => m.lyricsGeniusAccessToken,
+      (SettingsManager m) => m.lyricsGeniusAccessToken,
     );
     if (lyricsGeniusAccessToken?.isEmpty ?? true) {
       return const _OnlineLyricsNotSetup();
@@ -190,7 +190,7 @@ class _LrcLineViewerState extends State<_LrcLineViewer> {
 
   @override
   Widget build(BuildContext context) {
-    watchPropertyValue((PlayerModel m) {
+    watchPropertyValue((PlayerManager m) {
       final maybe = widget.lrc.firstWhereOrNull(
         (e) => e.timestamp.inSeconds == m.position?.inSeconds,
       );

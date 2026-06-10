@@ -10,7 +10,7 @@ import '../../common/view/spaced_divider.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/player_model.dart';
+import '../../player/player_manager.dart';
 import '../sidebar_audios_manager.dart';
 import 'master_item.dart';
 import '../routing_manager.dart';
@@ -137,9 +137,9 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
     }
 
     final isEnQueued = watchPropertyValue(
-      (PlayerModel m) => m.queueName != null && m.queueName == widget.pageId,
+      (PlayerManager m) => m.queueName != null && m.queueName == widget.pageId,
     );
-    final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
+    final isPlaying = watchPropertyValue((PlayerManager m) => m.isPlaying);
 
     final playAudiosByIdCommandResults = watchValue(
       (SidebarAudiosManager m) => m.playAudiosByIdCommand.results,

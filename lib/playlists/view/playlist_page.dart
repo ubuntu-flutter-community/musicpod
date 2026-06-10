@@ -24,7 +24,7 @@ import '../../local_audio/playlist_action.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../local_audio/view/failed_import_snackbar.dart';
-import '../../player/player_model.dart';
+import '../../player/player_manager.dart';
 import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
 import 'playlist_add_audio_autocomplete.dart';
@@ -171,11 +171,11 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final allowReorder = watchValue((LocalAudioManager m) => m.allowReorder);
-    final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
+    final isPlaying = watchPropertyValue((PlayerManager m) => m.isPlaying);
     final localAudioManager = di<LocalAudioManager>();
-    final playerModel = di<PlayerModel>();
+    final playerManager = di<PlayerManager>();
 
-    final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
+    final currentAudio = watchPropertyValue((PlayerManager m) => m.audio);
 
     final audioPageHeader = AudioPageHeader(
       title: pageId,
@@ -232,12 +232,12 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
                         onTap: () {
                           if (audioSelected) {
                             if (isPlaying) {
-                              playerModel.pause();
+                              playerManager.pause();
                             } else {
-                              playerModel.resume();
+                              playerManager.resume();
                             }
                           } else {
-                            playerModel.startPlaylist(
+                            playerManager.startPlaylist(
                               audios: audios,
                               listName: pageId,
                               index: index,
@@ -253,8 +253,8 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
                   );
                 },
                 onReorder: (oldIndex, newIndex) {
-                  if (playerModel.queueName == pageId) {
-                    playerModel.moveAudioInQueue(oldIndex, newIndex);
+                  if (playerManager.queueName == pageId) {
+                    playerManager.moveAudioInQueue(oldIndex, newIndex);
                   }
 
                   localAudioManager

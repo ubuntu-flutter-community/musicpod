@@ -5,7 +5,7 @@ import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
 import '../common/logging.dart';
 import '../local_audio/local_audio_manager.dart';
-import '../player/player_model.dart';
+import '../player/player_manager.dart';
 import '../podcasts/data/podcast_update_capsule.dart';
 import '../podcasts/episodes_manager.dart';
 import '../podcasts/podcast_manager.dart';
@@ -16,17 +16,17 @@ class SidebarAudiosManager {
   final PodcastManager _podcastManager;
   final LocalAudioManager _localAudioManager;
   final RadioManager _radioManager;
-  final PlayerModel _playerModel;
+  final PlayerManager _playerManager;
 
   SidebarAudiosManager({
     required PodcastManager podcastManager,
     required LocalAudioManager localAudioManager,
     required RadioManager radioManager,
-    required PlayerModel playerModel,
+    required PlayerManager playerManager,
   }) : _localAudioManager = localAudioManager,
        _podcastManager = podcastManager,
        _radioManager = radioManager,
-       _playerModel = playerModel {
+       _playerManager = playerManager {
     printInfoInDebugMode(
       '$SidebarAudiosManager created',
       tag: '$SidebarAudiosManager',
@@ -47,12 +47,12 @@ class SidebarAudiosManager {
       await _radioManager.clickStation(audios?.firstOrNull);
     }
     final isEnQueued =
-        _playerModel.queueName != null &&
-        _playerModel.queueName == param.pageId;
+        _playerManager.queueName != null &&
+        _playerManager.queueName == param.pageId;
     if (isEnQueued) {
-      _playerModel.isPlaying
-          ? await _playerModel.pause()
-          : await _playerModel.resume();
+      _playerManager.isPlaying
+          ? await _playerManager.pause()
+          : await _playerManager.resume();
     } else if (audios != null) {
       await _podcastManager.manageUpdatesCommand.runAsync(
         PodcastUpdateCapsule(

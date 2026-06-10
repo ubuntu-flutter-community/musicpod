@@ -8,8 +8,8 @@ import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../local_audio/local_audio_manager.dart';
-import '../../player/player_model.dart';
-import '../../settings/settings_model.dart';
+import '../../player/player_manager.dart';
+import '../../settings/settings_manager.dart';
 
 class MainPageIcon extends StatelessWidget with WatchItMixin {
   const MainPageIcon({
@@ -24,11 +24,11 @@ class MainPageIcon extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final currentAudioType = watchPropertyValue(
-      (PlayerModel m) => m.audio?.audioType,
+      (PlayerManager m) => m.audio?.audioType,
     );
-    final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
+    final isPlaying = watchPropertyValue((PlayerManager m) => m.isPlaying);
     final useMoreAnimations = watchPropertyValue(
-      (SettingsModel m) => m.useMoreAnimations,
+      (SettingsManager m) => m.useMoreAnimations,
     );
 
     if (audioType == AudioType.local) {

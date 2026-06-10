@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/data/audio.dart';
-import '../../player/player_model.dart';
+import '../../player/player_manager.dart';
 import '../data/podcast_toggle_capsule.dart';
 import '../podcast_manager.dart';
 import 'podcast_audio_tile.dart';
@@ -19,7 +19,7 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final selectedAudio = watchPropertyValue((PlayerModel m) => m.audio);
+    final selectedAudio = watchPropertyValue((PlayerManager m) => m.audio);
 
     return SliverList(
       delegate: SliverChildBuilderDelegate(childCount: audios.length, (
@@ -41,7 +41,7 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
           ),
           isExpanded: episode == selectedAudio,
           selected: episode == selectedAudio,
-          startPlaylist: () => di<PlayerModel>().startPlaylist(
+          startPlaylist: () => di<PlayerManager>().startPlaylist(
             audios: audios,
             listName: pageId,
             index: index,

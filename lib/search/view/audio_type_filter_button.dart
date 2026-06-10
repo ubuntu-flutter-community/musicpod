@@ -7,7 +7,7 @@ import '../../common/view/modals.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../settings/settings_model.dart';
+import '../../settings/settings_manager.dart';
 import '../search_manager.dart';
 
 class AudioTypeFilterButton extends StatelessWidget {
@@ -33,9 +33,8 @@ class AudioTypeFilterSwitcher extends StatelessWidget with WatchItMixin {
     final searchManager = di<SearchManager>();
     final audioType = watchValue((SearchManager m) => m.audioType);
     final useYaruTheme = watchPropertyValue(
-      (SettingsModel m) => m.useYaruTheme,
+      (SettingsManager m) => m.useYaruTheme,
     );
-    final searchBarBorderRadius = getSearchBarBorderRadius(useYaruTheme);
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -48,15 +47,8 @@ class AudioTypeFilterSwitcher extends StatelessWidget with WatchItMixin {
               selected: selected,
               useYaruTheme: useYaruTheme,
             ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                topRight: i == AudioType.values.length - 1
-                    ? Radius.circular(searchBarBorderRadius)
-                    : Radius.zero,
-                bottomRight: i == AudioType.values.length - 1
-                    ? Radius.circular(searchBarBorderRadius)
-                    : Radius.zero,
-              ),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.zero,
             ),
           ),
           isSelected: selected,

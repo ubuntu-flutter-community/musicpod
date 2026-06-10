@@ -3,7 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
-import '../../settings/settings_model.dart';
+import '../../settings/settings_manager.dart';
 
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason>?
 showFailedImportsSnackBarIfNotBlocked({
@@ -12,19 +12,19 @@ showFailedImportsSnackBarIfNotBlocked({
   bool failedToImport = false,
 }) {
   if (context.mounted == false) return null;
-  final settingsModel = di<SettingsModel>();
+  final settingsManager = di<SettingsManager>();
   final l10n = context.l10n;
-  if (settingsModel.neverShowFailedImports) return null;
+  if (settingsManager.neverShowFailedImports) return null;
   return context.toast(
     _Content(
       message: failedToImport ? l10n.failedToImport : l10n.failedToReadMetadata,
       failedImports: failedImports,
       onNeverShowFailedImports: () =>
-          settingsModel.setNeverShowFailedImports(true),
+          settingsManager.setNeverShowFailedImports(true),
     ),
     action: SnackBarAction(
       onPressed: () {
-        settingsModel.setNeverShowFailedImports(true);
+        settingsManager.setNeverShowFailedImports(true);
         ScaffoldMessenger.of(context).clearSnackBars();
       },
       label: context.l10n.dontShowAgain,

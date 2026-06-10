@@ -5,8 +5,8 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../radio/view/radio_history_list.dart';
-import '../../settings/settings_model.dart';
-import '../player_model.dart';
+import '../../settings/settings_manager.dart';
+import '../player_manager.dart';
 import 'full_window_player_image.dart';
 import 'player_lyrics.dart';
 import 'queue/queue_body.dart';
@@ -39,7 +39,7 @@ class _PlayerExplorerState extends State<PlayerExplorer>
 
   TabController _createController() {
     final length = widget.includeImage ? 3 : 2;
-    final savedIndex = di<SettingsModel>().playerExplorerTabIndex;
+    final savedIndex = di<SettingsManager>().playerExplorerTabIndex;
     final initialIndex = savedIndex < length ? savedIndex : savedIndex - 1;
     return TabController(
       vsync: this,
@@ -52,13 +52,13 @@ class _PlayerExplorerState extends State<PlayerExplorer>
   Widget build(BuildContext context) {
     onDispose(_controller.dispose);
 
-    final audio = watchPropertyValue((PlayerModel m) => m.audio);
+    final audio = watchPropertyValue((PlayerManager m) => m.audio);
 
     return Column(
       spacing: kLargestSpace,
       children: [
         TabBar(
-          onTap: (index) => di<SettingsModel>().setPlayerExplorerTabIndex(
+          onTap: (index) => di<SettingsManager>().setPlayerExplorerTabIndex(
             widget.includeImage
                 ? index
                 : index > 2

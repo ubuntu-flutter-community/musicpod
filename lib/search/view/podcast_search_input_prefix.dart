@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:podcast_search/podcast_search.dart';
-import 'package:yaru/constants.dart';
 
 import '../../common/view/country_auto_complete.dart';
 import '../../common/view/language_autocomplete.dart';
@@ -10,7 +9,7 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/country_x.dart';
-import '../../settings/settings_model.dart';
+import '../../settings/settings_manager.dart';
 import '../search_manager.dart';
 
 class PodcastSearchInputPrefix extends StatelessWidget with WatchItMixin {
@@ -21,19 +20,14 @@ class PodcastSearchInputPrefix extends StatelessWidget with WatchItMixin {
     final country = watchValue((SearchManager m) => m.country);
     const flagTextStyle = TextStyle(fontSize: 20, height: 1.2);
     final usePodcastIndex = watchPropertyValue(
-      (SettingsModel m) => m.usePodcastIndex,
+      (SettingsManager m) => m.usePodcastIndex,
     );
     final l10n = context.l10n;
     final tooltip = usePodcastIndex ? l10n.language : l10n.country;
-    final useYaruTheme = watchPropertyValue(
-      (SettingsModel m) => m.useYaruTheme,
-    );
-    final radius = Radius.circular(useYaruTheme ? kYaruButtonRadius : 100);
+
     return IconButton(
       style: IconButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(topLeft: radius, bottomLeft: radius),
-        ),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       ),
       tooltip: tooltip,
       onPressed: () => showModal(
@@ -95,24 +89,24 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final searchManager = di<SearchManager>();
-    watchPropertyValue((SettingsModel m) => m.favoriteLanguageCodeLength);
-    watchPropertyValue((SettingsModel m) => m.favoriteCountryCodeLength);
+    watchPropertyValue((SettingsManager m) => m.favoriteLanguageCodeLength);
+    watchPropertyValue((SettingsManager m) => m.favoriteCountryCodeLength);
     final country = watchValue((SearchManager m) => m.country);
 
     void setCountry(Country? country) {
       searchManager.setCountry(country);
       if (country?.code != null) {
-        di<SettingsModel>().setLastCountryCode(country!.code);
+        di<SettingsManager>().setLastCountryCode(country!.code);
       }
     }
 
     final usePodcastIndex = watchPropertyValue(
-      (SettingsModel m) => m.usePodcastIndex,
+      (SettingsManager m) => m.usePodcastIndex,
     );
-    watchPropertyValue((SettingsModel m) => m.favoriteLanguageCodeLength);
-    watchPropertyValue((SettingsModel m) => m.favoriteCountryCodeLength);
+    watchPropertyValue((SettingsManager m) => m.favoriteLanguageCodeLength);
+    watchPropertyValue((SettingsManager m) => m.favoriteCountryCodeLength);
     final favLanguageCodes = watchPropertyValue(
-      (SettingsModel m) => m.favoriteLanguageCode,
+      (SettingsManager m) => m.favoriteLanguageCode,
     );
 
     final language = watchValue((SearchManager m) => m.language);
@@ -121,7 +115,7 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
     final height = chipHeight;
 
     final useYaruTheme = watchPropertyValue(
-      (SettingsModel m) => m.useYaruTheme,
+      (SettingsManager m) => m.useYaruTheme,
     );
     final countryPillPadding = getCountryPillPadding(useYaruTheme);
 
@@ -137,17 +131,19 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
             favs: favLanguageCodes,
             addFav: (language) {
               if (language?.isoCode == null) return;
-              di<SettingsModel>().addFavoriteLanguageCode(language!.isoCode);
+              di<SettingsManager>().addFavoriteLanguageCode(language!.isoCode);
             },
             removeFav: (language) {
               if (language?.isoCode == null) return;
-              di<SettingsModel>().removeFavoriteLanguageCode(language!.isoCode);
+              di<SettingsManager>().removeFavoriteLanguageCode(
+                language!.isoCode,
+              );
             },
             onSelected: (language) {
               context.pop();
               searchManager.setLanguage(language);
               if (language?.isoCode != null) {
-                di<SettingsModel>().setLastLanguageCode(language!.isoCode);
+                di<SettingsManager>().setLastLanguageCode(language!.isoCode);
               }
               searchManager.search();
             },
@@ -162,12 +158,16 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
             countries: [
               ...[...Country.values].where(
                 (e) =>
-                    di<SettingsModel>().favoriteCountryCode.contains(e.code) ==
+                    di<SettingsManager>().favoriteCountryCode.contains(
+                      e.code,
+                    ) ==
                     true,
               ),
               ...[...Country.values].where(
                 (e) =>
-                    di<SettingsModel>().favoriteCountryCode.contains(e.code) ==
+                    di<SettingsManager>().favoriteCountryCode.contains(
+                      e.code,
+                    ) ==
                     false,
               ),
             ]..remove(Country.none),
@@ -179,13 +179,13 @@ class LocationFilter extends StatelessWidget with WatchItMixin {
             value: country,
             addFav: (v) {
               if (country?.code == null) return;
-              di<SettingsModel>().addFavoriteCountryCode(v!.code);
+              di<SettingsManager>().addFavoriteCountryCode(v!.code);
             },
             removeFav: (v) {
               if (country?.code == null) return;
-              di<SettingsModel>().removeFavoriteCountryCode(v!.code);
+              di<SettingsManager>().removeFavoriteCountryCode(v!.code);
             },
-            favs: di<SettingsModel>().favoriteCountryCode,
+            favs: di<SettingsManager>().favoriteCountryCode,
           );
   }
 }

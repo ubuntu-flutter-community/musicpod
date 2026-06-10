@@ -16,9 +16,9 @@ import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../podcasts/view/lazy_podcast_page.dart';
 import '../../radio/view/station_page.dart';
-import '../../settings/settings_model.dart';
+import '../../settings/settings_manager.dart';
 import '../mpv_metadata_manager.dart';
-import '../player_model.dart';
+import '../player_manager.dart';
 import 'player_track.dart';
 import 'player_view.dart';
 
@@ -35,14 +35,14 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
       (LocalAudioManager m) => m.initAudiosCommand.isRunning,
     );
 
-    final audio = watchPropertyValue((PlayerModel m) => m.audio);
+    final audio = watchPropertyValue((PlayerManager m) => m.audio);
 
     final icyTitle = watchValue(
       (MpvMetadataManager m) =>
           m.mpvMetaDataCommand.select((cmd) => cmd?.icyTitle),
     );
     final showPositionDuration = watchPropertyValue(
-      (SettingsModel m) => m.showPositionDuration,
+      (SettingsManager m) => m.showPositionDuration,
     );
 
     final hoverColor = theme.colorScheme.primary.withValues(alpha: 0.3);

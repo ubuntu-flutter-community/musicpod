@@ -11,7 +11,7 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/command_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../player/player_model.dart';
+import '../../player/player_manager.dart';
 import '../local_audio_manager.dart';
 import 'album_page.dart';
 import 'local_cover.dart';
@@ -66,7 +66,7 @@ class _AlbumCard extends StatelessWidget {
       builder: (context) => AlbumPage(id: id),
       pageId: id.toString(),
     ),
-    onPlay: () async => di<PlayerModel>().startPlaylist(
+    onPlay: () async => di<PlayerManager>().startPlaylist(
       audios:
           await di<LocalAudioManager>()
               .findAlbumCommand(id)

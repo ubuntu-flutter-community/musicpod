@@ -9,7 +9,7 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../player/player_model.dart';
+import '../player_manager.dart';
 import 'bottom_player_image.dart';
 import 'bottom_player_like_and_star_button.dart';
 import 'play_button.dart';
@@ -29,8 +29,8 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final smallWindow = context.smallWindow;
-    final audio = watchPropertyValue((PlayerModel m) => m.audio);
-    final isVideo = watchPropertyValue((PlayerModel m) => m.isVideo);
+    final audio = watchPropertyValue((PlayerManager m) => m.audio);
+    final isVideo = watchPropertyValue((PlayerManager m) => m.isVideo);
     final fullWindowMode = watchValue((AppManager m) => m.fullWindowMode);
 
     final active = audio != null;

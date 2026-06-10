@@ -4,7 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/player_model.dart';
+import '../../player/player_manager.dart';
 
 class PodcastTileProgress extends StatelessWidget with WatchItMixin {
   const PodcastTileProgress({
@@ -24,13 +24,13 @@ class PodcastTileProgress extends StatelessWidget with WatchItMixin {
 
     final pos =
         (selected
-            ? watchPropertyValue((PlayerModel m) => m.position)
+            ? watchPropertyValue((PlayerManager m) => m.position)
             : lastPosition) ??
         const Duration(seconds: 0);
 
     final dur =
         (selected
-            ? watchPropertyValue((PlayerModel m) => m.duration)
+            ? watchPropertyValue((PlayerManager m) => m.duration)
             : duration) ??
         const Duration(seconds: 1);
 

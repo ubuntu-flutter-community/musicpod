@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/data/audio_type.dart';
-import '../../player/player_model.dart';
+import '../../player/player_manager.dart';
 import '../page_ids.dart';
 import '../../search/search_manager.dart';
 import '../app_manager.dart';
@@ -95,36 +95,36 @@ class MouseAndKeyboardCommandWrapper extends StatelessWidget {
         ),
         _PlayPauseIntent: CallbackAction<_PlayPauseIntent>(
           onInvoke: (intent) {
-            di<PlayerModel>().playOrPause();
+            di<PlayerManager>().playOrPause();
             return null;
           },
         ),
         _PlayNextIntent: CallbackAction<_PlayNextIntent>(
           onInvoke: (intent) {
-            final playerModel = di<PlayerModel>();
+            final playerManager = di<PlayerManager>();
 
-            final audio = playerModel.audio;
+            final audio = playerManager.audio;
             if (audio == null) return;
 
             if (audio.isRadio) {
               di<SearchManager>().findSimilarStationCommand.run(audio);
             } else {
-              playerModel.playNext();
+              playerManager.playNext();
             }
             return null;
           },
         ),
         _PlayPreviousIntent: CallbackAction<_PlayPreviousIntent>(
           onInvoke: (intent) {
-            final playerModel = di<PlayerModel>();
+            final playerManager = di<PlayerManager>();
 
-            final audio = playerModel.audio;
+            final audio = playerManager.audio;
             if (audio == null) return;
 
             if (audio.isRadio) {
-              playerModel.playNext();
+              playerManager.playNext();
             } else {
-              playerModel.playPrevious();
+              playerManager.playPrevious();
             }
             return null;
           },

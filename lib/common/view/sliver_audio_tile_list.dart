@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../player/player_model.dart';
+import '../../player/player_manager.dart';
 import '../data/audio.dart';
 import 'audio_page_type.dart';
 import 'audio_tile.dart';
@@ -33,10 +33,10 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
 
     final width = mqSize;
 
-    final playerModel = di<PlayerModel>();
-    final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
+    final playerManager = di<PlayerManager>();
+    final isPlaying = watchPropertyValue((PlayerManager m) => m.isPlaying);
 
-    final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
+    final currentAudio = watchPropertyValue((PlayerManager m) => m.audio);
     final allowLeadingImage =
         audios.length < kShowLeadingThreshold &&
         audioPageType != AudioPageType.allTitlesView;
@@ -66,12 +66,12 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
             onTap: () {
               if (audioSelected) {
                 if (isPlaying) {
-                  playerModel.pause();
+                  playerManager.pause();
                 } else {
-                  playerModel.resume();
+                  playerManager.resume();
                 }
               } else {
-                playerModel.startPlaylist(
+                playerManager.startPlaylist(
                   audios: audios,
                   listName: pageId,
                   index: index,

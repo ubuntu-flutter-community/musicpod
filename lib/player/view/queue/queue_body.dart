@@ -9,7 +9,7 @@ import '../../../common/view/ui_constants.dart';
 import '../../../extensions/build_context_x.dart';
 import '../../../local_audio/local_audio_manager.dart';
 import '../../../local_audio/playlist_action.dart';
-import '../../player_model.dart';
+import '../../player_manager.dart';
 
 class QueueBody extends StatefulWidget with WatchItStatefulWidgetMixin {
   const QueueBody({super.key, this.selectedColor, this.shownInDialog = false});
@@ -26,7 +26,7 @@ class _QueueBodyState extends State<QueueBody>
   final AutoScrollController _controller = AutoScrollController();
 
   void _jump({required bool isJumping, required bool autoScrollEnabled}) {
-    final model = di<PlayerModel>();
+    final model = di<PlayerManager>();
     final currentAudio = model.audio;
     if (!isJumping &&
         autoScrollEnabled &&
@@ -60,40 +60,40 @@ class _QueueBodyState extends State<QueueBody>
     // auto scroll controller offset, we have to use this workaround to prevent
     // the auto scrolling to distract people in huge queues
     // so we use a loading indicator while jumping
-    final jumping = watchPropertyValue((PlayerModel m) => m.jumpingQueue);
+    final jumping = watchPropertyValue((PlayerManager m) => m.jumpingQueue);
     final showSpinnerWhileJumping = watchPropertyValue(
-      (PlayerModel m) => m.showSpinnerWhileJumping,
+      (PlayerManager m) => m.showSpinnerWhileJumping,
     );
 
     final queueAutoScroll = watchPropertyValue(
-      (PlayerModel m) => m.queueAutoScroll,
+      (PlayerManager m) => m.queueAutoScroll,
     );
 
     callOnceAfterThisBuild((_) {
       if (queueAutoScroll) {
-        di<PlayerModel>().setShowSpinnerWhileJumping(true);
+        di<PlayerManager>().setShowSpinnerWhileJumping(true);
         _jump(isJumping: jumping, autoScrollEnabled: queueAutoScroll);
       }
     });
     onDispose(_controller.dispose);
 
     registerStreamHandler(
-      select: (PlayerModel m) => m.newAudioStream,
+      select: (PlayerManager m) => m.newAudioStream,
       handler: (context, snapshot, cancel) {
         if (!snapshot.hasData) return;
         if (queueAutoScroll) {
           _jump(
-            isJumping: di<PlayerModel>().jumpingQueue,
-            autoScrollEnabled: di<PlayerModel>().queueAutoScroll,
+            isJumping: di<PlayerManager>().jumpingQueue,
+            autoScrollEnabled: di<PlayerManager>().queueAutoScroll,
           );
         }
       },
     );
 
-    final currentAudio = watchPropertyValue((PlayerModel m) => m.audio);
-    final queueLength = watchPropertyValue((PlayerModel m) => m.queue.length);
+    final currentAudio = watchPropertyValue((PlayerManager m) => m.audio);
+    final queueLength = watchPropertyValue((PlayerManager m) => m.queue.length);
 
-    final queue = di<PlayerModel>().queue;
+    final queue = di<PlayerManager>().queue;
 
     return SizedBox(
       width: 400,
@@ -126,14 +126,14 @@ class _QueueBodyState extends State<QueueBody>
                         index: index,
                         controller: _controller,
                         selectedColor: colorScheme.onSurface,
-                        queueName: di<PlayerModel>().queueName,
+                        queueName: di<PlayerManager>().queueName,
                         queue: queue,
                         audio: audio,
                         selected: selected,
                       );
                     },
                     itemCount: queueLength,
-                    onReorder: di<PlayerModel>().moveAudioInQueue,
+                    onReorder: di<PlayerManager>().moveAudioInQueue,
                   ),
                 ),
               ],
@@ -194,19 +194,19 @@ class _QueueBodyState extends State<QueueBody>
                   tooltip: l10n.clearQueue,
                   onPressed:
                       queue.isEmpty ||
-                          di<PlayerModel>().queueName == null ||
-                          di<PlayerModel>().audio == null
+                          di<PlayerManager>().queueName == null ||
+                          di<PlayerManager>().audio == null
                       ? null
-                      : () => di<PlayerModel>().clearQueue(),
+                      : () => di<PlayerManager>().clearQueue(),
                 ),
                 IconButton(
                   tooltip: l10n.autoScrolling,
                   isSelected: queueAutoScroll,
                   icon: Icon(Iconz.autoScrollOn),
                   onPressed: () {
-                    if (!di<PlayerModel>().queueAutoScroll)
+                    if (!di<PlayerManager>().queueAutoScroll)
                       _jump(isJumping: jumping, autoScrollEnabled: true);
-                    di<PlayerModel>().toggleQueueAutoScroll();
+                    di<PlayerManager>().toggleQueueAutoScroll();
                   },
                 ),
               ],
@@ -267,7 +267,7 @@ class _QueueTileState extends State<_QueueTile> {
             ),
             onTap: widget.queueName == null
                 ? null
-                : () => di<PlayerModel>()
+                : () => di<PlayerManager>()
                     ..setShuffle(false)
                     ..startPlaylist(
                       listName: widget.queueName!,
@@ -291,7 +291,7 @@ class _QueueTileState extends State<_QueueTile> {
                     dimension: 30,
                     child: IconButton(
                       padding: EdgeInsets.zero,
-                      onPressed: () => di<PlayerModel>().remove(widget.audio),
+                      onPressed: () => di<PlayerManager>().remove(widget.audio),
                       icon: Icon(Iconz.remove),
                     ),
                   )

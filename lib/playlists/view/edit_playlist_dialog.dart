@@ -9,12 +9,12 @@ import '../../common/data/audio.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
-import '../../custom_content/custom_content_model.dart';
+import '../../custom_content/custom_content_manager.dart';
 import '../../extensions/build_context_x.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/local_audio_view.dart';
 import '../../local_audio/playlist_action.dart';
-import '../../settings/settings_model.dart';
+import '../../settings/settings_manager.dart';
 
 class EditPlaylistDialog extends StatefulWidget
     with WatchItStatefulWidgetMixin {
@@ -80,7 +80,7 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
                   onPressed:
                       widget.playlistName == null || widget.audios == null
                       ? null
-                      : () => di<CustomContentModel>().exportPlaylistToM3u(
+                      : () => di<CustomContentManager>().exportPlaylistToM3u(
                           id: widget.playlistName!,
                           audios: widget.audios!,
                         ),
@@ -93,7 +93,7 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
                       if (context.mounted && context.canPop()) {
                         context.pop();
                       }
-                      di<SettingsModel>().setLocalAudioindex(
+                      di<SettingsManager>().setLocalAudioindex(
                         LocalAudioView.playlists.index,
                       );
                       routingManager.push(
@@ -121,7 +121,7 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
         unawaited(
           routingManager.push(pageId: PageIDs.localAudio, replace: true),
         );
-        await di<SettingsModel>().setLocalAudioindex(
+        await di<SettingsManager>().setLocalAudioindex(
           LocalAudioView.playlists.index,
         );
         localAudioManager

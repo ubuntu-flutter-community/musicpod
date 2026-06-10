@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:podcast_search/podcast_search.dart';
+import 'package:yaru/constants.dart';
 
 import '../../common/data/audio_type.dart';
 import '../../common/view/country_auto_complete.dart';
@@ -13,7 +14,7 @@ import '../../extensions/taget_platform_x.dart';
 import '../../podcasts/data/podcast_genre.dart';
 import '../../radio/radio_manager.dart';
 import '../../radio/view/tag_auto_complete.dart';
-import '../../settings/settings_model.dart';
+import '../../settings/settings_manager.dart';
 import '../search_manager.dart';
 import '../search_type.dart';
 import 'audio_type_filter_button.dart';
@@ -28,39 +29,42 @@ class SearchPageInput extends StatelessWidget with WatchItMixin {
     final searchQuery = watchValue((SearchManager m) => m.searchQuery);
     final searchType = watchValue((SearchManager m) => m.searchType);
     final audioType = watchValue((SearchManager m) => m.audioType);
-
-    return SizedBox(
-      width: searchBarWidth,
-      height: getInputHeight(),
-      child: Theme(
-        data: context.theme.copyWith(
-          listTileTheme: context.theme.listTileTheme.copyWith(
-            shape: const RoundedRectangleBorder(),
-          ),
-        ),
-        child: switch (searchType) {
-          SearchType.radioCountry => const CountryAutoCompleteWithSuffix(),
-          SearchType.radioTag => const TagAutoCompleteWithSuffix(),
-          SearchType.radioLanguage => const LanguageAutoCompleteWithSuffix(),
-          _ => SearchInput(
-            autoFocus: !isMobile,
-            text: searchQuery,
-            hintText: audioType.localizedSearchHint(context.l10n),
-            onChanged: (v) {
-              searchManager.setSearchQuery(v);
-              if (v.isEmpty) {
-                searchManager.setPodcastGenre(PodcastGenre.all);
-              }
-              searchManager.search();
-            },
-            suffixIcon: AudioTypeFilterButton(
-              mode: OverlayMode.platformModalMode,
+    final yaruTheme = watchPropertyValue((SettingsManager m) => m.useYaruTheme);
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(yaruTheme ? kYaruButtonRadius : 100),
+      child: SizedBox(
+        width: searchBarWidth,
+        height: getInputHeight(),
+        child: Theme(
+          data: context.theme.copyWith(
+            listTileTheme: context.theme.listTileTheme.copyWith(
+              shape: const RoundedRectangleBorder(),
             ),
-            prefixIcon: audioType == AudioType.podcast
-                ? const PodcastSearchInputPrefix()
-                : null,
           ),
-        },
+          child: switch (searchType) {
+            SearchType.radioCountry => const CountryAutoCompleteWithSuffix(),
+            SearchType.radioTag => const TagAutoCompleteWithSuffix(),
+            SearchType.radioLanguage => const LanguageAutoCompleteWithSuffix(),
+            _ => SearchInput(
+              autoFocus: !isMobile,
+              text: searchQuery,
+              hintText: audioType.localizedSearchHint(context.l10n),
+              onChanged: (v) {
+                searchManager.setSearchQuery(v);
+                if (v.isEmpty) {
+                  searchManager.setPodcastGenre(PodcastGenre.all);
+                }
+                searchManager.search();
+              },
+              suffixIcon: AudioTypeFilterButton(
+                mode: OverlayMode.platformModalMode,
+              ),
+              prefixIcon: audioType == AudioType.podcast
+                  ? const PodcastSearchInputPrefix()
+                  : null,
+            ),
+          },
+        ),
       ),
     );
   }
@@ -73,9 +77,9 @@ class CountryAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final searchManager = di<SearchManager>();
     final country = watchValue((SearchManager m) => m.country);
-    watchPropertyValue((SettingsModel m) => m.favoriteCountryCodeLength);
+    watchPropertyValue((SettingsManager m) => m.favoriteCountryCodeLength);
     final favCountryCodes = watchPropertyValue(
-      (SettingsModel m) => m.favoriteCountryCode,
+      (SettingsManager m) => m.favoriteCountryCode,
     );
 
     return CountryAutoComplete(
@@ -91,18 +95,18 @@ class CountryAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
       onSelected: (c) {
         searchManager.setCountry(c);
         if (c?.code != null) {
-          di<SettingsModel>().setLastCountryCode(c!.code);
+          di<SettingsManager>().setLastCountryCode(c!.code);
         }
         searchManager.search();
       },
       value: country,
       addFav: (v) {
         if (country?.code == null) return;
-        di<SettingsModel>().addFavoriteCountryCode(v!.code);
+        di<SettingsManager>().addFavoriteCountryCode(v!.code);
       },
       removeFav: (v) {
         if (country?.code == null) return;
-        di<SettingsModel>().removeFavoriteCountryCode(v!.code);
+        di<SettingsManager>().removeFavoriteCountryCode(v!.code);
       },
       favs: favCountryCodes,
     );
@@ -152,9 +156,9 @@ class LanguageAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final language = watchValue((SearchManager m) => m.language);
-    watchPropertyValue((SettingsModel m) => m.favoriteLanguageCodeLength);
+    watchPropertyValue((SettingsManager m) => m.favoriteLanguageCodeLength);
     final favLanguageCodes = watchPropertyValue(
-      (SettingsModel m) => m.favoriteLanguageCode,
+      (SettingsManager m) => m.favoriteLanguageCode,
     );
     return LanguageAutoComplete(
       suffixIcon: AudioTypeFilterButton(mode: OverlayMode.platformModalMode),
@@ -164,17 +168,17 @@ class LanguageAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
           ..setLanguage(language)
           ..search();
         if (language?.isoCode != null) {
-          di<SettingsModel>().setLastLanguageCode(language!.isoCode);
+          di<SettingsManager>().setLastLanguageCode(language!.isoCode);
         }
       },
       favs: favLanguageCodes,
       addFav: (language) {
         if (language?.isoCode == null) return;
-        di<SettingsModel>().addFavoriteLanguageCode(language!.isoCode);
+        di<SettingsManager>().addFavoriteLanguageCode(language!.isoCode);
       },
       removeFav: (language) {
         if (language?.isoCode == null) return;
-        di<SettingsModel>().removeFavoriteLanguageCode(language!.isoCode);
+        di<SettingsManager>().removeFavoriteLanguageCode(language!.isoCode);
       },
     );
   }

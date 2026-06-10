@@ -11,10 +11,10 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../l10n/app_localizations.dart';
 import '../../local_audio/local_audio_manager.dart';
-import '../../player/player_model.dart';
+import '../../player/player_manager.dart';
 import '../../podcasts/podcast_manager.dart';
 import '../../radio/radio_manager.dart';
-import '../../settings/settings_model.dart';
+import '../../settings/settings_manager.dart';
 import '../app_config.dart';
 import '../page_ids.dart';
 import '../routing_manager.dart';
@@ -47,13 +47,13 @@ class _MobileMusicPodAppState extends State<MobileMusicPodApp> {
 
   Future<void> _onStateChanged(AppLifecycleState state) async {
     if (state == AppLifecycleState.paused) {
-      await di<PlayerModel>().persistPlayerState();
+      await di<PlayerManager>().persistPlayerState();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final themeIndex = watchPropertyValue((SettingsModel m) => m.themeIndex);
+    final themeIndex = watchPropertyValue((SettingsManager m) => m.themeIndex);
 
     final phoenix = phoenixTheme(color: widget.accent ?? kMusicPodDefaultColor);
     final routingManager = di<RoutingManager>();

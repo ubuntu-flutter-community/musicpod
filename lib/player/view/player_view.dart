@@ -4,8 +4,8 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../../settings/settings_model.dart';
-import '../player_model.dart';
+import '../../settings/settings_manager.dart';
+import '../player_manager.dart';
 import 'bottom_player.dart';
 import 'full_window_player.dart';
 
@@ -22,13 +22,13 @@ class PlayerView extends StatelessWidget with WatchItMixin {
     final theme = context.theme;
     final baseColor = theme.cardColor;
     final usePlayerColor = watchPropertyValue(
-      (SettingsModel m) => m.usePlayerColor,
+      (SettingsManager m) => m.usePlayerColor,
     );
     final playerBg = !usePlayerColor
         ? baseColor
         : getPlayerBg(
             theme,
-            watchPropertyValue((PlayerModel m) => m.color ?? baseColor),
+            watchPropertyValue((PlayerManager m) => m.color ?? baseColor),
             blendAmount: _position == PlayerPosition.bottom
                 ? (theme.isLight ? 0.2 : 0.3)
                 : 0.3,

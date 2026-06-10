@@ -11,7 +11,7 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/playlist_action.dart';
-import '../../settings/settings_model.dart';
+import '../../settings/settings_manager.dart';
 
 class PlaylistAddAudioAutoCompleteOrShrink extends StatelessWidget
     with WatchItMixin {
@@ -69,7 +69,7 @@ class _PlaylistAddAudioAutoCompleteState
       fontWeight: FontWeight.w500,
     );
     final useYaruTheme = watchPropertyValue(
-      (SettingsModel m) => m.useYaruTheme,
+      (SettingsManager m) => m.useYaruTheme,
     );
     final allAudiosResults = watchValue(
       (LocalAudioManager m) => m.initAudiosCommand.results,

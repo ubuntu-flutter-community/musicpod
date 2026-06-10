@@ -3,7 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
-import '../player_model.dart';
+import '../player_manager.dart';
 
 class SeekButton extends StatelessWidget {
   const SeekButton({
@@ -19,7 +19,7 @@ class SeekButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final playerModel = di<PlayerModel>();
+    final playerManager = di<PlayerManager>();
 
     final icon = Icon(
       forward ? Iconz.forward30 : Iconz.backward10,
@@ -29,7 +29,7 @@ class SeekButton extends StatelessWidget {
       color:
           iconColor ??
           (active ? (theme.colorScheme.onSurface) : theme.disabledColor),
-      onPressed: () => playerModel.seekInSeconds(forward ? 30 : -10),
+      onPressed: () => playerManager.seekInSeconds(forward ? 30 : -10),
       icon: Iconz.yaru
           ? Stack(
               alignment: Alignment.center,

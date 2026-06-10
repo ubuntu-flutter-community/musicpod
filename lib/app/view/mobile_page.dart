@@ -5,7 +5,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/player_model.dart';
+import '../../player/player_manager.dart';
 import '../../player/view/player_main_controls.dart';
 import '../../player/view/player_view.dart';
 import '../app_manager.dart';
@@ -63,9 +63,9 @@ class MobilePage extends StatelessWidget
                         onHorizontalDragEnd: (details) {
                           if (details.primaryVelocity != null) {
                             if (details.primaryVelocity! < -150) {
-                              di<PlayerModel>().playNext();
+                              di<PlayerManager>().playNext();
                             } else if (details.primaryVelocity! > 150) {
-                              di<PlayerModel>().playPrevious();
+                              di<PlayerManager>().playPrevious();
                             }
                           }
                         },

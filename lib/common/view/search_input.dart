@@ -5,7 +5,7 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../settings/settings_model.dart';
+import '../../settings/settings_manager.dart';
 import 'theme.dart';
 
 class SearchInput extends StatefulWidget with WatchItStatefulWidgetMixin {
@@ -60,7 +60,7 @@ class _SearchInputState extends State<SearchInput> {
   @override
   Widget build(BuildContext context) {
     final useYaruTheme = watchPropertyValue(
-      (SettingsModel m) => m.useYaruTheme,
+      (SettingsManager m) => m.useYaruTheme,
     );
     final theme = context.theme;
     return SizedBox(

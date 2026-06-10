@@ -3,7 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
-import '../player_model.dart';
+import '../player_manager.dart';
 
 class PlaybackRateButton extends StatelessWidget with WatchItMixin {
   const PlaybackRateButton({super.key, this.color});
@@ -13,7 +13,7 @@ class PlaybackRateButton extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final rate = watchPropertyValue((PlayerModel m) => m.rate);
+    final rate = watchPropertyValue((PlayerManager m) => m.rate);
 
     return PopupMenuButton(
       tooltip: 'x$rate',
@@ -30,10 +30,10 @@ class PlaybackRateButton extends StatelessWidget with WatchItMixin {
                 : (theme.colorScheme.onSurface)),
       ),
       initialValue: rate,
-      itemBuilder: (context) => PlayerModel.rateValues
+      itemBuilder: (context) => PlayerManager.rateValues
           .map(
             (e) => PopupMenuItem(
-              onTap: () => di<PlayerModel>().setRate(e),
+              onTap: () => di<PlayerManager>().setRate(e),
               child: Text('x$e'),
             ),
           )

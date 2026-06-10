@@ -22,7 +22,7 @@ import '../../extensions/command_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
-import '../../settings/settings_model.dart';
+import '../../settings/settings_manager.dart';
 import '../radio_manager.dart';
 import '../radio_service.dart';
 import 'radio_connect_mixin.dart';
@@ -50,7 +50,7 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
     final isRunning = stationResult.isRunning;
 
     final useYaruTheme = watchPropertyValue(
-      (SettingsModel m) => m.useYaruTheme,
+      (SettingsManager m) => m.useYaruTheme,
     );
     final radioHistoryListPadding = getRadioHistoryListPadding(useYaruTheme);
 

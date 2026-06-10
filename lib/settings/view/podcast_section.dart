@@ -7,7 +7,7 @@ import '../../common/view/common_widgets.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
-import '../../custom_content/custom_content_model.dart';
+import '../../custom_content/custom_content_manager.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
 
@@ -16,7 +16,7 @@ import '../../player/player_service.dart';
 import '../../podcasts/download_manager.dart';
 import '../../podcasts/podcast_manager.dart';
 import '../../search/search_manager.dart';
-import '../settings_model.dart';
+import '../settings_manager.dart';
 import '../shared_preferences_keys.dart';
 
 class PodcastSection extends StatefulWidget with WatchItStatefulWidgetMixin {
@@ -34,7 +34,7 @@ class _PodcastSectionState extends State<PodcastSection> {
   @override
   void initState() {
     super.initState();
-    final model = di<SettingsModel>();
+    final model = di<SettingsManager>();
     _initialKey = model.podcastIndexApiKey;
     _keyController = TextEditingController(text: _initialKey);
     _initialSecret = model.podcastIndexApiSecret;
@@ -52,15 +52,15 @@ class _PodcastSectionState extends State<PodcastSection> {
   Widget build(BuildContext context) {
     final theme = context.theme;
     final l10n = context.l10n;
-    final model = di<SettingsModel>();
+    final model = di<SettingsManager>();
     final usePodcastIndex = watchPropertyValue(
-      (SettingsModel m) => m.usePodcastIndex,
+      (SettingsManager m) => m.usePodcastIndex,
     );
     final podcastIndexApiKey = watchPropertyValue(
-      (SettingsModel m) => m.podcastIndexApiKey,
+      (SettingsManager m) => m.podcastIndexApiKey,
     );
     final podcastIndexApiSecret = watchPropertyValue(
-      (SettingsModel m) => m.podcastIndexApiSecret,
+      (SettingsManager m) => m.podcastIndexApiSecret,
     );
 
     return YaruSection(
@@ -185,7 +185,8 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
             tooltip: context.l10n.exportPodcastsToOpmlFile,
             onPressed: () => showFutureLoadingDialog(
               context: context,
-              future: () => di<CustomContentModel>().exportPodcastsToOpmlFile(),
+              future: () =>
+                  di<CustomContentManager>().exportPodcastsToOpmlFile(),
               backLabel: context.l10n.back,
               title: context.l10n.exportingPodcastsPleaseWait,
             ),
@@ -199,7 +200,7 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
             onPressed: () => showFutureLoadingDialog(
               context: context,
               future: () =>
-                  di<CustomContentModel>().importPodcastsFromOpmlFile(),
+                  di<CustomContentManager>().importPodcastsFromOpmlFile(),
               title: context.l10n.importingPodcastsPleaseWait,
               backLabel: context.l10n.back,
             ),

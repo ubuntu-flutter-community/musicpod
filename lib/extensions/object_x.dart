@@ -3,6 +3,7 @@ import 'package:podcast_search/podcast_search.dart';
 import '../l10n/app_localizations.dart';
 import '../podcasts/podcast_service.dart';
 import '../radio/radio_service.dart';
+import '../search/search_timeout_exception.dart';
 
 extension ObjectX on Object {
   String localizedErrorMessage(
@@ -27,6 +28,7 @@ extension ObjectX on Object {
       (this as PodcastFailedException).message.contains('host lookup')
           ? l10n.podcastFailedHostLookup
           : (this as PodcastFailedException).message,
+    SearchTimeoutException() => l10n.searchTimeoutMessage,
     _ => this.toString(),
   };
 }

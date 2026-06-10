@@ -3,7 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
-import '../../player/player_model.dart';
+import '../../player/player_manager.dart';
 import '../data/podcast_download.dart';
 import '../download_manager.dart';
 import 'download_button.dart';
@@ -124,7 +124,7 @@ class RecentDownloads extends StatelessWidget with WatchItMixin {
         final episode = downloads.elementAt(index);
         return ListTile(
           onTap: () {
-            di<PlayerModel>().startPlaylist(
+            di<PlayerManager>().startPlaylist(
               audios: [episode],
               listName: 'Recent Downloads',
               index: 0,

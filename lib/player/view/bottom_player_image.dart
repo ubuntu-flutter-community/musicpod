@@ -6,7 +6,7 @@ import '../../app/app_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../local_audio/view/local_cover.dart';
-import '../player_model.dart';
+import '../player_manager.dart';
 import 'player_fall_back_image.dart';
 import 'player_remote_source_image.dart';
 
@@ -51,7 +51,7 @@ class _BottomPlayerImageState extends State<BottomPlayerImage> {
               height: widget.size,
               width: widget.size,
               filterQuality: FilterQuality.medium,
-              controller: di<PlayerModel>().controller,
+              controller: di<PlayerManager>().controller,
               controls: (state) {
                 return const SizedBox.shrink();
               },

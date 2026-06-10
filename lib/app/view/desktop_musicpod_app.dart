@@ -10,7 +10,7 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../l10n/app_localizations.dart';
-import '../../settings/settings_model.dart';
+import '../../settings/settings_manager.dart';
 import '../app_config.dart';
 import 'desktop_home_page.dart';
 import 'mouse_and_keyboard_command_wrapper.dart';
@@ -33,9 +33,9 @@ class DesktopMusicPodApp extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final themeIndex = watchPropertyValue((SettingsModel m) => m.themeIndex);
+    final themeIndex = watchPropertyValue((SettingsManager m) => m.themeIndex);
     final useYaruTheme = watchPropertyValue(
-      (SettingsModel m) => m.useYaruTheme,
+      (SettingsManager m) => m.useYaruTheme,
     );
     final color = accent ?? kMusicPodDefaultColor;
     final phoenix = phoenixTheme(color: color);

@@ -6,8 +6,8 @@ import '../../common/view/custom_track_shape.dart';
 import '../../common/view/progress.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';
-import '../../settings/settings_model.dart';
-import '../player_model.dart';
+import '../../settings/settings_manager.dart';
+import '../player_manager.dart';
 
 class PlayerTrack extends StatelessWidget with WatchItMixin {
   const PlayerTrack({super.key, this.bottomPlayer = false, this.active = true});
@@ -18,18 +18,20 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final theme = context.theme;
     final useYaruTheme = watchPropertyValue(
-      (SettingsModel m) => m.useYaruTheme,
+      (SettingsManager m) => m.useYaruTheme,
     );
 
     final mainColor = theme.colorScheme.onSurface;
 
-    final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
+    final isPlaying = watchPropertyValue((PlayerManager m) => m.isPlaying);
 
-    final position = watchPropertyValue((PlayerModel m) => m.position);
-    final buffer = watchPropertyValue((PlayerModel m) => m.buffer);
-    final audioType = watchPropertyValue((PlayerModel m) => m.audio?.audioType);
+    final position = watchPropertyValue((PlayerManager m) => m.position);
+    final buffer = watchPropertyValue((PlayerManager m) => m.buffer);
+    final audioType = watchPropertyValue(
+      (PlayerManager m) => m.audio?.audioType,
+    );
 
-    final duration = watchPropertyValue((PlayerModel m) => m.duration);
+    final duration = watchPropertyValue((PlayerManager m) => m.duration);
 
     final sliderActive =
         active &&
@@ -108,7 +110,7 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
                         ? buffer.inSeconds.toDouble()
                         : null,
                     onChanged: sliderActive
-                        ? (v) => di<PlayerModel>().seek(
+                        ? (v) => di<PlayerManager>().seek(
                             Duration(seconds: v.toInt()),
                           )
                         : null,
@@ -173,8 +175,8 @@ class PlayerSimpleTrack extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final position = watchPropertyValue((PlayerModel m) => m.position);
-    final duration = watchPropertyValue((PlayerModel m) => m.duration);
+    final position = watchPropertyValue((PlayerManager m) => m.position);
+    final duration = watchPropertyValue((PlayerManager m) => m.duration);
     final textStyle = TextStyle(
       fontSize: 10,
       color: !active ? theme.disabledColor : null,

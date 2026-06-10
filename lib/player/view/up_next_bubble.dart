@@ -4,7 +4,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../common/data/audio.dart';
-import '../../player/player_model.dart';
+import '../player_manager.dart';
 
 class UpNextBubble extends StatelessWidget with WatchItMixin {
   const UpNextBubble({super.key, required this.audio, required this.nextAudio});
@@ -23,11 +23,11 @@ class UpNextBubble extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final setUpNextExpanded = di<PlayerModel>().setUpNextExpanded;
+    final setUpNextExpanded = di<PlayerManager>().setUpNextExpanded;
     final isUpNextExpanded = watchPropertyValue(
-      (PlayerModel m) => m.isUpNextExpanded,
+      (PlayerManager m) => m.isUpNextExpanded,
     );
-    final queue = watchPropertyValue((PlayerModel m) => m.queue);
+    final queue = watchPropertyValue((PlayerManager m) => m.queue);
 
     return SizedBox(
       height: isUpNextExpanded ? 180 : 70,

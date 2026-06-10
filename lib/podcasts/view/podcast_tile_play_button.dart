@@ -5,7 +5,7 @@ import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/player_model.dart';
+import '../../player/player_manager.dart';
 import '../podcast_manager.dart';
 import 'podcast_tile_progress.dart';
 
@@ -24,9 +24,11 @@ class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final isPlayerPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
+    final isPlayerPlaying = watchPropertyValue(
+      (PlayerManager m) => m.isPlaying,
+    );
 
-    final playerModel = di<PlayerModel>();
+    final playerManager = di<PlayerManager>();
 
     String label;
     final l10n = context.l10n;
@@ -59,12 +61,12 @@ class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
             di<PodcastManager>().updateAudioDuration(audio);
             if (selected) {
               if (isPlayerPlaying) {
-                playerModel.pause();
+                playerManager.pause();
               } else {
-                playerModel.resume();
+                playerManager.resume();
               }
             } else {
-              playerModel.safeCurrentAudioPosition().then((value) {
+              playerManager.safeCurrentAudioPosition().then((value) {
                 startPlaylist?.call();
               });
             }
@@ -77,7 +79,7 @@ class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
               child: PodcastTileProgress(
                 selected: selected,
                 lastPosition: watchValue(
-                  (PlayerModel m) => m.toggleAudiosProgressCommand.select(
+                  (PlayerManager m) => m.toggleAudiosProgressCommand.select(
                     (m) => m?[audio.url],
                   ),
                 ),

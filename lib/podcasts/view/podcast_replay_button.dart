@@ -4,7 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/player_model.dart';
+import '../../player/player_manager.dart';
 import '../episodes_manager.dart';
 import 'podcast_icon_button_progress.dart';
 
@@ -20,7 +20,7 @@ class PodcastReplayButton extends StatelessWidget with WatchItMixin {
     ).value;
 
     final isRunning = watchValue(
-      (PlayerModel m) => m.toggleAudiosProgressCommand.isRunning,
+      (PlayerManager m) => m.toggleAudiosProgressCommand.isRunning,
     );
 
     return Stack(
@@ -30,7 +30,7 @@ class PodcastReplayButton extends StatelessWidget with WatchItMixin {
           tooltip: context.l10n.replayAllEpisodes,
           onPressed: isRunning
               ? null
-              : () => di<PlayerModel>().toggleAudiosProgressCommand.run((
+              : () => di<PlayerManager>().toggleAudiosProgressCommand.run((
                   audios: podcast ?? [],
                   markComplete: false,
                 )),
@@ -51,7 +51,7 @@ class PodcastEpisodeResetProgressButton extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     final isRunning = watchValue(
-      (PlayerModel m) => m.toggleAudiosProgressCommand.isRunning,
+      (PlayerManager m) => m.toggleAudiosProgressCommand.isRunning,
     );
 
     return Stack(
@@ -61,7 +61,7 @@ class PodcastEpisodeResetProgressButton extends StatelessWidget
           tooltip: context.l10n.replayEpisode,
           onPressed: audio.url == null || isRunning
               ? null
-              : () => di<PlayerModel>().toggleAudiosProgressCommand.run((
+              : () => di<PlayerManager>().toggleAudiosProgressCommand.run((
                   audios: [audio],
                   markComplete: false,
                 )),

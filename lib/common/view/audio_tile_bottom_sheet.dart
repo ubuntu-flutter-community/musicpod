@@ -12,7 +12,7 @@ import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/playlist_action.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
-import '../../player/player_model.dart';
+import '../../player/player_manager.dart';
 import '../../playlists/view/add_to_playlist_dialog.dart';
 import '../data/audio.dart';
 import '../data/audio_type.dart';
@@ -116,7 +116,7 @@ class AudioTileBottomSheet extends StatelessWidget {
                             children: [
                               _Button(
                                 onPressed: () {
-                                  di<PlayerModel>().insertIntoQueue(audios);
+                                  di<PlayerManager>().insertIntoQueue(audios);
                                   context
                                     ..pop()
                                     ..toast(

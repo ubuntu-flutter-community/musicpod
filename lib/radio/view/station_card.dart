@@ -9,7 +9,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/command_x.dart';
-import '../../player/player_model.dart';
+import '../../player/player_manager.dart';
 import '../radio_manager.dart';
 import 'station_page.dart';
 
@@ -25,9 +25,11 @@ class StationCard extends StatelessWidget with WatchItMixin {
     );
 
     final isSelected = watchPropertyValue(
-      (PlayerModel m) => m.audio?.uuid == uuid,
+      (PlayerManager m) => m.audio?.uuid == uuid,
     );
-    final isPlayerPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
+    final isPlayerPlaying = watchPropertyValue(
+      (PlayerManager m) => m.isPlaying,
+    );
 
     final stationResult = watchValue(
       (RadioManager m) => m.getStationByUUIDCommand(uuid).results,
@@ -54,10 +56,10 @@ class StationCard extends StatelessWidget with WatchItMixin {
           ? null
           : () {
               if (isSelected) {
-                di<PlayerModel>().playOrPause();
+                di<PlayerManager>().playOrPause();
                 return;
               }
-              di<PlayerModel>()
+              di<PlayerManager>()
                   .startPlaylist(audios: [station], listName: uuid)
                   .then((_) => di<RadioManager>().clickStation(station));
             },

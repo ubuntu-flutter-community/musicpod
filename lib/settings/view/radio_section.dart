@@ -5,7 +5,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
-import '../../custom_content/custom_content_model.dart';
+import '../../custom_content/custom_content_manager.dart';
 import '../../extensions/build_context_x.dart';
 
 import '../../radio/radio_manager.dart';
@@ -34,7 +34,7 @@ class RadioSection extends StatelessWidget with WatchItMixin {
                   ),
                   onPressed: () => showFutureLoadingDialog(
                     context: context,
-                    future: () => di<CustomContentModel>()
+                    future: () => di<CustomContentManager>()
                         .exportStarredStationsToOpmlFile(),
                     title: context.l10n.exportingStationsPleaseWait,
                     backLabel: context.l10n.back,
@@ -48,7 +48,7 @@ class RadioSection extends StatelessWidget with WatchItMixin {
                   ),
                   onPressed: () => showFutureLoadingDialog(
                     context: context,
-                    future: () => di<CustomContentModel>()
+                    future: () => di<CustomContentManager>()
                         .importStarredStationsFromOpmlFile(),
                     title: context.l10n.importingStationsPleaseWait,
                     backLabel: context.l10n.back,

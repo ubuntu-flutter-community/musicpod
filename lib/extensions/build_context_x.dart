@@ -12,7 +12,7 @@ extension BuildContextX on BuildContext {
   ColorScheme get colorScheme => theme.colorScheme;
   TextTheme get textTheme => theme.textTheme;
   double get buttonRadius => kYaruButtonRadius;
-  double get buttonHeight => kYaruButtonHeight + 2;
+  double get buttonHeight => theme.buttonTheme.height;
 
   Size get mediaQuerySize => MediaQuery.sizeOf(this);
   bool get isPortrait => MediaQuery.orientationOf(this) == Orientation.portrait;

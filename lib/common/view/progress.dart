@@ -3,7 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
-import '../../settings/settings_model.dart';
+import '../../settings/settings_manager.dart';
 
 class Progress extends StatelessWidget with WatchItMixin {
   const Progress({
@@ -34,7 +34,7 @@ class Progress extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final useYaruTheme = watchPropertyValue(
-      (SettingsModel m) => m.useYaruTheme,
+      (SettingsManager m) => m.useYaruTheme,
     );
     return useYaruTheme
         ? YaruCircularProgressIndicator(
@@ -82,7 +82,7 @@ class LinearProgress extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final useYaruTheme = watchPropertyValue(
-      (SettingsModel m) => m.useYaruTheme,
+      (SettingsManager m) => m.useYaruTheme,
     );
     return useYaruTheme
         ? YaruLinearProgressIndicator(

@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:m3u_parser_nullsafe/m3u_parser_nullsafe.dart';
 import 'package:opml/opml.dart';
 import 'package:path/path.dart';
 import 'package:pls/pls.dart';
-import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
@@ -18,8 +18,8 @@ import '../podcasts/podcast_service.dart';
 import '../radio/radio_service.dart';
 
 @lazySingleton
-class CustomContentModel extends SafeChangeNotifier {
-  CustomContentModel({
+class CustomContentManager {
+  CustomContentManager({
     required ExternalPathService externalPathService,
     required LocalAudioService localAudioService,
     required PodcastService podcastService,
@@ -34,16 +34,14 @@ class CustomContentModel extends SafeChangeNotifier {
   final LocalAudioService _localAudioService;
   final RadioService _radioService;
 
-  List<({List<Audio> audios, String id})> _playlists = [];
-  List<({List<Audio> audios, String id})> get playlists => _playlists;
+  ListNotifier<({List<Audio> audios, String id})> playlists = ListNotifier();
   Future<void> addPlaylists() async {
-    _playlists = [..._playlists, ...await loadPlaylists()];
-    notifyListeners();
+    final more = await loadPlaylists();
+    playlists.addAll(more);
   }
 
   void removePlaylist({required String name}) {
-    _playlists.removeWhere((e) => e.id == name);
-    notifyListeners();
+    playlists.removeWhere((e) => e.id == name);
   }
 
   Future<List<({List<Audio> audios, String id})>> loadPlaylists() async {
@@ -65,7 +63,7 @@ class CustomContentModel extends SafeChangeNotifier {
         }
       }
     } on Exception catch (e, s) {
-      printErrorInDebugMode(e, trace: s, tag: '$CustomContentModel');
+      printErrorInDebugMode(e, trace: s, tag: '$CustomContentManager');
     }
 
     return lists;
@@ -127,7 +125,7 @@ class CustomContentModel extends SafeChangeNotifier {
     try {
       File(join(basePath, '$id.m3u')).writeAsStringSync(m3uAsString.toString());
     } on Exception catch (e, s) {
-      printErrorInDebugMode(e, trace: s, tag: '$CustomContentModel');
+      printErrorInDebugMode(e, trace: s, tag: '$CustomContentManager');
     }
   }
 
@@ -290,18 +288,15 @@ class CustomContentModel extends SafeChangeNotifier {
     }
   }
 
-  String? _playlistName;
-  String? get playlistName => _playlistName;
+  final playlistName = ValueNotifier<String?>(null);
   void setPlaylistName(String? value) {
-    if (_playlistName == value) return;
-    _playlistName = value;
-    notifyListeners();
+    if (playlistName.value == value) return;
+    playlistName.value = value;
   }
 
   void reset() {
-    _playlists = [];
-    _playlistName = null;
-    notifyListeners();
+    playlists.clear();
+    playlistName.value = null;
   }
 }
 

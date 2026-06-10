@@ -4,7 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/player_model.dart';
+import '../../player/player_manager.dart';
 import '../episodes_manager.dart';
 import 'podcast_icon_button_progress.dart';
 
@@ -20,7 +20,7 @@ class PodcastMarkDoneButton extends StatelessWidget with WatchItMixin {
     ).value;
 
     final isToggling = watchValue(
-      (PlayerModel m) => m.toggleAudiosProgressCommand.isRunning,
+      (PlayerManager m) => m.toggleAudiosProgressCommand.isRunning,
     );
 
     return Stack(
@@ -30,7 +30,7 @@ class PodcastMarkDoneButton extends StatelessWidget with WatchItMixin {
           tooltip: context.l10n.markAllEpisodesAsDone,
           onPressed: isToggling
               ? null
-              : () => di<PlayerModel>().toggleAudiosProgressCommand.run((
+              : () => di<PlayerManager>().toggleAudiosProgressCommand.run((
                   audios: podcast ?? [],
                   markComplete: true,
                 )),
@@ -50,20 +50,20 @@ class EpisodeMarkDownButton extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final isCompleted = watchValue(
-      (PlayerModel m) => m.toggleAudiosProgressCommand.select(
+      (PlayerManager m) => m.toggleAudiosProgressCommand.select(
         (m) =>
             m?[episode.url]?.inMilliseconds == episode.durationMs?.toInt() &&
             episode.durationMs != null,
       ),
     );
 
-    final isPlaying = watchPropertyValue((PlayerModel m) {
+    final isPlaying = watchPropertyValue((PlayerManager m) {
       final audio = m.audio;
       return audio == episode;
     });
 
     final isRunning = watchValue(
-      (PlayerModel m) => m.toggleAudiosProgressCommand.isRunning,
+      (PlayerManager m) => m.toggleAudiosProgressCommand.isRunning,
     );
 
     return Stack(
@@ -76,7 +76,7 @@ class EpisodeMarkDownButton extends StatelessWidget with WatchItMixin {
           isSelected: isCompleted,
           onPressed: isRunning || episode.durationMs == null
               ? null
-              : () => di<PlayerModel>().toggleAudiosProgressCommand.run((
+              : () => di<PlayerManager>().toggleAudiosProgressCommand.run((
                   audios: [episode],
                   markComplete: true,
                 )),

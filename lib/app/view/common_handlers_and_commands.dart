@@ -11,7 +11,7 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../notifications/notifications_service.dart';
 import '../../patch_notes/patch_notes_dialog.dart';
-import '../../player/player_model.dart';
+import '../../player/player_manager.dart';
 import '../../player/player_service.dart';
 import '../../podcasts/data/podcast_download.dart';
 import '../../podcasts/data/podcast_update_capsule.dart';
@@ -70,10 +70,10 @@ mixin CommonHandlersAndCommandsMixin {
     );
 
     registerStreamHandler(
-      select: (PlayerModel m) => m.messageStream,
+      select: (PlayerManager m) => m.messageStream,
       handler: (context, newValue, cancel) {
         if (newValue.hasError) {
-          final audio = di<PlayerModel>().audio;
+          final audio = di<PlayerManager>().audio;
 
           context.toast(
             Text(
@@ -114,7 +114,7 @@ mixin CommonHandlersAndCommandsMixin {
         } else if (results.hasData && results.data != null) {
           final data = results.data!;
           context.clearToasts();
-          di<PlayerModel>().startPlaylist(
+          di<PlayerManager>().startPlaylist(
             audios: data.audios,
             listName: data.pageId,
           );

@@ -12,8 +12,8 @@ import '../../extensions/taget_platform_x.dart';
 import '../../extensions/theme_data_x.dart';
 
 import '../../radio/view/next_station_button.dart';
-import '../../settings/settings_model.dart';
-import '../player_model.dart';
+import '../../settings/settings_manager.dart';
+import '../player_manager.dart';
 import 'play_button.dart';
 import 'repeat_button.dart';
 import 'seek_button.dart';
@@ -44,11 +44,11 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final theme = context.theme;
 
-    final audio = watchPropertyValue((PlayerModel m) => m.audio);
+    final audio = watchPropertyValue((PlayerManager m) => m.audio);
     final defaultColor =
         iconColor ??
         (!active ? theme.disabledColor : theme.colorScheme.onSurface);
-    final queueLength = watchPropertyValue((PlayerModel m) => m.queue.length);
+    final queueLength = watchPropertyValue((PlayerManager m) => m.queue.length);
     final showSkipButtons =
         queueLength > 1 || audio?.audioType == AudioType.local;
 
@@ -75,7 +75,7 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
     );
 
     final useYaruTheme = watchPropertyValue(
-      (SettingsModel m) => m.useYaruTheme,
+      (SettingsManager m) => m.useYaruTheme,
     );
 
     final radius = getBigAvatarButtonRadius(useYaruTheme);
@@ -97,7 +97,7 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
         ),
         AudioType.radio => IconButton(
           tooltip: context.l10n.skipToLivStream,
-          onPressed: active ? di<PlayerModel>().playNext : null,
+          onPressed: active ? di<PlayerManager>().playNext : null,
           icon: Icon(Iconz.refresh, color: defaultColor),
         ),
         _ => const SizedBox.shrink(),
@@ -106,7 +106,7 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
         IconButton(
           tooltip: context.l10n.back,
           color: defaultColor,
-          onPressed: !active ? null : () => di<PlayerModel>().playPrevious(),
+          onPressed: !active ? null : () => di<PlayerManager>().playPrevious(),
           icon: Icon(Iconz.skipBackward, color: defaultColor),
         ),
       playButton,
@@ -116,7 +116,7 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
           color: defaultColor,
           onPressed: !active || queueLength < 2
               ? null
-              : () => di<PlayerModel>().playNext(),
+              : () => di<PlayerManager>().playNext(),
           icon: Icon(Iconz.skipForward, color: defaultColor),
         ),
 
@@ -165,7 +165,7 @@ class PlayerCompactControls extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final audio = watchPropertyValue((PlayerModel m) => m.audio);
+    final audio = watchPropertyValue((PlayerManager m) => m.audio);
 
     final active = audio != null;
 
@@ -175,7 +175,7 @@ class PlayerCompactControls extends StatelessWidget with WatchItMixin {
     );
 
     final useYaruTheme = watchPropertyValue(
-      (SettingsModel m) => m.useYaruTheme,
+      (SettingsManager m) => m.useYaruTheme,
     );
 
     final radius = getSmallAvatarButtonRadius(useYaruTheme);
