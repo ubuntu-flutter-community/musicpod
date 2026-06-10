@@ -23,16 +23,13 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
 
     final mainColor = theme.colorScheme.onSurface;
 
-    final playerModel = di<PlayerModel>();
     final isPlaying = watchPropertyValue((PlayerModel m) => m.isPlaying);
 
     final position = watchPropertyValue((PlayerModel m) => m.position);
     final buffer = watchPropertyValue((PlayerModel m) => m.buffer);
     final audioType = watchPropertyValue((PlayerModel m) => m.audio?.audioType);
 
-    final setPosition = playerModel.setPosition;
     final duration = watchPropertyValue((PlayerModel m) => m.duration);
-    final seek = playerModel.seek;
 
     final sliderActive =
         active &&
@@ -111,10 +108,9 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
                         ? buffer.inSeconds.toDouble()
                         : null,
                     onChanged: sliderActive
-                        ? (v) async {
-                            setPosition(Duration(seconds: v.toInt()));
-                            await seek();
-                          }
+                        ? (v) => di<PlayerModel>().seek(
+                            Duration(seconds: v.toInt()),
+                          )
                         : null,
                   ),
                 ),

@@ -70,14 +70,12 @@ class PlayerModel extends SafeChangeNotifier {
   Duration? get duration => _playerService.duration;
 
   Duration? get position => _playerService.position;
-  void setPosition(Duration? value) => _playerService.setPosition(value);
 
   Duration? get buffer => _playerService.buffer;
 
   Future<void> seekInSeconds(int seconds) async {
     if (position != null && position!.inSeconds + seconds >= 0) {
-      setPosition(Duration(seconds: position!.inSeconds + seconds));
-      await seek();
+      await seek(Duration(seconds: position!.inSeconds + seconds));
     }
   }
 
@@ -97,7 +95,7 @@ class PlayerModel extends SafeChangeNotifier {
 
   Future<void> pause() async => _playerService.pause();
 
-  Future<void> seek() async => _playerService.seek();
+  Future<void> seek(Duration position) async => _playerService.seek(position);
 
   Future<void> resume() async => _playerService.resume();
 

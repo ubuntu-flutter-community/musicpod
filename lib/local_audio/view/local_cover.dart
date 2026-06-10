@@ -8,7 +8,6 @@ class LocalCover extends StatelessWidget with WatchItMixin {
   const LocalCover({
     super.key,
     required this.albumId,
-    required this.path,
     required this.fallback,
     required this.dimension,
     this.loadingWidget,
@@ -16,7 +15,6 @@ class LocalCover extends StatelessWidget with WatchItMixin {
   });
 
   final int albumId;
-  final String? path;
   final Widget fallback;
   final Widget? loadingWidget;
   final double dimension;
@@ -24,9 +22,9 @@ class LocalCover extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    if (di<LocalCoverManager>().shouldRequestCover(albumId, path)) {
+    if (di<LocalCoverManager>().shouldRequestCover(albumId)) {
       callOnceAfterThisBuild((context) {
-        di<LocalCoverManager>().getCoverCommand(albumId).run(path!);
+        di<LocalCoverManager>().getCoverCommand(albumId).run();
       });
     }
 
@@ -59,8 +57,12 @@ class LocalCover extends StatelessWidget with WatchItMixin {
                       fit: fit,
                       height: dimension,
                       width: dimension,
-                      cacheHeight: (dimension * 1.2).toInt(),
-                      cacheWidth: (dimension * 1.2).toInt(),
+                      cacheHeight: dimension != double.infinity
+                          ? (dimension * 1.2).toInt()
+                          : null,
+                      cacheWidth: dimension != double.infinity
+                          ? (dimension * 1.2).toInt()
+                          : null,
                     ),
             ),
       ),

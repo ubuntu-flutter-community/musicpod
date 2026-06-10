@@ -162,7 +162,6 @@ class AlbumPageSideBarIcon extends StatelessWidget with WatchItMixin {
                     )
                   : LocalCover(
                       albumId: albumId,
-                      path: path,
                       fallback: SideBarFallBackImage(
                         color: alphabetColor,
                         child: Icon(Iconz.startPlayList),
@@ -202,7 +201,6 @@ class AlbumPageImage extends StatelessWidget with WatchItMixin {
                   const CoverBackground(dimension: kMaxAudioPageHeaderHeight),
               onData: (album, param) => LocalCover(
                 albumId: audio!.albumDbId!,
-                path: audio!.path!,
                 dimension: kMaxAudioPageHeaderHeight,
                 fallback: const CoverBackground(
                   dimension: kMaxAudioPageHeaderHeight,

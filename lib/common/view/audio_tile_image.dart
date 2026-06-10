@@ -23,7 +23,6 @@ class AudioTileImage extends StatelessWidget {
     if (audio?.canHaveLocalCover == true) {
       image = LocalCover(
         albumId: audio!.albumDbId!,
-        path: audio!.path!,
         fit: BoxFit.cover,
         dimension: size,
         fallback: fallbackIcon,

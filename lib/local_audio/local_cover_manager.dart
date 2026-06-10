@@ -15,20 +15,20 @@ class LocalCoverManager {
 
   final LocalCoverService _localCoverService;
 
-  final _getCoverCommands = <int, Command<String, Uint8List?>>{};
+  final _getCoverCommands = <int, Command<void, Uint8List?>>{};
 
-  Command<String, Uint8List?> getCoverCommand(int albumId) =>
+  Command<void, Uint8List?> getCoverCommand(int albumId) =>
       _getCoverCommands.putIfAbsent(
         albumId,
         () => Command.createAsync(
-          (path) => _localCoverService.getCover(albumId: albumId, path: path),
+          (_) => _localCoverService.getCover(albumId: albumId),
           initialValue: null,
         ),
       );
 
-  bool shouldRequestCover(int? albumId, String? path) {
+  bool shouldRequestCover(int? albumId) {
     if (albumId == null) return false;
     final command = getCoverCommand(albumId);
-    return !command.results.value.hasData && path != null;
+    return !command.results.value.hasData;
   }
 }

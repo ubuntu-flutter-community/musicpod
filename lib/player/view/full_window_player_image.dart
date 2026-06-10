@@ -38,7 +38,6 @@ class FullWindowPlayerImage extends StatelessWidget with WatchItMixin {
       image = LocalCover(
         key: ValueKey(audio!.albumDbId!),
         albumId: audio.albumDbId!,
-        path: audio.path!,
         dimension: kFullWindowPlayerImageSize,
         fit: fit ?? BoxFit.fitHeight,
         fallback: fallBackImage,

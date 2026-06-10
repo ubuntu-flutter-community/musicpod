@@ -383,10 +383,7 @@ class PlayerService {
     _propertiesChangedController.add(true);
   }
 
-  Future<void> seek() async {
-    if (position == null) return;
-    await player.seek(position!);
-  }
+  Future<void> seek(Duration position) => player.seek(position);
 
   Future<void> resume() async {
     if (audio == null) return;
@@ -463,8 +460,7 @@ class PlayerService {
         audio != null &&
         queue.audios.contains(audio)) {
       if (position != null && position!.inSeconds > 10) {
-        setPosition(Duration.zero);
-        await seek();
+        await seek(Duration.zero);
       } else {
         final currentIndex = queue.audios.indexOf(audio!);
         if (currentIndex == 0) {
@@ -541,13 +537,8 @@ class PlayerService {
         return;
       }
       if (audio.canHaveLocalCover) {
-        var maybeData = await _localCoverService.getCover(
+        final maybeData = await _localCoverService.getCover(
           albumId: audio.albumDbId!,
-          path: audio.path!,
-        );
-        maybeData ??= await _localCoverService.getCover(
-          albumId: audio.albumDbId!,
-          path: audio.path!,
         );
 
         if (maybeData != null) {
@@ -644,6 +635,7 @@ class PlayerService {
   _onSetMediaControlsMetaData;
   Future<void>? Function(Duration? position)? _onSetMediaControlsPosition;
   Future<void>? Function(Duration? duration)? _onSetMediaControlsDuration;
+  Future<void>? Function()? _onStopMediaControls;
 
   void registerMediaControlsCallBacks({
     required Future<void> onIsPlaying({
@@ -657,11 +649,13 @@ class PlayerService {
     }),
     required Future<void> onSetPosition(Duration? position),
     required Future<void> onSetDuration(Duration? duration)?,
+    required Future<void> Function()? onStop,
   }) {
     _onSetMediaControlsIsPlaying = onIsPlaying;
     _onSetMediaControlsMetaData = onSetMetaData;
     _onSetMediaControlsPosition = onSetPosition;
     _onSetMediaControlsDuration = onSetDuration;
+    _onStopMediaControls = onStop;
   }
 
   Future<void> _setMediaControlsIsPlaying(bool playing) async =>
@@ -676,6 +670,9 @@ class PlayerService {
 
   Future<void> _setMediaControlDuration(Duration? duration) async =>
       await _onSetMediaControlsDuration?.call(duration);
+
+  Future<void> _setMediaControlsStop() async =>
+      await _onStopMediaControls?.call();
 
   Future<void> setMediaControlsMetaData({required Audio audio}) async {
     final artUri = await _localCoverService.createMediaControlsArtUri(
@@ -795,6 +792,7 @@ class PlayerService {
   }
 
   Future<void> stop() async {
+    await _setMediaControlsStop();
     await persistPlayerState();
     await _setAudio(null);
     _nextAudio = null;

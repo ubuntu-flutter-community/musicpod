@@ -63,7 +63,6 @@ class _BottomPlayerImageState extends State<BottomPlayerImage> {
       child = LocalCover(
         key: ValueKey(widget.audio!.path),
         albumId: widget.audio!.albumDbId!,
-        path: widget.audio!.path!,
         fit: BoxFit.cover,
         dimension: widget.size,
         fallback: fallBackImage,

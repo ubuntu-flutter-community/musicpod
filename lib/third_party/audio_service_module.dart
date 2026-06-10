@@ -58,10 +58,7 @@ Future<AudioServiceHandler> _registerAudioServiceHandler(
       onNext: playerService.playNext,
       onPause: playerService.pause,
       onPrevious: playerService.playPrevious,
-      onSeek: (position) async {
-        playerService.setPosition(position);
-        await playerService.seek();
-      },
+      onSeek: playerService.seek,
     ),
   );
 
@@ -118,6 +115,7 @@ Future<AudioServiceHandler> _registerAudioServiceHandler(
 
       return Future.value();
     },
+    onStop: () => audioHandler.stop(),
   );
 
   return audioHandler;
@@ -158,27 +156,17 @@ class AudioServiceHandler extends BaseAudioHandler with SeekHandler {
   }
 
   @override
-  Future<void> play() async {
-    await onPlay();
-  }
+  Future<void> play() => onPlay();
 
   @override
-  Future<void> pause() async {
-    await onPause();
-  }
+  Future<void> pause() => onPause();
 
   @override
-  Future<void> skipToNext() async {
-    await onNext();
-  }
+  Future<void> skipToNext() => onNext();
 
   @override
-  Future<void> skipToPrevious() async {
-    await onPrevious();
-  }
+  Future<void> skipToPrevious() => onPrevious();
 
   @override
-  Future<void> seek(Duration position) async {
-    await onSeek(position);
-  }
+  Future<void> seek(Duration position) => onSeek(position);
 }

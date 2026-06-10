@@ -2,35 +2,34 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
-import 'package:flutter/foundation.dart';
 import 'package:collection/collection.dart';
-import 'package:drift/drift.dart';
+import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:path/path.dart' as p;
 
 import '../common/data/audio.dart';
 import '../common/logging.dart';
-import '../common/persistence/database.dart';
+import '../common/persistence_utils.dart';
 import '../extensions/media_file_x.dart';
 import '../extensions/string_x.dart';
 import '../extensions/taget_platform_x.dart';
-import '../common/persistence_utils.dart';
+import 'persistence/local_audio_dao.dart';
 
 @lazySingleton
 class LocalCoverService {
-  final Database _db;
+  final LocalAudioDao _dao;
 
-  LocalCoverService({required Database database}) : _db = database;
+  LocalCoverService({required LocalAudioDao dao}) : _dao = dao;
 
-  Future<Uint8List?> getCover({
-    required int albumId,
-    required String path,
-  }) async {
+  Future<Uint8List?> getCover({required int albumId}) async {
     // Check database
     final dbCover = await getFromDb(albumId);
     if (dbCover != null) {
       return dbCover;
     }
+
+    final path = await _dao.findPathOfFirstTrackInAlbum(albumId);
+    if (path == null) return null;
 
     final file = File(path);
     if (file.existsSync() && file.isPlayable) {
@@ -51,41 +50,13 @@ class LocalCoverService {
 
       if (bytesFromMetadata == null) return null;
 
-      await _persistToDb(albumId, bytesFromMetadata);
+      await _dao.addAlbumCover(albumId, bytesFromMetadata);
       return bytesFromMetadata;
     }
     return null;
   }
 
-  Future<Uint8List?> getFromDb(int albumId) async {
-    final row = await (_db.select(
-      _db.albumArtTable,
-    )..where((t) => t.album.equals(albumId))).getSingleOrNull();
-    return row?.pictureData;
-  }
-
-  Future<void> _persistToDb(int albumId, Uint8List data) async {
-    final existing = await (_db.select(
-      _db.albumArtTable,
-    )..where((t) => t.album.equals(albumId))).getSingleOrNull();
-
-    if (existing == null) {
-      await _db
-          .into(_db.albumArtTable)
-          .insert(
-            AlbumArtTableCompanion.insert(
-              album: albumId,
-              pictureData: data,
-              pictureMimeType: 'image/png',
-            ),
-            mode: InsertMode.insertOrReplace,
-          );
-    } else {
-      await (_db.update(_db.albumArtTable)
-            ..where((t) => t.album.equals(albumId)))
-          .write(AlbumArtTableCompanion(pictureData: Value(data)));
-    }
-  }
+  Future<Uint8List?> getFromDb(int albumId) => _dao.getAlbumCover(albumId);
 
   String? _getImageInFolder(File file) =>
       _commonCoverInFolderNames.firstWhereOrNull(
@@ -124,10 +95,7 @@ class LocalCoverService {
       if (uri != null && uri.hasScheme && uri.host.isNotEmpty) return uri;
     } else if (audio?.canHaveLocalCover == true &&
         File(audio!.path!).existsSync()) {
-      final newData = await getCover(
-        albumId: audio.albumDbId!,
-        path: audio.path!,
-      );
+      final newData = await getCover(albumId: audio.albumDbId!);
       if (newData != null) {
         final File newFile = await _safeTempCover(newData);
 

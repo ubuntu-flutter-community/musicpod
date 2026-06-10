@@ -37,6 +37,36 @@ class LocalAudioDao {
     );
   }
 
+  Future<Uint8List?> getAlbumCover(int albumId) async {
+    final row = await (_db.select(
+      _db.albumArtTable,
+    )..where((t) => t.album.equals(albumId))).getSingleOrNull();
+    return row?.pictureData;
+  }
+
+  Future<void> addAlbumCover(int albumId, Uint8List data) async {
+    final existing = await (_db.select(
+      _db.albumArtTable,
+    )..where((t) => t.album.equals(albumId))).getSingleOrNull();
+
+    if (existing == null) {
+      await _db
+          .into(_db.albumArtTable)
+          .insert(
+            AlbumArtTableCompanion.insert(
+              album: albumId,
+              pictureData: data,
+              pictureMimeType: 'image/png',
+            ),
+            mode: InsertMode.insertOrReplace,
+          );
+    } else {
+      await (_db.update(_db.albumArtTable)
+            ..where((t) => t.album.equals(albumId)))
+          .write(AlbumArtTableCompanion(pictureData: Value(data)));
+    }
+  }
+
   JoinedSelectStatement trackJoin(SimpleSelectStatement base) => base.join([
     innerJoin(
       _db.trackTable,
@@ -69,6 +99,15 @@ class LocalAudioDao {
     final row = await (_db.select(
       _db.trackTable,
     )..where((t) => t.path.equals(path))).getSingleOrNull();
+    return row?.path;
+  }
+
+  Future<String?> findPathOfFirstTrackInAlbum(int albumId) async {
+    final row =
+        await (_db.select(_db.trackTable)
+              ..where((t) => t.album.equals(albumId))
+              ..limit(1))
+            .getSingleOrNull();
     return row?.path;
   }
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable_generator/utils.dart';
 
 import '../../app/routing_manager.dart';
 import '../../common/view/audio_card.dart';
@@ -24,10 +23,6 @@ class AlbumCard extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    callOnceAfterThisBuild(
-      (context) => di<LocalAudioManager>().findAlbumCommand(id).runRestricted(),
-    );
-
     final pinned = watchValue(
       (LocalAudioManager m) =>
           m.togglePinnedAlbumCommand.select((e) => e.contains(id)),
@@ -36,18 +31,7 @@ class AlbumCard extends StatelessWidget with WatchItMixin {
     return Stack(
       alignment: Alignment.center,
       children: [
-        watchValue(
-          (LocalAudioManager m) => m.findAlbumCommand(id).results,
-        ).toWidget(
-          onError: (error, lastResult, param) => _AlbumCard(id: id, path: null),
-          whileRunning: (lastResult, param) => _AlbumCard(id: id, path: null),
-          onData: (album, param) {
-            final path = album
-                ?.firstWhereOrNull((e) => e.albumDbId == id)
-                ?.path;
-            return _AlbumCard(id: id, path: path);
-          },
-        ),
+        _AlbumCard(id: id),
         if (pinned)
           Positioned(
             left: isMobile ? 6 : 5,
@@ -64,10 +48,9 @@ class AlbumCard extends StatelessWidget with WatchItMixin {
 }
 
 class _AlbumCard extends StatelessWidget {
-  const _AlbumCard({required this.path, required this.id});
+  const _AlbumCard({required this.id});
 
   final int id;
-  final String? path;
 
   @override
   Widget build(BuildContext context) => AudioCard(
@@ -77,7 +60,6 @@ class _AlbumCard extends StatelessWidget {
     image: LocalCover(
       dimension: audioCardDimension,
       albumId: id,
-      path: path,
       fallback: CoverBackground(dimension: audioCardDimension),
     ),
     onTap: () => di<RoutingManager>().push(

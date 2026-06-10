@@ -78,7 +78,6 @@ class _ArtistImage extends StatelessWidget {
                 .map(
                   (e) => LocalCover(
                     albumId: e.albumDbId!,
-                    path: e.path!,
                     fallback: ColoredBox(color: theme.cardColor),
                     fit: BoxFit.fill,
                     dimension: dimension,

@@ -30,7 +30,7 @@ class AppLocalizationsSv extends AppLocalizations {
   String get repeatAll => 'Upprepa alla';
 
   @override
-  String get repeatOff => 'Repeat Off';
+  String get repeatOff => 'Upprepa av';
 
   @override
   String get next => 'Nästa';
@@ -451,7 +451,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String downloadRemoved(String name) {
-    return 'Download removed: $name';
+    return 'Nedladdning borttagen: $name';
   }
 
   @override
@@ -2141,11 +2141,11 @@ class AppLocalizationsSv extends AppLocalizations {
       'Detta låter dig välja en anpassad accentfärg för det aktuella temat.';
 
   @override
-  String get usePlayerColorTitle => 'Use player color';
+  String get usePlayerColorTitle => 'Använd spelarens färg';
 
   @override
   String get usePlayerColorDescription =>
-      'This will use the dominant color has been extracted out of the current artwork (if available) for the whole app.';
+      'Detta kommer att använda den dominerande färgen som har extraherats från den aktuella illustrationen (om tillgänglig) för hela appen.';
 
   @override
   String get selectColor => 'Välj färg';
@@ -2188,15 +2188,15 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get parsingLocalAudioFilesMetadataPleaseWait =>
-      'Parsing local audio files metadata, please wait ...';
+      'Analyserar lokala ljudfilers metadata, vänligen vänta ...';
 
   @override
   String get persistingLocalAudioFilesMetadataPleaseWait =>
-      'Persisting local audio files metadata, please wait ...';
+      'Lagrar metadata för lokala ljudfiler, vänligen vänta ...';
 
   @override
   String get buildingLocalAudioLibraryPleaseWait =>
-      'Building local audio library, please wait ...';
+      'Bygger lokalt ljudbibliotek, vänligen vänta ...';
 
   @override
   String get importingPodcastsPleaseWait =>
@@ -2224,7 +2224,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String checkingForUpdatesPleaseWait(int progress) {
-    return 'Checking for updates $progress%';
+    return 'Söker efter uppdateringar $progress%';
   }
 
   @override
@@ -2242,199 +2242,199 @@ class AppLocalizationsSv extends AppLocalizations {
   }
 
   @override
-  String get lyrics => 'Lyrics';
+  String get lyrics => 'Låttext';
 
   @override
-  String get noLyricsFound => 'No lyrics found';
+  String get noLyricsFound => 'Ingen låttext hittades';
 
   @override
-  String get autoScrolling => 'Auto scroll';
+  String get autoScrolling => 'Automatisk scrollning';
 
   @override
-  String get genericErrorTitle => 'An error occurred';
+  String get genericErrorTitle => 'Ett fel uppstod';
 
   @override
   String get genericErrorDescription =>
-      'An unexpected error occurred. Please try again later.';
+      'Ett oväntat fel uppstod. Vänligen försök igen senare.';
 
   @override
   String errorDetails(String details) {
-    return 'Error details: $details';
+    return 'Feldetaljer: $details';
   }
 
   @override
-  String get appendToQueue => 'Append to queue';
+  String get appendToQueue => 'Lägg till i kö';
 
   @override
   String appendedToQueue(String title) {
-    return 'Appended to queue: $title';
+    return 'Tillagd i kö: $title';
   }
 
   @override
   String appendMediaToQueueDescription(String title) {
-    return '$title is already inside the queue. Do you want to append it to the end of the queue?';
+    return '$title finns redan i kön. Vill du lägga till den i slutet av kön?';
   }
 
   @override
-  String get appendMediaToQueueTitle => 'Append media to queue';
+  String get appendMediaToQueueTitle => 'Lägg till media i kö';
 
   @override
   String appendMediaToQueue(String title) {
-    return 'Append media to queue: $title';
+    return 'Lägg till media i kö: $title';
   }
 
   @override
-  String get explore => 'Explore';
+  String get explore => 'Utforska';
 
   @override
-  String get favorites => 'Favorites';
+  String get favorites => 'Favoriter';
 
   @override
-  String get autoMovePlayerTitle => 'Auto move player';
+  String get autoMovePlayerTitle => 'Flytta spelaren automatiskt';
 
   @override
   String get autoMovePlayerDescription =>
-      'Move the player to the right if there is enough horizontal space';
+      'Flytta spelaren åt höger om det finns tillräckligt med horisontellt utrymme';
 
   @override
   String get onlineLyricsNotSetup =>
-      'If you want to fetch lyrics from Genius, please provide an API key in the settings.';
+      'Om du vill hämta låttexter från Genius, vänligen ange en API-nyckel i inställningarna.';
 
   @override
   String get settingsGeniusDisclaimer =>
-      'MusicPod, its contributors, and the Genius API are not responsible for any misuse of the API key. By providing your API key, you agree to use it responsibly and in accordance with Genius terms of service.\n\n';
+      'MusicPod, dess bidragsgivare och Genius API ansvarar inte för missbruk av API-nyckeln. Genom att tillhandahålla din API-nyckel samtycker du till att använda den ansvarsfullt och i enlighet med Genius användarvillkor.\n\n';
 
   @override
   String get settingsGeniusDescription =>
-      'To fetch lyrics from Genius, you need to provide a Genius API Key. You can obtain an API key by creating an account on Genius and registering an application to get your access token.';
+      'För att hämta låttexter från Genius behöver du ange en Genius API-nyckel. Du kan få en API-nyckel genom att skapa ett konto på Genius och registrera en applikation för att få din åtkomsttoken.';
 
   @override
   String get settingsDoNotAskForGeniusTitle =>
-      'Do not use Genius or ask for Genius API Key again';
+      'Använd inte Genius eller fråga om Genius API-nyckel igen';
 
   @override
   String get settingsDoNotAskForGeniusDescription =>
-      'This prevents the app from prompting for the Genius API key in the future and makes the lyrics feature fully rely on local LRC files or LRC strings embedded in audio metadata.';
+      'Detta förhindrar att appen frågar efter Genius API-nyckeln i framtiden och gör att låttextfunktionen helt förlitar sig på lokala LRC-filer eller LRC-strängar inbäddade i ljudmetadata.';
 
   @override
   String get tosLink => 'https://genius.com/static/terms';
 
   @override
-  String get tosLinkText => 'Read Genius\'s Terms of Service';
+  String get tosLinkText => 'Läs Genius användarvillkor';
 
   @override
-  String get oopsSomethingWentWrong => 'Oops, something went wrong!';
+  String get oopsSomethingWentWrong => 'Oj, något gick fel!';
 
   @override
-  String get retry => 'Retry';
+  String get retry => 'Försök igen';
 
   @override
-  String get reportIssue => 'Report this issue';
+  String get reportIssue => 'Rapportera detta problem';
 
   @override
   String get ignoreThisTitleInHearingHistory =>
-      'Ignore this title in hearing history';
+      'Ignorera den här titeln i lyssningshistoriken';
 
   @override
   String get removeFromIgnoredHearyHistoryTitles =>
-      'Remove from ignored titles';
+      'Ta bort från ignorerade titlar';
 
   @override
-  String get ignoredHearyHistoryTitlesTitle => 'Ignored titles';
+  String get ignoredHearyHistoryTitlesTitle => 'Ignorerade titlar';
 
   @override
   String get ignoredHearyHistoryTitlesDescription =>
-      'These titles will be ignored in the hearing history and will not be shown in the recently played list.';
+      'Dessa titlar kommer att ignoreras i lyssningshistoriken och visas inte i listan över senast spelade.';
 
   @override
   String get playingMediaTimedOut =>
-      'Playing media timed out. This might be caused by a network error or server issues.';
+      'Uppspelningen av media har löpt ut. Detta kan orsakas av ett nätverksfel eller serverproblem.';
 
   @override
-  String get playbackWasPausedByTimer => 'Playback was paused by timer';
+  String get playbackWasPausedByTimer => 'Uppspelningen pausades av timer';
 
   @override
-  String get playbackTimerCancelled => 'Playback timer cancelled';
+  String get playbackTimerCancelled => 'Uppspelningstimer avbruten';
 
   @override
   String get podcastDoesNotSendEpisodeDuration =>
-      'This podcast does not send episode duration. The mark done feature might not work as expected.';
+      'Den här podcasten skickar inte avsnittets längd. Funktionen för att markera som klar kanske inte fungerar som förväntat.';
 
   @override
   String cleanedUpEpisodesOfUnsubscribedPodcast(String podcastName) {
-    return 'Cleaned up episodes of unsubscribed podcast: $podcastName';
+    return 'Rensade avsnitt av oprenumererad podcast: $podcastName';
   }
 
   @override
   String findEpisodesTimeoutMessage(String podcastName) {
-    return 'Finding episodes takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+    return 'Det tar längre tid än vanligt att hitta avsnitt. Är du ansluten till internet? Om ja, kan det vara ett serverproblem.';
   }
 
   @override
   String get radioBrowserServerUnavailable =>
-      'The radio browser server is currently unavailable. This might be a temporary issue. Please try again later.';
+      'Radiobläddraren är för närvarande inte tillgänglig. Detta kan vara ett tillfälligt problem. Försök igen senare.';
 
   @override
   String get findStationsTimeoutMessage =>
-      'Finding (this) station(s) takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      'Det tar längre tid än vanligt att hitta (dessa) station(er). Är du ansluten till internet? Om ja, kan det vara ett serverproblem.';
 
   @override
   String retryInSeconds(String seconds) {
-    return 'Retry in $seconds seconds';
+    return 'Försök igen om $seconds sekunder';
   }
 
   @override
   String retryngInSeconds(String seconds) {
-    return 'Retryng in $seconds seconds';
+    return 'Försöker igen om $seconds sekunder';
   }
 
   @override
   String playerCouldNotOpenRemoteMedia(String media) {
-    return 'The player could not open or maintain to play remote media \'$media\'. Are you connected to the internet? If yes, this might be a server issue.';
+    return 'Spelaren kunde inte öppna eller underhålla uppspelning av fjärrmedia \'$media\'. Är du ansluten till internet? Om ja, kan det vara ett serverproblem.';
   }
 
   @override
   String get searchTimeoutMessage =>
-      'Searching takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      'Sökningen tar längre tid än vanligt. Är du ansluten till internet? Om ja, kan det vara ett serverproblem.';
 
   @override
-  String get youCanEditTheNameLater => 'You can edit the name later.';
+  String get youCanEditTheNameLater => 'Du kan redigera namnet senare.';
 
   @override
   String get geniusAlsoProvidesArt =>
-      'Genius also provides artwork for most songs. If you enable Genius to fetch lyrics, the online art in the player will also use Genius instead of MusicBrainz.';
+      'Genius tillhandahåller även omslagsbilder för de flesta låtar. Om du aktiverar Genius för att hämta låttexter kommer onlinebilden i spelaren också att använda Genius istället för MusicBrainz.';
 
   @override
-  String get enterYourGeniusApiKey => 'Enter your Genius API key';
+  String get enterYourGeniusApiKey => 'Ange din Genius API-nyckel';
 
   @override
-  String get saveYourApiKey => 'Save API Key';
+  String get saveYourApiKey => 'Spara API-nyckel';
 
   @override
   String get lookUpRadioBrowserHostsFailed =>
-      'Looking up radio browser hosts failed. Are you connected to the internet? If yes, this might be a server issue.';
+      'Misslyckades med att söka efter radiovärdar i bläddraren. Är du ansluten till internet? Om ja, kan det vara ett serverproblem.';
 
   @override
   String get lookUpRadioBrowserHostsTimouted =>
-      'Finding Radio Browser hosts takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      'Det tar längre tid än vanligt att hitta värdar i radiobläddraren. Är du ansluten till internet? Om ja, kan det vara ett serverproblem.';
 
   @override
   String get radioBrowserServerNotConnected =>
-      'You are not connected to any radio browser server';
+      'Du är inte ansluten till någon radiobläddrarserver';
 
   @override
   String get radioBrowserLoadingTagsFailed =>
-      'An error occurred while loading radio tags, the server might be unavailable.';
+      'Ett fel uppstod när radiotaggar skulle laddas in. Servern kanske inte är tillgänglig.';
 
   @override
   String get radioBrowserLoadingTagsTimeouted =>
-      'Loading tags took longer than expected, are you connected to the internet? If yes, this might be a server issue';
+      'Det tog längre tid än väntat att ladda taggarna. Är du ansluten till internet? Om ja, kan det vara ett serverproblem';
 
   @override
   String get podcastSearchNotSuccessfull =>
-      'This podcast search was not successfull, are you connected to the internet? If yes this might be a server issue.';
+      'Den här podcastsökningen misslyckades, är du ansluten till internet? Om ja, kan det vara ett serverproblem.';
 
   @override
   String get podcastFailedHostLookup =>
-      'Finding episodes was not successfull - could not connect to the server. Are you connected to the internet? If yes this might be a server issue.';
+      'Det gick inte att hitta avsnitten – det gick inte att ansluta till servern. Är du ansluten till internet? Om ja, kan det vara ett serverproblem.';
 }
