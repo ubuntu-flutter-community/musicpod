@@ -889,5 +889,13 @@
     },
     "searchTimeoutMessage": "Otsimine kestab kauem, kui peaks. Kas sinu arvuti või seadme internetiühendus ikka toimib? Kui jah, siis võib ka olla tegemist serveri veaga.",
     "youCanEditTheNameLater": "Sa võid nime hiljem muuta.",
-    "geniusAlsoProvidesArt": "Geniuse teenusest saad ka enamuse lugude kaanepildid. Kui kasutad Geniuse teenust laulusõnade laadimiseks, siis samast laaditakse MusicBrainzi asemel ka kaanepildid."
+    "geniusAlsoProvidesArt": "Geniuse teenusest saad ka enamuse lugude kaanepildid. Kui kasutad Geniuse teenust laulusõnade laadimiseks, siis samast laaditakse MusicBrainzi asemel ka kaanepildid.",
+    "tryToFetchLyricsOnlineTitle": "Proovi laulusõnad laadida võrgust",
+    "tryToFetchLyricsOnlineDescription": "Kas soovid proovida laadida laulusõnu võrguteenustest?",
+    "fetchingLyricsOnline": "Laadin laulusõnu võrguteenustest, palun oota…",
+    "fetchingLyricsOnlineTimeoutMessage": "Laulusõnade võrgust laadimine kestab kauem, kui tavaliselt. Kas sinu arvuti või seadme internetiühendus ikka toimib? Kui jah, siis võib ka olla tegemist serveri veaga või selle laulu sõnu pole enam saadaval",
+    "fetchingLyricsOnlineFailed": "Laulusõnade võrgust laadimine ei õnnestunud. Võib-olla server pole saadaval või selle laulu sõnad on eemaldatud",
+    "onlineLyricsSourceTitle": "Laulusõnade võrgust laadimise allikas",
+    "onlineLyricsSourceDescription": "Vali teenus laulusõnade võrgust laadimiseks.",
+    "onlineLyricsSourceLrcLib": "LrcLib"
 }
