@@ -22,6 +22,7 @@ class LyricsManager {
           audio: param.audio,
           title: param.title,
           artist: param.artist,
+          searchOnline: param.tryToFetchOnline,
         ),
         initialValue: null,
       );
@@ -30,6 +31,7 @@ class LyricsManager {
     required Audio? audio,
     required String? title,
     required String? artist,
+    required bool searchOnline,
   }) async {
     final local = _localLyricsService.parseLocalLyrics(
       filePath: audio?.path,
@@ -37,17 +39,23 @@ class LyricsManager {
     );
 
     if ((local?.lrcLines?.isNotEmpty ?? false) ||
-        (local?.lyricsString?.isNotEmpty ?? false)) {
+        (local?.plainLyrics?.isNotEmpty ?? false)) {
       return LyricsAndArtResult(
-        lyricsString: local?.lyricsString,
+        plainLyrics: local?.plainLyrics,
         lrcLines: local?.lrcLines,
         artUrl: null,
       );
     }
 
-    return _onlineLyricsService.fetchLyricsFromGenius(
-      title: title ?? audio?.title ?? '',
-      artist: artist ?? audio?.artist,
-    );
+    if (searchOnline) {
+      return _onlineLyricsService.fetchOnlineLyrics(
+        title: title ?? audio?.title ?? '',
+        artist: artist ?? audio?.artist,
+        durationMs: audio?.durationMs?.toInt(),
+        album: audio?.album,
+      );
+    }
+
+    return null;
   }
 }

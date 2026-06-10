@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
+import '../../extensions/object_x.dart';
 import 'no_search_result_page.dart';
 import '../../extensions/build_context_x.dart';
 
@@ -13,6 +14,7 @@ class ErrorRetryBody extends StatelessWidget with WatchItMixin {
     this.sliver = false,
     required this.cooldown,
     this.errorText,
+    this.errorTextStyle,
   });
 
   final Object error;
@@ -20,6 +22,7 @@ class ErrorRetryBody extends StatelessWidget with WatchItMixin {
   final void Function()? onRetry;
   final bool sliver;
   final SafeValueNotifier<int> cooldown;
+  final TextStyle? errorTextStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +37,10 @@ class ErrorRetryBody extends StatelessWidget with WatchItMixin {
                 : context.l10n.retryngInSeconds(cooldownValue.toString()),
           ),
         ),
-        message: Text(errorText ?? error.toString()),
+        message: Text(
+          errorText ?? error.localizedErrorMessage(context.l10n),
+          style: errorTextStyle,
+        ),
       );
     }
 
@@ -47,7 +53,10 @@ class ErrorRetryBody extends StatelessWidget with WatchItMixin {
               : context.l10n.retryngInSeconds(cooldownValue.toString()),
         ),
       ),
-      message: Text(errorText ?? error.toString()),
+      message: Text(
+        errorText ?? error.localizedErrorMessage(context.l10n),
+        style: errorTextStyle,
+      ),
     );
   }
 }

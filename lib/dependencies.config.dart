@@ -10,7 +10,6 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:dio/dio.dart' as _i361;
-import 'package:genius_lyrics/genius_lyrics.dart' as _i1015;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:github/github.dart' as _i535;
 import 'package:injectable/injectable.dart' as _i526;
@@ -65,7 +64,6 @@ import 'settings/view/licenses_dialog.dart' as _i1009;
 import 'third_party/audio_service_module.dart' as _i739;
 import 'third_party/database_module.dart' as _i440;
 import 'third_party/dio_module.dart' as _i1039;
-import 'third_party/genius_module.dart' as _i264;
 import 'third_party/github_module.dart' as _i207;
 import 'third_party/local_notifier_module.dart' as _i8;
 import 'third_party/media_kit_module.dart' as _i94;
@@ -88,7 +86,6 @@ extension GetItInjectableX on _i174.GetIt {
     final sharedPreferencesModule = _$SharedPreferencesModule();
     final windowManagerModule = _$WindowManagerModule();
     final databaseModule = _$DatabaseModule();
-    final geniusModule = _$GeniusModule();
     final audioServiceModule = _$AudioServiceModule();
     gh.factory<_i361.Dio>(() => dioModule.create());
     gh.factory<_i535.GitHub>(() => githubModule.gitHub);
@@ -117,6 +114,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i1009.LicenseStore>(() => _i1009.LicenseStore());
     gh.lazySingleton<_i115.Database>(() => databaseModule.database);
+    gh.lazySingleton<_i546.OnlineLyricsService>(
+      () => _i546.OnlineLyricsService(dio: gh<_i361.Dio>()),
+    );
     gh.lazySingleton<_i328.OnlineArtService>(
       () => _i328.OnlineArtService(dio: gh<_i361.Dio>()),
     );
@@ -128,6 +128,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i414.RadioDao>(
       () => _i414.RadioDao(db: gh<_i115.Database>()),
+    );
+    gh.factoryCached<_i23.LyricsManager>(
+      () => _i23.LyricsManager(
+        localLyricsService: gh<_i546.LocalLyricsService>(),
+        onlineLyricsService: gh<_i546.OnlineLyricsService>(),
+      ),
     );
     gh.lazySingleton<_i635.OnlineArtManager>(
       () => _i635.OnlineArtManager(
@@ -153,9 +159,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i57.LocalCoverService>(
       () => _i57.LocalCoverService(dao: gh<_i688.LocalAudioDao>()),
     );
-    gh.factoryCachedParam<_i1015.Genius, String, dynamic>(
-      (accessToken, _) => geniusModule.genius(accessToken: accessToken),
-    );
     gh.lazySingleton<_i616.DownloadService>(
       () => _i616.DownloadService(
         externalPathService: gh<_i551.ExternalPathService>(),
@@ -172,18 +175,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i348.ListenBrainzService>(
       () => _i348.ListenBrainzService(
         settingsService: gh<_i763.SettingsService>(),
-      ),
-    );
-    gh.lazySingleton<_i546.OnlineLyricsService>(
-      () => _i546.OnlineLyricsService(
-        localLyricsService: gh<_i546.LocalLyricsService>(),
-        settingsService: gh<_i763.SettingsService>(),
-      ),
-    );
-    gh.factoryCached<_i23.LyricsManager>(
-      () => _i23.LyricsManager(
-        localLyricsService: gh<_i546.LocalLyricsService>(),
-        onlineLyricsService: gh<_i546.OnlineLyricsService>(),
       ),
     );
     gh.lazySingleton<_i721.PodcastService>(
@@ -371,7 +362,5 @@ class _$SharedPreferencesModule extends _i357.SharedPreferencesModule {}
 class _$WindowManagerModule extends _i271.WindowManagerModule {}
 
 class _$DatabaseModule extends _i440.DatabaseModule {}
-
-class _$GeniusModule extends _i264.GeniusModule {}
 
 class _$AudioServiceModule extends _i739.AudioServiceModule {}

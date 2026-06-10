@@ -2436,4 +2436,32 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get podcastFailedHostLookup =>
       'La ricerca degli episodi non è riuscita: impossibile connettersi al server. Sei connesso a Internet? Se sì, potrebbe trattarsi di un problema del server.';
+
+  @override
+  String get tryToFetchLyricsOnlineTitle => 'Try to fetch lyrics online';
+
+  @override
+  String get tryToFetchLyricsOnlineDescription =>
+      'Do you want to try to fetch the lyrics online?';
+
+  @override
+  String get fetchingLyricsOnline => 'Fetching lyrics online, please wait ...';
+
+  @override
+  String get fetchingLyricsOnlineTimeoutMessage =>
+      'Fetching lyrics online takes longer than usual. Are you connected to the internet? If yes, this might be a server issue or the song might not be available';
+
+  @override
+  String get fetchingLyricsOnlineFailed =>
+      'Fetching lyrics online failed. This might be a server issue or the song might not be available';
+
+  @override
+  String get onlineLyricsSourceTitle => 'Online lyrics source';
+
+  @override
+  String get onlineLyricsSourceDescription =>
+      'Select the source for online lyrics.';
+
+  @override
+  String get onlineLyricsSourceLrcLib => 'LrcLib';
 }

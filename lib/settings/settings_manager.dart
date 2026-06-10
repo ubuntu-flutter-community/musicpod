@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../local_audio/local_audio_service.dart';
+import '../lyrics/lyrics_service.dart';
 import '../player/player_service.dart';
 import '../podcasts/podcast_service.dart';
 import '../radio/radio_service.dart';
@@ -160,20 +162,10 @@ class SettingsManager extends SafeChangeNotifier {
   Future<void> setShowPlayerLyrics(bool value) =>
       _service.setValue(SPKeys.showPlayerLyrics, value);
 
-  bool get enableLyricsGenius =>
-      _service.getBool(SPKeys.enableLyricsGenius) ?? false;
-  Future<void> setEnableLyricsGenius(bool value) =>
-      _service.setValue(SPKeys.enableLyricsGenius, value);
-
-  String? get lyricsGeniusAccessToken =>
-      _service.getString(SPKeys.lyricsGeniusAccessToken);
-  Future<void> setLyricsGeniusAccessToken(String value) =>
-      _service.setValue(SPKeys.lyricsGeniusAccessToken, value);
-
-  bool get neverAskAgainForGeniusToken =>
-      _service.getBool(SPKeys.neverAskAgainForGeniusToken) ?? false;
-  Future<void> setNeverAskAgainForGeniusToken(bool value) =>
-      _service.setValue(SPKeys.neverAskAgainForGeniusToken, value);
+  bool get tryToFetchLyricsOnline =>
+      _service.getBool(SPKeys.tryToFetchLyricsOnline) ?? false;
+  Future<void> setTryToFetchLyricsOnline(bool value) =>
+      _service.setValue(SPKeys.tryToFetchLyricsOnline, value);
 
   String get selectedSearchAudioType =>
       _service.getString(SPKeys.selectedSearchAudioType) ?? 'podcast';
@@ -240,6 +232,16 @@ class SettingsManager extends SafeChangeNotifier {
         await _radioService.wipeAndBuildRadioLibrary();
         await _playerService.resetPlayerState();
       });
+
+  OnlineLyricsSource? get onlineLyricsSource {
+    final value = _service.getString(SPKeys.onlineLyricsSource);
+    if (value == null) return null;
+    return OnlineLyricsSource.values.firstWhereOrNull((e) => e.name == value);
+  }
+
+  void setOnlineLyricsSource(OnlineLyricsSource? value) {
+    _service.setValue(SPKeys.onlineLyricsSource, value?.name);
+  }
 
   @override
   Future<void> dispose() async {

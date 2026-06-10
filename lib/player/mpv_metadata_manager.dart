@@ -197,7 +197,7 @@ class MpvMetadataManager {
     if (!dataSafeMode.value) {
       LyricsAndArtResult? lyricsAndArtResult;
 
-      // First we check if genius gives us lyrics and art if it is set up
+      // First we check if the lyrics manager gives us lyrics and art if it is set up
       if (_geniusIsSetup) {
         lyricsAndArtResult = await _lyricsManager.command.runRestrictedAsync(
           param: LyricsAndArtParam(
@@ -210,7 +210,7 @@ class MpvMetadataManager {
       }
 
       albumArt = await _onlineArtService.fetchAlbumArt(
-        // If genius gives us an artUrl, we use it. If not, we try to fetch it via the icyTitle
+        // If the lyrics manager gives us an artUrl, we use it. If not, we try to fetch it via the icyTitle
         albumArtOverwrite: lyricsAndArtResult?.artUrl,
         icyTitle: parsedIcyTitle,
       );

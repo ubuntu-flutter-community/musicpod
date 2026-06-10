@@ -1,6 +1,7 @@
 import 'package:podcast_search/podcast_search.dart';
 
 import '../l10n/app_localizations.dart';
+import '../lyrics/lyrics_service.dart';
 import '../podcasts/podcast_service.dart';
 import '../radio/radio_service.dart';
 import '../search/search_timeout_exception.dart';
@@ -29,6 +30,8 @@ extension ObjectX on Object {
           ? l10n.podcastFailedHostLookup
           : (this as PodcastFailedException).message,
     SearchTimeoutException() => l10n.searchTimeoutMessage,
+    FetchOnlineLyricsTimeoutException() =>
+      l10n.fetchingLyricsOnlineTimeoutMessage,
     _ => this.toString(),
   };
 }

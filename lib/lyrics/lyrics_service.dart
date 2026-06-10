@@ -1,15 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter_it/flutter_it.dart';
-import 'package:genius_lyrics/genius_lyrics.dart';
+import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:lrc/lrc.dart';
 import 'package:path/path.dart' as p;
 
+import '../app/app_config.dart';
 import '../common/logging.dart';
-import '../settings/settings_service.dart';
-import '../settings/shared_preferences_keys.dart';
+import '../l10n/app_localizations.dart';
 import 'data/lyrics_and_art_result_and_param.dart';
 
 @lazySingleton
@@ -55,7 +54,7 @@ class LocalLyricsService {
     }
 
     return LyricsAndArtResult(
-      lyricsString: outputString,
+      plainLyrics: outputString,
       lrcLines: outputLrcLines,
       artUrl: null,
     );
@@ -64,69 +63,26 @@ class LocalLyricsService {
 
 @lazySingleton
 class OnlineLyricsService {
-  OnlineLyricsService({
-    required LocalLyricsService localLyricsService,
-    required SettingsService settingsService,
-  }) : _localLyricsService = localLyricsService,
-       _settingsService = settingsService {
-    const fromEnv = String.fromEnvironment('GENIUS_ACCESS_TOKEN');
-    _genius = di.get<Genius>(
-      param1: fromEnv.isNotEmpty
-          ? fromEnv
-          : _settingsService.getString(SPKeys.lyricsGeniusAccessToken) ?? '',
-    );
-  }
+  OnlineLyricsService({required Dio dio}) : _dio = dio;
 
-  // Note: the genius API is actually capable of much more than just fetching lyrics,
-  // but because genius needs an API token, and musicbrainz doesn't, and musicpod should
-  // be able to provide artwork without API tokens.
-  // If this is set up, the MPV Metadata manager will not use musicbrainz anymore for fetching artwork,
-  // because genius provides more reliable results for artwork than musicbrainz
-  late final Genius _genius;
-
-  final LocalLyricsService _localLyricsService;
-  final SettingsService _settingsService;
-  static bool get isRegistered => di.isRegistered<OnlineLyricsService>();
-
-  static Future<void> refreshRegistration(String token) async {
-    if (di.isRegistered<OnlineLyricsService>()) {
-      di.unregister<OnlineLyricsService>();
-    }
-
-    final saved = await di<SettingsService>().setValue(
-      SPKeys.lyricsGeniusAccessToken,
-      token,
-    );
-
-    if (!saved) {
-      throw GeniusNotSetupException();
-    }
-
-    di.registerLazySingleton(
-      () => OnlineLyricsService(
-        localLyricsService: di<LocalLyricsService>(),
-        settingsService: di<SettingsService>(),
-      ),
-    );
-  }
+  final Dio _dio;
 
   final _cache = <String, LyricsAndArtResult>{};
   Timer? _debounceTimer;
   Completer<LyricsAndArtResult?>? _completer;
 
-  Future<LyricsAndArtResult?> fetchLyricsFromGenius({
+  Future<LyricsAndArtResult?> fetchOnlineLyrics({
     required String title,
     String? artist,
+    String? album,
+    int? durationMs,
+    OnlineLyricsSource source = OnlineLyricsSource.lrcLib,
   }) {
-    if (_settingsService.getBool(SPKeys.neverAskAgainForGeniusToken) ?? false) {
-      return Future.value(null);
-    }
-
     final cacheKey = '${artist ?? ''} - $title'.toLowerCase();
     if (_cache.containsKey(cacheKey)) {
       final value = _cache[cacheKey];
       printInfoInDebugMode(
-        'Fetched lyrics from Genius for "$artist - $title": ${value?.lyricsString?.substring(0, 10)}..., artUrl: ${value?.artUrl}',
+        'Fetched lyrics from cache for "$artist - $title": ${value?.plainLyrics?.substring(0, 10)}..., artUrl: ${value?.artUrl}',
         tag: '$OnlineLyricsService',
       );
       return Future.value(value);
@@ -142,38 +98,33 @@ class OnlineLyricsService {
     _debounceTimer = Timer(const Duration(seconds: 2), () async {
       try {
         printInfoInDebugMode(
-          'Trying to fetch lyrics and art from Genius for "$artist - $title"',
+          'Trying to fetch lyrics and art from lrcLib for "$artist - $title"',
           tag: '$OnlineLyricsService',
         );
 
-        final song = await _genius.searchSong(artist: artist, title: title);
-        if (song != null) {
-          final lyrics = await song.lyrics;
+        LyricsAndArtResult? lyricsAndArtResult;
+        switch (source) {
+          case OnlineLyricsSource.lrcLib:
+            lyricsAndArtResult = await fetchLrcLineFromLrcLib(
+              title,
+              artist: artist,
+              album: album,
+              durationMs: durationMs,
+            );
+          // Here we could add more sources in the future
+          // prefably without API keys, so that the user can fetch lyrics without setting up anything
+        }
 
-          final localParsed = _localLyricsService.parseLocalLyrics(
-            inputString: lyrics,
-          );
-
+        if (lyricsAndArtResult != null) {
           printInfoInDebugMode(
-            'Fetched lyrics from Genius for "$artist - $title": ${lyrics?.substring(0, 10)}..., artUrl: ${song.songArtImageUrl}',
+            'Fetched lyrics from LrcLib for "$artist - $title": ${lyricsAndArtResult.plainLyrics?.substring(0, 10)}..., artUrl: ${lyricsAndArtResult.artUrl}',
             tag: '$OnlineLyricsService',
           );
-
-          _cache[cacheKey] = LyricsAndArtResult(
-            lyricsString: localParsed?.lyricsString ?? lyrics,
-            lrcLines: localParsed?.lrcLines,
-            artUrl: song.songArtImageUrl,
-          );
-
           if (_completer?.isCompleted == false) {
-            _completer?.complete(
-              LyricsAndArtResult(
-                lyricsString: localParsed?.lyricsString,
-                lrcLines: localParsed?.lrcLines,
-                artUrl: song.songArtImageUrl,
-              ),
-            );
+            _cache[cacheKey] = lyricsAndArtResult;
+            _completer?.complete(lyricsAndArtResult);
           }
+          return;
         } else {
           if (_completer?.isCompleted == false) {
             _completer?.complete(null);
@@ -189,10 +140,84 @@ class OnlineLyricsService {
 
     return _completer!.future;
   }
+
+  Future<LyricsAndArtResult?> fetchLrcLineFromLrcLib(
+    String title, {
+    String? artist,
+    String? album,
+    int? durationMs,
+  }) async {
+    const url = 'https://lrclib.net/api/get';
+
+    final cancelToken = CancelToken();
+
+    _dio.options.headers['user-agent'] =
+        '${AppConfig.appTitle} (${AppConfig.repoUrl})';
+    final response = await _dio
+        .get(
+          url,
+          queryParameters: {
+            'artist_name': artist ?? '',
+            'track_name': title,
+            'album_name': album ?? '',
+            if (durationMs != null) 'duration': (durationMs / 1000).round(),
+          },
+          cancelToken: cancelToken,
+        )
+        .timeout(
+          const Duration(seconds: 10),
+          onTimeout: () {
+            cancelToken.cancel('Request timed out');
+            throw FetchOnlineLyricsTimeoutException(
+              'Fetching lyrics from LrcLib timed out',
+            );
+          },
+        );
+    if (response.statusCode == 200) {
+      final data = response.data;
+
+      final syncedLyrics = data['syncedLyrics'] as String?;
+      if (syncedLyrics != null) {
+        final lrcLines = Lrc.parse(syncedLyrics).lyrics;
+        return LyricsAndArtResult(
+          plainLyrics: syncedLyrics,
+          lrcLines: lrcLines,
+          artUrl: null,
+        );
+      }
+      final plainLyrics = data['plainLyrics'] as String?;
+      if (plainLyrics != null) {
+        return LyricsAndArtResult(
+          lrcLines: null,
+          plainLyrics: plainLyrics,
+          artUrl: null,
+        );
+      }
+    }
+
+    return null;
+  }
 }
 
-class GeniusNotSetupException implements Exception {
+enum OnlineLyricsSource {
+  lrcLib;
+
+  String localize(AppLocalizations l10n) => switch (this) {
+    OnlineLyricsSource.lrcLib => l10n.onlineLyricsSourceLrcLib,
+  };
+
+  OnlineLyricsSource fromString(String s) => switch (s.toLowerCase()) {
+    'lrclib' => OnlineLyricsSource.lrcLib,
+    _ => throw ArgumentError('Unknown online lyrics source: $s'),
+  };
+}
+
+class FetchOnlineLyricsTimeoutException implements Exception {
+  final String message;
+  FetchOnlineLyricsTimeoutException(this.message);
+
+  static const Duration timeoutDuration = Duration(seconds: 10);
+
   @override
-  String toString() =>
-      'Genius API is not setup correctly. Please provide a valid API token in the settings.';
+  String toString() => 'FetchOnlineLyricsTimeoutException: $message';
 }

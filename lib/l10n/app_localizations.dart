@@ -4706,6 +4706,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Finding episodes was not successfull - could not connect to the server. Are you connected to the internet? If yes this might be a server issue.'**
   String get podcastFailedHostLookup;
+
+  /// No description provided for @tryToFetchLyricsOnlineTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Try to fetch lyrics online'**
+  String get tryToFetchLyricsOnlineTitle;
+
+  /// No description provided for @tryToFetchLyricsOnlineDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to try to fetch the lyrics online?'**
+  String get tryToFetchLyricsOnlineDescription;
+
+  /// No description provided for @fetchingLyricsOnline.
+  ///
+  /// In en, this message translates to:
+  /// **'Fetching lyrics online, please wait ...'**
+  String get fetchingLyricsOnline;
+
+  /// No description provided for @fetchingLyricsOnlineTimeoutMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Fetching lyrics online takes longer than usual. Are you connected to the internet? If yes, this might be a server issue or the song might not be available'**
+  String get fetchingLyricsOnlineTimeoutMessage;
+
+  /// No description provided for @fetchingLyricsOnlineFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Fetching lyrics online failed. This might be a server issue or the song might not be available'**
+  String get fetchingLyricsOnlineFailed;
+
+  /// No description provided for @onlineLyricsSourceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Online lyrics source'**
+  String get onlineLyricsSourceTitle;
+
+  /// No description provided for @onlineLyricsSourceDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Select the source for online lyrics.'**
+  String get onlineLyricsSourceDescription;
+
+  /// No description provided for @onlineLyricsSourceLrcLib.
+  ///
+  /// In en, this message translates to:
+  /// **'LrcLib'**
+  String get onlineLyricsSourceLrcLib;
 }
 
 class _AppLocalizationsDelegate

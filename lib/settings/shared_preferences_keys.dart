@@ -54,9 +54,10 @@ class SPKeys {
   static const hideCompletedEpisodes = 'hideCompletedEpisodes';
   static const showPlayerLyrics = 'showPlayerLyrics';
   static const lyricsGeniusAccessToken = 'lyricsGeniusAccessToken';
-  static const enableLyricsGenius = 'enableLyricsGenius';
+  static const tryToFetchLyricsOnline = 'tryToFetchLyricsOnline';
   static const neverAskAgainForGeniusToken = 'neverAskAgainForGeniusToken';
   static const blockedIcyTitles = 'blockedIcyTitles';
   static const playerExplorerTabIndex = 'playerExplorerTabIndex';
   static const selectedSearchAudioType = 'selectedSearchAudioType';
+  static const onlineLyricsSource = 'onlineLyricsSource';
 }
