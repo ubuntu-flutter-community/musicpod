@@ -897,5 +897,13 @@
     "radioBrowserLoadingTagsFailed": "Si è verificato un errore durante il caricamento dei tag radio, il server potrebbe non essere disponibile.",
     "radioBrowserLoadingTagsTimeouted": "Il caricamento dei tag ha richiesto più tempo del previsto, sei connesso a Internet? Se sì, potrebbe trattarsi di un problema del server",
     "podcastSearchNotSuccessfull": "La ricerca del podcast non è andata a buon fine, sei connesso a Internet? Se sì, potrebbe trattarsi di un problema del server.",
-    "podcastFailedHostLookup": "La ricerca degli episodi non è riuscita: impossibile connettersi al server. Sei connesso a Internet? Se sì, potrebbe trattarsi di un problema del server."
+    "podcastFailedHostLookup": "La ricerca degli episodi non è riuscita: impossibile connettersi al server. Sei connesso a Internet? Se sì, potrebbe trattarsi di un problema del server.",
+    "tryToFetchLyricsOnlineTitle": "Prova a recuperare i testi online",
+    "tryToFetchLyricsOnlineDescription": "Vuoi provare a recuperare i testi online?",
+    "fetchingLyricsOnline": "Recupero testi online...",
+    "fetchingLyricsOnlineTimeoutMessage": "Il recupero dei testi online richiede più tempo del solito. Sei connesso a Internet? Se sì, potrebbe trattarsi di un problema del server oppure il brano potrebbe non essere disponibile",
+    "fetchingLyricsOnlineFailed": "Il recupero dei testi online non è riuscito. Potrebbe trattarsi di un problema del server oppure il brano potrebbe non essere disponibile",
+    "onlineLyricsSourceTitle": "Fonte testi online",
+    "onlineLyricsSourceDescription": "Seleziona la fonte per i testi online.",
+    "onlineLyricsSourceLrcLib": "LrcLib"
 }
