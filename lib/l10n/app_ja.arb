@@ -889,5 +889,13 @@
     "radioBrowserLoadingTagsFailed": "ラジオタグの読み込み中にエラーが発生しました。サーバーが利用できない可能性があります。",
     "radioBrowserLoadingTagsTimeouted": "タグの読み込みに予想以上に時間がかかりました。インターネットに接続されていますか？接続されている場合、サーバー側の問題である可能性があります",
     "podcastSearchNotSuccessfull": "ポッドキャストの検索に失敗しました。インターネットに接続されていますか？接続されている場合、サーバー側の問題である可能性があります。",
-    "podcastFailedHostLookup": "エピソードの検索に失敗しました。サーバーに接続できませんでした。インターネットに接続されていますか？接続されている場合、サーバー側の問題である可能性があります。"
+    "podcastFailedHostLookup": "エピソードの検索に失敗しました。サーバーに接続できませんでした。インターネットに接続されていますか？接続されている場合、サーバー側の問題である可能性があります。",
+    "tryToFetchLyricsOnlineTitle": "オンラインで歌詞を検索する",
+    "tryToFetchLyricsOnlineDescription": "歌詞をオンラインで取得しますか?",
+    "fetchingLyricsOnline": "歌詞をオンラインで取得しています。お待ちください...",
+    "fetchingLyricsOnlineTimeoutMessage": "歌詞をオンラインで取得するのに通常より時間がかかっています。インターネットに接続されていますか？接続されている場合、サーバーの問題か、曲が利用できない可能性があります",
+    "fetchingLyricsOnlineFailed": "歌詞のオンライン取得に失敗しました。サーバーの問題か、曲が利用できない可能性があります",
+    "onlineLyricsSourceTitle": "オンライン歌詞ソース",
+    "onlineLyricsSourceDescription": "オンライン歌詞のソースを選択します。",
+    "onlineLyricsSourceLrcLib": "LrcLib"
 }
