@@ -8,6 +8,7 @@ import 'package:yaru/yaru.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/data/retry_capsule.dart';
+import '../../common/retry_manager.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/error_retry_body.dart';
 import '../../common/view/theme.dart';
@@ -86,6 +87,11 @@ class _PlayerLyricsState extends State<_PlayerLyrics> {
         runWhen: RunWhen.paramChanges,
       );
     });
+
+    registerHandler(
+      select: (LyricsManager m) => m.command,
+      handler: (context, _, __) => RetryManager.dispose('lyrics'),
+    );
 
     return Column(
       spacing: kLargestSpace,
