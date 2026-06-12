@@ -61,8 +61,8 @@ class SearchPage extends StatelessWidget with WatchItMixin {
               errorText: error.localizedErrorMessage(context.l10n),
               onRetry: () => di<SearchManager>().searchCommand.runRestricted(
                 param: (clear: true, manualFilter: false),
+                immediatelyClearErrors: true,
               ),
-              cooldown: di<SearchManager>().searchCommand.cooldown,
             )
           : Stack(
               alignment: Alignment.center,

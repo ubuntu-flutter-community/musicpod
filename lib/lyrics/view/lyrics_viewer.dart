@@ -108,7 +108,6 @@ class _PlayerLyricsState extends State<_PlayerLyrics> {
                   immediatelyClearErrors: true,
                   runWhen: RunWhen.hasNoValueAndNoErrors,
                 ),
-                cooldown: di<LyricsManager>().command.cooldown,
               ),
             ),
             onNullData: (param) => const NoLyricsFound(),

@@ -9,6 +9,7 @@ import '../../common/view/adaptive_multi_layout_body.dart';
 import '../../common/view/audio_fall_back_icon.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/avatar_play_button.dart';
+import '../../common/view/error_retry_body.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
@@ -24,9 +25,7 @@ import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
 import '../../settings/settings_manager.dart';
 import '../radio_manager.dart';
-import '../radio_service.dart';
 import 'radio_connect_mixin.dart';
-import '../../common/view/error_retry_body.dart';
 import 'radio_history_list.dart';
 import 'radio_page_copy_histoy_button.dart';
 import 'radio_page_tag_bar.dart';
@@ -84,27 +83,10 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
         builder: (context) {
           if (error != null) {
             return ErrorRetryBody(
-              errorText: switch (error) {
-                LookUpRadioBrowserHostsException() =>
-                  context.l10n.lookUpRadioBrowserHostsFailed,
-                FindStationTimeoutException() =>
-                  context.l10n.findStationsTimeoutMessage,
-                RadioBrowserServerUnavailableException() =>
-                  context.l10n.radioBrowserServerUnavailable,
-                RadioBrowserApiNotConnectedException() =>
-                  '${context.l10n.disconnectedFrom} RadioBrowser API',
-                _ => error.toString(),
-              },
-              cooldown: di<RadioManager>()
-                  .getStationByUUIDCommand(uuid)
-                  .cooldown,
               error: error,
-
-              onRetry: isRunning
-                  ? null
-                  : () => di<RadioManager>()
-                        .getStationByUUIDCommand(uuid)
-                        .runRestricted(immediatelyClearErrors: true),
+              onRetry: () => di<RadioManager>()
+                  .getStationByUUIDCommand(uuid)
+                  .runRestricted(immediatelyClearErrors: true),
             );
           }
 

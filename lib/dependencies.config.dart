@@ -25,6 +25,7 @@ import 'app/sidebar_audios_manager.dart' as _i190;
 import 'app/window_size_to_settings_listener.dart' as _i517;
 import 'common/data/audio.dart' as _i537;
 import 'common/persistence/database.dart' as _i115;
+import 'common/view/error_retry_body.dart' as _i400;
 import 'custom_content/custom_content_manager.dart' as _i1028;
 import 'expose/expose_manager.dart' as _i987;
 import 'expose/expose_service.dart' as _i820;
@@ -137,6 +138,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i688.LocalAudioDao>(
       () => _i688.LocalAudioDao(database: gh<_i115.Database>()),
+    );
+    gh.factoryCachedParam<_i400.RetryManager, String, dynamic>(
+      (source, _) => _i400.RetryManager(source: source),
     );
     gh.lazySingleton<_i763.SettingsService>(
       () => _i763.SettingsService(

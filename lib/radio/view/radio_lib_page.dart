@@ -36,7 +36,6 @@ class RadioLibPage extends StatelessWidget
     return watchValue((RadioManager m) => m.connectCommand.results).toWidget(
       whileRunning: (lastResult, param) => const Center(child: Progress()),
       onError: (error, lastResult, param) => ErrorRetryBody(
-        cooldown: di<RadioManager>().connectCommand.cooldown,
         error: error,
         onRetry: () => di<RadioManager>().connectCommand.runRestricted(
           immediatelyClearErrors: true,
@@ -44,7 +43,6 @@ class RadioLibPage extends StatelessWidget
       ),
       onData: (connectedHost, param) => connectedHost == null
           ? ErrorRetryBody(
-              cooldown: di<RadioManager>().connectCommand.cooldown,
               error: RadioBrowserApiNotConnectedException(),
               onRetry: () => di<RadioManager>().connectCommand.runRestricted(
                 immediatelyClearErrors: true,
