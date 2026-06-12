@@ -5,6 +5,8 @@ import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
+import '../../common/data/retry_capsule.dart';
+import '../../common/retry_manager.dart';
 import '../../common/view/adaptive_multi_layout_body.dart';
 import '../../common/view/audio_fall_back_icon.dart';
 import '../../common/view/audio_page_header.dart';
@@ -39,6 +41,11 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
   Widget build(BuildContext context) {
     callOnceAfterThisBuild(
       (_) => di<RadioManager>().getStationByUUIDCommand(uuid).runRestricted(),
+    );
+
+    registerHandler(
+      select: (RadioManager m) => m.getStationByUUIDCommand(uuid),
+      handler: (_, _, __) => di<RetryManager>().removeRetry(retryViewId: uuid),
     );
 
     final stationResult = watchValue(
@@ -84,9 +91,12 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
           if (error != null) {
             return ErrorRetryBody(
               error: error,
-              onRetry: () => di<RadioManager>()
-                  .getStationByUUIDCommand(uuid)
-                  .runRestricted(immediatelyClearErrors: true),
+              retryViewId: uuid,
+              retryCapsule: RetryCapsule(
+                onRetry: () => di<RadioManager>()
+                    .getStationByUUIDCommand(uuid)
+                    .runRestricted(immediatelyClearErrors: true),
+              ),
             );
           }
 

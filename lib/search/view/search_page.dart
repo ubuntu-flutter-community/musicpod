@@ -3,8 +3,11 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
+import '../../common/data/retry_capsule.dart';
+import '../../common/retry_manager.dart';
 import '../../common/view/default_page_body.dart';
 import '../../common/view/error_retry_body.dart';
 import '../../common/view/header_bar.dart';
@@ -35,7 +38,12 @@ class SearchPage extends StatelessWidget with WatchItMixin {
     final error = watchValue(
       (SearchManager m) => m.searchCommand.errors.select((v) => v?.error),
     );
-    // TODO: care for timeouts
+
+    registerHandler(
+      select: (SearchManager m) => m.searchCommand,
+      handler: (context, _, _) =>
+          di<RetryManager>().removeRetry(retryViewId: PageIDs.searchPage),
+    );
 
     return Scaffold(
       appBar: HeaderBar(
@@ -59,9 +67,12 @@ class SearchPage extends StatelessWidget with WatchItMixin {
           ? ErrorRetryBody(
               error: error,
               errorText: error.localizedErrorMessage(context.l10n),
-              onRetry: () => di<SearchManager>().searchCommand.runRestricted(
-                param: (clear: true, manualFilter: false),
-                immediatelyClearErrors: true,
+              retryViewId: PageIDs.searchPage,
+              retryCapsule: RetryCapsule(
+                onRetry: () => di<SearchManager>().searchCommand.runRestricted(
+                  param: (clear: true, manualFilter: false),
+                  immediatelyClearErrors: true,
+                ),
               ),
             )
           : Stack(

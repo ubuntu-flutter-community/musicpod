@@ -7,6 +7,8 @@ import 'package:yaru/yaru.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
+import '../../common/data/retry_capsule.dart';
+import '../../common/retry_manager.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/error_retry_body.dart';
 import '../../common/view/theme.dart';
@@ -15,11 +17,11 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/command_x.dart';
 import '../../extensions/string_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../data/lyrics_and_art_result_and_param.dart';
-import '../lyrics_manager.dart';
-import '../../settings/settings_manager.dart';
 import '../../player/mpv_metadata_manager.dart';
 import '../../player/player_manager.dart';
+import '../../settings/settings_manager.dart';
+import '../data/lyrics_and_art_result_and_param.dart';
+import '../lyrics_manager.dart';
 
 class LyricsViewer extends StatelessWidget with WatchItMixin {
   const LyricsViewer({super.key});
@@ -86,6 +88,12 @@ class _PlayerLyricsState extends State<_PlayerLyrics> {
       );
     });
 
+    registerHandler(
+      select: (LyricsManager m) => m.command,
+      handler: (context, _, __) =>
+          di<RetryManager>().removeRetry(retryViewId: 'lyrics'),
+    );
+
     return Column(
       spacing: kLargestSpace,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,16 +105,19 @@ class _PlayerLyricsState extends State<_PlayerLyrics> {
             onError: (error, lastResult, param) => Center(
               child: ErrorRetryBody(
                 error: error,
+                retryViewId: 'lyrics',
                 errorTextStyle: context.textTheme.bodyLarge,
-                onRetry: () => di<LyricsManager>().command.runRestricted(
-                  param: LyricsAndArtParam(
-                    audio: widget.audio,
-                    title: widget.title,
-                    artist: widget.artist,
-                    tryToFetchOnline: widget.tryToFetchOnline,
+                retryCapsule: RetryCapsule(
+                  onRetry: () => di<LyricsManager>().command.runRestricted(
+                    param: LyricsAndArtParam(
+                      audio: widget.audio,
+                      title: widget.title,
+                      artist: widget.artist,
+                      tryToFetchOnline: widget.tryToFetchOnline,
+                    ),
+                    immediatelyClearErrors: true,
+                    runWhen: RunWhen.hasNoValueAndNoErrors,
                   ),
-                  immediatelyClearErrors: true,
-                  runWhen: RunWhen.hasNoValueAndNoErrors,
                 ),
               ),
             ),

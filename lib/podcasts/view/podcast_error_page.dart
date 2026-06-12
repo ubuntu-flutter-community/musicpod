@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
+import '../../common/data/retry_capsule.dart';
 import '../../common/view/error_retry_body.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/command_x.dart';
@@ -29,11 +30,14 @@ class PodcastErrorPage extends StatelessWidget with WatchItMixin {
       imageUrl: imageUrl,
       expandChild: true,
       child: ErrorRetryBody(
+        retryViewId: feedUrl,
         error: error,
-        onRetry: () => manager.command.runRestricted(
-          runWhen: RunWhen.hasNoValueAndNoErrors,
-          immediatelyClearErrors: true,
-          param: FindEpisodesParam(feedUrl: feedUrl, tryFromDbOnly: false),
+        retryCapsule: RetryCapsule(
+          onRetry: () => manager.command.runRestricted(
+            runWhen: RunWhen.hasNoValueAndNoErrors,
+            immediatelyClearErrors: true,
+            param: FindEpisodesParam(feedUrl: feedUrl, tryFromDbOnly: false),
+          ),
         ),
       ),
     );
