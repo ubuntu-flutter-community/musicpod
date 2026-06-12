@@ -45,7 +45,7 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
 
     registerHandler(
       select: (RadioManager m) => m.getStationByUUIDCommand(uuid),
-      handler: (_, _, __) => di<RetryManager>().removeRetry(retryViewId: uuid),
+      handler: (_, _, __) => RetryManager.dispose(uuid),
     );
 
     final stationResult = watchValue(
@@ -91,8 +91,8 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
           if (error != null) {
             return ErrorRetryBody(
               error: error,
-              retryViewId: uuid,
               retryCapsule: RetryCapsule(
+                retryViewId: uuid,
                 onRetry: () => di<RadioManager>()
                     .getStationByUUIDCommand(uuid)
                     .runRestricted(immediatelyClearErrors: true),

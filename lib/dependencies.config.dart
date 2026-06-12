@@ -24,8 +24,9 @@ import 'app/routing_manager.dart' as _i971;
 import 'app/sidebar_audios_manager.dart' as _i190;
 import 'app/window_size_to_settings_listener.dart' as _i517;
 import 'common/data/audio.dart' as _i537;
+import 'common/data/retry_capsule.dart' as _i327;
 import 'common/persistence/database.dart' as _i115;
-import 'common/retry_manager.dart' as _i400;
+import 'common/retry_manager.dart' as _i569;
 import 'custom_content/custom_content_manager.dart' as _i1028;
 import 'expose/expose_manager.dart' as _i987;
 import 'expose/expose_service.dart' as _i820;
@@ -107,7 +108,6 @@ extension GetItInjectableX on _i174.GetIt {
       () => windowManagerModule.create(),
       preResolve: true,
     );
-    gh.lazySingleton<_i400.RetryManager>(() => _i400.RetryManager());
     gh.lazySingleton<_i551.ExternalPathService>(
       () => const _i551.ExternalPathService(),
     );
@@ -151,6 +151,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i57.LocalCoverService>(
       () => _i57.LocalCoverService(dao: gh<_i688.LocalAudioDao>()),
+    );
+    gh.factoryCachedParam<_i569.RetryManager, _i327.RetryCapsule, dynamic>(
+      (retryCapsule, _) => _i569.RetryManager(retryCapsule: retryCapsule),
     );
     gh.lazySingleton<_i616.DownloadService>(
       () => _i616.DownloadService(

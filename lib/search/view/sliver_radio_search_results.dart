@@ -35,8 +35,8 @@ class SliverRadioSearchResults extends StatelessWidget with WatchItMixin {
       return ErrorRetryBody(
         sliver: true,
         error: connectedHostResults.error!,
-        retryViewId: 'connected_host',
         retryCapsule: RetryCapsule(
+          retryViewId: 'connected_host',
           onRetry: () => di<RadioManager>().connectCommand.runRestricted(
             immediatelyClearErrors: true,
           ),

@@ -30,9 +30,9 @@ class PodcastErrorPage extends StatelessWidget with WatchItMixin {
       imageUrl: imageUrl,
       expandChild: true,
       child: ErrorRetryBody(
-        retryViewId: feedUrl,
         error: error,
         retryCapsule: RetryCapsule(
+          retryViewId: feedUrl,
           onRetry: () => manager.command.runRestricted(
             runWhen: RunWhen.hasNoValueAndNoErrors,
             immediatelyClearErrors: true,

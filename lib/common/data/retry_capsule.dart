@@ -1,31 +1,36 @@
-import 'dart:async';
-
-import 'package:safe_change_notifier/safe_change_notifier.dart';
-
 class RetryCapsule {
-  RetryCapsule({required this.onRetry, this.cooldownStartValue = 20}) {
-    Timer.periodic(const Duration(seconds: 1), (timer) {
-      this.timer = timer;
-      if (cooldown.value > 0) {
-        cooldown.value--;
-      } else {
-        cooldown.value = cooldownStartValue;
-        onRetry();
-      }
-    });
-  }
+  const RetryCapsule({
+    required this.onRetry,
+    required this.retryViewId,
+    this.retries = 1,
+    this.autoRetry = true,
+  });
 
-  final int cooldownStartValue;
-
-  Timer? timer;
+  final String retryViewId;
   final dynamic Function() onRetry;
-  final SafeValueNotifier<int> cooldown = SafeValueNotifier<int>(20);
+  final int retries;
+  final bool autoRetry;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is RetryCapsule && onRetry == other.onRetry;
+      other is RetryCapsule &&
+          retryViewId == other.retryViewId &&
+          autoRetry == other.autoRetry;
 
   @override
-  int get hashCode => onRetry.hashCode;
+  int get hashCode => Object.hash(retryViewId, autoRetry);
+
+  RetryCapsule copyWith({
+    dynamic Function()? onRetry,
+    int? retries,
+    bool? autoRetry,
+  }) {
+    return RetryCapsule(
+      retryViewId: this.retryViewId,
+      onRetry: onRetry ?? this.onRetry,
+      retries: retries ?? this.retries,
+      autoRetry: autoRetry ?? this.autoRetry,
+    );
+  }
 }

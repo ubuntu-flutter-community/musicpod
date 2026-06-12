@@ -12,7 +12,6 @@ class ErrorRetryBody extends StatelessWidget with WatchItMixin {
     super.key,
     required this.error,
     required this.retryCapsule,
-    required this.retryViewId,
     this.sliver = false,
     this.errorText,
     this.errorTextStyle,
@@ -20,18 +19,14 @@ class ErrorRetryBody extends StatelessWidget with WatchItMixin {
 
   final Object error;
   final String? errorText;
-  final String retryViewId;
   final RetryCapsule retryCapsule;
   final bool sliver;
   final TextStyle? errorTextStyle;
 
   @override
   Widget build(BuildContext context) {
-    final manager = di<RetryManager>();
     final cooldownValue = watch(
-      manager
-          .addRetry(retryViewId: retryViewId, capsule: retryCapsule)
-          .cooldown,
+      di<RetryManager>(param1: retryCapsule).cooldown,
     ).value;
 
     final errorText = Text(

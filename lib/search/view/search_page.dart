@@ -41,8 +41,7 @@ class SearchPage extends StatelessWidget with WatchItMixin {
 
     registerHandler(
       select: (SearchManager m) => m.searchCommand,
-      handler: (context, _, _) =>
-          di<RetryManager>().removeRetry(retryViewId: PageIDs.searchPage),
+      handler: (_, _, __) => RetryManager.dispose(PageIDs.searchPage),
     );
 
     return Scaffold(
@@ -67,8 +66,9 @@ class SearchPage extends StatelessWidget with WatchItMixin {
           ? ErrorRetryBody(
               error: error,
               errorText: error.localizedErrorMessage(context.l10n),
-              retryViewId: PageIDs.searchPage,
               retryCapsule: RetryCapsule(
+                autoRetry: false,
+                retryViewId: PageIDs.searchPage,
                 onRetry: () => di<SearchManager>().searchCommand.runRestricted(
                   param: (clear: true, manualFilter: false),
                   immediatelyClearErrors: true,

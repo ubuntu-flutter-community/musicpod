@@ -22,7 +22,9 @@ mixin RadioConnectMixin {
         if (!results.hasData) {
           return;
         }
-        di<RetryManager>().removeRetry(retryViewId: 'connected_host');
+
+        RetryManager.dispose('connected_host');
+
         final connectedHost = results.data;
         final isRunning = results.isRunning;
         context.toast(

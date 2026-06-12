@@ -37,9 +37,9 @@ class RadioLibPage extends StatelessWidget
       whileRunning: (lastResult, param) => const Center(child: Progress()),
       onError: (error, lastResult, param) => ErrorRetryBody(
         sliver: true,
-        retryViewId: 'connected_host',
         error: error,
         retryCapsule: RetryCapsule(
+          retryViewId: 'connected_host',
           onRetry: () => di<RadioManager>().connectCommand.runRestricted(
             immediatelyClearErrors: true,
           ),
