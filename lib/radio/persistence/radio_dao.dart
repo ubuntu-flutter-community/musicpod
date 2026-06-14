@@ -1,5 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:injectable/injectable.dart';
+import 'package:radio_browser_api/radio_browser_api.dart';
+import '../../common/data/audio.dart';
 import '../../common/persistence/database.dart';
 
 @lazySingleton
@@ -13,12 +15,17 @@ class RadioDao {
     return rows.map((r) => r.uuid).toList();
   }
 
-  Future<void> insertStarredStation(String uuid) => _db
+  Future<Station?> getStationByUuid(String uuid) async {
+    final row = await (_db.select(
+      _db.starredStationTable,
+    )..where((t) => t.uuid.equals(uuid))).getSingleOrNull();
+    if (row == null) return null;
+    return _stationFromRow(row);
+  }
+
+  Future<void> insertStarredStation(Audio audio) => _db
       .into(_db.starredStationTable)
-      .insert(
-        StarredStationTableCompanion.insert(uuid: uuid),
-        mode: InsertMode.insert,
-      );
+      .insertOnConflictUpdate(_companionFromAudio(audio));
 
   Future<void> insertStarredStations(List<String> uuids) async {
     if (uuids.isEmpty) return;
@@ -28,7 +35,7 @@ class RadioDao {
         uuids
             .map((uuid) => StarredStationTableCompanion.insert(uuid: uuid))
             .toList(),
-        mode: InsertMode.insert,
+        mode: InsertMode.insertOrIgnore,
       ),
     );
   }
@@ -58,4 +65,53 @@ class RadioDao {
 
     _db.delete(_db.favoriteRadioTagTable).go(),
   ]);
+
+  StarredStationTableCompanion _companionFromAudio(Audio audio) =>
+      StarredStationTableCompanion.insert(
+        uuid: audio.uuid ?? '',
+        name: Value(audio.title),
+        urlResolved: Value(audio.url),
+        favicon: Value(audio.imageUrl),
+        homepage: Value(audio.website),
+        language: Value(audio.language),
+        tags: Value(audio.radioTags),
+        codec: Value(audio.codec),
+        clickCount: Value(audio.clicks),
+        bitrate: Value(audio.bitRate),
+      );
+
+  Station _stationFromRow(StarredStationTableData row) => Station(
+    changeUUID: row.changeUuid ?? '',
+    stationUUID: row.uuid,
+    serverUUID: row.serverUuid,
+    name: row.name ?? '',
+    url: row.url ?? '',
+    urlResolved: row.urlResolved,
+    homepage: row.homepage,
+    favicon: row.favicon,
+    tags: row.tags,
+    // ignore: deprecated_member_use
+    country: row.country ?? '',
+    countryCode: row.countryCode ?? '',
+    state: row.state,
+    language: row.language,
+    languageCodes: row.languageCodes,
+    votes: row.votes ?? 0,
+    lastChangeTime:
+        row.lastChangeTime ?? DateTime.fromMillisecondsSinceEpoch(0),
+    codec: row.codec,
+    bitrate: row.bitrate ?? 0,
+    hls: row.hls ?? false,
+    lastCheckOk: row.lastCheckOk ?? false,
+    lastCheckTime: row.lastCheckTime,
+    lastCheckOkTime: row.lastCheckOkTime,
+    lastLocalCheckTime: row.lastLocalCheckTime,
+    clickTimestamp: row.clickTimestamp,
+    clickCount: row.clickCount ?? 0,
+    clickTrend: row.clickTrend ?? 0,
+    sslError: row.sslError ?? false,
+    geoLat: row.geoLat,
+    geoLong: row.geoLong,
+    hasExtendedInfo: row.hasExtendedInfo ?? false,
+  );
 }

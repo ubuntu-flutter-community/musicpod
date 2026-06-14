@@ -2,35 +2,37 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
 import '../common/data/audio.dart';
-import '../common/logging.dart';
+import '../common/keep_alive_registry.dart';
 import 'podcast_service.dart';
 
-@Injectable(cache: true)
+@injectable
 class EpisodesManager {
-  EpisodesManager({
+  EpisodesManager._({
     @factoryParam required String feedUrl,
-    @factoryParam required String? genre,
     required PodcastService podcastService,
-  }) : _feedUrl = feedUrl,
-       _genre = genre,
-       _podcastService = podcastService {
-    printInfoInDebugMode(
-      'Instance created for feedUrl: $feedUrl, genre: $genre',
-      tag: '$EpisodesManager',
+  }) {
+    _registry.register(feedUrl, this);
+    command = Command.createAsync(
+      (genre) => podcastService.findEpisodes(
+        feedUrl: feedUrl,
+        tryFromDbOnly: true,
+        genre: genre,
+      ),
+      initialValue: null,
     );
     command.run();
   }
 
-  final String _feedUrl;
-  final String? _genre;
-  final PodcastService _podcastService;
+  @factoryMethod
+  static EpisodesManager create({
+    @factoryParam required String feedUrl,
+    required PodcastService podcastService,
+  }) =>
+      _registry.get(feedUrl) ??
+      EpisodesManager._(feedUrl: feedUrl, podcastService: podcastService);
 
-  late final Command<void, List<Audio>?> command = Command.createAsyncNoParam(
-    () => _podcastService.findEpisodes(
-      feedUrl: _feedUrl,
-      tryFromDbOnly: true,
-      genre: _genre,
-    ),
-    initialValue: null,
-  );
+  static final _registry = KeepAliveRegistry<String, EpisodesManager>();
+  static EpisodesManager? dispose(String feedUrl) => _registry.dispose(feedUrl);
+
+  late final Command<String?, List<Audio>?> command;
 }

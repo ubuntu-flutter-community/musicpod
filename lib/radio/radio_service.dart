@@ -84,9 +84,19 @@ class RadioService {
 
   Future<Audio?> getAudioByUUID(
     String uuid, {
-    // TODO: implement storing stations offline
     bool tryFromDbFirst = true,
   }) async {
+    if (tryFromDbFirst) {
+      final station = await _dao.getStationByUuid(uuid);
+      if (station != null) {
+        printInfoInDebugMode(
+          'Station with uuid $uuid found in local database, returning it.',
+          tag: '$RadioService',
+        );
+        return Audio.fromStation(station);
+      }
+    }
+
     if (await connectToServer() == null) {
       throw RadioBrowserApiNotConnectedException();
     }
@@ -107,7 +117,12 @@ class RadioService {
     final response = await _radioBrowserApi?.getStationsByUrl(url: url);
     final station = response?.items.firstOrNull;
 
-    return station != null ? Audio.fromStation(station) : null;
+    if (station != null) {
+      final audio = Audio.fromStation(station);
+      await _dao.insertStarredStation(audio);
+      return audio;
+    }
+    return null;
   }
 
   static const radioSearchMaxLimit = 300;
@@ -292,7 +307,7 @@ class RadioService {
     final uuid = audio.uuid;
     if (uuid == null || _starredStations.contains(uuid)) return;
 
-    await _dao.insertStarredStation(uuid);
+    await _dao.insertStarredStation(audio);
     _starredStations.add(uuid);
   }
 

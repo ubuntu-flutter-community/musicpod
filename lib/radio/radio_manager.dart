@@ -7,9 +7,10 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 import '../common/data/audio.dart';
 import '../l10n/app_localizations.dart';
 import 'radio_service.dart';
+import 'station_manager.dart';
 
 @singleton
-class RadioManager extends SafeChangeNotifier {
+class RadioManager {
   final RadioService _radioService;
 
   RadioManager({required RadioService radioService})
@@ -19,55 +20,13 @@ class RadioManager extends SafeChangeNotifier {
     toggleStarStationCommand.run();
   }
 
-  final _stationCache = <String, Audio>{};
   late final Command<void, String?> connectCommand = Command.createAsyncNoParam(
     _radioService.connectToServer,
     initialValue: null,
   );
 
-  final _getStationByUUIDCommands = <String, Command<void, Audio?>>{};
-  Command<void, Audio?> getStationByUUIDCommand(String uuid) =>
-      _getStationByUUIDCommands.putIfAbsent(
-        uuid,
-        () => Command.createAsyncNoParam(
-          () => _getStationByUUID(uuid)
-              .timeout(const Duration(seconds: 5))
-              .catchError((error) {
-                if (error is TimeoutException) {
-                  throw FindStationTimeoutException();
-                }
-                throw error;
-              }),
-          initialValue: null,
-        ),
-      );
-
-  Future<Audio?> _getStationByUUID(String pageId) async {
-    if (_stationCache.containsKey(pageId)) {
-      return _stationCache[pageId];
-    }
-
-    final audioByUUID = await _radioService.getAudioByUUID(pageId);
-
-    if (audioByUUID == null) {
-      return null;
-    }
-
-    _stationCache[pageId] = audioByUUID;
-    return audioByUUID;
-  }
-
-  Future<Audio?> getStationByUrl(String url) async {
-    if (_stationCache.containsKey(url)) {
-      return _stationCache[url];
-    }
-    final audioByUrl = await _radioService.getAudioByUrl(url);
-    if (audioByUrl == null) {
-      return null;
-    }
-    _stationCache[url] = audioByUrl;
-    return audioByUrl;
-  }
+  Future<Audio?> getStationByUrl(String url) =>
+      _radioService.getAudioByUrl(url);
 
   Future<void> clickStation(Audio? station) =>
       _radioService.clickStation(station?.uuid);
@@ -92,6 +51,7 @@ class RadioManager extends SafeChangeNotifier {
         if (audio?.uuid != null) {
           if (_radioService.isStarredStation(audio!.uuid!)) {
             await _radioService.removeStarredStation(audio.uuid!);
+            await StationManager.dispose(audio.uuid!);
           } else {
             await _radioService.addStarredStation(audio);
           }
@@ -105,7 +65,6 @@ class RadioManager extends SafeChangeNotifier {
         await _radioService.wipeAndBuildRadioLibrary();
         await toggleFavRadioTagCommand.runAsync();
         await toggleStarStationCommand.runAsync();
-        _stationCache.clear();
       });
 
   //

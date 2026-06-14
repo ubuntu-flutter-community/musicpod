@@ -240,7 +240,6 @@ class AudioTileOptionButton extends StatelessWidget {
               PopupMenuItem(
                 onTap: () => di<EpisodesManager>(
                   param1: audios.first.feedUrl!,
-                  param2: null,
                 ).command.runAsync(),
                 child: IgnorePointer(
                   child: ListTile(

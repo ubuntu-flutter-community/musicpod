@@ -2402,8 +2402,358 @@ class $StarredStationTableTable extends StarredStationTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _changeUuidMeta = const VerificationMeta(
+    'changeUuid',
+  );
   @override
-  List<GeneratedColumn> get $columns => [uuid];
+  late final GeneratedColumn<String> changeUuid = GeneratedColumn<String>(
+    'change_uuid',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _serverUuidMeta = const VerificationMeta(
+    'serverUuid',
+  );
+  @override
+  late final GeneratedColumn<String> serverUuid = GeneratedColumn<String>(
+    'server_uuid',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _urlMeta = const VerificationMeta('url');
+  @override
+  late final GeneratedColumn<String> url = GeneratedColumn<String>(
+    'url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _urlResolvedMeta = const VerificationMeta(
+    'urlResolved',
+  );
+  @override
+  late final GeneratedColumn<String> urlResolved = GeneratedColumn<String>(
+    'url_resolved',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _homepageMeta = const VerificationMeta(
+    'homepage',
+  );
+  @override
+  late final GeneratedColumn<String> homepage = GeneratedColumn<String>(
+    'homepage',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _faviconMeta = const VerificationMeta(
+    'favicon',
+  );
+  @override
+  late final GeneratedColumn<String> favicon = GeneratedColumn<String>(
+    'favicon',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _tagsMeta = const VerificationMeta('tags');
+  @override
+  late final GeneratedColumn<String> tags = GeneratedColumn<String>(
+    'tags',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _countryMeta = const VerificationMeta(
+    'country',
+  );
+  @override
+  late final GeneratedColumn<String> country = GeneratedColumn<String>(
+    'country',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _countryCodeMeta = const VerificationMeta(
+    'countryCode',
+  );
+  @override
+  late final GeneratedColumn<String> countryCode = GeneratedColumn<String>(
+    'country_code',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _stateMeta = const VerificationMeta('state');
+  @override
+  late final GeneratedColumn<String> state = GeneratedColumn<String>(
+    'state',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _languageMeta = const VerificationMeta(
+    'language',
+  );
+  @override
+  late final GeneratedColumn<String> language = GeneratedColumn<String>(
+    'language',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _languageCodesMeta = const VerificationMeta(
+    'languageCodes',
+  );
+  @override
+  late final GeneratedColumn<String> languageCodes = GeneratedColumn<String>(
+    'language_codes',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _votesMeta = const VerificationMeta('votes');
+  @override
+  late final GeneratedColumn<int> votes = GeneratedColumn<int>(
+    'votes',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _lastChangeTimeMeta = const VerificationMeta(
+    'lastChangeTime',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastChangeTime =
+      GeneratedColumn<DateTime>(
+        'last_change_time',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _codecMeta = const VerificationMeta('codec');
+  @override
+  late final GeneratedColumn<String> codec = GeneratedColumn<String>(
+    'codec',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _bitrateMeta = const VerificationMeta(
+    'bitrate',
+  );
+  @override
+  late final GeneratedColumn<int> bitrate = GeneratedColumn<int>(
+    'bitrate',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _hlsMeta = const VerificationMeta('hls');
+  @override
+  late final GeneratedColumn<bool> hls = GeneratedColumn<bool>(
+    'hls',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("hls" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _lastCheckOkMeta = const VerificationMeta(
+    'lastCheckOk',
+  );
+  @override
+  late final GeneratedColumn<bool> lastCheckOk = GeneratedColumn<bool>(
+    'last_check_ok',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("last_check_ok" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _lastCheckTimeMeta = const VerificationMeta(
+    'lastCheckTime',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastCheckTime =
+      GeneratedColumn<DateTime>(
+        'last_check_time',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _lastCheckOkTimeMeta = const VerificationMeta(
+    'lastCheckOkTime',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastCheckOkTime =
+      GeneratedColumn<DateTime>(
+        'last_check_ok_time',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _lastLocalCheckTimeMeta =
+      const VerificationMeta('lastLocalCheckTime');
+  @override
+  late final GeneratedColumn<DateTime> lastLocalCheckTime =
+      GeneratedColumn<DateTime>(
+        'last_local_check_time',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _clickTimestampMeta = const VerificationMeta(
+    'clickTimestamp',
+  );
+  @override
+  late final GeneratedColumn<DateTime> clickTimestamp =
+      GeneratedColumn<DateTime>(
+        'click_timestamp',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _clickCountMeta = const VerificationMeta(
+    'clickCount',
+  );
+  @override
+  late final GeneratedColumn<int> clickCount = GeneratedColumn<int>(
+    'click_count',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _clickTrendMeta = const VerificationMeta(
+    'clickTrend',
+  );
+  @override
+  late final GeneratedColumn<int> clickTrend = GeneratedColumn<int>(
+    'click_trend',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _sslErrorMeta = const VerificationMeta(
+    'sslError',
+  );
+  @override
+  late final GeneratedColumn<bool> sslError = GeneratedColumn<bool>(
+    'ssl_error',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("ssl_error" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _geoLatMeta = const VerificationMeta('geoLat');
+  @override
+  late final GeneratedColumn<double> geoLat = GeneratedColumn<double>(
+    'geo_lat',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _geoLongMeta = const VerificationMeta(
+    'geoLong',
+  );
+  @override
+  late final GeneratedColumn<double> geoLong = GeneratedColumn<double>(
+    'geo_long',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _hasExtendedInfoMeta = const VerificationMeta(
+    'hasExtendedInfo',
+  );
+  @override
+  late final GeneratedColumn<bool> hasExtendedInfo = GeneratedColumn<bool>(
+    'has_extended_info',
+    aliasedName,
+    true,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("has_extended_info" IN (0, 1))',
+    ),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    uuid,
+    changeUuid,
+    serverUuid,
+    name,
+    url,
+    urlResolved,
+    homepage,
+    favicon,
+    tags,
+    country,
+    countryCode,
+    state,
+    language,
+    languageCodes,
+    votes,
+    lastChangeTime,
+    codec,
+    bitrate,
+    hls,
+    lastCheckOk,
+    lastCheckTime,
+    lastCheckOkTime,
+    lastLocalCheckTime,
+    clickTimestamp,
+    clickCount,
+    clickTrend,
+    sslError,
+    geoLat,
+    geoLong,
+    hasExtendedInfo,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -2424,6 +2774,210 @@ class $StarredStationTableTable extends StarredStationTable
     } else if (isInserting) {
       context.missing(_uuidMeta);
     }
+    if (data.containsKey('change_uuid')) {
+      context.handle(
+        _changeUuidMeta,
+        changeUuid.isAcceptableOrUnknown(data['change_uuid']!, _changeUuidMeta),
+      );
+    }
+    if (data.containsKey('server_uuid')) {
+      context.handle(
+        _serverUuidMeta,
+        serverUuid.isAcceptableOrUnknown(data['server_uuid']!, _serverUuidMeta),
+      );
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    }
+    if (data.containsKey('url')) {
+      context.handle(
+        _urlMeta,
+        url.isAcceptableOrUnknown(data['url']!, _urlMeta),
+      );
+    }
+    if (data.containsKey('url_resolved')) {
+      context.handle(
+        _urlResolvedMeta,
+        urlResolved.isAcceptableOrUnknown(
+          data['url_resolved']!,
+          _urlResolvedMeta,
+        ),
+      );
+    }
+    if (data.containsKey('homepage')) {
+      context.handle(
+        _homepageMeta,
+        homepage.isAcceptableOrUnknown(data['homepage']!, _homepageMeta),
+      );
+    }
+    if (data.containsKey('favicon')) {
+      context.handle(
+        _faviconMeta,
+        favicon.isAcceptableOrUnknown(data['favicon']!, _faviconMeta),
+      );
+    }
+    if (data.containsKey('tags')) {
+      context.handle(
+        _tagsMeta,
+        tags.isAcceptableOrUnknown(data['tags']!, _tagsMeta),
+      );
+    }
+    if (data.containsKey('country')) {
+      context.handle(
+        _countryMeta,
+        country.isAcceptableOrUnknown(data['country']!, _countryMeta),
+      );
+    }
+    if (data.containsKey('country_code')) {
+      context.handle(
+        _countryCodeMeta,
+        countryCode.isAcceptableOrUnknown(
+          data['country_code']!,
+          _countryCodeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('state')) {
+      context.handle(
+        _stateMeta,
+        state.isAcceptableOrUnknown(data['state']!, _stateMeta),
+      );
+    }
+    if (data.containsKey('language')) {
+      context.handle(
+        _languageMeta,
+        language.isAcceptableOrUnknown(data['language']!, _languageMeta),
+      );
+    }
+    if (data.containsKey('language_codes')) {
+      context.handle(
+        _languageCodesMeta,
+        languageCodes.isAcceptableOrUnknown(
+          data['language_codes']!,
+          _languageCodesMeta,
+        ),
+      );
+    }
+    if (data.containsKey('votes')) {
+      context.handle(
+        _votesMeta,
+        votes.isAcceptableOrUnknown(data['votes']!, _votesMeta),
+      );
+    }
+    if (data.containsKey('last_change_time')) {
+      context.handle(
+        _lastChangeTimeMeta,
+        lastChangeTime.isAcceptableOrUnknown(
+          data['last_change_time']!,
+          _lastChangeTimeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('codec')) {
+      context.handle(
+        _codecMeta,
+        codec.isAcceptableOrUnknown(data['codec']!, _codecMeta),
+      );
+    }
+    if (data.containsKey('bitrate')) {
+      context.handle(
+        _bitrateMeta,
+        bitrate.isAcceptableOrUnknown(data['bitrate']!, _bitrateMeta),
+      );
+    }
+    if (data.containsKey('hls')) {
+      context.handle(
+        _hlsMeta,
+        hls.isAcceptableOrUnknown(data['hls']!, _hlsMeta),
+      );
+    }
+    if (data.containsKey('last_check_ok')) {
+      context.handle(
+        _lastCheckOkMeta,
+        lastCheckOk.isAcceptableOrUnknown(
+          data['last_check_ok']!,
+          _lastCheckOkMeta,
+        ),
+      );
+    }
+    if (data.containsKey('last_check_time')) {
+      context.handle(
+        _lastCheckTimeMeta,
+        lastCheckTime.isAcceptableOrUnknown(
+          data['last_check_time']!,
+          _lastCheckTimeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('last_check_ok_time')) {
+      context.handle(
+        _lastCheckOkTimeMeta,
+        lastCheckOkTime.isAcceptableOrUnknown(
+          data['last_check_ok_time']!,
+          _lastCheckOkTimeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('last_local_check_time')) {
+      context.handle(
+        _lastLocalCheckTimeMeta,
+        lastLocalCheckTime.isAcceptableOrUnknown(
+          data['last_local_check_time']!,
+          _lastLocalCheckTimeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('click_timestamp')) {
+      context.handle(
+        _clickTimestampMeta,
+        clickTimestamp.isAcceptableOrUnknown(
+          data['click_timestamp']!,
+          _clickTimestampMeta,
+        ),
+      );
+    }
+    if (data.containsKey('click_count')) {
+      context.handle(
+        _clickCountMeta,
+        clickCount.isAcceptableOrUnknown(data['click_count']!, _clickCountMeta),
+      );
+    }
+    if (data.containsKey('click_trend')) {
+      context.handle(
+        _clickTrendMeta,
+        clickTrend.isAcceptableOrUnknown(data['click_trend']!, _clickTrendMeta),
+      );
+    }
+    if (data.containsKey('ssl_error')) {
+      context.handle(
+        _sslErrorMeta,
+        sslError.isAcceptableOrUnknown(data['ssl_error']!, _sslErrorMeta),
+      );
+    }
+    if (data.containsKey('geo_lat')) {
+      context.handle(
+        _geoLatMeta,
+        geoLat.isAcceptableOrUnknown(data['geo_lat']!, _geoLatMeta),
+      );
+    }
+    if (data.containsKey('geo_long')) {
+      context.handle(
+        _geoLongMeta,
+        geoLong.isAcceptableOrUnknown(data['geo_long']!, _geoLongMeta),
+      );
+    }
+    if (data.containsKey('has_extended_info')) {
+      context.handle(
+        _hasExtendedInfoMeta,
+        hasExtendedInfo.isAcceptableOrUnknown(
+          data['has_extended_info']!,
+          _hasExtendedInfoMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -2440,6 +2994,122 @@ class $StarredStationTableTable extends StarredStationTable
         DriftSqlType.string,
         data['${effectivePrefix}uuid'],
       )!,
+      changeUuid: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}change_uuid'],
+      ),
+      serverUuid: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}server_uuid'],
+      ),
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      ),
+      url: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}url'],
+      ),
+      urlResolved: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}url_resolved'],
+      ),
+      homepage: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}homepage'],
+      ),
+      favicon: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}favicon'],
+      ),
+      tags: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tags'],
+      ),
+      country: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}country'],
+      ),
+      countryCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}country_code'],
+      ),
+      state: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}state'],
+      ),
+      language: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}language'],
+      ),
+      languageCodes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}language_codes'],
+      ),
+      votes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}votes'],
+      ),
+      lastChangeTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_change_time'],
+      ),
+      codec: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}codec'],
+      ),
+      bitrate: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}bitrate'],
+      ),
+      hls: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}hls'],
+      ),
+      lastCheckOk: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}last_check_ok'],
+      ),
+      lastCheckTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_check_time'],
+      ),
+      lastCheckOkTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_check_ok_time'],
+      ),
+      lastLocalCheckTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_local_check_time'],
+      ),
+      clickTimestamp: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}click_timestamp'],
+      ),
+      clickCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}click_count'],
+      ),
+      clickTrend: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}click_trend'],
+      ),
+      sslError: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}ssl_error'],
+      ),
+      geoLat: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}geo_lat'],
+      ),
+      geoLong: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}geo_long'],
+      ),
+      hasExtendedInfo: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}has_extended_info'],
+      ),
     );
   }
 
@@ -2451,17 +3121,246 @@ class $StarredStationTableTable extends StarredStationTable
 
 class StarredStationTableData extends DataClass
     implements Insertable<StarredStationTableData> {
+  /// Maps to [Station.stationUUID].
   final String uuid;
-  const StarredStationTableData({required this.uuid});
+  final String? changeUuid;
+  final String? serverUuid;
+  final String? name;
+  final String? url;
+  final String? urlResolved;
+  final String? homepage;
+  final String? favicon;
+  final String? tags;
+  final String? country;
+  final String? countryCode;
+  final String? state;
+  final String? language;
+  final String? languageCodes;
+  final int? votes;
+  final DateTime? lastChangeTime;
+  final String? codec;
+  final int? bitrate;
+  final bool? hls;
+  final bool? lastCheckOk;
+  final DateTime? lastCheckTime;
+  final DateTime? lastCheckOkTime;
+  final DateTime? lastLocalCheckTime;
+  final DateTime? clickTimestamp;
+  final int? clickCount;
+  final int? clickTrend;
+  final bool? sslError;
+  final double? geoLat;
+  final double? geoLong;
+  final bool? hasExtendedInfo;
+  const StarredStationTableData({
+    required this.uuid,
+    this.changeUuid,
+    this.serverUuid,
+    this.name,
+    this.url,
+    this.urlResolved,
+    this.homepage,
+    this.favicon,
+    this.tags,
+    this.country,
+    this.countryCode,
+    this.state,
+    this.language,
+    this.languageCodes,
+    this.votes,
+    this.lastChangeTime,
+    this.codec,
+    this.bitrate,
+    this.hls,
+    this.lastCheckOk,
+    this.lastCheckTime,
+    this.lastCheckOkTime,
+    this.lastLocalCheckTime,
+    this.clickTimestamp,
+    this.clickCount,
+    this.clickTrend,
+    this.sslError,
+    this.geoLat,
+    this.geoLong,
+    this.hasExtendedInfo,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['uuid'] = Variable<String>(uuid);
+    if (!nullToAbsent || changeUuid != null) {
+      map['change_uuid'] = Variable<String>(changeUuid);
+    }
+    if (!nullToAbsent || serverUuid != null) {
+      map['server_uuid'] = Variable<String>(serverUuid);
+    }
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String>(name);
+    }
+    if (!nullToAbsent || url != null) {
+      map['url'] = Variable<String>(url);
+    }
+    if (!nullToAbsent || urlResolved != null) {
+      map['url_resolved'] = Variable<String>(urlResolved);
+    }
+    if (!nullToAbsent || homepage != null) {
+      map['homepage'] = Variable<String>(homepage);
+    }
+    if (!nullToAbsent || favicon != null) {
+      map['favicon'] = Variable<String>(favicon);
+    }
+    if (!nullToAbsent || tags != null) {
+      map['tags'] = Variable<String>(tags);
+    }
+    if (!nullToAbsent || country != null) {
+      map['country'] = Variable<String>(country);
+    }
+    if (!nullToAbsent || countryCode != null) {
+      map['country_code'] = Variable<String>(countryCode);
+    }
+    if (!nullToAbsent || state != null) {
+      map['state'] = Variable<String>(state);
+    }
+    if (!nullToAbsent || language != null) {
+      map['language'] = Variable<String>(language);
+    }
+    if (!nullToAbsent || languageCodes != null) {
+      map['language_codes'] = Variable<String>(languageCodes);
+    }
+    if (!nullToAbsent || votes != null) {
+      map['votes'] = Variable<int>(votes);
+    }
+    if (!nullToAbsent || lastChangeTime != null) {
+      map['last_change_time'] = Variable<DateTime>(lastChangeTime);
+    }
+    if (!nullToAbsent || codec != null) {
+      map['codec'] = Variable<String>(codec);
+    }
+    if (!nullToAbsent || bitrate != null) {
+      map['bitrate'] = Variable<int>(bitrate);
+    }
+    if (!nullToAbsent || hls != null) {
+      map['hls'] = Variable<bool>(hls);
+    }
+    if (!nullToAbsent || lastCheckOk != null) {
+      map['last_check_ok'] = Variable<bool>(lastCheckOk);
+    }
+    if (!nullToAbsent || lastCheckTime != null) {
+      map['last_check_time'] = Variable<DateTime>(lastCheckTime);
+    }
+    if (!nullToAbsent || lastCheckOkTime != null) {
+      map['last_check_ok_time'] = Variable<DateTime>(lastCheckOkTime);
+    }
+    if (!nullToAbsent || lastLocalCheckTime != null) {
+      map['last_local_check_time'] = Variable<DateTime>(lastLocalCheckTime);
+    }
+    if (!nullToAbsent || clickTimestamp != null) {
+      map['click_timestamp'] = Variable<DateTime>(clickTimestamp);
+    }
+    if (!nullToAbsent || clickCount != null) {
+      map['click_count'] = Variable<int>(clickCount);
+    }
+    if (!nullToAbsent || clickTrend != null) {
+      map['click_trend'] = Variable<int>(clickTrend);
+    }
+    if (!nullToAbsent || sslError != null) {
+      map['ssl_error'] = Variable<bool>(sslError);
+    }
+    if (!nullToAbsent || geoLat != null) {
+      map['geo_lat'] = Variable<double>(geoLat);
+    }
+    if (!nullToAbsent || geoLong != null) {
+      map['geo_long'] = Variable<double>(geoLong);
+    }
+    if (!nullToAbsent || hasExtendedInfo != null) {
+      map['has_extended_info'] = Variable<bool>(hasExtendedInfo);
+    }
     return map;
   }
 
   StarredStationTableCompanion toCompanion(bool nullToAbsent) {
-    return StarredStationTableCompanion(uuid: Value(uuid));
+    return StarredStationTableCompanion(
+      uuid: Value(uuid),
+      changeUuid: changeUuid == null && nullToAbsent
+          ? const Value.absent()
+          : Value(changeUuid),
+      serverUuid: serverUuid == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverUuid),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      url: url == null && nullToAbsent ? const Value.absent() : Value(url),
+      urlResolved: urlResolved == null && nullToAbsent
+          ? const Value.absent()
+          : Value(urlResolved),
+      homepage: homepage == null && nullToAbsent
+          ? const Value.absent()
+          : Value(homepage),
+      favicon: favicon == null && nullToAbsent
+          ? const Value.absent()
+          : Value(favicon),
+      tags: tags == null && nullToAbsent ? const Value.absent() : Value(tags),
+      country: country == null && nullToAbsent
+          ? const Value.absent()
+          : Value(country),
+      countryCode: countryCode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(countryCode),
+      state: state == null && nullToAbsent
+          ? const Value.absent()
+          : Value(state),
+      language: language == null && nullToAbsent
+          ? const Value.absent()
+          : Value(language),
+      languageCodes: languageCodes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(languageCodes),
+      votes: votes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(votes),
+      lastChangeTime: lastChangeTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastChangeTime),
+      codec: codec == null && nullToAbsent
+          ? const Value.absent()
+          : Value(codec),
+      bitrate: bitrate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(bitrate),
+      hls: hls == null && nullToAbsent ? const Value.absent() : Value(hls),
+      lastCheckOk: lastCheckOk == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastCheckOk),
+      lastCheckTime: lastCheckTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastCheckTime),
+      lastCheckOkTime: lastCheckOkTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastCheckOkTime),
+      lastLocalCheckTime: lastLocalCheckTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastLocalCheckTime),
+      clickTimestamp: clickTimestamp == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clickTimestamp),
+      clickCount: clickCount == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clickCount),
+      clickTrend: clickTrend == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clickTrend),
+      sslError: sslError == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sslError),
+      geoLat: geoLat == null && nullToAbsent
+          ? const Value.absent()
+          : Value(geoLat),
+      geoLong: geoLong == null && nullToAbsent
+          ? const Value.absent()
+          : Value(geoLong),
+      hasExtendedInfo: hasExtendedInfo == null && nullToAbsent
+          ? const Value.absent()
+          : Value(hasExtendedInfo),
+    );
   }
 
   factory StarredStationTableData.fromJson(
@@ -2471,66 +3370,554 @@ class StarredStationTableData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return StarredStationTableData(
       uuid: serializer.fromJson<String>(json['uuid']),
+      changeUuid: serializer.fromJson<String?>(json['changeUuid']),
+      serverUuid: serializer.fromJson<String?>(json['serverUuid']),
+      name: serializer.fromJson<String?>(json['name']),
+      url: serializer.fromJson<String?>(json['url']),
+      urlResolved: serializer.fromJson<String?>(json['urlResolved']),
+      homepage: serializer.fromJson<String?>(json['homepage']),
+      favicon: serializer.fromJson<String?>(json['favicon']),
+      tags: serializer.fromJson<String?>(json['tags']),
+      country: serializer.fromJson<String?>(json['country']),
+      countryCode: serializer.fromJson<String?>(json['countryCode']),
+      state: serializer.fromJson<String?>(json['state']),
+      language: serializer.fromJson<String?>(json['language']),
+      languageCodes: serializer.fromJson<String?>(json['languageCodes']),
+      votes: serializer.fromJson<int?>(json['votes']),
+      lastChangeTime: serializer.fromJson<DateTime?>(json['lastChangeTime']),
+      codec: serializer.fromJson<String?>(json['codec']),
+      bitrate: serializer.fromJson<int?>(json['bitrate']),
+      hls: serializer.fromJson<bool?>(json['hls']),
+      lastCheckOk: serializer.fromJson<bool?>(json['lastCheckOk']),
+      lastCheckTime: serializer.fromJson<DateTime?>(json['lastCheckTime']),
+      lastCheckOkTime: serializer.fromJson<DateTime?>(json['lastCheckOkTime']),
+      lastLocalCheckTime: serializer.fromJson<DateTime?>(
+        json['lastLocalCheckTime'],
+      ),
+      clickTimestamp: serializer.fromJson<DateTime?>(json['clickTimestamp']),
+      clickCount: serializer.fromJson<int?>(json['clickCount']),
+      clickTrend: serializer.fromJson<int?>(json['clickTrend']),
+      sslError: serializer.fromJson<bool?>(json['sslError']),
+      geoLat: serializer.fromJson<double?>(json['geoLat']),
+      geoLong: serializer.fromJson<double?>(json['geoLong']),
+      hasExtendedInfo: serializer.fromJson<bool?>(json['hasExtendedInfo']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{'uuid': serializer.toJson<String>(uuid)};
+    return <String, dynamic>{
+      'uuid': serializer.toJson<String>(uuid),
+      'changeUuid': serializer.toJson<String?>(changeUuid),
+      'serverUuid': serializer.toJson<String?>(serverUuid),
+      'name': serializer.toJson<String?>(name),
+      'url': serializer.toJson<String?>(url),
+      'urlResolved': serializer.toJson<String?>(urlResolved),
+      'homepage': serializer.toJson<String?>(homepage),
+      'favicon': serializer.toJson<String?>(favicon),
+      'tags': serializer.toJson<String?>(tags),
+      'country': serializer.toJson<String?>(country),
+      'countryCode': serializer.toJson<String?>(countryCode),
+      'state': serializer.toJson<String?>(state),
+      'language': serializer.toJson<String?>(language),
+      'languageCodes': serializer.toJson<String?>(languageCodes),
+      'votes': serializer.toJson<int?>(votes),
+      'lastChangeTime': serializer.toJson<DateTime?>(lastChangeTime),
+      'codec': serializer.toJson<String?>(codec),
+      'bitrate': serializer.toJson<int?>(bitrate),
+      'hls': serializer.toJson<bool?>(hls),
+      'lastCheckOk': serializer.toJson<bool?>(lastCheckOk),
+      'lastCheckTime': serializer.toJson<DateTime?>(lastCheckTime),
+      'lastCheckOkTime': serializer.toJson<DateTime?>(lastCheckOkTime),
+      'lastLocalCheckTime': serializer.toJson<DateTime?>(lastLocalCheckTime),
+      'clickTimestamp': serializer.toJson<DateTime?>(clickTimestamp),
+      'clickCount': serializer.toJson<int?>(clickCount),
+      'clickTrend': serializer.toJson<int?>(clickTrend),
+      'sslError': serializer.toJson<bool?>(sslError),
+      'geoLat': serializer.toJson<double?>(geoLat),
+      'geoLong': serializer.toJson<double?>(geoLong),
+      'hasExtendedInfo': serializer.toJson<bool?>(hasExtendedInfo),
+    };
   }
 
-  StarredStationTableData copyWith({String? uuid}) =>
-      StarredStationTableData(uuid: uuid ?? this.uuid);
+  StarredStationTableData copyWith({
+    String? uuid,
+    Value<String?> changeUuid = const Value.absent(),
+    Value<String?> serverUuid = const Value.absent(),
+    Value<String?> name = const Value.absent(),
+    Value<String?> url = const Value.absent(),
+    Value<String?> urlResolved = const Value.absent(),
+    Value<String?> homepage = const Value.absent(),
+    Value<String?> favicon = const Value.absent(),
+    Value<String?> tags = const Value.absent(),
+    Value<String?> country = const Value.absent(),
+    Value<String?> countryCode = const Value.absent(),
+    Value<String?> state = const Value.absent(),
+    Value<String?> language = const Value.absent(),
+    Value<String?> languageCodes = const Value.absent(),
+    Value<int?> votes = const Value.absent(),
+    Value<DateTime?> lastChangeTime = const Value.absent(),
+    Value<String?> codec = const Value.absent(),
+    Value<int?> bitrate = const Value.absent(),
+    Value<bool?> hls = const Value.absent(),
+    Value<bool?> lastCheckOk = const Value.absent(),
+    Value<DateTime?> lastCheckTime = const Value.absent(),
+    Value<DateTime?> lastCheckOkTime = const Value.absent(),
+    Value<DateTime?> lastLocalCheckTime = const Value.absent(),
+    Value<DateTime?> clickTimestamp = const Value.absent(),
+    Value<int?> clickCount = const Value.absent(),
+    Value<int?> clickTrend = const Value.absent(),
+    Value<bool?> sslError = const Value.absent(),
+    Value<double?> geoLat = const Value.absent(),
+    Value<double?> geoLong = const Value.absent(),
+    Value<bool?> hasExtendedInfo = const Value.absent(),
+  }) => StarredStationTableData(
+    uuid: uuid ?? this.uuid,
+    changeUuid: changeUuid.present ? changeUuid.value : this.changeUuid,
+    serverUuid: serverUuid.present ? serverUuid.value : this.serverUuid,
+    name: name.present ? name.value : this.name,
+    url: url.present ? url.value : this.url,
+    urlResolved: urlResolved.present ? urlResolved.value : this.urlResolved,
+    homepage: homepage.present ? homepage.value : this.homepage,
+    favicon: favicon.present ? favicon.value : this.favicon,
+    tags: tags.present ? tags.value : this.tags,
+    country: country.present ? country.value : this.country,
+    countryCode: countryCode.present ? countryCode.value : this.countryCode,
+    state: state.present ? state.value : this.state,
+    language: language.present ? language.value : this.language,
+    languageCodes: languageCodes.present
+        ? languageCodes.value
+        : this.languageCodes,
+    votes: votes.present ? votes.value : this.votes,
+    lastChangeTime: lastChangeTime.present
+        ? lastChangeTime.value
+        : this.lastChangeTime,
+    codec: codec.present ? codec.value : this.codec,
+    bitrate: bitrate.present ? bitrate.value : this.bitrate,
+    hls: hls.present ? hls.value : this.hls,
+    lastCheckOk: lastCheckOk.present ? lastCheckOk.value : this.lastCheckOk,
+    lastCheckTime: lastCheckTime.present
+        ? lastCheckTime.value
+        : this.lastCheckTime,
+    lastCheckOkTime: lastCheckOkTime.present
+        ? lastCheckOkTime.value
+        : this.lastCheckOkTime,
+    lastLocalCheckTime: lastLocalCheckTime.present
+        ? lastLocalCheckTime.value
+        : this.lastLocalCheckTime,
+    clickTimestamp: clickTimestamp.present
+        ? clickTimestamp.value
+        : this.clickTimestamp,
+    clickCount: clickCount.present ? clickCount.value : this.clickCount,
+    clickTrend: clickTrend.present ? clickTrend.value : this.clickTrend,
+    sslError: sslError.present ? sslError.value : this.sslError,
+    geoLat: geoLat.present ? geoLat.value : this.geoLat,
+    geoLong: geoLong.present ? geoLong.value : this.geoLong,
+    hasExtendedInfo: hasExtendedInfo.present
+        ? hasExtendedInfo.value
+        : this.hasExtendedInfo,
+  );
   StarredStationTableData copyWithCompanion(StarredStationTableCompanion data) {
     return StarredStationTableData(
       uuid: data.uuid.present ? data.uuid.value : this.uuid,
+      changeUuid: data.changeUuid.present
+          ? data.changeUuid.value
+          : this.changeUuid,
+      serverUuid: data.serverUuid.present
+          ? data.serverUuid.value
+          : this.serverUuid,
+      name: data.name.present ? data.name.value : this.name,
+      url: data.url.present ? data.url.value : this.url,
+      urlResolved: data.urlResolved.present
+          ? data.urlResolved.value
+          : this.urlResolved,
+      homepage: data.homepage.present ? data.homepage.value : this.homepage,
+      favicon: data.favicon.present ? data.favicon.value : this.favicon,
+      tags: data.tags.present ? data.tags.value : this.tags,
+      country: data.country.present ? data.country.value : this.country,
+      countryCode: data.countryCode.present
+          ? data.countryCode.value
+          : this.countryCode,
+      state: data.state.present ? data.state.value : this.state,
+      language: data.language.present ? data.language.value : this.language,
+      languageCodes: data.languageCodes.present
+          ? data.languageCodes.value
+          : this.languageCodes,
+      votes: data.votes.present ? data.votes.value : this.votes,
+      lastChangeTime: data.lastChangeTime.present
+          ? data.lastChangeTime.value
+          : this.lastChangeTime,
+      codec: data.codec.present ? data.codec.value : this.codec,
+      bitrate: data.bitrate.present ? data.bitrate.value : this.bitrate,
+      hls: data.hls.present ? data.hls.value : this.hls,
+      lastCheckOk: data.lastCheckOk.present
+          ? data.lastCheckOk.value
+          : this.lastCheckOk,
+      lastCheckTime: data.lastCheckTime.present
+          ? data.lastCheckTime.value
+          : this.lastCheckTime,
+      lastCheckOkTime: data.lastCheckOkTime.present
+          ? data.lastCheckOkTime.value
+          : this.lastCheckOkTime,
+      lastLocalCheckTime: data.lastLocalCheckTime.present
+          ? data.lastLocalCheckTime.value
+          : this.lastLocalCheckTime,
+      clickTimestamp: data.clickTimestamp.present
+          ? data.clickTimestamp.value
+          : this.clickTimestamp,
+      clickCount: data.clickCount.present
+          ? data.clickCount.value
+          : this.clickCount,
+      clickTrend: data.clickTrend.present
+          ? data.clickTrend.value
+          : this.clickTrend,
+      sslError: data.sslError.present ? data.sslError.value : this.sslError,
+      geoLat: data.geoLat.present ? data.geoLat.value : this.geoLat,
+      geoLong: data.geoLong.present ? data.geoLong.value : this.geoLong,
+      hasExtendedInfo: data.hasExtendedInfo.present
+          ? data.hasExtendedInfo.value
+          : this.hasExtendedInfo,
     );
   }
 
   @override
   String toString() {
     return (StringBuffer('StarredStationTableData(')
-          ..write('uuid: $uuid')
+          ..write('uuid: $uuid, ')
+          ..write('changeUuid: $changeUuid, ')
+          ..write('serverUuid: $serverUuid, ')
+          ..write('name: $name, ')
+          ..write('url: $url, ')
+          ..write('urlResolved: $urlResolved, ')
+          ..write('homepage: $homepage, ')
+          ..write('favicon: $favicon, ')
+          ..write('tags: $tags, ')
+          ..write('country: $country, ')
+          ..write('countryCode: $countryCode, ')
+          ..write('state: $state, ')
+          ..write('language: $language, ')
+          ..write('languageCodes: $languageCodes, ')
+          ..write('votes: $votes, ')
+          ..write('lastChangeTime: $lastChangeTime, ')
+          ..write('codec: $codec, ')
+          ..write('bitrate: $bitrate, ')
+          ..write('hls: $hls, ')
+          ..write('lastCheckOk: $lastCheckOk, ')
+          ..write('lastCheckTime: $lastCheckTime, ')
+          ..write('lastCheckOkTime: $lastCheckOkTime, ')
+          ..write('lastLocalCheckTime: $lastLocalCheckTime, ')
+          ..write('clickTimestamp: $clickTimestamp, ')
+          ..write('clickCount: $clickCount, ')
+          ..write('clickTrend: $clickTrend, ')
+          ..write('sslError: $sslError, ')
+          ..write('geoLat: $geoLat, ')
+          ..write('geoLong: $geoLong, ')
+          ..write('hasExtendedInfo: $hasExtendedInfo')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => uuid.hashCode;
+  int get hashCode => Object.hashAll([
+    uuid,
+    changeUuid,
+    serverUuid,
+    name,
+    url,
+    urlResolved,
+    homepage,
+    favicon,
+    tags,
+    country,
+    countryCode,
+    state,
+    language,
+    languageCodes,
+    votes,
+    lastChangeTime,
+    codec,
+    bitrate,
+    hls,
+    lastCheckOk,
+    lastCheckTime,
+    lastCheckOkTime,
+    lastLocalCheckTime,
+    clickTimestamp,
+    clickCount,
+    clickTrend,
+    sslError,
+    geoLat,
+    geoLong,
+    hasExtendedInfo,
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is StarredStationTableData && other.uuid == this.uuid);
+      (other is StarredStationTableData &&
+          other.uuid == this.uuid &&
+          other.changeUuid == this.changeUuid &&
+          other.serverUuid == this.serverUuid &&
+          other.name == this.name &&
+          other.url == this.url &&
+          other.urlResolved == this.urlResolved &&
+          other.homepage == this.homepage &&
+          other.favicon == this.favicon &&
+          other.tags == this.tags &&
+          other.country == this.country &&
+          other.countryCode == this.countryCode &&
+          other.state == this.state &&
+          other.language == this.language &&
+          other.languageCodes == this.languageCodes &&
+          other.votes == this.votes &&
+          other.lastChangeTime == this.lastChangeTime &&
+          other.codec == this.codec &&
+          other.bitrate == this.bitrate &&
+          other.hls == this.hls &&
+          other.lastCheckOk == this.lastCheckOk &&
+          other.lastCheckTime == this.lastCheckTime &&
+          other.lastCheckOkTime == this.lastCheckOkTime &&
+          other.lastLocalCheckTime == this.lastLocalCheckTime &&
+          other.clickTimestamp == this.clickTimestamp &&
+          other.clickCount == this.clickCount &&
+          other.clickTrend == this.clickTrend &&
+          other.sslError == this.sslError &&
+          other.geoLat == this.geoLat &&
+          other.geoLong == this.geoLong &&
+          other.hasExtendedInfo == this.hasExtendedInfo);
 }
 
 class StarredStationTableCompanion
     extends UpdateCompanion<StarredStationTableData> {
   final Value<String> uuid;
+  final Value<String?> changeUuid;
+  final Value<String?> serverUuid;
+  final Value<String?> name;
+  final Value<String?> url;
+  final Value<String?> urlResolved;
+  final Value<String?> homepage;
+  final Value<String?> favicon;
+  final Value<String?> tags;
+  final Value<String?> country;
+  final Value<String?> countryCode;
+  final Value<String?> state;
+  final Value<String?> language;
+  final Value<String?> languageCodes;
+  final Value<int?> votes;
+  final Value<DateTime?> lastChangeTime;
+  final Value<String?> codec;
+  final Value<int?> bitrate;
+  final Value<bool?> hls;
+  final Value<bool?> lastCheckOk;
+  final Value<DateTime?> lastCheckTime;
+  final Value<DateTime?> lastCheckOkTime;
+  final Value<DateTime?> lastLocalCheckTime;
+  final Value<DateTime?> clickTimestamp;
+  final Value<int?> clickCount;
+  final Value<int?> clickTrend;
+  final Value<bool?> sslError;
+  final Value<double?> geoLat;
+  final Value<double?> geoLong;
+  final Value<bool?> hasExtendedInfo;
   final Value<int> rowid;
   const StarredStationTableCompanion({
     this.uuid = const Value.absent(),
+    this.changeUuid = const Value.absent(),
+    this.serverUuid = const Value.absent(),
+    this.name = const Value.absent(),
+    this.url = const Value.absent(),
+    this.urlResolved = const Value.absent(),
+    this.homepage = const Value.absent(),
+    this.favicon = const Value.absent(),
+    this.tags = const Value.absent(),
+    this.country = const Value.absent(),
+    this.countryCode = const Value.absent(),
+    this.state = const Value.absent(),
+    this.language = const Value.absent(),
+    this.languageCodes = const Value.absent(),
+    this.votes = const Value.absent(),
+    this.lastChangeTime = const Value.absent(),
+    this.codec = const Value.absent(),
+    this.bitrate = const Value.absent(),
+    this.hls = const Value.absent(),
+    this.lastCheckOk = const Value.absent(),
+    this.lastCheckTime = const Value.absent(),
+    this.lastCheckOkTime = const Value.absent(),
+    this.lastLocalCheckTime = const Value.absent(),
+    this.clickTimestamp = const Value.absent(),
+    this.clickCount = const Value.absent(),
+    this.clickTrend = const Value.absent(),
+    this.sslError = const Value.absent(),
+    this.geoLat = const Value.absent(),
+    this.geoLong = const Value.absent(),
+    this.hasExtendedInfo = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   StarredStationTableCompanion.insert({
     required String uuid,
+    this.changeUuid = const Value.absent(),
+    this.serverUuid = const Value.absent(),
+    this.name = const Value.absent(),
+    this.url = const Value.absent(),
+    this.urlResolved = const Value.absent(),
+    this.homepage = const Value.absent(),
+    this.favicon = const Value.absent(),
+    this.tags = const Value.absent(),
+    this.country = const Value.absent(),
+    this.countryCode = const Value.absent(),
+    this.state = const Value.absent(),
+    this.language = const Value.absent(),
+    this.languageCodes = const Value.absent(),
+    this.votes = const Value.absent(),
+    this.lastChangeTime = const Value.absent(),
+    this.codec = const Value.absent(),
+    this.bitrate = const Value.absent(),
+    this.hls = const Value.absent(),
+    this.lastCheckOk = const Value.absent(),
+    this.lastCheckTime = const Value.absent(),
+    this.lastCheckOkTime = const Value.absent(),
+    this.lastLocalCheckTime = const Value.absent(),
+    this.clickTimestamp = const Value.absent(),
+    this.clickCount = const Value.absent(),
+    this.clickTrend = const Value.absent(),
+    this.sslError = const Value.absent(),
+    this.geoLat = const Value.absent(),
+    this.geoLong = const Value.absent(),
+    this.hasExtendedInfo = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : uuid = Value(uuid);
   static Insertable<StarredStationTableData> custom({
     Expression<String>? uuid,
+    Expression<String>? changeUuid,
+    Expression<String>? serverUuid,
+    Expression<String>? name,
+    Expression<String>? url,
+    Expression<String>? urlResolved,
+    Expression<String>? homepage,
+    Expression<String>? favicon,
+    Expression<String>? tags,
+    Expression<String>? country,
+    Expression<String>? countryCode,
+    Expression<String>? state,
+    Expression<String>? language,
+    Expression<String>? languageCodes,
+    Expression<int>? votes,
+    Expression<DateTime>? lastChangeTime,
+    Expression<String>? codec,
+    Expression<int>? bitrate,
+    Expression<bool>? hls,
+    Expression<bool>? lastCheckOk,
+    Expression<DateTime>? lastCheckTime,
+    Expression<DateTime>? lastCheckOkTime,
+    Expression<DateTime>? lastLocalCheckTime,
+    Expression<DateTime>? clickTimestamp,
+    Expression<int>? clickCount,
+    Expression<int>? clickTrend,
+    Expression<bool>? sslError,
+    Expression<double>? geoLat,
+    Expression<double>? geoLong,
+    Expression<bool>? hasExtendedInfo,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (uuid != null) 'uuid': uuid,
+      if (changeUuid != null) 'change_uuid': changeUuid,
+      if (serverUuid != null) 'server_uuid': serverUuid,
+      if (name != null) 'name': name,
+      if (url != null) 'url': url,
+      if (urlResolved != null) 'url_resolved': urlResolved,
+      if (homepage != null) 'homepage': homepage,
+      if (favicon != null) 'favicon': favicon,
+      if (tags != null) 'tags': tags,
+      if (country != null) 'country': country,
+      if (countryCode != null) 'country_code': countryCode,
+      if (state != null) 'state': state,
+      if (language != null) 'language': language,
+      if (languageCodes != null) 'language_codes': languageCodes,
+      if (votes != null) 'votes': votes,
+      if (lastChangeTime != null) 'last_change_time': lastChangeTime,
+      if (codec != null) 'codec': codec,
+      if (bitrate != null) 'bitrate': bitrate,
+      if (hls != null) 'hls': hls,
+      if (lastCheckOk != null) 'last_check_ok': lastCheckOk,
+      if (lastCheckTime != null) 'last_check_time': lastCheckTime,
+      if (lastCheckOkTime != null) 'last_check_ok_time': lastCheckOkTime,
+      if (lastLocalCheckTime != null)
+        'last_local_check_time': lastLocalCheckTime,
+      if (clickTimestamp != null) 'click_timestamp': clickTimestamp,
+      if (clickCount != null) 'click_count': clickCount,
+      if (clickTrend != null) 'click_trend': clickTrend,
+      if (sslError != null) 'ssl_error': sslError,
+      if (geoLat != null) 'geo_lat': geoLat,
+      if (geoLong != null) 'geo_long': geoLong,
+      if (hasExtendedInfo != null) 'has_extended_info': hasExtendedInfo,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
   StarredStationTableCompanion copyWith({
     Value<String>? uuid,
+    Value<String?>? changeUuid,
+    Value<String?>? serverUuid,
+    Value<String?>? name,
+    Value<String?>? url,
+    Value<String?>? urlResolved,
+    Value<String?>? homepage,
+    Value<String?>? favicon,
+    Value<String?>? tags,
+    Value<String?>? country,
+    Value<String?>? countryCode,
+    Value<String?>? state,
+    Value<String?>? language,
+    Value<String?>? languageCodes,
+    Value<int?>? votes,
+    Value<DateTime?>? lastChangeTime,
+    Value<String?>? codec,
+    Value<int?>? bitrate,
+    Value<bool?>? hls,
+    Value<bool?>? lastCheckOk,
+    Value<DateTime?>? lastCheckTime,
+    Value<DateTime?>? lastCheckOkTime,
+    Value<DateTime?>? lastLocalCheckTime,
+    Value<DateTime?>? clickTimestamp,
+    Value<int?>? clickCount,
+    Value<int?>? clickTrend,
+    Value<bool?>? sslError,
+    Value<double?>? geoLat,
+    Value<double?>? geoLong,
+    Value<bool?>? hasExtendedInfo,
     Value<int>? rowid,
   }) {
     return StarredStationTableCompanion(
       uuid: uuid ?? this.uuid,
+      changeUuid: changeUuid ?? this.changeUuid,
+      serverUuid: serverUuid ?? this.serverUuid,
+      name: name ?? this.name,
+      url: url ?? this.url,
+      urlResolved: urlResolved ?? this.urlResolved,
+      homepage: homepage ?? this.homepage,
+      favicon: favicon ?? this.favicon,
+      tags: tags ?? this.tags,
+      country: country ?? this.country,
+      countryCode: countryCode ?? this.countryCode,
+      state: state ?? this.state,
+      language: language ?? this.language,
+      languageCodes: languageCodes ?? this.languageCodes,
+      votes: votes ?? this.votes,
+      lastChangeTime: lastChangeTime ?? this.lastChangeTime,
+      codec: codec ?? this.codec,
+      bitrate: bitrate ?? this.bitrate,
+      hls: hls ?? this.hls,
+      lastCheckOk: lastCheckOk ?? this.lastCheckOk,
+      lastCheckTime: lastCheckTime ?? this.lastCheckTime,
+      lastCheckOkTime: lastCheckOkTime ?? this.lastCheckOkTime,
+      lastLocalCheckTime: lastLocalCheckTime ?? this.lastLocalCheckTime,
+      clickTimestamp: clickTimestamp ?? this.clickTimestamp,
+      clickCount: clickCount ?? this.clickCount,
+      clickTrend: clickTrend ?? this.clickTrend,
+      sslError: sslError ?? this.sslError,
+      geoLat: geoLat ?? this.geoLat,
+      geoLong: geoLong ?? this.geoLong,
+      hasExtendedInfo: hasExtendedInfo ?? this.hasExtendedInfo,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -2540,6 +3927,95 @@ class StarredStationTableCompanion
     final map = <String, Expression>{};
     if (uuid.present) {
       map['uuid'] = Variable<String>(uuid.value);
+    }
+    if (changeUuid.present) {
+      map['change_uuid'] = Variable<String>(changeUuid.value);
+    }
+    if (serverUuid.present) {
+      map['server_uuid'] = Variable<String>(serverUuid.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (url.present) {
+      map['url'] = Variable<String>(url.value);
+    }
+    if (urlResolved.present) {
+      map['url_resolved'] = Variable<String>(urlResolved.value);
+    }
+    if (homepage.present) {
+      map['homepage'] = Variable<String>(homepage.value);
+    }
+    if (favicon.present) {
+      map['favicon'] = Variable<String>(favicon.value);
+    }
+    if (tags.present) {
+      map['tags'] = Variable<String>(tags.value);
+    }
+    if (country.present) {
+      map['country'] = Variable<String>(country.value);
+    }
+    if (countryCode.present) {
+      map['country_code'] = Variable<String>(countryCode.value);
+    }
+    if (state.present) {
+      map['state'] = Variable<String>(state.value);
+    }
+    if (language.present) {
+      map['language'] = Variable<String>(language.value);
+    }
+    if (languageCodes.present) {
+      map['language_codes'] = Variable<String>(languageCodes.value);
+    }
+    if (votes.present) {
+      map['votes'] = Variable<int>(votes.value);
+    }
+    if (lastChangeTime.present) {
+      map['last_change_time'] = Variable<DateTime>(lastChangeTime.value);
+    }
+    if (codec.present) {
+      map['codec'] = Variable<String>(codec.value);
+    }
+    if (bitrate.present) {
+      map['bitrate'] = Variable<int>(bitrate.value);
+    }
+    if (hls.present) {
+      map['hls'] = Variable<bool>(hls.value);
+    }
+    if (lastCheckOk.present) {
+      map['last_check_ok'] = Variable<bool>(lastCheckOk.value);
+    }
+    if (lastCheckTime.present) {
+      map['last_check_time'] = Variable<DateTime>(lastCheckTime.value);
+    }
+    if (lastCheckOkTime.present) {
+      map['last_check_ok_time'] = Variable<DateTime>(lastCheckOkTime.value);
+    }
+    if (lastLocalCheckTime.present) {
+      map['last_local_check_time'] = Variable<DateTime>(
+        lastLocalCheckTime.value,
+      );
+    }
+    if (clickTimestamp.present) {
+      map['click_timestamp'] = Variable<DateTime>(clickTimestamp.value);
+    }
+    if (clickCount.present) {
+      map['click_count'] = Variable<int>(clickCount.value);
+    }
+    if (clickTrend.present) {
+      map['click_trend'] = Variable<int>(clickTrend.value);
+    }
+    if (sslError.present) {
+      map['ssl_error'] = Variable<bool>(sslError.value);
+    }
+    if (geoLat.present) {
+      map['geo_lat'] = Variable<double>(geoLat.value);
+    }
+    if (geoLong.present) {
+      map['geo_long'] = Variable<double>(geoLong.value);
+    }
+    if (hasExtendedInfo.present) {
+      map['has_extended_info'] = Variable<bool>(hasExtendedInfo.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -2551,6 +4027,35 @@ class StarredStationTableCompanion
   String toString() {
     return (StringBuffer('StarredStationTableCompanion(')
           ..write('uuid: $uuid, ')
+          ..write('changeUuid: $changeUuid, ')
+          ..write('serverUuid: $serverUuid, ')
+          ..write('name: $name, ')
+          ..write('url: $url, ')
+          ..write('urlResolved: $urlResolved, ')
+          ..write('homepage: $homepage, ')
+          ..write('favicon: $favicon, ')
+          ..write('tags: $tags, ')
+          ..write('country: $country, ')
+          ..write('countryCode: $countryCode, ')
+          ..write('state: $state, ')
+          ..write('language: $language, ')
+          ..write('languageCodes: $languageCodes, ')
+          ..write('votes: $votes, ')
+          ..write('lastChangeTime: $lastChangeTime, ')
+          ..write('codec: $codec, ')
+          ..write('bitrate: $bitrate, ')
+          ..write('hls: $hls, ')
+          ..write('lastCheckOk: $lastCheckOk, ')
+          ..write('lastCheckTime: $lastCheckTime, ')
+          ..write('lastCheckOkTime: $lastCheckOkTime, ')
+          ..write('lastLocalCheckTime: $lastLocalCheckTime, ')
+          ..write('clickTimestamp: $clickTimestamp, ')
+          ..write('clickCount: $clickCount, ')
+          ..write('clickTrend: $clickTrend, ')
+          ..write('sslError: $sslError, ')
+          ..write('geoLat: $geoLat, ')
+          ..write('geoLong: $geoLong, ')
+          ..write('hasExtendedInfo: $hasExtendedInfo, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -4250,11 +5755,11 @@ class $PodcastGenreRelationTableTable extends PodcastGenreRelationTable
     'genreId',
   );
   @override
-  late final GeneratedColumn<String> genreId = GeneratedColumn<String>(
+  late final GeneratedColumn<int> genreId = GeneratedColumn<int>(
     'genre_id',
     aliasedName,
     false,
-    type: DriftSqlType.string,
+    type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
       'REFERENCES podcast_genre_table (id)',
@@ -4307,7 +5812,7 @@ class $PodcastGenreRelationTableTable extends PodcastGenreRelationTable
         data['${effectivePrefix}feed_url'],
       )!,
       genreId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
+        DriftSqlType.int,
         data['${effectivePrefix}genre_id'],
       )!,
     );
@@ -4322,7 +5827,7 @@ class $PodcastGenreRelationTableTable extends PodcastGenreRelationTable
 class PodcastGenreRelationTableData extends DataClass
     implements Insertable<PodcastGenreRelationTableData> {
   final String feedUrl;
-  final String genreId;
+  final int genreId;
   const PodcastGenreRelationTableData({
     required this.feedUrl,
     required this.genreId,
@@ -4331,7 +5836,7 @@ class PodcastGenreRelationTableData extends DataClass
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['feed_url'] = Variable<String>(feedUrl);
-    map['genre_id'] = Variable<String>(genreId);
+    map['genre_id'] = Variable<int>(genreId);
     return map;
   }
 
@@ -4349,7 +5854,7 @@ class PodcastGenreRelationTableData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return PodcastGenreRelationTableData(
       feedUrl: serializer.fromJson<String>(json['feedUrl']),
-      genreId: serializer.fromJson<String>(json['genreId']),
+      genreId: serializer.fromJson<int>(json['genreId']),
     );
   }
   @override
@@ -4357,11 +5862,11 @@ class PodcastGenreRelationTableData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'feedUrl': serializer.toJson<String>(feedUrl),
-      'genreId': serializer.toJson<String>(genreId),
+      'genreId': serializer.toJson<int>(genreId),
     };
   }
 
-  PodcastGenreRelationTableData copyWith({String? feedUrl, String? genreId}) =>
+  PodcastGenreRelationTableData copyWith({String? feedUrl, int? genreId}) =>
       PodcastGenreRelationTableData(
         feedUrl: feedUrl ?? this.feedUrl,
         genreId: genreId ?? this.genreId,
@@ -4397,7 +5902,7 @@ class PodcastGenreRelationTableData extends DataClass
 class PodcastGenreRelationTableCompanion
     extends UpdateCompanion<PodcastGenreRelationTableData> {
   final Value<String> feedUrl;
-  final Value<String> genreId;
+  final Value<int> genreId;
   final Value<int> rowid;
   const PodcastGenreRelationTableCompanion({
     this.feedUrl = const Value.absent(),
@@ -4406,13 +5911,13 @@ class PodcastGenreRelationTableCompanion
   });
   PodcastGenreRelationTableCompanion.insert({
     required String feedUrl,
-    required String genreId,
+    required int genreId,
     this.rowid = const Value.absent(),
   }) : feedUrl = Value(feedUrl),
        genreId = Value(genreId);
   static Insertable<PodcastGenreRelationTableData> custom({
     Expression<String>? feedUrl,
-    Expression<String>? genreId,
+    Expression<int>? genreId,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -4424,7 +5929,7 @@ class PodcastGenreRelationTableCompanion
 
   PodcastGenreRelationTableCompanion copyWith({
     Value<String>? feedUrl,
-    Value<String>? genreId,
+    Value<int>? genreId,
     Value<int>? rowid,
   }) {
     return PodcastGenreRelationTableCompanion(
@@ -4441,7 +5946,7 @@ class PodcastGenreRelationTableCompanion
       map['feed_url'] = Variable<String>(feedUrl.value);
     }
     if (genreId.present) {
-      map['genre_id'] = Variable<String>(genreId.value);
+      map['genre_id'] = Variable<int>(genreId.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -8731,11 +10236,69 @@ typedef $$LikedTrackTableTableProcessedTableManager =
 typedef $$StarredStationTableTableCreateCompanionBuilder =
     StarredStationTableCompanion Function({
       required String uuid,
+      Value<String?> changeUuid,
+      Value<String?> serverUuid,
+      Value<String?> name,
+      Value<String?> url,
+      Value<String?> urlResolved,
+      Value<String?> homepage,
+      Value<String?> favicon,
+      Value<String?> tags,
+      Value<String?> country,
+      Value<String?> countryCode,
+      Value<String?> state,
+      Value<String?> language,
+      Value<String?> languageCodes,
+      Value<int?> votes,
+      Value<DateTime?> lastChangeTime,
+      Value<String?> codec,
+      Value<int?> bitrate,
+      Value<bool?> hls,
+      Value<bool?> lastCheckOk,
+      Value<DateTime?> lastCheckTime,
+      Value<DateTime?> lastCheckOkTime,
+      Value<DateTime?> lastLocalCheckTime,
+      Value<DateTime?> clickTimestamp,
+      Value<int?> clickCount,
+      Value<int?> clickTrend,
+      Value<bool?> sslError,
+      Value<double?> geoLat,
+      Value<double?> geoLong,
+      Value<bool?> hasExtendedInfo,
       Value<int> rowid,
     });
 typedef $$StarredStationTableTableUpdateCompanionBuilder =
     StarredStationTableCompanion Function({
       Value<String> uuid,
+      Value<String?> changeUuid,
+      Value<String?> serverUuid,
+      Value<String?> name,
+      Value<String?> url,
+      Value<String?> urlResolved,
+      Value<String?> homepage,
+      Value<String?> favicon,
+      Value<String?> tags,
+      Value<String?> country,
+      Value<String?> countryCode,
+      Value<String?> state,
+      Value<String?> language,
+      Value<String?> languageCodes,
+      Value<int?> votes,
+      Value<DateTime?> lastChangeTime,
+      Value<String?> codec,
+      Value<int?> bitrate,
+      Value<bool?> hls,
+      Value<bool?> lastCheckOk,
+      Value<DateTime?> lastCheckTime,
+      Value<DateTime?> lastCheckOkTime,
+      Value<DateTime?> lastLocalCheckTime,
+      Value<DateTime?> clickTimestamp,
+      Value<int?> clickCount,
+      Value<int?> clickTrend,
+      Value<bool?> sslError,
+      Value<double?> geoLat,
+      Value<double?> geoLong,
+      Value<bool?> hasExtendedInfo,
       Value<int> rowid,
     });
 
@@ -8750,6 +10313,151 @@ class $$StarredStationTableTableFilterComposer
   });
   ColumnFilters<String> get uuid => $composableBuilder(
     column: $table.uuid,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get changeUuid => $composableBuilder(
+    column: $table.changeUuid,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get serverUuid => $composableBuilder(
+    column: $table.serverUuid,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get url => $composableBuilder(
+    column: $table.url,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get urlResolved => $composableBuilder(
+    column: $table.urlResolved,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get homepage => $composableBuilder(
+    column: $table.homepage,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get favicon => $composableBuilder(
+    column: $table.favicon,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tags => $composableBuilder(
+    column: $table.tags,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get country => $composableBuilder(
+    column: $table.country,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get countryCode => $composableBuilder(
+    column: $table.countryCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get state => $composableBuilder(
+    column: $table.state,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get language => $composableBuilder(
+    column: $table.language,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get languageCodes => $composableBuilder(
+    column: $table.languageCodes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get votes => $composableBuilder(
+    column: $table.votes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastChangeTime => $composableBuilder(
+    column: $table.lastChangeTime,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get codec => $composableBuilder(
+    column: $table.codec,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get bitrate => $composableBuilder(
+    column: $table.bitrate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get hls => $composableBuilder(
+    column: $table.hls,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get lastCheckOk => $composableBuilder(
+    column: $table.lastCheckOk,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastCheckTime => $composableBuilder(
+    column: $table.lastCheckTime,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastCheckOkTime => $composableBuilder(
+    column: $table.lastCheckOkTime,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastLocalCheckTime => $composableBuilder(
+    column: $table.lastLocalCheckTime,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get clickTimestamp => $composableBuilder(
+    column: $table.clickTimestamp,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get clickCount => $composableBuilder(
+    column: $table.clickCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get clickTrend => $composableBuilder(
+    column: $table.clickTrend,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get sslError => $composableBuilder(
+    column: $table.sslError,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get geoLat => $composableBuilder(
+    column: $table.geoLat,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get geoLong => $composableBuilder(
+    column: $table.geoLong,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get hasExtendedInfo => $composableBuilder(
+    column: $table.hasExtendedInfo,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -8767,6 +10475,151 @@ class $$StarredStationTableTableOrderingComposer
     column: $table.uuid,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get changeUuid => $composableBuilder(
+    column: $table.changeUuid,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get serverUuid => $composableBuilder(
+    column: $table.serverUuid,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get url => $composableBuilder(
+    column: $table.url,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get urlResolved => $composableBuilder(
+    column: $table.urlResolved,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get homepage => $composableBuilder(
+    column: $table.homepage,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get favicon => $composableBuilder(
+    column: $table.favicon,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tags => $composableBuilder(
+    column: $table.tags,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get country => $composableBuilder(
+    column: $table.country,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get countryCode => $composableBuilder(
+    column: $table.countryCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get state => $composableBuilder(
+    column: $table.state,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get language => $composableBuilder(
+    column: $table.language,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get languageCodes => $composableBuilder(
+    column: $table.languageCodes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get votes => $composableBuilder(
+    column: $table.votes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastChangeTime => $composableBuilder(
+    column: $table.lastChangeTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get codec => $composableBuilder(
+    column: $table.codec,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get bitrate => $composableBuilder(
+    column: $table.bitrate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get hls => $composableBuilder(
+    column: $table.hls,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get lastCheckOk => $composableBuilder(
+    column: $table.lastCheckOk,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastCheckTime => $composableBuilder(
+    column: $table.lastCheckTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastCheckOkTime => $composableBuilder(
+    column: $table.lastCheckOkTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastLocalCheckTime => $composableBuilder(
+    column: $table.lastLocalCheckTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get clickTimestamp => $composableBuilder(
+    column: $table.clickTimestamp,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get clickCount => $composableBuilder(
+    column: $table.clickCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get clickTrend => $composableBuilder(
+    column: $table.clickTrend,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get sslError => $composableBuilder(
+    column: $table.sslError,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get geoLat => $composableBuilder(
+    column: $table.geoLat,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get geoLong => $composableBuilder(
+    column: $table.geoLong,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get hasExtendedInfo => $composableBuilder(
+    column: $table.hasExtendedInfo,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$StarredStationTableTableAnnotationComposer
@@ -8780,6 +10633,121 @@ class $$StarredStationTableTableAnnotationComposer
   });
   GeneratedColumn<String> get uuid =>
       $composableBuilder(column: $table.uuid, builder: (column) => column);
+
+  GeneratedColumn<String> get changeUuid => $composableBuilder(
+    column: $table.changeUuid,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get serverUuid => $composableBuilder(
+    column: $table.serverUuid,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get url =>
+      $composableBuilder(column: $table.url, builder: (column) => column);
+
+  GeneratedColumn<String> get urlResolved => $composableBuilder(
+    column: $table.urlResolved,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get homepage =>
+      $composableBuilder(column: $table.homepage, builder: (column) => column);
+
+  GeneratedColumn<String> get favicon =>
+      $composableBuilder(column: $table.favicon, builder: (column) => column);
+
+  GeneratedColumn<String> get tags =>
+      $composableBuilder(column: $table.tags, builder: (column) => column);
+
+  GeneratedColumn<String> get country =>
+      $composableBuilder(column: $table.country, builder: (column) => column);
+
+  GeneratedColumn<String> get countryCode => $composableBuilder(
+    column: $table.countryCode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get state =>
+      $composableBuilder(column: $table.state, builder: (column) => column);
+
+  GeneratedColumn<String> get language =>
+      $composableBuilder(column: $table.language, builder: (column) => column);
+
+  GeneratedColumn<String> get languageCodes => $composableBuilder(
+    column: $table.languageCodes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get votes =>
+      $composableBuilder(column: $table.votes, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastChangeTime => $composableBuilder(
+    column: $table.lastChangeTime,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get codec =>
+      $composableBuilder(column: $table.codec, builder: (column) => column);
+
+  GeneratedColumn<int> get bitrate =>
+      $composableBuilder(column: $table.bitrate, builder: (column) => column);
+
+  GeneratedColumn<bool> get hls =>
+      $composableBuilder(column: $table.hls, builder: (column) => column);
+
+  GeneratedColumn<bool> get lastCheckOk => $composableBuilder(
+    column: $table.lastCheckOk,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get lastCheckTime => $composableBuilder(
+    column: $table.lastCheckTime,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get lastCheckOkTime => $composableBuilder(
+    column: $table.lastCheckOkTime,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get lastLocalCheckTime => $composableBuilder(
+    column: $table.lastLocalCheckTime,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get clickTimestamp => $composableBuilder(
+    column: $table.clickTimestamp,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get clickCount => $composableBuilder(
+    column: $table.clickCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get clickTrend => $composableBuilder(
+    column: $table.clickTrend,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get sslError =>
+      $composableBuilder(column: $table.sslError, builder: (column) => column);
+
+  GeneratedColumn<double> get geoLat =>
+      $composableBuilder(column: $table.geoLat, builder: (column) => column);
+
+  GeneratedColumn<double> get geoLong =>
+      $composableBuilder(column: $table.geoLong, builder: (column) => column);
+
+  GeneratedColumn<bool> get hasExtendedInfo => $composableBuilder(
+    column: $table.hasExtendedInfo,
+    builder: (column) => column,
+  );
 }
 
 class $$StarredStationTableTableTableManager
@@ -8826,14 +10794,135 @@ class $$StarredStationTableTableTableManager
           updateCompanionCallback:
               ({
                 Value<String> uuid = const Value.absent(),
+                Value<String?> changeUuid = const Value.absent(),
+                Value<String?> serverUuid = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                Value<String?> url = const Value.absent(),
+                Value<String?> urlResolved = const Value.absent(),
+                Value<String?> homepage = const Value.absent(),
+                Value<String?> favicon = const Value.absent(),
+                Value<String?> tags = const Value.absent(),
+                Value<String?> country = const Value.absent(),
+                Value<String?> countryCode = const Value.absent(),
+                Value<String?> state = const Value.absent(),
+                Value<String?> language = const Value.absent(),
+                Value<String?> languageCodes = const Value.absent(),
+                Value<int?> votes = const Value.absent(),
+                Value<DateTime?> lastChangeTime = const Value.absent(),
+                Value<String?> codec = const Value.absent(),
+                Value<int?> bitrate = const Value.absent(),
+                Value<bool?> hls = const Value.absent(),
+                Value<bool?> lastCheckOk = const Value.absent(),
+                Value<DateTime?> lastCheckTime = const Value.absent(),
+                Value<DateTime?> lastCheckOkTime = const Value.absent(),
+                Value<DateTime?> lastLocalCheckTime = const Value.absent(),
+                Value<DateTime?> clickTimestamp = const Value.absent(),
+                Value<int?> clickCount = const Value.absent(),
+                Value<int?> clickTrend = const Value.absent(),
+                Value<bool?> sslError = const Value.absent(),
+                Value<double?> geoLat = const Value.absent(),
+                Value<double?> geoLong = const Value.absent(),
+                Value<bool?> hasExtendedInfo = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => StarredStationTableCompanion(uuid: uuid, rowid: rowid),
+              }) => StarredStationTableCompanion(
+                uuid: uuid,
+                changeUuid: changeUuid,
+                serverUuid: serverUuid,
+                name: name,
+                url: url,
+                urlResolved: urlResolved,
+                homepage: homepage,
+                favicon: favicon,
+                tags: tags,
+                country: country,
+                countryCode: countryCode,
+                state: state,
+                language: language,
+                languageCodes: languageCodes,
+                votes: votes,
+                lastChangeTime: lastChangeTime,
+                codec: codec,
+                bitrate: bitrate,
+                hls: hls,
+                lastCheckOk: lastCheckOk,
+                lastCheckTime: lastCheckTime,
+                lastCheckOkTime: lastCheckOkTime,
+                lastLocalCheckTime: lastLocalCheckTime,
+                clickTimestamp: clickTimestamp,
+                clickCount: clickCount,
+                clickTrend: clickTrend,
+                sslError: sslError,
+                geoLat: geoLat,
+                geoLong: geoLong,
+                hasExtendedInfo: hasExtendedInfo,
+                rowid: rowid,
+              ),
           createCompanionCallback:
               ({
                 required String uuid,
+                Value<String?> changeUuid = const Value.absent(),
+                Value<String?> serverUuid = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                Value<String?> url = const Value.absent(),
+                Value<String?> urlResolved = const Value.absent(),
+                Value<String?> homepage = const Value.absent(),
+                Value<String?> favicon = const Value.absent(),
+                Value<String?> tags = const Value.absent(),
+                Value<String?> country = const Value.absent(),
+                Value<String?> countryCode = const Value.absent(),
+                Value<String?> state = const Value.absent(),
+                Value<String?> language = const Value.absent(),
+                Value<String?> languageCodes = const Value.absent(),
+                Value<int?> votes = const Value.absent(),
+                Value<DateTime?> lastChangeTime = const Value.absent(),
+                Value<String?> codec = const Value.absent(),
+                Value<int?> bitrate = const Value.absent(),
+                Value<bool?> hls = const Value.absent(),
+                Value<bool?> lastCheckOk = const Value.absent(),
+                Value<DateTime?> lastCheckTime = const Value.absent(),
+                Value<DateTime?> lastCheckOkTime = const Value.absent(),
+                Value<DateTime?> lastLocalCheckTime = const Value.absent(),
+                Value<DateTime?> clickTimestamp = const Value.absent(),
+                Value<int?> clickCount = const Value.absent(),
+                Value<int?> clickTrend = const Value.absent(),
+                Value<bool?> sslError = const Value.absent(),
+                Value<double?> geoLat = const Value.absent(),
+                Value<double?> geoLong = const Value.absent(),
+                Value<bool?> hasExtendedInfo = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) =>
-                  StarredStationTableCompanion.insert(uuid: uuid, rowid: rowid),
+              }) => StarredStationTableCompanion.insert(
+                uuid: uuid,
+                changeUuid: changeUuid,
+                serverUuid: serverUuid,
+                name: name,
+                url: url,
+                urlResolved: urlResolved,
+                homepage: homepage,
+                favicon: favicon,
+                tags: tags,
+                country: country,
+                countryCode: countryCode,
+                state: state,
+                language: language,
+                languageCodes: languageCodes,
+                votes: votes,
+                lastChangeTime: lastChangeTime,
+                codec: codec,
+                bitrate: bitrate,
+                hls: hls,
+                lastCheckOk: lastCheckOk,
+                lastCheckTime: lastCheckTime,
+                lastCheckOkTime: lastCheckOkTime,
+                lastLocalCheckTime: lastLocalCheckTime,
+                clickTimestamp: clickTimestamp,
+                clickCount: clickCount,
+                clickTrend: clickTrend,
+                sslError: sslError,
+                geoLat: geoLat,
+                geoLong: geoLong,
+                hasExtendedInfo: hasExtendedInfo,
+                rowid: rowid,
+              ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
@@ -10623,6 +12712,48 @@ typedef $$PodcastGenreTableTableCreateCompanionBuilder =
 typedef $$PodcastGenreTableTableUpdateCompanionBuilder =
     PodcastGenreTableCompanion Function({Value<int> id, Value<String> name});
 
+final class $$PodcastGenreTableTableReferences
+    extends
+        BaseReferences<
+          _$Database,
+          $PodcastGenreTableTable,
+          PodcastGenreTableData
+        > {
+  $$PodcastGenreTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static MultiTypedResultKey<
+    $PodcastGenreRelationTableTable,
+    List<PodcastGenreRelationTableData>
+  >
+  _podcastGenreRelationTableRefsTable(_$Database db) =>
+      MultiTypedResultKey.fromTable(
+        db.podcastGenreRelationTable,
+        aliasName: $_aliasNameGenerator(
+          db.podcastGenreTable.id,
+          db.podcastGenreRelationTable.genreId,
+        ),
+      );
+
+  $$PodcastGenreRelationTableTableProcessedTableManager
+  get podcastGenreRelationTableRefs {
+    final manager = $$PodcastGenreRelationTableTableTableManager(
+      $_db,
+      $_db.podcastGenreRelationTable,
+    ).filter((f) => f.genreId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _podcastGenreRelationTableRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
 class $$PodcastGenreTableTableFilterComposer
     extends Composer<_$Database, $PodcastGenreTableTable> {
   $$PodcastGenreTableTableFilterComposer({
@@ -10641,6 +12772,33 @@ class $$PodcastGenreTableTableFilterComposer
     column: $table.name,
     builder: (column) => ColumnFilters(column),
   );
+
+  Expression<bool> podcastGenreRelationTableRefs(
+    Expression<bool> Function($$PodcastGenreRelationTableTableFilterComposer f)
+    f,
+  ) {
+    final $$PodcastGenreRelationTableTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.podcastGenreRelationTable,
+          getReferencedColumn: (t) => t.genreId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$PodcastGenreRelationTableTableFilterComposer(
+                $db: $db,
+                $table: $db.podcastGenreRelationTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$PodcastGenreTableTableOrderingComposer
@@ -10677,6 +12835,33 @@ class $$PodcastGenreTableTableAnnotationComposer
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
+
+  Expression<T> podcastGenreRelationTableRefs<T extends Object>(
+    Expression<T> Function($$PodcastGenreRelationTableTableAnnotationComposer a)
+    f,
+  ) {
+    final $$PodcastGenreRelationTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.podcastGenreRelationTable,
+          getReferencedColumn: (t) => t.genreId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$PodcastGenreRelationTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.podcastGenreRelationTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$PodcastGenreTableTableTableManager
@@ -10690,16 +12875,9 @@ class $$PodcastGenreTableTableTableManager
           $$PodcastGenreTableTableAnnotationComposer,
           $$PodcastGenreTableTableCreateCompanionBuilder,
           $$PodcastGenreTableTableUpdateCompanionBuilder,
-          (
-            PodcastGenreTableData,
-            BaseReferences<
-              _$Database,
-              $PodcastGenreTableTable,
-              PodcastGenreTableData
-            >,
-          ),
+          (PodcastGenreTableData, $$PodcastGenreTableTableReferences),
           PodcastGenreTableData,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool podcastGenreRelationTableRefs})
         > {
   $$PodcastGenreTableTableTableManager(
     _$Database db,
@@ -10726,9 +12904,45 @@ class $$PodcastGenreTableTableTableManager
               ({Value<int> id = const Value.absent(), required String name}) =>
                   PodcastGenreTableCompanion.insert(id: id, name: name),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$PodcastGenreTableTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({podcastGenreRelationTableRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (podcastGenreRelationTableRefs) db.podcastGenreRelationTable,
+              ],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (podcastGenreRelationTableRefs)
+                    await $_getPrefetchedData<
+                      PodcastGenreTableData,
+                      $PodcastGenreTableTable,
+                      PodcastGenreRelationTableData
+                    >(
+                      currentTable: table,
+                      referencedTable: $$PodcastGenreTableTableReferences
+                          ._podcastGenreRelationTableRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$PodcastGenreTableTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).podcastGenreRelationTableRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where((e) => e.genreId == item.id),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
         ),
       );
 }
@@ -10743,27 +12957,20 @@ typedef $$PodcastGenreTableTableProcessedTableManager =
       $$PodcastGenreTableTableAnnotationComposer,
       $$PodcastGenreTableTableCreateCompanionBuilder,
       $$PodcastGenreTableTableUpdateCompanionBuilder,
-      (
-        PodcastGenreTableData,
-        BaseReferences<
-          _$Database,
-          $PodcastGenreTableTable,
-          PodcastGenreTableData
-        >,
-      ),
+      (PodcastGenreTableData, $$PodcastGenreTableTableReferences),
       PodcastGenreTableData,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool podcastGenreRelationTableRefs})
     >;
 typedef $$PodcastGenreRelationTableTableCreateCompanionBuilder =
     PodcastGenreRelationTableCompanion Function({
       required String feedUrl,
-      required String genreId,
+      required int genreId,
       Value<int> rowid,
     });
 typedef $$PodcastGenreRelationTableTableUpdateCompanionBuilder =
     PodcastGenreRelationTableCompanion Function({
       Value<String> feedUrl,
-      Value<String> genreId,
+      Value<int> genreId,
       Value<int> rowid,
     });
 
@@ -10801,6 +13008,28 @@ final class $$PodcastGenreRelationTableTableReferences
       manager.$state.copyWith(prefetchedData: [item]),
     );
   }
+
+  static $PodcastGenreTableTable _genreIdTable(_$Database db) =>
+      db.podcastGenreTable.createAlias(
+        $_aliasNameGenerator(
+          db.podcastGenreRelationTable.genreId,
+          db.podcastGenreTable.id,
+        ),
+      );
+
+  $$PodcastGenreTableTableProcessedTableManager get genreId {
+    final $_column = $_itemColumn<int>('genre_id')!;
+
+    final manager = $$PodcastGenreTableTableTableManager(
+      $_db,
+      $_db.podcastGenreTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_genreIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
 }
 
 class $$PodcastGenreRelationTableTableFilterComposer
@@ -10826,6 +13055,29 @@ class $$PodcastGenreRelationTableTableFilterComposer
           }) => $$PodcastTableTableFilterComposer(
             $db: $db,
             $table: $db.podcastTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$PodcastGenreTableTableFilterComposer get genreId {
+    final $$PodcastGenreTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.genreId,
+      referencedTable: $db.podcastGenreTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PodcastGenreTableTableFilterComposer(
+            $db: $db,
+            $table: $db.podcastGenreTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -10867,6 +13119,29 @@ class $$PodcastGenreRelationTableTableOrderingComposer
     );
     return composer;
   }
+
+  $$PodcastGenreTableTableOrderingComposer get genreId {
+    final $$PodcastGenreTableTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.genreId,
+      referencedTable: $db.podcastGenreTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PodcastGenreTableTableOrderingComposer(
+            $db: $db,
+            $table: $db.podcastGenreTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$PodcastGenreRelationTableTableAnnotationComposer
@@ -10900,6 +13175,30 @@ class $$PodcastGenreRelationTableTableAnnotationComposer
     );
     return composer;
   }
+
+  $$PodcastGenreTableTableAnnotationComposer get genreId {
+    final $$PodcastGenreTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.genreId,
+          referencedTable: $db.podcastGenreTable,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$PodcastGenreTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.podcastGenreTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
 }
 
 class $$PodcastGenreRelationTableTableTableManager
@@ -10918,7 +13217,7 @@ class $$PodcastGenreRelationTableTableTableManager
             $$PodcastGenreRelationTableTableReferences,
           ),
           PodcastGenreRelationTableData,
-          PrefetchHooks Function({bool feedUrl})
+          PrefetchHooks Function({bool feedUrl, bool genreId})
         > {
   $$PodcastGenreRelationTableTableTableManager(
     _$Database db,
@@ -10945,7 +13244,7 @@ class $$PodcastGenreRelationTableTableTableManager
           updateCompanionCallback:
               ({
                 Value<String> feedUrl = const Value.absent(),
-                Value<String> genreId = const Value.absent(),
+                Value<int> genreId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => PodcastGenreRelationTableCompanion(
                 feedUrl: feedUrl,
@@ -10955,7 +13254,7 @@ class $$PodcastGenreRelationTableTableTableManager
           createCompanionCallback:
               ({
                 required String feedUrl,
-                required String genreId,
+                required int genreId,
                 Value<int> rowid = const Value.absent(),
               }) => PodcastGenreRelationTableCompanion.insert(
                 feedUrl: feedUrl,
@@ -10970,7 +13269,7 @@ class $$PodcastGenreRelationTableTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({feedUrl = false}) {
+          prefetchHooksCallback: ({feedUrl = false, genreId = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [],
@@ -11005,6 +13304,21 @@ class $$PodcastGenreRelationTableTableTableManager
                               )
                               as T;
                     }
+                    if (genreId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.genreId,
+                                referencedTable:
+                                    $$PodcastGenreRelationTableTableReferences
+                                        ._genreIdTable(db),
+                                referencedColumn:
+                                    $$PodcastGenreRelationTableTableReferences
+                                        ._genreIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
 
                     return state;
                   },
@@ -11032,7 +13346,7 @@ typedef $$PodcastGenreRelationTableTableProcessedTableManager =
         $$PodcastGenreRelationTableTableReferences,
       ),
       PodcastGenreRelationTableData,
-      PrefetchHooks Function({bool feedUrl})
+      PrefetchHooks Function({bool feedUrl, bool genreId})
     >;
 typedef $$DownloadedPodcastEpisodeTableTableCreateCompanionBuilder =
     DownloadedPodcastEpisodeTableCompanion Function({

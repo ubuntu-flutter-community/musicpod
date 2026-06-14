@@ -1830,12 +1830,13 @@ packages:
     source: hosted
     version: "1.4.0"
   watch_it:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: watch_it
-      sha256: "0449f08187ba70833dbca64fd9d7f098a53d4bd27ab5e9f49ae44b4c3a7577fa"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: "8992c04aef1703f81d90c59eed36bff83ce33edf"
+      resolved-ref: "8992c04aef1703f81d90c59eed36bff83ce33edf"
+      url: "https://github.com/Feichtmeier/watch_it"
+    source: git
     version: "2.4.2"
   watcher:
     dependency: transitive

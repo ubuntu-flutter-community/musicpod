@@ -6,32 +6,21 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'data/retry_capsule.dart';
 import 'logging.dart';
 
-final _retryManagers = <String, RetryManager>{};
-
 @Injectable(cache: true)
 class RetryManager {
-  static RetryManager? dispose(String retryViewId) {
-    final disposedManager = _retryManagers.remove(retryViewId);
-    printInfoInDebugMode(
-      'Disposed $RetryManager for $retryViewId',
-      tag: '$RetryManager',
-    );
-    return disposedManager;
-  }
-
   RetryManager({@factoryParam required RetryCapsule retryCapsule})
     : _retryCapsule = retryCapsule {
     printInfoInDebugMode(
-      'Instace created for ${retryCapsule.retryViewId}',
+      'Instance created for ${retryCapsule.retryViewId}',
       tag: '$RetryManager',
     );
-    _retryManagers[retryCapsule.retryViewId] = this;
+    _instances[retryCapsule.retryViewId] = this;
 
     _retryTicker = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (cooldown.value > 0) {
         cooldown.value--;
       } else {
-        if (retryCapsule.autoRetry) {
+        if (retryCapsule.autoRetry && cooldown.value < cooldownMaxValue) {
           _retryCapsule = _retryCapsule.copyWith(
             retries: _retryCapsule.retries + 1,
           );
@@ -44,14 +33,30 @@ class RetryManager {
     });
   }
 
+  RetryCapsule _retryCapsule;
   Timer? _retryTicker;
   Timer? get retryTicker => _retryTicker;
   final SafeValueNotifier<int> cooldown = SafeValueNotifier<int>(
     cooldownStartValue,
   );
 
-  RetryCapsule _retryCapsule;
-  RetryCapsule get retryCapsule => _retryCapsule;
+  static final _instances = <String, RetryManager>{};
+
+  static RetryManager? dispose(String retryViewId) {
+    if (_instances.containsKey(retryViewId)) {
+      final disposedManager = _instances.remove(retryViewId);
+
+      printInfoInDebugMode(
+        'Disposed $RetryManager for $retryViewId',
+        tag: '$RetryManager',
+      );
+
+      return disposedManager;
+    } else {
+      return null;
+    }
+  }
 }
 
-const cooldownStartValue = 20;
+const cooldownStartValue = 5;
+const cooldownMaxValue = 100;
