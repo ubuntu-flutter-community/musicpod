@@ -10,6 +10,7 @@ import '../podcasts/data/podcast_update_capsule.dart';
 import '../podcasts/episodes_manager.dart';
 import '../podcasts/podcast_manager.dart';
 import '../radio/radio_manager.dart';
+import '../radio/station_manager.dart';
 
 @Injectable(cache: true)
 class SidebarAudiosManager {
@@ -71,17 +72,12 @@ class SidebarAudiosManager {
     String? podcastGenre,
   }) async {
     if (_radioManager.toggleStarStationCommand.value.contains(pageId)) {
-      final audio = await _radioManager
-          .getStationByUUIDCommand(pageId)
-          .runAsync();
+      final audio = await di<StationManager>(param1: pageId).command.runAsync();
       return audio == null ? [] : [audio];
     }
 
     if (_podcastManager.isPodcastSubscribed(pageId) || podcastGenre != null) {
-      return di<EpisodesManager>(
-        param1: pageId,
-        param2: podcastGenre,
-      ).command.runAsync();
+      return di<EpisodesManager>(param1: pageId).command.runAsync(podcastGenre);
     }
 
     if (_localAudioManager.isPlaylistSaved(pageId)) {

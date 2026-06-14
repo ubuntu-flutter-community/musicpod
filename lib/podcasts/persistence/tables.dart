@@ -20,7 +20,7 @@ class PodcastGenreTable extends Table {
 
 class PodcastGenreRelationTable extends Table {
   late final feedUrl = text().references(PodcastTable, #feedUrl)();
-  late final genreId = text().references(PodcastGenreTable, #id)();
+  late final genreId = integer().references(PodcastGenreTable, #id)();
 
   @override
   Set<Column<Object>> get primaryKey => {feedUrl, genreId};

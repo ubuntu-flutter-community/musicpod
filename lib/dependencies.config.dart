@@ -59,6 +59,7 @@ import 'radio/online_art_service.dart' as _i328;
 import 'radio/persistence/radio_dao.dart' as _i414;
 import 'radio/radio_manager.dart' as _i749;
 import 'radio/radio_service.dart' as _i811;
+import 'radio/station_manager.dart' as _i752;
 import 'search/search_manager.dart' as _i807;
 import 'settings/settings_manager.dart' as _i651;
 import 'settings/settings_service.dart' as _i763;
@@ -139,6 +140,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i688.LocalAudioDao>(
       () => _i688.LocalAudioDao(database: gh<_i115.Database>()),
+    );
+    gh.factoryParam<_i752.StationManager, String, dynamic>(
+      (uuid, _) => _i752.StationManager.create(
+        uuid: uuid,
+        radioService: gh<_i811.RadioService>(),
+      ),
     );
     gh.lazySingleton<_i763.SettingsService>(
       () => _i763.SettingsService(
@@ -225,6 +232,12 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioDao: gh<_i688.LocalAudioDao>(),
       ),
     );
+    gh.factoryParam<_i0.EpisodesManager, String, dynamic>(
+      (feedUrl, _) => _i0.EpisodesManager.create(
+        feedUrl: feedUrl,
+        podcastService: gh<_i721.PodcastService>(),
+      ),
+    );
     gh.factoryCachedParam<_i973.PodcastGenreManager, String, dynamic>(
       (feedUrl, _) => _i973.PodcastGenreManager(
         feedUrl: feedUrl,
@@ -268,13 +281,6 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioService: gh<_i438.LocalAudioService>(),
         radioService: gh<_i811.RadioService>(),
         playerService: gh<_i38.PlayerService>(),
-      ),
-    );
-    gh.factoryCachedParam<_i0.EpisodesManager, String, String?>(
-      (feedUrl, genre) => _i0.EpisodesManager(
-        feedUrl: feedUrl,
-        genre: genre,
-        podcastService: gh<_i721.PodcastService>(),
       ),
     );
     gh.singleton<_i351.PodcastManager>(

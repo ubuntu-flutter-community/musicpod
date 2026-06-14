@@ -161,3 +161,7 @@ dependency_overrides:
       url: https://github.com/Predidit/media-kit.git
       ref: 7d1e3f8116abce740bdf83dc5e85f37e89436db5
       path: ./libs/windows/media_kit_libs_windows_video
+  watch_it:
+    git:
+      url: https://github.com/Feichtmeier/watch_it
+      ref: 8992c04aef1703f81d90c59eed36bff83ce33edf

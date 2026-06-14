@@ -15,9 +15,10 @@ class PodcastReplayButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final podcast = watch(
-      di<EpisodesManager>(param1: feedUrl, param2: null).command,
-    ).value;
+    final podcast = watchValue(
+      (EpisodesManager m) => m.command,
+      param1: feedUrl,
+    );
 
     final isRunning = watchValue(
       (PlayerManager m) => m.toggleAudiosProgressCommand.isRunning,

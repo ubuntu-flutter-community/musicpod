@@ -26,7 +26,7 @@ import '../../extensions/taget_platform_x.dart';
 import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
 import '../../settings/settings_manager.dart';
-import '../radio_manager.dart';
+import '../station_manager.dart';
 import 'radio_connect_mixin.dart';
 import 'radio_history_list.dart';
 import 'radio_page_copy_histoy_button.dart';
@@ -39,17 +39,15 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
 
   @override
   Widget build(BuildContext context) {
-    callOnceAfterThisBuild(
-      (_) => di<RadioManager>().getStationByUUIDCommand(uuid).runRestricted(),
-    );
-
     registerHandler(
-      select: (RadioManager m) => m.getStationByUUIDCommand(uuid),
+      select: (StationManager m) => m.command,
+      param1: uuid,
       handler: (_, _, __) => RetryManager.dispose(uuid),
     );
 
     final stationResult = watchValue(
-      (RadioManager m) => m.getStationByUUIDCommand(uuid).results,
+      (StationManager m) => m.command.results,
+      param1: uuid,
     );
     final station = stationResult.data;
     final error = stationResult.error;
@@ -93,9 +91,9 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
               error: error,
               retryCapsule: RetryCapsule(
                 retryViewId: uuid,
-                onRetry: () => di<RadioManager>()
-                    .getStationByUUIDCommand(uuid)
-                    .runRestricted(immediatelyClearErrors: true),
+                onRetry: () => di<StationManager>(
+                  param1: uuid,
+                ).command.runRestricted(immediatelyClearErrors: true),
               ),
             );
           }

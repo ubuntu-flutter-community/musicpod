@@ -8,9 +8,9 @@ import '../../common/view/audio_fall_back_icon.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
-import '../../extensions/command_x.dart';
 import '../../player/player_manager.dart';
 import '../radio_manager.dart';
+import '../station_manager.dart';
 import 'station_page.dart';
 
 class StationCard extends StatelessWidget with WatchItMixin {
@@ -20,10 +20,6 @@ class StationCard extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    callOnceAfterThisBuild(
-      (_) => di<RadioManager>().getStationByUUIDCommand(uuid).runRestricted(),
-    );
-
     final isSelected = watchPropertyValue(
       (PlayerManager m) => m.audio?.uuid == uuid,
     );
@@ -32,8 +28,10 @@ class StationCard extends StatelessWidget with WatchItMixin {
     );
 
     final stationResult = watchValue(
-      (RadioManager m) => m.getStationByUUIDCommand(uuid).results,
+      (StationManager m) => m.command.results,
+      param1: uuid,
     );
+
     final station = stationResult.data;
     final error = stationResult.error;
 

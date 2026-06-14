@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../extensions/build_context_x.dart';
-import '../radio_manager.dart';
+import '../station_manager.dart';
 
 class StationTitle extends StatelessWidget with WatchItMixin {
   const StationTitle({super.key, required this.uuid});
@@ -12,7 +12,8 @@ class StationTitle extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final stationResults = watchValue(
-      (RadioManager m) => m.getStationByUUIDCommand(uuid).results,
+      (StationManager m) => m.command.results,
+      param1: uuid,
     );
     final station = stationResults.data;
 

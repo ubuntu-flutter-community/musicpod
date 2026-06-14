@@ -506,22 +506,17 @@ class PodcastDao {
           .insertOnConflictUpdate(
             PodcastGenreRelationTableCompanion.insert(
               feedUrl: feedUrl,
-              genreId: genreId
-                  .toString(), // Cast to String if relation table still expects a text ID
+              genreId: genreId,
             ),
           );
     });
   }
 
   Future<String?> getPodcastGenre(String feedUrl) async {
-    // The query structure remains almost identical, but Drift handles
-    // the underlying SQLite type conversion automatically.
     final query = _db.select(_db.podcastGenreRelationTable).join([
       innerJoin(
         _db.podcastGenreTable,
-        // If your relation table's genreId is now an integer, use .equalsExp() directly.
-        // If it's still a string, you may need to cast using .cast<String>() depending on your setup.
-        _db.podcastGenreTable.id.cast<String>().equalsExp(
+        _db.podcastGenreTable.id.equalsExp(
           _db.podcastGenreRelationTable.genreId,
         ),
       ),

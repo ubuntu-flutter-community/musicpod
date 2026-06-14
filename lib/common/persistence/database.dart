@@ -34,7 +34,7 @@ class Database extends _$Database {
   Database(super.e);
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 5;
 
   Future<void> reclaimDiskSpace() async {
     try {
@@ -68,6 +68,62 @@ class Database extends _$Database {
       if (from < 3) {
         await m.createTable(podcastGenreTable);
         await m.createTable(podcastGenreRelationTable);
+      }
+      if (from < 4) {
+        await m.deleteTable(podcastGenreRelationTable.actualTableName);
+        await m.createTable(podcastGenreRelationTable);
+      }
+      if (from < 5) {
+        await m.addColumn(starredStationTable, starredStationTable.changeUuid);
+        await m.addColumn(starredStationTable, starredStationTable.serverUuid);
+        await m.addColumn(starredStationTable, starredStationTable.name);
+        await m.addColumn(starredStationTable, starredStationTable.url);
+        await m.addColumn(starredStationTable, starredStationTable.urlResolved);
+        await m.addColumn(starredStationTable, starredStationTable.homepage);
+        await m.addColumn(starredStationTable, starredStationTable.favicon);
+        await m.addColumn(starredStationTable, starredStationTable.tags);
+        await m.addColumn(starredStationTable, starredStationTable.country);
+        await m.addColumn(starredStationTable, starredStationTable.countryCode);
+        await m.addColumn(starredStationTable, starredStationTable.state);
+        await m.addColumn(starredStationTable, starredStationTable.language);
+        await m.addColumn(
+          starredStationTable,
+          starredStationTable.languageCodes,
+        );
+        await m.addColumn(starredStationTable, starredStationTable.votes);
+        await m.addColumn(
+          starredStationTable,
+          starredStationTable.lastChangeTime,
+        );
+        await m.addColumn(starredStationTable, starredStationTable.codec);
+        await m.addColumn(starredStationTable, starredStationTable.bitrate);
+        await m.addColumn(starredStationTable, starredStationTable.hls);
+        await m.addColumn(starredStationTable, starredStationTable.lastCheckOk);
+        await m.addColumn(
+          starredStationTable,
+          starredStationTable.lastCheckTime,
+        );
+        await m.addColumn(
+          starredStationTable,
+          starredStationTable.lastCheckOkTime,
+        );
+        await m.addColumn(
+          starredStationTable,
+          starredStationTable.lastLocalCheckTime,
+        );
+        await m.addColumn(
+          starredStationTable,
+          starredStationTable.clickTimestamp,
+        );
+        await m.addColumn(starredStationTable, starredStationTable.clickCount);
+        await m.addColumn(starredStationTable, starredStationTable.clickTrend);
+        await m.addColumn(starredStationTable, starredStationTable.sslError);
+        await m.addColumn(starredStationTable, starredStationTable.geoLat);
+        await m.addColumn(starredStationTable, starredStationTable.geoLong);
+        await m.addColumn(
+          starredStationTable,
+          starredStationTable.hasExtendedInfo,
+        );
       }
     },
   );

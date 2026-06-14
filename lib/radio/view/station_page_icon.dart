@@ -6,8 +6,7 @@ import '../../common/view/safe_network_image.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/command_x.dart';
-import '../radio_manager.dart';
+import '../station_manager.dart';
 
 class StationPageIcon extends StatelessWidget with WatchItMixin {
   const StationPageIcon({
@@ -21,14 +20,10 @@ class StationPageIcon extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    callAfterEveryBuild((_, _) {
-      di<RadioManager>().getStationByUUIDCommand(uuid).runRestricted();
-    });
-
     final stationResults = watchValue(
-      (RadioManager m) => m.getStationByUUIDCommand(uuid).results,
+      (StationManager m) => m.command.results,
+      param1: uuid,
     );
-
     final station = stationResults.data;
 
     final fallBackColor = getAlphabetColor(uuid);

@@ -87,10 +87,7 @@ class PodcastManager {
           updateProgress: handle.updateProgress,
         );
         for (final feedUrl in updates) {
-          await di<EpisodesManager>(
-            param1: feedUrl,
-            param2: null,
-          ).command.runAsync();
+          await di<EpisodesManager>(param1: feedUrl).command.runAsync();
         }
         return updates;
       }, initialValue: _podcastService.podcastUpdates);
@@ -128,7 +125,7 @@ class PodcastManager {
       feedUrl: param.feedUrl,
       ascending: param.ascending,
     );
-    di<EpisodesManager>(param1: param.feedUrl, param2: null).command.run();
+    di<EpisodesManager>(param1: param.feedUrl).command.run();
 
     return _podcastService.ascendingPodcasts;
   }, initialValue: _podcastService.ascendingPodcasts);
