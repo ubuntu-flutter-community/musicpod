@@ -79,32 +79,21 @@ class LocalAudioManager {
           ));
         }
 
-        return _localAudioService.getCachedAlbum(albumId) ??
-            _localAudioService.findAlbum(
-              albumId,
-              audioFilter ?? AudioFilter.trackNumber,
-            );
+        return _localAudioService.findAlbum(
+          albumId,
+          audioFilter ?? AudioFilter.trackNumber,
+        );
       }, initialValue: null),
     );
   }
 
-  List<Audio>? getCachedTitlesOfArtist(String artist) =>
-      _localAudioService.getCachedTitlesOfArtist(artist);
   Future<List<Audio>?> findTitlesOfArtist(
     String artist, [
     AudioFilter audioFilter = AudioFilter.album,
   ]) async => _localAudioService.findTitlesOfArtist(artist, audioFilter);
 
-  List<int>? getCachedAlbumIDsOfGenre(String genre) =>
-      _localAudioService.getCachedAlbumIDsOfGenre(genre);
-  Future<List<int>?> findAlbumsIDOfGenre(String genre) async =>
-      _localAudioService.findAlbumIDsOfGenre(genre);
-
-  List<Audio> findUniqueAlbumAudios(List<Audio> audios) =>
-      _localAudioService.findUniqueAlbumAudios(audios);
-
-  List<int>? findAllAlbumIDs({String? artist, bool clean = true}) =>
-      _localAudioService.findAllAlbumIDs(artist: artist, clean: clean);
+  Future<List<int>> findAlbumIDsOfArtist(String artist) async =>
+      _localAudioService.findAlbumIDsOfArtist(artist);
 
   late final Command<void, bool> areTracksSyncedCommand =
       Command.createAsyncNoParam(
@@ -120,9 +109,7 @@ class LocalAudioManager {
   initAudiosCommand = Command.createAsyncWithProgress((param, handle) async {
     if (param.forceInit) {
       clear(
-        clearAlbumContentCache: true,
-        clearTitlesOfArtistCache: true,
-        clearAlbumIDsOfGenreCache: true,
+        clearFindAlbumsCommands: true,
         clearPlaylistContents: true,
         clearLikedAudiosCommand: true,
         clearPlaylistIDCommands: true,
@@ -235,21 +222,16 @@ class LocalAudioManager {
       }, initialValue: _localAudioService.pinnedAlbumIDs);
 
   void clear({
-    bool clearAlbumContentCache = true,
-    bool clearTitlesOfArtistCache = true,
-    bool clearAlbumIDsOfGenreCache = true,
     bool clearPlaylistContents = true,
+    bool clearFindAlbumsCommands = true,
     bool clearPlaylistIDCommands = false,
     bool clearPinnedAlbumIDsCommands = false,
     bool clearLikedAudiosCommand = false,
   }) {
     _localAudioService.clearContentCaches(
-      clearAlbumContentCache: clearAlbumContentCache,
-      clearTitlesOfArtistCache: clearTitlesOfArtistCache,
-      clearAlbumIDsOfGenreCache: clearAlbumIDsOfGenreCache,
       clearPlaylistContents: clearPlaylistContents,
     );
-    if (clearAlbumContentCache) {
+    if (clearFindAlbumsCommands) {
       _findAlbumCommands.clear();
     }
     if (clearPlaylistContents) {

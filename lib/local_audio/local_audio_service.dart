@@ -47,32 +47,6 @@ class LocalAudioService {
   List<int>? _allAlbumIDs;
   List<int>? get allAlbumIDs => _allAlbumIDs;
 
-  List<int>? findAllAlbumIDs({String? artist, bool clean = true}) {
-    if (_audios == null) return null;
-
-    final theAudios = artist == null || artist.isEmpty
-        ? _audios!
-        : _audios!.where((e) => e.artist == artist);
-    final albumsResult = <int>[];
-    for (var a in theAudios.sorted(
-      (a, b) => a.album == null || b.album == null
-          ? 0
-          : compareNatural(a.album!.toLowerCase(), b.album!.toLowerCase()),
-    )) {
-      final id = a.albumDbId;
-      if (id != null && albumsResult.none((e) => e == id)) {
-        albumsResult.add(id);
-      }
-    }
-
-    if (clean) {
-      _allAlbumIDs = albumsResult;
-      return _allAlbumIDs;
-    } else {
-      return albumsResult;
-    }
-  }
-
   int? findAlbumId({required String artist, required String album}) {
     if (_audios == null) return null;
     return _audios!
@@ -86,72 +60,21 @@ class LocalAudioService {
   String? findArtistOfAlbum(int albumId) =>
       _audios?.firstWhereOrNull((a) => a.albumDbId == albumId)?.artist;
 
-  List<Audio>? getCachedAlbum(int albumId) => _albumContentCache[albumId];
-  final Map<int, List<Audio>?> _albumContentCache = {};
   Future<List<Audio>?> findAlbum(
     int albumId, [
     AudioFilter audioFilter = AudioFilter.trackNumber,
-  ]) async {
-    final cached = _albumContentCache[albumId];
-    if (cached != null) return cached;
+  ]) => _dao.loadAlbum(albumId);
 
-    final list = await _dao.loadAlbum(albumId);
-
-    _albumContentCache[albumId] = list;
-    return list;
-  }
-
-  final Map<String, List<Audio>?> _titlesOfArtistCache = {};
-  List<Audio>? getCachedTitlesOfArtist(String artist) =>
-      _titlesOfArtistCache[artist];
+  Future<List<int>> findAlbumIDsOfArtist(String artist) async =>
+      _dao.findAlbumIDsOfArtist(artist);
 
   Future<List<Audio>?> findTitlesOfArtist(
     String artist, [
     AudioFilter audioFilter = AudioFilter.album,
-  ]) async {
-    final cached = _titlesOfArtistCache[artist];
-    if (cached != null) return cached;
+  ]) => _dao.loadTitlesOfArtist(artist, audioFilter);
 
-    final list = await _dao.loadTitlesOfArtist(artist, audioFilter);
-
-    _titlesOfArtistCache[artist] = list;
-    return list;
-  }
-
-  List<int>? getCachedAlbumIDsOfGenre(String genre) =>
-      _albumIDsOfGenreCache[genre];
-
-  final Map<String, List<int>?> _albumIDsOfGenreCache = {};
-  Future<List<int>?> findAlbumIDsOfGenre(String genre) async {
-    if (!_initialized) return null;
-    final cached = _albumIDsOfGenreCache[genre];
-    if (cached != null) return cached;
-
-    final albumIDsOfGenre = <int>[];
-    if (_audios != null) {
-      for (var a in _audios!) {
-        if (a.genre?.trim().isNotEmpty == true &&
-            a.genre == genre &&
-            a.albumDbId != null &&
-            albumIDsOfGenre.none((e) => e == a.albumDbId)) {
-          albumIDsOfGenre.add(a.albumDbId!);
-        }
-      }
-    }
-
-    _albumIDsOfGenreCache[genre] = albumIDsOfGenre;
-    return albumIDsOfGenre;
-  }
-
-  List<Audio> findUniqueAlbumAudios(List<Audio> audios) {
-    final albumAudios = <Audio>[];
-    for (var audio in audios) {
-      if (albumAudios.none((a) => a.albumDbId == audio.albumDbId)) {
-        albumAudios.add(audio);
-      }
-    }
-    return albumAudios;
-  }
+  Future<List<int>?> findAlbumIDsOfGenre(String genre) =>
+      _dao.findAlbumIDsOfGenre(genre);
 
   LocalSearchResult? search(String? query) {
     if (query == null) return null;
@@ -285,9 +208,7 @@ class LocalAudioService {
     _audios = await _dao.loadAllTracks();
     _allArtists = await _dao.loadAllArtists();
     _allGenres = await _dao.loadAllGenres();
-
-    // Build album IDs
-    findAllAlbumIDs();
+    _allAlbumIDs = await _dao.loadAllAlbumIDs();
   }
 
   Future<void> _loadPlaylistsAndPinsAndBuildCaches() async {
@@ -305,43 +226,12 @@ class LocalAudioService {
     _playlistIDs.clear();
     _pinnedAlbumIDs.clear();
     _likedAudios.clear();
-    clearContentCaches(
-      clearAlbumContentCache: true,
-      clearTitlesOfArtistCache: true,
-      clearAlbumIDsOfGenreCache: true,
-      clearPlaylistContents: true,
-    );
+    clearContentCaches(clearPlaylistContents: true);
     // then clear all related database tables:
     await _dao.wipeAllLocalAudioTables();
   }
 
-  void clearContentCaches({
-    required bool clearAlbumContentCache,
-    required bool clearTitlesOfArtistCache,
-    required bool clearAlbumIDsOfGenreCache,
-    required bool clearPlaylistContents,
-  }) {
-    if (clearAlbumContentCache) {
-      printInfoInDebugMode(
-        'Clearing album content cache',
-        tag: '$LocalAudioService',
-      );
-      _albumContentCache.clear();
-    }
-    if (clearTitlesOfArtistCache) {
-      printInfoInDebugMode(
-        'Clearing titlesOfArtist cache',
-        tag: '$LocalAudioService',
-      );
-      _titlesOfArtistCache.clear();
-    }
-    if (clearAlbumIDsOfGenreCache) {
-      printInfoInDebugMode(
-        'Clearing albumIDsOfGenre cache',
-        tag: '$LocalAudioService',
-      );
-      _albumIDsOfGenreCache.clear();
-    }
+  void clearContentCaches({required bool clearPlaylistContents}) {
     if (clearPlaylistContents) {
       printInfoInDebugMode(
         'Clearing playlists cache',
@@ -509,8 +399,6 @@ class LocalAudioService {
       audios: localAudios,
       external: external,
     );
-
-    findAllAlbumIDs(clean: true);
   }
 
   Future<void> removePlaylist(String id) async {
@@ -710,25 +598,6 @@ class LocalAudioService {
         if (index != null && index >= 0) {
           _audios?[index] = updated;
           updatedAudio = updated;
-
-          if (old.artist != capsule.artist || old.album != capsule.album) {
-            _albumContentCache.remove(old.albumDbId);
-            if (updated.albumDbId != null) {
-              await findAlbum(updated.albumDbId!);
-            }
-          }
-          if (old.artist != capsule.artist) {
-            _titlesOfArtistCache.remove(old.artist);
-            if (capsule.artist != null) {
-              await findTitlesOfArtist(capsule.artist!);
-            }
-          }
-          if (old.genre != capsule.genre) {
-            _albumIDsOfGenreCache.remove(old.genre);
-            if (capsule.genre != null) {
-              await findAlbumIDsOfGenre(capsule.genre!);
-            }
-          }
         }
       }
     } on Exception catch (e, s) {

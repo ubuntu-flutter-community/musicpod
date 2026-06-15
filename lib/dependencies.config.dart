@@ -33,6 +33,8 @@ import 'expose/expose_service.dart' as _i820;
 import 'expose/lastfm_service.dart' as _i820;
 import 'expose/listenbrainz_service.dart' as _i348;
 import 'external_path/external_path_service.dart' as _i551;
+import 'local_audio/album_ids_of_artist_manager.dart' as _i234;
+import 'local_audio/album_ids_of_genre_manager.dart' as _i75;
 import 'local_audio/change_local_meta_data_manager.dart' as _i46;
 import 'local_audio/local_audio_manager.dart' as _i688;
 import 'local_audio/local_audio_service.dart' as _i438;
@@ -233,8 +235,8 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioDao: gh<_i688.LocalAudioDao>(),
       ),
     );
-    gh.factoryParam<_i0.EpisodesManager, String, dynamic>(
-      (feedUrl, _) => _i0.EpisodesManager.create(
+    gh.factoryCachedParam<_i0.EpisodesManager, String, dynamic>(
+      (feedUrl, _) => _i0.EpisodesManager(
         feedUrl: feedUrl,
         podcastService: gh<_i721.PodcastService>(),
       ),
@@ -256,6 +258,12 @@ extension GetItInjectableX on _i174.GetIt {
         settingsService: gh<_i763.SettingsService>(),
         gitHub: gh<_i535.GitHub>(),
         localAudioService: gh<_i438.LocalAudioService>(),
+      ),
+    );
+    gh.factoryCachedParam<_i75.AlbumIDsOfGenreManager, String, dynamic>(
+      (genre, _) => _i75.AlbumIDsOfGenreManager(
+        genre: genre,
+        service: gh<_i438.LocalAudioService>(),
       ),
     );
     gh.factoryCachedParam<
@@ -356,6 +364,12 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioManager: gh<_i688.LocalAudioManager>(),
         radioManager: gh<_i749.RadioManager>(),
         playerManager: gh<_i444.PlayerManager>(),
+      ),
+    );
+    gh.factoryCachedParam<_i234.AlbumIDsOfArtistManager, String, dynamic>(
+      (artist, _) => _i234.AlbumIDsOfArtistManager(
+        artist: artist,
+        service: gh<_i688.LocalAudioManager>(),
       ),
     );
     return this;

@@ -1,90 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../common/data/audio.dart';
 import '../../common/view/round_image_container.dart';
 import '../../extensions/build_context_x.dart';
-import '../local_audio_manager.dart';
+import '../album_ids_of_artist_manager.dart';
 import 'local_cover.dart';
 
-class ArtistImage extends StatefulWidget {
-  const ArtistImage({super.key, required this.artist, required this.dimension});
-
+class ArtistImage extends StatelessWidget with WatchItMixin {
+  const ArtistImage({required this.artist, required this.dimension});
   final String artist;
   final double dimension;
 
   @override
-  State<ArtistImage> createState() => _ArtistImageState();
-}
-
-class _ArtistImageState extends State<ArtistImage> {
-  late Future<List<Audio>?> _artistAudios;
-
-  @override
-  void initState() {
-    super.initState();
-    final manager = di<LocalAudioManager>();
-    final cachedTitlesOfArtist = manager.getCachedTitlesOfArtist(widget.artist);
-    _artistAudios = cachedTitlesOfArtist != null
-        ? Future.value(cachedTitlesOfArtist)
-        : manager.findTitlesOfArtist(widget.artist);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final manager = di<LocalAudioManager>();
-
-    final cachedTitlesOfArtist = manager.getCachedTitlesOfArtist(widget.artist);
-    if (cachedTitlesOfArtist != null) {
-      return _ArtistImage(
-        artist: widget.artist,
-        artistAudios: cachedTitlesOfArtist,
-        dimension: widget.dimension,
-      );
-    }
-
-    return FutureBuilder(
-      future: _artistAudios,
-      builder: (context, snapshot) => _ArtistImage(
-        artistAudios: snapshot.data ?? [],
-        dimension: widget.dimension,
-        artist: widget.artist,
-      ),
-    );
-  }
-}
-
-class _ArtistImage extends StatelessWidget {
-  const _ArtistImage({
-    required this.artist,
-    required this.artistAudios,
-    required this.dimension,
-  });
-  final String artist;
-  final List<Audio> artistAudios;
-  final double dimension;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = context.theme;
-    return RoundImageContainer(
-      dimension: dimension,
-      backgroundColor: theme.cardColor,
-      images: artistAudios.isEmpty
-          ? []
-          : di<LocalAudioManager>()
-                .findUniqueAlbumAudios(artistAudios)
-                .where((e) => e.albumDbId != null && e.path != null)
-                .map(
-                  (e) => LocalCover(
-                    albumId: e.albumDbId!,
-                    fallback: ColoredBox(color: theme.cardColor),
-                    fit: BoxFit.fill,
-                    dimension: dimension,
-                  ),
-                )
-                .toList(),
-      fallBackText: artist,
-    );
-  }
+  Widget build(BuildContext context) => RoundImageContainer(
+    dimension: dimension,
+    backgroundColor: context.theme.cardColor,
+    images:
+        watchValue((AlbumIDsOfArtistManager m) => m.command, param1: artist)
+            ?.map(
+              (e) => LocalCover(
+                albumId: e,
+                fallback: ColoredBox(color: context.theme.cardColor),
+                fit: BoxFit.fill,
+                dimension: dimension,
+              ),
+            )
+            .toList() ??
+        [],
+    fallBackText: artist,
+  );
 }
