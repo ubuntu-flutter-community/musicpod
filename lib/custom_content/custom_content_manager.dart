@@ -80,10 +80,10 @@ class CustomContentManager {
 
   bool get isExportingPlaylistsAndPinnedAlbumsToM3UsNeeded =>
       _localAudioService.playlistIDs.isNotEmpty ||
-      _localAudioService.pinnedAlbums.isNotEmpty;
+      _localAudioService.pinnedAlbumIDs.isNotEmpty;
   Future<bool> exportPlaylistsAndPinnedAlbumsToM3Us() async {
     final albums = <({String id, List<Audio> audios})>[];
-    for (var e in _localAudioService.pinnedAlbums) {
+    for (var e in _localAudioService.pinnedAlbumIDs) {
       albums.add((
         id: e.toString(),
         audios: await _localAudioService.findAlbum(e) ?? [],

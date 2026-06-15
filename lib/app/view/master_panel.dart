@@ -86,7 +86,7 @@ class PlaylistList extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final playlistIDs = watchValue(
-      (LocalAudioManager m) => m.allPlaylistsCommand,
+      (LocalAudioManager m) => m.playlistIDsCommand,
     );
     final masterItems = createPlaylistMasterItems(playlistIDs);
     final selectedPageId = watchPropertyValue(

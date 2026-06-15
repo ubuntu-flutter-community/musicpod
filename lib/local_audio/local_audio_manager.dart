@@ -16,7 +16,7 @@ class LocalAudioManager {
   LocalAudioManager({required LocalAudioService localAudioService})
     : _localAudioService = localAudioService {
     togglePinnedAlbumCommand.run();
-    allPlaylistsCommand.run();
+    playlistIDsCommand.run();
     likedAudiosCommand.run();
   }
 
@@ -119,7 +119,15 @@ class LocalAudioManager {
   >
   initAudiosCommand = Command.createAsyncWithProgress((param, handle) async {
     if (param.forceInit) {
-      _reset();
+      clear(
+        clearAlbumContentCache: true,
+        clearTitlesOfArtistCache: true,
+        clearAlbumIDsOfGenreCache: true,
+        clearPlaylistContents: true,
+        clearLikedAudiosCommand: true,
+        clearPlaylistIDCommands: true,
+        clearPinnedAlbumIDsCommands: true,
+      );
     }
 
     final localAudioResult = await _localAudioService.init(
@@ -174,16 +182,15 @@ class LocalAudioManager {
         id,
         () => Command.createAsync((param) async {
           await _localAudioService.createOrChangePlaylist(param);
-          await allPlaylistsCommand.runAsync();
+          await playlistIDsCommand.runAsync();
           return _localAudioService.getPlaylistById(id);
         }, initialValue: _localAudioService.getPlaylistById(id)),
       );
 
-  late final Command<void, List<String>> allPlaylistsCommand =
+  late final Command<void, List<String>> playlistIDsCommand =
       Command.createAsyncNoParam(() async {
-        if (_localAudioService.playlistIDs.isEmpty) {
-          await _localAudioService.loadPlaylists();
-        }
+        await _localAudioService.loadPlaylistIDs();
+
         return _localAudioService.playlistIDs;
       }, initialValue: _localAudioService.playlistIDs);
 
@@ -202,7 +209,7 @@ class LocalAudioManager {
           external: true,
         ),
       );
-      await allPlaylistsCommand.runAsync();
+      await playlistIDsCommand.runAsync();
     }
   });
 
@@ -213,26 +220,50 @@ class LocalAudioManager {
   late final Command<int?, List<int>> togglePinnedAlbumCommand =
       Command.createAsync((id) async {
         if (id != null) {
-          if (_localAudioService.pinnedAlbums.contains(id)) {
+          if (_localAudioService.pinnedAlbumIDs.contains(id)) {
             await _localAudioService.unpinAlbum(id);
           } else {
             await _localAudioService.pinAlbum(id);
           }
         }
 
-        if (_localAudioService.pinnedAlbums.isEmpty) {
+        if (_localAudioService.pinnedAlbumIDs.isEmpty) {
           await _localAudioService.loadPinnedAlbums();
         }
 
-        return _localAudioService.pinnedAlbums;
-      }, initialValue: _localAudioService.pinnedAlbums);
+        return _localAudioService.pinnedAlbumIDs;
+      }, initialValue: _localAudioService.pinnedAlbumIDs);
 
-  void _reset() {
-    likedAudiosCommand.value = [];
-    allPlaylistsCommand.value = [];
-    togglePinnedAlbumCommand.value = [];
-    _findAlbumCommands.clear();
-    _playlistCommands.clear();
+  void clear({
+    bool clearAlbumContentCache = true,
+    bool clearTitlesOfArtistCache = true,
+    bool clearAlbumIDsOfGenreCache = true,
+    bool clearPlaylistContents = true,
+    bool clearPlaylistIDCommands = false,
+    bool clearPinnedAlbumIDsCommands = false,
+    bool clearLikedAudiosCommand = false,
+  }) {
+    _localAudioService.clearContentCaches(
+      clearAlbumContentCache: clearAlbumContentCache,
+      clearTitlesOfArtistCache: clearTitlesOfArtistCache,
+      clearAlbumIDsOfGenreCache: clearAlbumIDsOfGenreCache,
+      clearPlaylistContents: clearPlaylistContents,
+    );
+    if (clearAlbumContentCache) {
+      _findAlbumCommands.clear();
+    }
+    if (clearPlaylistContents) {
+      _playlistCommands.clear();
+    }
+    if (clearLikedAudiosCommand) {
+      likedAudiosCommand.value = [];
+    }
+    if (clearPlaylistIDCommands) {
+      playlistIDsCommand.value = [];
+    }
+    if (clearPinnedAlbumIDsCommands) {
+      togglePinnedAlbumCommand.value = [];
+    }
     importExternalPlaylistsCommand.value = [];
   }
 }

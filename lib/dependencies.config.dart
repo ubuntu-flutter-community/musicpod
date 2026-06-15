@@ -159,8 +159,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i57.LocalCoverService>(
       () => _i57.LocalCoverService(dao: gh<_i688.LocalAudioDao>()),
     );
-    gh.factoryCachedParam<_i569.RetryManager, _i327.RetryCapsule, dynamic>(
-      (retryCapsule, _) => _i569.RetryManager(retryCapsule: retryCapsule),
+    gh.factoryParam<_i569.RetryManager, _i327.RetryCapsule, dynamic>(
+      (retryCapsule, _) =>
+          _i569.RetryManager.create(retryCapsule: retryCapsule),
     );
     gh.lazySingleton<_i616.DownloadService>(
       () => _i616.DownloadService(

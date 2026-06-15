@@ -5,7 +5,11 @@ import 'logging.dart';
 class KeepAliveRegistry<I, T> {
   final _instances = <I, T>{};
 
-  void register(I id, T instance, {Duration? autoDisposeAfter}) {
+  void register({
+    required I id,
+    required T instance,
+    Duration? autoDisposeAfter,
+  }) {
     printInfoInDebugMode('Instance created for id: $id', tag: '$T');
     _instances[id] = instance;
     if (autoDisposeAfter != null) {

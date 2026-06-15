@@ -26,6 +26,9 @@ class LocalCoverManager {
         ),
       );
 
+  void clear({List<int> exceptions = const []}) => _getCoverCommands
+      .removeWhere((albumId, _) => !exceptions.contains(albumId));
+
   bool shouldRequestCover(int? albumId) {
     if (albumId == null) return false;
     final command = getCoverCommand(albumId);

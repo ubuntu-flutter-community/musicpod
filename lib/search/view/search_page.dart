@@ -40,8 +40,12 @@ class SearchPage extends StatelessWidget with WatchItMixin {
     );
 
     registerHandler(
-      select: (SearchManager m) => m.searchCommand,
-      handler: (_, _, __) => RetryManager.dispose(PageIDs.searchPage),
+      select: (SearchManager m) => m.searchCommand.results,
+      handler: (_, results, __) {
+        if (results.isSuccess) {
+          RetryManager.dispose(PageIDs.searchPage);
+        }
+      },
     );
 
     return Scaffold(

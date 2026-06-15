@@ -12,6 +12,7 @@ import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
+import '../../local_audio/local_audio_clear_handler.dart';
 import '../../player/player_manager.dart';
 import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
@@ -27,7 +28,8 @@ import 'podcast_page_header.dart';
 import 'podcast_page_search_field.dart';
 import 'sliver_podcast_page_list.dart';
 
-class PodcastPage extends StatelessWidget with WatchItMixin {
+class PodcastPage extends StatelessWidget
+    with WatchItMixin, LocalAudioClearHandler {
   const PodcastPage({super.key, this.imageUrl, required this.feedUrl});
 
   final String feedUrl;
@@ -36,6 +38,8 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     onDispose(di<PodcastCleanManager>().command);
+
+    clearLocalAudioCaches();
 
     callOnceAfterThisBuild(
       (_) => di<PodcastManager>().manageUpdatesCommand.run(

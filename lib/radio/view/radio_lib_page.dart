@@ -6,6 +6,7 @@ import '../../common/view/default_page_body.dart';
 import '../../common/view/error_retry_body.dart';
 import '../../common/view/progress.dart';
 import '../../extensions/command_x.dart';
+import '../../local_audio/local_audio_clear_handler.dart';
 import '../../settings/view/settings_action.dart';
 import '../radio_manager.dart';
 import 'blocked_heariny_history_list.dart';
@@ -16,11 +17,13 @@ import 'radio_lib_page_control_panel.dart';
 import 'starred_stations_grid.dart';
 
 class RadioLibPage extends StatelessWidget
-    with WatchItMixin, RadioConnectMixin {
+    with WatchItMixin, RadioConnectMixin, LocalAudioClearHandler {
   const RadioLibPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    clearLocalAudioCaches();
+
     callOnceAfterThisBuild(
       (_) => di<RadioManager>().connectCommand.runRestricted(
         immediatelyClearErrors: false,

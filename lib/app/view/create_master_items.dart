@@ -34,7 +34,7 @@ Iterable<MasterItem> getAllMasterItems(
   RadioManager radioManager,
 ) => [
   ...permanentMasterItems,
-  ...createPlaylistMasterItems(localAudioManager.allPlaylistsCommand.value),
+  ...createPlaylistMasterItems(localAudioManager.playlistIDsCommand.value),
   ...createPodcastMasterItems(podcastManager.togglePodcastCommand.value),
   ...createPinnedAlbumsMasterItems(
     localAudioManager.togglePinnedAlbumCommand.value,

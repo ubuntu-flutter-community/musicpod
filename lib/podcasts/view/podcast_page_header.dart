@@ -37,9 +37,7 @@ class PodcastPageHeader extends StatelessWidget with WatchItMixin {
 
     final genre = feedUrl == null
         ? null
-        : watch(
-            di<PodcastGenreManager>(param1: feedUrl).findPodcastGenreCommand,
-          ).value;
+        : watchValue((PodcastGenreManager m) => m.findCommand, param1: feedUrl);
 
     return AudioPageHeader(
       image: PodcastPageImage(

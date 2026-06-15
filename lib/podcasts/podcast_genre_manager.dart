@@ -7,25 +7,23 @@ class PodcastGenreManager {
   PodcastGenreManager({
     @factoryParam required String feedUrl,
     required PodcastService podcastService,
-  }) : _feedUrl = feedUrl,
-       _podcastService = podcastService {
-    findPodcastGenreCommand.run();
+  }) {
+    findCommand = Command.createAsyncNoParam(
+      () => podcastService.findPodcastGenre(feedUrl),
+      initialValue: null,
+    );
+
+    updateCommand = Command.createAsyncNoResult(
+      (param) => podcastService.addPodcastGenre(
+        feedUrl: feedUrl,
+        genreName: param.genre,
+      ),
+    );
+
+    findCommand.run();
   }
 
-  final String _feedUrl;
-  final PodcastService _podcastService;
+  late final Command<void, String?> findCommand;
 
-  late final Command<void, String?> findPodcastGenreCommand =
-      Command.createAsyncNoParam(
-        () => _podcastService.findPodcastGenre(_feedUrl),
-        initialValue: null,
-      );
-
-  late final Command<({String genre}), void> updatePodcastGenreCommand =
-      Command.createAsyncNoResult(
-        (param) => _podcastService.addPodcastGenre(
-          feedUrl: _feedUrl,
-          genreName: param.genre,
-        ),
-      );
+  late final Command<({String genre}), void> updateCommand;
 }
