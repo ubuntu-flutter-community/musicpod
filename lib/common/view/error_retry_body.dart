@@ -25,9 +25,10 @@ class ErrorRetryBody extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final cooldownValue = watch(
-      di<RetryManager>(param1: retryCapsule).cooldown,
-    ).value;
+    final cooldownValue = watchValue(
+      (RetryManager m) => m.cooldown,
+      param1: retryCapsule,
+    );
 
     final errorText = Text(
       this.errorText ?? error.localizedErrorMessage(context.l10n),

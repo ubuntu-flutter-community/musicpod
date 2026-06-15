@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:podcast_search/podcast_search.dart';
 
 import '../l10n/app_localizations.dart';
@@ -32,6 +34,7 @@ extension ObjectX on Object {
     SearchTimeoutException() => l10n.searchTimeoutMessage,
     FetchOnlineLyricsTimeoutException() =>
       l10n.fetchingLyricsOnlineTimeoutMessage,
+    SocketException() => l10n.lookUpRadioBrowserHostsFailed,
     _ => this.toString(),
   };
 }

@@ -8,7 +8,7 @@ import 'radio_service.dart';
 @injectable
 class StationManager {
   StationManager._({required String uuid, required RadioService radioService}) {
-    _registry.register(uuid, this);
+    _registry.register(id: uuid, instance: this);
     command = Command.createAsyncNoParam(
       () => radioService.getAudioByUUID(uuid),
       initialValue: null,

@@ -87,9 +87,7 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
     final isRunning = audiosResults.isRunning;
     final localAudioManager = di<LocalAudioManager>();
 
-    final playlists = watchValue(
-      (LocalAudioManager m) => m.allPlaylistsCommand,
-    );
+    final playlists = watchValue((LocalAudioManager m) => m.playlistIDsCommand);
     final index = watchPropertyValue((SettingsManager m) => m.localAudioindex);
     final localAudioView = LocalAudioView.values[index];
 

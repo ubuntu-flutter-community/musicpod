@@ -21,6 +21,7 @@ class PodcastCard extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final feedUrl = item.feedUrl;
+    final genre = item.primaryGenreName ?? item.genre?.firstOrNull?.name;
 
     return AudioCard(
       key: ValueKey(feedUrl),
@@ -37,7 +38,7 @@ class PodcastCard extends StatelessWidget with WatchItMixin {
           ? null
           : () => di<SidebarAudiosManager>().playAudiosByIdCommand.run((
               pageId: feedUrl,
-              genre: item.primaryGenreName,
+              genre: genre,
             )),
       onTap: () {
         if (feedUrl == null) {
@@ -45,10 +46,10 @@ class PodcastCard extends StatelessWidget with WatchItMixin {
 
           return;
         } else {
-          if ((item.primaryGenreName ?? item.genre?.firstOrNull) != null) {
+          if (genre != null) {
             di<PodcastGenreManager>(
               param1: feedUrl,
-            ).updatePodcastGenreCommand.run((genre: item.primaryGenreName!));
+            ).updateCommand.run((genre: genre));
           }
         }
         di<RoutingManager>().push(

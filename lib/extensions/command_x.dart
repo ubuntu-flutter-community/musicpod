@@ -8,6 +8,9 @@ extension CommandX<TParam, TResult> on Command<TParam, TResult> {
   void runRestricted({
     TParam? param,
     bool immediatelyClearErrors = false,
+    // TODO: this is not good as it does not work for example for collections.
+    // replace with callback or
+    // remove this extension and move decisions back to the caller
     RunWhen runWhen = RunWhen.hasNoValueAndNoErrors,
   }) {
     if (immediatelyClearErrors) {

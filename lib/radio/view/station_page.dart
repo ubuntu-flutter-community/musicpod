@@ -23,6 +23,7 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/command_x.dart';
 import '../../extensions/taget_platform_x.dart';
+import '../../local_audio/local_audio_clear_handler.dart';
 import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
 import '../../settings/settings_manager.dart';
@@ -32,13 +33,16 @@ import 'radio_history_list.dart';
 import 'radio_page_copy_histoy_button.dart';
 import 'radio_page_tag_bar.dart';
 
-class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
+class StationPage extends StatelessWidget
+    with WatchItMixin, RadioConnectMixin, LocalAudioClearHandler {
   const StationPage({super.key, required this.uuid});
 
   final String uuid;
 
   @override
   Widget build(BuildContext context) {
+    clearLocalAudioCaches();
+
     registerHandler(
       select: (StationManager m) => m.command,
       param1: uuid,

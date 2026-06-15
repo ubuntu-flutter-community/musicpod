@@ -359,6 +359,11 @@ class LocalAudioDao {
     return _db.select(_db.playlistTable).get();
   }
 
+  Future<List<String>> loadAllPlaylistIDs() async {
+    final rows = await _db.select(_db.playlistTable).get();
+    return rows.map((r) => r.name).toList();
+  }
+
   Future<List<Audio>> loadPlaylistTracks(int playlistId) async {
     final trackRows = await (_db.select(_db.playlistTrackTable).join([
       innerJoin(
@@ -464,7 +469,7 @@ class LocalAudioDao {
     }
   }
 
-  Future<List<int>> loadPinnedAlbums() async {
+  Future<List<int>> loadPinnedAlbumIDs() async {
     final rows = await (_db.select(
       _db.albumTable,
     )..where((t) => t.pinned.equals(true))).get();

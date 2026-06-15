@@ -86,19 +86,18 @@ class LocalAudioService {
   String? findArtistOfAlbum(int albumId) =>
       _audios?.firstWhereOrNull((a) => a.albumDbId == albumId)?.artist;
 
-  List<Audio>? getCachedAlbum(int albumId) => _albumCache[albumId];
-
-  final Map<int, List<Audio>?> _albumCache = {};
+  List<Audio>? getCachedAlbum(int albumId) => _albumContentCache[albumId];
+  final Map<int, List<Audio>?> _albumContentCache = {};
   Future<List<Audio>?> findAlbum(
     int albumId, [
     AudioFilter audioFilter = AudioFilter.trackNumber,
   ]) async {
-    final cached = _albumCache[albumId];
+    final cached = _albumContentCache[albumId];
     if (cached != null) return cached;
 
     final list = await _dao.loadAlbum(albumId);
 
-    _albumCache[albumId] = list;
+    _albumContentCache[albumId] = list;
     return list;
   }
 
@@ -303,14 +302,53 @@ class LocalAudioService {
     _allArtists?.clear();
     _allGenres?.clear();
     _allAlbumIDs?.clear();
-    _albumCache.clear();
-    _titlesOfArtistCache.clear();
+    _playlistIDs.clear();
+    _pinnedAlbumIDs.clear();
     _likedAudios.clear();
-    _playlists.clear();
-    _likedAudios.clear();
-    _pinnedAlbums.clear();
+    clearContentCaches(
+      clearAlbumContentCache: true,
+      clearTitlesOfArtistCache: true,
+      clearAlbumIDsOfGenreCache: true,
+      clearPlaylistContents: true,
+    );
     // then clear all related database tables:
     await _dao.wipeAllLocalAudioTables();
+  }
+
+  void clearContentCaches({
+    required bool clearAlbumContentCache,
+    required bool clearTitlesOfArtistCache,
+    required bool clearAlbumIDsOfGenreCache,
+    required bool clearPlaylistContents,
+  }) {
+    if (clearAlbumContentCache) {
+      printInfoInDebugMode(
+        'Clearing album content cache',
+        tag: '$LocalAudioService',
+      );
+      _albumContentCache.clear();
+    }
+    if (clearTitlesOfArtistCache) {
+      printInfoInDebugMode(
+        'Clearing titlesOfArtist cache',
+        tag: '$LocalAudioService',
+      );
+      _titlesOfArtistCache.clear();
+    }
+    if (clearAlbumIDsOfGenreCache) {
+      printInfoInDebugMode(
+        'Clearing albumIDsOfGenre cache',
+        tag: '$LocalAudioService',
+      );
+      _albumIDsOfGenreCache.clear();
+    }
+    if (clearPlaylistContents) {
+      printInfoInDebugMode(
+        'Clearing playlists cache',
+        tag: '$LocalAudioService',
+      );
+      _playlistContents.clear();
+    }
   }
 
   // ── Liked Audios ──
@@ -378,12 +416,15 @@ class LocalAudioService {
 
   // ── Playlists ──
 
-  Map<String, List<Audio>> _playlists = {};
-  List<String> get playlistIDs => _playlists.keys.toList();
+  List<String> get playlistIDs => _playlistIDs;
+  List<String> _playlistIDs = [];
+
+  Map<String, List<Audio>> _playlistContents = {};
+
   List<Audio>? getPlaylistById(String id) =>
-      id == PageIDs.likedAudios ? _likedAudios : _playlists[id];
+      id == PageIDs.likedAudios ? _likedAudios : _playlistContents[id];
   bool isPlaylistSaved(String? id) =>
-      id == null ? false : _playlists.containsKey(id);
+      id == null ? false : _playlistIDs.contains(id);
 
   Future<void> createOrChangePlaylist(PlaylistChange change) async {
     if (change.audios != null &&
@@ -393,7 +434,7 @@ class LocalAudioService {
             change.action == PlaylistAction.create)) {
       await _dao.persistAudios(change.audios!);
     }
-    if (!_playlists.containsKey(change.id)) {
+    if (!_playlistContents.containsKey(change.id)) {
       if (change.action == PlaylistAction.create) {
         await _createPlaylist(
           id: change.id,
@@ -437,17 +478,21 @@ class LocalAudioService {
   }
 
   Future<void> loadPlaylists() async {
-    _playlists = {};
+    _playlistContents = {};
     final playlistRows = await _dao.loadAllPlaylists();
     for (final pl in playlistRows) {
-      _playlists[pl.name] = await _dao.loadPlaylistTracks(pl.id);
+      _playlistContents[pl.name] = await _dao.loadPlaylistTracks(pl.id);
     }
+  }
+
+  Future<void> loadPlaylistIDs() async {
+    _playlistIDs = await _dao.loadAllPlaylistIDs();
   }
 
   Future<void> _reloadPlaylist(String name) async {
     final plRow = await _dao.findPlaylistByName(name);
     if (plRow == null) return;
-    _playlists[name] = await _dao.loadPlaylistTracks(plRow.id);
+    _playlistContents[name] = await _dao.loadPlaylistTracks(plRow.id);
   }
 
   Future<void> _createPlaylist({
@@ -455,9 +500,9 @@ class LocalAudioService {
     required List<Audio> audios,
     bool external = false,
   }) async {
-    if (_playlists.containsKey(id)) return;
+    if (_playlistContents.containsKey(id)) return;
     final localAudios = audios.where((e) => e.isLocal).toList();
-    _playlists[id] = localAudios;
+    _playlistContents[id] = localAudios;
 
     await _dao.createPlaylistInDb(
       name: id,
@@ -469,17 +514,17 @@ class LocalAudioService {
   }
 
   Future<void> removePlaylist(String id) async {
-    if (!_playlists.containsKey(id)) return;
-    _playlists.remove(id);
+    if (!_playlistContents.containsKey(id)) return;
+    _playlistContents.remove(id);
     await _dao.deletePlaylist(id);
   }
 
   Future<void> _updatePlaylistName(String oldName, String newName) async {
     if (newName == oldName) return;
-    final oldList = _playlists[oldName];
+    final oldList = _playlistContents[oldName];
     if (oldList != null) {
-      _playlists.remove(oldName);
-      _playlists[newName] = oldList;
+      _playlistContents.remove(oldName);
+      _playlistContents[newName] = oldList;
       await _dao.updatePlaylistNameInDb(oldName, newName);
     }
   }
@@ -491,7 +536,7 @@ class LocalAudioService {
   }) {
     final list = id == PageIDs.likedAudios
         ? _likedAudios.toList()
-        : _playlists[id]?.toList();
+        : _playlistContents[id]?.toList();
 
     if (list == null || list.isEmpty == true || !(newIndex <= list.length)) {
       return;
@@ -509,7 +554,7 @@ class LocalAudioService {
       _likedAudios.addAll(list);
       _persistLikedAudios();
     } else {
-      _playlists[id] = list;
+      _playlistContents[id] = list;
       _persistPlaylist(id, list);
     }
   }
@@ -519,15 +564,15 @@ class LocalAudioService {
   }
 
   Future<void> _replacePlaylist(String id, List<Audio> newAudios) async {
-    _playlists[id] = newAudios.where((e) => e.isLocal).toList();
-    await _persistPlaylist(id, _playlists[id]!);
+    _playlistContents[id] = newAudios.where((e) => e.isLocal).toList();
+    await _persistPlaylist(id, _playlistContents[id]!);
   }
 
   Future<void> _addAudiosToPlaylist({
     required String id,
     required List<Audio> newAudios,
   }) async {
-    final playlist = _playlists[id];
+    final playlist = _playlistContents[id];
     if (playlist == null) return;
     if (playlist.toSet().containsAll(newAudios)) {
       return;
@@ -549,7 +594,7 @@ class LocalAudioService {
     required String id,
     required List<Audio> audios,
   }) async {
-    final playlist = _playlists[id];
+    final playlist = _playlistContents[id];
     if (playlist == null) return;
     if (playlist.toSet().intersection(audios.toSet()).isEmpty) {
       return;
@@ -569,24 +614,24 @@ class LocalAudioService {
 
   // ── Pinned Albums ──
 
-  List<int> _pinnedAlbums = [];
-  List<int> get pinnedAlbums => _pinnedAlbums;
+  List<int> _pinnedAlbumIDs = [];
+  List<int> get pinnedAlbumIDs => _pinnedAlbumIDs;
 
   Future<void> loadPinnedAlbums() async {
-    _pinnedAlbums = await _dao.loadPinnedAlbums();
+    _pinnedAlbumIDs = await _dao.loadPinnedAlbumIDs();
   }
 
-  bool isPinnedAlbum(int id) => _pinnedAlbums.contains(id);
+  bool isPinnedAlbum(int id) => _pinnedAlbumIDs.contains(id);
 
   Future<void> pinAlbum(int id) async {
-    if (_pinnedAlbums.contains(id)) return;
-    _pinnedAlbums.add(id);
+    if (_pinnedAlbumIDs.contains(id)) return;
+    _pinnedAlbumIDs.add(id);
     await _dao.updateAlbumPinned(id, true);
   }
 
   Future<void> unpinAlbum(int id) async {
-    if (!_pinnedAlbums.contains(id)) return;
-    _pinnedAlbums.remove(id);
+    if (!_pinnedAlbumIDs.contains(id)) return;
+    _pinnedAlbumIDs.remove(id);
     await _dao.updateAlbumPinned(id, false);
   }
 
@@ -667,7 +712,7 @@ class LocalAudioService {
           updatedAudio = updated;
 
           if (old.artist != capsule.artist || old.album != capsule.album) {
-            _albumCache.remove(old.albumDbId);
+            _albumContentCache.remove(old.albumDbId);
             if (updated.albumDbId != null) {
               await findAlbum(updated.albumDbId!);
             }

@@ -118,16 +118,17 @@ class AppManager {
   late final Command<void, bool?> backupNeededCommand =
       Command.createAsyncNoParam(() async {
         final needed =
-            (_localAudioService.audios?.isNotEmpty ?? false) &&
-            _localAudioService.playlistIDs.isNotEmpty &&
-            _localAudioService.pinnedAlbums.isNotEmpty &&
+            (_localAudioService.audios?.isNotEmpty ?? false) ||
+            _localAudioService.playlistIDs.isNotEmpty ||
+            _localAudioService.pinnedAlbumIDs.isNotEmpty ||
             isCurrentVersionLowerThan(
-              const String.fromEnvironment(
-                'FORCED_UPDATE_THRESHOLD',
-                defaultValue: '2.11.0',
-              ),
-            ) &&
-            !(_settingsService.getBool(SPKeys.backupSaved + version) ?? false);
+                  const String.fromEnvironment(
+                    'FORCED_UPDATE_THRESHOLD',
+                    defaultValue: '2.16.0',
+                  ),
+                ) &&
+                !(_settingsService.getBool(SPKeys.backupSaved + version) ??
+                    false);
         return needed;
       }, initialValue: null);
 

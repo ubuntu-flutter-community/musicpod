@@ -8,10 +8,10 @@ import 'podcast_service.dart';
 @injectable
 class EpisodesManager {
   EpisodesManager._({
-    @factoryParam required String feedUrl,
+    required String feedUrl,
     required PodcastService podcastService,
   }) {
-    _registry.register(feedUrl, this);
+    _registry.register(id: feedUrl, instance: this);
     command = Command.createAsync(
       (genre) => podcastService.findEpisodes(
         feedUrl: feedUrl,
