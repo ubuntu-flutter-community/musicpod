@@ -37,7 +37,10 @@ class PodcastPage extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    onDispose(di<PodcastCleanManager>().command);
+    onDispose(() {
+      di<PodcastCleanManager>().command.run();
+      EpisodesManager.dispose(feedUrl);
+    });
 
     clearLocalAudioCaches();
 

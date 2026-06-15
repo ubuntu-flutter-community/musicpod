@@ -13,28 +13,19 @@ class LazyPodcastPage extends StatelessWidget with WatchItMixin {
   final String feedUrl;
 
   @override
-  Widget build(BuildContext context) {
-    final results = watchValue(
-      (EpisodesManager m) => m.command.results,
-      param1: feedUrl,
-    );
-    final error = results.error;
-    final isRunning = results.isRunning;
-
-    if (isRunning) {
-      return const LazyPodcastLoadingPage(child: Center(child: Progress()));
-    }
-
-    if (error != null) {
-      return PodcastErrorPage(error: error, feedUrl: feedUrl);
-    }
-
-    final episodes = results.data;
-
-    return PodcastPage(
-      imageUrl:
-          episodes?.firstOrNull?.albumArtUrl ?? episodes?.firstOrNull?.imageUrl,
-      feedUrl: feedUrl,
-    );
-  }
+  Widget build(BuildContext context) =>
+      watchValue(
+        (EpisodesManager m) => m.command.results,
+        param1: feedUrl,
+      ).toWidget(
+        whileRunning: (lastResult, param) =>
+            const LazyPodcastLoadingPage(child: Center(child: Progress())),
+        onError: (error, lastResult, param) =>
+            PodcastErrorPage(error: error, feedUrl: feedUrl),
+        onData: (result, param) => PodcastPage(
+          imageUrl:
+              result?.firstOrNull?.albumArtUrl ?? result?.firstOrNull?.imageUrl,
+          feedUrl: feedUrl,
+        ),
+      );
 }
