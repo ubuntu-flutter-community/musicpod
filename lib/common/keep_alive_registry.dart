@@ -5,13 +5,11 @@ import 'logging.dart';
 class KeepAliveRegistry<I, T> {
   final _instances = <I, T>{};
 
-  void register({
+  T getOrRegister({
     required I id,
-    required T instance,
+    required T Function() factoryFunction,
     Duration? autoDisposeAfter,
   }) {
-    printInfoInDebugMode('Instance created for id: $id', tag: '$T');
-    _instances[id] = instance;
     if (autoDisposeAfter != null) {
       Future.delayed(
         autoDisposeAfter,
@@ -21,9 +19,11 @@ class KeepAliveRegistry<I, T> {
         ),
       );
     }
+    return _instances.putIfAbsent(id, () {
+      printInfoInDebugMode('Instance created for id: $id', tag: '$T');
+      return factoryFunction();
+    });
   }
-
-  T? get(I id) => _instances[id];
 
   T? dispose(I id, {String message = 'Instance disposed'}) {
     if (!_instances.containsKey(id)) return null;

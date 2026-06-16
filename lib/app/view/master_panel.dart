@@ -150,7 +150,7 @@ class AlbumsList extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final pinnedAlbums = watchValue(
-      (LocalAudioManager m) => m.togglePinnedAlbumCommand,
+      (LocalAudioManager m) => m.togglePinnedAlbumIDsCommand,
     );
     final masterItems = createPinnedAlbumsMasterItems(pinnedAlbums);
     final selectedPageId = watchPropertyValue(

@@ -68,11 +68,7 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
       return;
     }
     if (inLibrary) {
-      if (replace || PageIDs.replacers.contains(pageId)) {
-        await _masterNavigatorKey.currentState?.pushReplacementNamed(pageId);
-      } else {
-        await _masterNavigatorKey.currentState?.pushNamed(pageId);
-      }
+      await _masterNavigatorKey.currentState?.pushReplacementNamed(pageId);
     } else if (builder != null) {
       final materialPageRoute = PageRouteBuilder(
         maintainState: maintainState,
@@ -91,19 +87,9 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
     }
   }
 
-  void pop() {
-    if (!PageIDs.replacers.contains(selectedPageId)) {
-      _masterNavigatorKey.currentState?.maybePop();
-    } else {
-      _masterNavigatorKey.currentState?.popUntil(
-        (route) => route.settings.name == selectedPageId,
-      );
-    }
-  }
+  void pop() => _masterNavigatorKey.currentState?.maybePop();
 
-  bool get canPop => PageIDs.replacers.contains(selectedPageId)
-      ? false
-      : _masterNavigatorKey.currentState?.canPop() == true;
+  bool get canPop => _masterNavigatorKey.currentState?.canPop() == true;
 
   @override
   void didPop(Route route, Route? previousRoute) {

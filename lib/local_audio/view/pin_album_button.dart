@@ -14,7 +14,7 @@ class PinAlbumButton extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final pinnedAlbum = watchValue(
       (LocalAudioManager m) =>
-          m.togglePinnedAlbumCommand.select((e) => e.contains(albumId)),
+          m.togglePinnedAlbumIDsCommand.select((e) => e.contains(albumId)),
     );
     return IconButton(
       key: ValueKey(pinnedAlbum),
@@ -22,7 +22,7 @@ class PinAlbumButton extends StatelessWidget with WatchItMixin {
       isSelected: pinnedAlbum,
       icon: Icon(pinnedAlbum ? Iconz.pinFilled : Iconz.pin),
       onPressed: () =>
-          di<LocalAudioManager>().togglePinnedAlbumCommand.run(albumId),
+          di<LocalAudioManager>().togglePinnedAlbumIDsCommand.run(albumId),
     );
   }
 }

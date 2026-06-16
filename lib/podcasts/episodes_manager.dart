@@ -11,7 +11,6 @@ class EpisodesManager {
     required String feedUrl,
     required PodcastService podcastService,
   }) {
-    _registry.register(id: feedUrl, instance: this);
     command = Command.createAsync(
       (genre) => podcastService.findEpisodes(
         feedUrl: feedUrl,
@@ -27,9 +26,11 @@ class EpisodesManager {
   static EpisodesManager create({
     @factoryParam required String feedUrl,
     required PodcastService podcastService,
-  }) =>
-      _registry.get(feedUrl) ??
-      EpisodesManager._(feedUrl: feedUrl, podcastService: podcastService);
+  }) => _registry.getOrRegister(
+    id: feedUrl,
+    factoryFunction: () =>
+        EpisodesManager._(feedUrl: feedUrl, podcastService: podcastService),
+  );
 
   static final _registry = KeepAliveRegistry<String, EpisodesManager>();
   static EpisodesManager? dispose(String feedUrl) => _registry.dispose(feedUrl);

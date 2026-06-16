@@ -15,7 +15,7 @@ import 'playlist_action.dart';
 class LocalAudioManager {
   LocalAudioManager({required LocalAudioService localAudioService})
     : _localAudioService = localAudioService {
-    togglePinnedAlbumCommand.run();
+    togglePinnedAlbumIDsCommand.run();
     playlistIDsCommand.run();
     likedAudiosCommand.run();
   }
@@ -113,7 +113,7 @@ class LocalAudioManager {
         clearPlaylistContents: true,
         clearLikedAudiosCommand: true,
         clearPlaylistIDCommands: true,
-        clearPinnedAlbumIDsCommands: true,
+        clearTogglePinnedAlbumIDsCommand: true,
       );
     }
 
@@ -204,7 +204,7 @@ class LocalAudioManager {
   // Pinned Albums
   //
 
-  late final Command<int?, List<int>> togglePinnedAlbumCommand =
+  late final Command<int?, List<int>> togglePinnedAlbumIDsCommand =
       Command.createAsync((id) async {
         if (id != null) {
           if (_localAudioService.pinnedAlbumIDs.contains(id)) {
@@ -225,7 +225,7 @@ class LocalAudioManager {
     bool clearPlaylistContents = true,
     bool clearFindAlbumsCommands = true,
     bool clearPlaylistIDCommands = false,
-    bool clearPinnedAlbumIDsCommands = false,
+    bool clearTogglePinnedAlbumIDsCommand = false,
     bool clearLikedAudiosCommand = false,
   }) {
     _localAudioService.clearContentCaches(
@@ -243,8 +243,8 @@ class LocalAudioManager {
     if (clearPlaylistIDCommands) {
       playlistIDsCommand.value = [];
     }
-    if (clearPinnedAlbumIDsCommands) {
-      togglePinnedAlbumCommand.value = [];
+    if (clearTogglePinnedAlbumIDsCommand) {
+      togglePinnedAlbumIDsCommand.value = [];
     }
     importExternalPlaylistsCommand.value = [];
   }

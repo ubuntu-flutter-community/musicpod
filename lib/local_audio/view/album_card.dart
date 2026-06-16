@@ -25,7 +25,7 @@ class AlbumCard extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final pinned = watchValue(
       (LocalAudioManager m) =>
-          m.togglePinnedAlbumCommand.select((e) => e.contains(id)),
+          m.togglePinnedAlbumIDsCommand.select((e) => e.contains(id)),
     );
 
     return Stack(
@@ -39,7 +39,7 @@ class AlbumCard extends StatelessWidget with WatchItMixin {
             child: AudioCardVignette(
               iconData: Iconz.pinFilled,
               onTap: () =>
-                  di<LocalAudioManager>().togglePinnedAlbumCommand.run(id),
+                  di<LocalAudioManager>().togglePinnedAlbumIDsCommand.run(id),
             ),
           ),
       ],
