@@ -23,6 +23,7 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
+import '../album_ids_of_artist_manager.dart';
 import '../local_audio_manager.dart';
 import 'album_page.dart';
 import 'album_view.dart';
@@ -123,12 +124,7 @@ class _ArtistPageState extends State<ArtistPage> {
               audios: artistAudios,
             ),
             sliverBody: (constraints) => useGridView
-                ? AlbumsView(
-                    albumIDs: di<LocalAudioManager>().findAllAlbumIDs(
-                      artist: widget.pageId,
-                      clean: false,
-                    ),
-                  )
+                ? AlbumsOfArtistView(artist: widget.pageId)
                 : SliverAudioTileList(
                     audios: artistAudios,
                     pageId: widget.pageId,
@@ -141,6 +137,20 @@ class _ArtistPageState extends State<ArtistPage> {
       ),
     );
   }
+}
+
+class AlbumsOfArtistView extends StatelessWidget with WatchItMixin {
+  const AlbumsOfArtistView({super.key, required this.artist});
+
+  final String artist;
+
+  @override
+  Widget build(BuildContext context) => AlbumsView(
+    albumIDs: watchValue(
+      (AlbumIDsOfArtistManager m) => m.command,
+      param1: artist,
+    ),
+  );
 }
 
 class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {

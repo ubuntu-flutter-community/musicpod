@@ -112,6 +112,31 @@ class LocalAudioDao {
     return row?.path;
   }
 
+  Future<List<int>?> loadAllAlbumIDs() async {
+    final rows = await _db.select(_db.albumTable).get();
+    return rows.map((r) => r.id).toList();
+  }
+
+  Future<List<int>> findAlbumIDsOfArtist(String artist) async {
+    final rows = await (_db.select(
+      _db.albumTable,
+    )..where((t) => t.artist.equals(artist))).get();
+    return rows.map((r) => r.id).toList();
+  }
+
+  Future<List<int>> findAlbumIDsOfGenre(String genre) async {
+    final query = _db.selectOnly(_db.trackTable, distinct: true)
+      ..addColumns([_db.trackTable.album])
+      ..where(
+        _db.trackTable.genre.equals(genre) & _db.trackTable.album.isNotNull(),
+      );
+    final rows = await query.get();
+    return rows
+        .map((r) => r.read(_db.trackTable.album))
+        .whereType<int>()
+        .toList();
+  }
+
   Future<void> persistAudios(List<Audio> audioList) => _db.transaction(
     () async {
       // ── 1. Artists: batch-insert new, then bulk-load IDs ──

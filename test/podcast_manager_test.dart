@@ -14,6 +14,10 @@ Future<void> main() async {
   late PodcastManager manager;
   late MockPodcastService mockPodcastService;
 
+  setUpAll(() {
+    Command.globalExceptionHandler = (error, stackTrace) {};
+  });
+
   setUp(() {
     mockPodcastService = MockPodcastService();
     when(
