@@ -350,6 +350,12 @@ extension GetItInjectableX on _i174.GetIt {
       ),
       dispose: (i) => i.dispose(),
     );
+    gh.factoryCachedParam<_i234.AlbumIDsOfArtistManager, String, dynamic>(
+      (artist, _) => _i234.AlbumIDsOfArtistManager(
+        artist: artist,
+        service: gh<_i438.LocalAudioService>(),
+      ),
+    );
     gh.lazySingleton<_i1028.CustomContentManager>(
       () => _i1028.CustomContentManager(
         externalPathService: gh<_i551.ExternalPathService>(),
@@ -364,12 +370,6 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioManager: gh<_i688.LocalAudioManager>(),
         radioManager: gh<_i749.RadioManager>(),
         playerManager: gh<_i444.PlayerManager>(),
-      ),
-    );
-    gh.factoryCachedParam<_i234.AlbumIDsOfArtistManager, String, dynamic>(
-      (artist, _) => _i234.AlbumIDsOfArtistManager(
-        artist: artist,
-        service: gh<_i688.LocalAudioManager>(),
       ),
     );
     return this;

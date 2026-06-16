@@ -7,8 +7,6 @@ class PageIDs {
   static const likedAudios = 'likedAudios';
   static const searchPage = 'searchPageId';
 
-  static const replacers = {localAudio, podcasts, radio};
-
   static const permanent = {
     searchPage,
     likedAudios,

@@ -7,9 +7,10 @@ import 'local_cover_manager.dart';
 mixin LocalAudioClearHandler on WatchItMixin {
   void clearLocalAudioCaches() {
     callOnceAfterThisBuild((_) {
+      final playerManager = di<PlayerManager>();
       di<LocalCoverManager>().clear(
-        exceptions: di<PlayerManager>().audio?.albumDbId != null
-            ? [di<PlayerManager>().audio!.albumDbId!]
+        exceptions: playerManager.audio?.albumDbId != null
+            ? [playerManager.audio!.albumDbId!]
             : [],
       );
       di<LocalAudioManager>().clear();

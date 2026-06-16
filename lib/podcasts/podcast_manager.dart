@@ -8,6 +8,7 @@ import '../common/data/audio.dart';
 import 'data/podcast_episode_filter.dart';
 import 'data/podcast_toggle_capsule.dart';
 import 'data/podcast_update_capsule.dart';
+import 'episodes_manager.dart';
 import 'podcast_service.dart';
 
 // Note: we need to see the subbed podcasts at the start
@@ -84,6 +85,10 @@ class PodcastManager {
           feedUrls: capsule.feedUrls,
           updateProgress: handle.updateProgress,
         );
+
+        for (final feedUrl in updates) {
+          await di<EpisodesManager>(param1: feedUrl).command.runAsync();
+        }
 
         return updates;
       }, initialValue: _podcastService.podcastUpdates);

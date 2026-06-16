@@ -9,12 +9,6 @@ import 'keep_alive_registry.dart';
 @injectable
 class RetryManager {
   RetryManager._({required RetryCapsule retryCapsule}) {
-    _registry.register(
-      id: retryCapsule.retryViewId,
-      instance: this,
-      autoDisposeAfter: const Duration(minutes: 5),
-    );
-
     _retryTicker = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (cooldown.value > 0) {
         cooldown.value--;
@@ -35,9 +29,11 @@ class RetryManager {
   @factoryMethod
   static RetryManager create({
     @factoryParam required RetryCapsule retryCapsule,
-  }) =>
-      _registry.get(retryCapsule.retryViewId) ??
-      RetryManager._(retryCapsule: retryCapsule);
+  }) => _registry.getOrRegister(
+    id: retryCapsule.retryViewId,
+    factoryFunction: () => RetryManager._(retryCapsule: retryCapsule),
+    autoDisposeAfter: const Duration(minutes: 5),
+  );
 
   static final _registry = KeepAliveRegistry<String, RetryManager>();
 

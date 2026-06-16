@@ -1,12 +1,13 @@
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
-import 'local_audio_manager.dart';
+
+import 'local_audio_service.dart';
 
 @Injectable(cache: true)
 class AlbumIDsOfArtistManager {
   AlbumIDsOfArtistManager({
     @factoryParam required String artist,
-    required LocalAudioManager service,
+    required LocalAudioService service,
   }) {
     command = Command.createAsync(
       (artist) => service.findAlbumIDsOfArtist(artist),

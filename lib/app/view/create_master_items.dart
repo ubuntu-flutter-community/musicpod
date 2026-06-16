@@ -37,7 +37,7 @@ Iterable<MasterItem> getAllMasterItems(
   ...createPlaylistMasterItems(localAudioManager.playlistIDsCommand.value),
   ...createPodcastMasterItems(podcastManager.togglePodcastCommand.value),
   ...createPinnedAlbumsMasterItems(
-    localAudioManager.togglePinnedAlbumCommand.value,
+    localAudioManager.togglePinnedAlbumIDsCommand.value,
   ),
   ...createStarredStationsMasterItems(
     radioManager.toggleStarStationCommand.value,
