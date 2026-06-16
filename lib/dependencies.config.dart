@@ -235,8 +235,8 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioDao: gh<_i688.LocalAudioDao>(),
       ),
     );
-    gh.factoryCachedParam<_i0.EpisodesManager, String, dynamic>(
-      (feedUrl, _) => _i0.EpisodesManager(
+    gh.factoryParam<_i0.EpisodesManager, String, dynamic>(
+      (feedUrl, _) => _i0.EpisodesManager.create(
         feedUrl: feedUrl,
         podcastService: gh<_i721.PodcastService>(),
       ),
