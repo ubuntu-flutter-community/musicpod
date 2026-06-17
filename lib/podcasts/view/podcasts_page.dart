@@ -8,18 +8,17 @@ import '../../common/view/header_bar.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../../local_audio/local_audio_clear_handler.dart';
+import '../../common/view/clean_up_caches.dart';
 import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
 import 'podcasts_collection_body.dart';
 
-class PodcastsPage extends StatelessWidget
-    with WatchItMixin, LocalAudioClearHandler {
+class PodcastsPage extends StatelessWidget with WatchItMixin {
   const PodcastsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    clearLocalAudioCaches();
+    callOnceAfterThisBuild((_) => cleanUpLocalAudioCaches());
 
     return Scaffold(
       appBar: HeaderBar(

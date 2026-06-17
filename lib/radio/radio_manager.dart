@@ -15,7 +15,6 @@ class RadioManager {
 
   RadioManager({required RadioService radioService})
     : _radioService = radioService {
-    connectCommand.run();
     toggleFavRadioTagCommand.run();
     toggleStarStationCommand.run();
   }
