@@ -8,7 +8,7 @@ import '../../extensions/command_x.dart';
 import '../../extensions/object_x.dart';
 import '../radio_manager.dart';
 
-mixin RadioConnectMixin {
+mixin RadioConnectMixin on WatchItMixin {
   void registerRadioConnectHandler(BuildContext context) {
     registerHandler(
       select: (RadioManager m) => m.connectCommand.results,

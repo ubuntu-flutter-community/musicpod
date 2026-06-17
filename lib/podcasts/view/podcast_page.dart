@@ -6,13 +6,13 @@ import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/adaptive_multi_layout_body.dart';
 import '../../common/view/audio_filter.dart';
+import '../../common/view/clean_up_caches.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../local_audio/local_audio_clear_handler.dart';
 import '../../player/player_manager.dart';
 import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
@@ -21,15 +21,13 @@ import '../data/podcast_episode_filter.dart';
 import '../data/podcast_update_capsule.dart';
 import '../download_manager.dart';
 import '../episodes_manager.dart';
-import '../podcast_clean_manager.dart';
 import '../podcast_manager.dart';
 import 'podcast_page_control_panel.dart';
 import 'podcast_page_header.dart';
 import 'podcast_page_search_field.dart';
 import 'sliver_podcast_page_list.dart';
 
-class PodcastPage extends StatelessWidget
-    with WatchItMixin, LocalAudioClearHandler {
+class PodcastPage extends StatelessWidget with WatchItMixin {
   const PodcastPage({super.key, this.imageUrl, required this.feedUrl});
 
   final String feedUrl;
@@ -37,21 +35,15 @@ class PodcastPage extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    onDispose(() {
-      di<PodcastCleanManager>().command.run();
-      EpisodesManager.dispose(feedUrl);
-    });
-
-    clearLocalAudioCaches();
-
-    callOnceAfterThisBuild(
-      (_) => di<PodcastManager>().manageUpdatesCommand.run(
+    callOnceAfterThisBuild((_) {
+      cleanUpLocalAudioCaches();
+      di<PodcastManager>().manageUpdatesCommand.run(
         PodcastUpdateCapsule(
           feedUrls: [feedUrl],
           type: PodcastUpdateType.remove,
         ),
-      ),
-    );
+      );
+    });
 
     registerHandler(
       select: (PlayerManager m) => m.toggleAudiosProgressCommand.results,
@@ -161,12 +153,16 @@ class PodcastPage extends StatelessWidget
       ),
       body: RefreshIndicator(
         onRefresh: di<PodcastManager>().isPodcastSubscribed(feedUrl)
-            ? () async => di<PodcastManager>().manageUpdatesCommand.runAsync(
-                PodcastUpdateCapsule(
-                  feedUrls: [feedUrl],
-                  type: PodcastUpdateType.update,
-                ),
-              )
+            ? () async => di<PodcastManager>().manageUpdatesCommand
+                  .runAsync(
+                    PodcastUpdateCapsule(
+                      feedUrls: [feedUrl],
+                      type: PodcastUpdateType.update,
+                    ),
+                  )
+                  .then(
+                    (_) => di<EpisodesManager>(param1: feedUrl).command.run(),
+                  )
             : () async {},
         child: AdaptiveMultiLayoutBody(
           header: PodcastPageHeader(
