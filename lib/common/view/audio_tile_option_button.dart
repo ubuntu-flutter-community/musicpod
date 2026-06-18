@@ -11,7 +11,9 @@ import '../../app/routing_manager.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/command_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../local_audio/local_audio_manager.dart';
+import '../../local_audio/find_album_manager.dart';
+import '../../local_audio/find_playlist_manager.dart';
+import '../../local_audio/liked_audios_manager.dart';
 import '../../local_audio/playlist_action.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
@@ -52,7 +54,6 @@ class AudioTileOptionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.theme;
     final l10n = context.l10n;
-    final localAudioManager = di<LocalAudioManager>();
 
     if (isMobile) {
       return AudioTileBottomSheetButton(
@@ -113,16 +114,16 @@ class AudioTileOptionButton extends StatelessWidget {
           if (allowRemove)
             PopupMenuItem(
               onTap: () => playlistId == PageIDs.likedAudios
-                  ? localAudioManager.removeLikedAudios(audios)
-                  : localAudioManager
-                        .playlistCommand(playlistId)
-                        .run(
-                          PlaylistChange(
-                            id: playlistId,
-                            audios: audios,
-                            action: PlaylistAction.removeFrom,
-                          ),
-                        ),
+                  ? di<LikedAudiosManager>().removeLikedAudios(audios)
+                  : di<PlaylistManager>(
+                      param1: playlistId,
+                    ).createOrchangePlaylistCommand.run(
+                      PlaylistChange(
+                        id: playlistId,
+                        audios: audios,
+                        action: PlaylistAction.removeFrom,
+                      ),
+                    ),
               child: YaruTile(
                 leading: Icon(Iconz.remove),
                 title: Text(
@@ -163,9 +164,9 @@ class AudioTileOptionButton extends StatelessWidget {
               onTap: () async {
                 final albumId = audios.firstOrNull?.albumDbId;
                 if (albumId != null) {
-                  final albumAudios = await di<LocalAudioManager>()
-                      .findAlbumCommand(albumId)
-                      .runRestrictedAsync();
+                  final albumAudios = await di<FindAlbumManager>(
+                    param1: albumId,
+                  ).command.runRestrictedAsync();
                   if (albumAudios != null) {
                     unawaited(
                       di<RoutingManager>().push(

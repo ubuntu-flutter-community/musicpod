@@ -3,7 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/page_ids.dart';
 import '../../extensions/build_context_x.dart';
-import '../../local_audio/local_audio_manager.dart';
+import '../../local_audio/liked_audios_manager.dart';
 import '../../playlists/view/add_to_playlist_snack_bar.dart';
 import '../data/audio.dart';
 import 'animated_like_icon.dart';
@@ -17,11 +17,11 @@ class LikeIconButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final localAudioManager = di<LocalAudioManager>();
+    final likedAudiosManager = di<LikedAudiosManager>();
 
     final liked = watchValue(
-      (LocalAudioManager m) =>
-          m.likedAudiosCommand.select((e) => e.contains(audio)),
+      (LikedAudiosManager m) =>
+          m.command.select((e) => e?.contains(audio) ?? false),
     );
 
     final void Function()? onLike;
@@ -30,9 +30,9 @@ class LikeIconButton extends StatelessWidget with WatchItMixin {
     } else {
       onLike = () {
         if (liked) {
-          localAudioManager.removeLikedAudios([audio!]);
+          likedAudiosManager.removeLikedAudios([audio!]);
         } else {
-          localAudioManager.addLikedAudios([audio!]);
+          likedAudiosManager.addLikedAudios([audio!]);
           showAddedToPlaylistSnackBar(
             context: context,
             id: PageIDs.likedAudios,

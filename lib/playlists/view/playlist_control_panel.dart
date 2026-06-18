@@ -6,6 +6,7 @@ import '../../common/view/avatar_play_button.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
+import '../../local_audio/find_playlist_manager.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/playlist_action.dart';
 import 'edit_playlist_dialog.dart';
@@ -24,7 +25,6 @@ class PlaylistControlPanel extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final allowReorder = watchValue((LocalAudioManager m) => m.allowReorder);
-    final localAudioManager = di<LocalAudioManager>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: space(
@@ -43,8 +43,8 @@ class PlaylistControlPanel extends StatelessWidget with WatchItMixin {
           IconButton(
             tooltip: l10n.clearPlaylist,
             icon: Icon(Iconz.clearAll),
-            onPressed: () => localAudioManager
-                .playlistCommand(pageId)
+            onPressed: () => di<PlaylistManager>(param1: pageId)
+                .createOrchangePlaylistCommand
                 .run(
                   PlaylistChange(
                     id: pageId,

@@ -2,11 +2,13 @@ import 'package:audio_metadata_reader/audio_metadata_reader.dart' show Picture;
 import 'package:drift/drift.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../app/page_ids.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/logging.dart';
 import '../../common/persistence/database.dart';
 import '../../common/view/audio_filter.dart';
+import '../local_search_result.dart';
 
 @lazySingleton
 class LocalAudioDao {
@@ -36,6 +38,15 @@ class LocalAudioDao {
       year: track.year,
       lyrics: track.lyrics,
     );
+  }
+
+  /// The album name a local track should be grouped under. Tracks that lack an
+  /// album tag fall back to their title and finally their path, so that every
+  /// local track is linked to an album row (and therefore has an [Audio.albumDbId]).
+  String? _albumNameFor(Audio audio) {
+    if (audio.album?.isNotEmpty == true) return audio.album;
+    if (audio.title?.isNotEmpty == true) return audio.title;
+    return audio.path;
   }
 
   Future<Uint8List?> getAlbumCover(int albumId) async {
@@ -112,8 +123,9 @@ class LocalAudioDao {
     return row?.path;
   }
 
-  Future<List<int>?> loadAllAlbumIDs() async {
+  Future<List<int>?> findAllAlbumIDs() async {
     final rows = await _db.select(_db.albumTable).get();
+    rows.sort((a, b) => compareCaseInsensitive(a.name, b.name));
     return rows.map((r) => r.id).toList();
   }
 
@@ -122,6 +134,20 @@ class LocalAudioDao {
       _db.albumTable,
     )..where((t) => t.artist.equals(artist))).get();
     return rows.map((r) => r.id).toList();
+  }
+
+  Future<String?> findAlbumName(int albumId) async {
+    final row = await (_db.select(
+      _db.albumTable,
+    )..where((t) => t.id.equals(albumId))).getSingleOrNull();
+    return row?.name;
+  }
+
+  Future<String?> findArtistOfAlbum(int albumId) async {
+    final row = await (_db.select(
+      _db.albumTable,
+    )..where((t) => t.id.equals(albumId))).getSingleOrNull();
+    return row?.artist;
   }
 
   Future<List<int>> findAlbumIDsOfGenre(String genre) async {
@@ -220,23 +246,16 @@ class LocalAudioDao {
       }
 
       final newAlbumCompanions = <AlbumTableCompanion>[];
-      final uniqueAlbums = <String>{};
+      final seenAlbumKeys = <String>{};
       for (final a in audioList) {
-        if (a.album?.isNotEmpty == true) {
-          uniqueAlbums.add(a.album!);
-        }
-      }
-      for (final albumName in uniqueAlbums) {
-        final sampleAudio = audioList.firstWhere((a) => a.album == albumName);
-        final artistId = sampleAudio.artist != null
-            ? artistNameToId[sampleAudio.artist!]
-            : null;
+        final albumName = _albumNameFor(a);
+        if (albumName == null) continue;
+        final artistId = a.artist != null ? artistNameToId[a.artist!] : null;
         final key = '${artistId ?? ''}_$albumName';
-        if (!albumKeyToId.containsKey(key)) {
-          newAlbumCompanions.add(
-            AlbumTableCompanion.insert(name: albumName, artist: artistId ?? ''),
-          );
-        }
+        if (albumKeyToId.containsKey(key) || !seenAlbumKeys.add(key)) continue;
+        newAlbumCompanions.add(
+          AlbumTableCompanion.insert(name: albumName, artist: artistId ?? ''),
+        );
       }
       if (newAlbumCompanions.isNotEmpty) {
         await _db.batch((batch) {
@@ -269,8 +288,9 @@ class LocalAudioDao {
         final albumArtistId = audio.albumArtist != null
             ? artistNameToId[audio.albumArtist!]
             : null;
-        final albumKey = '${artistId ?? ''}_${audio.album ?? ''}';
-        final albumId = audio.album != null ? albumKeyToId[albumKey] : null;
+        final albumName = _albumNameFor(audio);
+        final albumKey = '${artistId ?? ''}_${albumName ?? ''}';
+        final albumId = albumName != null ? albumKeyToId[albumKey] : null;
         final genreId = audio.genre?.trim().isNotEmpty == true
             ? genreNameToId[audio.genre!.trim()]
             : null;
@@ -329,7 +349,7 @@ class LocalAudioDao {
     },
   );
 
-  Future<List<Audio>> loadLikedAudios() async {
+  Future<List<Audio>> findLikedAudios() async {
     final rows = await trackJoin(_db.select(_db.likedTrackTable)).get();
     return joinedRowsToAudios(rows);
   }
@@ -365,26 +385,11 @@ class LocalAudioDao {
     }
   }
 
-  Future<void> persistLikedAudios(List<Audio> audios) async {
-    await _db.delete(_db.likedTrackTable).go();
-    for (final audio in audios) {
-      final trackId = await findTrackIdByPath(audio.path);
-      if (trackId != null) {
-        await _db
-            .into(_db.likedTrackTable)
-            .insert(
-              LikedTrackTableCompanion.insert(trackId: trackId),
-              mode: InsertMode.insertOrIgnore,
-            );
-      }
-    }
-  }
-
   Future<List<PlaylistTableData>> loadAllPlaylists() async {
     return _db.select(_db.playlistTable).get();
   }
 
-  Future<List<String>> loadAllPlaylistIDs() async {
+  Future<List<String>> findAllPlaylistIDs() async {
     final rows = await _db.select(_db.playlistTable).get();
     return rows.map((r) => r.name).toList();
   }
@@ -417,6 +422,17 @@ class LocalAudioDao {
       _db.playlistTable,
     )..where((t) => t.name.equals(name))).getSingleOrNull();
   }
+
+  Future<List<Audio>?> findPlaylistById(String id) async {
+    final plRow = await findPlaylistByName(id);
+    if (plRow == null) return null;
+    return loadPlaylistTracks(plRow.id);
+  }
+
+  Future<bool> isPlaylistSaved(String id) =>
+      (_db.select(_db.playlistTable)..where((t) => t.name.equals(id)))
+          .getSingleOrNull()
+          .then((value) => value != null);
 
   Future<void> createPlaylistInDb({
     required String name,
@@ -494,7 +510,7 @@ class LocalAudioDao {
     }
   }
 
-  Future<List<int>> loadPinnedAlbumIDs() async {
+  Future<List<int>> findPinnedAlbumIDs() async {
     final rows = await (_db.select(
       _db.albumTable,
     )..where((t) => t.pinned.equals(true))).get();
@@ -522,7 +538,7 @@ class LocalAudioDao {
     return _db.trackTable.count().getSingle();
   }
 
-  Future<List<Audio>> loadAllTracks() async {
+  Future<List<Audio>> findAllTracks() async {
     final query = _db.select(_db.trackTable).join([
       leftOuterJoin(
         _db.albumTable,
@@ -537,16 +553,17 @@ class LocalAudioDao {
         _db.genreTable.name.equalsExp(_db.trackTable.genre),
       ),
     ]);
-    query.orderBy([OrderingTerm.asc(_db.trackTable.name)]);
 
     final rows = await query.get();
-    return rows.map((row) {
+    final audios = rows.map((row) {
       final track = row.readTable(_db.trackTable);
       final albumRow = row.readTableOrNull(_db.albumTable);
       final artistRow = row.readTableOrNull(_db.artistTable);
       final genreRow = row.readTableOrNull(_db.genreTable);
       return trackToAudio(track, albumRow, artistRow, genreRow);
     }).toList();
+    audios.sort((a, b) => compareCaseInsensitive(a.title ?? '', b.title ?? ''));
+    return audios;
   }
 
   Future<List<String>> loadAllArtists() async {
@@ -829,5 +846,158 @@ class LocalAudioDao {
 
       return targetAlbumId;
     });
+  }
+
+  Future<int?> findAlbumIdForArtistAndAlbum({
+    required String artist,
+    required String album,
+  }) async {
+    final result =
+        await (_db.select(_db.albumTable)
+              ..where((a) => a.artist.equals(artist) & a.name.equals(album)))
+            .getSingleOrNull();
+    return result?.id;
+  }
+
+  Future<List<String>?> findAllArtists() async {
+    final rows = await _db.select(_db.artistTable).get();
+    final names = rows.map((r) => r.name).toList();
+    names.sort(compareCaseInsensitive);
+    return names;
+  }
+
+  Future<List<String>?> findAllGenres() async {
+    final rows = await _db.select(_db.genreTable).get();
+    final names = rows.map((r) => r.name).toList();
+    names.sort(compareCaseInsensitive);
+    return names;
+  }
+
+  Future<LocalSearchResult?> search(String query) async {
+    final likeQuery = '%${query.toLowerCase()}%';
+
+    final trackRows = await (_db.select(_db.trackTable).join([
+      leftOuterJoin(
+        _db.albumTable,
+        _db.albumTable.id.equalsExp(_db.trackTable.album),
+      ),
+      leftOuterJoin(
+        _db.artistTable,
+        _db.artistTable.name.equalsExp(_db.trackTable.artist),
+      ),
+      leftOuterJoin(
+        _db.genreTable,
+        _db.genreTable.name.equalsExp(_db.trackTable.genre),
+      ),
+    ])..where(_db.trackTable.name.lower().like(likeQuery))).get();
+    final titles = joinedRowsToAudios(trackRows);
+
+    final artistRows = await (_db.select(
+      _db.artistTable,
+    )..where((t) => t.name.lower().like(likeQuery))).get();
+    final artists = artistRows.map((r) => r.name).toList();
+
+    final albumRows = await (_db.select(
+      _db.albumTable,
+    )..where((t) => t.name.lower().like(likeQuery))).get();
+    final albums = albumRows.map((r) => r.id).toList();
+
+    final genreRows = await (_db.select(
+      _db.genreTable,
+    )..where((t) => t.name.lower().like(likeQuery))).get();
+    final genres = genreRows.map((r) => r.name).toList();
+
+    final playlistRows = await (_db.select(
+      _db.playlistTable,
+    )..where((t) => t.name.lower().like(likeQuery))).get();
+    final playlists = playlistRows.map((r) => r.name).toList();
+
+    return LocalSearchResult(
+      titles: titles,
+      artists: artists,
+      albums: albums,
+      genres: genres,
+      playlists: playlists,
+    );
+  }
+
+  Future<bool> isAlbumPinned(int id) async {
+    final result = await (_db.select(
+      _db.albumTable,
+    )..where((a) => a.id.equals(id) & a.pinned.equals(true))).getSingleOrNull();
+    return result != null;
+  }
+
+  Future<bool> isAudioLiked(Audio audio) async {
+    if (audio.path == null) false;
+    final result = await (_db.select(
+      _db.likedTrackTable,
+    )..where((t) => t.trackId.equals(audio.path!))).getSingleOrNull();
+    return result != null;
+  }
+
+  Future<bool> areAudiosLiked(List<Audio> audios) async {
+    final paths = audios.map((a) => a.path).whereType<String>().toSet();
+    if (paths.isEmpty) return false;
+
+    final query = _db.select(_db.likedTrackTable)
+      ..where((t) => t.trackId.isIn(paths));
+    final results = await query.get();
+    return results.length == paths.length;
+  }
+
+  Future<void> moveAudioInPlaylist(
+    String id,
+    int oldIndex,
+    int newIndex,
+  ) async {
+    if (id == PageIDs.likedAudios) {
+      final reordered = _reorderedAudios(
+        await findLikedAudios(),
+        oldIndex,
+        newIndex,
+      );
+      if (reordered == null) return;
+
+      await _db.transaction(() async {
+        await _db.delete(_db.likedTrackTable).go();
+        for (final audio in reordered) {
+          final trackId = await findTrackIdByPath(audio.path);
+          if (trackId != null) {
+            await _db
+                .into(_db.likedTrackTable)
+                .insert(
+                  LikedTrackTableCompanion.insert(trackId: trackId),
+                  mode: InsertMode.insertOrIgnore,
+                );
+          }
+        }
+      });
+    } else {
+      final plRow = await findPlaylistByName(id);
+      if (plRow == null) return;
+
+      final reordered = _reorderedAudios(
+        await loadPlaylistTracks(plRow.id),
+        oldIndex,
+        newIndex,
+      );
+      if (reordered == null) return;
+
+      await persistPlaylistInDb(id, reordered);
+    }
+  }
+
+  List<Audio>? _reorderedAudios(List<Audio> list, int oldIndex, int newIndex) {
+    if (list.isEmpty || oldIndex < 0 || oldIndex >= list.length) return null;
+    if (newIndex > list.length) return null;
+
+    if (oldIndex < newIndex) {
+      newIndex -= 1;
+    }
+
+    final audio = list.removeAt(oldIndex);
+    list.insert(newIndex, audio);
+    return list;
   }
 }

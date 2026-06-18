@@ -9,6 +9,8 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
+import '../../local_audio/find_all_tracks_manager.dart';
+import '../../local_audio/find_playlist_manager.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/playlist_action.dart';
 import '../../settings/settings_manager.dart';
@@ -74,11 +76,12 @@ class _PlaylistAddAudioAutoCompleteState
     final allAudiosResults = watchValue(
       (LocalAudioManager m) => m.initAudiosCommand.results,
     );
-    final allAudios = allAudiosResults.data?.audios ?? [];
+    final allAudios = watchValue((FindAllTracksManager m) => m.command);
     final isRunning = allAudiosResults.isRunning;
     final error = allAudiosResults.error;
     final playListResult = watchValue(
-      (LocalAudioManager m) => m.playlistCommand(widget.pageId).results,
+      (PlaylistManager m) => m.command.results,
+      param1: widget.pageId,
     );
     final playlist = playListResult.data ?? [];
 
@@ -214,7 +217,7 @@ class _PlaylistAddAudioAutoCompleteState
                   );
                 },
                 optionsBuilder: (textEditingValue) {
-                  final options = allAudios
+                  final options = (allAudios ?? [])
                       .whereNot(
                         (oneOfAll) => playlist.any(
                           (playlistElement) => playlistElement == oneOfAll,
@@ -231,9 +234,10 @@ class _PlaylistAddAudioAutoCompleteState
                     ),
                   );
                 },
-                onSelected: (option) => di<LocalAudioManager>()
-                    .playlistCommand(widget.pageId)
-                    .run(
+                onSelected: (option) =>
+                    di<PlaylistManager>(
+                      param1: widget.pageId,
+                    ).createOrchangePlaylistCommand.run(
                       PlaylistChange(
                         id: widget.pageId,
                         audios: [option],

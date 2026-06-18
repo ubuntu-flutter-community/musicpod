@@ -43,13 +43,13 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
     super.dispose();
   }
 
-  bool isPageInLibrary(String? pageId) =>
+  Future<bool> isPageInLibrary(String? pageId) async =>
       pageId != null &&
       (PageIDs.permanent.contains(pageId) ||
           (int.tryParse(pageId) != null &&
-              _localAudioService.isPinnedAlbum(int.parse(pageId))) ||
+              await _localAudioService.isPinnedAlbum(int.parse(pageId))) ||
           _radioService.isStarredStation(pageId) ||
-          _localAudioService.isPlaylistSaved(pageId) ||
+          await _localAudioService.isPlaylistSaved(pageId) ||
           _podcastService.isPodcastSubscribed(pageId));
 
   String? get selectedPageId => _settingsService.getString(SPKeys.selectedPage);
@@ -62,7 +62,7 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
     bool maintainState = false,
     bool replace = false,
   }) async {
-    final inLibrary = isPageInLibrary(pageId);
+    final inLibrary = await isPageInLibrary(pageId);
     assert(inLibrary || builder != null);
     if (selectedPageId == pageId && !replace) {
       return;

@@ -7,7 +7,7 @@ import '../../../common/view/confirm.dart';
 import '../../../common/view/icons.dart';
 import '../../../common/view/ui_constants.dart';
 import '../../../extensions/build_context_x.dart';
-import '../../../local_audio/local_audio_manager.dart';
+import '../../../local_audio/find_playlist_manager.dart';
 import '../../../local_audio/playlist_action.dart';
 import '../../player_manager.dart';
 
@@ -164,19 +164,17 @@ class _QueueBodyState extends State<QueueBody>
                             ],
                           ),
                           onConfirm: () {
-                            di<LocalAudioManager>()
-                                .playlistCommand(
-                                  '${l10n.queue} ${DateTime.now()}',
-                                )
-                                .run(
-                                  PlaylistChange(
-                                    id: '${l10n.queue} ${DateTime.now()}',
-                                    audios: List.from(
-                                      queue.where((e) => e.isLocal),
-                                    ),
-                                    action: PlaylistAction.create,
-                                  ),
-                                );
+                            di<PlaylistManager>(
+                              param1: '${l10n.queue} ${DateTime.now()}',
+                            ).createOrchangePlaylistCommand.run(
+                              PlaylistChange(
+                                id: '${l10n.queue} ${DateTime.now()}',
+                                audios: List.from(
+                                  queue.where((e) => e.isLocal),
+                                ),
+                                action: PlaylistAction.create,
+                              ),
+                            );
                             if (widget.shownInDialog && context.canPop()) {
                               context.pop();
                             }

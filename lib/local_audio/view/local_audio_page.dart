@@ -5,11 +5,11 @@ import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/confirm.dart';
+import '../../common/view/default_page_body.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/search_button.dart';
-import '../../common/view/default_page_body.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -17,6 +17,10 @@ import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
 import '../../settings/settings_manager.dart';
 import '../../settings/view/settings_action.dart';
+import '../find_all_album_i_ds_manager.dart';
+import '../find_all_artists_manager.dart';
+import '../find_all_genres_manager.dart';
+import '../find_all_tracks_manager.dart';
 import '../local_audio_manager.dart';
 import '../local_audio_view.dart';
 import 'failed_import_snackbar.dart';
@@ -77,17 +81,14 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
       },
     );
 
-    final audiosResults = watchValue(
+    final initResults = watchValue(
       (LocalAudioManager m) => m.initAudiosCommand.results,
     );
     final progress = watchValue(
       (LocalAudioManager m) => m.initAudiosCommand.progress,
     );
-    final audios = audiosResults.data?.audios;
-    final isRunning = audiosResults.isRunning;
-    final localAudioManager = di<LocalAudioManager>();
+    final isRunning = initResults.isRunning;
 
-    final playlists = watchValue((LocalAudioManager m) => m.playlistIDsCommand);
     final index = watchPropertyValue((SettingsManager m) => m.localAudioindex);
     final localAudioView = LocalAudioView.values[index];
 
@@ -113,7 +114,7 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
         ],
         title: Text(context.l10n.localAudio),
       ),
-      body: audios == null || isRunning
+      body: isRunning
           ? Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -133,27 +134,50 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
             )
           : DefaultPageBody(
               controlPanel: const LocalAudioControlPanel(),
-              sliverContentBuilder: (context, constraints) => audios.isEmpty
-                  ? SliverNoSearchResultPage(
-                      message: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(l10n.noLocalTitlesFound),
-                          const SizedBox(height: kLargestSpace),
-                          const SettingsButton.important(scrollIndex: 2),
-                        ],
-                      ),
-                    )
-                  : LocalAudioBody(
-                      constraints: constraints,
-                      localAudioView: localAudioView,
-                      titles: audios,
-                      albumIDs: localAudioManager.allAlbumIDs,
-                      artists: localAudioManager.allArtists,
-                      genres: localAudioManager.allGenres,
-                      playlists: playlists,
-                    ),
+              sliverContentBuilder: (context, constraints) =>
+                  LocalAudioPageBody(
+                    constraints: constraints,
+                    localAudioView: localAudioView,
+                  ),
             ),
+    );
+  }
+}
+
+class LocalAudioPageBody extends StatelessWidget with WatchItMixin {
+  const LocalAudioPageBody({
+    super.key,
+    required this.constraints,
+    required this.localAudioView,
+  });
+
+  final BoxConstraints constraints;
+  final LocalAudioView localAudioView;
+
+  @override
+  Widget build(BuildContext context) {
+    final titles = watchValue((FindAllTracksManager m) => m.command);
+
+    if (titles == null || titles.isEmpty)
+      return SliverNoSearchResultPage(
+        message: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(context.l10n.noLocalTitlesFound),
+            const SizedBox(height: kLargestSpace),
+            const SettingsButton.important(scrollIndex: 2),
+          ],
+        ),
+      );
+
+    return LocalAudioBody(
+      constraints: constraints,
+      localAudioView: localAudioView,
+      titles: titles,
+      albumIDs: watchValue((FindAllAlbumIDsManager m) => m.command),
+      artists: watchValue((FindAllArtistsManager m) => m.command),
+      genres: watchValue((FindAllGenresManager m) => m.command),
+      playlists: watchValue((PlaylistIDsManager m) => m.command),
     );
   }
 }

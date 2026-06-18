@@ -11,7 +11,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../custom_content/custom_content_manager.dart';
 import '../../extensions/build_context_x.dart';
-import '../../local_audio/local_audio_manager.dart';
+import '../../local_audio/find_playlist_manager.dart';
 import '../../local_audio/local_audio_view.dart';
 import '../../local_audio/playlist_action.dart';
 import '../../settings/settings_manager.dart';
@@ -50,7 +50,6 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final localAudioManager = di<LocalAudioManager>();
     final routingManager = di<RoutingManager>();
     final l10n = context.l10n;
     return ConfirmationDialog(
@@ -100,14 +99,14 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
                         pageId: PageIDs.localAudio,
                         replace: true,
                       );
-                      localAudioManager
-                          .playlistCommand(widget.playlistName!)
-                          .run(
-                            PlaylistChange(
-                              id: widget.playlistName!,
-                              action: PlaylistAction.delete,
-                            ),
-                          );
+                      di<PlaylistManager>(
+                        param1: widget.playlistName!,
+                      ).createOrchangePlaylistCommand.run(
+                        PlaylistChange(
+                          id: widget.playlistName!,
+                          action: PlaylistAction.delete,
+                        ),
+                      );
                     },
                     label: Text(context.l10n.deletePlaylist),
                   ),
@@ -124,15 +123,15 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
         await di<SettingsManager>().setLocalAudioindex(
           LocalAudioView.playlists.index,
         );
-        localAudioManager
-            .playlistCommand(widget.playlistName!)
-            .run(
-              PlaylistChange(
-                id: widget.playlistName!,
-                action: PlaylistAction.updateName,
-                newName: _controller.text,
-              ),
-            );
+        di<PlaylistManager>(
+          param1: widget.playlistName!,
+        ).createOrchangePlaylistCommand.run(
+          PlaylistChange(
+            id: widget.playlistName!,
+            action: PlaylistAction.updateName,
+            newName: _controller.text,
+          ),
+        );
       },
     );
   }

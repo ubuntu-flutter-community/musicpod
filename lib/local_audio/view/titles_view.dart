@@ -53,12 +53,12 @@ class TitlesView extends StatelessWidget with WatchItMixin {
         builder: (_) => ArtistPage(pageId: artist),
         pageId: artist,
       ),
-      onSubSubTitleTab: (Audio audio) {
+      onSubSubTitleTab: (Audio audio) async {
         if (audio.album == null || audio.artist == null) {
           context.toast(Text(context.l10n.nothingFound));
           return;
         }
-        final id = di<LocalAudioManager>().findAlbumId(
+        final id = await di<LocalAudioManager>().findAlbumId(
           artist: audio.artist!,
           album: audio.album!,
         );
@@ -68,7 +68,7 @@ class TitlesView extends StatelessWidget with WatchItMixin {
           return;
         }
 
-        di<RoutingManager>().push(
+        await di<RoutingManager>().push(
           builder: (_) => AlbumPage(id: id),
           pageId: id.toString(),
         );

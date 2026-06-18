@@ -36,6 +36,15 @@ import 'external_path/external_path_service.dart' as _i551;
 import 'local_audio/album_ids_of_artist_manager.dart' as _i234;
 import 'local_audio/album_ids_of_genre_manager.dart' as _i75;
 import 'local_audio/change_local_meta_data_manager.dart' as _i46;
+import 'local_audio/find_album_manager.dart' as _i160;
+import 'local_audio/find_album_name_manager.dart' as _i548;
+import 'local_audio/find_all_album_i_ds_manager.dart' as _i1054;
+import 'local_audio/find_all_artists_manager.dart' as _i142;
+import 'local_audio/find_all_genres_manager.dart' as _i486;
+import 'local_audio/find_all_tracks_manager.dart' as _i897;
+import 'local_audio/find_artist_of_album_manager.dart' as _i234;
+import 'local_audio/find_playlist_manager.dart' as _i305;
+import 'local_audio/liked_audios_manager.dart' as _i215;
 import 'local_audio/local_audio_manager.dart' as _i688;
 import 'local_audio/local_audio_service.dart' as _i438;
 import 'local_audio/local_cover_manager.dart' as _i439;
@@ -283,6 +292,18 @@ extension GetItInjectableX on _i174.GetIt {
       ),
       dispose: (i) => i.dispose(),
     );
+    gh.factoryCached<_i1054.FindAllAlbumIDsManager>(
+      () => _i1054.FindAllAlbumIDsManager(gh<_i438.LocalAudioService>()),
+    );
+    gh.factoryCached<_i142.FindAllArtistsManager>(
+      () => _i142.FindAllArtistsManager(gh<_i438.LocalAudioService>()),
+    );
+    gh.factoryCached<_i486.FindAllGenresManager>(
+      () => _i486.FindAllGenresManager(gh<_i438.LocalAudioService>()),
+    );
+    gh.factoryCached<_i215.LikedAudiosManager>(
+      () => _i215.LikedAudiosManager(gh<_i438.LocalAudioService>()),
+    );
     gh.lazySingleton<_i651.SettingsManager>(
       () => _i651.SettingsManager(
         service: gh<_i763.SettingsService>(),
@@ -336,10 +357,41 @@ extension GetItInjectableX on _i174.GetIt {
       preResolve: true,
       dispose: (i) => i.dispose(),
     );
+    gh.factoryCached<_i688.PinnedAlbumIDsManager>(
+      () => _i688.PinnedAlbumIDsManager(
+        localAudioService: gh<_i438.LocalAudioService>(),
+      ),
+    );
+    gh.factoryCached<_i688.PlaylistIDsManager>(
+      () => _i688.PlaylistIDsManager(
+        localAudioService: gh<_i438.LocalAudioService>(),
+      ),
+    );
     gh.singleton<_i688.LocalAudioManager>(
       () => _i688.LocalAudioManager(
         localAudioService: gh<_i438.LocalAudioService>(),
       ),
+    );
+    gh.factoryCachedParam<_i160.FindAlbumManager, int, dynamic>(
+      (albumId, _) => _i160.FindAlbumManager(
+        albumId: albumId,
+        localAudioManager: gh<_i688.LocalAudioManager>(),
+      ),
+    );
+    gh.factoryParam<_i548.FindAlbumNameManager, int, dynamic>(
+      (albumId, _) => _i548.FindAlbumNameManager.create(
+        albumId: albumId,
+        localAudioManager: gh<_i688.LocalAudioManager>(),
+      ),
+    );
+    gh.factoryParam<_i234.FindArtistOfAlbumManager, int, dynamic>(
+      (albumId, _) => _i234.FindArtistOfAlbumManager.create(
+        albumId: albumId,
+        localAudioManager: gh<_i688.LocalAudioManager>(),
+      ),
+    );
+    gh.factoryCached<_i897.FindAllTracksManager>(
+      () => _i897.FindAllTracksManager(gh<_i688.LocalAudioManager>()),
     );
     gh.lazySingleton<_i807.SearchManager>(
       () => _i807.SearchManager(
@@ -370,6 +422,12 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioManager: gh<_i688.LocalAudioManager>(),
         radioManager: gh<_i749.RadioManager>(),
         playerManager: gh<_i444.PlayerManager>(),
+      ),
+    );
+    gh.factoryCachedParam<_i305.PlaylistManager, String, dynamic>(
+      (playlistId, _) => _i305.PlaylistManager(
+        playlistId: playlistId,
+        localAudioManager: gh<_i688.LocalAudioManager>(),
       ),
     );
     return this;

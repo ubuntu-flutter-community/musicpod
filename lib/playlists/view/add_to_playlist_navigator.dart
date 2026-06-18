@@ -9,6 +9,8 @@ import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../local_audio/find_playlist_manager.dart';
+import '../../local_audio/liked_audios_manager.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/playlist_action.dart';
 import 'add_to_playlist_snack_bar.dart';
@@ -43,9 +45,7 @@ class _PlaylistTilesList extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final playlistNames = watchValue(
-      (LocalAudioManager m) => m.playlistIDsCommand,
-    );
+    final playlistNames = watchValue((PlaylistIDsManager m) => m.command);
 
     final children = [
       ListTile(
@@ -111,17 +111,17 @@ class _PlaylistTile extends StatelessWidget {
       contentPadding: padding,
       onTap: () {
         if (playlistId == PageIDs.likedAudios) {
-          localAudioManager.addLikedAudios(audios);
+          di<LikedAudiosManager>().addLikedAudios(audios);
         } else {
-          localAudioManager
-              .playlistCommand(playlistId)
-              .run(
-                PlaylistChange(
-                  id: playlistId,
-                  audios: audios,
-                  action: PlaylistAction.addTo,
-                ),
-              );
+          di<PlaylistManager>(
+            param1: playlistId,
+          ).createOrchangePlaylistCommand.run(
+            PlaylistChange(
+              id: playlistId,
+              audios: audios,
+              action: PlaylistAction.addTo,
+            ),
+          );
         }
 
         Navigator.of(context, rootNavigator: true).maybePop();
@@ -162,7 +162,6 @@ class _NewViewState extends State<_NewView> {
 
   @override
   Widget build(BuildContext context) {
-    final localAudioManager = di<LocalAudioManager>();
     return Container(
       decoration: BoxDecoration(
         color: context.theme.dialogTheme.backgroundColor,
@@ -188,15 +187,15 @@ class _NewViewState extends State<_NewView> {
                   ElevatedButton(
                     onPressed: () {
                       context.pop();
-                      localAudioManager
-                          .playlistCommand(_controller.text)
-                          .run(
-                            PlaylistChange(
-                              id: _controller.text,
-                              audios: widget.audios,
-                              action: PlaylistAction.create,
-                            ),
-                          );
+                      di<PlaylistManager>(
+                        param1: _controller.text,
+                      ).createOrchangePlaylistCommand.run(
+                        PlaylistChange(
+                          id: _controller.text,
+                          audios: widget.audios,
+                          action: PlaylistAction.create,
+                        ),
+                      );
                       showAddedToPlaylistSnackBar(
                         context: context,
                         id: _controller.text,

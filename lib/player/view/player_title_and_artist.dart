@@ -212,7 +212,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
   }) async {
     final id =
         audio.albumDbId ??
-        di<LocalAudioManager>().findAlbumId(
+        await di<LocalAudioManager>().findAlbumId(
           artist: audio.artist!,
           album: audio.album!,
         );

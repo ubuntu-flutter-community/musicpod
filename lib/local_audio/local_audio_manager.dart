@@ -4,7 +4,6 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-import '../app/page_ids.dart';
 import '../common/data/audio.dart';
 import '../common/no_error_filter.dart';
 import '../common/view/audio_filter.dart';
@@ -14,11 +13,7 @@ import 'playlist_action.dart';
 @singleton
 class LocalAudioManager {
   LocalAudioManager({required LocalAudioService localAudioService})
-    : _localAudioService = localAudioService {
-    togglePinnedAlbumIDsCommand.run();
-    playlistIDsCommand.run();
-    likedAudiosCommand.run();
-  }
+    : _localAudioService = localAudioService {}
 
   final LocalAudioService _localAudioService;
 
@@ -38,53 +33,30 @@ class LocalAudioManager {
   void setShowPlaylistAddAudios(bool value) {
     if (value == showPlaylistAddAudios.value) return;
     showPlaylistAddAudios.value = value;
-    if (showPlaylistAddAudios.value && _localAudioService.audios == null) {
-      initAudiosCommand.run((
-        directory: null,
-        forceInit: false,
-        forceDbOnly: false,
-      ));
-    }
   }
 
-  List<String>? get allArtists => _localAudioService.allArtists;
-  List<String>? get allGenres => _localAudioService.allGenres;
-  List<int>? get allAlbumIDs => _localAudioService.allAlbumIDs;
+  Future<int?> findAlbumId({required String artist, required String album}) =>
+      _localAudioService.findAlbumIdForArtistAndAlbum(
+        artist: artist,
+        album: album,
+      );
 
-  int? findAlbumId({required String artist, required String album}) =>
-      _localAudioService.findAlbumId(artist: artist, album: album);
+  Future<String?> findAlbumName(int albumId) async {
+    await _runInitIfNeeded();
 
-  String? findAlbumName(int albumId) =>
-      _localAudioService.findAlbumName(albumId);
+    return _localAudioService.findAlbumName(albumId);
+  }
 
-  String? findArtistOfAlbum(int albumId) =>
-      _localAudioService.findArtistOfAlbum(albumId);
+  Future<String?> findArtistOfAlbum(int albumId) async {
+    await _runInitIfNeeded();
 
-  final _findAlbumCommands = <int, Command<AudioFilter?, List<Audio>?>>{};
-  Command<AudioFilter?, List<Audio>?> findAlbumCommand(
-    int albumId, {
-    bool force = false,
-  }) {
-    if (force) {
-      _findAlbumCommands.remove(albumId);
-    }
-    return _findAlbumCommands.putIfAbsent(
-      albumId,
-      () => Command.createAsync((audioFilter) async {
-        if (initAudiosCommand.value == null) {
-          await initAudiosCommand.runAsync((
-            directory: null,
-            forceInit: false,
-            forceDbOnly: false,
-          ));
-        }
+    return _localAudioService.findArtistOfAlbum(albumId);
+  }
 
-        return _localAudioService.findAlbum(
-          albumId,
-          audioFilter ?? AudioFilter.trackNumber,
-        );
-      }, initialValue: null),
-    );
+  Future<List<Audio>?> findAlbum(int albumId) async {
+    await _runInitIfNeeded();
+
+    return _localAudioService.findAlbum(albumId);
   }
 
   Future<List<Audio>?> findTitlesOfArtist(
@@ -104,19 +76,9 @@ class LocalAudioManager {
 
   late final Command<
     ({bool forceInit, String? directory, bool forceDbOnly}),
-    ({List<Audio> audios, List<String> failedImports})?
+    ({bool initialized, List<String> failedImports})?
   >
   initAudiosCommand = Command.createAsyncWithProgress((param, handle) async {
-    if (param.forceInit) {
-      clear(
-        clearFindAlbumsCommands: true,
-        clearPlaylistContents: true,
-        clearLikedAudiosCommand: true,
-        clearPlaylistIDCommands: true,
-        clearTogglePinnedAlbumIDsCommand: true,
-      );
-    }
-
     final localAudioResult = await _localAudioService.init(
       forceInit: param.forceInit,
       newDirectory: param.directory,
@@ -129,59 +91,19 @@ class LocalAudioManager {
     return localAudioResult;
   }, initialValue: null);
 
-  //
-  // Liked Audios
-  //
-  void addLikedAudios(List<Audio> audios) => likedAudiosCommand.run(
-    PlaylistChange(
-      id: PageIDs.likedAudios,
-      action: PlaylistAction.addTo,
-      audios: audios,
-    ),
-  );
-  void removeLikedAudios(List<Audio> audios) => likedAudiosCommand.run(
-    PlaylistChange(
-      id: PageIDs.likedAudios,
-      action: PlaylistAction.removeFrom,
-      audios: audios,
-    ),
-  );
-  late final Command<PlaylistChange?, List<Audio>> likedAudiosCommand =
-      Command.createAsync((param) async {
-        if (param != null) {
-          await _localAudioService.createOrChangeLikedAudios(param);
-        }
-
-        if (_localAudioService.likedAudios.isEmpty) {
-          await _localAudioService.loadLikedAudios();
-        }
-
-        return _localAudioService.likedAudios;
-      }, initialValue: _localAudioService.likedAudios);
+  Future<void> _runInitIfNeeded() async {
+    if (initAudiosCommand.value == null) {
+      await initAudiosCommand.runAsync((
+        directory: null,
+        forceInit: false,
+        forceDbOnly: false,
+      ));
+    }
+  }
 
   //
   // Playlists
   //
-
-  final _playlistCommands = <String, Command<PlaylistChange, List<Audio>?>>{};
-  Command<PlaylistChange, List<Audio>?> playlistCommand(String id) =>
-      _playlistCommands.putIfAbsent(
-        id,
-        () => Command.createAsync((param) async {
-          await _localAudioService.createOrChangePlaylist(param);
-          await playlistIDsCommand.runAsync();
-          return _localAudioService.getPlaylistById(id);
-        }, initialValue: _localAudioService.getPlaylistById(id)),
-      );
-
-  late final Command<void, List<String>> playlistIDsCommand =
-      Command.createAsyncNoParam(() async {
-        await _localAudioService.loadPlaylistIDs();
-
-        return _localAudioService.playlistIDs;
-      }, initialValue: _localAudioService.playlistIDs);
-
-  bool isPlaylistSaved(String? id) => _playlistCommands.containsKey(id);
 
   late final Command<List<({String id, List<Audio> audios})>, void>
   importExternalPlaylistsCommand = Command.createAsyncNoResult((
@@ -196,7 +118,7 @@ class LocalAudioManager {
           external: true,
         ),
       );
-      await playlistIDsCommand.runAsync();
+      await di<PlaylistIDsManager>().command.runAsync();
     }
   });
 
@@ -204,48 +126,49 @@ class LocalAudioManager {
   // Pinned Albums
   //
 
-  late final Command<int?, List<int>> togglePinnedAlbumIDsCommand =
-      Command.createAsync((id) async {
-        if (id != null) {
-          if (_localAudioService.pinnedAlbumIDs.contains(id)) {
-            await _localAudioService.unpinAlbum(id);
-          } else {
-            await _localAudioService.pinAlbum(id);
-          }
-        }
+  Future<void> createOrChangePlaylist(PlaylistChange param) =>
+      _localAudioService.createOrChangePlaylist(param);
 
-        if (_localAudioService.pinnedAlbumIDs.isEmpty) {
-          await _localAudioService.loadPinnedAlbums();
-        }
-
-        return _localAudioService.pinnedAlbumIDs;
-      }, initialValue: _localAudioService.pinnedAlbumIDs);
-
-  void clear({
-    bool clearPlaylistContents = true,
-    bool clearFindAlbumsCommands = true,
-    bool clearPlaylistIDCommands = false,
-    bool clearTogglePinnedAlbumIDsCommand = false,
-    bool clearLikedAudiosCommand = false,
-  }) {
-    _localAudioService.clearContentCaches(
-      clearPlaylistContents: clearPlaylistContents,
-    );
-    if (clearFindAlbumsCommands) {
-      _findAlbumCommands.clear();
-    }
-    if (clearPlaylistContents) {
-      _playlistCommands.clear();
-    }
-    if (clearLikedAudiosCommand) {
-      likedAudiosCommand.value = [];
-    }
-    if (clearPlaylistIDCommands) {
-      playlistIDsCommand.value = [];
-    }
-    if (clearTogglePinnedAlbumIDsCommand) {
-      togglePinnedAlbumIDsCommand.value = [];
-    }
-    importExternalPlaylistsCommand.value = [];
+  Future<List<Audio>?> findPlaylistById(String playlistId) async {
+    await _runInitIfNeeded();
+    return _localAudioService.findPlaylistById(playlistId);
   }
+
+  Future<List<Audio>> findAllTracks() async {
+    await _runInitIfNeeded();
+    return _localAudioService.findAllTracks();
+  }
+}
+
+@Injectable(cache: true)
+class PinnedAlbumIDsManager {
+  PinnedAlbumIDsManager({required LocalAudioService localAudioService}) {
+    command = Command.createAsync((id) async {
+      if (id != null) {
+        if (await localAudioService.isPinnedAlbum(id)) {
+          await localAudioService.unpinAlbum(id);
+        } else {
+          await localAudioService.pinAlbum(id);
+        }
+      }
+
+      return localAudioService.findPinnedAlbumIDs();
+    }, initialValue: []);
+    command.run();
+  }
+
+  late final Command<int?, List<int>> command;
+}
+
+@Injectable(cache: true)
+class PlaylistIDsManager {
+  PlaylistIDsManager({required LocalAudioService localAudioService}) {
+    command = Command.createAsyncNoParam(
+      () => localAudioService.findAllPlaylistIDs(),
+      initialValue: [],
+    );
+    command.run();
+  }
+
+  late final Command<void, List<String>> command;
 }

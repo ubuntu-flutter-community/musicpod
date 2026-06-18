@@ -4,6 +4,8 @@ import 'package:injectable/injectable.dart';
 import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
 import '../common/logging.dart';
+import '../local_audio/find_album_manager.dart';
+import '../local_audio/find_playlist_manager.dart';
 import '../local_audio/local_audio_manager.dart';
 import '../player/player_manager.dart';
 import '../podcasts/data/podcast_update_capsule.dart';
@@ -15,7 +17,6 @@ import '../radio/station_manager.dart';
 @Injectable(cache: true)
 class SidebarAudiosManager {
   final PodcastManager _podcastManager;
-  final LocalAudioManager _localAudioManager;
   final RadioManager _radioManager;
   final PlayerManager _playerManager;
 
@@ -24,8 +25,7 @@ class SidebarAudiosManager {
     required LocalAudioManager localAudioManager,
     required RadioManager radioManager,
     required PlayerManager playerManager,
-  }) : _localAudioManager = localAudioManager,
-       _podcastManager = podcastManager,
+  }) : _podcastManager = podcastManager,
        _radioManager = radioManager,
        _playerManager = playerManager {
     printInfoInDebugMode(
@@ -80,13 +80,13 @@ class SidebarAudiosManager {
       return di<EpisodesManager>(param1: pageId).command.runAsync(podcastGenre);
     }
 
-    if (_localAudioManager.isPlaylistSaved(pageId)) {
-      return _localAudioManager.playlistCommand(pageId).value;
+    if (di<PlaylistManager>(param1: pageId).command.value != null) {
+      return di<PlaylistManager>(param1: pageId).command.value;
     }
 
     final albumId = int.tryParse(pageId);
     if (albumId != null) {
-      return _localAudioManager.findAlbumCommand(albumId).runAsync();
+      return di<FindAlbumManager>(param1: albumId).command.runAsync();
     }
     return null;
   }
