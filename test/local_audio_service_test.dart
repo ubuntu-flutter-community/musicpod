@@ -52,8 +52,8 @@ Future<void> main() async {
   });
 
   group('test metadata', () {
-    test('testTestMp3', () {
-      final audios = service?.audios;
+    test('testTestMp3', () async {
+      final audios = await service?.findAllTracks();
       expect(audios?.isNotEmpty, true);
 
       final testTestMp3 = audios?.firstWhereOrNull(
@@ -65,8 +65,8 @@ Future<void> main() async {
       expect(testTestMp3?.genre, testMp3.genre);
     });
 
-    test('testTestOgg', () {
-      final audios = service?.audios;
+    test('testTestOgg', () async {
+      final audios = await service?.findAllTracks();
       expect(audios?.isNotEmpty, true);
 
       final coldStones = audios?.firstWhereOrNull(

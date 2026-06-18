@@ -13,6 +13,7 @@ import '../common/data/audio_type.dart';
 import '../common/logging.dart';
 import '../extensions/media_file_x.dart';
 import '../external_path/external_path_service.dart';
+import '../local_audio/find_playlist_manager.dart';
 import '../local_audio/local_audio_service.dart';
 import '../podcasts/podcast_service.dart';
 import '../radio/radio_service.dart';
@@ -78,12 +79,9 @@ class CustomContentManager {
     _exportPlaylistToM3u(audios: audios, basePath: path, id: id);
   }
 
-  bool get isExportingPlaylistsAndPinnedAlbumsToM3UsNeeded =>
-      _localAudioService.playlistIDs.isNotEmpty ||
-      _localAudioService.pinnedAlbumIDs.isNotEmpty;
   Future<bool> exportPlaylistsAndPinnedAlbumsToM3Us() async {
     final albums = <({String id, List<Audio> audios})>[];
-    for (var e in _localAudioService.pinnedAlbumIDs) {
+    for (var e in (await _localAudioService.findPinnedAlbumIDs())) {
       albums.add((
         id: e.toString(),
         audios: await _localAudioService.findAlbum(e) ?? [],
@@ -91,8 +89,13 @@ class CustomContentManager {
     }
 
     final List<({String id, List<Audio> audios})> list = [
-      ..._localAudioService.playlistIDs.map(
-        (e) => (id: e, audios: _localAudioService.getPlaylistById(e) ?? []),
+      ...await _localAudioService.findAllPlaylistIDs().then(
+        (ids) => ids.map(
+          (e) => (
+            id: e,
+            audios: (di<PlaylistManager>(param1: e).command.value) ?? [],
+          ),
+        ),
       ),
       ...albums,
     ];

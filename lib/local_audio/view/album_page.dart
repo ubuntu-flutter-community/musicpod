@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../../app/routing_manager.dart';
 import '../../common/data/audio.dart';
@@ -17,8 +16,9 @@ import '../../common/view/sliver_audio_page.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/command_x.dart';
-import '../local_audio_manager.dart';
+import '../find_album_manager.dart';
+import '../find_album_name_manager.dart';
+import '../find_artist_of_album_manager.dart';
 import 'artist_page.dart';
 import 'local_cover.dart';
 import 'pin_album_button.dart';
@@ -30,12 +30,9 @@ class AlbumPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    callOnceAfterThisBuild(
-      (context) => di<LocalAudioManager>().findAlbumCommand(id).runRestricted(),
-    );
-
     return watchValue(
-      (LocalAudioManager m) => m.findAlbumCommand(id).results,
+      (FindAlbumManager m) => m.command.results,
+      param1: id,
     ).toWidget(
       onError: (error, lastResult, param) => Scaffold(
         appBar: const HeaderBar(),
@@ -83,13 +80,14 @@ class AlbumPageSideBarName extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final albumName = watchValue(
-      (LocalAudioManager m) => m
-          .findAlbumCommand(albumId)
-          .select(
-            (r) => di<LocalAudioManager>().findAlbumName(albumId) ?? '...',
-          ),
+      (FindAlbumNameManager m) => m.command,
+      param1: albumId,
     );
-    return Text(albumName, maxLines: 1, overflow: TextOverflow.ellipsis);
+    return Text(
+      albumName ?? '...',
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
   }
 }
 
@@ -101,13 +99,14 @@ class AlbumPageSideBarArtist extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final artistName = watchValue(
-      (LocalAudioManager m) => m
-          .findAlbumCommand(albumId)
-          .select(
-            (r) => di<LocalAudioManager>().findArtistOfAlbum(albumId) ?? '...',
-          ),
+      (FindArtistOfAlbumManager m) => m.command,
+      param1: albumId,
     );
-    return Text(artistName, maxLines: 1, overflow: TextOverflow.ellipsis);
+    return Text(
+      artistName ?? '...',
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
   }
 }
 
@@ -118,58 +117,24 @@ class AlbumPageSideBarIcon extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    callOnceAfterThisBuild(
-      (context) =>
-          di<LocalAudioManager>().findAlbumCommand(albumId).runRestricted(),
+    final albumName = watchValue(
+      (FindAlbumNameManager m) => m.command,
+      param1: albumId,
     );
-    final albumName =
-        watchValue(
-          (LocalAudioManager m) => m
-              .findAlbumCommand(albumId)
-              .select((r) => di<LocalAudioManager>().findAlbumName(albumId)),
-        ) ??
-        albumId.toString();
-    final alphabetColor = getAlphabetColor(albumName);
+
+    albumId.toString();
+    final alphabetColor = getAlphabetColor(albumName ?? 'a');
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
-      child:
-          watchValue(
-            (LocalAudioManager m) => m.findAlbumCommand(albumId).results,
-          ).toWidget(
-            onError: (error, lastResult, param) {
-              return SideBarFallBackImage(
-                color: alphabetColor,
-                child: Icon(Iconz.startPlayList),
-              );
-            },
-            whileRunning: (lastResult, param) => Shimmer.fromColors(
-              child: SideBarFallBackImage(
-                color: alphabetColor,
-                child: const SizedBox.shrink(),
-              ),
-              baseColor: alphabetColor,
-              highlightColor: alphabetColor.withValues(alpha: 0.5),
-            ),
-            onData: (album, param) {
-              final path = album
-                  ?.firstWhereOrNull((e) => e.albumDbId == albumId)
-                  ?.path;
-              return path == null
-                  ? SideBarFallBackImage(
-                      color: alphabetColor,
-                      child: Icon(Iconz.startPlayList),
-                    )
-                  : LocalCover(
-                      albumId: albumId,
-                      fallback: SideBarFallBackImage(
-                        color: alphabetColor,
-                        child: Icon(Iconz.startPlayList),
-                      ),
-                      dimension: sideBarImageSize,
-                    );
-            },
-          ),
+      child: LocalCover(
+        albumId: albumId,
+        fallback: SideBarFallBackImage(
+          color: alphabetColor,
+          child: Icon(Iconz.startPlayList),
+        ),
+        dimension: sideBarImageSize,
+      ),
     );
   }
 }
@@ -184,27 +149,11 @@ class AlbumPageImage extends StatelessWidget with WatchItMixin {
     return Align(
       alignment: Alignment.centerLeft,
       child: audio != null && audio!.canHaveLocalCover
-          ? watchValue(
-              (LocalAudioManager m) =>
-                  m.findAlbumCommand(audio!.albumDbId!).results,
-            ).toWidget(
-              whileRunning: (lastResult, param) => Shimmer.fromColors(
-                child: const SizedBox.square(
-                  dimension: kMaxAudioPageHeaderHeight,
-                ),
-                baseColor: getAlphabetColor(audio!.album ?? ''),
-                highlightColor: getAlphabetColor(
-                  audio!.album ?? '',
-                ).withValues(alpha: 0.5),
-              ),
-              onError: (error, lastResult, param) =>
-                  const CoverBackground(dimension: kMaxAudioPageHeaderHeight),
-              onData: (album, param) => LocalCover(
-                albumId: audio!.albumDbId!,
+          ? LocalCover(
+              albumId: audio!.albumDbId!,
+              dimension: kMaxAudioPageHeaderHeight,
+              fallback: const CoverBackground(
                 dimension: kMaxAudioPageHeaderHeight,
-                fallback: const CoverBackground(
-                  dimension: kMaxAudioPageHeaderHeight,
-                ),
               ),
             )
           : const CoverBackground(dimension: kMaxAudioPageHeaderHeight),

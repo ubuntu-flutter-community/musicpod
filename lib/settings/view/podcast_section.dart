@@ -10,8 +10,6 @@ import '../../common/view/ui_constants.dart';
 import '../../custom_content/custom_content_manager.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
-
-import '../../local_audio/local_audio_manager.dart';
 import '../../player/player_service.dart';
 import '../../podcasts/download_manager.dart';
 import '../../podcasts/podcast_manager.dart';
@@ -258,18 +256,8 @@ class _DownloadsTileState extends State<_DownloadsTile> {
                   style: context.textTheme.bodyLarge,
                 ),
               ),
-              onConfirm: () async {
-                final firstAudio = di<LocalAudioManager>()
-                    .initAudiosCommand
-                    .value
-                    ?.audios
-                    .firstOrNull;
-                if (firstAudio != null) {
-                  await di<DownloadManager>().downloadsDirCommand.runAsync((
-                    getDefault: false,
-                  ));
-                }
-              },
+              onConfirm: () async => di<DownloadManager>().downloadsDirCommand
+                  .runAsync((getDefault: false)),
             ),
           );
         },

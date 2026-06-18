@@ -1,19 +1,15 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../page_ids.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../podcasts/podcast_manager.dart';
-import '../../local_audio/local_audio_manager.dart';
-import '../../radio/radio_manager.dart';
-import 'create_master_items.dart';
-import 'master_panel.dart';
+import '../page_ids.dart';
 import '../routing_manager.dart';
+import 'master_item_page.dart';
+import 'master_panel.dart';
 
 class MasterDetailPage extends StatelessWidget {
   const MasterDetailPage({super.key});
@@ -59,26 +55,12 @@ class MasterDetailPage extends StatelessWidget {
               onDidRemovePage: (page) {},
               key: routingManager.masterNavigatorKey,
               observers: [routingManager],
-              onGenerateRoute: (settings) {
-                final masterItems = getAllMasterItems(
-                  context,
-                  di<PodcastManager>(),
-                  di<LocalAudioManager>(),
-                  di<RadioManager>(),
-                );
-                final page =
-                    (masterItems.firstWhereOrNull(
-                              (e) => e.pageId == settings.name,
-                            ) ??
-                            masterItems.elementAt(0))
-                        .pageBuilder(context);
-
-                return PageRouteBuilder(
-                  settings: settings,
-                  maintainState: false,
-                  pageBuilder: (context, _, __) => page,
-                );
-              },
+              onGenerateRoute: (settings) => PageRouteBuilder(
+                settings: settings,
+                maintainState: false,
+                pageBuilder: (context, _, __) =>
+                    MasterItemPage(pageId: settings.name ?? PageIDs.searchPage),
+              ),
             ),
           ),
         ],

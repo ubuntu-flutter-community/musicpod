@@ -19,6 +19,7 @@ import '../../common/view/sliver_audio_tile_list.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../local_audio/find_playlist_manager.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/playlist_action.dart';
 import '../../local_audio/view/album_page.dart';
@@ -53,34 +54,16 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
       }
     });
 
-    registerHandler(
-      select: (LocalAudioManager m) => m.playlistCommand(pageId).results,
-      handler: (context, results, cancel) {
-        if (results.isRunning) return;
-        if (results.hasError) {
-          showFailedImportsSnackBarIfNotBlocked(
-            failedImports:
-                results.paramData?.audios
-                    ?.map((e) => e.path ?? e.url ?? 'unknown')
-                    .toList() ??
-                [],
-            context: context,
-            failedToImport: true,
-          );
-        }
-      },
-    );
-
     final playlistResult = watchValue(
-      (LocalAudioManager m) => m.playlistCommand(pageId).results,
+      (PlaylistManager m) => m.command.results,
+      param1: pageId,
     );
 
     final playlist = playlistResult.data ?? [];
 
     return DropTarget(
-      onDragDone: (details) => di<LocalAudioManager>()
-          .playlistCommand(pageId)
-          .run(
+      onDragDone: (details) =>
+          di<PlaylistManager>(param1: pageId).createOrchangePlaylistCommand.run(
             PlaylistChange(
               id: pageId,
               action: PlaylistAction.addTo,
@@ -172,7 +155,6 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
     final l10n = context.l10n;
     final allowReorder = watchValue((LocalAudioManager m) => m.allowReorder);
     final isPlaying = watchPropertyValue((PlayerManager m) => m.isPlaying);
-    final localAudioManager = di<LocalAudioManager>();
     final playerManager = di<PlayerManager>();
 
     final currentAudio = watchPropertyValue((PlayerManager m) => m.audio);
@@ -257,17 +239,17 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
                     playerManager.moveAudioInQueue(oldIndex, newIndex);
                   }
 
-                  localAudioManager
-                      .playlistCommand(pageId)
-                      .run(
-                        PlaylistChange(
-                          id: pageId,
-                          audios: [],
-                          action: PlaylistAction.moveWithin,
-                          oldIndex: oldIndex,
-                          newIndex: newIndex,
-                        ),
-                      );
+                  di<PlaylistManager>(
+                    param1: pageId,
+                  ).createOrchangePlaylistCommand.run(
+                    PlaylistChange(
+                      id: pageId,
+                      audios: [],
+                      action: PlaylistAction.moveWithin,
+                      oldIndex: oldIndex,
+                      newIndex: newIndex,
+                    ),
+                  );
                 },
               )
             : SliverAudioTileList(
@@ -276,12 +258,12 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
                 audioPageType: AudioPageType.playlist,
                 onSubTitleTab: onArtistTap,
                 constraints: constraints,
-                onSubSubTitleTab: (Audio audio) {
+                onSubSubTitleTab: (Audio audio) async {
                   if (audio.album == null || audio.artist == null) {
                     context.toast(Text(context.l10n.nothingFound));
                     return;
                   }
-                  final id = di<LocalAudioManager>().findAlbumId(
+                  final id = await di<LocalAudioManager>().findAlbumId(
                     artist: audio.artist!,
                     album: audio.album!,
                   );
@@ -291,7 +273,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
                     return;
                   }
 
-                  di<RoutingManager>().push(
+                  await di<RoutingManager>().push(
                     builder: (_) => AlbumPage(id: id),
                     pageId: id.toString(),
                   );

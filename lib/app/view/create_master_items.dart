@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
@@ -27,20 +28,13 @@ import '../page_ids.dart';
 import 'main_page_icon.dart';
 import 'master_item.dart';
 
-Iterable<MasterItem> getAllMasterItems(
-  BuildContext context,
-  PodcastManager podcastManager,
-  LocalAudioManager localAudioManager,
-  RadioManager radioManager,
-) => [
+Iterable<MasterItem> getAllMasterItems() => [
   ...permanentMasterItems,
-  ...createPlaylistMasterItems(localAudioManager.playlistIDsCommand.value),
-  ...createPodcastMasterItems(podcastManager.togglePodcastCommand.value),
-  ...createPinnedAlbumsMasterItems(
-    localAudioManager.togglePinnedAlbumIDsCommand.value,
-  ),
+  ...createPlaylistMasterItems(di<PlaylistIDsManager>().command.value),
+  ...createPodcastMasterItems(di<PodcastManager>().togglePodcastCommand.value),
+  ...createPinnedAlbumsMasterItems(di<PinnedAlbumIDsManager>().command.value),
   ...createStarredStationsMasterItems(
-    radioManager.toggleStarStationCommand.value,
+    di<RadioManager>().toggleStarStationCommand.value,
   ),
 ];
 

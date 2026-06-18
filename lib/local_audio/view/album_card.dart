@@ -12,6 +12,8 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/command_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../player/player_manager.dart';
+import '../find_album_manager.dart';
+import '../find_album_name_manager.dart';
 import '../local_audio_manager.dart';
 import 'album_page.dart';
 import 'local_cover.dart';
@@ -24,8 +26,7 @@ class AlbumCard extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final pinned = watchValue(
-      (LocalAudioManager m) =>
-          m.togglePinnedAlbumIDsCommand.select((e) => e.contains(id)),
+      (PinnedAlbumIDsManager m) => m.command.select((e) => e.contains(id)),
     );
 
     return Stack(
@@ -38,8 +39,7 @@ class AlbumCard extends StatelessWidget with WatchItMixin {
             bottom: kAudioCardBottomHeight + (isMobile ? 25 : 13),
             child: AudioCardVignette(
               iconData: Iconz.pinFilled,
-              onTap: () =>
-                  di<LocalAudioManager>().togglePinnedAlbumIDsCommand.run(id),
+              onTap: () => di<PinnedAlbumIDsManager>().command.run(id),
             ),
           ),
       ],
@@ -47,7 +47,7 @@ class AlbumCard extends StatelessWidget with WatchItMixin {
   }
 }
 
-class _AlbumCard extends StatelessWidget {
+class _AlbumCard extends StatelessWidget with WatchItMixin {
   const _AlbumCard({required this.id});
 
   final int id;
@@ -55,7 +55,7 @@ class _AlbumCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => AudioCard(
     bottom: AudioCardBottom(
-      text: di<LocalAudioManager>().findAlbumName(id) ?? '',
+      text: watchValue((FindAlbumNameManager m) => m.command, param1: id),
     ),
     image: LocalCover(
       dimension: audioCardDimension,
@@ -68,9 +68,7 @@ class _AlbumCard extends StatelessWidget {
     ),
     onPlay: () async => di<PlayerManager>().startPlaylist(
       audios:
-          await di<LocalAudioManager>()
-              .findAlbumCommand(id)
-              .runRestrictedAsync() ??
+          await di<FindAlbumManager>(param1: id).command.runRestrictedAsync() ??
           [],
       listName: id.toString(),
     ),

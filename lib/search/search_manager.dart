@@ -138,20 +138,8 @@ class SearchManager {
     initialValue: _podcastService.cachedPodcastGenres,
   );
 
-  Future<LocalSearchResult?> localSearch(String? query) async {
-    final search = _localAudioService.search(searchQuery.value);
-    return LocalSearchResult(
-      titles: search?.titles,
-      artists: search?.artists,
-      albums: search?.albums,
-      genres: search?.genres,
-      playlists: (query != null && query.isNotEmpty)
-          ? _localAudioService.playlistIDs
-                .where((e) => e.toLowerCase().contains(query.toLowerCase()))
-                .toList()
-          : null,
-    );
-  }
+  Future<LocalSearchResult?> localSearch(String query) =>
+      _localAudioService.search(query);
 
   static const podcastDefaultLimit = 32;
   int _podcastLimit = podcastDefaultLimit;
@@ -242,7 +230,7 @@ class SearchManager {
               attribute: podcastSearchAttribute.value,
             )
             .then((v) => _setPodcastSearchResult(v)),
-      _ => localSearch(searchQuery.value).then((v) {
+      _ => localSearch(searchQuery.value ?? '').then((v) {
         _setLocalSearchResult(v);
 
         if (!manualFilter) {

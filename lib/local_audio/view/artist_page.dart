@@ -56,24 +56,26 @@ class _ArtistPageState extends State<ArtistPage> {
       (LocalAudioManager m) => m.useArtistGridView,
     );
 
-    void onAlbumTap(String text) {
-      final id = manager.findAlbumId(artist: widget.pageId, album: text);
+    Future<void> onAlbumTap(String text) async {
+      final id = await manager.findAlbumId(artist: widget.pageId, album: text);
 
       if (id == null) {
         context.toast(Text(context.l10n.nothingFound));
         return;
       }
 
-      di<RoutingManager>().push(
+      await di<RoutingManager>().push(
         builder: (_) => AlbumPage(id: id),
         pageId: id.toString(),
       );
     }
 
-    void onSubTitleTab(String text) => di<RoutingManager>().push(
-      builder: (context) => GenrePage(genre: text),
-      pageId: text,
-    );
+    Future<void> onSubTitleTab(String text) async {
+      await di<RoutingManager>().push(
+        builder: (context) => GenrePage(genre: text),
+        pageId: text,
+      );
+    }
 
     return Scaffold(
       appBar: HeaderBar(

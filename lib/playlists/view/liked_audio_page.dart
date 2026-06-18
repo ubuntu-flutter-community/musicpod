@@ -10,7 +10,7 @@ import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/sliver_audio_page.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../../local_audio/local_audio_manager.dart';
+import '../../local_audio/liked_audios_manager.dart';
 import '../../local_audio/view/artist_page.dart';
 
 class LikedAudioPage extends StatelessWidget with WatchItMixin {
@@ -18,15 +18,7 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    if (di<LocalAudioManager>().likedAudiosCommand.value.isEmpty) {
-      callOnceAfterThisBuild((context) {
-        di<LocalAudioManager>().likedAudiosCommand.run();
-      });
-    }
-
-    final likedAudios = watchValue(
-      (LocalAudioManager m) => m.likedAudiosCommand,
-    );
+    final likedAudios = watchValue((LikedAudiosManager m) => m.command);
 
     return SliverAudioPage(
       onPageLabelTab: (text) => di<RoutingManager>().push(
@@ -39,7 +31,7 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
       pageId: PageIDs.likedAudios,
       pageTitle: context.l10n.likedSongs,
       pageLabel: context.l10n.playlist,
-      pageSubTitle: '${likedAudios.length} ${context.l10n.titles}',
+      pageSubTitle: '${likedAudios?.length ?? 0} ${context.l10n.titles}',
       description: Text(
         context.l10n.likedSongsSubtitle,
         style: context.theme.pageHeaderDescription,

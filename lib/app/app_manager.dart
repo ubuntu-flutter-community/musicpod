@@ -30,6 +30,7 @@ class AppManager {
        _packageInfo = packageInfo,
        _localAudioService = localAudioService;
 
+  // ignore: unused_field
   final LocalAudioService _localAudioService;
   final GitHub _gitHub;
   final SettingsService _settingsService;
@@ -117,19 +118,8 @@ class AppManager {
 
   late final Command<void, bool?> backupNeededCommand =
       Command.createAsyncNoParam(() async {
-        final needed =
-            (_localAudioService.audios?.isNotEmpty ?? false) ||
-            _localAudioService.playlistIDs.isNotEmpty ||
-            _localAudioService.pinnedAlbumIDs.isNotEmpty ||
-            isCurrentVersionLowerThan(
-                  const String.fromEnvironment(
-                    'FORCED_UPDATE_THRESHOLD',
-                    defaultValue: '2.16.0',
-                  ),
-                ) &&
-                !(_settingsService.getBool(SPKeys.backupSaved + version) ??
-                    false);
-        return needed;
+        // TODO: actually make a check that makes sense, disabled for now
+        return false;
       }, initialValue: null);
 
   late final Command<bool, bool> saveBackupCommand = Command.createAsync(

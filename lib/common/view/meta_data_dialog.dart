@@ -4,8 +4,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
-import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/change_local_meta_data_manager.dart';
+import '../../local_audio/find_album_manager.dart';
 import '../../radio/view/radio_page_tag_bar.dart';
 import '../data/audio.dart';
 import 'copy_clipboard_content.dart';
@@ -47,9 +47,9 @@ class MetaDataContent extends StatelessWidget with WatchItMixin {
       _sub = command.listen((res, sub) {
         if (res != null) {
           context.toast(const Text('Changed metadata successfully'));
-          di<LocalAudioManager>()
-              .findAlbumCommand(audio.albumDbId!, force: true)
-              .run();
+          if (audio.albumDbId != null) {
+            di<FindAlbumManager>(param1: audio.albumDbId!).command.run();
+          }
         }
       });
     });

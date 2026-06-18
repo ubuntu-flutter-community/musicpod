@@ -10,6 +10,7 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../local_audio/find_playlist_manager.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/playlist_action.dart';
 import '../../search/search_manager.dart';
@@ -23,7 +24,6 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final localAudioManager = di<LocalAudioManager>();
     final routingManager = di<RoutingManager>();
 
     final manager = di<CustomContentManager>();
@@ -36,15 +36,15 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
               context.pop();
             }
 
-            localAudioManager
-                .playlistCommand(playlistName!)
-                .run(
-                  PlaylistChange(
-                    id: playlistName,
-                    action: PlaylistAction.create,
-                    external: true,
-                  ),
-                );
+            di<PlaylistManager>(
+              param1: playlistName!,
+            ).createOrchangePlaylistCommand.run(
+              PlaylistChange(
+                id: playlistName,
+                action: PlaylistAction.create,
+                external: true,
+              ),
+            );
 
             await Future.delayed(
               const Duration(milliseconds: 200),
@@ -157,9 +157,8 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
                         if (shownInDialog && context.canPop()) {
                           context.pop();
                         }
-                        localAudioManager.importExternalPlaylistsCommand.run(
-                          playlists,
-                        );
+                        di<LocalAudioManager>().importExternalPlaylistsCommand
+                            .run(playlists);
 
                         manager.reset();
                       }

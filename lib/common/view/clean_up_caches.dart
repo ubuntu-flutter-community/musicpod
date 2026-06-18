@@ -1,9 +1,8 @@
 import 'package:flutter_it/flutter_it.dart';
 
+import '../../local_audio/local_cover_manager.dart';
 import '../../player/player_manager.dart';
 import '../../podcasts/podcast_clean_manager.dart';
-import '../../local_audio/local_audio_manager.dart';
-import '../../local_audio/local_cover_manager.dart';
 
 void cleanUpUnusedPodcasts() {
   di<PodcastCleanManager>().command.run();
@@ -16,5 +15,4 @@ void cleanUpLocalAudioCaches() {
         ? [playerManager.audio!.albumDbId!]
         : [],
   );
-  di<LocalAudioManager>().clear();
 }

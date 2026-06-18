@@ -5,7 +5,7 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../../local_audio/local_audio_manager.dart';
+import '../../local_audio/liked_audios_manager.dart';
 import '../data/audio.dart';
 import '../data/audio_type.dart';
 import 'audio_page_type.dart';
@@ -211,8 +211,8 @@ class _AudioTileTrailing extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final liked = watchValue(
-      (LocalAudioManager m) =>
-          m.likedAudiosCommand.select((e) => e.contains(audio)),
+      (LikedAudiosManager m) =>
+          m.command.select((e) => e?.contains(audio) ?? false),
     );
 
     return Row(
