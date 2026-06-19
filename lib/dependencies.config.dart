@@ -51,7 +51,7 @@ import 'local_audio/local_cover_manager.dart' as _i439;
 import 'local_audio/local_cover_service.dart' as _i57;
 import 'local_audio/persistence/local_audio_dao.dart' as _i688;
 import 'local_audio/pinned_album_i_ds_manager.dart' as _i942;
-import 'local_audio/playlist_i_ds_manager.dart' as _i122;
+import 'local_audio/playlist_ids_manager.dart' as _i803;
 import 'lyrics/lyrics_manager.dart' as _i23;
 import 'lyrics/lyrics_service.dart' as _i546;
 import 'notifications/notifications_service.dart' as _i57;
@@ -369,11 +369,6 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioService: gh<_i438.LocalAudioService>(),
       ),
     );
-    gh.lazySingleton<_i122.PlaylistIDsManager>(
-      () => _i122.PlaylistIDsManager(
-        localAudioService: gh<_i438.LocalAudioService>(),
-      ),
-    );
     gh.factoryCachedParam<_i160.FindAlbumManager, int, dynamic>(
       (albumId, _) => _i160.FindAlbumManager(
         albumId: albumId,
@@ -426,9 +421,19 @@ extension GetItInjectableX on _i174.GetIt {
         playerManager: gh<_i444.PlayerManager>(),
       ),
     );
-    gh.factoryCachedParam<_i305.PlaylistManager, String, dynamic>(
-      (playlistId, _) => _i305.PlaylistManager(
+    gh.factoryParam<_i305.PlaylistManager, String, dynamic>(
+      (playlistId, _) => _i305.PlaylistManager.create(
         playlistId: playlistId,
+        localAudioManager: gh<_i688.LocalAudioManager>(),
+      ),
+    );
+    gh.factoryCached<_i803.ImportExternalPlaylistManager>(
+      () => _i803.ImportExternalPlaylistManager(
+        localAudioManager: gh<_i688.LocalAudioManager>(),
+      ),
+    );
+    gh.lazySingleton<_i803.PlaylistIDsManager>(
+      () => _i803.PlaylistIDsManager(
         localAudioManager: gh<_i688.LocalAudioManager>(),
       ),
     );

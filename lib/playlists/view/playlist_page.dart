@@ -22,6 +22,7 @@ import '../../extensions/build_context_x.dart';
 import '../../local_audio/find_playlist_manager.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/playlist_action.dart';
+import '../../local_audio/playlist_ids_manager.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../local_audio/view/failed_import_snackbar.dart';
@@ -43,6 +44,8 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
       (LocalAudioManager m) => m.initAudiosCommand.isRunning,
     );
 
+    onDispose(() => PlaylistManager.dispose(pageId));
+
     callOnceAfterThisBuild((context) {
       final initAudiosCommand = di<LocalAudioManager>().initAudiosCommand;
       if (!isInitializing && initAudiosCommand.value == null) {
@@ -62,32 +65,30 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
     final playlist = playlistResult.data ?? [];
 
     return DropTarget(
-      onDragDone: (details) =>
-          di<PlaylistManager>(param1: pageId).createOrchangePlaylistCommand.run(
-            PlaylistChange(
-              id: pageId,
-              action: PlaylistAction.addTo,
-              audios: details.files
-                  .map((xFile) => File(xFile.path))
-                  .map(
-                    (file) => Audio.local(
-                      file,
-                      onError: (path) => showFailedImportsSnackBarIfNotBlocked(
-                        failedImports: [path],
-                        context: context,
-                        failedToImport: true,
-                      ),
-                      onParseError: (path) =>
-                          showFailedImportsSnackBarIfNotBlocked(
-                            failedImports: [path],
-                            context: context,
-                          ),
-                    ),
-                  )
-                  .toList(),
-              external: false,
-            ),
-          ),
+      onDragDone: (details) => di<PlaylistIDsManager>().command.run(
+        PlaylistChange(
+          id: pageId,
+          action: PlaylistAction.addTo,
+          audios: details.files
+              .map((xFile) => File(xFile.path))
+              .map(
+                (file) => Audio.local(
+                  file,
+                  onError: (path) => showFailedImportsSnackBarIfNotBlocked(
+                    failedImports: [path],
+                    context: context,
+                    failedToImport: true,
+                  ),
+                  onParseError: (path) => showFailedImportsSnackBarIfNotBlocked(
+                    failedImports: [path],
+                    context: context,
+                  ),
+                ),
+              )
+              .toList(),
+          external: false,
+        ),
+      ),
       child: Scaffold(
         appBar: HeaderBar(
           title: Text(pageId),
@@ -239,9 +240,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
                     playerManager.moveAudioInQueue(oldIndex, newIndex);
                   }
 
-                  di<PlaylistManager>(
-                    param1: pageId,
-                  ).createOrchangePlaylistCommand.run(
+                  di<PlaylistIDsManager>().command.run(
                     PlaylistChange(
                       id: pageId,
                       audios: [],

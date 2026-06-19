@@ -6,7 +6,7 @@ import 'package:yaru/yaru.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/ui_constants.dart';
 import '../../local_audio/pinned_album_i_ds_manager.dart';
-import '../../local_audio/playlist_i_ds_manager.dart';
+import '../../local_audio/playlist_ids_manager.dart';
 import '../../podcasts/podcast_manager.dart';
 import '../../podcasts/view/recent_downloads_button.dart';
 import '../../radio/radio_manager.dart';

@@ -9,11 +9,10 @@ import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../local_audio/find_playlist_manager.dart';
 import '../../local_audio/liked_audios_manager.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/playlist_action.dart';
-import '../../local_audio/playlist_i_ds_manager.dart';
+import '../../local_audio/playlist_ids_manager.dart';
 import 'add_to_playlist_snack_bar.dart';
 
 class AddToPlaylistNavigator extends StatelessWidget {
@@ -114,9 +113,7 @@ class _PlaylistTile extends StatelessWidget {
         if (playlistId == PageIDs.likedAudios) {
           di<LikedAudiosManager>().addLikedAudios(audios);
         } else {
-          di<PlaylistManager>(
-            param1: playlistId,
-          ).createOrchangePlaylistCommand.run(
+          di<PlaylistIDsManager>().command.run(
             PlaylistChange(
               id: playlistId,
               audios: audios,
@@ -188,9 +185,7 @@ class _NewViewState extends State<_NewView> {
                   ElevatedButton(
                     onPressed: () {
                       context.pop();
-                      di<PlaylistManager>(
-                        param1: _controller.text,
-                      ).createOrchangePlaylistCommand.run(
+                      di<PlaylistIDsManager>().command.run(
                         PlaylistChange(
                           id: _controller.text,
                           audios: widget.audios,

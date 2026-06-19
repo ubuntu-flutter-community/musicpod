@@ -9,7 +9,6 @@ import '../common/no_error_filter.dart';
 import '../common/view/audio_filter.dart';
 import 'local_audio_service.dart';
 import 'playlist_action.dart';
-import 'playlist_i_ds_manager.dart';
 
 @singleton
 class LocalAudioManager {
@@ -99,37 +98,19 @@ class LocalAudioManager {
     }
   }
 
-  //
-  // Playlists
-  //
-
-  late final Command<List<({String id, List<Audio> audios})>, void>
-  importExternalPlaylistsCommand = Command.createAsyncNoResult((
-    playlists,
-  ) async {
-    for (final playlist in playlists) {
-      await _localAudioService.createOrChangePlaylist(
-        PlaylistChange(
-          id: playlist.id,
-          audios: playlist.audios,
-          action: PlaylistAction.create,
-          external: true,
-        ),
-      );
-      await di<PlaylistIDsManager>().command.runAsync();
-    }
-  });
-
-  //
-  // Pinned Albums
-  //
-
-  Future<void> createOrChangePlaylist(PlaylistChange param) =>
-      _localAudioService.createOrChangePlaylist(param);
+  Future<void> createOrChangePlaylist(PlaylistChange param) async {
+    await _runInitIfNeeded();
+    return _localAudioService.createOrChangePlaylist(param);
+  }
 
   Future<List<Audio>?> findPlaylistById(String playlistId) async {
     await _runInitIfNeeded();
     return _localAudioService.findPlaylistById(playlistId);
+  }
+
+  Future<List<String>> findAllPlaylistIDs() async {
+    await _runInitIfNeeded();
+    return _localAudioService.findAllPlaylistIDs();
   }
 
   Future<List<Audio>> findAllTracks() async {

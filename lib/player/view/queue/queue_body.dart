@@ -7,8 +7,8 @@ import '../../../common/view/confirm.dart';
 import '../../../common/view/icons.dart';
 import '../../../common/view/ui_constants.dart';
 import '../../../extensions/build_context_x.dart';
-import '../../../local_audio/find_playlist_manager.dart';
 import '../../../local_audio/playlist_action.dart';
+import '../../../local_audio/playlist_ids_manager.dart';
 import '../../player_manager.dart';
 
 class QueueBody extends StatefulWidget with WatchItStatefulWidgetMixin {
@@ -164,9 +164,7 @@ class _QueueBodyState extends State<QueueBody>
                             ],
                           ),
                           onConfirm: () {
-                            di<PlaylistManager>(
-                              param1: '${l10n.queue} ${DateTime.now()}',
-                            ).createOrchangePlaylistCommand.run(
+                            di<PlaylistIDsManager>().command.run(
                               PlaylistChange(
                                 id: '${l10n.queue} ${DateTime.now()}',
                                 audios: List.from(

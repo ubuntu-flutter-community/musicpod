@@ -23,7 +23,7 @@ import '../find_all_genres_manager.dart';
 import '../find_all_tracks_manager.dart';
 import '../local_audio_manager.dart';
 import '../local_audio_view.dart';
-import '../playlist_i_ds_manager.dart';
+import '../playlist_ids_manager.dart';
 import 'failed_import_snackbar.dart';
 import 'local_audio_body.dart';
 import 'local_audio_control_panel.dart';

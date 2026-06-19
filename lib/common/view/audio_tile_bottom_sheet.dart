@@ -9,9 +9,9 @@ import '../../app/routing_manager.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/command_x.dart';
 import '../../local_audio/find_album_manager.dart';
-import '../../local_audio/find_playlist_manager.dart';
 import '../../local_audio/liked_audios_manager.dart';
 import '../../local_audio/playlist_action.dart';
+import '../../local_audio/playlist_ids_manager.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../player/player_manager.dart';
@@ -139,9 +139,7 @@ class AudioTileBottomSheet extends StatelessWidget {
                                   playlistId == PageIDs.likedAudios
                                       ? di<LikedAudiosManager>()
                                             .removeLikedAudios(audios)
-                                      : di<PlaylistManager>(
-                                          param1: playlistId,
-                                        ).createOrchangePlaylistCommand.run(
+                                      : di<PlaylistIDsManager>().command.run(
                                           PlaylistChange(
                                             id: playlistId,
                                             audios: audios,
