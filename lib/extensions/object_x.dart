@@ -8,7 +8,7 @@ import '../podcasts/podcast_service.dart';
 import '../radio/radio_service.dart';
 import '../search/search_timeout_exception.dart';
 
-extension ObjectX on Object {
+extension ObjectX on Object? {
   String localizedErrorMessage(
     AppLocalizations l10n, {
     String? title,

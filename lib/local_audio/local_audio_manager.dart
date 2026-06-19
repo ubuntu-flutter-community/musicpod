@@ -64,9 +64,6 @@ class LocalAudioManager {
     AudioFilter audioFilter = AudioFilter.album,
   ]) async => _localAudioService.findTitlesOfArtist(artist, audioFilter);
 
-  Future<List<int>> findAlbumIDsOfArtist(String artist) async =>
-      _localAudioService.findAlbumIDsOfArtist(artist);
-
   late final Command<void, bool> areTracksSyncedCommand =
       Command.createAsyncNoParam(
         _localAudioService.areTracksSynced,
@@ -101,74 +98,23 @@ class LocalAudioManager {
     }
   }
 
-  //
-  // Playlists
-  //
-
-  late final Command<List<({String id, List<Audio> audios})>, void>
-  importExternalPlaylistsCommand = Command.createAsyncNoResult((
-    playlists,
-  ) async {
-    for (final playlist in playlists) {
-      await _localAudioService.createOrChangePlaylist(
-        PlaylistChange(
-          id: playlist.id,
-          audios: playlist.audios,
-          action: PlaylistAction.create,
-          external: true,
-        ),
-      );
-      await di<PlaylistIDsManager>().command.runAsync();
-    }
-  });
-
-  //
-  // Pinned Albums
-  //
-
-  Future<void> createOrChangePlaylist(PlaylistChange param) =>
-      _localAudioService.createOrChangePlaylist(param);
+  Future<void> createOrChangePlaylist(PlaylistChange param) async {
+    await _runInitIfNeeded();
+    return _localAudioService.createOrChangePlaylist(param);
+  }
 
   Future<List<Audio>?> findPlaylistById(String playlistId) async {
     await _runInitIfNeeded();
     return _localAudioService.findPlaylistById(playlistId);
   }
 
+  Future<List<String>> findAllPlaylistIDs() async {
+    await _runInitIfNeeded();
+    return _localAudioService.findAllPlaylistIDs();
+  }
+
   Future<List<Audio>> findAllTracks() async {
     await _runInitIfNeeded();
     return _localAudioService.findAllTracks();
   }
-}
-
-@Injectable(cache: true)
-class PinnedAlbumIDsManager {
-  PinnedAlbumIDsManager({required LocalAudioService localAudioService}) {
-    command = Command.createAsync((id) async {
-      if (id != null) {
-        if (await localAudioService.isPinnedAlbum(id)) {
-          await localAudioService.unpinAlbum(id);
-        } else {
-          await localAudioService.pinAlbum(id);
-        }
-      }
-
-      return localAudioService.findPinnedAlbumIDs();
-    }, initialValue: []);
-    command.run();
-  }
-
-  late final Command<int?, List<int>> command;
-}
-
-@Injectable(cache: true)
-class PlaylistIDsManager {
-  PlaylistIDsManager({required LocalAudioService localAudioService}) {
-    command = Command.createAsyncNoParam(
-      () => localAudioService.findAllPlaylistIDs(),
-      initialValue: [],
-    );
-    command.run();
-  }
-
-  late final Command<void, List<String>> command;
 }

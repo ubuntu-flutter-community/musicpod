@@ -517,6 +517,13 @@ class LocalAudioDao {
     return rows.map((r) => r.id).toList();
   }
 
+  Future<bool> isAlbumPinned(int id) async {
+    final result = await (_db.select(
+      _db.albumTable,
+    )..where((a) => a.id.equals(id) & a.pinned.equals(true))).getSingleOrNull();
+    return result != null;
+  }
+
   Future<void> updateAlbumPinned(int id, bool pinned) async {
     await (_db.update(_db.albumTable)..where((t) => t.id.equals(id))).write(
       AlbumTableCompanion(pinned: Value(pinned)),
@@ -919,13 +926,6 @@ class LocalAudioDao {
       genres: genres,
       playlists: playlists,
     );
-  }
-
-  Future<bool> isAlbumPinned(int id) async {
-    final result = await (_db.select(
-      _db.albumTable,
-    )..where((a) => a.id.equals(id) & a.pinned.equals(true))).getSingleOrNull();
-    return result != null;
   }
 
   Future<bool> isAudioLiked(Audio audio) async {

@@ -10,9 +10,8 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../local_audio/find_playlist_manager.dart';
-import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/playlist_action.dart';
+import '../../local_audio/playlist_ids_manager.dart';
 import '../../search/search_manager.dart';
 import '../custom_content_manager.dart';
 
@@ -36,11 +35,9 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
               context.pop();
             }
 
-            di<PlaylistManager>(
-              param1: playlistName!,
-            ).createOrchangePlaylistCommand.run(
+            di<PlaylistIDsManager>().command.run(
               PlaylistChange(
-                id: playlistName,
+                id: playlistName!,
                 action: PlaylistAction.create,
                 external: true,
               ),
@@ -157,8 +154,9 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
                         if (shownInDialog && context.canPop()) {
                           context.pop();
                         }
-                        di<LocalAudioManager>().importExternalPlaylistsCommand
-                            .run(playlists);
+                        di<ImportExternalPlaylistManager>().command.run(
+                          playlists,
+                        );
 
                         manager.reset();
                       }

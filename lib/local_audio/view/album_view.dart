@@ -4,7 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/sliver_fill_remaining_progress.dart';
 import '../../common/view/theme.dart';
-import '../local_audio_manager.dart';
+import '../pinned_album_i_ds_manager.dart';
 import 'album_card.dart';
 
 class AlbumsView extends StatelessWidget with WatchItMixin {

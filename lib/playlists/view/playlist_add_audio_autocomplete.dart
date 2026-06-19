@@ -13,6 +13,7 @@ import '../../local_audio/find_all_tracks_manager.dart';
 import '../../local_audio/find_playlist_manager.dart';
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/playlist_action.dart';
+import '../../local_audio/playlist_ids_manager.dart';
 import '../../settings/settings_manager.dart';
 
 class PlaylistAddAudioAutoCompleteOrShrink extends StatelessWidget
@@ -234,16 +235,13 @@ class _PlaylistAddAudioAutoCompleteState
                     ),
                   );
                 },
-                onSelected: (option) =>
-                    di<PlaylistManager>(
-                      param1: widget.pageId,
-                    ).createOrchangePlaylistCommand.run(
-                      PlaylistChange(
-                        id: widget.pageId,
-                        audios: [option],
-                        action: PlaylistAction.addTo,
-                      ),
-                    ),
+                onSelected: (option) => di<PlaylistIDsManager>().command.run(
+                  PlaylistChange(
+                    id: widget.pageId,
+                    audios: [option],
+                    action: PlaylistAction.addTo,
+                  ),
+                ),
               ),
       ),
     );

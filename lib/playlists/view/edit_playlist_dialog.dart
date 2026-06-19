@@ -11,9 +11,9 @@ import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../custom_content/custom_content_manager.dart';
 import '../../extensions/build_context_x.dart';
-import '../../local_audio/find_playlist_manager.dart';
 import '../../local_audio/local_audio_view.dart';
 import '../../local_audio/playlist_action.dart';
+import '../../local_audio/playlist_ids_manager.dart';
 import '../../settings/settings_manager.dart';
 
 class EditPlaylistDialog extends StatefulWidget
@@ -99,9 +99,7 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
                         pageId: PageIDs.localAudio,
                         replace: true,
                       );
-                      di<PlaylistManager>(
-                        param1: widget.playlistName!,
-                      ).createOrchangePlaylistCommand.run(
+                      di<PlaylistIDsManager>().command.run(
                         PlaylistChange(
                           id: widget.playlistName!,
                           action: PlaylistAction.delete,
@@ -123,9 +121,7 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
         await di<SettingsManager>().setLocalAudioindex(
           LocalAudioView.playlists.index,
         );
-        di<PlaylistManager>(
-          param1: widget.playlistName!,
-        ).createOrchangePlaylistCommand.run(
+        di<PlaylistIDsManager>().command.run(
           PlaylistChange(
             id: widget.playlistName!,
             action: PlaylistAction.updateName,

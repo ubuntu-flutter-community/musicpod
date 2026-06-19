@@ -32,18 +32,19 @@ Future<void> main() async {
     test('initSearchCommand', () async {
       manager.initSearchCommand.run((forceInit: true));
 
-      manager.initSearchCommand.listen(
-        (_, _) => expect(manager.showSearch.value, false),
-      );
-      ;
+      manager.initSearchCommand.listen((_, sub) {
+        expect(manager.showSearch.value, false);
+        sub.cancel();
+      });
     });
 
     test('togglePodcastCommand', () async {
       manager.togglePodcastCommand.run();
 
-      manager.togglePodcastCommand.listen((result, _) {
+      manager.togglePodcastCommand.listen((result, sub) {
         expect(result, isA<List<String>>());
         expect(result, contains(episodeOneAudio.feedUrl));
+        sub.cancel();
       });
     });
 
@@ -57,21 +58,28 @@ Future<void> main() async {
         PodcastToggleCapsule(feedUrl: newFeedUrl),
       );
 
-      manager.togglePodcastCommand.listen((result, _) {
+      manager.togglePodcastCommand.listen((result, sub) {
         expect(result, isA<List<String>>());
         expect(result, contains(episodeOneAudio.feedUrl));
         expect(result, contains(newFeedUrl));
+        sub.cancel();
       });
     });
 
     test('togglePodcastCommand with removing a feed', () async {
+      const newFeedUrl = 'https://example.com/new_feed.xml';
+
+      await manager.togglePodcastCommand.runAsync(
+        PodcastToggleCapsule(feedUrl: newFeedUrl),
+      );
       manager.togglePodcastCommand.run(
-        PodcastToggleCapsule(feedUrl: episodeOneAudio.feedUrl!),
+        PodcastToggleCapsule(feedUrl: newFeedUrl),
       );
 
-      manager.togglePodcastCommand.listen((result, _) {
+      manager.togglePodcastCommand.listen((result, sub) {
         expect(result, isA<List<String>>());
-        expect(result, isNot(contains(episodeOneAudio.feedUrl)));
+        expect(result, isNot(contains(newFeedUrl)));
+        sub.cancel();
       });
     });
   });

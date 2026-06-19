@@ -14,7 +14,7 @@ import '../../extensions/taget_platform_x.dart';
 import '../../player/player_manager.dart';
 import '../find_album_manager.dart';
 import '../find_album_name_manager.dart';
-import '../local_audio_manager.dart';
+import '../pinned_album_i_ds_manager.dart';
 import 'album_page.dart';
 import 'local_cover.dart';
 
