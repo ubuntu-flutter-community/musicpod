@@ -157,9 +157,12 @@ class LocalAudioPageBody extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final titles = watchValue((FindAllTracksManager m) => m.command);
-
-    if (titles == null || titles.isEmpty)
+    final titlesResults = watchValue(
+      (FindAllTracksManager m) => m.command.results,
+    );
+    final titlesResultsLoading = titlesResults.isRunning;
+    if (!titlesResultsLoading &&
+        (titlesResults.data == null || titlesResults.data!.isEmpty))
       return SliverNoSearchResultPage(
         message: Column(
           mainAxisSize: MainAxisSize.min,
@@ -174,7 +177,7 @@ class LocalAudioPageBody extends StatelessWidget with WatchItMixin {
     return LocalAudioBody(
       constraints: constraints,
       localAudioView: localAudioView,
-      titles: titles,
+      titles: titlesResults.data,
       albumIDs: watchValue((FindAllAlbumIDsManager m) => m.command),
       artists: watchValue((FindAllArtistsManager m) => m.command),
       genres: watchValue((FindAllGenresManager m) => m.command),

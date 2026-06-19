@@ -10,7 +10,7 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../custom_content/view/custom_playlists_section.dart';
 import '../../extensions/build_context_x.dart';
-import '../../playlists/view/playlist_page.dart';
+import 'playlist_page.dart';
 
 class PlaylistsView extends StatelessWidget {
   const PlaylistsView({

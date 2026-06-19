@@ -10,8 +10,8 @@ import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/sliver_audio_page.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../../local_audio/liked_audios_manager.dart';
-import '../../local_audio/view/artist_page.dart';
+import '../liked_audios_manager.dart';
+import 'artist_page.dart';
 
 class LikedAudioPage extends StatelessWidget with WatchItMixin {
   const LikedAudioPage({super.key});
