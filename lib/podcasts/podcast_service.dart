@@ -13,6 +13,7 @@ import '../common/view/languages.dart';
 import '../settings/settings_service.dart';
 import '../settings/shared_preferences_keys.dart';
 import 'data/podcast_genre.dart';
+import 'data/podcast_short_info.dart';
 import 'persistence/podcast_dao.dart';
 
 @lazySingleton
@@ -60,13 +61,7 @@ class PodcastService {
     return _search.searchProvider;
   }
 
-  List<PodcastGenre> get cachedPodcastGenres => _podcastGenreCache;
-  List<PodcastGenre> _podcastGenreCache = [];
   Future<List<PodcastGenre>> loadGenres({bool force = false}) async {
-    if (_podcastGenreCache.isNotEmpty && !force) {
-      return _podcastGenreCache;
-    }
-
     var genres = <String>{};
     try {
       genres = await _search.genres().toSet();
@@ -74,12 +69,7 @@ class PodcastService {
       printErrorInDebugMode(e, trace: s, tag: '$PodcastService');
     }
 
-    _podcastGenreCache = genres
-        .map((g) => PodcastGenre.fromString(g))
-        .toSet()
-        .toList();
-
-    return _podcastGenreCache;
+    return genres.map((g) => PodcastGenre.fromString(g)).toSet().toList();
   }
 
   static const podcastMaxLimit = 80;
@@ -160,15 +150,15 @@ class PodcastService {
     await loadPodcastUpdates();
 
     for (final (index, feedUrl) in toCheckFeedUrls.indexed) {
-      final storedTimeStamp = getPodcastLastUpdated(feedUrl);
-      final name = getPodcastName(feedUrl);
+      final storedTimeStamp = await getPodcastLastUpdated(feedUrl);
+      final name = await getPodcastName(feedUrl);
 
       printInfoInDebugMode(
-        'checking update for: ${name ?? feedUrl}',
+        'checking update for: $name',
         tag: '$PodcastService',
       );
       printInfoInDebugMode(
-        'storedTimeStamp: ${storedTimeStamp ?? 'no timestamp stored'}',
+        'storedTimeStamp: $storedTimeStamp',
         tag: '$PodcastService',
       );
 
@@ -350,7 +340,10 @@ class PodcastService {
     _podcasts = await _dao.getPodcasts();
   }
 
-  String? getSubscribedPodcastImage(String feedUrl) =>
+  Future<PodcastShortInfo?> getPodcastShortInfo(String feedUrl) =>
+      _dao.getPodcastShortInfo(feedUrl);
+
+  Future<String?> getSubscribedPodcastImage(String feedUrl) =>
       _dao.getPodcastImage(feedUrl);
 
   void addPodcastImage({
@@ -363,9 +356,10 @@ class PodcastService {
     title: title,
   );
 
-  String? getPodcastName(String feedUrl) => _dao.getPodcastName(feedUrl);
+  Future<String?> getPodcastName(String feedUrl) =>
+      _dao.getPodcastName(feedUrl);
 
-  String? getSubscribedPodcastArtist(String feedUrl) =>
+  Future<String?> getSubscribedPodcastArtist(String feedUrl) =>
       _dao.getPodcastArtist(feedUrl);
 
   Future<void> addPodcast({
@@ -407,7 +401,7 @@ class PodcastService {
     required bool ascending,
   }) => _dao.reorderPodcast(feedUrl: feedUrl, ascending: ascending);
 
-  Set<String> get ascendingPodcasts => _dao.ascendingPodcasts;
+  Future<Set<String>> get ascendingPodcasts => _dao.ascendingPodcasts;
 
   Set<String> podcastUpdates = {};
 
@@ -420,7 +414,7 @@ class PodcastService {
     required DateTime lastUpdated,
   }) => _dao.addPodcastLastUpdated(feedUrl: feedUrl, lastUpdated: lastUpdated);
 
-  String? getPodcastLastUpdated(String feedUrl) =>
+  Future<String?> getPodcastLastUpdated(String feedUrl) =>
       _dao.getPodcastLastUpdated(feedUrl);
 
   bool podcastUpdateAvailable(String feedUrl) =>

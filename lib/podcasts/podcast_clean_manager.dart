@@ -2,7 +2,6 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
 import '../common/logging.dart';
-import 'episodes_manager.dart';
 import 'podcast_service.dart';
 
 @Injectable(cache: true)
@@ -17,10 +16,6 @@ class PodcastCleanManager {
   late final Command<void, Set<String>?> command = Command.createAsyncNoParam(
     () async {
       final unsubbedFeedUrls = await _podcastService.deleteOrphanEpisodes();
-
-      for (final feedUrl in unsubbedFeedUrls) {
-        await EpisodesManager.dispose(feedUrl);
-      }
 
       return unsubbedFeedUrls;
     },

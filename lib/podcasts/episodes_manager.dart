@@ -2,15 +2,19 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
 import '../common/data/audio.dart';
-import '../common/keep_alive_registry.dart';
+import '../common/logging.dart';
 import 'podcast_service.dart';
 
-@injectable
+@Injectable(cache: true)
 class EpisodesManager {
-  EpisodesManager._({
-    required String feedUrl,
+  EpisodesManager({
+    @factoryParam required String feedUrl,
     required PodcastService podcastService,
   }) {
+    printInfoInDebugMode(
+      'Instance created for feedUrl: $feedUrl',
+      tag: '$EpisodesManager',
+    );
     command = Command.createAsync(
       (genre) => podcastService.findEpisodes(
         feedUrl: feedUrl,
@@ -21,19 +25,6 @@ class EpisodesManager {
     );
     command.run();
   }
-
-  @factoryMethod
-  static EpisodesManager create({
-    @factoryParam required String feedUrl,
-    required PodcastService podcastService,
-  }) => _registry.getOrRegister(
-    id: feedUrl,
-    factoryFunction: () =>
-        EpisodesManager._(feedUrl: feedUrl, podcastService: podcastService),
-  );
-
-  static final _registry = KeepAliveRegistry<String, EpisodesManager>();
-  static EpisodesManager? dispose(String feedUrl) => _registry.dispose(feedUrl);
 
   late final Command<String?, List<Audio>?> command;
 }

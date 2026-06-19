@@ -218,8 +218,8 @@ class CustomContentManager {
     final category = OpmlOutlineBuilder();
 
     for (var podcast in _podcastService.podcasts) {
-      final name = _podcastService.getPodcastName(podcast);
-      final artist = _podcastService.getSubscribedPodcastArtist(podcast);
+      final name = await _podcastService.getPodcastName(podcast);
+      final artist = await _podcastService.getSubscribedPodcastArtist(podcast);
       final builder = OpmlOutlineBuilder().type('rss').xmlUrl(podcast);
       if (name != null) {
         builder.title(name);

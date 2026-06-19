@@ -4,17 +4,12 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
-import '../../app/sidebar_audios_manager.dart';
 import '../../common/data/audio_type.dart';
-import '../../common/view/audio_card.dart';
-import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/default_page_body.dart';
 import '../../common/view/error_page.dart';
-import '../../common/view/icons.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
-import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -23,6 +18,7 @@ import '../../settings/view/settings_action.dart';
 import '../data/podcast_update_capsule.dart';
 import '../podcast_clean_manager.dart';
 import '../podcast_manager.dart';
+import 'podcast_collection_card.dart';
 import 'podcast_collection_control_panel.dart';
 
 class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
@@ -30,8 +26,6 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.theme;
-
     callOnceAfterThisBuild(
       (context) => di<PodcastCleanManager>().command.run(),
     );
@@ -157,33 +151,10 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                   return const SizedBox.shrink();
                 }
 
-                return AudioCard(
+                return PodcastCollectionCard(
                   key: ValueKey(feedUrl),
-                  image: SafeNetworkImage(
-                    url: di<PodcastManager>().getSubscribedPodcastImage(
-                      feedUrl,
-                    ),
-                    fit: BoxFit.cover,
-                    height: audioCardDimension,
-                    width: audioCardDimension,
-                    fallbackWidget: Icon(Iconz.podcast, size: 70),
-                  ),
-                  bottom: AudioCardBottom(
-                    style: updates.contains(feedUrl)
-                        ? theme.textTheme.bodyMedium?.copyWith(
-                                color: theme.colorScheme.primary,
-                                fontWeight: FontWeight.bold,
-                              ) ??
-                              TextStyle(
-                                color: theme.colorScheme.primary,
-                                fontWeight: FontWeight.bold,
-                              )
-                        : null,
-                    text: di<PodcastManager>().getPodcastName(feedUrl),
-                  ),
-                  onPlay: () => di<SidebarAudiosManager>().playAudiosByIdCommand
-                      .run((pageId: feedUrl!, genre: null)),
-                  onTap: () => di<RoutingManager>().push(pageId: feedUrl!),
+                  feedUrl: feedUrl,
+                  hasUpdated: updates.contains(feedUrl),
                 );
               },
             ),

@@ -8,6 +8,7 @@ import '../../common/data/audio_type.dart';
 import '../../common/logging.dart';
 import '../../common/persistence/database.dart';
 import '../../extensions/date_time_x.dart';
+import '../data/podcast_short_info.dart';
 
 @lazySingleton
 class PodcastDao {
@@ -30,20 +31,33 @@ class PodcastDao {
     final rows = await (_db.select(
       _db.podcastEpisodeTable,
     )..where((t) => t.podcastFeedUrl.equals(feedUrl))).get();
-    return rows
-        .map((r) => getEpisodeFromTableEntry(r, feedUrl: feedUrl))
-        .toSet()
-        .toList();
+    return Future.wait(
+      rows.map((r) => getEpisodeFromTableEntry(r, feedUrl: feedUrl)),
+    ).then((episodes) => episodes.toSet().toList());
   }
 
-  Map<String, PodcastTableData> _podcastCache = {};
+  Future<PodcastTableData?> getPodcastData(String feedUrl) async {
+    final row = await (_db.select(
+      _db.podcastTable,
+    )..where((t) => t.feedUrl.equals(feedUrl))).getSingleOrNull();
+    if (row == null) return null;
+    return PodcastTableData(
+      feedUrl: row.feedUrl,
+      name: row.name,
+      artist: row.artist,
+      description: row.description,
+      imageUrl: row.imageUrl,
+      lastUpdated: row.lastUpdated,
+      ascending: row.ascending,
+    );
+  }
 
-  Audio getEpisodeFromTableEntry(
+  Future<Audio> getEpisodeFromTableEntry(
     PodcastEpisodeTableData data, {
     required String feedUrl,
-  }) {
+  }) async {
     // find podcast table data first:
-    final podcastData = _podcastCache[feedUrl];
+    final podcastData = await getPodcastData(feedUrl);
 
     return Audio(
       url: data.contentUrl,
@@ -208,35 +222,54 @@ class PodcastDao {
     final rows = await (_db.select(
       _db.podcastTable,
     )..orderBy([(t) => OrderingTerm(expression: t.name)])).get();
-    _podcastCache = {for (final r in rows) r.feedUrl: r};
+
     return rows.map((r) => r.feedUrl).toSet();
   }
 
-  String? getPodcastImage(String feedUrl) => _podcastCache[feedUrl]?.imageUrl;
+  Future<String?> getPodcastImage(String feedUrl) async {
+    final row = await (_db.select(
+      _db.podcastTable,
+    )..where((t) => t.feedUrl.equals(feedUrl))).getSingleOrNull();
+    return row?.imageUrl;
+  }
 
-  void updatePodcastImage({
+  Future<void> updatePodcastImage({
     required String feedUrl,
     required String imageUrl,
     required String title,
-  }) {
-    (_db.update(_db.podcastTable)..where((t) => t.feedUrl.equals(feedUrl)))
-        .write(
-          PodcastTableCompanion(imageUrl: Value(imageUrl), name: Value(title)),
-        )
-        .then((_) {
-          final cached = _podcastCache[feedUrl];
-          if (cached != null) {
-            _podcastCache[feedUrl] = cached.copyWith(
-              imageUrl: Value(imageUrl),
-              name: title,
-            );
-          }
-        });
+  }) async {
+    await (_db.update(
+      _db.podcastTable,
+    )..where((t) => t.feedUrl.equals(feedUrl))).write(
+      PodcastTableCompanion(imageUrl: Value(imageUrl), name: Value(title)),
+    );
   }
 
-  String? getPodcastName(String feedUrl) => _podcastCache[feedUrl]?.name;
+  Future<String?> getPodcastName(String feedUrl) async {
+    final row = await (_db.select(
+      _db.podcastTable,
+    )..where((t) => t.feedUrl.equals(feedUrl))).getSingleOrNull();
+    return row?.name;
+  }
 
-  String? getPodcastArtist(String feedUrl) => _podcastCache[feedUrl]?.artist;
+  Future<String?> getPodcastArtist(String feedUrl) async {
+    final row = await (_db.select(
+      _db.podcastTable,
+    )..where((t) => t.feedUrl.equals(feedUrl))).getSingleOrNull();
+    return row?.artist;
+  }
+
+  Future<PodcastShortInfo?> getPodcastShortInfo(String feedUrl) async {
+    final row = await (_db.select(
+      _db.podcastTable,
+    )..where((t) => t.feedUrl.equals(feedUrl))).getSingleOrNull();
+    if (row == null) return null;
+    return PodcastShortInfo(
+      name: row.name,
+      artist: row.artist,
+      imageUrl: row.imageUrl,
+    );
+  }
 
   Future<void> addPodcast({
     required String feedUrl,
@@ -258,15 +291,6 @@ class PodcastDao {
           ),
           mode: InsertMode.insertOrIgnore,
         );
-    _podcastCache[feedUrl] = PodcastTableData(
-      feedUrl: feedUrl,
-      name: name,
-      artist: artist,
-      description: '',
-      imageUrl: imageUrl,
-      lastUpdated: now,
-      ascending: false,
-    );
   }
 
   Future<void> addPodcasts(
@@ -292,18 +316,6 @@ class PodcastDao {
         );
       }
     });
-
-    for (final p in newPodcasts) {
-      _podcastCache[p.feedUrl] = PodcastTableData(
-        feedUrl: p.feedUrl,
-        name: p.name,
-        artist: p.artist,
-        description: '',
-        imageUrl: p.imageUrl,
-        lastUpdated: now,
-        ascending: false,
-      );
-    }
   }
 
   Future<void> reorderPodcast({
@@ -313,16 +325,14 @@ class PodcastDao {
     await (_db.update(_db.podcastTable)
           ..where((t) => t.feedUrl.equals(feedUrl)))
         .write(PodcastTableCompanion(ascending: Value(ascending)));
-    final cached = _podcastCache[feedUrl];
-    if (cached != null) {
-      _podcastCache[feedUrl] = cached.copyWith(ascending: ascending);
-    }
   }
 
-  Set<String> get ascendingPodcasts => _podcastCache.values
-      .where((p) => p.ascending == true)
-      .map((p) => p.feedUrl)
-      .toSet();
+  Future<Set<String>> get ascendingPodcasts async {
+    final rows = await (_db.select(
+      _db.podcastTable,
+    )..where((t) => t.ascending.equals(true))).get();
+    return rows.map((r) => r.feedUrl).toSet();
+  }
 
   Future<Set<String>> getPodcastUpdates() async {
     final rows = await _db.select(_db.podcastUpdateTable).get();
@@ -336,14 +346,14 @@ class PodcastDao {
     await (_db.update(_db.podcastTable)
           ..where((t) => t.feedUrl.equals(feedUrl)))
         .write(PodcastTableCompanion(lastUpdated: Value(lastUpdated)));
-    final cached = _podcastCache[feedUrl];
-    if (cached != null) {
-      _podcastCache[feedUrl] = cached.copyWith(lastUpdated: lastUpdated);
-    }
   }
 
-  String? getPodcastLastUpdated(String feedUrl) =>
-      _podcastCache[feedUrl]?.lastUpdated.toPodcastTimeStamp;
+  Future<String?> getPodcastLastUpdated(String feedUrl) async {
+    final row = await (_db.select(
+      _db.podcastTable,
+    )..where((t) => t.feedUrl.equals(feedUrl))).getSingleOrNull();
+    return row?.lastUpdated.toPodcastTimeStamp;
+  }
 
   Future<void> addPodcastUpdate(String feedUrl) async {
     await _db

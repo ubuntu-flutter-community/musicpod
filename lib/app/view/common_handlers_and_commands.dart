@@ -59,11 +59,22 @@ mixin CommonHandlersAndCommandsMixin {
           final feedsWithUpdates = res.data ?? {};
           if (feedsWithUpdates.isEmpty) {
           } else {
-            di<NotificationsService>().notify(
-              message: feedsWithUpdates.length == 1
-                  ? '${context.l10n.newEpisodeAvailable} ${di<PodcastManager>().getPodcastName(feedsWithUpdates.first)}'
-                  : '${context.l10n.newEpisodesAvailableFor(feedsWithUpdates.length)}',
-            );
+            if (feedsWithUpdates.length == 1) {
+              di<PodcastNameManager>(
+                param1: feedsWithUpdates.first,
+              ).command.runAsync().then(
+                (name) => di<NotificationsService>().notify(
+                  message: feedsWithUpdates.length == 1
+                      ? '${context.l10n.newEpisodeAvailable} ${name ?? ''}'
+                      : '${context.l10n.newEpisodesAvailableFor(feedsWithUpdates.length)}',
+                ),
+              );
+            } else {
+              di<NotificationsService>().notify(
+                message:
+                    '${context.l10n.newEpisodesAvailableFor(feedsWithUpdates.length)}',
+              );
+            }
           }
         }
       },
