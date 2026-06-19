@@ -4,7 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../app/page_ids.dart';
 import '../../extensions/build_context_x.dart';
 import '../../local_audio/liked_audios_manager.dart';
-import '../../playlists/view/add_to_playlist_snack_bar.dart';
+import '../../local_audio/view/add_to_playlist_snack_bar.dart';
 import '../data/audio.dart';
 import 'animated_like_icon.dart';
 

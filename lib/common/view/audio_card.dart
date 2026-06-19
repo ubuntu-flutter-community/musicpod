@@ -20,6 +20,7 @@ class AudioCard extends StatefulWidget {
     this.showBorder = true,
     this.playIcon,
     this.seleted = false,
+    this.overlay,
   });
   final Widget? image;
   final void Function()? onTap;
@@ -31,6 +32,7 @@ class AudioCard extends StatefulWidget {
   final bool showBorder;
   final IconData? playIcon;
   final bool seleted;
+  final Widget? overlay;
 
   @override
   State<AudioCard> createState() => _AudioCardState();
@@ -38,6 +40,8 @@ class AudioCard extends StatefulWidget {
 
 class _AudioCardState extends State<AudioCard> {
   bool _hovered = false;
+  bool _focused = false;
+
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
@@ -46,43 +50,56 @@ class _AudioCardState extends State<AudioCard> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _AudioCard(
-          width: widget.width,
-          height: widget.height,
-          showBorder: widget.showBorder,
-          color: widget.color ?? theme.cardColor,
-          onTap: widget.onTap,
-          onHover: (value) => setState(() {
-            _hovered = value;
-          }),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Stack(
-              children: [
-                if (widget.image == null)
-                  Shimmer.fromColors(
-                    baseColor: theme.cardColor,
-                    highlightColor: light
-                        ? theme.cardColor.scale(lightness: -0.01)
-                        : theme.cardColor.scale(lightness: 0.01),
-                    child: Container(color: theme.cardColor),
-                  ),
-                if (widget.image != null) widget.image!,
-                if ((_hovered || widget.seleted) && widget.onPlay != null)
-                  Positioned(
-                    bottom: 10,
-                    right: 10,
-                    child: FloatingActionButton.small(
-                      onPressed: widget.onPlay,
-                      elevation: 0.5,
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        widget.playIcon ?? Iconz.playFilled,
-                        color: Colors.black,
+        ColorFiltered(
+          colorFilter: ColorFilter.mode(
+            (theme.isLight ? Colors.black : Colors.white).withValues(
+              alpha: (_focused || _hovered) ? 0.2 : 0,
+            ),
+            BlendMode.srcATop,
+          ),
+          child: _AudioCard(
+            width: widget.width,
+            height: widget.height,
+            showBorder: widget.showBorder,
+            color: widget.color ?? theme.cardColor,
+            onTap: widget.onTap,
+            onHover: (value) => setState(() {
+              _hovered = value;
+            }),
+            onFocusChange: (value) => setState(() {
+              _focused = value;
+            }),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Stack(
+                children: [
+                  if (widget.image == null)
+                    Shimmer.fromColors(
+                      baseColor: theme.cardColor,
+                      highlightColor: light
+                          ? theme.cardColor.scale(lightness: -0.01)
+                          : theme.cardColor.scale(lightness: 0.01),
+                      child: Container(color: theme.cardColor),
+                    ),
+                  if (widget.image != null) widget.image!,
+                  if ((_hovered || widget.seleted) && widget.onPlay != null)
+                    Positioned(
+                      bottom: 10,
+                      right: 10,
+                      child: FloatingActionButton.small(
+                        onPressed: widget.onPlay,
+                        elevation: 0.5,
+                        backgroundColor: Colors.white,
+                        hoverColor: theme.colorScheme.primary,
+                        child: Icon(
+                          widget.playIcon ?? Iconz.playFilled,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
-                  ),
-              ],
+                  if (widget.overlay != null) widget.overlay!,
+                ],
+              ),
             ),
           ),
         ),
@@ -102,6 +119,7 @@ class _AudioCard extends StatelessWidget {
     this.onHover,
     this.height,
     this.width,
+    this.onFocusChange,
   });
 
   final Widget child;
@@ -116,6 +134,7 @@ class _AudioCard extends StatelessWidget {
 
   final double? height;
   final double? width;
+  final void Function(bool)? onFocusChange;
 
   @override
   Widget build(BuildContext context) {
@@ -128,13 +147,13 @@ class _AudioCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         onHover: onHover,
+        onFocusChange: onFocusChange,
         borderRadius: BorderRadius.circular(12),
         hoverColor: theme.colorScheme.onSurface.withValues(alpha: 0.1),
         child: Container(
-          margin: const EdgeInsets.all(4),
           decoration: BoxDecoration(
             color: color,
-            borderRadius: BorderRadius.circular(11),
+            borderRadius: BorderRadius.circular(12),
             border: showBorder
                 ? Border.all(
                     width: 1,

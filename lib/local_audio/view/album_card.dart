@@ -8,9 +8,7 @@ import '../../common/view/audio_card_vignette.dart';
 import '../../common/view/cover_background.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
-import '../../common/view/ui_constants.dart';
 import '../../extensions/command_x.dart';
-import '../../extensions/taget_platform_x.dart';
 import '../../player/player_manager.dart';
 import '../find_album_manager.dart';
 import '../find_album_name_manager.dart';
@@ -29,28 +27,27 @@ class AlbumCard extends StatelessWidget with WatchItMixin {
       (PinnedAlbumIDsManager m) => m.command.select((e) => e.contains(id)),
     );
 
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        _AlbumCard(id: id),
-        if (pinned)
-          Positioned(
-            left: isMobile ? 6 : 5,
-            bottom: kAudioCardBottomHeight + (isMobile ? 25 : 13),
-            child: AudioCardVignette(
-              iconData: Iconz.pinFilled,
-              onTap: () => di<PinnedAlbumIDsManager>().command.run(id),
-            ),
-          ),
-      ],
+    return _AlbumCard(
+      id: id,
+      overlay: pinned
+          ? Positioned(
+              left: 0,
+              bottom: 0,
+              child: AudioCardVignette(
+                iconData: Iconz.pinFilled,
+                onTap: () => di<PinnedAlbumIDsManager>().command.run(id),
+              ),
+            )
+          : null,
     );
   }
 }
 
 class _AlbumCard extends StatelessWidget with WatchItMixin {
-  const _AlbumCard({required this.id});
+  const _AlbumCard({required this.id, this.overlay});
 
   final int id;
+  final Widget? overlay;
 
   @override
   Widget build(BuildContext context) => AudioCard(
@@ -72,5 +69,6 @@ class _AlbumCard extends StatelessWidget with WatchItMixin {
           [],
       listName: id.toString(),
     ),
+    overlay: overlay,
   );
 }
