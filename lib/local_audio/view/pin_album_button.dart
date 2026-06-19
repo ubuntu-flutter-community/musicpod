@@ -3,7 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
-import '../local_audio_manager.dart';
+import '../pinned_album_i_ds_manager.dart';
 
 class PinAlbumButton extends StatelessWidget with WatchItMixin {
   const PinAlbumButton({super.key, required this.albumId});
@@ -16,7 +16,6 @@ class PinAlbumButton extends StatelessWidget with WatchItMixin {
       (PinnedAlbumIDsManager m) => m.command.select((e) => e.contains(albumId)),
     );
     return IconButton(
-      key: ValueKey(pinnedAlbum),
       tooltip: pinnedAlbum ? context.l10n.unPinAlbum : context.l10n.pinAlbum,
       isSelected: pinnedAlbum,
       icon: Icon(pinnedAlbum ? Iconz.pinFilled : Iconz.pin),

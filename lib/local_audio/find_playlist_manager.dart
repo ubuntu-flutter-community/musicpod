@@ -6,6 +6,7 @@ import '../common/keep_alive_registry.dart';
 import '../common/logging.dart';
 import 'local_audio_manager.dart';
 import 'playlist_action.dart';
+import 'playlist_i_ds_manager.dart';
 
 @Injectable(cache: true)
 class PlaylistManager {

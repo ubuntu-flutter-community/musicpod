@@ -315,6 +315,17 @@ class LocalAudioService {
     await _dao.updateAlbumPinned(id, false);
   }
 
+  Future<List<int>> togglePinAlbum(int? id) async {
+    if (id != null) {
+      if (await isPinnedAlbum(id)) {
+        await unpinAlbum(id);
+      } else {
+        await pinAlbum(id);
+      }
+    }
+    return findPinnedAlbumIDs();
+  }
+
   Future<Audio?> changeMetadata(
     Audio audio,
     ChangeMetadataCapsule capsule,

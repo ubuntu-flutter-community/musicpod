@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/progress.dart';
-import '../../local_audio/local_audio_manager.dart';
+import '../../local_audio/pinned_album_i_ds_manager.dart';
+import '../../local_audio/playlist_i_ds_manager.dart';
 import '../../podcasts/podcast_manager.dart';
 import '../../radio/radio_manager.dart';
 import 'create_master_items.dart';

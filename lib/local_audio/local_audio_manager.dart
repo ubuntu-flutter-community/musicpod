@@ -9,6 +9,7 @@ import '../common/no_error_filter.dart';
 import '../common/view/audio_filter.dart';
 import 'local_audio_service.dart';
 import 'playlist_action.dart';
+import 'playlist_i_ds_manager.dart';
 
 @singleton
 class LocalAudioManager {
@@ -63,9 +64,6 @@ class LocalAudioManager {
     String artist, [
     AudioFilter audioFilter = AudioFilter.album,
   ]) async => _localAudioService.findTitlesOfArtist(artist, audioFilter);
-
-  Future<List<int>> findAlbumIDsOfArtist(String artist) async =>
-      _localAudioService.findAlbumIDsOfArtist(artist);
 
   late final Command<void, bool> areTracksSyncedCommand =
       Command.createAsyncNoParam(
@@ -138,37 +136,4 @@ class LocalAudioManager {
     await _runInitIfNeeded();
     return _localAudioService.findAllTracks();
   }
-}
-
-@Injectable(cache: true)
-class PinnedAlbumIDsManager {
-  PinnedAlbumIDsManager({required LocalAudioService localAudioService}) {
-    command = Command.createAsync((id) async {
-      if (id != null) {
-        if (await localAudioService.isPinnedAlbum(id)) {
-          await localAudioService.unpinAlbum(id);
-        } else {
-          await localAudioService.pinAlbum(id);
-        }
-      }
-
-      return localAudioService.findPinnedAlbumIDs();
-    }, initialValue: []);
-    command.run();
-  }
-
-  late final Command<int?, List<int>> command;
-}
-
-@Injectable(cache: true)
-class PlaylistIDsManager {
-  PlaylistIDsManager({required LocalAudioService localAudioService}) {
-    command = Command.createAsyncNoParam(
-      () => localAudioService.findAllPlaylistIDs(),
-      initialValue: [],
-    );
-    command.run();
-  }
-
-  late final Command<void, List<String>> command;
 }
