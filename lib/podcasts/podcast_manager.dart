@@ -5,7 +5,9 @@ import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
+import '../common/keep_alive_registry.dart';
 import 'data/podcast_episode_filter.dart';
+import 'data/podcast_short_info.dart';
 import 'data/podcast_toggle_capsule.dart';
 import 'data/podcast_update_capsule.dart';
 import 'episodes_manager.dart';
@@ -60,12 +62,6 @@ class PodcastManager {
     };
   }
 
-  String? getSubscribedPodcastImage(String feedUrl) =>
-      _podcastService.getSubscribedPodcastImage(feedUrl);
-  String? getPodcastName(String feedUrl) =>
-      _podcastService.getPodcastName(feedUrl);
-  String? getSubscribedPodcastArtist(String feedUrl) =>
-      _podcastService.getSubscribedPodcastArtist(feedUrl);
   bool isPodcastSubscribed(String? feedUrl) =>
       feedUrl == null ? false : _podcastService.isPodcastSubscribed(feedUrl);
   Future<void> updateAudioDuration(Audio audio) =>
@@ -105,6 +101,7 @@ class PodcastManager {
             await _podcastService.removePodcastsWithUpdatesAndEpisodes(
               param.feedUrl,
             );
+            PodcastShortInfoManager.dispose(param.feedUrl);
           } else if (param.name != null && param.artist != null) {
             await _podcastService.addPodcast(
               feedUrl: param.feedUrl,
@@ -128,7 +125,7 @@ class PodcastManager {
     );
 
     return _podcastService.ascendingPodcasts;
-  }, initialValue: _podcastService.ascendingPodcasts);
+  }, initialValue: {});
 
   late final Command<void, Set<String>> feedsWithDownloadsCommand =
       Command.createAsyncNoParam(() async {
@@ -145,4 +142,70 @@ class PodcastManager {
         await togglePodcastCommand.runAsync();
         await feedsWithDownloadsCommand.runAsync();
       });
+}
+
+@Injectable(cache: true)
+class PodcastImageManager {
+  PodcastImageManager({
+    @factoryMethod required String feedUrl,
+    required PodcastService podcastService,
+  }) {
+    command = Command.createAsync(
+      podcastService.getSubscribedPodcastImage,
+      initialValue: null,
+    );
+
+    command.run(feedUrl);
+  }
+
+  late final Command<String, String?> command;
+}
+
+@Injectable(cache: true)
+class PodcastNameManager {
+  PodcastNameManager({
+    @factoryMethod required String feedUrl,
+    required PodcastService podcastService,
+  }) {
+    command = Command.createAsync(
+      podcastService.getPodcastName,
+      initialValue: null,
+    );
+    command.run(feedUrl);
+  }
+
+  late final Command<String, String?> command;
+}
+
+@injectable
+class PodcastShortInfoManager {
+  PodcastShortInfoManager._({
+    required String feedUrl,
+    required PodcastService podcastService,
+  }) {
+    command = Command.createAsync(
+      podcastService.getPodcastShortInfo,
+      initialValue: null,
+    );
+
+    command.run(feedUrl);
+  }
+
+  @factoryMethod
+  static PodcastShortInfoManager create({
+    @factoryParam required String feedUrl,
+    required PodcastService podcastService,
+  }) => _registry.getOrRegister(
+    id: feedUrl,
+    factoryFunction: () => PodcastShortInfoManager._(
+      feedUrl: feedUrl,
+      podcastService: podcastService,
+    ),
+  );
+
+  static final _registry = KeepAliveRegistry<String, PodcastShortInfoManager>();
+  static PodcastShortInfoManager? dispose(String feedUrl) =>
+      _registry.dispose(feedUrl);
+
+  late final Command<String, PodcastShortInfo?> command;
 }

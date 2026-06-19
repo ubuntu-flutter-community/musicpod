@@ -135,7 +135,7 @@ class SearchManager {
   late final Command<({bool force})?, List<PodcastGenre>>
   loadPodcastGenresCommand = Command.createAsync(
     (param) => _podcastService.loadGenres(force: param?.force ?? false),
-    initialValue: _podcastService.cachedPodcastGenres,
+    initialValue: [],
   );
 
   Future<LocalSearchResult?> localSearch(String query) =>

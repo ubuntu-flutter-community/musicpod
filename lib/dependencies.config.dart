@@ -246,14 +246,20 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioDao: gh<_i688.LocalAudioDao>(),
       ),
     );
-    gh.factoryParam<_i0.EpisodesManager, String, dynamic>(
-      (feedUrl, _) => _i0.EpisodesManager.create(
+    gh.factoryCachedParam<_i0.EpisodesManager, String, dynamic>(
+      (feedUrl, _) => _i0.EpisodesManager(
         feedUrl: feedUrl,
         podcastService: gh<_i721.PodcastService>(),
       ),
     );
     gh.factoryCachedParam<_i973.PodcastGenreManager, String, dynamic>(
       (feedUrl, _) => _i973.PodcastGenreManager(
+        feedUrl: feedUrl,
+        podcastService: gh<_i721.PodcastService>(),
+      ),
+    );
+    gh.factoryParam<_i351.PodcastShortInfoManager, String, dynamic>(
+      (feedUrl, _) => _i351.PodcastShortInfoManager.create(
         feedUrl: feedUrl,
         podcastService: gh<_i721.PodcastService>(),
       ),
@@ -285,6 +291,18 @@ extension GetItInjectableX on _i174.GetIt {
       (audio, _) => _i46.ChangeLocalMetaDataManager(
         audio: audio,
         localAudioService: gh<_i438.LocalAudioService>(),
+      ),
+    );
+    gh.factoryCached<_i351.PodcastImageManager>(
+      () => _i351.PodcastImageManager(
+        feedUrl: gh<String>(),
+        podcastService: gh<_i721.PodcastService>(),
+      ),
+    );
+    gh.factoryCached<_i351.PodcastNameManager>(
+      () => _i351.PodcastNameManager(
+        feedUrl: gh<String>(),
+        podcastService: gh<_i721.PodcastService>(),
       ),
     );
     gh.lazySingleton<_i388.DownloadManager>(
