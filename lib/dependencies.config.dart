@@ -396,14 +396,13 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factoryCached<_i897.FindAllTracksManager>(
       () => _i897.FindAllTracksManager(gh<_i688.LocalAudioManager>()),
     );
-    gh.lazySingleton<_i807.SearchManager>(
+    gh.factoryCached<_i807.SearchManager>(
       () => _i807.SearchManager(
         radioService: gh<_i811.RadioService>(),
         podcastService: gh<_i721.PodcastService>(),
         localAudioService: gh<_i438.LocalAudioService>(),
         settingsService: gh<_i763.SettingsService>(),
       ),
-      dispose: (i) => i.dispose(),
     );
     gh.factoryCachedParam<_i234.AlbumIDsOfArtistManager, String, dynamic>(
       (artist, _) => _i234.AlbumIDsOfArtistManager(

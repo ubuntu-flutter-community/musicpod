@@ -21,8 +21,8 @@ Future<void> main() async {
   setUp(() {
     mockPodcastService = MockPodcastService();
     when(
-      mockPodcastService.podcastFeedUrls,
-    ).thenReturn([episodeOneAudio.feedUrl!]);
+      mockPodcastService.getSubscribedPodcasts(),
+    ).thenAnswer((_) async => {episodeOneAudio.feedUrl!});
     when(mockPodcastService.feedsWithDownloads).thenReturn({});
 
     manager = PodcastManager(podcastService: mockPodcastService);
@@ -42,7 +42,7 @@ Future<void> main() async {
       manager.togglePodcastCommand.run();
 
       manager.togglePodcastCommand.listen((result, sub) {
-        expect(result, isA<List<String>>());
+        expect(result, isA<Set<String>>());
         expect(result, contains(episodeOneAudio.feedUrl));
         sub.cancel();
       });
@@ -51,15 +51,15 @@ Future<void> main() async {
     test('togglePodcastCommand with adding a feed', () async {
       const newFeedUrl = 'https://example.com/new_feed.xml';
       when(
-        mockPodcastService.podcastFeedUrls,
-      ).thenReturn([episodeOneAudio.feedUrl!, newFeedUrl]);
+        mockPodcastService.getSubscribedPodcasts(),
+      ).thenAnswer((_) async => {episodeOneAudio.feedUrl!, newFeedUrl});
 
       manager.togglePodcastCommand.run(
         PodcastToggleCapsule(feedUrl: newFeedUrl),
       );
 
       manager.togglePodcastCommand.listen((result, sub) {
-        expect(result, isA<List<String>>());
+        expect(result, isA<Set<String>>());
         expect(result, contains(episodeOneAudio.feedUrl));
         expect(result, contains(newFeedUrl));
         sub.cancel();
@@ -77,7 +77,7 @@ Future<void> main() async {
       );
 
       manager.togglePodcastCommand.listen((result, sub) {
-        expect(result, isA<List<String>>());
+        expect(result, isA<Set<String>>());
         expect(result, isNot(contains(newFeedUrl)));
         sub.cancel();
       });

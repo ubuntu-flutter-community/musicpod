@@ -22,7 +22,7 @@ import '../settings/shared_preferences_keys.dart';
 import 'search_timeout_exception.dart';
 import 'search_type.dart';
 
-@lazySingleton
+@Injectable(cache: true)
 class SearchManager {
   SearchManager({
     required RadioService radioService,
@@ -70,12 +70,6 @@ class SearchManager {
   final LocalAudioService _localAudioService;
   final SettingsService _settingsService;
   late AudioType _initialAudioType;
-
-  final _messageController = StreamController<String>.broadcast();
-  Stream<String> get messageStream => _messageController.stream;
-
-  @disposeMethod
-  Future<void> dispose() => _messageController.close();
 
   late SafeValueNotifier<Set<SearchType>> searchTypes;
   late SafeValueNotifier<AudioType> audioType;
