@@ -60,12 +60,12 @@ mixin CommonHandlersAndCommandsMixin {
           if (feedsWithUpdates.isEmpty) {
           } else {
             if (feedsWithUpdates.length == 1) {
-              di<PodcastNameManager>(
+              di<PodcastShortInfoManager>(
                 param1: feedsWithUpdates.first,
               ).command.runAsync().then(
-                (name) => di<NotificationsService>().notify(
+                (info) => di<NotificationsService>().notify(
                   message: feedsWithUpdates.length == 1
-                      ? '${context.l10n.newEpisodeAvailable} ${name ?? ''}'
+                      ? '${context.l10n.newEpisodeAvailable} ${info?.name ?? ''}'
                       : '${context.l10n.newEpisodesAvailableFor(feedsWithUpdates.length)}',
                 ),
               );

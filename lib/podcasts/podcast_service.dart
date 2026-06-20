@@ -137,8 +137,10 @@ class PodcastService {
     required Iterable<String> feedUrls,
     void Function(double progress)? updateProgress,
   }) => _syncLock.synchronized(
-    () => _checkForUpdates(
-      toCheckFeedUrls: feedUrls.isEmpty ? podcastFeedUrls : feedUrls,
+    () async => _checkForUpdates(
+      toCheckFeedUrls: feedUrls.isEmpty
+          ? (await getSubscribedPodcasts())
+          : feedUrls,
       updateProgress: updateProgress,
     ),
   );
@@ -147,7 +149,7 @@ class PodcastService {
     required Iterable<String> toCheckFeedUrls,
     void Function(double progress)? updateProgress,
   }) async {
-    await loadPodcastUpdates();
+    await getPodcastUpdates();
 
     for (final (index, feedUrl) in toCheckFeedUrls.indexed) {
       final storedTimeStamp = await getPodcastLastUpdated(feedUrl);
@@ -173,6 +175,7 @@ class PodcastService {
       final allFreshEpisodes = await findEpisodes(
         feedUrl: feedUrl,
         tryFromDbOnly: false,
+        genre: null,
       );
 
       final newEpisodes = allFreshEpisodes
@@ -187,17 +190,15 @@ class PodcastService {
       await Future<void>.delayed(Duration.zero);
     }
 
-    return podcastUpdates;
+    return getPodcastUpdates();
   }
 
   Future<List<Audio>> findEpisodes({
     required String feedUrl,
     required bool tryFromDbOnly,
-    String? genre,
+    required String? genre,
   }) async {
-    final hasEpisodesInDb =
-        await _dao.hasPodcastStoredEpisodes(feedUrl) &&
-        isPodcastSubscribed(feedUrl);
+    final hasEpisodesInDb = await _dao.hasPodcastStoredEpisodes(feedUrl);
 
     if (tryFromDbOnly && hasEpisodesInDb) {
       printInfoInDebugMode(
@@ -211,24 +212,25 @@ class PodcastService {
       'Fetching all episodes from ${_search.searchProvider is ITunesProvider ? 'iTunes' : 'podcastindex'} for feedUrl: $feedUrl',
       tag: '$PodcastService',
     );
-    final Podcast? podcast = await compute(loadPodcast, feedUrl);
-    if (podcast?.image != null) {
-      addPodcastImage(
-        feedUrl: feedUrl,
-        imageUrl: podcast!.image!,
-        title: podcast.title ?? '',
-      );
-    }
+    final podcast = await compute(loadPodcast, feedUrl);
+
+    // Optimistically add the podcast to the DB unsubscribed
+    await _dao.addPodcast(
+      feedUrl: feedUrl,
+      subscribe: false,
+      imageUrl: podcast.image,
+      name: podcast.title ?? '',
+      artist: podcast.copyright ?? '',
+    );
+
     if (genre != null) {
       await addPodcastGenre(feedUrl: feedUrl, genreName: genre);
     }
 
-    final episodes =
-        podcast?.episodes
-            .where((e) => e.contentUrl != null)
-            .map((e) => Audio.fromPodcast(episode: e, podcast: podcast))
-            .toList() ??
-        <Audio>[];
+    final episodes = podcast.episodes
+        .where((e) => e.contentUrl != null)
+        .map((e) => Audio.fromPodcast(episode: e, podcast: podcast))
+        .toList();
 
     sortListByAudioFilter(
       audioFilter: AudioFilter.year,
@@ -239,7 +241,7 @@ class PodcastService {
     // optimistically upsert episodes after finding them, so they are available faster when opening the podcast page
     await _dao.upsertEpisodes(
       feedUrl: feedUrl,
-      podcastDescription: podcast?.description,
+      podcastDescription: podcast.description,
       episodes: episodes,
     );
 
@@ -329,32 +331,13 @@ class PodcastService {
     await loadDownloads();
   }
 
-  Set<String> _podcasts = {};
-  bool isPodcastSubscribed(String pageId) => _podcasts.contains(pageId);
+  Future<bool> isPodcastSubscribed(String pageId) =>
+      _dao.isPodcastSubscribed(pageId);
 
-  List<String> get podcastFeedUrls => _podcasts.toList();
-  Set<String> get podcasts => _podcasts;
-  int get podcastsLength => _podcasts.length;
-
-  Future<void> loadPodcasts() async {
-    _podcasts = await _dao.getPodcasts();
-  }
+  Future<Set<String>> getSubscribedPodcasts() => _dao.getSubscribedPodcasts();
 
   Future<PodcastShortInfo?> getPodcastShortInfo(String feedUrl) =>
       _dao.getPodcastShortInfo(feedUrl);
-
-  Future<String?> getSubscribedPodcastImage(String feedUrl) =>
-      _dao.getPodcastImage(feedUrl);
-
-  void addPodcastImage({
-    required String feedUrl,
-    required String imageUrl,
-    required String title,
-  }) => _dao.updatePodcastImage(
-    feedUrl: feedUrl,
-    imageUrl: imageUrl,
-    title: title,
-  );
 
   Future<String?> getPodcastName(String feedUrl) =>
       _dao.getPodcastName(feedUrl);
@@ -362,38 +345,18 @@ class PodcastService {
   Future<String?> getSubscribedPodcastArtist(String feedUrl) =>
       _dao.getPodcastArtist(feedUrl);
 
-  Future<void> addPodcast({
-    required String feedUrl,
-    required String? imageUrl,
-    required String name,
-    required String artist,
-  }) async {
-    if (podcastFeedUrls.contains(feedUrl)) return;
-    await _dao.addPodcast(
-      feedUrl: feedUrl,
-      imageUrl: imageUrl,
-      name: name,
-      artist: artist,
-    );
-
-    _podcasts.add(feedUrl);
-  }
+  Future<void> togglePodcastSubscription({required String feedUrl}) =>
+      _dao.togglePodcastSubscription(feedUrl: feedUrl);
 
   Future<void> addPodcasts(
     List<({String feedUrl, String? imageUrl, String name, String artist})>
     podcasts,
   ) async {
     if (podcasts.isEmpty) return;
-    final newPodcasts = podcasts
-        .where((p) => !_podcasts.contains(p.feedUrl))
-        .toList();
+    final newPodcasts = podcasts.toList();
     if (newPodcasts.isEmpty) return;
 
     await _dao.addPodcasts(newPodcasts);
-
-    for (final p in newPodcasts) {
-      _podcasts.add(p.feedUrl);
-    }
   }
 
   Future<void> reorderPodcast({
@@ -403,11 +366,7 @@ class PodcastService {
 
   Future<Set<String>> get ascendingPodcasts => _dao.ascendingPodcasts;
 
-  Set<String> podcastUpdates = {};
-
-  Future<void> loadPodcastUpdates() async {
-    podcastUpdates = await _dao.getPodcastUpdates();
-  }
+  Future<Set<String>> getPodcastUpdates() => _dao.getPodcastUpdates();
 
   Future<void> _addPodcastLastUpdated({
     required String feedUrl,
@@ -417,56 +376,35 @@ class PodcastService {
   Future<String?> getPodcastLastUpdated(String feedUrl) =>
       _dao.getPodcastLastUpdated(feedUrl);
 
-  bool podcastUpdateAvailable(String feedUrl) =>
-      podcastUpdates.contains(feedUrl);
-
-  Future<void> _addPodcastUpdate(String feedUrl) async {
-    if (podcastUpdates.contains(feedUrl)) return;
-    await _dao.addPodcastUpdate(feedUrl);
-    podcastUpdates.add(feedUrl);
-  }
+  Future<void> _addPodcastUpdate(String feedUrl) =>
+      _dao.addPodcastUpdate(feedUrl);
 
   Future<void> removePodcastUpdates({
     Iterable<String>? feedUrls,
     required void Function(double) updateProgress,
   }) async {
-    if (podcastUpdates.isEmpty) {
-      await loadPodcastUpdates();
-    }
-    final urls = feedUrls ?? podcastFeedUrls;
+    final urls = feedUrls ?? (await getSubscribedPodcasts());
     for (final (index, url) in urls.indexed) {
       await removePodcastUpdate(url);
       updateProgress((index + 1) / urls.length);
     }
   }
 
-  Future<void> removePodcastUpdate(String feedUrl) async {
-    if (podcastUpdates.isEmpty) return;
-    await _dao.deletePodcastUpdate(feedUrl);
-    podcastUpdates.remove(feedUrl);
-  }
+  Future<void> removePodcastUpdate(String feedUrl) =>
+      _dao.deletePodcastUpdate(feedUrl);
 
-  Future<void> removePodcastsWithUpdatesAndEpisodes(String feedUrl) async {
-    printInfoInDebugMode(
-      'Cleaning up unsubscribed podcast: $feedUrl',
-      tag: '$PodcastService',
-    );
-    await _dao.deletePodcastAndFriends(deleteMeUrls: {feedUrl});
+  Future<Set<String>> deleteOrphanPodcastData() => _dao.deleteOrphanEpisodes();
 
-    if (podcastFeedUrls.contains(feedUrl)) {
-      _podcasts.remove(feedUrl);
-    }
-  }
-
-  Future<Set<String>> deleteOrphanEpisodes() => _dao.deleteOrphanEpisodes();
+  Future<Set<String>> deletePodcastAndFriends({
+    required Set<String> deleteMeUrls,
+  }) => _dao.deletePodcastAndFriends(deleteMeUrls: deleteMeUrls);
 
   Future<void> updateAudioDuration(Audio audio) =>
       _dao.updateAudioDuration(audio);
 
   Future<void> wipeAndBuildPodcastLibrary() async {
     await _dao.deleteAllPodcasts();
-    await loadPodcasts();
-    await loadPodcastUpdates();
+    await getPodcastUpdates();
     await loadDownloads();
   }
 
@@ -479,14 +417,7 @@ class PodcastService {
   }) => _dao.insertPodcastGenre(feedUrl: feedUrl, genreName: genreName);
 }
 
-Future<Podcast?> loadPodcast(String url) => Feed.loadFeed(url: url);
-
-class PodcastUpdate {
-  final String feedUrl;
-  final List<Audio> episodes;
-
-  const PodcastUpdate({required this.feedUrl, required this.episodes});
-}
+Future<Podcast> loadPodcast(String url) => Feed.loadFeed(url: url);
 
 class FindEpisodesTimeoutException implements Exception {
   final String? message;

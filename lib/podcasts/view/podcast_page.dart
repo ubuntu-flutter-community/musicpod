@@ -9,6 +9,7 @@ import '../../common/view/audio_filter.dart';
 import '../../common/view/clean_up_caches.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/no_search_result_page.dart';
+import '../../common/view/progress.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
@@ -21,20 +22,48 @@ import '../data/podcast_episode_filter.dart';
 import '../data/podcast_update_capsule.dart';
 import '../download_manager.dart';
 import '../episodes_manager.dart';
+import '../podcast_genre_manager.dart';
 import '../podcast_manager.dart';
+import 'podcast_loading_page.dart';
+import 'podcast_error_page.dart';
 import 'podcast_page_control_panel.dart';
 import 'podcast_page_header.dart';
 import 'podcast_page_search_field.dart';
 import 'sliver_podcast_page_list.dart';
 
 class PodcastPage extends StatelessWidget with WatchItMixin {
-  const PodcastPage({super.key, this.imageUrl, required this.feedUrl});
+  const PodcastPage({super.key, required this.feedUrl, this.genre});
 
   final String feedUrl;
-  final String? imageUrl;
+  final String? genre;
 
   @override
   Widget build(BuildContext context) {
+    if (genre != null) {
+      callOnceAfterThisBuild((_) {
+        if (genre != null) {
+          di<PodcastGenreManager>(
+            param1: feedUrl,
+          ).updateCommand.run((genre: genre!));
+        }
+      });
+    }
+
+    onDispose(() => cleanUpUnusedPodcasts(deleteMeUrls: {feedUrl}));
+
+    final episodesResults = watchValue(
+      (EpisodesManager m) => m.command.results,
+      param1: feedUrl,
+    );
+
+    if (episodesResults.isRunning) {
+      return const PodcastLoadingPage(child: Center(child: Progress()));
+    }
+
+    if (episodesResults.hasError) {
+      return PodcastErrorPage(error: episodesResults.error!, feedUrl: feedUrl);
+    }
+
     callOnceAfterThisBuild((_) {
       cleanUpLocalAudioCaches();
       di<PodcastManager>().manageUpdatesCommand.run(
@@ -90,10 +119,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
 
     watchValue((DownloadManager m) => m.downloadCommands);
 
-    final freshEspidodes = watchValue(
-      (EpisodesManager m) => m.command,
-      param1: feedUrl,
-    );
+    final freshEspidodes = episodesResults.data;
 
     final filteredEpisodes = freshEspidodes
         ?.where((a) => a.title != null && a.episodeDescription != null)
@@ -152,7 +178,8 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
         ],
       ),
       body: RefreshIndicator(
-        onRefresh: di<PodcastManager>().isPodcastSubscribed(feedUrl)
+        onRefresh:
+            di<PodcastManager>().togglePodcastCommand.value.contains(feedUrl)
             ? () async => di<PodcastManager>().manageUpdatesCommand
                   .runAsync(
                     PodcastUpdateCapsule(
@@ -168,7 +195,6 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
           header: PodcastPageHeader(
             feedUrl: feedUrl,
             title: title,
-            imageUrl: imageUrl,
             episodes: filteredEpisodes,
             showFallbackIcon: true,
           ),
@@ -186,7 +212,6 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
                   feedUrl: feedUrl,
                   audios: filteredEpisodes ?? [],
                   title: title,
-                  imageUrl: imageUrl,
                 ),
           secondControlPanel: (freshEspidodes?.isEmpty ?? true)
               ? const SizedBox.shrink()

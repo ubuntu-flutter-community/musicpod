@@ -14,12 +14,10 @@ class PodcastErrorPage extends StatelessWidget with WatchItMixin {
   const PodcastErrorPage({
     super.key,
     required this.error,
-    this.imageUrl,
     required this.feedUrl,
   });
 
   final Object error;
-  final String? imageUrl;
   final String feedUrl;
 
   @override
@@ -28,7 +26,6 @@ class PodcastErrorPage extends StatelessWidget with WatchItMixin {
     body: AdaptiveMultiLayoutBody(
       header: PodcastPageHeader(
         title: context.l10n.oopsSomethingWentWrong,
-        imageUrl: imageUrl,
         episodes: [],
         showFallbackIcon: false,
       ),

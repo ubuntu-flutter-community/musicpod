@@ -33,4 +33,9 @@ class KeepAliveRegistry<I, T> {
     }
     return instance;
   }
+
+  void disposeAll() {
+    _instances.clear();
+    printInfoInDebugMode('All instances disposed', tag: '$T');
+  }
 }

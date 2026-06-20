@@ -16,8 +16,6 @@ class MasterItemPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    // Rebuild whenever one of the asynchronously loaded library id lists
-    // changes value.
     final playlistIdResults = watchValue(
       (PlaylistIDsManager m) => m.command.results,
     );

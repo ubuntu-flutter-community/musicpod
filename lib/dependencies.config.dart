@@ -293,18 +293,6 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioService: gh<_i438.LocalAudioService>(),
       ),
     );
-    gh.factoryCached<_i351.PodcastImageManager>(
-      () => _i351.PodcastImageManager(
-        feedUrl: gh<String>(),
-        podcastService: gh<_i721.PodcastService>(),
-      ),
-    );
-    gh.factoryCached<_i351.PodcastNameManager>(
-      () => _i351.PodcastNameManager(
-        feedUrl: gh<String>(),
-        podcastService: gh<_i721.PodcastService>(),
-      ),
-    );
     gh.lazySingleton<_i388.DownloadManager>(
       () => _i388.DownloadManager(
         podcastService: gh<_i721.PodcastService>(),

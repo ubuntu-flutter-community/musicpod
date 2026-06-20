@@ -33,7 +33,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
     final subsResults = watchValue(
       (PodcastManager m) => m.togglePodcastCommand.results,
     );
-    final subs = subsResults.data ?? [];
+    final subs = subsResults.data ?? {};
     final podcastManager = di<PodcastManager>();
     final updates = watchValue((PodcastManager m) => m.manageUpdatesCommand);
     final updatesOnly = watchValue((PodcastManager m) => m.updatesOnly);

@@ -62,8 +62,6 @@ class PodcastManager {
     };
   }
 
-  bool isPodcastSubscribed(String? feedUrl) =>
-      feedUrl == null ? false : _podcastService.isPodcastSubscribed(feedUrl);
   Future<void> updateAudioDuration(Audio audio) =>
       _podcastService.updateAudioDuration(audio);
 
@@ -74,7 +72,7 @@ class PodcastManager {
             feedUrls: capsule.feedUrls,
             updateProgress: handle.updateProgress,
           );
-          return _podcastService.podcastUpdates;
+          return _podcastService.getPodcastUpdates();
         }
 
         final updates = await _podcastService.checkForUpdates(
@@ -87,35 +85,18 @@ class PodcastManager {
         }
 
         return updates;
-      }, initialValue: _podcastService.podcastUpdates);
+      }, initialValue: {});
 
-  late final Command<PodcastToggleCapsule?, List<String>> togglePodcastCommand =
+  late final Command<PodcastToggleCapsule?, Set<String>> togglePodcastCommand =
       Command.createAsync((param) async {
-        if (_podcastService.podcastFeedUrls.isEmpty) {
-          await _podcastService.loadPodcasts();
-          await _podcastService.loadPodcastUpdates();
-        }
-
         if (param?.feedUrl != null) {
-          if (_podcastService.podcastFeedUrls.contains(param!.feedUrl)) {
-            await _podcastService.removePodcastsWithUpdatesAndEpisodes(
-              param.feedUrl,
-            );
-            PodcastShortInfoManager.dispose(param.feedUrl);
-          } else if (param.name != null && param.artist != null) {
-            await _podcastService.addPodcast(
-              feedUrl: param.feedUrl,
-              imageUrl: param.imageUrl,
-              name: param.name!,
-              artist: param.artist!,
-            );
-          } else {
-            throw ArgumentError('name and artist are required');
-          }
+          await _podcastService.togglePodcastSubscription(
+            feedUrl: param!.feedUrl,
+          );
         }
 
-        return _podcastService.podcastFeedUrls;
-      }, initialValue: _podcastService.podcastFeedUrls);
+        return _podcastService.getSubscribedPodcasts();
+      }, initialValue: {});
 
   late final Command<({String feedUrl, bool ascending}), Set<String>>
   reorderPodcastCommand = Command.createAsync((param) async {
@@ -142,39 +123,6 @@ class PodcastManager {
         await togglePodcastCommand.runAsync();
         await feedsWithDownloadsCommand.runAsync();
       });
-}
-
-@Injectable(cache: true)
-class PodcastImageManager {
-  PodcastImageManager({
-    @factoryMethod required String feedUrl,
-    required PodcastService podcastService,
-  }) {
-    command = Command.createAsync(
-      podcastService.getSubscribedPodcastImage,
-      initialValue: null,
-    );
-
-    command.run(feedUrl);
-  }
-
-  late final Command<String, String?> command;
-}
-
-@Injectable(cache: true)
-class PodcastNameManager {
-  PodcastNameManager({
-    @factoryMethod required String feedUrl,
-    required PodcastService podcastService,
-  }) {
-    command = Command.createAsync(
-      podcastService.getPodcastName,
-      initialValue: null,
-    );
-    command.run(feedUrl);
-  }
-
-  late final Command<String, String?> command;
 }
 
 @injectable
@@ -206,6 +154,7 @@ class PodcastShortInfoManager {
   static final _registry = KeepAliveRegistry<String, PodcastShortInfoManager>();
   static PodcastShortInfoManager? dispose(String feedUrl) =>
       _registry.dispose(feedUrl);
+  static void disposeAll() => _registry.disposeAll();
 
   late final Command<String, PodcastShortInfo?> command;
 }

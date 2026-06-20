@@ -8,6 +8,7 @@ class PodcastTable extends Table {
   late final imageUrl = text().nullable()();
   late final lastUpdated = dateTime()();
   late final ascending = boolean().withDefault(const Constant(false))();
+  late final subscribed = boolean().withDefault(const Constant(false))();
 
   @override
   Set<Column<Object>> get primaryKey => {feedUrl};

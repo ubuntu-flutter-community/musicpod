@@ -14,7 +14,7 @@ import '../../local_audio/view/liked_audio_page.dart';
 import '../../local_audio/view/local_audio_page.dart';
 import '../../local_audio/view/playlist_page.dart';
 import '../../podcasts/podcast_manager.dart';
-import '../../podcasts/view/lazy_podcast_page.dart';
+import '../../podcasts/view/podcast_page.dart';
 import '../../podcasts/view/podcast_page_side_bar_icon.dart';
 import '../../podcasts/view/podcast_page_title.dart';
 import '../../podcasts/view/podcasts_page.dart';
@@ -32,7 +32,9 @@ import 'master_item.dart';
 Iterable<MasterItem> getAllMasterItems() => [
   ...permanentMasterItems,
   ...createPlaylistMasterItems(di<PlaylistIDsManager>().command.value),
-  ...createPodcastMasterItems(di<PodcastManager>().togglePodcastCommand.value),
+  ...createPodcastMasterItems(
+    di<PodcastManager>().togglePodcastCommand.value.toList(),
+  ),
   ...createPinnedAlbumsMasterItems(di<PinnedAlbumIDsManager>().command.value),
   ...createStarredStationsMasterItems(
     di<RadioManager>().toggleStarStationCommand.value,
@@ -132,7 +134,7 @@ Iterable<MasterItem> createPodcastMasterItems(List<String> podcastFeedUrls) =>
         titleBuilder: (_) => PodcastPageTitle(feedUrl: feedUrl),
         subtitleBuilder: (_) => PodcastPageSubTitle(feedUrl: feedUrl),
         pageId: feedUrl,
-        pageBuilder: (_) => LazyPodcastPage(feedUrl: feedUrl),
+        pageBuilder: (_) => PodcastPage(feedUrl: feedUrl),
         iconBuilder: (selected) => PodcastPageSideBarIcon(feedUrl: feedUrl),
       ),
     );

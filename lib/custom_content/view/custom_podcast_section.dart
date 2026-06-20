@@ -5,7 +5,7 @@ import '../../app/routing_manager.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../podcasts/episodes_manager.dart';
-import '../../podcasts/view/lazy_podcast_page.dart';
+import '../../podcasts/view/podcast_page.dart';
 
 class CustomPodcastSection extends StatefulWidget {
   const CustomPodcastSection({super.key});
@@ -63,9 +63,8 @@ class _CustomPodcastSectionState extends State<CustomPodcastSection> {
                             } else {
                               di<RoutingManager>().push(
                                 pageId: _urlController.text,
-                                builder: (context) => LazyPodcastPage(
-                                  feedUrl: _urlController.text,
-                                ),
+                                builder: (context) =>
+                                    PodcastPage(feedUrl: _urlController.text),
                               );
                             }
                           });
