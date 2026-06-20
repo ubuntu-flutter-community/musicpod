@@ -49,7 +49,11 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
       });
     }
 
-    onDispose(() => cleanUpUnusedPodcasts(deleteMeUrls: {feedUrl}));
+    onDispose(() {
+      if (!di<PodcastManager>().togglePodcastCommand.value.contains(feedUrl)) {
+        cleanUpUnusedPodcasts(deleteMeUrls: {feedUrl});
+      }
+    });
 
     final episodesResults = watchValue(
       (EpisodesManager m) => m.command.results,
