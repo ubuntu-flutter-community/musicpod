@@ -5,17 +5,15 @@ import '../../common/view/header_bar.dart';
 import '../../extensions/build_context_x.dart';
 import 'podcast_page_header.dart';
 
-class LazyPodcastLoadingPage extends StatelessWidget {
-  const LazyPodcastLoadingPage({
+class PodcastLoadingPage extends StatelessWidget {
+  const PodcastLoadingPage({
     super.key,
-    this.imageUrl,
     required this.child,
     this.expandChild = false,
     this.title,
   });
 
   final String? title;
-  final String? imageUrl;
   final Widget child;
   final bool expandChild;
 
@@ -25,7 +23,6 @@ class LazyPodcastLoadingPage extends StatelessWidget {
     body: AdaptiveMultiLayoutBody(
       header: PodcastPageHeader(
         title: title ?? context.l10n.loadingPodcastFeed,
-        imageUrl: imageUrl,
         episodes: [],
         showFallbackIcon: false,
       ),

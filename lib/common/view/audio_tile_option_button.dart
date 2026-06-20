@@ -235,7 +235,9 @@ class AudioTileOptionButton extends StatelessWidget {
               ),
             ),
             if (audios.firstOrNull?.feedUrl != null &&
-                di<PodcastManager>().isPodcastSubscribed(audios.first.feedUrl!))
+                di<PodcastManager>().togglePodcastCommand.value.contains(
+                  audios.first.feedUrl!,
+                ))
               PopupMenuItem(
                 onTap: () => di<PodcastManager>().manageUpdatesCommand.runAsync(
                   PodcastUpdateCapsule(

@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_it/flutter_it.dart';
-import 'package:podcast_search/podcast_search.dart';
 
 import '../../common/view/progress.dart';
 import '../../common/view/ui_constants.dart';
@@ -18,8 +17,6 @@ import '../../podcasts/data/podcast_update_capsule.dart';
 import '../../podcasts/download_manager.dart';
 import '../../podcasts/podcast_clean_manager.dart';
 import '../../podcasts/podcast_manager.dart';
-import '../../search/search_manager.dart';
-import '../../search/search_timeout_exception.dart';
 import '../app_manager.dart';
 import '../sidebar_audios_manager.dart';
 
@@ -60,12 +57,12 @@ mixin CommonHandlersAndCommandsMixin {
           if (feedsWithUpdates.isEmpty) {
           } else {
             if (feedsWithUpdates.length == 1) {
-              di<PodcastNameManager>(
+              di<PodcastShortInfoManager>(
                 param1: feedsWithUpdates.first,
               ).command.runAsync().then(
-                (name) => di<NotificationsService>().notify(
+                (info) => di<NotificationsService>().notify(
                   message: feedsWithUpdates.length == 1
-                      ? '${context.l10n.newEpisodeAvailable} ${name ?? ''}'
+                      ? '${context.l10n.newEpisodeAvailable} ${info?.name ?? ''}'
                       : '${context.l10n.newEpisodesAvailableFor(feedsWithUpdates.length)}',
                 ),
               );
@@ -128,24 +125,6 @@ mixin CommonHandlersAndCommandsMixin {
           di<PlayerManager>().startPlaylist(
             audios: data.audios,
             listName: data.pageId,
-          );
-        }
-      },
-    );
-
-    registerStreamHandler(
-      select: (SearchManager m) => m.messageStream,
-      handler: (context, newValue, cancel) {
-        if (newValue.hasError) {
-          context.toast(
-            Text(switch (newValue.error) {
-              SearchTimeoutException() => context.l10n.searchTimeoutMessage,
-              PodcastFailedException() =>
-                (newValue.error as PodcastFailedException).message,
-              _ => newValue.error.toString(),
-            }),
-            duration: const Duration(seconds: 8),
-            showCloseIcon: true,
           );
         }
       },

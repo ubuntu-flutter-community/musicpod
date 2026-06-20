@@ -51,24 +51,6 @@ class MockPodcastService extends _i1.Mock implements _i3.PodcastService {
           as Set<String>);
 
   @override
-  List<String> get podcastFeedUrls =>
-      (super.noSuchMethod(
-            Invocation.getter(#podcastFeedUrls),
-            returnValue: <String>[],
-          )
-          as List<String>);
-
-  @override
-  Set<String> get podcasts =>
-      (super.noSuchMethod(Invocation.getter(#podcasts), returnValue: <String>{})
-          as Set<String>);
-
-  @override
-  int get podcastsLength =>
-      (super.noSuchMethod(Invocation.getter(#podcastsLength), returnValue: 0)
-          as int);
-
-  @override
   _i4.Future<Set<String>> get ascendingPodcasts =>
       (super.noSuchMethod(
             Invocation.getter(#ascendingPodcasts),
@@ -77,22 +59,8 @@ class MockPodcastService extends _i1.Mock implements _i3.PodcastService {
           as _i4.Future<Set<String>>);
 
   @override
-  Set<String> get podcastUpdates =>
-      (super.noSuchMethod(
-            Invocation.getter(#podcastUpdates),
-            returnValue: <String>{},
-          )
-          as Set<String>);
-
-  @override
   set feedsWithDownloads(Set<String>? value) => super.noSuchMethod(
     Invocation.setter(#feedsWithDownloads, value),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  set podcastUpdates(Set<String>? value) => super.noSuchMethod(
-    Invocation.setter(#podcastUpdates, value),
     returnValueForMissingStub: null,
   );
 
@@ -159,7 +127,7 @@ class MockPodcastService extends _i1.Mock implements _i3.PodcastService {
   _i4.Future<List<_i7.Audio>> findEpisodes({
     required String? feedUrl,
     required bool? tryFromDbOnly,
-    String? genre,
+    required String? genre,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#findEpisodes, [], {
@@ -222,21 +190,20 @@ class MockPodcastService extends _i1.Mock implements _i3.PodcastService {
           as _i4.Future<void>);
 
   @override
-  bool isPodcastSubscribed(String? pageId) =>
+  _i4.Future<bool> isPodcastSubscribed(String? pageId) =>
       (super.noSuchMethod(
             Invocation.method(#isPodcastSubscribed, [pageId]),
-            returnValue: false,
+            returnValue: _i4.Future<bool>.value(false),
           )
-          as bool);
+          as _i4.Future<bool>);
 
   @override
-  _i4.Future<void> loadPodcasts() =>
+  _i4.Future<Set<String>> getSubscribedPodcasts() =>
       (super.noSuchMethod(
-            Invocation.method(#loadPodcasts, []),
-            returnValue: _i4.Future<void>.value(),
-            returnValueForMissingStub: _i4.Future<void>.value(),
+            Invocation.method(#getSubscribedPodcasts, []),
+            returnValue: _i4.Future<Set<String>>.value(<String>{}),
           )
-          as _i4.Future<void>);
+          as _i4.Future<Set<String>>);
 
   @override
   _i4.Future<_i8.PodcastShortInfo?> getPodcastShortInfo(String? feedUrl) =>
@@ -245,28 +212,6 @@ class MockPodcastService extends _i1.Mock implements _i3.PodcastService {
             returnValue: _i4.Future<_i8.PodcastShortInfo?>.value(),
           )
           as _i4.Future<_i8.PodcastShortInfo?>);
-
-  @override
-  _i4.Future<String?> getSubscribedPodcastImage(String? feedUrl) =>
-      (super.noSuchMethod(
-            Invocation.method(#getSubscribedPodcastImage, [feedUrl]),
-            returnValue: _i4.Future<String?>.value(),
-          )
-          as _i4.Future<String?>);
-
-  @override
-  void addPodcastImage({
-    required String? feedUrl,
-    required String? imageUrl,
-    required String? title,
-  }) => super.noSuchMethod(
-    Invocation.method(#addPodcastImage, [], {
-      #feedUrl: feedUrl,
-      #imageUrl: imageUrl,
-      #title: title,
-    }),
-    returnValueForMissingStub: null,
-  );
 
   @override
   _i4.Future<String?> getPodcastName(String? feedUrl) =>
@@ -285,18 +230,10 @@ class MockPodcastService extends _i1.Mock implements _i3.PodcastService {
           as _i4.Future<String?>);
 
   @override
-  _i4.Future<void> addPodcast({
-    required String? feedUrl,
-    required String? imageUrl,
-    required String? name,
-    required String? artist,
-  }) =>
+  _i4.Future<void> togglePodcastSubscription({required String? feedUrl}) =>
       (super.noSuchMethod(
-            Invocation.method(#addPodcast, [], {
+            Invocation.method(#togglePodcastSubscription, [], {
               #feedUrl: feedUrl,
-              #imageUrl: imageUrl,
-              #name: name,
-              #artist: artist,
             }),
             returnValue: _i4.Future<void>.value(),
             returnValueForMissingStub: _i4.Future<void>.value(),
@@ -331,13 +268,12 @@ class MockPodcastService extends _i1.Mock implements _i3.PodcastService {
           as _i4.Future<void>);
 
   @override
-  _i4.Future<void> loadPodcastUpdates() =>
+  _i4.Future<Set<String>> getPodcastUpdates() =>
       (super.noSuchMethod(
-            Invocation.method(#loadPodcastUpdates, []),
-            returnValue: _i4.Future<void>.value(),
-            returnValueForMissingStub: _i4.Future<void>.value(),
+            Invocation.method(#getPodcastUpdates, []),
+            returnValue: _i4.Future<Set<String>>.value(<String>{}),
           )
-          as _i4.Future<void>);
+          as _i4.Future<Set<String>>);
 
   @override
   _i4.Future<String?> getPodcastLastUpdated(String? feedUrl) =>
@@ -346,14 +282,6 @@ class MockPodcastService extends _i1.Mock implements _i3.PodcastService {
             returnValue: _i4.Future<String?>.value(),
           )
           as _i4.Future<String?>);
-
-  @override
-  bool podcastUpdateAvailable(String? feedUrl) =>
-      (super.noSuchMethod(
-            Invocation.method(#podcastUpdateAvailable, [feedUrl]),
-            returnValue: false,
-          )
-          as bool);
 
   @override
   _i4.Future<void> removePodcastUpdates({
@@ -380,18 +308,21 @@ class MockPodcastService extends _i1.Mock implements _i3.PodcastService {
           as _i4.Future<void>);
 
   @override
-  _i4.Future<void> removePodcastsWithUpdatesAndEpisodes(String? feedUrl) =>
+  _i4.Future<Set<String>> deleteOrphanPodcastData() =>
       (super.noSuchMethod(
-            Invocation.method(#removePodcastsWithUpdatesAndEpisodes, [feedUrl]),
-            returnValue: _i4.Future<void>.value(),
-            returnValueForMissingStub: _i4.Future<void>.value(),
+            Invocation.method(#deleteOrphanPodcastData, []),
+            returnValue: _i4.Future<Set<String>>.value(<String>{}),
           )
-          as _i4.Future<void>);
+          as _i4.Future<Set<String>>);
 
   @override
-  _i4.Future<Set<String>> deleteOrphanEpisodes() =>
+  _i4.Future<Set<String>> deletePodcastAndFriends({
+    required Set<String>? deleteMeUrls,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#deleteOrphanEpisodes, []),
+            Invocation.method(#deletePodcastAndFriends, [], {
+              #deleteMeUrls: deleteMeUrls,
+            }),
             returnValue: _i4.Future<Set<String>>.value(<String>{}),
           )
           as _i4.Future<Set<String>>);

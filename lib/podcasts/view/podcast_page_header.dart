@@ -13,6 +13,7 @@ import '../../extensions/string_x.dart';
 import '../../l10n/app_localizations.dart';
 import '../../search/search_manager.dart';
 import '../podcast_genre_manager.dart';
+import '../podcast_manager.dart';
 import 'podcast_page_image.dart';
 
 class PodcastPageHeader extends StatelessWidget with WatchItMixin {
@@ -21,13 +22,11 @@ class PodcastPageHeader extends StatelessWidget with WatchItMixin {
     this.feedUrl,
     required this.title,
     required this.episodes,
-    this.imageUrl,
     required this.showFallbackIcon,
   });
 
   final String? feedUrl;
   final String title;
-  final String? imageUrl;
   final List<Audio>? episodes;
   final bool showFallbackIcon;
 
@@ -38,6 +37,13 @@ class PodcastPageHeader extends StatelessWidget with WatchItMixin {
     final genre = feedUrl == null
         ? null
         : watchValue((PodcastGenreManager m) => m.findCommand, param1: feedUrl);
+
+    final imageUrl = feedUrl == null
+        ? null
+        : watchValue(
+            (PodcastShortInfoManager m) => m.command.select((v) => v?.imageUrl),
+            param1: feedUrl!,
+          );
 
     return AudioPageHeader(
       image: PodcastPageImage(

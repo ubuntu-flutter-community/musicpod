@@ -34,7 +34,7 @@ class Database extends _$Database {
   Database(super.e);
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   Future<void> reclaimDiskSpace() async {
     try {
@@ -124,6 +124,9 @@ class Database extends _$Database {
           starredStationTable,
           starredStationTable.hasExtendedInfo,
         );
+      }
+      if (from < 6) {
+        await m.addColumn(podcastTable, podcastTable.subscribed);
       }
     },
   );

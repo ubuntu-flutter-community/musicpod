@@ -4317,6 +4317,21 @@ class $PodcastTableTable extends PodcastTable
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _subscribedMeta = const VerificationMeta(
+    'subscribed',
+  );
+  @override
+  late final GeneratedColumn<bool> subscribed = GeneratedColumn<bool>(
+    'subscribed',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("subscribed" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     feedUrl,
@@ -4326,6 +4341,7 @@ class $PodcastTableTable extends PodcastTable
     imageUrl,
     lastUpdated,
     ascending,
+    subscribed,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -4397,6 +4413,12 @@ class $PodcastTableTable extends PodcastTable
         ascending.isAcceptableOrUnknown(data['ascending']!, _ascendingMeta),
       );
     }
+    if (data.containsKey('subscribed')) {
+      context.handle(
+        _subscribedMeta,
+        subscribed.isAcceptableOrUnknown(data['subscribed']!, _subscribedMeta),
+      );
+    }
     return context;
   }
 
@@ -4434,6 +4456,10 @@ class $PodcastTableTable extends PodcastTable
         DriftSqlType.bool,
         data['${effectivePrefix}ascending'],
       )!,
+      subscribed: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}subscribed'],
+      )!,
     );
   }
 
@@ -4452,6 +4478,7 @@ class PodcastTableData extends DataClass
   final String? imageUrl;
   final DateTime lastUpdated;
   final bool ascending;
+  final bool subscribed;
   const PodcastTableData({
     required this.feedUrl,
     required this.name,
@@ -4460,6 +4487,7 @@ class PodcastTableData extends DataClass
     this.imageUrl,
     required this.lastUpdated,
     required this.ascending,
+    required this.subscribed,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -4473,6 +4501,7 @@ class PodcastTableData extends DataClass
     }
     map['last_updated'] = Variable<DateTime>(lastUpdated);
     map['ascending'] = Variable<bool>(ascending);
+    map['subscribed'] = Variable<bool>(subscribed);
     return map;
   }
 
@@ -4487,6 +4516,7 @@ class PodcastTableData extends DataClass
           : Value(imageUrl),
       lastUpdated: Value(lastUpdated),
       ascending: Value(ascending),
+      subscribed: Value(subscribed),
     );
   }
 
@@ -4503,6 +4533,7 @@ class PodcastTableData extends DataClass
       imageUrl: serializer.fromJson<String?>(json['imageUrl']),
       lastUpdated: serializer.fromJson<DateTime>(json['lastUpdated']),
       ascending: serializer.fromJson<bool>(json['ascending']),
+      subscribed: serializer.fromJson<bool>(json['subscribed']),
     );
   }
   @override
@@ -4516,6 +4547,7 @@ class PodcastTableData extends DataClass
       'imageUrl': serializer.toJson<String?>(imageUrl),
       'lastUpdated': serializer.toJson<DateTime>(lastUpdated),
       'ascending': serializer.toJson<bool>(ascending),
+      'subscribed': serializer.toJson<bool>(subscribed),
     };
   }
 
@@ -4527,6 +4559,7 @@ class PodcastTableData extends DataClass
     Value<String?> imageUrl = const Value.absent(),
     DateTime? lastUpdated,
     bool? ascending,
+    bool? subscribed,
   }) => PodcastTableData(
     feedUrl: feedUrl ?? this.feedUrl,
     name: name ?? this.name,
@@ -4535,6 +4568,7 @@ class PodcastTableData extends DataClass
     imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
     lastUpdated: lastUpdated ?? this.lastUpdated,
     ascending: ascending ?? this.ascending,
+    subscribed: subscribed ?? this.subscribed,
   );
   PodcastTableData copyWithCompanion(PodcastTableCompanion data) {
     return PodcastTableData(
@@ -4549,6 +4583,9 @@ class PodcastTableData extends DataClass
           ? data.lastUpdated.value
           : this.lastUpdated,
       ascending: data.ascending.present ? data.ascending.value : this.ascending,
+      subscribed: data.subscribed.present
+          ? data.subscribed.value
+          : this.subscribed,
     );
   }
 
@@ -4561,7 +4598,8 @@ class PodcastTableData extends DataClass
           ..write('description: $description, ')
           ..write('imageUrl: $imageUrl, ')
           ..write('lastUpdated: $lastUpdated, ')
-          ..write('ascending: $ascending')
+          ..write('ascending: $ascending, ')
+          ..write('subscribed: $subscribed')
           ..write(')'))
         .toString();
   }
@@ -4575,6 +4613,7 @@ class PodcastTableData extends DataClass
     imageUrl,
     lastUpdated,
     ascending,
+    subscribed,
   );
   @override
   bool operator ==(Object other) =>
@@ -4586,7 +4625,8 @@ class PodcastTableData extends DataClass
           other.description == this.description &&
           other.imageUrl == this.imageUrl &&
           other.lastUpdated == this.lastUpdated &&
-          other.ascending == this.ascending);
+          other.ascending == this.ascending &&
+          other.subscribed == this.subscribed);
 }
 
 class PodcastTableCompanion extends UpdateCompanion<PodcastTableData> {
@@ -4597,6 +4637,7 @@ class PodcastTableCompanion extends UpdateCompanion<PodcastTableData> {
   final Value<String?> imageUrl;
   final Value<DateTime> lastUpdated;
   final Value<bool> ascending;
+  final Value<bool> subscribed;
   final Value<int> rowid;
   const PodcastTableCompanion({
     this.feedUrl = const Value.absent(),
@@ -4606,6 +4647,7 @@ class PodcastTableCompanion extends UpdateCompanion<PodcastTableData> {
     this.imageUrl = const Value.absent(),
     this.lastUpdated = const Value.absent(),
     this.ascending = const Value.absent(),
+    this.subscribed = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   PodcastTableCompanion.insert({
@@ -4616,6 +4658,7 @@ class PodcastTableCompanion extends UpdateCompanion<PodcastTableData> {
     this.imageUrl = const Value.absent(),
     required DateTime lastUpdated,
     this.ascending = const Value.absent(),
+    this.subscribed = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : feedUrl = Value(feedUrl),
        name = Value(name),
@@ -4630,6 +4673,7 @@ class PodcastTableCompanion extends UpdateCompanion<PodcastTableData> {
     Expression<String>? imageUrl,
     Expression<DateTime>? lastUpdated,
     Expression<bool>? ascending,
+    Expression<bool>? subscribed,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -4640,6 +4684,7 @@ class PodcastTableCompanion extends UpdateCompanion<PodcastTableData> {
       if (imageUrl != null) 'image_url': imageUrl,
       if (lastUpdated != null) 'last_updated': lastUpdated,
       if (ascending != null) 'ascending': ascending,
+      if (subscribed != null) 'subscribed': subscribed,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -4652,6 +4697,7 @@ class PodcastTableCompanion extends UpdateCompanion<PodcastTableData> {
     Value<String?>? imageUrl,
     Value<DateTime>? lastUpdated,
     Value<bool>? ascending,
+    Value<bool>? subscribed,
     Value<int>? rowid,
   }) {
     return PodcastTableCompanion(
@@ -4662,6 +4708,7 @@ class PodcastTableCompanion extends UpdateCompanion<PodcastTableData> {
       imageUrl: imageUrl ?? this.imageUrl,
       lastUpdated: lastUpdated ?? this.lastUpdated,
       ascending: ascending ?? this.ascending,
+      subscribed: subscribed ?? this.subscribed,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -4690,6 +4737,9 @@ class PodcastTableCompanion extends UpdateCompanion<PodcastTableData> {
     if (ascending.present) {
       map['ascending'] = Variable<bool>(ascending.value);
     }
+    if (subscribed.present) {
+      map['subscribed'] = Variable<bool>(subscribed.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -4706,6 +4756,7 @@ class PodcastTableCompanion extends UpdateCompanion<PodcastTableData> {
           ..write('imageUrl: $imageUrl, ')
           ..write('lastUpdated: $lastUpdated, ')
           ..write('ascending: $ascending, ')
+          ..write('subscribed: $subscribed, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -11101,6 +11152,7 @@ typedef $$PodcastTableTableCreateCompanionBuilder =
       Value<String?> imageUrl,
       required DateTime lastUpdated,
       Value<bool> ascending,
+      Value<bool> subscribed,
       Value<int> rowid,
     });
 typedef $$PodcastTableTableUpdateCompanionBuilder =
@@ -11112,6 +11164,7 @@ typedef $$PodcastTableTableUpdateCompanionBuilder =
       Value<String?> imageUrl,
       Value<DateTime> lastUpdated,
       Value<bool> ascending,
+      Value<bool> subscribed,
       Value<int> rowid,
     });
 
@@ -11286,6 +11339,11 @@ class $$PodcastTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<bool> get subscribed => $composableBuilder(
+    column: $table.subscribed,
+    builder: (column) => ColumnFilters(column),
+  );
+
   Expression<bool> podcastUpdateTableRefs(
     Expression<bool> Function($$PodcastUpdateTableTableFilterComposer f) f,
   ) {
@@ -11432,6 +11490,11 @@ class $$PodcastTableTableOrderingComposer
     column: $table.ascending,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<bool> get subscribed => $composableBuilder(
+    column: $table.subscribed,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$PodcastTableTableAnnotationComposer
@@ -11467,6 +11530,11 @@ class $$PodcastTableTableAnnotationComposer
 
   GeneratedColumn<bool> get ascending =>
       $composableBuilder(column: $table.ascending, builder: (column) => column);
+
+  GeneratedColumn<bool> get subscribed => $composableBuilder(
+    column: $table.subscribed,
+    builder: (column) => column,
+  );
 
   Expression<T> podcastUpdateTableRefs<T extends Object>(
     Expression<T> Function($$PodcastUpdateTableTableAnnotationComposer a) f,
@@ -11614,6 +11682,7 @@ class $$PodcastTableTableTableManager
                 Value<String?> imageUrl = const Value.absent(),
                 Value<DateTime> lastUpdated = const Value.absent(),
                 Value<bool> ascending = const Value.absent(),
+                Value<bool> subscribed = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => PodcastTableCompanion(
                 feedUrl: feedUrl,
@@ -11623,6 +11692,7 @@ class $$PodcastTableTableTableManager
                 imageUrl: imageUrl,
                 lastUpdated: lastUpdated,
                 ascending: ascending,
+                subscribed: subscribed,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -11634,6 +11704,7 @@ class $$PodcastTableTableTableManager
                 Value<String?> imageUrl = const Value.absent(),
                 required DateTime lastUpdated,
                 Value<bool> ascending = const Value.absent(),
+                Value<bool> subscribed = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => PodcastTableCompanion.insert(
                 feedUrl: feedUrl,
@@ -11643,6 +11714,7 @@ class $$PodcastTableTableTableManager
                 imageUrl: imageUrl,
                 lastUpdated: lastUpdated,
                 ascending: ascending,
+                subscribed: subscribed,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

@@ -10,6 +10,8 @@ import '../../custom_content/view/backup_dialog.dart';
 import '../../extensions/build_context_x.dart';
 
 import '../../local_audio/local_audio_manager.dart';
+import '../../local_audio/pinned_album_i_ds_manager.dart';
+import '../../local_audio/playlist_ids_manager.dart';
 import '../../podcasts/podcast_manager.dart';
 import '../../radio/radio_manager.dart';
 import '../settings_manager.dart';
@@ -85,6 +87,11 @@ class WipeConfirmDialog extends StatelessWidget {
         ));
         await di<SettingsManager>().wipeAndInitLibraryCommand.runAsync();
         await di<Database>().reclaimDiskSpace();
+        PodcastShortInfoManager.disposeAll();
+        di<PlaylistIDsManager>().command.value = [];
+        di<PinnedAlbumIDsManager>().command.value = [];
+        di<RadioManager>().toggleStarStationCommand.value = [];
+        di<PodcastManager>().togglePodcastCommand.value = {};
       },
     );
   }

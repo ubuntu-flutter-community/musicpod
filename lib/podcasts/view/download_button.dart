@@ -50,7 +50,9 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
           ),
           onPressed: () {
             final downloadCommand = di<DownloadManager>().getCommand(audio);
-            if (!di<PodcastManager>().isPodcastSubscribed(audio.feedUrl)) {
+            if (!di<PodcastManager>().togglePodcastCommand.value.contains(
+              audio.feedUrl,
+            )) {
               addPodcast();
             }
 

@@ -49,6 +49,7 @@ class PodcastDao {
       imageUrl: row.imageUrl,
       lastUpdated: row.lastUpdated,
       ascending: row.ascending,
+      subscribed: row.subscribed,
     );
   }
 
@@ -218,12 +219,21 @@ class PodcastDao {
 
   Future<void> deleteDownloads() => _db.delete(_db.downloadTable).go();
 
-  Future<Set<String>> getPodcasts() async {
-    final rows = await (_db.select(
-      _db.podcastTable,
-    )..orderBy([(t) => OrderingTerm(expression: t.name)])).get();
+  Future<Set<String>> getSubscribedPodcasts() async {
+    final rows =
+        await (_db.select(_db.podcastTable)
+              ..where((t) => t.subscribed.equals(true))
+              ..orderBy([(t) => OrderingTerm(expression: t.name)]))
+            .get();
 
     return rows.map((r) => r.feedUrl).toSet();
+  }
+
+  Future<bool> isPodcastSubscribed(String feedUrl) async {
+    final row = await (_db.select(
+      _db.podcastTable,
+    )..where((t) => t.feedUrl.equals(feedUrl))).getSingleOrNull();
+    return row?.subscribed ?? false;
   }
 
   Future<String?> getPodcastImage(String feedUrl) async {
@@ -231,18 +241,6 @@ class PodcastDao {
       _db.podcastTable,
     )..where((t) => t.feedUrl.equals(feedUrl))).getSingleOrNull();
     return row?.imageUrl;
-  }
-
-  Future<void> updatePodcastImage({
-    required String feedUrl,
-    required String imageUrl,
-    required String title,
-  }) async {
-    await (_db.update(
-      _db.podcastTable,
-    )..where((t) => t.feedUrl.equals(feedUrl))).write(
-      PodcastTableCompanion(imageUrl: Value(imageUrl), name: Value(title)),
-    );
   }
 
   Future<String?> getPodcastName(String feedUrl) async {
@@ -273,6 +271,7 @@ class PodcastDao {
 
   Future<void> addPodcast({
     required String feedUrl,
+    required bool subscribe,
     required String? imageUrl,
     required String name,
     required String artist,
@@ -288,9 +287,45 @@ class PodcastDao {
             description: '',
             imageUrl: Value(imageUrl),
             lastUpdated: now,
+            subscribed: Value(subscribe),
           ),
           mode: InsertMode.insertOrIgnore,
         );
+  }
+
+  Future<void> setPodcastSubscription({
+    required String feedUrl,
+    required bool subscribe,
+  }) async {
+    await (_db.update(_db.podcastTable)
+          ..where((t) => t.feedUrl.equals(feedUrl)))
+        .write(PodcastTableCompanion(subscribed: Value(subscribe)));
+  }
+
+  Future<void> togglePodcastSubscription({required String feedUrl}) async {
+    final row = await (_db.select(
+      _db.podcastTable,
+    )..where((t) => t.feedUrl.equals(feedUrl))).getSingleOrNull();
+
+    if (row == null) {
+      printInfoInDebugMode(
+        'No podcast found with feedUrl: $feedUrl to toggle subscription.',
+        tag: '$PodcastDao',
+      );
+      return;
+    }
+
+    final currentlySubscribed = row.subscribed;
+
+    if (currentlySubscribed) {
+      await deletePodcastAndFriends(deleteMeUrls: {feedUrl});
+    }
+
+    final newSubscriptionStatus = !currentlySubscribed;
+    await setPodcastSubscription(
+      feedUrl: feedUrl,
+      subscribe: newSubscriptionStatus,
+    );
   }
 
   Future<void> addPodcasts(
@@ -311,6 +346,7 @@ class PodcastDao {
             description: '',
             imageUrl: Value(p.imageUrl),
             lastUpdated: now,
+            subscribed: const Value(true),
           ),
           mode: InsertMode.insertOrIgnore,
         );
@@ -415,9 +451,13 @@ class PodcastDao {
     return feedUrlsToDelete;
   }
 
-  Future<void> deletePodcastAndFriends({
+  Future<Set<String>> deletePodcastAndFriends({
     required Set<String> deleteMeUrls,
   }) async {
+    printInfoInDebugMode(
+      'Deleting podcasts and related data for feed URLs: $deleteMeUrls',
+      tag: '$PodcastDao',
+    );
     await _db.transaction(() async {
       await _db.batch((batch) {
         batch.deleteWhere(
@@ -436,12 +476,18 @@ class PodcastDao {
           _db.podcastTable,
           (t) => t.feedUrl.isIn(deleteMeUrls.toList()),
         );
+        batch.deleteWhere(
+          _db.podcastGenreRelationTable,
+          (t) => t.feedUrl.isIn(deleteMeUrls.toList()),
+        );
       });
     });
 
     if (deleteMeUrls.isNotEmpty) {
       await _db.reclaimDiskSpace();
     }
+
+    return deleteMeUrls;
   }
 
   Future<Set<String>> _existingTableNames() async {

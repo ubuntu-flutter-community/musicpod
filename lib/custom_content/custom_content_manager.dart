@@ -187,6 +187,7 @@ class CustomContentManager {
     final audios = await _podcastService.findEpisodes(
       feedUrl: feed,
       tryFromDbOnly: false,
+      genre: null,
     );
     final artist = audios.first.copyright ?? '';
     final imageUrl = audios.first.albumArtUrl ?? audios.first.imageUrl;
@@ -217,7 +218,7 @@ class CustomContentManager {
     final body = <OpmlOutline>[];
     final category = OpmlOutlineBuilder();
 
-    for (var podcast in _podcastService.podcasts) {
+    for (var podcast in (await _podcastService.getSubscribedPodcasts())) {
       final name = await _podcastService.getPodcastName(podcast);
       final artist = await _podcastService.getSubscribedPodcastArtist(podcast);
       final builder = OpmlOutlineBuilder().type('rss').xmlUrl(podcast);

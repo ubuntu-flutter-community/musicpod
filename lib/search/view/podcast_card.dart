@@ -10,8 +10,7 @@ import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../../podcasts/podcast_genre_manager.dart';
-import '../../podcasts/view/lazy_podcast_page.dart';
+import '../../podcasts/view/podcast_page.dart';
 
 class PodcastCard extends StatelessWidget with WatchItMixin {
   const PodcastCard({super.key, required this.item});
@@ -41,19 +40,12 @@ class PodcastCard extends StatelessWidget with WatchItMixin {
               genre: genre,
             )),
       onTap: () {
-        if (feedUrl == null) {
+        if (feedUrl == null || feedUrl.isEmpty) {
           context.toast(Text(context.l10n.podcastFeedIsEmpty));
-
           return;
-        } else {
-          if (genre != null) {
-            di<PodcastGenreManager>(
-              param1: feedUrl,
-            ).updateCommand.run((genre: genre));
-          }
         }
         di<RoutingManager>().push(
-          builder: (context) => LazyPodcastPage(feedUrl: feedUrl),
+          builder: (context) => PodcastPage(feedUrl: feedUrl, genre: genre),
           pageId: feedUrl,
         );
       },

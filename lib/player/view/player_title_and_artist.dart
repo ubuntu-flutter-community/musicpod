@@ -10,11 +10,10 @@ import '../../common/view/copy_clipboard_content.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
 import '../../extensions/taget_platform_x.dart';
-
 import '../../local_audio/local_audio_manager.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
-import '../../podcasts/view/lazy_podcast_page.dart';
+import '../../podcasts/view/podcast_page.dart';
 import '../../radio/view/station_page.dart';
 import '../../settings/settings_manager.dart';
 import '../mpv_metadata_manager.dart';
@@ -245,7 +244,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
 
           routingManager.push(
             pageId: feedUrl,
-            builder: (context) => LazyPodcastPage(feedUrl: feedUrl),
+            builder: (context) => PodcastPage(feedUrl: feedUrl),
           );
         }
         return;

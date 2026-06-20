@@ -76,7 +76,8 @@ class SidebarAudiosManager {
       return audio == null ? [] : [audio];
     }
 
-    if (_podcastManager.isPodcastSubscribed(pageId) || podcastGenre != null) {
+    if (_podcastManager.togglePodcastCommand.value.contains(pageId) ||
+        podcastGenre != null) {
       return di<EpisodesManager>(param1: pageId).command.runAsync(podcastGenre);
     }
 
