@@ -92,6 +92,7 @@ class WipeConfirmDialog extends StatelessWidget {
         di<PinnedAlbumIDsManager>().command.value = [];
         di<RadioManager>().toggleStarStationCommand.value = [];
         di<PodcastManager>().togglePodcastCommand.value = {};
+        di<PlaylistIDsManager>().command.value = [];
       },
     );
   }

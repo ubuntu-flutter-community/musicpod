@@ -34,7 +34,13 @@ class MasterItemPage extends StatelessWidget with WatchItMixin {
     final loadingStations = starredStationIdResults.isRunning;
     final loadingPodcasts = subscribedPodcastIdResults.isRunning;
 
-    final masterItems = getAllMasterItems();
+    final masterItems = getAllMasterItems(
+      playlistIDs: playlistIdResults.data ?? [],
+      pinnedAlbumIDs: pinnedAlbumIdResults.data ?? [],
+      starredStationIDs: starredStationIdResults.data ?? [],
+      subscribedPodcastFeedUrls:
+          subscribedPodcastIdResults.data?.toList() ?? [],
+    );
     final item = masterItems.firstWhereOrNull((e) => e.pageId == pageId);
     if (item != null) return item.pageBuilder(context);
 
