@@ -85,29 +85,6 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
                         ),
                   label: Text(l10n.exportPlaylistToM3UFile),
                 ),
-                if (widget.playlistName != null)
-                  TextButton.icon(
-                    icon: Icon(Iconz.remove),
-                    onPressed: () {
-                      if (context.mounted && context.canPop()) {
-                        context.pop();
-                      }
-                      di<SettingsManager>().setLocalAudioindex(
-                        LocalAudioView.playlists.index,
-                      );
-                      routingManager.push(
-                        pageId: PageIDs.localAudio,
-                        replace: true,
-                      );
-                      di<PlaylistIDsManager>().command.run(
-                        PlaylistChange(
-                          id: widget.playlistName!,
-                          action: PlaylistAction.delete,
-                        ),
-                      );
-                    },
-                    label: Text(context.l10n.deletePlaylist),
-                  ),
               ],
             ),
           ),

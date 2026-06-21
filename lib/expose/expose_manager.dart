@@ -5,7 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'data/last_fm_credentials.dart';
 import 'expose_service.dart';
 
-@lazySingleton
+@Injectable(cache: true)
 class ExposeManager {
   ExposeManager({required ExposeService exposeService})
     : _exposeService = exposeService;

@@ -1,5 +1,6 @@
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
+import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
 import '../common/keep_alive_registry.dart';
@@ -31,6 +32,11 @@ class PlaylistManager {
   );
 
   late final Command<void, List<Audio>?> command;
+
+  final showPlaylistAddAudios = SafeValueNotifier<bool>(false);
+  void toggleShowPlaylistAddAudios() =>
+      showPlaylistAddAudios.value = !showPlaylistAddAudios.value;
+
   static final _registry = KeepAliveRegistry<String, PlaylistManager>();
   static void dispose(String playlistId) => _registry.dispose(playlistId);
 }

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
-import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
 import '../common/no_error_filter.dart';
@@ -10,30 +9,12 @@ import '../common/view/audio_filter.dart';
 import 'local_audio_service.dart';
 import 'playlist_action.dart';
 
-@singleton
+@lazySingleton
 class LocalAudioManager {
   LocalAudioManager({required LocalAudioService localAudioService})
-    : _localAudioService = localAudioService {}
+    : _localAudioService = localAudioService;
 
   final LocalAudioService _localAudioService;
-
-  final allowReorder = SafeValueNotifier<bool>(false);
-  void setAllowReorder(bool value) {
-    if (value == allowReorder.value) return;
-    allowReorder.value = value;
-  }
-
-  final useArtistGridView = SafeValueNotifier<bool>(true);
-  void setUseArtistGridView(bool value) {
-    if (value == useArtistGridView.value) return;
-    useArtistGridView.value = value;
-  }
-
-  final showPlaylistAddAudios = SafeValueNotifier<bool>(false);
-  void setShowPlaylistAddAudios(bool value) {
-    if (value == showPlaylistAddAudios.value) return;
-    showPlaylistAddAudios.value = value;
-  }
 
   Future<int?> findAlbumId({required String artist, required String album}) =>
       _localAudioService.findAlbumIdForArtistAndAlbum(
@@ -62,7 +43,10 @@ class LocalAudioManager {
   Future<List<Audio>?> findTitlesOfArtist(
     String artist, [
     AudioFilter audioFilter = AudioFilter.album,
-  ]) async => _localAudioService.findTitlesOfArtist(artist, audioFilter);
+  ]) async {
+    await _runInitIfNeeded();
+    return _localAudioService.findTitlesOfArtist(artist, audioFilter);
+  }
 
   late final Command<void, bool> areTracksSyncedCommand =
       Command.createAsyncNoParam(

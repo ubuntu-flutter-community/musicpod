@@ -15,14 +15,13 @@ import '../../common/view/audio_tile.dart';
 import '../../common/view/genre_bar.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/search_button.dart';
-import '../../common/view/sliver_audio_tile_list.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../player/player_manager.dart';
 import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
-import '../find_playlist_manager.dart';
+import '../playlist_manager.dart';
 import '../local_audio_manager.dart';
 import '../playlist_action.dart';
 import '../playlist_ids_manager.dart';
@@ -43,26 +42,6 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
     final isInitializing = watchValue(
       (LocalAudioManager m) => m.initAudiosCommand.isRunning,
     );
-
-    onDispose(() => PlaylistManager.dispose(pageId));
-
-    callOnceAfterThisBuild((context) {
-      final initAudiosCommand = di<LocalAudioManager>().initAudiosCommand;
-      if (!isInitializing && initAudiosCommand.value == null) {
-        initAudiosCommand.run((
-          directory: null,
-          forceInit: false,
-          forceDbOnly: false,
-        ));
-      }
-    });
-
-    final playlistResult = watchValue(
-      (PlaylistManager m) => m.command.results,
-      param1: pageId,
-    );
-
-    final playlist = playlistResult.data ?? [];
 
     return DropTarget(
       onDragDone: (details) => di<PlaylistIDsManager>().command.run(
@@ -127,7 +106,6 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
                   );
                 },
                 image: PlaylistHeaderImage(pageId: pageId),
-                audios: playlist,
                 pageId: pageId,
               ),
       ),
@@ -138,14 +116,12 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
 class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
   const _PlaylistPageBody({
     required this.pageId,
-    required this.audios,
     this.image,
     this.onArtistTap,
     this.onAlbumTap,
   });
 
   final String pageId;
-  final List<Audio> audios;
   final Widget? image;
 
   final void Function(String text)? onArtistTap;
@@ -154,7 +130,11 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final allowReorder = watchValue((LocalAudioManager m) => m.allowReorder);
+    onDispose(() => PlaylistManager.dispose(pageId));
+
+    final audios =
+        watchValue((PlaylistManager m) => m.command, param1: pageId) ?? [];
+
     final isPlaying = watchPropertyValue((PlayerManager m) => m.isPlaying);
     final playerManager = di<PlayerManager>();
 
@@ -184,100 +164,77 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
         child: PlaylistAddAudioAutoCompleteOrShrink(pageId: pageId),
       ),
       sliverBody: (constraints) {
-        final mqSize = constraints.maxWidth;
+        final width = constraints.maxWidth;
 
-        final width = mqSize;
-        return allowReorder
-            ? SliverReorderableList(
-                itemCount: audios.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final audio = audios.elementAt(index);
-                  final audioSelected = currentAudio == audio;
+        return SliverReorderableList(
+          itemCount: audios.length,
 
-                  return ReorderableDragStartListener(
-                    key: ValueKey(audio.path ?? audio.url),
-                    index: index,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 5),
-                      child: AudioTile(
-                        showSubSubTitle: width > 1200,
-                        showDuration: width > 1000,
-                        showSubTitle: width > 500,
-                        style: width <= 500
-                            ? AudioTileStyle.normal
-                            : AudioTileStyle.compact,
-                        allowLeadingImage:
-                            audios.length < kShowLeadingThreshold,
-                        onSubTitleTap: onArtistTap,
-                        onSubSubTitleTap: onAlbumTap,
-                        key: ValueKey(audio.path ?? audio.url),
-                        isPlayerPlaying: isPlaying,
-                        onTap: () {
-                          if (audioSelected) {
-                            if (isPlaying) {
-                              playerManager.pause();
-                            } else {
-                              playerManager.resume();
-                            }
-                          } else {
-                            playerManager.startPlaylist(
-                              audios: audios,
-                              listName: pageId,
-                              index: index,
-                            );
-                          }
-                        },
-                        selected: audioSelected,
-                        audio: audio,
-                        pageId: pageId,
-                        audioPageType: AudioPageType.playlist,
-                      ),
-                    ),
-                  );
-                },
-                onReorder: (oldIndex, newIndex) {
-                  if (playerManager.queueName == pageId) {
-                    playerManager.moveAudioInQueue(oldIndex, newIndex);
-                  }
+          proxyDecorator: (child, index, animation) => Material(
+            borderRadius: BorderRadius.circular(8),
+            child: child,
+            elevation: 6,
+            color: Theme.of(context).cardColor.withValues(alpha: 0.8),
+          ),
+          itemBuilder: (BuildContext context, int index) {
+            final audio = audios.elementAt(index);
+            final audioSelected = currentAudio == audio;
 
-                  di<PlaylistIDsManager>().command.run(
-                    PlaylistChange(
-                      id: pageId,
-                      audios: [],
-                      action: PlaylistAction.moveWithin,
-                      oldIndex: oldIndex,
-                      newIndex: newIndex,
-                    ),
-                  );
-                },
-              )
-            : SliverAudioTileList(
-                audios: audios,
-                pageId: pageId,
-                audioPageType: AudioPageType.playlist,
-                onSubTitleTab: onArtistTap,
-                constraints: constraints,
-                onSubSubTitleTab: (Audio audio) async {
-                  if (audio.album == null || audio.artist == null) {
-                    context.toast(Text(context.l10n.nothingFound));
-                    return;
-                  }
-                  final id = await di<LocalAudioManager>().findAlbumId(
-                    artist: audio.artist!,
-                    album: audio.album!,
-                  );
+            return ReorderableDragStartListener(
+              key: ValueKey(audio.path ?? audio.url),
+              index: index,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 5),
+                child: AudioTile(
+                  showSubSubTitle: width > 1200,
+                  showDuration: width > 1000,
+                  showSubTitle: width > 500,
+                  style: width <= 500
+                      ? AudioTileStyle.normal
+                      : AudioTileStyle.compact,
+                  allowLeadingImage: audios.length < kShowLeadingThreshold,
+                  onSubTitleTap: onArtistTap,
+                  onSubSubTitleTap: onAlbumTap,
+                  key: ValueKey(audio.path ?? audio.url),
+                  isPlayerPlaying: isPlaying,
+                  onTap: () {
+                    if (audioSelected) {
+                      if (isPlaying) {
+                        playerManager.pause();
+                      } else {
+                        playerManager.resume();
+                      }
+                    } else {
+                      playerManager.startPlaylist(
+                        audios: audios,
+                        listName: pageId,
+                        index: index,
+                      );
+                    }
+                  },
+                  selected: audioSelected,
+                  audio: audio,
+                  pageId: pageId,
+                  audioPageType: AudioPageType.playlist,
+                ),
+              ),
+            );
+          },
+          onReorder: (oldIndex, newIndex) {
+            if (playerManager.queueName == pageId) {
+              playerManager.moveAudioInQueue(oldIndex, newIndex);
+            }
 
-                  if (id == null) {
-                    context.toast(Text(context.l10n.nothingFound));
-                    return;
-                  }
-
-                  await di<RoutingManager>().push(
-                    builder: (_) => AlbumPage(id: id),
-                    pageId: id.toString(),
-                  );
-                },
-              );
+            di<PlaylistIDsManager>().command.run(
+              PlaylistChange(
+                id: pageId,
+                audios: [],
+                action: PlaylistAction.moveWithin,
+                oldIndex: oldIndex,
+                newIndex: newIndex,
+              ),
+            );
+          },
+        );
       },
     );
   }
