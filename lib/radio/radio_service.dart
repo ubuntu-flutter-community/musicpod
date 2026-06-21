@@ -126,13 +126,7 @@ class RadioService {
   }
 
   static const radioSearchMaxLimit = 300;
-  RadioBrowserListResponse<Station>? _response;
-  String? _country;
-  String? _name;
-  String? _state;
-  String? _tag;
-  String? _language;
-  int? _limit;
+
   Future<List<Audio>?> search({
     String? country,
     String? name,
@@ -145,15 +139,7 @@ class RadioService {
       throw RadioBrowserApiNotConnectedException();
     }
 
-    if (_response?.items != null &&
-        _country == country &&
-        _name == name &&
-        _state == state &&
-        _tag == tag &&
-        _language == language &&
-        _limit == limit) {
-      return _response?.items.map((e) => Audio.fromStation(e)).toList();
-    }
+    RadioBrowserListResponse<Station>? _response;
 
     final parameters = InputParameters(
       hidebroken: true,
@@ -187,14 +173,6 @@ class RadioService {
         parameters: parameters,
       );
     }
-
-    _country = country;
-    _name = name;
-    _state = state;
-    _tag = tag;
-    _language = language;
-    _limit = limit;
-
     return (_response?.items ?? []).map((e) => Audio.fromStation(e)).toList();
   }
 
