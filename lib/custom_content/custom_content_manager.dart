@@ -18,7 +18,7 @@ import '../local_audio/local_audio_service.dart';
 import '../podcasts/podcast_service.dart';
 import '../radio/radio_service.dart';
 
-@lazySingleton
+@Injectable(cache: true)
 class CustomContentManager {
   CustomContentManager({
     required ExternalPathService externalPathService,

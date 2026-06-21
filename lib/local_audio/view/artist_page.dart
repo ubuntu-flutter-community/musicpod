@@ -24,62 +24,23 @@ import '../../extensions/build_context_x.dart';
 import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
 import '../album_ids_of_artist_manager.dart';
+import '../find_titles_of_artist_manager.dart';
 import '../local_audio_manager.dart';
 import 'album_page.dart';
 import 'album_view.dart';
 import 'artist_image.dart';
 import 'genre_page.dart';
 
-class ArtistPage extends StatefulWidget with WatchItStatefulWidgetMixin {
+class ArtistPage extends StatelessWidget {
   const ArtistPage({super.key, required this.pageId});
 
   final String pageId;
 
   @override
-  State<ArtistPage> createState() => _ArtistPageState();
-}
-
-class _ArtistPageState extends State<ArtistPage> {
-  late Future<List<Audio>?> _artistAudios;
-
-  @override
-  void initState() {
-    super.initState();
-    _artistAudios = di<LocalAudioManager>().findTitlesOfArtist(widget.pageId);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final manager = di<LocalAudioManager>();
-
-    final useGridView = watchValue(
-      (LocalAudioManager m) => m.useArtistGridView,
-    );
-
-    Future<void> onAlbumTap(String text) async {
-      final id = await manager.findAlbumId(artist: widget.pageId, album: text);
-
-      if (id == null) {
-        context.toast(Text(context.l10n.nothingFound));
-        return;
-      }
-
-      await di<RoutingManager>().push(
-        builder: (_) => AlbumPage(id: id),
-        pageId: id.toString(),
-      );
-    }
-
-    Future<void> onSubTitleTab(String text) async {
-      await di<RoutingManager>().push(
-        builder: (context) => GenrePage(genre: text),
-        pageId: text,
-      );
-    }
-
     return Scaffold(
       appBar: HeaderBar(
-        title: Text(widget.pageId),
+        title: Text(pageId),
         actions: [
           Padding(
             padding: appBarSingleActionSpacing,
@@ -96,53 +57,92 @@ class _ArtistPageState extends State<ArtistPage> {
           ),
         ],
       ),
-      body: FutureBuilder(
-        future: _artistAudios,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(child: Text(snapshot.error.toString()));
-          }
-          if (!snapshot.hasData) {
-            return const Center(child: Progress());
-          }
-
-          final artistAudios = snapshot.data!;
-
-          return AdaptiveMultiLayoutBody(
-            header: AudioPageHeader(
-              imageRadius: BorderRadius.circular(10000),
-              title: widget.pageId,
-              image: ArtistImage(
-                artist: widget.pageId,
-                dimension: kMaxAudioPageHeaderHeight,
-              ),
-              subTitleWidget: GenreBar(audios: artistAudios),
-              label: context.l10n.artist,
-              onLabelTab: onAlbumTap,
-              onSubTitleTab: onSubTitleTab,
-            ),
-            controlPanel: _ArtistPageControlPanel(
-              pageId: widget.pageId,
-              audios: artistAudios,
-            ),
-            sliverBody: (constraints) => useGridView
-                ? AlbumsOfArtistView(artist: widget.pageId)
-                : SliverAudioTileList(
-                    audios: artistAudios,
-                    pageId: widget.pageId,
-                    audioPageType: AudioPageType.artist,
-                    onSubTitleTab: onAlbumTap,
-                    constraints: constraints,
-                  ),
-          );
-        },
-      ),
+      body: _LocalAudioBody(pageId: pageId),
     );
   }
 }
 
-class AlbumsOfArtistView extends StatelessWidget with WatchItMixin {
-  const AlbumsOfArtistView({super.key, required this.artist});
+class _LocalAudioBody extends StatelessWidget with WatchItMixin {
+  const _LocalAudioBody({required this.pageId});
+
+  final String pageId;
+
+  @override
+  Widget build(BuildContext context) {
+    final useGridView = watchValue(
+      (LocalAudioManager m) => m.useArtistGridView,
+    );
+
+    final results = watchValue(
+      (FindTitlesOfArtistManager m) => m.command.results,
+      param1: pageId,
+    );
+
+    if (results.isRunning) {
+      return const Center(child: Progress());
+    }
+
+    if (results.hasError) {
+      return Center(child: Text(results.error.toString()));
+    }
+
+    final artistAudios = results.data ?? [];
+
+    return AdaptiveMultiLayoutBody(
+      header: AudioPageHeader(
+        imageRadius: BorderRadius.circular(10000),
+        title: pageId,
+        image: ArtistImage(
+          artist: pageId,
+          dimension: kMaxAudioPageHeaderHeight,
+        ),
+        subTitleWidget: GenreBar(audios: artistAudios),
+        label: context.l10n.artist,
+        onLabelTab: (text) => onAlbumTap(text: text, context: context),
+        onSubTitleTab: (text) => di<RoutingManager>().push(
+          builder: (context) => GenrePage(genre: text),
+          pageId: text,
+        ),
+      ),
+      controlPanel: _ArtistPageControlPanel(
+        pageId: pageId,
+        audios: artistAudios,
+      ),
+      sliverBody: (constraints) => useGridView
+          ? _AlbumsOfArtistGridView(artist: pageId)
+          : SliverAudioTileList(
+              audios: artistAudios,
+              pageId: pageId,
+              audioPageType: AudioPageType.artist,
+              onSubTitleTab: (text) => onAlbumTap(text: text, context: context),
+              constraints: constraints,
+            ),
+    );
+  }
+
+  Future<void> onAlbumTap({
+    required String text,
+    required BuildContext context,
+  }) async {
+    final id = await di<LocalAudioManager>().findAlbumId(
+      artist: pageId,
+      album: text,
+    );
+
+    if (id == null) {
+      context.toast(Text(context.l10n.nothingFound));
+      return;
+    }
+
+    await di<RoutingManager>().push(
+      builder: (_) => AlbumPage(id: id),
+      pageId: id.toString(),
+    );
+  }
+}
+
+class _AlbumsOfArtistGridView extends StatelessWidget with WatchItMixin {
+  const _AlbumsOfArtistGridView({required this.artist});
 
   final String artist;
 

@@ -10,10 +10,10 @@ import '../common/view/audio_filter.dart';
 import 'local_audio_service.dart';
 import 'playlist_action.dart';
 
-@singleton
+@lazySingleton
 class LocalAudioManager {
   LocalAudioManager({required LocalAudioService localAudioService})
-    : _localAudioService = localAudioService {}
+    : _localAudioService = localAudioService;
 
   final LocalAudioService _localAudioService;
 
@@ -62,7 +62,10 @@ class LocalAudioManager {
   Future<List<Audio>?> findTitlesOfArtist(
     String artist, [
     AudioFilter audioFilter = AudioFilter.album,
-  ]) async => _localAudioService.findTitlesOfArtist(artist, audioFilter);
+  ]) async {
+    await _runInitIfNeeded();
+    return _localAudioService.findTitlesOfArtist(artist, audioFilter);
+  }
 
   late final Command<void, bool> areTracksSyncedCommand =
       Command.createAsyncNoParam(

@@ -44,6 +44,7 @@ import 'local_audio/find_all_genres_manager.dart' as _i486;
 import 'local_audio/find_all_tracks_manager.dart' as _i897;
 import 'local_audio/find_artist_of_album_manager.dart' as _i234;
 import 'local_audio/find_playlist_manager.dart' as _i305;
+import 'local_audio/find_titles_of_artist_manager.dart' as _i292;
 import 'local_audio/liked_audios_manager.dart' as _i215;
 import 'local_audio/local_audio_manager.dart' as _i688;
 import 'local_audio/local_audio_service.dart' as _i438;
@@ -236,7 +237,7 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i444.PlayerManager(service: gh<_i38.PlayerService>()),
       dispose: (i) => i.dispose(),
     );
-    gh.lazySingleton<_i987.ExposeManager>(
+    gh.factoryCached<_i987.ExposeManager>(
       () => _i987.ExposeManager(exposeService: gh<_i820.ExposeService>()),
     );
     gh.lazySingleton<_i438.LocalAudioService>(
@@ -365,7 +366,7 @@ extension GetItInjectableX on _i174.GetIt {
       preResolve: true,
       dispose: (i) => i.dispose(),
     );
-    gh.singleton<_i688.LocalAudioManager>(
+    gh.lazySingleton<_i688.LocalAudioManager>(
       () => _i688.LocalAudioManager(
         localAudioService: gh<_i438.LocalAudioService>(),
       ),
@@ -410,7 +411,7 @@ extension GetItInjectableX on _i174.GetIt {
         service: gh<_i438.LocalAudioService>(),
       ),
     );
-    gh.lazySingleton<_i1028.CustomContentManager>(
+    gh.factoryCached<_i1028.CustomContentManager>(
       () => _i1028.CustomContentManager(
         externalPathService: gh<_i551.ExternalPathService>(),
         localAudioService: gh<_i438.LocalAudioService>(),
@@ -439,6 +440,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i803.PlaylistIDsManager>(
       () => _i803.PlaylistIDsManager(
+        localAudioManager: gh<_i688.LocalAudioManager>(),
+      ),
+    );
+    gh.factoryParam<_i292.FindTitlesOfArtistManager, String, dynamic>(
+      (artist, _) => _i292.FindTitlesOfArtistManager(
+        artist: artist,
         localAudioManager: gh<_i688.LocalAudioManager>(),
       ),
     );
