@@ -10,9 +10,11 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../local_audio/find_all_tracks_manager.dart';
 import '../../local_audio/playlist_action.dart';
 import '../../local_audio/playlist_ids_manager.dart';
 import '../../search/search_manager.dart';
+import '../../settings/view/settings_action.dart';
 import '../custom_content_manager.dart';
 
 class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
@@ -24,6 +26,21 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final routingManager = di<RoutingManager>();
+
+    final tracksResults = watchValue(
+      (FindAllTracksManager m) => m.command.results,
+    );
+    if (!tracksResults.isRunning && (tracksResults.data?.isEmpty ?? false)) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(context.l10n.noLocalTitlesFound),
+          const SizedBox(height: kLargestSpace),
+          const SettingsButton.important(scrollIndex: 2),
+        ],
+      );
+    }
 
     final manager = di<CustomContentManager>();
     final playlistName = watchValue((CustomContentManager m) => m.playlistName);
