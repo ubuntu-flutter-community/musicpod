@@ -39,7 +39,6 @@ class PodcastService {
     );
   }
 
-  SearchResult? _searchResult;
   late Search _search;
 
   SearchProvider initSearchProvider({bool forceInit = false}) {
@@ -73,7 +72,6 @@ class PodcastService {
   }
 
   static const podcastMaxLimit = 80;
-  String? _previousQuery;
   Future<SearchResult?> search({
     String? searchQuery,
     PodcastGenre podcastGenre = PodcastGenre.all,
@@ -117,19 +115,10 @@ class PodcastService {
     );
 
     if (!result.successful) {
-      throw throw PodcastSearchNotSuccessfulException();
+      throw PodcastSearchNotSuccessfulException();
     }
 
-    if (result.successful &&
-        (searchQuery == null ||
-            _previousQuery != searchQuery ||
-            (_previousQuery == searchQuery &&
-                _searchResult?.items.isNotEmpty == true))) {
-      _searchResult = result;
-    }
-    _previousQuery = searchQuery;
-
-    return _searchResult;
+    return result;
   }
 
   final _syncLock = Lock();
