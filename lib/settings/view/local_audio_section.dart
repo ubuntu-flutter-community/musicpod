@@ -7,7 +7,7 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../external_path/external_path_service.dart';
 
-import '../../local_audio/local_audio_manager.dart';
+import '../../local_audio/manager/local_audio_manager.dart';
 import '../settings_manager.dart';
 
 class LocalAudioSection extends StatelessWidget with WatchItMixin {

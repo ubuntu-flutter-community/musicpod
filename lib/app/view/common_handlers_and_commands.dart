@@ -14,9 +14,10 @@ import '../../player/player_manager.dart';
 import '../../player/player_service.dart';
 import '../../podcasts/data/podcast_download.dart';
 import '../../podcasts/data/podcast_update_capsule.dart';
-import '../../podcasts/download_manager.dart';
-import '../../podcasts/podcast_clean_manager.dart';
-import '../../podcasts/podcast_manager.dart';
+import '../../podcasts/manager/download_manager.dart';
+import '../../podcasts/manager/podcast_clean_manager.dart';
+import '../../podcasts/manager/podcast_manager.dart';
+import '../../podcasts/manager/podcast_short_info_manager.dart';
 import '../app_manager.dart';
 import '../sidebar_audios_manager.dart';
 

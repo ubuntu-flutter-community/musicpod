@@ -10,7 +10,7 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/picture_type_x.dart';
 import '../../external_path/external_path_service.dart';
 import '../../local_audio/data/change_metadata_capsule.dart';
-import '../../local_audio/change_local_meta_data_manager.dart';
+import '../../local_audio/manager/change_local_meta_data_manager.dart';
 import '../../local_audio/view/local_cover.dart';
 import '../data/audio.dart';
 import 'icons.dart';

@@ -13,7 +13,7 @@ import '../common/data/audio_type.dart';
 import '../common/view/languages.dart';
 import '../extensions/string_x.dart';
 import '../local_audio/local_audio_service.dart';
-import '../local_audio/local_search_result.dart';
+import '../local_audio/data/local_search_result.dart';
 import '../podcasts/data/podcast_genre.dart';
 import '../podcasts/podcast_service.dart';
 import '../radio/radio_service.dart';
@@ -126,15 +126,6 @@ class SearchManager {
     podcastGenre.value = value;
   }
 
-  late final Command<({bool force})?, List<PodcastGenre>>
-  loadPodcastGenresCommand = Command.createAsync(
-    (param) => _podcastService.loadGenres(force: param?.force ?? false),
-    initialValue: [],
-  );
-
-  Future<LocalSearchResult?> localSearch(String query) =>
-      _localAudioService.search(query);
-
   static const podcastDefaultLimit = 32;
   int _podcastLimit = podcastDefaultLimit;
   void incrementPodcastLimit(int value) => _podcastLimit += value;
@@ -169,8 +160,6 @@ class SearchManager {
         (param) =>
             _search(clear: param.clear, manualFilter: param.manualFilter),
       );
-
-  final cooldown = SafeValueNotifier<int>(20);
 
   Future<void> _search({bool clear = false, bool manualFilter = false}) async {
     if (clear) {
@@ -224,7 +213,7 @@ class SearchManager {
               attribute: podcastSearchAttribute.value,
             )
             .then((v) => _setPodcastSearchResult(v)),
-      _ => localSearch(searchQuery.value ?? '').then((v) {
+      _ => _localAudioService.search(searchQuery.value ?? '').then((v) {
         _setLocalSearchResult(v);
 
         if (!manualFilter) {

@@ -6,8 +6,8 @@ import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../download_manager.dart';
-import '../podcast_manager.dart';
+import '../manager/download_manager.dart';
+import '../manager/subscribed_podcasts_manager.dart';
 
 class DownloadButton extends StatelessWidget with WatchItMixin {
   const DownloadButton({
@@ -50,7 +50,7 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
           ),
           onPressed: () {
             final downloadCommand = di<DownloadManager>().getCommand(audio);
-            if (!di<PodcastManager>().togglePodcastCommand.value.contains(
+            if (!di<SubscribedPodcastsManager>().command.value.contains(
               audio.feedUrl,
             )) {
               addPodcast();

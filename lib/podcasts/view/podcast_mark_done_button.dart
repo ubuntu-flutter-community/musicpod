@@ -5,7 +5,7 @@ import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
 import '../../player/player_manager.dart';
-import '../episodes_manager.dart';
+import '../manager/episodes_manager.dart';
 import 'podcast_icon_button_progress.dart';
 
 class PodcastMarkDoneButton extends StatelessWidget with WatchItMixin {

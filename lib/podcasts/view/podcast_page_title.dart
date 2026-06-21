@@ -3,7 +3,8 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
-import '../podcast_manager.dart';
+import '../manager/podcast_manager.dart';
+import '../manager/podcast_short_info_manager.dart';
 
 class PodcastPageTitle extends StatelessWidget with WatchItMixin {
   const PodcastPageTitle({super.key, required this.feedUrl});

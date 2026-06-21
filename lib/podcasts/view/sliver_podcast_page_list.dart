@@ -4,7 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/data/audio.dart';
 import '../../player/player_manager.dart';
 import '../data/podcast_toggle_capsule.dart';
-import '../podcast_manager.dart';
+import '../manager/subscribed_podcasts_manager.dart';
 import 'podcast_audio_tile.dart';
 
 class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
@@ -31,7 +31,7 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
         return PodcastAudioTile(
           key: ValueKey('${episode.path ?? episode.url}'),
           audio: episode,
-          addPodcast: () => di<PodcastManager>().togglePodcastCommand.run(
+          addPodcast: () => di<SubscribedPodcastsManager>().command.run(
             PodcastToggleCapsule(
               feedUrl: episode.feedUrl!,
               imageUrl: episode.albumArtUrl ?? episode.imageUrl ?? '',

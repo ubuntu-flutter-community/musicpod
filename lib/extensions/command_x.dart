@@ -29,7 +29,7 @@ extension CommandX<TParam, TResult> on Command<TParam, TResult> {
     }
   }
 
-  Future<TResult?> runRestrictedAsync({
+  Future<TResult> runRestrictedAsync({
     TParam? param,
     bool immediatelyClearErrors = false,
     RunWhen runWhen = RunWhen.hasNoValueAndNoErrors,

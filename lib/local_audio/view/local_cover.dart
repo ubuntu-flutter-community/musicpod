@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../extensions/build_context_x.dart';
-import '../local_cover_manager.dart';
+import '../manager/local_cover_manager.dart';
 
 class LocalCover extends StatelessWidget with WatchItMixin {
   const LocalCover({

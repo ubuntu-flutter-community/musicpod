@@ -138,11 +138,11 @@ class SettingsManager extends SafeChangeNotifier {
 
   String? get podcastIndexApiKey =>
       _service.getString(SPKeys.podcastIndexApiKey);
-  void setPodcastIndexApiKey(String value) =>
+  Future<void> setPodcastIndexApiKey(String value) =>
       _service.setValue(SPKeys.podcastIndexApiKey, value);
   String? get podcastIndexApiSecret =>
       _service.getString(SPKeys.podcastIndexApiSecret);
-  void setPodcastIndexApiSecret(String value) async =>
+  Future<void> setPodcastIndexApiSecret(String value) =>
       _service.setValue(SPKeys.podcastIndexApiSecret, value);
 
   bool get showPositionDuration =>

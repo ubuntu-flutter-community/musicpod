@@ -5,7 +5,8 @@ import '../../common/view/common_control_panel.dart';
 import '../../common/view/confirm.dart';
 import '../../extensions/build_context_x.dart';
 import '../data/podcast_update_capsule.dart';
-import '../podcast_manager.dart';
+import '../manager/podcast_manager.dart';
+import '../manager/subscribed_podcasts_manager.dart';
 
 class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
   const PodcastCollectionControlPanel({super.key});
@@ -29,7 +30,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
             manager.setUpdatesOnly(false);
           } else {
             final subLength =
-                di<PodcastManager>().togglePodcastCommand.value.length;
+                di<SubscribedPodcastsManager>().command.value.length;
             if (subLength > 10) {
               ConfirmationDialog.show(
                 context: context,

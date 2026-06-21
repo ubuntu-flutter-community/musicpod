@@ -34,7 +34,6 @@ Future<void> main() async {
       episodes = await service.findEpisodes(
         feedUrl: feedUrl,
         tryFromDbOnly: false,
-        genre: null,
       );
     }
 

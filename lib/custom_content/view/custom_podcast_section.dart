@@ -4,7 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../app/routing_manager.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../podcasts/episodes_manager.dart';
+import '../../podcasts/manager/episodes_manager.dart';
 import '../../podcasts/view/podcast_page.dart';
 
 class CustomPodcastSection extends StatefulWidget {

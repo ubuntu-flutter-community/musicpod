@@ -9,11 +9,12 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/audio_page_header_html_description.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/command_x.dart';
 import '../../extensions/string_x.dart';
 import '../../l10n/app_localizations.dart';
 import '../../search/search_manager.dart';
-import '../podcast_genre_manager.dart';
-import '../podcast_manager.dart';
+import '../manager/podcast_genre_manager.dart';
+import '../manager/podcast_short_info_manager.dart';
 import 'podcast_page_image.dart';
 
 class PodcastPageHeader extends StatelessWidget with WatchItMixin {
@@ -76,8 +77,8 @@ class PodcastPageHeader extends StatelessWidget with WatchItMixin {
     required AppLocalizations l10n,
     required String text,
   }) async {
-    final genres = await di<SearchManager>().loadPodcastGenresCommand
-        .runAsync();
+    final genres = await di<PodcastLoadGenresManager>().command
+        .runRestrictedAsync();
 
     final genreOrNull = genres.firstWhereOrNull(
       (e) =>

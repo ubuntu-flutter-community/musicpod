@@ -10,10 +10,10 @@ import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../settings/settings_manager.dart';
-import '../local_audio_view.dart';
-import '../playlist_manager.dart';
-import '../playlist_action.dart';
-import '../playlist_ids_manager.dart';
+import '../data/local_audio_view.dart';
+import '../manager/playlist_manager.dart';
+import '../data/playlist_action.dart';
+import '../manager/playlist_ids_manager.dart';
 import 'edit_playlist_dialog.dart';
 
 class PlaylistControlPanel extends StatelessWidget with WatchItMixin {

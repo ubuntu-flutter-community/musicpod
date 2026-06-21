@@ -7,7 +7,7 @@ import '../../common/view/error_retry_body.dart';
 import '../../common/view/header_bar.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/command_x.dart';
-import '../episodes_manager.dart';
+import '../manager/episodes_manager.dart';
 import 'podcast_page_header.dart';
 
 class PodcastErrorPage extends StatelessWidget with WatchItMixin {

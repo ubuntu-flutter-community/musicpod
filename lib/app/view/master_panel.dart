@@ -5,9 +5,9 @@ import 'package:yaru/yaru.dart';
 
 import '../../common/view/header_bar.dart';
 import '../../common/view/ui_constants.dart';
-import '../../local_audio/pinned_album_i_ds_manager.dart';
-import '../../local_audio/playlist_ids_manager.dart';
-import '../../podcasts/podcast_manager.dart';
+import '../../local_audio/manager/pinned_album_i_ds_manager.dart';
+import '../../local_audio/manager/playlist_ids_manager.dart';
+import '../../podcasts/manager/subscribed_podcasts_manager.dart';
 import '../../podcasts/view/recent_downloads_button.dart';
 import '../../radio/radio_manager.dart';
 import '../../settings/view/settings_action.dart';
@@ -106,7 +106,7 @@ class PodcastList extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final subs = watchValue((PodcastManager m) => m.togglePodcastCommand);
+    final subs = watchValue((SubscribedPodcastsManager m) => m.command);
     final masterItems = createPodcastMasterItems(subs.toList());
     final selectedPageId = watchPropertyValue(
       (RoutingManager m) => m.selectedPageId,

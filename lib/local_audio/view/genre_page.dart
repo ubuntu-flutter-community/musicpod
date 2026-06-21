@@ -12,7 +12,7 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
-import '../album_ids_of_genre_manager.dart';
+import '../manager/album_ids_of_genre_manager.dart';
 import 'album_view.dart';
 
 class GenrePage extends StatelessWidget with WatchItMixin {

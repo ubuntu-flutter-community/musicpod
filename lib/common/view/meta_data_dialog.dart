@@ -4,8 +4,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
-import '../../local_audio/change_local_meta_data_manager.dart';
-import '../../local_audio/find_album_manager.dart';
+import '../../local_audio/manager/change_local_meta_data_manager.dart';
+import '../../local_audio/manager/find_album_manager.dart';
 import '../../radio/view/radio_page_tag_bar.dart';
 import '../data/audio.dart';
 import 'copy_clipboard_content.dart';

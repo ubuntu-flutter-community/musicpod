@@ -5,7 +5,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
-import '../podcast_manager.dart';
+import '../manager/podcast_short_info_manager.dart';
 
 class PodcastPageSideBarIcon extends StatelessWidget with WatchItMixin {
   const PodcastPageSideBarIcon({super.key, required this.feedUrl});

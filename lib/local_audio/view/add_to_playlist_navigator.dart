@@ -9,10 +9,10 @@ import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../liked_audios_manager.dart';
-import '../local_audio_manager.dart';
-import '../playlist_action.dart';
-import '../playlist_ids_manager.dart';
+import '../manager/liked_audios_manager.dart';
+import '../manager/local_audio_manager.dart';
+import '../data/playlist_action.dart';
+import '../manager/playlist_ids_manager.dart';
 import 'add_to_playlist_snack_bar.dart';
 
 class AddToPlaylistNavigator extends StatelessWidget {

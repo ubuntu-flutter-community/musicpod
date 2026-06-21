@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:future_loading_dialog/future_loading_dialog.dart';
+import 'package:podcast_search/podcast_search.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/view/common_widgets.dart';
@@ -11,9 +12,9 @@ import '../../custom_content/custom_content_manager.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
 import '../../player/player_service.dart';
-import '../../podcasts/download_manager.dart';
-import '../../podcasts/podcast_manager.dart';
-import '../../search/search_manager.dart';
+import '../../podcasts/manager/download_manager.dart';
+import '../../podcasts/manager/podcast_genre_manager.dart';
+import '../../podcasts/manager/podcast_manager.dart';
 import '../settings_manager.dart';
 import '../shared_preferences_keys.dart';
 
@@ -77,12 +78,15 @@ class _PodcastSectionState extends State<PodcastSection> {
                     context: context,
                     title: Text(l10n.iTunes + '?'),
                     onConfirm: () async {
-                      await model.setUsePodcastIndex(v);
                       di<PodcastManager>().initSearchCommand.run((
-                        forceInit: true,
+                        searchProvider: const ITunesProvider(),
                       ));
-                      await di<SearchManager>().loadPodcastGenresCommand
-                          .runAsync((force: true));
+
+                      await model.setUsePodcastIndex(v);
+
+                      await di<PodcastLoadGenresManager>().command.runAsync((
+                        force: true,
+                      ));
                     },
                   );
                 } else {
@@ -120,42 +124,55 @@ class _PodcastSectionState extends State<PodcastSection> {
                 right: 8,
                 bottom: kLargestSpace,
               ),
-              child: TextField(
-                controller: _secretController,
-                onChanged: (v) => setState(() => _initialSecret = v),
-                obscureText: true,
-                decoration: InputDecoration(
-                  label: Text(SPKeys.podcastIndexApiSecret.camelToSentence),
-                  suffixIcon: IconButton(
-                    tooltip: l10n.save,
-                    onPressed: () =>
-                        model.setPodcastIndexApiSecret(_secretController.text),
-                    icon: Icon(
-                      Iconz.check,
-                      color: podcastIndexApiSecret == _initialSecret
-                          ? theme.colorScheme.success
-                          : theme.colorScheme.onSurface,
+              child: ValueListenableBuilder(
+                valueListenable: _keyController,
+                builder: (context, value, child) {
+                  return TextField(
+                    enabled: value.text.isNotEmpty,
+                    controller: _secretController,
+                    onChanged: (v) => setState(() => _initialSecret = v),
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      label: Text(SPKeys.podcastIndexApiSecret.camelToSentence),
+                      suffixIcon: IconButton(
+                        tooltip: l10n.save,
+                        onPressed: () => model.setPodcastIndexApiSecret(
+                          _secretController.text,
+                        ),
+                        icon: Icon(
+                          Iconz.check,
+                          color: podcastIndexApiSecret == _initialSecret
+                              ? theme.colorScheme.success
+                              : theme.colorScheme.onSurface,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
             ),
-            ListTile(
-              trailing: ElevatedButton(
-                onPressed: () => ConfirmationDialog.show(
-                  context: context,
-                  title: Text(l10n.usePodcastIndex + '?'),
-                  onConfirm: () async {
-                    di<PodcastManager>().initSearchCommand.run((
-                      forceInit: true,
-                    ));
-                    await di<SearchManager>().loadPodcastGenresCommand.runAsync(
-                      (force: true),
-                    );
-                  },
-                ),
-                child: Text(context.l10n.confirm),
-              ),
+            ValueListenableBuilder(
+              valueListenable: _secretController,
+              builder: (context, value, child) {
+                return ListTile(
+                  trailing: ElevatedButton(
+                    onPressed: value.text.isEmpty
+                        ? null
+                        : () => ConfirmationDialog.show(
+                            context: context,
+                            title: Text(l10n.usePodcastIndex + '?'),
+                            onConfirm: () async =>
+                                di<PodcastManager>().initSearchCommand.run((
+                                  searchProvider: PodcastIndexProvider(
+                                    key: model.podcastIndexApiKey!,
+                                    secret: model.podcastIndexApiSecret!,
+                                  ),
+                                )),
+                          ),
+                    child: Text(context.l10n.confirm),
+                  ),
+                );
+              },
             ),
           ],
         ],

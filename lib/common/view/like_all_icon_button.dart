@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../local_audio/liked_audios_manager.dart';
+import '../../local_audio/manager/liked_audios_manager.dart';
 import '../data/audio.dart';
 import 'animated_like_icon.dart';
 
