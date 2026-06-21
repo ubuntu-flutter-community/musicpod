@@ -43,7 +43,6 @@ import 'local_audio/find_all_artists_manager.dart' as _i142;
 import 'local_audio/find_all_genres_manager.dart' as _i486;
 import 'local_audio/find_all_tracks_manager.dart' as _i897;
 import 'local_audio/find_artist_of_album_manager.dart' as _i234;
-import 'local_audio/playlist_manager.dart' as _i305;
 import 'local_audio/find_titles_of_artist_manager.dart' as _i292;
 import 'local_audio/liked_audios_manager.dart' as _i215;
 import 'local_audio/local_audio_manager.dart' as _i688;
@@ -53,6 +52,7 @@ import 'local_audio/local_cover_service.dart' as _i57;
 import 'local_audio/persistence/local_audio_dao.dart' as _i688;
 import 'local_audio/pinned_album_i_ds_manager.dart' as _i942;
 import 'local_audio/playlist_ids_manager.dart' as _i803;
+import 'local_audio/playlist_manager.dart' as _i466;
 import 'lyrics/lyrics_manager.dart' as _i23;
 import 'lyrics/lyrics_service.dart' as _i546;
 import 'notifications/notifications_service.dart' as _i57;
@@ -427,8 +427,8 @@ extension GetItInjectableX on _i174.GetIt {
         playerManager: gh<_i444.PlayerManager>(),
       ),
     );
-    gh.factoryParam<_i305.PlaylistManager, String, dynamic>(
-      (playlistId, _) => _i305.PlaylistManager.create(
+    gh.factoryParam<_i466.PlaylistManager, String, dynamic>(
+      (playlistId, _) => _i466.PlaylistManager.create(
         playlistId: playlistId,
         localAudioManager: gh<_i688.LocalAudioManager>(),
       ),
@@ -444,7 +444,7 @@ extension GetItInjectableX on _i174.GetIt {
       ),
     );
     gh.factoryParam<_i292.FindTitlesOfArtistManager, String, dynamic>(
-      (artist, _) => _i292.FindTitlesOfArtistManager(
+      (artist, _) => _i292.FindTitlesOfArtistManager.create(
         artist: artist,
         localAudioManager: gh<_i688.LocalAudioManager>(),
       ),

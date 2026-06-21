@@ -37,40 +37,39 @@ class ArtistPage extends StatelessWidget {
   final String pageId;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: HeaderBar(
-        title: Text(pageId),
-        actions: [
-          Padding(
-            padding: appBarSingleActionSpacing,
-            child: SearchButton(
-              onPressed: () {
-                di<RoutingManager>().push(pageId: PageIDs.searchPage);
-                final searchManager = di<SearchManager>();
-                searchManager
-                  ..setAudioType(AudioType.local)
-                  ..setSearchType(SearchType.localArtist)
-                  ..search();
-              },
-            ),
+  Widget build(BuildContext context) => Scaffold(
+    appBar: HeaderBar(
+      title: Text(pageId),
+      actions: [
+        Padding(
+          padding: appBarSingleActionSpacing,
+          child: SearchButton(
+            onPressed: () {
+              di<RoutingManager>().push(pageId: PageIDs.searchPage);
+              final searchManager = di<SearchManager>();
+              searchManager
+                ..setAudioType(AudioType.local)
+                ..setSearchType(SearchType.localArtist)
+                ..search();
+            },
           ),
-        ],
-      ),
-      body: _LocalAudioBody(pageId: pageId),
-    );
-  }
+        ),
+      ],
+    ),
+    body: _ArtistPageBody(pageId: pageId),
+  );
 }
 
-class _LocalAudioBody extends StatelessWidget with WatchItMixin {
-  const _LocalAudioBody({required this.pageId});
+class _ArtistPageBody extends StatelessWidget with WatchItMixin {
+  const _ArtistPageBody({required this.pageId});
 
   final String pageId;
 
   @override
   Widget build(BuildContext context) {
     final useGridView = watchValue(
-      (LocalAudioManager m) => m.useArtistGridView,
+      (FindTitlesOfArtistManager m) => m.useArtistGridView,
+      param1: pageId,
     );
 
     final results = watchValue(
@@ -164,9 +163,15 @@ class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final useGridView = watchValue(
-      (LocalAudioManager m) => m.useArtistGridView,
+      (FindTitlesOfArtistManager m) => m.useArtistGridView,
+      param1: pageId,
     );
-    final setUseGridView = di<LocalAudioManager>().setUseArtistGridView;
+    final setUseGridView = di<FindTitlesOfArtistManager>(
+      param1: pageId,
+    ).setUseArtistGridView;
+
+    onDispose(() => FindTitlesOfArtistManager.dispose(pageId));
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,

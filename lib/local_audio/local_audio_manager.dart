@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
-import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/data/audio.dart';
 import '../common/no_error_filter.dart';
@@ -16,12 +15,6 @@ class LocalAudioManager {
     : _localAudioService = localAudioService;
 
   final LocalAudioService _localAudioService;
-
-  final useArtistGridView = SafeValueNotifier<bool>(true);
-  void setUseArtistGridView(bool value) {
-    if (value == useArtistGridView.value) return;
-    useArtistGridView.value = value;
-  }
 
   Future<int?> findAlbumId({required String artist, required String album}) =>
       _localAudioService.findAlbumIdForArtistAndAlbum(
