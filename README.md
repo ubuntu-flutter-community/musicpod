@@ -160,21 +160,63 @@ Test mocks are generated with [Mockito](https://github.com/dart-lang/mockito). Y
 
 MusicPod is basically a fancy front-end for [MPV](https://github.com/mpv-player/mpv)! Without it it would still look nice, but it wouldn't play any media :D!
 
+### State
+
+The ever living discussion about state (Initially I didn't really like the word "state", in german it is "Zustand") in flutter is certainly an amusing topic. Often the word "state" means simply "data", "loading" and "error" state. Flutter let's the developer choose how to manage state, which can be awkward coming from UI frameworks with inbuilt data binding and state management solutions.
+
+Amusing or not, it is incredibly important to understand where you keep state alive and when you want to dispose it and to treat the memory of the compuers of your users with respect!
+
+So the "state management" topic is at least three fold:
+- life cycle: when do we create the state and when do we dispose it?
+- access and data binding: how do we access the state, how do we update it and how do we bind the state/data to the UI?
+- async operations and their states: how do we handle loading, error and data "sub"-states for async operations?
+
+Flutter provides very good out of the box solutions with [State](https://api.flutter.dev/flutter/widgets/State-class.html), [StatefulWidgets](https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html) and [InheritedWidgets](https://api.flutter.dev/flutter/widgets/InheritedWidget-class.html).
+Also for async state we have [FutureBuilder](https://api.flutter.dev/flutter/widgets/FutureBuilder-class.html) and [StreamBuilder](https://api.flutter.dev/flutter/widgets/StreamBuilder-class.html).
+
+But managing state becomes harder if your data is not only async but also needs to be shared across multiple widgets and you want to update and listen to it from different places in the app. 
+And in case of MusicPod that data consists of local music, podcasts and radio stations, which all have different sources (and in case of slocal audio files, I initially underestimated how big the library of some users are...) which means you deal with huge lists of objects, which means huge amount of data, which means huge amount of allocated memory.
+
+So if you want to access state from different places in your app, one could just make it available everywhere inside the app.
+But this means that the instantiated objects living in the heap of your apps process never will be garbage collected, which is really bad for every app.
+
+So I was looking for a solution that:
+
+- makes it easy to access state wherever I want, preferably without needing to manage flutter's build context
+- making it easy to use async state and update the UI accordingly to loading and error states
+- cut the state "potions" as small as possible
+- dispose the state whenever it is not needed anymore, so that the memory can be freed
+
+#### Why not just use stateful widgets then?
+
+Stateful widgets work fine and exactly as they should and dispose the data instantiated within them when the widgets are disposed but as soon as the state consists of multiple objects or fields it becomes hard to only redraw the parts that should be redrawn. And also when the the state needs to be created and updated asynchronoulsy it becomes a pain to only update loading error and loading states for this particular piece of state that you are currently interested in. Long story short: at a certain feature amount and size of your app, stateful widgets become a pain to manage and you need to look for a more scalable solution.
+
+### Resulting package choices
+
+So I found my personal favorite solution with [get_it](https://pub.dev/packages/get_it) plus [watch_it](https://pub.dev/packages/watch_it) plus [command_it](https://pub.dev/packages/command_it) and [listen_it](https://pub.dev/packages/listen_it). Additionally, to make my life easier when connecting the dependencies of classes I use [Injectable](https://pub.dev/packages/injectable) for code generation of the dependency graph of get_it, by annotating the constructors of my classes and then running the `build_runner` command to generate the code for get_it.
+
+(get_it, watch_it, listen_it and command_it be obtained with [flutter_it](https://pub.dev/packages/flutter_it) which is a meta package for all of them.)
+
 ### Architecture
 
-WIP - I need to update this section of the readme.
+- UI / View
+  - with widgets builds methods cut as small as possible, to keep the build methods fast and to not lose the overview of the UI code
+- Manager classes, updating the state and thus the UI
+  - they provide ["commands"](https://flutter-it.dev/documentation/command_it/getting_started#core-concept), which are async/sync operations which update their data, loading and error state
+  - key to memory succes is here using [get_it's cached factories](https://flutter-it.dev/documentation/get_it/object_registration#cached-factories)!, which's data is garbagge collected when not used anymore!
+- Service classes, defining the actualy operations in form of methods of a service class
+- [DAO](https://en.wikipedia.org/wiki/Data_access_object)-classes, as an abstration layer for the database
+- a database, which is currently implemented with [drift](https://pub.dev/packages/drift) and sqlite, to persist data, and make it available across app restarts
 
-### Dependency choices, service locator and state management
+### Examples
 
-Regarding the packages to implement this architecture I've had quite a journey from [provider](https://pub.dev/packages/provider) to [riverpod](https://pub.dev/packages/riverpod).
+WIP
 
-I found my personal favorite solution with [get_it](https://pub.dev/packages/get_it) plus [watch_it](https://pub.dev/packages/watch_it) plus [command_it](https://pub.dev/packages/command_it) and [listen_it](https://pub.dev/packages/listen_it) because this fits the need of this application and the best and I can write reactive code without the need of a lot of boilerplate code, while still keeping the layers of the application clearly separated and easy to re-implement.
-
-(all four packages can be obtained with [flutter_it](https://pub.dev/packages/flutter_it) which is a meta package for all of them.)
 
 ### Performance
 
 Reading the local covers and fetching remote covers for radio data happens inside additional second [dart isolates](https://dart.dev/language/isolates). When idle MusiPod's CPU power consumption is 0%. For a 10 years old intel dual core, the CPU usage is about 2% while playing music, since only the parts are redrawn which need to be, thanks to watch_it.
+Memory allocation can spike depending on the size of a page's data, but it is freed as soon as the user leaves the page, thanks to get_it's cached factories (the same behaviour can ofc be achieved with flutter's stateful widgets, but I prefer the get_it solution for the reasons mentioned above in the "state" section).
 
 ### Persistence
 

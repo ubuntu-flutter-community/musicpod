@@ -3,7 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/round_image_container.dart';
 import '../../extensions/build_context_x.dart';
-import '../album_ids_of_artist_manager.dart';
+import '../manager/album_ids_of_artist_manager.dart';
 import 'local_cover.dart';
 
 class ArtistImage extends StatelessWidget with WatchItMixin {

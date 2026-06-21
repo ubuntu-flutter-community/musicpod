@@ -9,7 +9,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../podcast_manager.dart';
+import '../manager/podcast_short_info_manager.dart';
 
 class PodcastCollectionCard extends StatelessWidget with WatchItMixin {
   const PodcastCollectionCard({
@@ -51,7 +51,6 @@ class PodcastCollectionCard extends StatelessWidget with WatchItMixin {
       ),
       onPlay: () => di<SidebarAudiosManager>().playAudiosByIdCommand.run((
         pageId: feedUrl,
-        genre: null,
       )),
       onTap: () => di<RoutingManager>().push(pageId: feedUrl),
     );

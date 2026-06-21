@@ -7,8 +7,8 @@ import '../../../common/view/confirm.dart';
 import '../../../common/view/icons.dart';
 import '../../../common/view/ui_constants.dart';
 import '../../../extensions/build_context_x.dart';
-import '../../../local_audio/playlist_action.dart';
-import '../../../local_audio/playlist_ids_manager.dart';
+import '../../../local_audio/data/playlist_action.dart';
+import '../../../local_audio/manager/playlist_ids_manager.dart';
 import '../../player_manager.dart';
 
 class QueueBody extends StatefulWidget with WatchItStatefulWidgetMixin {

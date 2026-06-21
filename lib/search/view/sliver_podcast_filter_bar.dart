@@ -4,6 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/view/common_control_panel.dart';
 import '../../common/view/progress.dart';
 import '../../extensions/build_context_x.dart';
+import '../../podcasts/manager/podcast_genre_manager.dart';
 import '../search_manager.dart';
 
 class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
@@ -11,14 +12,10 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    callOnceAfterThisBuild(
-      (context) => di<SearchManager>().loadPodcastGenresCommand.run(),
-    );
-
     final podcastGenre = watchValue((SearchManager m) => m.podcastGenre);
 
     return watchValue(
-      (SearchManager m) => m.loadPodcastGenresCommand.results,
+      (PodcastLoadGenresManager m) => m.command.results,
     ).toWidget(
       whileRunning: (lastResult, param) => const Progress(),
       onError: (_, lastResult, _) => const SizedBox.shrink(),

@@ -11,16 +11,17 @@ import '../../app/routing_manager.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/command_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../local_audio/find_album_manager.dart';
-import '../../local_audio/liked_audios_manager.dart';
-import '../../local_audio/playlist_action.dart';
-import '../../local_audio/playlist_ids_manager.dart';
+import '../../local_audio/manager/find_album_manager.dart';
+import '../../local_audio/manager/liked_audios_manager.dart';
+import '../../local_audio/data/playlist_action.dart';
+import '../../local_audio/manager/playlist_ids_manager.dart';
 import '../../local_audio/view/add_to_playlist_dialog.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../player/player_manager.dart';
 import '../../podcasts/data/podcast_update_capsule.dart';
-import '../../podcasts/podcast_manager.dart';
+import '../../podcasts/manager/podcast_manager.dart';
+import '../../podcasts/manager/subscribed_podcasts_manager.dart';
 import '../../settings/settings_manager.dart';
 import '../data/audio.dart';
 import '../data/audio_type.dart';
@@ -235,7 +236,7 @@ class AudioTileOptionButton extends StatelessWidget {
               ),
             ),
             if (audios.firstOrNull?.feedUrl != null &&
-                di<PodcastManager>().togglePodcastCommand.value.contains(
+                di<SubscribedPodcastsManager>().command.value.contains(
                   audios.first.feedUrl!,
                 ))
               PopupMenuItem(

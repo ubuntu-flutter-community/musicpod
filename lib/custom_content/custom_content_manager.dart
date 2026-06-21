@@ -13,7 +13,7 @@ import '../common/data/audio_type.dart';
 import '../common/logging.dart';
 import '../extensions/media_file_x.dart';
 import '../external_path/external_path_service.dart';
-import '../local_audio/playlist_manager.dart';
+import '../local_audio/manager/playlist_manager.dart';
 import '../local_audio/local_audio_service.dart';
 import '../podcasts/podcast_service.dart';
 import '../radio/radio_service.dart';
@@ -187,7 +187,6 @@ class CustomContentManager {
     final audios = await _podcastService.findEpisodes(
       feedUrl: feed,
       tryFromDbOnly: false,
-      genre: null,
     );
     final artist = audios.first.copyright ?? '';
     final imageUrl = audios.first.albumArtUrl ?? audios.first.imageUrl;

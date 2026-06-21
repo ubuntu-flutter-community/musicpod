@@ -8,7 +8,7 @@ import '../../common/data/audio_type.dart';
 import '../../common/logging.dart';
 import '../../common/persistence/database.dart';
 import '../../common/view/audio_filter.dart';
-import '../local_search_result.dart';
+import '../data/local_search_result.dart';
 
 @lazySingleton
 class LocalAudioDao {

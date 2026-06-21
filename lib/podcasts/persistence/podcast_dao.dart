@@ -370,6 +370,13 @@ class PodcastDao {
     return rows.map((r) => r.feedUrl).toSet();
   }
 
+  Future<Set<String>> get descendingPodcasts async {
+    final rows = await (_db.select(
+      _db.podcastTable,
+    )..where((t) => t.ascending.equals(false))).get();
+    return rows.map((r) => r.feedUrl).toSet();
+  }
+
   Future<Set<String>> getPodcastUpdates() async {
     final rows = await _db.select(_db.podcastUpdateTable).get();
     return rows.map((r) => r.podcastFeedUrl).toSet();

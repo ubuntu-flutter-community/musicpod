@@ -4,12 +4,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
-import '../common/cached_streamcontroller.dart';
-import '../common/data/audio.dart';
-import '../common/logging.dart';
-import 'data/podcast_download.dart';
-import 'download_service.dart';
-import 'podcast_service.dart';
+import '../../common/cached_streamcontroller.dart';
+import '../../common/data/audio.dart';
+import '../../common/logging.dart';
+import '../data/podcast_download.dart';
+import '../download_service.dart';
+import '../podcast_service.dart';
 
 @lazySingleton
 class DownloadManager {

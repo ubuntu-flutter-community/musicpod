@@ -2,10 +2,10 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-import '../common/data/audio.dart';
-import '../common/logging.dart';
-import 'data/change_metadata_capsule.dart';
-import 'local_audio_service.dart';
+import '../../common/data/audio.dart';
+import '../../common/logging.dart';
+import '../data/change_metadata_capsule.dart';
+import '../local_audio_service.dart';
 
 @Injectable(cache: true)
 class ChangeLocalMetaDataManager {

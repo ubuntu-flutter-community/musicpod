@@ -5,7 +5,7 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';
 import '../../extensions/taget_platform_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../../local_audio/liked_audios_manager.dart';
+import '../../local_audio/manager/liked_audios_manager.dart';
 import '../data/audio.dart';
 import '../data/audio_type.dart';
 import 'audio_page_type.dart';

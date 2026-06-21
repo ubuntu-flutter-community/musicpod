@@ -1,8 +1,8 @@
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../local_audio/local_cover_manager.dart';
+import '../../local_audio/manager/local_cover_manager.dart';
 import '../../player/player_manager.dart';
-import '../../podcasts/podcast_clean_manager.dart';
+import '../../podcasts/manager/podcast_clean_manager.dart';
 
 void cleanUpUnusedPodcasts({Set<String> deleteMeUrls = const {}}) {
   di<PodcastCleanManager>().command.run((deleteMeUrls: deleteMeUrls));

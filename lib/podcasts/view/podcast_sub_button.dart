@@ -4,7 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
 import '../data/podcast_toggle_capsule.dart';
-import '../podcast_manager.dart';
+import '../manager/subscribed_podcasts_manager.dart';
 
 class PodcastSubButton extends StatelessWidget with WatchItMixin {
   const PodcastSubButton({
@@ -22,11 +22,9 @@ class PodcastSubButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final podcastManager = di<PodcastManager>();
-
     final subscribed = watchValue(
-      (PodcastManager m) =>
-          m.togglePodcastCommand.select((v) => v.contains(pageId)),
+      (SubscribedPodcastsManager m) =>
+          m.command.select((v) => v.contains(pageId)),
     );
 
     final disabled = pageId.isEmpty;
@@ -41,7 +39,7 @@ class PodcastSubButton extends StatelessWidget with WatchItMixin {
       ),
       onPressed: disabled
           ? null
-          : () => podcastManager.togglePodcastCommand.run(
+          : () => di<SubscribedPodcastsManager>().command.run(
               PodcastToggleCapsule(
                 feedUrl: pageId,
                 imageUrl: imageUrl,

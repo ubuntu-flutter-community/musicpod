@@ -5,7 +5,8 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
-import '../podcast_manager.dart';
+import '../manager/episodes_manager.dart';
+import '../manager/subscribed_podcasts_manager.dart';
 
 class PodcastReorderButton extends StatelessWidget with WatchItMixin {
   const PodcastReorderButton({super.key, required this.feedUrl});
@@ -15,22 +16,22 @@ class PodcastReorderButton extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final ascending = watchValue(
-      (PodcastManager m) =>
-          m.reorderPodcastCommand.select((v) => v.contains(feedUrl)),
+      (EpisodesManager m) => m.reorderPodcastCommand.select(
+        (v) => v?.ascendingPodcasts.contains(feedUrl) ?? false,
+      ),
+      param1: feedUrl,
     );
 
     final podcastSubscribed = watchValue(
-      (PodcastManager m) =>
-          m.togglePodcastCommand.select((v) => v.contains(feedUrl)),
+      (SubscribedPodcastsManager m) =>
+          m.command.select((v) => v.contains(feedUrl)),
     );
 
     return IconButton(
       tooltip: context.l10n.reorder,
       onPressed: podcastSubscribed
-          ? () => di<PodcastManager>().reorderPodcastCommand.run((
-              feedUrl: feedUrl,
-              ascending: !ascending,
-            ))
+          ? () => di<EpisodesManager>(param1: feedUrl).reorderPodcastCommand
+                .run((feedUrl: feedUrl, ascending: !ascending))
           : null,
       icon: Iconz.ascending == Iconz.materialAscending && ascending
           ? Transform.flip(

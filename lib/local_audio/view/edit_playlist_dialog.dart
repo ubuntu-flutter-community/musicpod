@@ -12,9 +12,9 @@ import '../../common/view/ui_constants.dart';
 import '../../custom_content/custom_content_manager.dart';
 import '../../extensions/build_context_x.dart';
 import '../../settings/settings_manager.dart';
-import '../local_audio_view.dart';
-import '../playlist_action.dart';
-import '../playlist_ids_manager.dart';
+import '../data/local_audio_view.dart';
+import '../data/playlist_action.dart';
+import '../manager/playlist_ids_manager.dart';
 
 class EditPlaylistDialog extends StatefulWidget
     with WatchItStatefulWidgetMixin {

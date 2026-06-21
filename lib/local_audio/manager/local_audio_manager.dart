@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
-import '../common/data/audio.dart';
-import '../common/no_error_filter.dart';
-import '../common/view/audio_filter.dart';
-import 'local_audio_service.dart';
-import 'playlist_action.dart';
+import '../../common/data/audio.dart';
+import '../../common/no_error_filter.dart';
+import '../../common/view/audio_filter.dart';
+import '../local_audio_service.dart';
+import '../data/playlist_action.dart';
 
 @lazySingleton
 class LocalAudioManager {

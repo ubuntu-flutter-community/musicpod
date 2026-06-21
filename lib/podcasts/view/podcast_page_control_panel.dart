@@ -6,7 +6,7 @@ import '../../common/data/audio.dart';
 import '../../common/view/audio_tile_option_button.dart';
 import '../../common/view/avatar_play_button.dart';
 import '../../common/view/theme.dart';
-import '../podcast_manager.dart';
+import '../manager/podcast_short_info_manager.dart';
 import 'podcast_mark_done_button.dart';
 import 'podcast_page_search_button.dart';
 import 'podcast_reorder_button.dart';

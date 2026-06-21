@@ -10,7 +10,7 @@ import '../../common/view/copy_clipboard_content.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../local_audio/local_audio_manager.dart';
+import '../../local_audio/manager/local_audio_manager.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../podcasts/view/podcast_page.dart';

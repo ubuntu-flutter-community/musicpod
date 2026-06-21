@@ -7,7 +7,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../../local_audio/local_audio_manager.dart';
+import '../../local_audio/manager/local_audio_manager.dart';
 import '../../player/player_manager.dart';
 import '../../settings/settings_manager.dart';
 

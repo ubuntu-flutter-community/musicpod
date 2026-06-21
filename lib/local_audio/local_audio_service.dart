@@ -15,9 +15,9 @@ import '../settings/settings_service.dart';
 import '../settings/shared_preferences_keys.dart';
 import 'data/change_metadata_capsule.dart';
 import 'local_cover_service.dart';
-import 'local_search_result.dart';
+import 'data/local_search_result.dart';
 import 'persistence/local_audio_dao.dart';
-import 'playlist_action.dart';
+import 'data/playlist_action.dart';
 
 @lazySingleton
 class LocalAudioService {

@@ -1,16 +1,19 @@
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
-import 'local_audio_service.dart';
+import '../local_audio_service.dart';
 
 @Injectable(cache: true)
-class FindAllArtistsManager {
-  FindAllArtistsManager(LocalAudioService localAudioService) {
+class FindAllGenresManager {
+  FindAllGenresManager(LocalAudioService localAudioService)
+    : _localAudioService = localAudioService {
     command = Command.createAsyncNoParam(
-      localAudioService.findAllArtists,
+      _localAudioService.findAllGenres,
       initialValue: null,
     );
     command.run();
   }
+
+  final LocalAudioService _localAudioService;
 
   late final Command<void, List<String>?> command;
 }

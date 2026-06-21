@@ -16,8 +16,10 @@ import '../../extensions/build_context_x.dart';
 import '../../search/search_manager.dart';
 import '../../settings/view/settings_action.dart';
 import '../data/podcast_update_capsule.dart';
-import '../podcast_clean_manager.dart';
-import '../podcast_manager.dart';
+import '../manager/podcast_clean_manager.dart';
+import '../manager/podcast_feeds_with_downloads_manager.dart';
+import '../manager/podcast_manager.dart';
+import '../manager/subscribed_podcasts_manager.dart';
 import 'podcast_collection_card.dart';
 import 'podcast_collection_control_panel.dart';
 
@@ -31,16 +33,15 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
     );
 
     final subsResults = watchValue(
-      (PodcastManager m) => m.togglePodcastCommand.results,
+      (SubscribedPodcastsManager m) => m.command.results,
     );
     final subs = subsResults.data ?? {};
-    final podcastManager = di<PodcastManager>();
     final updates = watchValue((PodcastManager m) => m.manageUpdatesCommand);
     final updatesOnly = watchValue((PodcastManager m) => m.updatesOnly);
     final downloadsOnly = watchValue((PodcastManager m) => m.downloadsOnly);
     final subsLength = subs.length;
     final feedsWithDownloads = watchValue(
-      (PodcastManager m) => m.feedsWithDownloadsCommand,
+      (PodcastFeedsWithDownloadsManager m) => m.command,
     );
     final feedsWithDownloadLength = feedsWithDownloads.length;
 
@@ -57,7 +58,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
         child: ErrorBody(
           error: subsResults.error!,
           stackTrace: subsResults.stackTrace,
-          onRetry: () => di<PodcastManager>().togglePodcastCommand.run(),
+          onRetry: () => di<SubscribedPodcastsManager>().command.run(),
         ),
       );
     }
@@ -139,7 +140,9 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                 } else if (downloadsOnly) {
                   feedUrl = subs
                       .where(
-                        (e) => podcastManager.feedsWithDownloadsCommand.value
+                        (e) => di<PodcastFeedsWithDownloadsManager>()
+                            .command
+                            .value
                             .contains(e),
                       )
                       .elementAtOrNull(index);

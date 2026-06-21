@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../common/data/audio.dart';
-import '../local_audio_view.dart';
+import '../data/local_audio_view.dart';
 import 'album_view.dart';
 import 'artists_view.dart';
 import 'genres_view.dart';

@@ -41,24 +41,8 @@ class PodcastService {
 
   late Search _search;
 
-  SearchProvider initSearchProvider({bool forceInit = false}) {
-    if (forceInit) {
-      _search = Search(
-        searchProvider:
-            _settingsService.getBool(SPKeys.usePodcastIndex) == true &&
-                _settingsService.getString(SPKeys.podcastIndexApiKey) != null &&
-                _settingsService.getString(SPKeys.podcastIndexApiSecret) != null
-            ? PodcastIndexProvider(
-                key: _settingsService.getString(SPKeys.podcastIndexApiKey)!,
-                secret: _settingsService.getString(
-                  SPKeys.podcastIndexApiSecret,
-                )!,
-              )
-            : const ITunesProvider(),
-      );
-    }
-    return _search.searchProvider;
-  }
+  void initSearchProvider(SearchProvider searchProvider) =>
+      _search = Search(searchProvider: searchProvider);
 
   Future<List<PodcastGenre>> loadGenres({bool force = false}) async {
     var genres = <String>{};
@@ -164,7 +148,6 @@ class PodcastService {
       final allFreshEpisodes = await findEpisodes(
         feedUrl: feedUrl,
         tryFromDbOnly: false,
-        genre: null,
       );
 
       final newEpisodes = allFreshEpisodes
@@ -185,7 +168,6 @@ class PodcastService {
   Future<List<Audio>> findEpisodes({
     required String feedUrl,
     required bool tryFromDbOnly,
-    required String? genre,
   }) async {
     final hasEpisodesInDb = await _dao.hasPodcastStoredEpisodes(feedUrl);
 
@@ -211,10 +193,6 @@ class PodcastService {
       name: podcast.title ?? '',
       artist: podcast.copyright ?? '',
     );
-
-    if (genre != null) {
-      await addPodcastGenre(feedUrl: feedUrl, genreName: genre);
-    }
 
     final episodes = podcast.episodes
         .where((e) => e.contentUrl != null)
@@ -354,6 +332,8 @@ class PodcastService {
   }) => _dao.reorderPodcast(feedUrl: feedUrl, ascending: ascending);
 
   Future<Set<String>> get ascendingPodcasts => _dao.ascendingPodcasts;
+
+  Future<Set<String>> get descendingPodcasts => _dao.descendingPodcasts;
 
   Future<Set<String>> getPodcastUpdates() => _dao.getPodcastUpdates();
 

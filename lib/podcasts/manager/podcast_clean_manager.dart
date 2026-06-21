@@ -1,8 +1,8 @@
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
-import '../common/logging.dart';
-import 'podcast_service.dart';
+import '../../common/logging.dart';
+import '../podcast_service.dart';
 
 @Injectable(cache: true)
 class PodcastCleanManager {

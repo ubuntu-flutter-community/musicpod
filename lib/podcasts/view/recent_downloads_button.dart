@@ -5,7 +5,7 @@ import 'package:yaru/yaru.dart';
 import '../../extensions/build_context_x.dart';
 import '../../player/player_manager.dart';
 import '../data/podcast_download.dart';
-import '../download_manager.dart';
+import '../manager/download_manager.dart';
 import 'download_button.dart';
 
 class RecentDownloadsButton extends StatefulWidget

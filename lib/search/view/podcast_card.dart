@@ -37,7 +37,6 @@ class PodcastCard extends StatelessWidget with WatchItMixin {
           ? null
           : () => di<SidebarAudiosManager>().playAudiosByIdCommand.run((
               pageId: feedUrl,
-              genre: genre,
             )),
       onTap: () {
         if (feedUrl == null || feedUrl.isEmpty) {

@@ -1,4 +1,4 @@
-import '../common/data/audio.dart';
+import '../../common/data/audio.dart';
 
 class LocalSearchResult {
   const LocalSearchResult({

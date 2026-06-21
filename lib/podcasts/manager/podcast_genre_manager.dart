@@ -1,6 +1,8 @@
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
-import 'podcast_service.dart';
+
+import '../data/podcast_genre.dart';
+import '../podcast_service.dart';
 
 @Injectable(cache: true)
 class PodcastGenreManager {
@@ -26,4 +28,17 @@ class PodcastGenreManager {
   late final Command<void, String?> findCommand;
 
   late final Command<({String genre}), void> updateCommand;
+}
+
+@Injectable(cache: true)
+class PodcastLoadGenresManager {
+  PodcastLoadGenresManager({required PodcastService podcastService}) {
+    command = Command.createAsyncNoParam(
+      () => podcastService.loadGenres(),
+      initialValue: const [],
+    );
+    command.run();
+  }
+
+  late final Command<void, List<PodcastGenre>> command;
 }

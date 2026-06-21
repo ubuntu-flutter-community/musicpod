@@ -1,10 +1,10 @@
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
-import '../common/data/audio.dart';
+import '../../common/data/audio.dart';
 import 'playlist_manager.dart';
 import 'local_audio_manager.dart';
-import 'playlist_action.dart';
+import '../data/playlist_action.dart';
 
 @lazySingleton
 class PlaylistIDsManager {
