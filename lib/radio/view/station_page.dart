@@ -27,7 +27,7 @@ import '../../common/view/clean_up_caches.dart';
 import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
 import '../../settings/settings_manager.dart';
-import '../station_manager.dart';
+import '../manager/station_manager.dart';
 import 'radio_connect_mixin.dart';
 import 'radio_history_list.dart';
 import 'radio_page_copy_histoy_button.dart';

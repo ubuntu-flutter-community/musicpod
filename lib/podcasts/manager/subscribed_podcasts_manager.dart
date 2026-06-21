@@ -16,9 +16,8 @@ class SubscribedPodcastsManager {
 
     command.run();
 
-    podcastManager.wipeCommand.listen((_, sub) {
-      command.run();
-      sub.cancel();
+    podcastManager.wipeCommand.listen((_, _) {
+      command.value = {};
     });
   }
 

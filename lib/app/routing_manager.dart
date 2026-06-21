@@ -48,7 +48,7 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
       (PageIDs.permanent.contains(pageId) ||
           (int.tryParse(pageId) != null &&
               await _localAudioService.isPinnedAlbum(int.parse(pageId))) ||
-          _radioService.isStarredStation(pageId) ||
+          await _radioService.isStarredStation(pageId) ||
           await _localAudioService.isPlaylistSaved(pageId) ||
           await _podcastService.isPodcastSubscribed(pageId));
 

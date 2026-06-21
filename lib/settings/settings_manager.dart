@@ -21,21 +21,13 @@ class SettingsManager extends SafeChangeNotifier {
     required LocalAudioService localAudioService,
     required RadioService radioService,
     required PlayerService playerService,
-  }) : _service = service,
-       _podcastService = podcastService,
-       _localAudioService = localAudioService,
-       _radioService = radioService,
-       _playerService = playerService {
+  }) : _service = service {
     _propertiesChangedSub ??= _service.propertiesChanged.listen(
       (_) => notifyListeners(),
     );
   }
 
   final SettingsService _service;
-  final PodcastService _podcastService;
-  final LocalAudioService _localAudioService;
-  final RadioService _radioService;
-  final PlayerService _playerService;
 
   int _scrollIndex = 0;
   int get scrollIndex => _scrollIndex;
@@ -224,14 +216,6 @@ class SettingsManager extends SafeChangeNotifier {
 
   late final Command<void, void> wipeAllSettingsCommand =
       Command.createAsyncNoParamNoResult(_service.wipeAllSettings);
-
-  late final Command<void, void> wipeAndInitLibraryCommand =
-      Command.createAsyncNoParamNoResult(() async {
-        await _podcastService.wipeAndBuildPodcastLibrary();
-        await _localAudioService.init(forceInit: true);
-        await _radioService.wipeAndBuildRadioLibrary();
-        await _playerService.resetPlayerState();
-      });
 
   OnlineLyricsSource? get onlineLyricsSource {
     final value = _service.getString(SPKeys.onlineLyricsSource);

@@ -13,7 +13,7 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
-import '../radio_manager.dart';
+import '../manager/radio_fav_tag_manager.dart';
 import 'open_radio_discover_page_button.dart';
 
 class FavoriteRadioTagsGrid extends StatelessWidget with WatchItMixin {
@@ -21,11 +21,7 @@ class FavoriteRadioTagsGrid extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    callOnceAfterThisBuild(
-      (context) => di<RadioManager>().toggleFavRadioTagCommand.run(),
-    );
-
-    final favTags = watchValue((RadioManager m) => m.toggleFavRadioTagCommand);
+    final favTags = watchValue((RadioFavTagManager m) => m.command);
     final favTagsLength = favTags.length;
 
     if (favTagsLength == 0) {

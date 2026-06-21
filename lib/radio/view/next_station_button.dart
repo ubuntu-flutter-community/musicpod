@@ -4,7 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
 import '../../player/player_manager.dart';
-import '../../search/search_manager.dart';
+import '../manager/radio_manager.dart';
 
 class NextStationButton extends StatelessWidget with WatchItMixin {
   const NextStationButton({super.key, this.iconColor, required this.active});
@@ -15,7 +15,7 @@ class NextStationButton extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     registerHandler(
-      select: (SearchManager m) => m.findSimilarStationCommand,
+      select: (RadioManager m) => m.findSimilarStationCommand,
       handler: (context, newValue, cancel) {
         if (newValue != null &&
             newValue.uuid != null &&
@@ -33,7 +33,7 @@ class NextStationButton extends StatelessWidget with WatchItMixin {
     final audio = watchPropertyValue((PlayerManager m) => m.audio);
 
     final findingSimilarStation = watchValue(
-      (SearchManager m) => m.findSimilarStationCommand.isRunning,
+      (RadioManager m) => m.findSimilarStationCommand.isRunning,
     );
 
     return IconButton(
@@ -41,7 +41,7 @@ class NextStationButton extends StatelessWidget with WatchItMixin {
       onPressed: !active || findingSimilarStation || audio == null
           ? null
           : () {
-              di<SearchManager>().findSimilarStationCommand.run(audio);
+              di<RadioManager>().findSimilarStationCommand.run(audio);
             },
       icon: Icon(Iconz.explore, color: iconColor),
     );

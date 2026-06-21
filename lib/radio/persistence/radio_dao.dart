@@ -10,9 +10,9 @@ class RadioDao {
 
   RadioDao({required Database db}) : _db = db;
 
-  Future<List<String>> getStarredStations() async {
+  Future<Set<String>> getStarredStations() async {
     final rows = await _db.select(_db.starredStationTable).get();
-    return rows.map((r) => r.uuid).toList();
+    return rows.map((r) => r.uuid).toSet();
   }
 
   Future<Station?> getStationByUuid(String uuid) async {
@@ -37,6 +37,14 @@ class RadioDao {
             .toList(),
         mode: InsertMode.insertOrIgnore,
       ),
+    );
+  }
+
+  Future<void> deleteStarredStations(List<String> uuids) async {
+    if (uuids.isEmpty) return;
+    await _db.batch(
+      (batch) =>
+          batch.deleteWhere(_db.starredStationTable, (t) => t.uuid.isIn(uuids)),
     );
   }
 
@@ -114,4 +122,12 @@ class RadioDao {
     geoLong: row.geoLong,
     hasExtendedInfo: row.hasExtendedInfo ?? false,
   );
+
+  Future<bool> isStationStarred(String pageId) async {
+    final row =
+        await (await _db.select(_db.starredStationTable)
+              ..where((t) => t.uuid.equals(pageId)))
+            .getSingleOrNull();
+    return row != null;
+  }
 }

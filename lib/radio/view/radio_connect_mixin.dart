@@ -6,7 +6,7 @@ import '../../common/view/progress.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/command_x.dart';
 import '../../extensions/object_x.dart';
-import '../radio_manager.dart';
+import '../manager/radio_manager.dart';
 
 mixin RadioConnectMixin on WatchItMixin {
   void registerRadioConnectHandler(BuildContext context) {

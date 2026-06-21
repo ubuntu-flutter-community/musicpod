@@ -12,11 +12,11 @@ import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
 import '../common/view/languages.dart';
 import '../extensions/string_x.dart';
-import '../local_audio/local_audio_service.dart';
 import '../local_audio/data/local_search_result.dart';
+import '../local_audio/local_audio_service.dart';
 import '../podcasts/data/podcast_genre.dart';
 import '../podcasts/podcast_service.dart';
-import '../radio/radio_service.dart';
+import '../radio/manager/radio_manager.dart';
 import '../settings/settings_service.dart';
 import '../settings/shared_preferences_keys.dart';
 import 'search_timeout_exception.dart';
@@ -25,11 +25,11 @@ import 'search_type.dart';
 @Injectable(cache: true)
 class SearchManager {
   SearchManager({
-    required RadioService radioService,
+    required RadioManager radioManager,
     required PodcastService podcastService,
     required LocalAudioService localAudioService,
     required SettingsService settingsService,
-  }) : _radioService = radioService,
+  }) : _radioManager = radioManager,
        _settingsService = settingsService,
 
        _podcastService = podcastService,
@@ -65,7 +65,7 @@ class SearchManager {
     );
   }
 
-  final RadioService _radioService;
+  final RadioManager _radioManager;
   final PodcastService _podcastService;
   final LocalAudioService _localAudioService;
   final SettingsService _settingsService;
@@ -111,7 +111,6 @@ class SearchManager {
     language.value = value;
   }
 
-  List<Tag>? get tags => _radioService.tags;
   SafeValueNotifier<Tag?> tag = SafeValueNotifier(null);
   void setTag(Tag? value) {
     if (value == tag.value) return;
@@ -137,9 +136,6 @@ class SearchManager {
   void incrementLimit(int value) => audioType.value == AudioType.podcast
       ? incrementPodcastLimit(value)
       : incrementRadioLimit(value);
-
-  late final Command<Audio, Audio?> findSimilarStationCommand =
-      Command.createAsync(_radioService.findSimilarStation, initialValue: null);
 
   SafeValueNotifier<Attribute> podcastSearchAttribute = SafeValueNotifier(
     Attribute.none,
@@ -175,7 +171,7 @@ class SearchManager {
 
     return (switch (searchType.value) {
       SearchType.radioName =>
-        _radioService
+        _radioManager
             .search(name: searchQuery.value, limit: _radioLimit)
             .then(
               (v) => _setRadioSearchResult(
@@ -185,18 +181,18 @@ class SearchManager {
               ),
             ),
       SearchType.radioTag =>
-        _radioService
+        _radioManager
             .search(tag: tag.value?.name, limit: _radioLimit)
             .then((v) => _setRadioSearchResult(v)),
       SearchType.radioCountry =>
-        _radioService
+        _radioManager
             .search(
               country: country.value?.name.camelToSentence,
               limit: _radioLimit,
             )
             .then((v) => _setRadioSearchResult(v)),
       SearchType.radioLanguage =>
-        _radioService
+        _radioManager
             .search(
               language: language.value?.name.toLowerCase(),
               limit: _radioLimit,
@@ -256,5 +252,5 @@ class SearchManager {
   }
 
   Future<List<Audio>?> radioNameSearch(String? searchQuery) async =>
-      _radioService.search(name: searchQuery, limit: _radioLimit);
+      _radioManager.search(name: searchQuery, limit: _radioLimit);
 }

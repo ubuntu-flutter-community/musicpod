@@ -19,6 +19,8 @@ class PlaylistIDsManager {
       return localAudioManager.findAllPlaylistIDs();
     }, initialValue: []);
 
+    localAudioManager.initAudiosCommand.listen((_, _) => command.value = []);
+
     command.run();
   }
 

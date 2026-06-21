@@ -1,32 +1,38 @@
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
+
 import '../../common/keep_alive_registry.dart';
 import '../data/podcast_short_info.dart';
-import '../podcast_service.dart';
+import 'podcast_manager.dart';
 
 @injectable
 class PodcastShortInfoManager {
   PodcastShortInfoManager._({
     required String feedUrl,
-    required PodcastService podcastService,
+    required PodcastManager podcastManager,
   }) {
     command = Command.createAsync(
-      podcastService.getPodcastShortInfo,
+      podcastManager.getPodcastShortInfo,
       initialValue: null,
     );
 
     command.run(feedUrl);
+
+    podcastManager.wipeCommand.listen((_, sub) {
+      dispose(feedUrl);
+      sub.cancel();
+    });
   }
 
   @factoryMethod
   static PodcastShortInfoManager create({
     @factoryParam required String feedUrl,
-    required PodcastService podcastService,
+    required PodcastManager podcastManager,
   }) => _registry.getOrRegister(
     id: feedUrl,
     factoryFunction: () => PodcastShortInfoManager._(
       feedUrl: feedUrl,
-      podcastService: podcastService,
+      podcastManager: podcastManager,
     ),
   );
 

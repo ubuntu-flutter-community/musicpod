@@ -13,7 +13,7 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/command_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../player/player_manager.dart';
-import '../../radio/radio_manager.dart';
+import '../../radio/manager/radio_manager.dart';
 import '../../radio/view/radio_connect_mixin.dart';
 import '../../radio/view/radio_page_tag_bar.dart';
 import '../../radio/view/station_page.dart';

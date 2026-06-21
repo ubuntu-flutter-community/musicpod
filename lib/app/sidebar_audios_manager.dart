@@ -5,33 +5,39 @@ import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
 import '../common/logging.dart';
 import '../local_audio/manager/find_album_manager.dart';
-import '../local_audio/manager/playlist_manager.dart';
 import '../local_audio/manager/local_audio_manager.dart';
+import '../local_audio/manager/playlist_manager.dart';
 import '../player/player_manager.dart';
 import '../podcasts/data/podcast_update_capsule.dart';
 import '../podcasts/manager/episodes_manager.dart';
 import '../podcasts/manager/podcast_manager.dart';
+import '../podcasts/manager/podcast_updates_manager.dart';
 import '../podcasts/manager/subscribed_podcasts_manager.dart';
-import '../radio/radio_manager.dart';
-import '../radio/station_manager.dart';
+import '../radio/manager/radio_star_station_manager.dart';
+import '../radio/manager/radio_manager.dart';
+import '../radio/manager/station_manager.dart';
 
 @Injectable(cache: true)
 class SidebarAudiosManager {
-  final PodcastManager _podcastManager;
+  final PodcastUpdatesManager _podcastUpdatesManager;
   final SubscribedPodcastsManager _podcastToggleManager;
   final RadioManager _radioManager;
+  final RadioStarStationManager _radioStarStationManager;
   final PlayerManager _playerManager;
 
   SidebarAudiosManager({
     required PodcastManager podcastManager,
+    required PodcastUpdatesManager podcastUpdatesManager,
     required LocalAudioManager localAudioManager,
     required RadioManager radioManager,
     required SubscribedPodcastsManager podcastToggleManager,
     required PlayerManager playerManager,
-  }) : _podcastManager = podcastManager,
-       _podcastToggleManager = podcastToggleManager,
+    required RadioStarStationManager radioStarStationManager,
+  }) : _podcastToggleManager = podcastToggleManager,
        _radioManager = radioManager,
-       _playerManager = playerManager {
+       _playerManager = playerManager,
+       _podcastUpdatesManager = podcastUpdatesManager,
+       _radioStarStationManager = radioStarStationManager {
     printInfoInDebugMode(
       '$SidebarAudiosManager created',
       tag: '$SidebarAudiosManager',
@@ -53,7 +59,7 @@ class SidebarAudiosManager {
           ? await _playerManager.pause()
           : await _playerManager.resume();
     } else if (audios != null) {
-      await _podcastManager.manageUpdatesCommand.runAsync(
+      await _podcastUpdatesManager.command.runAsync(
         PodcastUpdateCapsule(
           type: PodcastUpdateType.remove,
           feedUrls: [param.pageId],
@@ -66,7 +72,7 @@ class SidebarAudiosManager {
   }, initialValue: null);
 
   Future<List<Audio>?> _getAudiosById({required String pageId}) async {
-    if (_radioManager.toggleStarStationCommand.value.contains(pageId)) {
+    if (_radioStarStationManager.command.value.contains(pageId)) {
       final audio = await di<StationManager>(param1: pageId).command.runAsync();
       return audio == null ? [] : [audio];
     }

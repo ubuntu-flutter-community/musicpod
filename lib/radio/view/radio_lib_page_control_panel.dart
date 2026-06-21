@@ -3,7 +3,8 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/common_control_panel.dart';
 import '../../extensions/build_context_x.dart';
-import '../radio_manager.dart';
+import '../data/radio_collection_view.dart';
+import '../manager/radio_manager.dart';
 
 class RadioLibPageControlPanel extends StatelessWidget with WatchItMixin {
   const RadioLibPageControlPanel({super.key});

@@ -16,8 +16,8 @@ import '../../podcasts/data/podcast_download.dart';
 import '../../podcasts/data/podcast_update_capsule.dart';
 import '../../podcasts/manager/download_manager.dart';
 import '../../podcasts/manager/podcast_clean_manager.dart';
-import '../../podcasts/manager/podcast_manager.dart';
 import '../../podcasts/manager/podcast_short_info_manager.dart';
+import '../../podcasts/manager/podcast_updates_manager.dart';
 import '../app_manager.dart';
 import '../sidebar_audios_manager.dart';
 
@@ -45,7 +45,7 @@ mixin CommonHandlersAndCommandsMixin {
     );
 
     registerHandler(
-      select: (PodcastManager m) => m.manageUpdatesCommand.results,
+      select: (PodcastUpdatesManager m) => m.command.results,
       handler: (context, res, cancel) {
         if (res.isRunning) {
           return;

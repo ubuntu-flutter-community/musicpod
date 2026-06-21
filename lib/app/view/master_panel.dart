@@ -5,11 +5,11 @@ import 'package:yaru/yaru.dart';
 
 import '../../common/view/header_bar.dart';
 import '../../common/view/ui_constants.dart';
-import '../../local_audio/manager/pinned_album_i_ds_manager.dart';
+import '../../local_audio/manager/pinned_album_ids_manager.dart';
 import '../../local_audio/manager/playlist_ids_manager.dart';
 import '../../podcasts/manager/subscribed_podcasts_manager.dart';
 import '../../podcasts/view/recent_downloads_button.dart';
-import '../../radio/radio_manager.dart';
+import '../../radio/manager/radio_star_station_manager.dart';
 import '../../settings/view/settings_action.dart';
 import '../app_config.dart';
 import '../page_ids.dart';
@@ -127,7 +127,7 @@ class StationsList extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final starredStationIDs = watchValue(
-      (RadioManager m) => m.toggleStarStationCommand,
+      (RadioStarStationManager m) => m.command,
     );
     final masterItems = createStarredStationsMasterItems(starredStationIDs);
     final selectedPageId = watchPropertyValue(

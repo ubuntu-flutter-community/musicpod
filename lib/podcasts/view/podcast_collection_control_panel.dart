@@ -6,6 +6,7 @@ import '../../common/view/confirm.dart';
 import '../../extensions/build_context_x.dart';
 import '../data/podcast_update_capsule.dart';
 import '../manager/podcast_manager.dart';
+import '../manager/podcast_updates_manager.dart';
 import '../manager/subscribed_podcasts_manager.dart';
 
 class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
@@ -39,12 +40,12 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
                 content: Text(
                   context.l10n.checkForUpdatesConfirm(subLength.toString()),
                 ),
-                onConfirm: () => di<PodcastManager>().manageUpdatesCommand.run(
+                onConfirm: () => di<PodcastUpdatesManager>().command.runAsync(
                   const PodcastUpdateCapsule.updateAll(),
                 ),
               );
             } else {
-              di<PodcastManager>().manageUpdatesCommand.run(
+              di<PodcastUpdatesManager>().command.runAsync(
                 const PodcastUpdateCapsule.updateAll(),
               );
             }

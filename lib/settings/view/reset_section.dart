@@ -3,20 +3,11 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/app_manager.dart';
-import '../../common/persistence/database.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../custom_content/view/backup_dialog.dart';
 import '../../extensions/build_context_x.dart';
-
-import '../../local_audio/manager/local_audio_manager.dart';
-import '../../local_audio/manager/pinned_album_i_ds_manager.dart';
-import '../../local_audio/manager/playlist_ids_manager.dart';
-import '../../podcasts/manager/podcast_manager.dart';
-import '../../podcasts/manager/podcast_short_info_manager.dart';
-import '../../podcasts/manager/subscribed_podcasts_manager.dart';
-import '../../radio/radio_manager.dart';
-import '../settings_manager.dart';
+import '../wipe_manager.dart';
 
 class ResetSection extends StatelessWidget {
   const ResetSection({super.key});
@@ -78,24 +69,7 @@ class WipeConfirmDialog extends StatelessWidget {
       showCloseIcon: false,
       title: Text(l10n.confirm),
       content: SizedBox(width: 350, child: Text(l10n.resetAllSettingsConfirm)),
-      onConfirm: () async {
-        await di<PodcastManager>().wipeCommand.runAsync();
-        await di<RadioManager>().wipeCommand.runAsync();
-        await di<SettingsManager>().wipeAllSettingsCommand.runAsync();
-        await di<LocalAudioManager>().initAudiosCommand.runAsync((
-          directory: null,
-          forceInit: true,
-          forceDbOnly: false,
-        ));
-        await di<SettingsManager>().wipeAndInitLibraryCommand.runAsync();
-        await di<Database>().reclaimDiskSpace();
-        PodcastShortInfoManager.disposeAll();
-        di<PlaylistIDsManager>().command.value = [];
-        di<PinnedAlbumIDsManager>().command.value = [];
-        di<RadioManager>().toggleStarStationCommand.value = [];
-        di<SubscribedPodcastsManager>().command.value = {};
-        di<PlaylistIDsManager>().command.value = [];
-      },
+      onConfirm: () => di<WipeManager>().wipeCommand.runAsync(),
     );
   }
 }

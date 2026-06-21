@@ -3,8 +3,8 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
-import '../manager/podcast_manager.dart';
 import '../manager/podcast_short_info_manager.dart';
+import '../manager/podcast_updates_manager.dart';
 
 class PodcastPageTitle extends StatelessWidget with WatchItMixin {
   const PodcastPageTitle({super.key, required this.feedUrl});
@@ -18,8 +18,7 @@ class PodcastPageTitle extends StatelessWidget with WatchItMixin {
       param1: feedUrl,
     );
     final visible = watchValue(
-      (PodcastManager m) =>
-          m.manageUpdatesCommand.select((v) => v.contains(feedUrl)),
+      (PodcastUpdatesManager m) => m.command.select((v) => v.contains(feedUrl)),
     );
     return Badge(
       backgroundColor: context.theme.colorScheme.primary,

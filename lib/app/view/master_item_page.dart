@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/progress.dart';
-import '../../local_audio/manager/pinned_album_i_ds_manager.dart';
+import '../../local_audio/manager/pinned_album_ids_manager.dart';
 import '../../local_audio/manager/playlist_ids_manager.dart';
 import '../../podcasts/manager/subscribed_podcasts_manager.dart';
-import '../../radio/radio_manager.dart';
+import '../../radio/manager/radio_star_station_manager.dart';
 import 'create_master_items.dart';
 
 class MasterItemPage extends StatelessWidget with WatchItMixin {
@@ -23,7 +23,7 @@ class MasterItemPage extends StatelessWidget with WatchItMixin {
       (PinnedAlbumIDsManager m) => m.command.results,
     );
     final starredStationIdResults = watchValue(
-      (RadioManager m) => m.toggleStarStationCommand.results,
+      (RadioStarStationManager m) => m.command.results,
     );
     final subscribedPodcastIdResults = watchValue(
       (SubscribedPodcastsManager m) => m.command.results,
@@ -37,7 +37,7 @@ class MasterItemPage extends StatelessWidget with WatchItMixin {
     final masterItems = getAllMasterItems(
       playlistIDs: playlistIdResults.data ?? [],
       pinnedAlbumIDs: pinnedAlbumIdResults.data ?? [],
-      starredStationIDs: starredStationIdResults.data ?? [],
+      starredStationIDs: starredStationIdResults.data ?? {},
       subscribedPodcastFeedUrls:
           subscribedPodcastIdResults.data?.toList() ?? [],
     );

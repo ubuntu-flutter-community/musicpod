@@ -3,13 +3,13 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i8;
+import 'dart:async' as _i7;
 
 import 'package:flutter_it/flutter_it.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:musicpod/common/data/audio.dart' as _i9;
+import 'package:musicpod/common/data/audio.dart' as _i8;
 import 'package:musicpod/podcasts/data/podcast_episode_filter.dart' as _i6;
-import 'package:musicpod/podcasts/data/podcast_update_capsule.dart' as _i7;
+import 'package:musicpod/podcasts/data/podcast_short_info.dart' as _i9;
 import 'package:musicpod/podcasts/manager/podcast_manager.dart' as _i4;
 import 'package:podcast_search/podcast_search.dart' as _i5;
 import 'package:safe_change_notifier/safe_change_notifier.dart' as _i3;
@@ -118,17 +118,6 @@ class MockPodcastManager extends _i1.Mock implements _i4.PodcastManager {
           as _i3.SafeValueNotifier<_i6.PodcastEpisodeFilter>);
 
   @override
-  _i2.Command<_i7.PodcastUpdateCapsule, Set<String>> get manageUpdatesCommand =>
-      (super.noSuchMethod(
-            Invocation.getter(#manageUpdatesCommand),
-            returnValue: _FakeCommand_0<_i7.PodcastUpdateCapsule, Set<String>>(
-              this,
-              Invocation.getter(#manageUpdatesCommand),
-            ),
-          )
-          as _i2.Command<_i7.PodcastUpdateCapsule, Set<String>>);
-
-  @override
   _i2.Command<void, void> get wipeCommand =>
       (super.noSuchMethod(
             Invocation.getter(#wipeCommand),
@@ -184,39 +173,47 @@ class MockPodcastManager extends _i1.Mock implements _i4.PodcastManager {
   );
 
   @override
-  _i8.Future<void> updateAudioDuration(_i9.Audio? audio) =>
+  _i7.Future<void> updateAudioDuration(_i8.Audio? audio) =>
       (super.noSuchMethod(
             Invocation.method(#updateAudioDuration, [audio]),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i7.Future<void>.value(),
+            returnValueForMissingStub: _i7.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i7.Future<void>);
 
   @override
-  _i8.Future<void> togglePodcastSubscription({required String? feedUrl}) =>
+  _i7.Future<void> togglePodcastSubscription({required String? feedUrl}) =>
       (super.noSuchMethod(
             Invocation.method(#togglePodcastSubscription, [], {
               #feedUrl: feedUrl,
             }),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i7.Future<void>.value(),
+            returnValueForMissingStub: _i7.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i7.Future<void>);
 
   @override
-  _i8.Future<Set<String>> getSubscribedPodcasts() =>
+  _i7.Future<Set<String>> getSubscribedPodcasts() =>
       (super.noSuchMethod(
             Invocation.method(#getSubscribedPodcasts, []),
-            returnValue: _i8.Future<Set<String>>.value(<String>{}),
+            returnValue: _i7.Future<Set<String>>.value(<String>{}),
           )
-          as _i8.Future<Set<String>>);
+          as _i7.Future<Set<String>>);
 
   @override
-  _i8.Future<void> loadDownloads() =>
+  _i7.Future<void> loadDownloads() =>
       (super.noSuchMethod(
             Invocation.method(#loadDownloads, []),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i7.Future<void>.value(),
+            returnValueForMissingStub: _i7.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i7.Future<void>);
+
+  @override
+  _i7.Future<_i9.PodcastShortInfo?> getPodcastShortInfo(String? feedUrl) =>
+      (super.noSuchMethod(
+            Invocation.method(#getPodcastShortInfo, [feedUrl]),
+            returnValue: _i7.Future<_i9.PodcastShortInfo?>.value(),
+          )
+          as _i7.Future<_i9.PodcastShortInfo?>);
 }
