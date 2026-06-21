@@ -12,10 +12,7 @@ class PinnedAlbumIDsManager {
     );
     command.run();
 
-    localAudioManager.initAudiosCommand.listen((_, sub) {
-      command.run();
-      sub.cancel();
-    });
+    localAudioManager.initAudiosCommand.listen((_, _) => command.value = []);
   }
 
   late final Command<int?, List<int>> command;

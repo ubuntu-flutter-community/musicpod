@@ -13,10 +13,7 @@ class RadioStarStationManager {
       return radioManager.getStarredStations();
     }, initialValue: {});
 
-    radioManager.wipeCommand.listen((result, sub) {
-      command.run();
-      sub.cancel();
-    });
+    radioManager.wipeCommand.listen((_, _) => command.value = {});
 
     command.run();
   }
