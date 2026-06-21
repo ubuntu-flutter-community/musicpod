@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../extensions/build_context_x.dart';
-import '../../radio/radio_manager.dart';
+import '../../radio/manager/radio_star_station_manager.dart';
 import '../data/audio.dart';
 import 'animated_like_icon.dart';
 
@@ -14,11 +14,9 @@ class StaredStationIconButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final radioManager = di<RadioManager>();
-
     final isStarredStation = watchValue(
-      (RadioManager m) =>
-          m.toggleStarStationCommand.select((p) => p.contains(audio?.uuid)),
+      (RadioStarStationManager m) =>
+          m.command.select((p) => p.contains(audio?.uuid)),
     );
 
     return IconButton(
@@ -29,7 +27,7 @@ class StaredStationIconButton extends StatelessWidget with WatchItMixin {
       icon: AnimatedStar(isStarred: isStarredStation, color: color),
       onPressed: audio?.uuid == null
           ? null
-          : () => radioManager.toggleStarStationCommand.run(audio),
+          : () => di<RadioStarStationManager>().command.run(audio),
       color: color,
     );
   }

@@ -30,10 +30,6 @@ Future<void> main() async {
       expect(host != null, true);
     });
 
-    test('loadTags', () {
-      expect(service.tags?.any((e) => e.name == 'metal'), true);
-    });
-
     test('find6forty', () async {
       final result = await service.search(name: '6forty', limit: 10);
       expect(result?.isNotEmpty, true);

@@ -7,9 +7,8 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../common/data/audio.dart';
 import '../data/podcast_episode_filter.dart';
-import '../data/podcast_update_capsule.dart';
+import '../data/podcast_short_info.dart';
 import '../podcast_service.dart';
-import 'episodes_manager.dart';
 import 'podcast_genre_manager.dart';
 
 @Injectable(cache: true)
@@ -57,28 +56,8 @@ class PodcastManager {
   Future<void> updateAudioDuration(Audio audio) =>
       _podcastService.updateAudioDuration(audio);
 
-  late final Command<PodcastUpdateCapsule, Set<String>> manageUpdatesCommand =
-      Command.createAsyncWithProgress((capsule, handle) async {
-        if (capsule.type == PodcastUpdateType.remove) {
-          await _podcastService.removePodcastUpdates(
-            feedUrls: capsule.feedUrls,
-            updateProgress: handle.updateProgress,
-          );
-          return _podcastService.getPodcastUpdates();
-        }
-
-        final updates = await _podcastService.checkForUpdates(
-          feedUrls: capsule.feedUrls,
-          updateProgress: handle.updateProgress,
-        );
-
-        for (final feedUrl in updates) {
-          await di<EpisodesManager>(param1: feedUrl).command.runAsync();
-        }
-
-        return updates;
-      }, initialValue: {});
-
+  // TODO: when the downloads/updates filters are moved to the episode loading
+  // we can move this command to its own manager
   late final Command<void, void> wipeCommand =
       Command.createAsyncNoParamNoResult(
         _podcastService.wipeAndBuildPodcastLibrary,
@@ -93,4 +72,7 @@ class PodcastManager {
   Future<void> loadDownloads() => _podcastService.loadDownloads();
 
   Set<String> get feedsWithDownloads => _podcastService.feedsWithDownloads;
+
+  Future<PodcastShortInfo?> getPodcastShortInfo(String feedUrl) =>
+      _podcastService.getPodcastShortInfo(feedUrl);
 }

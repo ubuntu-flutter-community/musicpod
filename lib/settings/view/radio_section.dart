@@ -8,7 +8,7 @@ import '../../common/view/icons.dart';
 import '../../custom_content/custom_content_manager.dart';
 import '../../extensions/build_context_x.dart';
 
-import '../../radio/radio_manager.dart';
+import '../../radio/manager/radio_manager.dart';
 
 class RadioSection extends StatelessWidget with WatchItMixin {
   const RadioSection({super.key});

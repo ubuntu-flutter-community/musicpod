@@ -15,8 +15,7 @@ class TagAutoComplete extends StatelessWidget with WatchItMixin {
     this.tags,
     required this.value,
     this.textStyle,
-    required this.addFav,
-    required this.removeFav,
+    required this.toggleFav,
     this.favs,
     this.suffixIcon,
     this.contentPadding,
@@ -27,8 +26,7 @@ class TagAutoComplete extends StatelessWidget with WatchItMixin {
   final Set<String>? favs;
   final Tag? value;
   final TextStyle? textStyle;
-  final void Function(Tag? tag) addFav;
-  final void Function(Tag? tag) removeFav;
+  final void Function(Tag? tag) toggleFav;
   final Widget? suffixIcon;
   final EdgeInsets? contentPadding;
 
@@ -125,8 +123,7 @@ class TagAutoComplete extends StatelessWidget with WatchItMixin {
                               theme: theme,
                               t: t,
                               favs: favs,
-                              addFav: addFav,
-                              removeFav: removeFav,
+                              toggleFav: toggleFav,
                             );
                           },
                         );
@@ -162,8 +159,7 @@ class _TagTile extends StatelessWidget {
     required this.theme,
     required this.t,
     required this.favs,
-    required this.addFav,
-    required this.removeFav,
+    required this.toggleFav,
     required this.onSelected,
   });
 
@@ -172,8 +168,7 @@ class _TagTile extends StatelessWidget {
   final ThemeData theme;
   final Tag t;
   final Set<String>? favs;
-  final void Function(Tag? tag) addFav;
-  final void Function(Tag? tag) removeFav;
+  final void Function(Tag? tag) toggleFav;
   final void Function(Tag tag) onSelected;
 
   @override
@@ -193,9 +188,7 @@ class _TagTile extends StatelessWidget {
           iconSize: 20,
           shape: const RoundedRectangleBorder(),
         ),
-        onPressed: () {
-          favs?.contains(t.name) == false ? addFav(t) : removeFav(t);
-        },
+        onPressed: () => toggleFav(t),
         icon: Icon(
           favs?.contains(t.name) == true ? Iconz.starFilled : Iconz.star,
         ),

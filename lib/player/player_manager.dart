@@ -178,4 +178,6 @@ class PlayerManager extends SafeChangeNotifier {
   Future<void> stop() => _playerService.stop();
 
   void toggleShowQueue() => setShowQueue(!_showQueue);
+
+  Future<void> resetPlayerState() => _playerService.resetPlayerState();
 }

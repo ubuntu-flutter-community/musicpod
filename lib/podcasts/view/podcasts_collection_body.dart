@@ -19,6 +19,7 @@ import '../data/podcast_update_capsule.dart';
 import '../manager/podcast_clean_manager.dart';
 import '../manager/podcast_feeds_with_downloads_manager.dart';
 import '../manager/podcast_manager.dart';
+import '../manager/podcast_updates_manager.dart';
 import '../manager/subscribed_podcasts_manager.dart';
 import 'podcast_collection_card.dart';
 import 'podcast_collection_control_panel.dart';
@@ -36,7 +37,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
       (SubscribedPodcastsManager m) => m.command.results,
     );
     final subs = subsResults.data ?? {};
-    final updates = watchValue((PodcastManager m) => m.manageUpdatesCommand);
+    final updates = watchValue((PodcastUpdatesManager m) => m.command);
     final updatesOnly = watchValue((PodcastManager m) => m.updatesOnly);
     final downloadsOnly = watchValue((PodcastManager m) => m.downloadsOnly);
     final subsLength = subs.length;
@@ -46,10 +47,10 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
     final feedsWithDownloadLength = feedsWithDownloads.length;
 
     final checkingForUpdates = watchValue(
-      (PodcastManager m) => m.manageUpdatesCommand.isRunning,
+      (PodcastUpdatesManager m) => m.command.isRunning,
     );
     final progress = watchValue(
-      (PodcastManager m) => m.manageUpdatesCommand.progress,
+      (PodcastUpdatesManager m) => m.command.progress,
     );
 
     if (subsResults.hasError) {
@@ -79,12 +80,12 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
             content: Text(
               context.l10n.checkForUpdatesConfirm(subsLength.toString()),
             ),
-            onConfirm: () => di<PodcastManager>().manageUpdatesCommand.runAsync(
+            onConfirm: () => di<PodcastUpdatesManager>().command.runAsync(
               const PodcastUpdateCapsule.updateAll(),
             ),
           );
         } else {
-          await di<PodcastManager>().manageUpdatesCommand.runAsync(
+          await di<PodcastUpdatesManager>().command.runAsync(
             const PodcastUpdateCapsule.updateAll(),
           );
         }

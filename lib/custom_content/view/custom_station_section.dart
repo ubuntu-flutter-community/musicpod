@@ -7,7 +7,8 @@ import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../radio/radio_manager.dart';
+import '../../radio/manager/radio_star_station_manager.dart';
+import '../../radio/manager/radio_manager.dart';
 import '../../search/search_manager.dart';
 
 class CustomStationSection extends StatefulWidget {
@@ -93,8 +94,9 @@ class _AddStationDialogState extends State<CustomStationSection> {
 
                                     return;
                                   } else {
-                                    di<RadioManager>().toggleStarStationCommand
-                                        .run(v);
+                                    di<RadioStarStationManager>().command.run(
+                                      v,
+                                    );
                                   }
                                 });
                           },

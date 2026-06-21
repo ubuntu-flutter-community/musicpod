@@ -21,7 +21,7 @@ class RadioService {
   RadioBrowserApi? _radioBrowserApi;
 
   Future<String?> connectToServer({List<String>? newHosts}) async {
-    if (_radioBrowserApi?.host != null && _tags?.isNotEmpty == true) {
+    if (_radioBrowserApi?.host != null) {
       return _radioBrowserApi?.host;
     }
 
@@ -37,12 +37,8 @@ class RadioService {
     for (var host in potentialHosts) {
       try {
         _radioBrowserApi = RadioBrowserApi.fromHost(host);
-        // Having the API set up is not enough
-        // we need to make an actual request to check if the server is responsive
-        // so since we need the tags anyways from this point on
-        // we can just try to load them and if it works, we know the server is responsive and has the data we need
-        _tags = await _loadTags();
-        if (_radioBrowserApi?.host != null && _tags?.isNotEmpty == true) {
+
+        if (_radioBrowserApi?.host != null) {
           break;
         }
       } on Exception catch (e) {
@@ -50,9 +46,8 @@ class RadioService {
       }
     }
 
-    if (_radioBrowserApi?.host == null || _tags?.isEmpty != false) {
+    if (_radioBrowserApi?.host == null) {
       _radioBrowserApi = null;
-      _tags = null;
       throw RadioBrowserServerUnavailableException();
     }
 
@@ -176,12 +171,8 @@ class RadioService {
     return (_response?.items ?? []).map((e) => Audio.fromStation(e)).toList();
   }
 
-  List<Tag>? _tags;
-  List<Tag>? get tags => _tags;
-  Future<List<Tag>?>? _loadTags({String? filter, int? limit}) async {
-    if (_radioBrowserApi == null) return null;
-    if (_tags?.isNotEmpty == true) return _tags;
-    RadioBrowserListResponse<Tag>? response;
+  Future<List<Tag>> loadTags({String? filter, int? limit}) async {
+    RadioBrowserListResponse<Tag> response;
 
     try {
       response = await _radioBrowserApi!
@@ -200,13 +191,12 @@ class RadioService {
               throw LoadTagsTimeoutException();
             },
           );
-      _tags = response.items;
     } on Exception catch (e, s) {
       printErrorInDebugMode(e, trace: s, tag: '$RadioService');
       throw LoadTagsFailedException(e.toString());
     }
 
-    return _tags;
+    return response.items;
   }
 
   Future<void> clickStation(String? uuid) async {
@@ -273,75 +263,46 @@ class RadioService {
 
   // ── Starred stations ──
 
-  List<String> _starredStations = [];
-  List<String> get starredStations => _starredStations;
-  int get starredStationsLength => _starredStations.length;
+  Future<Set<String>> getStarredStations() => _dao.getStarredStations();
 
-  Future<void> loadStarredStations() async {
-    _starredStations = await _dao.getStarredStations();
+  Future<void> toggleStarredStation(Audio audio) async {
+    if (audio.uuid == null) {
+      printInfoInDebugMode(
+        'Cannot toggle starred station with null uuid.',
+        tag: '$RadioService',
+      );
+      return;
+    }
+
+    final isStarred = await getStarredStations().then(
+      (uuids) => uuids.contains(audio.uuid!),
+    );
+    if (isStarred) {
+      await _dao.deleteStarredStation(audio.uuid!);
+    } else {
+      await _dao.insertStarredStation(audio);
+    }
   }
-
-  Future<void> addStarredStation(Audio audio) async {
-    final uuid = audio.uuid;
-    if (uuid == null || _starredStations.contains(uuid)) return;
-
-    await _dao.insertStarredStation(audio);
-    _starredStations.add(uuid);
-  }
-
-  Future<void> addStarredStations(List<String?> uuids) async {
-    if (uuids.isEmpty) return;
-    final newUuids = uuids
-        .whereType<String>()
-        .where((uuid) => uuid.isNotEmpty && !_starredStations.contains(uuid))
-        .toList();
-    if (newUuids.isEmpty) return;
-    _starredStations.addAll(newUuids);
-    await _dao.insertStarredStations(newUuids);
-  }
-
-  Future<void> removeStarredStation(String uuid) async {
-    if (!_starredStations.contains(uuid)) return;
-
-    await _dao.deleteStarredStation(uuid);
-    _starredStations.remove(uuid);
-  }
-
-  bool isStarredStation(String? uuid) => _starredStations.contains(uuid);
 
   // ── Fav radio tags ──
 
-  Set<String> _favRadioTags = {};
-  Set<String> get favRadioTags => _favRadioTags;
-  bool isFavTag(String value) => _favRadioTags.contains(value);
+  Future<Set<String>> getFavRadioTags() => _dao.getFavRadioTags();
 
-  Future<void> loadFavRadioTags() async {
-    _favRadioTags = await _dao.getFavRadioTags();
+  Future<void> toggleFavRadioTag(String name) async {
+    final favTags = await getFavRadioTags();
+    if (favTags.contains(name)) {
+      await _dao.deleteFavoriteRadioTag(name);
+    } else {
+      await _dao.insertFavoriteRadioTag(name);
+    }
   }
 
-  Future<void> addFavRadioTag(String name) async {
-    if (_favRadioTags.contains(name)) return;
-    _favRadioTags.add(name);
-    await _dao.insertFavoriteRadioTag(name);
-  }
+  Future<void> wipeRadioLibrary() => _dao.deleteRadioTables();
 
-  Future<void> removeFavRadioTag(String name) async {
-    if (!_favRadioTags.contains(name)) return;
-    _favRadioTags.remove(name);
-    await _dao.deleteFavoriteRadioTag(name);
-  }
+  Future<bool> isStarredStation(String pageId) => _dao.isStationStarred(pageId);
 
-  Future<void> wipeAndBuildRadioLibrary() async {
-    await _wipeRadioLibrary();
-    await loadStarredStations();
-    await loadFavRadioTags();
-  }
-
-  Future<void> _wipeRadioLibrary() async {
-    await _dao.deleteRadioTables();
-    _favRadioTags.clear();
-    _starredStations.clear();
-  }
+  Future<void> addStarredStations(List<String> starredStations) =>
+      _dao.insertStarredStations(starredStations);
 }
 
 class FindRadioBrowserHostsTimeoutException implements Exception {

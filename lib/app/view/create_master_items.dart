@@ -27,7 +27,7 @@ import 'master_item.dart';
 Iterable<MasterItem> getAllMasterItems({
   required List<String> playlistIDs,
   required List<int> pinnedAlbumIDs,
-  required List<String> starredStationIDs,
+  required Set<String> starredStationIDs,
   required List<String> subscribedPodcastFeedUrls,
 }) => [
   ...permanentMasterItems,
@@ -102,7 +102,7 @@ Iterable<MasterItem> createPlaylistMasterItems(List<String> playlistIDs) =>
     );
 
 Iterable<MasterItem> createStarredStationsMasterItems(
-  List<String> starredStationIDs,
+  Set<String> starredStationIDs,
 ) => starredStationIDs.map(
   (uuid) => MasterItem(
     titleBuilder: (_) => StationTitle(uuid: uuid),

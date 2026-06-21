@@ -100,7 +100,7 @@ class LocalAudioService {
         updateProgress?.call(1);
         return;
       } else {
-        await _wipeLocalAudioCachesAndTables();
+        await _wipeLocalAudioLibrary();
       }
 
       final dir = newDirectory ?? _settingsService.getString(SPKeys.directory);
@@ -134,8 +134,7 @@ class LocalAudioService {
 
   // ── Local Audio Library ──
 
-  Future<void> _wipeLocalAudioCachesAndTables() =>
-      _dao.wipeAllLocalAudioTables();
+  Future<void> _wipeLocalAudioLibrary() => _dao.wipeAllLocalAudioTables();
 
   // ── Liked Audios ──
 

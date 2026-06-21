@@ -23,6 +23,7 @@ import '../manager/download_manager.dart';
 import '../manager/episodes_manager.dart';
 import '../manager/podcast_genre_manager.dart';
 import '../manager/podcast_manager.dart';
+import '../manager/podcast_updates_manager.dart';
 import '../manager/subscribed_podcasts_manager.dart';
 import 'podcast_error_page.dart';
 import 'podcast_loading_page.dart';
@@ -46,7 +47,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
         ).updateCommand.run((genre: genre!));
       }
       cleanUpLocalAudioCaches();
-      di<PodcastManager>().manageUpdatesCommand.run(
+      di<PodcastUpdatesManager>().command.run(
         PodcastUpdateCapsule(
           feedUrls: [feedUrl],
           type: PodcastUpdateType.remove,
@@ -168,7 +169,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
       body: RefreshIndicator(
         onRefresh:
             di<SubscribedPodcastsManager>().command.value.contains(feedUrl)
-            ? () async => di<PodcastManager>().manageUpdatesCommand
+            ? () async => di<PodcastUpdatesManager>().command
                   .runAsync(
                     PodcastUpdateCapsule(
                       feedUrls: [feedUrl],

@@ -21,6 +21,7 @@ import '../../local_audio/view/artist_page.dart';
 import '../../player/player_manager.dart';
 import '../../podcasts/data/podcast_update_capsule.dart';
 import '../../podcasts/manager/podcast_manager.dart';
+import '../../podcasts/manager/podcast_updates_manager.dart';
 import '../../podcasts/manager/subscribed_podcasts_manager.dart';
 import '../../settings/settings_manager.dart';
 import '../data/audio.dart';
@@ -240,7 +241,7 @@ class AudioTileOptionButton extends StatelessWidget {
                   audios.first.feedUrl!,
                 ))
               PopupMenuItem(
-                onTap: () => di<PodcastManager>().manageUpdatesCommand.runAsync(
+                onTap: () => di<PodcastUpdatesManager>().command.runAsync(
                   PodcastUpdateCapsule(
                     type: PodcastUpdateType.update,
                     feedUrls: [audios.first.feedUrl!],

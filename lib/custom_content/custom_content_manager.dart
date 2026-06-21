@@ -253,7 +253,7 @@ class CustomContentManager {
     final body = <OpmlOutline>[];
     final category = OpmlOutlineBuilder();
 
-    for (var station in _radioService.starredStations) {
+    for (var station in await _radioService.getStarredStations()) {
       category.addChild(OpmlOutlineBuilder().text(station).build());
     }
 

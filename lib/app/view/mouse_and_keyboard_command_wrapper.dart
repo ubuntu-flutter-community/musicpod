@@ -5,11 +5,12 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/data/audio_type.dart';
 import '../../player/player_manager.dart';
-import '../page_ids.dart';
+import '../../radio/manager/radio_manager.dart';
 import '../../search/search_manager.dart';
 import '../app_manager.dart';
-import 'back_gesture.dart';
+import '../page_ids.dart';
 import '../routing_manager.dart';
+import 'back_gesture.dart';
 
 class MouseAndKeyboardCommandWrapper extends StatelessWidget {
   const MouseAndKeyboardCommandWrapper({super.key, required this.child});
@@ -107,7 +108,7 @@ class MouseAndKeyboardCommandWrapper extends StatelessWidget {
             if (audio == null) return;
 
             if (audio.isRadio) {
-              di<SearchManager>().findSimilarStationCommand.run(audio);
+              di<RadioManager>().findSimilarStationCommand.run(audio);
             } else {
               playerManager.playNext();
             }

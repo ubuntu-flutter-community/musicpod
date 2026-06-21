@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../extensions/build_context_x.dart';
-import '../station_manager.dart';
+import '../manager/station_manager.dart';
 
 class StationTitle extends StatelessWidget with WatchItMixin {
   const StationTitle({super.key, required this.uuid});

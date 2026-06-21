@@ -1,15 +1,21 @@
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
-import '../local_audio_service.dart';
+
+import 'local_audio_manager.dart';
 
 @lazySingleton
 class PinnedAlbumIDsManager {
-  PinnedAlbumIDsManager({required LocalAudioService localAudioService}) {
+  PinnedAlbumIDsManager({required LocalAudioManager localAudioManager}) {
     command = Command.createAsync(
-      localAudioService.togglePinAlbum,
+      localAudioManager.togglePinAlbum,
       initialValue: [],
     );
     command.run();
+
+    localAudioManager.initAudiosCommand.listen((_, sub) {
+      command.run();
+      sub.cancel();
+    });
   }
 
   late final Command<int?, List<int>> command;
