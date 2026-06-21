@@ -42,14 +42,13 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
       child: IconButton(
         style: IconButton.styleFrom(
           shape: const CircleBorder(),
-
           minimumSize: Size(
-            context.buttonHeight * 1.2,
-            context.buttonHeight * 1.2,
+            context.buttonHeight * 1.4,
+            context.buttonHeight * 1.4,
           ),
           maximumSize: Size(
-            context.buttonHeight * 1.2,
-            context.buttonHeight * 1.2,
+            context.buttonHeight * 1.4,
+            context.buttonHeight * 1.4,
           ),
           backgroundColor: theme.colorScheme.inverseSurface,
           foregroundColor: theme.colorScheme.onInverseSurface,

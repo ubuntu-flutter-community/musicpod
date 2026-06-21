@@ -43,7 +43,7 @@ import 'local_audio/find_all_artists_manager.dart' as _i142;
 import 'local_audio/find_all_genres_manager.dart' as _i486;
 import 'local_audio/find_all_tracks_manager.dart' as _i897;
 import 'local_audio/find_artist_of_album_manager.dart' as _i234;
-import 'local_audio/find_playlist_manager.dart' as _i305;
+import 'local_audio/playlist_manager.dart' as _i305;
 import 'local_audio/find_titles_of_artist_manager.dart' as _i292;
 import 'local_audio/liked_audios_manager.dart' as _i215;
 import 'local_audio/local_audio_manager.dart' as _i688;

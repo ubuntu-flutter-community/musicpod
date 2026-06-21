@@ -79,7 +79,6 @@ dependencies:
   pls: ^1.1.0
   podcast_search: ^0.7.15
   radio_browser_api: ^2.0.0+1
-  reorderableitemsview: ^2.0.1
   safe_change_notifier: ^0.4.0+1
   scroll_to_index: ^3.0.1
   shared_preferences: ^2.5.5

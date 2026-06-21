@@ -11,7 +11,7 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../settings/settings_manager.dart';
 import '../find_all_tracks_manager.dart';
-import '../find_playlist_manager.dart';
+import '../playlist_manager.dart';
 import '../local_audio_manager.dart';
 import '../playlist_action.dart';
 import '../playlist_ids_manager.dart';
@@ -24,7 +24,10 @@ class PlaylistAddAudioAutoCompleteOrShrink extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    final show = watchValue((LocalAudioManager m) => m.showPlaylistAddAudios);
+    final show = watchValue(
+      (PlaylistManager m) => m.showPlaylistAddAudios,
+      param1: pageId,
+    );
 
     return AnimatedContainer(
       width: 400,

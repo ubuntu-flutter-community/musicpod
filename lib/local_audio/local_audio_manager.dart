@@ -17,22 +17,10 @@ class LocalAudioManager {
 
   final LocalAudioService _localAudioService;
 
-  final allowReorder = SafeValueNotifier<bool>(false);
-  void setAllowReorder(bool value) {
-    if (value == allowReorder.value) return;
-    allowReorder.value = value;
-  }
-
   final useArtistGridView = SafeValueNotifier<bool>(true);
   void setUseArtistGridView(bool value) {
     if (value == useArtistGridView.value) return;
     useArtistGridView.value = value;
-  }
-
-  final showPlaylistAddAudios = SafeValueNotifier<bool>(false);
-  void setShowPlaylistAddAudios(bool value) {
-    if (value == showPlaylistAddAudios.value) return;
-    showPlaylistAddAudios.value = value;
   }
 
   Future<int?> findAlbumId({required String artist, required String album}) =>
