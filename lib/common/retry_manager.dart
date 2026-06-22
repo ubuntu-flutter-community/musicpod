@@ -8,7 +8,7 @@ import 'keep_alive_registry.dart';
 
 @injectable
 class RetryManager {
-  late final RetryCapsule _capsule;
+  late RetryCapsule _capsule;
 
   RetryManager._({required RetryCapsule capsule}) {
     _capsule = capsule;

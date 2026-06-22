@@ -50,6 +50,7 @@ class LyricsViewer extends StatelessWidget with WatchItMixin {
       artist: artist,
       tryToFetchOnline: tryToFetchOnline,
       autoScroll: audio?.isLocal ?? false,
+      highlightCurrentLine: audio?.isLocal ?? false,
     );
   }
 }
@@ -61,6 +62,7 @@ class _PlayerLyrics extends StatefulWidget with WatchItStatefulWidgetMixin {
     this.artist,
     required this.tryToFetchOnline,
     required this.autoScroll,
+    this.highlightCurrentLine = true,
   });
 
   final Audio? audio;
@@ -68,6 +70,7 @@ class _PlayerLyrics extends StatefulWidget with WatchItStatefulWidgetMixin {
   final String? artist;
   final bool tryToFetchOnline;
   final bool autoScroll;
+  final bool highlightCurrentLine;
 
   @override
   State<_PlayerLyrics> createState() => _PlayerLyricsState();
@@ -118,7 +121,7 @@ class _PlayerLyricsState extends State<_PlayerLyrics> {
                     StackTrace.current,
                 errorTextStyle: context.textTheme.bodyLarge,
                 retryCapsule: RetryCapsule(
-                  retryViewId: '$LyricsViewer',
+                  retryViewId: 'lyrics',
                   onRetry: () => di<LyricsManager>().command.runRestricted(
                     param: LyricsAndArtParam(
                       audio: widget.audio,
@@ -135,7 +138,11 @@ class _PlayerLyricsState extends State<_PlayerLyrics> {
             onNullData: (param) => const NoLyricsFound(),
             onData: (result, param) =>
                 result!.lrcLines != null && result.lrcLines!.isNotEmpty
-                ? _LrcLineViewer(lrc: result.lrcLines!, autoScroll: _autoScroll)
+                ? _LrcLineViewer(
+                    lrc: result.lrcLines!,
+                    autoScroll: _autoScroll,
+                    highlightCurrentLine: widget.highlightCurrentLine,
+                  )
                 : result.plainLyrics != null && result.plainLyrics!.isNotEmpty
                 ? SingleChildScrollView(
                     padding: const EdgeInsets.all(kLargestSpace),
@@ -191,10 +198,15 @@ class NoLyricsFound extends StatelessWidget {
 }
 
 class _LrcLineViewer extends StatefulWidget with WatchItStatefulWidgetMixin {
-  const _LrcLineViewer({required this.lrc, required this.autoScroll});
+  const _LrcLineViewer({
+    required this.lrc,
+    required this.autoScroll,
+    this.highlightCurrentLine = true,
+  });
 
   final bool autoScroll;
   final List<LrcLine> lrc;
+  final bool highlightCurrentLine;
 
   @override
   State<_LrcLineViewer> createState() => _LrcLineViewerState();
@@ -222,7 +234,7 @@ class _LrcLineViewerState extends State<_LrcLineViewer> {
       final maybe = widget.lrc.firstWhereOrNull(
         (e) => e.timestamp.inSeconds == m.position?.inSeconds,
       );
-      if (maybe != null) {
+      if (maybe != null && widget.highlightCurrentLine) {
         _selectedIndex = widget.lrc.indexOf(maybe);
       }
 
