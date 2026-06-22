@@ -95,6 +95,7 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
           if (error != null) {
             return ErrorRetryBody(
               error: error,
+              stackTrace: stationResult.stackTrace ?? StackTrace.current,
               retryCapsule: RetryCapsule(
                 retryViewId: uuid,
                 onRetry: () => di<StationManager>(

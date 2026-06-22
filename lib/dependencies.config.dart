@@ -49,7 +49,7 @@ import 'local_audio/manager/find_titles_of_artist_manager.dart' as _i665;
 import 'local_audio/manager/liked_audios_manager.dart' as _i372;
 import 'local_audio/manager/local_audio_manager.dart' as _i76;
 import 'local_audio/manager/local_cover_manager.dart' as _i612;
-import 'local_audio/manager/pinned_album_ids_manager.dart' as _i947;
+import 'local_audio/manager/pinned_album_ids_manager.dart' as _i1030;
 import 'local_audio/manager/playlist_ids_manager.dart' as _i924;
 import 'local_audio/manager/playlist_manager.dart' as _i438;
 import 'local_audio/persistence/local_audio_dao.dart' as _i688;
@@ -169,15 +169,14 @@ extension GetItInjectableX on _i174.GetIt {
       ),
       dispose: (i) => i.dispose(),
     );
+    gh.factoryParam<_i569.RetryManager, _i327.RetryCapsule, dynamic>(
+      (capsule, _) => _i569.RetryManager.create(capsule: capsule),
+    );
     gh.lazySingleton<_i57.NotificationsService>(
       () => _i57.NotificationsService(localNotifier: gh<_i526.LocalNotifier>()),
     );
     gh.lazySingleton<_i57.LocalCoverService>(
       () => _i57.LocalCoverService(dao: gh<_i688.LocalAudioDao>()),
-    );
-    gh.factoryParam<_i569.RetryManager, _i327.RetryCapsule, dynamic>(
-      (retryCapsule, _) =>
-          _i569.RetryManager.create(retryCapsule: retryCapsule),
     );
     gh.lazySingleton<_i616.DownloadService>(
       () => _i616.DownloadService(
@@ -455,8 +454,8 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioManager: gh<_i76.LocalAudioManager>(),
       ),
     );
-    gh.lazySingleton<_i947.PinnedAlbumIDsManager>(
-      () => _i947.PinnedAlbumIDsManager(
+    gh.lazySingleton<_i1030.PinnedAlbumIDsManager>(
+      () => _i1030.PinnedAlbumIDsManager(
         localAudioManager: gh<_i76.LocalAudioManager>(),
       ),
     );

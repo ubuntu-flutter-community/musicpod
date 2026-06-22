@@ -4754,6 +4754,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'LrcLib'**
   String get onlineLyricsSourceLrcLib;
+
+  /// No description provided for @appCanNotConnectToHost.
+  ///
+  /// In en, this message translates to:
+  /// **'{appName} can not connect to {host}. Are you connected to the internet?'**
+  String appCanNotConnectToHost(String appName, String host);
 }
 
 class _AppLocalizationsDelegate

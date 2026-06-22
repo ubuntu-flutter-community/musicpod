@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:podcast_search/podcast_search.dart';
 
+import '../app/app_config.dart';
 import '../l10n/app_localizations.dart';
 import '../lyrics/lyrics_service.dart';
 import '../podcasts/podcast_service.dart';
@@ -35,6 +37,16 @@ extension ObjectX on Object? {
     FetchOnlineLyricsTimeoutException() =>
       l10n.fetchingLyricsOnlineTimeoutMessage,
     SocketException() => l10n.lookUpRadioBrowserHostsFailed,
+    NoLyrcicsFoundException() => l10n.noLyricsFound,
+    DioException() =>
+      (this as DioException).error is SocketException
+          ? l10n.appCanNotConnectToHost(
+              AppConfig.appTitle,
+              '${(this as DioException).requestOptions.uri.host}',
+            )
+          : (this as DioException).response?.statusCode == 404
+          ? l10n.noLyricsFound
+          : (this as DioException).message ?? (this as DioException).toString(),
     _ => this.toString(),
   };
 }

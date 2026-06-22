@@ -923,5 +923,16 @@
     "fetchingLyricsOnlineFailed": "Fetching lyrics online failed. This might be a server issue or the song might not be available",
     "onlineLyricsSourceTitle": "Online lyrics source",
     "onlineLyricsSourceDescription": "Select the source for online lyrics.",
-    "onlineLyricsSourceLrcLib": "LrcLib"
+    "onlineLyricsSourceLrcLib": "LrcLib",
+    "appCanNotConnectToHost": "{appName} can not connect to {host}. Are you connected to the internet?",
+    "@appCanNotConnectToHost": {
+        "placeholders": {
+            "appName": {
+                "type": "String"
+            },
+            "host": {
+                "type": "String"
+            }
+        }
+    }
 }

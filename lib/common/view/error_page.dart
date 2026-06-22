@@ -9,6 +9,7 @@ import 'package:yaru/yaru.dart';
 import '../../app/app_config.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/object_x.dart';
 import '../logging.dart';
 
 class ErrorPage extends StatelessWidget {
@@ -50,10 +51,11 @@ class ErrorBody extends StatelessWidget with WatchItMixin {
   const ErrorBody({
     super.key,
     required this.error,
-    required this.stackTrace,
+    this.stackTrace,
     this.onRetry,
     this.onRetryLabel,
     this.addQuitButton = false,
+    this.errorTextStyle,
   });
 
   final Object? error;
@@ -61,12 +63,13 @@ class ErrorBody extends StatelessWidget with WatchItMixin {
   final void Function()? onRetry;
   final String? onRetryLabel;
   final bool addQuitButton;
+  final TextStyle? errorTextStyle;
 
   @override
   Widget build(BuildContext context) {
     callOnceAfterThisBuild(
       (_) => printErrorInDebugMode(
-        'ErrorPage: ${error.toString()} \n StackTrace: ${stackTrace.toString()}',
+        '${error.toString()} \n StackTrace: ${(stackTrace ?? StackTrace.current).toString()}',
         tag: '$ErrorPage',
         trace: stackTrace,
       ),
@@ -80,15 +83,14 @@ class ErrorBody extends StatelessWidget with WatchItMixin {
           child: ListView(
             shrinkWrap: true,
             children: [
-              const Icon(Icons.bug_report_outlined, size: 100),
-              const SizedBox(height: kMediumSpace),
-              YaruExpandable(
-                header: Text(
-                  error.toString().split(': ').firstOrNull ?? error.toString(),
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textAlign: TextAlign.center,
-                ),
-                child: SelectableText(error.toString()),
+              SelectableText(
+                error.localizedErrorMessage(context.l10n),
+                style:
+                    errorTextStyle ??
+                    context.textTheme.headlineSmall?.copyWith(
+                      color: context.colorScheme.onSurface,
+                    ),
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 2 * kLargestSpace),
               Column(
@@ -102,13 +104,42 @@ class ErrorBody extends StatelessWidget with WatchItMixin {
                         onPressed: onRetry,
                         label: Text(onRetryLabel ?? context.l10n.tryReconnect),
                       ),
-                      Tooltip(
-                        message: AppConfig.repoReportIssueUrl,
-                        child: OutlinedButton.icon(
-                          icon: const Icon(YaruIcons.send),
-                          onPressed: () {
-                            final String body =
-                                '''
+                      ErrorReportButton(
+                        error: error ?? 'Unknown error',
+                        stackTrace: stackTrace,
+                      ),
+                      if (addQuitButton)
+                        OutlinedButton.icon(
+                          icon: const Icon(YaruIcons.window_close),
+                          onPressed: () => exit(0),
+                          label: Text(context.l10n.closeApp),
+                        ),
+                    ].map((e) => SizedBox(width: 250.0, child: e)),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ErrorReportButton extends StatelessWidget {
+  const ErrorReportButton({super.key, required this.error, this.stackTrace});
+
+  final Object error;
+  final StackTrace? stackTrace;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: AppConfig.repoReportIssueUrl,
+      child: OutlinedButton.icon(
+        icon: const Icon(YaruIcons.send),
+        onPressed: () {
+          final String body =
+              '''
 **Describe the bug**
 
 A clear and concise description of what the bug is.
@@ -133,37 +164,23 @@ Platform: ${kIsWeb ? 'Web' : Platform.operatingSystem} ${kIsWeb ? '' : Platform.
 
 ------------ Error: ------------
 ${error.toString().splitMapJoin(RegExp('.{1,100}'), onMatch: (m) => '${m.group(0)}\n', onNonMatch: (n) => n)}
-${StackTrace.current.toString()}
+${(stackTrace ?? StackTrace.current).toString()}
 ```
                       ''';
-                            launchUrl(
-                              Uri(
-                                scheme: AppConfig.scheme,
-                                host: AppConfig.host,
-                                path: AppConfig.repoReportIssueUrl,
-                                queryParameters: {
-                                  'title':
-                                      'fix: ${error.toString().split(':').firstOrNull ?? 'error'}',
-                                  'body': body,
-                                },
-                              ),
-                            );
-                          },
-                          label: Text(context.l10n.reportIssue),
-                        ),
-                      ),
-                      if (addQuitButton)
-                        OutlinedButton.icon(
-                          icon: const Icon(YaruIcons.window_close),
-                          onPressed: () => exit(0),
-                          label: Text(context.l10n.closeApp),
-                        ),
-                    ].map((e) => SizedBox(width: 250.0, child: e)),
-                ],
-              ),
-            ],
-          ),
-        ),
+          launchUrl(
+            Uri(
+              scheme: AppConfig.scheme,
+              host: AppConfig.host,
+              path: AppConfig.repoReportIssueUrl,
+              queryParameters: {
+                'title':
+                    'fix: ${error.toString().split(':').firstOrNull ?? 'error'}',
+                'body': body,
+              },
+            ),
+          );
+        },
+        label: Text(context.l10n.reportIssue),
       ),
     );
   }

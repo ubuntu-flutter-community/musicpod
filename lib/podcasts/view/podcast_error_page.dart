@@ -15,9 +15,11 @@ class PodcastErrorPage extends StatelessWidget with WatchItMixin {
     super.key,
     required this.error,
     required this.feedUrl,
+    required this.stackTrace,
   });
 
   final Object error;
+  final StackTrace stackTrace;
   final String feedUrl;
 
   @override
@@ -32,6 +34,7 @@ class PodcastErrorPage extends StatelessWidget with WatchItMixin {
       sliverBody: (constraints) => ErrorRetryBody(
         sliver: true,
         error: error,
+        stackTrace: stackTrace,
         retryCapsule: RetryCapsule(
           retryViewId: feedUrl,
           onRetry: () =>
