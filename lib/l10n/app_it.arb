@@ -905,5 +905,16 @@
     "fetchingLyricsOnlineFailed": "Il recupero dei testi online non è riuscito. Potrebbe trattarsi di un problema del server oppure il brano potrebbe non essere disponibile",
     "onlineLyricsSourceTitle": "Fonte testi online",
     "onlineLyricsSourceDescription": "Seleziona la fonte per i testi online.",
-    "onlineLyricsSourceLrcLib": "LrcLib"
+    "onlineLyricsSourceLrcLib": "LrcLib",
+    "appCanNotConnectToHost": "{appName} non può connettersi a {host}. Sei connesso a internet?",
+    "@appCanNotConnectToHost": {
+        "placeholders": {
+            "appName": {
+                "type": "String"
+            },
+            "host": {
+                "type": "String"
+            }
+        }
+    }
 }
