@@ -8,44 +8,60 @@ import 'keep_alive_registry.dart';
 
 @injectable
 class RetryManager {
-  RetryManager._({required RetryCapsule retryCapsule}) {
-    _retryTicker = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (cooldown.value > 0) {
-        cooldown.value--;
-      } else {
-        if (retryCapsule.autoRetry && cooldown.value < cooldownMaxValue) {
-          retryCapsule = retryCapsule.copyWith(
-            retries: retryCapsule.retries + 1,
-          );
-          cooldown.value = cooldownStartValue * retryCapsule.retries;
-          retryCapsule.onRetry();
-        } else {
-          _retryTicker?.cancel();
-        }
-      }
-    });
+  late final RetryCapsule _capsule;
+
+  RetryManager._({required RetryCapsule capsule}) {
+    _capsule = capsule;
+    cooldown = SafeValueNotifier<int>(_capsule.cooldownStartValue);
+
+    _retryTicker = _createTimer();
   }
 
   @factoryMethod
-  static RetryManager create({
-    @factoryParam required RetryCapsule retryCapsule,
-  }) => _registry.getOrRegister(
-    id: retryCapsule.retryViewId,
-    factoryFunction: () => RetryManager._(retryCapsule: retryCapsule),
-    autoDisposeAfter: const Duration(minutes: 5),
-  );
+  static RetryManager create({@factoryParam required RetryCapsule capsule}) =>
+      _registry.getOrRegister(
+        id: capsule.retryViewId,
+        factoryFunction: () => RetryManager._(capsule: capsule),
+        autoDisposeAfter: const Duration(minutes: 5),
+      );
 
   static final _registry = KeepAliveRegistry<String, RetryManager>();
 
   static RetryManager? dispose(String retryViewId) =>
       _registry.dispose(retryViewId);
 
+  void manualRetry() {
+    _capsule.onRetry();
+    cooldown.value = _capsule.cooldownStartValue;
+    _retryTicker = _createTimer();
+  }
+
+  Timer _createTimer() => Timer.periodic(const Duration(seconds: 1), (timer) {
+    if (cooldown.value > 0) {
+      cooldown.value--;
+    } else
+    // Now we reached 0
+    {
+      // if auto retrying is disabled
+      if (!_capsule.autoRetry) {
+        // we stop the timer
+        timer.cancel();
+      } else {
+        // increment the retries
+        _capsule = _capsule.copyWith(retries: _capsule.retries + 1);
+
+        // set the cooldown either to the startvalue
+        // increment with the retry factor if autoIncrement is true
+        cooldown.value =
+            _capsule.cooldownStartValue *
+            (_capsule.autoIncrementCooldown ? _capsule.retries : 1);
+
+        _capsule.onRetry();
+      }
+    }
+  });
+
   Timer? _retryTicker;
   Timer? get retryTicker => _retryTicker;
-  final SafeValueNotifier<int> cooldown = SafeValueNotifier<int>(
-    cooldownStartValue,
-  );
+  late final SafeValueNotifier<int> cooldown;
 }
-
-const cooldownStartValue = 5;
-const cooldownMaxValue = 100;

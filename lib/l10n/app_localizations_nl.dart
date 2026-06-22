@@ -2460,4 +2460,9 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get onlineLyricsSourceLrcLib => 'LrcLib';
+
+  @override
+  String appCanNotConnectToHost(String appName, String host) {
+    return '$appName can not connect to $host. Are you connected to the internet?';
+  }
 }

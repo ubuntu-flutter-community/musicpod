@@ -23,15 +23,14 @@ class PodcastCard extends StatelessWidget with WatchItMixin {
     final genre = item.primaryGenreName ?? item.genre?.firstOrNull?.name;
 
     return AudioCard(
-      key: ValueKey(feedUrl),
       bottom: AudioCardBottom(text: item.collectionName ?? item.trackName),
       image: SafeNetworkImage(
         url: item.artworkUrl600 ?? item.artworkUrl,
         fit: BoxFit.cover,
         height: audioCardDimension,
         width: audioCardDimension,
-        cacheHeight: (audioCardDimension * 1.2).toInt(),
-        cacheWidth: (audioCardDimension * 1.2).toInt(),
+        cacheHeight: (audioCardDimension * 1.4).toInt(),
+        cacheWidth: (audioCardDimension * 1.4).toInt(),
       ),
       onPlay: feedUrl == null
           ? null

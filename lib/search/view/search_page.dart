@@ -7,7 +7,6 @@ import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/data/retry_capsule.dart';
-import '../../common/retry_manager.dart';
 import '../../common/view/default_page_body.dart';
 import '../../common/view/error_retry_body.dart';
 import '../../common/view/header_bar.dart';
@@ -38,14 +37,8 @@ class SearchPage extends StatelessWidget with WatchItMixin {
     final error = watchValue(
       (SearchManager m) => m.searchCommand.errors.select((v) => v?.error),
     );
-
-    registerHandler(
-      select: (SearchManager m) => m.searchCommand.results,
-      handler: (_, results, __) {
-        if (results.isSuccess) {
-          RetryManager.dispose(PageIDs.searchPage);
-        }
-      },
+    final stackTrace = watchValue(
+      (SearchManager m) => m.searchCommand.errors.select((v) => v?.stackTrace),
     );
 
     return Scaffold(
@@ -69,6 +62,7 @@ class SearchPage extends StatelessWidget with WatchItMixin {
       body: error != null
           ? ErrorRetryBody(
               error: error,
+              stackTrace: stackTrace ?? StackTrace.current,
               errorText: error.localizedErrorMessage(context.l10n),
               retryCapsule: RetryCapsule(
                 autoRetry: false,

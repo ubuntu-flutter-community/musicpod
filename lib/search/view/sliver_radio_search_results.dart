@@ -2,15 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/routing_manager.dart';
-import '../../common/data/retry_capsule.dart';
 import '../../common/view/audio_tile_image.dart';
-import '../../common/view/error_retry_body.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/stared_station_icon_button.dart';
 import '../../common/view/tapable_text.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/command_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../player/player_manager.dart';
 import '../../radio/manager/radio_manager.dart';
@@ -29,30 +26,7 @@ class SliverRadioSearchResults extends StatelessWidget
   Widget build(BuildContext context) {
     final theme = context.theme;
 
-    callOnceAfterThisBuild(
-      (_) => di<RadioManager>().connectCommand.runRestricted(
-        immediatelyClearErrors: false,
-      ),
-    );
-
     registerRadioConnectHandler(context);
-
-    final connectedHostResults = watchValue(
-      (RadioManager m) => m.connectCommand.results,
-    );
-
-    if (!connectedHostResults.isRunning && connectedHostResults.hasError) {
-      return ErrorRetryBody(
-        sliver: true,
-        error: connectedHostResults.error!,
-        retryCapsule: RetryCapsule(
-          retryViewId: 'connected_host',
-          onRetry: () => di<RadioManager>().connectCommand.runRestricted(
-            immediatelyClearErrors: true,
-          ),
-        ),
-      );
-    }
 
     final radioSearchResult = watchValue(
       (SearchManager m) => m.radioSearchResult,

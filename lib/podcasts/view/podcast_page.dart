@@ -71,7 +71,11 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
     }
 
     if (episodesResults.hasError) {
-      return PodcastErrorPage(error: episodesResults.error!, feedUrl: feedUrl);
+      return PodcastErrorPage(
+        error: episodesResults.error!,
+        feedUrl: feedUrl,
+        stackTrace: episodesResults.stackTrace ?? StackTrace.current,
+      );
     }
 
     registerHandler(

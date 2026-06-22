@@ -2383,6 +2383,11 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get onlineLyricsSourceLrcLib => 'LrcLib';
+
+  @override
+  String appCanNotConnectToHost(String appName, String host) {
+    return '$appName can not connect to $host. Are you connected to the internet?';
+  }
 }
 
 /// The translations for Chinese, as used in Hong Kong (`zh_HK`).

@@ -210,10 +210,22 @@ class OnlineLyricsService {
           artUrl: null,
         );
       }
+    } else {
+      throw NoLyrcicsFoundException(
+        'No lyrics found for "$artist - $title" on LrcLib',
+      );
     }
 
     return null;
   }
+}
+
+class NoLyrcicsFoundException implements Exception {
+  final String message;
+  NoLyrcicsFoundException(this.message);
+
+  @override
+  String toString() => 'NoLyrcicsFoundException: $message';
 }
 
 enum OnlineLyricsSource {
