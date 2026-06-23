@@ -262,22 +262,23 @@ class RadioService {
 
   Future<Set<String>> getStarredStations() => _dao.getStarredStations();
 
-  Future<void> toggleStarredStation(Audio audio) async {
+  Future<bool> toggleStarredStation(Audio audio) async {
     if (audio.uuid == null) {
       Logger.i(
         'Cannot toggle starred station with null uuid.',
         tag: '$RadioService',
       );
-      return;
+      return false;
     }
 
-    final isStarred = await getStarredStations().then(
+    if (await getStarredStations().then(
       (uuids) => uuids.contains(audio.uuid!),
-    );
-    if (isStarred) {
+    )) {
       await _dao.deleteStarredStation(audio.uuid!);
+      return false;
     } else {
       await _dao.insertStarredStation(audio);
+      return true;
     }
   }
 
