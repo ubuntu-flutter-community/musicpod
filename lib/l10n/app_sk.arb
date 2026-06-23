@@ -204,7 +204,7 @@
     "license": "Licencia",
     "dependencies": "Závislosti",
     "light": "Svetlá",
-    "system": "Systém",
+    "system": "Systémová",
     "dark": "Tmavá",
     "podcastProvider": "Poskytovateľ podcastov",
     "iTunes": "iTunes",
@@ -897,5 +897,16 @@
     "fetchingLyricsOnlineFailed": "Získavanie textu piesne online zlyhalo. Môže ísť o problém servera alebo text piesne nemusí byť dostupný",
     "onlineLyricsSourceTitle": "Zdroj online textov piesní",
     "onlineLyricsSourceDescription": "Vyberte zdroj pre online texty piesní.",
-    "onlineLyricsSourceLrcLib": "LrcLib"
+    "onlineLyricsSourceLrcLib": "LrcLib",
+    "appCanNotConnectToHost": "{appName} sa nemôže pripojiť k {host}. Ste pripojený na internet?",
+    "@appCanNotConnectToHost": {
+        "placeholders": {
+            "appName": {
+                "type": "String"
+            },
+            "host": {
+                "type": "String"
+            }
+        }
+    }
 }
