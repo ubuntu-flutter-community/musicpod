@@ -19,35 +19,28 @@ class StationPageIcon extends StatelessWidget with WatchItMixin {
   final bool selected;
 
   @override
-  Widget build(BuildContext context) {
-    final stationResults = watchValue(
-      (StationManager m) => m.command.results,
-      param1: uuid,
-    );
-    final station = stationResults.data;
-
-    final fallBackColor = getAlphabetColor(uuid);
-
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(6),
-      child: Container(
-        color: context.theme.cardColor,
-        height: sideBarImageSize,
-        width: sideBarImageSize,
-        child: SafeNetworkImage(
-          fallbackWidget: SideBarFallBackImage(
-            color: fallBackColor,
-            child: selected ? Icon(Iconz.starFilled) : Icon(Iconz.star),
-          ),
-          errorWidget: SideBarFallBackImage(
-            color: fallBackColor,
-            child: selected ? Icon(Iconz.starFilled) : Icon(Iconz.star),
-          ),
-          fit: BoxFit.fitHeight,
-          url: station?.imageUrl,
-          filterQuality: FilterQuality.medium,
+  Widget build(BuildContext context) => ClipRRect(
+    borderRadius: BorderRadius.circular(6),
+    child: Container(
+      color: context.theme.cardColor,
+      height: sideBarImageSize,
+      width: sideBarImageSize,
+      child: SafeNetworkImage(
+        fallbackWidget: SideBarFallBackImage(
+          color: getAlphabetColor(uuid),
+          child: selected ? Icon(Iconz.starFilled) : Icon(Iconz.star),
         ),
+        errorWidget: SideBarFallBackImage(
+          color: getAlphabetColor(uuid),
+          child: selected ? Icon(Iconz.starFilled) : Icon(Iconz.star),
+        ),
+        fit: BoxFit.fitHeight,
+        url: watchValue(
+          (StationManager m) => m.command.select((audio) => audio?.imageUrl),
+          param1: uuid,
+        ),
+        filterQuality: FilterQuality.medium,
       ),
-    );
-  }
+    ),
+  );
 }

@@ -11,6 +11,7 @@ import '../../common/view/adaptive_multi_layout_body.dart';
 import '../../common/view/audio_fall_back_icon.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/avatar_play_button.dart';
+import '../../common/view/clean_up_caches.dart';
 import '../../common/view/error_retry_body.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/no_search_result_page.dart';
@@ -23,7 +24,6 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/command_x.dart';
 import '../../extensions/taget_platform_x.dart';
-import '../../common/view/clean_up_caches.dart';
 import '../../search/search_manager.dart';
 import '../../search/search_type.dart';
 import '../../settings/settings_manager.dart';
@@ -55,6 +55,7 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
       (StationManager m) => m.command.results,
       param1: uuid,
     );
+
     final station = stationResult.data;
     final error = stationResult.error;
     final isRunning = stationResult.isRunning;

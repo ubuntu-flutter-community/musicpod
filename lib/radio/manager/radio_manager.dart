@@ -80,7 +80,7 @@ class RadioManager {
 
   Future<Set<String>> getStarredStations() =>
       _radioService.getStarredStations();
-  Future<void> toggleStarStation(Audio station) =>
+  Future<bool> toggleStarStation(Audio station) =>
       _radioService.toggleStarredStation(station);
 
   Future<Set<String>> getFavRadioTags() => _radioService.getFavRadioTags();
