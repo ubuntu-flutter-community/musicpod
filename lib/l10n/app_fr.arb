@@ -889,5 +889,24 @@
                 "type": "String"
             }
         }
-    }
+    },
+    "tryToFetchLyricsOnlineDescription": "Voulez-vous essayer de trouver les paroles sur Internet ?",
+    "fetchingLyricsOnline": "Récupération des paroles en ligne, veuillez patienter…",
+    "fetchingLyricsOnlineTimeoutMessage": "Le chargement des paroles en ligne prend plus de temps que d'habitude. Êtes-vous connecté à Internet ? Si oui, il s'agit peut-être d'un problème de serveur ou la chanson n'est peut-être pas disponible",
+    "fetchingLyricsOnlineFailed": "L'importation des paroles depuis Internet a échoué. Il s'agit peut-être d'un problème de serveur ou la chanson n'est peut-être pas disponible",
+    "onlineLyricsSourceTitle": "Source de paroles en ligne",
+    "onlineLyricsSourceDescription": "Sélectionnez la source des paroles en ligne.",
+    "onlineLyricsSourceLrcLib": "LrcLib",
+    "appCanNotConnectToHost": "{appName} ne parvient pas à se connecter à {host}. Êtes-vous connecté à Internet ?",
+    "@appCanNotConnectToHost": {
+        "placeholders": {
+            "appName": {
+                "type": "String"
+            },
+            "host": {
+                "type": "String"
+            }
+        }
+    },
+    "tryToFetchLyricsOnlineTitle": "Essayer de trouver les paroles en ligne"
 }
