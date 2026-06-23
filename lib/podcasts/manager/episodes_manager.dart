@@ -12,10 +12,7 @@ class EpisodesManager {
     @factoryParam required String feedUrl,
     required PodcastService podcastService,
   }) {
-    Logger.i(
-      'Instance created for feedUrl: $feedUrl',
-      tag: '$EpisodesManager',
-    );
+    Logger.i('Instance created for feedUrl: $feedUrl', tag: '$EpisodesManager');
     reorderPodcastCommand = Command.createAsync((param) async {
       await podcastService.reorderPodcast(
         feedUrl: param.feedUrl,

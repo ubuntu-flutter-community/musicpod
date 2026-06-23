@@ -202,10 +202,7 @@ class RadioService {
   Future<void> clickStation(String? uuid) async {
     try {
       if (uuid == null) {
-        Logger.i(
-          'Cannot click station with null uuid.',
-          tag: '$RadioService',
-        );
+        Logger.i('Cannot click station with null uuid.', tag: '$RadioService');
         return;
       }
       await _radioBrowserApi?.clickStation(uuid: uuid);
