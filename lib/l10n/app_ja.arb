@@ -897,5 +897,16 @@
     "fetchingLyricsOnlineFailed": "歌詞のオンライン取得に失敗しました。サーバーの問題か、曲が利用できない可能性があります",
     "onlineLyricsSourceTitle": "オンライン歌詞ソース",
     "onlineLyricsSourceDescription": "オンライン歌詞のソースを選択します。",
-    "onlineLyricsSourceLrcLib": "LrcLib"
+    "onlineLyricsSourceLrcLib": "LrcLib",
+    "appCanNotConnectToHost": "{appName} は {host} に接続できません。インターネットに接続されていますか？",
+    "@appCanNotConnectToHost": {
+        "placeholders": {
+            "appName": {
+                "type": "String"
+            },
+            "host": {
+                "type": "String"
+            }
+        }
+    }
 }
