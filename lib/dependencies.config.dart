@@ -449,13 +449,13 @@ extension GetItInjectableX on _i174.GetIt {
         database: gh<_i115.Database>(),
       ),
     );
-    gh.factoryCached<_i924.ImportExternalPlaylistManager>(
-      () => _i924.ImportExternalPlaylistManager(
+    gh.factoryCached<_i1030.PinnedAlbumIDsManager>(
+      () => _i1030.PinnedAlbumIDsManager(
         localAudioManager: gh<_i76.LocalAudioManager>(),
       ),
     );
-    gh.lazySingleton<_i1030.PinnedAlbumIDsManager>(
-      () => _i1030.PinnedAlbumIDsManager(
+    gh.factoryCached<_i924.ImportExternalPlaylistManager>(
+      () => _i924.ImportExternalPlaylistManager(
         localAudioManager: gh<_i76.LocalAudioManager>(),
       ),
     );

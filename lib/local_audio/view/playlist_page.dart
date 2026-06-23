@@ -11,7 +11,7 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/adaptive_multi_layout_body.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/audio_page_type.dart';
-import '../../common/view/audio_tile.dart';
+import '../../common/view/local_audio_tile.dart';
 import '../../common/view/genre_bar.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/search_button.dart';
@@ -184,7 +184,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
               index: index,
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 5),
-                child: AudioTile(
+                child: LocalAudioTile(
                   showSubSubTitle: width > 1200,
                   showDuration: width > 1000,
                   showSubTitle: width > 500,
@@ -214,7 +214,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
                   selected: audioSelected,
                   audio: audio,
                   pageId: pageId,
-                  audioPageType: AudioPageType.playlist,
+                  audioPageType: LocalAudioPageType.playlist,
                 ),
               ),
             );

@@ -17,11 +17,11 @@ import 'header_bar.dart';
 import 'no_search_result_page.dart';
 import 'progress.dart';
 import 'search_button.dart';
-import 'sliver_audio_tile_list.dart';
+import 'sliver_local_audio_tile_list.dart';
 import 'theme.dart';
 
-class SliverAudioPage extends StatelessWidget {
-  const SliverAudioPage({
+class SliverLocalAudioPage extends StatelessWidget {
+  const SliverLocalAudioPage({
     super.key,
     required this.pageId,
     this.audios,
@@ -36,11 +36,12 @@ class SliverAudioPage extends StatelessWidget {
     this.noSearchResultMessage,
     this.noSearchResultIcons,
     this.description,
+    required this.startNewPlaylistOnTap,
   });
 
   final String pageId;
   final List<Audio>? audios;
-  final AudioPageType audioPageType;
+  final LocalAudioPageType audioPageType;
 
   final String? pageTitle;
   final String? pageSubTitle;
@@ -55,6 +56,7 @@ class SliverAudioPage extends StatelessWidget {
 
   final Widget? noSearchResultMessage;
   final Widget? noSearchResultIcons;
+  final bool startNewPlaylistOnTap;
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +88,7 @@ class SliverAudioPage extends StatelessWidget {
           image: image,
           subTitle: pageSubTitle,
           label: pageLabel,
-          onLabelTab: audioPageType == AudioPageType.likedAudio
+          onLabelTab: audioPageType == LocalAudioPageType.likedAudio
               ? null
               : onPageLabelTab,
           onSubTitleTab: onPageSubTitleTab,
@@ -104,12 +106,13 @@ class SliverAudioPage extends StatelessWidget {
                   icon: noSearchResultIcons,
                 ),
               )
-            : SliverAudioTileList(
+            : SliverLocalAudioTileList(
                 audioPageType: audioPageType,
                 audios: audios!,
                 pageId: pageId,
                 onSubTitleTab: onPageLabelTab,
                 constraints: constraints,
+                startNewPlaylistOnTap: startNewPlaylistOnTap,
               ),
       ),
     );

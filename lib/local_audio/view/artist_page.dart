@@ -17,7 +17,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/like_all_icon_button.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/search_button.dart';
-import '../../common/view/sliver_audio_tile_list.dart';
+import '../../common/view/sliver_local_audio_tile_list.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -109,12 +109,13 @@ class _ArtistPageBody extends StatelessWidget with WatchItMixin {
       ),
       sliverBody: (constraints) => useGridView
           ? _AlbumsOfArtistGridView(artist: pageId)
-          : SliverAudioTileList(
+          : SliverLocalAudioTileList(
               audios: artistAudios,
               pageId: pageId,
-              audioPageType: AudioPageType.artist,
+              audioPageType: LocalAudioPageType.artist,
               onSubTitleTab: (text) => onAlbumTap(text: text, context: context),
               constraints: constraints,
+              startNewPlaylistOnTap: true,
             ),
     );
   }

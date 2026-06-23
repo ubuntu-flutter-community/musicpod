@@ -149,7 +149,7 @@ class PodcastDao {
     final nonExisting = <DownloadTableData>[];
     for (final entry in rows) {
       if (!File(entry.filePath).existsSync()) {
-        printInfoInDebugMode(
+        Logger.i(
           'Cleaning non-existing download:  [${entry.filePath} for URL: ${entry.url}]',
           tag: '$PodcastDao',
         );
@@ -181,14 +181,14 @@ class PodcastDao {
     // delete files that do not have a corresponding entry in the database
     for (final filePath in realDownloadFilePaths) {
       if (!newDownloadFilePaths.containsValue(filePath)) {
-        printInfoInDebugMode(
+        Logger.i(
           'Deleting file without database entry: $filePath',
           tag: '$PodcastDao',
         );
         try {
           File(filePath).deleteSync();
         } on Exception catch (e, s) {
-          printErrorInDebugMode(e, trace: s, tag: '$PodcastDao');
+          Logger.e(e, trace: s, tag: '$PodcastDao');
           rethrow;
         }
       }
@@ -308,7 +308,7 @@ class PodcastDao {
     )..where((t) => t.feedUrl.equals(feedUrl))).getSingleOrNull();
 
     if (row == null) {
-      printInfoInDebugMode(
+      Logger.i(
         'No podcast found with feedUrl: $feedUrl to toggle subscription.',
         tag: '$PodcastDao',
       );
@@ -438,15 +438,12 @@ class PodcastDao {
 
     // Early exit if nothing to delete
     if (feedUrlsToDelete.isEmpty) {
-      printInfoInDebugMode(
-        'No orphaned episodes found to clean up.',
-        tag: '$PodcastDao',
-      );
+      Logger.i('No orphaned episodes found to clean up.', tag: '$PodcastDao');
       return <String>{};
     }
 
     // Delete the orphaned episodes
-    printInfoInDebugMode(
+    Logger.i(
       'Deleting episodes with feed URLs not in podcast table: $feedUrlsToDelete',
       tag: '$PodcastDao',
     );
@@ -461,7 +458,7 @@ class PodcastDao {
   Future<Set<String>> deletePodcastAndFriends({
     required Set<String> deleteMeUrls,
   }) async {
-    printInfoInDebugMode(
+    Logger.i(
       'Deleting podcasts and related data for feed URLs: $deleteMeUrls',
       tag: '$PodcastDao',
     );
@@ -540,7 +537,7 @@ class PodcastDao {
     required String feedUrl,
     required String genreName,
   }) async {
-    printInfoInDebugMode(
+    Logger.i(
       'Upserting genre "$genreName" for feedUrl: $feedUrl',
       tag: '$PodcastDao',
     );

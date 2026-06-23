@@ -46,7 +46,7 @@ class LocalLyricsService {
         if (file.existsSync()) {
           final lrcString = file.readAsStringSync();
           if (lrcString.isValidLrc) {
-            printInfoInDebugMode(
+            Logger.i(
               'Parsed local .lrc file at "$maybe"',
               tag: '$LocalLyricsService',
             );
@@ -89,7 +89,7 @@ class OnlineLyricsService {
     final cacheKey = '${artist ?? ''} - $title'.toLowerCase();
     if (_cache.containsKey(cacheKey)) {
       final value = _cache[cacheKey];
-      printInfoInDebugMode(
+      Logger.i(
         'Fetched lyrics from cache for "$artist - $title": ${value?.plainLyrics?.substring(0, 10)}..., artUrl: ${value?.artUrl}',
         tag: '$OnlineLyricsService',
       );
@@ -105,7 +105,7 @@ class OnlineLyricsService {
 
     _debounceTimer = Timer(const Duration(seconds: 2), () async {
       try {
-        printInfoInDebugMode(
+        Logger.i(
           'Trying to fetch lyrics and art from lrcLib for "$artist - $title"',
           tag: '$OnlineLyricsService',
         );
@@ -124,7 +124,7 @@ class OnlineLyricsService {
         }
 
         if (lyricsAndArtResult != null) {
-          printInfoInDebugMode(
+          Logger.i(
             'Fetched lyrics from LrcLib for "$artist - $title": ${lyricsAndArtResult.plainLyrics?.substring(0, 10)}..., artUrl: ${lyricsAndArtResult.artUrl}',
             tag: '$OnlineLyricsService',
           );
@@ -148,7 +148,7 @@ class OnlineLyricsService {
           }
         }
       } catch (e, s) {
-        printErrorInDebugMode(e, trace: s, tag: '$OnlineLyricsService');
+        Logger.e(e, trace: s, tag: '$OnlineLyricsService');
         if (_completer?.isCompleted == false) {
           _completer?.completeError(e);
         }

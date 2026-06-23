@@ -7,7 +7,7 @@ import '../../common/view/audio_page_type.dart';
 import '../../common/view/fall_back_header_image.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
-import '../../common/view/sliver_audio_page.dart';
+import '../../common/view/sliver_local_audio_page.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../manager/liked_audios_manager.dart';
@@ -20,14 +20,14 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final likedAudios = watchValue((LikedAudiosManager m) => m.command);
 
-    return SliverAudioPage(
+    return SliverLocalAudioPage(
       onPageLabelTab: (text) => di<RoutingManager>().push(
         builder: (_) => ArtistPage(pageId: text),
         pageId: text,
       ),
       noSearchResultMessage: Text(context.l10n.likedSongsSubtitle),
       audios: likedAudios,
-      audioPageType: AudioPageType.likedAudio,
+      audioPageType: LocalAudioPageType.likedAudio,
       pageId: PageIDs.likedAudios,
       pageTitle: context.l10n.likedSongs,
       pageLabel: context.l10n.playlist,
@@ -37,6 +37,7 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
         style: context.theme.pageHeaderDescription,
       ),
       image: FallBackHeaderImage(child: Icon(Iconz.heart, size: 65)),
+      startNewPlaylistOnTap: true,
     );
   }
 }

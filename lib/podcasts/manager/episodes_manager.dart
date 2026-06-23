@@ -12,7 +12,7 @@ class EpisodesManager {
     @factoryParam required String feedUrl,
     required PodcastService podcastService,
   }) {
-    printInfoInDebugMode(
+    Logger.i(
       'Instance created for feedUrl: $feedUrl',
       tag: '$EpisodesManager',
     );

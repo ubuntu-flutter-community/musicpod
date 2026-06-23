@@ -157,11 +157,11 @@ class MpvMetadataManager {
     if (blockedIcyTitles.any(
       (b) => icyTitle.toLowerCase().contains(b.toLowerCase()),
     )) {
-      printInfoInDebugMode(
+      Logger.i(
         'Blocked icy-title: $icyTitle',
         tag: '$MpvMetadataManager',
       );
-      printInfoInDebugMode(
+      Logger.i(
         'Blocked because it contains: ${blockedIcyTitles.firstWhere((b) => icyTitle.toLowerCase().contains(b.toLowerCase()))}',
         tag: '$MpvMetadataManager',
       );

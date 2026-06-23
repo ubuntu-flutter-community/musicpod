@@ -1,94 +1,94 @@
 import 'package:flutter/foundation.dart';
 
-void printMessageInDebugMode(
-  Object? object, {
-  StackTrace? trace,
-  String tag = '',
-  required LogType logType,
-}) {
-  if (kDebugMode) {
-    final message = object.toString();
-    switch (logType) {
-      case LogType.info:
-        debugPrint(
-          tag.isNotEmpty
-              ? '\x1B[32m${logType.name}: [$tag] $message \x1B[0m'
-              : '\x1B[32m${logType.name}: $message\x1B[0m',
-        );
-      case LogType.warning:
-        debugPrint(
-          tag.isNotEmpty
-              ? '\x1B[33m${logType.name}: [$tag] ⚠️ $message \x1B[0m'
-              : '\x1B[33m${logType.name}: ⚠️ $message\x1B[0m',
-        );
-      case LogType.error:
-        debugPrint(
-          tag.isNotEmpty
-              ? '\x1B[31m${logType.name}: [$tag] ❌ $message \x1B[0m'
-              : '\x1B[31m${logType.name}: ❌ $message\x1B[0m',
-        );
-      case LogType.flutterError:
-        debugPrint(
-          tag.isNotEmpty
-              ? '\x1B[35m${logType.name}: [$tag] 👾 $message \x1B[0m'
-              : '\x1B[35m${logType.name}: 👾 $message\x1B[0m',
-        );
+class Logger {
+  static PrintWhen printWhen = PrintWhen.onlyInDebug;
+  static SendWhen sendWhen = SendWhen.onlyInDebug;
+
+  static void r(
+    Object? object, {
+    StackTrace? trace,
+    String tag = '',
+    required ReportType reportType,
+  }) {
+    if ((!kDebugMode && printWhen == PrintWhen.onlyInDebug) ||
+        (kDebugMode && printWhen == PrintWhen.onlyInRelease)) {
+      return;
+    } else {
+      _reportToConsole(object, trace: trace, tag: tag, reportType: reportType);
     }
-    if (trace != null) {
-      debugPrintStack(
-        stackTrace: trace,
-        label: tag.isNotEmpty ? 'Stack trace for [$tag]' : 'Stack trace',
-      );
-    }
+
+    // If we would ever like to send the error to a server, we could do it here. For now, we just print it to the console.
+    /* if ((!kDebugMode && sendWhen == SendWhen.onlyInDebug) ||
+        (kDebugMode && sendWhen == SendWhen.onlyInRelease)) {
+      return;
+    } else {
+      
+    } */
+  }
+
+  static void i(Object? object, {StackTrace? trace, String tag = ''}) {
+    r(object, trace: trace, tag: tag, reportType: ReportType.info);
+  }
+
+  static void w(Object? object, {StackTrace? trace, String tag = ''}) {
+    r(object, trace: trace, tag: tag, reportType: ReportType.warning);
+  }
+
+  static void e(Object? object, {StackTrace? trace, String tag = ''}) {
+    r(object, trace: trace, tag: tag, reportType: ReportType.error);
+  }
+
+  static void fe(FlutterErrorDetails details) {
+    r(
+      details.exception,
+      trace: details.stack,
+      tag: 'FlutterError',
+      reportType: ReportType.flutterError,
+    );
   }
 }
 
-void printInfoInDebugMode(
+void _reportToConsole(
   Object? object, {
   StackTrace? trace,
   String tag = '',
+  required ReportType reportType,
 }) {
-  printMessageInDebugMode(
-    object,
-    trace: trace,
-    tag: tag,
-    logType: LogType.info,
+  final message = object.toString();
+  debugPrint(
+    '${reportType.colorPrefix}${reportType.name}: ${tag.isEmpty ? '' : '[$tag] '} ${reportType.emoji} $message ${reportType.colorSuffix}',
   );
+  if (trace != null) {
+    debugPrintStack(
+      stackTrace: trace,
+      label: tag.isNotEmpty ? 'Stack trace for [$tag]' : 'Stack trace',
+    );
+  }
 }
 
-void printWarningInDebugMode(
-  Object? object, {
-  StackTrace? trace,
-  String tag = '',
-}) {
-  printMessageInDebugMode(
-    object,
-    trace: trace,
-    tag: tag,
-    logType: LogType.warning,
-  );
+enum ReportType {
+  info,
+  warning,
+  flutterError,
+  error;
+
+  String get colorPrefix => switch (this) {
+    ReportType.info => '\x1B[32m',
+    ReportType.warning => '\x1B[33m',
+    ReportType.error => '\x1B[31m',
+    ReportType.flutterError => '\x1B[35m',
+  };
+
+  String get colorSuffix => '\x1B[0m';
+
+  String get emoji => switch (this) {
+    ReportType.info => 'ℹ️',
+    ReportType.warning => '⚠️',
+    ReportType.error => '❌',
+    ReportType.flutterError => '👾',
+  };
 }
 
-void printErrorInDebugMode(
-  Object? object, {
-  required StackTrace? trace,
-  String tag = '',
-}) {
-  printMessageInDebugMode(
-    object,
-    trace: trace,
-    tag: tag,
-    logType: LogType.error,
-  );
-}
+enum PrintWhen { onlyInDebug, onlyInRelease, inDebugAndRelease }
 
-void printFlutterErrorInDebugMode(FlutterErrorDetails details) {
-  printMessageInDebugMode(
-    details.exception,
-    trace: details.stack,
-    tag: 'FlutterError',
-    logType: LogType.flutterError,
-  );
-}
-
-enum LogType { info, warning, flutterError, error }
+enum SendWhen { onlyInDebug, onlyInRelease, inDebugAndRelease }

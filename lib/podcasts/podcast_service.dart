@@ -49,7 +49,7 @@ class PodcastService {
     try {
       genres = await _search.genres().toSet();
     } on Exception catch (e, s) {
-      printErrorInDebugMode(e, trace: s, tag: '$PodcastService');
+      Logger.e(e, trace: s, tag: '$PodcastService');
     }
 
     return genres.map((g) => PodcastGenre.fromString(g)).toSet().toList();
@@ -87,11 +87,11 @@ class PodcastService {
         );
       }
     } on Exception catch (e, s) {
-      printErrorInDebugMode(e, trace: s, tag: '$PodcastService');
+      Logger.e(e, trace: s, tag: '$PodcastService');
       rethrow;
     }
 
-    printInfoInDebugMode(
+    Logger.i(
       'Podcast search result: successful=${result.successful}, '
       'itemCount=${result.items.length}, '
       'query=$searchQuery',
@@ -128,14 +128,8 @@ class PodcastService {
       final storedTimeStamp = await getPodcastLastUpdated(feedUrl);
       final name = await getPodcastName(feedUrl);
 
-      printInfoInDebugMode(
-        'checking update for: $name',
-        tag: '$PodcastService',
-      );
-      printInfoInDebugMode(
-        'storedTimeStamp: $storedTimeStamp',
-        tag: '$PodcastService',
-      );
+      Logger.i('checking update for: $name', tag: '$PodcastService');
+      Logger.i('storedTimeStamp: $storedTimeStamp', tag: '$PodcastService');
 
       await _addPodcastLastUpdated(
         feedUrl: feedUrl,
@@ -172,14 +166,14 @@ class PodcastService {
     final hasEpisodesInDb = await _dao.hasPodcastStoredEpisodes(feedUrl);
 
     if (tryFromDbOnly && hasEpisodesInDb) {
-      printInfoInDebugMode(
+      Logger.i(
         'Skipping episode load from network for $feedUrl, loading from DB instead',
         tag: '$PodcastService',
       );
       return _dao.getEpisodes(feedUrl);
     }
 
-    printInfoInDebugMode(
+    Logger.i(
       'Fetching all episodes from ${_search.searchProvider is ITunesProvider ? 'iTunes' : 'podcastindex'} for feedUrl: $feedUrl',
       tag: '$PodcastService',
     );
@@ -288,7 +282,7 @@ class PodcastService {
         _deleteDownloadInFileSystem(download.key);
         successFullDeletes.add(download.key);
       } on Exception catch (e, st) {
-        printErrorInDebugMode(e, trace: st, tag: '$PodcastService');
+        Logger.e(e, trace: st, tag: '$PodcastService');
         rethrow;
       }
     }

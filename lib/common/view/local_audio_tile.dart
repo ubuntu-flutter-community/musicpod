@@ -17,8 +17,8 @@ import 'tapable_text.dart';
 import 'theme.dart';
 import 'ui_constants.dart';
 
-class AudioTile extends StatefulWidget {
-  const AudioTile({
+class LocalAudioTile extends StatefulWidget {
+  const LocalAudioTile({
     super.key,
     required this.pageId,
     required this.selected,
@@ -31,7 +31,6 @@ class AudioTile extends StatefulWidget {
     required this.audioPageType,
     required this.allowLeadingImage,
     this.selectedColor,
-    this.onTitleTap,
     this.showDuration = true,
     this.showSubTitle = true,
     this.showSubSubTitle = false,
@@ -39,12 +38,11 @@ class AudioTile extends StatefulWidget {
 
   final String pageId;
   final Audio audio;
-  final AudioPageType audioPageType;
+  final LocalAudioPageType audioPageType;
   final bool selected;
 
   final bool isPlayerPlaying;
   final void Function() onTap;
-  final void Function()? onTitleTap;
   final void Function(String text)? onSubTitleTap;
   final void Function(Audio audio)? onSubSubTitleTap;
   final bool allowLeadingImage, showDuration, showSubTitle, showSubSubTitle;
@@ -52,10 +50,10 @@ class AudioTile extends StatefulWidget {
   final AudioTileStyle style;
 
   @override
-  State<AudioTile> createState() => _AudioTileState();
+  State<LocalAudioTile> createState() => _LocalAudioTileState();
 }
 
-class _AudioTileState extends State<AudioTile> {
+class _LocalAudioTileState extends State<LocalAudioTile> {
   bool _hovered = false;
 
   @override
@@ -68,40 +66,20 @@ class _AudioTileState extends State<AudioTile> {
         ? selectedColor
         : null;
 
-    const titleOverflow = TextOverflow.ellipsis;
-    const titleMaxLines = 1;
-
-    final title = Padding(
-      padding: const EdgeInsets.only(right: kLargestSpace),
-      child: widget.onTitleTap == null
-          ? TapAbleText(
-              onTap: isMobile ? null : widget.onTap,
-              text: widget.audio.title ?? l10n.unknown,
-              overflow: titleOverflow,
-              maxLines: titleMaxLines,
-            )
-          : TapAbleText(
-              onTap: widget.onTitleTap,
-              text: widget.audio.title ?? l10n.unknown,
-              overflow: titleOverflow,
-              maxLines: titleMaxLines,
-            ),
-    );
-
     final subTitle = _useDiscnumberAsSubTitle
         ? Text('${l10n.disc} ${widget.audio.discNumber}', maxLines: 1)
         : TapAbleText(
             maxLines: 1,
             wrapInFlexible: true,
             text: switch (widget.audioPageType) {
-              AudioPageType.artist => widget.audio.album ?? l10n.unknown,
+              LocalAudioPageType.artist => widget.audio.album ?? l10n.unknown,
               _ => widget.audio.artist ?? l10n.unknown,
             },
             onTap: widget.onSubTitleTap == null
                 ? null
                 : () =>
                       widget.onSubTitleTap?.call(switch (widget.audioPageType) {
-                        AudioPageType.artist =>
+                        LocalAudioPageType.artist =>
                           widget.audio.album ?? l10n.unknown,
                         _ => widget.audio.artist ?? l10n.unknown,
                       }),
@@ -141,12 +119,23 @@ class _AudioTileState extends State<AudioTile> {
         title: Row(
           spacing: kLargestSpace,
           children: [
-            Expanded(flex: 5, child: title),
+            Expanded(
+              flex: 5,
+              child: Padding(
+                padding: const EdgeInsets.only(right: kLargestSpace),
+                child: TapAbleText(
+                  onTap: isMobile ? null : widget.onTap,
+                  text: widget.audio.title ?? l10n.unknown,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
+            ),
             if (widget.style == AudioTileStyle.compact) ...[
               if (widget.showSubTitle)
                 Expanded(flex: notTitleFlex, child: subTitle),
-              if ((widget.audioPageType == AudioPageType.allTitlesView ||
-                      widget.audioPageType == AudioPageType.playlist) &&
+              if ((widget.audioPageType == LocalAudioPageType.allTitlesView ||
+                      widget.audioPageType == LocalAudioPageType.playlist) &&
                   widget.showSubSubTitle &&
                   widget.audio.album != null)
                 Expanded(
@@ -183,7 +172,7 @@ class _AudioTileState extends State<AudioTile> {
   }
 
   bool get _useDiscnumberAsSubTitle =>
-      widget.audioPageType == AudioPageType.album &&
+      widget.audioPageType == LocalAudioPageType.album &&
       widget.audio.discNumber != null &&
       widget.audio.discTotal != null &&
       widget.audio.discTotal! > 1;
@@ -204,7 +193,7 @@ class _AudioTileTrailing extends StatelessWidget with WatchItMixin {
   final bool selected;
   final bool isPlayerPlaying;
   final String pageId;
-  final AudioPageType audioPageType;
+  final LocalAudioPageType audioPageType;
   final bool hovered;
   final Color selectedColor;
 
@@ -237,8 +226,8 @@ class _AudioTileTrailing extends StatelessWidget with WatchItMixin {
           audios: [audio],
           searchTerm: '${audio.artist ?? ''} - ${audio.title ?? ''}',
           allowRemove:
-              (audioPageType == AudioPageType.playlist ||
-                  audioPageType == AudioPageType.likedAudio) &&
+              (audioPageType == LocalAudioPageType.playlist ||
+                  audioPageType == LocalAudioPageType.likedAudio) &&
               audio.audioType != AudioType.radio,
         ),
       ],
@@ -276,7 +265,7 @@ class _AudioTileLeading extends StatelessWidget {
   });
 
   final Audio audio;
-  final AudioPageType audioPageType;
+  final LocalAudioPageType audioPageType;
   final bool selected;
 
   final bool isPlayerPlaying;
@@ -307,7 +296,7 @@ class _AudioTileLeading extends StatelessWidget {
             _ => Iconz.musicNote,
           }, color: color)
         : switch (audioPageType) {
-            AudioPageType.album => _AlbumTileLead(
+            LocalAudioPageType.album => _AlbumTileLead(
               trackNumber: audio.trackNumber,
               color: color,
             ),

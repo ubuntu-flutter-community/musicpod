@@ -4,6 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
+import '../../common/view/clean_up_caches.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/default_page_body.dart';
 import '../../common/view/header_bar.dart';
@@ -33,15 +34,7 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    if (di<LocalAudioManager>().initAudiosCommand.value == null) {
-      callOnceAfterThisBuild(
-        (_) => di<LocalAudioManager>().initAudiosCommand.run((
-          directory: null,
-          forceInit: false,
-          forceDbOnly: false,
-        )),
-      );
-    }
+    callOnceAfterThisBuild((context) => clearImageCache());
 
     registerHandler(
       select: (LocalAudioManager m) => m.areTracksSyncedCommand.results,
@@ -182,6 +175,7 @@ class LocalAudioPageBody extends StatelessWidget with WatchItMixin {
       artists: watchValue((FindAllArtistsManager m) => m.command),
       genres: watchValue((FindAllGenresManager m) => m.command),
       playlists: watchValue((PlaylistIDsManager m) => m.command),
+      startNewPlaylistOnTap: true,
     );
   }
 }

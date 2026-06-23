@@ -45,7 +45,7 @@ class LocalCoverService {
           }
         }
       } on Exception catch (e, s) {
-        printErrorInDebugMode(e, trace: s, tag: '$LocalCoverService');
+        Logger.e(e, trace: s, tag: '$LocalCoverService');
       }
 
       if (bytesFromMetadata == null) return null;

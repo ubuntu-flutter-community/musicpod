@@ -41,7 +41,7 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
   @override
   Widget build(BuildContext context) {
     callOnceAfterThisBuild((_) {
-      cleanUpLocalAudioCaches();
+      clearLocalCovers();
       cleanUpUnusedPodcasts();
     });
 

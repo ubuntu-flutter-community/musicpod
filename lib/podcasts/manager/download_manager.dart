@@ -19,7 +19,7 @@ class DownloadManager {
   }) : _podcastService = podcastService,
        _downloadService = downloadService {
     downloadsDirCommand.run((getDefault: true));
-    printInfoInDebugMode('Instance created', tag: '$DownloadManager');
+    Logger.i('Instance created', tag: '$DownloadManager');
   }
 
   final PodcastService _podcastService;

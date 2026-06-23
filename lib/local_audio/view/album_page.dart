@@ -7,12 +7,13 @@ import '../../common/data/audio.dart';
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/audio_tile_option_button.dart';
 import '../../common/view/avatar_play_button.dart';
+import '../../common/view/clean_up_caches.dart';
 import '../../common/view/cover_background.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
-import '../../common/view/sliver_audio_page.dart';
+import '../../common/view/sliver_local_audio_page.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -30,6 +31,8 @@ class AlbumPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
+    callOnceAfterThisBuild((_) => clearImageCache());
+
     return watchValue(
       (FindAlbumManager m) => m.command.results,
       param1: id,
@@ -50,9 +53,9 @@ class AlbumPage extends StatelessWidget with WatchItMixin {
           );
         }
 
-        return SliverAudioPage(
+        return SliverLocalAudioPage(
           pageId: id.toString(),
-          audioPageType: AudioPageType.album,
+          audioPageType: LocalAudioPageType.album,
           audios: album,
           image: AlbumPageImage(audio: album.firstOrNull),
           noSearchResultMessage: Text(context.l10n.albumNotFound),
@@ -61,6 +64,7 @@ class AlbumPage extends StatelessWidget with WatchItMixin {
           onPageSubTitleTab: onArtistTap,
           onPageLabelTab: onArtistTap,
           controlPanel: AlbumPageControlPanel(album: album, id: id),
+          startNewPlaylistOnTap: true,
         );
       },
     );

@@ -84,7 +84,7 @@ class RadioService {
     if (tryFromDbFirst) {
       final station = await _dao.getStationByUuid(uuid);
       if (station != null) {
-        printInfoInDebugMode(
+        Logger.i(
           'Station with uuid $uuid found in local database, returning it.',
           tag: '$RadioService',
         );
@@ -192,7 +192,7 @@ class RadioService {
             },
           );
     } on Exception catch (e, s) {
-      printErrorInDebugMode(e, trace: s, tag: '$RadioService');
+      Logger.e(e, trace: s, tag: '$RadioService');
       throw LoadTagsFailedException(e.toString());
     }
 
@@ -202,16 +202,16 @@ class RadioService {
   Future<void> clickStation(String? uuid) async {
     try {
       if (uuid == null) {
-        printInfoInDebugMode(
+        Logger.i(
           'Cannot click station with null uuid.',
           tag: '$RadioService',
         );
         return;
       }
       await _radioBrowserApi?.clickStation(uuid: uuid);
-      printInfoInDebugMode('Station clicked: $uuid', tag: '$RadioService');
+      Logger.i('Station clicked: $uuid', tag: '$RadioService');
     } on Exception catch (e, s) {
-      printErrorInDebugMode(e, trace: s, tag: '$RadioService');
+      Logger.e(e, trace: s, tag: '$RadioService');
     }
   }
 
@@ -267,7 +267,7 @@ class RadioService {
 
   Future<void> toggleStarredStation(Audio audio) async {
     if (audio.uuid == null) {
-      printInfoInDebugMode(
+      Logger.i(
         'Cannot toggle starred station with null uuid.',
         tag: '$RadioService',
       );

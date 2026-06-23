@@ -18,7 +18,7 @@ class SafeNetworkImage extends StatelessWidget {
     this.onImageLoaded,
     this.cacheHeight,
     this.cacheWidth,
-    this.logType = LogType.warning,
+    this.logType = ReportType.warning,
   });
 
   final String? url;
@@ -32,7 +32,7 @@ class SafeNetworkImage extends StatelessWidget {
   final int? cacheWidth;
   final Map<String, String>? httpHeaders;
   final Function(ImageProvider imageProvider)? onImageLoaded;
-  final LogType logType;
+  final ReportType logType;
 
   static final List<String> _failedUrls = [];
 
@@ -93,11 +93,11 @@ class SafeNetworkImage extends StatelessWidget {
           },
           _ => 'Unknown error occurred: $error',
         };
-        printMessageInDebugMode(
+        Logger.r(
           'Failed to load image: $url, error: $message',
           trace: null,
           tag: '$SafeNetworkImage',
-          logType: logType,
+          reportType: logType,
         );
         if (url != null) {
           _failedUrls.add(url!);
