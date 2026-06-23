@@ -95,7 +95,7 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
   void didPop(Route route, Route? previousRoute) {
     final pageId = previousRoute?.settings.name;
 
-    printInfoInDebugMode(
+    Logger.i(
       'didPop: ${route.settings.name}, previousPageId: ${previousRoute?.settings.name}',
       tag: '$RoutingManager',
     );
@@ -106,7 +106,7 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
   @override
   void didPush(Route route, Route? previousRoute) {
     final pageId = route.settings.name;
-    printInfoInDebugMode(
+    Logger.i(
       'didPush: $pageId, previousPageId: ${previousRoute?.settings.name}',
       tag: '$RoutingManager',
     );
@@ -117,7 +117,7 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
   @override
   void didRemove(Route route, Route? previousRoute) {
     final pageId = route.settings.name;
-    printInfoInDebugMode(
+    Logger.i(
       'didRemove: $pageId, previousPageId: ${previousRoute?.settings.name}',
       tag: '$RoutingManager',
     );
@@ -127,7 +127,7 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
 
   @override
   void didReplace({Route? newRoute, Route? oldRoute}) {
-    printInfoInDebugMode(
+    Logger.i(
       'didReplace: ${oldRoute?.settings.name}, newPageId: ${newRoute?.settings.name}',
       tag: '$RoutingManager',
     );
@@ -138,7 +138,7 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
 
   @override
   void didStartUserGesture(Route route, Route? previousRoute) {
-    printInfoInDebugMode(
+    Logger.i(
       'didStartUserGesture: ${route.settings.name}, previousPageId: ${previousRoute?.settings.name}',
       tag: '$RoutingManager',
     );
@@ -146,12 +146,12 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
 
   @override
   void didStopUserGesture() {
-    printInfoInDebugMode('didStopUserGesture', tag: '$RoutingManager');
+    Logger.i('didStopUserGesture', tag: '$RoutingManager');
   }
 
   @override
   void didChangeTop(Route topRoute, Route? previousTopRoute) {
-    printInfoInDebugMode('didChangeTop', tag: '$RoutingManager');
+    Logger.i('didChangeTop', tag: '$RoutingManager');
   }
 
   // Note: Navigator.initState ensures assert(observer.navigator == null);

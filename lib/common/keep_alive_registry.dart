@@ -20,7 +20,7 @@ class KeepAliveRegistry<I, T> {
       );
     }
     return _instances.putIfAbsent(id, () {
-      printInfoInDebugMode('Instance created for id: $id', tag: '$T');
+      Logger.i('Instance created for id: $id', tag: '$T');
       return factoryFunction();
     });
   }
@@ -29,13 +29,13 @@ class KeepAliveRegistry<I, T> {
     if (!_instances.containsKey(id)) return null;
     final instance = _instances.remove(id);
     if (instance != null) {
-      printInfoInDebugMode('$message for id: $id', tag: '$T');
+      Logger.i('$message for id: $id', tag: '$T');
     }
     return instance;
   }
 
   void disposeAll() {
     _instances.clear();
-    printInfoInDebugMode('All instances disposed', tag: '$T');
+    Logger.i('All instances disposed', tag: '$T');
   }
 }

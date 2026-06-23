@@ -82,10 +82,7 @@ class LocalAudioService {
 
     await _lock.synchronized(() async {
       if (!forceInit && _initialized) {
-        printInfoInDebugMode(
-          'Already initialized, skipping',
-          tag: '$LocalAudioService',
-        );
+        Logger.i('Already initialized, skipping', tag: '$LocalAudioService');
         updateProgress?.call(1);
         return;
       }
@@ -275,7 +272,7 @@ class LocalAudioService {
       }
       await _persistPlaylist(id, playlist);
     } on Exception catch (e, s) {
-      printInfoInDebugMode(e, trace: s, tag: '$LocalAudioService');
+      Logger.i(e, trace: s, tag: '$LocalAudioService');
     }
   }
 
@@ -297,7 +294,7 @@ class LocalAudioService {
       }
       await _persistPlaylist(id, playlist);
     } on Exception catch (e, s) {
-      printInfoInDebugMode(e, trace: s, tag: '$LocalAudioService');
+      Logger.i(e, trace: s, tag: '$LocalAudioService');
     }
   }
 
@@ -388,7 +385,7 @@ class LocalAudioService {
         albumDbId: albumDbId,
       );
     } on Exception catch (e, s) {
-      printErrorInDebugMode(e, trace: s, tag: '$LocalAudioService');
+      Logger.e(e, trace: s, tag: '$LocalAudioService');
     }
 
     return updatedAudio;
@@ -408,12 +405,12 @@ FutureOr<ImportResult> _readAudiosFromDirectory(String? directory) async {
         newAudios.add(Audio.local(e, onError: (p) => failedImports.add(p)));
       } on Exception catch (ex, s) {
         failedImports.add(e.path);
-        printErrorInDebugMode(ex, trace: s, tag: '$LocalAudioService');
+        Logger.e(ex, trace: s, tag: '$LocalAudioService');
       }
     }
   }
 
-  printInfoInDebugMode(
+  Logger.i(
     'Finished reading audios from directory. Found ${newAudios.length} audios, with ${failedImports.length} failed imports.',
     tag: '$LocalAudioService',
   );

@@ -24,7 +24,7 @@ class ListenBrainzService {
         _listenBrainz = ListenBrainz(apiKey);
       }
     } on Exception catch (e, st) {
-      printErrorInDebugMode(e, trace: st, tag: '$ListenBrainzService');
+      Logger.e(e, trace: st, tag: '$ListenBrainzService');
       if (rethrowError) {
         rethrow;
       }
@@ -43,7 +43,7 @@ class ListenBrainzService {
         await _listenBrainz!.submitPlayingNow(track);
       }
     } on Exception catch (e, s) {
-      printErrorInDebugMode(e, trace: s, tag: '$ListenBrainzService');
+      Logger.e(e, trace: s, tag: '$ListenBrainzService');
     }
   }
 }

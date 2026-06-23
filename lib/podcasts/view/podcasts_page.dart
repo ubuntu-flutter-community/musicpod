@@ -18,7 +18,7 @@ class PodcastsPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    callOnceAfterThisBuild((_) => cleanUpLocalAudioCaches());
+    callOnceAfterThisBuild((_) => clearLocalCovers());
 
     return Scaffold(
       appBar: HeaderBar(

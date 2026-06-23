@@ -10,7 +10,7 @@ import '../local_cover_service.dart';
 class LocalCoverManager {
   LocalCoverManager({required LocalCoverService localCoverService})
     : _localCoverService = localCoverService {
-    printInfoInDebugMode('Instance created', tag: '$LocalCoverManager');
+    Logger.i('Instance created', tag: '$LocalCoverManager');
   }
 
   final LocalCoverService _localCoverService;

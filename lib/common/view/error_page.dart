@@ -68,7 +68,7 @@ class ErrorBody extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     callOnceAfterThisBuild(
-      (_) => printErrorInDebugMode(
+      (_) => Logger.e(
         '${error.toString()} \n StackTrace: ${(stackTrace ?? StackTrace.current).toString()}',
         tag: '$ErrorPage',
         trace: stackTrace,

@@ -679,7 +679,7 @@ class LocalAudioDao {
     required String? album,
     required String lyrics,
   }) async {
-    printInfoInDebugMode(
+    Logger.i(
       'Updating lyrics in DB for "$title" by "$artist"${album != null ? ' from album "$album"' : ''}',
       tag: '$LocalAudioDao',
     );

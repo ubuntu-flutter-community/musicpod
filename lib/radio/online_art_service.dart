@@ -63,7 +63,7 @@ class OnlineArtService {
                 _fetchAlbumArt,
                 _ComputeCapsule(icyTitle: icyTitle, dio: _dio),
               ).onError((e, s) {
-                printErrorInDebugMode(e, trace: s, tag: '$OnlineArtService');
+                Logger.e(e, trace: s, tag: '$OnlineArtService');
                 _errorController.add('$e : $s');
                 return null;
               }),
@@ -120,14 +120,14 @@ Future<String?> _fetchAlbumArt(_ComputeCapsule capsule) async {
         : firstRecording?['releases']?[0]?['id'];
 
     if (releaseId == null) {
-      printInfoInDebugMode(
+      Logger.i(
         '${capsule.icyTitle}: No release found}',
         tag: '$OnlineArtService',
       );
       return null;
     }
 
-    printInfoInDebugMode(
+    Logger.i(
       '${capsule.icyTitle}: Release ($releaseId) found, trying to find artwork ...',
       tag: '$OnlineArtService',
     );
@@ -138,12 +138,12 @@ Future<String?> _fetchAlbumArt(_ComputeCapsule capsule) async {
     );
 
     if (albumArtUrl != null) {
-      printInfoInDebugMode(
+      Logger.i(
         '${capsule.icyTitle}: Resource ($albumArtUrl) found',
         tag: '$OnlineArtService',
       );
     } else {
-      printInfoInDebugMode(
+      Logger.i(
         '${capsule.icyTitle}: No resource found for ($releaseId)!',
         tag: '$OnlineArtService',
       );
@@ -151,7 +151,7 @@ Future<String?> _fetchAlbumArt(_ComputeCapsule capsule) async {
 
     return albumArtUrl;
   } on Exception catch (e, s) {
-    printErrorInDebugMode(e, trace: s, tag: '$OnlineArtService');
+    Logger.e(e, trace: s, tag: '$OnlineArtService');
     return null;
   }
 }
@@ -191,13 +191,13 @@ Future<String?> _fetchAlbumArtUrlFromReleaseId({
       return url?.replaceAll('http://', 'https://');
     }
   } on Exception catch (e, s) {
-    printMessageInDebugMode(
+    Logger.r(
       e,
       trace: s,
       tag: '$OnlineArtService',
-      logType: switch (e.runtimeType) {
-        DioException => LogType.warning,
-        _ => LogType.error,
+      reportType: switch (e.runtimeType) {
+        DioException => ReportType.warning,
+        _ => ReportType.error,
       },
     );
     return null;

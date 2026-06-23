@@ -19,7 +19,7 @@ class RadioLibPage extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    callOnceAfterThisBuild((_) => cleanUpLocalAudioCaches());
+    callOnceAfterThisBuild((_) => clearLocalCovers());
 
     registerRadioConnectHandler(context);
 

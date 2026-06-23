@@ -7,7 +7,7 @@ import '../../app/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/no_search_result_page.dart';
-import '../../common/view/sliver_audio_tile_list.dart';
+import '../../common/view/sliver_local_audio_tile_list.dart';
 import '../../common/view/sliver_fill_remaining_progress.dart';
 import '../../extensions/build_context_x.dart';
 import '../manager/local_audio_manager.dart';
@@ -21,11 +21,13 @@ class TitlesView extends StatelessWidget with WatchItMixin {
     this.noResultMessage,
     this.noResultIcon,
     required this.constraints,
+    required this.startNewPlaylistOnTap,
   });
 
   final List<Audio>? audios;
   final Widget? noResultMessage, noResultIcon;
   final BoxConstraints constraints;
+  final bool startNewPlaylistOnTap;
 
   @override
   Widget build(BuildContext context) {
@@ -44,10 +46,11 @@ class TitlesView extends StatelessWidget with WatchItMixin {
       );
     }
 
-    return SliverAudioTileList(
+    return SliverLocalAudioTileList(
+      startNewPlaylistOnTap: startNewPlaylistOnTap,
       constraints: constraints,
       audios: audios!,
-      audioPageType: AudioPageType.allTitlesView,
+      audioPageType: LocalAudioPageType.allTitlesView,
       pageId: PageIDs.localAudio,
       onSubTitleTab: (artist) => di<RoutingManager>().push(
         builder: (_) => ArtistPage(pageId: artist),

@@ -64,7 +64,7 @@ class CustomContentManager {
         }
       }
     } on Exception catch (e, s) {
-      printErrorInDebugMode(e, trace: s, tag: '$CustomContentManager');
+      Logger.e(e, trace: s, tag: '$CustomContentManager');
     }
 
     return lists;
@@ -128,7 +128,7 @@ class CustomContentManager {
     try {
       File(join(basePath, '$id.m3u')).writeAsStringSync(m3uAsString.toString());
     } on Exception catch (e, s) {
-      printErrorInDebugMode(e, trace: s, tag: '$CustomContentManager');
+      Logger.e(e, trace: s, tag: '$CustomContentManager');
     }
   }
 

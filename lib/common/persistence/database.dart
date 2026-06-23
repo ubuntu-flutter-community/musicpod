@@ -38,14 +38,14 @@ class Database extends _$Database {
 
   Future<void> reclaimDiskSpace() async {
     try {
-      printInfoInDebugMode('Reclaiming disk space...', tag: '$Database');
+      Logger.i('Reclaiming disk space...', tag: '$Database');
       await customStatement('VACUUM;');
-      printInfoInDebugMode(
+      Logger.i(
         'Database defragmented and shrunk successfully.',
         tag: '$Database',
       );
     } catch (e, stackTrace) {
-      printErrorInDebugMode(
+      Logger.e(
         'Failed to vacuum database: $e',
         trace: stackTrace,
         tag: '$Database',

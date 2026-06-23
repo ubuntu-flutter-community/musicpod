@@ -4,11 +4,11 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../player/player_manager.dart';
 import '../data/audio.dart';
 import 'audio_page_type.dart';
-import 'audio_tile.dart';
+import 'local_audio_tile.dart';
 import 'ui_constants.dart';
 
-class SliverAudioTileList extends StatelessWidget with WatchItMixin {
-  const SliverAudioTileList({
+class SliverLocalAudioTileList extends StatelessWidget with WatchItMixin {
+  const SliverLocalAudioTileList({
     super.key,
     required this.audios,
     required this.pageId,
@@ -17,15 +17,17 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
     required this.audioPageType,
     this.selectedColor,
     required this.constraints,
+    required this.startNewPlaylistOnTap,
   });
 
   final List<Audio> audios;
   final String pageId;
-  final AudioPageType audioPageType;
+  final LocalAudioPageType audioPageType;
   final void Function(String text)? onSubTitleTab;
   final void Function(Audio audio)? onSubSubTitleTab;
   final Color? selectedColor;
   final BoxConstraints constraints;
+  final bool startNewPlaylistOnTap;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,7 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
     final currentAudio = watchPropertyValue((PlayerManager m) => m.audio);
     final allowLeadingImage =
         audios.length < kShowLeadingThreshold &&
-        audioPageType != AudioPageType.allTitlesView;
+        audioPageType != LocalAudioPageType.allTitlesView;
 
     return SliverList(
       delegate: SliverChildBuilderDelegate(childCount: audios.length, (
@@ -50,7 +52,7 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
         final audioSelected = currentAudio == audio;
         return Padding(
           padding: const EdgeInsets.only(bottom: kSmallestSpace),
-          child: AudioTile(
+          child: LocalAudioTile(
             showSubSubTitle: width > 1200,
             showDuration: width > 1000,
             showSubTitle: width > 500,
@@ -62,7 +64,6 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
             onSubTitleTap: onSubTitleTab,
             onSubSubTitleTap: onSubSubTitleTab,
             isPlayerPlaying: isPlaying,
-
             onTap: () {
               if (audioSelected) {
                 if (isPlaying) {
@@ -72,7 +73,7 @@ class SliverAudioTileList extends StatelessWidget with WatchItMixin {
                 }
               } else {
                 playerManager.startPlaylist(
-                  audios: audios,
+                  audios: startNewPlaylistOnTap ? audios : [audio],
                   listName: pageId,
                   index: index,
                 );

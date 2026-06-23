@@ -70,6 +70,7 @@ class SliverLocalSearchResult extends StatelessWidget with WatchItMixin {
       genres: genresResult,
       playlists: playlistsResult,
       constraints: constraints,
+      startNewPlaylistOnTap: false,
     );
   }
 }

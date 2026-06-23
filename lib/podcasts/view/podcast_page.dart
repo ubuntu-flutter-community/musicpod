@@ -46,7 +46,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
           param1: feedUrl,
         ).updateCommand.run((genre: genre!));
       }
-      cleanUpLocalAudioCaches();
+      clearLocalCovers();
       di<PodcastUpdatesManager>().command.run(
         PodcastUpdateCapsule(
           feedUrls: [feedUrl],
