@@ -1,5 +1,5 @@
-import '../common/data/audio_type.dart';
-import '../l10n/app_localizations.dart';
+import '../../common/data/audio_type.dart';
+import '../../l10n/app_localizations.dart';
 
 enum SearchType {
   localTitle,

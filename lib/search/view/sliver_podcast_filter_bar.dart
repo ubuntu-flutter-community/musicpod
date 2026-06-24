@@ -5,7 +5,7 @@ import '../../common/view/common_control_panel.dart';
 import '../../common/view/progress.dart';
 import '../../extensions/build_context_x.dart';
 import '../../podcasts/manager/podcast_genre_manager.dart';
-import '../search_manager.dart';
+import '../manager/search_manager.dart';
 
 class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
   const SliverPodcastFilterBar({super.key});

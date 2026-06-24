@@ -8,12 +8,12 @@ import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/taget_platform_x.dart';
+import '../../extensions/platform_x.dart';
 import '../../extensions/theme_data_x.dart';
 
 import '../../radio/view/next_station_button.dart';
-import '../../settings/settings_manager.dart';
-import '../player_manager.dart';
+import '../../settings/manager/settings_manager.dart';
+import '../manager/player_manager.dart';
 import 'play_button.dart';
 import 'repeat_button.dart';
 import 'seek_button.dart';

@@ -1,0 +1,28 @@
+name: Generate L10n for Weblate
+
+on:
+  push:
+    branches:
+      - 'weblate:weblate-musicpod-app' 
+
+jobs:
+  generate-l10n:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+      - name: Generate Localization Files
+        run: flutter gen-l10n
+
+      - name: Commit Generated Code
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: "chore: auto-generate dart localization files"
+          file_pattern: "lib/l10n/*.dart"
+          branch: ${{ github.ref }}

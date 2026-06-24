@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../common/file_names.dart';
-import '../common/logging.dart';
-import '../common/persistence_utils.dart';
-import '../extensions/taget_platform_x.dart';
-import 'shared_preferences_keys.dart';
+import '../../common/file_names.dart';
+import '../../common/logging.dart';
+import '../../common/persistence_utils.dart';
+import '../../extensions/platform_x.dart';
+import '../data/shared_preferences_keys.dart';
 
 @lazySingleton
 class SettingsService {

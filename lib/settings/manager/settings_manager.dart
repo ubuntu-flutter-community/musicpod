@@ -5,13 +5,13 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-import '../local_audio/local_audio_service.dart';
-import '../lyrics/lyrics_service.dart';
-import '../player/player_service.dart';
-import '../podcasts/podcast_service.dart';
-import '../radio/radio_service.dart';
-import 'settings_service.dart';
-import 'shared_preferences_keys.dart';
+import '../../local_audio/service/local_audio_service.dart';
+import '../../lyrics/data/online_lyrics_source.dart';
+import '../../player/service/player_service.dart';
+import '../../podcasts/service/podcast_service.dart';
+import '../../radio/service/radio_service.dart';
+import '../service/settings_service.dart';
+import '../data/shared_preferences_keys.dart';
 
 @lazySingleton
 class SettingsManager extends SafeChangeNotifier {
@@ -217,10 +217,11 @@ class SettingsManager extends SafeChangeNotifier {
   late final Command<void, void> wipeAllSettingsCommand =
       Command.createAsyncNoParamNoResult(_service.wipeAllSettings);
 
-  OnlineLyricsSource? get onlineLyricsSource {
+  OnlineLyricsSource get onlineLyricsSource {
     final value = _service.getString(SPKeys.onlineLyricsSource);
-    if (value == null) return null;
-    return OnlineLyricsSource.values.firstWhereOrNull((e) => e.name == value);
+    if (value == null) return OnlineLyricsSource.lrcLib;
+    return OnlineLyricsSource.values.firstWhereOrNull((e) => e.name == value) ??
+        OnlineLyricsSource.lrcLib;
   }
 
   void setOnlineLyricsSource(OnlineLyricsSource? value) {

@@ -5,20 +5,20 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-import '../common/data/audio.dart';
-import '../common/data/audio_type.dart';
-import '../common/logging.dart';
-import '../expose/expose_service.dart';
-import '../extensions/command_x.dart';
-import '../extensions/string_x.dart';
-import '../lyrics/data/lyrics_and_art_result_and_param.dart';
-import '../lyrics/lyrics_manager.dart';
-import '../radio/online_art_service.dart';
-import '../settings/settings_service.dart';
-import '../settings/shared_preferences_keys.dart';
-import 'data/mpv_meta_data.dart';
-import 'observe_property.dart';
-import 'player_service.dart';
+import '../../common/data/audio.dart';
+import '../../common/data/audio_type.dart';
+import '../../common/logging.dart';
+import '../../expose/service/expose_service.dart';
+import '../../extensions/command_x.dart';
+import '../../extensions/string_x.dart';
+import '../../lyrics/data/lyrics_and_art_result_and_param.dart';
+import '../../lyrics/lyrics_manager.dart';
+import '../../radio/service/online_art_service.dart';
+import '../../settings/service/settings_service.dart';
+import '../../settings/data/shared_preferences_keys.dart';
+import '../data/mpv_meta_data.dart';
+import '../data/observe_property/observe_property.dart';
+import '../service/player_service.dart';
 
 @singleton
 class MpvMetadataManager {

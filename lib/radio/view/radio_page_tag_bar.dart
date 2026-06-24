@@ -11,8 +11,8 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/tapable_text.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../../search/search_manager.dart';
-import '../../search/search_type.dart';
+import '../../search/manager/search_manager.dart';
+import '../../search/data/search_type.dart';
 
 class RadioPageTagBar extends StatelessWidget {
   const RadioPageTagBar({

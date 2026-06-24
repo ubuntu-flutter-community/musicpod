@@ -7,8 +7,8 @@ import '../../extensions/build_context_x.dart';
 import '../../local_audio/manager/local_audio_manager.dart';
 import '../../local_audio/data/local_audio_view.dart';
 import '../../local_audio/view/local_audio_body.dart';
-import '../search_manager.dart';
-import '../search_type.dart';
+import '../manager/search_manager.dart';
+import '../data/search_type.dart';
 
 class SliverLocalSearchResult extends StatelessWidget with WatchItMixin {
   const SliverLocalSearchResult({super.key, required this.constraints});

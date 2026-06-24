@@ -4,7 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/player_manager.dart';
+import '../../player/manager/player_manager.dart';
 import '../manager/episodes_manager.dart';
 import 'podcast_icon_button_progress.dart';
 

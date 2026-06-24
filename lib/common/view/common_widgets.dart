@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../settings/settings_manager.dart';
+import '../../settings/manager/settings_manager.dart';
 
 class CommonSwitch extends StatelessWidget with WatchItMixin {
   const CommonSwitch({super.key, required this.value, this.onChanged});

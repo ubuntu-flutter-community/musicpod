@@ -5,7 +5,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/player_manager.dart';
+import '../../player/manager/player_manager.dart';
 import '../../player/view/player_main_controls.dart';
 import '../../player/view/player_view.dart';
 import '../app_manager.dart';

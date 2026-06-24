@@ -8,7 +8,7 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 import '../../common/data/audio.dart';
 import '../data/podcast_episode_filter.dart';
 import '../data/podcast_short_info.dart';
-import '../podcast_service.dart';
+import '../service/podcast_service.dart';
 import 'podcast_genre_manager.dart';
 
 @Injectable(cache: true)

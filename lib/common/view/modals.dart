@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../extensions/build_context_x.dart';
-import '../../extensions/taget_platform_x.dart';
+import '../../extensions/platform_x.dart';
 
 Future<void> showModal({
   required BuildContext context,

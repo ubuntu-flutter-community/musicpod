@@ -5,10 +5,10 @@ import 'package:podcast_search/podcast_search.dart';
 
 import '../app/app_config.dart';
 import '../l10n/app_localizations.dart';
-import '../lyrics/lyrics_service.dart';
-import '../podcasts/podcast_service.dart';
-import '../radio/radio_service.dart';
-import '../search/search_timeout_exception.dart';
+import '../lyrics/data/online_lyrics_exceptions.dart';
+import '../podcasts/data/podcast_exceptions.dart';
+import '../radio/data/radio_exceptions.dart';
+import '../search/data/search_timeout_exception.dart';
 
 extension ObjectX on Object? {
   String localizedErrorMessage(
@@ -37,7 +37,6 @@ extension ObjectX on Object? {
     FetchOnlineLyricsTimeoutException() =>
       l10n.fetchingLyricsOnlineTimeoutMessage,
     SocketException() => l10n.lookUpRadioBrowserHostsFailed,
-    NoLyrcicsFoundException() => l10n.noLyricsFound,
     DioException() =>
       (this as DioException).error is SocketException
           ? l10n.appCanNotConnectToHost(

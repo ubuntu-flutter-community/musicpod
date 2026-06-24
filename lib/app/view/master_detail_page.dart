@@ -5,7 +5,7 @@ import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/taget_platform_x.dart';
+import '../../extensions/platform_x.dart';
 import '../page_ids.dart';
 import '../routing_manager.dart';
 import 'master_item_page.dart';

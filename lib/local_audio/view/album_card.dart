@@ -9,7 +9,7 @@ import '../../common/view/cover_background.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/command_x.dart';
-import '../../player/player_manager.dart';
+import '../../player/manager/player_manager.dart';
 import '../manager/find_album_manager.dart';
 import '../manager/find_album_name_manager.dart';
 import '../manager/pinned_album_ids_manager.dart';

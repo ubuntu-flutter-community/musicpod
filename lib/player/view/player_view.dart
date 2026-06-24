@@ -4,8 +4,8 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../../settings/settings_manager.dart';
-import '../player_manager.dart';
+import '../../settings/manager/settings_manager.dart';
+import '../manager/player_manager.dart';
 import 'bottom_player.dart';
 import 'full_window_player.dart';
 

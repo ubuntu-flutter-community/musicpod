@@ -7,7 +7,7 @@ import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../custom_content/view/backup_dialog.dart';
 import '../../extensions/build_context_x.dart';
-import '../wipe_manager.dart';
+import '../manager/wipe_manager.dart';
 
 class ResetSection extends StatelessWidget {
   const ResetSection({super.key});

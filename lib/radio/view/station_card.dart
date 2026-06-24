@@ -8,7 +8,7 @@ import '../../common/view/audio_fall_back_icon.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
-import '../../player/player_manager.dart';
+import '../../player/manager/player_manager.dart';
 import '../manager/radio_manager.dart';
 import '../manager/station_manager.dart';
 import 'station_page.dart';

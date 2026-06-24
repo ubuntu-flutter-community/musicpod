@@ -5,13 +5,13 @@ import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../common/logging.dart';
-import '../settings/settings_service.dart';
-import '../settings/shared_preferences_keys.dart';
+import '../settings/service/settings_service.dart';
+import '../settings/data/shared_preferences_keys.dart';
 import 'page_ids.dart';
-import '../extensions/taget_platform_x.dart';
-import '../local_audio/local_audio_service.dart';
-import '../podcasts/podcast_service.dart';
-import '../radio/radio_service.dart';
+import '../extensions/platform_x.dart';
+import '../local_audio/service/local_audio_service.dart';
+import '../podcasts/service/podcast_service.dart';
+import '../radio/service/radio_service.dart';
 import 'view/mobile_page.dart';
 
 @lazySingleton

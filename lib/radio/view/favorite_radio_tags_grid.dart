@@ -11,8 +11,8 @@ import '../../common/view/round_image_container.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../search/search_manager.dart';
-import '../../search/search_type.dart';
+import '../../search/manager/search_manager.dart';
+import '../../search/data/search_type.dart';
 import '../manager/radio_fav_tag_manager.dart';
 import 'open_radio_discover_page_button.dart';
 

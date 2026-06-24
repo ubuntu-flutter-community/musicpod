@@ -3,7 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
-import '../../settings/settings_manager.dart';
+import '../../settings/manager/settings_manager.dart';
 
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason>?
 showFailedImportsSnackBarIfNotBlocked({

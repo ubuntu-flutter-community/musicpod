@@ -1,7 +1,7 @@
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 import '../data/podcast_update_capsule.dart';
-import '../podcast_service.dart';
+import '../service/podcast_service.dart';
 import 'episodes_manager.dart';
 
 @Injectable(cache: true)

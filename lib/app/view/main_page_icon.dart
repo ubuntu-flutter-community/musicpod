@@ -8,8 +8,8 @@ import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../local_audio/manager/local_audio_manager.dart';
-import '../../player/player_manager.dart';
-import '../../settings/settings_manager.dart';
+import '../../player/manager/player_manager.dart';
+import '../../settings/manager/settings_manager.dart';
 
 class MainPageIcon extends StatelessWidget with WatchItMixin {
   const MainPageIcon({

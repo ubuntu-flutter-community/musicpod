@@ -1,9 +1,9 @@
 import 'package:injectable/injectable.dart';
 import 'package:listenbrainz_dart/listenbrainz_dart.dart';
 
-import '../common/logging.dart';
-import '../settings/settings_service.dart';
-import '../settings/shared_preferences_keys.dart';
+import '../../common/logging.dart';
+import '../../settings/service/settings_service.dart';
+import '../../settings/data/shared_preferences_keys.dart';
 
 @lazySingleton
 class ListenBrainzService {

@@ -7,7 +7,7 @@ import '../common/logging.dart';
 import '../local_audio/manager/find_album_manager.dart';
 import '../local_audio/manager/local_audio_manager.dart';
 import '../local_audio/manager/playlist_manager.dart';
-import '../player/player_manager.dart';
+import '../player/manager/player_manager.dart';
 import '../podcasts/data/podcast_update_capsule.dart';
 import '../podcasts/manager/episodes_manager.dart';
 import '../podcasts/manager/podcast_manager.dart';

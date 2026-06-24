@@ -3,7 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/ui_constants.dart';
 import '../../local_audio/view/local_cover.dart';
-import '../player_manager.dart';
+import '../manager/player_manager.dart';
 import 'player_fall_back_image.dart';
 import 'player_remote_source_image.dart';
 

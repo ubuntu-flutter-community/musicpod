@@ -5,7 +5,7 @@ import '../../app/app_manager.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
 
-import '../player_manager.dart';
+import '../manager/player_manager.dart';
 
 class StopButton extends StatelessWidget {
   const StopButton({super.key, required this.active});

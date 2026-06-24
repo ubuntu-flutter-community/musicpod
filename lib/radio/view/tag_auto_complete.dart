@@ -6,7 +6,7 @@ import 'package:radio_browser_api/radio_browser_api.dart' hide State;
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../../settings/settings_manager.dart';
+import '../../settings/manager/settings_manager.dart';
 
 class TagAutoComplete extends StatelessWidget with WatchItMixin {
   const TagAutoComplete({

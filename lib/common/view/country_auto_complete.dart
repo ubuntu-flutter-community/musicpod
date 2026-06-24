@@ -5,7 +5,7 @@ import 'package:podcast_search/podcast_search.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../extensions/country_x.dart';
-import '../../settings/settings_manager.dart';
+import '../../settings/manager/settings_manager.dart';
 import 'icons.dart';
 import 'theme.dart';
 

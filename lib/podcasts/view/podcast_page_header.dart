@@ -12,7 +12,7 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/command_x.dart';
 import '../../extensions/string_x.dart';
 import '../../l10n/app_localizations.dart';
-import '../../search/search_manager.dart';
+import '../../search/manager/search_manager.dart';
 import '../manager/podcast_genre_manager.dart';
 import '../manager/podcast_short_info_manager.dart';
 import 'podcast_page_image.dart';

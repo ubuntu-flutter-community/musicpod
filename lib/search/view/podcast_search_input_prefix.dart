@@ -9,8 +9,8 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/country_x.dart';
-import '../../settings/settings_manager.dart';
-import '../search_manager.dart';
+import '../../settings/manager/settings_manager.dart';
+import '../manager/search_manager.dart';
 
 class PodcastSearchInputPrefix extends StatelessWidget with WatchItMixin {
   const PodcastSearchInputPrefix({super.key});

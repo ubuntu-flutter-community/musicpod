@@ -7,8 +7,8 @@ import '../../common/view/modals.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../settings/settings_manager.dart';
-import '../search_manager.dart';
+import '../../settings/manager/settings_manager.dart';
+import '../manager/search_manager.dart';
 
 class AudioTypeFilterButton extends StatelessWidget {
   const AudioTypeFilterButton({super.key, required OverlayMode mode})

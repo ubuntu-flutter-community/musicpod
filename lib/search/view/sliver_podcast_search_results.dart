@@ -6,7 +6,7 @@ import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../search_manager.dart';
+import '../manager/search_manager.dart';
 import 'podcast_card.dart';
 
 class SliverPodcastSearchResults extends StatefulWidget

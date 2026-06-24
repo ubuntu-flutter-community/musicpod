@@ -7,17 +7,17 @@ import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:synchronized/synchronized.dart';
 
-import '../common/data/audio.dart';
-import '../common/logging.dart';
-import '../common/view/audio_filter.dart';
-import '../extensions/media_file_x.dart';
-import '../settings/settings_service.dart';
-import '../settings/shared_preferences_keys.dart';
-import 'data/change_metadata_capsule.dart';
+import '../../common/data/audio.dart';
+import '../../common/logging.dart';
+import '../../common/view/audio_filter.dart';
+import '../../extensions/media_file_x.dart';
+import '../../settings/service/settings_service.dart';
+import '../../settings/data/shared_preferences_keys.dart';
+import '../data/change_metadata_capsule.dart';
 import 'local_cover_service.dart';
-import 'data/local_search_result.dart';
-import 'persistence/local_audio_dao.dart';
-import 'data/playlist_action.dart';
+import '../data/local_search_result.dart';
+import '../persistence/local_audio_dao.dart';
+import '../data/playlist_action.dart';
 
 @lazySingleton
 class LocalAudioService {

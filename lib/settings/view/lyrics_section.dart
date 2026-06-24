@@ -4,8 +4,8 @@ import 'package:yaru/yaru.dart';
 
 import '../../common/view/common_widgets.dart';
 import '../../extensions/build_context_x.dart';
-import '../../lyrics/lyrics_service.dart';
-import '../settings_manager.dart';
+import '../../lyrics/data/online_lyrics_source.dart';
+import '../manager/settings_manager.dart';
 
 class LyricsSection extends StatelessWidget with WatchItMixin {
   const LyricsSection({super.key});
@@ -39,7 +39,7 @@ class LyricsSection extends StatelessWidget with WatchItMixin {
               title: Text(l10n.onlineLyricsSourceTitle),
               subtitle: Text(l10n.onlineLyricsSourceDescription),
               trailing: YaruPopupMenuButton<OnlineLyricsSource>(
-                child: Text(onlineLyricsSource?.localize(l10n) ?? ''),
+                child: Text(onlineLyricsSource.localize(l10n)),
                 initialValue: onlineLyricsSource,
                 onSelected: di<SettingsManager>().setOnlineLyricsSource,
                 itemBuilder: (context) =>

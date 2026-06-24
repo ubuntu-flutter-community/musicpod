@@ -4,7 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/player_manager.dart';
+import '../../player/manager/player_manager.dart';
 
 class PodcastTileProgress extends StatelessWidget with WatchItMixin {
   const PodcastTileProgress({

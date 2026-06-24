@@ -2467,6 +2467,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String appCanNotConnectToHost(String appName, String host) {
-    return '$appName can not connect to $host. Are you connected to the internet?';
+    return '$appName non può connettersi a $host. Sei connesso a internet?';
   }
 }

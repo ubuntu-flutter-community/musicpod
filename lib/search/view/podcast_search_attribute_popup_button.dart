@@ -5,7 +5,7 @@ import 'package:podcast_search/podcast_search.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
 import '../../l10n/app_localizations.dart';
-import '../search_manager.dart';
+import '../manager/search_manager.dart';
 
 class PodcastSearchAttributePopupButton extends StatelessWidget
     with WatchItMixin {

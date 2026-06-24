@@ -3,7 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/routing_manager.dart';
-import '../../settings/settings_manager.dart';
+import '../../settings/manager/settings_manager.dart';
 import 'icons.dart';
 
 class NavBackButton extends StatelessWidget with WatchItMixin {

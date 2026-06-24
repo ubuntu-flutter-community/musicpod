@@ -9,7 +9,7 @@ import '../../../common/view/ui_constants.dart';
 import '../../../extensions/build_context_x.dart';
 import '../../../local_audio/data/playlist_action.dart';
 import '../../../local_audio/manager/playlist_ids_manager.dart';
-import '../../player_manager.dart';
+import '../../manager/player_manager.dart';
 
 class QueueBody extends StatefulWidget with WatchItStatefulWidgetMixin {
   const QueueBody({super.key, this.selectedColor, this.shownInDialog = false});

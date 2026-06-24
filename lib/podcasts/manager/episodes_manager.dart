@@ -4,7 +4,7 @@ import 'package:injectable/injectable.dart';
 import '../../common/data/audio.dart';
 import '../../common/logging.dart';
 import '../../common/view/audio_filter.dart';
-import '../podcast_service.dart';
+import '../service/podcast_service.dart';
 
 @Injectable(cache: true)
 class EpisodesManager {

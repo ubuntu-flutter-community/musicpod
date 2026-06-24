@@ -3,7 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/mpv_metadata_manager.dart';
+import '../../player/manager/mpv_metadata_manager.dart';
 
 class BlockedHearinyHistoryList extends StatelessWidget with WatchItMixin {
   const BlockedHearinyHistoryList({super.key});

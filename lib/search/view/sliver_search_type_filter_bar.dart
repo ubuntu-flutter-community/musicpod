@@ -4,8 +4,8 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/view/common_control_panel.dart';
 import '../../extensions/build_context_x.dart';
 import '../../local_audio/data/local_search_result.dart';
-import '../search_manager.dart';
-import '../search_type.dart';
+import '../manager/search_manager.dart';
+import '../data/search_type.dart';
 
 class SearchTypeFilterBar extends StatelessWidget with WatchItMixin {
   const SearchTypeFilterBar({super.key});

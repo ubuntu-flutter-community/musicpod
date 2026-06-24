@@ -6,8 +6,8 @@ import '../../common/view/custom_track_shape.dart';
 import '../../common/view/progress.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';
-import '../../settings/settings_manager.dart';
-import '../player_manager.dart';
+import '../../settings/manager/settings_manager.dart';
+import '../manager/player_manager.dart';
 
 class PlayerTrack extends StatelessWidget with WatchItMixin {
   const PlayerTrack({super.key, this.bottomPlayer = false, this.active = true});

@@ -7,8 +7,8 @@ import '../app/app_config.dart';
 import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
 import '../common/snap_detector.dart';
-import '../extensions/taget_platform_x.dart';
-import '../player/player_service.dart';
+import '../extensions/platform_x.dart';
+import '../player/service/player_service.dart';
 
 @module
 abstract class AudioServiceModule {

@@ -5,9 +5,9 @@ import 'package:injectable/injectable.dart';
 import 'package:lastfm/lastfm.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../common/logging.dart';
-import '../settings/settings_service.dart';
-import '../settings/shared_preferences_keys.dart';
+import '../../common/logging.dart';
+import '../../settings/service/settings_service.dart';
+import '../../settings/data/shared_preferences_keys.dart';
 
 @lazySingleton
 class LastfmService {

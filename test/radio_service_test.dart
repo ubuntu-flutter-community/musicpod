@@ -4,7 +4,8 @@ import 'package:musicpod/common/data/audio.dart';
 import 'package:musicpod/common/data/audio_type.dart';
 import 'package:musicpod/common/persistence/database.dart';
 import 'package:musicpod/radio/persistence/radio_dao.dart';
-import 'package:musicpod/radio/radio_service.dart';
+import 'package:musicpod/radio/data/radio_exceptions.dart';
+import 'package:musicpod/radio/service/radio_service.dart';
 
 import 'radio_service_test.mocks.dart';
 

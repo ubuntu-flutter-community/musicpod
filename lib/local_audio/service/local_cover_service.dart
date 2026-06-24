@@ -7,13 +7,13 @@ import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:path/path.dart' as p;
 
-import '../common/data/audio.dart';
-import '../common/logging.dart';
-import '../common/persistence_utils.dart';
-import '../extensions/media_file_x.dart';
-import '../extensions/string_x.dart';
-import '../extensions/taget_platform_x.dart';
-import 'persistence/local_audio_dao.dart';
+import '../../common/data/audio.dart';
+import '../../common/logging.dart';
+import '../../common/persistence_utils.dart';
+import '../../extensions/media_file_x.dart';
+import '../../extensions/string_x.dart';
+import '../../extensions/platform_x.dart';
+import '../persistence/local_audio_dao.dart';
 
 @lazySingleton
 class LocalCoverService {

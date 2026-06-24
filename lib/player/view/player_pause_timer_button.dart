@@ -8,9 +8,9 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';
-import '../../extensions/taget_platform_x.dart';
+import '../../extensions/platform_x.dart';
 
-import '../player_manager.dart';
+import '../manager/player_manager.dart';
 
 Duration durationUntilNextTimeOfDay({
   required TimeOfDay targetTime,

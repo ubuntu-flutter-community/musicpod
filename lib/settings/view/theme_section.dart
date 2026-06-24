@@ -8,9 +8,9 @@ import '../../common/view/common_widgets.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/taget_platform_x.dart';
+import '../../extensions/platform_x.dart';
 import '../../extensions/theme_mode_x.dart';
-import '../settings_manager.dart';
+import '../manager/settings_manager.dart';
 import 'theme_tile.dart';
 
 class ThemeSection extends StatelessWidget with WatchItMixin {

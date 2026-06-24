@@ -17,9 +17,9 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/command_x.dart';
 import '../../extensions/string_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../../player/mpv_metadata_manager.dart';
-import '../../player/player_manager.dart';
-import '../../settings/settings_manager.dart';
+import '../../player/manager/mpv_metadata_manager.dart';
+import '../../player/manager/player_manager.dart';
+import '../../settings/manager/settings_manager.dart';
 import '../data/lyrics_and_art_result_and_param.dart';
 import '../lyrics_manager.dart';
 

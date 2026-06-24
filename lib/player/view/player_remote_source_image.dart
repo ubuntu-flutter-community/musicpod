@@ -4,7 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/safe_network_image.dart';
 import '../../extensions/build_context_x.dart';
-import '../player_manager.dart';
+import '../manager/player_manager.dart';
 
 class PlayerRemoteSourceImage extends StatelessWidget with WatchItMixin {
   const PlayerRemoteSourceImage({

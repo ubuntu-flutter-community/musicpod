@@ -6,10 +6,10 @@ import 'package:injectable/injectable.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-import '../extensions/taget_platform_x.dart';
-import '../local_audio/local_audio_service.dart';
-import '../settings/settings_service.dart';
-import '../settings/shared_preferences_keys.dart';
+import '../extensions/platform_x.dart';
+import '../local_audio/service/local_audio_service.dart';
+import '../settings/service/settings_service.dart';
+import '../settings/data/shared_preferences_keys.dart';
 import 'app_config.dart';
 
 @lazySingleton

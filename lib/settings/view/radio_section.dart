@@ -5,7 +5,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
-import '../../custom_content/custom_content_manager.dart';
+import '../../custom_content/manager/custom_content_manager.dart';
 import '../../extensions/build_context_x.dart';
 
 import '../../radio/manager/radio_manager.dart';

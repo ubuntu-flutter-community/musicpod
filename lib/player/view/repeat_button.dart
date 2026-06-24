@@ -5,7 +5,7 @@ import 'package:media_kit/media_kit.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
 
-import '../player_manager.dart';
+import '../manager/player_manager.dart';
 
 class PlaylistModeButton extends StatelessWidget with WatchItMixin {
   const PlaylistModeButton({super.key, required this.active, this.iconColor});

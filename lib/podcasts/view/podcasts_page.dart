@@ -9,8 +9,8 @@ import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../common/view/clean_up_caches.dart';
-import '../../search/search_manager.dart';
-import '../../search/search_type.dart';
+import '../../search/manager/search_manager.dart';
+import '../../search/data/search_type.dart';
 import 'podcasts_collection_body.dart';
 
 class PodcastsPage extends StatelessWidget with WatchItMixin {
