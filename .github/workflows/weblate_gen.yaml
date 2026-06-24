@@ -17,7 +17,8 @@ jobs:
         with:
           fetch-depth: 0
       - uses: kuhnroyal/flutter-fvm-config-action/setup@v3
-      - run: flutter pub get
+      - name: Generate Localization Files
+        run: flutter gen-l10n
 
       - name: Commit Generated Code
         uses: stefanzweifel/git-auto-commit-action@v7
