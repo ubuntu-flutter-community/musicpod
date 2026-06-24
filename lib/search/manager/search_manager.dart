@@ -8,19 +8,19 @@ import 'package:podcast_search/podcast_search.dart';
 import 'package:radio_browser_api/radio_browser_api.dart' hide Country;
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-import '../common/data/audio.dart';
-import '../common/data/audio_type.dart';
-import '../common/view/languages.dart';
-import '../extensions/string_x.dart';
-import '../local_audio/data/local_search_result.dart';
-import '../local_audio/local_audio_service.dart';
-import '../podcasts/data/podcast_genre.dart';
-import '../podcasts/podcast_service.dart';
-import '../radio/manager/radio_manager.dart';
-import '../settings/settings_service.dart';
-import '../settings/shared_preferences_keys.dart';
-import 'search_timeout_exception.dart';
-import 'search_type.dart';
+import '../../common/data/audio.dart';
+import '../../common/data/audio_type.dart';
+import '../../common/view/languages.dart';
+import '../../extensions/string_x.dart';
+import '../../local_audio/data/local_search_result.dart';
+import '../../local_audio/service/local_audio_service.dart';
+import '../../podcasts/data/podcast_genre.dart';
+import '../../podcasts/service/podcast_service.dart';
+import '../../radio/manager/radio_manager.dart';
+import '../../settings/service/settings_service.dart';
+import '../../settings/data/shared_preferences_keys.dart';
+import '../data/search_timeout_exception.dart';
+import '../data/search_type.dart';
 
 @Injectable(cache: true)
 class SearchManager {

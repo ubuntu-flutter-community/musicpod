@@ -9,7 +9,7 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../radio/manager/radio_star_station_manager.dart';
 import '../../radio/manager/radio_manager.dart';
-import '../../search/search_manager.dart';
+import '../../search/manager/search_manager.dart';
 
 class CustomStationSection extends StatefulWidget {
   const CustomStationSection({super.key});

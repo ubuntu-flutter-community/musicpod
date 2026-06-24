@@ -10,7 +10,7 @@ import '../../common/view/spaced_divider.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/player_manager.dart';
+import '../../player/manager/player_manager.dart';
 import '../sidebar_audios_manager.dart';
 import 'master_item.dart';
 import '../routing_manager.dart';

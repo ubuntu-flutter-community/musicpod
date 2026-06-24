@@ -8,10 +8,10 @@ import 'package:mockito/mockito.dart';
 import 'package:musicpod/common/data/audio.dart';
 import 'package:musicpod/common/data/audio_type.dart';
 import 'package:musicpod/common/persistence/database.dart';
-import 'package:musicpod/local_audio/local_cover_service.dart';
-import 'package:musicpod/local_audio/local_audio_service.dart';
+import 'package:musicpod/local_audio/service/local_cover_service.dart';
+import 'package:musicpod/local_audio/service/local_audio_service.dart';
 import 'package:musicpod/local_audio/persistence/local_audio_dao.dart';
-import 'package:musicpod/settings/settings_service.dart';
+import 'package:musicpod/settings/service/settings_service.dart';
 
 import 'local_audio_service_test.mocks.dart';
 

@@ -9,12 +9,12 @@ import '../../common/view/tapable_text.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../../player/player_manager.dart';
+import '../../player/manager/player_manager.dart';
 import '../../radio/manager/radio_manager.dart';
 import '../../radio/view/radio_connect_mixin.dart';
 import '../../radio/view/radio_page_tag_bar.dart';
 import '../../radio/view/station_page.dart';
-import '../search_manager.dart';
+import '../manager/search_manager.dart';
 
 class SliverRadioSearchResults extends StatelessWidget
     with WatchItMixin, RadioConnectMixin {

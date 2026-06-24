@@ -9,7 +9,7 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../../settings/settings_manager.dart';
+import '../../settings/manager/settings_manager.dart';
 import '../manager/find_all_tracks_manager.dart';
 import '../manager/playlist_manager.dart';
 import '../manager/local_audio_manager.dart';

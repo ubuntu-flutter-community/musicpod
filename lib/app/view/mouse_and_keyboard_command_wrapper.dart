@@ -4,9 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/data/audio_type.dart';
-import '../../player/player_manager.dart';
+import '../../player/manager/player_manager.dart';
 import '../../radio/manager/radio_manager.dart';
-import '../../search/search_manager.dart';
+import '../../search/manager/search_manager.dart';
 import '../app_manager.dart';
 import '../page_ids.dart';
 import '../routing_manager.dart';

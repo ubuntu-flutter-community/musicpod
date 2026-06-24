@@ -6,15 +6,16 @@ import 'package:injectable/injectable.dart';
 import 'package:podcast_search/podcast_search.dart' hide Value;
 import 'package:synchronized/synchronized.dart';
 
-import '../common/data/audio.dart';
-import '../common/logging.dart';
-import '../common/view/audio_filter.dart';
-import '../common/view/languages.dart';
-import '../settings/settings_service.dart';
-import '../settings/shared_preferences_keys.dart';
-import 'data/podcast_genre.dart';
-import 'data/podcast_short_info.dart';
-import 'persistence/podcast_dao.dart';
+import '../../common/data/audio.dart';
+import '../../common/logging.dart';
+import '../../common/view/audio_filter.dart';
+import '../../common/view/languages.dart';
+import '../../settings/service/settings_service.dart';
+import '../../settings/data/shared_preferences_keys.dart';
+import '../data/podcast_exceptions.dart';
+import '../data/podcast_genre.dart';
+import '../data/podcast_short_info.dart';
+import '../persistence/podcast_dao.dart';
 
 @lazySingleton
 class PodcastService {
@@ -381,21 +382,3 @@ class PodcastService {
 }
 
 Future<Podcast> loadPodcast(String url) => Feed.loadFeed(url: url);
-
-class FindEpisodesTimeoutException implements Exception {
-  final String? message;
-
-  static const Duration timeoutDuration = Duration(seconds: 30);
-
-  FindEpisodesTimeoutException({this.message});
-
-  @override
-  String toString() =>
-      message ?? 'Timeout while fetching episodes for the podcast';
-}
-
-class PodcastSearchNotSuccessfulException implements Exception {
-  @override
-  String toString() =>
-      'This podcast search was not successfull, are you connected to the internet? If yes this might be a server issue.';
-}

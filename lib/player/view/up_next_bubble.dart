@@ -4,7 +4,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../common/data/audio.dart';
-import '../player_manager.dart';
+import '../manager/player_manager.dart';
 
 class UpNextBubble extends StatelessWidget with WatchItMixin {
   const UpNextBubble({super.key, required this.audio, required this.nextAudio});

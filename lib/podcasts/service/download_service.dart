@@ -4,9 +4,9 @@ import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:path/path.dart' as p;
 
-import '../external_path/external_path_service.dart';
-import '../settings/settings_service.dart';
-import '../settings/shared_preferences_keys.dart';
+import '../../external_path/service/external_path_service.dart';
+import '../../settings/service/settings_service.dart';
+import '../../settings/data/shared_preferences_keys.dart';
 
 @lazySingleton
 class DownloadService {

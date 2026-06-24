@@ -7,7 +7,7 @@ import '../../extensions/build_context_x.dart';
 
 import '../../common/view/custom_track_shape.dart';
 
-import '../player_manager.dart';
+import '../manager/player_manager.dart';
 
 class VolumeSliderPopup extends StatelessWidget with WatchItMixin {
   const VolumeSliderPopup({super.key, this.color});

@@ -7,9 +7,9 @@ import '../../common/view/mpv_metadata_dialog.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/taget_platform_x.dart';
-import '../../player/mpv_metadata_manager.dart';
-import '../online_art_manager.dart';
+import '../../extensions/platform_x.dart';
+import '../../player/manager/mpv_metadata_manager.dart';
+import '../manager/online_art_manager.dart';
 
 class RadioHistoryTileImage extends StatelessWidget with WatchItMixin {
   const RadioHistoryTileImage({

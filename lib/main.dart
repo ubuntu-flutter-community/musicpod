@@ -5,7 +5,7 @@ import 'package:yaru/yaru.dart' show YaruWindowTitleBar;
 
 import 'app/view/musicpod.dart';
 import 'common/logging.dart';
-import 'extensions/taget_platform_x.dart';
+import 'extensions/platform_x.dart';
 
 Future<void> main(List<String> args) async {
   if (isMobile) {

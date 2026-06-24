@@ -7,7 +7,7 @@ import '../../app/page_ids.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
 
-import '../settings_manager.dart';
+import '../manager/settings_manager.dart';
 import 'settings_tile.dart';
 
 enum _SettingsButtonMode { icon, important, tile }

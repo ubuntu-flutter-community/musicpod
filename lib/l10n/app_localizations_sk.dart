@@ -626,7 +626,7 @@ class AppLocalizationsSk extends AppLocalizations {
   String get light => 'Svetlá';
 
   @override
-  String get system => 'Systém';
+  String get system => 'Systémová';
 
   @override
   String get dark => 'Tmavá';
@@ -2476,6 +2476,6 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String appCanNotConnectToHost(String appName, String host) {
-    return '$appName can not connect to $host. Are you connected to the internet?';
+    return '$appName sa nemôže pripojiť k $host. Ste pripojený na internet?';
   }
 }

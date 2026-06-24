@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:xdg_directories/xdg_directories.dart';
 
 import '../app/app_config.dart';
-import '../extensions/taget_platform_x.dart';
+import '../extensions/platform_x.dart';
 
 String? _workingDir;
 Future<String> getWorkingDir() async {

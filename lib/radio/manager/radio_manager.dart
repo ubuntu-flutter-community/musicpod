@@ -8,7 +8,7 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 import '../../common/data/audio.dart';
 import '../../extensions/command_x.dart';
 import '../data/radio_collection_view.dart';
-import '../radio_service.dart';
+import '../service/radio_service.dart';
 
 @Injectable(cache: true)
 class RadioManager {

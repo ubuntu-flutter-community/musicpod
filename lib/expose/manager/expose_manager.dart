@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
-import 'data/last_fm_credentials.dart';
-import 'expose_service.dart';
+import '../data/last_fm_credentials.dart';
+import '../service/expose_service.dart';
 
 @Injectable(cache: true)
 class ExposeManager {

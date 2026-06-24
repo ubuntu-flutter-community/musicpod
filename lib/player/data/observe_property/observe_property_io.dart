@@ -1,6 +1,6 @@
 import 'package:media_kit/media_kit.dart';
 
-import '../common/logging.dart';
+import '../../../common/logging.dart';
 
 Future<void> observeProperty({
   required String property,

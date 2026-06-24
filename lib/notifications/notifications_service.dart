@@ -3,7 +3,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:local_notifier/local_notifier.dart';
 
-import '../extensions/taget_platform_x.dart';
+import '../extensions/platform_x.dart';
 
 @lazySingleton
 class NotificationsService {

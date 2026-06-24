@@ -8,8 +8,8 @@ import '../../common/view/header_bar.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../../search/search_manager.dart';
-import '../../search/search_type.dart';
+import '../../search/manager/search_manager.dart';
+import '../../search/data/search_type.dart';
 import 'radio_lib_page.dart';
 
 class RadioPage extends StatelessWidget {

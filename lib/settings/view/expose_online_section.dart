@@ -6,9 +6,9 @@ import 'package:yaru/yaru.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/theme.dart';
 import '../../expose/data/last_fm_credentials.dart';
-import '../../expose/expose_manager.dart';
+import '../../expose/manager/expose_manager.dart';
 import '../../extensions/build_context_x.dart';
-import '../settings_manager.dart';
+import '../manager/settings_manager.dart';
 
 class ExposeOnlineSection extends StatefulWidget
     with WatchItStatefulWidgetMixin {

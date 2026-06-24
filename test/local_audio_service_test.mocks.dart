@@ -8,8 +8,8 @@ import 'dart:typed_data' as _i4;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:musicpod/common/data/audio.dart' as _i5;
-import 'package:musicpod/local_audio/local_cover_service.dart' as _i2;
-import 'package:musicpod/settings/settings_service.dart' as _i6;
+import 'package:musicpod/local_audio/service/local_cover_service.dart' as _i2;
+import 'package:musicpod/settings/service/settings_service.dart' as _i6;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values

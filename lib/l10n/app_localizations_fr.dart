@@ -98,7 +98,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get likedSongsDescription =>
-      'Tout les morceaux que vous avez aimé. Localement ou à partir d’Internet.';
+      'Tous les morceaux que vous avez aimés. Localement ou via internet.';
 
   @override
   String get likedSongsSubtitle =>
@@ -211,7 +211,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get noPodcastFound =>
-      'Désolé, aucun podcast n\'a été trouvé pour cette recherche.';
+      'Désolé, aucun podcast n\'a été trouvé pour cette requête.';
 
   @override
   String get noPodcastChartsFound =>
@@ -219,7 +219,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get noPodcastSubsFound =>
-      'Vous ne vous êtes abonné à aucun podcast pour le moment.';
+      'Vous n\'êtes abonné à aucun podcast pour le moment.';
 
   @override
   String get charts => 'Tendances';
@@ -372,8 +372,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get findUsOnGitHub => 'Retrouvez-nous sur GitHub';
 
   @override
-  String get musicPodSubTitle =>
-      'Votre lecteur de musique, radio et de podcasts';
+  String get musicPodSubTitle => 'Votre lecteur musical, radio et de podcasts';
 
   @override
   String get pickMusicCollection => 'Choisissez votre collection de musique';
@@ -490,18 +489,18 @@ class AppLocalizationsFr extends AppLocalizations {
   String get confirmation => 'Confirmation';
 
   @override
-  String get isMaybeLowBandwidthDialogTitle => 'Pas de WIFI/Ethernet';
+  String get isMaybeLowBandwidthDialogTitle => 'Pas de WiFi/Ethernet';
 
   @override
   String get isMaybeLowBandwidthDialogBody =>
-      'Vous n\'êtes pas connecté au WIFI ou à l\'Ethernet. Voulez-vous activer le mode sans échec des données ?';
+      'Vous n\'êtes pas connecté au WiFi ou à l\'Ethernet. Voulez-vous activer le mode sans échec des données ?';
 
   @override
-  String get isBackInWifiDialogTitle => 'Le WIFI/Ethernet est de retour';
+  String get isBackInWifiDialogTitle => 'Le WiFi/Ethernet est de retour';
 
   @override
   String get isBackInWifiDialogBody =>
-      'Vous êtes connecté au WIFI ou à l\'Ethernet. Voulez-vous désactiver le mode sans échec des données ?';
+      'Vous êtes connecté au WiFi ou à l\'Ethernet. Voulez-vous désactiver le mode sans échec des données ?';
 
   @override
   String get enableDataSafeModeSettingTitle => 'Mode sans échec des données';
@@ -512,7 +511,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get dataSafeModeDisabled =>
-      'Wifi/Ethernet : Mode sans échec des données désactivé.';
+      'WiFi/Ethernet : Mode sans échec des données désactivé.';
 
   @override
   String get enableDataSafeModeSettingDescription =>
@@ -594,7 +593,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get state => 'État';
 
   @override
-  String get playNext => 'Lire le suivant';
+  String get playNext => 'Lire juste ensuite';
 
   @override
   String get contributors => 'Contributeurs';
@@ -636,7 +635,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get dark => 'Sombre';
 
   @override
-  String get podcastProvider => 'Fournisseur de podcast';
+  String get podcastProvider => 'Fournisseur de podcasts';
 
   @override
   String get iTunes => 'iTunes';
@@ -2459,35 +2458,37 @@ class AppLocalizationsFr extends AppLocalizations {
       'La recherche d\'épisodes a échoué : impossible de se connecter au serveur. Êtes-vous connecté à Internet ? Si oui, il s\'agit peut-être d\'un problème lié au serveur.';
 
   @override
-  String get tryToFetchLyricsOnlineTitle => 'Try to fetch lyrics online';
+  String get tryToFetchLyricsOnlineTitle =>
+      'Essayer de trouver les paroles en ligne';
 
   @override
   String get tryToFetchLyricsOnlineDescription =>
-      'Do you want to try to fetch the lyrics online?';
+      'Voulez-vous essayer de trouver les paroles sur Internet ?';
 
   @override
-  String get fetchingLyricsOnline => 'Fetching lyrics online, please wait ...';
+  String get fetchingLyricsOnline =>
+      'Récupération des paroles en ligne, veuillez patienter…';
 
   @override
   String get fetchingLyricsOnlineTimeoutMessage =>
-      'Fetching lyrics online takes longer than usual. Are you connected to the internet? If yes, this might be a server issue or the song might not be available';
+      'Le chargement des paroles en ligne prend plus de temps que d\'habitude. Êtes-vous connecté à Internet ? Si oui, il s\'agit peut-être d\'un problème de serveur ou la chanson n\'est peut-être pas disponible';
 
   @override
   String get fetchingLyricsOnlineFailed =>
-      'Fetching lyrics online failed. This might be a server issue or the song might not be available';
+      'L\'importation des paroles depuis Internet a échoué. Il s\'agit peut-être d\'un problème de serveur ou la chanson n\'est peut-être pas disponible';
 
   @override
-  String get onlineLyricsSourceTitle => 'Online lyrics source';
+  String get onlineLyricsSourceTitle => 'Source de paroles en ligne';
 
   @override
   String get onlineLyricsSourceDescription =>
-      'Select the source for online lyrics.';
+      'Sélectionnez la source des paroles en ligne.';
 
   @override
   String get onlineLyricsSourceLrcLib => 'LrcLib';
 
   @override
   String appCanNotConnectToHost(String appName, String host) {
-    return '$appName can not connect to $host. Are you connected to the internet?';
+    return '$appName ne parvient pas à se connecter à $host. Êtes-vous connecté à Internet ?';
   }
 }

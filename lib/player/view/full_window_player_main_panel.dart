@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../common/view/ui_constants.dart';
-import '../../extensions/taget_platform_x.dart';
+import '../../extensions/platform_x.dart';
 import 'full_window_player_image.dart';
 import 'player_main_controls.dart';
 import 'player_title_and_artist.dart';

@@ -4,7 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../common/logging.dart';
-import '../local_cover_service.dart';
+import '../service/local_cover_service.dart';
 
 @Injectable(cache: true)
 class LocalCoverManager {

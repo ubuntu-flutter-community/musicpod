@@ -4,8 +4,8 @@ import 'package:gtk/gtk.dart';
 
 import '../../common/view/error_page.dart';
 import '../../dependencies.dart';
-import '../../extensions/taget_platform_x.dart';
-import '../../player/player_service.dart';
+import '../../extensions/platform_x.dart';
+import '../../player/service/player_service.dart';
 import 'app.dart';
 import 'splash_screen.dart';
 

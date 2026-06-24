@@ -7,9 +7,9 @@ import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-import '../common/data/audio.dart';
-import '../extensions/taget_platform_x.dart';
-import 'player_service.dart';
+import '../../common/data/audio.dart';
+import '../../extensions/platform_x.dart';
+import '../service/player_service.dart';
 
 @lazySingleton
 class PlayerManager extends SafeChangeNotifier {

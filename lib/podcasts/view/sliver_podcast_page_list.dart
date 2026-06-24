@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/data/audio.dart';
-import '../../player/player_manager.dart';
+import '../../player/manager/player_manager.dart';
 import '../data/podcast_toggle_capsule.dart';
 import '../manager/subscribed_podcasts_manager.dart';
 import 'podcast_audio_tile.dart';

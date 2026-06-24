@@ -6,7 +6,7 @@ import '../../app/app_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../local_audio/view/local_cover.dart';
-import '../player_manager.dart';
+import '../manager/player_manager.dart';
 import 'player_fall_back_image.dart';
 import 'player_remote_source_image.dart';
 

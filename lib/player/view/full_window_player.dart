@@ -3,8 +3,8 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/taget_platform_x.dart';
-import '../player_manager.dart';
+import '../../extensions/platform_x.dart';
+import '../manager/player_manager.dart';
 import 'full_window_video_player.dart';
 import 'full_window_player_body.dart';
 import 'full_window_player_header_bar.dart';

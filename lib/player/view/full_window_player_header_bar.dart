@@ -5,7 +5,7 @@ import '../../app/app_manager.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/taget_platform_x.dart';
+import '../../extensions/platform_x.dart';
 import 'full_window_player_top_controls.dart';
 
 class FullWindowPlayerHeaderBar extends StatelessWidget {

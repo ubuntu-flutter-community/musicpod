@@ -5,9 +5,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 
-import '../app/app_config.dart';
-import '../common/logging.dart';
-import '../extensions/string_x.dart';
+import '../../app/app_config.dart';
+import '../../common/logging.dart';
+import '../../extensions/string_x.dart';
 
 const _kMusicBrainzAddress = 'https://musicbrainz.org/ws/2/recording/';
 const _kCoverArtArchiveAddress = 'https://coverartarchive.org/release/';

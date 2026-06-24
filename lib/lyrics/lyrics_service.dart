@@ -8,9 +8,10 @@ import 'package:path/path.dart' as p;
 
 import '../app/app_config.dart';
 import '../common/logging.dart';
-import '../l10n/app_localizations.dart';
 import '../local_audio/persistence/local_audio_dao.dart';
 import 'data/lyrics_and_art_result_and_param.dart';
+import 'data/online_lyrics_exceptions.dart';
+import 'data/online_lyrics_source.dart';
 
 @lazySingleton
 class LocalLyricsService {
@@ -210,43 +211,8 @@ class OnlineLyricsService {
           artUrl: null,
         );
       }
-    } else {
-      throw NoLyrcicsFoundException(
-        'No lyrics found for "$artist - $title" on LrcLib',
-      );
     }
 
     return null;
   }
-}
-
-class NoLyrcicsFoundException implements Exception {
-  final String message;
-  NoLyrcicsFoundException(this.message);
-
-  @override
-  String toString() => 'NoLyrcicsFoundException: $message';
-}
-
-enum OnlineLyricsSource {
-  lrcLib;
-
-  String localize(AppLocalizations l10n) => switch (this) {
-    OnlineLyricsSource.lrcLib => l10n.onlineLyricsSourceLrcLib,
-  };
-
-  OnlineLyricsSource fromString(String s) => switch (s.toLowerCase()) {
-    'lrclib' => OnlineLyricsSource.lrcLib,
-    _ => throw ArgumentError('Unknown online lyrics source: $s'),
-  };
-}
-
-class FetchOnlineLyricsTimeoutException implements Exception {
-  final String message;
-  FetchOnlineLyricsTimeoutException(this.message);
-
-  static const Duration timeoutDuration = Duration(seconds: 20);
-
-  @override
-  String toString() => 'FetchOnlineLyricsTimeoutException: $message';
 }

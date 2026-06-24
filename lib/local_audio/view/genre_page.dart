@@ -10,8 +10,8 @@ import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../search/search_manager.dart';
-import '../../search/search_type.dart';
+import '../../search/manager/search_manager.dart';
+import '../../search/data/search_type.dart';
 import '../manager/album_ids_of_genre_manager.dart';
 import 'album_view.dart';
 

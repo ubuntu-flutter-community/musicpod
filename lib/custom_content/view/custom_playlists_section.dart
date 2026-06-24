@@ -13,9 +13,9 @@ import '../../extensions/build_context_x.dart';
 import '../../local_audio/manager/find_all_tracks_manager.dart';
 import '../../local_audio/data/playlist_action.dart';
 import '../../local_audio/manager/playlist_ids_manager.dart';
-import '../../search/search_manager.dart';
+import '../../search/manager/search_manager.dart';
 import '../../settings/view/settings_action.dart';
-import '../custom_content_manager.dart';
+import '../manager/custom_content_manager.dart';
 
 class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
   const CustomPlaylistsSection({super.key, this.shownInDialog = false});

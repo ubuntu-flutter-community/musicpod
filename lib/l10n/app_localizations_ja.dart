@@ -2410,6 +2410,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String appCanNotConnectToHost(String appName, String host) {
-    return '$appName can not connect to $host. Are you connected to the internet?';
+    return '$appName は $host に接続できません。インターネットに接続されていますか？';
   }
 }

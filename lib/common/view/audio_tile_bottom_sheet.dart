@@ -15,7 +15,7 @@ import '../../local_audio/manager/playlist_ids_manager.dart';
 import '../../local_audio/view/add_to_playlist_dialog.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
-import '../../player/player_manager.dart';
+import '../../player/manager/player_manager.dart';
 import '../data/audio.dart';
 import '../data/audio_type.dart';
 import 'audio_tile_image.dart';

@@ -5,8 +5,8 @@ import 'package:yaru/yaru.dart';
 import '../../app/app_config.dart';
 import '../../common/view/common_widgets.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/mpv_metadata_manager.dart';
-import '../settings_manager.dart';
+import '../../player/manager/mpv_metadata_manager.dart';
+import '../manager/settings_manager.dart';
 
 class ResourceSection extends StatelessWidget with WatchItMixin {
   const ResourceSection({super.key});

@@ -8,8 +8,8 @@ import '../../common/cached_streamcontroller.dart';
 import '../../common/data/audio.dart';
 import '../../common/logging.dart';
 import '../data/podcast_download.dart';
-import '../download_service.dart';
-import '../podcast_service.dart';
+import '../service/download_service.dart';
+import '../service/podcast_service.dart';
 
 @lazySingleton
 class DownloadManager {

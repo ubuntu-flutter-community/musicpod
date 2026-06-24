@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../extensions/build_context_x.dart';
-import '../../extensions/taget_platform_x.dart';
-import '../../settings/settings_manager.dart';
+import '../../extensions/platform_x.dart';
+import '../../settings/manager/settings_manager.dart';
 import 'theme.dart';
 
 class SearchInput extends StatefulWidget with WatchItStatefulWidgetMixin {

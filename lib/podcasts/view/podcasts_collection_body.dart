@@ -13,7 +13,7 @@ import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../search/search_manager.dart';
+import '../../search/manager/search_manager.dart';
 import '../../settings/view/settings_action.dart';
 import '../data/podcast_update_capsule.dart';
 import '../manager/podcast_clean_manager.dart';

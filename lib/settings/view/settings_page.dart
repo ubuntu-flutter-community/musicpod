@@ -9,7 +9,7 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 
-import '../settings_manager.dart';
+import '../manager/settings_manager.dart';
 import 'about_section.dart';
 import 'expose_online_section.dart';
 import 'local_audio_section.dart';

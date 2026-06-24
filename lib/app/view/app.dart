@@ -4,9 +4,9 @@ import 'package:system_theme/system_theme.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/view/theme.dart';
-import '../../extensions/taget_platform_x.dart';
-import '../../player/player_manager.dart';
-import '../../settings/settings_manager.dart';
+import '../../extensions/platform_x.dart';
+import '../../player/manager/player_manager.dart';
+import '../../settings/manager/settings_manager.dart';
 import 'desktop_musicpod_app.dart';
 import 'mobile_musicpod_app.dart';
 

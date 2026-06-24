@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../settings/shared_preferences_keys.dart';
-import '../../extensions/taget_platform_x.dart';
-import '../../settings/settings_service.dart';
+import '../../settings/data/shared_preferences_keys.dart';
+import '../../extensions/platform_x.dart';
+import '../../settings/service/settings_service.dart';
 
 class Iconz {
   static int get _iconSetIndex =>

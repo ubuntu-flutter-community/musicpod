@@ -12,11 +12,11 @@ import '../../common/view/tapable_text.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../../player/mpv_metadata_manager.dart';
-import '../../search/search_manager.dart';
-import '../../search/search_type.dart';
-import '../../settings/settings_manager.dart';
-import '../online_art_manager.dart';
+import '../../player/manager/mpv_metadata_manager.dart';
+import '../../search/manager/search_manager.dart';
+import '../../search/data/search_type.dart';
+import '../../settings/manager/settings_manager.dart';
+import '../manager/online_art_manager.dart';
 import 'radio_history_tile_image.dart';
 import 'station_page.dart';
 

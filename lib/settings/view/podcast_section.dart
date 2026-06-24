@@ -8,15 +8,15 @@ import '../../common/view/common_widgets.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
-import '../../custom_content/custom_content_manager.dart';
+import '../../custom_content/manager/custom_content_manager.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
-import '../../player/player_service.dart';
+import '../../player/service/player_service.dart';
 import '../../podcasts/manager/download_manager.dart';
 import '../../podcasts/manager/podcast_genre_manager.dart';
 import '../../podcasts/manager/podcast_manager.dart';
-import '../settings_manager.dart';
-import '../shared_preferences_keys.dart';
+import '../manager/settings_manager.dart';
+import '../data/shared_preferences_keys.dart';
 
 class PodcastSection extends StatefulWidget with WatchItStatefulWidgetMixin {
   const PodcastSection({super.key});

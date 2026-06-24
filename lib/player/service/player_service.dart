@@ -10,16 +10,16 @@ import 'package:media_kit/media_kit.dart' hide PlayerState;
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:yaru/yaru.dart';
 
-import '../common/data/audio.dart';
-import '../common/data/audio_type.dart';
-import '../common/logging.dart';
-import '../expose/expose_service.dart';
-import '../extensions/media_file_x.dart';
-import '../extensions/string_x.dart';
-import '../extensions/taget_platform_x.dart';
-import '../local_audio/local_cover_service.dart';
-import '../podcasts/podcast_service.dart';
-import 'persistence/player_dao.dart';
+import '../../common/data/audio.dart';
+import '../../common/data/audio_type.dart';
+import '../../common/logging.dart';
+import '../../expose/service/expose_service.dart';
+import '../../extensions/media_file_x.dart';
+import '../../extensions/string_x.dart';
+import '../../extensions/platform_x.dart';
+import '../../local_audio/service/local_cover_service.dart';
+import '../../podcasts/service/podcast_service.dart';
+import '../persistence/player_dao.dart';
 
 typedef Queue = ({String name, List<Audio> audios});
 

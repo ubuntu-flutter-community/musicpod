@@ -2,7 +2,7 @@ import 'package:injectable/injectable.dart';
 import 'package:local_notifier/local_notifier.dart';
 
 import '../app/app_config.dart';
-import '../extensions/taget_platform_x.dart';
+import '../extensions/platform_x.dart';
 
 @module
 abstract class LocalNotifierModule {

@@ -5,7 +5,7 @@ import '../../common/data/audio.dart';
 import '../../common/view/copy_clipboard_content.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/mpv_metadata_manager.dart';
+import '../../player/manager/mpv_metadata_manager.dart';
 
 class RadioPageCopyHistoryButton extends StatelessWidget with WatchItMixin {
   const RadioPageCopyHistoryButton({super.key, required this.station});

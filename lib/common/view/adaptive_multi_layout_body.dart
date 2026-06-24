@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../extensions/taget_platform_x.dart';
+import '../../extensions/platform_x.dart';
 import 'sliver_audio_page_control_panel.dart';
 import 'ui_constants.dart';
 

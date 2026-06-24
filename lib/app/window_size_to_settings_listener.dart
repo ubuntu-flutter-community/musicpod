@@ -6,9 +6,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'app_config.dart';
-import '../player/player_service.dart';
-import '../settings/shared_preferences_keys.dart';
-import '../extensions/taget_platform_x.dart';
+import '../player/service/player_service.dart';
+import '../settings/data/shared_preferences_keys.dart';
+import '../extensions/platform_x.dart';
 
 @singleton
 class WindowSizeToSettingsListener implements WindowListener {

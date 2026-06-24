@@ -5,7 +5,7 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/like_icon_button.dart';
 import '../../common/view/stared_station_icon_button.dart';
 import '../../extensions/build_context_x.dart';
-import '../player_manager.dart';
+import '../manager/player_manager.dart';
 
 class BottomPlayerLikeAndStarButton extends StatelessWidget with WatchItMixin {
   const BottomPlayerLikeAndStarButton({super.key});

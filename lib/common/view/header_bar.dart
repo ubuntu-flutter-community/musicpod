@@ -4,7 +4,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../app/routing_manager.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/taget_platform_x.dart';
+import '../../extensions/platform_x.dart';
 import 'global_keys.dart';
 import 'icons.dart';
 import 'nav_back_button.dart';

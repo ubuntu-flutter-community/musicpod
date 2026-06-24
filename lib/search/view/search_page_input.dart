@@ -10,14 +10,14 @@ import '../../common/view/modals.dart';
 import '../../common/view/search_input.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/taget_platform_x.dart';
+import '../../extensions/platform_x.dart';
 import '../../podcasts/data/podcast_genre.dart';
 import '../../radio/manager/radio_fav_tag_manager.dart';
 import '../../radio/manager/radio_load_tags_manager.dart';
 import '../../radio/view/tag_auto_complete.dart';
-import '../../settings/settings_manager.dart';
-import '../search_manager.dart';
-import '../search_type.dart';
+import '../../settings/manager/settings_manager.dart';
+import '../manager/search_manager.dart';
+import '../data/search_type.dart';
 import 'audio_type_filter_button.dart';
 import 'podcast_search_input_prefix.dart';
 

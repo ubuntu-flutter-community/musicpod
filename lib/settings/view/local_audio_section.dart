@@ -5,10 +5,10 @@ import 'package:yaru/yaru.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../external_path/external_path_service.dart';
+import '../../external_path/service/external_path_service.dart';
 
 import '../../local_audio/manager/local_audio_manager.dart';
-import '../settings_manager.dart';
+import '../manager/settings_manager.dart';
 
 class LocalAudioSection extends StatelessWidget with WatchItMixin {
   const LocalAudioSection({super.key});

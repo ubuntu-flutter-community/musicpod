@@ -8,7 +8,7 @@ import '../../common/view/common_widgets.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../custom_content_manager.dart';
+import '../manager/custom_content_manager.dart';
 
 class BackupDialog extends StatelessWidget with WatchItMixin {
   const BackupDialog({super.key, this.breakingChange = true});
