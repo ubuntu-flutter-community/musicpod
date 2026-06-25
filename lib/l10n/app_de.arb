@@ -899,5 +899,24 @@
     "radioBrowserLoadingTagsFailed": "Es ist ein Fehler beim Laden der Radio-Tags aufgetreten, der Server wird vermutlich nicht erreichbar sein.",
     "radioBrowserLoadingTagsTimeouted": "Das Laden von Radio-Tags dauert länger als gewöhnlich. Bist du mit dem Internet verbunden? Falls ja könnte dies ein Serverproblem sein",
     "podcastSearchNotSuccessfull": "Die Podcast-Suche war nicht erfolgreich. Bist du mit dem Internet verbunden? Falls ja könnte dies ein Serverproblem sein.",
-    "podcastFailedHostLookup": "Das Laden der Episoden war nicht erfolgreich - der Server konnte nicht erreicht werden. Bist du mit dem Internet verbunden? Falls ja könnte dies ein Serverproblem sein."
+    "podcastFailedHostLookup": "Das Laden der Episoden war nicht erfolgreich - der Server konnte nicht erreicht werden. Bist du mit dem Internet verbunden? Falls ja könnte dies ein Serverproblem sein.",
+    "tryToFetchLyricsOnlineTitle": "Versuche Liedtexte aus dem Internet zu laden",
+    "tryToFetchLyricsOnlineDescription": "Möchtest du versuchen Liedtexte aus dem Internet zu laden?",
+    "fetchingLyricsOnline": "Lade Liedtext aus dem Internet, bitte warten ...",
+    "fetchingLyricsOnlineTimeoutMessage": "Das Laden von Liedtexten aus dem Internet dauert länger als gewöhnlich. Bist du mit dem Internet verbunden? Falls ja, könnte dies ein Serverproblem sein oder der Liedtext ist nicht verfügbar",
+    "fetchingLyricsOnlineFailed": "Das Laden von Liedtexten aus dem Internet ist gescheitert. Dies kann ein Serverproblem sein oder dieser Liedtext ist nicht verfügbar",
+    "onlineLyricsSourceTitle": "Internetquelle für Liedtexte",
+    "onlineLyricsSourceDescription": "Wähle eine Quelle für Liedtexte,",
+    "onlineLyricsSourceLrcLib": "LrcLib",
+    "appCanNotConnectToHost": "{appName} kann sich nicht mit {host} verbinden. Bist du mit dem Internet verbunden?",
+    "@appCanNotConnectToHost": {
+        "placeholders": {
+            "appName": {
+                "type": "String"
+            },
+            "host": {
+                "type": "String"
+            }
+        }
+    }
 }

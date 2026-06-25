@@ -897,5 +897,16 @@
     "fetchingLyricsOnlineFailed": "Laulusõnade võrgust laadimine ei õnnestunud. Võib-olla server pole saadaval või selle laulu sõnad on eemaldatud",
     "onlineLyricsSourceTitle": "Laulusõnade võrgust laadimise allikas",
     "onlineLyricsSourceDescription": "Vali teenus laulusõnade võrgust laadimiseks.",
-    "onlineLyricsSourceLrcLib": "LrcLib"
+    "onlineLyricsSourceLrcLib": "LrcLib",
+    "appCanNotConnectToHost": "{appName} ei suuda ühendada {host} serveriga. Kas sinu arvutis/seadmes internetiühendus ikka toimib?",
+    "@appCanNotConnectToHost": {
+        "placeholders": {
+            "appName": {
+                "type": "String"
+            },
+            "host": {
+                "type": "String"
+            }
+        }
+    }
 }
