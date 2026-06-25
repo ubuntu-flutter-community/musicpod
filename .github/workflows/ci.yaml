@@ -8,16 +8,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  setup:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: kuhnroyal/flutter-fvm-config-action/setup@v3
-      - run: flutter gen-l10n
-      - uses: actions/cache@v3
-        with:
-          path: .
-          key: ${{ runner.os }}-repo-${{ github.sha }}-generated
 
   analyze:
     runs-on: ubuntu-latest
@@ -26,34 +16,6 @@ jobs:
       - uses: kuhnroyal/flutter-fvm-config-action/setup@v3
       - run: flutter pub get
       - run: flutter analyze --fatal-infos
-
-  l10n:
-    runs-on: ubuntu-latest
-    needs: setup
-    steps:
-      - uses: actions/checkout@v7
-      - name: Restore repository cache
-        uses: actions/cache@v3
-        with:
-          path: .
-          key: ${{ runner.os }}-repo-${{ github.sha }}-generated
-      - uses: kuhnroyal/flutter-fvm-config-action/setup@v3
-      - run: flutter gen-l10n
-      - name: Check for outdated l10n
-        if: github.event_name == 'pull_request'
-        run: |
-          chmod +x ./scripts/check-outdated-files.sh
-          ./scripts/check-outdated-files.sh
-      - name: Create PR
-        if: github.event_name == 'push'
-        uses: peter-evans/create-pull-request@v5
-        with:
-          add-paths: |
-            '**/l10n/*.dart'
-          title: 'chore: regenerate l10n'
-          commit-message: 'chore: regenerate l10n'
-          branch: create-pull-request/l10n
-          delete-branch: true
 
   format:
     runs-on: ubuntu-latest

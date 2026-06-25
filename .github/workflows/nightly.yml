@@ -1,0 +1,42 @@
+name: Nightly L10n Sync
+
+on:
+  schedule:
+    # Runs at 03:00 UTC every night
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  sync-l10n:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          # Important: fetch-depth 0 is needed for git operations
+          fetch-depth: 0
+
+      - uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate Localization Files
+        run: flutter gen-l10n
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore: auto-generate localization files from Weblate'
+          branch: chore/update-l10n
+          delete-branch: true
+          title: 'chore: Auto-generate L10n files'
+          body: |
+            Automated update of generated localization files based on the latest .arb changes.
+          add-paths: |
+            lib/l10n/*.dart
