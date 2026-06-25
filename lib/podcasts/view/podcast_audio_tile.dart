@@ -24,7 +24,7 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
     super.key,
     required this.audio,
     required this.selected,
-    required this.startPlaylist,
+    required this.play,
     this.isExpanded = false,
     required this.addPodcast,
   });
@@ -32,7 +32,7 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
   final Audio audio;
   final bool selected;
 
-  final void Function()? startPlaylist;
+  final void Function()? play;
   final void Function() addPodcast;
 
   final bool isExpanded;
@@ -81,7 +81,7 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
                 PodcastTilePlayButton(
                   selected: selected,
                   audio: audio,
-                  startPlaylist: startPlaylist,
+                  play: play,
                 ),
                 SizedBox(width: isMobile ? 15 : 25),
                 Expanded(

@@ -20,7 +20,7 @@ class NextStationButton extends StatelessWidget with WatchItMixin {
         if (newValue != null &&
             newValue.uuid != null &&
             newValue.uuid != di<PlayerManager>().audio?.uuid) {
-          di<PlayerManager>().startPlaylist(
+          di<PlayerManager>().play(
             audios: [newValue],
             listName: newValue.uuid!,
           );

@@ -41,7 +41,7 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
           ),
           isExpanded: episode == selectedAudio,
           selected: episode == selectedAudio,
-          startPlaylist: () => di<PlayerManager>().startPlaylist(
+          play: () => di<PlayerManager>().play(
             audios: audios,
             listName: pageId,
             index: index,

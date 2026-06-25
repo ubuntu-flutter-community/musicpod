@@ -58,7 +58,7 @@ class StationCard extends StatelessWidget with WatchItMixin {
                 return;
               }
               di<PlayerManager>()
-                  .startPlaylist(audios: [station], listName: uuid)
+                  .play(audios: [station], listName: uuid)
                   .then((_) => di<RadioManager>().clickStation(station));
             },
       onTap: station.uuid == null

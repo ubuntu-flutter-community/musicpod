@@ -38,6 +38,20 @@ extension BuildContextX on BuildContext {
     bool clear = true,
     bool showCloseIcon = false,
     double? actionOverflowThreshold,
+    Color? backgroundColor,
+    double? elevation,
+    EdgeInsetsGeometry? margin,
+    EdgeInsetsGeometry? padding,
+    double? width,
+    ShapeBorder? shape,
+    HitTestBehavior? hitTestBehavior,
+    SnackBarBehavior behavior = SnackBarBehavior.floating,
+    Color? closeIconColor,
+    bool? persist,
+    Animation<double>? animation,
+    void Function()? onVisible,
+    DismissDirection? dismissDirection,
+    Clip clipBehavior = Clip.hardEdge,
   }) {
     final messenger = ScaffoldMessenger.of(this);
     if (clear) {
@@ -50,9 +64,43 @@ extension BuildContextX on BuildContext {
         action: action,
         showCloseIcon: showCloseIcon,
         actionOverflowThreshold: actionOverflowThreshold ?? 0.65,
+        backgroundColor: backgroundColor,
+        elevation: elevation,
+        margin: margin,
+        padding: padding,
+        width: width,
+        shape: shape,
+        hitTestBehavior: hitTestBehavior,
+        behavior: behavior,
+        closeIconColor: closeIconColor,
+        persist: persist,
+        animation: animation,
+        onVisible: onVisible,
+        dismissDirection: dismissDirection,
+        clipBehavior: clipBehavior,
       ),
     );
   }
+
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> errorToast(
+    String text, {
+    Duration duration = const Duration(seconds: 3),
+    SnackBarAction? action,
+  }) => toast(
+    Text(text, style: TextStyle(color: colorScheme.onError)),
+    duration: duration,
+    backgroundColor: colorScheme.error,
+    showCloseIcon: true,
+    closeIconColor: colorScheme.onError,
+    action: action == null
+        ? null
+        : SnackBarAction(
+            label: action.label,
+            textColor: colorScheme.onError,
+            onPressed: action.onPressed,
+            backgroundColor: colorScheme.error,
+          ),
+  );
 
   void clearToasts() => ScaffoldMessenger.of(this).clearSnackBars();
 

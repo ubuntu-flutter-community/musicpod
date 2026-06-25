@@ -100,10 +100,7 @@ class AudioTileOptionButton extends StatelessWidget {
                     showCloseIcon: true,
                   );
                 } else {
-                  playerManager.startPlaylist(
-                    audios: audios,
-                    listName: playlistId,
-                  );
+                  playerManager.play(audios: audios, listName: playlistId);
                 }
               },
               child: YaruTile(
