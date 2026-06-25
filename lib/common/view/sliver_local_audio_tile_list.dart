@@ -72,7 +72,7 @@ class SliverLocalAudioTileList extends StatelessWidget with WatchItMixin {
                   playerManager.resume();
                 }
               } else {
-                playerManager.startPlaylist(
+                playerManager.play(
                   audios: startNewPlaylistOnTap ? audios : [audio],
                   listName: pageId,
                   index: index,

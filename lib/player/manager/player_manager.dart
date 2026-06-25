@@ -9,6 +9,7 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../common/data/audio.dart';
 import '../../extensions/platform_x.dart';
+import '../data/queue.dart';
 import '../service/player_service.dart';
 
 @lazySingleton
@@ -29,9 +30,7 @@ class PlayerManager extends SafeChangeNotifier {
 
   Stream<String> get messageStream => _playerService.messageStream;
 
-  String? get queueName => _playerService.queue.name;
-
-  List<Audio> get queue => _playerService.queue.audios;
+  Queue get queue => _playerService.queue;
   void clearQueue() => _playerService.clearQueue();
 
   bool get queueAutoScroll => _playerService.queueAutoScroll;
@@ -83,7 +82,7 @@ class PlayerManager extends SafeChangeNotifier {
   void setPlaylistMode() => _playerService.setPlaylistMode();
 
   bool get shuffle => _playerService.shuffle;
-  void setShuffle(bool value) => _playerService.setShuffle(value);
+  Future<void> setShuffle(bool value) => _playerService.setShuffle(value);
 
   double? get volume => _playerService.volume;
   Future<void> setVolume(double value) async => _playerService.setVolume(value);
@@ -101,25 +100,23 @@ class PlayerManager extends SafeChangeNotifier {
 
   Future<void> playNext() async => _playerService.playNext();
 
-  void insertIntoQueue(List<Audio> newAudios) async =>
+  Future<void> insertIntoQueue(List<Audio> newAudios) async =>
       _playerService.insertIntoQueue(newAudios);
 
-  void moveAudioInQueue(int oldIndex, int newIndex) async =>
+  Future<void> moveAudioInQueue(int oldIndex, int newIndex) async =>
       _playerService.moveAudioInQueue(oldIndex, newIndex);
 
-  void remove(Audio deleteMe) => _playerService.remove(deleteMe);
+  Future<void> remove(Audio deleteMe) async => _playerService.remove(deleteMe);
 
   Future<void> playPrevious() async => _playerService.playPrevious();
 
-  Future<void> startPlaylist({
+  Future<void> play({
+    // TODO: use [Queue] instead of [audios] and [listName]
     required List<Audio> audios,
     required String listName,
     int? index,
-  }) async => _playerService.startPlaylist(
-    audios: audios,
-    listName: listName,
-    index: index,
-  );
+  }) async =>
+      _playerService.play(audios: audios, listName: listName, index: index);
 
   String? get remoteImageUrl => _playerService.remoteImageUrl;
 

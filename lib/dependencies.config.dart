@@ -430,17 +430,6 @@ extension GetItInjectableX on _i174.GetIt {
         podcastManager: gh<_i819.PodcastManager>(),
       ),
     );
-    gh.factoryCached<_i190.SidebarAudiosManager>(
-      () => _i190.SidebarAudiosManager(
-        podcastManager: gh<_i819.PodcastManager>(),
-        podcastUpdatesManager: gh<_i851.PodcastUpdatesManager>(),
-        localAudioManager: gh<_i76.LocalAudioManager>(),
-        radioManager: gh<_i443.RadioManager>(),
-        podcastToggleManager: gh<_i1055.SubscribedPodcastsManager>(),
-        playerManager: gh<_i95.PlayerManager>(),
-        radioStarStationManager: gh<_i309.RadioStarStationManager>(),
-      ),
-    );
     gh.factoryCached<_i1030.PinnedAlbumIDsManager>(
       () => _i1030.PinnedAlbumIDsManager(
         localAudioManager: gh<_i76.LocalAudioManager>(),
@@ -497,6 +486,18 @@ extension GetItInjectableX on _i174.GetIt {
       (playlistId, _) => _i438.PlaylistManager.create(
         playlistId: playlistId,
         localAudioManager: gh<_i76.LocalAudioManager>(),
+      ),
+    );
+    gh.factoryCached<_i190.SidebarAudiosManager>(
+      () => _i190.SidebarAudiosManager(
+        podcastService: gh<_i529.PodcastService>(),
+        podcastUpdatesManager: gh<_i851.PodcastUpdatesManager>(),
+        playlistIDsManager: gh<_i924.PlaylistIDsManager>(),
+        radioManager: gh<_i443.RadioManager>(),
+        podcastToggleManager: gh<_i1055.SubscribedPodcastsManager>(),
+        playerManager: gh<_i95.PlayerManager>(),
+        radioStarStationManager: gh<_i309.RadioStarStationManager>(),
+        pinnedAlbumIDsManager: gh<_i1030.PinnedAlbumIDsManager>(),
       ),
     );
     return this;

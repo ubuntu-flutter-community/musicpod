@@ -119,11 +119,19 @@ mixin CommonHandlersAndCommandsMixin {
             duration: const Duration(seconds: 99),
           );
         } else if (results.hasError) {
-          context.toast(Text(results.error.toString()));
+          context.errorToast(
+            results.error.toString(),
+            action: SnackBarAction(
+              label: '📋',
+              onPressed: () => Clipboard.setData(
+                ClipboardData(text: results.error.toString()),
+              ),
+            ),
+          );
         } else if (results.hasData && results.data != null) {
           final data = results.data!;
           context.clearToasts();
-          di<PlayerManager>().startPlaylist(
+          di<PlayerManager>().play(
             audios: data.audios,
             listName: data.pageId,
           );

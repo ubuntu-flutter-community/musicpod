@@ -137,7 +137,7 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
     }
 
     final isEnQueued = watchPropertyValue(
-      (PlayerManager m) => m.queueName != null && m.queueName == widget.pageId,
+      (PlayerManager m) => m.queue.name == widget.pageId,
     );
     final isPlaying = watchPropertyValue((PlayerManager m) => m.isPlaying);
 

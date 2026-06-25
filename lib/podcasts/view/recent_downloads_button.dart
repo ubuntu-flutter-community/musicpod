@@ -124,7 +124,7 @@ class RecentDownloads extends StatelessWidget with WatchItMixin {
         final episode = downloads.elementAt(index);
         return ListTile(
           onTap: () {
-            di<PlayerManager>().startPlaylist(
+            di<PlayerManager>().play(
               audios: [episode],
               listName: 'Recent Downloads',
               index: 0,

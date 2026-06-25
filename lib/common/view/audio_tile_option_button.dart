@@ -100,7 +100,7 @@ class AudioTileOptionButton extends StatelessWidget {
                     showCloseIcon: true,
                   );
                 } else {
-                  playerManager.startPlaylist(
+                  playerManager.play(
                     audios: audios,
                     listName: playlistId,
                   );

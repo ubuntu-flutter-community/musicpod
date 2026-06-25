@@ -19,11 +19,16 @@ import '../../extensions/string_x.dart';
 import '../../extensions/platform_x.dart';
 import '../../local_audio/service/local_cover_service.dart';
 import '../../podcasts/service/podcast_service.dart';
+import '../data/queue.dart';
 import '../persistence/player_dao.dart';
 
-typedef Queue = ({String name, List<Audio> audios});
-
 @singleton
+// Note: to detach the player service from the actual library to play media
+// this service contains a lot of fields and streams
+// that might look like overhead, but helps if we ever need to change the library or the way we play media in the future.
+// This also has the advantage that we can use our own type for the media files: [Audio] instead
+// of the library's [Media] type
+// but this also means that we need our own [Queue] type instead of the library's [Playlist] type
 class PlayerService {
   PlayerService({
     required VideoController controller,
@@ -91,7 +96,8 @@ class PlayerService {
     _isCompletedSub ??= player.stream.completed.listen((value) async {
       if (value) {
         if (_playlistMode == PlaylistMode.single) {
-          await _play(newAudio: _audio);
+          await _setAudio(_audio);
+          await _play();
         } else if (_playlistMode == PlaylistMode.loop ||
             _audio != null &&
                 queue.audios.contains(_audio) &&
@@ -146,7 +152,7 @@ class PlayerService {
   }
 
   Queue? _oldQueue;
-  Queue _queue = (name: '', audios: []);
+  Queue _queue = const Queue.empty();
   Queue get queue => _queue;
   void setQueue(Queue value) {
     if (value.audios.isEmpty) return;
@@ -263,18 +269,22 @@ class PlayerService {
 
   bool _shuffle = false;
   bool get shuffle => _shuffle;
-  void setShuffle(bool value) {
+  Future<void> setShuffle(bool value) async {
     if (value == _shuffle) return;
     _shuffle = value;
     if (value) {
-      _oldQueue = (audios: List.from(_queue.audios), name: _queue.name);
-      _queue.audios.shuffle();
+      _oldQueue = _queue;
+      final queue = Queue(
+        name: _queue.name,
+        audios: List.from(_queue.audios)..shuffle(),
+      );
+      setQueue(queue);
     } else if (_oldQueue != null &&
         _oldQueue?.name != null &&
         _oldQueue!.name == _queue.name) {
-      setQueue((audios: List.from(_oldQueue!.audios), name: _oldQueue!.name));
+      setQueue(_oldQueue!);
     }
-    _estimateNext();
+    await _estimateNext();
     _propertiesChangedController.add(true);
   }
 
@@ -296,13 +306,10 @@ class PlayerService {
   Stream<String> get messageStream => _messageController.stream.map((e) => e);
 
   /// To not mess up with the queue, this method is private
-  /// Use [startPlaylist] instead
+  /// Use [play] instead
   bool _firstPlay = true;
-  Future<void> _play({Duration? newPosition, Audio? newAudio}) async {
+  Future<void> _play({Duration? newPosition}) async {
     try {
-      if (newAudio != null) {
-        await _setAudio(newAudio);
-      }
       if (_audio == null) return;
 
       if (_audio!.url != null && _audio!.isPodcast) {
@@ -352,6 +359,7 @@ class PlayerService {
     } on Exception catch (e, s) {
       _messageController.addError(e);
       Logger.e(e, trace: s, tag: '$PlayerService');
+      rethrow;
     }
   }
 
@@ -399,20 +407,20 @@ class PlayerService {
     await _play();
   }
 
-  void insertIntoQueue(List<Audio> newAudios) {
+  Future<void> insertIntoQueue(List<Audio> newAudios) async {
     for (var audio in newAudios.reversed) {
-      _insertAudioIntoQueue(audio);
+      await _insertAudioIntoQueue(audio);
     }
   }
 
-  void _insertAudioIntoQueue(Audio newAudio) {
+  Future<void> _insertAudioIntoQueue(Audio newAudio) async {
     if (_queue.audios.isEmpty) {
-      startPlaylist(audios: [newAudio], listName: newAudio.toString());
+      await play(audios: [newAudio], listName: newAudio.toString());
     } else if (_audio != null) {
       final currentIndex = queue.audios.indexOf(_audio!);
       if (_queue.audios.contains(newAudio)) {
         final indexOfTitleInQueue = _queue.audios.indexOf(newAudio);
-        moveAudioInQueue(indexOfTitleInQueue, currentIndex + 1);
+        await moveAudioInQueue(indexOfTitleInQueue, currentIndex + 1);
       } else {
         _queue.audios.insert(currentIndex + 1, newAudio);
         nextAudio = newAudio;
@@ -475,7 +483,7 @@ class PlayerService {
     }
   }
 
-  Future<void> startPlaylist({
+  Future<void> play({
     required List<Audio> audios,
     required String listName,
     int? index,
@@ -487,8 +495,8 @@ class PlayerService {
         audios.elementAtOrNull(index) != null) {
       await _setAudio(audios.elementAtOrNull(index)!);
     } else {
-      setShuffle(false);
-      setQueue((name: listName, audios: audios.toList()));
+      await setShuffle(false);
+      setQueue(Queue(name: listName, audios: audios.toList()));
       await _setAudio(
         (index != null && audios.elementAtOrNull(index) != null)
             ? audios.elementAtOrNull(index)!
@@ -756,7 +764,7 @@ class PlayerService {
     await _wipePlayerState();
     _audio = null;
     _nextAudio = null;
-    _queue = (name: '', audios: []);
+    _queue = const Queue.empty();
     _position = Duration.zero;
     _duration = null;
     _buffer = null;
@@ -781,10 +789,7 @@ class PlayerService {
       final file = File(path);
 
       if (file.existsSync() && file.isPlayable) {
-        startPlaylist(
-          listName: path,
-          audios: [Audio.local(file, getImage: true)],
-        );
+        play(listName: path, audios: [Audio.local(file, getImage: true)]);
       }
     } on Exception catch (e, s) {
       Logger.e(e, trace: s, tag: '$PlayerService');
@@ -796,7 +801,7 @@ class PlayerService {
     await persistPlayerState();
     await _setAudio(null);
     _nextAudio = null;
-    _queue = (name: '', audios: []);
+    _queue = const Queue.empty();
     _position = Duration.zero;
     _duration = null;
     _buffer = null;

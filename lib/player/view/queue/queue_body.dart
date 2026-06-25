@@ -9,6 +9,7 @@ import '../../../common/view/ui_constants.dart';
 import '../../../extensions/build_context_x.dart';
 import '../../../local_audio/data/playlist_action.dart';
 import '../../../local_audio/manager/playlist_ids_manager.dart';
+import '../../data/queue.dart';
 import '../../manager/player_manager.dart';
 
 class QueueBody extends StatefulWidget with WatchItStatefulWidgetMixin {
@@ -31,12 +32,12 @@ class _QueueBodyState extends State<QueueBody>
     if (!isJumping &&
         autoScrollEnabled &&
         currentAudio != null &&
-        model.queue.isNotEmpty == true &&
+        model.queue.audios.isNotEmpty &&
         _controller.hasClients) {
       model.setJumpingQueue(true);
       _controller
           .scrollToIndex(
-            model.queue.indexOf(currentAudio),
+            model.queue.audios.indexOf(currentAudio),
             preferPosition: AutoScrollPosition.middle,
             duration: const Duration(microseconds: 60),
           )
@@ -91,9 +92,7 @@ class _QueueBodyState extends State<QueueBody>
     );
 
     final currentAudio = watchPropertyValue((PlayerManager m) => m.audio);
-    final queueLength = watchPropertyValue((PlayerManager m) => m.queue.length);
-
-    final queue = di<PlayerManager>().queue;
+    final queue = watchPropertyValue((PlayerManager m) => m.queue);
 
     return SizedBox(
       width: 400,
@@ -118,7 +117,7 @@ class _QueueBodyState extends State<QueueBody>
                       child: child,
                     ),
                     itemBuilder: (context, index) {
-                      final audio = queue.elementAt(index);
+                      final audio = queue.audios.elementAt(index);
                       final selected = audio == currentAudio;
 
                       return _QueueTile(
@@ -126,13 +125,12 @@ class _QueueBodyState extends State<QueueBody>
                         index: index,
                         controller: _controller,
                         selectedColor: colorScheme.onSurface,
-                        queueName: di<PlayerManager>().queueName,
                         queue: queue,
                         audio: audio,
                         selected: selected,
                       );
                     },
-                    itemCount: queueLength,
+                    itemCount: queue.audios.length,
                     onReorder: di<PlayerManager>().moveAudioInQueue,
                   ),
                 ),
@@ -147,7 +145,7 @@ class _QueueBodyState extends State<QueueBody>
               children: [
                 IconButton(
                   tooltip: l10n.createNewPlaylist,
-                  onPressed: queue.where((e) => e.isLocal).isEmpty
+                  onPressed: queue.audios.where((e) => e.isLocal).isEmpty
                       ? null
                       : () => ConfirmationDialog.show(
                           context: context,
@@ -168,7 +166,7 @@ class _QueueBodyState extends State<QueueBody>
                               PlaylistChange(
                                 id: '${l10n.queue} ${DateTime.now()}',
                                 audios: List.from(
-                                  queue.where((e) => e.isLocal),
+                                  queue.audios.where((e) => e.isLocal),
                                 ),
                                 action: PlaylistAction.create,
                               ),
@@ -180,7 +178,7 @@ class _QueueBodyState extends State<QueueBody>
                         ),
                   icon: Icon(
                     Iconz.createPlaylist,
-                    color: queue.where((e) => e.isLocal).isEmpty
+                    color: queue.audios.where((e) => e.isLocal).isEmpty
                         ? theme.disabledColor
                         : widget.selectedColor,
                   ),
@@ -189,9 +187,7 @@ class _QueueBodyState extends State<QueueBody>
                   icon: Icon(Iconz.clearAll, semanticLabel: l10n.clearQueue),
                   tooltip: l10n.clearQueue,
                   onPressed:
-                      queue.isEmpty ||
-                          di<PlayerManager>().queueName == null ||
-                          di<PlayerManager>().audio == null
+                      queue.audios.isEmpty || di<PlayerManager>().audio == null
                       ? null
                       : () => di<PlayerManager>().clearQueue(),
                 ),
@@ -221,7 +217,6 @@ class _QueueBodyState extends State<QueueBody>
 class _QueueTile extends StatefulWidget {
   const _QueueTile({
     required super.key,
-    required this.queueName,
     required this.queue,
     required this.audio,
     required this.selected,
@@ -231,9 +226,8 @@ class _QueueTile extends StatefulWidget {
   });
 
   final int index;
-  final String? queueName;
-  final List<Audio> queue;
   final Audio audio;
+  final Queue queue;
   final bool selected;
   final Color? selectedColor;
   final AutoScrollController controller;
@@ -261,15 +255,14 @@ class _QueueTileState extends State<_QueueTile> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(6),
             ),
-            onTap: widget.queueName == null
-                ? null
-                : () => di<PlayerManager>()
-                    ..setShuffle(false)
-                    ..startPlaylist(
-                      listName: widget.queueName!,
-                      audios: widget.queue,
-                      index: widget.queue.indexOf(widget.audio),
-                    ),
+            onTap: () async {
+              await di<PlayerManager>().setShuffle(false);
+              await di<PlayerManager>().play(
+                listName: widget.queue.name,
+                audios: widget.queue.audios,
+                index: widget.queue.audios.indexOf(widget.audio),
+              );
+            },
             hoverColor: context.colorScheme.onSurface.withValues(alpha: 0.3),
             leading: Visibility(
               visible: widget.selected,

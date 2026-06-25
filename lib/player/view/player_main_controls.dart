@@ -48,7 +48,9 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
     final defaultColor =
         iconColor ??
         (!active ? theme.disabledColor : theme.colorScheme.onSurface);
-    final queueLength = watchPropertyValue((PlayerManager m) => m.queue.length);
+    final queueLength = watchPropertyValue(
+      (PlayerManager m) => m.queue.audios.length,
+    );
     final showSkipButtons =
         queueLength > 1 || audio?.audioType == AudioType.local;
 

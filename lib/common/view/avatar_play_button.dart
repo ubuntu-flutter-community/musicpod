@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../extensions/build_context_x.dart';
+import '../../player/data/queue.dart';
 import '../../player/manager/player_manager.dart';
 import '../../radio/manager/radio_manager.dart';
 import '../data/audio.dart';
@@ -28,11 +29,11 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
       (PlayerManager m) => m.isPlaying,
     );
     final pageIsQueue = watchPropertyValue(
-      (PlayerManager m) => m.queueName != null && m.queueName == pageId,
+      (PlayerManager m) => m.queue.name == pageId,
     );
     final iconData =
         isPlayerPlaying &&
-            (pageIsQueue && playerManager.queue.length == audios.length)
+            (pageIsQueue && playerManager.queue.audios.length == audios.length)
         ? Iconz.pause
         : Iconz.playFilled;
 
@@ -65,22 +66,17 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
                 }
                 if (isPlayerPlaying) {
                   if (pageIsQueue &&
-                      playerManager.queue.length == audios.length) {
+                      playerManager.queue ==
+                          Queue(name: pageId, audios: audios)) {
                     playerManager.pause();
                   } else {
-                    playerManager.startPlaylist(
-                      audios: audios,
-                      listName: pageId,
-                    );
+                    playerManager.play(audios: audios, listName: pageId);
                   }
                 } else {
                   if (pageIsQueue) {
                     playerManager.resume();
                   } else {
-                    playerManager.startPlaylist(
-                      audios: audios,
-                      listName: pageId,
-                    );
+                    playerManager.play(audios: audios, listName: pageId);
                   }
                 }
               },

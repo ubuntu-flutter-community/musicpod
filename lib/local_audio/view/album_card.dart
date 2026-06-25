@@ -63,7 +63,7 @@ class _AlbumCard extends StatelessWidget with WatchItMixin {
       builder: (context) => AlbumPage(id: id),
       pageId: id.toString(),
     ),
-    onPlay: () async => di<PlayerManager>().startPlaylist(
+    onPlay: () async => di<PlayerManager>().play(
       audios:
           await di<FindAlbumManager>(param1: id).command.runRestrictedAsync() ??
           [],

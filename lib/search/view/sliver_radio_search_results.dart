@@ -139,11 +139,9 @@ class SliverRadioSearchResults extends StatelessWidget
                   ? theme.contrastyPrimary
                   : null,
             ),
-            onTap: () {
-              di<PlayerManager>()
-                  .startPlaylist(audios: [station], listName: station.uuid!)
-                  .then((_) => di<RadioManager>().clickStation(station));
-            },
+            onTap: () => di<PlayerManager>()
+                .play(audios: [station], listName: station.uuid!)
+                .then((_) => di<RadioManager>().clickStation(station)),
           ),
         );
       },

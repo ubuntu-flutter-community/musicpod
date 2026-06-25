@@ -18,6 +18,7 @@ import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../player/data/queue.dart';
 import '../../player/manager/player_manager.dart';
 import '../../search/manager/search_manager.dart';
 import '../../search/data/search_type.dart';
@@ -204,7 +205,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
                         playerManager.resume();
                       }
                     } else {
-                      playerManager.startPlaylist(
+                      playerManager.play(
                         audios: audios,
                         listName: pageId,
                         index: index,
@@ -220,7 +221,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
             );
           },
           onReorder: (oldIndex, newIndex) {
-            if (playerManager.queueName == pageId) {
+            if (playerManager.queue == Queue(name: pageId, audios: audios)) {
               playerManager.moveAudioInQueue(oldIndex, newIndex);
             }
 
