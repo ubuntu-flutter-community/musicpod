@@ -1,21 +1,25 @@
-name: Generate L10n for Weblate
+name: Generate L10n for Weblate PRs
 
 on:
-  push:
+  pull_request:
+    types: [opened, synchronize, reopened]
     branches:
-      - weblate-musicpod-app
+      - main
 
 jobs:
   generate-l10n:
+    if: github.head_ref == 'weblate-musicpod-app'
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write 
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
         with:
+          ref: ${{ github.head_ref }}
           fetch-depth: 0
+
       - uses: kuhnroyal/flutter-fvm-config-action/setup@v3
 
       - name: Install dependencies
@@ -28,4 +32,5 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "chore: auto-generate dart localization files"
-          file_pattern: "lib/l10n/*.arb"
+          file_pattern: "lib/l10n/*.dart"
+          branch: ${{ github.head_ref }}
