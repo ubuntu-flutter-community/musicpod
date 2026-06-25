@@ -131,10 +131,7 @@ mixin CommonHandlersAndCommandsMixin {
         } else if (results.hasData && results.data != null) {
           final data = results.data!;
           context.clearToasts();
-          di<PlayerManager>().play(
-            audios: data.audios,
-            listName: data.pageId,
-          );
+          di<PlayerManager>().play(audios: data.audios, listName: data.pageId);
         }
       },
     );
