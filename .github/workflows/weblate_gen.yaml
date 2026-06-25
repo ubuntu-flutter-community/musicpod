@@ -3,7 +3,7 @@ name: Generate L10n for Weblate
 on:
   push:
     branches:
-      - 'weblate:weblate-musicpod-app' 
+      - weblate:weblate-musicpod-app
 
 jobs:
   generate-l10n:
