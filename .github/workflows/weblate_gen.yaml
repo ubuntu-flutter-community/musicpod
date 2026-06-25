@@ -8,29 +8,43 @@ on:
 
 jobs:
   generate-l10n:
-    if: github.event.pull_request.head.ref == 'weblate-musicpod-app'
     runs-on: ubuntu-latest
     permissions:
       contents: write 
 
     steps:
+      - name: Check if we should run
+        id: check-branch
+        run: |
+          if [ "${{ github.event.pull_request.head.ref }}" == "weblate-musicpod-app" ]; then
+            echo "should_run=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_run=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Checkout repository
+        if: steps.check-branch.outputs.should_run == 'true'
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
           fetch-depth: 0
 
       - uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+        if: steps.check-branch.outputs.should_run == 'true'
 
       - name: Install dependencies
+        if: steps.check-branch.outputs.should_run == 'true'
         run: flutter pub get
 
       - name: Generate Localization Files
+        if: steps.check-branch.outputs.should_run == 'true'
         run: flutter gen-l10n
 
       - name: Commit Generated Code
-        uses: stefanzweifel/git-auto-commit-action@v7
+        if: steps.check-branch.outputs.should_run == 'true'
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore: auto-generate dart localization files"
           file_pattern: "lib/l10n/*.dart"
-          branch: ${{ github.head_ref }}
+          branch: ${{ github.event.pull_request.head.ref }}
