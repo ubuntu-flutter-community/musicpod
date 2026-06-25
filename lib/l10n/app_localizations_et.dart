@@ -2477,6 +2477,6 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String appCanNotConnectToHost(String appName, String host) {
-    return '$appName can not connect to $host. Are you connected to the internet?';
+    return '$appName ei suuda ühendada $host serveriga. Kas sinu arvutis/seadmes internetiühendus ikka toimib?';
   }
 }

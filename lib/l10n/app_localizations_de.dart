@@ -2450,35 +2450,37 @@ class AppLocalizationsDe extends AppLocalizations {
       'Das Laden der Episoden war nicht erfolgreich - der Server konnte nicht erreicht werden. Bist du mit dem Internet verbunden? Falls ja könnte dies ein Serverproblem sein.';
 
   @override
-  String get tryToFetchLyricsOnlineTitle => 'Try to fetch lyrics online';
+  String get tryToFetchLyricsOnlineTitle =>
+      'Versuche Liedtexte aus dem Internet zu laden';
 
   @override
   String get tryToFetchLyricsOnlineDescription =>
-      'Do you want to try to fetch the lyrics online?';
+      'Möchtest du versuchen Liedtexte aus dem Internet zu laden?';
 
   @override
-  String get fetchingLyricsOnline => 'Fetching lyrics online, please wait ...';
+  String get fetchingLyricsOnline =>
+      'Lade Liedtext aus dem Internet, bitte warten ...';
 
   @override
   String get fetchingLyricsOnlineTimeoutMessage =>
-      'Fetching lyrics online takes longer than usual. Are you connected to the internet? If yes, this might be a server issue or the song might not be available';
+      'Das Laden von Liedtexten aus dem Internet dauert länger als gewöhnlich. Bist du mit dem Internet verbunden? Falls ja, könnte dies ein Serverproblem sein oder der Liedtext ist nicht verfügbar';
 
   @override
   String get fetchingLyricsOnlineFailed =>
-      'Fetching lyrics online failed. This might be a server issue or the song might not be available';
+      'Das Laden von Liedtexten aus dem Internet ist gescheitert. Dies kann ein Serverproblem sein oder dieser Liedtext ist nicht verfügbar';
 
   @override
-  String get onlineLyricsSourceTitle => 'Online lyrics source';
+  String get onlineLyricsSourceTitle => 'Internetquelle für Liedtexte';
 
   @override
   String get onlineLyricsSourceDescription =>
-      'Select the source for online lyrics.';
+      'Wähle eine Quelle für Liedtexte,';
 
   @override
   String get onlineLyricsSourceLrcLib => 'LrcLib';
 
   @override
   String appCanNotConnectToHost(String appName, String host) {
-    return '$appName can not connect to $host. Are you connected to the internet?';
+    return '$appName kann sich nicht mit $host verbinden. Bist du mit dem Internet verbunden?';
   }
 }
