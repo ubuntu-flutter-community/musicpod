@@ -41,7 +41,9 @@ jobs:
       - run: flutter gen-l10n
       - name: Check for outdated l10n
         if: github.event_name == 'pull_request'
-        run: ./scripts/check-outdated-files.sh
+        run: |
+          chmod +x ./scripts/check-outdated-files.sh
+          ./scripts/check-outdated-files.sh
       - name: Create PR
         if: github.event_name == 'push'
         uses: peter-evans/create-pull-request@v5
