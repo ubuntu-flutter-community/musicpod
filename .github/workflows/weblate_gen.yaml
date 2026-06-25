@@ -8,7 +8,7 @@ on:
 
 jobs:
   generate-l10n:
-    if: github.head_ref == 'weblate-musicpod-app'
+    if: github.event.pull_request.head.ref == 'weblate-musicpod-app'
     runs-on: ubuntu-latest
     permissions:
       contents: write 
