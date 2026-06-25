@@ -24,7 +24,7 @@ jobs:
 
       - name: Checkout repository
         if: steps.check-branch.outputs.should_run == 'true'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
