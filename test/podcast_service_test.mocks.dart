@@ -77,9 +77,17 @@ class MockSettingsService extends _i1.Mock implements _i2.SettingsService {
           as List<String>?);
 
   @override
-  _i3.Future<bool> setValue(String? key, dynamic value) =>
+  _i3.Future<bool> setValue(
+    String? key,
+    dynamic value, {
+    bool? throwOnError = true,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#setValue, [key, value]),
+            Invocation.method(
+              #setValue,
+              [key, value],
+              {#throwOnError: throwOnError},
+            ),
             returnValue: _i3.Future<bool>.value(false),
           )
           as _i3.Future<bool>);
