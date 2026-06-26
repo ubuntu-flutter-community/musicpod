@@ -2,7 +2,7 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../common/data/audio.dart';
-import '../../common/keep_alive_registry.dart';
+import '../../common/util/keep_alive_registry.dart';
 import 'radio_manager.dart';
 
 @injectable

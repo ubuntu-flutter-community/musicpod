@@ -3,9 +3,7 @@ import 'dart:async';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../common/file_names.dart';
 import '../../common/logging.dart';
-import '../../common/persistence_utils.dart';
 import '../../extensions/platform_x.dart';
 import '../data/shared_preferences_keys.dart';
 
@@ -67,7 +65,14 @@ class SettingsService {
     }
   }
 
-  Future<bool> setValue(String key, dynamic value) async {
+  /// Sets a value in the shared preferences.
+  /// The value can be of type bool, String, int, double, or List<String>.
+  /// Returns true if the value was successfully saved, if not, it returns false. If [throwOnError] is true, it will throw an exception on error.
+  Future<bool> setValue(
+    String key,
+    dynamic value, {
+    bool throwOnError = true,
+  }) async {
     try {
       return notify(await switch (value) {
         (bool _) => _sharedPreferences.setBool(key, value),
@@ -79,16 +84,11 @@ class SettingsService {
       });
     } on Exception catch (e, s) {
       Logger.e(e, trace: s, tag: '$SettingsService');
-      return Future.error(e, s);
+      return throwOnError ? Future.error(e) : false;
     }
   }
 
-  Future<void> wipeAllSettings() async {
-    await Future.wait([
-      for (final name in FileNames.all) wipeCustomSettings(filename: name),
-      _sharedPreferences.clear(),
-    ]);
-  }
+  Future<void> wipeAllSettings() => _sharedPreferences.clear();
 
   Future<String?> get downloadsDirOrDefault async =>
       getString(SPKeys.downloads) ?? await PlatformX.downloadsDefaultDir;

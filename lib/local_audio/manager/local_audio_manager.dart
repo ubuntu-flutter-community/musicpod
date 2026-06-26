@@ -4,7 +4,6 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../common/data/audio.dart';
-import '../../common/no_error_filter.dart';
 import '../../common/view/audio_filter.dart';
 import '../service/local_audio_service.dart';
 import '../data/playlist_action.dart';
@@ -52,7 +51,6 @@ class LocalAudioManager {
       Command.createAsyncNoParam(
         _localAudioService.areTracksSynced,
         initialValue: true,
-        errorFilter: NoErrorFilter(),
       );
 
   late final Command<

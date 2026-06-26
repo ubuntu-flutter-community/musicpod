@@ -6,7 +6,7 @@ import 'package:window_manager/window_manager.dart';
 import '../app/app_config.dart';
 import '../common/data/audio.dart';
 import '../common/data/audio_type.dart';
-import '../common/snap_detector.dart';
+import '../common/util/snap_detector.dart';
 import '../extensions/platform_x.dart';
 import '../player/service/player_service.dart';
 

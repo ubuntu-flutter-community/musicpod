@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-import 'data/retry_capsule.dart';
-import 'keep_alive_registry.dart';
+import '../data/retry_capsule.dart';
+import '../util/keep_alive_registry.dart';
 
 @injectable
 class RetryManager {

@@ -51,10 +51,9 @@ class MasterDetailPage extends StatelessWidget {
           ],
           Expanded(
             child: Navigator(
-              initialRoute: routingManager.selectedPageId ?? PageIDs.searchPage,
+              initialRoute: routingManager.selectedPageId,
               onDidRemovePage: (page) {},
               key: routingManager.masterNavigatorKey,
-              observers: [routingManager],
               onGenerateRoute: (settings) => PageRouteBuilder(
                 settings: settings,
                 maintainState: false,

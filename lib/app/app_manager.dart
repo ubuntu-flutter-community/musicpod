@@ -116,12 +116,6 @@ class AppManager {
   bool recentPatchNotesDisposed() =>
       _settingsService.getString(SPKeys.patchNotesDisposed) == version;
 
-  late final Command<void, bool?> backupNeededCommand =
-      Command.createAsyncNoParam(() async {
-        // TODO: actually make a check that makes sense, disabled for now
-        return false;
-      }, initialValue: null);
-
   late final Command<bool, bool> saveBackupCommand = Command.createAsync(
     setBackupSaved,
     initialValue: false,

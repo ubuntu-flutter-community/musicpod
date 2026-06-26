@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-import '../common/logging.dart';
 import '../settings/service/settings_service.dart';
 import '../settings/data/shared_preferences_keys.dart';
 import 'page_ids.dart';
@@ -15,7 +14,7 @@ import '../radio/service/radio_service.dart';
 import 'view/mobile_page.dart';
 
 @lazySingleton
-class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
+class RoutingManager extends SafeChangeNotifier {
   RoutingManager({
     required PodcastService podcastService,
     required LocalAudioService localAudioService,
@@ -24,24 +23,12 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
   }) : _podcastService = podcastService,
        _localAudioService = localAudioService,
        _radioService = radioService,
-       _settingsService = settingsService {
-    _settingsChangedChangedSub ??= _settingsService.propertiesChanged.listen(
-      (_) => notifyListeners(),
-    );
-  }
+       _settingsService = settingsService;
 
   final PodcastService _podcastService;
   final LocalAudioService _localAudioService;
   final RadioService _radioService;
   final SettingsService _settingsService;
-  StreamSubscription<bool>? _settingsChangedChangedSub;
-
-  @disposeMethod
-  @override
-  Future<void> dispose() async {
-    await _settingsChangedChangedSub?.cancel();
-    super.dispose();
-  }
 
   Future<bool> isPageInLibrary(String? pageId) async =>
       pageId != null &&
@@ -52,9 +39,16 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
           await _localAudioService.isPlaylistSaved(pageId) ||
           await _podcastService.isPodcastSubscribed(pageId));
 
-  String? get selectedPageId => _settingsService.getString(SPKeys.selectedPage);
-  void _setSelectedPageId(String pageId) =>
-      _settingsService.setValue(SPKeys.selectedPage, pageId);
+  String _selectedPageId = PageIDs.searchPage;
+  String get selectedPageId => _selectedPageId;
+  void _setSelectedPageId(String pageId) => _settingsService
+      .setValue(SPKeys.selectedPage, pageId, throwOnError: false)
+      .then((saved) {
+        if (saved) {
+          _selectedPageId = pageId;
+          notifyListeners();
+        }
+      });
 
   Future<void> push({
     required String pageId,
@@ -64,11 +58,14 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
   }) async {
     final inLibrary = await isPageInLibrary(pageId);
     assert(inLibrary || builder != null);
-    if (selectedPageId == pageId && !replace) {
-      return;
-    }
+
+    _setSelectedPageId(pageId);
+
     if (inLibrary) {
-      await _masterNavigatorKey.currentState?.pushReplacementNamed(pageId);
+      await _masterNavigatorKey.currentState?.pushNamedAndRemoveUntil(
+        pageId,
+        (route) => false,
+      );
     } else if (builder != null) {
       final materialPageRoute = PageRouteBuilder(
         maintainState: maintainState,
@@ -91,73 +88,6 @@ class RoutingManager extends SafeChangeNotifier implements NavigatorObserver {
 
   bool get canPop => _masterNavigatorKey.currentState?.canPop() == true;
 
-  @override
-  void didPop(Route route, Route? previousRoute) {
-    final pageId = previousRoute?.settings.name;
-
-    Logger.i(
-      'didPop: ${route.settings.name}, previousPageId: ${previousRoute?.settings.name}',
-      tag: '$RoutingManager',
-    );
-    if (pageId == null) return;
-    _setSelectedPageId(pageId);
-  }
-
-  @override
-  void didPush(Route route, Route? previousRoute) {
-    final pageId = route.settings.name;
-    Logger.i(
-      'didPush: $pageId, previousPageId: ${previousRoute?.settings.name}',
-      tag: '$RoutingManager',
-    );
-    if (pageId == null) return;
-    _setSelectedPageId(pageId);
-  }
-
-  @override
-  void didRemove(Route route, Route? previousRoute) {
-    final pageId = route.settings.name;
-    Logger.i(
-      'didRemove: $pageId, previousPageId: ${previousRoute?.settings.name}',
-      tag: '$RoutingManager',
-    );
-    if (pageId == null) return;
-    _setSelectedPageId(pageId);
-  }
-
-  @override
-  void didReplace({Route? newRoute, Route? oldRoute}) {
-    Logger.i(
-      'didReplace: ${oldRoute?.settings.name}, newPageId: ${newRoute?.settings.name}',
-      tag: '$RoutingManager',
-    );
-    final pageId = newRoute?.settings.name;
-    if (pageId == null) return;
-    _setSelectedPageId(pageId);
-  }
-
-  @override
-  void didStartUserGesture(Route route, Route? previousRoute) {
-    Logger.i(
-      'didStartUserGesture: ${route.settings.name}, previousPageId: ${previousRoute?.settings.name}',
-      tag: '$RoutingManager',
-    );
-  }
-
-  @override
-  void didStopUserGesture() {
-    Logger.i('didStopUserGesture', tag: '$RoutingManager');
-  }
-
-  @override
-  void didChangeTop(Route topRoute, Route? previousTopRoute) {
-    Logger.i('didChangeTop', tag: '$RoutingManager');
-  }
-
-  // Note: Navigator.initState ensures assert(observer.navigator == null);
-  // Afterwards the Navigator itself!!! sets the navigator of its observers...
-  @override
-  NavigatorState? get navigator => null;
   final GlobalKey<NavigatorState> _masterNavigatorKey =
       GlobalKey<NavigatorState>();
   GlobalKey<NavigatorState> get masterNavigatorKey => _masterNavigatorKey;
