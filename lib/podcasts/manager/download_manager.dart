@@ -4,9 +4,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../common/cached_streamcontroller.dart';
 import '../../common/data/audio.dart';
 import '../../common/logging.dart';
+import '../../common/util/cached_streamcontroller.dart';
 import '../data/podcast_download.dart';
 import '../service/download_service.dart';
 import '../service/podcast_service.dart';

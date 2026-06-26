@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import '../extensions/platform_x.dart' as Platforms;
+import '../../extensions/platform_x.dart' as Platforms;
 
 class SnapDetector {
   static bool get isSnap {

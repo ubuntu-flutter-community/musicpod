@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'logging.dart';
+import '../logging.dart';
 
 class KeepAliveRegistry<I, T> {
   final _instances = <I, T>{};

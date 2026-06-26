@@ -4,7 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/object_x.dart';
 import '../data/retry_capsule.dart';
-import '../retry_manager.dart';
+import '../manager/retry_manager.dart';
 import 'error_page.dart';
 import 'no_search_result_page.dart';
 import 'ui_constants.dart';

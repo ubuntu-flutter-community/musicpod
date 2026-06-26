@@ -3,7 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../common/data/audio.dart';
-import '../../common/keep_alive_registry.dart';
+import '../../common/util/keep_alive_registry.dart';
 import 'local_audio_manager.dart';
 
 @injectable

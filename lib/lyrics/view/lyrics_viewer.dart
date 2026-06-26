@@ -8,7 +8,7 @@ import 'package:yaru/yaru.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/data/retry_capsule.dart';
-import '../../common/retry_manager.dart';
+import '../../common/manager/retry_manager.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/error_retry_body.dart';
 import '../../common/view/theme.dart';
