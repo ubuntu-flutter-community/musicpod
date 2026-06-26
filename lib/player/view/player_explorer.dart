@@ -4,22 +4,17 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../lyrics/view/lyrics_viewer.dart';
 import '../../radio/view/radio_history_list.dart';
 import '../../settings/manager/settings_manager.dart';
 import '../manager/player_manager.dart';
-import 'full_window_player_image.dart';
-import '../../lyrics/view/lyrics_viewer.dart';
 import 'queue/queue_body.dart';
 
 class PlayerExplorer extends StatefulWidget with WatchItStatefulWidgetMixin {
-  const PlayerExplorer({
-    super.key,
-    this.selectedColor,
-    this.includeImage = false,
-  });
+  const PlayerExplorer({super.key, this.selectedColor, this.firstChild});
 
   final Color? selectedColor;
-  final bool includeImage;
+  final Widget? firstChild;
 
   @override
   State<PlayerExplorer> createState() => _PlayerExplorerState();
@@ -32,13 +27,13 @@ class _PlayerExplorerState extends State<PlayerExplorer>
   @override
   void didUpdateWidget(covariant PlayerExplorer oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.includeImage != widget.includeImage) {
+    if (oldWidget.firstChild != widget.firstChild) {
       _controller = _createController();
     }
   }
 
   TabController _createController() {
-    final length = widget.includeImage ? 3 : 2;
+    final length = widget.firstChild != null ? 3 : 2;
     final savedIndex = di<SettingsManager>().playerExplorerTabIndex;
     final initialIndex = savedIndex < length ? savedIndex : savedIndex - 1;
     return TabController(
@@ -59,7 +54,7 @@ class _PlayerExplorerState extends State<PlayerExplorer>
       children: [
         TabBar(
           onTap: (index) => di<SettingsManager>().setPlayerExplorerTabIndex(
-            widget.includeImage
+            widget.firstChild != null
                 ? index
                 : index > 2
                 ? 2
@@ -67,7 +62,7 @@ class _PlayerExplorerState extends State<PlayerExplorer>
           ),
           controller: _controller,
           tabs: [
-            if (widget.includeImage) Tab(text: context.l10n.arts),
+            if (widget.firstChild != null) Tab(text: context.l10n.arts),
             Tab(
               text: audio?.isRadio == true
                   ? context.l10n.hearingHistory
@@ -80,11 +75,7 @@ class _PlayerExplorerState extends State<PlayerExplorer>
           child: TabBarView(
             controller: _controller,
             children: [
-              if (widget.includeImage)
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 2 * kLargestSpace),
-                  child: FullWindowPlayerImage(),
-                ),
+              ?widget.firstChild,
               if (audio?.audioType == AudioType.radio)
                 const RadioHistoryList(simpleList: true)
               else

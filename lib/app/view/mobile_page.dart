@@ -43,6 +43,7 @@ class MobilePage extends StatelessWidget
             ? const Hero(tag: 'bottomPlayer', child: MobileBottomBar())
             : null,
         body: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             if (context.showMasterPanel && !fullWindowMode) ...[
               const Hero(tag: 'masterPanel', child: MasterRail()),
@@ -116,43 +117,24 @@ class MasterRail extends StatelessWidget with WatchItMixin {
       (e) => e.pageId == selectedPageId,
     );
 
-    return SizedBox(
-      width: 200,
-      child: Column(
-        children: [
-          Expanded(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return SingleChildScrollView(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: constraints.maxHeight,
-                    ),
-                    child: IntrinsicHeight(
-                      child: NavigationRail(
-                        onDestinationSelected: (index) {
-                          final item = permanentMasterItems.elementAt(index);
-                          di<RoutingManager>().push(pageId: item.pageId);
-                        },
-                        extended: true,
-                        destinations: destinations,
-                        selectedIndex: selectedItem == null
-                            ? 0
-                            : permanentMasterItems.toList().indexOf(
-                                selectedItem,
-                              ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-          const Material(
-            color: Colors.transparent,
-            child: PlayerCompactControls(),
-          ),
-        ],
+    return NavigationRail(
+      scrollable: true,
+      extended: true,
+      minExtendedWidth: 180,
+      onDestinationSelected: (index) => di<RoutingManager>().push(
+        pageId: permanentMasterItems.elementAt(index).pageId,
+      ),
+      destinations: destinations,
+      selectedIndex: selectedItem == null
+          ? 0
+          : permanentMasterItems.toList().indexOf(selectedItem),
+      trailingAtBottom: true,
+      trailing: const Material(
+        color: Colors.transparent,
+        child: PlayerCompactControls(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+        ),
       ),
     );
   }

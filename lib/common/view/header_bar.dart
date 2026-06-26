@@ -24,6 +24,7 @@ class HeaderBar extends StatelessWidget
     this.includeSidebarButton = true,
     this.leading,
     this.heroTag,
+    this.hideOnMobile = true,
   });
 
   final Widget? title;
@@ -36,6 +37,7 @@ class HeaderBar extends StatelessWidget
   final bool includeSidebarButton;
   final Widget? leading;
   final Object? heroTag;
+  final bool hideOnMobile;
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +59,9 @@ class HeaderBar extends StatelessWidget
     }
 
     if (isMobile) {
+      if (hideOnMobile) {
+        return SizedBox(height: context.isPortrait ? 60 : 10);
+      }
       return AppBar(
         backgroundColor: backgroundColor,
         titleSpacing: titleSpacing,

@@ -11,14 +11,13 @@ class FullWindowPlayerImage extends StatelessWidget with WatchItMixin {
   const FullWindowPlayerImage({
     super.key,
     this.fit,
-    this.height,
-    this.width,
+    this.dimension,
     this.borderRadius,
     this.emptyFallBack = false,
   });
 
   final BoxFit? fit;
-  final double? height, width;
+  final double? dimension;
   final BorderRadius? borderRadius;
   final bool emptyFallBack;
 
@@ -29,8 +28,8 @@ class FullWindowPlayerImage extends StatelessWidget with WatchItMixin {
     final fallBackImage = PlayerFallBackImage(
       noIcon: emptyFallBack,
       audioType: audio?.audioType,
-      height: kFullWindowPlayerImageSize,
-      width: kFullWindowPlayerImageSize,
+      height: dimension ?? kFullWindowPlayerImageSize,
+      width: dimension ?? kFullWindowPlayerImageSize,
     );
 
     Widget image;
@@ -38,14 +37,14 @@ class FullWindowPlayerImage extends StatelessWidget with WatchItMixin {
       image = LocalCover(
         key: ValueKey(audio!.albumDbId!),
         albumId: audio.albumDbId!,
-        dimension: kFullWindowPlayerImageSize,
+        dimension: dimension ?? kFullWindowPlayerImageSize,
         fit: fit ?? BoxFit.fitHeight,
         fallback: fallBackImage,
       );
     } else {
       image = PlayerRemoteSourceImage(
-        height: kFullWindowPlayerImageSize,
-        width: kFullWindowPlayerImageSize,
+        height: dimension ?? kFullWindowPlayerImageSize,
+        width: dimension ?? kFullWindowPlayerImageSize,
         fit: fit,
         fallBackIcon: fallBackImage,
         errorIcon: fallBackImage,

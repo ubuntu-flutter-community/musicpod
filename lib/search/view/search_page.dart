@@ -43,6 +43,7 @@ class SearchPage extends StatelessWidget with WatchItMixin {
 
     return Scaffold(
       appBar: HeaderBar(
+        hideOnMobile: false,
         title: Padding(
           padding: EdgeInsets.only(left: isMobile ? 5 : 0),
           child: const SearchPageInput(),
