@@ -10,8 +10,8 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../local_audio/manager/find_all_tracks_manager.dart';
 import '../../local_audio/data/playlist_action.dart';
+import '../../local_audio/manager/find_all_tracks_manager.dart';
 import '../../local_audio/manager/playlist_ids_manager.dart';
 import '../../search/manager/search_manager.dart';
 import '../../settings/view/settings_action.dart';
@@ -22,10 +22,29 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
 
   final bool shownInDialog;
 
+  Future<void> _createEmptyPlaylist(
+    BuildContext context,
+    String playlistName,
+  ) async {
+    if (shownInDialog && context.canPop()) {
+      context.pop();
+    }
+
+    di<PlaylistIDsManager>().command.run(
+      PlaylistChange(id: playlistName, action: PlaylistAction.create),
+    );
+
+    await Future.delayed(
+      const Duration(milliseconds: 200),
+      () => di<RoutingManager>().push(pageId: playlistName),
+    );
+
+    di<CustomContentManager>().reset();
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final routingManager = di<RoutingManager>();
 
     final tracksResults = watchValue(
       (FindAllTracksManager m) => m.command.results,
@@ -44,30 +63,10 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
 
     final manager = di<CustomContentManager>();
     final playlistName = watchValue((CustomContentManager m) => m.playlistName);
-    watchValue((CustomContentManager m) => m.playlists.select((v) => v.length));
-    final playlists = di<CustomContentManager>().playlists;
-    final onPressed = (playlistName?.isNotEmpty ?? false)
-        ? () async {
-            if (shownInDialog && context.canPop()) {
-              context.pop();
-            }
+    final playlists = watchValue(
+      (CustomContentManager m) => m.externalPlaylists.select((v) => v),
+    );
 
-            di<PlaylistIDsManager>().command.run(
-              PlaylistChange(
-                id: playlistName!,
-                action: PlaylistAction.create,
-                external: true,
-              ),
-            );
-
-            await Future.delayed(
-              const Duration(milliseconds: 200),
-              () => routingManager.push(pageId: playlistName),
-            );
-
-            manager.reset();
-          }
-        : null;
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -77,7 +76,9 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
             height: 45,
             child: TextField(
               autofocus: true,
-              onSubmitted: (_) => onPressed?.call(),
+              onSubmitted: (playlistName?.isNotEmpty ?? false)
+                  ? (_) => _createEmptyPlaylist(context, playlistName!)
+                  : null,
               decoration: InputDecoration(
                 label: Text(l10n.name),
                 suffixIcon: SizedBox(
@@ -91,7 +92,9 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
                         ),
                       ),
                     ),
-                    onPressed: onPressed,
+                    onPressed: (playlistName?.isNotEmpty ?? false)
+                        ? () => _createEmptyPlaylist(context, playlistName!)
+                        : null,
                     child: Text(l10n.add),
                   ),
                 ),
@@ -119,16 +122,16 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
           ),
           child: Text(l10n.loadFromFileOptional),
         ),
-        ...playlists.map((e) {
-          if (e.audios.any((e) => e.isLocal)) {
+        ...playlists.entries.map((e) {
+          if (e.value.any((e) => e.isLocal)) {
             return ListTile(
-              title: Text(e.id),
-              subtitle: Text('${e.audios.length} ${l10n.titles}'),
+              title: Text(e.key),
+              subtitle: Text('${e.value.length} ${l10n.titles}'),
               trailing: IconButton(
                 tooltip: l10n.deletePlaylist,
                 icon: Icon(Iconz.remove, semanticLabel: l10n.deletePlaylist),
                 onPressed: () =>
-                    di<CustomContentManager>().removePlaylist(name: e.id),
+                    di<CustomContentManager>().removePlaylist(name: e.key),
               ),
             );
           } else {
@@ -136,7 +139,7 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
           }
         }),
         if (playlists.isNotEmpty &&
-            playlists.any((e) => e.audios.none((e) => e.isLocal)))
+            playlists.entries.any((e) => e.value.none((e) => e.isLocal)))
           Padding(
             padding: const EdgeInsets.symmetric(vertical: kLargestSpace),
             child: YaruInfoBox(
@@ -166,13 +169,19 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
               ElevatedButton(
                 onPressed:
                     playlists.isNotEmpty &&
-                        playlists.any((e) => e.audios.any((e) => e.isLocal))
+                        playlists.entries.any(
+                          (e) => e.value.any((e) => e.isLocal),
+                        )
                     ? () async {
                         if (shownInDialog && context.canPop()) {
                           context.pop();
                         }
-                        di<ImportExternalPlaylistManager>().command.run(
-                          playlists,
+                        await di<CustomContentManager>()
+                            .importExternalPlaylistsCommand
+                            .runAsync();
+
+                        await di<RoutingManager>().push(
+                          pageId: playlists.entries.first.key,
                         );
 
                         manager.reset();
