@@ -38,7 +38,7 @@ class CustomContentManager {
        _playlistIDsManager = playlistIDsManager,
        _pinnedAlbumIDsManager = pinnedAlbumIDsManager,
        _localAudioManager = localAudioManager {
-    Logger.i('Instance created', tag: '$CustomContentManager');
+    Logger.o(tag: '$CustomContentManager');
   }
 
   final ExternalPathService _externalPathService;

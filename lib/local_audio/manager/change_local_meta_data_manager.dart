@@ -14,10 +14,7 @@ class ChangeLocalMetaDataManager {
     required LocalAudioService localAudioService,
   }) : _audio = audio,
        _localAudioService = localAudioService {
-    Logger.i(
-      'Instance created for ${audio.path}',
-      tag: '$ChangeLocalMetaDataManager',
-    );
+    Logger.o(tag: '$ChangeLocalMetaDataManager:${audio.path}');
   }
 
   final Audio _audio;

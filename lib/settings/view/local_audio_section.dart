@@ -9,6 +9,7 @@ import '../../external_path/service/external_path_service.dart';
 
 import '../../local_audio/manager/local_audio_manager.dart';
 import '../manager/settings_manager.dart';
+import '../manager/wipe_manager.dart';
 
 class LocalAudioSection extends StatelessWidget with WatchItMixin {
   const LocalAudioSection({super.key});
@@ -35,6 +36,9 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
                 final directoryPath = await di<ExternalPathService>()
                     .getPathOfDirectory();
                 if (directoryPath != null) {
+                  await di<WipeManager>().wipeCommand.runAsync({
+                    WipeType.localAudio,
+                  });
                   di<LocalAudioManager>().initAudiosCommand.run((
                     forceInit: true,
                     directory: directoryPath,

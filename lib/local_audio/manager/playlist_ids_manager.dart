@@ -9,7 +9,7 @@ import 'playlist_manager.dart';
 @Injectable(cache: true)
 class PlaylistIDsManager {
   PlaylistIDsManager({required LocalAudioManager localAudioManager}) {
-    Logger.i('Instance created', tag: '$PlaylistIDsManager');
+    Logger.o(tag: '$PlaylistIDsManager');
     command = Command.createAsync((param) async {
       if (param != null) {
         await localAudioManager.createOrChangePlaylist(param);

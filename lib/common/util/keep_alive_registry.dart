@@ -20,7 +20,7 @@ class KeepAliveRegistry<I, T> {
     );
 
     return _instances.putIfAbsent(id, () {
-      Logger.i('Instance created for id: $id', tag: '$T');
+      Logger.o(tag: '$T:$id');
       return factoryFunction();
     });
   }

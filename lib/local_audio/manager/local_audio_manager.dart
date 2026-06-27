@@ -55,7 +55,7 @@ class LocalAudioManager {
 
   late final Command<
     ({bool forceInit, String? directory, bool forceDbOnly}),
-    ({bool initialized, List<String> failedImports})?
+    ({List<String> failedImports})?
   >
   initAudiosCommand = Command.createAsyncWithProgress((param, handle) async {
     final localAudioResult = await _localAudioService.init(

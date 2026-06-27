@@ -12,7 +12,7 @@ class EpisodesManager {
     @factoryParam required String feedUrl,
     required PodcastService podcastService,
   }) {
-    Logger.i('Instance created for feedUrl: $feedUrl', tag: '$EpisodesManager');
+    Logger.o(tag: '$EpisodesManager:$feedUrl');
 
     command = Command.createAsync((param) async {
       final episodes = await podcastService.findEpisodes(

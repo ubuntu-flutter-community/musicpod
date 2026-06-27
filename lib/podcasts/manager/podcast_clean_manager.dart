@@ -7,7 +7,7 @@ import '../service/podcast_service.dart';
 @Injectable(cache: true)
 class PodcastCleanManager {
   PodcastCleanManager(this._podcastService) {
-    Logger.i('Instance created', tag: '$PodcastCleanManager');
+    Logger.o(tag: '$PodcastCleanManager');
     command.run();
   }
 
