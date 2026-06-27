@@ -46,6 +46,7 @@ extension ObjectX on Object? {
           : (this as DioException).response?.statusCode == 404
           ? l10n.noLyricsFound
           : (this as DioException).message ?? (this as DioException).toString(),
+    Exception() => (this as Exception).toString(),
     _ => this.toString(),
   };
 }

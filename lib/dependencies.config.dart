@@ -411,13 +411,13 @@ extension GetItInjectableX on _i174.GetIt {
         settingsService: gh<_i862.SettingsService>(),
       ),
     );
-    gh.lazySingleton<_i1055.SubscribedPodcastsManager>(
-      () => _i1055.SubscribedPodcastsManager(
+    gh.factoryCached<_i399.PodcastFeedsWithDownloadsManager>(
+      () => _i399.PodcastFeedsWithDownloadsManager(
         podcastManager: gh<_i819.PodcastManager>(),
       ),
     );
-    gh.factoryCached<_i399.PodcastFeedsWithDownloadsManager>(
-      () => _i399.PodcastFeedsWithDownloadsManager(
+    gh.factoryCached<_i1055.SubscribedPodcastsManager>(
+      () => _i1055.SubscribedPodcastsManager(
         podcastManager: gh<_i819.PodcastManager>(),
       ),
     );
@@ -426,7 +426,7 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioManager: gh<_i76.LocalAudioManager>(),
       ),
     );
-    gh.lazySingleton<_i924.PlaylistIDsManager>(
+    gh.factoryCached<_i924.PlaylistIDsManager>(
       () => _i924.PlaylistIDsManager(
         localAudioManager: gh<_i76.LocalAudioManager>(),
       ),

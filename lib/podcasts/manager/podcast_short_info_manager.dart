@@ -11,12 +11,12 @@ class PodcastShortInfoManager {
     required String feedUrl,
     required PodcastManager podcastManager,
   }) {
-    command = Command.createAsync(
-      podcastManager.getPodcastShortInfo,
+    command = Command.createAsyncNoParam(
+      () => podcastManager.getPodcastShortInfo(feedUrl),
       initialValue: null,
     );
 
-    command.run(feedUrl);
+    command.run();
 
     podcastManager.wipeCommand.listen((_, sub) {
       dispose(feedUrl);
@@ -41,5 +41,5 @@ class PodcastShortInfoManager {
       _registry.dispose(feedUrl);
   static void disposeAll() => _registry.disposeAll();
 
-  late final Command<String, PodcastShortInfo?> command;
+  late final Command<void, PodcastShortInfo?> command;
 }

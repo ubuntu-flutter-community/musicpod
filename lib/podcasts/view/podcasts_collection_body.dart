@@ -23,6 +23,7 @@ import '../manager/podcast_updates_manager.dart';
 import '../manager/subscribed_podcasts_manager.dart';
 import 'podcast_collection_card.dart';
 import 'podcast_collection_control_panel.dart';
+import 'sliver_podcast_page_list.dart';
 
 class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
   const PodcastsCollectionBody({super.key});
@@ -40,6 +41,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
     final updates = watchValue((PodcastUpdatesManager m) => m.command);
     final updatesOnly = watchValue((PodcastManager m) => m.updatesOnly);
     final downloadsOnly = watchValue((PodcastManager m) => m.downloadsOnly);
+
     final subsLength = subs.length;
     final feedsWithDownloads = watchValue(
       (PodcastFeedsWithDownloadsManager m) => m.command,
@@ -108,6 +110,11 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                 ),
               ),
             )
+          : updates.isNotEmpty && updatesOnly
+          ? SliverPodcastPageList(
+              audios: updates.values.expand((e) => e).toList(),
+              pageId: 'newPodcastEpisodes',
+            )
           : (subsLength == 0)
           ? SliverNoSearchResultPage(
               message: Column(
@@ -133,12 +140,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
               gridDelegate: audioCardGridDelegate,
               itemBuilder: (context, index) {
                 final String? feedUrl;
-                if (updatesOnly) {
-                  feedUrl = subs
-                      .toSet()
-                      .intersection(updates)
-                      .elementAtOrNull(index);
-                } else if (downloadsOnly) {
+                if (downloadsOnly) {
                   feedUrl = subs
                       .where(
                         (e) => di<PodcastFeedsWithDownloadsManager>()
@@ -158,7 +160,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                 return PodcastCollectionCard(
                   key: ValueKey(feedUrl),
                   feedUrl: feedUrl,
-                  hasUpdated: updates.contains(feedUrl),
+                  hasUpdated: updates.containsKey(feedUrl),
                 );
               },
             ),
