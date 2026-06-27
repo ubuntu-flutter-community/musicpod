@@ -9,6 +9,7 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/platform_x.dart';
+import '../../extensions/theme_data_x.dart';
 import '../manager/player_manager.dart';
 import 'bottom_player_image.dart';
 import 'bottom_player_like_and_star_button.dart';
@@ -87,7 +88,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                       IconButton(
                         isSelected: fullWindowMode,
                         color: fullWindowMode
-                            ? context.colorScheme.primary
+                            ? context.theme.contrastyPrimary
                             : context.colorScheme.onSurface,
                         tooltip: audio == null || !audio.isRadio
                             ? l10n.queue

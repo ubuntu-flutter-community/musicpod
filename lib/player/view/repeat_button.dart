@@ -5,6 +5,7 @@ import 'package:media_kit/media_kit.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
 
+import '../../extensions/theme_data_x.dart';
 import '../manager/player_manager.dart';
 
 class PlaylistModeButton extends StatelessWidget with WatchItMixin {
@@ -20,7 +21,7 @@ class PlaylistModeButton extends StatelessWidget with WatchItMixin {
     );
 
     final isSelected = playlistMode != PlaylistMode.none;
-    final color = isSelected ? context.colorScheme.primary : iconColor;
+    final color = isSelected ? context.theme.contrastyPrimary : iconColor;
     return IconButton(
       isSelected: isSelected,
       color: color,
