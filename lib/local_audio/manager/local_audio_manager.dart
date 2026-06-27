@@ -104,4 +104,9 @@ class LocalAudioManager {
     await _runInitIfNeeded();
     return _localAudioService.togglePinAlbum(id);
   }
+
+  Future<List<int>> findPinnedAlbumIDs() async {
+    await _runInitIfNeeded();
+    return _localAudioService.findPinnedAlbumIDs();
+  }
 }

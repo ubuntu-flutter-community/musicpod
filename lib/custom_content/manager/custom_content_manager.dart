@@ -13,6 +13,10 @@ import '../../common/data/audio_type.dart';
 import '../../common/logging.dart';
 import '../../extensions/media_file_x.dart';
 import '../../external_path/service/external_path_service.dart';
+import '../../local_audio/data/playlist_action.dart';
+import '../../local_audio/manager/local_audio_manager.dart';
+import '../../local_audio/manager/pinned_album_ids_manager.dart';
+import '../../local_audio/manager/playlist_ids_manager.dart';
 import '../../local_audio/manager/playlist_manager.dart';
 import '../../local_audio/service/local_audio_service.dart';
 import '../../podcasts/service/podcast_service.dart';
@@ -23,44 +27,59 @@ class CustomContentManager {
   CustomContentManager({
     required ExternalPathService externalPathService,
     required LocalAudioService localAudioService,
+    required PlaylistIDsManager playlistIDsManager,
+    required PinnedAlbumIDsManager pinnedAlbumIDsManager,
+    required LocalAudioManager localAudioManager,
     required PodcastService podcastService,
     required RadioService radioService,
   }) : _externalPathService = externalPathService,
        _podcastService = podcastService,
-       _localAudioService = localAudioService,
-       _radioService = radioService;
+       _radioService = radioService,
+       _playlistIDsManager = playlistIDsManager,
+       _pinnedAlbumIDsManager = pinnedAlbumIDsManager,
+       _localAudioManager = localAudioManager {
+    Logger.i('Instance created', tag: '$CustomContentManager');
+  }
 
   final ExternalPathService _externalPathService;
   final PodcastService _podcastService;
-  final LocalAudioService _localAudioService;
+  final PlaylistIDsManager _playlistIDsManager;
+  final PinnedAlbumIDsManager _pinnedAlbumIDsManager;
+  final LocalAudioManager _localAudioManager;
   final RadioService _radioService;
 
-  ListNotifier<({List<Audio> audios, String id})> playlists = ListNotifier();
+  final externalPlaylists = MapNotifier<String, List<Audio>>();
   Future<void> addPlaylists() async {
-    final more = await loadPlaylists();
-    playlists.addAll(more);
+    final more = await _loadPlaylistsFromFile();
+    externalPlaylists.addEntries(more.entries);
   }
 
-  void removePlaylist({required String name}) {
-    playlists.removeWhere((e) => e.id == name);
-  }
+  late final Command<void, void> importExternalPlaylistsCommand =
+      Command.createAsyncNoParamNoResult(() async {
+        for (final entry in externalPlaylists.entries) {
+          await _playlistIDsManager.command.runAsync(
+            PlaylistChange(
+              id: entry.key,
+              audios: entry.value,
+              action: PlaylistAction.create,
+              external: true,
+            ),
+          );
+        }
+      });
 
-  Future<List<({List<Audio> audios, String id})>> loadPlaylists() async {
-    final List<({List<Audio> audios, String id})> lists = [];
+  void removePlaylist({required String name}) => externalPlaylists.remove(name);
+
+  Future<Map<String, List<Audio>>> _loadPlaylistsFromFile() async {
+    final Map<String, List<Audio>> lists = {};
 
     try {
       final paths = await _externalPathService.getPathsOfFiles();
       for (var path in paths) {
         if (path.endsWith('.m3u')) {
-          lists.add((
-            id: basename(path),
-            audios: await compute(_parseM3uPlaylist, path),
-          ));
+          lists[basename(path)] = await compute(_parseM3uPlaylist, path);
         } else if (path.endsWith('.pls')) {
-          lists.add((
-            id: basename(path),
-            audios: await compute(_parsePlsPlaylist, path),
-          ));
+          lists[basename(path)] = await compute(_parsePlsPlaylist, path);
         }
       }
     } on Exception catch (e, s) {
@@ -81,15 +100,15 @@ class CustomContentManager {
 
   Future<bool> exportPlaylistsAndPinnedAlbumsToM3Us() async {
     final albums = <({String id, List<Audio> audios})>[];
-    for (var e in (await _localAudioService.findPinnedAlbumIDs())) {
+    for (var e in (await _pinnedAlbumIDsManager.command.runAsync())) {
       albums.add((
         id: e.toString(),
-        audios: await _localAudioService.findAlbum(e) ?? [],
+        audios: await _localAudioManager.findAlbum(e) ?? [],
       ));
     }
 
     final List<({String id, List<Audio> audios})> list = [
-      ...await _localAudioService.findAllPlaylistIDs().then(
+      ...await _localAudioManager.findAllPlaylistIDs().then(
         (ids) => ids.map(
           (e) => (
             id: e,
@@ -298,7 +317,7 @@ class CustomContentManager {
   }
 
   void reset() {
-    playlists.clear();
+    externalPlaylists.clear();
     playlistName.value = null;
   }
 }
