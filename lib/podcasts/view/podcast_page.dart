@@ -23,6 +23,7 @@ import '../manager/download_manager.dart';
 import '../manager/episodes_manager.dart';
 import '../manager/podcast_genre_manager.dart';
 import '../manager/podcast_manager.dart';
+import '../manager/podcast_short_info_manager.dart';
 import '../manager/podcast_updates_manager.dart';
 import '../manager/subscribed_podcasts_manager.dart';
 import 'podcast_error_page.dart';
@@ -58,6 +59,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
     onDispose(() {
       if (!di<SubscribedPodcastsManager>().command.value.contains(feedUrl)) {
         cleanUpUnusedPodcasts(deleteMeUrls: {feedUrl});
+        PodcastShortInfoManager.dispose(feedUrl);
       }
     });
 

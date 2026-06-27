@@ -4,6 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
 
+import '../../extensions/theme_data_x.dart';
 import '../manager/player_manager.dart';
 
 class ShuffleButton extends StatelessWidget with WatchItMixin {
@@ -16,7 +17,7 @@ class ShuffleButton extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final shuffle = watchPropertyValue((PlayerManager m) => m.shuffle);
 
-    final color = shuffle ? context.colorScheme.primary : iconColor;
+    final color = shuffle ? context.theme.contrastyPrimary : iconColor;
 
     return IconButton(
       isSelected: shuffle,
