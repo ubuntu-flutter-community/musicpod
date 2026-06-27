@@ -9,30 +9,31 @@ import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/logging.dart';
 import '../../expose/service/expose_service.dart';
-import '../../extensions/command_x.dart';
 import '../../extensions/string_x.dart';
-import '../../lyrics/data/lyrics_and_art_result_and_param.dart';
-import '../../lyrics/lyrics_manager.dart';
 import '../../radio/service/online_art_service.dart';
-import '../../settings/service/settings_service.dart';
 import '../../settings/data/shared_preferences_keys.dart';
+import '../../settings/service/settings_service.dart';
 import '../data/mpv_meta_data.dart';
 import '../data/observe_property/observe_property.dart';
 import '../service/player_service.dart';
 
-@singleton
+@Injectable(cache: true)
 class MpvMetadataManager {
   MpvMetadataManager({
     required PlayerService playerService,
     required OnlineArtService onlineArtService,
     required ExposeService exposeService,
     required SettingsService settingsService,
-    required LyricsManager lyricsManager,
   }) : _playerService = playerService,
        _onlineArtService = onlineArtService,
        _exposeService = exposeService,
-       _settingsService = settingsService,
-       _lyricsManager = lyricsManager {
+       _settingsService = settingsService {
+    observeProperty(
+      property: 'metadata',
+      player: _playerService.player,
+      listener: _onMpvMetadata,
+    );
+
     editBlockedIcyTitleCommand.run((
       title: '',
       addOrRemove: EditIcyTitleInHistory.init,
@@ -43,18 +44,6 @@ class MpvMetadataManager {
   final OnlineArtService _onlineArtService;
   final ExposeService _exposeService;
   final SettingsService _settingsService;
-  final LyricsManager _lyricsManager;
-
-  @PostConstruct(preResolve: true)
-  Future<void> init() => observeProperty(
-    property: 'metadata',
-    player: _playerService.player,
-    listener: _onMpvMetadata,
-  );
-
-  @disposeMethod
-  Future<void> dispose() =>
-      observeProperty(property: 'metadata', player: _playerService.player);
 
   final dataSafeMode = SafeValueNotifier<bool>(false);
 
@@ -180,35 +169,12 @@ class MpvMetadataManager {
         !icyTitle.toLowerCase().contains(sanitizedDescription);
   }
 
-  bool get _geniusIsSetup {
-    final token = _settingsService.getString(SPKeys.lyricsGeniusAccessToken);
-    final geniusDisabled =
-        _settingsService.getBool(SPKeys.neverAskAgainForGeniusToken) ?? false;
-    return token != null && token.isNotEmpty && !geniusDisabled;
-  }
-
   Future<void> _processParsedIcyTitle(String parsedIcyTitle) async {
     final songInfo = parsedIcyTitle.splitByDash;
     String? albumArt;
 
     if (!dataSafeMode.value) {
-      LyricsAndArtResult? lyricsAndArtResult;
-
-      // First we check if the lyrics manager gives us lyrics and art if it is set up
-      if (_geniusIsSetup) {
-        lyricsAndArtResult = await _lyricsManager.command.runRestrictedAsync(
-          param: LyricsAndArtParam(
-            audio: _playerService.audio,
-            title: songInfo.songName,
-            artist: songInfo.artist,
-          ),
-          runWhen: RunWhen.paramChanges,
-        );
-      }
-
       albumArt = await _onlineArtService.fetchAlbumArt(
-        // If the lyrics manager gives us an artUrl, we use it. If not, we try to fetch it via the icyTitle
-        albumArtOverwrite: lyricsAndArtResult?.artUrl,
         icyTitle: parsedIcyTitle,
       );
     }

@@ -19,7 +19,7 @@ import '../data/local_search_result.dart';
 import '../persistence/local_audio_dao.dart';
 import '../data/playlist_action.dart';
 
-@lazySingleton
+@Injectable(cache: true)
 class LocalAudioService {
   final SettingsService _settingsService;
   final LocalAudioDao _dao;
@@ -29,9 +29,9 @@ class LocalAudioService {
     required SettingsService settingsService,
     required LocalAudioDao localAudioDao,
   }) : _settingsService = settingsService,
-       _dao = localAudioDao;
-
-  bool _initialized = false;
+       _dao = localAudioDao {
+    Logger.o(tag: '$LocalAudioService');
+  }
 
   Future<List<Audio>> findAllTracks() => _dao.findAllTracks();
 
@@ -70,7 +70,7 @@ class LocalAudioService {
   Future<LocalSearchResult?> search(String query) => _dao.search(query);
 
   final Lock _lock = Lock();
-  Future<({bool initialized, List<String> failedImports})> init({
+  Future<({List<String> failedImports})> init({
     String? newDirectory,
     bool forceInit = false,
     bool forceDbOnly = false,
@@ -81,22 +81,23 @@ class LocalAudioService {
     await Future<void>.delayed(Duration.zero);
 
     await _lock.synchronized(() async {
-      if (!forceInit && _initialized) {
-        Logger.i('Already initialized, skipping', tag: '$LocalAudioService');
-        updateProgress?.call(1);
-        return;
-      }
-
       if (newDirectory != null &&
           newDirectory != _settingsService.getString(SPKeys.directory)) {
         await _settingsService.setValue(SPKeys.directory, newDirectory);
       }
 
       if (((await _dao.getTrackCount()) > 0) && !forceInit || forceDbOnly) {
-        _initialized = true;
         updateProgress?.call(1);
+        Logger.i(
+          'Loading local audio library from database only, skipping directory scan.',
+          tag: '$LocalAudioService',
+        );
         return;
       } else {
+        Logger.i(
+          'Wiping local audio library if present and scanning directory for new audio files.',
+          tag: '$LocalAudioService',
+        );
         await _wipeLocalAudioLibrary();
       }
 
@@ -114,11 +115,9 @@ class LocalAudioService {
 
       updateProgress?.call(1);
       await Future<void>.delayed(Duration.zero);
-
-      _initialized = true;
     });
 
-    return (initialized: _initialized, failedImports: failedImports);
+    return (failedImports: failedImports);
   }
 
   Future<bool> areTracksSynced({String? newDir}) async {

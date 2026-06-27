@@ -9,6 +9,7 @@ import '../../custom_content/manager/custom_content_manager.dart';
 import '../../extensions/build_context_x.dart';
 
 import '../../radio/manager/radio_manager.dart';
+import '../manager/wipe_manager.dart';
 
 class RadioSection extends StatelessWidget with WatchItMixin {
   const RadioSection({super.key});
@@ -68,7 +69,9 @@ class RadioSection extends StatelessWidget with WatchItMixin {
                         width: 350,
                         child: Text(l10n.removeAllStarredStationsDescription),
                       ),
-                      onConfirm: di<RadioManager>().wipeCommand.runAsync,
+                      onConfirm: () => di<WipeManager>().wipeCommand.runAsync({
+                        WipeType.radio,
+                      }),
                     ),
                   ),
                 ),

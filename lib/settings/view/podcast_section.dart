@@ -11,12 +11,12 @@ import '../../common/view/ui_constants.dart';
 import '../../custom_content/manager/custom_content_manager.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
-import '../../player/service/player_service.dart';
 import '../../podcasts/manager/download_manager.dart';
 import '../../podcasts/manager/podcast_genre_manager.dart';
 import '../../podcasts/manager/podcast_manager.dart';
-import '../manager/settings_manager.dart';
 import '../data/shared_preferences_keys.dart';
+import '../manager/settings_manager.dart';
+import '../manager/wipe_manager.dart';
 
 class PodcastSection extends StatefulWidget with WatchItStatefulWidgetMixin {
   const PodcastSection({super.key});
@@ -229,10 +229,8 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
               content: Text(context.l10n.removeAllPodcastsDescription),
               confirmLabel: context.l10n.ok,
               cancelLabel: context.l10n.cancel,
-              onConfirm: () async {
-                await di<PodcastManager>().wipeCommand.runAsync();
-                await di<PlayerService>().clearAllLastPositions();
-              },
+              onConfirm: () =>
+                  di<WipeManager>().wipeCommand.runAsync({WipeType.podcasts}),
             ),
           ),
         ],

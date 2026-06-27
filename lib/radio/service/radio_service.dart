@@ -11,9 +11,11 @@ import '../../common/logging.dart';
 import '../persistence/radio_dao.dart';
 import '../data/radio_exceptions.dart';
 
-@singleton
+@Injectable(cache: true)
 class RadioService {
-  RadioService({required RadioDao dao}) : _dao = dao;
+  RadioService({required RadioDao dao}) : _dao = dao {
+    Logger.o(tag: '$RadioService');
+  }
 
   final RadioDao _dao;
 

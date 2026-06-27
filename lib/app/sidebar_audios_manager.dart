@@ -44,7 +44,7 @@ class SidebarAudiosManager {
        _radioStarStationManager = radioStarStationManager,
        _playlistIDsManager = playlistIDsManager,
        _pinnedAlbumIDsManager = pinnedAlbumIDsManager {
-    Logger.i('Instance created', tag: '$SidebarAudiosManager');
+    Logger.o(tag: '$SidebarAudiosManager');
   }
 
   late final Command<({String pageId}), ({String pageId, List<Audio> audios})?>

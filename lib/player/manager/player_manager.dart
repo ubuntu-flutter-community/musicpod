@@ -177,4 +177,7 @@ class PlayerManager extends SafeChangeNotifier {
   void toggleShowQueue() => setShowQueue(!_showQueue);
 
   Future<void> resetPlayerState() => _playerService.resetPlayerState();
+
+  Future<void> clearAllLastPositions() =>
+      _playerService.clearAllLastPositions();
 }

@@ -17,8 +17,6 @@ class RadioStarStationManager {
       return radioManager.getStarredStations();
     }, initialValue: {});
 
-    radioManager.wipeCommand.listen((_, _) => command.value = {});
-
     command.run();
   }
   late final Command<Audio?, Set<String>> command;

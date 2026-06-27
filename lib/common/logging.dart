@@ -30,6 +30,10 @@ class Logger {
     r(object, trace: trace, tag: tag, reportType: ReportType.info);
   }
 
+  static void o({required String tag}) {
+    r('Instance created', tag: tag, reportType: ReportType.objectCreation);
+  }
+
   static void w(Object? object, {StackTrace? trace, String tag = ''}) {
     r(object, trace: trace, tag: tag, reportType: ReportType.warning);
   }
@@ -68,6 +72,7 @@ void _reportToConsole(
 
 enum ReportType {
   info,
+  objectCreation,
   warning,
   flutterError,
   error;
@@ -77,12 +82,14 @@ enum ReportType {
     ReportType.warning => '\x1B[33m',
     ReportType.error => '\x1B[31m',
     ReportType.flutterError => '\x1B[35m',
+    ReportType.objectCreation => '\x1B[36m',
   };
 
   String get colorSuffix => '\x1B[0m';
 
   String get emoji => switch (this) {
     ReportType.info => 'ℹ️',
+    ReportType.objectCreation => '🧜🏻‍♀️',
     ReportType.warning => '⚠️',
     ReportType.error => '❌',
     ReportType.flutterError => '👾',
