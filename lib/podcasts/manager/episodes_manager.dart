@@ -13,57 +13,28 @@ class EpisodesManager {
     required PodcastService podcastService,
   }) {
     Logger.i('Instance created for feedUrl: $feedUrl', tag: '$EpisodesManager');
-    reorderPodcastCommand = Command.createAsync((param) async {
-      await podcastService.reorderPodcast(
-        feedUrl: param.feedUrl,
-        ascending: param.ascending,
-      );
-
-      return (
-        ascendingPodcasts: await podcastService.ascendingPodcasts,
-        descendingPodcasts: await podcastService.descendingPodcasts,
-      );
-    }, initialValue: null);
 
     command = Command.createAsync((param) async {
       final episodes = await podcastService.findEpisodes(
         feedUrl: feedUrl,
         tryFromDbOnly: true,
-      );
-      sortListByAudioFilter(
-        audioFilter: AudioFilter.year,
-        audios: episodes,
-        descending: !(param?.ascending ?? true),
+        order: param?.order,
       );
 
-      return episodes;
+      return (
+        episodes: episodes,
+        order: (await podcastService.ascendingPodcasts).contains(feedUrl)
+            ? AudioSortOrder.ascending
+            : AudioSortOrder.descending,
+      );
     }, initialValue: null);
-
-    reorderPodcastCommand.listen((results, sub) {
-      if (results == null) return;
-      if (results.ascendingPodcasts.contains(feedUrl)) {
-        command.run((ascending: true));
-      } else if (results.descendingPodcasts.contains(feedUrl)) {
-        command.run((ascending: false));
-      }
-    });
 
     command.run();
   }
 
   late final Command<
-    ({
-      // TODO: move filtering to dao/service
-      // bool withDownloads, bool hasUpdates,
-      bool ascending,
-    })?,
-    List<Audio>?
+    ({AudioSortOrder? order})?,
+    ({List<Audio>? episodes, AudioSortOrder? order})?
   >
   command;
-
-  late final Command<
-    ({String feedUrl, bool ascending}),
-    ({Set<String> ascendingPodcasts, Set<String> descendingPodcasts})?
-  >
-  reorderPodcastCommand;
 }

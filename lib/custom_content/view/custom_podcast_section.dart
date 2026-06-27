@@ -58,7 +58,8 @@ class _CustomPodcastSectionState extends State<CustomPodcastSection> {
                           di<EpisodesManager>(
                             param1: _urlController.text,
                           ).command.runAsync().then((v) {
-                            if (v?.isEmpty ?? true && context.mounted) {
+                            if (v?.episodes?.isEmpty ??
+                                true && context.mounted) {
                               context.toast(Text(context.l10n.noPodcastFound));
                             } else {
                               di<RoutingManager>().push(

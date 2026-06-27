@@ -32,7 +32,7 @@ class PodcastReplayButton extends StatelessWidget with WatchItMixin {
           onPressed: isRunning
               ? null
               : () => di<PlayerManager>().toggleAudiosProgressCommand.run((
-                  audios: podcast ?? [],
+                  audios: podcast?.episodes ?? [],
                   markComplete: false,
                 )),
           icon: Icon(Iconz.replay),

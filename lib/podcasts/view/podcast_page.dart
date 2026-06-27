@@ -118,7 +118,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
 
     watchValue((DownloadManager m) => m.downloadCommands);
 
-    final freshEspidodes = episodesResults.data;
+    final freshEspidodes = episodesResults.data?.episodes;
 
     final filteredEpisodes = freshEspidodes
         ?.where((a) => a.title != null && a.episodeDescription != null)

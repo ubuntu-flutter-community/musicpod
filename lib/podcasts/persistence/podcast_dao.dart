@@ -7,6 +7,7 @@ import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/logging.dart';
 import '../../common/persistence/database.dart';
+import '../../common/view/audio_filter.dart';
 import '../../extensions/date_time_x.dart';
 import '../data/podcast_short_info.dart';
 
@@ -356,11 +357,23 @@ class PodcastDao {
 
   Future<void> reorderPodcast({
     required String feedUrl,
-    required bool ascending,
+    required AudioSortOrder order,
   }) async {
-    await (_db.update(_db.podcastTable)
-          ..where((t) => t.feedUrl.equals(feedUrl)))
-        .write(PodcastTableCompanion(ascending: Value(ascending)));
+    await (_db.update(
+      _db.podcastTable,
+    )..where((t) => t.feedUrl.equals(feedUrl))).write(
+      PodcastTableCompanion(
+        ascending: Value(order == AudioSortOrder.ascending),
+      ),
+    );
+  }
+
+  Future<AudioSortOrder> getPodcastOrder(String feedUrl) async {
+    final row = await (_db.select(
+      _db.podcastTable,
+    )..where((t) => t.feedUrl.equals(feedUrl))).getSingleOrNull();
+    if (row == null) return AudioSortOrder.descending;
+    return row.ascending ? AudioSortOrder.ascending : AudioSortOrder.descending;
   }
 
   Future<Set<String>> get ascendingPodcasts async {
