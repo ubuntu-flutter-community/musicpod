@@ -171,6 +171,11 @@ class OnlineLyricsService {
 
     _dio.options.headers['user-agent'] =
         '${AppConfig.appTitle} (${AppConfig.repoUrl})';
+
+    // Note: we do not want to activate the RetryManager for client errors (4xx),
+    // as these are not recoverable by retrying. We only want to retry on server errors (5xx).
+    _dio.options.validateStatus = (status) => status != null && status < 500;
+
     final response = await _dio
         .get(
           url,

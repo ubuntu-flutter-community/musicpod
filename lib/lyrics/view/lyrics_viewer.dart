@@ -88,6 +88,9 @@ class _PlayerLyricsState extends State<_PlayerLyrics> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final retryViewId =
+        '${widget.audio?.toString() ?? ''}_${widget.title ?? ''}_${widget.artist ?? ''}';
+
     callAfterEveryBuild((_, _) {
       di<LyricsManager>().command.runRestricted(
         param: LyricsAndArtParam(
@@ -102,7 +105,7 @@ class _PlayerLyricsState extends State<_PlayerLyrics> {
 
     registerHandler(
       select: (LyricsManager m) => m.command,
-      handler: (context, _, __) => RetryManager.dispose('lyrics'),
+      handler: (context, _, __) => RetryManager.dispose(retryViewId),
     );
 
     return Column(
@@ -121,7 +124,7 @@ class _PlayerLyricsState extends State<_PlayerLyrics> {
                     StackTrace.current,
                 errorTextStyle: context.textTheme.bodyLarge,
                 retryCapsule: RetryCapsule(
-                  retryViewId: 'lyrics',
+                  retryViewId: retryViewId,
                   onRetry: () => di<LyricsManager>().command.runRestricted(
                     param: LyricsAndArtParam(
                       audio: widget.audio,
