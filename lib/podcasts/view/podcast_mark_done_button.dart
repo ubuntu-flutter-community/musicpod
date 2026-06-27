@@ -16,7 +16,7 @@ class PodcastMarkDoneButton extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final podcast = watchValue(
-      (EpisodesManager m) => m.command,
+      (EpisodesManager m) => m.command.select((v) => v?.episodes),
       param1: feedUrl,
     );
     final isToggling = watchValue(

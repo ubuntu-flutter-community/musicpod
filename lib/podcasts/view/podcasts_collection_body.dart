@@ -4,6 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
+import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/default_page_body.dart';
@@ -111,10 +112,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
               ),
             )
           : updates.isNotEmpty && updatesOnly
-          ? SliverPodcastPageList(
-              audios: updates.values.expand((e) => e).toList(),
-              pageId: 'newPodcastEpisodes',
-            )
+          ? SliverNewEpispdesList(updates: updates)
           : (subsLength == 0)
           ? SliverNoSearchResultPage(
               message: Column(
@@ -164,6 +162,29 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                 );
               },
             ),
+    );
+  }
+}
+
+class SliverNewEpispdesList extends StatelessWidget with WatchItMixin {
+  const SliverNewEpispdesList({super.key, required this.updates});
+
+  final Map<String, Set<Audio>> updates;
+
+  @override
+  Widget build(BuildContext context) {
+    onDispose(
+      () => di<PodcastUpdatesManager>().command.run(
+        PodcastUpdateCapsule(
+          feedUrls: updates.keys.toList(),
+          type: PodcastUpdateType.remove,
+        ),
+      ),
+    );
+
+    return SliverPodcastPageList(
+      audios: updates.values.expand((e) => e).toList(),
+      pageId: 'newPodcastEpisodes',
     );
   }
 }

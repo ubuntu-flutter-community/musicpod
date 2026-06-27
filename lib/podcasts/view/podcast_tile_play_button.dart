@@ -20,7 +20,7 @@ class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
   final bool selected;
   final Audio audio;
 
-  final void Function()? play;
+  final void Function() play;
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,7 @@ class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
               }
             } else {
               playerManager.safeCurrentAudioPosition().then((value) {
-                play?.call();
+                play();
               });
             }
           },

@@ -96,7 +96,9 @@ class SidebarAudiosManager {
 
     if (_podcastToggleManager.command.value.contains(pageId)) {
       return (
-        audios: await di<EpisodesManager>(param1: pageId).command.runAsync(),
+        audios: (await di<EpisodesManager>(
+          param1: pageId,
+        ).command.runAsync())?.episodes,
         audioType: AudioType.podcast,
       );
     }

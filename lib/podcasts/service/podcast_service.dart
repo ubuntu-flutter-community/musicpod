@@ -164,7 +164,9 @@ class PodcastService {
   Future<List<Audio>> findEpisodes({
     required String feedUrl,
     required bool tryFromDbOnly,
+    AudioSortOrder? order,
   }) async {
+    final theOrder = order ?? await _dao.getPodcastOrder(feedUrl);
     final isCurrentlySubscribed = await isPodcastSubscribed(feedUrl);
     final hasEpisodesInDb = await _dao.hasPodcastStoredEpisodes(feedUrl);
 
@@ -175,7 +177,14 @@ class PodcastService {
         'Skipping episode load from network for $feedUrl, loading from DB instead',
         tag: '$PodcastService',
       );
-      return _dao.getEpisodes(feedUrl);
+      final episodes = await _dao.getEpisodes(feedUrl);
+      sortListByAudioFilter(
+        audioFilter: AudioFilter.year,
+        audios: episodes,
+        order: theOrder,
+      );
+      await reorderPodcast(feedUrl: feedUrl, order: theOrder);
+      return episodes;
     }
 
     Logger.i(
@@ -204,8 +213,10 @@ class PodcastService {
     sortListByAudioFilter(
       audioFilter: AudioFilter.year,
       audios: episodes,
-      descending: true,
+      order: theOrder,
     );
+
+    await reorderPodcast(feedUrl: feedUrl, order: theOrder);
 
     // optimistically upsert episodes after finding them, so they are available faster when opening the podcast page
     await _dao.upsertEpisodes(
@@ -330,12 +341,10 @@ class PodcastService {
 
   Future<void> reorderPodcast({
     required String feedUrl,
-    required bool ascending,
-  }) => _dao.reorderPodcast(feedUrl: feedUrl, ascending: ascending);
+    required AudioSortOrder order,
+  }) => _dao.reorderPodcast(feedUrl: feedUrl, order: order);
 
   Future<Set<String>> get ascendingPodcasts => _dao.ascendingPodcasts;
-
-  Future<Set<String>> get descendingPodcasts => _dao.descendingPodcasts;
 
   Future<Set<String>> getPodcastUpdates() => _dao.getPodcastUpdates();
 

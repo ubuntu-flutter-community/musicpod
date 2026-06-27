@@ -25,11 +25,14 @@ int compareCaseInsensitive(String a, String b) {
   return compareNatural(a.toLowerCase(), b.toLowerCase());
 }
 
+enum AudioSortOrder { ascending, descending }
+
 void sortListByAudioFilter({
   required AudioFilter audioFilter,
   required List<Audio> audios,
-  bool descending = false,
+  AudioSortOrder order = AudioSortOrder.ascending,
 }) {
+  final descending = order == AudioSortOrder.descending;
   switch (audioFilter) {
     case AudioFilter.artist:
       audios.sort((a, b) {
