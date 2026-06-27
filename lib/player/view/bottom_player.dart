@@ -12,7 +12,6 @@ import '../../extensions/platform_x.dart';
 import '../manager/player_manager.dart';
 import 'bottom_player_image.dart';
 import 'bottom_player_like_and_star_button.dart';
-import 'play_button.dart';
 import 'playback_rate_button.dart';
 import 'player_main_controls.dart';
 import 'player_pause_timer_button.dart';
@@ -28,7 +27,7 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final smallWindow = context.smallWindow;
+    final compactBottomPlayer = context.compactBottomPlayer;
     final audio = watchPropertyValue((PlayerManager m) => m.audio);
     final isVideo = watchPropertyValue((PlayerManager m) => m.isVideo);
     final fullWindowMode = watchValue((AppManager m) => m.fullWindowMode);
@@ -65,13 +64,14 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                       ),
                     ),
                     const SizedBox(width: 10),
-                    if (!smallWindow) const BottomPlayerLikeAndStarButton(),
+                    if (!compactBottomPlayer)
+                      const BottomPlayerLikeAndStarButton(),
                   ],
                 ),
               ),
-              if (!smallWindow)
+              if (!compactBottomPlayer)
                 Expanded(flex: 6, child: PlayerMainControls(active: active)),
-              if (!smallWindow)
+              if (!compactBottomPlayer)
                 Flexible(
                   flex: 4,
                   child: Row(
@@ -103,16 +103,13 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
                   ),
                 )
               else ...[
-                const BottomPlayerLikeAndStarButton(),
+                StopButton(active: active),
                 const SizedBox(width: 10),
-                if (isMobile)
-                  PlayButton(active: active)
-                else
-                  PlayerMainControls(
-                    active: active,
-                    avatarPlayButton: false,
-                    iconColor: context.colorScheme.onSurface,
-                  ),
+                PlayerMainControls(
+                  active: active,
+                  avatarPlayButton: false,
+                  iconColor: context.colorScheme.onSurface,
+                ),
               ],
               const SizedBox(width: 10),
             ],

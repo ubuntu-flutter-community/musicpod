@@ -21,8 +21,9 @@ extension BuildContextX on BuildContext {
     return value < 48.0 && value != 0.0;
   }
 
-  bool get smallWindow => mediaQuerySize.width < kMasterDetailBreakPoint;
-  bool get wideWindow => mediaQuerySize.width < kAdaptivContainerBreakPoint;
+  bool get compactBottomPlayer =>
+      mediaQuerySize.width <= kMasterDetailBreakPoint + 110;
+
   bool get showMasterPanel => mediaQuerySize.width > kMasterDetailBreakPoint;
 
   NavigatorState get navigator => Navigator.of(this);
