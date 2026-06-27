@@ -6,10 +6,10 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/logging.dart';
+import '../../common/util/persistence_utils.dart';
 import '../../extensions/media_file_x.dart';
 import '../../extensions/platform_x.dart';
 import '../../extensions/string_x.dart';
@@ -107,9 +107,10 @@ class LocalCoverService {
   }
 
   Future<File> _safeTempCover(Uint8List maybeData) async {
-    final workingDir = await getTemporaryDirectory();
+    // Note: this is needed for Linux to safe the mpris covers
+    final workingDir = await getWorkingDir();
 
-    final imagesDir = p.join(workingDir.path, 'images');
+    final imagesDir = p.join(workingDir, 'images');
 
     if (Directory(imagesDir).existsSync()) {
       Directory(imagesDir).deleteSync(recursive: true);
