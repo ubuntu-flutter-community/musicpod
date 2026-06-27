@@ -19,18 +19,20 @@ class PlaylistModeButton extends StatelessWidget with WatchItMixin {
       (PlayerManager m) => m.playlistMode,
     );
 
+    final isSelected = playlistMode != PlaylistMode.none;
+    final color = isSelected ? context.colorScheme.primary : iconColor;
     return IconButton(
-      isSelected: playlistMode != PlaylistMode.none,
-      color: iconColor,
+      isSelected: isSelected,
+      color: color,
       tooltip: switch (playlistMode) {
         PlaylistMode.none => context.l10n.repeatOff,
         PlaylistMode.single => context.l10n.repeat,
         PlaylistMode.loop => context.l10n.repeatAll,
       },
       icon: switch (playlistMode) {
-        PlaylistMode.none => Icon(Iconz.repeatSingle, color: iconColor),
-        PlaylistMode.single => Icon(Iconz.repeatSingle, color: iconColor),
-        PlaylistMode.loop => Icon(Iconz.repeatAll, color: iconColor),
+        PlaylistMode.none => Icon(Iconz.repeatAll, color: color),
+        PlaylistMode.single => Icon(Iconz.repeatSingle, color: color),
+        PlaylistMode.loop => Icon(Iconz.repeatAll, color: color),
       },
       onPressed: !active ? null : () => di<PlayerManager>().setPlaylistMode(),
     );

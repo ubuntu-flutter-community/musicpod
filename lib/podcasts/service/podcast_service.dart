@@ -107,7 +107,7 @@ class PodcastService {
   }
 
   final _syncLock = Lock();
-  Future<Set<String>> checkForUpdates({
+  Future<Map<String, Set<Audio>>> checkForUpdates({
     required Iterable<String> feedUrls,
     void Function(double progress)? updateProgress,
   }) => _syncLock.synchronized(
@@ -119,11 +119,11 @@ class PodcastService {
     ),
   );
 
-  Future<Set<String>> _checkForUpdates({
+  Future<Map<String, Set<Audio>>> _checkForUpdates({
     required Iterable<String> toCheckFeedUrls,
     void Function(double progress)? updateProgress,
   }) async {
-    await getPodcastUpdates();
+    final Map<String, Set<Audio>> newEpisodeMap = {};
 
     for (final (index, feedUrl) in toCheckFeedUrls.indexed) {
       final storedTimeStamp = await getPodcastLastUpdated(feedUrl);
@@ -150,6 +150,7 @@ class PodcastService {
           .toSet();
 
       if (newEpisodes.isNotEmpty) {
+        newEpisodeMap[feedUrl] = newEpisodes;
         await _addPodcastUpdate(feedUrl);
       }
 
@@ -157,16 +158,19 @@ class PodcastService {
       await Future<void>.delayed(Duration.zero);
     }
 
-    return getPodcastUpdates();
+    return newEpisodeMap;
   }
 
   Future<List<Audio>> findEpisodes({
     required String feedUrl,
     required bool tryFromDbOnly,
   }) async {
+    final isCurrentlySubscribed = await isPodcastSubscribed(feedUrl);
     final hasEpisodesInDb = await _dao.hasPodcastStoredEpisodes(feedUrl);
 
-    if (tryFromDbOnly && hasEpisodesInDb) {
+    if (tryFromDbOnly &&
+        hasEpisodesInDb &&
+        await _dao.getPodcastImage(feedUrl) != null) {
       Logger.i(
         'Skipping episode load from network for $feedUrl, loading from DB instead',
         tag: '$PodcastService',
@@ -178,12 +182,15 @@ class PodcastService {
       'Fetching all episodes from ${_search.searchProvider is ITunesProvider ? 'iTunes' : 'podcastindex'} for feedUrl: $feedUrl',
       tag: '$PodcastService',
     );
-    final podcast = await compute(loadPodcast, feedUrl);
+    final podcast = await compute(loadPodcast, feedUrl).timeout(
+      FindEpisodesTimeoutException.timeoutDuration,
+      onTimeout: () => throw FindEpisodesTimeoutException(),
+    );
 
     // Optimistically add the podcast to the DB unsubscribed
     await _dao.addPodcast(
       feedUrl: feedUrl,
-      subscribe: false,
+      subscribe: isCurrentlySubscribed,
       imageUrl: podcast.image,
       name: podcast.title ?? '',
       artist: podcast.copyright ?? '',
@@ -344,18 +351,14 @@ class PodcastService {
       _dao.addPodcastUpdate(feedUrl);
 
   Future<void> removePodcastUpdates({
-    Iterable<String>? feedUrls,
+    required Iterable<String> feedUrls,
     required void Function(double) updateProgress,
   }) async {
-    final urls = feedUrls ?? (await getSubscribedPodcasts());
-    for (final (index, url) in urls.indexed) {
-      await removePodcastUpdate(url);
-      updateProgress((index + 1) / urls.length);
+    for (final (index, url) in feedUrls.indexed) {
+      await _dao.deletePodcastUpdate(url);
+      updateProgress((index + 1) / feedUrls.length);
     }
   }
-
-  Future<void> removePodcastUpdate(String feedUrl) =>
-      _dao.deletePodcastUpdate(feedUrl);
 
   Future<Set<String>> deleteOrphanPodcastData() => _dao.deleteOrphanEpisodes();
 

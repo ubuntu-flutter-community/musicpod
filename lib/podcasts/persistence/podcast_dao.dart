@@ -289,43 +289,43 @@ class PodcastDao {
             lastUpdated: now,
             subscribed: Value(subscribe),
           ),
-          mode: InsertMode.insertOrIgnore,
+          mode: InsertMode.insertOrReplace,
         );
   }
 
-  Future<void> setPodcastSubscription({
+  Future<bool> setPodcastSubscription({
     required String feedUrl,
     required bool subscribe,
   }) async {
+    Logger.i(
+      'Setting podcast subscription for feedUrl: $feedUrl to $subscribe',
+      tag: '$PodcastDao',
+    );
     await (_db.update(_db.podcastTable)
           ..where((t) => t.feedUrl.equals(feedUrl)))
         .write(PodcastTableCompanion(subscribed: Value(subscribe)));
+    return getPodcastSubscriptionStatus(feedUrl);
   }
 
-  Future<void> togglePodcastSubscription({required String feedUrl}) async {
+  Future<bool> getPodcastSubscriptionStatus(String feedUrl) async {
     final row = await (_db.select(
       _db.podcastTable,
     )..where((t) => t.feedUrl.equals(feedUrl))).getSingleOrNull();
+    return row?.subscribed ?? false;
+  }
 
-    if (row == null) {
-      Logger.i(
-        'No podcast found with feedUrl: $feedUrl to toggle subscription.',
-        tag: '$PodcastDao',
-      );
-      return;
-    }
+  Future<void> togglePodcastSubscription({required String feedUrl}) async {
+    final oldSubscribed = await getPodcastSubscriptionStatus(feedUrl);
 
-    final currentlySubscribed = row.subscribed;
+    final nowSubscribed = await setPodcastSubscription(
+      feedUrl: feedUrl,
+      subscribe: !oldSubscribed,
+    );
 
-    if (currentlySubscribed) {
+    if (!nowSubscribed) {
+      Logger.i('Unsubscribing from podcast: $feedUrl', tag: '$PodcastDao');
       await deletePodcastAndFriends(deleteMeUrls: {feedUrl});
     }
-
-    final newSubscriptionStatus = !currentlySubscribed;
-    await setPodcastSubscription(
-      feedUrl: feedUrl,
-      subscribe: newSubscriptionStatus,
-    );
   }
 
   Future<void> addPodcasts(

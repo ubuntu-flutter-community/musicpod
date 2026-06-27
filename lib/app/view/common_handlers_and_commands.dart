@@ -58,7 +58,7 @@ mixin CommonHandlersAndCommandsMixin {
           } else {
             if (feedsWithUpdates.length == 1) {
               di<PodcastShortInfoManager>(
-                param1: feedsWithUpdates.first,
+                param1: feedsWithUpdates.entries.first.key,
               ).command.runAsync().then(
                 (info) => di<NotificationsService>().notify(
                   message: feedsWithUpdates.length == 1

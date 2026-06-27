@@ -259,9 +259,9 @@ class PlayerService {
   PlaylistMode get playlistMode => _playlistMode;
   void setPlaylistMode() {
     _playlistMode = switch (_playlistMode) {
-      PlaylistMode.none => PlaylistMode.single,
-      PlaylistMode.single => PlaylistMode.loop,
-      PlaylistMode.loop => PlaylistMode.none,
+      PlaylistMode.none => PlaylistMode.loop,
+      PlaylistMode.loop => PlaylistMode.single,
+      PlaylistMode.single => PlaylistMode.none,
     };
     _estimateNext();
     _propertiesChangedController.add(true);

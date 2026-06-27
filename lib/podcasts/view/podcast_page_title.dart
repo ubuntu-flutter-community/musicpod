@@ -18,7 +18,8 @@ class PodcastPageTitle extends StatelessWidget with WatchItMixin {
       param1: feedUrl,
     );
     final visible = watchValue(
-      (PodcastUpdatesManager m) => m.command.select((v) => v.contains(feedUrl)),
+      (PodcastUpdatesManager m) =>
+          m.command.select((v) => v.containsKey(feedUrl)),
     );
     return Badge(
       backgroundColor: context.theme.colorScheme.primary,

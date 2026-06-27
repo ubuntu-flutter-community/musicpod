@@ -45,7 +45,7 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
                 ),
               );
             } else {
-              di<PodcastUpdatesManager>().command.runAsync(
+              di<PodcastUpdatesManager>().command.run(
                 const PodcastUpdateCapsule.updateAll(),
               );
             }

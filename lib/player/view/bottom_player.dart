@@ -86,6 +86,9 @@ class BottomPlayer extends StatelessWidget with WatchItMixin {
 
                       IconButton(
                         isSelected: fullWindowMode,
+                        color: fullWindowMode
+                            ? context.colorScheme.primary
+                            : context.colorScheme.onSurface,
                         tooltip: audio == null || !audio.isRadio
                             ? l10n.queue
                             : l10n.hearingHistory,

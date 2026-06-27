@@ -1,13 +1,15 @@
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../common/logging.dart';
 import '../data/playlist_action.dart';
 import 'local_audio_manager.dart';
 import 'playlist_manager.dart';
 
-@lazySingleton
+@Injectable(cache: true)
 class PlaylistIDsManager {
   PlaylistIDsManager({required LocalAudioManager localAudioManager}) {
+    Logger.i('Instance created', tag: '$PlaylistIDsManager');
     command = Command.createAsync((param) async {
       if (param != null) {
         await localAudioManager.createOrChangePlaylist(param);
