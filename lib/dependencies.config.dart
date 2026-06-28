@@ -157,7 +157,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i414.RadioDao>(
       () => _i414.RadioDao(db: gh<_i115.Database>()),
     );
-    gh.factoryCached<_i506.RadioService>(
+    gh.lazySingleton<_i506.RadioService>(
       () => _i506.RadioService(dao: gh<_i414.RadioDao>()),
     );
     gh.lazySingleton<_i688.LocalAudioDao>(
@@ -235,7 +235,7 @@ extension GetItInjectableX on _i174.GetIt {
         listenBrainzService: gh<_i821.ListenBrainzService>(),
       ),
     );
-    gh.factoryCached<_i529.PodcastService>(
+    gh.lazySingleton<_i529.PodcastService>(
       () => _i529.PodcastService(
         settingsService: gh<_i862.SettingsService>(),
         dao: gh<_i597.PodcastDao>(),
@@ -255,8 +255,8 @@ extension GetItInjectableX on _i174.GetIt {
       preResolve: true,
       dispose: (i) => i.dispose(),
     );
-    gh.factoryCachedParam<_i776.EpisodesManager, String, dynamic>(
-      (feedUrl, _) => _i776.EpisodesManager(
+    gh.factoryParam<_i776.EpisodesManager, String, dynamic>(
+      (feedUrl, _) => _i776.EpisodesManager.create(
         feedUrl: feedUrl,
         podcastService: gh<_i529.PodcastService>(),
       ),
@@ -273,7 +273,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factoryCached<_i960.ExposeManager>(
       () => _i960.ExposeManager(exposeService: gh<_i313.ExposeService>()),
     );
-    gh.factoryCached<_i985.LocalAudioService>(
+    gh.lazySingleton<_i985.LocalAudioService>(
       () => _i985.LocalAudioService(
         localCoverService: gh<_i582.LocalCoverService>(),
         settingsService: gh<_i862.SettingsService>(),
