@@ -19,7 +19,7 @@ import '../data/local_search_result.dart';
 import '../persistence/local_audio_dao.dart';
 import '../data/playlist_action.dart';
 
-@Injectable(cache: true)
+@lazySingleton
 class LocalAudioService {
   final SettingsService _settingsService;
   final LocalAudioDao _dao;

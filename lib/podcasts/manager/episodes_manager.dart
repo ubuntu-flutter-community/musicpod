@@ -3,12 +3,13 @@ import 'package:injectable/injectable.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/logging.dart';
+import '../../common/util/keep_alive_registry.dart';
 import '../../common/view/audio_filter.dart';
 import '../service/podcast_service.dart';
 
-@Injectable(cache: true)
+@injectable
 class EpisodesManager {
-  EpisodesManager({
+  EpisodesManager._({
     @factoryParam required String feedUrl,
     required PodcastService podcastService,
   }) {
@@ -32,9 +33,22 @@ class EpisodesManager {
     command.run();
   }
 
+  @factoryMethod
+  static EpisodesManager create({
+    @factoryParam required String feedUrl,
+    required PodcastService podcastService,
+  }) => _registry.getOrRegister(
+    id: feedUrl,
+    factoryFunction: () =>
+        EpisodesManager._(feedUrl: feedUrl, podcastService: podcastService),
+  );
+
   late final Command<
     ({AudioSortOrder? order})?,
     ({List<Audio>? episodes, AudioSortOrder? order})?
   >
   command;
+
+  static final _registry = KeepAliveRegistry<String, EpisodesManager>();
+  static void dispose(String feedUrl) => _registry.dispose(feedUrl);
 }

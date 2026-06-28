@@ -31,7 +31,7 @@ class KeepAliveRegistry<I, T> {
     if (!_instances.containsKey(id)) return null;
     final instance = _instances.remove(id);
     if (instance != null) {
-      Logger.i('$message for id: $id', tag: '$T');
+      Logger.o(tag: '$T:$id', message: message);
     }
     return instance;
   }
@@ -39,8 +39,9 @@ class KeepAliveRegistry<I, T> {
   void disposeAll({String? reason}) {
     _instances.clear();
 
-    Logger.i(
-      '${reason != null ? '$reason. ' : ''}All instances of $T disposed',
+    Logger.o(
+      message:
+          '${reason != null ? '$reason. ' : ''}All instances of $T disposed',
       tag: '$T',
     );
   }
