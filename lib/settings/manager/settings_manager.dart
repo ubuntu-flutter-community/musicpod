@@ -5,6 +5,7 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
+import '../../common/view/icons.dart';
 import '../../local_audio/service/local_audio_service.dart';
 import '../../lyrics/data/online_lyrics_source.dart';
 import '../../player/service/player_service.dart';
@@ -119,7 +120,8 @@ class SettingsManager extends SafeChangeNotifier {
   Future<void> setUsePlayerColor(bool value) =>
       _service.setValue(SPKeys.usePlayerColor, value);
 
-  int get iconSetIndex => _service.getInt(SPKeys.iconSetIndex) ?? 0;
+  int get iconSetIndex =>
+      _service.getInt(SPKeys.iconSetIndex) ?? IconSet.platformDefaultIndex;
   void setIconSetIndex(int value) =>
       _service.setValue(SPKeys.iconSetIndex, value);
 

@@ -37,10 +37,14 @@ class YaruMusicPodApp extends StatelessWidget with WatchItMixin {
             ? playerColor
             : (customThemeColor != null && useCustomThemeColor
                   ? Color(customThemeColor)
-                  : yaru.theme.colorScheme.primary);
+                  : null);
 
-        final yaruLightFlavor = createYaruLightTheme(primaryColor: color);
-        final yaruDarkFlavor = createYaruDarkTheme(primaryColor: color);
+        final yaruLightFlavor = color == null
+            ? yaru.theme
+            : createYaruLightTheme(primaryColor: color);
+        final yaruDarkFlavor = color == null
+            ? yaru.darkTheme
+            : createYaruDarkTheme(primaryColor: color);
 
         return DesktopMusicPodApp(
           highContrastTheme: yaruHighContrastLight,
