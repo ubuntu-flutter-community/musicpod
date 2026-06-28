@@ -22,7 +22,7 @@ import '../../podcasts/service/podcast_service.dart';
 import '../data/queue.dart';
 import '../persistence/player_dao.dart';
 
-@lazySingleton
+@singleton
 // Note: to detach the player service from the actual library to play media
 // this service contains a lot of fields and streams
 // that might look like overhead, but helps if we ever need to change the library or the way we play media in the future.

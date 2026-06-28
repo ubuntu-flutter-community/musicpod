@@ -241,7 +241,7 @@ extension GetItInjectableX on _i174.GetIt {
         dao: gh<_i597.PodcastDao>(),
       ),
     );
-    await gh.lazySingletonAsync<_i456.PlayerService>(() {
+    await gh.singletonAsync<_i456.PlayerService>(() {
       final i = _i456.PlayerService(
         controller: gh<_i150.VideoController>(),
         exposeService: gh<_i313.ExposeService>(),
