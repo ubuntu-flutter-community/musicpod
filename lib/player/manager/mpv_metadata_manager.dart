@@ -28,16 +28,26 @@ class MpvMetadataManager {
        _onlineArtService = onlineArtService,
        _exposeService = exposeService,
        _settingsService = settingsService {
-    observeProperty(
-      property: 'metadata',
-      player: _playerService.player,
-      listener: _onMpvMetadata,
-    );
+    Logger.o(tag: '$MpvMetadataManager');
+
+    _playerService.player.stream.playing.listen(_toggleObserve);
 
     editBlockedIcyTitleCommand.run((
       title: '',
       addOrRemove: EditIcyTitleInHistory.init,
     ));
+  }
+
+  Timer? _debounceTimer;
+  void _toggleObserve(bool observe) {
+    _debounceTimer?.cancel();
+    _debounceTimer = Timer(const Duration(milliseconds: 300), () {
+      observeProperty(
+        property: 'metadata',
+        player: _playerService.player,
+        listener: observe ? _onMpvMetadata : null,
+      );
+    });
   }
 
   final PlayerService _playerService;

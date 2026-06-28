@@ -241,20 +241,16 @@ extension GetItInjectableX on _i174.GetIt {
         dao: gh<_i597.PodcastDao>(),
       ),
     );
-    await gh.singletonAsync<_i456.PlayerService>(
-      () {
-        final i = _i456.PlayerService(
-          controller: gh<_i150.VideoController>(),
-          exposeService: gh<_i313.ExposeService>(),
-          localCoverService: gh<_i582.LocalCoverService>(),
-          podcastService: gh<_i529.PodcastService>(),
-          dao: gh<_i443.PlayerDao>(),
-        );
-        return i.init().then((_) => i);
-      },
-      preResolve: true,
-      dispose: (i) => i.dispose(),
-    );
+    await gh.singletonAsync<_i456.PlayerService>(() {
+      final i = _i456.PlayerService(
+        controller: gh<_i150.VideoController>(),
+        exposeService: gh<_i313.ExposeService>(),
+        localCoverService: gh<_i582.LocalCoverService>(),
+        podcastService: gh<_i529.PodcastService>(),
+        dao: gh<_i443.PlayerDao>(),
+      );
+      return i.init().then((_) => i);
+    }, preResolve: true);
     gh.factoryParam<_i776.EpisodesManager, String, dynamic>(
       (feedUrl, _) => _i776.EpisodesManager.create(
         feedUrl: feedUrl,

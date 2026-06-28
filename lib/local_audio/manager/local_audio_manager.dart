@@ -15,53 +15,14 @@ class LocalAudioManager {
 
   final LocalAudioService _localAudioService;
 
-  Future<int?> findAlbumId({required String artist, required String album}) =>
-      _localAudioService.findAlbumIdForArtistAndAlbum(
-        artist: artist,
-        album: album,
-      );
-
-  Future<String?> findAlbumName(int albumId) async {
-    await _runInitIfNeeded();
-
-    return _localAudioService.findAlbumName(albumId);
-  }
-
-  Future<String?> findArtistOfAlbum(int albumId) async {
-    await _runInitIfNeeded();
-
-    return _localAudioService.findArtistOfAlbum(albumId);
-  }
-
-  Future<List<Audio>?> findAlbum(int albumId) async {
-    await _runInitIfNeeded();
-
-    return _localAudioService.findAlbum(albumId);
-  }
-
-  Future<List<Audio>?> findTitlesOfArtist(
-    String artist, [
-    AudioFilter audioFilter = AudioFilter.album,
-  ]) async {
-    await _runInitIfNeeded();
-    return _localAudioService.findTitlesOfArtist(artist, audioFilter);
-  }
-
-  late final Command<void, bool> areTracksSyncedCommand =
-      Command.createAsyncNoParam(
-        _localAudioService.areTracksSynced,
-        initialValue: true,
-      );
-
   late final Command<
-    ({bool forceInit, String? directory, bool forceDbOnly}),
+    ({bool forceInit, String? directory}),
     ({List<String> failedImports})?
   >
   initAudiosCommand = Command.createAsyncWithProgress((param, handle) async {
     final localAudioResult = await _localAudioService.init(
       forceInit: param.forceInit,
       newDirectory: param.directory,
-      forceDbOnly: param.forceDbOnly,
       updateProgress: handle.updateProgress,
     );
 
@@ -72,12 +33,48 @@ class LocalAudioManager {
 
   Future<void> _runInitIfNeeded() async {
     if (initAudiosCommand.value == null) {
-      await initAudiosCommand.runAsync((
-        directory: null,
-        forceInit: false,
-        forceDbOnly: false,
-      ));
+      await initAudiosCommand.runAsync((directory: null, forceInit: false));
     }
+  }
+
+  late final Command<void, bool> areTracksSyncedCommand =
+      Command.createAsyncNoParam(
+        _localAudioService.areTracksSynced,
+        initialValue: true,
+      );
+
+  Future<int?> findAlbumId({
+    required String artist,
+    required String album,
+  }) async {
+    await _runInitIfNeeded();
+    return _localAudioService.findAlbumIdForArtistAndAlbum(
+      artist: artist,
+      album: album,
+    );
+  }
+
+  Future<String?> findAlbumName(int albumId) async {
+    await _runInitIfNeeded();
+    return _localAudioService.findAlbumName(albumId);
+  }
+
+  Future<String?> findArtistOfAlbum(int albumId) async {
+    await _runInitIfNeeded();
+    return _localAudioService.findArtistOfAlbum(albumId);
+  }
+
+  Future<List<Audio>?> findAlbum(int albumId) async {
+    await _runInitIfNeeded();
+    return _localAudioService.findAlbum(albumId);
+  }
+
+  Future<List<Audio>?> findTitlesOfArtist(
+    String artist, [
+    AudioFilter audioFilter = AudioFilter.album,
+  ]) async {
+    await _runInitIfNeeded();
+    return _localAudioService.findTitlesOfArtist(artist, audioFilter);
   }
 
   Future<void> createOrChangePlaylist(PlaylistChange param) async {

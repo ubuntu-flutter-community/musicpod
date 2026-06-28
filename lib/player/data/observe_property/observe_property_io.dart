@@ -11,7 +11,7 @@ Future<void> observeProperty({
   try {
     nativePlayer = player.platform as NativePlayer;
   } on Exception catch (e, s) {
-    Logger.e(e, trace: s, tag: '$observeProperty');
+    Logger.e(e, trace: s, tag: 'MpvProperty:$property');
   }
 
   if (nativePlayer == null) {
@@ -20,9 +20,11 @@ Future<void> observeProperty({
 
   if (listener == null) {
     if (nativePlayer.observed.containsKey(property)) {
+      Logger.i('Unobserving', tag: 'MpvProperty:$property');
       return nativePlayer.unobserveProperty(property);
     }
   } else if (!nativePlayer.observed.containsKey(property)) {
+    Logger.i('Observing', tag: 'MpvProperty:$property');
     return nativePlayer.observeProperty(property, listener);
   }
 }
