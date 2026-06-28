@@ -44,7 +44,6 @@ class WipeManager {
         await localAudioManager.initAudiosCommand.runAsync((
           directory: null,
           forceInit: true,
-          forceDbOnly: false,
         ));
         await pinnedAlbumIDsManager.command.runAsync();
         await playlistIDsManager.command.runAsync();

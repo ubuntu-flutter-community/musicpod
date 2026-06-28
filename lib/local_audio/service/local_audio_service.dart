@@ -11,6 +11,7 @@ import '../../common/data/audio.dart';
 import '../../common/logging.dart';
 import '../../common/view/audio_filter.dart';
 import '../../extensions/media_file_x.dart';
+import '../../extensions/platform_x.dart';
 import '../../settings/service/settings_service.dart';
 import '../../settings/data/shared_preferences_keys.dart';
 import '../data/change_metadata_capsule.dart';
@@ -73,7 +74,6 @@ class LocalAudioService {
   Future<({List<String> failedImports})> init({
     String? newDirectory,
     bool forceInit = false,
-    bool forceDbOnly = false,
     Function(double progress)? updateProgress,
   }) async {
     List<String> failedImports = [];
@@ -81,28 +81,29 @@ class LocalAudioService {
     await Future<void>.delayed(Duration.zero);
 
     await _lock.synchronized(() async {
-      if (newDirectory != null &&
-          newDirectory != _settingsService.getString(SPKeys.directory)) {
-        await _settingsService.setValue(SPKeys.directory, newDirectory);
-      }
-
-      if (((await _dao.getTrackCount()) > 0) && !forceInit || forceDbOnly) {
+      final bool hasDataInDb = await _dao.getTrackCount() > 0;
+      if (hasDataInDb && !forceInit) {
         updateProgress?.call(1);
         Logger.i(
           'Loading local audio library from database only, skipping directory scan.',
           tag: '$LocalAudioService',
         );
-        return;
-      } else {
-        Logger.i(
-          'Wiping local audio library if present and scanning directory for new audio files.',
-          tag: '$LocalAudioService',
-        );
-        await _wipeLocalAudioLibrary();
+        return (failedImports: failedImports);
       }
 
-      final dir = newDirectory ?? _settingsService.getString(SPKeys.directory);
+      Logger.i(
+        'Wiping local audio library if present and scanning directory for new audio files.',
+        tag: '$LocalAudioService',
+      );
+      await _wipeLocalAudioLibrary();
+
+      final dir =
+          newDirectory ??
+          _settingsService.getString(SPKeys.directory) ??
+          PlatformX.musicDefaultDir;
+
       if (dir != null) {
+        await _settingsService.setValue(SPKeys.directory, dir);
         final result = await compute(_readAudiosFromDirectory, dir);
         updateProgress?.call(0.5);
         await Future<void>.delayed(Duration.zero);
@@ -120,11 +121,11 @@ class LocalAudioService {
     return (failedImports: failedImports);
   }
 
-  Future<bool> areTracksSynced({String? newDir}) async {
-    final dir = newDir ?? _settingsService.getString(SPKeys.directory);
+  Future<bool> areTracksSynced() async {
+    final dir = _settingsService.getString(SPKeys.directory);
     if (dir == null || dir.isEmpty) return true;
     final trackCount = await _dao.getTrackCount();
-    final results = await findMediaFiles(dir);
+    final results = await _readMediaFilesFromDirectory(dir);
     return trackCount == results.files.length;
   }
 
@@ -396,7 +397,7 @@ FutureOr<ImportResult> _readAudiosFromDirectory(String? directory) async {
   final List<String> failedImports = [];
 
   if (directory != null && Directory(directory).existsSync()) {
-    final results = await findMediaFiles(directory);
+    final results = await _readMediaFilesFromDirectory(directory);
     failedImports.addAll(results.failedImports);
 
     for (final e in results.files) {
@@ -417,9 +418,8 @@ FutureOr<ImportResult> _readAudiosFromDirectory(String? directory) async {
   return (audios: newAudios, failedImports: failedImports);
 }
 
-Future<({Iterable<File> files, List<String> failedImports})> findMediaFiles(
-  String directory,
-) async {
+Future<({Iterable<File> files, List<String> failedImports})>
+_readMediaFilesFromDirectory(String directory) async {
   final failedImports = <String>[];
 
   final files =

@@ -15,14 +15,14 @@ import '../../common/data/audio_type.dart';
 import '../../common/logging.dart';
 import '../../expose/service/expose_service.dart';
 import '../../extensions/media_file_x.dart';
-import '../../extensions/string_x.dart';
 import '../../extensions/platform_x.dart';
+import '../../extensions/string_x.dart';
 import '../../local_audio/service/local_cover_service.dart';
 import '../../podcasts/service/podcast_service.dart';
 import '../data/queue.dart';
 import '../persistence/player_dao.dart';
 
-@singleton
+@lazySingleton
 // Note: to detach the player service from the actual library to play media
 // this service contains a lot of fields and streams
 // that might look like overhead, but helps if we ever need to change the library or the way we play media in the future.
@@ -75,7 +75,7 @@ class PlayerService {
       setIsPlaying(value);
     });
 
-    _errorSub = player.stream.error.listen((event) {
+    _errorSub ??= player.stream.error.listen((event) {
       _messageController.addError(event);
     });
 
@@ -127,28 +127,37 @@ class PlayerService {
       }
     });
 
-    await _loadPlayerState();
+    if (_audio == null && _firstPlay) {
+      await _loadPlayerState();
 
-    await _loadLastPositions();
+      await _loadLastPositions();
+    }
   }
 
   /// All subscriptions, native media trays and the pause timer need to be closed and disposed
-  @disposeMethod
-  Future<void> dispose() async {
-    await _propertiesChangedController.close();
-    await _newAudioControllerStream.close();
-    await _messageController.close();
+  Future<void> dispose({required bool disposePlayer}) async {
     await _isPlayingSub?.cancel();
+    _isPlayingSub = null;
     await _positionSub?.cancel();
+    _positionSub = null;
     await _durationSub?.cancel();
+    _durationSub = null;
     await _isCompletedSub?.cancel();
+    _isCompletedSub = null;
     await _volumeSub?.cancel();
+    _volumeSub = null;
     await _tracksSub?.cancel();
+    _tracksSub = null;
     await _rateSub?.cancel();
+    _rateSub = null;
     await _bufferSub?.cancel();
+    _bufferSub = null;
     await _errorSub?.cancel();
+    _errorSub = null;
     _timer?.cancel();
-    await player.dispose();
+    if (disposePlayer) {
+      await player.dispose();
+    }
   }
 
   Queue? _oldQueue;
@@ -489,6 +498,11 @@ class PlayerService {
     int? index,
   }) async {
     if (audios.isEmpty) return;
+
+    if (_isPlayingSub == null) {
+      await init();
+    }
+
     if (audios.length == _queue.audios.length &&
         listName == _queue.name &&
         index != null &&
@@ -505,6 +519,7 @@ class PlayerService {
     }
     _position = getLastPosition(_audio?.url);
     await _estimateNext();
+
     await _play(newPosition: _position);
   }
 
@@ -760,25 +775,8 @@ class PlayerService {
   }
 
   Future<void> resetPlayerState() async {
-    await player.stop();
     await _wipePlayerState();
-    _audio = null;
-    _nextAudio = null;
-    _queue = const Queue.empty();
-    _position = Duration.zero;
-    _duration = null;
-    _buffer = null;
-    _isPlaying = false;
-    _playlistMode = PlaylistMode.none;
-    _shuffle = false;
-    setRemoteImageUrl(null);
-    _setColor(null);
-    await _exposeService.exposeTitleOnline(
-      title: '',
-      artist: '',
-      additionalInfo: '',
-    );
-    _propertiesChangedController.add(true);
+    await stop();
   }
 
   void playPath([String? path]) {
@@ -800,6 +798,14 @@ class PlayerService {
     await _setMediaControlsStop();
     await persistPlayerState();
     await _setAudio(null);
+
+    await _exposeService.exposeTitleOnline(
+      title: '',
+      artist: '',
+      additionalInfo: '',
+      imageUrl: null,
+    );
+
     _nextAudio = null;
     _queue = const Queue.empty();
     _position = Duration.zero;
@@ -812,6 +818,7 @@ class PlayerService {
     _setColor(null);
     await player.stop();
     _propertiesChangedController.add(true);
+    await dispose(disposePlayer: false);
   }
 }
 

@@ -51,7 +51,6 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
             onConfirm: () => di<LocalAudioManager>().initAudiosCommand.run((
               directory: null,
               forceInit: true,
-              forceDbOnly: false,
             )),
           );
         }
