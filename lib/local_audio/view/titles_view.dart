@@ -50,7 +50,7 @@ class TitlesView extends StatelessWidget with WatchItMixin {
       startNewPlaylistOnTap: startNewPlaylistOnTap,
       constraints: constraints,
       audios: audios!,
-      audioPageType: LocalAudioPageType.allTitlesView,
+      audioPageType: AudioPageType.allTitlesView,
       pageId: PageIDs.localAudio,
       onSubTitleTab: (artist) => di<RoutingManager>().push(
         builder: (_) => ArtistPage(pageId: artist),

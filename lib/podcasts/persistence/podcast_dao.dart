@@ -424,50 +424,6 @@ class PodcastDao {
     _db.podcastUpdateTable,
   )..where((t) => t.podcastFeedUrl.equals(feedUrl))).go();
 
-  Future<Set<String>> deleteOrphanEpisodes() async {
-    // Create the base query with the join
-    final query = _db.selectOnly(_db.podcastEpisodeTable).join([
-      leftOuterJoin(
-        _db.podcastTable,
-        _db.podcastTable.feedUrl.equalsExp(
-          _db.podcastEpisodeTable.podcastFeedUrl,
-        ),
-      ),
-    ]);
-
-    // Explicitly tell Drift what column to SELECT
-    query.addColumns([_db.podcastEpisodeTable.podcastFeedUrl]);
-
-    // Filter for orphaned rows
-    query.where(_db.podcastTable.feedUrl.isNull());
-
-    // Fetch the data
-    final List<TypedResult> rows = await query.get();
-
-    final Set<String> feedUrlsToDelete = rows
-        .map((r) => r.read(_db.podcastEpisodeTable.podcastFeedUrl))
-        .whereType<String>()
-        .toSet();
-
-    // Early exit if nothing to delete
-    if (feedUrlsToDelete.isEmpty) {
-      Logger.i('No orphaned episodes found to clean up.', tag: '$PodcastDao');
-      return <String>{};
-    }
-
-    // Delete the orphaned episodes
-    Logger.i(
-      'Deleting episodes with feed URLs not in podcast table: $feedUrlsToDelete',
-      tag: '$PodcastDao',
-    );
-
-    await (_db.delete(
-      _db.podcastEpisodeTable,
-    )..where((tbl) => tbl.podcastFeedUrl.isIn(feedUrlsToDelete))).go();
-
-    return feedUrlsToDelete;
-  }
-
   Future<Set<String>> deletePodcastAndFriends({
     required Set<String> deleteMeUrls,
   }) async {
@@ -601,5 +557,19 @@ class PodcastDao {
     if (row == null) return null;
 
     return row.readTable(_db.podcastGenreTable).name;
+  }
+
+  Future<Set<String>?> deleteUnsubscribedPodcastData() async {
+    final rows = await (_db.select(
+      _db.podcastTable,
+    )..where((t) => t.subscribed.equals(false))).get();
+
+    final unsubscribedFeedUrls = rows.map((r) => r.feedUrl).toSet();
+
+    if (unsubscribedFeedUrls.isNotEmpty) {
+      await deletePodcastAndFriends(deleteMeUrls: unsubscribedFeedUrls);
+    }
+
+    return unsubscribedFeedUrls;
   }
 }

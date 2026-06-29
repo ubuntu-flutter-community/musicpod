@@ -167,7 +167,9 @@ Future<String?> _fetchAlbumArtUrlFromReleaseId({
     dio.options.receiveTimeout = const Duration(seconds: 25);
     dio.options.validateStatus = (code) {
       final stringCode = code.toString();
-      if (stringCode.startsWith('2') || stringCode.startsWith('3')) {
+      if (stringCode.startsWith('2') ||
+          stringCode.startsWith('3') ||
+          stringCode.startsWith('4')) {
         return true;
       }
       return false;

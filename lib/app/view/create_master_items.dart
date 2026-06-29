@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../common/data/audio_type.dart';
+import '../../common/view/audio_page_type.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
@@ -43,6 +44,7 @@ Iterable<MasterItem> permanentMasterItems = [
     pageBuilder: (_) => const SearchPage(),
     iconBuilder: (_) => Icon(Iconz.search),
     pageId: PageIDs.searchPage,
+    audioPageType: AudioPageType.none,
   ),
   MasterItem(
     titleBuilder: (context) => Text(context.l10n.local),
@@ -50,6 +52,7 @@ Iterable<MasterItem> permanentMasterItems = [
     iconBuilder: (selected) =>
         MainPageIcon(audioType: AudioType.local, selected: selected),
     pageId: PageIDs.localAudio,
+    audioPageType: AudioPageType.none,
   ),
   MasterItem(
     titleBuilder: (context) => Text(context.l10n.radio),
@@ -57,6 +60,7 @@ Iterable<MasterItem> permanentMasterItems = [
     iconBuilder: (selected) =>
         MainPageIcon(audioType: AudioType.radio, selected: selected),
     pageId: PageIDs.radio,
+    audioPageType: AudioPageType.none,
   ),
   MasterItem(
     titleBuilder: (context) => Text(context.l10n.podcasts),
@@ -64,12 +68,14 @@ Iterable<MasterItem> permanentMasterItems = [
     iconBuilder: (selected) =>
         MainPageIcon(audioType: AudioType.podcast, selected: selected),
     pageId: PageIDs.podcasts,
+    audioPageType: AudioPageType.none,
   ),
   MasterItem(
     iconBuilder: (selected) => Icon(Iconz.plus),
     titleBuilder: (context) => Text(context.l10n.add),
     pageBuilder: (_) => const CustomContentPage(),
     pageId: PageIDs.customContent,
+    audioPageType: AudioPageType.none,
   ),
   MasterItem(
     titleBuilder: (context) => Text(context.l10n.likedSongs),
@@ -77,6 +83,7 @@ Iterable<MasterItem> permanentMasterItems = [
     pageBuilder: (_) => const LikedAudioPage(),
     subtitleBuilder: (context) => Text(context.l10n.playlist),
     iconBuilder: (selected) => LikedAudioPageIcon(selected: selected),
+    audioPageType: AudioPageType.likedAudio,
   ),
   MasterItem(
     titleBuilder: (context) => Text(context.l10n.settings),
@@ -84,6 +91,7 @@ Iterable<MasterItem> permanentMasterItems = [
         Icon(selected ? Iconz.settingsFilled : Iconz.settings),
     pageBuilder: (_) => const SettingsPage(),
     pageId: PageIDs.settings,
+    audioPageType: AudioPageType.none,
   ),
 ];
 
@@ -98,6 +106,7 @@ Iterable<MasterItem> createPlaylistMasterItems(List<String> playlistIDs) =>
           color: getAlphabetColor(id),
           child: Icon(Iconz.playlist),
         ),
+        audioPageType: AudioPageType.playlist,
       ),
     );
 
@@ -110,6 +119,7 @@ Iterable<MasterItem> createStarredStationsMasterItems(
     pageId: uuid,
     pageBuilder: (_) => StationPage(uuid: uuid),
     iconBuilder: (selected) => StationPageIcon(uuid: uuid, selected: selected),
+    audioPageType: AudioPageType.radio,
   ),
 );
 
@@ -121,6 +131,7 @@ Iterable<MasterItem> createPinnedAlbumsMasterItems(List<int> pinnedAlbums) =>
         pageId: id.toString(),
         pageBuilder: (_) => AlbumPage(id: id),
         iconBuilder: (selected) => AlbumPageSideBarIcon(albumId: id),
+        audioPageType: AudioPageType.album,
       ),
     );
 
@@ -132,5 +143,6 @@ Iterable<MasterItem> createPodcastMasterItems(List<String> podcastFeedUrls) =>
         pageId: feedUrl,
         pageBuilder: (_) => PodcastPage(feedUrl: feedUrl),
         iconBuilder: (selected) => PodcastPageSideBarIcon(feedUrl: feedUrl),
+        audioPageType: AudioPageType.podcast,
       ),
     );

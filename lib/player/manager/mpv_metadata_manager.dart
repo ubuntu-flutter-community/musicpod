@@ -30,7 +30,20 @@ class MpvMetadataManager {
        _settingsService = settingsService {
     Logger.o(tag: '$MpvMetadataManager');
 
-    _playerService.player.stream.playing.listen(_toggleObserve);
+    // Note: the observeProperty stream allocates memory
+    // we need to unobserve when we don't need it anymore!
+    // it would be desireably if mediakit would provide a stream for this, but it doesn't
+    _playerService.player.stream.playing.listen((playing) {
+      if (_playerService.audio?.audioType != AudioType.radio) {
+        observeProperty(
+          property: 'metadata',
+          player: _playerService.player,
+          listener: null,
+        );
+      } else {
+        _toggleObserve(playing);
+      }
+    });
 
     editBlockedIcyTitleCommand.run((
       title: '',

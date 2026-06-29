@@ -203,6 +203,9 @@ class RadioService {
   }
 
   Future<void> clickStation(String? uuid) async {
+    if (await connectToServer() == null) {
+      throw RadioBrowserApiNotConnectedException();
+    }
     try {
       if (uuid == null) {
         Logger.i('Cannot click station with null uuid.', tag: '$RadioService');

@@ -1,8 +1,9 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../page_ids.dart';
+import '../../common/view/audio_page_type.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
@@ -11,9 +12,11 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../player/manager/player_manager.dart';
-import '../sidebar_audios_manager.dart';
-import 'master_item.dart';
+import '../data/play_anywhere_param.dart';
+import '../page_ids.dart';
+import '../play_anywhere_manager.dart';
 import '../routing_manager.dart';
+import 'master_item.dart';
 
 class MasterTileWithPageId extends StatelessWidget {
   const MasterTileWithPageId({
@@ -28,6 +31,7 @@ class MasterTileWithPageId extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MasterTile(
     key: ValueKey(item.pageId),
+    audioPageType: item.audioPageType,
     onTap: () => di<RoutingManager>().push(pageId: item.pageId),
     pageId: item.pageId,
     leading: item.iconBuilder(selectedPageId == item.pageId),
@@ -47,6 +51,7 @@ class MasterTile extends StatelessWidget {
     this.trailing,
     required this.pageId,
     required this.onTap,
+    required this.audioPageType,
   });
 
   final bool? selected;
@@ -56,6 +61,7 @@ class MasterTile extends StatelessWidget {
   final Widget? trailing;
   final String pageId;
   final void Function() onTap;
+  final AudioPageType audioPageType;
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +89,7 @@ class MasterTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: kSmallestSpace),
       child: _PlayAbleMasterTile(
+        audioPageType: audioPageType,
         selected: selected,
         pageId: pageId,
         tile: tile,
@@ -116,10 +123,12 @@ class _PlayAbleMasterTile extends StatefulWidget
   const _PlayAbleMasterTile({
     required this.pageId,
     required this.tile,
+    required this.audioPageType,
     this.selected,
   });
 
   final String pageId;
+  final AudioPageType audioPageType;
   final Widget tile;
   final bool? selected;
 
@@ -132,7 +141,9 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
 
   @override
   Widget build(BuildContext context) {
-    if (PageIDs.permanent.contains(widget.pageId)) {
+    if (PageIDs.permanent
+        .whereNot((e) => e == PageIDs.likedAudios)
+        .contains(widget.pageId)) {
       return widget.tile;
     }
 
@@ -142,7 +153,7 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
     final isPlaying = watchPropertyValue((PlayerManager m) => m.isPlaying);
 
     final playAudiosByIdCommandResults = watchValue(
-      (SidebarAudiosManager m) => m.playAudiosByIdCommand.results,
+      (PlayAnywhereManager m) => m.command.results,
     );
 
     final isRunning = playAudiosByIdCommandResults.isRunning;
@@ -166,8 +177,12 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
                   style: tonedIconButtonStyle(context.colorScheme),
                   onPressed: isRunning
                       ? null
-                      : () => di<SidebarAudiosManager>().playAudiosByIdCommand
-                            .run((pageId: widget.pageId)),
+                      : () => di<PlayAnywhereManager>().command.run(
+                          PlayAnywhereParam(
+                            pageId: widget.pageId,
+                            audioPageType: widget.audioPageType,
+                          ),
+                        ),
                   icon: busy
                       ? const SizedBox(
                           width: 15,

@@ -5,9 +5,7 @@ import '../../local_audio/manager/local_cover_manager.dart';
 import '../../player/manager/player_manager.dart';
 import '../../podcasts/manager/podcast_clean_manager.dart';
 
-void cleanUpUnusedPodcasts({Set<String> deleteMeUrls = const {}}) {
-  di<PodcastCleanManager>().command.run((deleteMeUrls: deleteMeUrls));
-}
+void cleanUpUnusedPodcasts() => di<PodcastCleanManager>().command.run();
 
 void clearLocalCovers() {
   final playerManager = di<PlayerManager>();

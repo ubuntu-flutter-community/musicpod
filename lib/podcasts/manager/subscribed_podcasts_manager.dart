@@ -5,7 +5,7 @@ import '../../common/logging.dart';
 import '../data/podcast_toggle_capsule.dart';
 import 'podcast_manager.dart';
 
-@Injectable(cache: true)
+@lazySingleton
 class SubscribedPodcastsManager {
   SubscribedPodcastsManager({required PodcastManager podcastManager}) {
     Logger.o(tag: '$SubscribedPodcastsManager');

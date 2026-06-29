@@ -1,22 +1,23 @@
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
+
 import '../../app/page_ids.dart';
 import '../../common/data/audio.dart';
-import '../service/local_audio_service.dart';
 import '../data/playlist_action.dart';
+import 'local_audio_manager.dart';
 
-@Injectable(cache: true)
+@lazySingleton
 class LikedAudiosManager {
-  LikedAudiosManager(LocalAudioService localAudioService) {
+  LikedAudiosManager(LocalAudioManager localAudioManager) {
     command = Command.createAsyncNoParam(
-      localAudioService.findLikedAudios,
+      localAudioManager.findLikedAudios,
       initialValue: null,
     );
     command.run();
 
     changeLikedAudiosCommand = Command.createAsync((param) async {
       if (param != null) {
-        await localAudioService.createOrChangeLikedAudios(param);
+        await localAudioManager.createOrChangeLikedAudios(param);
       }
 
       return await command.runAsync() ?? [];

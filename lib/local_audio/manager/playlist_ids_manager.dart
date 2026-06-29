@@ -6,7 +6,7 @@ import '../data/playlist_action.dart';
 import 'local_audio_manager.dart';
 import 'playlist_manager.dart';
 
-@Injectable(cache: true)
+@lazySingleton
 class PlaylistIDsManager {
   PlaylistIDsManager({required LocalAudioManager localAudioManager}) {
     Logger.o(tag: '$PlaylistIDsManager');

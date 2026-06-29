@@ -4,6 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:podcast_search/podcast_search.dart';
 
 import '../app/app_config.dart';
+import '../app/data/play_anywhere_bad_audios_exception.dart';
+import '../common/view/audio_page_type.dart';
 import '../l10n/app_localizations.dart';
 import '../lyrics/data/online_lyrics_exceptions.dart';
 import '../podcasts/data/podcast_exceptions.dart';
@@ -46,6 +48,17 @@ extension ObjectX on Object? {
           : (this as DioException).response?.statusCode == 404
           ? l10n.noLyricsFound
           : (this as DioException).message ?? (this as DioException).toString(),
+    PlayAnywhereBadAudiosException() => switch ((this
+            as PlayAnywhereBadAudiosException)
+        .result
+        .param
+        .audioPageType) {
+      AudioPageType.playlist => l10n.emptyPlaylist,
+      AudioPageType.album => l10n.albumNotFound,
+      AudioPageType.radio => l10n.stationNotFound,
+      AudioPageType.podcast => l10n.noPodcastFound,
+      _ => l10n.nothingFound,
+    },
     Exception() => (this as Exception).toString(),
     _ => this.toString(),
   };

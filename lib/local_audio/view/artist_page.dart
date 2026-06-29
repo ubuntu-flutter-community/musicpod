@@ -112,7 +112,7 @@ class _ArtistPageBody extends StatelessWidget with WatchItMixin {
           : SliverLocalAudioTileList(
               audios: artistAudios,
               pageId: pageId,
-              audioPageType: LocalAudioPageType.artist,
+              audioPageType: AudioPageType.artist,
               onSubTitleTab: (text) => onAlbumTap(text: text, context: context),
               constraints: constraints,
               startNewPlaylistOnTap: true,

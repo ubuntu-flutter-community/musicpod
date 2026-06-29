@@ -11,7 +11,7 @@ import '../data/podcast_short_info.dart';
 import '../service/podcast_service.dart';
 import 'podcast_genre_manager.dart';
 
-@Injectable(cache: true)
+@lazySingleton
 class PodcastManager {
   PodcastManager({required PodcastService podcastService})
     : _podcastService = podcastService;

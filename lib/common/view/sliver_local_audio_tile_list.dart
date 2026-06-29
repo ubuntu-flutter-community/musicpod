@@ -22,7 +22,7 @@ class SliverLocalAudioTileList extends StatelessWidget with WatchItMixin {
 
   final List<Audio> audios;
   final String pageId;
-  final LocalAudioPageType audioPageType;
+  final AudioPageType audioPageType;
   final void Function(String text)? onSubTitleTab;
   final void Function(Audio audio)? onSubSubTitleTab;
   final Color? selectedColor;
@@ -41,7 +41,7 @@ class SliverLocalAudioTileList extends StatelessWidget with WatchItMixin {
     final currentAudio = watchPropertyValue((PlayerManager m) => m.audio);
     final allowLeadingImage =
         audios.length < kShowLeadingThreshold &&
-        audioPageType != LocalAudioPageType.allTitlesView;
+        audioPageType != AudioPageType.allTitlesView;
 
     return SliverList(
       delegate: SliverChildBuilderDelegate(childCount: audios.length, (

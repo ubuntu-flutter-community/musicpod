@@ -38,7 +38,7 @@ class LocalAudioTile extends StatefulWidget {
 
   final String pageId;
   final Audio audio;
-  final LocalAudioPageType audioPageType;
+  final AudioPageType audioPageType;
   final bool selected;
 
   final bool isPlayerPlaying;
@@ -72,14 +72,14 @@ class _LocalAudioTileState extends State<LocalAudioTile> {
             maxLines: 1,
             wrapInFlexible: true,
             text: switch (widget.audioPageType) {
-              LocalAudioPageType.artist => widget.audio.album ?? l10n.unknown,
+              AudioPageType.artist => widget.audio.album ?? l10n.unknown,
               _ => widget.audio.artist ?? l10n.unknown,
             },
             onTap: widget.onSubTitleTap == null
                 ? null
                 : () =>
                       widget.onSubTitleTap?.call(switch (widget.audioPageType) {
-                        LocalAudioPageType.artist =>
+                        AudioPageType.artist =>
                           widget.audio.album ?? l10n.unknown,
                         _ => widget.audio.artist ?? l10n.unknown,
                       }),
@@ -134,8 +134,8 @@ class _LocalAudioTileState extends State<LocalAudioTile> {
             if (widget.style == AudioTileStyle.compact) ...[
               if (widget.showSubTitle)
                 Expanded(flex: notTitleFlex, child: subTitle),
-              if ((widget.audioPageType == LocalAudioPageType.allTitlesView ||
-                      widget.audioPageType == LocalAudioPageType.playlist) &&
+              if ((widget.audioPageType == AudioPageType.allTitlesView ||
+                      widget.audioPageType == AudioPageType.playlist) &&
                   widget.showSubSubTitle &&
                   widget.audio.album != null)
                 Expanded(
@@ -172,7 +172,7 @@ class _LocalAudioTileState extends State<LocalAudioTile> {
   }
 
   bool get _useDiscnumberAsSubTitle =>
-      widget.audioPageType == LocalAudioPageType.album &&
+      widget.audioPageType == AudioPageType.album &&
       widget.audio.discNumber != null &&
       widget.audio.discTotal != null &&
       widget.audio.discTotal! > 1;
@@ -193,7 +193,7 @@ class _AudioTileTrailing extends StatelessWidget with WatchItMixin {
   final bool selected;
   final bool isPlayerPlaying;
   final String pageId;
-  final LocalAudioPageType audioPageType;
+  final AudioPageType audioPageType;
   final bool hovered;
   final Color selectedColor;
 
@@ -226,8 +226,8 @@ class _AudioTileTrailing extends StatelessWidget with WatchItMixin {
           audios: [audio],
           searchTerm: '${audio.artist ?? ''} - ${audio.title ?? ''}',
           allowRemove:
-              (audioPageType == LocalAudioPageType.playlist ||
-                  audioPageType == LocalAudioPageType.likedAudio) &&
+              (audioPageType == AudioPageType.playlist ||
+                  audioPageType == AudioPageType.likedAudio) &&
               audio.audioType != AudioType.radio,
         ),
       ],
@@ -265,7 +265,7 @@ class _AudioTileLeading extends StatelessWidget {
   });
 
   final Audio audio;
-  final LocalAudioPageType audioPageType;
+  final AudioPageType audioPageType;
   final bool selected;
 
   final bool isPlayerPlaying;
@@ -296,7 +296,7 @@ class _AudioTileLeading extends StatelessWidget {
             _ => Iconz.musicNote,
           }, color: color)
         : switch (audioPageType) {
-            LocalAudioPageType.album => _AlbumTileLead(
+            AudioPageType.album => _AlbumTileLead(
               trackNumber: audio.trackNumber,
               color: color,
             ),

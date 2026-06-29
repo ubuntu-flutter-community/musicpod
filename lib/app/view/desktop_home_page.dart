@@ -14,7 +14,8 @@ class DesktopHomePage extends StatelessWidget
   Widget build(BuildContext context) {
     final isInFullWindowMode = watchValue((AppManager m) => m.fullWindowMode);
 
-    setupCommonHandlersAndCommands(context);
+    callCommonCommands();
+    registerCommonHandlers(context);
 
     // This scaffold is mainly used to have a unified place for snackbars
     return Scaffold(

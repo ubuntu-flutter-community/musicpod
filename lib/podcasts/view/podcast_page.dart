@@ -58,9 +58,9 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
 
     onDispose(() {
       if (!di<SubscribedPodcastsManager>().command.value.contains(feedUrl)) {
-        cleanUpUnusedPodcasts(deleteMeUrls: {feedUrl});
         PodcastShortInfoManager.dispose(feedUrl);
       }
+      cleanUpUnusedPodcasts();
       EpisodesManager.dispose(feedUrl);
     });
 
@@ -90,17 +90,6 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
             Text(context.l10n.podcastDoesNotSendEpisodeDuration),
             duration: const Duration(seconds: 5),
           );
-        }
-      },
-    );
-
-    registerHandler(
-      select: (SubscribedPodcastsManager m) => m.command.results,
-      handler: (context, result, cancel) {
-        if (result.hasData && result.data?.contains(feedUrl) == false) {
-          if (context.canPop()) {
-            context.pop();
-          }
         }
       },
     );

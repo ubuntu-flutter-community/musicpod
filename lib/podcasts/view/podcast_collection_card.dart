@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
+import '../../app/data/play_anywhere_param.dart';
+import '../../app/play_anywhere_manager.dart';
 import '../../app/routing_manager.dart';
-import '../../app/sidebar_audios_manager.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
+import '../../common/view/audio_page_type.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
@@ -49,9 +51,12 @@ class PodcastCollectionCard extends StatelessWidget with WatchItMixin {
             : null,
         text: shortInfo?.name ?? context.l10n.podcast,
       ),
-      onPlay: () => di<SidebarAudiosManager>().playAudiosByIdCommand.run((
-        pageId: feedUrl,
-      )),
+      onPlay: () => di<PlayAnywhereManager>().command.run(
+        PlayAnywhereParam(
+          pageId: feedUrl,
+          audioPageType: AudioPageType.podcast,
+        ),
+      ),
       onTap: () => di<RoutingManager>().push(pageId: feedUrl),
     );
   }
