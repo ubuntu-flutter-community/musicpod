@@ -41,7 +41,7 @@ class SliverLocalAudioPage extends StatelessWidget {
 
   final String pageId;
   final List<Audio>? audios;
-  final LocalAudioPageType audioPageType;
+  final AudioPageType audioPageType;
 
   final String? pageTitle;
   final String? pageSubTitle;
@@ -88,7 +88,7 @@ class SliverLocalAudioPage extends StatelessWidget {
           image: image,
           subTitle: pageSubTitle,
           label: pageLabel,
-          onLabelTab: audioPageType == LocalAudioPageType.likedAudio
+          onLabelTab: audioPageType == AudioPageType.likedAudio
               ? null
               : onPageLabelTab,
           onSubTitleTab: onPageSubTitleTab,

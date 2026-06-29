@@ -55,7 +55,7 @@ class AlbumPage extends StatelessWidget with WatchItMixin {
 
         return SliverLocalAudioPage(
           pageId: id.toString(),
-          audioPageType: LocalAudioPageType.album,
+          audioPageType: AudioPageType.album,
           audios: album,
           image: AlbumPageImage(audio: album.firstOrNull),
           noSearchResultMessage: Text(context.l10n.albumNotFound),

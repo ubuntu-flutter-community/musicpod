@@ -2165,11 +2165,11 @@ class AppLocalizationsEt extends AppLocalizations {
   String get selectColorAndItsShades => 'Vali värv ja tema varjud';
 
   @override
-  String get selectIconThemeTitle => 'Vali ikooniteema';
+  String get selectIconThemeTitle => 'Vali ikoonikomplekt';
 
   @override
   String get selectIconThemeDescription =>
-      'Vali rakenduse ikooniteema. Vaikimis teema sõltub sinu aervuti või seadme operatsioonisüsteemist. Selle eelistuse muutmine käivitab rakenduse uuesti!';
+      'Vali rakenduse ikoonikomplekt. Vaikimisi valik sõltub sinu arvuti või seadme operatsioonisüsteemist. Selle eelistuse muutmine käivitab rakenduse uuesti!';
 
   @override
   String get saveWindowSizeTitle => 'Salvesta akna mõõdud';

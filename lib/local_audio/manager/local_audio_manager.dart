@@ -106,4 +106,14 @@ class LocalAudioManager {
     await _runInitIfNeeded();
     return _localAudioService.findPinnedAlbumIDs();
   }
+
+  Future<List<Audio>?> findLikedAudios() async {
+    await _runInitIfNeeded();
+    return _localAudioService.findLikedAudios();
+  }
+
+  Future<void> createOrChangeLikedAudios(PlaylistChange param) async {
+    await _runInitIfNeeded();
+    return _localAudioService.createOrChangeLikedAudios(param);
+  }
 }

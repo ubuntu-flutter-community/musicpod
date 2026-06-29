@@ -168,7 +168,7 @@ class PodcastService {
     AudioSortOrder? order,
   }) async {
     final theOrder = order ?? await _dao.getPodcastOrder(feedUrl);
-    final isCurrentlySubscribed = await isPodcastSubscribed(feedUrl);
+    final subscribe = await isPodcastSubscribed(feedUrl);
     final hasEpisodesInDb = await _dao.hasPodcastStoredEpisodes(feedUrl);
 
     if (tryFromDbOnly &&
@@ -197,10 +197,10 @@ class PodcastService {
       onTimeout: () => throw FindEpisodesTimeoutException(),
     );
 
-    // Optimistically add the podcast to the DB unsubscribed
+    // Optimistically add the podcast to the DB with the current subscription status
     await _dao.addPodcast(
       feedUrl: feedUrl,
-      subscribe: isCurrentlySubscribed,
+      subscribe: subscribe,
       imageUrl: podcast.image,
       name: podcast.title ?? '',
       artist: podcast.copyright ?? '',
@@ -370,12 +370,6 @@ class PodcastService {
     }
   }
 
-  Future<Set<String>> deleteOrphanPodcastData() => _dao.deleteOrphanEpisodes();
-
-  Future<Set<String>> deletePodcastAndFriends({
-    required Set<String> deleteMeUrls,
-  }) => _dao.deletePodcastAndFriends(deleteMeUrls: deleteMeUrls);
-
   Future<void> updateAudioDuration(Audio audio) =>
       _dao.updateAudioDuration(audio);
 
@@ -392,6 +386,9 @@ class PodcastService {
     required String feedUrl,
     required String genreName,
   }) => _dao.insertPodcastGenre(feedUrl: feedUrl, genreName: genreName);
+
+  Future<Set<String>?> deleteUnsubscribedPodcastData() =>
+      _dao.deleteUnsubscribedPodcastData();
 }
 
 Future<Podcast> loadPodcast(String url) => Feed.loadFeed(url: url);

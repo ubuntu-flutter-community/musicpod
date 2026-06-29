@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
+import '../../app/data/play_anywhere_param.dart';
+import '../../app/play_anywhere_manager.dart';
 import '../../app/routing_manager.dart';
+import '../../common/view/audio_page_type.dart';
 import '../../common/view/audio_tile_image.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/stared_station_icon_button.dart';
@@ -10,7 +13,6 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../player/manager/player_manager.dart';
-import '../../radio/manager/radio_manager.dart';
 import '../../radio/view/radio_connect_mixin.dart';
 import '../../radio/view/radio_page_tag_bar.dart';
 import '../../radio/view/station_page.dart';
@@ -139,9 +141,12 @@ class SliverRadioSearchResults extends StatelessWidget
                   ? theme.contrastyPrimary
                   : null,
             ),
-            onTap: () => di<PlayerManager>()
-                .play(audios: [station], listName: station.uuid!)
-                .then((_) => di<RadioManager>().clickStation(station)),
+            onTap: () => di<PlayAnywhereManager>().command.run(
+              PlayAnywhereParam(
+                pageId: station.uuid!,
+                audioPageType: AudioPageType.radio,
+              ),
+            ),
           ),
         );
       },

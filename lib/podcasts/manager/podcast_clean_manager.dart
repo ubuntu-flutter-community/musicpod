@@ -13,18 +13,13 @@ class PodcastCleanManager {
 
   final PodcastService _podcastService;
 
-  late final Command<({Set<String> deleteMeUrls})?, Set<String>?> command =
-      Command.createAsync((param) async {
-        final unsubbedFeedUrls = await _podcastService
-            .deleteOrphanPodcastData();
+  late final Command<void, Set<String>?> command = Command.createAsyncNoParam(
+    () async {
+      final unsubscribedPodcasts = await _podcastService
+          .deleteUnsubscribedPodcastData();
 
-        Set<String>? deleteMeUrls;
-        if (param?.deleteMeUrls != null) {
-          deleteMeUrls = await _podcastService.deletePodcastAndFriends(
-            deleteMeUrls: param!.deleteMeUrls,
-          );
-        }
-
-        return Set.from(unsubbedFeedUrls)..addAll(deleteMeUrls ?? {});
-      }, initialValue: null);
+      return Set.from(unsubscribedPodcasts ?? {});
+    },
+    initialValue: null,
+  );
 }

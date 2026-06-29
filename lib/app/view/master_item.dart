@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../common/view/audio_page_type.dart';
+
 class MasterItem {
   MasterItem({
     required this.titleBuilder,
@@ -7,6 +9,7 @@ class MasterItem {
     required this.pageBuilder,
     required this.iconBuilder,
     required this.pageId,
+    required this.audioPageType,
   });
 
   final WidgetBuilder titleBuilder;
@@ -14,4 +17,5 @@ class MasterItem {
   final WidgetBuilder pageBuilder;
   final Widget Function(bool selected) iconBuilder;
   final String pageId;
+  final AudioPageType audioPageType;
 }

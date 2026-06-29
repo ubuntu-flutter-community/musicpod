@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_it/flutter_it.dart';
 
+import '../../common/view/audio_page_type.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/object_x.dart';
 import '../../extensions/platform_x.dart';
 import '../../notifications/notifications_service.dart';
 import '../../patch_notes/patch_notes_dialog.dart';
@@ -17,8 +19,9 @@ import '../../podcasts/manager/download_manager.dart';
 import '../../podcasts/manager/podcast_clean_manager.dart';
 import '../../podcasts/manager/podcast_short_info_manager.dart';
 import '../../podcasts/manager/podcast_updates_manager.dart';
+import '../../radio/manager/radio_manager.dart';
 import '../app_manager.dart';
-import '../sidebar_audios_manager.dart';
+import '../play_anywhere_manager.dart';
 
 mixin CommonHandlersAndCommandsMixin {
   void setupCommonHandlersAndCommands(BuildContext context) {
@@ -101,7 +104,7 @@ mixin CommonHandlersAndCommandsMixin {
     );
 
     registerHandler(
-      select: (SidebarAudiosManager m) => m.playAudiosByIdCommand.results,
+      select: (PlayAnywhereManager m) => m.command.results,
       handler: (context, results, cancel) {
         if (results.isRunning) {
           context.toast(
@@ -118,19 +121,21 @@ mixin CommonHandlersAndCommandsMixin {
             duration: const Duration(seconds: 99),
           );
         } else if (results.hasError) {
-          context.errorToast(
-            results.error.toString(),
-            action: SnackBarAction(
-              label: '📋',
-              onPressed: () => Clipboard.setData(
-                ClipboardData(text: results.error.toString()),
-              ),
-            ),
+          context.toast(
+            Text(results.error.localizedErrorMessage(context.l10n)),
           );
         } else if (results.hasData && results.data != null) {
-          final data = results.data!;
           context.clearToasts();
-          di<PlayerManager>().play(audios: data.audios, listName: data.pageId);
+          switch (results.data!.param.audioPageType) {
+            case AudioPageType.radio:
+              di<ClickStationManager>(
+                param1: results.data!.audios.singleOrNull?.uuid,
+              );
+            case AudioPageType.podcast:
+              di<PodcastCleanManager>().command.run();
+            default:
+              break;
+          }
         }
       },
     );

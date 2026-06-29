@@ -20,8 +20,8 @@ import 'package:shared_preferences/shared_preferences.dart' as _i460;
 import 'package:window_manager/window_manager.dart' as _i740;
 
 import 'app/app_manager.dart' as _i369;
+import 'app/play_anywhere_manager.dart' as _i164;
 import 'app/routing_manager.dart' as _i971;
-import 'app/sidebar_audios_manager.dart' as _i190;
 import 'app/window_size_to_settings_listener.dart' as _i517;
 import 'common/data/audio.dart' as _i537;
 import 'common/data/retry_capsule.dart' as _i327;
@@ -181,15 +181,21 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i582.LocalCoverService>(
       () => _i582.LocalCoverService(dao: gh<_i688.LocalAudioDao>()),
     );
+    gh.factoryParam<_i443.ClickStationManager, String, dynamic>(
+      (uuid, _) => _i443.ClickStationManager.create(
+        uuid: uuid,
+        radioService: gh<_i506.RadioService>(),
+      ),
+    );
     gh.factoryCached<_i604.RadioFavTagManager>(
       () => _i604.RadioFavTagManager(radioManager: gh<_i443.RadioManager>()),
     );
-    gh.factoryCached<_i309.RadioStarStationManager>(
-      () =>
-          _i309.RadioStarStationManager(radioManager: gh<_i443.RadioManager>()),
-    );
     gh.lazySingleton<_i645.RadioLoadTagsManager>(
       () => _i645.RadioLoadTagsManager(radioManager: gh<_i443.RadioManager>()),
+    );
+    gh.lazySingleton<_i309.RadioStarStationManager>(
+      () =>
+          _i309.RadioStarStationManager(radioManager: gh<_i443.RadioManager>()),
     );
     gh.lazySingleton<_i546.OnlineLyricsService>(
       () => _i546.OnlineLyricsService(
@@ -281,13 +287,13 @@ extension GetItInjectableX on _i174.GetIt {
         podcastService: gh<_i529.PodcastService>(),
       ),
     );
-    gh.factoryCached<_i819.PodcastManager>(
-      () => _i819.PodcastManager(podcastService: gh<_i529.PodcastService>()),
-    );
     gh.factoryCached<_i851.PodcastUpdatesManager>(
       () => _i851.PodcastUpdatesManager(
         podcastService: gh<_i529.PodcastService>(),
       ),
+    );
+    gh.lazySingleton<_i819.PodcastManager>(
+      () => _i819.PodcastManager(podcastService: gh<_i529.PodcastService>()),
     );
     gh.factoryCachedParam<_i475.AlbumIDsOfGenreManager, String, dynamic>(
       (genre, _) => _i475.AlbumIDsOfGenreManager(
@@ -324,9 +330,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factoryCached<_i429.FindAllGenresManager>(
       () => _i429.FindAllGenresManager(gh<_i985.LocalAudioService>()),
-    );
-    gh.factoryCached<_i372.LikedAudiosManager>(
-      () => _i372.LikedAudiosManager(gh<_i985.LocalAudioService>()),
     );
     gh.factoryCachedParam<_i483.AlbumIDsOfArtistManager, String, dynamic>(
       (artist, _) => _i483.AlbumIDsOfArtistManager(
@@ -401,22 +404,22 @@ extension GetItInjectableX on _i174.GetIt {
         settingsService: gh<_i862.SettingsService>(),
       ),
     );
+    gh.lazySingleton<_i1055.SubscribedPodcastsManager>(
+      () => _i1055.SubscribedPodcastsManager(
+        podcastManager: gh<_i819.PodcastManager>(),
+      ),
+    );
     gh.factoryCached<_i399.PodcastFeedsWithDownloadsManager>(
       () => _i399.PodcastFeedsWithDownloadsManager(
         podcastManager: gh<_i819.PodcastManager>(),
       ),
     );
-    gh.factoryCached<_i1055.SubscribedPodcastsManager>(
-      () => _i1055.SubscribedPodcastsManager(
-        podcastManager: gh<_i819.PodcastManager>(),
-      ),
-    );
-    gh.factoryCached<_i1030.PinnedAlbumIDsManager>(
+    gh.lazySingleton<_i1030.PinnedAlbumIDsManager>(
       () => _i1030.PinnedAlbumIDsManager(
         localAudioManager: gh<_i76.LocalAudioManager>(),
       ),
     );
-    gh.factoryCached<_i924.PlaylistIDsManager>(
+    gh.lazySingleton<_i924.PlaylistIDsManager>(
       () => _i924.PlaylistIDsManager(
         localAudioManager: gh<_i76.LocalAudioManager>(),
       ),
@@ -441,6 +444,9 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioManager: gh<_i76.LocalAudioManager>(),
       ),
     );
+    gh.factoryCached<_i164.PlayAnywhereManager>(
+      () => _i164.PlayAnywhereManager(playerManager: gh<_i95.PlayerManager>()),
+    );
     gh.factoryCachedParam<_i830.FindAlbumManager, int, dynamic>(
       (albumId, _) => _i830.FindAlbumManager(
         albumId: albumId,
@@ -458,6 +464,9 @@ extension GetItInjectableX on _i174.GetIt {
         albumId: albumId,
         localAudioManager: gh<_i76.LocalAudioManager>(),
       ),
+    );
+    gh.lazySingleton<_i372.LikedAudiosManager>(
+      () => _i372.LikedAudiosManager(gh<_i76.LocalAudioManager>()),
     );
     gh.factoryCached<_i178.FindAllTracksManager>(
       () => _i178.FindAllTracksManager(gh<_i76.LocalAudioManager>()),
@@ -477,18 +486,6 @@ extension GetItInjectableX on _i174.GetIt {
       (playlistId, _) => _i438.PlaylistManager.create(
         playlistId: playlistId,
         localAudioManager: gh<_i76.LocalAudioManager>(),
-      ),
-    );
-    gh.factoryCached<_i190.SidebarAudiosManager>(
-      () => _i190.SidebarAudiosManager(
-        podcastService: gh<_i529.PodcastService>(),
-        podcastUpdatesManager: gh<_i851.PodcastUpdatesManager>(),
-        playlistIDsManager: gh<_i924.PlaylistIDsManager>(),
-        radioManager: gh<_i443.RadioManager>(),
-        podcastToggleManager: gh<_i1055.SubscribedPodcastsManager>(),
-        playerManager: gh<_i95.PlayerManager>(),
-        radioStarStationManager: gh<_i309.RadioStarStationManager>(),
-        pinnedAlbumIDsManager: gh<_i1030.PinnedAlbumIDsManager>(),
       ),
     );
     return this;

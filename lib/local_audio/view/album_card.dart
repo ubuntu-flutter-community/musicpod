@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
+import '../../app/data/play_anywhere_param.dart';
+import '../../app/play_anywhere_manager.dart';
 import '../../app/routing_manager.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/audio_card_vignette.dart';
+import '../../common/view/audio_page_type.dart';
 import '../../common/view/cover_background.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
-import '../../extensions/command_x.dart';
-import '../../player/manager/player_manager.dart';
-import '../manager/find_album_manager.dart';
 import '../manager/find_album_name_manager.dart';
 import '../manager/pinned_album_ids_manager.dart';
 import 'album_page.dart';
@@ -63,11 +63,11 @@ class _AlbumCard extends StatelessWidget with WatchItMixin {
       builder: (context) => AlbumPage(id: id),
       pageId: id.toString(),
     ),
-    onPlay: () async => di<PlayerManager>().play(
-      audios:
-          await di<FindAlbumManager>(param1: id).command.runRestrictedAsync() ??
-          [],
-      listName: id.toString(),
+    onPlay: () => di<PlayAnywhereManager>().command.run(
+      PlayAnywhereParam(
+        pageId: id.toString(),
+        audioPageType: AudioPageType.album,
+      ),
     ),
     overlay: overlay,
   );

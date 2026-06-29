@@ -35,7 +35,7 @@ const kGridPadding = EdgeInsets.only(
   right: kLargestSpace,
 );
 
-const kAudioCardDimension = 130.0;
+const kAudioCardDimension = 150.0;
 
 const kAudioCardBottomHeight = 50.0;
 

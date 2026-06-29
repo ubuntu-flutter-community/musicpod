@@ -3,7 +3,7 @@ import 'package:injectable/injectable.dart';
 
 import 'local_audio_manager.dart';
 
-@Injectable(cache: true)
+@lazySingleton
 class PinnedAlbumIDsManager {
   PinnedAlbumIDsManager({required LocalAudioManager localAudioManager}) {
     command = Command.createAsync(

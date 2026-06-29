@@ -357,7 +357,7 @@ EdgeInsets getCountryPillPadding(bool useYaruTheme) => useYaruTheme
 
 double getInputHeight() => isMobile ? 40 : 36;
 
-double get audioCardDimension => kAudioCardDimension - (isMobile ? 15 : 0);
+double get audioCardDimension => kAudioCardDimension;
 
 double get bottomPlayerDefaultHeight => isMobile ? 90.0 : 90.0;
 

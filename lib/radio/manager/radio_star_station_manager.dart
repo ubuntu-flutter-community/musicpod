@@ -4,7 +4,7 @@ import '../../common/data/audio.dart';
 import 'radio_manager.dart';
 import 'station_manager.dart';
 
-@Injectable(cache: true)
+@lazySingleton
 class RadioStarStationManager {
   RadioStarStationManager({required RadioManager radioManager}) {
     command = Command.createAsync((station) async {
