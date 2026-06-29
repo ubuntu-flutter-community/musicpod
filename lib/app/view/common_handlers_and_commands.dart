@@ -24,7 +24,11 @@ import '../app_manager.dart';
 import '../play_anywhere_manager.dart';
 
 mixin CommonHandlersAndCommandsMixin {
-  void setupCommonHandlersAndCommands(BuildContext context) {
+  void callCommonCommands() => callOnceAfterThisBuild((_) {
+    di<PodcastCleanManager>().command.run();
+  });
+
+  void registerCommonHandlers(BuildContext context) {
     registerStreamHandler(
       select: (DownloadManager m) => m.downloadStream,
       handler: (context, asyncData, cancel) {
@@ -131,8 +135,6 @@ mixin CommonHandlersAndCommandsMixin {
               di<ClickStationManager>(
                 param1: results.data!.audios.singleOrNull?.uuid,
               );
-            case AudioPageType.podcast:
-              di<PodcastCleanManager>().command.run();
             default:
               break;
           }
