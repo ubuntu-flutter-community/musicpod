@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_it/flutter_it.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../logging.dart';
 import 'icons.dart';
 
-class SafeNetworkImage extends StatelessWidget {
+class SafeNetworkImage extends StatelessWidget with WatchItMixin {
   const SafeNetworkImage({
     super.key,
     required this.url,
@@ -38,6 +39,19 @@ class SafeNetworkImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    onDispose(() {
+      if (url != null) {
+        final imageCache2 = PaintingBinding.instance.imageCache;
+
+        if (imageCache2.containsKey(NetworkImage(url!)) ||
+            imageCache2.containsKey(url!)) {
+          Logger.i('Evicting image from cache: $url', tag: '$SafeNetworkImage');
+          imageCache2.evict(NetworkImage(url!));
+          imageCache2.evict(url!);
+        }
+      }
+    });
+
     final fallBack = Center(
       child:
           fallbackWidget ??

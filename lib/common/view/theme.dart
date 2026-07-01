@@ -339,8 +339,9 @@ double get chipHeight => isMobile ? 40 : 34.0;
 
 EdgeInsets get audioTilePadding => kAudioTilePadding;
 
-SliverGridDelegate get audioCardGridDelegate =>
-    isMobile ? kMobileAudioCardGridDelegate : kAudioCardGridDelegate;
+SliverGridDelegate get audioCardGridDelegate => kAudioCardGridDelegate;
+
+SliverGridDelegate get diskGridDelegate => kDiskGridDelegate;
 
 EdgeInsets get appBarSingleActionSpacing => isMacOS
     ? const EdgeInsets.only(right: 5, left: 5)
@@ -357,7 +358,8 @@ EdgeInsets getCountryPillPadding(bool useYaruTheme) => useYaruTheme
 
 double getInputHeight() => isMobile ? 40 : 36;
 
-double get audioCardDimension => kAudioCardDimension;
+double get audioCardDimension =>
+    isMobile ? kMobileAudioCardDimension : kAudioCardDimension;
 
 double get bottomPlayerDefaultHeight => isMobile ? 90.0 : 90.0;
 

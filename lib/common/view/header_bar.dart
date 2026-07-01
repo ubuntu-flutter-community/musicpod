@@ -24,7 +24,7 @@ class HeaderBar extends StatelessWidget
     this.includeSidebarButton = true,
     this.leading,
     this.heroTag,
-    this.hideOnMobile = true,
+    this.hideOnMobile = false,
   });
 
   final Widget? title;

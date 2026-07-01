@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../common/logging.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -35,6 +36,7 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
               onPressed: () async {
                 final directoryPath = await di<ExternalPathService>()
                     .getPathOfDirectory();
+                Logger.i('Selected directory: $directoryPath');
                 if (directoryPath != null) {
                   await di<WipeManager>().wipeCommand.runAsync({
                     WipeType.localAudio,

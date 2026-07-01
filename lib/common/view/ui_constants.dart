@@ -37,6 +37,8 @@ const kGridPadding = EdgeInsets.only(
 
 const kAudioCardDimension = 150.0;
 
+const kMobileAudioCardDimension = 300.0;
+
 const kAudioCardBottomHeight = 50.0;
 
 const kMasterDetailBreakPoint = 720.0;
@@ -48,13 +50,6 @@ const kAdaptivContainerBreakPoint = 1200.0;
 const kAudioCardGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
   maxCrossAxisExtent: kAudioCardDimension + 40,
   mainAxisExtent: kAudioCardDimension + kAudioCardBottomHeight + 8,
-  mainAxisSpacing: 0,
-  crossAxisSpacing: 10,
-);
-
-const kMobileAudioCardGridDelegate = SliverGridDelegateWithMaxCrossAxisExtent(
-  maxCrossAxisExtent: kAudioCardDimension,
-  mainAxisExtent: kAudioCardDimension + kAudioCardBottomHeight + 5,
   mainAxisSpacing: 0,
   crossAxisSpacing: 10,
 );

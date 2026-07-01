@@ -6,7 +6,7 @@ import '../../app/routing_manager.dart';
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/round_image_container.dart';
 import '../../common/view/sliver_fill_remaining_progress.dart';
-import '../../common/view/ui_constants.dart';
+import '../../common/view/theme.dart';
 import 'artist_image.dart';
 import 'artist_page.dart';
 
@@ -36,7 +36,7 @@ class ArtistsView extends StatelessWidget {
 
     return SliverGrid.builder(
       itemCount: artists!.length,
-      gridDelegate: kDiskGridDelegate,
+      gridDelegate: diskGridDelegate,
       itemBuilder: (context, index) {
         final artistName = artists!.elementAt(index);
         final radius = BorderRadius.circular(300);

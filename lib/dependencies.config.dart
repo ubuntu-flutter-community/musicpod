@@ -287,8 +287,8 @@ extension GetItInjectableX on _i174.GetIt {
         podcastService: gh<_i529.PodcastService>(),
       ),
     );
-    gh.factoryCached<_i851.PodcastUpdatesManager>(
-      () => _i851.PodcastUpdatesManager(
+    gh.factory<_i851.PodcastUpdatesManager>(
+      () => _i851.PodcastUpdatesManager.create(
         podcastService: gh<_i529.PodcastService>(),
       ),
     );
