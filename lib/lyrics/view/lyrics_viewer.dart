@@ -11,6 +11,7 @@ import '../../common/data/retry_capsule.dart';
 import '../../common/manager/retry_manager.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/error_retry_body.dart';
+import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -115,7 +116,7 @@ class _PlayerLyricsState extends State<_PlayerLyrics> {
         Expanded(
           child: watchValue((LyricsManager m) => m.command.results).toWidget(
             whileRunning: (lastResult, param) =>
-                const Center(child: CircularProgressIndicator()),
+                const Center(child: Progress()),
             onError: (error, lastResult, param) => Center(
               child: ErrorRetryBody(
                 error: error,

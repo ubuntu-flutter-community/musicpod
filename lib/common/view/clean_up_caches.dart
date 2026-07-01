@@ -1,3 +1,4 @@
+import 'package:cached_network_image_ce/cached_network_image.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_it/flutter_it.dart';
 
@@ -16,8 +17,11 @@ void clearLocalCovers() {
   );
 }
 
-void clearImageCache() {
-  PaintingBinding.instance.imageCache.clear();
-
-  PaintingBinding.instance.imageCache.clearLiveImages();
+Future<void> clearNetworkImageCache() async {
+  // Evict the in-memory image cache.
+  PaintingBinding.instance.imageCache
+    ..clear()
+    ..clearLiveImages();
+  // Empty the on-disk cache used by CachedNetworkImage.
+  await CachedNetworkImageProvider.defaultCacheManager.emptyCache();
 }

@@ -10,7 +10,6 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/platform_x.dart';
 import '../manager/player_manager.dart';
-import 'full_window_player_top_controls.dart';
 import 'player_main_controls.dart';
 import 'player_track.dart';
 import 'player_view.dart';
@@ -152,20 +151,6 @@ class _LinuxFullWindowVideoPlayerState
             avatarColor: Colors.black.withAlpha(150),
           ),
         ),
-        Positioned(
-          top: 0,
-          right: 0,
-          child: AnimatedOpacity(
-            duration: const Duration(milliseconds: 200),
-            opacity: _hovered ? 1 : 0,
-            child: OverlayContainer(
-              child: FullWindowPlayerTopControls(
-                iconColor: widget.iconColor,
-                video: true,
-              ),
-            ),
-          ),
-        ),
         if (isFullscreen(context))
           Positioned(
             bottom: 0,
@@ -186,6 +171,25 @@ class _LinuxFullWindowVideoPlayerState
               ),
             ),
           ),
+        Positioned(
+          bottom: 0,
+          child: AnimatedOpacity(
+            duration: const Duration(milliseconds: 200),
+            opacity: _hovered ? 1 : 0,
+            child: const Padding(
+              padding: EdgeInsets.only(
+                bottom: kLargestSpace,
+                left: kLargestSpace,
+                right: kLargestSpace,
+              ),
+              child: SizedBox(
+                height: kLargestSpace,
+                width: 600,
+                child: PlayerTrack(),
+              ),
+            ),
+          ),
+        ),
       ],
     ),
   );

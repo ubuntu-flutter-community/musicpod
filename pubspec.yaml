@@ -16,7 +16,7 @@ dependencies:
       ref: 694a519007cf0a7b81d17ef3792cc157990a3dc8
   audio_service_win: ^0.0.3
   basic_utils: ^5.8.2
-  blur: ^4.0.2
+  cached_network_image_ce: ^4.9.0
   chinese_font_library: ^1.2.0
   collection: ^1.19.1
   cupertino_icons: ^1.0.9

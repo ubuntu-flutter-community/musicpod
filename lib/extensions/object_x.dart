@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:podcast_search/podcast_search.dart';
 
 import '../app/app_config.dart';
@@ -17,6 +18,9 @@ extension ObjectX on Object? {
     AppLocalizations l10n, {
     String? title,
   }) => switch (this) {
+    NetworkImageLoadException() => l10n.errorDetails(
+      (this as NetworkImageLoadException).statusCode.toString(),
+    ),
     FindRadioBrowserHostsTimeoutException() =>
       l10n.lookUpRadioBrowserHostsTimouted,
     LookUpRadioBrowserHostsException() => l10n.lookUpRadioBrowserHostsFailed,

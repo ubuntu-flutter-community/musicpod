@@ -36,7 +36,10 @@ class PodcastCollectionCard extends StatelessWidget with WatchItMixin {
         fit: BoxFit.cover,
         height: audioCardDimension,
         width: audioCardDimension,
-        fallbackWidget: Icon(Iconz.podcast, size: 70),
+        fallbackWidget: const Center(),
+        errorWidget: Center(
+          child: Icon(Iconz.podcast, size: audioCardDimension * 0.7),
+        ),
       ),
       bottom: AudioCardBottom(
         style: hasUpdated

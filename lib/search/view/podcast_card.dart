@@ -9,6 +9,7 @@ import '../../app/routing_manager.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
 import '../../common/view/audio_page_type.dart';
+import '../../common/view/icons.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
@@ -33,6 +34,10 @@ class PodcastCard extends StatelessWidget with WatchItMixin {
         width: audioCardDimension,
         cacheHeight: audioCardDimension.toInt(),
         cacheWidth: audioCardDimension.toInt(),
+        fallbackWidget: const Center(),
+        errorWidget: Center(
+          child: Icon(Iconz.podcast, size: audioCardDimension * 0.7),
+        ),
       ),
       onPlay: feedUrl == null
           ? null
