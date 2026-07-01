@@ -17,6 +17,7 @@ class FullWindowPlayerHeaderBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return HeaderBar(
       heroTag: 'fullWindowPlayerHeaderBar',
+      hideOnMobile: true,
       leading: isMobile
           ? Center(
               child: IconButton(

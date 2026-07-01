@@ -7,7 +7,6 @@ import '../../common/data/audio.dart';
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/audio_tile_option_button.dart';
 import '../../common/view/avatar_play_button.dart';
-import '../../common/view/clean_up_caches.dart';
 import '../../common/view/cover_background.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
@@ -30,45 +29,44 @@ class AlbumPage extends StatelessWidget with WatchItMixin {
   final int id;
 
   @override
-  Widget build(BuildContext context) {
-    callOnceAfterThisBuild((_) => clearImageCache());
+  Widget build(BuildContext context) =>
+      watchValue(
+        (FindAlbumManager m) => m.command.results,
+        param1: id,
+      ).toWidget(
+        onError: (error, lastResult, param) => Scaffold(
+          appBar: const HeaderBar(),
+          body: Center(child: Text(error.toString())),
+        ),
+        whileRunning: (lastResult, param) => const Scaffold(
+          appBar: HeaderBar(),
+          body: Center(child: Progress()),
+        ),
+        onData: (album, param) {
+          if (album == null) {
+            return Scaffold(
+              appBar: const HeaderBar(),
+              body: Center(child: Text(context.l10n.albumNotFound)),
+            );
+          }
 
-    return watchValue(
-      (FindAlbumManager m) => m.command.results,
-      param1: id,
-    ).toWidget(
-      onError: (error, lastResult, param) => Scaffold(
-        appBar: const HeaderBar(),
-        body: Center(child: Text(error.toString())),
-      ),
-      whileRunning: (lastResult, param) => const Scaffold(
-        appBar: HeaderBar(),
-        body: Center(child: Progress()),
-      ),
-      onData: (album, param) {
-        if (album == null) {
-          return Scaffold(
-            appBar: const HeaderBar(),
-            body: Center(child: Text(context.l10n.albumNotFound)),
+          return SliverLocalAudioPage(
+            pageId: id.toString(),
+            audioPageType: AudioPageType.album,
+            audios: album,
+            image: AlbumPageImage(audio: album.firstOrNull),
+            noSearchResultMessage: Text(context.l10n.albumNotFound),
+            pageTitle: album.firstWhereOrNull((e) => e.album != null)?.album,
+            pageSubTitle: album
+                .firstWhereOrNull((e) => e.artist != null)
+                ?.artist,
+            onPageSubTitleTab: onArtistTap,
+            onPageLabelTab: onArtistTap,
+            controlPanel: AlbumPageControlPanel(album: album, id: id),
+            startNewPlaylistOnTap: true,
           );
-        }
-
-        return SliverLocalAudioPage(
-          pageId: id.toString(),
-          audioPageType: AudioPageType.album,
-          audios: album,
-          image: AlbumPageImage(audio: album.firstOrNull),
-          noSearchResultMessage: Text(context.l10n.albumNotFound),
-          pageTitle: album.firstWhereOrNull((e) => e.album != null)?.album,
-          pageSubTitle: album.firstWhereOrNull((e) => e.artist != null)?.artist,
-          onPageSubTitleTab: onArtistTap,
-          onPageLabelTab: onArtistTap,
-          controlPanel: AlbumPageControlPanel(album: album, id: id),
-          startNewPlaylistOnTap: true,
-        );
-      },
-    );
-  }
+        },
+      );
 
   void onArtistTap(String text) => di<RoutingManager>().push(
     builder: (_) => ArtistPage(pageId: text),

@@ -37,7 +37,7 @@ class FavoriteRadioTagsGrid extends StatelessWidget with WatchItMixin {
     }
 
     return SliverGrid.builder(
-      gridDelegate: kDiskGridDelegate,
+      gridDelegate: diskGridDelegate,
       itemCount: favTagsLength,
       itemBuilder: (context, index) {
         final text = favTags.elementAt(index);

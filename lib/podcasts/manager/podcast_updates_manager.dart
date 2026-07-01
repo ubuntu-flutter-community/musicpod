@@ -1,13 +1,14 @@
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 import '../../common/data/audio.dart';
+import '../../common/util/keep_alive_registry.dart';
 import '../data/podcast_update_capsule.dart';
 import '../service/podcast_service.dart';
 import 'episodes_manager.dart';
 
-@Injectable(cache: true)
+@injectable
 class PodcastUpdatesManager {
-  PodcastUpdatesManager({required PodcastService podcastService}) {
+  PodcastUpdatesManager._({required PodcastService podcastService}) {
     command = Command.createAsyncWithProgress((capsule, handle) async {
       if (capsule.type == PodcastUpdateType.remove) {
         await podcastService.removePodcastUpdates(
@@ -36,5 +37,20 @@ class PodcastUpdatesManager {
     }, initialValue: {});
   }
 
+  @factoryMethod
+  static PodcastUpdatesManager create({
+    required PodcastService podcastService,
+  }) => _registry.getOrRegister(
+    id: 'PodcastUpdatesManager',
+    factoryFunction: () =>
+        PodcastUpdatesManager._(podcastService: podcastService),
+    autoDisposeAfter: const Duration(hours: 5),
+  );
+
   late final Command<PodcastUpdateCapsule, Map<String, Set<Audio>>> command;
+
+  static final _registry = KeepAliveRegistry<String, PodcastUpdatesManager>(
+    autoDisposeAllAfter: const Duration(hours: 5),
+  );
+  static void dispose() => _registry.disposeAll();
 }

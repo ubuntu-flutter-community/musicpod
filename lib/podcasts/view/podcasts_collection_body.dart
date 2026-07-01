@@ -35,6 +35,8 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
       (context) => di<PodcastCleanManager>().command.run(),
     );
 
+    onDispose(PodcastUpdatesManager.dispose);
+
     final subsResults = watchValue(
       (SubscribedPodcastsManager m) => m.command.results,
     );
