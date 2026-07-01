@@ -11,6 +11,7 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/adaptive_multi_layout_body.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/audio_page_type.dart';
+import '../../common/view/clean_up_caches.dart';
 import '../../common/view/local_audio_tile.dart';
 import '../../common/view/genre_bar.dart';
 import '../../common/view/header_bar.dart';
@@ -40,6 +41,7 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
+    callOnceAfterThisBuild((context) => clearNetworkImageCache());
     final isInitializing = watchValue(
       (LocalAudioManager m) => m.initAudiosCommand.isRunning,
     );
