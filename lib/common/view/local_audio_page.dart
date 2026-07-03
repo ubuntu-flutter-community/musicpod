@@ -1,0 +1,122 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_it/flutter_it.dart';
+
+import '../../app/page_ids.dart';
+import '../../app/routing_manager.dart';
+import '../../extensions/build_context_x.dart';
+import '../../extensions/platform_x.dart';
+import '../../search/manager/search_manager.dart';
+import '../../search/data/search_type.dart';
+import '../data/audio.dart';
+import '../data/audio_type.dart';
+import 'adaptive_multi_layout_body.dart';
+import 'audio_page_header.dart';
+import 'audio_page_type.dart';
+import 'avatar_play_button.dart';
+import 'clean_up_caches.dart';
+import 'header_bar.dart';
+import 'no_search_result_page.dart';
+import 'progress.dart';
+import 'search_button.dart';
+import 'sliver_local_audio_tile_list.dart';
+import 'theme.dart';
+
+class LocalAudioPage extends StatelessWidget with WatchItMixin {
+  const LocalAudioPage({
+    super.key,
+    required this.pageId,
+    this.audios,
+    required this.audioPageType,
+    this.onPageSubTitleTab,
+    this.onPageLabelTab,
+    this.pageTitle,
+    this.pageSubTitle,
+    this.pageLabel,
+    this.image,
+    this.controlPanel,
+    this.noSearchResultMessage,
+    this.noSearchResultIcons,
+    this.description,
+    required this.startNewPlaylistOnTap,
+  });
+
+  final String pageId;
+  final List<Audio>? audios;
+  final AudioPageType audioPageType;
+
+  final String? pageTitle;
+  final String? pageSubTitle;
+  final String? pageLabel;
+  final Widget? image;
+  final Widget? description;
+
+  final void Function(String text)? onPageSubTitleTab;
+  final void Function(String)? onPageLabelTab;
+
+  final Widget? controlPanel;
+
+  final Widget? noSearchResultMessage;
+  final Widget? noSearchResultIcons;
+  final bool startNewPlaylistOnTap;
+
+  @override
+  Widget build(BuildContext context) {
+    callOnceAfterThisBuild((context) => clearNetworkImageCache());
+    return Scaffold(
+      appBar: HeaderBar(
+        title: isMobile ? null : Text(pageTitle ?? ''),
+        actions: [
+          Padding(
+            padding: appBarSingleActionSpacing,
+            child: SearchButton(
+              onPressed: () {
+                di<RoutingManager>().push(pageId: PageIDs.searchPage);
+                final searchManager = di<SearchManager>();
+                if (searchManager.audioType != AudioType.local) {
+                  searchManager
+                    ..setAudioType(AudioType.local)
+                    ..setSearchType(SearchType.localTitle)
+                    ..setSearchQuery(null)
+                    ..search();
+                }
+              },
+            ),
+          ),
+        ],
+      ),
+      body: AdaptiveMultiLayoutBody(
+        header: AudioPageHeader(
+          title: pageTitle ?? context.l10n.album,
+          image: image,
+          subTitle: pageSubTitle,
+          label: pageLabel,
+          onLabelTab: audioPageType == AudioPageType.likedAudio
+              ? null
+              : onPageLabelTab,
+          onSubTitleTab: onPageSubTitleTab,
+          description: description,
+        ),
+        controlPanel:
+            controlPanel ??
+            AvatarPlayButton(audios: audios ?? [], pageId: pageId),
+        sliverBody: (constraints) => audios == null
+            ? const SliverToBoxAdapter(child: Center(child: Progress()))
+            : audios!.isEmpty
+            ? SliverToBoxAdapter(
+                child: NoSearchResultPage(
+                  message: noSearchResultMessage,
+                  icon: noSearchResultIcons,
+                ),
+              )
+            : SliverLocalAudioTileList(
+                audioPageType: audioPageType,
+                audios: audios!,
+                pageId: pageId,
+                onSubTitleTab: onPageLabelTab,
+                constraints: constraints,
+                startNewPlaylistOnTap: startNewPlaylistOnTap,
+              ),
+      ),
+    );
+  }
+}

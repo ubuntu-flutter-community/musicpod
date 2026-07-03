@@ -3,12 +3,16 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
+import '../../common/data/retry_capsule.dart';
 import '../../common/view/audio_page_type.dart';
+import '../../common/view/error_retry_body.dart';
 import '../../common/view/fall_back_header_image.dart';
 import '../../common/view/icons.dart';
+import '../../common/view/progress.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
-import '../../common/view/sliver_local_audio_page.dart';
+import '../../common/view/local_audio_page.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/command_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../manager/liked_audios_manager.dart';
 import 'artist_page.dart';
@@ -17,29 +21,39 @@ class LikedAudioPage extends StatelessWidget with WatchItMixin {
   const LikedAudioPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final likedAudios = watchValue((LikedAudiosManager m) => m.command);
-
-    return SliverLocalAudioPage(
-      onPageLabelTab: (text) => di<RoutingManager>().push(
-        builder: (_) => ArtistPage(pageId: text),
-        pageId: text,
-      ),
-      noSearchResultMessage: Text(context.l10n.likedSongsSubtitle),
-      audios: likedAudios,
-      audioPageType: AudioPageType.likedAudio,
-      pageId: PageIDs.likedAudios,
-      pageTitle: context.l10n.likedSongs,
-      pageLabel: context.l10n.playlist,
-      pageSubTitle: '${likedAudios?.length ?? 0} ${context.l10n.titles}',
-      description: Text(
-        context.l10n.likedSongsSubtitle,
-        style: context.theme.pageHeaderDescription,
-      ),
-      image: FallBackHeaderImage(child: Icon(Iconz.heart, size: 65)),
-      startNewPlaylistOnTap: true,
-    );
-  }
+  Widget build(BuildContext context) =>
+      watchValue((LikedAudiosManager m) => m.command.results).toWidget(
+        whileRunning: (lastResult, param) => const Center(child: Progress()),
+        onError: (error, lastResult, param) => ErrorRetryBody(
+          error: error,
+          retryCapsule: RetryCapsule(
+            onRetry: () => di<LikedAudiosManager>().command.runRestrictedAsync(
+              immediatelyClearErrors: true,
+            ),
+            retryViewId: PageIDs.likedAudios,
+          ),
+          stackTrace: StackTrace.current,
+        ),
+        onData: (likedAudios, param) => LocalAudioPage(
+          onPageLabelTab: (text) => di<RoutingManager>().push(
+            builder: (_) => ArtistPage(pageId: text),
+            pageId: text,
+          ),
+          noSearchResultMessage: Text(context.l10n.likedSongsSubtitle),
+          audios: likedAudios,
+          audioPageType: AudioPageType.likedAudio,
+          pageId: PageIDs.likedAudios,
+          pageTitle: context.l10n.likedSongs,
+          pageLabel: context.l10n.playlist,
+          pageSubTitle: '${likedAudios?.length ?? 0} ${context.l10n.titles}',
+          description: Text(
+            context.l10n.likedSongsSubtitle,
+            style: context.theme.pageHeaderDescription,
+          ),
+          image: FallBackHeaderImage(child: Icon(Iconz.heart, size: 65)),
+          startNewPlaylistOnTap: true,
+        ),
+      );
 }
 
 class LikedAudioPageIcon extends StatelessWidget {
