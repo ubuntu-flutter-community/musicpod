@@ -13,17 +13,14 @@ class KeepAliveRegistry<I, T> {
     required I id,
     required T Function() factoryFunction,
     Duration autoDisposeAfter = const Duration(minutes: 5),
-  }) {
+  }) => _instances.putIfAbsent(id, () {
+    Logger.o(tag: '$T:$id');
     Future.delayed(
       autoDisposeAfter,
       () => dispose(id, reason: 'Auto dispose after $autoDisposeAfter'),
     );
-
-    return _instances.putIfAbsent(id, () {
-      Logger.o(tag: '$T:$id');
-      return factoryFunction();
-    });
-  }
+    return factoryFunction();
+  });
 
   T? dispose(I id, {String? reason}) {
     final message =

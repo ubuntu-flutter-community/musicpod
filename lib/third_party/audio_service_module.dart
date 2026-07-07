@@ -85,6 +85,8 @@ Future<AudioServiceHandler> _registerAudioServiceHandler(
           return Future.value();
         },
     onSetMetaData: ({required Uri? artUri, required Audio audio}) {
+      if (audioHandler.mediaItem.value?.artUri.toString() == artUri?.toString())
+        return;
       audioHandler.mediaItem.add(
         MediaItem(
           id: audio.toString(),
@@ -96,7 +98,6 @@ Future<AudioServiceHandler> _registerAudioServiceHandler(
               : Duration(milliseconds: audio.durationMs!.toInt()),
         ),
       );
-      return Future.value();
     },
     onSetPosition: (position) {
       audioHandler.playbackState.add(
@@ -104,7 +105,6 @@ Future<AudioServiceHandler> _registerAudioServiceHandler(
           updatePosition: position ?? Duration.zero,
         ),
       );
-      return Future.value();
     },
     onSetDuration: (duration) {
       if (audioHandler.mediaItem.value != null) {
@@ -112,8 +112,6 @@ Future<AudioServiceHandler> _registerAudioServiceHandler(
           audioHandler.mediaItem.value!.copyWith(duration: duration),
         );
       }
-
-      return Future.value();
     },
     onStop: () => audioHandler.stop(),
   );

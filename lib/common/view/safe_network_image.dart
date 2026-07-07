@@ -1,12 +1,12 @@
 import 'package:cached_network_image_ce/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../logging.dart';
+import '../util/failed_image_urls.dart';
 import 'icons.dart';
 
-class SafeNetworkImage extends StatelessWidget with WatchItMixin {
+class SafeNetworkImage extends StatelessWidget {
   const SafeNetworkImage({
     super.key,
     required this.url,
@@ -36,23 +36,8 @@ class SafeNetworkImage extends StatelessWidget with WatchItMixin {
   final Function(ImageProvider imageProvider)? onImageLoaded;
   final ReportType logType;
 
-  static final List<String> _failedUrls = [];
-
   @override
   Widget build(BuildContext context) {
-    onDispose(() {
-      if (url != null) {
-        final imageCache2 = PaintingBinding.instance.imageCache;
-
-        if (imageCache2.containsKey(NetworkImage(url!)) ||
-            imageCache2.containsKey(url!)) {
-          Logger.i('Evicting image from cache: $url', tag: '$SafeNetworkImage');
-          imageCache2.evict(NetworkImage(url!));
-          imageCache2.evict(url!);
-        }
-      }
-    });
-
     final fallBack = Center(
       child:
           fallbackWidget ??
@@ -71,7 +56,7 @@ class SafeNetworkImage extends StatelessWidget with WatchItMixin {
 
     if (url == null ||
         url!.isEmpty ||
-        _failedUrls.contains(url!) ||
+        FailedImageUrls.contains(url) ||
         (Uri.tryParse(url!)?.host.isEmpty ?? false))
       return errorWidget;
 
@@ -114,9 +99,7 @@ class SafeNetworkImage extends StatelessWidget with WatchItMixin {
           tag: '$SafeNetworkImage',
           reportType: logType,
         );
-        if (url != null) {
-          _failedUrls.add(url!);
-        }
+        FailedImageUrls.add(url);
         return errorWidget;
       },
     );

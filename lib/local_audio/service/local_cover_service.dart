@@ -9,6 +9,7 @@ import 'package:path/path.dart' as p;
 
 import '../../common/data/audio.dart';
 import '../../common/logging.dart';
+import '../../common/util/failed_image_urls.dart';
 import '../../common/util/persistence_utils.dart';
 import '../../extensions/media_file_x.dart';
 import '../../extensions/platform_x.dart';
@@ -91,7 +92,9 @@ class LocalCoverService {
 
   Future<Uri?> createMediaControlsArtUri({Audio? audio}) async {
     if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
-      final uri = Uri.tryParse(audio?.imageUrl ?? audio!.albumArtUrl!);
+      final url = audio?.imageUrl ?? audio!.albumArtUrl!;
+      if (FailedImageUrls.contains(url)) return null;
+      final uri = Uri.tryParse(url);
       if (uri != null && uri.hasScheme && uri.host.isNotEmpty) return uri;
     } else if (audio?.canHaveLocalCover == true &&
         File(audio!.path!).existsSync()) {
