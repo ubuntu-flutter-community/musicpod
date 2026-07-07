@@ -19,6 +19,7 @@ import '../../extensions/platform_x.dart';
 import '../../extensions/string_x.dart';
 import '../../local_audio/service/local_cover_service.dart';
 import '../../podcasts/service/podcast_service.dart';
+import '../data/play_timeout_exception.dart';
 import '../data/queue.dart';
 import '../persistence/player_dao.dart';
 
@@ -339,7 +340,7 @@ class PlayerService {
       await player
           .open(media)
           .timeout(
-            const Duration(seconds: 15),
+            PlayTimeoutException.timeoutDuration,
             onTimeout: () {
               throw PlayTimeoutException();
             },
@@ -816,9 +817,4 @@ class PlayerService {
     _propertiesChangedController.add(true);
     await dispose(disposePlayer: false);
   }
-}
-
-class PlayTimeoutException implements Exception {
-  @override
-  String toString() => 'Failed to open media: Operation timed out';
 }
