@@ -6,13 +6,14 @@ import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../common/view/icons.dart';
+import '../../extensions/platform_x.dart';
 import '../../local_audio/service/local_audio_service.dart';
 import '../../lyrics/data/online_lyrics_source.dart';
 import '../../player/service/player_service.dart';
 import '../../podcasts/service/podcast_service.dart';
 import '../../radio/service/radio_service.dart';
-import '../service/settings_service.dart';
 import '../data/shared_preferences_keys.dart';
+import '../service/settings_service.dart';
 
 @lazySingleton
 class SettingsManager extends SafeChangeNotifier {
@@ -104,7 +105,7 @@ class SettingsManager extends SafeChangeNotifier {
   int get themeIndex => _service.getInt(SPKeys.themeIndex) ?? 0;
   void setThemeIndex(int value) => _service.setValue(SPKeys.themeIndex, value);
 
-  bool get useYaruTheme => _service.getBool(SPKeys.useYaruTheme) ?? false;
+  bool get useYaruTheme => _service.getBool(SPKeys.useYaruTheme) ?? isLinux;
   void setUseYaruTheme(bool value) =>
       _service.setValue(SPKeys.useYaruTheme, value);
 

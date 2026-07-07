@@ -39,6 +39,7 @@ class EpisodesManager {
     required PodcastService podcastService,
   }) => _registry.getOrRegister(
     id: feedUrl,
+    autoDisposeAfter: const Duration(hours: 1),
     factoryFunction: () =>
         EpisodesManager._(feedUrl: feedUrl, podcastService: podcastService),
   );

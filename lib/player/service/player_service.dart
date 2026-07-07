@@ -654,11 +654,11 @@ class PlayerService {
     required bool queueNotEmpty,
   })?
   _onSetMediaControlsIsPlaying;
-  Future<void>? Function({required Audio audio, required Uri? artUri})?
+  void Function({required Audio audio, required Uri? artUri})?
   _onSetMediaControlsMetaData;
-  Future<void>? Function(Duration? position)? _onSetMediaControlsPosition;
-  Future<void>? Function(Duration? duration)? _onSetMediaControlsDuration;
-  Future<void>? Function()? _onStopMediaControls;
+  void Function(Duration? position)? _onSetMediaControlsPosition;
+  void Function(Duration? duration)? _onSetMediaControlsDuration;
+  void Function()? _onStopMediaControls;
 
   void registerMediaControlsCallBacks({
     required Future<void> onIsPlaying({
@@ -666,13 +666,10 @@ class PlayerService {
       required AudioType? audioType,
       required bool queueNotEmpty,
     }),
-    required Future<void> onSetMetaData({
-      required Audio audio,
-      required Uri? artUri,
-    }),
-    required Future<void> onSetPosition(Duration? position),
-    required Future<void> onSetDuration(Duration? duration)?,
-    required Future<void> Function()? onStop,
+    required void onSetMetaData({required Audio audio, required Uri? artUri}),
+    required void onSetPosition(Duration? position),
+    required void onSetDuration(Duration? duration)?,
+    required void Function()? onStop,
   }) {
     _onSetMediaControlsIsPlaying = onIsPlaying;
     _onSetMediaControlsMetaData = onSetMetaData;
@@ -681,27 +678,26 @@ class PlayerService {
     _onStopMediaControls = onStop;
   }
 
-  Future<void> _setMediaControlsIsPlaying(bool playing) async =>
-      await _onSetMediaControlsIsPlaying?.call(
+  void _setMediaControlsIsPlaying(bool playing) =>
+      _onSetMediaControlsIsPlaying?.call(
         isPlaying: playing,
         audioType: _audio?.audioType,
         queueNotEmpty: _queue.audios.isNotEmpty,
       );
 
-  Future<void> _setMediaControlPosition(Duration? position) async =>
-      await _onSetMediaControlsPosition?.call(position);
+  void _setMediaControlPosition(Duration? position) =>
+      _onSetMediaControlsPosition?.call(position);
 
-  Future<void> _setMediaControlDuration(Duration? duration) async =>
-      await _onSetMediaControlsDuration?.call(duration);
+  void _setMediaControlDuration(Duration? duration) =>
+      _onSetMediaControlsDuration?.call(duration);
 
-  Future<void> _setMediaControlsStop() async =>
-      await _onStopMediaControls?.call();
+  void _setMediaControlsStop() => _onStopMediaControls?.call();
 
   Future<void> setMediaControlsMetaData({required Audio audio}) async {
     final artUri = await _localCoverService.createMediaControlsArtUri(
       audio: audio,
     );
-    await _onSetMediaControlsMetaData?.call(audio: audio, artUri: artUri);
+    _onSetMediaControlsMetaData?.call(audio: audio, artUri: artUri);
   }
 
   Future<void> persistPlayerState() async {
@@ -795,7 +791,7 @@ class PlayerService {
   }
 
   Future<void> stop() async {
-    await _setMediaControlsStop();
+    _setMediaControlsStop();
     await persistPlayerState();
     await _setAudio(null);
 
