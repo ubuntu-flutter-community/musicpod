@@ -16,7 +16,7 @@ class OnlineArtManager extends SafeChangeNotifier {
 
   final OnlineArtService _onlineArtService;
   StreamSubscription<bool>? _propertiesChangedSub;
-  String? getCover(String icyTitle) => _onlineArtService.get(icyTitle);
+  String? getCover(String? icyTitle) => _onlineArtService.get(icyTitle);
 
   @disposeMethod
   @override

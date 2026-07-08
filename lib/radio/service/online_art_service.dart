@@ -50,24 +50,21 @@ class OnlineArtService {
       return null;
     }
 
-    if (albumArtOverwrite != null) {
-      return put(key: icyTitle, url: albumArtOverwrite);
-    }
-
-    final albumArtUrl =
-        get(icyTitle) ??
-        put(
-          key: icyTitle,
-          url:
-              await compute(
-                _fetchAlbumArt,
-                _ComputeCapsule(icyTitle: icyTitle, dio: _dio),
-              ).onError((e, s) {
-                Logger.e(e, trace: s, tag: '$OnlineArtService');
-                _errorController.add('$e : $s');
-                return null;
-              }),
-        );
+    final albumArtUrl = albumArtOverwrite != null
+        ? put(key: icyTitle, url: albumArtOverwrite)
+        : get(icyTitle) ??
+              put(
+                key: icyTitle,
+                url:
+                    await compute(
+                      _fetchAlbumArt,
+                      _ComputeCapsule(icyTitle: icyTitle, dio: _dio),
+                    ).onError((e, s) {
+                      Logger.e(e, trace: s, tag: '$OnlineArtService');
+                      _errorController.add('$e : $s');
+                      return null;
+                    }),
+              );
     _propertiesChangedController.add(true);
 
     return albumArtUrl;
