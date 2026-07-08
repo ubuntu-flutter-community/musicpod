@@ -29,7 +29,7 @@ class RadioHistoryTileImage extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final bR = BorderRadius.circular(4);
     final imageUrl = watchPropertyValue(
-      (OnlineArtManager m) => m.getCover(icyTitle!),
+      (OnlineArtManager m) => m.getCover(icyTitle),
     );
 
     return Tooltip(
@@ -61,6 +61,7 @@ class RadioHistoryTileImage extends StatelessWidget with WatchItMixin {
             child: SafeNetworkImage(
               url: imageUrl,
               fallbackWidget: Icon(Iconz.radio),
+              errorWidget: Icon(Iconz.radio),
               filterQuality: FilterQuality.medium,
               fit: fit ?? BoxFit.fitHeight,
             ),
