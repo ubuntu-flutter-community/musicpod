@@ -30,7 +30,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get repeatAll => 'Repetir todo';
 
   @override
-  String get repeatOff => 'Repeat Off';
+  String get repeatOff => 'Repetir desactivado';
 
   @override
   String get next => 'Siguiente';
@@ -138,7 +138,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get titles => 'Títulos';
 
   @override
-  String get description => 'Description';
+  String get description => 'Descripción';
 
   @override
   String get artist => 'Artista';
@@ -289,7 +289,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get offlineDescription =>
-      'Parece que tu ordenador no está conectado a internet';
+      'Parece que tu ordenador no está conectado a internet.';
 
   @override
   String get newEpisodeAvailable => 'Nuevo episodio disponible:';
@@ -337,7 +337,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get queue => 'Cola';
 
   @override
-  String get clearQueue => 'Clear queue';
+  String get clearQueue => 'Limpiar la cola';
 
   @override
   String get limit => 'Límite';
@@ -358,11 +358,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get noLocalTitlesFound =>
-      'Parece que tu colección de música local está vacía. Revisa la ubicación de tu biblioteca en los ajustes';
+      'Parece que tu colección de música local está vacía. Revisa la ubicación de tu biblioteca en los ajustes.';
 
   @override
   String get noLocalSearchFound =>
-      'Lo siento, no se ha encontrado música local que coincida con esta búsqueda';
+      'Lo siento, no se ha encontrado música local que coincida con esta búsqueda.';
 
   @override
   String get buyMusicOnline =>
@@ -392,7 +392,7 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get emptyPlaylist => 'Esta lista de reproducción se encuentra vacía';
+  String get emptyPlaylist => 'Esta lista de reproducción se encuentra vacía.';
 
   @override
   String get copiedToClipBoard => 'Copiado al portapapeles:';
@@ -457,77 +457,79 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String downloadRemoved(String name) {
-    return 'Download removed: $name';
+    return 'Descarga eliminada: $name';
   }
 
   @override
-  String get markAllEpisodesAsDone => 'Mark all episodes as done';
+  String get markAllEpisodesAsDone => 'Marcar todos como escuchados';
 
   @override
-  String get markEpisodeAsDone => 'Mark episode as done';
+  String get markEpisodeAsDone => 'Marcar como escuchado';
 
   @override
-  String get hideCompletedEpisodes => 'Hide completed episodes';
+  String get hideCompletedEpisodes => 'Ocultar episodios escuchados';
 
   @override
-  String get showCompletedEpisodes => 'Show completed episodes';
+  String get showCompletedEpisodes => 'Mostrar episodios completos';
 
   @override
-  String get reset => 'Reset';
+  String get reset => 'Reiniciar';
 
   @override
-  String get resetAllSettings => 'Reset all settings';
+  String get resetAllSettings => 'Reiniciar todas las configuraciones';
 
   @override
   String get resetAllSettingsConfirm =>
-      'Are you absolutely sure to reset all settings, your podcast subscriptions, your podcast progress, your starred stations and your pinned albums?  The app will be closed after and you need to re-open it.';
+      '¿Estás seguro de que deseas restablecer todos los ajustes, tus suscripciones de podcasts, tu progreso de reproducción, tus estaciones destacadas y tus álbumes fijados? La aplicación se cerrará después y deberás volver a abrirla.';
 
   @override
-  String get confirm => 'Confirm';
+  String get confirm => 'Confirmar';
 
   @override
-  String get confirmation => 'Confirmation';
+  String get confirmation => 'Confirmación';
 
   @override
   String get isMaybeLowBandwidthDialogTitle => 'No WIFI/Ethernet';
 
   @override
   String get isMaybeLowBandwidthDialogBody =>
-      'You are not connected to WIFI or Ethernet. Do you want to enable data safe mode?';
+      'No estás conectado a WIFI o Ethernet. ¿Quieres habilitar el modo de ahorro de datos?';
 
   @override
-  String get isBackInWifiDialogTitle => 'Back in WIFI/Ethernet';
+  String get isBackInWifiDialogTitle => 'Conectado a Internet WIFI/Ethernet';
 
   @override
   String get isBackInWifiDialogBody =>
-      'You are connected to WIFI or Ethernet. Do you want to disable data safe mode?';
+      'Estás conectado a Wi-Fi o Ethernet. ¿Quieres desactivar el modo de ahorro de datos?';
 
   @override
-  String get enableDataSafeModeSettingTitle => 'Data safe mode';
+  String get enableDataSafeModeSettingTitle => 'Modo de ahorro de datos';
 
   @override
   String get dataSafeModeEnabled =>
-      'Mobile Connection: Data safe mode enabled.';
+      'Conexión móvil: Modo de ahorro de datos activado.';
 
   @override
-  String get dataSafeModeDisabled => 'Wifi/Ethernet: Data safe mode disabled.';
+  String get dataSafeModeDisabled =>
+      'Wi-Fi/Ethernet: Modo de ahorro de datos desactivado.';
 
   @override
   String get enableDataSafeModeSettingDescription =>
-      'When active the player will not try to download artwork of titles send from radio stations.';
+      'Cuando esté activo, el reproductor no intentará descargar las portadas de los títulos enviados por las estaciones de radio.';
 
   @override
-  String get stopToNotifyAboutDataSafeMode => 'Stop to notify me';
+  String get stopToNotifyAboutDataSafeMode => 'Deja de notificarme';
 
   @override
-  String get notifyMeAboutDataSafeModeTitle => 'Data safe mode notifications';
+  String get notifyMeAboutDataSafeModeTitle =>
+      'Notificaciones sobre ahorro de datos';
 
   @override
   String get notifyMeAboutDataSafeModeDescription =>
-      'Notify me about data safe mode';
+      'Avísame sobre el modo ahorro de datos';
 
   @override
-  String get resourceSectionTitle => 'Device resources';
+  String get resourceSectionTitle => 'Recursos de dispositivo';
 
   @override
   String get downloadsOnly => 'Solo descargas';
@@ -554,13 +556,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get connectedTo => 'Conectado a';
 
   @override
-  String get connectedToDiscord => 'Connected to Discord';
+  String get connectedToDiscord => 'Conectado a Discord';
 
   @override
   String get disconnectedFrom => 'Desconectado de';
 
   @override
-  String get disconnectedFromDiscord => 'Disconnected from Discord';
+  String get disconnectedFromDiscord => 'Desconectado de Discord';
 
   @override
   String get tryReconnect => 'Intentar conectar de nuevo';
@@ -1001,67 +1003,69 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get exportPinnedAlbumsToM3UFiles =>
-      'Export pinned albums to M3U files';
+      'Exportar álbumes fijados a archivos M3U';
 
   @override
-  String get exportPinnedAlbumToM3UFile => 'Export pinned albums to M3U file';
+  String get exportPinnedAlbumToM3UFile =>
+      'Exportar álbumes fijados a archivos M3U';
 
   @override
-  String get exportPlaylistToM3UFile => 'Export playlist to M3U';
+  String get exportPlaylistToM3UFile => 'Exportar Playlist a archivo M3U';
 
   @override
   String get exportPlaylistsAndAlbumsToM3UFiles =>
-      'Export playlists and albums to M3U files';
+      'Exportar playlists y álbumes a archivos M3U';
 
   @override
-  String get exportPodcastsToOpmlFile => 'Export podcasts to OPML file';
+  String get exportPodcastsToOpmlFile => 'Exportar podcasts a archivo OPML';
 
   @override
-  String get importPodcastsFromOpmlFile => 'Import podcasts from OPML file';
+  String get importPodcastsFromOpmlFile => 'Importar podcasts desde OPML file';
 
   @override
   String get exportStarredStationsToOpmlFile =>
-      'Export starred stations to OPML file';
+      'Exportar estaciones destacadas a archivo OPML';
 
   @override
   String get importStarredStationsFromOpmlFile =>
-      'Import starred stations from OPML file';
+      'Importar estaciones destacadas desde archivo OPML';
 
   @override
-  String get removeAllStarredStations => 'Remove all starred stations';
+  String get removeAllStarredStations =>
+      'Quitar todas las estaciones destacadas';
 
   @override
   String get removeAllStarredStationsConfirm =>
-      'Are you sure you want to remove all starred stations?';
+      '¿Estás seguro de que quieres eliminar todas las estaciones destacadas?';
 
   @override
   String get removeAllStarredStationsDescription =>
-      'This will remove all your starred stations.';
+      'Esto eliminará todas sus estaciones destacadas.';
 
   @override
-  String get removeAllPodcasts => 'Remove all podcasts';
+  String get removeAllPodcasts => 'Eliminar todos los podcasts';
 
   @override
   String get removeAllPodcastsConfirm =>
-      'Are you sure you want to remove all podcasts?';
+      '¿Estás seguro de que quieres eliminar todos los podcasts?';
 
   @override
   String get removeAllPodcastsDescription =>
-      'This will remove all your podcast subscriptions and progress.';
+      'Esto eliminará todas sus suscripciones de podcast y progreso.';
 
   @override
-  String get customContentTitle => 'Add custom content';
+  String get customContentTitle => 'Añadir contenido personalizado';
 
   @override
   String get customContentDescription =>
-      'If you do not want to use the radiobrowser or podcast search feature you can add your own content here, or you can add empty playlists or import playlists from M3U and PLS files.';
+      'Si no deseas usar la función de búsqueda de podcasts o de radiobrowser, puedes agregar tu propio contenido aquí, añadir listas de reproducción vacías o importar listas desde archivos M3U y PLS.';
 
   @override
   String get setPlaylistNameAndAddMoreLater =>
-      'Set playlist name and add more titles later';
+      'Poner el nombre de la playlist y añadir más títulos más tarde';
 
   @override
-  String get or => 'or';
+  String get or => 'o';
 
   @override
   String get loadMore => 'Cargar más';
@@ -1111,7 +1115,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String checkForUpdatesConfirm(String length) {
-    return 'Are you sure you want to check for updates for $length podcasts?';
+    return '¿Estás seguro de que deseas revisar actualizaciones para $length podcasts?';
   }
 
   @override
@@ -1162,10 +1166,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get clicks => 'Clics';
 
   @override
-  String get theClick => 'click';
+  String get theClick => 'Clic';
 
   @override
-  String get toClick => 'click';
+  String get toClick => 'Clic';
 
   @override
   String get exposeOnlineHeadline =>
@@ -1972,511 +1976,516 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get failedToReadMetadata =>
-      'Failed to read metadata for the following media files:';
+      'Error al leer los metadatos de los siguientes archivos multimedia:';
 
   @override
   String get failedToReadMetadataDescription =>
-      'The metadata of this file could not be read. This is usually caused by a missing codec or a corrupted file.';
+      'No se pudieron leer los metadatos de este archivo. Esto suele deberse a la falta de un códec o a que el archivo está dañado.';
 
   @override
   String get breakingChangesPleaseBackupTitle =>
-      'Breaking changes: Please backup!';
+      'Cambios importantes: ¡Por favor, haz una copia de seguridad!';
 
   @override
   String get breakingChangesPleaseBackupDescription =>
-      'The next version of MusicPod will have breaking changes. Please backup your playlists, podcast subscriptions and pinned albums before updating.';
+      'La próxima versión de MusicPod incluirá cambios importantes. Por favor, haz una copia de seguridad de tus playlists, suscripciones de podcasts y álbumes fijados antes de actualizar.';
 
   @override
   String get breakingChangesPleaseBackupConfirmation =>
-      'I confirm that I have backed up my:';
+      'Confirmo que he hecho una copia de seguridad de mis:';
 
   @override
-  String get pinnedAlbumsAndPlaylists => 'Pinned albums and playlists';
+  String get pinnedAlbumsAndPlaylists => 'Álbumes fijados y playlists';
 
   @override
-  String get starredStations => 'Starred stations';
+  String get starredStations => 'Estaciones destacadas';
 
   @override
-  String get podcastSubscriptions => 'Podcast subscriptions';
+  String get podcastSubscriptions => 'Suscripciones de podcast';
 
   @override
-  String get pinnedAlbums => 'Pinned albums';
+  String get pinnedAlbums => 'Álbumes fijados';
 
   @override
-  String get export => 'Export';
+  String get export => 'Exportar';
 
   @override
-  String get import => 'Import';
+  String get import => 'Importar';
 
   @override
-  String get exportYourData => 'Export your data';
+  String get exportYourData => 'Exporta tus datos';
 
   @override
   String get exportYourDataDescription =>
-      'Export your podcast subscriptions, starred stations and pinned albums.';
+      'Exporta tus suscripciones de podcasts, estaciones destacadas y álbumes fijados.';
 
   @override
-  String get localAudioWatchDialogTitle => 'Local audio directory was modified';
+  String get localAudioWatchDialogTitle =>
+      'El directorio de audios locales ha sido modificado';
 
   @override
   String get localAudioWatchDialogDescription =>
-      'Do you want to reload the local audio directory?';
+      '¿Quieres recargar el directorio de audios locales?';
 
   @override
-  String get external => 'external';
+  String get external => 'Externo';
 
   @override
-  String get externalPlaylist => 'External playlist';
+  String get externalPlaylist => 'Playlist externa';
 
   @override
-  String get pictures => 'Pictures';
+  String get pictures => 'Fotos';
 
   @override
-  String get localPictureTypeOther => 'Other';
+  String get localPictureTypeOther => 'Otros';
 
   @override
-  String get localPictureTypeFileIcon32x32 => 'Icon 32x32';
+  String get localPictureTypeFileIcon32x32 => 'Icono 32x32';
 
   @override
-  String get localPictureTypeOtherFileIcon => 'Other file icon';
+  String get localPictureTypeOtherFileIcon => 'Otro tipo de archivo icono';
 
   @override
-  String get localPictureTypeCoverFront => 'Cover front';
+  String get localPictureTypeCoverFront => 'Portada frontal';
 
   @override
-  String get localPictureTypeCoverBack => 'Cover back';
+  String get localPictureTypeCoverBack => 'Portada trasera';
 
   @override
-  String get localPictureTypeLeafletPage => 'Leaflet page';
+  String get localPictureTypeLeafletPage => 'Página del libreto';
 
   @override
-  String get localPictureTypeMediaLabelCD => 'Media label CD';
+  String get localPictureTypeMediaLabelCD => 'Etiqueta del CD';
 
   @override
-  String get localPictureTypeLeadArtist => 'Lead artist';
+  String get localPictureTypeLeadArtist => 'Artista principal';
 
   @override
-  String get localPictureTypeArtistPerformer => 'Artist/Performer';
+  String get localPictureTypeArtistPerformer => 'Artista/Intérprete';
 
   @override
   String get localPictureTypeConductor => 'Conductor';
 
   @override
-  String get localPictureTypeBandOrchestra => 'Band/Orchestra';
+  String get localPictureTypeBandOrchestra => 'Banda/Orquesta';
 
   @override
-  String get localPictureTypeComposer => 'Composer';
+  String get localPictureTypeComposer => 'Compositor';
 
   @override
-  String get localPictureTypeLyricistTextWriter => 'Lyricist/Text writer';
+  String get localPictureTypeLyricistTextWriter => 'Letrista/Escritor';
 
   @override
-  String get localPictureTypeRecordingLocation => 'Recording location';
+  String get localPictureTypeRecordingLocation => 'Locación de grabación';
 
   @override
-  String get localPictureTypeDuringRecording => 'During recording';
+  String get localPictureTypeDuringRecording => 'Durante la grabación';
 
   @override
-  String get localPictureTypeDuringPerformance => 'During performance';
+  String get localPictureTypeDuringPerformance => 'Durante la interpretación';
 
   @override
   String get localPictureTypeMovieVideoScreenCapture =>
-      'Movie/Video screen capture';
+      'Captura de pantalla de película/vídeo';
 
   @override
-  String get localPictureTypeBrightColouredFish => 'Bright coloured fish';
+  String get localPictureTypeBrightColouredFish => 'Pez de colores brillantes';
 
   @override
-  String get localPictureTypeIllustration => 'Illustration';
+  String get localPictureTypeIllustration => 'Ilustración';
 
   @override
-  String get localPictureTypebandArtistLogotype => 'Band/Artist logotype';
+  String get localPictureTypebandArtistLogotype => 'Logotipo de Banda/Artista';
 
   @override
   String get localPictureTypepublisherStudioLogotype =>
-      'Publisher/Studio logotype';
+      'Logotipo de la Discográfica/Estudio';
 
   @override
   String get cantPinEmptyAlbum =>
-      'You can\'t pin albums without empty album metadata!';
+      '¡No puedes fijar álbumes con metadatos vacíos!';
 
   @override
   String get cantUnpinEmptyAlbum =>
-      'You can\'t unpin albums without empty album metadata!';
+      '¡No puedes desfijar álbumes con metadatos vacíos!';
 
   @override
-  String get path => 'Path';
+  String get path => 'Ruta';
 
   @override
   String get albumNotFound =>
-      'This album does not exist or you have removed the external playlist (M3U/PLS file) where it has been loaded from.';
+      'Este álbum no existe o eliminaste la lista de reproducción externa (archivo M3U/PLS) desde donde se había cargado.';
 
   @override
   String get stationNotFound =>
-      'This station does not exist or it has been removed from the radiobrowser server.';
+      'Esta estación no existe o fue eliminada del servidor de radiobrowser.';
 
   @override
   String get onlyLocalAudioForPlaylists =>
-      'Only local audio is supported for playlist imports! Please search for them in the radio feature and add them with the star button to your library!';
+      '¡Sólo se admite audio local para las importaciones de playlists! Por favor busque en la función de radio y añádelos con el botón estrella a su biblioteca!';
 
   @override
   String get customStationWarning =>
-      'The provided URL must exist on the radiobrowser server, otherwise it will not be added to you library! Ideally search for them in the radio feature and add them with the star button to your library!';
+      'La URL proporcionada debe existir en el servidor de radiobrowser, de lo contrario no se añadirá a la biblioteca! ¡Lo ideal es buscarlos en la función de radio y añadirlos con el botón estrella a su biblioteca!';
 
   @override
-  String get disc => 'Disc';
+  String get disc => 'Disco';
 
   @override
-  String get groupAlbumsOnlyByAlbumName => 'Group albums only by album name';
+  String get groupAlbumsOnlyByAlbumName =>
+      'Álbumes de grupo sólo por nombre del álbum';
 
   @override
   String get groupAlbumsOnlyByAlbumNameDescription =>
-      'This will group albums only by album name and not by artist name + album name, which assumes that the album name is unique inside your library!';
+      '¡Esto agrupará álbumes sólo por nombre del álbum y no por nombre del artista + nombre del álbum, que supone que el nombre del álbum es único dentro de su biblioteca!';
 
   @override
-  String get useYaruThemeTitle => 'Use Yaru theme';
+  String get useYaruThemeTitle => 'Usar el tema Yaru';
 
   @override
   String get useYaruThemeDescription =>
-      'This will use the Yaru theme for the application. This is the default theme for Ubuntu.';
+      'Esto usará el tema Yaru para la aplicacion. Este es el tema predeterminado para Ubuntu.';
 
   @override
-  String get customThemeColor => 'Custom theme color';
+  String get customThemeColor => 'Color de tema personalizado';
 
   @override
-  String get useCustomThemeColorTitle => 'Use custom accent color';
+  String get useCustomThemeColorTitle => 'Usar color de acento personalizado';
 
   @override
   String get useCustomThemeColorDescription =>
-      'This will let you chose a custom accent color for the current theme.';
+      'Esto te permitirá elegir un color de acento personalizado para el tema actual.';
 
   @override
-  String get usePlayerColorTitle => 'Use player color';
+  String get usePlayerColorTitle => 'Usar color del reproductor';
 
   @override
   String get usePlayerColorDescription =>
-      'This will use the dominant color has been extracted out of the current artwork (if available) for the whole app.';
+      'Esto usará el color dominante que ha sido extraído de la portada actual (si está disponible) para toda la aplicación.';
 
   @override
-  String get selectColor => 'Select color';
+  String get selectColor => 'Seleccionar color';
 
   @override
-  String get selectColorShade => 'Select color shade';
+  String get selectColorShade => 'Seleccionar la sombra de color';
 
   @override
-  String get selectColorAndItsShades => 'Select color and its shades';
+  String get selectColorAndItsShades => 'Seleccionar color y sus matices';
 
   @override
-  String get selectIconThemeTitle => 'Select icon theme';
+  String get selectIconThemeTitle => 'Seleccionar icono del tema';
 
   @override
   String get selectIconThemeDescription =>
-      'Chose an icon theme for the application. The default theme depends on your operating system. This reloads the application!';
+      'Elige un icono de tema para la aplicación. El tema por predeterminado depende de tu sistema operativo. ¡Esto recarga la aplicación!';
 
   @override
-  String get saveWindowSizeTitle => 'Save window size';
+  String get saveWindowSizeTitle => 'Guardar tamaño de la ventana';
 
   @override
   String get saveWindowSizeDescription =>
-      'This will save the window size and position of the application.';
+      'Esto guardará el tamaño de la ventana y la posición de la aplicación.';
 
   @override
   String downloadsOfLatestRelease(String latestRelease) {
-    return 'Downloaded $latestRelease times outside of snapstore and flathub';
+    return 'Descargado $latestRelease veces fuera de snapstore y flathub';
   }
 
   @override
-  String get useBlurredPlayerBackgroundTitle => 'Use blurred player background';
+  String get useBlurredPlayerBackgroundTitle =>
+      'Usar fondo de reproductor borroso';
 
   @override
   String get useBlurredPlayerBackgroundDescription =>
-      'This will blur the background of the player. This might lead to lower performance on some devices.';
+      'Esto va a desenfocar el fondo del reproductor. Esto podría conducir a un menor rendimiento en algunos dispositivos.';
 
   @override
-  String get loadingPleaseWait => 'Loading, please wait ...';
+  String get loadingPleaseWait => 'Cargando, por favor espera...';
 
   @override
   String get parsingLocalAudioFilesMetadataPleaseWait =>
-      'Parsing local audio files metadata, please wait ...';
+      'Analizando metadatos de archivos locales, por favor espera...';
 
   @override
   String get persistingLocalAudioFilesMetadataPleaseWait =>
-      'Persisting local audio files metadata, please wait ...';
+      'Persistiendo metadatos de archivos de audio locales, por favor espera...';
 
   @override
   String get buildingLocalAudioLibraryPleaseWait =>
-      'Building local audio library, please wait ...';
+      'Creando biblioteca de audio local, por favor espera...';
 
   @override
   String get importingPodcastsPleaseWait =>
-      'Importing your podcasts, please wait ...';
+      'Importando sus podcasts, por favor espera...';
 
   @override
   String get exportingPodcastsPleaseWait =>
-      'Exporting your podcasts, please wait ...';
+      'Exportando sus podcasts, por favor espera...';
 
   @override
   String get importingStationsPleaseWait =>
-      'Importing your stations, please wait ...';
+      'Importando sus estaciones, por favor espera...';
 
   @override
   String get exportingStationsPleaseWait =>
-      'Exporting your stations, please wait ...';
+      'Exportando sus estaciones, por favor espera...';
 
   @override
   String get importingPlaylistsPleaseWait =>
-      'Importing your playlists, please wait ...';
+      'Importando sus playlists, por favor espera...';
 
   @override
   String get exportingPlaylistsPleaseWait =>
-      'Exporting your playlists, please wait ...';
+      'Exportando sus playlists, por favor espera...';
 
   @override
   String checkingForUpdatesPleaseWait(int progress) {
-    return 'Checking for updates $progress%';
+    return 'Comprobando si hay actualizaciones disponibles $progress%';
   }
 
   @override
-  String get author => 'Author';
+  String get author => 'Autor';
 
   @override
-  String get rating => 'Rating';
+  String get rating => 'Calificación';
 
   @override
-  String get keywords => 'Keywords';
+  String get keywords => 'Palabras clave';
 
   @override
   String newEpisodesAvailableFor(int length) {
-    return 'New episodes available for $length podcasts';
+    return 'Nuevos episodios disponibles para podcasts $length';
   }
 
   @override
-  String get lyrics => 'Lyrics';
+  String get lyrics => 'Letras';
 
   @override
-  String get noLyricsFound => 'No lyrics found';
+  String get noLyricsFound => 'No hay letras encontradas';
 
   @override
-  String get autoScrolling => 'Auto scroll';
+  String get autoScrolling => 'Auto-desplazamiento';
 
   @override
-  String get genericErrorTitle => 'An error occurred';
+  String get genericErrorTitle => 'Ha ocurrido un error';
 
   @override
   String get genericErrorDescription =>
-      'An unexpected error occurred. Please try again later.';
+      'Un inesperado error acaba de suceder. Por favor intenta de nuevo luego.';
 
   @override
   String errorDetails(String details) {
-    return 'Error details: $details';
+    return 'Detalles del error: $details';
   }
 
   @override
-  String get appendToQueue => 'Append to queue';
+  String get appendToQueue => 'Añadir a la cola';
 
   @override
   String appendedToQueue(String title) {
-    return 'Appended to queue: $title';
+    return 'Añadido a la cola: $title';
   }
 
   @override
   String appendMediaToQueueDescription(String title) {
-    return '$title is already inside the queue. Do you want to append it to the end of the queue?';
+    return '$title ya está dentro de la cola. ¿Quieres añadirlo al final de la cola?';
   }
 
   @override
-  String get appendMediaToQueueTitle => 'Append media to queue';
+  String get appendMediaToQueueTitle => 'Añadir archivos a la cola';
 
   @override
   String appendMediaToQueue(String title) {
-    return 'Append media to queue: $title';
+    return 'Añadir archivos a la cola: $title';
   }
 
   @override
-  String get explore => 'Explore';
+  String get explore => 'Explorar';
 
   @override
-  String get favorites => 'Favorites';
+  String get favorites => 'Favoritos';
 
   @override
-  String get autoMovePlayerTitle => 'Auto move player';
+  String get autoMovePlayerTitle => 'Desplazar automáticamente al reproductor';
 
   @override
   String get autoMovePlayerDescription =>
-      'Move the player to the right if there is enough horizontal space';
+      'Mover el reproductor a la derecha si hay suficiente espacio horizontal';
 
   @override
   String get onlineLyricsNotSetup =>
-      'If you want to fetch lyrics from Genius, please provide an API key in the settings.';
+      'Si quieres obtener letras de Genius, debes proporcionar una clave de API en la configuración.';
 
   @override
   String get settingsGeniusDisclaimer =>
-      'MusicPod, its contributors, and the Genius API are not responsible for any misuse of the API key. By providing your API key, you agree to use it responsibly and in accordance with Genius terms of service.\n\n';
+      'MusicPod, sus colaboradores y la API de Genius no se hacen responsables del uso indebido de la clave de la API. Al proporcionar tu clave de la API, aceptas usarla de manera responsable y de acuerdo con los términos de servicio de Genius.\n\n';
 
   @override
   String get settingsGeniusDescription =>
-      'To fetch lyrics from Genius, you need to provide a Genius API Key. You can obtain an API key by creating an account on Genius and registering an application to get your access token.';
+      'Para obtener letras de Genius, necesita proporcionar una Clave de API de Genius. Puedes obtener una clave de API creando una cuenta en Genius y registrando una aplicación para conseguir tu token de acceso.';
 
   @override
   String get settingsDoNotAskForGeniusTitle =>
-      'Do not use Genius or ask for Genius API Key again';
+      'No usar Genius ni volver a pedir la clave';
 
   @override
   String get settingsDoNotAskForGeniusDescription =>
-      'This prevents the app from prompting for the Genius API key in the future and makes the lyrics feature fully rely on local LRC files or LRC strings embedded in audio metadata.';
+      'Esto evita que la aplicación te pida la clave de la API de Genius en el futuro y hace que la función de letras dependa por completo de archivos LRC locales o cadenas LRC incrustadas en los metadatos de audio.';
 
   @override
   String get tosLink => 'https://genius.com/static/terms';
 
   @override
-  String get tosLinkText => 'Read Genius\'s Terms of Service';
+  String get tosLinkText => 'Leer los Términos de Servicios de Genius';
 
   @override
-  String get oopsSomethingWentWrong => 'Oops, something went wrong!';
+  String get oopsSomethingWentWrong => '¡Upsi, dupsi, algo salio mal!';
 
   @override
-  String get retry => 'Retry';
+  String get retry => 'Reintentar';
 
   @override
-  String get reportIssue => 'Report this issue';
+  String get reportIssue => 'Reportar este problema';
 
   @override
   String get ignoreThisTitleInHearingHistory =>
-      'Ignore this title in hearing history';
+      'Ignorar este título en el historial de reproducción';
 
   @override
   String get removeFromIgnoredHearyHistoryTitles =>
-      'Remove from ignored titles';
+      'Quitar de títulos ignorados';
 
   @override
-  String get ignoredHearyHistoryTitlesTitle => 'Ignored titles';
+  String get ignoredHearyHistoryTitlesTitle => 'Títulos ignorados';
 
   @override
   String get ignoredHearyHistoryTitlesDescription =>
-      'These titles will be ignored in the hearing history and will not be shown in the recently played list.';
+      'Estos títulos se ignorarán en el historial de reproducción y no se mostrarán en la lista de reproducidos recientemente.';
 
   @override
   String get playingMediaTimedOut =>
-      'Playing media timed out. This might be caused by a network error or server issues.';
+      'Se agotó el tiempo de espera de reproducción. Esto podría deberse a un error de red o problemas en el servidor.';
 
   @override
-  String get playbackWasPausedByTimer => 'Playback was paused by timer';
+  String get playbackWasPausedByTimer =>
+      'Reproducción pausada por temporizador';
 
   @override
-  String get playbackTimerCancelled => 'Playback timer cancelled';
+  String get playbackTimerCancelled => 'Temporizador de reproducción cancelado';
 
   @override
   String get podcastDoesNotSendEpisodeDuration =>
-      'This podcast does not send episode duration. The mark done feature might not work as expected.';
+      'Este podcast no envía la duración de los episodios. La función de marcar como reproducido podría no funcionar como se espera.';
 
   @override
   String cleanedUpEpisodesOfUnsubscribedPodcast(String podcastName) {
-    return 'Cleaned up episodes of unsubscribed podcast: $podcastName';
+    return 'Se limpiaron los episodios del podcast no suscrito: $podcastName';
   }
 
   @override
   String findEpisodesTimeoutMessage(String podcastName) {
-    return 'Finding episodes takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+    return 'Buscar episodios está tardando más de lo habitual. ¿Estás conectado a internet? Si es así, esto podría ser un problema del servidor.';
   }
 
   @override
   String get radioBrowserServerUnavailable =>
-      'The radio browser server is currently unavailable. This might be a temporary issue. Please try again later.';
+      'El servidor de radiobrowser no está disponible en este momento. Esto podría ser un problema temporal. Por favor, inténtalo de nuevo más tarde.';
 
   @override
   String get findStationsTimeoutMessage =>
-      'Finding (this) station(s) takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      'Buscar esta(s) estación(es) está tardando más de lo habitual. ¿Estás conectado a internet? Si es así, esto podría ser un problema del servidor.';
 
   @override
   String retryInSeconds(String seconds) {
-    return 'Retry in $seconds seconds';
+    return 'Reintentar en $seconds segundos';
   }
 
   @override
   String retryngInSeconds(String seconds) {
-    return 'Retryng in $seconds seconds';
+    return 'Reintentando en $seconds segundos';
   }
 
   @override
   String playerCouldNotOpenRemoteMedia(String media) {
-    return 'The player could not open or maintain to play remote media \'$media\'. Are you connected to the internet? If yes, this might be a server issue.';
+    return 'El reproductor no pudo abrir o mantener la reproducción del archivo remoto \'$media\'. ¿Estás conectado a internet? Si es así, esto podría ser un problema del servidor.';
   }
 
   @override
   String get searchTimeoutMessage =>
-      'Searching takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      'La búsqueda está tardando más de lo habitual. ¿Estás conectado a internet? Si es así, esto podría ser un problema del servidor.';
 
   @override
-  String get youCanEditTheNameLater => 'You can edit the name later.';
+  String get youCanEditTheNameLater => 'Puedes editar el nombre luego.';
 
   @override
   String get geniusAlsoProvidesArt =>
-      'Genius also provides artwork for most songs. If you enable Genius to fetch lyrics, the online art in the player will also use Genius instead of MusicBrainz.';
+      'Genius también proporciona portadas para la mayoría de las canciones. Si activas Genius para buscar letras, el arte en línea del reproductor también usará Genius en lugar de MusicBrainz.';
 
   @override
-  String get enterYourGeniusApiKey => 'Enter your Genius API key';
+  String get enterYourGeniusApiKey => 'Escribe tu Llave API de Genius';
 
   @override
-  String get saveYourApiKey => 'Save API Key';
+  String get saveYourApiKey => 'Guardar Llave API';
 
   @override
   String get lookUpRadioBrowserHostsFailed =>
-      'Looking up radio browser hosts failed. Are you connected to the internet? If yes, this might be a server issue.';
+      'Error al buscar los servidores de radiobrowser. ¿Estás conectado a internet? Si es así, esto podría ser un problema del servidor.';
 
   @override
   String get lookUpRadioBrowserHostsTimouted =>
-      'Finding Radio Browser hosts takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      'Buscar los servidores de radiobrowser está tardando más de lo habitual. ¿Estás conectado a internet? Si es así, esto podría ser un problema del servidor.';
 
   @override
   String get radioBrowserServerNotConnected =>
-      'You are not connected to any radio browser server';
+      'No estás conectado a ningún servidor de navegador de radio';
 
   @override
   String get radioBrowserLoadingTagsFailed =>
-      'An error occurred while loading radio tags, the server might be unavailable.';
+      'Ocurrió un error al cargar las etiquetas de radio, el servidor podría no estar disponible.';
 
   @override
   String get radioBrowserLoadingTagsTimeouted =>
-      'Loading tags took longer than expected, are you connected to the internet? If yes, this might be a server issue';
+      'Cargar las etiquetas está tardando más de lo esperado. ¿Estás conectado a internet? Si es así, esto podría ser un problema del servidor.';
 
   @override
   String get podcastSearchNotSuccessfull =>
-      'This podcast search was not successfull, are you connected to the internet? If yes this might be a server issue.';
+      'La búsqueda de podcasts no tuvo éxito. ¿Estás conectado a internet? Si es así, esto podría ser un problema del servidor.';
 
   @override
   String get podcastFailedHostLookup =>
-      'Finding episodes was not successfull - could not connect to the server. Are you connected to the internet? If yes this might be a server issue.';
+      'La búsqueda de episodios no tuvo éxito - no se pudo conectar al servidor. ¿Estás conectado a internet? Si es así, esto podría ser un problema del servidor.';
 
   @override
-  String get tryToFetchLyricsOnlineTitle => 'Try to fetch lyrics online';
+  String get tryToFetchLyricsOnlineTitle => 'Intenta buscar letras en línea';
 
   @override
   String get tryToFetchLyricsOnlineDescription =>
-      'Do you want to try to fetch the lyrics online?';
+      '¿Quieres intentar buscar las letras en línea?';
 
   @override
-  String get fetchingLyricsOnline => 'Fetching lyrics online, please wait ...';
+  String get fetchingLyricsOnline =>
+      'Buscando letras online, por favor espera...';
 
   @override
   String get fetchingLyricsOnlineTimeoutMessage =>
-      'Fetching lyrics online takes longer than usual. Are you connected to the internet? If yes, this might be a server issue or the song might not be available';
+      'Buscar las letras en línea está tardando más de lo habitual. ¿Estás conectado a internet? Si es así, esto podría ser un problema del servidor o la canción podría no estar disponible';
 
   @override
   String get fetchingLyricsOnlineFailed =>
-      'Fetching lyrics online failed. This might be a server issue or the song might not be available';
+      'Fallo al buscar las letras en línea. Esto podría ser un problema del servidor o la canción podría no estar disponible';
 
   @override
-  String get onlineLyricsSourceTitle => 'Online lyrics source';
+  String get onlineLyricsSourceTitle => 'Fuente de letras en línea';
 
   @override
   String get onlineLyricsSourceDescription =>
-      'Select the source for online lyrics.';
+      'Seleccione la fuente para letras en línea.';
 
   @override
   String get onlineLyricsSourceLrcLib => 'LrcLib';
 
   @override
   String appCanNotConnectToHost(String appName, String host) {
-    return '$appName can not connect to $host. Are you connected to the internet?';
+    return '$appName no puede conectarse a $host. ¿Estás conectado a Internet?';
   }
 }
