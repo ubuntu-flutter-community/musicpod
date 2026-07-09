@@ -10,6 +10,7 @@ import '../../common/manager/retry_manager.dart';
 import '../../common/view/adaptive_multi_layout_body.dart';
 import '../../common/view/audio_fall_back_icon.dart';
 import '../../common/view/audio_page_header.dart';
+import '../../common/view/audio_page_type.dart';
 import '../../common/view/avatar_play_button.dart';
 import '../../common/view/clean_up_caches.dart';
 import '../../common/view/error_retry_body.dart';
@@ -184,7 +185,10 @@ class _StationPageControlPanel extends StatelessWidget {
         children: [
           StaredStationIconButton(audio: station),
           if (station.uuid != null)
-            AvatarPlayButton(audios: [station], pageId: station.uuid!),
+            AvatarPlayButton(
+              pageId: station.uuid!,
+              audioPageType: AudioPageType.radio,
+            ),
           RadioPageCopyHistoryButton(station: station),
         ],
       ),

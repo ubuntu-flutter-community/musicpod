@@ -98,7 +98,7 @@ class SliverLocalAudioPage extends StatelessWidget {
         ),
         controlPanel:
             controlPanel ??
-            AvatarPlayButton(audios: audios ?? [], pageId: pageId),
+            AvatarPlayButton(pageId: pageId, audioPageType: audioPageType),
         sliverBody: (constraints) => audios == null
             ? const SliverToBoxAdapter(child: Center(child: Progress()))
             : audios!.isEmpty

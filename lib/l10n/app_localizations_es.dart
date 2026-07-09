@@ -1010,11 +1010,12 @@ class AppLocalizationsEs extends AppLocalizations {
       'Exportar álbumes fijados a archivos M3U';
 
   @override
-  String get exportPlaylistToM3UFile => 'Exportar Playlist a archivo M3U';
+  String get exportPlaylistToM3UFile =>
+      'Exportar lista de reproducción a archivo M3U';
 
   @override
   String get exportPlaylistsAndAlbumsToM3UFiles =>
-      'Exportar playlists y álbumes a archivos M3U';
+      'Exportar listas de reproducción y álbumes a archivos M3U';
 
   @override
   String get exportPodcastsToOpmlFile => 'Exportar podcasts a archivo OPML';
@@ -1062,7 +1063,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get setPlaylistNameAndAddMoreLater =>
-      'Poner el nombre de la playlist y añadir más títulos más tarde';
+      'Poner el nombre de la lista de reproducción y añadir más títulos más tarde';
 
   @override
   String get or => 'o';
@@ -1988,14 +1989,15 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get breakingChangesPleaseBackupDescription =>
-      'La próxima versión de MusicPod incluirá cambios importantes. Por favor, haz una copia de seguridad de tus playlists, suscripciones de podcasts y álbumes fijados antes de actualizar.';
+      'La próxima versión de MusicPod incluirá cambios importantes. Por favor, haz una copia de seguridad de tus listas de reproducción, suscripciones de podcasts y álbumes fijados antes de actualizar.';
 
   @override
   String get breakingChangesPleaseBackupConfirmation =>
       'Confirmo que he hecho una copia de seguridad de mis:';
 
   @override
-  String get pinnedAlbumsAndPlaylists => 'Álbumes fijados y playlists';
+  String get pinnedAlbumsAndPlaylists =>
+      'Álbumes fijados y listas de reproducción';
 
   @override
   String get starredStations => 'Estaciones destacadas';
@@ -2031,7 +2033,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get external => 'Externo';
 
   @override
-  String get externalPlaylist => 'Playlist externa';
+  String get externalPlaylist => 'Lista de reproducción externa';
 
   @override
   String get pictures => 'Fotos';
@@ -2122,7 +2124,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get onlyLocalAudioForPlaylists =>
-      '¡Sólo se admite audio local para las importaciones de playlists! Por favor busque en la función de radio y añádelos con el botón estrella a su biblioteca!';
+      '¡Sólo se admite audio local para las importaciones de listas de reproducción! Por favor busque en la función de radio y añádelos con el botón estrella a su biblioteca!';
 
   @override
   String get customStationWarning =>
@@ -2232,11 +2234,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get importingPlaylistsPleaseWait =>
-      'Importando sus playlists, por favor espera...';
+      'Importando sus listas de reproducción, por favor espera...';
 
   @override
   String get exportingPlaylistsPleaseWait =>
-      'Exportando sus playlists, por favor espera...';
+      'Exportando sus listas de reproducción, por favor espera...';
 
   @override
   String checkingForUpdatesPleaseWait(int progress) {

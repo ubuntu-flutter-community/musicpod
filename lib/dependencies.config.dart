@@ -241,7 +241,7 @@ extension GetItInjectableX on _i174.GetIt {
         listenBrainzService: gh<_i821.ListenBrainzService>(),
       ),
     );
-    gh.lazySingleton<_i529.PodcastService>(
+    gh.factoryCached<_i529.PodcastService>(
       () => _i529.PodcastService(
         settingsService: gh<_i862.SettingsService>(),
         dao: gh<_i597.PodcastDao>(),
@@ -316,8 +316,8 @@ extension GetItInjectableX on _i174.GetIt {
         settingsService: gh<_i862.SettingsService>(),
       ),
     );
-    gh.factoryParam<_i212.PodcastShortInfoManager, String, dynamic>(
-      (feedUrl, _) => _i212.PodcastShortInfoManager.create(
+    gh.factoryCachedParam<_i212.PodcastShortInfoManager, String, dynamic>(
+      (feedUrl, _) => _i212.PodcastShortInfoManager(
         feedUrl: feedUrl,
         podcastManager: gh<_i819.PodcastManager>(),
       ),
@@ -438,8 +438,8 @@ extension GetItInjectableX on _i174.GetIt {
         database: gh<_i115.Database>(),
       ),
     );
-    gh.factoryParam<_i665.FindTitlesOfArtistManager, String, dynamic>(
-      (artist, _) => _i665.FindTitlesOfArtistManager.create(
+    gh.factoryCachedParam<_i665.FindTitlesOfArtistManager, String, dynamic>(
+      (artist, _) => _i665.FindTitlesOfArtistManager(
         artist: artist,
         localAudioManager: gh<_i76.LocalAudioManager>(),
       ),
@@ -453,14 +453,14 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioManager: gh<_i76.LocalAudioManager>(),
       ),
     );
-    gh.factoryParam<_i424.FindAlbumNameManager, int, dynamic>(
-      (albumId, _) => _i424.FindAlbumNameManager.create(
+    gh.factoryCachedParam<_i424.FindAlbumNameManager, int, dynamic>(
+      (albumId, _) => _i424.FindAlbumNameManager(
         albumId: albumId,
         localAudioManager: gh<_i76.LocalAudioManager>(),
       ),
     );
-    gh.factoryParam<_i88.FindArtistOfAlbumManager, int, dynamic>(
-      (albumId, _) => _i88.FindArtistOfAlbumManager.create(
+    gh.factoryCachedParam<_i88.FindArtistOfAlbumManager, int, dynamic>(
+      (albumId, _) => _i88.FindArtistOfAlbumManager(
         albumId: albumId,
         localAudioManager: gh<_i76.LocalAudioManager>(),
       ),

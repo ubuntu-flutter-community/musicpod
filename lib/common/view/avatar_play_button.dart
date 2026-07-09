@@ -1,39 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
+import '../../app/data/play_anywhere_param.dart';
+import '../../app/play_anywhere_manager.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/data/queue.dart';
 import '../../player/manager/player_manager.dart';
-import '../../radio/manager/radio_manager.dart';
-import '../data/audio.dart';
-import '../data/audio_type.dart';
+import 'audio_page_type.dart';
 import 'icons.dart';
 import 'ui_constants.dart';
 
 class AvatarPlayButton extends StatelessWidget with WatchItMixin {
   const AvatarPlayButton({
     super.key,
-    required this.audios,
     required this.pageId,
+    required this.audioPageType,
   });
 
-  final List<Audio> audios;
   final String pageId;
+  final AudioPageType audioPageType;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final playerManager = di<PlayerManager>();
-    final disabled = pageId.isEmpty || audios.isEmpty;
     final isPlayerPlaying = watchPropertyValue(
       (PlayerManager m) => m.isPlaying,
     );
     final pageIsQueue = watchPropertyValue(
       (PlayerManager m) => m.queue.name == pageId,
     );
-    final iconData =
-        isPlayerPlaying &&
-            (pageIsQueue && playerManager.queue.audios.length == audios.length)
+    final iconData = isPlayerPlaying && pageIsQueue
         ? Iconz.pause
         : Iconz.playFilled;
 
@@ -57,32 +52,12 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
           focusColor: theme.colorScheme.primary.withValues(alpha: 0.5),
         ),
         tooltip: label,
-        onPressed: disabled
-            ? null
-            : () {
-                if (audios.isNotEmpty &&
-                    audios.first.audioType == AudioType.radio) {
-                  di<ClickStationManager>(param1: audios.first.uuid);
-                }
-                if (isPlayerPlaying) {
-                  if (pageIsQueue &&
-                      playerManager.queue ==
-                          Queue(name: pageId, audios: audios)) {
-                    playerManager.pause();
-                  } else {
-                    playerManager.play(audios: audios, listName: pageId);
-                  }
-                } else {
-                  if (pageIsQueue) {
-                    playerManager.resume();
-                  } else {
-                    playerManager.play(audios: audios, listName: pageId);
-                  }
-                }
-              },
+        onPressed: () => di<PlayAnywhereManager>().command.run(
+          PlayAnywhereParam(audioPageType: audioPageType, pageId: pageId),
+        ),
         icon: Icon(
           iconData,
-          color: disabled ? null : theme.colorScheme.onInverseSurface,
+          color: theme.colorScheme.onInverseSurface,
           semanticLabel: label,
         ),
       ),

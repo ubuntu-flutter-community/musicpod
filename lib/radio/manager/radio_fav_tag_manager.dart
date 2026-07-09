@@ -13,11 +13,6 @@ class RadioFavTagManager {
       return radioManager.getFavRadioTags();
     }, initialValue: {});
 
-    radioManager.wipeCommand.listen((result, sub) {
-      command.run();
-      sub.cancel();
-    });
-
     command.run();
   }
 

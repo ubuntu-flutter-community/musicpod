@@ -14,8 +14,8 @@ import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/platform_x.dart';
 import '../../player/manager/player_manager.dart';
-import '../../search/manager/search_manager.dart';
 import '../../search/data/search_type.dart';
+import '../../search/manager/search_manager.dart';
 import '../../settings/manager/settings_manager.dart';
 import '../data/podcast_episode_filter.dart';
 import '../data/podcast_update_capsule.dart';
@@ -23,7 +23,6 @@ import '../manager/download_manager.dart';
 import '../manager/episodes_manager.dart';
 import '../manager/podcast_genre_manager.dart';
 import '../manager/podcast_manager.dart';
-import '../manager/podcast_short_info_manager.dart';
 import '../manager/podcast_updates_manager.dart';
 import '../manager/subscribed_podcasts_manager.dart';
 import 'podcast_error_page.dart';
@@ -57,9 +56,6 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
     });
 
     onDispose(() {
-      if (!di<SubscribedPodcastsManager>().command.value.contains(feedUrl)) {
-        PodcastShortInfoManager.dispose(feedUrl);
-      }
       cleanUpUnusedPodcasts();
       EpisodesManager.dispose(feedUrl);
     });
