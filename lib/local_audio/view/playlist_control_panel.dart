@@ -4,6 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio.dart';
+import '../../common/view/audio_page_type.dart';
 import '../../common/view/avatar_play_button.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
@@ -56,7 +57,10 @@ class PlaylistControlPanel extends StatelessWidget with WatchItMixin {
               ),
             ),
           ),
-          AvatarPlayButton(audios: audios, pageId: pageId),
+          AvatarPlayButton(
+            pageId: pageId,
+            audioPageType: AudioPageType.playlist,
+          ),
           IconButton(
             isSelected: watchValue(
               (PlaylistManager m) => m.showPlaylistAddAudios,

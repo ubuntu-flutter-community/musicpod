@@ -17,7 +17,7 @@ import '../data/podcast_genre.dart';
 import '../data/podcast_short_info.dart';
 import '../persistence/podcast_dao.dart';
 
-@lazySingleton
+@Injectable(cache: true)
 class PodcastService {
   final SettingsService _settingsService;
   final PodcastDao _dao;

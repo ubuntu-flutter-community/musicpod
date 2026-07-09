@@ -13,11 +13,6 @@ class PodcastFeedsWithDownloadsManager {
       return podcastManager.feedsWithDownloads;
     }, initialValue: podcastManager.feedsWithDownloads);
 
-    podcastManager.wipeCommand.listen((_, sub) {
-      command.run();
-      sub.cancel();
-    });
-
     command.run();
   }
 

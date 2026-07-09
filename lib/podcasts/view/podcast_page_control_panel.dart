@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/data/audio.dart';
+import '../../common/view/audio_page_type.dart';
 import '../../common/view/audio_tile_option_button.dart';
 import '../../common/view/avatar_play_button.dart';
 import '../../common/view/theme.dart';
@@ -44,7 +45,10 @@ class PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
             name: title,
             artist: artist,
           ),
-          AvatarPlayButton(audios: audios, pageId: feedUrl),
+          AvatarPlayButton(
+            pageId: feedUrl,
+            audioPageType: AudioPageType.podcast,
+          ),
           PodcastPageSearchButton(feedUrl: feedUrl),
           PodcastReorderButton(feedUrl: feedUrl),
           AudioTileOptionButton(

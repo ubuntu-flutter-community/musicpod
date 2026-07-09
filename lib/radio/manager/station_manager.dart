@@ -13,10 +13,6 @@ class StationManager {
       initialValue: null,
     );
     command.run();
-    radioManager.wipeCommand.listen((_, sub) {
-      dispose(uuid);
-      sub.cancel();
-    });
   }
 
   late final Command<void, Audio?> command;

@@ -181,7 +181,10 @@ class AlbumPageControlPanel extends StatelessWidget {
       children: space(
         children: [
           PinAlbumButton(albumId: id),
-          AvatarPlayButton(audios: album, pageId: id.toString()),
+          AvatarPlayButton(
+            pageId: id.toString(),
+            audioPageType: AudioPageType.album,
+          ),
           AudioTileOptionButton(
             audios: album,
             playlistId: id.toString(),

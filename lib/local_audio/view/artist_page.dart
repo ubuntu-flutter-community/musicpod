@@ -171,8 +171,6 @@ class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
       param1: pageId,
     ).setUseArtistGridView;
 
-    onDispose(() => FindTitlesOfArtistManager.dispose(pageId));
-
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -188,7 +186,7 @@ class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
             isSelected: !useGridView,
             onPressed: () => setUseGridView(false),
           ),
-          AvatarPlayButton(audios: audios, pageId: pageId),
+          AvatarPlayButton(pageId: pageId, audioPageType: AudioPageType.artist),
           LikeAllIconButton(audios: audios),
           AudioTileOptionButton(
             audios: audios,
