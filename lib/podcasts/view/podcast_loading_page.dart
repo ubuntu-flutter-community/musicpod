@@ -10,11 +10,11 @@ class PodcastLoadingPage extends StatelessWidget {
     super.key,
     required this.child,
     this.expandChild = false,
-    this.title,
+    required this.feedUrl,
   });
 
-  final String? title;
   final Widget child;
+  final String feedUrl;
   final bool expandChild;
 
   @override
@@ -22,9 +22,9 @@ class PodcastLoadingPage extends StatelessWidget {
     appBar: const HeaderBar(),
     body: AdaptiveMultiLayoutBody(
       header: PodcastPageHeader(
-        title: title ?? context.l10n.loadingPodcastFeed,
-        episodes: [],
+        title: context.l10n.loadingPodcastFeed,
         showFallbackIcon: false,
+        feedUrl: feedUrl,
       ),
       sliverBody: (constraints) => expandChild
           ? SliverFillRemaining(hasScrollBody: false, child: child)

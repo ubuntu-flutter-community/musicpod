@@ -167,6 +167,8 @@ class PlayerManager extends SafeChangeNotifier {
 
   bool _showQueue = isDesktop;
   bool get showQueue => _showQueue;
+
+  Map<String, Duration>? get lastPositions => _playerService.lastPositions;
   void setShowQueue(bool value) {
     _showQueue = value;
     notifyListeners();

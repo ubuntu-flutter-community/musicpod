@@ -391,4 +391,14 @@ class PodcastService {
       _dao.deleteUnsubscribedPodcastData();
 }
 
-Future<Podcast> loadPodcast(String url) => Feed.loadFeed(url: url);
+Future<Podcast> loadPodcast(String url) async {
+  try {
+    return await Feed.loadFeed(
+      url: url,
+      timeout: FindEpisodesTimeoutException.timeoutDuration,
+    );
+  } catch (e, s) {
+    Logger.e(e, trace: s, tag: 'loadPodcast', useDebugPrint: false);
+    rethrow;
+  }
+}

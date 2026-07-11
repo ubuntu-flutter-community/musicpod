@@ -6,6 +6,7 @@ import 'package:podcast_search/podcast_search.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../common/data/audio.dart';
+import '../../common/view/audio_filter.dart';
 import '../data/podcast_episode_filter.dart';
 import '../data/podcast_short_info.dart';
 import '../service/podcast_service.dart';
@@ -73,6 +74,19 @@ class PodcastManager {
 
   Set<String> get feedsWithDownloads => _podcastService.feedsWithDownloads;
 
+  Future<Set<String>> get ascendingPodcasts =>
+      _podcastService.ascendingPodcasts;
+
   Future<PodcastShortInfo?> getPodcastShortInfo(String feedUrl) =>
       _podcastService.getPodcastShortInfo(feedUrl);
+
+  Future<List<Audio>> findEpisodes({
+    required String feedUrl,
+    required bool tryFromDbOnly,
+    AudioSortOrder? order,
+  }) => _podcastService.findEpisodes(
+    feedUrl: feedUrl,
+    tryFromDbOnly: tryFromDbOnly,
+    order: order,
+  );
 }

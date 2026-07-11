@@ -38,6 +38,8 @@ extension ObjectX on Object? {
     PodcastFailedException() =>
       (this as PodcastFailedException).message.contains('host lookup')
           ? l10n.podcastFailedHostLookup
+          : (this as PodcastFailedException).statusCode == 404
+          ? l10n.podcastEpisodesNotFound
           : (this as PodcastFailedException).message,
     SearchTimeoutException() => l10n.searchTimeoutMessage,
     FetchOnlineLyricsTimeoutException() =>

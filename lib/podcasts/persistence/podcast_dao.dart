@@ -267,6 +267,7 @@ class PodcastDao {
       name: row.name,
       artist: row.artist,
       imageUrl: row.imageUrl,
+      description: row.description,
     );
   }
 

@@ -4,7 +4,6 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
-import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/audio_page_header_html_description.dart';
@@ -20,46 +19,43 @@ import 'podcast_page_image.dart';
 class PodcastPageHeader extends StatelessWidget with WatchItMixin {
   const PodcastPageHeader({
     super.key,
-    this.feedUrl,
-    required this.title,
-    required this.episodes,
+    required this.feedUrl,
     required this.showFallbackIcon,
+    this.title,
   });
 
-  final String? feedUrl;
-  final String title;
-  final List<Audio>? episodes;
+  final String feedUrl;
+  final String? title;
   final bool showFallbackIcon;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
-    final genre = feedUrl == null
-        ? null
-        : watchValue((PodcastGenreManager m) => m.findCommand, param1: feedUrl);
+    final genre = watchValue(
+      (PodcastGenreManager m) => m.findCommand,
+      param1: feedUrl,
+    );
 
-    final imageUrl = feedUrl == null
-        ? null
-        : watchValue(
-            (PodcastShortInfoManager m) => m.command.select((v) => v?.imageUrl),
-            param1: feedUrl!,
-          );
+    final shortInfo = watchValue(
+      (PodcastShortInfoManager m) => m.command,
+      param1: feedUrl,
+    );
 
     return AudioPageHeader(
       image: PodcastPageImage(
-        imageUrl: imageUrl,
+        imageUrl: shortInfo?.imageUrl,
         showFallbackIcon: showFallbackIcon,
       ),
       label: genre ?? l10n.podcast,
-      subTitle: episodes?.firstOrNull?.copyright?.trim(),
-      description: episodes?.firstOrNull?.podcastDescription == null
+      subTitle: shortInfo?.artist,
+      description: shortInfo?.description == null
           ? null
           : AudioPageHeaderHtmlDescription(
-              description: episodes!.firstOrNull!.podcastDescription!,
-              title: title,
+              description: shortInfo!.description!,
+              title: shortInfo.name,
             ),
-      title: title.unEscapeHtml ?? title,
+      title: title ?? shortInfo?.name.unEscapeHtml ?? '',
       onLabelTab: (text) => _onGenreTap(l10n: l10n, text: text),
       onSubTitleTab: (text) => _onArtistTap(l10n: l10n, text: text),
     );

@@ -186,7 +186,8 @@ class SliverNewEpispdesList extends StatelessWidget with WatchItMixin {
 
     return SliverPodcastPageList(
       audios: updates.values.expand((e) => e).toList(),
-      pageId: 'newPodcastEpisodes',
+      feedUrl: 'newPodcastEpisodes',
+      includePodcastImage: true,
     );
   }
 }

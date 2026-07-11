@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:podcast_search/podcast_search.dart';
 
 import '../../common/data/retry_capsule.dart';
 import '../../common/view/adaptive_multi_layout_body.dart';
@@ -28,10 +29,11 @@ class PodcastErrorPage extends StatelessWidget with WatchItMixin {
     body: AdaptiveMultiLayoutBody(
       header: PodcastPageHeader(
         title: context.l10n.oopsSomethingWentWrong,
-        episodes: [],
         showFallbackIcon: false,
+        feedUrl: feedUrl,
       ),
       sliverBody: (constraints) => ErrorRetryBody(
+        logError: error is! PodcastFailedException,
         sliver: true,
         error: error,
         stackTrace: stackTrace,
