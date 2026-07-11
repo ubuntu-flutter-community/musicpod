@@ -112,6 +112,13 @@ extension GetItInjectableX on _i174.GetIt {
     final windowManagerModule = _$WindowManagerModule();
     final databaseModule = _$DatabaseModule();
     final audioServiceModule = _$AudioServiceModule();
+    gh.factoryCached<_i415.ExternalPathService>(
+      () => const _i415.ExternalPathService(),
+    );
+    gh.factoryCached<_i546.LocalLyricsService>(
+      () => _i546.LocalLyricsService(),
+    );
+    gh.factoryCached<_i1009.LicenseStore>(() => _i1009.LicenseStore());
     gh.factory<_i361.Dio>(() => dioModule.create());
     gh.factory<_i535.GitHub>(() => githubModule.gitHub);
     await gh.factoryAsync<_i526.LocalNotifier>(
@@ -131,36 +138,26 @@ extension GetItInjectableX on _i174.GetIt {
       () => windowManagerModule.create(),
       preResolve: true,
     );
-    gh.lazySingleton<_i415.ExternalPathService>(
-      () => const _i415.ExternalPathService(),
-    );
-    gh.lazySingleton<_i546.LocalLyricsService>(
-      () => _i546.LocalLyricsService(),
-    );
-    gh.lazySingleton<_i1009.LicenseStore>(() => _i1009.LicenseStore());
     gh.lazySingleton<_i115.Database>(() => databaseModule.database);
-    gh.lazySingleton<_i852.OnlineArtService>(
+    gh.factoryCached<_i852.OnlineArtService>(
       () => _i852.OnlineArtService(dio: gh<_i361.Dio>()),
     );
-    gh.lazySingleton<_i224.OnlineArtManager>(
-      () => _i224.OnlineArtManager(
-        onlineArtService: gh<_i852.OnlineArtService>(),
-      ),
-      dispose: (i) => i.dispose(),
+    gh.factoryParam<_i224.OnlineArtManager, String, dynamic>(
+      (icyTitle, _) => _i224.OnlineArtManager.create(icyTitle),
     );
-    gh.lazySingleton<_i443.PlayerDao>(
+    gh.factoryCached<_i443.PlayerDao>(
       () => _i443.PlayerDao(db: gh<_i115.Database>()),
     );
-    gh.lazySingleton<_i597.PodcastDao>(
+    gh.factoryCached<_i597.PodcastDao>(
       () => _i597.PodcastDao(db: gh<_i115.Database>()),
     );
-    gh.lazySingleton<_i414.RadioDao>(
+    gh.factoryCached<_i414.RadioDao>(
       () => _i414.RadioDao(db: gh<_i115.Database>()),
     );
-    gh.lazySingleton<_i506.RadioService>(
+    gh.factoryCached<_i506.RadioService>(
       () => _i506.RadioService(dao: gh<_i414.RadioDao>()),
     );
-    gh.lazySingleton<_i688.LocalAudioDao>(
+    gh.factoryCached<_i688.LocalAudioDao>(
       () => _i688.LocalAudioDao(database: gh<_i115.Database>()),
     );
     gh.factoryCached<_i443.RadioManager>(
@@ -178,7 +175,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i57.NotificationsService>(
       () => _i57.NotificationsService(localNotifier: gh<_i526.LocalNotifier>()),
     );
-    gh.lazySingleton<_i582.LocalCoverService>(
+    gh.factoryCached<_i582.LocalCoverService>(
       () => _i582.LocalCoverService(dao: gh<_i688.LocalAudioDao>()),
     );
     gh.factoryParam<_i443.ClickStationManager, String, dynamic>(
@@ -197,7 +194,7 @@ extension GetItInjectableX on _i174.GetIt {
       () =>
           _i309.RadioStarStationManager(radioManager: gh<_i443.RadioManager>()),
     );
-    gh.lazySingleton<_i546.OnlineLyricsService>(
+    gh.factoryCached<_i546.OnlineLyricsService>(
       () => _i546.OnlineLyricsService(
         dio: gh<_i361.Dio>(),
         localAudioDao: gh<_i688.LocalAudioDao>(),
@@ -221,10 +218,10 @@ extension GetItInjectableX on _i174.GetIt {
         dio: gh<_i361.Dio>(),
       ),
     );
-    gh.lazySingleton<_i61.LastfmService>(
+    gh.factoryCached<_i61.LastfmService>(
       () => _i61.LastfmService(settingsService: gh<_i862.SettingsService>()),
     );
-    gh.lazySingleton<_i821.ListenBrainzService>(
+    gh.factoryCached<_i821.ListenBrainzService>(
       () => _i821.ListenBrainzService(
         settingsService: gh<_i862.SettingsService>(),
       ),
@@ -235,7 +232,7 @@ extension GetItInjectableX on _i174.GetIt {
         radioManager: gh<_i443.RadioManager>(),
       ),
     );
-    gh.lazySingleton<_i313.ExposeService>(
+    gh.factoryCached<_i313.ExposeService>(
       () => _i313.ExposeService(
         lastFmService: gh<_i61.LastfmService>(),
         listenBrainzService: gh<_i821.ListenBrainzService>(),
@@ -269,7 +266,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factoryCached<_i960.ExposeManager>(
       () => _i960.ExposeManager(exposeService: gh<_i313.ExposeService>()),
     );
-    gh.lazySingleton<_i985.LocalAudioService>(
+    gh.factoryCached<_i985.LocalAudioService>(
       () => _i985.LocalAudioService(
         localCoverService: gh<_i582.LocalCoverService>(),
         settingsService: gh<_i862.SettingsService>(),
@@ -302,14 +299,6 @@ extension GetItInjectableX on _i174.GetIt {
       ),
       preResolve: true,
     );
-    gh.factoryCached<_i507.MpvMetadataManager>(
-      () => _i507.MpvMetadataManager(
-        playerService: gh<_i456.PlayerService>(),
-        onlineArtService: gh<_i852.OnlineArtService>(),
-        exposeService: gh<_i313.ExposeService>(),
-        settingsService: gh<_i862.SettingsService>(),
-      ),
-    );
     gh.factoryCachedParam<_i212.PodcastShortInfoManager, String, dynamic>(
       (feedUrl, _) => _i212.PodcastShortInfoManager(
         feedUrl: feedUrl,
@@ -324,6 +313,13 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factoryCached<_i429.FindAllGenresManager>(
       () => _i429.FindAllGenresManager(gh<_i985.LocalAudioService>()),
+    );
+    gh.factoryCached<_i507.MpvMetadataManager>(
+      () => _i507.MpvMetadataManager(
+        playerService: gh<_i456.PlayerService>(),
+        exposeService: gh<_i313.ExposeService>(),
+        settingsService: gh<_i862.SettingsService>(),
+      ),
     );
     gh.factoryCachedParam<_i483.AlbumIDsOfArtistManager, String, dynamic>(
       (artist, _) => _i483.AlbumIDsOfArtistManager(
@@ -467,11 +463,11 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioManager: gh<_i76.LocalAudioManager>(),
       ),
     );
-    gh.lazySingleton<_i372.LikedAudiosManager>(
-      () => _i372.LikedAudiosManager(gh<_i76.LocalAudioManager>()),
-    );
     gh.factoryCached<_i178.FindAllTracksManager>(
       () => _i178.FindAllTracksManager(gh<_i76.LocalAudioManager>()),
+    );
+    gh.factoryCached<_i372.LikedAudiosManager>(
+      () => _i372.LikedAudiosManager(gh<_i76.LocalAudioManager>()),
     );
     gh.factoryCached<_i925.CustomContentManager>(
       () => _i925.CustomContentManager(

@@ -28,8 +28,9 @@ class RadioHistoryTileImage extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final bR = BorderRadius.circular(4);
-    final imageUrl = watchPropertyValue(
-      (OnlineArtManager m) => m.getCover(icyTitle),
+    final imageUrl = watchValue(
+      (OnlineArtManager m) => m.command,
+      param1: icyTitle,
     );
 
     return Tooltip(

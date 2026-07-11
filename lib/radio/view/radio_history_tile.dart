@@ -74,7 +74,9 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
                   case RadioHistoryTileOption.streamprovider:
                     break;
                   case RadioHistoryTileOption.showMetadata:
-                    final imageUrl = di<OnlineArtManager>().getCover(icyTitle);
+                    final imageUrl = di<OnlineArtManager>(
+                      param1: icyTitle,
+                    ).command.value;
                     final metadata = di<MpvMetadataManager>().getMetadata(
                       icyTitle,
                     );

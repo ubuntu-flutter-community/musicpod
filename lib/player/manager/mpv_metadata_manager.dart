@@ -10,7 +10,7 @@ import '../../common/data/audio_type.dart';
 import '../../common/logging.dart';
 import '../../expose/service/expose_service.dart';
 import '../../extensions/string_x.dart';
-import '../../radio/service/online_art_service.dart';
+import '../../radio/manager/online_art_manager.dart';
 import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/service/settings_service.dart';
 import '../data/mpv_meta_data.dart';
@@ -21,11 +21,9 @@ import '../service/player_service.dart';
 class MpvMetadataManager {
   MpvMetadataManager({
     required PlayerService playerService,
-    required OnlineArtService onlineArtService,
     required ExposeService exposeService,
     required SettingsService settingsService,
   }) : _playerService = playerService,
-       _onlineArtService = onlineArtService,
        _exposeService = exposeService,
        _settingsService = settingsService {
     Logger.o(tag: '$MpvMetadataManager');
@@ -64,7 +62,6 @@ class MpvMetadataManager {
   }
 
   final PlayerService _playerService;
-  final OnlineArtService _onlineArtService;
   final ExposeService _exposeService;
   final SettingsService _settingsService;
 
@@ -197,9 +194,9 @@ class MpvMetadataManager {
     String? albumArt;
 
     if (!dataSafeMode.value) {
-      albumArt = await _onlineArtService.fetchAlbumArt(
-        icyTitle: parsedIcyTitle,
-      );
+      albumArt = await di<OnlineArtManager>(
+        param1: parsedIcyTitle,
+      ).command.runAsync();
     }
 
     final mergedAudio =

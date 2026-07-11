@@ -5,7 +5,7 @@ import '../../common/logging.dart';
 import '../../settings/service/settings_service.dart';
 import '../../settings/data/shared_preferences_keys.dart';
 
-@lazySingleton
+@Injectable(cache: true)
 class ListenBrainzService {
   ListenBrainzService({required SettingsService settingsService})
     : _settingsService = settingsService;

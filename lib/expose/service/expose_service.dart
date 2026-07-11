@@ -6,7 +6,7 @@ import 'package:injectable/injectable.dart';
 import 'lastfm_service.dart';
 import 'listenbrainz_service.dart';
 
-@lazySingleton
+@Injectable(cache: true)
 class ExposeService {
   ExposeService({
     required LastfmService lastFmService,

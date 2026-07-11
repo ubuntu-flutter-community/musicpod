@@ -58,7 +58,7 @@ class _LicensesDialogState extends State<LicensesDialog> {
   }
 }
 
-@lazySingleton
+@Injectable(cache: true)
 class LicenseStore extends SafeChangeNotifier {
   final _licenses = <String, List<LicenseEntry>>{};
 

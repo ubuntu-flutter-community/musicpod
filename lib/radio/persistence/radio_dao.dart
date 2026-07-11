@@ -4,7 +4,7 @@ import 'package:radio_browser_api/radio_browser_api.dart';
 import '../../common/data/audio.dart';
 import '../../common/persistence/database.dart';
 
-@lazySingleton
+@Injectable(cache: true)
 class RadioDao {
   final Database _db;
 
