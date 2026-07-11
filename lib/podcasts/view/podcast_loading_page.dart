@@ -23,7 +23,7 @@ class PodcastLoadingPage extends StatelessWidget {
     body: AdaptiveMultiLayoutBody(
       header: PodcastPageHeader(
         title: context.l10n.loadingPodcastFeed,
-        showFallbackIcon: false,
+        showFallBackOrErrorIcon: false,
         feedUrl: feedUrl,
       ),
       sliverBody: (constraints) => expandChild

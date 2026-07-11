@@ -38,12 +38,6 @@ class SafeNetworkImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fallBack = Center(
-      child:
-          fallbackWidget ??
-          Icon(Iconz.musicNote, size: height != null ? height! * 0.7 : null),
-    );
-
     final errorWidget = Center(
       child:
           this.errorWidget ??
@@ -82,7 +76,14 @@ class SafeNetworkImage extends StatelessWidget {
           filterQuality: filterQuality,
         );
       },
-      placeholder: (context, url) => fallbackWidget ?? fallBack,
+      placeholder: (context, url) =>
+          fallbackWidget ??
+          Center(
+            child: Icon(
+              Iconz.musicNote,
+              size: height != null ? height! * 0.7 : null,
+            ),
+          ),
       errorBuilder: (context, error, _) {
         final message = switch (error.runtimeType) {
           final NetworkImageLoadException e => switch (e.statusCode) {

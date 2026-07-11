@@ -20,13 +20,13 @@ class PodcastPageHeader extends StatelessWidget with WatchItMixin {
   const PodcastPageHeader({
     super.key,
     required this.feedUrl,
-    required this.showFallbackIcon,
     this.title,
+    this.showFallBackOrErrorIcon = true,
   });
 
   final String feedUrl;
   final String? title;
-  final bool showFallbackIcon;
+  final bool showFallBackOrErrorIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class PodcastPageHeader extends StatelessWidget with WatchItMixin {
     return AudioPageHeader(
       image: PodcastPageImage(
         imageUrl: shortInfo?.imageUrl,
-        showFallbackIcon: showFallbackIcon,
+        showFallBackOrErrorIcon: showFallBackOrErrorIcon,
       ),
       label: genre ?? l10n.podcast,
       subTitle: shortInfo?.artist,

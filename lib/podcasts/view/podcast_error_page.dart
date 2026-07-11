@@ -29,7 +29,6 @@ class PodcastErrorPage extends StatelessWidget with WatchItMixin {
     body: AdaptiveMultiLayoutBody(
       header: PodcastPageHeader(
         title: context.l10n.oopsSomethingWentWrong,
-        showFallbackIcon: false,
         feedUrl: feedUrl,
       ),
       sliverBody: (constraints) => ErrorRetryBody(

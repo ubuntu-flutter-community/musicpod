@@ -65,10 +65,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
       );
     });
 
-    onDispose(() {
-      cleanUpUnusedPodcasts();
-      EpisodesManager.dispose(feedUrl);
-    });
+    onDispose(cleanUpUnusedPodcasts);
 
     return watchValue(
       (EpisodesManager m) => m.command.results,
@@ -135,7 +132,7 @@ class _PodcastPage extends StatelessWidget with WatchItMixin {
                   )
             : () async {},
         child: AdaptiveMultiLayoutBody(
-          header: PodcastPageHeader(feedUrl: feedUrl, showFallbackIcon: false),
+          header: PodcastPageHeader(feedUrl: feedUrl),
           sliverBody: (constraints) => SliverPodcastPageList(feedUrl: feedUrl),
           controlPanel: PodcastPageControlPanel(feedUrl: feedUrl),
           secondControlPanel: (showSearch

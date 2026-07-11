@@ -7,20 +7,22 @@ class PodcastPageImage extends StatelessWidget {
   const PodcastPageImage({
     super.key,
     required this.imageUrl,
-    required this.showFallbackIcon,
+    this.showFallBackOrErrorIcon = true,
   });
 
   final String? imageUrl;
-  final bool showFallbackIcon;
+  final bool showFallBackOrErrorIcon;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
     final safeNetworkImage = SafeNetworkImage(
-      fallbackWidget: showFallbackIcon
+      fallbackWidget: showFallBackOrErrorIcon
           ? Icon(Iconz.podcast, size: 80, color: theme.hintColor)
           : const SizedBox.shrink(),
-      errorWidget: Icon(Iconz.imageMissing, size: 80, color: theme.hintColor),
+      errorWidget: showFallBackOrErrorIcon
+          ? Icon(Iconz.podcast, size: 80, color: theme.hintColor)
+          : const SizedBox.shrink(),
       url: imageUrl,
       fit: BoxFit.fitHeight,
       filterQuality: FilterQuality.medium,

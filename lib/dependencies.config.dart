@@ -441,8 +441,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factoryCached<_i164.PlayAnywhereManager>(
       () => _i164.PlayAnywhereManager(playerManager: gh<_i95.PlayerManager>()),
     );
-    gh.factoryParam<_i776.EpisodesManager, String, dynamic>(
-      (feedUrl, _) => _i776.EpisodesManager.create(
+    gh.factoryCachedParam<_i776.EpisodesManager, String, dynamic>(
+      (feedUrl, _) => _i776.EpisodesManager(
         feedUrl: feedUrl,
         podcastManager: gh<_i819.PodcastManager>(),
         downloadsManager: gh<_i167.DownloadManager>(),

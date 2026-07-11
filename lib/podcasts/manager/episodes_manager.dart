@@ -3,7 +3,6 @@ import 'package:injectable/injectable.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/logging.dart';
-import '../../common/util/keep_alive_registry.dart';
 import '../../common/view/audio_filter.dart';
 import '../../extensions/command_x.dart';
 import '../../player/manager/player_manager.dart';
@@ -12,9 +11,9 @@ import 'download_manager.dart';
 import 'podcast_manager.dart';
 import 'podcast_short_info_manager.dart';
 
-@injectable
+@Injectable(cache: true)
 class EpisodesManager {
-  EpisodesManager._({
+  EpisodesManager({
     @factoryParam required String feedUrl,
     required PodcastManager podcastManager,
     required DownloadManager downloadsManager,
@@ -87,29 +86,9 @@ class EpisodesManager {
     command.run();
   }
 
-  @factoryMethod
-  static EpisodesManager create({
-    @factoryParam required String feedUrl,
-    required PodcastManager podcastManager,
-    required DownloadManager downloadsManager,
-    required PlayerManager playerManager,
-  }) => _registry.getOrRegister(
-    id: feedUrl,
-    autoDisposeAfter: const Duration(hours: 1),
-    factoryFunction: () => EpisodesManager._(
-      feedUrl: feedUrl,
-      podcastManager: podcastManager,
-      downloadsManager: downloadsManager,
-      playerManager: playerManager,
-    ),
-  );
-
   late final Command<
     ({AudioSortOrder? order})?,
     ({List<Audio>? episodes, AudioSortOrder? order})?
   >
   command;
-
-  static final _registry = KeepAliveRegistry<String, EpisodesManager>();
-  static void dispose(String feedUrl) => _registry.dispose(feedUrl);
 }
