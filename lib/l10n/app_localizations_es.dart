@@ -159,7 +159,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get albums => 'Álbumes';
 
   @override
-  String get genres => 'Género';
+  String get genres => 'Géneros';
 
   @override
   String get genre => 'Géneros';
@@ -392,7 +392,7 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get emptyPlaylist => 'Esta lista de reproducción se encuentra vacía.';
+  String get emptyPlaylist => 'Esta lista de reproducción está vacía.';
 
   @override
   String get copiedToClipBoard => 'Copiado al portapapeles:';
@@ -438,7 +438,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get removeFromCollection => 'Remove de la colección';
 
   @override
-  String get loadingPodcastFeed => 'Loading podcast feed...';
+  String get loadingPodcastFeed => 'Cargando la lista de episodios...';
 
   @override
   String downloadStarted(String name) {
@@ -648,7 +648,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get usePodcastIndex => 'Usar índice de podcast en lugar de iTunes';
 
   @override
-  String get select => 'Select';
+  String get select => 'Seleccionar';
 
   @override
   String get requiresAppRestart => 'Requiere reiniciar la aplicación';
@@ -801,7 +801,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get kidsXXXPodcastIndexOnly => 'Niños';
 
   @override
-  String get languageXXXPodcastIndexOnly => 'Lingüística';
+  String get languageXXXPodcastIndexOnly => 'Lenguaje';
 
   @override
   String get learningXXXPodcastIndexOnly => 'Formación';
@@ -873,7 +873,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get reviewsXXXPodcastIndexOnly => 'Reseñas';
 
   @override
-  String get rolePlayingXXXPodcastIndexOnly => 'Role Playing';
+  String get rolePlayingXXXPodcastIndexOnly => 'Juegos de rol';
 
   @override
   String get rugbyXXXPodcastIndexOnly => 'Rugby';
@@ -1226,7 +1226,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get regionAfghanistan => 'Afganistán';
 
   @override
-  String get regionAlandislands => 'Islas Aland';
+  String get regionAlandislands => 'Islas Åland';
 
   @override
   String get regionAlbania => 'Albania';
@@ -1241,7 +1241,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get regionAndorra => 'Andorra';
 
   @override
-  String get regionAngolia => 'Angolia';
+  String get regionAngolia => 'Angola';
 
   @override
   String get regionAnguilla => 'Anguila';
@@ -1937,7 +1937,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get regionUnitedstatesminoroutlyingislands =>
-      'Islas Ultramarinas Menores de Estados Unidos';
+      'Islas Ultramarinas Menores de los Estados Unidos';
 
   @override
   String get regionUruguay => 'Uruguay';
