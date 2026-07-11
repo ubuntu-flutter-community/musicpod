@@ -6,7 +6,7 @@ import '../../common/data/audio.dart';
 import '../data/playlist_action.dart';
 import 'local_audio_manager.dart';
 
-@lazySingleton
+@Injectable(cache: true)
 class LikedAudiosManager {
   LikedAudiosManager(LocalAudioManager localAudioManager) {
     command = Command.createAsyncNoParam(

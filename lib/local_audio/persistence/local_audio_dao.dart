@@ -10,7 +10,7 @@ import '../../common/persistence/database.dart';
 import '../../common/view/audio_filter.dart';
 import '../data/local_search_result.dart';
 
-@lazySingleton
+@Injectable(cache: true)
 class LocalAudioDao {
   LocalAudioDao({required Database database}) : _db = database;
 

@@ -60,4 +60,5 @@ class SPKeys {
   static const playerExplorerTabIndex = 'playerExplorerTabIndex';
   static const selectedSearchAudioType = 'selectedSearchAudioType';
   static const onlineLyricsSource = 'onlineLyricsSource';
+  static const dataSafeMode = 'dataSafeMode';
 }

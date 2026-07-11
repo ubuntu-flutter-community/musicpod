@@ -20,80 +20,29 @@ const _kInternetArchiveHeaders = {
   'User-Agent': '${AppConfig.appTitle} (${AppConfig.repoUrl})',
 };
 
-@lazySingleton
+@Injectable(cache: true)
 class OnlineArtService {
   OnlineArtService({required Dio dio}) : _dio = dio;
   final Dio _dio;
-  final _propertiesChangedController = StreamController<bool>.broadcast();
-  Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
-  final _errorController = StreamController<String?>.broadcast();
-  Stream<String?> get error => _errorController.stream;
 
-  bool _dataSafeMode = false;
-  bool get dataSafeMode => _dataSafeMode;
-  void setDataSafeMode(bool value) {
-    if (value == _dataSafeMode) return;
-    _dataSafeMode = value;
-    _propertiesChangedController.add(true);
-  }
-
-  /// Fetches album art for a given [icyTitle]. If [albumArtOverwrite] is provided,
-  /// it will be returned directly without making any network requests.
-  /// If [icyTitle] is null, the method will return null.
-  Future<String?> fetchAlbumArt({
-    String? icyTitle,
-    String? albumArtOverwrite,
-  }) async {
-    _errorController.add(null);
-
-    if (icyTitle == null) {
-      return null;
-    }
-
-    final albumArtUrl = albumArtOverwrite != null
-        ? put(key: icyTitle, url: albumArtOverwrite)
-        : get(icyTitle) ??
-              put(
-                key: icyTitle,
-                url:
-                    await compute(
-                      _fetchAlbumArt,
-                      _ComputeCapsule(icyTitle: icyTitle, dio: _dio),
-                    ).onError((e, s) {
-                      Logger.e(e, trace: s, tag: '$OnlineArtService');
-                      _errorController.add('$e : $s');
-                      return null;
-                    }),
-              );
-    _propertiesChangedController.add(true);
-
-    return albumArtUrl;
-  }
-
-  final _store = <String, String?>{};
-
-  String? put({required String key, String? url}) {
-    return _store.containsKey(key)
-        ? _store.update(key, (value) => url)
-        : _store.putIfAbsent(key, () => url);
-  }
-
-  String? get(String? icyTitle) => icyTitle == null ? null : _store[icyTitle];
-
-  Future<void> dispose() async {
-    await _errorController.close();
-    await _propertiesChangedController.close();
-  }
+  Future<String?> fetchAlbumArt({required String icyTitle}) =>
+      compute(
+        _fetchAlbumArt,
+        FetchAlbumArtParam(icyTitle: icyTitle, dio: _dio),
+      ).onError((e, s) {
+        Logger.e(e, trace: s, tag: '$OnlineArtService');
+        return null;
+      });
 }
 
-class _ComputeCapsule {
+class FetchAlbumArtParam {
   final String icyTitle;
   final Dio dio;
 
-  _ComputeCapsule({required this.icyTitle, required this.dio});
+  FetchAlbumArtParam({required this.icyTitle, required this.dio});
 }
 
-Future<String?> _fetchAlbumArt(_ComputeCapsule capsule) async {
+Future<String?> _fetchAlbumArt(FetchAlbumArtParam capsule) async {
   final dio = capsule.dio;
   dio.options.headers = _kMusicBrainzHeaders;
   final songInfo = capsule.icyTitle.splitByDash;

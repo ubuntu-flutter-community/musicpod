@@ -16,7 +16,7 @@ import '../../extensions/platform_x.dart';
 import '../../extensions/string_x.dart';
 import '../persistence/local_audio_dao.dart';
 
-@lazySingleton
+@Injectable(cache: true)
 class LocalCoverService {
   final LocalAudioDao _dao;
 

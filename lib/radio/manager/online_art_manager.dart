@@ -1,27 +1,36 @@
-import 'dart:async';
-
+import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
-import 'package:safe_change_notifier/safe_change_notifier.dart';
 
+import '../../common/util/keep_alive_registry.dart';
 import '../service/online_art_service.dart';
 
-@lazySingleton
-class OnlineArtManager extends SafeChangeNotifier {
-  OnlineArtManager({required OnlineArtService onlineArtService})
-    : _onlineArtService = onlineArtService {
-    _propertiesChangedSub ??= _onlineArtService.propertiesChanged.listen(
-      (_) => notifyListeners(),
+@injectable
+class OnlineArtManager {
+  OnlineArtManager._({
+    required String icyTitle,
+    required OnlineArtService onlineArtService,
+  }) {
+    command = Command.createAsyncNoParam(
+      () => onlineArtService.fetchAlbumArt(icyTitle: icyTitle),
+      initialValue: null,
     );
+
+    command.run();
   }
 
-  final OnlineArtService _onlineArtService;
-  StreamSubscription<bool>? _propertiesChangedSub;
-  String? getCover(String? icyTitle) => _onlineArtService.get(icyTitle);
+  @factoryMethod
+  static OnlineArtManager create(@factoryParam String icyTitle) =>
+      _registry.getOrRegister(
+        autoDisposeAfter: const Duration(hours: 5),
+        id: icyTitle,
+        factoryFunction: () => OnlineArtManager._(
+          icyTitle: icyTitle,
+          onlineArtService: di<OnlineArtService>(),
+        ),
+      );
 
-  @disposeMethod
-  @override
-  Future<void> dispose() async {
-    await _propertiesChangedSub?.cancel();
-    super.dispose();
-  }
+  late final Command<void, String?> command;
+
+  static final _registry = KeepAliveRegistry<String, OnlineArtManager>();
+  static void disposeAll() => _registry.disposeAll();
 }

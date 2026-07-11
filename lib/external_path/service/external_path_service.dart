@@ -6,7 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../extensions/platform_x.dart';
 
-@lazySingleton
+@Injectable(cache: true)
 class ExternalPathService {
   const ExternalPathService();
 
