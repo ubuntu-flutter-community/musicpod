@@ -8,6 +8,7 @@ import 'dart:async' as _i7;
 import 'package:flutter_it/flutter_it.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:musicpod/common/data/audio.dart' as _i8;
+import 'package:musicpod/common/view/audio_filter.dart' as _i10;
 import 'package:musicpod/podcasts/data/podcast_episode_filter.dart' as _i6;
 import 'package:musicpod/podcasts/data/podcast_short_info.dart' as _i9;
 import 'package:musicpod/podcasts/manager/podcast_manager.dart' as _i4;
@@ -137,6 +138,14 @@ class MockPodcastManager extends _i1.Mock implements _i4.PodcastManager {
           as Set<String>);
 
   @override
+  _i7.Future<Set<String>> get ascendingPodcasts =>
+      (super.noSuchMethod(
+            Invocation.getter(#ascendingPodcasts),
+            returnValue: _i7.Future<Set<String>>.value(<String>{}),
+          )
+          as _i7.Future<Set<String>>);
+
+  @override
   void setUpdatesOnly(bool? value) => super.noSuchMethod(
     Invocation.method(#setUpdatesOnly, [value]),
     returnValueForMissingStub: null,
@@ -216,4 +225,20 @@ class MockPodcastManager extends _i1.Mock implements _i4.PodcastManager {
             returnValue: _i7.Future<_i9.PodcastShortInfo?>.value(),
           )
           as _i7.Future<_i9.PodcastShortInfo?>);
+
+  @override
+  _i7.Future<List<_i8.Audio>> findEpisodes({
+    required String? feedUrl,
+    required bool? tryFromDbOnly,
+    _i10.AudioSortOrder? order,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#findEpisodes, [], {
+              #feedUrl: feedUrl,
+              #tryFromDbOnly: tryFromDbOnly,
+              #order: order,
+            }),
+            returnValue: _i7.Future<List<_i8.Audio>>.value(<_i8.Audio>[]),
+          )
+          as _i7.Future<List<_i8.Audio>>);
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/foundation.dart';
 
 class Logger {
@@ -9,12 +11,19 @@ class Logger {
     StackTrace? trace,
     String tag = '',
     required ReportType reportType,
+    bool useDebugPrint = true,
   }) {
     if ((!kDebugMode && printWhen == PrintWhen.onlyInDebug) ||
         (kDebugMode && printWhen == PrintWhen.onlyInRelease)) {
       return;
     } else {
-      _reportToConsole(object, trace: trace, tag: tag, reportType: reportType);
+      _reportToConsole(
+        object,
+        trace: trace,
+        tag: tag,
+        reportType: reportType,
+        useDebugPrint: useDebugPrint,
+      );
     }
 
     // If we would ever like to send the error to a server, we could do it here. For now, we just print it to the console.
@@ -42,8 +51,19 @@ class Logger {
     r(object, trace: trace, tag: tag, reportType: ReportType.warning);
   }
 
-  static void e(Object? object, {StackTrace? trace, String tag = ''}) {
-    r(object, trace: trace, tag: tag, reportType: ReportType.error);
+  static void e(
+    Object? object, {
+    StackTrace? trace,
+    String tag = '',
+    bool useDebugPrint = true,
+  }) {
+    r(
+      object,
+      trace: trace,
+      tag: tag,
+      reportType: ReportType.error,
+      useDebugPrint: useDebugPrint,
+    );
   }
 
   static void fe(FlutterErrorDetails details) {
@@ -61,16 +81,34 @@ void _reportToConsole(
   StackTrace? trace,
   String tag = '',
   required ReportType reportType,
+  bool useDebugPrint = true,
 }) {
   final message = object.toString();
-  debugPrint(
-    '${reportType.colorPrefix}${reportType.name}: ${tag.isEmpty ? '' : '[$tag] '} ${reportType.emoji} $message ${reportType.colorSuffix}',
-  );
-  if (trace != null) {
-    debugPrintStack(
-      stackTrace: trace,
-      label: tag.isNotEmpty ? 'Stack trace for [$tag]' : 'Stack trace',
+  if (useDebugPrint) {
+    debugPrint(
+      '${reportType.colorPrefix}${reportType.name}: ${tag.isEmpty ? '' : '[$tag] '} ${reportType.emoji} $message ${reportType.colorSuffix}',
     );
+  } else {
+    print(
+      '${reportType.colorPrefix}${reportType.name}: ${tag.isEmpty ? '' : '[$tag] '} ${reportType.emoji} $message ${reportType.colorSuffix}',
+    );
+  }
+  if (trace != null) {
+    final label = tag.isNotEmpty ? 'Stack trace for [$tag]' : 'Stack trace';
+    try {
+      if (useDebugPrint) {
+        debugPrintStack(stackTrace: trace, label: label);
+      } else {
+        print(label);
+        print(trace);
+      }
+    } on Object {
+      // Traces that cross isolate boundaries (e.g. `compute`) or contain
+      // `package:stack_trace` async-gap markers cannot be parsed frame-by-frame
+      // by debugPrintStack. Fall back to printing the raw trace string so the
+      // real stack (e.g. from findEpisodes) is not lost behind a FlutterError.
+      debugPrint('$label\n$trace');
+    }
   }
 }
 

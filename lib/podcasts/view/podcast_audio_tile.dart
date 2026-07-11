@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../app/routing_manager.dart';
 import '../../common/data/audio.dart';
+import '../../common/view/audio_tile_image.dart';
 import '../../common/view/html_text.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/share_button.dart';
@@ -27,6 +29,7 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
     required this.play,
     this.isExpanded = false,
     required this.addPodcast,
+    this.includePodcastImage = false,
   });
 
   final Audio audio;
@@ -36,6 +39,7 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
   final void Function() addPodcast;
 
   final bool isExpanded;
+  final bool includePodcastImage;
 
   @override
   Widget build(BuildContext context) {
@@ -77,13 +81,22 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
+              spacing: kMediumSpace,
               children: [
                 PodcastTilePlayButton(
                   selected: selected,
                   audio: audio,
                   play: play,
                 ),
-                SizedBox(width: isMobile ? 15 : 25),
+                if (includePodcastImage)
+                  InkWell(
+                    borderRadius: BorderRadius.circular(radius / 2),
+                    onTap: audio.feedUrl != null
+                        ? () =>
+                              di<RoutingManager>().push(pageId: audio.feedUrl!)
+                        : null,
+                    child: AudioTileImage(audio: audio, size: radius * 2),
+                  ),
                 Expanded(
                   child: _Center(
                     selected: selected,

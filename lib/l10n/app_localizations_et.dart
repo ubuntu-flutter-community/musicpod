@@ -2479,4 +2479,8 @@ class AppLocalizationsEt extends AppLocalizations {
   String appCanNotConnectToHost(String appName, String host) {
     return '$appName ei suuda ühendada $host serveriga. Kas sinu arvutis/seadmes internetiühendus ikka toimib?';
   }
+
+  @override
+  String get podcastEpisodesNotFound =>
+      'No episodes found for this podcast. They might have been removed or the podcast might not be available anymore with this feed URL.';
 }

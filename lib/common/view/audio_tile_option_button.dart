@@ -42,6 +42,7 @@ class AudioTileOptionButton extends StatelessWidget {
     required this.title,
     required this.subTitle,
     this.icon,
+    this.enabled = true,
   });
 
   final String playlistId;
@@ -51,6 +52,7 @@ class AudioTileOptionButton extends StatelessWidget {
   final Widget title;
   final Widget subTitle;
   final Widget? icon;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +75,7 @@ class AudioTileOptionButton extends StatelessWidget {
       tooltip: l10n.moreOptions,
       padding: EdgeInsets.zero,
       enabled:
+          enabled &&
           (audios.isNotEmpty || audios.every((e) => e.isPodcast)) &&
           playlistId.isNotEmpty,
       itemBuilder: (context) {

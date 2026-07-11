@@ -257,12 +257,6 @@ extension GetItInjectableX on _i174.GetIt {
       );
       return i.init().then((_) => i);
     }, preResolve: true);
-    gh.factoryParam<_i776.EpisodesManager, String, dynamic>(
-      (feedUrl, _) => _i776.EpisodesManager.create(
-        feedUrl: feedUrl,
-        podcastService: gh<_i529.PodcastService>(),
-      ),
-    );
     gh.factoryCachedParam<_i990.PodcastGenreManager, String, dynamic>(
       (feedUrl, _) => _i990.PodcastGenreManager(
         feedUrl: feedUrl,
@@ -446,6 +440,14 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factoryCached<_i164.PlayAnywhereManager>(
       () => _i164.PlayAnywhereManager(playerManager: gh<_i95.PlayerManager>()),
+    );
+    gh.factoryParam<_i776.EpisodesManager, String, dynamic>(
+      (feedUrl, _) => _i776.EpisodesManager.create(
+        feedUrl: feedUrl,
+        podcastManager: gh<_i819.PodcastManager>(),
+        downloadsManager: gh<_i167.DownloadManager>(),
+        playerManager: gh<_i95.PlayerManager>(),
+      ),
     );
     gh.factoryCachedParam<_i830.FindAlbumManager, int, dynamic>(
       (albumId, _) => _i830.FindAlbumManager(

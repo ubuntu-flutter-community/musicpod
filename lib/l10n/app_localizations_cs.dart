@@ -2472,4 +2472,8 @@ class AppLocalizationsCs extends AppLocalizations {
   String appCanNotConnectToHost(String appName, String host) {
     return '$appName can not connect to $host. Are you connected to the internet?';
   }
+
+  @override
+  String get podcastEpisodesNotFound =>
+      'No episodes found for this podcast. They might have been removed or the podcast might not be available anymore with this feed URL.';
 }

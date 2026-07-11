@@ -17,8 +17,10 @@ class PodcastPageImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.theme;
     final safeNetworkImage = SafeNetworkImage(
-      fallbackWidget: Icon(Iconz.podcast, size: 80, color: theme.hintColor),
-      errorWidget: Icon(Iconz.podcast, size: 80, color: theme.hintColor),
+      fallbackWidget: showFallbackIcon
+          ? Icon(Iconz.podcast, size: 80, color: theme.hintColor)
+          : const SizedBox.shrink(),
+      errorWidget: Icon(Iconz.imageMissing, size: 80, color: theme.hintColor),
       url: imageUrl,
       fit: BoxFit.fitHeight,
       filterQuality: FilterQuality.medium,
@@ -26,9 +28,7 @@ class PodcastPageImage extends StatelessWidget {
 
     return InkWell(
       borderRadius: BorderRadius.circular(10),
-      child: imageUrl == null && !showFallbackIcon
-          ? const SizedBox.shrink()
-          : safeNetworkImage,
+      child: safeNetworkImage,
       onTap: () => context.dialog(
         (context) => SimpleDialog(
           titlePadding: EdgeInsets.zero,

@@ -4,6 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/object_x.dart';
 import '../data/retry_capsule.dart';
+import '../logging.dart';
 import '../manager/retry_manager.dart';
 import 'error_page.dart';
 import 'no_search_result_page.dart';
@@ -18,6 +19,7 @@ class ErrorRetryBody extends StatelessWidget with WatchItMixin {
     this.sliver = false,
     this.errorText,
     this.errorTextStyle,
+    this.logError = false,
   });
 
   final Object error;
@@ -26,9 +28,16 @@ class ErrorRetryBody extends StatelessWidget with WatchItMixin {
   final RetryCapsule retryCapsule;
   final bool sliver;
   final TextStyle? errorTextStyle;
+  final bool logError;
 
   @override
   Widget build(BuildContext context) {
+    if (logError) {
+      callOnceAfterThisBuild((_) {
+        Logger.e(error, trace: stackTrace, tag: '$ErrorRetryBody');
+      });
+    }
+
     final cooldownValue = watchValue(
       (RetryManager m) => m.cooldown,
       param1: retryCapsule,

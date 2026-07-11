@@ -4760,6 +4760,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{appName} can not connect to {host}. Are you connected to the internet?'**
   String appCanNotConnectToHost(String appName, String host);
+
+  /// No description provided for @podcastEpisodesNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No episodes found for this podcast. They might have been removed or the podcast might not be available anymore with this feed URL.'**
+  String get podcastEpisodesNotFound;
 }
 
 class _AppLocalizationsDelegate
