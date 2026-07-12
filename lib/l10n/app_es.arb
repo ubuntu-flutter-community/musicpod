@@ -839,7 +839,7 @@
     "settingsDoNotAskForGeniusDescription": "Esto evita que la aplicación te pida la clave de la API de Genius en el futuro y hace que la función de letras dependa por completo de archivos LRC locales o cadenas LRC incrustadas en los metadatos de audio.",
     "tosLink": "https://genius.com/static/terms",
     "tosLinkText": "Leer los Términos de Servicios de Genius",
-    "oopsSomethingWentWrong": "¡Upsi, dupsi, algo salio mal!",
+    "oopsSomethingWentWrong": "¡Ay caramba, algo salio mal!",
     "retry": "Reintentar",
     "reportIssue": "Reportar este problema",
     "ignoreThisTitleInHearingHistory": "Ignorar este título en el historial de reproducción",
