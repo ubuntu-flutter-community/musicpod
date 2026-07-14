@@ -2341,7 +2341,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get tosLinkText => 'Leer los Términos de Servicios de Genius';
 
   @override
-  String get oopsSomethingWentWrong => '¡Upsi, dupsi, algo salio mal!';
+  String get oopsSomethingWentWrong => '¡Ay caramba, algo salio mal!';
 
   @override
   String get retry => 'Reintentar';
