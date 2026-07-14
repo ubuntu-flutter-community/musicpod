@@ -13,8 +13,8 @@ class PinAlbumButton extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final pinnedAlbum = watchValue(
-      (PinnedAlbumIDsManager m) => m.command.select((e) => e.contains(albumId)),
-    );
+      (PinnedAlbumIDsManager m) => m.command,
+    ).contains(albumId);
     return IconButton(
       tooltip: pinnedAlbum ? context.l10n.unPinAlbum : context.l10n.pinAlbum,
       isSelected: pinnedAlbum,

@@ -1,7 +1,7 @@
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 import '../../common/data/audio.dart';
-import '../../common/util/keep_alive_registry.dart';
+import '../../common/util/family.dart';
 import '../data/podcast_update_capsule.dart';
 import '../service/podcast_service.dart';
 import 'episodes_manager.dart';
@@ -40,17 +40,14 @@ class PodcastUpdatesManager {
   @factoryMethod
   static PodcastUpdatesManager create({
     required PodcastService podcastService,
-  }) => _registry.getOrRegister(
-    id: 'PodcastUpdatesManager',
-    factoryFunction: () =>
-        PodcastUpdatesManager._(podcastService: podcastService),
+  }) => Family.of(
+    'PodcastUpdatesManager',
+    () => PodcastUpdatesManager._(podcastService: podcastService),
+    shouldDispose: (t) => t.command.listenerCount == 0,
     autoDisposeAfter: const Duration(hours: 5),
   );
 
   late final Command<PodcastUpdateCapsule, Map<String, Set<Audio>>> command;
 
-  static final _registry = KeepAliveRegistry<String, PodcastUpdatesManager>(
-    autoDisposeAllAfter: const Duration(hours: 5),
-  );
-  static void dispose() => _registry.disposeAll();
+  static void dispose() => Family.disposeAll<PodcastUpdatesManager>();
 }

@@ -8,6 +8,7 @@ import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
+import '../../common/util/family.dart';
 import '../../common/view/adaptive_multi_layout_body.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/audio_page_type.dart';
@@ -133,7 +134,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    onDispose(() => PlaylistManager.dispose(pageId));
+    onDispose(() => Family.dispose<PlaylistManager>(pageId));
 
     final audios =
         watchValue((PlaylistManager m) => m.command, param1: pageId) ?? [];

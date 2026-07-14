@@ -34,9 +34,7 @@ class _SliverPodcastSearchResultsState
   Widget build(BuildContext context) {
     final loading = watchValue((SearchManager m) => m.searchCommand.isRunning);
 
-    final items = watchValue(
-      (SearchManager m) => m.podcastSearchResult.select((v) => v?.items),
-    );
+    final items = watchValue((SearchManager m) => m.podcastSearchResult)?.items;
 
     final searchResultItems = widget.take != null
         ? items?.take(widget.take!)

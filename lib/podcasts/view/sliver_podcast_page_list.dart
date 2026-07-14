@@ -24,10 +24,7 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final audios =
         this.audios ??
-        watchValue(
-          (EpisodesManager m) => m.command.select((v) => v?.episodes ?? []),
-          param1: feedUrl,
-        );
+        watchValue((EpisodesManager m) => m.command, param1: feedUrl)?.episodes;
     final selectedAudio = watchPropertyValue((PlayerManager m) => m.audio);
 
     return SliverList(

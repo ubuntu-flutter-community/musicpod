@@ -24,8 +24,8 @@ class AlbumCard extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final pinned = watchValue(
-      (PinnedAlbumIDsManager m) => m.command.select((e) => e.contains(id)),
-    );
+      (PinnedAlbumIDsManager m) => m.command,
+    ).contains(id);
 
     return _AlbumCard(
       id: id,

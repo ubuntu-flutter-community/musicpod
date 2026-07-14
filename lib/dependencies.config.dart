@@ -175,6 +175,13 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i57.NotificationsService>(
       () => _i57.NotificationsService(localNotifier: gh<_i526.LocalNotifier>()),
     );
+    gh.factoryParam<_i964.SettingsTypeManager, String, dynamic>(
+      (key, type) => _i964.SettingsTypeManager.create(
+        key: key,
+        type: type,
+        settingsService: gh<_i862.SettingsService>(),
+      ),
+    );
     gh.factoryCached<_i582.LocalCoverService>(
       () => _i582.LocalCoverService(dao: gh<_i688.LocalAudioDao>()),
     );

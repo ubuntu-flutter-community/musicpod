@@ -339,7 +339,8 @@ double get chipHeight => isMobile ? 40 : 34.0;
 
 EdgeInsets get audioTilePadding => kAudioTilePadding;
 
-SliverGridDelegate get audioCardGridDelegate => kAudioCardGridDelegate;
+SliverGridDelegate get audioCardGridDelegate =>
+    isMobile ? kAudioCardMobileGridDelegate : kAudioCardGridDelegate;
 
 SliverGridDelegate get diskGridDelegate => kDiskGridDelegate;
 

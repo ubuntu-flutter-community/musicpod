@@ -7,7 +7,6 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/adaptive_multi_layout_body.dart';
 import '../../common/view/clean_up_caches.dart';
 import '../../common/view/header_bar.dart';
-import '../../common/view/progress.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
@@ -73,10 +72,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
     ).toWidget(
       whileRunning: (lastResult, param) => lastResult?.episodes != null
           ? _PodcastPage(feedUrl: feedUrl)
-          : PodcastLoadingPage(
-              child: const Center(child: Progress()),
-              feedUrl: feedUrl,
-            ),
+          : PodcastLoadingPage(feedUrl: feedUrl),
       onError: (error, lastResult, param) => PodcastErrorPage(
         error: error,
         feedUrl: feedUrl,

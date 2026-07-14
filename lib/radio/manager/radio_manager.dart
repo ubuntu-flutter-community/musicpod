@@ -6,7 +6,7 @@ import 'package:radio_browser_api/src/models/tag.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../common/data/audio.dart';
-import '../../common/util/keep_alive_registry.dart';
+import '../../common/util/family.dart';
 import '../../extensions/command_x.dart';
 import '../data/radio_collection_view.dart';
 import '../service/radio_service.dart';
@@ -105,13 +105,12 @@ class ClickStationManager {
   static ClickStationManager create({
     @factoryParam required String uuid,
     required RadioService radioService,
-  }) => _registry.getOrRegister(
-    id: uuid,
-    factoryFunction: () =>
-        ClickStationManager._(uuid: uuid, radioService: radioService),
+  }) => Family.of(
+    uuid,
+    () => ClickStationManager._(uuid: uuid, radioService: radioService),
+    shouldDispose: (t) => t.command.listenerCount == 0,
+    autoDisposeAfter: const Duration(hours: 5),
   );
-
-  static final _registry = KeepAliveRegistry<String, ClickStationManager>();
 
   late final Command<void, void> command;
 }

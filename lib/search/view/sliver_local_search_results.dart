@@ -28,33 +28,23 @@ class SliverLocalSearchResult extends StatelessWidget with WatchItMixin {
       );
     }
 
-    final localAudioView = watchValue(
-      (SearchManager m) => m.searchType.select(
-        (audioType) => switch (audioType) {
-          SearchType.localAlbum => LocalAudioView.albums,
-          SearchType.localArtist => LocalAudioView.artists,
-          SearchType.localTitle => LocalAudioView.titles,
-          SearchType.localGenreName => LocalAudioView.genres,
-          _ => LocalAudioView.playlists,
-        },
-      ),
-    );
+    final searchType = watchValue((SearchManager m) => m.searchType);
+    final localAudioView = switch (searchType) {
+      SearchType.localAlbum => LocalAudioView.albums,
+      SearchType.localArtist => LocalAudioView.artists,
+      SearchType.localTitle => LocalAudioView.titles,
+      SearchType.localGenreName => LocalAudioView.genres,
+      _ => LocalAudioView.playlists,
+    };
 
-    final titles = watchValue(
-      (SearchManager m) => m.localSearchResult.select((v) => v?.titles),
+    final localSearchResult = watchValue(
+      (SearchManager m) => m.localSearchResult,
     );
-    final artists = watchValue(
-      (SearchManager m) => m.localSearchResult.select((v) => v?.artists),
-    );
-    final albums = watchValue(
-      (SearchManager m) => m.localSearchResult.select((v) => v?.albums),
-    );
-    final genresResult = watchValue(
-      (SearchManager m) => m.localSearchResult.select((v) => v?.genres),
-    );
-    final playlistsResult = watchValue(
-      (SearchManager m) => m.localSearchResult.select((v) => v?.playlists),
-    );
+    final titles = localSearchResult?.titles;
+    final artists = localSearchResult?.artists;
+    final albums = localSearchResult?.albums;
+    final genresResult = localSearchResult?.genres;
+    final playlistsResult = localSearchResult?.playlists;
 
     final searchQuery = watchValue((SearchManager m) => m.searchQuery);
 

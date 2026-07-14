@@ -36,9 +36,7 @@ class _PodcastPageSearchFieldState extends State<PodcastPageSearchField> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final filter = watchValue(
-      (PodcastManager m) => m.filter.select((f) => f.localize(l10n)),
-    );
+    final filter = watchValue((PodcastManager m) => m.filter).localize(l10n);
 
     final field = Padding(
       padding: const EdgeInsets.symmetric(horizontal: kLargestSpace),

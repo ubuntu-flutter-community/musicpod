@@ -1,6 +1,7 @@
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 import '../../common/data/audio.dart';
+import '../../common/util/family.dart';
 import 'radio_manager.dart';
 import 'station_manager.dart';
 
@@ -11,7 +12,7 @@ class RadioStarStationManager {
       if (station != null) {
         final starred = await radioManager.toggleStarStation(station);
         if (!starred) {
-          StationManager.dispose(station.uuid!);
+          Family.dispose<StationManager>(station.uuid!);
         }
       }
       return radioManager.getStarredStations();
