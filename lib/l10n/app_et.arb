@@ -908,5 +908,6 @@
                 "type": "String"
             }
         }
-    }
+    },
+    "podcastEpisodesNotFound": "Selle taskuhäälingu jaoks ei leidu osi. Nad võivad olla lihtsalt eemaldatud või pole taskuhääling enam sellel võrguaadressil saadaval."
 }
