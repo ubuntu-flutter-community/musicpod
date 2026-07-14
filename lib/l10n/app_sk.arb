@@ -908,5 +908,6 @@
                 "type": "String"
             }
         }
-    }
+    },
+    "podcastEpisodesNotFound": "Pre tento podcast sa nenašli žiadne epizódy. Mohli byť odstránené alebo podcast už nemusí byť dostupný na tejto adrese URL kanála."
 }
