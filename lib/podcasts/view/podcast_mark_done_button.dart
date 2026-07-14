@@ -16,9 +16,9 @@ class PodcastMarkDoneButton extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final podcast = watchValue(
-      (EpisodesManager m) => m.command.select((v) => v?.episodes),
+      (EpisodesManager m) => m.command,
       param1: feedUrl,
-    );
+    )?.episodes;
     final isToggling = watchValue(
       (PlayerManager m) => m.toggleAudiosProgressCommand.isRunning,
     );
@@ -49,13 +49,12 @@ class EpisodeMarkDownButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final isCompleted = watchValue(
-      (PlayerManager m) => m.toggleAudiosProgressCommand.select(
-        (m) =>
-            m?[episode.url]?.inMilliseconds == episode.durationMs?.toInt() &&
-            episode.durationMs != null,
-      ),
+    final progress = watchValue(
+      (PlayerManager m) => m.toggleAudiosProgressCommand,
     );
+    final isCompleted =
+        progress?[episode.url]?.inMilliseconds == episode.durationMs?.toInt() &&
+        episode.durationMs != null;
 
     final isPlaying = watchPropertyValue((PlayerManager m) {
       final audio = m.audio;

@@ -4,7 +4,7 @@ import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../data/retry_capsule.dart';
-import '../util/keep_alive_registry.dart';
+import '../util/family.dart';
 
 @injectable
 class RetryManager {
@@ -19,16 +19,12 @@ class RetryManager {
 
   @factoryMethod
   static RetryManager create({@factoryParam required RetryCapsule capsule}) =>
-      _registry.getOrRegister(
-        id: capsule.retryViewId,
-        factoryFunction: () => RetryManager._(capsule: capsule),
+      Family.of(
+        capsule.retryViewId,
+        () => RetryManager._(capsule: capsule),
+        shouldDispose: (t) => !t.cooldown.hasListeners,
         autoDisposeAfter: const Duration(minutes: 5),
       );
-
-  static final _registry = KeepAliveRegistry<String, RetryManager>();
-
-  static RetryManager? dispose(String retryViewId) =>
-      _registry.dispose(retryViewId);
 
   void manualRetry() {
     _capsule.onRetry();

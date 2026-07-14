@@ -7,6 +7,7 @@ import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/data/retry_capsule.dart';
 import '../../common/manager/retry_manager.dart';
+import '../../common/util/family.dart';
 import '../../common/view/adaptive_multi_layout_body.dart';
 import '../../common/view/audio_fall_back_icon.dart';
 import '../../common/view/audio_page_header.dart';
@@ -49,7 +50,7 @@ class StationPage extends StatelessWidget with WatchItMixin, RadioConnectMixin {
     registerHandler(
       select: (StationManager m) => m.command,
       param1: uuid,
-      handler: (_, _, __) => RetryManager.dispose(uuid),
+      handler: (_, _, __) => Family.dispose<RetryManager>(uuid),
     );
 
     final stationResult = watchValue(

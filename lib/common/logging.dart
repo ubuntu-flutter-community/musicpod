@@ -43,7 +43,7 @@ class Logger {
     r(
       message ?? 'Instance ${created ? 'created' : 'disposed'}',
       tag: tag,
-      reportType: ReportType.memoryChange,
+      reportType: ReportType.objectInfo,
     );
   }
 
@@ -114,7 +114,7 @@ void _reportToConsole(
 
 enum ReportType {
   info,
-  memoryChange,
+  objectInfo,
   warning,
   flutterError,
   error;
@@ -124,14 +124,14 @@ enum ReportType {
     ReportType.warning => '\x1B[33m',
     ReportType.error => '\x1B[31m',
     ReportType.flutterError => '\x1B[35m',
-    ReportType.memoryChange => '\x1B[36m',
+    ReportType.objectInfo => '\x1B[36m',
   };
 
   String get colorSuffix => '\x1B[0m';
 
   String get emoji => switch (this) {
     ReportType.info => 'ℹ️',
-    ReportType.memoryChange => '🧜🏻‍♀️',
+    ReportType.objectInfo => '📦',
     ReportType.warning => '⚠️',
     ReportType.error => '❌',
     ReportType.flutterError => '👾',

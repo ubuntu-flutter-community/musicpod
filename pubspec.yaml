@@ -130,6 +130,10 @@ flutter:
           style: normal
 
 dependency_overrides:
+  listen_it:
+    git:
+      url: https://github.com/flutter-it/listen_it
+      ref: 8a578591162350887accbdb4c3d4aeede161d5ef
   media_kit_libs_android_video:
     git:
       url: https://github.com/Predidit/media-kit.git

@@ -14,13 +14,12 @@ class PodcastPageTitle extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final title = watchValue(
-      (PodcastShortInfoManager m) => m.command.select((info) => info?.name),
+      (PodcastShortInfoManager m) => m.command,
       param1: feedUrl,
-    );
+    )?.name;
     final visible = watchValue(
-      (PodcastUpdatesManager m) =>
-          m.command.select((v) => v.containsKey(feedUrl)),
-    );
+      (PodcastUpdatesManager m) => m.command,
+    ).containsKey(feedUrl);
     return Badge(
       backgroundColor: context.theme.colorScheme.primary,
       isLabelVisible: visible,

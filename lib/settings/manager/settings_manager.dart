@@ -5,6 +5,7 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
+import '../../common/util/family.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/platform_x.dart';
 import '../../local_audio/service/local_audio_service.dart';
@@ -15,6 +16,7 @@ import '../../radio/service/radio_service.dart';
 import '../data/shared_preferences_keys.dart';
 import '../service/settings_service.dart';
 
+// TODO: remove this in favor of SettingsTypeManager, which is a more generic and reusable solution for managing settings of different types. This class is kept for backward compatibility and will be removed in future versions.
 @lazySingleton
 class SettingsManager extends SafeChangeNotifier {
   SettingsManager({
@@ -236,4 +238,59 @@ class SettingsManager extends SafeChangeNotifier {
     await _propertiesChangedSub?.cancel();
     super.dispose();
   }
+}
+
+@injectable
+class SettingsTypeManager {
+  SettingsTypeManager._({
+    required String key,
+    required dynamic type,
+    required SettingsService settingsService,
+  }) {
+    command = Command.createAsync((value) async {
+      if (value != null) {
+        final success = await settingsService.setValue(key, value);
+        if (!success) {
+          throw SettingsException('Failed to set value for key: $key');
+        }
+      }
+
+      return switch (type) {
+        bool => settingsService.getBool(key),
+        int => settingsService.getInt(key),
+        String => settingsService.getString(key),
+        List<String> _ => settingsService.getStringList(key),
+        _ => throw SettingsException('Unsupported type: $type'),
+      };
+    }, initialValue: null);
+
+    command.run();
+  }
+
+  late final Command<dynamic, dynamic> command;
+
+  @factoryMethod
+  static SettingsTypeManager create({
+    @factoryParam required String key,
+    @factoryParam required dynamic type,
+    required SettingsService settingsService,
+  }) => Family.of(
+    key,
+    () => SettingsTypeManager._(
+      key: key,
+      type: type,
+      settingsService: settingsService,
+    ),
+    shouldDispose: (t) => t.command.listenerCount == 0,
+    onDispose: (t) => t.command.dispose(),
+  );
+}
+
+class SettingsException implements Exception {
+  SettingsException(this.message);
+
+  final String message;
+
+  @override
+  String toString() => 'SettingsException: $message';
 }

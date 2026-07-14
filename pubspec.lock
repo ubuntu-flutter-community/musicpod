@@ -895,12 +895,13 @@ packages:
     source: hosted
     version: "6.1.0"
   listen_it:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: listen_it
-      sha256: "4cfc307e943a25c7b500d173523dcebe966b0a323eaa07bd3769f563af19f065"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: "8a578591162350887accbdb4c3d4aeede161d5ef"
+      resolved-ref: "8a578591162350887accbdb4c3d4aeede161d5ef"
+      url: "https://github.com/flutter-it/listen_it"
+    source: git
     version: "5.3.5"
   listenbrainz_dart:
     dependency: "direct main"

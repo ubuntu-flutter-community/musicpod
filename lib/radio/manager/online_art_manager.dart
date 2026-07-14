@@ -1,7 +1,7 @@
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../common/util/keep_alive_registry.dart';
+import '../../common/util/family.dart';
 import '../service/online_art_service.dart';
 
 @injectable
@@ -19,18 +19,17 @@ class OnlineArtManager {
   }
 
   @factoryMethod
-  static OnlineArtManager create(@factoryParam String icyTitle) =>
-      _registry.getOrRegister(
-        autoDisposeAfter: const Duration(hours: 5),
-        id: icyTitle,
-        factoryFunction: () => OnlineArtManager._(
-          icyTitle: icyTitle,
-          onlineArtService: di<OnlineArtService>(),
-        ),
-      );
+  static OnlineArtManager create(@factoryParam String icyTitle) => Family.of(
+    icyTitle,
+    () => OnlineArtManager._(
+      icyTitle: icyTitle,
+      onlineArtService: di<OnlineArtService>(),
+    ),
+    shouldDispose: (t) => t.command.listenerCount == 0,
+    autoDisposeAfter: const Duration(hours: 5),
+  );
 
   late final Command<void, String?> command;
 
-  static final _registry = KeepAliveRegistry<String, OnlineArtManager>();
-  static void disposeAll() => _registry.disposeAll();
+  static void disposeAll() => Family.disposeAll<OnlineArtManager>();
 }

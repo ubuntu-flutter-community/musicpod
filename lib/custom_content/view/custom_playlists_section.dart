@@ -64,7 +64,7 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
     final manager = di<CustomContentManager>();
     final playlistName = watchValue((CustomContentManager m) => m.playlistName);
     final playlists = watchValue(
-      (CustomContentManager m) => m.externalPlaylists.select((v) => v),
+      (CustomContentManager m) => m.externalPlaylists,
     );
 
     return Column(

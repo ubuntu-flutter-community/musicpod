@@ -15,9 +15,9 @@ class PodcastPageSideBarIcon extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final imageUrl = watchValue(
-      (PodcastShortInfoManager m) => m.command.select((info) => info?.imageUrl),
+      (PodcastShortInfoManager m) => m.command,
       param1: feedUrl,
-    );
+    )?.imageUrl;
     if (imageUrl == null) {
       return SideBarFallBackImage(child: Icon(Iconz.podcast));
     }

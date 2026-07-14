@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 
 import '../../common/view/adaptive_multi_layout_body.dart';
 import '../../common/view/header_bar.dart';
+import '../../common/view/progress.dart';
+import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import 'podcast_page_header.dart';
 
 class PodcastLoadingPage extends StatelessWidget {
   const PodcastLoadingPage({
     super.key,
-    required this.child,
     this.expandChild = false,
     required this.feedUrl,
   });
 
-  final Widget child;
   final String feedUrl;
   final bool expandChild;
 
@@ -27,8 +27,23 @@ class PodcastLoadingPage extends StatelessWidget {
         feedUrl: feedUrl,
       ),
       sliverBody: (constraints) => expandChild
-          ? SliverFillRemaining(hasScrollBody: false, child: child)
-          : SliverToBoxAdapter(child: child),
+          ? const SliverFillRemaining(
+              hasScrollBody: false,
+              child: const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(kSmallestSpace),
+                  child: Progress(),
+                ),
+              ),
+            )
+          : const SliverToBoxAdapter(
+              child: const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(kSmallestSpace),
+                  child: Progress(),
+                ),
+              ),
+            ),
       controlPanel: const SizedBox.shrink(),
     ),
   );

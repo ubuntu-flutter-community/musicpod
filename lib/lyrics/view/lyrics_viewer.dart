@@ -9,6 +9,7 @@ import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/data/retry_capsule.dart';
 import '../../common/manager/retry_manager.dart';
+import '../../common/util/family.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/error_retry_body.dart';
 import '../../common/view/progress.dart';
@@ -106,7 +107,7 @@ class _PlayerLyricsState extends State<_PlayerLyrics> {
 
     registerHandler(
       select: (LyricsManager m) => m.command,
-      handler: (context, _, __) => RetryManager.dispose(retryViewId),
+      handler: (context, _, __) => Family.dispose<RetryManager>(retryViewId),
     );
 
     return Column(

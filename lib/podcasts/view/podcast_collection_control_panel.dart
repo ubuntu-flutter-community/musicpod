@@ -25,42 +25,45 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
         Text(context.l10n.downloadsOnly),
       ],
       isSelected: [updatesOnly, downloadsOnly],
-      onSelected: (index) {
-        if (index == 0) {
-          if (updatesOnly) {
-            manager.setUpdatesOnly(false);
-          } else {
-            final subLength =
-                di<SubscribedPodcastsManager>().command.value.length;
-            if (subLength > 10) {
-              ConfirmationDialog.show(
-                context: context,
-                title: Text(context.l10n.checkForUpdates),
-                confirmLabel: context.l10n.checkForUpdates,
-                content: Text(
-                  context.l10n.checkForUpdatesConfirm(subLength.toString()),
-                ),
-                onConfirm: () => di<PodcastUpdatesManager>().command.runAsync(
-                  const PodcastUpdateCapsule.updateAll(),
-                ),
-              );
-            } else {
-              di<PodcastUpdatesManager>().command.run(
-                const PodcastUpdateCapsule.updateAll(),
-              );
-            }
-            manager.setUpdatesOnly(true);
-            manager.setDownloadsOnly(false);
-          }
-        } else {
-          if (downloadsOnly) {
-            manager.setDownloadsOnly(false);
-          } else {
-            manager.setDownloadsOnly(true);
-            manager.setUpdatesOnly(false);
-          }
-        }
-      },
+      onSelected: watchValue((PodcastUpdatesManager m) => m.command.isRunning)
+          ? null
+          : (index) {
+              if (index == 0) {
+                if (updatesOnly) {
+                  manager.setUpdatesOnly(false);
+                } else {
+                  final subLength =
+                      di<SubscribedPodcastsManager>().command.value.length;
+                  if (subLength > 10) {
+                    ConfirmationDialog.show(
+                      context: context,
+                      title: Text(context.l10n.checkForUpdates),
+                      confirmLabel: context.l10n.checkForUpdates,
+                      content: Text(
+                        context.l10n.checkForUpdatesConfirm(
+                          subLength.toString(),
+                        ),
+                      ),
+                      onConfirm: () => di<PodcastUpdatesManager>().command
+                          .runAsync(const PodcastUpdateCapsule.updateAll()),
+                    );
+                  } else {
+                    di<PodcastUpdatesManager>().command.run(
+                      const PodcastUpdateCapsule.updateAll(),
+                    );
+                  }
+                  manager.setUpdatesOnly(true);
+                  manager.setDownloadsOnly(false);
+                }
+              } else {
+                if (downloadsOnly) {
+                  manager.setDownloadsOnly(false);
+                } else {
+                  manager.setDownloadsOnly(true);
+                  manager.setUpdatesOnly(false);
+                }
+              }
+            },
     );
   }
 }
