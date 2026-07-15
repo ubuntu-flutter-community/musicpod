@@ -348,9 +348,6 @@ EdgeInsets get appBarSingleActionSpacing => isMacOS
     ? const EdgeInsets.only(right: 5, left: 5)
     : EdgeInsets.only(right: 10, left: isMobile ? 0 : kLargestSpace);
 
-EdgeInsetsGeometry getRadioHistoryListPadding(bool useYaruTheme) =>
-    EdgeInsets.only(left: useYaruTheme ? 0 : 5);
-
 EdgeInsets get mainPageIconPadding => kMainPageIconPadding;
 
 EdgeInsets getCountryPillPadding(bool useYaruTheme) => useYaruTheme

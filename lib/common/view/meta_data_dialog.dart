@@ -41,7 +41,7 @@ class MetaDataContent extends StatelessWidget with WatchItMixin {
     final manager = di<ChangeLocalMetaDataManager>(param1: audio);
     final command = manager.command;
 
-    final wasChanged = watch(manager.draft.select((v) => v != null)).value;
+    final wasChanged = watch(manager.draft).value != null;
 
     callOnceAfterThisBuild((context) {
       _sub = command.listen((res, sub) {

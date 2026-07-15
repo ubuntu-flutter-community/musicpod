@@ -7,8 +7,6 @@ import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../custom_content/manager/custom_content_manager.dart';
 import '../../extensions/build_context_x.dart';
-
-import '../../radio/manager/radio_manager.dart';
 import '../manager/wipe_manager.dart';
 
 class RadioSection extends StatelessWidget with WatchItMixin {
@@ -17,7 +15,6 @@ class RadioSection extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    watchValue((RadioManager m) => m.radioCollectionView);
 
     return YaruSection(
       headline: Text(l10n.radio),
@@ -69,9 +66,8 @@ class RadioSection extends StatelessWidget with WatchItMixin {
                         width: 350,
                         child: Text(l10n.removeAllStarredStationsDescription),
                       ),
-                      onConfirm: () => di<WipeManager>().wipeCommand.runAsync({
-                        WipeType.radio,
-                      }),
+                      onConfirm: () =>
+                          di<WipeManager>().command.runAsync({WipeType.radio}),
                     ),
                   ),
                 ),

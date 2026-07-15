@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:flutter/widgets.dart';
 import 'package:injectable/injectable.dart';
 import 'package:lastfm/lastfm.dart';
+import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common/logging.dart';
-import '../../settings/service/settings_service.dart';
 import '../../settings/data/shared_preferences_keys.dart';
+import '../../settings/service/settings_service.dart';
 
 @Injectable(cache: true)
 class LastfmService {
@@ -17,7 +17,7 @@ class LastfmService {
   final SettingsService _settingsService;
 
   LastFM? _lastFm;
-  final isAuthorized = ValueNotifier<bool>(false);
+  final isAuthorized = SafeValueNotifier<bool>(false);
   void _setLastFm(LastFM lastFm) {
     _lastFm = lastFm;
     isAuthorized.value = lastFm is LastFMAuthorized;

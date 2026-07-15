@@ -2,12 +2,14 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../common/data/audio.dart';
-import '../../common/util/family.dart';
 import 'radio_manager.dart';
 
-@injectable
+@Injectable(cache: true)
 class StationManager {
-  StationManager._({required String uuid, required RadioManager radioManager}) {
+  StationManager({
+    @factoryParam required String uuid,
+    required RadioManager radioManager,
+  }) {
     command = Command.createAsyncNoParam(
       () => radioManager.getAudioByUUID(uuid),
       initialValue: null,
@@ -16,14 +18,4 @@ class StationManager {
   }
 
   late final Command<void, Audio?> command;
-
-  @factoryMethod
-  static StationManager create({
-    @factoryParam required String uuid,
-    required RadioManager radioManager,
-  }) => Family.of(
-    uuid,
-    () => StationManager._(uuid: uuid, radioManager: radioManager),
-    shouldDispose: (t) => t.command.listenerCount == 0,
-  );
 }

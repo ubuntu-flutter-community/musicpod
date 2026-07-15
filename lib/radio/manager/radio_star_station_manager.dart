@@ -1,21 +1,19 @@
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
+
 import '../../common/data/audio.dart';
-import '../../common/util/family.dart';
-import 'radio_manager.dart';
-import 'station_manager.dart';
+import '../../common/logging.dart';
+import '../service/radio_service.dart';
 
 @lazySingleton
 class RadioStarStationManager {
-  RadioStarStationManager({required RadioManager radioManager}) {
+  RadioStarStationManager({required RadioService service}) {
+    Logger.o(tag: '$RadioStarStationManager');
     command = Command.createAsync((station) async {
       if (station != null) {
-        final starred = await radioManager.toggleStarStation(station);
-        if (!starred) {
-          Family.dispose<StationManager>(station.uuid!);
-        }
+        await service.toggleStarredStation(station);
       }
-      return radioManager.getStarredStations();
+      return service.getStarredStations();
     }, initialValue: {});
 
     command.run();

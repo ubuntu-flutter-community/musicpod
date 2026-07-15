@@ -13,9 +13,9 @@ class LikeAllIconButton extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final liked = watchValue(
-      (LikedAudiosManager m) =>
-          m.command.select((e) => e?.contains(audios) ?? false),
-    );
+      (LikedAudiosManager m) => m.command,
+    ).toSet().containsAll(audios);
+
     final likedAudiosManager = di<LikedAudiosManager>();
     return IconButton(
       onPressed: () => liked

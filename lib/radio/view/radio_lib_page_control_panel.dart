@@ -4,7 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/view/common_control_panel.dart';
 import '../../extensions/build_context_x.dart';
 import '../data/radio_collection_view.dart';
-import '../manager/radio_manager.dart';
+import '../manager/radio_collection_view_manager.dart';
 
 class RadioLibPageControlPanel extends StatelessWidget with WatchItMixin {
   const RadioLibPageControlPanel({super.key});
@@ -12,13 +12,12 @@ class RadioLibPageControlPanel extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final radioCollectionView = watchValue(
-      (RadioManager m) => m.radioCollectionView,
+      (RadioCollectionViewManager m) => m.radioCollectionView,
     );
 
     return CommonControlPanel(
-      onSelected: (index) => di<RadioManager>().setRadioCollectionView(
-        RadioCollectionView.values[index],
-      ),
+      onSelected: (index) => di<RadioCollectionViewManager>()
+          .setRadioCollectionView(RadioCollectionView.values[index]),
       labels: [
         Text(context.l10n.stations),
         Text(context.l10n.tags),

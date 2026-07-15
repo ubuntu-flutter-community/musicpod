@@ -3,35 +3,35 @@ import 'dart:typed_data';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../common/logging.dart';
+import '../../common/util/family.dart';
 import '../service/local_cover_service.dart';
 
-@Injectable(cache: true)
+@injectable
 class LocalCoverManager {
-  LocalCoverManager({required LocalCoverService localCoverService})
-    : _localCoverService = localCoverService {
-    Logger.o(tag: '$LocalCoverManager');
+  LocalCoverManager._({
+    required int albumId,
+    required LocalCoverService localCoverService,
+  }) {
+    command = Command.createAsyncNoParam(
+      () => localCoverService.getCover(albumId: albumId),
+      initialValue: null,
+    );
+    command.run();
   }
 
-  final LocalCoverService _localCoverService;
+  @factoryMethod
+  factory LocalCoverManager.create({
+    @factoryParam required int albumId,
+    required LocalCoverService localCoverService,
+  }) => Family.of(
+    albumId,
+    () => LocalCoverManager._(
+      albumId: albumId,
+      localCoverService: localCoverService,
+    ),
+    shouldDispose: (m) => m.command.listenerCount == 0,
+    onDispose: (m) => m.command.dispose(),
+  );
 
-  final _getCoverCommands = <int, Command<void, Uint8List?>>{};
-
-  Command<void, Uint8List?> getCoverCommand(int albumId) =>
-      _getCoverCommands.putIfAbsent(
-        albumId,
-        () => Command.createAsync(
-          (_) => _localCoverService.getCover(albumId: albumId),
-          initialValue: null,
-        ),
-      );
-
-  void clear({List<int> exceptions = const []}) => _getCoverCommands
-      .removeWhere((albumId, _) => !exceptions.contains(albumId));
-
-  bool shouldRequestCover(int? albumId) {
-    if (albumId == null) return false;
-    final command = getCoverCommand(albumId);
-    return !command.results.value.hasData;
-  }
+  late final Command<void, Uint8List?> command;
 }

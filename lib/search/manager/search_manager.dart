@@ -10,6 +10,7 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
+import '../../common/logging.dart';
 import '../../common/view/languages.dart';
 import '../../extensions/string_x.dart';
 import '../../local_audio/data/local_search_result.dart';
@@ -34,6 +35,8 @@ class SearchManager {
 
        _podcastService = podcastService,
        _localAudioService = localAudioService {
+    Logger.o(tag: '$SearchManager');
+
     country.value ??= Country.values.firstWhereOrNull(
       (c) =>
           c.code ==

@@ -37,9 +37,8 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     final audio = watchPropertyValue((PlayerManager m) => m.audio);
 
     final icyTitle = watchValue(
-      (MpvMetadataManager m) =>
-          m.mpvMetaDataCommand.select((cmd) => cmd?.icyTitle),
-    );
+      (MpvMetadataManager m) => m.mpvMetaDataCommand,
+    )?.icyTitle;
     final showPositionDuration = watchPropertyValue(
       (SettingsManager m) => m.showPositionDuration,
     );

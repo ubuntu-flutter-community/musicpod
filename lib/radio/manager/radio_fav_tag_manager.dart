@@ -1,16 +1,17 @@
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
-import 'radio_manager.dart';
+
+import '../service/radio_service.dart';
 
 @Injectable(cache: true)
 class RadioFavTagManager {
-  RadioFavTagManager({required RadioManager radioManager}) {
+  RadioFavTagManager({required RadioService service}) {
     command = Command.createAsync((tag) async {
       if (tag != null) {
-        await radioManager.toggleFavRadioTag(tag);
+        await service.toggleFavRadioTag(tag);
       }
 
-      return radioManager.getFavRadioTags();
+      return service.getFavRadioTags();
     }, initialValue: {});
 
     command.run();

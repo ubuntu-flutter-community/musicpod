@@ -12,7 +12,7 @@ import '../../custom_content/manager/custom_content_manager.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
 import '../../podcasts/manager/download_manager.dart';
-import '../../podcasts/manager/podcast_genre_manager.dart';
+import '../../podcasts/manager/podcast_load_genres_manager.dart';
 import '../../podcasts/manager/podcast_manager.dart';
 import '../data/shared_preferences_keys.dart';
 import '../manager/settings_manager.dart';
@@ -230,7 +230,7 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
               confirmLabel: context.l10n.ok,
               cancelLabel: context.l10n.cancel,
               onConfirm: () =>
-                  di<WipeManager>().wipeCommand.runAsync({WipeType.podcasts}),
+                  di<WipeManager>().command.runAsync({WipeType.podcasts}),
             ),
           ),
         ],

@@ -3,7 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
-import '../manager/podcast_manager.dart';
+import '../manager/episodes_manager.dart';
 
 class PodcastPageSearchButton extends StatelessWidget with WatchItMixin {
   const PodcastPageSearchButton({super.key, required this.feedUrl});
@@ -15,10 +15,13 @@ class PodcastPageSearchButton extends StatelessWidget with WatchItMixin {
     final search = context.l10n.search;
     return IconButton(
       tooltip: search,
-      isSelected: watchValue((PodcastManager m) => m.showSearch),
+      isSelected: watchValue(
+        (EpisodesManager m) => m.showSearch,
+        param1: feedUrl,
+      ),
       onPressed: feedUrl.isEmpty
           ? null
-          : () => di<PodcastManager>().toggleShowSearch(),
+          : () => di<EpisodesManager>(param1: feedUrl).toggleShowSearch(),
       icon: Icon(Iconz.search, semanticLabel: search),
     );
   }

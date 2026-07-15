@@ -260,6 +260,7 @@ class SettingsTypeManager {
         int => settingsService.getInt(key),
         String => settingsService.getString(key),
         List<String> _ => settingsService.getStringList(key),
+        double => settingsService.getDouble(key),
         _ => throw SettingsException('Unsupported type: $type'),
       };
     }, initialValue: null);
@@ -294,3 +295,5 @@ class SettingsException implements Exception {
   @override
   String toString() => 'SettingsException: $message';
 }
+
+enum SettingsType { bool, int, String, listString, double }

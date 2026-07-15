@@ -88,10 +88,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get radio => 'Radio';
 
   @override
-  String get podcasts => 'Podcasts';
+  String get podcasts => 'Pódcast';
 
   @override
-  String get podcast => 'Podcast';
+  String get podcast => 'Pódcast';
 
   @override
   String get likedSongs => 'Canciones favoritas';
@@ -211,7 +211,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get noPodcastFound =>
-      'Lo siento, no se ha encontrado ningún podcast que coincida con esta búsqueda.';
+      'Lo siento, no se ha encontrado ningún pódcast que coincida con esta búsqueda.';
 
   @override
   String get noPodcastChartsFound =>
@@ -219,7 +219,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get noPodcastSubsFound =>
-      'Todavía no te has suscrito a ningún podcast.';
+      'Todavía no te has suscrito a ningún pódcast.';
 
   @override
   String get charts => 'Gráficos';
@@ -348,7 +348,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get podcastFeedIsEmpty =>
-      'Lo sentimos, el feed de este podcast está vacío.';
+      'Lo sentimos, el feed de este pódcast está vacío.';
 
   @override
   String get video => 'Vídeo';
@@ -375,7 +375,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get findUsOnGitHub => 'Encuéntranos en GitHub';
 
   @override
-  String get musicPodSubTitle => 'Tu reproductor de música, radio y podcasts';
+  String get musicPodSubTitle => 'Tu reproductor de música, radio y pódcast';
 
   @override
   String get pickMusicCollection => 'Selecciona tu colección de música';
@@ -480,7 +480,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get resetAllSettingsConfirm =>
-      '¿Estás seguro de que deseas restablecer todos los ajustes, tus suscripciones de podcasts, tu progreso de reproducción, tus estaciones destacadas y tus álbumes fijados? La aplicación se cerrará después y deberás volver a abrirla.';
+      '¿Estás seguro de que deseas restablecer todos los ajustes, tus suscripciones de pódcast, tu progreso de reproducción, tus estaciones destacadas y tus álbumes fijados? La aplicación se cerrará después y deberás volver a abrirla.';
 
   @override
   String get confirm => 'Confirmar';
@@ -636,16 +636,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get dark => 'Oscuro';
 
   @override
-  String get podcastProvider => 'Lista de podcast';
+  String get podcastProvider => 'Lista de pódcast';
 
   @override
   String get iTunes => 'iTunes';
 
   @override
-  String get podcastIndex => 'Índice de podcast';
+  String get podcastIndex => 'Índice de pódcast';
 
   @override
-  String get usePodcastIndex => 'Usar índice de podcast en lugar de iTunes';
+  String get usePodcastIndex => 'Usar índice de pódcast en lugar de iTunes';
 
   @override
   String get select => 'Seleccionar';
@@ -666,7 +666,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get aviationXXXPodcastIndexOnly => 'Aviación';
 
   @override
-  String get baseballXXXPodcastIndexOnly => 'Beisbol';
+  String get baseballXXXPodcastIndexOnly => 'Béisbol';
 
   @override
   String get basketballXXXPodcastIndexOnly => 'Baloncesto';
@@ -987,7 +987,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get stationUrl => 'Url de la emisora';
 
   @override
-  String get podcastFeedUrl => 'Url del feed del podcast';
+  String get podcastFeedUrl => 'URL del feed del podcast';
 
   @override
   String get stationName => 'Nombre de la emisora';
@@ -1018,10 +1018,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Exportar listas de reproducción y álbumes a archivos M3U';
 
   @override
-  String get exportPodcastsToOpmlFile => 'Exportar podcasts a archivo OPML';
+  String get exportPodcastsToOpmlFile => 'Exportar pódcast a archivo OPML';
 
   @override
-  String get importPodcastsFromOpmlFile => 'Importar podcasts desde OPML file';
+  String get importPodcastsFromOpmlFile => 'Importar pódcast desde OPML file';
 
   @override
   String get exportStarredStationsToOpmlFile =>
@@ -1044,15 +1044,15 @@ class AppLocalizationsEs extends AppLocalizations {
       'Esto eliminará todas sus estaciones destacadas.';
 
   @override
-  String get removeAllPodcasts => 'Eliminar todos los podcasts';
+  String get removeAllPodcasts => 'Eliminar todos los pódcast';
 
   @override
   String get removeAllPodcastsConfirm =>
-      '¿Estás seguro de que quieres eliminar todos los podcasts?';
+      '¿Estás seguro de que quieres eliminar todos los pódcast?';
 
   @override
   String get removeAllPodcastsDescription =>
-      'Esto eliminará todas sus suscripciones de podcast y progreso.';
+      'Esto eliminará todas sus suscripciones de pódcast y progreso.';
 
   @override
   String get customContentTitle => 'Añadir contenido personalizado';
@@ -1116,7 +1116,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String checkForUpdatesConfirm(String length) {
-    return '¿Estás seguro de que deseas revisar actualizaciones para $length podcasts?';
+    return '¿Estás seguro de que deseas revisar actualizaciones para $length pódcast?';
   }
 
   @override
@@ -1989,7 +1989,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get breakingChangesPleaseBackupDescription =>
-      'La próxima versión de MusicPod incluirá cambios importantes. Por favor, haz una copia de seguridad de tus listas de reproducción, suscripciones de podcasts y álbumes fijados antes de actualizar.';
+      'La próxima versión de MusicPod incluirá cambios importantes. Por favor, haz una copia de seguridad de tus listas de reproducción, suscripciones de pódcast y álbumes fijados antes de actualizar.';
 
   @override
   String get breakingChangesPleaseBackupConfirmation =>
@@ -2003,7 +2003,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get starredStations => 'Estaciones destacadas';
 
   @override
-  String get podcastSubscriptions => 'Suscripciones de podcast';
+  String get podcastSubscriptions => 'Suscripciones de pódcast';
 
   @override
   String get pinnedAlbums => 'Álbumes fijados';
@@ -2019,7 +2019,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get exportYourDataDescription =>
-      'Exporta tus suscripciones de podcasts, estaciones destacadas y álbumes fijados.';
+      'Exporta tus suscripciones de pódcast, estaciones destacadas y álbumes fijados.';
 
   @override
   String get localAudioWatchDialogTitle =>
@@ -2218,11 +2218,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get importingPodcastsPleaseWait =>
-      'Importando sus podcasts, por favor espera...';
+      'Importando sus pódcast, por favor espera...';
 
   @override
   String get exportingPodcastsPleaseWait =>
-      'Exportando sus podcasts, por favor espera...';
+      'Exportando sus pódcast, por favor espera...';
 
   @override
   String get importingStationsPleaseWait =>
@@ -2256,7 +2256,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String newEpisodesAvailableFor(int length) {
-    return 'Nuevos episodios disponibles para podcasts $length';
+    return 'Nuevos episodios disponibles para pódcast $length';
   }
 
   @override
@@ -2451,7 +2451,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get podcastSearchNotSuccessfull =>
-      'La búsqueda de podcasts no tuvo éxito. ¿Estás conectado a internet? Si es así, esto podría ser un problema del servidor.';
+      'La búsqueda de pódcast no tuvo éxito. ¿Estás conectado a internet? Si es así, esto podría ser un problema del servidor.';
 
   @override
   String get podcastFailedHostLookup =>
@@ -2493,5 +2493,5 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get podcastEpisodesNotFound =>
-      'No episodes found for this podcast. They might have been removed or the podcast might not be available anymore with this feed URL.';
+      'No se encontraron episodios para este pódcast. Es posible que hayan sido eliminados o que el pódcast ya no esté disponible con esta URL de feed.';
 }

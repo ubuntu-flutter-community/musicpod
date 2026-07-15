@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/widgets.dart';
 import 'package:injectable/injectable.dart';
+import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import 'lastfm_service.dart';
 import 'listenbrainz_service.dart';
@@ -41,7 +41,7 @@ class ExposeService {
   Future<void> initListenBrains(String apiKey) =>
       _listenBrainzService.init(newKey: apiKey, rethrowError: true);
 
-  ValueNotifier<bool> get isLastFmAuthorized => _lastFmService.isAuthorized;
+  SafeValueNotifier<bool> get isLastFmAuthorized => _lastFmService.isAuthorized;
   Future<void> authorizeLastFm({
     required String apiKey,
     required String apiSecret,
