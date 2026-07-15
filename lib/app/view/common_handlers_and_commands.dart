@@ -19,7 +19,7 @@ import '../../podcasts/manager/download_manager.dart';
 import '../../podcasts/manager/podcast_clean_manager.dart';
 import '../../podcasts/manager/podcast_short_info_manager.dart';
 import '../../podcasts/manager/podcast_updates_manager.dart';
-import '../../radio/manager/radio_manager.dart';
+import '../../radio/manager/click_station_manager.dart';
 import '../app_manager.dart';
 import '../play_anywhere_manager.dart';
 
@@ -132,8 +132,8 @@ mixin CommonHandlersAndCommandsMixin {
           context.clearToasts();
           switch (results.data!.param.audioPageType) {
             case AudioPageType.radio:
-              di<ClickStationManager>(
-                param1: results.data!.audios.singleOrNull?.uuid,
+              di<ClickStationManager>().command.run(
+                results.data!.audios.singleOrNull?.uuid,
               );
             default:
               break;

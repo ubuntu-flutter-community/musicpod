@@ -11,7 +11,7 @@ import '../../common/view/audio_filter.dart';
 import '../../extensions/date_time_x.dart';
 import '../data/podcast_short_info.dart';
 
-@Injectable(cache: true)
+@injectable
 class PodcastDao {
   final Database _db;
 
@@ -481,6 +481,7 @@ class PodcastDao {
       _db.podcastTable,
       _db.podcastGenreRelationTable,
       _db.podcastGenreTable,
+      _db.downloadedPodcastEpisodeTable,
     ].where((t) => existingTables.contains(t.actualTableName)).toList();
 
     await _db.transaction(() async {

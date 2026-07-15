@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../common/view/clean_up_caches.dart';
 import '../../common/view/default_page_body.dart';
 import '../../settings/view/settings_action.dart';
 import '../data/radio_collection_view.dart';
-import '../manager/radio_manager.dart';
+import '../manager/radio_collection_view_manager.dart';
 import 'blocked_heariny_history_list.dart';
 import 'favorite_radio_tags_grid.dart';
 import 'radio_connect_mixin.dart';
@@ -19,12 +18,10 @@ class RadioLibPage extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    callOnceAfterThisBuild((_) => clearLocalCovers());
-
     registerRadioConnectHandler(context);
 
     final radioCollectionView = watchValue(
-      (RadioManager m) => m.radioCollectionView,
+      (RadioCollectionViewManager m) => m.radioCollectionView,
     );
 
     return DefaultPageBody(

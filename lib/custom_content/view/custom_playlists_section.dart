@@ -38,8 +38,6 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
       const Duration(milliseconds: 200),
       () => di<RoutingManager>().push(pageId: playlistName),
     );
-
-    di<CustomContentManager>().reset();
   }
 
   @override
@@ -61,10 +59,9 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
       );
     }
 
-    final manager = di<CustomContentManager>();
     final playlistName = watchValue((CustomContentManager m) => m.playlistName);
     final playlists = watchValue(
-      (CustomContentManager m) => m.externalPlaylists,
+      (CustomContentManager m) => m.externalPlaylistsDraft,
     );
 
     return Column(
@@ -130,8 +127,8 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
               trailing: IconButton(
                 tooltip: l10n.deletePlaylist,
                 icon: Icon(Iconz.remove, semanticLabel: l10n.deletePlaylist),
-                onPressed: () =>
-                    di<CustomContentManager>().removePlaylist(name: e.key),
+                onPressed: () => di<CustomContentManager>()
+                    .removeExternalPlaylistFromDraft(name: e.key),
               ),
             );
           } else {
@@ -183,8 +180,6 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
                         await di<RoutingManager>().push(
                           pageId: playlists.entries.first.key,
                         );
-
-                        manager.reset();
                       }
                     : null,
                 child: Text(l10n.add),

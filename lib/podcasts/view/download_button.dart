@@ -57,7 +57,7 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
             }
 
             if (isRunning) {
-              downloadCommand.cancel();
+              di<DownloadManager>().cancelDownload(audio);
             } else {
               downloadCommand.run(audio);
             }

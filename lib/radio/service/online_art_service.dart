@@ -20,7 +20,7 @@ const _kInternetArchiveHeaders = {
   'User-Agent': '${AppConfig.appTitle} (${AppConfig.repoUrl})',
 };
 
-@Injectable(cache: true)
+@injectable
 class OnlineArtService {
   OnlineArtService({required Dio dio}) : _dio = dio;
   final Dio _dio;

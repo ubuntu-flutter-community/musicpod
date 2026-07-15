@@ -20,8 +20,7 @@ class LikeIconButton extends StatelessWidget with WatchItMixin {
     final likedAudiosManager = di<LikedAudiosManager>();
 
     final liked = watchValue(
-      (LikedAudiosManager m) =>
-          m.command.select((e) => e?.contains(audio) ?? false),
+      (LikedAudiosManager m) => m.command.select((e) => e.contains(audio)),
     );
 
     final void Function()? onLike;

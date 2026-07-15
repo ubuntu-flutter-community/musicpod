@@ -38,7 +38,7 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
                     .getPathOfDirectory();
                 Logger.i('Selected directory: $directoryPath');
                 if (directoryPath != null) {
-                  await di<WipeManager>().wipeCommand.runAsync({
+                  await di<WipeManager>().command.runAsync({
                     WipeType.localAudio,
                   });
                   di<LocalAudioManager>().initAudiosCommand.run((

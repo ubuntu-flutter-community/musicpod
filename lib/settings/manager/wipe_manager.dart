@@ -1,42 +1,44 @@
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../common/logging.dart';
 import '../../common/persistence/database.dart';
 import '../../local_audio/manager/local_audio_manager.dart';
 import '../../local_audio/manager/pinned_album_ids_manager.dart';
 import '../../local_audio/manager/playlist_ids_manager.dart';
 import '../../player/manager/player_manager.dart';
-import '../../podcasts/manager/podcast_manager.dart';
 import '../../podcasts/manager/subscribed_podcasts_manager.dart';
-import '../../radio/manager/radio_manager.dart';
+import '../../podcasts/service/podcast_service.dart';
 import '../../radio/manager/radio_star_station_manager.dart';
+import '../../radio/service/radio_service.dart';
 import 'settings_manager.dart';
 
 @Injectable(cache: true)
 class WipeManager {
   WipeManager({
     required SettingsManager settingsManager,
-    required PodcastManager podcastManager,
+    required PodcastService podcastService,
     required PinnedAlbumIDsManager pinnedAlbumIDsManager,
     required PlaylistIDsManager playlistIDsManager,
     required SubscribedPodcastsManager subscribedPodcastsManager,
     required RadioStarStationManager radioStarStationManager,
-    required RadioManager radioManager,
+    required RadioService radioService,
     required LocalAudioManager localAudioManager,
     required PlayerManager playerManager,
     required Database database,
   }) {
-    wipeCommand = Command.createAsyncNoResult((param) async {
+    Logger.o(tag: '$WipeManager');
+    command = Command.createAsyncNoResult((param) async {
       final wipeTypes = param ?? WipeType.values.toSet();
 
       if (wipeTypes.contains(WipeType.podcasts)) {
-        await podcastManager.wipeCommand.runAsync();
+        await podcastService.wipeAndBuildPodcastLibrary();
         await playerManager.clearAllLastPositions();
         await subscribedPodcastsManager.command.runAsync();
       }
 
       if (wipeTypes.contains(WipeType.radio)) {
-        await radioManager.wipeCommand.runAsync();
+        await radioService.wipeRadioLibrary();
         await radioStarStationManager.command.runAsync();
       }
 
@@ -61,7 +63,7 @@ class WipeManager {
     });
   }
 
-  late final Command<Set<WipeType>?, void> wipeCommand;
+  late final Command<Set<WipeType>?, void> command;
 }
 
 enum WipeType { podcasts, radio, localAudio, player, settings }

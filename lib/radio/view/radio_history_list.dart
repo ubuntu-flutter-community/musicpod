@@ -25,11 +25,10 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final length = watchValue(
-      (MpvMetadataManager m) => m.mpvMetadataHistory.select(
-        (history) => m.filteredMpvMetaDataHistory(filter: filter).length,
-      ),
-    );
+    watchValue((MpvMetadataManager m) => m.mpvMetadataHistory);
+    final length = di<MpvMetadataManager>()
+        .filteredMpvMetaDataHistory(filter: filter)
+        .length;
 
     final current = watchValue((MpvMetadataManager m) => m.mpvMetaDataCommand);
 
@@ -95,11 +94,10 @@ class SliverRadioHistoryList extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final length = watchValue(
-      (MpvMetadataManager m) => m.mpvMetadataHistory.select(
-        (history) => m.filteredMpvMetaDataHistory(filter: filter).length,
-      ),
-    );
+    watchValue((MpvMetadataManager m) => m.mpvMetadataHistory);
+    final length = di<MpvMetadataManager>()
+        .filteredMpvMetaDataHistory(filter: filter)
+        .length;
 
     final current = watchValue((MpvMetadataManager m) => m.mpvMetaDataCommand);
 

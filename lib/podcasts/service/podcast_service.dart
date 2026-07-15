@@ -17,7 +17,7 @@ import '../data/podcast_genre.dart';
 import '../data/podcast_short_info.dart';
 import '../persistence/podcast_dao.dart';
 
-@Injectable(cache: true)
+@lazySingleton
 class PodcastService {
   final SettingsService _settingsService;
   final PodcastDao _dao;
@@ -127,8 +127,8 @@ class PodcastService {
     final Map<String, Set<Audio>> newEpisodeMap = {};
 
     for (final (index, feedUrl) in toCheckFeedUrls.indexed) {
-      final storedTimeStamp = await getPodcastLastUpdated(feedUrl);
-      final name = await getPodcastName(feedUrl);
+      final storedTimeStamp = await _dao.getPodcastLastUpdated(feedUrl);
+      final name = await _dao.getPodcastName(feedUrl);
 
       Logger.i('checking update for: $name', tag: '$PodcastService');
       Logger.i('storedTimeStamp: $storedTimeStamp', tag: '$PodcastService');
@@ -320,12 +320,6 @@ class PodcastService {
   Future<PodcastShortInfo?> getPodcastShortInfo(String feedUrl) =>
       _dao.getPodcastShortInfo(feedUrl);
 
-  Future<String?> getPodcastName(String feedUrl) =>
-      _dao.getPodcastName(feedUrl);
-
-  Future<String?> getSubscribedPodcastArtist(String feedUrl) =>
-      _dao.getPodcastArtist(feedUrl);
-
   Future<void> togglePodcastSubscription({required String feedUrl}) =>
       _dao.togglePodcastSubscription(feedUrl: feedUrl);
 
@@ -353,9 +347,6 @@ class PodcastService {
     required String feedUrl,
     required DateTime lastUpdated,
   }) => _dao.addPodcastLastUpdated(feedUrl: feedUrl, lastUpdated: lastUpdated);
-
-  Future<String?> getPodcastLastUpdated(String feedUrl) =>
-      _dao.getPodcastLastUpdated(feedUrl);
 
   Future<void> _addPodcastUpdate(String feedUrl) =>
       _dao.addPodcastUpdate(feedUrl);

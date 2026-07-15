@@ -25,10 +25,6 @@ Future<void> main() async {
     ).thenAnswer((_) async => {episodeOneAudio.feedUrl!});
     when(mockPodcastManager.feedsWithDownloads).thenReturn({});
 
-    when(
-      mockPodcastManager.wipeCommand,
-    ).thenAnswer((_) => Command.createAsyncNoParamNoResult(() async {}));
-
     manager = SubscribedPodcastsManager(podcastManager: mockPodcastManager);
   });
 

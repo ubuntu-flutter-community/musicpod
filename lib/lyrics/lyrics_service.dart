@@ -13,7 +13,7 @@ import 'data/lyrics_and_art_result_and_param.dart';
 import 'data/online_lyrics_exceptions.dart';
 import 'data/online_lyrics_source.dart';
 
-@Injectable(cache: true)
+@injectable
 class LocalLyricsService {
   LyricsAndArtResult? parseLocalLyrics({
     String? filePath,
@@ -67,7 +67,7 @@ class LocalLyricsService {
   }
 }
 
-@Injectable(cache: true)
+@injectable
 class OnlineLyricsService {
   OnlineLyricsService({required Dio dio, required LocalAudioDao localAudioDao})
     : _dio = dio,

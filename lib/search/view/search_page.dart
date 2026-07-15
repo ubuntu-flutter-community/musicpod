@@ -34,12 +34,9 @@ class SearchPage extends StatelessWidget with WatchItMixin {
     final colorScheme = context.colorScheme;
     final audioType = watchValue((SearchManager m) => m.audioType);
     final loading = watchValue((SearchManager m) => m.searchCommand.isRunning);
-    final error = watchValue(
-      (SearchManager m) => m.searchCommand.errors.select((v) => v?.error),
-    );
-    final stackTrace = watchValue(
-      (SearchManager m) => m.searchCommand.errors.select((v) => v?.stackTrace),
-    );
+    final errors = watchValue((SearchManager m) => m.searchCommand.errors);
+    final error = errors?.error;
+    final stackTrace = errors?.stackTrace;
 
     return Scaffold(
       appBar: HeaderBar(

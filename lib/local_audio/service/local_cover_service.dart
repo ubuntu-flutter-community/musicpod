@@ -16,7 +16,7 @@ import '../../extensions/platform_x.dart';
 import '../../extensions/string_x.dart';
 import '../persistence/local_audio_dao.dart';
 
-@Injectable(cache: true)
+@injectable
 class LocalCoverService {
   final LocalAudioDao _dao;
 
@@ -24,7 +24,7 @@ class LocalCoverService {
 
   Future<Uint8List?> getCover({required int albumId}) async {
     // Check database
-    final dbCover = await getFromDb(albumId);
+    final dbCover = await _getFromDb(albumId);
     if (dbCover != null) {
       return dbCover;
     }
@@ -57,7 +57,7 @@ class LocalCoverService {
     return null;
   }
 
-  Future<Uint8List?> getFromDb(int albumId) => _dao.getAlbumCover(albumId);
+  Future<Uint8List?> _getFromDb(int albumId) => _dao.getAlbumCover(albumId);
 
   String? _getImageInFolder(File file) =>
       _commonCoverInFolderNames.firstWhereOrNull(

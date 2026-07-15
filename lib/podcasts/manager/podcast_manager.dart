@@ -7,10 +7,9 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/audio_filter.dart';
-import '../data/podcast_episode_filter.dart';
 import '../data/podcast_short_info.dart';
 import '../service/podcast_service.dart';
-import 'podcast_genre_manager.dart';
+import 'podcast_load_genres_manager.dart';
 
 @lazySingleton
 class PodcastManager {
@@ -39,30 +38,8 @@ class PodcastManager {
 
   void toggleDownloadsOnly() => setDownloadsOnly(!downloadsOnly.value);
 
-  final showSearch = SafeValueNotifier(false);
-
-  void toggleShowSearch() => showSearch.value = !showSearch.value;
-
-  final searchQuery = SafeValueNotifier<String?>(null);
-  void setSearchQuery(String value) => searchQuery.value = value;
-
-  final filter = SafeValueNotifier<PodcastEpisodeFilter>(
-    PodcastEpisodeFilter.title,
-  );
-  void setFilter() => filter.value = switch (filter.value) {
-    PodcastEpisodeFilter.title => PodcastEpisodeFilter.description,
-    PodcastEpisodeFilter.description => PodcastEpisodeFilter.title,
-  };
-
   Future<void> updateAudioDuration(Audio audio) =>
       _podcastService.updateAudioDuration(audio);
-
-  // TODO: when the downloads/updates filters are moved to the episode loading
-  // we can move this command to its own manager
-  late final Command<void, void> wipeCommand =
-      Command.createAsyncNoParamNoResult(
-        _podcastService.wipeAndBuildPodcastLibrary,
-      );
 
   Future<void> togglePodcastSubscription({required String feedUrl}) =>
       _podcastService.togglePodcastSubscription(feedUrl: feedUrl);

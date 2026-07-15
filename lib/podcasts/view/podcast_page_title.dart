@@ -40,10 +40,9 @@ class PodcastPageSubTitle extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) => Text(
     watchValue(
-          (PodcastShortInfoManager m) =>
-              m.command.select((info) => info?.artist),
+          (PodcastShortInfoManager m) => m.command,
           param1: feedUrl,
-        ) ??
+        )?.artist ??
         '',
   );
 }

@@ -8,6 +8,7 @@ import '../common/logging.dart';
 import '../common/view/audio_page_type.dart';
 import '../extensions/command_x.dart';
 import '../local_audio/manager/find_album_manager.dart';
+import '../local_audio/manager/find_titles_of_artist_manager.dart';
 import '../local_audio/manager/liked_audios_manager.dart';
 import '../local_audio/manager/playlist_manager.dart';
 import '../player/manager/player_manager.dart';
@@ -70,13 +71,13 @@ class PlayAnywhereManager {
       param: param,
     ),
     AudioPageType.likedAudio => PlayAnywhereResult(
-      audios: await di<LikedAudiosManager>().command.runRestrictedAsync() ?? [],
+      audios: await di<LikedAudiosManager>().command.runRestrictedAsync(),
       param: param,
     ),
     AudioPageType.album => PlayAnywhereResult(
       audios:
           await di<FindAlbumManager>(
-            param1: param.pageId,
+            param1: int.parse(param.pageId),
           ).command.runRestrictedAsync() ??
           [],
       param: param,
@@ -94,6 +95,14 @@ class PlayAnywhereManager {
           (await di<EpisodesManager>(
             param1: param.pageId,
           ).command.runRestrictedAsync())?.episodes ??
+          [],
+      param: param,
+    ),
+    AudioPageType.artist => PlayAnywhereResult(
+      audios:
+          await di<FindTitlesOfArtistManager>(
+            param1: param.pageId,
+          ).command.runRestrictedAsync() ??
           [],
       param: param,
     ),

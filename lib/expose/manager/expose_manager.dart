@@ -1,6 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
+import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../data/last_fm_credentials.dart';
 import '../service/expose_service.dart';
@@ -17,7 +17,7 @@ class ExposeManager {
         (apiKey) => _exposeService.initListenBrains(apiKey),
       );
 
-  ValueNotifier<bool> get isLastFmAuthorized =>
+  SafeValueNotifier<bool> get isLastFmAuthorized =>
       _exposeService.isLastFmAuthorized;
 
   late final Command<LastFmCredentials, void> authorizeLastFmCommand =

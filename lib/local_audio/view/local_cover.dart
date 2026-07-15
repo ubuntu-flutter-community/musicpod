@@ -22,12 +22,6 @@ class LocalCover extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    if (di<LocalCoverManager>().shouldRequestCover(albumId)) {
-      callOnceAfterThisBuild((context) {
-        di<LocalCoverManager>().getCoverCommand(albumId).run();
-      });
-    }
-
     return SizedBox.square(
       dimension: dimension,
       child: AnimatedSwitcher(
@@ -37,7 +31,8 @@ class LocalCover extends StatelessWidget with WatchItMixin {
         reverseDuration: const Duration(milliseconds: 200),
         child:
             watchValue(
-              (LocalCoverManager m) => m.getCoverCommand(albumId).results,
+              (LocalCoverManager m) => m.command.results,
+              param1: albumId,
             ).toWidget(
               whileRunning: (lastResult, param) =>
                   loadingWidget ??

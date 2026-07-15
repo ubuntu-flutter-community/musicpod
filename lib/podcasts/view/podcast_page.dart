@@ -17,7 +17,6 @@ import '../../search/manager/search_manager.dart';
 import '../data/podcast_update_capsule.dart';
 import '../manager/episodes_manager.dart';
 import '../manager/podcast_genre_manager.dart';
-import '../manager/podcast_manager.dart';
 import '../manager/podcast_updates_manager.dart';
 import '../manager/subscribed_podcasts_manager.dart';
 import 'podcast_error_page.dart';
@@ -55,7 +54,7 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
           param1: feedUrl,
         ).updateCommand.run((genre: genre!));
       }
-      clearLocalCovers();
+
       di<PodcastUpdatesManager>().command.run(
         PodcastUpdateCapsule(
           feedUrls: [feedUrl],
@@ -94,7 +93,10 @@ class _PodcastPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final showSearch = watchValue((PodcastManager m) => m.showSearch);
+    final showSearch = watchValue(
+      (EpisodesManager m) => m.showSearch,
+      param1: feedUrl,
+    );
 
     return Scaffold(
       appBar: HeaderBar(

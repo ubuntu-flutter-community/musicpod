@@ -6,7 +6,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/sliver_app_bar_bottom_space.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../manager/podcast_manager.dart';
+import '../manager/episodes_manager.dart';
 
 class PodcastPageSearchField extends StatefulWidget
     with WatchItStatefulWidgetMixin {
@@ -29,14 +29,23 @@ class _PodcastPageSearchFieldState extends State<PodcastPageSearchField> {
   void initState() {
     super.initState();
     _textEditingController = TextEditingController(
-      text: di<PodcastManager>().searchQuery.value,
+      text: di<EpisodesManager>(param1: widget.feedUrl).searchQuery.value,
     );
+  }
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final filter = watchValue((PodcastManager m) => m.filter).localize(l10n);
+    final filter = watchValue(
+      (EpisodesManager m) => m.filter,
+      param1: widget.feedUrl,
+    ).localize(l10n);
 
     final field = Padding(
       padding: const EdgeInsets.symmetric(horizontal: kLargestSpace),
@@ -48,7 +57,7 @@ class _PodcastPageSearchFieldState extends State<PodcastPageSearchField> {
           decoration: InputDecoration(
             label: Text(l10n.search),
             prefix: InkWell(
-              onTap: di<PodcastManager>().setFilter,
+              onTap: di<EpisodesManager>(param1: widget.feedUrl).setFilter,
               child: Text('$filter: '),
             ),
             suffixIcon: IconButton(
@@ -61,11 +70,13 @@ class _PodcastPageSearchFieldState extends State<PodcastPageSearchField> {
                   ),
                 ),
               ),
-              onPressed: di<PodcastManager>().toggleShowSearch,
+              onPressed: di<EpisodesManager>(
+                param1: widget.feedUrl,
+              ).toggleShowSearch,
               icon: Icon(Iconz.search, semanticLabel: context.l10n.search),
             ),
           ),
-          onChanged: di<PodcastManager>().setSearchQuery,
+          onChanged: di<EpisodesManager>(param1: widget.feedUrl).setSearchQuery,
         ),
       ),
     );

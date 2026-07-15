@@ -1,8 +1,9 @@
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
+import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../common/data/audio.dart';
-import '../../common/logging.dart';
+import '../../common/util/family.dart';
 import '../../common/view/audio_filter.dart';
 import '../../extensions/command_x.dart';
 import '../../player/manager/player_manager.dart';
@@ -11,27 +12,26 @@ import 'download_manager.dart';
 import 'podcast_manager.dart';
 import 'podcast_short_info_manager.dart';
 
-@Injectable(cache: true)
+@injectable
 class EpisodesManager {
-  EpisodesManager({
-    @factoryParam required String feedUrl,
+  EpisodesManager._({
+    required String feedUrl,
     required PodcastManager podcastManager,
     required DownloadManager downloadsManager,
     required PlayerManager playerManager,
   }) {
-    Logger.o(tag: '$EpisodesManager:$feedUrl');
+    podcastManager.updatesOnly.listen((_, _) => command.run());
+    podcastManager.downloadsOnly.listen((_, _) => command.run());
     downloadsManager.downloadCommands
         .select((v) => v.entries.any((e) => e.key.feedUrl == feedUrl))
         .listen((_, _) => command.run());
-    podcastManager.searchQuery.listen((_, _) => command.run());
-    podcastManager.filter.listen((_, _) => command.run());
-    podcastManager.updatesOnly.listen((_, _) => command.run());
-    podcastManager.downloadsOnly.listen((_, _) => command.run());
+    searchQuery.listen((_, _) => command.run());
+    filter.listen((_, _) => command.run());
 
     command = Command.createAsync(
       (param) async {
-        final searchQuery = podcastManager.searchQuery.value;
-        final filter = podcastManager.filter.value;
+        final searchQuery = this.searchQuery.value;
+        final filter = this.filter.value;
         final hideCompletedEpisodes = podcastManager.updatesOnly.value;
         final showDownloadsOnly = podcastManager.downloadsOnly.value;
         final episodes =
@@ -86,9 +86,42 @@ class EpisodesManager {
     command.run();
   }
 
+  @factoryMethod
+  static EpisodesManager create({
+    @factoryParam required String feedUrl,
+    required PodcastManager podcastManager,
+    required DownloadManager downloadsManager,
+    required PlayerManager playerManager,
+  }) => Family.of(
+    feedUrl,
+    () => EpisodesManager._(
+      feedUrl: feedUrl,
+      podcastManager: podcastManager,
+      downloadsManager: downloadsManager,
+      playerManager: playerManager,
+    ),
+    shouldDispose: (instance) => instance.command.listenerCount == 0,
+    onDispose: (instance) => instance.command.dispose(),
+  );
+
   late final Command<
     ({AudioSortOrder? order})?,
     ({List<Audio>? episodes, AudioSortOrder? order})?
   >
   command;
+
+  final showSearch = SafeValueNotifier(false);
+
+  void toggleShowSearch() => showSearch.value = !showSearch.value;
+
+  final searchQuery = SafeValueNotifier<String?>(null);
+  void setSearchQuery(String value) => searchQuery.value = value;
+
+  final filter = SafeValueNotifier<PodcastEpisodeFilter>(
+    PodcastEpisodeFilter.title,
+  );
+  void setFilter() => filter.value = switch (filter.value) {
+    PodcastEpisodeFilter.title => PodcastEpisodeFilter.description,
+    PodcastEpisodeFilter.description => PodcastEpisodeFilter.title,
+  };
 }

@@ -13,6 +13,7 @@ import '../../extensions/string_x.dart';
 import '../../l10n/app_localizations.dart';
 import '../../search/manager/search_manager.dart';
 import '../manager/podcast_genre_manager.dart';
+import '../manager/podcast_load_genres_manager.dart';
 import '../manager/podcast_short_info_manager.dart';
 import 'podcast_page_image.dart';
 

@@ -32,9 +32,8 @@ class LyricsViewer extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final audio = watchPropertyValue((PlayerManager m) => m.audio);
     final splitByDash = watchValue(
-      (MpvMetadataManager m) =>
-          m.mpvMetaDataCommand.select((cmd) => cmd?.icyTitle.splitByDash),
-    );
+      (MpvMetadataManager m) => m.mpvMetaDataCommand,
+    )?.icyTitle.splitByDash;
     final tryToFetchOnline = watchPropertyValue(
       (SettingsManager m) => m.tryToFetchLyricsOnline,
     );

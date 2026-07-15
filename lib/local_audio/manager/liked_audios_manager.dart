@@ -9,37 +9,30 @@ import 'local_audio_manager.dart';
 @Injectable(cache: true)
 class LikedAudiosManager {
   LikedAudiosManager(LocalAudioManager localAudioManager) {
-    command = Command.createAsyncNoParam(
-      localAudioManager.findLikedAudios,
-      initialValue: null,
-    );
-    command.run();
-
-    changeLikedAudiosCommand = Command.createAsync((param) async {
+    command = Command.createAsync((param) async {
       if (param != null) {
         await localAudioManager.createOrChangeLikedAudios(param);
       }
 
-      return await command.runAsync() ?? [];
+      return (await localAudioManager.findLikedAudios()) ?? [];
     }, initialValue: []);
+    command.run();
   }
 
-  late final Command<void, List<Audio>?> command;
+  late final Command<PlaylistChange?, List<Audio>> command;
 
-  void addLikedAudios(List<Audio> audios) => changeLikedAudiosCommand.run(
+  void addLikedAudios(List<Audio> audios) => command.run(
     PlaylistChange(
       id: PageIDs.likedAudios,
       action: PlaylistAction.addTo,
       audios: audios,
     ),
   );
-  void removeLikedAudios(List<Audio> audios) => changeLikedAudiosCommand.run(
+  void removeLikedAudios(List<Audio> audios) => command.run(
     PlaylistChange(
       id: PageIDs.likedAudios,
       action: PlaylistAction.removeFrom,
       audios: audios,
     ),
   );
-
-  late final Command<PlaylistChange?, List<Audio>> changeLikedAudiosCommand;
 }

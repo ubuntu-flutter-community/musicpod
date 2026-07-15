@@ -7,6 +7,7 @@ import 'package:m3u_parser_nullsafe/m3u_parser_nullsafe.dart';
 import 'package:opml/opml.dart';
 import 'package:path/path.dart';
 import 'package:pls/pls.dart';
+import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
@@ -14,49 +15,50 @@ import '../../common/logging.dart';
 import '../../extensions/media_file_x.dart';
 import '../../external_path/service/external_path_service.dart';
 import '../../local_audio/data/playlist_action.dart';
-import '../../local_audio/manager/local_audio_manager.dart';
+import '../../local_audio/manager/find_album_manager.dart';
 import '../../local_audio/manager/pinned_album_ids_manager.dart';
 import '../../local_audio/manager/playlist_ids_manager.dart';
 import '../../local_audio/manager/playlist_manager.dart';
-import '../../local_audio/service/local_audio_service.dart';
-import '../../podcasts/service/podcast_service.dart';
+import '../../podcasts/data/podcast_toggle_capsule.dart';
+import '../../podcasts/manager/episodes_manager.dart';
+import '../../podcasts/manager/podcast_short_info_manager.dart';
+import '../../podcasts/manager/subscribed_podcasts_manager.dart';
 import '../../radio/service/radio_service.dart';
 
 @Injectable(cache: true)
 class CustomContentManager {
   CustomContentManager({
     required ExternalPathService externalPathService,
-    required LocalAudioService localAudioService,
     required PlaylistIDsManager playlistIDsManager,
     required PinnedAlbumIDsManager pinnedAlbumIDsManager,
-    required LocalAudioManager localAudioManager,
-    required PodcastService podcastService,
+    required SubscribedPodcastsManager podcastService,
     required RadioService radioService,
   }) : _externalPathService = externalPathService,
-       _podcastService = podcastService,
+       _subscribedPodcastsManager = podcastService,
        _radioService = radioService,
        _playlistIDsManager = playlistIDsManager,
-       _pinnedAlbumIDsManager = pinnedAlbumIDsManager,
-       _localAudioManager = localAudioManager {
+       _pinnedAlbumIDsManager = pinnedAlbumIDsManager {
     Logger.o(tag: '$CustomContentManager');
   }
 
   final ExternalPathService _externalPathService;
-  final PodcastService _podcastService;
+  final SubscribedPodcastsManager _subscribedPodcastsManager;
   final PlaylistIDsManager _playlistIDsManager;
   final PinnedAlbumIDsManager _pinnedAlbumIDsManager;
-  final LocalAudioManager _localAudioManager;
   final RadioService _radioService;
 
-  final externalPlaylists = MapNotifier<String, List<Audio>>();
+  final externalPlaylistsDraft = MapNotifier<String, List<Audio>>();
   Future<void> addPlaylists() async {
     final more = await _loadPlaylistsFromFile();
-    externalPlaylists.addEntries(more.entries);
+    externalPlaylistsDraft.addEntries(more.entries);
   }
+
+  void removeExternalPlaylistFromDraft({required String name}) =>
+      externalPlaylistsDraft.remove(name);
 
   late final Command<void, void> importExternalPlaylistsCommand =
       Command.createAsyncNoParamNoResult(() async {
-        for (final entry in externalPlaylists.entries) {
+        for (final entry in externalPlaylistsDraft.entries) {
           await _playlistIDsManager.command.runAsync(
             PlaylistChange(
               id: entry.key,
@@ -67,8 +69,6 @@ class CustomContentManager {
           );
         }
       });
-
-  void removePlaylist({required String name}) => externalPlaylists.remove(name);
 
   Future<Map<String, List<Audio>>> _loadPlaylistsFromFile() async {
     final Map<String, List<Audio>> lists = {};
@@ -103,17 +103,15 @@ class CustomContentManager {
     for (var e in (await _pinnedAlbumIDsManager.command.runAsync())) {
       albums.add((
         id: e.toString(),
-        audios: await _localAudioManager.findAlbum(e) ?? [],
+        audios: await di<FindAlbumManager>(param1: e).command.runAsync() ?? [],
       ));
     }
 
     final List<({String id, List<Audio> audios})> list = [
-      ...await _localAudioManager.findAllPlaylistIDs().then(
-        (ids) => ids.map(
-          (e) => (
-            id: e,
-            audios: (di<PlaylistManager>(param1: e).command.value) ?? [],
-          ),
+      ...(await _playlistIDsManager.command.runAsync()).map(
+        (e) => (
+          id: e,
+          audios: (di<PlaylistManager>(param1: e).command.value) ?? [],
         ),
       ),
       ...albums,
@@ -152,9 +150,6 @@ class CustomContentManager {
   }
 
   Future<void> importPodcastsFromOpmlFile() async {
-    final podcasts =
-        <({String artist, String feedUrl, String? imageUrl, String name})>[];
-
     final path = await _externalPathService.getPathOfFile();
 
     if (path == null) {
@@ -165,61 +160,40 @@ class CustomContentManager {
     final xml = file.readAsStringSync();
     final doc = OpmlDocument.parse(xml);
 
+    final podcasts = <({String feedUrl})>[];
     for (var outline in doc.body) {
       if (outline.xmlUrl != null) {
-        final maybe = await _findPodcast(
-          outline.xmlUrl!,
-          text: outline.text,
-          title: outline.title,
-        );
-        if (maybe != null) {
-          podcasts.add(maybe);
-        }
+        podcasts.add((feedUrl: outline.xmlUrl!));
       } else {
         for (var outlineChild in (outline.children ?? <OpmlOutline>[]).where(
           (e) => e.xmlUrl != null,
         )) {
-          final maybe = await _findPodcast(
-            outlineChild.xmlUrl!,
-            text: outlineChild.text,
-            title: outlineChild.title,
-          );
-          if (maybe != null) {
-            podcasts.add(maybe);
-          }
+          podcasts.add((feedUrl: outlineChild.xmlUrl!));
         }
       }
     }
 
     if (podcasts.isNotEmpty) {
-      await _podcastService.addPodcasts(podcasts);
+      for (final podcast in podcasts) {
+        final episodes = (await di<EpisodesManager>(
+          param1: podcast.feedUrl,
+        ).command.runAsync())?.episodes;
+        final shortInfo = await di<PodcastShortInfoManager>(
+          param1: podcast.feedUrl,
+        ).command.runAsync();
+        final artist = shortInfo?.artist;
+        final imageUrl = shortInfo?.imageUrl;
+        final name = episodes?.firstOrNull?.podcastTitle ?? '';
+        await di<SubscribedPodcastsManager>().command.runAsync(
+          PodcastToggleCapsule(
+            feedUrl: podcast.feedUrl,
+            imageUrl: imageUrl,
+            name: name,
+            artist: artist,
+          ),
+        );
+      }
     }
-  }
-
-  Future<({String artist, String feedUrl, String? imageUrl, String name})?>
-  _findPodcast(String feed, {String? text, String? title}) async {
-    if (title != null && text != null) {
-      return (feedUrl: feed, artist: text, imageUrl: null, name: title);
-    }
-
-    // Only load the feed if the fields are not provided because this is expensive
-    final audios = await _podcastService.findEpisodes(
-      feedUrl: feed,
-      tryFromDbOnly: false,
-    );
-    final artist = audios.first.copyright ?? '';
-    final imageUrl = audios.first.albumArtUrl ?? audios.first.imageUrl;
-    final name = audios.first.podcastTitle ?? '';
-    if (audios.isNotEmpty) {
-      final value = (
-        feedUrl: feed,
-        artist: artist,
-        imageUrl: imageUrl,
-        name: name,
-      );
-      return value;
-    }
-    return null;
   }
 
   Future<bool> exportPodcastsToOpmlFile() async {
@@ -236,10 +210,13 @@ class CustomContentManager {
     final body = <OpmlOutline>[];
     final category = OpmlOutlineBuilder();
 
-    for (var podcast in (await _podcastService.getSubscribedPodcasts())) {
-      final name = await _podcastService.getPodcastName(podcast);
-      final artist = await _podcastService.getSubscribedPodcastArtist(podcast);
-      final builder = OpmlOutlineBuilder().type('rss').xmlUrl(podcast);
+    for (var feedUrl in (await _subscribedPodcastsManager.command.runAsync())) {
+      final shortInfo = di<PodcastShortInfoManager>(
+        param1: feedUrl,
+      ).command.value;
+      final name = shortInfo?.name;
+      final artist = shortInfo?.artist;
+      final builder = OpmlOutlineBuilder().type('rss').xmlUrl(feedUrl);
       if (name != null) {
         builder.title(name);
       }
@@ -310,15 +287,10 @@ class CustomContentManager {
     }
   }
 
-  final playlistName = ValueNotifier<String?>(null);
+  final playlistName = SafeValueNotifier<String?>(null);
   void setPlaylistName(String? value) {
     if (playlistName.value == value) return;
     playlistName.value = value;
-  }
-
-  void reset() {
-    externalPlaylists.clear();
-    playlistName.value = null;
   }
 }
 

@@ -35,6 +35,15 @@ class DownloadManager {
   Command<void, PodcastDownload?> getCommand(Audio audio) =>
       downloadCommands.putIfAbsent(audio, () => _createDownloadCommand(audio));
 
+  void cancelDownload(Audio audio) {
+    final command = downloadCommands[audio];
+    if (command != null) {
+      command.cancel();
+      downloadCommands.remove(audio);
+      downloadCommands.notifyListeners();
+    }
+  }
+
   Command<void, PodcastDownload> _createDownloadCommand(Audio audio) =>
       Command.createAsyncNoParamWithProgress(
         (handle) async {
@@ -110,6 +119,8 @@ class DownloadManager {
 
         if (!param.getDefault) {
           await _podcastService.removeAllDownloads();
+          downloadCommands.clear();
+          downloadCommands.notifyListeners();
         }
 
         return dir;

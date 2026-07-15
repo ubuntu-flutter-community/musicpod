@@ -4,7 +4,7 @@ import 'package:injectable/injectable.dart';
 import '../../common/data/audio.dart';
 import '../../common/persistence/database.dart';
 
-@Injectable(cache: true)
+@injectable
 class PlayerDao {
   PlayerDao({required Database db}) : _db = db;
 

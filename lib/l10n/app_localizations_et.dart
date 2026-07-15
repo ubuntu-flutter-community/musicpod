@@ -2482,5 +2482,5 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String get podcastEpisodesNotFound =>
-      'No episodes found for this podcast. They might have been removed or the podcast might not be available anymore with this feed URL.';
+      'Selle taskuhäälingu jaoks ei leidu osi. Nad võivad olla lihtsalt eemaldatud või pole taskuhääling enam sellel võrguaadressil saadaval.';
 }
