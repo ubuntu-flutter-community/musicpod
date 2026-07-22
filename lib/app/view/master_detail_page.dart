@@ -11,14 +11,46 @@ import '../routing_manager.dart';
 import 'master_item_page.dart';
 import 'master_panel.dart';
 
-class MasterDetailPage extends StatelessWidget {
+class MasterDetailPage extends StatelessWidget with WatchItMixin {
   const MasterDetailPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final routingManager = di<RoutingManager>();
+  Widget build(BuildContext context) => Scaffold(
+    resizeToAvoidBottomInset: isMobile ? false : null,
+    key: masterScaffoldKey,
+    endDrawer: isMacOS ? const _Drawer() : null,
+    drawer: isMacOS ? null : const _Drawer(),
+    body: Row(
+      children: [
+        if (context.showMasterPanel) ...[
+          const MasterPanel(),
+          const VerticalDivider(),
+        ],
+        Expanded(
+          child: Navigator(
+            initialRoute: watchValue(
+              (RoutingManager m) => m.selectedPageIdCommand,
+            ),
+            key: di<RoutingManager>().masterNavigatorKey,
+            onGenerateRoute: (settings) => PageRouteBuilder(
+              settings: settings,
+              maintainState: false,
+              pageBuilder: (context, _, __) =>
+                  MasterItemPage(pageId: settings.name ?? PageIDs.searchPage),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
-    final drawer = Drawer(
+class _Drawer extends StatelessWidget {
+  const _Drawer();
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
       width: kMasterDetailSideBarWidth,
       child: Stack(
         children: [
@@ -32,34 +64,6 @@ class MasterDetailPage extends StatelessWidget {
                   ? masterScaffoldKey.currentState?.closeEndDrawer
                   : masterScaffoldKey.currentState?.closeDrawer,
               icon: Icon(Iconz.close),
-            ),
-          ),
-        ],
-      ),
-    );
-
-    return Scaffold(
-      resizeToAvoidBottomInset: isMobile ? false : null,
-      key: masterScaffoldKey,
-      endDrawer: isMacOS ? drawer : null,
-      drawer: isMacOS ? null : drawer,
-      body: Row(
-        children: [
-          if (context.showMasterPanel) ...[
-            const MasterPanel(),
-            const VerticalDivider(),
-          ],
-          Expanded(
-            child: Navigator(
-              initialRoute: routingManager.selectedPageId,
-              onDidRemovePage: (page) {},
-              key: routingManager.masterNavigatorKey,
-              onGenerateRoute: (settings) => PageRouteBuilder(
-                settings: settings,
-                maintainState: false,
-                pageBuilder: (context, _, __) =>
-                    MasterItemPage(pageId: settings.name ?? PageIDs.searchPage),
-              ),
             ),
           ),
         ],

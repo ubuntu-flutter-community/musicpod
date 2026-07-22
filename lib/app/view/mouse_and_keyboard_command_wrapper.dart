@@ -47,7 +47,8 @@ class MouseAndKeyboardCommandWrapper extends StatelessWidget {
       actions: <Type, Action<Intent>>{
         _SearchIntent: CallbackAction<_SearchIntent>(
           onInvoke: (intent) {
-            final currentPageId = di<RoutingManager>().selectedPageId;
+            final currentPageId =
+                di<RoutingManager>().selectedPageIdCommand.value;
 
             if (currentPageId == PageIDs.searchPage) {
               if (di<AppManager>().fullWindowMode.value) {

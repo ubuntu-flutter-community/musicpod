@@ -126,7 +126,6 @@ class AudioServiceHandler extends BaseAudioHandler with SeekHandler {
   final Future<void> Function() onPrevious;
   final Future<void> Function(Duration position) onSeek;
 
-  @override
   AudioServiceHandler({
     required this.onPlay,
     required this.onPause,

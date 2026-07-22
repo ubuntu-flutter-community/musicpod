@@ -238,7 +238,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
         return;
       case AudioType.podcast:
         if (audio.feedUrl != null &&
-            routingManager.selectedPageId != audio.feedUrl) {
+            routingManager.selectedPageIdCommand.value != audio.feedUrl) {
           final feedUrl = audio.feedUrl!;
 
           routingManager.push(
@@ -254,7 +254,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     final routingManager = di<RoutingManager>();
     if (audio.url == null ||
         audio.uuid == null ||
-        routingManager.selectedPageId == audio.uuid) {
+        routingManager.selectedPageIdCommand.value == audio.uuid) {
       return;
     }
     routingManager.push(

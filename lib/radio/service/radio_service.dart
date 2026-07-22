@@ -80,19 +80,14 @@ class RadioService {
     return hosts;
   }
 
-  Future<Audio?> getAudioByUUID(
-    String uuid, {
-    bool tryFromDbFirst = true,
-  }) async {
-    if (tryFromDbFirst) {
-      final station = await _dao.getStationByUuid(uuid);
-      if (station != null) {
-        Logger.i(
-          'Station with uuid $uuid found in local database, returning it.',
-          tag: '$RadioService',
-        );
-        return Audio.fromStation(station);
-      }
+  Future<Audio?> getAudioByUUID(String uuid) async {
+    final stationFromDb = await _dao.getStationByUuid(uuid);
+    if (stationFromDb != null) {
+      Logger.i(
+        'Station with uuid $uuid found in local database, returning it.',
+        tag: '$RadioService',
+      );
+      return Audio.fromStation(stationFromDb);
     }
 
     if (await connectToServer() == null) {

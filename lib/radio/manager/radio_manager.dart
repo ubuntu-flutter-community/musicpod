@@ -20,12 +20,9 @@ class RadioManager {
     initialValue: null,
   );
 
-  Future<Audio?> getAudioByUUID(
-    String uuid, {
-    bool tryFromDbFirst = true,
-  }) async {
+  Future<Audio?> getAudioByUUID(String uuid) async {
     await connectCommand.runRestrictedAsync();
-    return _radioService.getAudioByUUID(uuid, tryFromDbFirst: tryFromDbFirst);
+    return _radioService.getAudioByUUID(uuid);
   }
 
   late final Command<Audio, Audio?> findSimilarStationCommand =

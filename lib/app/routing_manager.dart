@@ -1,20 +1,20 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
-import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-import '../settings/service/settings_service.dart';
-import '../settings/data/shared_preferences_keys.dart';
-import 'page_ids.dart';
 import '../extensions/platform_x.dart';
 import '../local_audio/service/local_audio_service.dart';
 import '../podcasts/service/podcast_service.dart';
 import '../radio/service/radio_service.dart';
+import '../settings/data/shared_preferences_keys.dart';
+import '../settings/service/settings_service.dart';
+import 'page_ids.dart';
 import 'view/mobile_page.dart';
 
 @lazySingleton
-class RoutingManager extends SafeChangeNotifier {
+class RoutingManager {
   RoutingManager({
     required PodcastService podcastService,
     required LocalAudioService localAudioService,
@@ -23,7 +23,9 @@ class RoutingManager extends SafeChangeNotifier {
   }) : _podcastService = podcastService,
        _localAudioService = localAudioService,
        _radioService = radioService,
-       _settingsService = settingsService;
+       _settingsService = settingsService {
+    selectedPageIdCommand.run();
+  }
 
   final PodcastService _podcastService;
   final LocalAudioService _localAudioService;
@@ -39,16 +41,20 @@ class RoutingManager extends SafeChangeNotifier {
           await _localAudioService.isPlaylistSaved(pageId) ||
           await _podcastService.isPodcastSubscribed(pageId));
 
-  String _selectedPageId = PageIDs.searchPage;
-  String get selectedPageId => _selectedPageId;
-  void _setSelectedPageId(String pageId) => _settingsService
-      .setValue(SPKeys.selectedPage, pageId, throwOnError: false)
-      .then((saved) {
-        if (saved) {
-          _selectedPageId = pageId;
-          notifyListeners();
-        }
-      });
+  late final Command<String, String> selectedPageIdCommand =
+      Command.createAsync(
+        (String? pageId) async {
+          if (pageId != null) {
+            await _settingsService.setValue(SPKeys.selectedPage, pageId);
+          }
+
+          return _settingsService.getString(SPKeys.selectedPage) ??
+              PageIDs.searchPage;
+        },
+        initialValue:
+            _settingsService.getString(SPKeys.selectedPage) ??
+            PageIDs.searchPage,
+      );
 
   Future<void> push({
     required String pageId,
@@ -59,7 +65,7 @@ class RoutingManager extends SafeChangeNotifier {
     final inLibrary = await isPageInLibrary(pageId);
     assert(inLibrary || builder != null);
 
-    _setSelectedPageId(pageId);
+    selectedPageIdCommand(pageId);
 
     if (inLibrary) {
       await _masterNavigatorKey.currentState?.pushNamedAndRemoveUntil(

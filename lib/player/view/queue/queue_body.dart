@@ -131,7 +131,7 @@ class _QueueBodyState extends State<QueueBody>
                       );
                     },
                     itemCount: queue.audios.length,
-                    onReorder: di<PlayerManager>().moveAudioInQueue,
+                    onReorderItem: di<PlayerManager>().moveAudioInQueue,
                   ),
                 ),
               ],

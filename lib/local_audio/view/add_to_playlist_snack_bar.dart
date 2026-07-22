@@ -10,7 +10,7 @@ void showAddedToPlaylistSnackBar({
   required BuildContext context,
   required String id,
 }) {
-  if (id == di<RoutingManager>().selectedPageId) {
+  if (id == di<RoutingManager>().selectedPageIdCommand.value) {
     return;
   }
 

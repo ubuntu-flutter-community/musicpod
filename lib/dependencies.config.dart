@@ -119,7 +119,7 @@ extension GetItInjectableX on _i174.GetIt {
       () => const _i415.ExternalPathService(),
     );
     gh.factory<_i546.LocalLyricsService>(() => _i546.LocalLyricsService());
-    gh.factory<_i1009.LicenseStore>(() => _i1009.LicenseStore());
+    gh.factoryCached<_i1009.LicenseStore>(() => _i1009.LicenseStore());
     gh.factory<_i361.Dio>(() => dioModule.create());
     gh.factory<_i535.GitHub>(() => githubModule.gitHub);
     await gh.factoryAsync<_i526.LocalNotifier>(

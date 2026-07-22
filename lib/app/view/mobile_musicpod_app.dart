@@ -66,7 +66,7 @@ class _MobileMusicPodAppState extends State<MobileMusicPodApp> {
 
     return MaterialApp(
       navigatorKey: routingManager.masterNavigatorKey,
-      initialRoute: routingManager.selectedPageId,
+      initialRoute: watchValue((RoutingManager m) => m.selectedPageIdCommand),
       onGenerateRoute: (settings) => PageRouteBuilder(
         settings: settings,
         maintainState: false,

@@ -15,9 +15,8 @@ class StaredStationIconButton extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final isStarredStation = watchValue(
-      (RadioStarStationManager m) =>
-          m.command.select((p) => p.contains(audio?.uuid)),
-    );
+      (RadioStarStationManager m) => m.command,
+    ).contains(audio?.uuid);
 
     return IconButton(
       isSelected: isStarredStation,
