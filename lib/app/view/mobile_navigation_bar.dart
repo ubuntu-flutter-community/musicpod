@@ -14,8 +14,8 @@ class MobileNavigationBar extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
-    final selectedPageId = watchPropertyValue(
-      (RoutingManager m) => m.selectedPageId,
+    final selectedPageId = watchValue(
+      (RoutingManager m) => m.selectedPageIdCommand,
     );
 
     final sizedBox = SizedBox(

@@ -7,6 +7,7 @@ import '../../local_audio/manager/pinned_album_ids_manager.dart';
 import '../../local_audio/manager/playlist_ids_manager.dart';
 import '../../podcasts/manager/subscribed_podcasts_manager.dart';
 import '../../radio/manager/radio_star_station_manager.dart';
+import '../routing_manager.dart';
 import 'create_master_items.dart';
 
 class MasterItemPage extends StatelessWidget with WatchItMixin {
@@ -16,6 +17,10 @@ class MasterItemPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
+    final routingManagerInitializing = watchValue(
+      (RoutingManager m) => m.selectedPageIdCommand.isRunning,
+    );
+
     final playlistIdResults = watchValue(
       (PlaylistIDsManager m) => m.command.results,
     );
@@ -42,9 +47,11 @@ class MasterItemPage extends StatelessWidget with WatchItMixin {
           subscribedPodcastIdResults.data?.toList() ?? [],
     );
     final item = masterItems.firstWhereOrNull((e) => e.pageId == pageId);
-    if (item != null) return item.pageBuilder(context);
+    if (item != null && !routingManagerInitializing)
+      return item.pageBuilder(context);
 
-    if (loadingPlaylists ||
+    if (routingManagerInitializing ||
+        loadingPlaylists ||
         loadingAlbums ||
         loadingStations ||
         loadingPodcasts) {

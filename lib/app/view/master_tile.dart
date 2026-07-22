@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/global_keys.dart';
@@ -18,8 +17,8 @@ import '../play_anywhere_manager.dart';
 import '../routing_manager.dart';
 import 'master_item.dart';
 
-class MasterTileWithPageId extends StatelessWidget {
-  const MasterTileWithPageId({
+class MasterTile extends StatelessWidget {
+  const MasterTile({
     super.key,
     required this.item,
     required this.selectedPageId,
@@ -29,7 +28,7 @@ class MasterTileWithPageId extends StatelessWidget {
   final String? selectedPageId;
 
   @override
-  Widget build(BuildContext context) => MasterTile(
+  Widget build(BuildContext context) => _MasterTile(
     key: ValueKey(item.pageId),
     audioPageType: item.audioPageType,
     onTap: () => di<RoutingManager>().push(pageId: item.pageId),
@@ -41,14 +40,13 @@ class MasterTileWithPageId extends StatelessWidget {
   );
 }
 
-class MasterTile extends StatelessWidget {
-  const MasterTile({
+class _MasterTile extends StatelessWidget {
+  const _MasterTile({
     super.key,
     this.selected,
     this.leading,
     required this.title,
     this.subtitle,
-    this.trailing,
     required this.pageId,
     required this.onTap,
     required this.audioPageType,
@@ -58,44 +56,76 @@ class MasterTile extends StatelessWidget {
   final Widget? leading;
   final Widget? title;
   final Widget? subtitle;
-  final Widget? trailing;
   final String pageId;
   final void Function() onTap;
   final AudioPageType audioPageType;
 
   @override
   Widget build(BuildContext context) {
-    final yaruMasterTile = YaruMasterTile(
-      title: title,
+    final theme = context.theme;
+    final masterTile = ListTile(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(context.buttonRadius),
+      ),
+      title: _titleStyle(title, theme.textTheme.bodyMedium?.color),
       onTap: () {
         masterScaffoldKey.currentState
           ?..closeEndDrawer()
           ..closeDrawer();
         onTap();
       },
-      selected: selected,
+      selected: selected ?? false,
       leading: leading,
-      subtitle: subtitle,
-      trailing: trailing,
+      subtitle: _subTitleStyle(subtitle, theme.textTheme.bodyMedium?.color),
     );
 
     final Widget tile;
     if (pageId == PageIDs.customContent) {
-      tile = _FramedMasterTile(tile: yaruMasterTile);
+      tile = _FramedMasterTile(tile: masterTile);
     } else {
-      tile = yaruMasterTile;
+      tile = Padding(
+        padding: const EdgeInsets.only(
+          bottom: kSmallestSpace,
+          left: kMediumSpace,
+          right: kMediumSpace,
+        ),
+        child: masterTile,
+      );
     }
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: kSmallestSpace),
-      child: _PlayAbleMasterTile(
-        audioPageType: audioPageType,
-        selected: selected,
-        pageId: pageId,
-        tile: tile,
-      ),
+    return _PlayAbleMasterTile(
+      audioPageType: audioPageType,
+      selected: selected,
+      pageId: pageId,
+      tile: tile,
     );
   }
+}
+
+Widget? _titleStyle(Widget? child, Color? color) {
+  if (child == null) {
+    return child;
+  }
+
+  return DefaultTextStyle.merge(
+    child: child,
+    maxLines: 1,
+    overflow: TextOverflow.ellipsis,
+    style: TextStyle(color: color),
+  );
+}
+
+Widget? _subTitleStyle(Widget? child, Color? color) {
+  if (child == null) {
+    return child;
+  }
+
+  return DefaultTextStyle.merge(
+    child: child,
+    maxLines: 1,
+    overflow: TextOverflow.ellipsis,
+    style: TextStyle(color: color),
+  );
 }
 
 class _FramedMasterTile extends StatelessWidget {

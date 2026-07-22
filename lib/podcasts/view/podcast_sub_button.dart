@@ -23,9 +23,8 @@ class PodcastSubButton extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final subscribed = watchValue(
-      (SubscribedPodcastsManager m) =>
-          m.command.select((v) => v.contains(pageId)),
-    );
+      (SubscribedPodcastsManager m) => m.command,
+    ).contains(pageId);
 
     final disabled = pageId.isEmpty;
     return IconButton(

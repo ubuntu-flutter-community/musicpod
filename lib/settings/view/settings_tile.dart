@@ -19,8 +19,8 @@ class SettingsTile extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final selectedPageId = watchPropertyValue(
-      (RoutingManager m) => m.selectedPageId,
+    final selectedPageId = watchValue(
+      (RoutingManager m) => m.selectedPageIdCommand,
     );
 
     return Padding(

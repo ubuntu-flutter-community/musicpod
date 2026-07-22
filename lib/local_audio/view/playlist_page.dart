@@ -223,7 +223,7 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
               ),
             );
           },
-          onReorder: (oldIndex, newIndex) {
+          onReorderItem: (oldIndex, newIndex) {
             if (playerManager.queue == Queue(name: pageId, audios: audios)) {
               playerManager.moveAudioInQueue(oldIndex, newIndex);
             }
