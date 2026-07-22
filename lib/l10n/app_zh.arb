@@ -904,5 +904,16 @@
     "fetchingLyricsOnlineFailed": "无法在线获取歌词，可能是服务器问题或该歌曲无法获取",
     "onlineLyricsSourceTitle": "在线歌词源",
     "onlineLyricsSourceDescription": "选择在线歌词源。",
-    "onlineLyricsSourceLrcLib": "LrcLib"
+    "onlineLyricsSourceLrcLib": "LrcLib",
+    "appCanNotConnectToHost": "{appName}无法连接到{host}。您是否连接了互联网？",
+    "@appCanNotConnectToHost": {
+        "placeholders": {
+            "appName": {
+                "type": "String"
+            },
+            "host": {
+                "type": "String"
+            }
+        }
+    }
 }
