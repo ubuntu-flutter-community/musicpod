@@ -908,5 +908,6 @@
             }
         }
     },
-    "tryToFetchLyricsOnlineTitle": "Essayer de trouver les paroles en ligne"
+    "tryToFetchLyricsOnlineTitle": "Essayer de trouver les paroles en ligne",
+    "podcastEpisodesNotFound": "Aucun épisode n'a été trouvé pour ce podcast. Il se peut qu'ils aient été supprimés ou que le podcast ne soit plus disponible via cette URL de flux."
 }
