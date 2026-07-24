@@ -2494,5 +2494,5 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get podcastEpisodesNotFound =>
-      'No episodes found for this podcast. They might have been removed or the podcast might not be available anymore with this feed URL.';
+      'Aucun épisode n\'a été trouvé pour ce podcast. Il se peut qu\'ils aient été supprimés ou que le podcast ne soit plus disponible via cette URL de flux.';
 }
