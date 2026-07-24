@@ -2386,7 +2386,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String appCanNotConnectToHost(String appName, String host) {
-    return '$appName can not connect to $host. Are you connected to the internet?';
+    return '$appName无法连接到$host。您是否连接了互联网？';
   }
 
   @override
