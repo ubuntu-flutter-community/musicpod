@@ -13,9 +13,8 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../player/manager/mpv_metadata_manager.dart';
-import '../../search/manager/search_manager.dart';
 import '../../search/data/search_type.dart';
-import '../../settings/manager/settings_manager.dart';
+import '../../search/manager/search_manager.dart';
 import '../manager/online_art_manager.dart';
 import 'radio_history_tile_image.dart';
 import 'station_page.dart';
@@ -45,9 +44,7 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final icyName = di<MpvMetadataManager>().getMetadata(icyTitle)?.icyName;
-    final useYaruTheme = watchPropertyValue(
-      (SettingsManager m) => m.useYaruTheme,
-    );
+
     return switch (_variant) {
       _RadioHistoryTileVariant.simple => _SimpleRadioHistoryTile(
         icyTitle: icyTitle,
@@ -59,8 +56,6 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
         contentPadding: const EdgeInsets.symmetric(horizontal: kLargestSpace),
         leading: RadioHistoryTileImage(
           key: ValueKey(icyTitle),
-          height: useYaruTheme ? 34 : 40,
-          width: useYaruTheme ? 34 : 40,
           icyTitle: icyTitle,
         ),
         trailing: Row(

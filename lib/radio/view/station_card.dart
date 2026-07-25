@@ -6,13 +6,13 @@ import '../../app/play_anywhere_manager.dart';
 import '../../app/routing_manager.dart';
 import '../../common/view/audio_card.dart';
 import '../../common/view/audio_card_bottom.dart';
-import '../../common/view/audio_fall_back_icon.dart';
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/icons.dart';
-import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
 import '../../player/manager/player_manager.dart';
 import '../manager/station_manager.dart';
+import 'station_page_icon.dart';
+import 'station_title.dart';
 
 class StationCard extends StatelessWidget with WatchItMixin {
   const StationCard({super.key, required this.uuid});
@@ -48,7 +48,7 @@ class StationCard extends StatelessWidget with WatchItMixin {
         : Iconz.playFilled;
 
     return AudioCard(
-      bottom: AudioCardBottom(text: station.title?.replaceAll('_', '') ?? ''),
+      bottom: AudioCardBottom(child: StationTitle(uuid: uuid)),
       playIcon: iconData,
       seleted: isSelected,
       onPlay: () => di<PlayAnywhereManager>().command.run(
@@ -56,13 +56,10 @@ class StationCard extends StatelessWidget with WatchItMixin {
       ),
       onTap: () => di<RoutingManager>().push(pageId: uuid),
       image: SizedBox.expand(
-        child: SafeNetworkImage(
-          fallbackWidget: AudioFallBackIcon(audio: station, iconSize: 70),
-          errorWidget: AudioFallBackIcon(audio: station, iconSize: 70),
-          url: station.imageUrl,
-          fit: BoxFit.scaleDown,
-          height: audioCardDimension,
-          width: audioCardDimension,
+        child: StationPageIcon(
+          uuid: uuid,
+          selected: false,
+          dimension: audioCardDimension,
         ),
       ),
     );

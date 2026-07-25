@@ -41,7 +41,7 @@ class RoutingManager {
           await _localAudioService.isPlaylistSaved(pageId) ||
           await _podcastService.isPodcastSubscribed(pageId));
 
-  late final Command<String, String> selectedPageIdCommand =
+  late final Command<String?, String> selectedPageIdCommand =
       Command.createAsync(
         (String? pageId) async {
           if (pageId != null) {
