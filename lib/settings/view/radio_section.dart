@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:future_loading_dialog/future_loading_dialog.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../custom_content/manager/custom_content_manager.dart';
 import '../../extensions/build_context_x.dart';
+import '../../common/view/ui_constants.dart';
 import '../manager/wipe_manager.dart';
 
 class RadioSection extends StatelessWidget with WatchItMixin {
@@ -16,65 +16,70 @@ class RadioSection extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
-    return YaruSection(
-      headline: Text(l10n.radio),
-      child: Column(
-        children: [
-          YaruTile(
-            title: Text(l10n.starredStations),
-            trailing: Row(
-              children: [
-                IconButton(
-                  tooltip: l10n.exportStarredStationsToOpmlFile,
-                  icon: Icon(
-                    Iconz.export,
-                    semanticLabel: l10n.exportStarredStationsToOpmlFile,
-                  ),
-                  onPressed: () => showFutureLoadingDialog(
-                    context: context,
-                    future: () => di<CustomContentManager>()
-                        .exportStarredStationsToOpmlFile(),
-                    title: context.l10n.exportingStationsPleaseWait,
-                    backLabel: context.l10n.back,
-                  ),
-                ),
-                IconButton(
-                  tooltip: l10n.importStarredStationsFromOpmlFile,
-                  icon: Icon(
-                    Iconz.import,
-                    semanticLabel: l10n.importStarredStationsFromOpmlFile,
-                  ),
-                  onPressed: () => showFutureLoadingDialog(
-                    context: context,
-                    future: () => di<CustomContentManager>()
-                        .importStarredStationsFromOpmlFile(),
-                    title: context.l10n.importingStationsPleaseWait,
-                    backLabel: context.l10n.back,
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(
-                    Iconz.remove,
-                    semanticLabel: l10n.removeAllStarredStations,
-                  ),
-                  tooltip: context.l10n.removeAllStarredStations,
-                  onPressed: () => context.dialog(
-                    (context) => ConfirmationDialog(
-                      showCloseIcon: false,
-                      title: Text(l10n.removeAllStarredStationsConfirm),
-                      content: SizedBox(
-                        width: 350,
-                        child: Text(l10n.removeAllStarredStationsDescription),
-                      ),
-                      onConfirm: () =>
-                          di<WipeManager>().command.runAsync({WipeType.radio}),
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(kMediumSpace),
+        child: Column(
+          children: [
+            ListTile(title: Text(l10n.radio)),
+            ListTile(
+              title: Text(l10n.starredStations),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    tooltip: l10n.exportStarredStationsToOpmlFile,
+                    icon: Icon(
+                      Iconz.export,
+                      semanticLabel: l10n.exportStarredStationsToOpmlFile,
+                    ),
+                    onPressed: () => showFutureLoadingDialog(
+                      context: context,
+                      future: () => di<CustomContentManager>()
+                          .exportStarredStationsToOpmlFile(),
+                      title: context.l10n.exportingStationsPleaseWait,
+                      backLabel: context.l10n.back,
                     ),
                   ),
-                ),
-              ],
+                  IconButton(
+                    tooltip: l10n.importStarredStationsFromOpmlFile,
+                    icon: Icon(
+                      Iconz.import,
+                      semanticLabel: l10n.importStarredStationsFromOpmlFile,
+                    ),
+                    onPressed: () => showFutureLoadingDialog(
+                      context: context,
+                      future: () => di<CustomContentManager>()
+                          .importStarredStationsFromOpmlFile(),
+                      title: context.l10n.importingStationsPleaseWait,
+                      backLabel: context.l10n.back,
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Iconz.remove,
+                      semanticLabel: l10n.removeAllStarredStations,
+                    ),
+                    tooltip: context.l10n.removeAllStarredStations,
+                    onPressed: () => context.dialog(
+                      (context) => ConfirmationDialog(
+                        showCloseIcon: false,
+                        title: Text(l10n.removeAllStarredStationsConfirm),
+                        content: SizedBox(
+                          width: 350,
+                          child: Text(l10n.removeAllStarredStationsDescription),
+                        ),
+                        onConfirm: () => di<WipeManager>().command.runAsync({
+                          WipeType.radio,
+                        }),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

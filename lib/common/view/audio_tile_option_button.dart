@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../app/app_manager.dart';
 import '../../app/page_ids.dart';
@@ -11,9 +10,9 @@ import '../../app/routing_manager.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/command_x.dart';
 import '../../extensions/platform_x.dart';
+import '../../local_audio/data/playlist_action.dart';
 import '../../local_audio/manager/find_album_manager.dart';
 import '../../local_audio/manager/liked_audios_manager.dart';
-import '../../local_audio/data/playlist_action.dart';
 import '../../local_audio/manager/playlist_ids_manager.dart';
 import '../../local_audio/view/add_to_playlist_dialog.dart';
 import '../../local_audio/view/album_page.dart';
@@ -106,7 +105,7 @@ class AudioTileOptionButton extends StatelessWidget {
                   playerManager.play(audios: audios, listName: playlistId);
                 }
               },
-              child: YaruTile(
+              child: ListTile(
                 leading: Icon(Iconz.insertIntoQueue),
                 title: Text(
                   currentlyLocalPlaying ? l10n.playNext : l10n.playAll,
@@ -124,7 +123,7 @@ class AudioTileOptionButton extends StatelessWidget {
                         action: PlaylistAction.removeFrom,
                       ),
                     ),
-              child: YaruTile(
+              child: ListTile(
                 leading: Icon(Iconz.remove),
                 title: Text(
                   '${l10n.removeFrom} ${playlistId == PageIDs.likedAudios ? l10n.likedSongs : playlistId}',
@@ -138,7 +137,7 @@ class AudioTileOptionButton extends StatelessWidget {
               onTap: () => context.dialog(
                 (context) => AddToPlaylistDialog(audios: audios),
               ),
-              child: YaruTile(
+              child: ListTile(
                 leading: Icon(Iconz.plus),
                 title: Text('${l10n.addToPlaylist} ...'),
               ),
@@ -155,7 +154,7 @@ class AudioTileOptionButton extends StatelessWidget {
                   );
                 }
               },
-              child: YaruTile(
+              child: ListTile(
                 leading: Icon(Iconz.artist),
                 title: Text(l10n.showArtistPage),
               ),
@@ -177,7 +176,7 @@ class AudioTileOptionButton extends StatelessWidget {
                   }
                 }
               },
-              child: YaruTile(
+              child: ListTile(
                 leading: Icon(Iconz.album),
                 title: Text(l10n.showAlbumPage),
               ),
@@ -192,7 +191,7 @@ class AudioTileOptionButton extends StatelessWidget {
                   pageId: playlistId,
                 ),
               ),
-              child: YaruTile(
+              child: ListTile(
                 leading: Icon(Iconz.info),
                 title: Text('${l10n.showMetaData} ...'),
               ),
