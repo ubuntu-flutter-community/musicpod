@@ -80,7 +80,7 @@ class RadioService {
     return hosts;
   }
 
-  Future<Audio?> getAudioByUUID(String uuid) async {
+  Future<Audio?> getAudioByUUID(String uuid, {required bool fromDbOnly}) async {
     final stationFromDb = await _dao.getStationByUuid(uuid);
     if (stationFromDb != null) {
       Logger.i(
@@ -88,6 +88,10 @@ class RadioService {
         tag: '$RadioService',
       );
       return Audio.fromStation(stationFromDb);
+    }
+
+    if (fromDbOnly) {
+      return null;
     }
 
     if (await connectToServer() == null) {
@@ -101,6 +105,12 @@ class RadioService {
     final station = response!.items.first;
     return Audio.fromStation(station);
   }
+
+  Future<String?> getStationNameByUUID(String uuid) async =>
+      _dao.getStationNameByUuid(uuid);
+
+  Future<String?> getStationImageByUUID(String uuid) async =>
+      _dao.getStationImageByUuid(uuid);
 
   Future<Audio?> getAudioByUrl(String url) async {
     if (await connectToServer() == null) {

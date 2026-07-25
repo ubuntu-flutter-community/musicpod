@@ -13,18 +13,20 @@ class StationPageIcon extends StatelessWidget with WatchItMixin {
     super.key,
     required this.uuid,
     required this.selected,
+    this.dimension,
   });
 
   final String uuid;
   final bool selected;
+  final double? dimension;
 
   @override
   Widget build(BuildContext context) => ClipRRect(
     borderRadius: BorderRadius.circular(6),
     child: Container(
       color: context.theme.cardColor,
-      height: sideBarImageSize,
-      width: sideBarImageSize,
+      height: dimension ?? sideBarImageSize,
+      width: dimension ?? sideBarImageSize,
       child: SafeNetworkImage(
         fallbackWidget: SideBarFallBackImage(
           color: getAlphabetColor(uuid),
@@ -35,10 +37,7 @@ class StationPageIcon extends StatelessWidget with WatchItMixin {
           child: selected ? Icon(Iconz.starFilled) : Icon(Iconz.star),
         ),
         fit: BoxFit.fitHeight,
-        url: watchValue(
-          (StationManager m) => m.command.select((audio) => audio?.imageUrl),
-          param1: uuid,
-        ),
+        url: watchValue((StationImageManager m) => m.command, param1: uuid),
         filterQuality: FilterQuality.medium,
       ),
     ),

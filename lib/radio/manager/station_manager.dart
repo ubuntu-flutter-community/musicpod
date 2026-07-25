@@ -11,11 +11,43 @@ class StationManager {
     required RadioManager radioManager,
   }) {
     command = Command.createAsyncNoParam(
-      () => radioManager.getAudioByUUID(uuid),
+      () => radioManager.getAudioByUUID(uuid, fromDbOnly: true),
       initialValue: null,
     );
     command.run();
   }
 
   late final Command<void, Audio?> command;
+}
+
+@Injectable(cache: true)
+class StationNameManager {
+  StationNameManager({
+    @factoryParam required String uuid,
+    required RadioManager radioManager,
+  }) {
+    command = Command.createAsyncNoParam(
+      () => radioManager.getStationNameByUUID(uuid),
+      initialValue: null,
+    );
+    command.run();
+  }
+
+  late final Command<void, String?> command;
+}
+
+@Injectable(cache: true)
+class StationImageManager {
+  StationImageManager({
+    @factoryParam required String uuid,
+    required RadioManager radioManager,
+  }) {
+    command = Command.createAsyncNoParam(
+      () => radioManager.getStationImageByUUID(uuid),
+      initialValue: null,
+    );
+    command.run();
+  }
+
+  late final Command<void, String?> command;
 }

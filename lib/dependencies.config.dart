@@ -232,6 +232,18 @@ extension GetItInjectableX on _i174.GetIt {
         radioManager: gh<_i443.RadioManager>(),
       ),
     );
+    gh.factoryCachedParam<_i117.StationNameManager, String, dynamic>(
+      (uuid, _) => _i117.StationNameManager(
+        uuid: uuid,
+        radioManager: gh<_i443.RadioManager>(),
+      ),
+    );
+    gh.factoryCachedParam<_i117.StationImageManager, String, dynamic>(
+      (uuid, _) => _i117.StationImageManager(
+        uuid: uuid,
+        radioManager: gh<_i443.RadioManager>(),
+      ),
+    );
     gh.factoryCached<_i313.ExposeService>(
       () => _i313.ExposeService(
         lastFmService: gh<_i61.LastfmService>(),

@@ -20,11 +20,6 @@ class RadioManager {
     initialValue: null,
   );
 
-  Future<Audio?> getAudioByUUID(String uuid) async {
-    await connectCommand.runRestrictedAsync();
-    return _radioService.getAudioByUUID(uuid);
-  }
-
   late final Command<Audio, Audio?> findSimilarStationCommand =
       Command.createAsync((audio) async {
         await connectCommand.runRestrictedAsync();
@@ -50,6 +45,9 @@ class RadioManager {
     );
   }
 
+  Future<Audio?> getAudioByUUID(String uuid, {required bool fromDbOnly}) =>
+      _radioService.getAudioByUUID(uuid, fromDbOnly: fromDbOnly);
+
   Future<Audio?> getStationByUrl(String url) async {
     await connectCommand.runRestrictedAsync();
     return _radioService.getAudioByUrl(url);
@@ -59,4 +57,10 @@ class RadioManager {
     await connectCommand.runRestrictedAsync();
     return _radioService.loadTags();
   }
+
+  Future<String?> getStationNameByUUID(String uuid) =>
+      _radioService.getStationNameByUUID(uuid);
+
+  Future<String?> getStationImageByUUID(String uuid) =>
+      _radioService.getStationImageByUUID(uuid);
 }

@@ -6,7 +6,6 @@ import '../../common/view/custom_track_shape.dart';
 import '../../common/view/progress.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';
-import '../../settings/manager/settings_manager.dart';
 import '../manager/player_manager.dart';
 
 class PlayerTrack extends StatelessWidget with WatchItMixin {
@@ -17,9 +16,6 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final useYaruTheme = watchPropertyValue(
-      (SettingsManager m) => m.useYaruTheme,
-    );
 
     final mainColor = theme.colorScheme.onSurface;
 
@@ -65,7 +61,7 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
         ? const RectangularSliderTrackShape()
         : CustomTrackShape();
 
-    final trackHeight = useYaruTheme && !bottomPlayer ? 5.0 : 4.0;
+    final trackHeight = bottomPlayer ? 4.0 : 5.0;
 
     final slider =
         (duration?.inSeconds != null && duration!.inSeconds < 10) &&

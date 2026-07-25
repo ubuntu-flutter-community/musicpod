@@ -1,3 +1,4 @@
+import 'package:cached_network_image_ce/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../extensions/build_context_x.dart';
@@ -53,29 +54,36 @@ class SafeNetworkImage extends StatelessWidget {
         (Uri.tryParse(url!)?.host.isEmpty ?? false))
       return errorWidget;
 
-    return Image.network(
-      url!,
+    return CachedNetworkImage(
+      cacheManager: _cacheManager,
+      imageUrl: url!,
       height: height,
       width: width,
-      cacheHeight: cacheHeight,
-      cacheWidth: cacheWidth,
+      memCacheHeight: cacheHeight,
+      memCacheWidth: cacheWidth,
+      maxWidthDiskCache: cacheWidth,
+      maxHeightDiskCache: cacheHeight,
       fit: fit,
       filterQuality: filterQuality,
-      headers: httpHeaders,
-      frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-        if (frame != null) {
-          onImageLoaded?.call(NetworkImage(url!));
-        }
-        if (wasSynchronouslyLoaded) {
-          return child;
-        }
-        return AnimatedOpacity(
-          opacity: frame == null ? 0 : 1,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-          child: child,
+      httpHeaders: httpHeaders,
+      imageBuilder: (context, imageProvider) {
+        onImageLoaded?.call(imageProvider);
+        return Image(
+          image: imageProvider,
+          height: height,
+          width: width,
+          fit: fit,
+          filterQuality: filterQuality,
         );
       },
+      placeholder: (context, url) =>
+          fallbackWidget ??
+          Center(
+            child: Icon(
+              Iconz.musicNote,
+              size: height != null ? height! * 0.7 : null,
+            ),
+          ),
       errorBuilder: (context, error, _) {
         final message = switch (error.runtimeType) {
           final NetworkImageLoadException e => switch (e.statusCode) {
@@ -92,7 +100,7 @@ class SafeNetworkImage extends StatelessWidget {
           tag: '$SafeNetworkImage',
           reportType: logType,
         );
-        if (url != null) {
+        if (url == null || url!.isEmpty) {
           FailedImageUrls.add(url);
         }
         return errorWidget;
@@ -100,3 +108,12 @@ class SafeNetworkImage extends StatelessWidget {
     );
   }
 }
+
+final _cacheManager = DefaultCacheManager(
+  stalePeriod: const Duration(days: 1),
+  maxNrOfCacheObjects: 100,
+  connectionParameters: ConnectionParameters(
+    connectionTimeout: const Duration(seconds: 10),
+    requestTimeout: const Duration(seconds: 30),
+  ),
+);

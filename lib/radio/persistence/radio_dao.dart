@@ -23,6 +23,22 @@ class RadioDao {
     return _stationFromRow(row);
   }
 
+  Future<String?> getStationNameByUuid(String uuid) async {
+    final row = await (_db.select(
+      _db.starredStationTable,
+    )..where((t) => t.uuid.equals(uuid))).getSingleOrNull();
+    if (row == null) return null;
+    return row.name;
+  }
+
+  Future<String?> getStationImageByUuid(String uuid) async {
+    final row = await (_db.select(
+      _db.starredStationTable,
+    )..where((t) => t.uuid.equals(uuid))).getSingleOrNull();
+    if (row == null) return null;
+    return row.favicon;
+  }
+
   Future<void> insertStarredStation(Audio audio) => _db
       .into(_db.starredStationTable)
       .insertOnConflictUpdate(_companionFromAudio(audio));

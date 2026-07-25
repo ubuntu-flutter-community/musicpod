@@ -12,7 +12,7 @@ class StationTitle extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final stationResults = watchValue(
-      (StationManager m) => m.command.results,
+      (StationNameManager m) => m.command.results,
       param1: uuid,
     );
     final station = stationResults.data;
@@ -25,6 +25,6 @@ class StationTitle extends StatelessWidget with WatchItMixin {
       return const Text('...');
     }
 
-    return Text(station.title ?? context.l10n.station);
+    return Text(station);
   }
 }
