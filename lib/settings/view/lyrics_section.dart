@@ -3,6 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/view/common_widgets.dart';
+import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../lyrics/data/online_lyrics_source.dart';
 import '../manager/settings_manager.dart';
@@ -22,36 +23,39 @@ class LyricsSection extends StatelessWidget with WatchItMixin {
       (SettingsManager m) => m.onlineLyricsSource,
     );
 
-    return YaruSection(
-      headline: Text(l10n.lyrics),
-      child: Column(
-        children: [
-          YaruTile(
-            title: Text(l10n.tryToFetchLyricsOnlineTitle),
-            subtitle: Text(l10n.tryToFetchLyricsOnlineDescription),
-            trailing: CommonSwitch(
-              value: tryToFetchLyricsOnline,
-              onChanged: di<SettingsManager>().setTryToFetchLyricsOnline,
-            ),
-          ),
-          if (tryToFetchLyricsOnline)
-            YaruTile(
-              title: Text(l10n.onlineLyricsSourceTitle),
-              subtitle: Text(l10n.onlineLyricsSourceDescription),
-              trailing: YaruPopupMenuButton<OnlineLyricsSource>(
-                child: Text(onlineLyricsSource.localize(l10n)),
-                initialValue: onlineLyricsSource,
-                onSelected: di<SettingsManager>().setOnlineLyricsSource,
-                itemBuilder: (context) =>
-                    OnlineLyricsSource.values.map((source) {
-                      return PopupMenuItem<OnlineLyricsSource>(
-                        value: source,
-                        child: Text(source.localize(l10n)),
-                      );
-                    }).toList(),
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(kMediumSpace),
+        child: Column(
+          children: [
+            ListTile(title: Text(l10n.lyrics)),
+            ListTile(
+              title: Text(l10n.tryToFetchLyricsOnlineTitle),
+              subtitle: Text(l10n.tryToFetchLyricsOnlineDescription),
+              trailing: CommonSwitch(
+                value: tryToFetchLyricsOnline,
+                onChanged: di<SettingsManager>().setTryToFetchLyricsOnline,
               ),
             ),
-        ],
+            if (tryToFetchLyricsOnline)
+              ListTile(
+                title: Text(l10n.onlineLyricsSourceTitle),
+                subtitle: Text(l10n.onlineLyricsSourceDescription),
+                trailing: YaruPopupMenuButton<OnlineLyricsSource>(
+                  child: Text(onlineLyricsSource.localize(l10n)),
+                  initialValue: onlineLyricsSource,
+                  onSelected: di<SettingsManager>().setOnlineLyricsSource,
+                  itemBuilder: (context) =>
+                      OnlineLyricsSource.values.map((source) {
+                        return PopupMenuItem<OnlineLyricsSource>(
+                          value: source,
+                          child: Text(source.localize(l10n)),
+                        );
+                      }).toList(),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

@@ -62,120 +62,125 @@ class _PodcastSectionState extends State<PodcastSection> {
       (SettingsManager m) => m.podcastIndexApiSecret,
     );
 
-    return YaruSection(
-      headline: Text(l10n.podcasts),
-      child: Column(
-        children: [
-          const _DownloadsTile(),
-          const _ControlCollectionTile(),
-          YaruTile(
-            title: Text(l10n.usePodcastIndex),
-            trailing: CommonSwitch(
-              value: usePodcastIndex,
-              onChanged: (v) {
-                if (!v) {
-                  ConfirmationDialog.show(
-                    context: context,
-                    title: Text(l10n.iTunes + '?'),
-                    onConfirm: () async {
-                      di<PodcastManager>().initSearchCommand.run((
-                        searchProvider: const ITunesProvider(),
-                      ));
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(kMediumSpace),
+        child: Column(
+          children: [
+            ListTile(title: Text(l10n.podcasts)),
+            const _DownloadsTile(),
+            const _ControlCollectionTile(),
+            ListTile(
+              title: Text(l10n.usePodcastIndex),
+              trailing: CommonSwitch(
+                value: usePodcastIndex,
+                onChanged: (v) {
+                  if (!v) {
+                    ConfirmationDialog.show(
+                      context: context,
+                      title: Text(l10n.iTunes + '?'),
+                      onConfirm: () async {
+                        di<PodcastManager>().initSearchCommand.run((
+                          searchProvider: const ITunesProvider(),
+                        ));
 
-                      await model.setUsePodcastIndex(v);
+                        await model.setUsePodcastIndex(v);
 
-                      await di<PodcastLoadGenresManager>().command.runAsync((
-                        force: true,
-                      ));
-                    },
-                  );
-                } else {
-                  model.setUsePodcastIndex(v);
-                }
-              },
+                        await di<PodcastLoadGenresManager>().command.runAsync((
+                          force: true,
+                        ));
+                      },
+                    );
+                  } else {
+                    model.setUsePodcastIndex(v);
+                  }
+                },
+              ),
             ),
-          ),
-          if (usePodcastIndex) ...[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: _keyController,
-                onChanged: (v) => setState(() => _initialKey = v),
-                obscureText: true,
-                decoration: InputDecoration(
-                  label: Text(SPKeys.podcastIndexApiKey.camelToSentence),
-                  suffixIcon: IconButton(
-                    tooltip: l10n.save,
-                    onPressed: () =>
-                        model.setPodcastIndexApiKey(_keyController.text),
-                    icon: Icon(
-                      Iconz.check,
-                      color: podcastIndexApiKey == _initialKey
-                          ? theme.colorScheme.success
-                          : theme.colorScheme.onSurface,
+            if (usePodcastIndex) ...[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: _keyController,
+                  onChanged: (v) => setState(() => _initialKey = v),
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    label: Text(SPKeys.podcastIndexApiKey.camelToSentence),
+                    suffixIcon: IconButton(
+                      tooltip: l10n.save,
+                      onPressed: () =>
+                          model.setPodcastIndexApiKey(_keyController.text),
+                      icon: Icon(
+                        Iconz.check,
+                        color: podcastIndexApiKey == _initialKey
+                            ? theme.colorScheme.success
+                            : theme.colorScheme.onSurface,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 8,
-                right: 8,
-                bottom: kLargestSpace,
-              ),
-              child: ValueListenableBuilder(
-                valueListenable: _keyController,
-                builder: (context, value, child) {
-                  return TextField(
-                    enabled: value.text.isNotEmpty,
-                    controller: _secretController,
-                    onChanged: (v) => setState(() => _initialSecret = v),
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      label: Text(SPKeys.podcastIndexApiSecret.camelToSentence),
-                      suffixIcon: IconButton(
-                        tooltip: l10n.save,
-                        onPressed: () => model.setPodcastIndexApiSecret(
-                          _secretController.text,
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 8,
+                  right: 8,
+                  bottom: kLargestSpace,
+                ),
+                child: ValueListenableBuilder(
+                  valueListenable: _keyController,
+                  builder: (context, value, child) {
+                    return TextField(
+                      enabled: value.text.isNotEmpty,
+                      controller: _secretController,
+                      onChanged: (v) => setState(() => _initialSecret = v),
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        label: Text(
+                          SPKeys.podcastIndexApiSecret.camelToSentence,
                         ),
-                        icon: Icon(
-                          Iconz.check,
-                          color: podcastIndexApiSecret == _initialSecret
-                              ? theme.colorScheme.success
-                              : theme.colorScheme.onSurface,
+                        suffixIcon: IconButton(
+                          tooltip: l10n.save,
+                          onPressed: () => model.setPodcastIndexApiSecret(
+                            _secretController.text,
+                          ),
+                          icon: Icon(
+                            Iconz.check,
+                            color: podcastIndexApiSecret == _initialSecret
+                                ? theme.colorScheme.success
+                                : theme.colorScheme.onSurface,
+                          ),
                         ),
                       ),
+                    );
+                  },
+                ),
+              ),
+              ValueListenableBuilder(
+                valueListenable: _secretController,
+                builder: (context, value, child) {
+                  return ListTile(
+                    trailing: ElevatedButton(
+                      onPressed: value.text.isEmpty
+                          ? null
+                          : () => ConfirmationDialog.show(
+                              context: context,
+                              title: Text(l10n.usePodcastIndex + '?'),
+                              onConfirm: () async =>
+                                  di<PodcastManager>().initSearchCommand.run((
+                                    searchProvider: PodcastIndexProvider(
+                                      key: model.podcastIndexApiKey!,
+                                      secret: model.podcastIndexApiSecret!,
+                                    ),
+                                  )),
+                            ),
+                      child: Text(context.l10n.confirm),
                     ),
                   );
                 },
               ),
-            ),
-            ValueListenableBuilder(
-              valueListenable: _secretController,
-              builder: (context, value, child) {
-                return ListTile(
-                  trailing: ElevatedButton(
-                    onPressed: value.text.isEmpty
-                        ? null
-                        : () => ConfirmationDialog.show(
-                            context: context,
-                            title: Text(l10n.usePodcastIndex + '?'),
-                            onConfirm: () async =>
-                                di<PodcastManager>().initSearchCommand.run((
-                                  searchProvider: PodcastIndexProvider(
-                                    key: model.podcastIndexApiKey!,
-                                    secret: model.podcastIndexApiSecret!,
-                                  ),
-                                )),
-                          ),
-                    child: Text(context.l10n.confirm),
-                  ),
-                );
-              },
-            ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
@@ -188,9 +193,10 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
-    return YaruTile(
+    return ListTile(
       title: Text(l10n.podcastSubscriptions),
       trailing: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
             icon: Icon(
@@ -257,7 +263,7 @@ class _DownloadsTileState extends State<_DownloadsTile> {
     final error = downloadsDirResults.error;
     final downloadsDir = downloadsDirResults.data;
 
-    return YaruTile(
+    return ListTile(
       title: Text(l10n.downloadsDirectory),
       subtitle: Text(error?.toString() ?? downloadsDir ?? ''),
       trailing: ElevatedButton(

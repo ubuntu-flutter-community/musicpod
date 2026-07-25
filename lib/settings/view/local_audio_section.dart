@@ -7,7 +7,6 @@ import '../../common/view/common_widgets.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../external_path/service/external_path_service.dart';
-
 import '../../local_audio/manager/local_audio_manager.dart';
 import '../manager/settings_manager.dart';
 import '../manager/wipe_manager.dart';
@@ -25,67 +24,70 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
     final groupAlbumsOnlyByAlbumName = watchPropertyValue(
       (SettingsManager m) => m.groupAlbumsOnlyByAlbumName,
     );
-    return YaruSection(
-      headline: Text(l10n.localAudio),
-      child: Column(
-        children: [
-          YaruTile(
-            title: Text(l10n.musicCollectionLocation),
-            subtitle: Text(directory),
-            trailing: ElevatedButton(
-              onPressed: () async {
-                final directoryPath = await di<ExternalPathService>()
-                    .getPathOfDirectory();
-                Logger.i('Selected directory: $directoryPath');
-                if (directoryPath != null) {
-                  await di<WipeManager>().command.runAsync({
-                    WipeType.localAudio,
-                  });
-                  di<LocalAudioManager>().initAudiosCommand.run((
-                    forceInit: true,
-                    directory: directoryPath,
-                  ));
-                }
-              },
-              child: Text(
-                l10n.select,
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(kMediumSpace),
+        child: Column(
+          children: [
+            ListTile(title: Text(l10n.localAudio)),
+            ListTile(
+              title: Text(l10n.musicCollectionLocation),
+              subtitle: Text(directory),
+              trailing: ElevatedButton(
+                onPressed: () async {
+                  final directoryPath = await di<ExternalPathService>()
+                      .getPathOfDirectory();
+                  Logger.i('Selected directory: $directoryPath');
+                  if (directoryPath != null) {
+                    await di<WipeManager>().command.runAsync({
+                      WipeType.localAudio,
+                    });
+                    di<LocalAudioManager>().initAudiosCommand.run((
+                      forceInit: true,
+                      directory: directoryPath,
+                    ));
+                  }
+                },
+                child: Text(
+                  l10n.select,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
-          ),
-          YaruTile(
-            title: Text(
-              l10n.dontShowAgain +
-                  ': ' +
-                  '"${l10n.failedToImport.replaceAll(':', '')}"',
-            ),
-            trailing: CommonSwitch(
-              value: watchPropertyValue(
-                (SettingsManager m) => m.neverShowFailedImports,
+            ListTile(
+              title: Text(
+                l10n.dontShowAgain +
+                    ': ' +
+                    '"${l10n.failedToImport.replaceAll(':', '')}"',
               ),
-              onChanged: di<SettingsManager>().setNeverShowFailedImports,
-            ),
-          ),
-          YaruTile(
-            title: Text(l10n.groupAlbumsOnlyByAlbumName),
-            trailing: CommonSwitch(
-              value: groupAlbumsOnlyByAlbumName,
-              onChanged: di<SettingsManager>().setGroupAlbumsOnlyByAlbumName,
-            ),
-          ),
-          if (groupAlbumsOnlyByAlbumName)
-            Padding(
-              padding: const EdgeInsets.only(
-                top: kSmallestSpace,
-                right: kSmallestSpace,
-              ),
-              child: YaruInfoBox(
-                yaruInfoType: YaruInfoType.warning,
-                subtitle: Text(l10n.groupAlbumsOnlyByAlbumNameDescription),
+              trailing: CommonSwitch(
+                value: watchPropertyValue(
+                  (SettingsManager m) => m.neverShowFailedImports,
+                ),
+                onChanged: di<SettingsManager>().setNeverShowFailedImports,
               ),
             ),
-        ],
+            ListTile(
+              title: Text(l10n.groupAlbumsOnlyByAlbumName),
+              trailing: CommonSwitch(
+                value: groupAlbumsOnlyByAlbumName,
+                onChanged: di<SettingsManager>().setGroupAlbumsOnlyByAlbumName,
+              ),
+            ),
+            if (groupAlbumsOnlyByAlbumName)
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: kSmallestSpace,
+                  right: kSmallestSpace,
+                ),
+                child: YaruInfoBox(
+                  yaruInfoType: YaruInfoType.warning,
+                  subtitle: Text(l10n.groupAlbumsOnlyByAlbumNameDescription),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

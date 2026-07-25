@@ -8,6 +8,7 @@ import '../../app/app_config.dart';
 import '../../app/app_manager.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/tapable_text.dart';
+import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import 'about_page.dart';
@@ -17,13 +18,18 @@ class AboutSection extends StatelessWidget with WatchItMixin {
   const AboutSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final text = '${context.l10n.about} ${AppConfig.appTitle}';
-    return YaruSection(
-      headline: Text(text),
-      child: const Column(children: [_AboutTile(), _LicenseTile()]),
-    );
-  }
+  Widget build(BuildContext context) => Card(
+    child: Padding(
+      padding: const EdgeInsets.all(kMediumSpace),
+      child: Column(
+        children: [
+          ListTile(title: Text('${context.l10n.about} ${AppConfig.appTitle}')),
+          const _AboutTile(),
+          const _LicenseTile(),
+        ],
+      ),
+    ),
+  );
 }
 
 class _AboutTile extends StatelessWidget with WatchItMixin {
@@ -54,7 +60,7 @@ class _AboutTile extends StatelessWidget with WatchItMixin {
     );
     final currentVersion = di<AppManager>().version;
 
-    return YaruTile(
+    return ListTile(
       subtitle: Text(
         context.l10n.downloadsOfLatestRelease(downloads.toString()),
       ),
@@ -95,7 +101,7 @@ class _LicenseTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return YaruTile(
+    return ListTile(
       title: TapAbleText(text: '${context.l10n.license}: GPL3'),
       trailing: OutlinedButton(
         onPressed: () => context.dialog((context) => const LicensesDialog()),
