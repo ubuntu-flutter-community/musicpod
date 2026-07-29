@@ -44,7 +44,7 @@ class WipeManager {
 
       if (wipeTypes.contains(WipeType.localAudio)) {
         await localAudioManager.initAudiosCommand.runAsync((
-          directory: null,
+          directory: '',
           forceInit: true,
         ));
         await pinnedAlbumIDsManager.command.runAsync();

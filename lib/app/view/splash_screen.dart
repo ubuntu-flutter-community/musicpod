@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:phoenix_theme/phoenix_theme.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/view/theme.dart';
@@ -15,20 +14,13 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final phoenix = phoenixTheme(color: kMusicPodDefaultColor);
-    final phoenixLightWithFont = isLinux
-        ? phoenix.lightTheme
-        : applyChineseFontToPhoenixTheme(
-            lightTheme: phoenix.lightTheme,
-            darkTheme: phoenix.darkTheme,
-          );
-    final phoenixDarkWithFont = isLinux
-        ? phoenix.darkTheme
-        : applyChineseFontToPhoenixDarkTheme(darkTheme: phoenix.darkTheme);
-
     return MaterialApp(
-      theme: isLinux ? yaruLight : phoenixLightWithFont,
-      darkTheme: isLinux ? yaruDark : phoenixDarkWithFont,
+      theme: isLinux
+          ? createYaruLightTheme(primaryColor: kMusicPodDefaultColor)
+          : lightBaseTheme(kMusicPodDefaultColor),
+      darkTheme: isLinux
+          ? createYaruDarkTheme(primaryColor: kMusicPodDefaultColor)
+          : lightDarkTheme(kMusicPodDefaultColor),
       title: '',
       debugShowCheckedModeBanner: false,
       localizationsDelegates: AppLocalizations.localizationsDelegates,

@@ -8,7 +8,7 @@ environment:
   sdk: ">=3.8.0 <4.0.0"
 
 dependencies:
-  audio_metadata_reader: ^1.6.0
+  audio_metadata_reader: ^1.7.0
   audio_service: ^0.18.18
   audio_service_mpris:
     git:
@@ -75,7 +75,7 @@ dependencies:
   phoenix_theme:
     git:
       url: https://github.com/ubuntu-flutter-community/phoenix_theme
-      ref: 7d22aba2841e522bf4c140e60e4a60f33c8f5aa6
+      ref: bb2637c5929aedcb8b65f66b99da9276951bf291
   pls: ^1.1.0
   podcast_search: ^0.7.15
   radio_browser_api: ^2.0.0+1

@@ -2,6 +2,7 @@
 
 import 'package:chinese_font_library/chinese_font_library.dart';
 import 'package:flutter/material.dart';
+import 'package:phoenix_theme/phoenix_theme.dart' hide ColorX, ColorSchemeX;
 import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
@@ -46,6 +47,10 @@ ThemeData? yaruLightWithTweaks(ThemeData? theme) {
     iconButtonTheme: iconButtonTheme(theme),
   );
 }
+
+ThemeData lightBaseTheme(Color color) => phoenixTheme(color: color).lightTheme;
+
+ThemeData lightDarkTheme(Color color) => phoenixTheme(color: color).darkTheme;
 
 TextTheme textThemeWithEmojis(ThemeData theme) => theme.textTheme.copyWith(
   bodySmall: theme.textTheme.bodySmall?.copyWith(
@@ -182,26 +187,6 @@ double get searchBarWidth =>
 double getSearchBarBorderRadius(bool useYaruTheme) =>
     useYaruTheme ? kYaruButtonRadius : 100;
 
-Color? audioFilterBackgroundColor({
-  required ThemeData theme,
-  required bool selected,
-  required bool useYaruTheme,
-}) => selected
-    ? useYaruTheme
-          ? theme.colorScheme.onSurface.withValues(alpha: 0.15)
-          : (theme.chipTheme.selectedColor ?? theme.colorScheme.primary)
-    : null;
-
-Color? audioFilterForegroundColor({
-  required ThemeData theme,
-  required bool selected,
-  required bool useYaruTheme,
-}) => selected
-    ? theme.colorScheme.isDark
-          ? Colors.white
-          : Colors.black
-    : theme.colorScheme.onSurface.scale(alpha: useYaruTheme ? 1 : -0.3);
-
 InputDecoration createMaterialDecoration({
   required ColorScheme colorScheme,
   TextStyle? style,
@@ -218,10 +203,7 @@ InputDecoration createMaterialDecoration({
       border ??
       OutlineInputBorder(
         borderRadius: BorderRadius.circular(100),
-        borderSide: BorderSide(
-          width: isMobile ? 2 : 1,
-          color: colorScheme.outline,
-        ),
+        borderSide: BorderSide(width: 1, color: colorScheme.outline),
       );
   return InputDecoration(
     prefixIcon: prefixIcon,
@@ -240,10 +222,7 @@ InputDecoration createMaterialDecoration({
     errorBorder: outlineInputBorder,
     enabledBorder: outlineInputBorder,
     focusedBorder: outlineInputBorder.copyWith(
-      borderSide: BorderSide(
-        color: colorScheme.primary,
-        width: isMobile ? 2 : 1,
-      ),
+      borderSide: BorderSide(color: colorScheme.primary, width: 2),
     ),
     disabledBorder: outlineInputBorder,
     focusedErrorBorder: outlineInputBorder,
@@ -506,23 +485,11 @@ class _TextStyle extends TextStyle {
   final Color textColor;
 }
 
-ThemeData applyChineseFontToPhoenixTheme({
-  required ThemeData lightTheme,
-  required ThemeData darkTheme,
-}) {
-  return lightTheme.copyWith(
-    textTheme: lightTheme.textTheme.useSystemChineseFont(Brightness.light),
-    primaryTextTheme: lightTheme.primaryTextTheme.useSystemChineseFont(
+ThemeData applyChineseFontToTheme({required ThemeData theme}) {
+  return theme.copyWith(
+    textTheme: theme.textTheme.useSystemChineseFont(theme.brightness),
+    primaryTextTheme: theme.primaryTextTheme.useSystemChineseFont(
       Brightness.light,
-    ),
-  );
-}
-
-ThemeData applyChineseFontToPhoenixDarkTheme({required ThemeData darkTheme}) {
-  return darkTheme.copyWith(
-    textTheme: darkTheme.textTheme.useSystemChineseFont(Brightness.dark),
-    primaryTextTheme: darkTheme.primaryTextTheme.useSystemChineseFont(
-      Brightness.dark,
     ),
   );
 }

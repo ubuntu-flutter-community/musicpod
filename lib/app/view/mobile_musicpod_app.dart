@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
-import 'package:phoenix_theme/phoenix_theme.dart';
 
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
@@ -51,18 +50,16 @@ class _MobileMusicPodAppState extends State<MobileMusicPodApp> {
   Widget build(BuildContext context) {
     final themeIndex = watchPropertyValue((SettingsManager m) => m.themeIndex);
 
-    final phoenix = phoenixTheme(color: widget.accent ?? kMusicPodDefaultColor);
     final routingManager = di<RoutingManager>();
 
+    final light = lightBaseTheme(widget.accent ?? kMusicPodDefaultColor);
     final phoenixLightWithFont = isLinux
-        ? phoenix.lightTheme
-        : applyChineseFontToPhoenixTheme(
-            lightTheme: phoenix.lightTheme,
-            darkTheme: phoenix.darkTheme,
-          );
+        ? light
+        : applyChineseFontToTheme(theme: light);
+    final dark = lightDarkTheme(widget.accent ?? kMusicPodDefaultColor);
     final phoenixDarkWithFont = isLinux
-        ? phoenix.darkTheme
-        : applyChineseFontToPhoenixDarkTheme(darkTheme: phoenix.darkTheme);
+        ? dark
+        : applyChineseFontToTheme(theme: dark);
 
     return MaterialApp(
       navigatorKey: routingManager.masterNavigatorKey,
@@ -78,12 +75,8 @@ class _MobileMusicPodAppState extends State<MobileMusicPodApp> {
       themeMode: ThemeMode.values[themeIndex],
       theme: phoenixLightWithFont,
       darkTheme: phoenixDarkWithFont.copyWith(
-        appBarTheme: phoenix.darkTheme.appBarTheme.copyWith(
-          backgroundColor: Colors.black,
-        ),
-        colorScheme: phoenix.darkTheme.colorScheme.copyWith(
-          surface: Colors.black,
-        ),
+        appBarTheme: dark.appBarTheme.copyWith(backgroundColor: Colors.black),
+        colorScheme: dark.colorScheme.copyWith(surface: Colors.black),
         scaffoldBackgroundColor: Colors.black,
       ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
