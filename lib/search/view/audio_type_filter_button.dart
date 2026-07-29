@@ -4,10 +4,8 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/data/audio_type.dart';
 import '../../common/view/modals.dart';
-import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../settings/manager/settings_manager.dart';
 import '../manager/search_manager.dart';
 
 class AudioTypeFilterButton extends StatelessWidget {
@@ -29,29 +27,31 @@ class AudioTypeFilterSwitcher extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final theme = context.theme;
     final searchManager = di<SearchManager>();
     final audioType = watchValue((SearchManager m) => m.audioType);
-    final useYaruTheme = watchPropertyValue(
-      (SettingsManager m) => m.useYaruTheme,
-    );
 
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: AudioType.values.mapIndexed((i, e) {
         final selected = audioType == e;
+
+        final backgroundColor = selected
+            ? context.theme.colorScheme.primary
+            : null;
+        final foregroundColor = selected
+            ? context.theme.colorScheme.onPrimary
+            : null;
+
         return IconButton(
           style: IconButton.styleFrom(
-            backgroundColor: audioFilterBackgroundColor(
-              theme: theme,
-              selected: selected,
-              useYaruTheme: useYaruTheme,
-            ),
+            backgroundColor: backgroundColor,
+            foregroundColor: foregroundColor,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.zero,
             ),
           ),
           isSelected: selected,
+
           tooltip: e.localize(l10n),
           padding: EdgeInsets.zero,
           onPressed: () => searchManager
@@ -62,12 +62,8 @@ class AudioTypeFilterSwitcher extends StatelessWidget with WatchItMixin {
             child: Icon(
               e.iconData,
               size: 20,
-              color: audioFilterForegroundColor(
-                theme: theme,
-                selected: selected,
-                useYaruTheme: useYaruTheme,
-              ),
               semanticLabel: e.localize(l10n),
+              color: foregroundColor,
             ),
           ),
         );

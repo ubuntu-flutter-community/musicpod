@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
-import 'package:phoenix_theme/phoenix_theme.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/view/theme.dart';
@@ -38,29 +37,21 @@ class DesktopMusicPodApp extends StatelessWidget with WatchItMixin {
       (SettingsManager m) => m.useYaruTheme,
     );
     final color = accent ?? kMusicPodDefaultColor;
-    final phoenix = phoenixTheme(color: color);
 
-    final phoenixLightWithFont = isLinux
-        ? phoenix.lightTheme
-        : applyChineseFontToPhoenixTheme(
-            lightTheme: phoenix.lightTheme,
-            darkTheme: phoenix.darkTheme,
-          );
-    final phoenixDarkWithFont = isLinux
-        ? phoenix.darkTheme
-        : applyChineseFontToPhoenixDarkTheme(darkTheme: phoenix.darkTheme);
-
-    // TODO: seriously we need to clean up the themes...
     final theTheme =
         lightTheme ??
         (useYaruTheme
             ? yaruLightWithTweaks(createYaruLightTheme(primaryColor: color))
-            : phoenixLightWithFont);
+            : isLinux
+            ? lightBaseTheme(color)
+            : applyChineseFontToTheme(theme: lightBaseTheme(color)));
     final theDarkTheme =
         darkTheme ??
         (useYaruTheme
             ? yaruDarkWithTweaks(createYaruDarkTheme(primaryColor: color))
-            : phoenixDarkWithFont);
+            : isLinux
+            ? lightDarkTheme(color)
+            : applyChineseFontToTheme(theme: lightDarkTheme(color)));
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,

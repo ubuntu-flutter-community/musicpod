@@ -12,6 +12,7 @@ import '../../app/page_ids.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
+import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 
 class SettingsTile extends StatelessWidget with WatchItMixin {
@@ -23,22 +24,25 @@ class SettingsTile extends StatelessWidget with WatchItMixin {
       (RoutingManager m) => m.selectedPageIdCommand,
     );
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: YaruMasterTile(
-        selected: selectedPageId == PageIDs.settings,
-        leading: Icon(Iconz.settings),
-        title: Text(context.l10n.settings),
-        onTap: () {
-          masterScaffoldKey.currentState
-            ?..closeEndDrawer()
-            ..closeDrawer();
+    return Material(
+      color: context.theme.scaffoldBackgroundColor,
+      child: Padding(
+        padding: const EdgeInsetsGeometry.all(kMediumSpace),
+        child: ListTile(
+          selected: selectedPageId == PageIDs.settings,
+          leading: Icon(Iconz.settings),
+          title: Text(context.l10n.settings),
+          onTap: () {
+            masterScaffoldKey.currentState
+              ?..closeEndDrawer()
+              ..closeDrawer();
 
-          di<RoutingManager>().push(pageId: PageIDs.settings);
-        },
-        trailing: (di<AppManager>().allowManualUpdate)
-            ? const _UpdateButton()
-            : null,
+            di<RoutingManager>().push(pageId: PageIDs.settings);
+          },
+          trailing: (di<AppManager>().allowManualUpdate)
+              ? const _UpdateButton()
+              : null,
+        ),
       ),
     );
   }
