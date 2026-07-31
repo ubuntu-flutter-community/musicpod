@@ -8,11 +8,11 @@ import '../../app/app_config.dart';
 import '../../app/app_manager.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/tapable_text.dart';
-import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import 'about_page.dart';
 import 'licenses_dialog.dart';
+import 'settings_list_tile.dart';
 import 'settings_section.dart';
 
 class AboutSection extends StatelessWidget with WatchItMixin {
@@ -21,12 +21,7 @@ class AboutSection extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) => SettingsSection(
     heading: '${context.l10n.about} ${AppConfig.appTitle}',
-    children: [
-      const Padding(
-        padding: const EdgeInsets.all(kMediumSpace),
-        child: Column(children: [const _AboutTile(), const _LicenseTile()]),
-      ),
-    ],
+    children: [const _AboutTile(), const _LicenseTile()],
   );
 }
 
@@ -58,7 +53,8 @@ class _AboutTile extends StatelessWidget with WatchItMixin {
     );
     final currentVersion = di<AppManager>().version;
 
-    return ListTile(
+    return SettingsListTile(
+      position: ListTilePosition.first,
       subtitle: Text(
         context.l10n.downloadsOfLatestRelease(downloads.toString()),
       ),
@@ -99,13 +95,13 @@ class _LicenseTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
+    return SettingsListTile(
       title: TapAbleText(text: '${context.l10n.license}: GPL3'),
       trailing: OutlinedButton(
         onPressed: () => context.dialog((context) => const LicensesDialog()),
         child: Text(context.l10n.dependencies),
       ),
-      enabled: true,
+      position: ListTilePosition.last,
     );
   }
 }

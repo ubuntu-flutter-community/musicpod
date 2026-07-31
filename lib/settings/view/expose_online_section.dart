@@ -4,11 +4,11 @@ import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
 import '../../common/view/common_widgets.dart';
 import '../../common/view/theme.dart';
-import '../../common/view/ui_constants.dart';
 import '../../expose/data/last_fm_credentials.dart';
 import '../../expose/manager/expose_manager.dart';
 import '../../extensions/build_context_x.dart';
 import '../manager/settings_manager.dart';
+import 'settings_list_tile.dart';
 import 'settings_section.dart';
 
 class ExposeOnlineSection extends StatefulWidget
@@ -62,173 +62,163 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
     return SettingsSection(
       heading: l10n.exposeOnlineHeadline,
       children: [
-        Padding(
-          padding: const EdgeInsets.all(kMediumSpace),
-          child: Column(
-            children: [
-              ListTile(
-                title: Row(
-                  children: space(
-                    children: [
-                      const Icon(TablerIcons.brand_lastfm),
-                      if (lastFmEnabled &&
-                          watchValue((ExposeManager m) => m.isLastFmAuthorized))
-                        Text(l10n.connectedTo),
-                      Text(l10n.exposeToLastfmTitle),
-                    ],
-                  ),
-                ),
-                subtitle: Column(children: [Text(l10n.exposeToLastfmSubTitle)]),
-                trailing: CommonSwitch(
-                  value: lastFmEnabled,
-                  onChanged: (v) {
-                    di<SettingsManager>().setEnableLastFmScrobbling(v);
-                  },
-                ),
-              ),
-              if (lastFmEnabled) ...[
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Form(
-                    key: _lastFmFormKey,
-                    onChanged: _lastFmFormKey.currentState?.validate,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: space(
-                        heightGap: 10,
-                        children: [
-                          TextFormField(
-                            obscureText: true,
-                            controller: _lastFmApiKeyController,
-                            decoration: InputDecoration(
-                              hintText: l10n.lastfmApiKey,
-                              label: Text(l10n.lastfmApiKey),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return l10n.lastfmApiKeyEmpty;
-                              }
-                              return null;
-                            },
-                            onChanged: (_) =>
-                                _lastFmFormKey.currentState?.validate(),
-                            onFieldSubmitted: (value) async {
-                              if (_lastFmFormKey.currentState!.validate()) {
-                                di<SettingsManager>().setLastFmApiKey(value);
-                              }
-                            },
-                          ),
-                          TextFormField(
-                            obscureText: true,
-                            controller: _lastFmSecretController,
-                            decoration: InputDecoration(
-                              hintText: l10n.lastfmSecret,
-                              label: Text(l10n.lastfmSecret),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return l10n.lastfmSecretEmpty;
-                              }
-                              return null;
-                            },
-                            onChanged: (_) =>
-                                _lastFmFormKey.currentState?.validate(),
-                            onFieldSubmitted: (value) async {
-                              if (_lastFmFormKey.currentState!.validate()) {
-                                di<SettingsManager>().setLastFmSecret(value);
-                              }
-                            },
-                          ),
-                          ElevatedButton(
-                            onPressed: () =>
-                                di<ExposeManager>().authorizeLastFmCommand.run(
-                                  LastFmCredentials(
-                                    apiKey: _lastFmApiKeyController.text,
-                                    apiSecret: _lastFmSecretController.text,
-                                  ),
-                                ),
-                            child: Text(l10n.saveAndAuthorize),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+        SettingsListTile(
+          position: ListTilePosition.first,
+          title: Row(
+            children: space(
+              children: [
+                const Icon(TablerIcons.brand_lastfm),
+                if (lastFmEnabled &&
+                    watchValue((ExposeManager m) => m.isLastFmAuthorized))
+                  Text(l10n.connectedTo),
+                Text(l10n.exposeToLastfmTitle),
               ],
-              ListTile(
-                title: Row(
-                  children: space(
-                    children: [
-                      const ImageIcon(
-                        AssetImage('assets/images/listenbrainz-icon.png'),
+            ),
+          ),
+          subtitle: Column(children: [Text(l10n.exposeToLastfmSubTitle)]),
+          trailing: CommonSwitch(
+            value: lastFmEnabled,
+            onChanged: (v) {
+              di<SettingsManager>().setEnableLastFmScrobbling(v);
+            },
+          ),
+        ),
+        if (lastFmEnabled) ...[
+          SettingsListTile(
+            position: ListTilePosition.middle,
+            title: Form(
+              key: _lastFmFormKey,
+              onChanged: _lastFmFormKey.currentState?.validate,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: space(
+                  heightGap: 10,
+                  children: [
+                    TextFormField(
+                      obscureText: true,
+                      controller: _lastFmApiKeyController,
+                      decoration: InputDecoration(
+                        hintText: l10n.lastfmApiKey,
+                        label: Text(l10n.lastfmApiKey),
                       ),
-                      Text(l10n.exposeToListenBrainzTitle),
-                    ],
-                  ),
-                ),
-                subtitle: Text(l10n.exposeToListenBrainzSubTitle),
-                trailing: CommonSwitch(
-                  value: listenBrainzEnabled,
-                  onChanged:
-                      di<SettingsManager>().setEnableListenBrainzScrobbling,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return l10n.lastfmApiKeyEmpty;
+                        }
+                        return null;
+                      },
+                      onChanged: (_) => _lastFmFormKey.currentState?.validate(),
+                      onFieldSubmitted: (value) async {
+                        if (_lastFmFormKey.currentState!.validate()) {
+                          di<SettingsManager>().setLastFmApiKey(value);
+                        }
+                      },
+                    ),
+                    TextFormField(
+                      obscureText: true,
+                      controller: _lastFmSecretController,
+                      decoration: InputDecoration(
+                        hintText: l10n.lastfmSecret,
+                        label: Text(l10n.lastfmSecret),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return l10n.lastfmSecretEmpty;
+                        }
+                        return null;
+                      },
+                      onChanged: (_) => _lastFmFormKey.currentState?.validate(),
+                      onFieldSubmitted: (value) async {
+                        if (_lastFmFormKey.currentState!.validate()) {
+                          di<SettingsManager>().setLastFmSecret(value);
+                        }
+                      },
+                    ),
+                    ElevatedButton(
+                      onPressed: () =>
+                          di<ExposeManager>().authorizeLastFmCommand.run(
+                            LastFmCredentials(
+                              apiKey: _lastFmApiKeyController.text,
+                              apiSecret: _lastFmSecretController.text,
+                            ),
+                          ),
+                      child: Text(l10n.saveAndAuthorize),
+                    ),
+                  ],
                 ),
               ),
-              if (listenBrainzEnabled) ...[
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: space(
-                      heightGap: 10,
+            ),
+          ),
+        ],
+        SettingsListTile(
+          position: listenBrainzEnabled
+              ? ListTilePosition.middle
+              : ListTilePosition.last,
+          title: Row(
+            children: space(
+              children: [
+                const ImageIcon(
+                  AssetImage('assets/images/listenbrainz-icon.png'),
+                ),
+                Text(l10n.exposeToListenBrainzTitle),
+              ],
+            ),
+          ),
+          subtitle: Text(l10n.exposeToListenBrainzSubTitle),
+          trailing: CommonSwitch(
+            value: listenBrainzEnabled,
+            onChanged: di<SettingsManager>().setEnableListenBrainzScrobbling,
+          ),
+        ),
+        if (listenBrainzEnabled) ...[
+          SettingsListTile(
+            position: ListTilePosition.last,
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: space(
+                heightGap: 10,
+                children: [
+                  Form(
+                    key: _listenBrainzFormKey,
+                    onChanged: _listenBrainzFormKey.currentState?.validate,
+                    child: Column(
                       children: [
-                        Form(
-                          key: _listenBrainzFormKey,
-                          onChanged:
-                              _listenBrainzFormKey.currentState?.validate,
-                          child: Column(
-                            children: [
-                              TextFormField(
-                                controller: _listenBrainzApiKeyController,
-                                obscureText: true,
-                                decoration: InputDecoration(
-                                  hintText: l10n.listenBrainzApiKey,
-                                  label: Text(l10n.listenBrainzApiKey),
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return l10n.listenBrainzApiKeyEmpty;
-                                  }
-                                  return null;
-                                },
-                                onChanged: (_) => _listenBrainzFormKey
-                                    .currentState
-                                    ?.validate(),
-                                onFieldSubmitted: (value) async {
-                                  if (_listenBrainzFormKey.currentState!
-                                      .validate()) {
-                                    di<SettingsManager>().setListenBrainzApiKey(
-                                      value,
-                                    );
-                                  }
-                                },
-                              ),
-                            ],
+                        TextFormField(
+                          controller: _listenBrainzApiKeyController,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            hintText: l10n.listenBrainzApiKey,
+                            label: Text(l10n.listenBrainzApiKey),
                           ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () => di<ExposeManager>()
-                              .initListenBrainsCommand
-                              .run(_listenBrainzApiKeyController.text),
-                          child: Text(l10n.save),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return l10n.listenBrainzApiKeyEmpty;
+                            }
+                            return null;
+                          },
+                          onChanged: (_) =>
+                              _listenBrainzFormKey.currentState?.validate(),
+                          onFieldSubmitted: (value) async {
+                            if (_listenBrainzFormKey.currentState!.validate()) {
+                              di<SettingsManager>().setListenBrainzApiKey(
+                                value,
+                              );
+                            }
+                          },
                         ),
                       ],
                     ),
                   ),
-                ),
-              ],
-            ],
+                  ElevatedButton(
+                    onPressed: () => di<ExposeManager>().initListenBrainsCommand
+                        .run(_listenBrainzApiKeyController.text),
+                    child: Text(l10n.save),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
+        ],
       ],
     );
   }

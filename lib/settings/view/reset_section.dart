@@ -4,9 +4,11 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../app/app_manager.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
+import '../../common/view/ui_constants.dart';
 import '../../custom_content/view/backup_dialog.dart';
 import '../../extensions/build_context_x.dart';
 import '../manager/wipe_manager.dart';
+import 'settings_list_tile.dart';
 import 'settings_section.dart';
 
 class ResetSection extends StatelessWidget {
@@ -19,7 +21,8 @@ class ResetSection extends StatelessWidget {
     return SettingsSection(
       heading: l10n.resetAllSettings,
       children: [
-        ListTile(
+        SettingsListTile(
+          position: ListTilePosition.first,
           leading: Icon(Iconz.download),
           title: Text(l10n.exportYourData),
           subtitle: SizedBox(
@@ -34,7 +37,8 @@ class ResetSection extends StatelessWidget {
             child: Text(l10n.export),
           ),
         ),
-        ListTile(
+        SettingsListTile(
+          position: ListTilePosition.last,
           leading: Icon(Iconz.remove),
           title: Text(l10n.resetAllSettings),
           subtitle: Text(l10n.resetAllSettings),
@@ -42,9 +46,16 @@ class ResetSection extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: theme.colorScheme.error,
             ),
-            onPressed: () => context.dialog(
-              (context) => const WipeConfirmDialog(),
+            onPressed: () => ConfirmationDialog.show(
+              context: context,
+              modalLevel: ModalLevel.error,
               barrierDismissible: false,
+              title: Text(l10n.confirm),
+              content: Padding(
+                padding: const EdgeInsets.all(kMediumPlusSpace),
+                child: Text(l10n.resetAllSettingsConfirm),
+              ),
+              onConfirm: () => di<WipeManager>().command.runAsync(),
             ),
             child: Text(
               l10n.reset,
@@ -53,22 +64,6 @@ class ResetSection extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class WipeConfirmDialog extends StatelessWidget {
-  const WipeConfirmDialog({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-
-    return ConfirmationDialog(
-      showCloseIcon: false,
-      title: Text(l10n.confirm),
-      content: SizedBox(width: 350, child: Text(l10n.resetAllSettingsConfirm)),
-      onConfirm: () => di<WipeManager>().command.runAsync(),
     );
   }
 }

@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
-import 'package:yaru/yaru.dart';
 
 import '../../common/logging.dart';
 import '../../common/view/common_widgets.dart';
-import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../external_path/service/external_path_service.dart';
 import '../../local_audio/manager/local_audio_manager.dart';
 import '../manager/settings_manager.dart';
 import '../manager/wipe_manager.dart';
+import 'settings_list_tile.dart';
 import 'settings_section.dart';
 
 class LocalAudioSection extends StatelessWidget with WatchItMixin {
@@ -28,7 +27,8 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
     return SettingsSection(
       heading: l10n.localAudio,
       children: [
-        ListTile(
+        SettingsListTile(
+          position: ListTilePosition.first,
           title: Text(l10n.musicCollectionLocation),
           subtitle: Text(directory),
           trailing: ElevatedButton(
@@ -51,7 +51,8 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
             ),
           ),
         ),
-        ListTile(
+        SettingsListTile(
+          position: ListTilePosition.middle,
           title: Text(
             l10n.dontShowAgain +
                 ': ' +
@@ -64,24 +65,15 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
             onChanged: di<SettingsManager>().setNeverShowFailedImports,
           ),
         ),
-        ListTile(
+        SettingsListTile(
+          position: ListTilePosition.last,
           title: Text(l10n.groupAlbumsOnlyByAlbumName),
+          subtitle: Text(l10n.groupAlbumsOnlyByAlbumNameDescription),
           trailing: CommonSwitch(
             value: groupAlbumsOnlyByAlbumName,
             onChanged: di<SettingsManager>().setGroupAlbumsOnlyByAlbumName,
           ),
         ),
-        if (groupAlbumsOnlyByAlbumName)
-          Padding(
-            padding: const EdgeInsets.only(
-              top: kSmallestSpace,
-              right: kSmallestSpace,
-            ),
-            child: YaruInfoBox(
-              yaruInfoType: YaruInfoType.warning,
-              subtitle: Text(l10n.groupAlbumsOnlyByAlbumNameDescription),
-            ),
-          ),
       ],
     );
   }

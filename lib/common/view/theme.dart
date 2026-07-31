@@ -43,7 +43,6 @@ ThemeData? yaruLightWithTweaks(ThemeData? theme) {
     actionIconTheme: ActionIconThemeData(
       backButtonIconBuilder: (context) => Icon(Iconz.goBack),
     ),
-    cardColor: theme.dividerColor.scale(lightness: -0.01),
     iconButtonTheme: iconButtonTheme(theme),
   );
 }
@@ -558,3 +557,12 @@ TextStyle? getPlayerLyricsTextStyle({
         : null,
   );
 }
+
+TextStyle dialogSubtitleTextStyle(ColorScheme colorScheme) =>
+    TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 16);
+
+TextStyle dialogTitleTextStyle(ColorScheme colorScheme) => TextStyle(
+  color: colorScheme.onSurface,
+  fontSize: 18,
+  fontWeight: FontWeight.bold,
+);

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
-import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:yaru/yaru.dart';
 
@@ -17,6 +16,7 @@ import '../../podcasts/manager/podcast_manager.dart';
 import '../data/shared_preferences_keys.dart';
 import '../manager/settings_manager.dart';
 import '../manager/wipe_manager.dart';
+import 'settings_list_tile.dart';
 import 'settings_section.dart';
 
 class PodcastSection extends StatefulWidget with WatchItStatefulWidgetMixin {
@@ -68,13 +68,17 @@ class _PodcastSectionState extends State<PodcastSection> {
       children: [
         const _DownloadsTile(),
         const _ControlCollectionTile(),
-        ListTile(
+        SettingsListTile(
+          position: usePodcastIndex
+              ? ListTilePosition.middle
+              : ListTilePosition.last,
           title: Text(l10n.usePodcastIndex),
           trailing: CommonSwitch(
             value: usePodcastIndex,
             onChanged: (v) {
               if (!v) {
                 ConfirmationDialog.show(
+                  modalLevel: ModalLevel.warning,
                   context: context,
                   title: Text(l10n.iTunes + '?'),
                   onConfirm: () async {
@@ -154,7 +158,8 @@ class _PodcastSectionState extends State<PodcastSection> {
           ValueListenableBuilder(
             valueListenable: _secretController,
             builder: (context, value, child) {
-              return ListTile(
+              return SettingsListTile(
+                position: ListTilePosition.last,
                 trailing: ElevatedButton(
                   onPressed: value.text.isEmpty
                       ? null
@@ -187,7 +192,8 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
-    return ListTile(
+    return SettingsListTile(
+      position: ListTilePosition.middle,
       title: Text(l10n.podcastSubscriptions),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
@@ -198,12 +204,14 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
               semanticLabel: context.l10n.exportPodcastsToOpmlFile,
             ),
             tooltip: context.l10n.exportPodcastsToOpmlFile,
-            onPressed: () => showFutureLoadingDialog(
+            onPressed: () => ConfirmationDialog.show(
               context: context,
-              future: () =>
+              initialFuture: () =>
                   di<CustomContentManager>().exportPodcastsToOpmlFile(),
-              backLabel: context.l10n.back,
-              title: context.l10n.exportingPodcastsPleaseWait,
+              cancelLabel: context.l10n.back,
+              loadingTitle: Text(context.l10n.exportingPodcastsPleaseWait),
+              showCancel: false,
+              showConfirm: false,
             ),
           ),
           IconButton(
@@ -212,18 +220,22 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
               semanticLabel: context.l10n.importPodcastsFromOpmlFile,
             ),
             tooltip: context.l10n.importPodcastsFromOpmlFile,
-            onPressed: () => showFutureLoadingDialog(
+            onPressed: () => ConfirmationDialog.show(
               context: context,
-              future: () =>
+              initialFuture: () =>
                   di<CustomContentManager>().importPodcastsFromOpmlFile(),
-              title: context.l10n.importingPodcastsPleaseWait,
-              backLabel: context.l10n.back,
+              loadingTitle: Text(context.l10n.importingPodcastsPleaseWait),
+              cancelLabel: context.l10n.back,
+              showCancel: false,
+              showConfirm: false,
             ),
           ),
           IconButton(
             icon: Icon(Iconz.remove),
             tooltip: context.l10n.podcasts,
             onPressed: () => ConfirmationDialog.show(
+              modalLevel: ModalLevel.error,
+              headerIconData: Iconz.remove,
               context: context,
               title: Text(context.l10n.removeAllPodcastsConfirm),
               content: Text(context.l10n.removeAllPodcastsDescription),
@@ -257,7 +269,8 @@ class _DownloadsTileState extends State<_DownloadsTile> {
     final error = downloadsDirResults.error;
     final downloadsDir = downloadsDirResults.data;
 
-    return ListTile(
+    return SettingsListTile(
+      position: ListTilePosition.first,
       title: Text(l10n.downloadsDirectory),
       subtitle: Text(error?.toString() ?? downloadsDir ?? ''),
       trailing: ElevatedButton(

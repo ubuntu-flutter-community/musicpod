@@ -11,6 +11,7 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/platform_x.dart';
 import '../../extensions/theme_mode_x.dart';
 import '../manager/settings_manager.dart';
+import 'settings_list_tile.dart';
 import 'settings_section.dart';
 import 'theme_tile.dart';
 
@@ -47,12 +48,10 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
     return SettingsSection(
       heading: l10n.theme,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(
-            top: kMediumPlusSpace,
-            left: kMediumPlusSpace,
-          ),
-          child: Wrap(
+        SettingsListTile(
+          position: ListTilePosition.first,
+          includeChevron: false,
+          title: Wrap(
             alignment: WrapAlignment.start,
             spacing: kLargestSpace,
             children: [
@@ -79,7 +78,8 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
           ),
         ),
         if (!isMobile) ...[
-          ListTile(
+          SettingsListTile(
+            position: ListTilePosition.middle,
             title: Text(l10n.useYaruThemeTitle),
             subtitle: Text(l10n.useYaruThemeDescription),
             trailing: CommonSwitch(
@@ -87,7 +87,8 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
               value: useYaruTheme,
             ),
           ),
-          ListTile(
+          SettingsListTile(
+            position: ListTilePosition.middle,
             title: Text(l10n.selectIconThemeTitle),
             subtitle: Text(l10n.selectIconThemeDescription),
             trailing: YaruPopupMenuButton(
@@ -112,7 +113,8 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
             ),
           ),
         ],
-        ListTile(
+        SettingsListTile(
+          position: ListTilePosition.middle,
           title: Text(l10n.usePlayerColorTitle),
           subtitle: Text(l10n.usePlayerColorDescription),
           trailing: CommonSwitch(
@@ -120,7 +122,8 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
             value: usePlayerColor,
           ),
         ),
-        ListTile(
+        SettingsListTile(
+          position: ListTilePosition.middle,
           title: Text(l10n.useCustomThemeColorTitle),
           subtitle: Text(l10n.useCustomThemeColorDescription),
           trailing: CommonSwitch(
@@ -129,7 +132,8 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
           ),
         ),
         if (useCustomThemeColor)
-          ListTile(
+          SettingsListTile(
+            position: ListTilePosition.middle,
             title: const Text(''),
             subtitle: const Text(''),
             trailing: ElevatedButton.icon(
@@ -188,7 +192,8 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
                   ),
             ),
           ),
-        ListTile(
+        SettingsListTile(
+          position: ListTilePosition.last,
           title: Text(l10n.showPositionDurationTitle),
           subtitle: Text(l10n.showPositionDurationDescription),
           trailing: CommonSwitch(
