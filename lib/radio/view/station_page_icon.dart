@@ -28,18 +28,23 @@ class StationPageIcon extends StatelessWidget with WatchItMixin {
       height: dimension ?? sideBarImageSize,
       width: dimension ?? sideBarImageSize,
       child: SafeNetworkImage(
-        fallbackWidget: SideBarFallBackImage(
-          color: getAlphabetColor(uuid),
-          child: selected ? Icon(Iconz.starFilled) : Icon(Iconz.star),
-        ),
-        errorWidget: SideBarFallBackImage(
-          color: getAlphabetColor(uuid),
-          child: selected ? Icon(Iconz.starFilled) : Icon(Iconz.star),
-        ),
+        fallbackWidget: _getIcon(context.theme.colorScheme, selected),
+        errorWidget: _getIcon(context.theme.colorScheme, selected),
         fit: BoxFit.fitHeight,
         url: watchValue((StationImageManager m) => m.command, param1: uuid),
         filterQuality: FilterQuality.medium,
       ),
     ),
   );
+
+  SideBarFallBackImage _getIcon(ColorScheme colorScheme, bool selected) =>
+      SideBarFallBackImage(
+        height: dimension ?? audioCardDimension,
+        width: dimension ?? audioCardDimension,
+        color: getAlphabetColor(uuid),
+        child: Icon(
+          selected ? Iconz.starFilled : Iconz.star,
+          size: dimension != null ? dimension! * 0.5 : null,
+        ),
+      );
 }

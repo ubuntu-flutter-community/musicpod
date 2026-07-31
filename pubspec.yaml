@@ -8,7 +8,7 @@ environment:
   sdk: ">=3.8.0 <4.0.0"
 
 dependencies:
-  audio_metadata_reader: ^1.7.0
+  audio_metadata_reader: ^1.7.1
   audio_service: ^0.18.18
   audio_service_mpris:
     git:
@@ -37,7 +37,6 @@ dependencies:
   flutter_markdown: ^0.7.7+1
   flutter_tabler_icons: ^1.43.0
   flutter_widget_from_html_core: ^0.17.2
-  future_loading_dialog: ^0.3.0
   genius_lyrics: ^1.0.1
   github: ^9.25.0
   gtk: ^2.1.0

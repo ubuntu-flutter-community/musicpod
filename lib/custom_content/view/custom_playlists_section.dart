@@ -1,12 +1,12 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
-import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
+import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -111,11 +111,13 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
           ],
         ),
         TextButton(
-          onPressed: () => showFutureLoadingDialog(
+          onPressed: () => ConfirmationDialog.show(
             context: context,
-            future: () => di<CustomContentManager>().addPlaylists(),
-            backLabel: context.l10n.back,
-            title: context.l10n.importingPlaylistsPleaseWait,
+            initialFuture: () => di<CustomContentManager>().addPlaylists(),
+            showCancel: false,
+            showConfirm: false,
+            cancelLabel: context.l10n.back,
+            loadingTitle: Text(context.l10n.importingPlaylistsPleaseWait),
           ),
           child: Text(l10n.loadFromFileOptional),
         ),

@@ -118,7 +118,11 @@ Iterable<MasterItem> createStarredStationsMasterItems(
     subtitleBuilder: (context) => Text(context.l10n.station),
     pageId: uuid,
     pageBuilder: (_) => StationPage(uuid: uuid),
-    iconBuilder: (selected) => StationPageIcon(uuid: uuid, selected: selected),
+    iconBuilder: (selected) => StationPageIcon(
+      uuid: uuid,
+      selected: selected,
+      dimension: sideBarImageSize,
+    ),
     audioPageType: AudioPageType.radio,
   ),
 );

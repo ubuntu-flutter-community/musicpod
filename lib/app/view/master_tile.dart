@@ -141,7 +141,10 @@ class _FramedMasterTile extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SpacedDivider(top: 10, bottom: 10, right: 0, left: 0),
-        tile,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: kMediumSpace),
+          child: tile,
+        ),
         const SpacedDivider(top: 10, bottom: 10, right: 0, left: 0),
       ],
     );

@@ -43,14 +43,23 @@ ThemeData? yaruLightWithTweaks(ThemeData? theme) {
     actionIconTheme: ActionIconThemeData(
       backButtonIconBuilder: (context) => Icon(Iconz.goBack),
     ),
-    cardColor: theme.dividerColor.scale(lightness: -0.01),
     iconButtonTheme: iconButtonTheme(theme),
   );
 }
 
-ThemeData lightBaseTheme(Color color) => phoenixTheme(color: color).lightTheme;
+ThemeData lightBaseTheme(Color color) =>
+    phoenixTheme(color: color).lightTheme.copyWith(
+      cardTheme: phoenixTheme(
+        color: color,
+      ).lightTheme.cardTheme.copyWith(elevation: 0),
+    );
 
-ThemeData lightDarkTheme(Color color) => phoenixTheme(color: color).darkTheme;
+ThemeData lightDarkTheme(Color color) =>
+    phoenixTheme(color: color).darkTheme.copyWith(
+      cardTheme: phoenixTheme(
+        color: color,
+      ).darkTheme.cardTheme.copyWith(elevation: 0),
+    );
 
 TextTheme textThemeWithEmojis(ThemeData theme) => theme.textTheme.copyWith(
   bodySmall: theme.textTheme.bodySmall?.copyWith(
@@ -548,3 +557,12 @@ TextStyle? getPlayerLyricsTextStyle({
         : null,
   );
 }
+
+TextStyle dialogSubtitleTextStyle(ColorScheme colorScheme) =>
+    TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 16);
+
+TextStyle dialogTitleTextStyle(ColorScheme colorScheme) => TextStyle(
+  color: colorScheme.onSurface,
+  fontSize: 18,
+  fontWeight: FontWeight.bold,
+);

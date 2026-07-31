@@ -75,6 +75,9 @@ class PlaylistControlPanel extends StatelessWidget with WatchItMixin {
           IconButton(
             icon: Icon(Iconz.remove),
             onPressed: () => ConfirmationDialog.show(
+              title: Text(l10n.deletePlaylist),
+              modalLevel: ModalLevel.error,
+              headerIconData: Iconz.remove,
               context: context,
               onConfirm: () {
                 if (context.mounted && context.canPop()) {

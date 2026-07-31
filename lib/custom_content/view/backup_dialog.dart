@@ -27,7 +27,7 @@ class BackupDialog extends StatelessWidget with WatchItMixin {
 
     return ConfirmationDialog(
       showCancel: false,
-      showCloseIcon: !breakingChange,
+      barrierDismissible: !breakingChange,
       onConfirm: confirmEnabled ? () => appManager.setBackupSaved(true) : null,
       title: Text(
         breakingChange

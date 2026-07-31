@@ -23,6 +23,8 @@ import '../../podcasts/data/podcast_toggle_capsule.dart';
 import '../../podcasts/manager/episodes_manager.dart';
 import '../../podcasts/manager/podcast_short_info_manager.dart';
 import '../../podcasts/manager/subscribed_podcasts_manager.dart';
+import '../../radio/manager/radio_manager.dart';
+import '../../radio/manager/radio_star_station_manager.dart';
 import '../../radio/service/radio_service.dart';
 
 @Injectable(cache: true)
@@ -282,7 +284,10 @@ class CustomContentManager {
         starredStations.add(feed.text!);
       }
       if (starredStations.isNotEmpty) {
-        await _radioService.addStarredStations(starredStations);
+        for (final uuid in starredStations) {
+          final station = await di<RadioManager>().getAudioByUUID(uuid);
+          await di<RadioStarStationManager>().command.runAsync(station);
+        }
       }
     }
   }

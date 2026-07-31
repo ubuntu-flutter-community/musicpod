@@ -83,3 +83,7 @@ const kShowLeadingThreshold = 500;
 const kMusicPodDefaultColor = Color(0xFFed3c63);
 
 const kMobileScaffoldBackgroundColor = Color.fromARGB(255, 14, 14, 14);
+
+const kDialogWidthMedium = 480.0;
+const kDialogWidthSmall = 343.0;
+const kDialogWidthLarge = 900.0;

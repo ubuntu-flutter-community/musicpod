@@ -11,6 +11,8 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/platform_x.dart';
 import '../../extensions/theme_mode_x.dart';
 import '../manager/settings_manager.dart';
+import 'settings_list_tile.dart';
+import 'settings_section.dart';
 import 'theme_tile.dart';
 
 class ThemeSection extends StatelessWidget with WatchItMixin {
@@ -43,170 +45,165 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
     final iconSetIndex = watchPropertyValue(
       (SettingsManager m) => m.iconSetIndex,
     );
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(kMediumSpace),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ListTile(title: Text(l10n.theme)),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: kLargestSpace,
-                left: kMediumSpace,
-              ),
-              child: Wrap(
-                alignment: WrapAlignment.start,
-                spacing: kLargestSpace,
-                children: [
-                  for (var i = 0; i < ThemeMode.values.length; ++i)
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        YaruSelectableContainer(
-                          padding: const EdgeInsets.all(1),
-                          borderRadius: BorderRadius.circular(15),
-                          selected: themeIndex == i,
-                          onTap: () => model.setThemeIndex(i),
-                          selectionColor: context.theme.colorScheme.primary,
-                          child: ThemeTile(ThemeMode.values[i]),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            ThemeMode.values[i].localize(context.l10n),
-                          ),
-                        ),
-                      ],
+    return SettingsSection(
+      heading: l10n.theme,
+      children: [
+        SettingsListTile(
+          position: ListTilePosition.first,
+          includeChevron: false,
+          title: Wrap(
+            alignment: WrapAlignment.start,
+            spacing: kLargestSpace,
+            children: [
+              for (var i = 0; i < ThemeMode.values.length; ++i)
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    YaruSelectableContainer(
+                      padding: const EdgeInsets.all(1),
+                      borderRadius: BorderRadius.circular(15),
+                      selected: themeIndex == i,
+                      onTap: () => model.setThemeIndex(i),
+                      selectionColor: context.theme.colorScheme.primary,
+                      child: ThemeTile(ThemeMode.values[i]),
                     ),
-                ],
-              ),
-            ),
-            if (!isMobile) ...[
-              ListTile(
-                title: Text(l10n.useYaruThemeTitle),
-                subtitle: Text(l10n.useYaruThemeDescription),
-                trailing: CommonSwitch(
-                  onChanged: model.setUseYaruTheme,
-                  value: useYaruTheme,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(ThemeMode.values[i].localize(context.l10n)),
+                    ),
+                  ],
                 ),
-              ),
-              ListTile(
-                title: Text(l10n.selectIconThemeTitle),
-                subtitle: Text(l10n.selectIconThemeDescription),
-                trailing: YaruPopupMenuButton(
-                  itemBuilder: (p0) => IconSet.values
-                      .map(
-                        (IconSet iconSet) => PopupMenuItem(
-                          value: iconSet.index,
-                          child: Text(iconSet.name),
-                        ),
-                      )
-                      .toList(),
-                  initialValue: iconSetIndex,
-                  onSelected: (int? value) {
-                    if (value != null) {
-                      di<SettingsManager>().setIconSetIndex(value);
-                      di<SettingsManager>().scrollIndex = 0;
-                      appRestartNotifier.value = UniqueKey();
-                    }
-                  },
-                  icon: Icon(Iconz.dropdown),
-                  child: Text(IconSet.values[iconSetIndex].name),
-                ),
-              ),
             ],
-            ListTile(
-              title: Text(l10n.usePlayerColorTitle),
-              subtitle: Text(l10n.usePlayerColorDescription),
-              trailing: CommonSwitch(
-                onChanged: model.setUsePlayerColor,
-                value: usePlayerColor,
-              ),
-            ),
-            ListTile(
-              title: Text(l10n.useCustomThemeColorTitle),
-              subtitle: Text(l10n.useCustomThemeColorDescription),
-              trailing: CommonSwitch(
-                onChanged: usePlayerColor ? null : model.setUseCustomThemeColor,
-                value: useCustomThemeColor,
-              ),
-            ),
-            if (useCustomThemeColor)
-              ListTile(
-                title: const Text(''),
-                subtitle: const Text(''),
-                trailing: ElevatedButton.icon(
-                  icon: Icon(Iconz.color),
-                  label: Text(l10n.selectColor),
-                  onPressed: () =>
-                      ColorPicker(
-                        color: color,
-                        onColorChanged: (Color color) => di<SettingsManager>()
-                            .setCustomThemeColor(color.toARGB32()),
-                        width: 40,
-                        height: 40,
-                        borderRadius: 4,
-                        spacing: 5,
-                        runSpacing: 5,
-                        wheelDiameter: 155,
-                        heading: Text(
-                          l10n.selectColor,
-                          style: theme.textTheme.titleMedium,
-                        ),
-                        subheading: Text(
-                          l10n.selectColorShade,
-                          style: theme.textTheme.titleMedium,
-                        ),
-                        wheelSubheading: Text(
-                          l10n.selectColorAndItsShades,
-                          style: theme.textTheme.titleMedium,
-                        ),
-                        showMaterialName: true,
-                        showColorName: true,
-                        showColorCode: true,
-                        copyPasteBehavior: const ColorPickerCopyPasteBehavior(
-                          longPressMenu: true,
-                        ),
-                        materialNameTextStyle: theme.textTheme.bodySmall,
-                        colorNameTextStyle: theme.textTheme.bodySmall,
-                        colorCodeTextStyle: theme.textTheme.bodyMedium,
-                        colorCodePrefixStyle: theme.textTheme.bodySmall,
-                        selectedPickerTypeColor: theme.colorScheme.primary,
-                        pickersEnabled: const <ColorPickerType, bool>{
-                          ColorPickerType.both: false,
-                          ColorPickerType.primary: true,
-                          ColorPickerType.accent: true,
-                          ColorPickerType.bw: false,
-                          ColorPickerType.custom: true,
-                          ColorPickerType.wheel: true,
-                        },
-                      ).showPickerDialog(
-                        context,
-                        actionsPadding: const EdgeInsets.all(16),
-                        constraints: const BoxConstraints(
-                          minHeight: 480,
-                          minWidth: 300,
-                          maxWidth: 320,
-                        ),
-                      ),
-                ),
-              ),
-            ListTile(
-              title: Text(l10n.showPositionDurationTitle),
-              subtitle: Text(l10n.showPositionDurationDescription),
-              trailing: CommonSwitch(
-                onChanged: di<SettingsManager>().setShowPositionDuration,
-                value: watchPropertyValue(
-                  (SettingsManager m) => m.showPositionDuration,
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
+        if (!isMobile) ...[
+          SettingsListTile(
+            position: ListTilePosition.middle,
+            title: Text(l10n.useYaruThemeTitle),
+            subtitle: Text(l10n.useYaruThemeDescription),
+            trailing: CommonSwitch(
+              onChanged: model.setUseYaruTheme,
+              value: useYaruTheme,
+            ),
+          ),
+          SettingsListTile(
+            position: ListTilePosition.middle,
+            title: Text(l10n.selectIconThemeTitle),
+            subtitle: Text(l10n.selectIconThemeDescription),
+            trailing: YaruPopupMenuButton(
+              itemBuilder: (p0) => IconSet.values
+                  .map(
+                    (IconSet iconSet) => PopupMenuItem(
+                      value: iconSet.index,
+                      child: Text(iconSet.name),
+                    ),
+                  )
+                  .toList(),
+              initialValue: iconSetIndex,
+              onSelected: (int? value) {
+                if (value != null) {
+                  di<SettingsManager>().setIconSetIndex(value);
+                  di<SettingsManager>().scrollIndex = 0;
+                  appRestartNotifier.value = UniqueKey();
+                }
+              },
+              icon: Icon(Iconz.dropdown),
+              child: Text(IconSet.values[iconSetIndex].name),
+            ),
+          ),
+        ],
+        SettingsListTile(
+          position: ListTilePosition.middle,
+          title: Text(l10n.usePlayerColorTitle),
+          subtitle: Text(l10n.usePlayerColorDescription),
+          trailing: CommonSwitch(
+            onChanged: model.setUsePlayerColor,
+            value: usePlayerColor,
+          ),
+        ),
+        SettingsListTile(
+          position: ListTilePosition.middle,
+          title: Text(l10n.useCustomThemeColorTitle),
+          subtitle: Text(l10n.useCustomThemeColorDescription),
+          trailing: CommonSwitch(
+            onChanged: usePlayerColor ? null : model.setUseCustomThemeColor,
+            value: useCustomThemeColor,
+          ),
+        ),
+        if (useCustomThemeColor)
+          SettingsListTile(
+            position: ListTilePosition.middle,
+            title: const Text(''),
+            subtitle: const Text(''),
+            trailing: ElevatedButton.icon(
+              icon: Icon(Iconz.color),
+              label: Text(l10n.selectColor),
+              onPressed: () =>
+                  ColorPicker(
+                    color: color,
+                    onColorChanged: (Color color) => di<SettingsManager>()
+                        .setCustomThemeColor(color.toARGB32()),
+                    width: 40,
+                    height: 40,
+                    borderRadius: 4,
+                    spacing: 5,
+                    runSpacing: 5,
+                    wheelDiameter: 155,
+                    heading: Text(
+                      l10n.selectColor,
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    subheading: Text(
+                      l10n.selectColorShade,
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    wheelSubheading: Text(
+                      l10n.selectColorAndItsShades,
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    showMaterialName: true,
+                    showColorName: true,
+                    showColorCode: true,
+                    copyPasteBehavior: const ColorPickerCopyPasteBehavior(
+                      longPressMenu: true,
+                    ),
+                    materialNameTextStyle: theme.textTheme.bodySmall,
+                    colorNameTextStyle: theme.textTheme.bodySmall,
+                    colorCodeTextStyle: theme.textTheme.bodyMedium,
+                    colorCodePrefixStyle: theme.textTheme.bodySmall,
+                    selectedPickerTypeColor: theme.colorScheme.primary,
+                    pickersEnabled: const <ColorPickerType, bool>{
+                      ColorPickerType.both: false,
+                      ColorPickerType.primary: true,
+                      ColorPickerType.accent: true,
+                      ColorPickerType.bw: false,
+                      ColorPickerType.custom: true,
+                      ColorPickerType.wheel: true,
+                    },
+                  ).showPickerDialog(
+                    context,
+                    actionsPadding: const EdgeInsets.all(16),
+                    constraints: const BoxConstraints(
+                      minHeight: 480,
+                      minWidth: 300,
+                      maxWidth: 320,
+                    ),
+                  ),
+            ),
+          ),
+        SettingsListTile(
+          position: ListTilePosition.last,
+          title: Text(l10n.showPositionDurationTitle),
+          subtitle: Text(l10n.showPositionDurationDescription),
+          trailing: CommonSwitch(
+            onChanged: di<SettingsManager>().setShowPositionDuration,
+            value: watchPropertyValue(
+              (SettingsManager m) => m.showPositionDuration,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

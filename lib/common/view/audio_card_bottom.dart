@@ -38,15 +38,19 @@ class AudioCardBottom extends StatelessWidget {
     return SizedBox(
       width: audioCardDimension,
       height: kAudioCardBottomHeight,
-      child: child != null
-          ? DefaultTextStyle(style: textStyle, child: child!)
-          : Tooltip(
-              message: text ?? '',
-              child: Container(
-                width: audioCardDimension,
-                margin: const EdgeInsets.all(1),
-                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                child: text == null
+      child: Tooltip(
+        message: text ?? '',
+        child: Container(
+          width: audioCardDimension,
+          margin: const EdgeInsets.all(1),
+          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+          child: child != null
+              ? DefaultTextStyle(
+                  style: textStyle,
+                  child: child!,
+                  textAlign: TextAlign.center,
+                )
+              : (text == null
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(5),
                         child: Shimmer.fromColors(
@@ -63,9 +67,9 @@ class AudioCardBottom extends StatelessWidget {
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
                         maxLines: maxLines,
-                      ),
-              ),
-            ),
+                      )),
+        ),
+      ),
     );
   }
 }

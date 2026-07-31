@@ -9,5 +9,5 @@ class ClickStationManager {
     command = Command.createAsyncNoResult(radioService.clickStation);
   }
 
-  late final Command<String?, void> command;
+  late final Command<String, void> command;
 }

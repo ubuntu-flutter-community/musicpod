@@ -84,9 +84,9 @@ class PlayAnywhereManager {
     ),
     AudioPageType.radio => PlayAnywhereResult(
       audios: [
-        ?await di<StationManager>(
+        ?(await di<StationManager>(
           param1: param.pageId,
-        ).command.runRestrictedAsync(),
+        ).command.runRestrictedAsync(param: (fromDbOnly: false))),
       ],
       param: param,
     ),

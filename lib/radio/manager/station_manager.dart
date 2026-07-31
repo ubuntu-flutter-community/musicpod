@@ -11,7 +11,7 @@ class StationManager {
     required RadioManager radioManager,
   }) {
     command = Command.createAsyncNoParam(
-      () => radioManager.getAudioByUUID(uuid, fromDbOnly: true),
+      () => radioManager.getAudioByUUID(uuid),
       initialValue: null,
     );
     command.run();

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
-import 'package:future_loading_dialog/future_loading_dialog.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:yaru/yaru.dart';
 
@@ -17,6 +16,8 @@ import '../../podcasts/manager/podcast_manager.dart';
 import '../data/shared_preferences_keys.dart';
 import '../manager/settings_manager.dart';
 import '../manager/wipe_manager.dart';
+import 'settings_list_tile.dart';
+import 'settings_section.dart';
 
 class PodcastSection extends StatefulWidget with WatchItStatefulWidgetMixin {
   const PodcastSection({super.key});
@@ -62,126 +63,124 @@ class _PodcastSectionState extends State<PodcastSection> {
       (SettingsManager m) => m.podcastIndexApiSecret,
     );
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(kMediumSpace),
-        child: Column(
-          children: [
-            ListTile(title: Text(l10n.podcasts)),
-            const _DownloadsTile(),
-            const _ControlCollectionTile(),
-            ListTile(
-              title: Text(l10n.usePodcastIndex),
-              trailing: CommonSwitch(
-                value: usePodcastIndex,
-                onChanged: (v) {
-                  if (!v) {
-                    ConfirmationDialog.show(
-                      context: context,
-                      title: Text(l10n.iTunes + '?'),
-                      onConfirm: () async {
-                        di<PodcastManager>().initSearchCommand.run((
-                          searchProvider: const ITunesProvider(),
-                        ));
+    return SettingsSection(
+      heading: l10n.podcasts,
+      children: [
+        const _DownloadsTile(),
+        const _ControlCollectionTile(),
+        SettingsListTile(
+          position: usePodcastIndex
+              ? ListTilePosition.middle
+              : ListTilePosition.last,
+          title: Text(l10n.usePodcastIndex),
+          trailing: CommonSwitch(
+            value: usePodcastIndex,
+            onChanged: (v) {
+              if (!v) {
+                ConfirmationDialog.show(
+                  modalLevel: ModalLevel.warning,
+                  context: context,
+                  title: Text(l10n.iTunes + '?'),
+                  onConfirm: () async {
+                    di<PodcastManager>().initSearchCommand.run((
+                      searchProvider: const ITunesProvider(),
+                    ));
 
-                        await model.setUsePodcastIndex(v);
+                    await model.setUsePodcastIndex(v);
 
-                        await di<PodcastLoadGenresManager>().command.runAsync((
-                          force: true,
-                        ));
-                      },
-                    );
-                  } else {
-                    model.setUsePodcastIndex(v);
-                  }
-                },
+                    await di<PodcastLoadGenresManager>().command.runAsync((
+                      force: true,
+                    ));
+                  },
+                );
+              } else {
+                model.setUsePodcastIndex(v);
+              }
+            },
+          ),
+        ),
+        if (usePodcastIndex) ...[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _keyController,
+              onChanged: (v) => setState(() => _initialKey = v),
+              obscureText: true,
+              decoration: InputDecoration(
+                label: Text(SPKeys.podcastIndexApiKey.camelToSentence),
+                suffixIcon: IconButton(
+                  tooltip: l10n.save,
+                  onPressed: () =>
+                      model.setPodcastIndexApiKey(_keyController.text),
+                  icon: Icon(
+                    Iconz.check,
+                    color: podcastIndexApiKey == _initialKey
+                        ? theme.colorScheme.success
+                        : theme.colorScheme.onSurface,
+                  ),
+                ),
               ),
             ),
-            if (usePodcastIndex) ...[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: _keyController,
-                  onChanged: (v) => setState(() => _initialKey = v),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 8,
+              right: 8,
+              bottom: kLargestSpace,
+            ),
+            child: ValueListenableBuilder(
+              valueListenable: _keyController,
+              builder: (context, value, child) {
+                return TextField(
+                  enabled: value.text.isNotEmpty,
+                  controller: _secretController,
+                  onChanged: (v) => setState(() => _initialSecret = v),
                   obscureText: true,
                   decoration: InputDecoration(
-                    label: Text(SPKeys.podcastIndexApiKey.camelToSentence),
+                    label: Text(SPKeys.podcastIndexApiSecret.camelToSentence),
                     suffixIcon: IconButton(
                       tooltip: l10n.save,
-                      onPressed: () =>
-                          model.setPodcastIndexApiKey(_keyController.text),
+                      onPressed: () => model.setPodcastIndexApiSecret(
+                        _secretController.text,
+                      ),
                       icon: Icon(
                         Iconz.check,
-                        color: podcastIndexApiKey == _initialKey
+                        color: podcastIndexApiSecret == _initialSecret
                             ? theme.colorScheme.success
                             : theme.colorScheme.onSurface,
                       ),
                     ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 8,
-                  right: 8,
-                  bottom: kLargestSpace,
-                ),
-                child: ValueListenableBuilder(
-                  valueListenable: _keyController,
-                  builder: (context, value, child) {
-                    return TextField(
-                      enabled: value.text.isNotEmpty,
-                      controller: _secretController,
-                      onChanged: (v) => setState(() => _initialSecret = v),
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        label: Text(
-                          SPKeys.podcastIndexApiSecret.camelToSentence,
+                );
+              },
+            ),
+          ),
+          ValueListenableBuilder(
+            valueListenable: _secretController,
+            builder: (context, value, child) {
+              return SettingsListTile(
+                position: ListTilePosition.last,
+                trailing: ElevatedButton(
+                  onPressed: value.text.isEmpty
+                      ? null
+                      : () => ConfirmationDialog.show(
+                          context: context,
+                          title: Text(l10n.usePodcastIndex + '?'),
+                          onConfirm: () async =>
+                              di<PodcastManager>().initSearchCommand.run((
+                                searchProvider: PodcastIndexProvider(
+                                  key: model.podcastIndexApiKey!,
+                                  secret: model.podcastIndexApiSecret!,
+                                ),
+                              )),
                         ),
-                        suffixIcon: IconButton(
-                          tooltip: l10n.save,
-                          onPressed: () => model.setPodcastIndexApiSecret(
-                            _secretController.text,
-                          ),
-                          icon: Icon(
-                            Iconz.check,
-                            color: podcastIndexApiSecret == _initialSecret
-                                ? theme.colorScheme.success
-                                : theme.colorScheme.onSurface,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
+                  child: Text(context.l10n.confirm),
                 ),
-              ),
-              ValueListenableBuilder(
-                valueListenable: _secretController,
-                builder: (context, value, child) {
-                  return ListTile(
-                    trailing: ElevatedButton(
-                      onPressed: value.text.isEmpty
-                          ? null
-                          : () => ConfirmationDialog.show(
-                              context: context,
-                              title: Text(l10n.usePodcastIndex + '?'),
-                              onConfirm: () async =>
-                                  di<PodcastManager>().initSearchCommand.run((
-                                    searchProvider: PodcastIndexProvider(
-                                      key: model.podcastIndexApiKey!,
-                                      secret: model.podcastIndexApiSecret!,
-                                    ),
-                                  )),
-                            ),
-                      child: Text(context.l10n.confirm),
-                    ),
-                  );
-                },
-              ),
-            ],
-          ],
-        ),
-      ),
+              );
+            },
+          ),
+        ],
+      ],
     );
   }
 }
@@ -193,7 +192,8 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
-    return ListTile(
+    return SettingsListTile(
+      position: ListTilePosition.middle,
       title: Text(l10n.podcastSubscriptions),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
@@ -204,12 +204,14 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
               semanticLabel: context.l10n.exportPodcastsToOpmlFile,
             ),
             tooltip: context.l10n.exportPodcastsToOpmlFile,
-            onPressed: () => showFutureLoadingDialog(
+            onPressed: () => ConfirmationDialog.show(
               context: context,
-              future: () =>
+              initialFuture: () =>
                   di<CustomContentManager>().exportPodcastsToOpmlFile(),
-              backLabel: context.l10n.back,
-              title: context.l10n.exportingPodcastsPleaseWait,
+              cancelLabel: context.l10n.back,
+              loadingTitle: Text(context.l10n.exportingPodcastsPleaseWait),
+              showCancel: false,
+              showConfirm: false,
             ),
           ),
           IconButton(
@@ -218,18 +220,22 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
               semanticLabel: context.l10n.importPodcastsFromOpmlFile,
             ),
             tooltip: context.l10n.importPodcastsFromOpmlFile,
-            onPressed: () => showFutureLoadingDialog(
+            onPressed: () => ConfirmationDialog.show(
               context: context,
-              future: () =>
+              initialFuture: () =>
                   di<CustomContentManager>().importPodcastsFromOpmlFile(),
-              title: context.l10n.importingPodcastsPleaseWait,
-              backLabel: context.l10n.back,
+              loadingTitle: Text(context.l10n.importingPodcastsPleaseWait),
+              cancelLabel: context.l10n.back,
+              showCancel: false,
+              showConfirm: false,
             ),
           ),
           IconButton(
             icon: Icon(Iconz.remove),
             tooltip: context.l10n.podcasts,
             onPressed: () => ConfirmationDialog.show(
+              modalLevel: ModalLevel.error,
+              headerIconData: Iconz.remove,
               context: context,
               title: Text(context.l10n.removeAllPodcastsConfirm),
               content: Text(context.l10n.removeAllPodcastsDescription),
@@ -263,7 +269,8 @@ class _DownloadsTileState extends State<_DownloadsTile> {
     final error = downloadsDirResults.error;
     final downloadsDir = downloadsDirResults.data;
 
-    return ListTile(
+    return SettingsListTile(
+      position: ListTilePosition.first,
       title: Text(l10n.downloadsDirectory),
       subtitle: Text(error?.toString() ?? downloadsDir ?? ''),
       trailing: ElevatedButton(

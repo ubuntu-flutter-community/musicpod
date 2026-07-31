@@ -23,27 +23,41 @@ class RadioService {
 
   RadioBrowserApi? _radioBrowserApi;
 
-  Future<String?> connectToServer({List<String>? newHosts}) async {
+  final List<String> _hosts = [];
+
+  Future<String?> connectToServer({
+    List<String>? newHosts,
+    Set<String> excludeHosts = const {},
+  }) async {
     if (_radioBrowserApi?.host != null) {
       return _radioBrowserApi?.host;
     }
 
-    final potentialHosts =
-        newHosts ??
+    if (newHosts != null) {
+      _hosts
+        ..clear()
+        ..addAll(newHosts);
+    } else if (_hosts.isEmpty) {
+      _hosts.addAll(
         await _findHosts().timeout(
           FindRadioBrowserHostsTimeoutException.timeoutDuration,
           onTimeout: () {
             throw FindRadioBrowserHostsTimeoutException();
           },
-        );
+        ),
+      );
+    }
 
-    for (var host in potentialHosts) {
+    // Radio Browser recommends picking a random host to distribute load.
+    var pool = _hosts.where((h) => !excludeHosts.contains(h)).toList();
+    if (pool.isEmpty) {
+      pool = _hosts;
+    }
+
+    if (pool.isNotEmpty) {
+      final host = pool[Random().nextInt(pool.length)];
       try {
         _radioBrowserApi = RadioBrowserApi.fromHost(host);
-
-        if (_radioBrowserApi?.host != null) {
-          break;
-        }
       } on Exception catch (e) {
         throw RadioBrowserServerUnavailableException(e.toString());
       }
@@ -55,6 +69,34 @@ class RadioService {
     }
 
     return _radioBrowserApi?.host;
+  }
+
+  /// Runs a Radio Browser API [request], retrying on a different host when the
+  /// selected node returns a non-JSON error body (e.g. "no available server").
+  /// The connected, non-null [RadioBrowserApi] is passed to [request].
+  Future<T> _withServerRetry<T>(
+    Future<T> Function(RadioBrowserApi api) request, {
+    int maxAttempts = 3,
+  }) async {
+    final excluded = <String>{};
+    Object? lastError;
+    for (var attempt = 0; attempt < maxAttempts; attempt++) {
+      await connectToServer(excludeHosts: excluded);
+      final api = _radioBrowserApi;
+      if (api == null) {
+        throw RadioBrowserApiNotConnectedException();
+      }
+      try {
+        return await request(api);
+      } on FormatException catch (e) {
+        lastError = e;
+        excluded.add(api.host);
+        if (identical(_radioBrowserApi, api)) {
+          _radioBrowserApi = null;
+        }
+      }
+    }
+    throw RadioBrowserServerUnavailableException(lastError?.toString());
   }
 
   Future<List<String>> _findHosts() async {
@@ -80,7 +122,7 @@ class RadioService {
     return hosts;
   }
 
-  Future<Audio?> getAudioByUUID(String uuid, {required bool fromDbOnly}) async {
+  Future<Audio?> getAudioByUUID(String uuid, {required bool fromDBOnly}) async {
     final stationFromDb = await _dao.getStationByUuid(uuid);
     if (stationFromDb != null) {
       Logger.i(
@@ -90,20 +132,22 @@ class RadioService {
       return Audio.fromStation(stationFromDb);
     }
 
-    if (fromDbOnly) {
+    if (fromDBOnly) {
+      Logger.i(
+        'Station with uuid $uuid not found in local database, returning null.',
+        tag: '$RadioService',
+      );
       return null;
     }
 
-    if (await connectToServer() == null) {
-      throw RadioBrowserApiNotConnectedException();
-    }
-
-    final response = await _radioBrowserApi?.getStationsByUUID(uuids: [uuid]);
-    if (response?.items.isEmpty != false) {
-      return null;
-    }
-    final station = response!.items.first;
-    return Audio.fromStation(station);
+    return _withServerRetry((api) async {
+      final response = await api.getStationsByUUID(uuids: [uuid]);
+      if (response.items.isEmpty) {
+        return null;
+      }
+      final station = response.items.first;
+      return Audio.fromStation(station);
+    });
   }
 
   Future<String?> getStationNameByUUID(String uuid) async =>
@@ -112,13 +156,9 @@ class RadioService {
   Future<String?> getStationImageByUUID(String uuid) async =>
       _dao.getStationImageByUuid(uuid);
 
-  Future<Audio?> getAudioByUrl(String url) async {
-    if (await connectToServer() == null) {
-      throw RadioBrowserApiNotConnectedException();
-    }
-
-    final response = await _radioBrowserApi?.getStationsByUrl(url: url);
-    final station = response?.items.firstOrNull;
+  Future<Audio?> getAudioByUrl(String url) => _withServerRetry((api) async {
+    final response = await api.getStationsByUrl(url: url);
+    final station = response.items.firstOrNull;
 
     if (station != null) {
       final audio = Audio.fromStation(station);
@@ -126,7 +166,7 @@ class RadioService {
       return audio;
     }
     return null;
-  }
+  });
 
   static const radioSearchMaxLimit = 300;
 
@@ -138,67 +178,67 @@ class RadioService {
     String? language,
     required int limit,
   }) async {
-    if (await connectToServer() == null) {
-      throw RadioBrowserApiNotConnectedException();
-    }
-
-    RadioBrowserListResponse<Station>? _response;
-
     final parameters = InputParameters(
       hidebroken: true,
       order: 'stationcount',
       limit: limit > radioSearchMaxLimit ? radioSearchMaxLimit : limit,
     );
 
-    if (name?.isEmpty == false) {
-      _response = await _radioBrowserApi?.getStationsByName(
-        name: name!,
-        parameters: parameters,
-      );
-    } else if (country?.isEmpty == false) {
-      _response = await _radioBrowserApi?.getStationsByCountry(
-        country: country!,
-        parameters: parameters,
-      );
-    } else if (tag?.isEmpty == false) {
-      _response = await _radioBrowserApi?.getStationsByTag(
-        tag: tag!,
-        parameters: parameters,
-      );
-    } else if (state?.isEmpty == false) {
-      _response = await _radioBrowserApi?.getStationsByState(
-        state: state!,
-        parameters: parameters,
-      );
-    } else if (language?.isEmpty == false) {
-      _response = await _radioBrowserApi?.getStationsByLanguage(
-        language: language!,
-        parameters: parameters,
-      );
-    }
-    return (_response?.items ?? []).map((e) => Audio.fromStation(e)).toList();
+    return _withServerRetry((api) async {
+      RadioBrowserListResponse<Station>? _response;
+
+      if (name?.isEmpty == false) {
+        _response = await api.getStationsByName(
+          name: name!,
+          parameters: parameters,
+        );
+      } else if (country?.isEmpty == false) {
+        _response = await api.getStationsByCountry(
+          country: country!,
+          parameters: parameters,
+        );
+      } else if (tag?.isEmpty == false) {
+        _response = await api.getStationsByTag(
+          tag: tag!,
+          parameters: parameters,
+        );
+      } else if (state?.isEmpty == false) {
+        _response = await api.getStationsByState(
+          state: state!,
+          parameters: parameters,
+        );
+      } else if (language?.isEmpty == false) {
+        _response = await api.getStationsByLanguage(
+          language: language!,
+          parameters: parameters,
+        );
+      }
+      return (_response?.items ?? []).map((e) => Audio.fromStation(e)).toList();
+    });
   }
 
   Future<List<Tag>> loadTags({String? filter, int? limit}) async {
     RadioBrowserListResponse<Tag> response;
 
     try {
-      response = await _radioBrowserApi!
-          .getTags(
-            filter: filter,
-            parameters: InputParameters(
-              hidebroken: true,
-              limit: limit ?? 5000,
-              order: 'stationcount',
-              reverse: true,
+      response = await _withServerRetry(
+        (api) => api
+            .getTags(
+              filter: filter,
+              parameters: InputParameters(
+                hidebroken: true,
+                limit: limit ?? 5000,
+                order: 'stationcount',
+                reverse: true,
+              ),
+            )
+            .timeout(
+              LoadTagsTimeoutException.timeoutDuration,
+              onTimeout: () {
+                throw LoadTagsTimeoutException();
+              },
             ),
-          )
-          .timeout(
-            LoadTagsTimeoutException.timeoutDuration,
-            onTimeout: () {
-              throw LoadTagsTimeoutException();
-            },
-          );
+      );
     } on Exception catch (e, s) {
       Logger.e(e, trace: s, tag: '$RadioService');
       throw LoadTagsFailedException(e.toString());
@@ -207,16 +247,9 @@ class RadioService {
     return response.items;
   }
 
-  Future<void> clickStation(String? uuid) async {
-    if (await connectToServer() == null) {
-      throw RadioBrowserApiNotConnectedException();
-    }
+  Future<void> clickStation(String uuid) async {
     try {
-      if (uuid == null) {
-        Logger.i('Cannot click station with null uuid.', tag: '$RadioService');
-        return;
-      }
-      await _radioBrowserApi?.clickStation(uuid: uuid);
+      await _withServerRetry((api) => api.clickStation(uuid: uuid));
       Logger.i('Station clicked: $uuid', tag: '$RadioService');
     } on Exception catch (e, s) {
       Logger.e(e, trace: s, tag: '$RadioService');
