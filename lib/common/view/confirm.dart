@@ -1,3 +1,4 @@
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:phoenix_theme/phoenix_theme.dart';
 import 'package:yaru/yaru.dart';
@@ -29,6 +30,7 @@ class ConfirmationDialog<T> extends StatefulWidget {
     this.cancelLabel,
     this.confirmEnabled = true,
     this.createErrorText,
+    this.onError,
     this.onErrorConfirm,
     this.loadingIndicator,
     this.dialogWidth = DialogWidth.medium,
@@ -58,6 +60,7 @@ class ConfirmationDialog<T> extends StatefulWidget {
   final String? cancelLabel;
   final bool confirmEnabled;
   final String? Function(Object? error)? createErrorText;
+  final String Function(Object? error)? onError;
   final void Function()? onErrorConfirm;
   final Widget? loadingIndicator;
   final ModalLevel modalLevel;
@@ -68,7 +71,7 @@ class ConfirmationDialog<T> extends StatefulWidget {
   final bool presentAsBottomSheet;
   final bool barrierDismissible;
 
-  static Future<T?> show<T>({
+  static Future<Result<T>> show<T>({
     required BuildContext context,
     Key? key,
     dynamic Function()? onConfirm,
@@ -90,6 +93,7 @@ class ConfirmationDialog<T> extends StatefulWidget {
     bool showCancel = true,
     bool showConfirm = true,
     String? Function(Object? error)? createErrorText,
+    String Function(Object? error)? onError,
     void Function()? onErrorConfirm,
     Widget? loadingIndicator,
     ModalLevel modalLevel = ModalLevel.info,
@@ -99,7 +103,7 @@ class ConfirmationDialog<T> extends StatefulWidget {
     CancelButtonStyle cancelButtonStyle = CancelButtonStyle.outlined,
     DialogWidth dialogWidth = DialogWidth.medium,
     Widget Function(BuildContext context, bool asBottomSheet)? builder,
-  }) {
+  }) async {
     final asBottomSheet = context.isPortrait;
 
     Widget builderFn(BuildContext context, {required bool asBottomSheet}) =>
@@ -123,6 +127,7 @@ class ConfirmationDialog<T> extends StatefulWidget {
           showConfirm: showConfirm,
           loadingTitle: loadingTitle,
           createErrorText: createErrorText,
+          onError: onError,
           onErrorConfirm: onErrorConfirm,
           loadingIndicator: loadingIndicator,
           modalLevel: modalLevel,
@@ -134,8 +139,9 @@ class ConfirmationDialog<T> extends StatefulWidget {
           dialogWidth: dialogWidth,
         );
 
+    final Result<T>? result;
     if (asBottomSheet) {
-      return showModalBottomSheet<T>(
+      result = await showModalBottomSheet<Result<T>>(
         context: context,
         useRootNavigator: true,
         isScrollControlled: true,
@@ -148,15 +154,18 @@ class ConfirmationDialog<T> extends StatefulWidget {
             builder?.call(context, asBottomSheet) ??
             builderFn(context, asBottomSheet: asBottomSheet),
       );
+    } else {
+      result = await showDialog<Result<T>>(
+        context: context,
+        barrierDismissible: barrierDismissible,
+        builder: (context) =>
+            builder?.call(context, asBottomSheet) ??
+            builderFn(context, asBottomSheet: asBottomSheet),
+      );
     }
 
-    return showDialog<T>(
-      context: context,
-      barrierDismissible: barrierDismissible,
-      builder: (context) =>
-          builder?.call(context, asBottomSheet) ??
-          builderFn(context, asBottomSheet: asBottomSheet),
-    );
+    return result ??
+        Result.error(Exception('AdaptiveModal canceled'), StackTrace.current);
   }
 
   @override
@@ -166,6 +175,19 @@ class ConfirmationDialog<T> extends StatefulWidget {
 class _ConfirmationDialogState<T> extends State<ConfirmationDialog<T>> {
   bool _loading = false;
   String? _error;
+  Object? _errorObject;
+  StackTrace? _stackTrace;
+
+  void _popResult(Result<T> result) {
+    if (mounted && Navigator.of(context).canPop()) {
+      Navigator.of(context).pop<Result<T>>(result);
+    }
+  }
+
+  String _resolveErrorText(Object error) =>
+      widget.createErrorText?.call(error) ??
+      widget.onError?.call(error) ??
+      error.toString();
 
   @override
   void initState() {
@@ -173,17 +195,13 @@ class _ConfirmationDialogState<T> extends State<ConfirmationDialog<T>> {
     if (widget.initialFuture != null) {
       _loading = true;
       widget.initialFuture!()
-          .then((_) {
-            if (mounted && Navigator.of(context).canPop()) {
-              Navigator.of(context).pop();
-            }
-          })
-          .catchError((error) {
+          .then((value) => _popResult(Result.value(value)))
+          .catchError((Object error, StackTrace stackTrace) {
             setState(() {
               _loading = false;
-              _error = widget.createErrorText != null
-                  ? widget.createErrorText!(error)
-                  : error.toString();
+              _errorObject = error;
+              _stackTrace = stackTrace;
+              _error = _resolveErrorText(error);
             });
           });
     }
@@ -227,9 +245,12 @@ class _ConfirmationDialogState<T> extends State<ConfirmationDialog<T>> {
 
     void onConfirmErrorPressed() {
       widget.onErrorConfirm?.call();
-      if (context.mounted && Navigator.of(context).canPop()) {
-        Navigator.of(context).pop();
-      }
+      _popResult(
+        Result.error(
+          _errorObject ?? Exception('AdaptiveModal error'),
+          _stackTrace ?? StackTrace.current,
+        ),
+      );
     }
 
     final onCancelPressed = _loading
@@ -240,9 +261,12 @@ class _ConfirmationDialogState<T> extends State<ConfirmationDialog<T>> {
                 setState(() => _loading = true);
                 widget.onCancel!()
                     .then((_) {
-                      if (context.mounted && Navigator.of(context).canPop()) {
-                        Navigator.of(context).pop();
-                      }
+                      _popResult(
+                        Result.error(
+                          Exception('AdaptiveModal canceled'),
+                          StackTrace.current,
+                        ),
+                      );
                     })
                     .catchError((error) {
                       setState(() {
@@ -251,13 +275,21 @@ class _ConfirmationDialogState<T> extends State<ConfirmationDialog<T>> {
                       });
                     });
               } else {
-                if (context.mounted && Navigator.of(context).canPop()) {
-                  Navigator.of(context).pop();
-                }
+                _popResult(
+                  Result.error(
+                    Exception('AdaptiveModal canceled'),
+                    StackTrace.current,
+                  ),
+                );
                 widget.onCancel?.call();
               }
-            } else if (context.mounted && Navigator.of(context).canPop()) {
-              Navigator.of(context).pop();
+            } else {
+              _popResult(
+                Result.error(
+                  Exception('AdaptiveModal canceled'),
+                  StackTrace.current,
+                ),
+              );
             }
           };
 
@@ -269,26 +301,23 @@ class _ConfirmationDialogState<T> extends State<ConfirmationDialog<T>> {
               if (widget.onConfirm is Future<T> Function()) {
                 setState(() => _loading = true);
                 widget.onConfirm!()
-                    .then((_) {
-                      if (context.mounted && Navigator.of(context).canPop()) {
-                        Navigator.of(context).pop();
-                      }
+                    .then((value) {
+                      _popResult(Result.value(value as T));
                     })
-                    .catchError((error) {
+                    .catchError((Object error, StackTrace stackTrace) {
                       setState(() {
                         _loading = false;
-                        _error = widget.createErrorText != null
-                            ? widget.createErrorText!(error)
-                            : error.toString();
+                        _errorObject = error;
+                        _stackTrace = stackTrace;
+                        _error = _resolveErrorText(error);
                       });
                     });
               } else {
-                Navigator.of(context).pop();
+                _popResult(Result.value(null as T));
                 widget.onConfirm!();
-                setState(() => _loading = false);
               }
-            } else if (context.mounted && Navigator.of(context).canPop()) {
-              Navigator.of(context).pop();
+            } else {
+              _popResult(Result.value(null as T));
             }
           }
         : null;
@@ -392,7 +421,8 @@ class _ConfirmationDialogState<T> extends State<ConfirmationDialog<T>> {
                                 ),
                               ),
                             ]
-                          : [
+                          : widget.initialFuture != null
+                          ? [
                               if (widget.showConfirm)
                                 SizedBox(
                                   width: double.infinity,
@@ -462,7 +492,8 @@ class _ConfirmationDialogState<T> extends State<ConfirmationDialog<T>> {
                                           ),
                                         ),
                                 ),
-                            ],
+                            ]
+                          : [],
                     ),
                   ],
                 ),
