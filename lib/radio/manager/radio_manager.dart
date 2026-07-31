@@ -45,8 +45,14 @@ class RadioManager {
     );
   }
 
-  Future<Audio?> getAudioByUUID(String uuid, {required bool fromDbOnly}) =>
-      _radioService.getAudioByUUID(uuid, fromDbOnly: fromDbOnly);
+  Future<Audio?> getAudioByUUID(String uuid) async {
+    final fromDb = await _radioService.getAudioByUUID(uuid, fromDBOnly: true);
+    if (fromDb != null) {
+      return fromDb;
+    }
+    await connectCommand.runRestrictedAsync();
+    return _radioService.getAudioByUUID(uuid, fromDBOnly: false);
+  }
 
   Future<Audio?> getStationByUrl(String url) async {
     await connectCommand.runRestrictedAsync();

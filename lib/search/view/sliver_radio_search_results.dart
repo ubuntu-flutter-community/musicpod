@@ -1,22 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../app/data/play_anywhere_param.dart';
-import '../../app/play_anywhere_manager.dart';
-import '../../app/routing_manager.dart';
-import '../../common/view/audio_page_type.dart';
-import '../../common/view/audio_tile_image.dart';
 import '../../common/view/no_search_result_page.dart';
-import '../../common/view/stared_station_icon_button.dart';
-import '../../common/view/tapable_text.dart';
-import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/theme_data_x.dart';
 import '../../player/manager/player_manager.dart';
 import '../../radio/view/radio_connect_mixin.dart';
-import '../../radio/view/radio_page_tag_bar.dart';
-import '../../radio/view/station_page.dart';
 import '../manager/search_manager.dart';
+import 'radio_search_result_tile.dart';
 
 class SliverRadioSearchResults extends StatelessWidget
     with WatchItMixin, RadioConnectMixin {
@@ -26,8 +16,6 @@ class SliverRadioSearchResults extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.theme;
-
     registerRadioConnectHandler(context);
 
     final radioSearchResult = watchValue(
@@ -59,94 +47,16 @@ class SliverRadioSearchResults extends StatelessWidget
       itemCount: radioSearchResult.length,
       itemBuilder: (context, index) {
         final station = radioSearchResult.elementAt(index);
-        const maxLines = 1;
         final selected = currentAudio?.uuid == station.uuid;
         return Padding(
           padding: const EdgeInsets.only(bottom: 5),
-          child: ListTile(
+          child: RadioSearchResultTile(
             key: ValueKey(station.uuid),
-            leading: AudioTileImage(size: kAudioTrackWidth, audio: station),
+            station: station,
             selected: selected,
-            selectedColor: context.theme.contrastyPrimary,
-            title: Row(
-              spacing: kLargestSpace,
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                    children: [
-                      TapAbleText(
-                        text: station.title ?? context.l10n.unknown,
-                        onTap: () => di<RoutingManager>().push(
-                          pageId: station.uuid!,
-                          builder: (context) =>
-                              StationPage(uuid: station.uuid!),
-                        ),
-                        maxLines: maxLines,
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: (station.tags?.isEmpty ?? true)
-                            ? Text(context.l10n.station)
-                            : RadioPageTagBar(
-                                station: station,
-                                tagLimit: 2,
-                                style:
-                                    theme.listTileTheme.subtitleTextStyle ??
-                                    theme.textTheme.bodyMedium?.copyWith(
-                                      color: selected
-                                          ? theme.colorScheme.primary
-                                          : theme.colorScheme.onSurfaceVariant,
-                                    ),
-                              ),
-                      ),
-                    ],
-                  ),
-                ),
-                if (width > 500)
-                  Expanded(
-                    child: Text(
-                      '${(station.bitRate ?? 0) > 0 ? '${station.bitRate} kbps' : context.l10n.unknown}',
-                      maxLines: maxLines,
-                    ),
-                  ),
-                if (width > 800)
-                  Expanded(
-                    child: Text(
-                      '${station.codec?.isNotEmpty == true ? '${station.codec}' : context.l10n.unknown}',
-                      maxLines: maxLines,
-                    ),
-                  ),
-
-                if (width > 1100)
-                  Expanded(
-                    child: Text(
-                      '${(station.clicks ?? 0) > 0 ? '${station.clicks} ${context.l10n.clicks}' : context.l10n.unknown}',
-                      maxLines: maxLines,
-                    ),
-                  ),
-                if (width > 1200)
-                  Expanded(
-                    child: Text(
-                      '${(station.language ?? '').trim().isNotEmpty ? '${station.language!.split(',').join(', ')}' : context.l10n.unknown}',
-                      maxLines: maxLines,
-                    ),
-                  ),
-              ],
-            ),
-
-            trailing: StaredStationIconButton(
-              audio: station,
-              color: currentAudio == station && playing
-                  ? theme.contrastyPrimary
-                  : null,
-            ),
-            onTap: () => di<PlayAnywhereManager>().command.run(
-              PlayAnywhereParam(
-                pageId: station.uuid!,
-                audioPageType: AudioPageType.radio,
-              ),
-            ),
+            width: width,
+            currentAudio: currentAudio,
+            playing: playing,
           ),
         );
       },

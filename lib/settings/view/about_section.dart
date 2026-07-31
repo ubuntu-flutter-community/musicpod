@@ -13,22 +13,20 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import 'about_page.dart';
 import 'licenses_dialog.dart';
+import 'settings_section.dart';
 
 class AboutSection extends StatelessWidget with WatchItMixin {
   const AboutSection({super.key});
 
   @override
-  Widget build(BuildContext context) => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(kMediumSpace),
-      child: Column(
-        children: [
-          ListTile(title: Text('${context.l10n.about} ${AppConfig.appTitle}')),
-          const _AboutTile(),
-          const _LicenseTile(),
-        ],
+  Widget build(BuildContext context) => SettingsSection(
+    heading: '${context.l10n.about} ${AppConfig.appTitle}',
+    children: [
+      const Padding(
+        padding: const EdgeInsets.all(kMediumSpace),
+        child: Column(children: [const _AboutTile(), const _LicenseTile()]),
       ),
-    ),
+    ],
   );
 }
 

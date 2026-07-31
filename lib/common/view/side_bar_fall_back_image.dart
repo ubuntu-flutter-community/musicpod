@@ -34,7 +34,17 @@ class SideBarFallBackImage extends StatelessWidget {
       ),
       width: width ?? sideBarImageSize,
       height: height ?? sideBarImageSize,
-      child: child,
+      child: Theme(
+        data: context.theme.copyWith(
+          iconTheme: context.theme.iconTheme.copyWith(
+            color: baseColor.scale(
+              lightness: context.theme.colorScheme.isLight ? -0.6 : -0.8,
+              saturation: context.theme.colorScheme.isLight ? 0.0 : -0.8,
+            ),
+          ),
+        ),
+        child: child,
+      ),
     );
   }
 }

@@ -4,10 +4,10 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../app/app_manager.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
-import '../../common/view/ui_constants.dart';
 import '../../custom_content/view/backup_dialog.dart';
 import '../../extensions/build_context_x.dart';
 import '../manager/wipe_manager.dart';
+import 'settings_section.dart';
 
 class ResetSection extends StatelessWidget {
   const ResetSection({super.key});
@@ -16,47 +16,43 @@ class ResetSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = context.theme;
-    return Card(
-      child: Padding(
-        padding: const EdgeInsetsGeometry.all(kMediumSpace),
-        child: Column(
-          children: [
-            ListTile(title: Text(l10n.resetAllSettings)),
-            ListTile(
-              leading: Icon(Iconz.download),
-              title: Text(l10n.exportYourData),
-              subtitle: SizedBox(
-                width: 300,
-                child: Text(l10n.exportYourDataDescription),
-              ),
-              trailing: ElevatedButton(
-                onPressed: () => context.dialog((context) {
-                  di<AppManager>().resetBackupSettings();
-                  return const BackupDialog(breakingChange: false);
-                }, barrierDismissible: false),
-                child: Text(l10n.export),
-              ),
-            ),
-            ListTile(
-              leading: Icon(Iconz.remove),
-              title: Text(l10n.resetAllSettings),
-              trailing: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.colorScheme.error,
-                ),
-                onPressed: () => context.dialog(
-                  (context) => const WipeConfirmDialog(),
-                  barrierDismissible: false,
-                ),
-                child: Text(
-                  l10n.reset,
-                  style: TextStyle(color: theme.colorScheme.onError),
-                ),
-              ),
-            ),
-          ],
+    return SettingsSection(
+      heading: l10n.resetAllSettings,
+      children: [
+        ListTile(
+          leading: Icon(Iconz.download),
+          title: Text(l10n.exportYourData),
+          subtitle: SizedBox(
+            width: 300,
+            child: Text(l10n.exportYourDataDescription),
+          ),
+          trailing: ElevatedButton(
+            onPressed: () => context.dialog((context) {
+              di<AppManager>().resetBackupSettings();
+              return const BackupDialog(breakingChange: false);
+            }, barrierDismissible: false),
+            child: Text(l10n.export),
+          ),
         ),
-      ),
+        ListTile(
+          leading: Icon(Iconz.remove),
+          title: Text(l10n.resetAllSettings),
+          subtitle: Text(l10n.resetAllSettings),
+          trailing: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: theme.colorScheme.error,
+            ),
+            onPressed: () => context.dialog(
+              (context) => const WipeConfirmDialog(),
+              barrierDismissible: false,
+            ),
+            child: Text(
+              l10n.reset,
+              style: TextStyle(color: theme.colorScheme.onError),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

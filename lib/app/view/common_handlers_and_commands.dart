@@ -132,9 +132,11 @@ mixin CommonHandlersAndCommandsMixin {
           context.clearToasts();
           switch (results.data!.param.audioPageType) {
             case AudioPageType.radio:
-              di<ClickStationManager>().command.run(
-                results.data!.audios.singleOrNull?.uuid,
-              );
+              results.data!.audios.singleOrNull?.uuid != null
+                  ? di<ClickStationManager>().command.run(
+                      results.data!.audios.singleOrNull!.uuid,
+                    )
+                  : context.toast(Text(context.l10n.noStationFound));
             default:
               break;
           }

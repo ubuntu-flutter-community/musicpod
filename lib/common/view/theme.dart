@@ -48,9 +48,19 @@ ThemeData? yaruLightWithTweaks(ThemeData? theme) {
   );
 }
 
-ThemeData lightBaseTheme(Color color) => phoenixTheme(color: color).lightTheme;
+ThemeData lightBaseTheme(Color color) =>
+    phoenixTheme(color: color).lightTheme.copyWith(
+      cardTheme: phoenixTheme(
+        color: color,
+      ).lightTheme.cardTheme.copyWith(elevation: 0),
+    );
 
-ThemeData lightDarkTheme(Color color) => phoenixTheme(color: color).darkTheme;
+ThemeData lightDarkTheme(Color color) =>
+    phoenixTheme(color: color).darkTheme.copyWith(
+      cardTheme: phoenixTheme(
+        color: color,
+      ).darkTheme.cardTheme.copyWith(elevation: 0),
+    );
 
 TextTheme textThemeWithEmojis(ThemeData theme) => theme.textTheme.copyWith(
   bodySmall: theme.textTheme.bodySmall?.copyWith(

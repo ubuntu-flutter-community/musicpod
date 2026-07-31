@@ -33,7 +33,6 @@ extension CommandX<TParam, TResult> on Command<TParam, TResult> {
     TParam? param,
     bool immediatelyClearErrors = false,
     RunWhen runWhen = RunWhen.hasNoValueAndNoErrors,
-    int coolDownSeconds = 20,
   }) async {
     if (immediatelyClearErrors) {
       this.clearErrors();

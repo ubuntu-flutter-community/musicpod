@@ -71,40 +71,42 @@ class _RecentDownloadsButtonState extends State<RecentDownloadsButton>
         ..value = 1.0;
     }
 
-    return AnimatedOpacity(
-      duration: const Duration(milliseconds: 300),
-      opacity: hasActiveDownloads || hasRecentDownloads ? 1.0 : 0.0,
-      child: IconButton(
-        icon: hasActiveDownloads
-            ? FadeTransition(
-                opacity: _animation,
-                child: Icon(
-                  Icons.download_for_offline,
-                  color: theme.colorScheme.primary,
+    return hasActiveDownloads || hasRecentDownloads
+        ? AnimatedOpacity(
+            duration: const Duration(milliseconds: 300),
+            opacity: hasActiveDownloads || hasRecentDownloads ? 1.0 : 0.0,
+            child: IconButton(
+              icon: hasActiveDownloads
+                  ? FadeTransition(
+                      opacity: _animation,
+                      child: Icon(
+                        Icons.download_for_offline,
+                        color: theme.colorScheme.primary,
+                      ),
+                    )
+                  : Icon(
+                      Icons.download_for_offline,
+                      color: theme.colorScheme.onSurface,
+                    ),
+              onPressed: () => showDialog(
+                context: context,
+                builder: (context) => const AlertDialog(
+                  titlePadding: EdgeInsets.zero,
+                  title: const YaruDialogTitleBar(
+                    title: Text('Recent Downloads'),
+                    border: BorderSide.none,
+                    backgroundColor: Colors.transparent,
+                  ),
+                  content: SizedBox(
+                    width: 400,
+                    height: 400,
+                    child: CustomScrollView(slivers: [RecentDownloads()]),
+                  ),
                 ),
-              )
-            : Icon(
-                Icons.download_for_offline,
-                color: theme.colorScheme.onSurface,
               ),
-        onPressed: () => showDialog(
-          context: context,
-          builder: (context) => const AlertDialog(
-            titlePadding: EdgeInsets.zero,
-            title: const YaruDialogTitleBar(
-              title: Text('Recent Downloads'),
-              border: BorderSide.none,
-              backgroundColor: Colors.transparent,
             ),
-            content: SizedBox(
-              width: 400,
-              height: 400,
-              child: CustomScrollView(slivers: [RecentDownloads()]),
-            ),
-          ),
-        ),
-      ),
-    );
+          )
+        : const SizedBox.shrink();
   }
 }
 
