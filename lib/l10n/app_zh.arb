@@ -3,7 +3,7 @@
     "about": "关于",
     "add": "添加",
     "addTo": "添加到：",
-    "addToCollection": "添加到收藏",
+    "addToCollection": "添加到集合",
     "addToFavorites": "添加到收藏夹",
     "addToPlaylist": "添加到播放列表",
     "addedTo": "已添加到",
@@ -147,13 +147,13 @@
     "leaveFullScreen": "退出全屏模式",
     "leaveFullWindow": "退出全窗口模式",
     "leisure": "休闲",
-    "library": "库",
+    "library": "媒体库",
     "license": "许可证",
     "lifeXXXPodcastIndexOnly": "生活",
     "light": "浅色",
     "likedSongs": "喜欢的歌曲",
     "likedSongsDescription": "您喜欢的所有音频。本地或来自互联网。",
-    "likedSongsSubtitle": "按心形按钮添加更多标题。",
+    "likedSongsSubtitle": "按爱心按钮添加更多标题。",
     "limit": "限制",
     "loadFromFileOptional": "从文件加载（可选）",
     "loadMore": "加载更多",
@@ -188,7 +188,7 @@
     "newEpisodeAvailable": "新节目可用：",
     "newEpisodes": "新节目",
     "news": "新闻",
-    "next": "下一个",
+    "next": "下一首",
     "noCountryFound": "找不到这个名称的区域。您也可以使用电话区号，如 +49",
     "noLocalSearchFound": "抱歉，没有找到与此有关的本地音乐。",
     "noLocalTitlesFound": "看起来您的本地音乐收藏为空。检查设置中的库位置。",
@@ -220,7 +220,7 @@
     "play": "播放",
     "playAll": "播放全部",
     "playNext": "播放下一个",
-    "playbackRate": "播放速度",
+    "playbackRate": "倍速",
     "playlist": "播放列表",
     "playlistDialogTitleEdit": "编辑播放列表",
     "playlistDialogTitleNew": "添加播放列表",
@@ -235,7 +235,7 @@
     "podcasts": "播客",
     "politicsXXXPodcastIndexOnly": "政治",
     "quality": "质量",
-    "queue": "列表",
+    "queue": "播放队列",
     "queueConfirmMessage": "您真的想要将 {length} 个媒体加入列表吗？",
     "@queueConfirmMessage": {
         "placeholders": {
@@ -256,8 +256,8 @@
     "removeFromCollection": "从收藏中移除",
     "removeFromFavorites": "从收藏夹中移除",
     "reorder": "重新排序",
-    "repeat": "重复",
-    "repeatAll": "全部重复",
+    "repeat": "循环",
+    "repeatAll": "全部循环",
     "replayEpisode": "重播节目",
     "replayAllEpisodes": "重播所有节目",
     "requiresAppRestart": "需要重启应用程序",
@@ -330,7 +330,7 @@
     "writeMetadata": "写入元数据",
     "year": "年份",
     "years": "年份",
-    "playbackWillStopIn": "播放将在 {duration} （{timeOfDay}）后停止",
+    "playbackWillStopIn": "播放将在 {duration} ({timeOfDay})后停止",
     "schedulePlaybackStopTimer": "计划停止播放的时间",
     "alwaysAsk": "总是询问",
     "hideToTray": "隐藏到托盘",
@@ -606,12 +606,12 @@
     "featureDisabledOnPlatform": "此操作系统当前已禁用此功能。",
     "markAllEpisodesAsDone": "将所有剧集标记为已完成",
     "resetAllSettings": "重置所有设置",
-    "resetAllSettingsConfirm": "您是否绝对确定要重置所有设置、播客订阅、播客进度、星标的电台以及收藏的专辑？  应用程序将在之后关闭，您需要重新打开它。",
+    "resetAllSettingsConfirm": "您确定要重置所有设置、播客订阅、播放进度、收藏的电台和专辑吗？   应用将在此操作后关闭，需要您重新打开。",
     "confirm": "确认",
     "confirmation": "确认",
     "isMaybeLowBandwidthDialogBody": "您未连接到 WIFI 或以太网。您想启用数据安全模式吗？",
     "enableDataSafeModeSettingTitle": "数据安全模式",
-    "dataSafeModeDisabled": "WIFI/以太网：数据安全模式已禁用。",
+    "dataSafeModeDisabled": "Wifi/以太网：数据安全模式已禁用。",
     "stopToNotifyAboutDataSafeMode": "停用通知",
     "notifyMeAboutDataSafeModeTitle": "消息安全模式通知",
     "notifyMeAboutDataSafeModeDescription": "通知我关于安全模式",
@@ -726,7 +726,7 @@
     "groupAlbumsOnlyByAlbumName": "仅按专辑名称对专辑进行分组",
     "localPictureTypeBrightColouredFish": "鲜亮多彩的鱼",
     "useCustomThemeColorDescription": "该选项允许您为当前主题选择自定义强调色。",
-    "repeatOff": "关闭重复",
+    "repeatOff": "不循环",
     "downloadRemoved": "下载已移除：{name}",
     "@downloadRemoved": {
         "placeholders": {
@@ -821,11 +821,11 @@
             }
         }
     },
-    "explore": "导出",
-    "favorites": "收藏",
+    "explore": "探索",
+    "favorites": "收藏夹",
     "autoMovePlayerTitle": "自动移动播放器",
     "autoMovePlayerDescription": "如果水平空间允许，播放器将移至右侧",
-    "onlineLyricsNotSetup": "若需从 Genius 获取歌词，请在设置中输入API密钥。",
+    "onlineLyricsNotSetup": "若需从 Genius 获取歌词，请在设置中输入 API 密钥。",
     "settingsGeniusDisclaimer": "MusicPod 及其贡献者、Genius API 均不承担因 API 密钥滥用而产生的一切责任。提交 API 密钥即意味着您承诺将依据 Genius 的服务条款，合理使用该密钥。\n\n",
     "settingsGeniusDescription": "为了从 Genius 获取歌词，您需要提供 Genius API 密钥。首先，在 Genius 上创建一个账户，然后注册一个新的应用程序以获取访问令牌（API密钥）。",
     "settingsDoNotAskForGeniusTitle": "请勿再次使用 Genius 服务或请求 Genius API 密钥",
@@ -915,5 +915,6 @@
                 "type": "String"
             }
         }
-    }
+    },
+    "podcastEpisodesNotFound": "未找到此播客的节目。它们可能已被移除，或者该播客可能不再通过此订阅源网址提供服务。"
 }
