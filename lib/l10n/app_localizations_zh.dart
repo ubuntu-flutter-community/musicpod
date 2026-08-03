@@ -24,16 +24,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get shuffle => '随机播放';
 
   @override
-  String get repeat => '重复';
+  String get repeat => '循环';
 
   @override
-  String get repeatAll => '全部重复';
+  String get repeatAll => '全部循环';
 
   @override
-  String get repeatOff => '关闭重复';
+  String get repeatOff => '不循环';
 
   @override
-  String get next => '下一个';
+  String get next => '下一首';
 
   @override
   String get back => '返回';
@@ -57,7 +57,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get leaveFullScreen => '退出全屏模式';
 
   @override
-  String get playbackRate => '播放速度';
+  String get playbackRate => '倍速';
 
   @override
   String get addToFavorites => '添加到收藏夹';
@@ -99,7 +99,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get likedSongsDescription => '您喜欢的所有音频。本地或来自互联网。';
 
   @override
-  String get likedSongsSubtitle => '按心形按钮添加更多标题。';
+  String get likedSongsSubtitle => '按爱心按钮添加更多标题。';
 
   @override
   String get cancel => '取消';
@@ -189,7 +189,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get searchLocalAudioHint => '搜索本地音频';
 
   @override
-  String get library => '库';
+  String get library => '媒体库';
 
   @override
   String get playlists => '播放列表';
@@ -324,7 +324,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get volume => '音量';
 
   @override
-  String get queue => '列表';
+  String get queue => '播放队列';
 
   @override
   String get clearQueue => '清空队列';
@@ -417,7 +417,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get collection => '收藏';
 
   @override
-  String get addToCollection => '添加到收藏';
+  String get addToCollection => '添加到集合';
 
   @override
   String get removeFromCollection => '从收藏中移除';
@@ -465,7 +465,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get resetAllSettingsConfirm =>
-      '您是否绝对确定要重置所有设置、播客订阅、播客进度、星标的电台以及收藏的专辑？  应用程序将在之后关闭，您需要重新打开它。';
+      '您确定要重置所有设置、播客订阅、播放进度、收藏的电台和专辑吗？   应用将在此操作后关闭，需要您重新打开。';
 
   @override
   String get confirm => '确认';
@@ -492,7 +492,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get dataSafeModeEnabled => '移动连接：数据安全模式已启用。';
 
   @override
-  String get dataSafeModeDisabled => 'WIFI/以太网：数据安全模式已禁用。';
+  String get dataSafeModeDisabled => 'Wifi/以太网：数据安全模式已禁用。';
 
   @override
   String get enableDataSafeModeSettingDescription =>
@@ -1073,7 +1073,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String playbackWillStopIn(String duration, String timeOfDay) {
-    return '播放将在 $duration （$timeOfDay）后停止';
+    return '播放将在 $duration ($timeOfDay)后停止';
   }
 
   @override
@@ -2212,10 +2212,10 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get explore => '导出';
+  String get explore => '探索';
 
   @override
-  String get favorites => '收藏';
+  String get favorites => '收藏夹';
 
   @override
   String get autoMovePlayerTitle => '自动移动播放器';
@@ -2224,7 +2224,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get autoMovePlayerDescription => '如果水平空间允许，播放器将移至右侧';
 
   @override
-  String get onlineLyricsNotSetup => '若需从 Genius 获取歌词，请在设置中输入API密钥。';
+  String get onlineLyricsNotSetup => '若需从 Genius 获取歌词，请在设置中输入 API 密钥。';
 
   @override
   String get settingsGeniusDisclaimer =>
@@ -2391,7 +2391,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get podcastEpisodesNotFound =>
-      'No episodes found for this podcast. They might have been removed or the podcast might not be available anymore with this feed URL.';
+      '未找到此播客的节目。它们可能已被移除，或者该播客可能不再通过此订阅源网址提供服务。';
 }
 
 /// The translations for Chinese, as used in Hong Kong (`zh_HK`).

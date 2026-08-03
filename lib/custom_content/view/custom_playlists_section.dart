@@ -114,8 +114,6 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
           onPressed: () => ConfirmationDialog.show(
             context: context,
             initialFuture: () => di<CustomContentManager>().addPlaylists(),
-            showCancel: false,
-            showConfirm: false,
             cancelLabel: context.l10n.back,
             loadingTitle: Text(context.l10n.importingPlaylistsPleaseWait),
           ),
