@@ -210,8 +210,6 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
                   di<CustomContentManager>().exportPodcastsToOpmlFile(),
               cancelLabel: context.l10n.back,
               loadingTitle: Text(context.l10n.exportingPodcastsPleaseWait),
-              showCancel: false,
-              showConfirm: false,
             ),
           ),
           IconButton(
@@ -226,8 +224,6 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
                   di<CustomContentManager>().importPodcastsFromOpmlFile(),
               loadingTitle: Text(context.l10n.importingPodcastsPleaseWait),
               cancelLabel: context.l10n.back,
-              showCancel: false,
-              showConfirm: false,
             ),
           ),
           IconButton(

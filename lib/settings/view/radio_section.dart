@@ -37,8 +37,6 @@ class RadioSection extends StatelessWidget with WatchItMixin {
                       .exportStarredStationsToOpmlFile(),
                   loadingTitle: Text(context.l10n.exportingStationsPleaseWait),
                   cancelLabel: context.l10n.back,
-                  showCancel: false,
-                  showConfirm: false,
                 ),
               ),
               IconButton(
@@ -53,8 +51,6 @@ class RadioSection extends StatelessWidget with WatchItMixin {
                       .importStarredStationsFromOpmlFile(),
                   loadingTitle: Text(context.l10n.importingStationsPleaseWait),
                   cancelLabel: context.l10n.back,
-                  showCancel: false,
-                  showConfirm: false,
                 ),
               ),
               IconButton(
