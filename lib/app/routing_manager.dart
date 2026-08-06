@@ -62,6 +62,10 @@ class RoutingManager {
     bool maintainState = false,
     bool replace = false,
   }) async {
+    if (pageId == selectedPageIdCommand.value) {
+      return;
+    }
+
     final inLibrary = await isPageInLibrary(pageId);
     assert(inLibrary || builder != null);
 
