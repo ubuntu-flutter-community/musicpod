@@ -2441,14 +2441,15 @@ class AppLocalizationsDa extends AppLocalizations {
       'Det lykkedes ikke at finde episoder – kunne ikke oprette forbindelse til serveren. Er du forbundet til internettet? Hvis ja, kan dette være et serverproblem.';
 
   @override
-  String get tryToFetchLyricsOnlineTitle => 'Try to fetch lyrics online';
+  String get tryToFetchLyricsOnlineTitle => 'Prøv at finde sangtekster online';
 
   @override
   String get tryToFetchLyricsOnlineDescription =>
-      'Do you want to try to fetch the lyrics online?';
+      'Vil du prøve at hente sangteksterne online?';
 
   @override
-  String get fetchingLyricsOnline => 'Fetching lyrics online, please wait ...';
+  String get fetchingLyricsOnline =>
+      'Henter sangtekster online, vent venligst ...';
 
   @override
   String get fetchingLyricsOnlineTimeoutMessage =>
@@ -2459,21 +2460,21 @@ class AppLocalizationsDa extends AppLocalizations {
       'Fetching lyrics online failed. This might be a server issue or the song might not be available';
 
   @override
-  String get onlineLyricsSourceTitle => 'Online lyrics source';
+  String get onlineLyricsSourceTitle => 'Online kilde til sangtekster';
 
   @override
   String get onlineLyricsSourceDescription =>
-      'Select the source for online lyrics.';
+      'Vælg kilden til online sangtekster.';
 
   @override
   String get onlineLyricsSourceLrcLib => 'LrcLib';
 
   @override
   String appCanNotConnectToHost(String appName, String host) {
-    return '$appName can not connect to $host. Are you connected to the internet?';
+    return '$appName kan ikke oprette forbindelse til $host. Har du forbindelse til internettet?';
   }
 
   @override
   String get podcastEpisodesNotFound =>
-      'No episodes found for this podcast. They might have been removed or the podcast might not be available anymore with this feed URL.';
+      'Der blev ikke fundet nogen episoder til denne podcast. De er muligvis blevet fjernet, eller podcasten er muligvis ikke længere tilgængelig med denne feed-URL.';
 }
