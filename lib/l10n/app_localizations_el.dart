@@ -30,7 +30,7 @@ class AppLocalizationsEl extends AppLocalizations {
   String get repeatAll => 'Επανάληψη Όλων';
 
   @override
-  String get repeatOff => 'Repeat Off';
+  String get repeatOff => 'Χωρίς Επανάληψη';
 
   @override
   String get next => 'Επόμενο';
@@ -455,7 +455,7 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String downloadRemoved(String name) {
-    return 'Download removed: $name';
+    return 'Η λήψη αφαιρέθηκε: $name';
   }
 
   @override
@@ -2209,15 +2209,15 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get parsingLocalAudioFilesMetadataPleaseWait =>
-      'Parsing local audio files metadata, please wait ...';
+      'Ανάλυση μεταδεδομένων τοπικών αρχείων ήχου, παρακαλώ περιμένετε...';
 
   @override
   String get persistingLocalAudioFilesMetadataPleaseWait =>
-      'Persisting local audio files metadata, please wait ...';
+      'Αποθήκευση μεταδεδομένων τοπικών αρχείων ήχου, παρακαλώ περιμένετε ...';
 
   @override
   String get buildingLocalAudioLibraryPleaseWait =>
-      'Building local audio library, please wait ...';
+      'Δημιουγία τοπικής βιβλιοθήκης ήχου, παρακαλώ περιμένετε ...';
 
   @override
   String get importingPodcastsPleaseWait =>
@@ -2245,7 +2245,7 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String checkingForUpdatesPleaseWait(int progress) {
-    return 'Checking for updates $progress%';
+    return 'Έλεγχος για ενημερώσεις $progress%';
   }
 
   @override
@@ -2344,155 +2344,156 @@ class AppLocalizationsEl extends AppLocalizations {
   String get tosLinkText => 'Διάβασε τους Όρους Υπηρεσίας του Genius';
 
   @override
-  String get oopsSomethingWentWrong => 'Oops, something went wrong!';
+  String get oopsSomethingWentWrong => 'Ουπς, κάτι δεν πήγε καλά!';
 
   @override
-  String get retry => 'Retry';
+  String get retry => 'Επανάληψη';
 
   @override
-  String get reportIssue => 'Report this issue';
+  String get reportIssue => 'Αναφορά σφάλματος';
 
   @override
   String get ignoreThisTitleInHearingHistory =>
-      'Ignore this title in hearing history';
+      'Παράλειψη τίτλου από το ιστορικό ακρόασης';
 
   @override
   String get removeFromIgnoredHearyHistoryTitles =>
-      'Remove from ignored titles';
+      'Αφαίρεση από παραλειπόμενους τίτλους';
 
   @override
-  String get ignoredHearyHistoryTitlesTitle => 'Ignored titles';
+  String get ignoredHearyHistoryTitlesTitle => 'Παραλειμμένοι τίτλοι';
 
   @override
   String get ignoredHearyHistoryTitlesDescription =>
-      'These titles will be ignored in the hearing history and will not be shown in the recently played list.';
+      'Αυτοί οι τίτλοι θα παραληφθούν από το ιστορικό ακρόασης και δεν θα εμφανιστούν στη λίστα \"Αναπαράχθηκε Πρόσφατα\".';
 
   @override
   String get playingMediaTimedOut =>
-      'Playing media timed out. This might be caused by a network error or server issues.';
+      'Η αναπαραγωγή δεν ολοκληρώθηκε εντός του χρονικού ορίου. Αυτό μπορεί να προκληθεί από βλάβη στη δικτύωση ή σφαλματα εξυπηρετητή.';
 
   @override
-  String get playbackWasPausedByTimer => 'Playback was paused by timer';
+  String get playbackWasPausedByTimer => 'Παύση αναπαραγωγής από το χρονόμετρο';
 
   @override
-  String get playbackTimerCancelled => 'Playback timer cancelled';
+  String get playbackTimerCancelled => 'Το χρονόμετρο αναπαραγωγής ακυρώθηκε';
 
   @override
   String get podcastDoesNotSendEpisodeDuration =>
-      'This podcast does not send episode duration. The mark done feature might not work as expected.';
+      'Αυτό το podcast δεν αναφέρει διάρκεια επισοδείου. Η λειτουργία \"μάρκαρε ως ολοκληρωμένο\" μπορεί να μην έχει το αναμενόμενο αποτέλεσμα.';
 
   @override
   String cleanedUpEpisodesOfUnsubscribedPodcast(String podcastName) {
-    return 'Cleaned up episodes of unsubscribed podcast: $podcastName';
+    return 'Έγινε εκκαθάριση των επισοδείων του podcast $podcastName από το οποίο απεγγραφήκατε';
   }
 
   @override
   String findEpisodesTimeoutMessage(String podcastName) {
-    return 'Finding episodes takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+    return 'Η εύρεση επισοδείων παίρνει παραπάνω από το συνηθισμένο χρόνο. Είστε συνδεδεμένοι στο internet? Αν ναι, μπορεί να προέκυψε σφάλμα εξυπηρετητή.';
   }
 
   @override
   String get radioBrowserServerUnavailable =>
-      'The radio browser server is currently unavailable. This might be a temporary issue. Please try again later.';
+      'Ο εξυπηρετητής του περιηγητή (browser) ραδιοφωνικών σταθμών δεν είναι διαθέσιμος αυτή τη στιγμή. Το σφάλμα αυτό μπορεί να έιναι προσωρινό. Παρακαλώ προσπαθήστε ξανά αργοτέρα.';
 
   @override
   String get findStationsTimeoutMessage =>
-      'Finding (this) station(s) takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      'Η εύρεση του σταθμού παίρνει παραπάνω χρόνο απο το συνηθισμένο. Είστε συνδεδεμένοι στο internet? Αν ναι, μπορεί να είναι σφάλμα εξυπηρετητή.';
 
   @override
   String retryInSeconds(String seconds) {
-    return 'Retry in $seconds seconds';
+    return 'Επανάληψη σε $seconds δευτερόλεπτα';
   }
 
   @override
   String retryngInSeconds(String seconds) {
-    return 'Retryng in $seconds seconds';
+    return 'Επανάληψη σε $seconds δευτερόλεπτα';
   }
 
   @override
   String playerCouldNotOpenRemoteMedia(String media) {
-    return 'The player could not open or maintain to play remote media \'$media\'. Are you connected to the internet? If yes, this might be a server issue.';
+    return 'Η αρχή ή η συνέχιση της αναπαραγωγής απομακρυσμένων πολυμέσων δεν ήταν εφικτή. Είστε συνδεδεμένοι στο internet? Αν ναι, αυτό μπορεί να είναι σφάλμα εξυπηρετητή.';
   }
 
   @override
   String get searchTimeoutMessage =>
-      'Searching takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      'Η αναζήτηση παίρνει παραπάνω χρόνο από το συνηθισμένο. Είστε συνδεδεένοι στο internet? Αν ναι, αυτό μπορεί να είναι σφάλμα εξυπηρετητή.';
 
   @override
-  String get youCanEditTheNameLater => 'You can edit the name later.';
+  String get youCanEditTheNameLater =>
+      'Μπορείτε να αλλάξετε το όνομα αργότερα.';
 
   @override
   String get geniusAlsoProvidesArt =>
-      'Genius also provides artwork for most songs. If you enable Genius to fetch lyrics, the online art in the player will also use Genius instead of MusicBrainz.';
+      'Το Genius παρέχει επίσης εξώφυλλα για τα περισσότερα τραγούδια. Αν ενεργοποιήσετε την ανάκτηση στίχων από το Genius, η online εικόνα στο πρόγραμμα αναπαραγωγής θα προέρχεται επίσης από το Genius αντί για το MusicBrainz.';
 
   @override
-  String get enterYourGeniusApiKey => 'Enter your Genius API key';
+  String get enterYourGeniusApiKey => 'Εισάγετε το κλειδί API του Genius';
 
   @override
-  String get saveYourApiKey => 'Save API Key';
+  String get saveYourApiKey => 'Αποθήκευση κλειδιού API';
 
   @override
   String get lookUpRadioBrowserHostsFailed =>
-      'Looking up radio browser hosts failed. Are you connected to the internet? If yes, this might be a server issue.';
+      'Αποτυχία εύρεσης εξυπηρετητών περιηγητών (browser) ραδιοφώνου. Είστε συνδεδεμένοι στο internet? Αν ναι, αυτό μπορεί να είναι σφάλμα εξυπηρετητή.';
 
   @override
   String get lookUpRadioBrowserHostsTimouted =>
-      'Finding Radio Browser hosts takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+      'Η εύρεση διακομιστών του Περιηγητή (Browser) Ραδιοφώνου διαρκεί περισσότερο από το συνηθισμένο. Είστε συνδεδεμένοι στο internet; Αν ναι, ενδέχεται να είναι σφάλμα εξυπηρετητή.';
 
   @override
   String get radioBrowserServerNotConnected =>
-      'You are not connected to any radio browser server';
+      'Δεν είστε συνδεδεμένοι σε κανέναν εξυπηρετητή περιηγητή (browser) ραδιοφώνων';
 
   @override
   String get radioBrowserLoadingTagsFailed =>
-      'An error occurred while loading radio tags, the server might be unavailable.';
+      'Προέκυψε σφάλμα κάτα τη φόρτωση ετικετών (tags) ραδιοφώνου, ο εξυπηρετητής μπορεί να μην είναι διαθέσιμος.';
 
   @override
   String get radioBrowserLoadingTagsTimeouted =>
-      'Loading tags took longer than expected, are you connected to the internet? If yes, this might be a server issue';
+      'Η φόρτωση ετικετών (tags) παίρνει παραπάνω χρόνο από το συνηθισμένο, είστε συνδεδεμένοι στο internet? Αν ναι, αυτό μπορεί να είναι σφάλμα εξυπηρετητή';
 
   @override
   String get podcastSearchNotSuccessfull =>
-      'This podcast search was not successfull, are you connected to the internet? If yes this might be a server issue.';
+      'Η αναζήτηση podcast δεν ήταν επιτυχής, είστε συνδεδεμένοι στο internet? Αν ναι, αυτό μπορεί να είναι σφάλμα εξυπηρετητή.';
 
   @override
   String get podcastFailedHostLookup =>
-      'Finding episodes was not successfull - could not connect to the server. Are you connected to the internet? If yes this might be a server issue.';
+      'Αποτυχία εύρεσης επισοδείων - η σύνδεση με τον εξυπηρετητή απέτυχε. Eίστε συνδεδεμένοι στο internet? Αν ναι, αυτό μπορεί να είναι σφάλμα εξυπηρετητή.';
 
   @override
-  String get tryToFetchLyricsOnlineTitle => 'Try to fetch lyrics online';
+  String get tryToFetchLyricsOnlineTitle => 'Εύρεση στίχων online';
 
   @override
   String get tryToFetchLyricsOnlineDescription =>
-      'Do you want to try to fetch the lyrics online?';
+      'Θα θέλατε να γίνει προσπάθεια εύρεσης των στίχων online;';
 
   @override
-  String get fetchingLyricsOnline => 'Fetching lyrics online, please wait ...';
+  String get fetchingLyricsOnline =>
+      'Εύρεση στίχων online, παρακαλώ περιμένετε ...';
 
   @override
   String get fetchingLyricsOnlineTimeoutMessage =>
-      'Fetching lyrics online takes longer than usual. Are you connected to the internet? If yes, this might be a server issue or the song might not be available';
+      'Η online εύρεση στίχων παίρνει παραπάνω χρόνο από το συνηθισμένο. Είστε συνδεδεμένοι στο internet? Αν ναι, αυτό μπορεί να είναι σφάλμα εξυπηρετητή ή το κομμάτι μπορεί να μην είναι διαθέσιμο';
 
   @override
   String get fetchingLyricsOnlineFailed =>
-      'Fetching lyrics online failed. This might be a server issue or the song might not be available';
+      'Η online εύρεση στίχων απέτυχε. Αυτό μπορεί να είναι σφάλμα εξυπηρετητή ή το κομμάτι μπορεί να μην είναι διαθέσιμο';
 
   @override
-  String get onlineLyricsSourceTitle => 'Online lyrics source';
+  String get onlineLyricsSourceTitle => 'Online πηγή στίχων';
 
   @override
-  String get onlineLyricsSourceDescription =>
-      'Select the source for online lyrics.';
+  String get onlineLyricsSourceDescription => 'Επιλέξτε online πηγή στίχων.';
 
   @override
   String get onlineLyricsSourceLrcLib => 'LrcLib';
 
   @override
   String appCanNotConnectToHost(String appName, String host) {
-    return '$appName can not connect to $host. Are you connected to the internet?';
+    return 'Η εφαρμογή $appName δεν μπορεί να συνδεθεί στο $host. Είστε συνδεδεμένοι στο internet?';
   }
 
   @override
   String get podcastEpisodesNotFound =>
-      'No episodes found for this podcast. They might have been removed or the podcast might not be available anymore with this feed URL.';
+      'Δεν βρέθηκαν επισόδεια αυτού του podcast. Μπορεί να έχουν αφαιρεθεί ή το podcast μπορεί να μην είναι πλέον διαθέσιμο από αυτό το URL τροφοδοσίας.';
 }

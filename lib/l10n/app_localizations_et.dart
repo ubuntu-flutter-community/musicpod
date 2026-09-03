@@ -325,7 +325,7 @@ class AppLocalizationsEt extends AppLocalizations {
   String get failedToImport => 'Järgnevate failide importimine ei õnnestunud:';
 
   @override
-  String get unknown => 'Tundmatu';
+  String get unknown => 'Pole teada';
 
   @override
   String get volume => 'Helivaljus';
