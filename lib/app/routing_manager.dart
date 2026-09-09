@@ -14,7 +14,7 @@ import 'page_ids.dart';
 import 'view/mobile_page.dart';
 
 @lazySingleton
-class RoutingManager {
+class RoutingManager extends NavigatorObserver {
   RoutingManager({
     required PodcastService podcastService,
     required LocalAudioService localAudioService,
@@ -31,6 +31,8 @@ class RoutingManager {
   final LocalAudioService _localAudioService;
   final RadioService _radioService;
   final SettingsService _settingsService;
+
+  String? currentRouteName;
 
   Future<bool> isPageInLibrary(String? pageId) async =>
       pageId != null &&
@@ -62,7 +64,7 @@ class RoutingManager {
     bool maintainState = false,
     bool replace = false,
   }) async {
-    if (pageId == selectedPageIdCommand.value) {
+    if (pageId == currentRouteName) {
       return;
     }
 
@@ -101,4 +103,26 @@ class RoutingManager {
   final GlobalKey<NavigatorState> _masterNavigatorKey =
       GlobalKey<NavigatorState>();
   GlobalKey<NavigatorState> get masterNavigatorKey => _masterNavigatorKey;
+
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    currentRouteName = route.settings.name;
+  }
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    currentRouteName = previousRoute?.settings.name;
+  }
+
+  @override
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
+    currentRouteName = newRoute?.settings.name;
+  }
+
+  @override
+  void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    if (route.settings.name == currentRouteName) {
+      currentRouteName = previousRoute?.settings.name;
+    }
+  }
 }
