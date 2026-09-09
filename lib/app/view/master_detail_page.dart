@@ -32,6 +32,7 @@ class MasterDetailPage extends StatelessWidget with WatchItMixin {
               (RoutingManager m) => m.selectedPageIdCommand,
             ),
             key: di<RoutingManager>().masterNavigatorKey,
+            observers: [di<RoutingManager>()],
             onGenerateRoute: (settings) => PageRouteBuilder(
               settings: settings,
               maintainState: false,
