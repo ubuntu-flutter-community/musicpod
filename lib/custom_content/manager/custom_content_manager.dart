@@ -22,14 +22,15 @@ import '../../local_audio/manager/playlist_manager.dart';
 import '../../podcasts/data/podcast_toggle_capsule.dart';
 import '../../podcasts/manager/episodes_manager.dart';
 import '../../podcasts/manager/podcast_short_info_manager.dart';
+import '../../common/util/family.dart';
 import '../../podcasts/manager/subscribed_podcasts_manager.dart';
 import '../../radio/manager/radio_manager.dart';
 import '../../radio/manager/radio_star_station_manager.dart';
 import '../../radio/service/radio_service.dart';
 
-@Injectable(cache: true)
+@injectable
 class CustomContentManager {
-  CustomContentManager({
+  CustomContentManager._({
     required ExternalPathService externalPathService,
     required PlaylistIDsManager playlistIDsManager,
     required PinnedAlbumIDsManager pinnedAlbumIDsManager,
@@ -42,6 +43,32 @@ class CustomContentManager {
        _pinnedAlbumIDsManager = pinnedAlbumIDsManager {
     Logger.o(tag: '$CustomContentManager');
   }
+
+  @factoryMethod
+  static CustomContentManager create({
+    required ExternalPathService externalPathService,
+    required PlaylistIDsManager playlistIDsManager,
+    required PinnedAlbumIDsManager pinnedAlbumIDsManager,
+    required SubscribedPodcastsManager podcastService,
+    required RadioService radioService,
+  }) => Family.of(
+    '$CustomContentManager',
+    () => CustomContentManager._(
+      externalPathService: externalPathService,
+      playlistIDsManager: playlistIDsManager,
+      pinnedAlbumIDsManager: pinnedAlbumIDsManager,
+      podcastService: podcastService,
+      radioService: radioService,
+    ),
+    shouldDispose: (m) =>
+        m.importExternalPlaylistsCommand.listenerCount == 0 &&
+        !m.playlistName.hasListeners,
+    onDispose: (m) {
+      m.importExternalPlaylistsCommand.dispose();
+      m.externalPlaylistsDraft.dispose();
+      m.playlistName.dispose();
+    },
+  );
 
   final ExternalPathService _externalPathService;
   final SubscribedPodcastsManager _subscribedPodcastsManager;

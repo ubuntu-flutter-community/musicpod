@@ -8,7 +8,7 @@ import '../../common/data/audio.dart';
 import '../../extensions/command_x.dart';
 import '../service/radio_service.dart';
 
-@Injectable(cache: true)
+@lazySingleton
 class RadioManager {
   final RadioService _radioService;
 

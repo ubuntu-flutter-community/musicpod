@@ -14,19 +14,29 @@ import 'podcast_short_info_manager.dart';
 
 @injectable
 class EpisodesManager {
+  ListenableSubscription? updatesOnlySubscription;
+  ListenableSubscription? downloadsOnlySubscription;
+  ListenableSubscription? downloadCommandsSubscription;
+  ListenableSubscription? searchQuerySubscription;
+  ListenableSubscription? filterSubscription;
+
   EpisodesManager._({
     required String feedUrl,
     required PodcastManager podcastManager,
     required DownloadManager downloadsManager,
     required PlayerManager playerManager,
   }) {
-    podcastManager.updatesOnly.listen((_, _) => command.run());
-    podcastManager.downloadsOnly.listen((_, _) => command.run());
-    downloadsManager.downloadCommands
+    updatesOnlySubscription ??= podcastManager.updatesOnly.listen(
+      (_, _) => command.run(),
+    );
+    downloadsOnlySubscription ??= podcastManager.downloadsOnly.listen(
+      (_, _) => command.run(),
+    );
+    downloadCommandsSubscription ??= downloadsManager.downloadCommands
         .select((v) => v.entries.any((e) => e.key.feedUrl == feedUrl))
         .listen((_, _) => command.run());
-    searchQuery.listen((_, _) => command.run());
-    filter.listen((_, _) => command.run());
+    searchQuerySubscription ??= searchQuery.listen((_, _) => command.run());
+    filterSubscription ??= filter.listen((_, _) => command.run());
 
     command = Command.createAsync(
       (param) async {
@@ -101,7 +111,14 @@ class EpisodesManager {
       playerManager: playerManager,
     ),
     shouldDispose: (instance) => instance.command.listenerCount == 0,
-    onDispose: (instance) => instance.command.dispose(),
+    onDispose: (instance) {
+      instance.command.dispose();
+      instance.updatesOnlySubscription?.cancel();
+      instance.downloadsOnlySubscription?.cancel();
+      instance.downloadCommandsSubscription?.cancel();
+      instance.searchQuerySubscription?.cancel();
+      instance.filterSubscription?.cancel();
+    },
   );
 
   late final Command<

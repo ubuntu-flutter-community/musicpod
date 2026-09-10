@@ -2,14 +2,12 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../common/data/audio.dart';
+import '../../common/util/family.dart';
 import 'radio_manager.dart';
 
-@Injectable(cache: true)
+@injectable
 class StationManager {
-  StationManager({
-    @factoryParam required String uuid,
-    required RadioManager radioManager,
-  }) {
+  StationManager._({required String uuid, required RadioManager radioManager}) {
     command = Command.createAsyncNoParam(
       () => radioManager.getAudioByUUID(uuid),
       initialValue: null,
@@ -17,13 +15,24 @@ class StationManager {
     command.run();
   }
 
+  @factoryMethod
+  static StationManager create({
+    @factoryParam required String uuid,
+    required RadioManager radioManager,
+  }) => Family.of(
+    uuid,
+    () => StationManager._(uuid: uuid, radioManager: radioManager),
+    shouldDispose: (m) => m.command.listenerCount == 0,
+    onDispose: (m) => m.command.dispose(),
+  );
+
   late final Command<void, Audio?> command;
 }
 
-@Injectable(cache: true)
+@injectable
 class StationNameManager {
-  StationNameManager({
-    @factoryParam required String uuid,
+  StationNameManager._({
+    required String uuid,
     required RadioManager radioManager,
   }) {
     command = Command.createAsyncNoParam(
@@ -33,13 +42,24 @@ class StationNameManager {
     command.run();
   }
 
+  @factoryMethod
+  static StationNameManager create({
+    @factoryParam required String uuid,
+    required RadioManager radioManager,
+  }) => Family.of(
+    uuid,
+    () => StationNameManager._(uuid: uuid, radioManager: radioManager),
+    shouldDispose: (m) => m.command.listenerCount == 0,
+    onDispose: (m) => m.command.dispose(),
+  );
+
   late final Command<void, String?> command;
 }
 
-@Injectable(cache: true)
+@injectable
 class StationImageManager {
-  StationImageManager({
-    @factoryParam required String uuid,
+  StationImageManager._({
+    required String uuid,
     required RadioManager radioManager,
   }) {
     command = Command.createAsyncNoParam(
@@ -48,6 +68,17 @@ class StationImageManager {
     );
     command.run();
   }
+
+  @factoryMethod
+  static StationImageManager create({
+    @factoryParam required String uuid,
+    required RadioManager radioManager,
+  }) => Family.of(
+    uuid,
+    () => StationImageManager._(uuid: uuid, radioManager: radioManager),
+    shouldDispose: (m) => m.command.listenerCount == 0,
+    onDispose: (m) => m.command.dispose(),
+  );
 
   late final Command<void, String?> command;
 }

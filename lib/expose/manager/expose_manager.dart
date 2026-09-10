@@ -2,13 +2,28 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
+import '../../common/util/family.dart';
 import '../data/last_fm_credentials.dart';
 import '../service/expose_service.dart';
 
-@Injectable(cache: true)
+@injectable
 class ExposeManager {
-  ExposeManager({required ExposeService exposeService})
+  ExposeManager._({required ExposeService exposeService})
     : _exposeService = exposeService;
+
+  @factoryMethod
+  static ExposeManager create({required ExposeService exposeService}) =>
+      Family.of(
+        '$ExposeManager',
+        () => ExposeManager._(exposeService: exposeService),
+        shouldDispose: (m) =>
+            m.initListenBrainsCommand.listenerCount == 0 &&
+            m.authorizeLastFmCommand.listenerCount == 0,
+        onDispose: (m) {
+          m.initListenBrainsCommand.dispose();
+          m.authorizeLastFmCommand.dispose();
+        },
+      );
 
   final ExposeService _exposeService;
 

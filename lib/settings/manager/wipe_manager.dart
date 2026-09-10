@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../common/logging.dart';
 import '../../common/persistence/database.dart';
+import '../../common/util/family.dart';
 import '../../local_audio/manager/local_audio_manager.dart';
 import '../../local_audio/manager/pinned_album_ids_manager.dart';
 import '../../local_audio/manager/playlist_ids_manager.dart';
@@ -13,9 +14,9 @@ import '../../radio/manager/radio_star_station_manager.dart';
 import '../../radio/service/radio_service.dart';
 import 'settings_manager.dart';
 
-@Injectable(cache: true)
+@injectable
 class WipeManager {
-  WipeManager({
+  WipeManager._({
     required SettingsManager settingsManager,
     required PodcastService podcastService,
     required PinnedAlbumIDsManager pinnedAlbumIDsManager,
@@ -62,6 +63,36 @@ class WipeManager {
       await database.reclaimDiskSpace();
     });
   }
+
+  @factoryMethod
+  static WipeManager create({
+    required SettingsManager settingsManager,
+    required PodcastService podcastService,
+    required PinnedAlbumIDsManager pinnedAlbumIDsManager,
+    required PlaylistIDsManager playlistIDsManager,
+    required SubscribedPodcastsManager subscribedPodcastsManager,
+    required RadioStarStationManager radioStarStationManager,
+    required RadioService radioService,
+    required LocalAudioManager localAudioManager,
+    required PlayerManager playerManager,
+    required Database database,
+  }) => Family.of(
+    '$WipeManager',
+    () => WipeManager._(
+      settingsManager: settingsManager,
+      podcastService: podcastService,
+      pinnedAlbumIDsManager: pinnedAlbumIDsManager,
+      playlistIDsManager: playlistIDsManager,
+      subscribedPodcastsManager: subscribedPodcastsManager,
+      radioStarStationManager: radioStarStationManager,
+      radioService: radioService,
+      localAudioManager: localAudioManager,
+      playerManager: playerManager,
+      database: database,
+    ),
+    shouldDispose: (m) => m.command.listenerCount == 0,
+    onDispose: (m) => m.command.dispose(),
+  );
 
   late final Command<Set<WipeType>?, void> command;
 }

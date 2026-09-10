@@ -10,7 +10,10 @@ abstract class MediaKitModule {
     MediaKit.ensureInitialized();
     return VideoController(
       Player(
-        configuration: const PlayerConfiguration(title: AppConfig.appTitle),
+        configuration: const PlayerConfiguration(
+          title: AppConfig.appTitle,
+          bufferSize: 16 * 1024 * 1024,
+        ),
       ),
     );
   }

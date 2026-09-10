@@ -54,15 +54,48 @@ class SafeNetworkImage extends StatelessWidget {
         (Uri.tryParse(url!)?.host.isEmpty ?? false))
       return errorWidget;
 
+    final dpr = MediaQuery.maybeDevicePixelRatioOf(context) ?? 2.0;
+    const maxDecodeDimension = 1024;
+
+    final effectiveWidth =
+        width ??
+        (fit == BoxFit.cover || fit == BoxFit.fill || fit == BoxFit.fitHeight
+            ? height
+            : null);
+    final effectiveHeight =
+        height ??
+        (fit == BoxFit.cover || fit == BoxFit.fill || fit == BoxFit.fitWidth
+            ? width
+            : null);
+
+    final int? calculatedCacheWidth = effectiveWidth != null
+        ? (effectiveWidth * dpr).round()
+        : null;
+    final int? calculatedCacheHeight = effectiveHeight != null
+        ? (effectiveHeight * dpr).round()
+        : null;
+
+    final int? effectiveCacheWidth = (cacheWidth ?? calculatedCacheWidth)
+        ?.clamp(1, maxDecodeDimension);
+    final int? effectiveCacheHeight = (cacheHeight ?? calculatedCacheHeight)
+        ?.clamp(1, maxDecodeDimension);
+
+    final memWidth =
+        effectiveCacheWidth ??
+        (effectiveCacheHeight == null ? maxDecodeDimension : null);
+    final memHeight =
+        effectiveCacheHeight ??
+        (effectiveCacheWidth == null ? maxDecodeDimension : null);
+
     return CachedNetworkImage(
       cacheManager: _cacheManager,
       imageUrl: url!,
       height: height,
       width: width,
-      memCacheHeight: cacheHeight,
-      memCacheWidth: cacheWidth,
-      maxWidthDiskCache: cacheWidth,
-      maxHeightDiskCache: cacheHeight,
+      memCacheHeight: memHeight,
+      memCacheWidth: memWidth,
+      maxWidthDiskCache: maxDecodeDimension,
+      maxHeightDiskCache: maxDecodeDimension,
       fit: fit,
       filterQuality: filterQuality,
       httpHeaders: httpHeaders,

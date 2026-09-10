@@ -3,12 +3,13 @@ import 'package:injectable/injectable.dart';
 
 import '../../app/page_ids.dart';
 import '../../common/data/audio.dart';
+import '../../common/util/family.dart';
 import '../data/playlist_action.dart';
 import 'local_audio_manager.dart';
 
-@Injectable(cache: true)
+@injectable
 class LikedAudiosManager {
-  LikedAudiosManager(LocalAudioManager localAudioManager) {
+  LikedAudiosManager._(LocalAudioManager localAudioManager) {
     command = Command.createAsync((param) async {
       if (param != null) {
         await localAudioManager.createOrChangeLikedAudios(param);
@@ -18,6 +19,15 @@ class LikedAudiosManager {
     }, initialValue: []);
     command.run();
   }
+
+  @factoryMethod
+  static LikedAudiosManager create(LocalAudioManager localAudioManager) =>
+      Family.of(
+        '$LikedAudiosManager',
+        () => LikedAudiosManager._(localAudioManager),
+        shouldDispose: (m) => m.command.listenerCount == 0,
+        onDispose: (m) => m.command.dispose(),
+      );
 
   late final Command<PlaylistChange?, List<Audio>> command;
 

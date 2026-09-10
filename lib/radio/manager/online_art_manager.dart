@@ -26,7 +26,7 @@ class OnlineArtManager {
       onlineArtService: di<OnlineArtService>(),
     ),
     shouldDispose: (t) => t.command.listenerCount == 0,
-    autoDisposeAfter: const Duration(hours: 5),
+    autoDisposeAfter: const Duration(minutes: 5),
   );
 
   late final Command<void, String?> command;

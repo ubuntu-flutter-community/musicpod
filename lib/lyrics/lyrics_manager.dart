@@ -2,16 +2,31 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
 import '../common/data/audio.dart';
+import '../common/util/family.dart';
 import 'data/lyrics_and_art_result_and_param.dart';
 import 'lyrics_service.dart';
 
-@Injectable(cache: true)
+@injectable
 class LyricsManager {
-  LyricsManager({
+  LyricsManager._({
     required LocalLyricsService localLyricsService,
     required OnlineLyricsService onlineLyricsService,
   }) : _localLyricsService = localLyricsService,
        _onlineLyricsService = onlineLyricsService;
+
+  @factoryMethod
+  static LyricsManager create({
+    required LocalLyricsService localLyricsService,
+    required OnlineLyricsService onlineLyricsService,
+  }) => Family.of(
+    '$LyricsManager',
+    () => LyricsManager._(
+      localLyricsService: localLyricsService,
+      onlineLyricsService: onlineLyricsService,
+    ),
+    shouldDispose: (m) => m.command.listenerCount == 0,
+    onDispose: (m) => m.command.dispose(),
+  );
 
   final LocalLyricsService _localLyricsService;
   final OnlineLyricsService _onlineLyricsService;
