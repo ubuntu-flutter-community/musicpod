@@ -31,10 +31,8 @@ class PodcastGenreManager {
     required PodcastService podcastService,
   }) => Family.of(
     feedUrl,
-    () => PodcastGenreManager._(
-      feedUrl: feedUrl,
-      podcastService: podcastService,
-    ),
+    () =>
+        PodcastGenreManager._(feedUrl: feedUrl, podcastService: podcastService),
     shouldDispose: (m) =>
         m.findCommand.listenerCount == 0 && m.updateCommand.listenerCount == 0,
     onDispose: (m) {

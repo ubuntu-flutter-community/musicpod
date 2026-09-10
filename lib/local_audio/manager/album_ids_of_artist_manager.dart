@@ -23,10 +23,7 @@ class AlbumIDsOfArtistManager {
     required LocalAudioService service,
   }) => Family.of(
     artist,
-    () => AlbumIDsOfArtistManager._(
-      artist: artist,
-      service: service,
-    ),
+    () => AlbumIDsOfArtistManager._(artist: artist, service: service),
     shouldDispose: (m) => m.command.listenerCount == 0,
     onDispose: (m) => m.command.dispose(),
   );

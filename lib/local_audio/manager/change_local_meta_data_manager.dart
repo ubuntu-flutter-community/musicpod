@@ -28,8 +28,7 @@ class ChangeLocalMetaDataManager {
       audio: audio,
       localAudioService: localAudioService,
     ),
-    shouldDispose: (m) =>
-        m.command.listenerCount == 0 && !m.draft.hasListeners,
+    shouldDispose: (m) => m.command.listenerCount == 0 && !m.draft.hasListeners,
     onDispose: (m) {
       m.command.dispose();
       m.draft.dispose();

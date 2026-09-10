@@ -7,10 +7,7 @@ import 'radio_manager.dart';
 
 @injectable
 class StationManager {
-  StationManager._({
-    required String uuid,
-    required RadioManager radioManager,
-  }) {
+  StationManager._({required String uuid, required RadioManager radioManager}) {
     command = Command.createAsyncNoParam(
       () => radioManager.getAudioByUUID(uuid),
       initialValue: null,
@@ -24,10 +21,7 @@ class StationManager {
     required RadioManager radioManager,
   }) => Family.of(
     uuid,
-    () => StationManager._(
-      uuid: uuid,
-      radioManager: radioManager,
-    ),
+    () => StationManager._(uuid: uuid, radioManager: radioManager),
     shouldDispose: (m) => m.command.listenerCount == 0,
     onDispose: (m) => m.command.dispose(),
   );
@@ -54,10 +48,7 @@ class StationNameManager {
     required RadioManager radioManager,
   }) => Family.of(
     uuid,
-    () => StationNameManager._(
-      uuid: uuid,
-      radioManager: radioManager,
-    ),
+    () => StationNameManager._(uuid: uuid, radioManager: radioManager),
     shouldDispose: (m) => m.command.listenerCount == 0,
     onDispose: (m) => m.command.dispose(),
   );
@@ -84,10 +75,7 @@ class StationImageManager {
     required RadioManager radioManager,
   }) => Family.of(
     uuid,
-    () => StationImageManager._(
-      uuid: uuid,
-      radioManager: radioManager,
-    ),
+    () => StationImageManager._(uuid: uuid, radioManager: radioManager),
     shouldDispose: (m) => m.command.listenerCount == 0,
     onDispose: (m) => m.command.dispose(),
   );

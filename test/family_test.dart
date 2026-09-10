@@ -50,36 +50,42 @@ void main() {
       expect(b.id, equals('item-2'));
     });
 
-    test('supports class name identifier for singleton/screen-scoped instances', () {
-      final a = Family.of(
-        '$_TestResource',
-        () => _TestResource('scoped'),
-        shouldDispose: (r) => r.canDispose,
-      );
-      final b = Family.of(
-        '$_TestResource',
-        () => _TestResource('scoped'),
-        shouldDispose: (r) => r.canDispose,
-      );
+    test(
+      'supports class name identifier for singleton/screen-scoped instances',
+      () {
+        final a = Family.of(
+          '$_TestResource',
+          () => _TestResource('scoped'),
+          shouldDispose: (r) => r.canDispose,
+        );
+        final b = Family.of(
+          '$_TestResource',
+          () => _TestResource('scoped'),
+          shouldDispose: (r) => r.canDispose,
+        );
 
-      expect(identical(a, b), isTrue);
-    });
+        expect(identical(a, b), isTrue);
+      },
+    );
 
-    test('get returns null when not registered, and returns instance when registered', () {
-      expect(Family.get<_TestResource>('lookup-1'), isNull);
+    test(
+      'get returns null when not registered, and returns instance when registered',
+      () {
+        expect(Family.get<_TestResource>('lookup-1'), isNull);
 
-      final a = Family.of(
-        'lookup-1',
-        () => _TestResource('lookup-1'),
-        shouldDispose: (r) => r.canDispose,
-      );
+        final a = Family.of(
+          'lookup-1',
+          () => _TestResource('lookup-1'),
+          shouldDispose: (r) => r.canDispose,
+        );
 
-      expect(Family.get<_TestResource>('lookup-1'), equals(a));
-      expect(Family.get<_TestResource>('lookup-other'), isNull);
+        expect(Family.get<_TestResource>('lookup-1'), equals(a));
+        expect(Family.get<_TestResource>('lookup-other'), isNull);
 
-      Family.dispose<_TestResource>('lookup-1');
-      expect(Family.get<_TestResource>('lookup-1'), isNull);
-    });
+        Family.dispose<_TestResource>('lookup-1');
+        expect(Family.get<_TestResource>('lookup-1'), isNull);
+      },
+    );
 
     test('manually disposes an instance by id', () {
       final a = Family.of(

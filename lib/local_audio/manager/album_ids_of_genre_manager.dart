@@ -24,10 +24,7 @@ class AlbumIDsOfGenreManager {
     required LocalAudioService service,
   }) => Family.of(
     genre,
-    () => AlbumIDsOfGenreManager._(
-      genre: genre,
-      service: service,
-    ),
+    () => AlbumIDsOfGenreManager._(genre: genre, service: service),
     shouldDispose: (m) => m.command.listenerCount == 0,
     onDispose: (m) => m.command.dispose(),
   );

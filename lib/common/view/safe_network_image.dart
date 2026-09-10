@@ -57,11 +57,13 @@ class SafeNetworkImage extends StatelessWidget {
     final dpr = MediaQuery.maybeDevicePixelRatioOf(context) ?? 2.0;
     const maxDecodeDimension = 1024;
 
-    final effectiveWidth = width ??
+    final effectiveWidth =
+        width ??
         (fit == BoxFit.cover || fit == BoxFit.fill || fit == BoxFit.fitHeight
             ? height
             : null);
-    final effectiveHeight = height ??
+    final effectiveHeight =
+        height ??
         (fit == BoxFit.cover || fit == BoxFit.fill || fit == BoxFit.fitWidth
             ? width
             : null);
@@ -78,9 +80,11 @@ class SafeNetworkImage extends StatelessWidget {
     final int? effectiveCacheHeight = (cacheHeight ?? calculatedCacheHeight)
         ?.clamp(1, maxDecodeDimension);
 
-    final memWidth = effectiveCacheWidth ??
+    final memWidth =
+        effectiveCacheWidth ??
         (effectiveCacheHeight == null ? maxDecodeDimension : null);
-    final memHeight = effectiveCacheHeight ??
+    final memHeight =
+        effectiveCacheHeight ??
         (effectiveCacheWidth == null ? maxDecodeDimension : null);
 
     return CachedNetworkImage(
