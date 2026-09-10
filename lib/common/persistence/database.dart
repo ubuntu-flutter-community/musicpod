@@ -33,6 +33,20 @@ part 'database.g.dart';
 class Database extends _$Database {
   Database(super.e);
 
+  Future<void> _addColumnIfMissing(
+    Migrator m,
+    TableInfo table,
+    GeneratedColumn column,
+  ) async {
+    final existingColumns = (await customSelect(
+      'PRAGMA table_info("${table.actualTableName}")',
+    ).get()).map((row) => row.read<String>('name')).toSet();
+
+    if (!existingColumns.contains(column.$name)) {
+      await m.addColumn(table, column);
+    }
+  }
+
   @override
   int get schemaVersion => 6;
 
@@ -74,59 +88,154 @@ class Database extends _$Database {
         await m.createTable(podcastGenreRelationTable);
       }
       if (from < 5) {
-        await m.addColumn(starredStationTable, starredStationTable.changeUuid);
-        await m.addColumn(starredStationTable, starredStationTable.serverUuid);
-        await m.addColumn(starredStationTable, starredStationTable.name);
-        await m.addColumn(starredStationTable, starredStationTable.url);
-        await m.addColumn(starredStationTable, starredStationTable.urlResolved);
-        await m.addColumn(starredStationTable, starredStationTable.homepage);
-        await m.addColumn(starredStationTable, starredStationTable.favicon);
-        await m.addColumn(starredStationTable, starredStationTable.tags);
-        await m.addColumn(starredStationTable, starredStationTable.country);
-        await m.addColumn(starredStationTable, starredStationTable.countryCode);
-        await m.addColumn(starredStationTable, starredStationTable.state);
-        await m.addColumn(starredStationTable, starredStationTable.language);
-        await m.addColumn(
+        await _addColumnIfMissing(
+          m,
+          starredStationTable,
+          starredStationTable.changeUuid,
+        );
+        await _addColumnIfMissing(
+          m,
+          starredStationTable,
+          starredStationTable.serverUuid,
+        );
+        await _addColumnIfMissing(
+          m,
+          starredStationTable,
+          starredStationTable.name,
+        );
+        await _addColumnIfMissing(
+          m,
+          starredStationTable,
+          starredStationTable.url,
+        );
+        await _addColumnIfMissing(
+          m,
+          starredStationTable,
+          starredStationTable.urlResolved,
+        );
+        await _addColumnIfMissing(
+          m,
+          starredStationTable,
+          starredStationTable.homepage,
+        );
+        await _addColumnIfMissing(
+          m,
+          starredStationTable,
+          starredStationTable.favicon,
+        );
+        await _addColumnIfMissing(
+          m,
+          starredStationTable,
+          starredStationTable.tags,
+        );
+        await _addColumnIfMissing(
+          m,
+          starredStationTable,
+          starredStationTable.country,
+        );
+        await _addColumnIfMissing(
+          m,
+          starredStationTable,
+          starredStationTable.countryCode,
+        );
+        await _addColumnIfMissing(
+          m,
+          starredStationTable,
+          starredStationTable.state,
+        );
+        await _addColumnIfMissing(
+          m,
+          starredStationTable,
+          starredStationTable.language,
+        );
+        await _addColumnIfMissing(
+          m,
           starredStationTable,
           starredStationTable.languageCodes,
         );
-        await m.addColumn(starredStationTable, starredStationTable.votes);
-        await m.addColumn(
+        await _addColumnIfMissing(
+          m,
+          starredStationTable,
+          starredStationTable.votes,
+        );
+        await _addColumnIfMissing(
+          m,
           starredStationTable,
           starredStationTable.lastChangeTime,
         );
-        await m.addColumn(starredStationTable, starredStationTable.codec);
-        await m.addColumn(starredStationTable, starredStationTable.bitrate);
-        await m.addColumn(starredStationTable, starredStationTable.hls);
-        await m.addColumn(starredStationTable, starredStationTable.lastCheckOk);
-        await m.addColumn(
+        await _addColumnIfMissing(
+          m,
+          starredStationTable,
+          starredStationTable.codec,
+        );
+        await _addColumnIfMissing(
+          m,
+          starredStationTable,
+          starredStationTable.bitrate,
+        );
+        await _addColumnIfMissing(
+          m,
+          starredStationTable,
+          starredStationTable.hls,
+        );
+        await _addColumnIfMissing(
+          m,
+          starredStationTable,
+          starredStationTable.lastCheckOk,
+        );
+        await _addColumnIfMissing(
+          m,
           starredStationTable,
           starredStationTable.lastCheckTime,
         );
-        await m.addColumn(
+        await _addColumnIfMissing(
+          m,
           starredStationTable,
           starredStationTable.lastCheckOkTime,
         );
-        await m.addColumn(
+        await _addColumnIfMissing(
+          m,
           starredStationTable,
           starredStationTable.lastLocalCheckTime,
         );
-        await m.addColumn(
+        await _addColumnIfMissing(
+          m,
           starredStationTable,
           starredStationTable.clickTimestamp,
         );
-        await m.addColumn(starredStationTable, starredStationTable.clickCount);
-        await m.addColumn(starredStationTable, starredStationTable.clickTrend);
-        await m.addColumn(starredStationTable, starredStationTable.sslError);
-        await m.addColumn(starredStationTable, starredStationTable.geoLat);
-        await m.addColumn(starredStationTable, starredStationTable.geoLong);
-        await m.addColumn(
+        await _addColumnIfMissing(
+          m,
+          starredStationTable,
+          starredStationTable.clickCount,
+        );
+        await _addColumnIfMissing(
+          m,
+          starredStationTable,
+          starredStationTable.clickTrend,
+        );
+        await _addColumnIfMissing(
+          m,
+          starredStationTable,
+          starredStationTable.sslError,
+        );
+        await _addColumnIfMissing(
+          m,
+          starredStationTable,
+          starredStationTable.geoLat,
+        );
+        await _addColumnIfMissing(
+          m,
+          starredStationTable,
+          starredStationTable.geoLong,
+        );
+        await _addColumnIfMissing(
+          m,
           starredStationTable,
           starredStationTable.hasExtendedInfo,
         );
       }
       if (from < 6) {
-        await m.addColumn(podcastTable, podcastTable.subscribed);
+        await _addColumnIfMissing(m, podcastTable, podcastTable.subscribed);
       }
     },
   );
