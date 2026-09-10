@@ -7,6 +7,7 @@ import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../common/util/family.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -22,7 +23,10 @@ class _LicensesDialogState extends State<LicensesDialog> {
   @override
   void initState() {
     super.initState();
-    di<LicenseStore>().load(LicenseRegistry.licenses);
+    final store = di<LicenseStore>();
+    if (store.packages.isEmpty) {
+      store.load(LicenseRegistry.licenses);
+    }
   }
 
   @override
@@ -58,8 +62,18 @@ class _LicensesDialogState extends State<LicensesDialog> {
   }
 }
 
-@Injectable(cache: true)
+@injectable
 class LicenseStore extends SafeChangeNotifier {
+  LicenseStore._();
+
+  @factoryMethod
+  static LicenseStore create() => Family.of(
+    '$LicenseStore',
+    LicenseStore._,
+    shouldDispose: (s) => !s.hasListeners,
+    onDispose: (s) => s.dispose(),
+  );
+
   final _licenses = <String, List<LicenseEntry>>{};
 
   List<String> get packages => _licenses.keys.toList();

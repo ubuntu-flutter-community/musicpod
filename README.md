@@ -203,7 +203,7 @@ So I found my personal favorite solution with [get_it](https://pub.dev/packages/
   - with widgets builds methods cut as small as possible, to keep the build methods fast and to not lose the overview of the UI code
 - Manager classes, updating the state and thus the UI
   - they provide ["commands"](https://flutter-it.dev/documentation/command_it/getting_started#core-concept), which are async/sync operations which update their data, loading and error state
-  - key to memory succes is here using [get_it's cached factories](https://flutter-it.dev/documentation/get_it/object_registration#cached-factories)!, which's data is garbagge collected when not used anymore!
+  - key to memory success is using a lightweight `Family` registry with auto-disposal: screen- and item-scoped managers are automatically disposed and garbage collected when their commands have no active listeners! (Much to my regret, `flutter_it` does not provide such a family / auto-dispose feature out of the box, so I had to implement my own.)
 - Service classes, defining the actualy operations in form of methods of a service class
 - [DAO](https://en.wikipedia.org/wiki/Data_access_object)-classes, as an abstration layer for the database
 - a database, which is currently implemented with [drift](https://pub.dev/packages/drift) and sqlite, to persist data, and make it available across app restarts
@@ -216,7 +216,7 @@ WIP
 ### Performance
 
 Reading the local covers and fetching remote covers for radio data happens inside additional second [dart isolates](https://dart.dev/language/isolates). When idle MusiPod's CPU power consumption is 0%. For a 10 years old intel dual core, the CPU usage is about 2% while playing music, since only the parts are redrawn which need to be, thanks to watch_it.
-Memory allocation can spike depending on the size of a page's data, but it is freed as soon as the user leaves the page, thanks to get_it's cached factories (the same behaviour can ofc be achieved with flutter's stateful widgets, but I prefer the get_it solution for the reasons mentioned above in the "state" section).
+Memory allocation can temporarily spike when loading large datasets on a page, but page-scoped managers and their data are automatically dereferenced and scheduled for disposal 5 seconds after navigation when listener counts drop to zero, keeping the active heap lean without retaining dormant screen state (the same behaviour can ofc be achieved with flutter's stateful widgets, but I prefer this architecture for the reasons mentioned above in the "state" section).
 
 ### Persistence
 

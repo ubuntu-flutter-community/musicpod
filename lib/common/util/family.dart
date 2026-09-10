@@ -53,6 +53,11 @@ abstract final class Family {
     return instance;
   }
 
+  /// Returns the cached instance for `([T], [id])` if it exists, or `null`
+  /// when no instance is currently registered.
+  static T? get<T extends Object>(Object? id) =>
+      _entries[(T, id)]?.instance as T?;
+
   static void _scheduleDispose((Type, Object?) key, Duration after) {
     Future.delayed(after, () {
       final entry = _entries[key];

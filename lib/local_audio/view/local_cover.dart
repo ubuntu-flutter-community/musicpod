@@ -22,6 +22,12 @@ class LocalCover extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
+    final dpr = MediaQuery.maybeDevicePixelRatioOf(context) ?? 2.0;
+    const maxDecodeDimension = 1024;
+    final cacheDim = dimension.isFinite
+        ? (dimension * dpr).round().clamp(1, maxDecodeDimension)
+        : maxDecodeDimension;
+
     return SizedBox.square(
       dimension: dimension,
       child: AnimatedSwitcher(
@@ -52,14 +58,8 @@ class LocalCover extends StatelessWidget with WatchItMixin {
                       fit: fit,
                       height: dimension,
                       width: dimension,
-                      // TODO: understand why the cache dimensions have to be bigger than the actual dimensions
-                      // to prevent the image to look blurry. Maybe the image is resized at some point and needs bigger cache dimensions to still look good after resizing?
-                      cacheHeight: dimension != double.infinity
-                          ? (dimension * 1.4).toInt()
-                          : null,
-                      cacheWidth: dimension != double.infinity
-                          ? (dimension * 1.4).toInt()
-                          : null,
+                      cacheHeight: cacheDim,
+                      cacheWidth: cacheDim,
                     ),
             ),
       ),

@@ -30,6 +30,10 @@ class StationPageIcon extends StatelessWidget with WatchItMixin {
       child: SafeNetworkImage(
         fallbackWidget: _getIcon(context.theme.colorScheme, selected),
         errorWidget: _getIcon(context.theme.colorScheme, selected),
+        height: dimension ?? sideBarImageSize,
+        width: dimension ?? sideBarImageSize,
+        cacheHeight: ((dimension ?? sideBarImageSize) * 2).toInt(),
+        cacheWidth: ((dimension ?? sideBarImageSize) * 2).toInt(),
         fit: BoxFit.fitHeight,
         url: watchValue((StationImageManager m) => m.command, param1: uuid),
         filterQuality: FilterQuality.medium,

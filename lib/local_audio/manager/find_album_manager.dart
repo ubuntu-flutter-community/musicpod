@@ -1,12 +1,14 @@
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
+
 import '../../common/data/audio.dart';
+import '../../common/util/family.dart';
 import 'local_audio_manager.dart';
 
-@Injectable(cache: true)
+@injectable
 class FindAlbumManager {
-  FindAlbumManager({
-    @factoryParam required int albumId,
+  FindAlbumManager._({
+    required int albumId,
     required LocalAudioManager localAudioManager,
   }) {
     command = Command.createAsyncNoParam(
@@ -15,6 +17,20 @@ class FindAlbumManager {
     );
     command.run();
   }
+
+  @factoryMethod
+  static FindAlbumManager create({
+    @factoryParam required int albumId,
+    required LocalAudioManager localAudioManager,
+  }) => Family.of(
+    albumId,
+    () => FindAlbumManager._(
+      albumId: albumId,
+      localAudioManager: localAudioManager,
+    ),
+    shouldDispose: (m) => m.command.listenerCount == 0,
+    onDispose: (m) => m.command.dispose(),
+  );
 
   late final Command<void, List<Audio>?> command;
 }

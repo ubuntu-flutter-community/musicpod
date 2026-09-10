@@ -30,7 +30,7 @@ class PodcastUpdatesManager {
       );
 
       for (final feedUrl in updates.keys) {
-        await di<EpisodesManager>(param1: feedUrl).command.runAsync();
+        await Family.get<EpisodesManager>(feedUrl)?.command.runAsync();
       }
 
       return updates;
@@ -41,7 +41,7 @@ class PodcastUpdatesManager {
   static PodcastUpdatesManager create({
     required PodcastService podcastService,
   }) => Family.of(
-    'PodcastUpdatesManager',
+    '$PodcastUpdatesManager',
     () => PodcastUpdatesManager._(podcastService: podcastService),
     shouldDispose: (t) => t.command.listenerCount == 0,
     autoDisposeAfter: const Duration(hours: 5),

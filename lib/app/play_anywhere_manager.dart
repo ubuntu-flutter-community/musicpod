@@ -18,14 +18,25 @@ import 'data/play_anywhere_bad_audios_exception.dart';
 import 'data/play_anywhere_param.dart';
 import 'data/play_anywhere_result.dart';
 
-@Injectable(cache: true)
+import '../common/util/family.dart';
+
+@injectable
 class PlayAnywhereManager {
   final PlayerManager _playerManager;
 
-  PlayAnywhereManager({required PlayerManager playerManager})
+  PlayAnywhereManager._({required PlayerManager playerManager})
     : _playerManager = playerManager {
     Logger.o(tag: '$PlayAnywhereManager');
   }
+
+  @factoryMethod
+  static PlayAnywhereManager create({required PlayerManager playerManager}) =>
+      Family.of(
+        '$PlayAnywhereManager',
+        () => PlayAnywhereManager._(playerManager: playerManager),
+        shouldDispose: (m) => m.command.listenerCount == 0,
+        onDispose: (m) => m.command.dispose(),
+      );
 
   late final Command<PlayAnywhereParam, PlayAnywhereResult?> command =
       Command.createAsync(

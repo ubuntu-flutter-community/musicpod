@@ -6,7 +6,7 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'lastfm_service.dart';
 import 'listenbrainz_service.dart';
 
-@Injectable(cache: true)
+@lazySingleton
 class ExposeService {
   ExposeService({
     required LastfmService lastFmService,

@@ -1,12 +1,13 @@
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../common/util/family.dart';
 import '../service/local_audio_service.dart';
 
-@Injectable(cache: true)
+@injectable
 class AlbumIDsOfGenreManager {
-  AlbumIDsOfGenreManager({
-    @factoryParam required String genre,
+  AlbumIDsOfGenreManager._({
+    required String genre,
     required LocalAudioService service,
   }) {
     command = Command.createAsync(
@@ -16,6 +17,20 @@ class AlbumIDsOfGenreManager {
 
     command.run(genre);
   }
+
+  @factoryMethod
+  static AlbumIDsOfGenreManager create({
+    @factoryParam required String genre,
+    required LocalAudioService service,
+  }) => Family.of(
+    genre,
+    () => AlbumIDsOfGenreManager._(
+      genre: genre,
+      service: service,
+    ),
+    shouldDispose: (m) => m.command.listenerCount == 0,
+    onDispose: (m) => m.command.dispose(),
+  );
 
   late final Command<String, List<int>?> command;
 }

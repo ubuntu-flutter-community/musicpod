@@ -9,7 +9,7 @@ import '../../common/logging.dart';
 import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/service/settings_service.dart';
 
-@Injectable(cache: true)
+@lazySingleton
 class LastfmService {
   LastfmService({required SettingsService settingsService})
     : _settingsService = settingsService;

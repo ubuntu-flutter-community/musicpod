@@ -31,6 +31,9 @@ class AudioTileImage extends StatelessWidget {
       image = SafeNetworkImage(
         url: audio?.imageUrl ?? audio?.albumArtUrl,
         height: size,
+        width: size,
+        cacheHeight: (size * 2).toInt(),
+        cacheWidth: (size * 2).toInt(),
         fit: BoxFit.cover,
         fallbackWidget: fallbackIcon,
         errorWidget: fallbackIcon,

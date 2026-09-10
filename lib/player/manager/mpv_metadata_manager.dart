@@ -17,7 +17,7 @@ import '../data/mpv_meta_data.dart';
 import '../data/observe_property/observe_property.dart';
 import '../service/player_service.dart';
 
-@Injectable(cache: true)
+@lazySingleton
 class MpvMetadataManager {
   MpvMetadataManager({
     required PlayerService playerService,
