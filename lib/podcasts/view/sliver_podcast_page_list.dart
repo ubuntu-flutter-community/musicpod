@@ -27,38 +27,60 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
         watchValue((EpisodesManager m) => m.command, param1: feedUrl)?.episodes;
     final selectedAudio = watchPropertyValue((PlayerManager m) => m.audio);
 
+    final isPaginated = this.audios == null;
+    final hasMore = isPaginated && di<EpisodesManager>(param1: feedUrl).hasMore;
+    final count = audios?.length ?? 0;
+
     return SliverList(
-      delegate: SliverChildBuilderDelegate(childCount: audios?.length ?? 0, (
-        context,
-        index,
-      ) {
-        final episode = audios?.elementAt(index);
+      delegate: SliverChildBuilderDelegate(
+        childCount: count + (hasMore ? 1 : 0),
+        (context, index) {
+          if (hasMore && index >= count - 4) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              di<EpisodesManager>(param1: feedUrl).loadMore();
+            });
+          }
 
-        if (episode == null) {
-          return const SizedBox.shrink();
-        }
+          if (index >= count) {
+            return const Padding(
+              padding: EdgeInsets.symmetric(vertical: 24.0),
+              child: Center(
+                child: SizedBox.square(
+                  dimension: 24,
+                  child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+                ),
+              ),
+            );
+          }
 
-        return PodcastAudioTile(
-          key: ValueKey('${episode.path ?? episode.url}'),
-          audio: episode,
-          addPodcast: () => di<SubscribedPodcastsManager>().command.run(
-            PodcastToggleCapsule(
-              feedUrl: episode.feedUrl!,
-              imageUrl: episode.albumArtUrl ?? episode.imageUrl ?? '',
-              name: episode.podcastTitle ?? '',
-              artist: episode.copyright ?? '',
+          final episode = audios?.elementAt(index);
+
+          if (episode == null) {
+            return const SizedBox.shrink();
+          }
+
+          return PodcastAudioTile(
+            key: ValueKey('${episode.path ?? episode.url}'),
+            audio: episode,
+            addPodcast: () => di<SubscribedPodcastsManager>().command.run(
+              PodcastToggleCapsule(
+                feedUrl: episode.feedUrl!,
+                imageUrl: episode.albumArtUrl ?? episode.imageUrl ?? '',
+                name: episode.podcastTitle ?? '',
+                artist: episode.copyright ?? '',
+              ),
             ),
-          ),
-          isExpanded: episode == selectedAudio,
-          selected: episode == selectedAudio,
-          play: () => di<PlayerManager>().play(
-            audios: audios ?? [],
-            listName: feedUrl,
-            index: index,
-          ),
-          includePodcastImage: includePodcastImage,
-        );
-      }),
+            isExpanded: episode == selectedAudio,
+            selected: episode == selectedAudio,
+            play: () => di<PlayerManager>().play(
+              audios: [episode],
+              listName: feedUrl,
+              index: 0,
+            ),
+            includePodcastImage: includePodcastImage,
+          );
+        },
+      ),
     );
   }
 }

@@ -97,6 +97,11 @@ class LocalAudioManager {
     return _localAudioService.findAllTracks();
   }
 
+  Future<bool> hasTracks() async {
+    await _runInitIfNeeded();
+    return _localAudioService.hasTracks();
+  }
+
   Future<List<int>> togglePinAlbum(int? id) async {
     await _runInitIfNeeded();
     return _localAudioService.togglePinAlbum(id);
@@ -110,6 +115,11 @@ class LocalAudioManager {
   Future<List<Audio>?> findLikedAudios() async {
     await _runInitIfNeeded();
     return _localAudioService.findLikedAudios();
+  }
+
+  Future<Set<String>> findLikedAudioPaths() async {
+    await _runInitIfNeeded();
+    return _localAudioService.findLikedAudioPaths();
   }
 
   Future<void> createOrChangeLikedAudios(PlaylistChange param) async {

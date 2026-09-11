@@ -42,7 +42,7 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    callOnceAfterThisBuild((context) => clearNetworkImageCache());
+    callOnceAfterThisBuild((context) => clearInMemoryImageCache());
     final isInitializing = watchValue(
       (LocalAudioManager m) => m.initAudiosCommand.isRunning,
     );

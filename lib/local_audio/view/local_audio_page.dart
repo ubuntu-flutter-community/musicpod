@@ -34,7 +34,7 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    callOnceAfterThisBuild((context) => clearNetworkImageCache());
+    callOnceAfterThisBuild((context) => clearInMemoryImageCache());
 
     registerHandler(
       select: (LocalAudioManager m) => m.areTracksSyncedCommand.results,

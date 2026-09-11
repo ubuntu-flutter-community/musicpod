@@ -44,6 +44,8 @@ import 'local_audio/manager/find_all_genres_manager.dart' as _i429;
 import 'local_audio/manager/find_all_tracks_manager.dart' as _i178;
 import 'local_audio/manager/find_artist_of_album_manager.dart' as _i88;
 import 'local_audio/manager/find_titles_of_artist_manager.dart' as _i665;
+import 'local_audio/manager/has_tracks_manager.dart' as _i754;
+import 'local_audio/manager/liked_audio_paths_manager.dart' as _i311;
 import 'local_audio/manager/liked_audios_manager.dart' as _i372;
 import 'local_audio/manager/local_audio_manager.dart' as _i76;
 import 'local_audio/manager/local_cover_manager.dart' as _i612;
@@ -426,6 +428,16 @@ extension GetItInjectableX on _i174.GetIt {
         podcastManager: gh<_i819.PodcastManager>(),
       ),
     );
+    gh.factory<_i754.HasTracksManager>(
+      () => _i754.HasTracksManager.create(
+        localAudioManager: gh<_i76.LocalAudioManager>(),
+      ),
+    );
+    gh.factory<_i311.LikedAudioPathsManager>(
+      () => _i311.LikedAudioPathsManager.create(
+        localAudioManager: gh<_i76.LocalAudioManager>(),
+      ),
+    );
     gh.lazySingleton<_i1030.PinnedAlbumIDsManager>(
       () => _i1030.PinnedAlbumIDsManager(
         localAudioManager: gh<_i76.LocalAudioManager>(),
@@ -490,13 +502,16 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i178.FindAllTracksManager>(
       () => _i178.FindAllTracksManager.create(gh<_i76.LocalAudioManager>()),
     );
-    gh.factory<_i372.LikedAudiosManager>(
-      () => _i372.LikedAudiosManager.create(gh<_i76.LocalAudioManager>()),
-    );
     gh.factoryParam<_i438.PlaylistManager, String, dynamic>(
       (playlistId, _) => _i438.PlaylistManager.create(
         playlistId: playlistId,
         localAudioManager: gh<_i76.LocalAudioManager>(),
+      ),
+    );
+    gh.factory<_i372.LikedAudiosManager>(
+      () => _i372.LikedAudiosManager.create(
+        localAudioManager: gh<_i76.LocalAudioManager>(),
+        pathsManager: gh<_i311.LikedAudioPathsManager>(),
       ),
     );
     gh.factory<_i925.CustomContentManager>(

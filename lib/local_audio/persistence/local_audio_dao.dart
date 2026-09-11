@@ -354,6 +354,11 @@ class LocalAudioDao {
     return joinedRowsToAudios(rows);
   }
 
+  Future<Set<String>> findLikedAudioPaths() async {
+    final rows = await _db.select(_db.likedTrackTable).get();
+    return rows.map((r) => r.trackId).toSet();
+  }
+
   Future<void> addLikedAudiosToDb(List<Audio> audios) async {
     await Future.wait(
       audios.map((audio) async {

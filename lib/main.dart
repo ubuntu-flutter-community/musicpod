@@ -14,6 +14,9 @@ Future<void> main(List<String> args) async {
     await YaruWindowTitleBar.ensureInitialized();
   }
 
+  PaintingBinding.instance.imageCache.maximumSizeBytes = 40 * 1024 * 1024;
+  PaintingBinding.instance.imageCache.maximumSize = 100;
+
   FlutterError.onError = Logger.fe;
 
   Command.globalExceptionHandler =

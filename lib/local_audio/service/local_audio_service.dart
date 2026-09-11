@@ -35,6 +35,8 @@ class LocalAudioService {
 
   Future<List<Audio>> findAllTracks() => _dao.findAllTracks();
 
+  Future<bool> hasTracks() => _dao.getTrackCount().then((c) => c > 0);
+
   Future<List<String>?> findAllArtists() => _dao.findAllArtists();
 
   Future<List<String>?> findAllGenres() => _dao.findAllGenres();
@@ -135,6 +137,8 @@ class LocalAudioService {
   // ── Liked Audios ──
 
   Future<List<Audio>> findLikedAudios() => _dao.findLikedAudios();
+
+  Future<Set<String>> findLikedAudioPaths() => _dao.findLikedAudioPaths();
 
   Future<void> createOrChangeLikedAudios(PlaylistChange change) async {
     if (change.audios != null &&

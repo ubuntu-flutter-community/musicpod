@@ -14,10 +14,12 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
     super.key,
     required this.pageId,
     required this.audioPageType,
+    this.onPressed,
   });
 
   final String pageId;
   final AudioPageType audioPageType;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +54,11 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
           focusColor: theme.colorScheme.primary.withValues(alpha: 0.5),
         ),
         tooltip: label,
-        onPressed: () => di<PlayAnywhereManager>().command.run(
-          PlayAnywhereParam(audioPageType: audioPageType, pageId: pageId),
-        ),
+        onPressed:
+            onPressed ??
+            () => di<PlayAnywhereManager>().command.run(
+              PlayAnywhereParam(audioPageType: audioPageType, pageId: pageId),
+            ),
         icon: Icon(
           iconData,
           color: theme.colorScheme.onInverseSurface,

@@ -11,7 +11,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../local_audio/data/playlist_action.dart';
-import '../../local_audio/manager/find_all_tracks_manager.dart';
+import '../../local_audio/manager/has_tracks_manager.dart';
 import '../../local_audio/manager/playlist_ids_manager.dart';
 import '../../search/manager/search_manager.dart';
 import '../../settings/view/settings_action.dart';
@@ -44,10 +44,10 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
-    final tracksResults = watchValue(
-      (FindAllTracksManager m) => m.command.results,
+    final hasTracks = watchValue(
+      (HasTracksManager m) => m.command.results,
     );
-    if (!tracksResults.isRunning && (tracksResults.data?.isEmpty ?? false)) {
+    if (!hasTracks.isRunning && !(hasTracks.data ?? true)) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,

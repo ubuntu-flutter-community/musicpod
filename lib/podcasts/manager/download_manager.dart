@@ -30,7 +30,8 @@ class DownloadManager {
   );
 
   bool hasDownload(Audio audio) =>
-      getCommand(audio).value?.isDownload(audio) ?? false;
+      downloadCommands[audio]?.value?.isDownload(audio) ??
+      (_podcastService.getDownloadPath(audio) != null);
 
   Command<void, PodcastDownload?> getCommand(Audio audio) =>
       downloadCommands.putIfAbsent(audio, () => _createDownloadCommand(audio));

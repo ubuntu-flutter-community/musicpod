@@ -61,7 +61,7 @@ class SliverLocalAudioPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    callOnceAfterThisBuild((context) => clearNetworkImageCache());
+    callOnceAfterThisBuild((context) => clearInMemoryImageCache());
     return Scaffold(
       appBar: HeaderBar(
         title: isMobile ? null : Text(pageTitle ?? ''),
