@@ -11,8 +11,8 @@ class AlbumIDsOfArtistManager {
     required String artist,
     required LocalAudioService service,
   }) {
-    command = Command.createAsync(
-      (artist) => service.findAlbumIDsOfArtist(artist),
+    command = Command.createAsyncNoParam(
+      () => service.findAlbumIDsOfArtist(artist),
       initialValue: null,
     );
     command.run(artist);
@@ -29,5 +29,5 @@ class AlbumIDsOfArtistManager {
     onDispose: (m) => m.command.dispose(),
   );
 
-  late final Command<String, List<int>?> command;
+  late final Command<void, List<int>?> command;
 }

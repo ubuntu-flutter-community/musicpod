@@ -11,8 +11,8 @@ class AlbumIDsOfGenreManager {
     required String genre,
     required LocalAudioService service,
   }) {
-    command = Command.createAsync(
-      (genre) => service.findAlbumIDsOfGenre(genre),
+    command = Command.createAsyncNoParam(
+      () => service.findAlbumIDsOfGenre(genre),
       initialValue: null,
     );
 
@@ -30,5 +30,5 @@ class AlbumIDsOfGenreManager {
     onDispose: (m) => m.command.dispose(),
   );
 
-  late final Command<String, List<int>?> command;
+  late final Command<void, List<int>?> command;
 }
