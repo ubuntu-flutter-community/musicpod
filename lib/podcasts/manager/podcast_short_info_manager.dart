@@ -2,6 +2,7 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../common/util/family.dart';
+import '../../extensions/command_x.dart';
 import '../data/podcast_short_info.dart';
 import 'podcast_manager.dart';
 
@@ -29,7 +30,7 @@ class PodcastShortInfoManager {
       feedUrl: feedUrl,
       podcastManager: podcastManager,
     ),
-    shouldDispose: (t) => t.command.listenerCount == 0,
+    shouldDispose: (t) => t.command.safeToDispose,
     onDispose: (t) => t.command.dispose(),
   );
 

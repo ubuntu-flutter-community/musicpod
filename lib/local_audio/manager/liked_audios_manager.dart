@@ -4,6 +4,7 @@ import 'package:injectable/injectable.dart';
 import '../../app/page_ids.dart';
 import '../../common/data/audio.dart';
 import '../../common/util/family.dart';
+import '../../extensions/command_x.dart';
 import '../data/playlist_action.dart';
 import 'local_audio_manager.dart';
 
@@ -25,7 +26,7 @@ class LikedAudiosManager {
       Family.of(
         '$LikedAudiosManager',
         () => LikedAudiosManager._(localAudioManager),
-        shouldDispose: (m) => m.command.listenerCount == 0,
+        shouldDispose: (m) => m.command.safeToDispose,
         onDispose: (m) => m.command.dispose(),
       );
 

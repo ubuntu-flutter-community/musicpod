@@ -12,6 +12,7 @@ import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/logging.dart';
 import '../../common/view/languages.dart';
+import '../../extensions/command_x.dart';
 import '../../extensions/string_x.dart';
 import '../../local_audio/data/local_search_result.dart';
 import '../../local_audio/service/local_audio_service.dart';
@@ -83,7 +84,7 @@ class SearchManager {
       settingsService: settingsService,
     ),
     shouldDispose: (m) =>
-        m.searchCommand.listenerCount == 0 && !m.searchQuery.hasListeners,
+        m.searchCommand.safeToDispose && !m.searchQuery.hasListeners,
     onDispose: (m) {
       m.searchCommand.dispose();
       m.searchQuery.dispose();

@@ -34,7 +34,7 @@ class PlayAnywhereManager {
       Family.of(
         '$PlayAnywhereManager',
         () => PlayAnywhereManager._(playerManager: playerManager),
-        shouldDispose: (m) => m.command.listenerCount == 0,
+        shouldDispose: (m) => m.command.safeToDispose,
         onDispose: (m) => m.command.dispose(),
       );
 

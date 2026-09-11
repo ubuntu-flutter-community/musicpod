@@ -2,6 +2,7 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../common/util/family.dart';
+import '../../extensions/command_x.dart';
 import 'podcast_manager.dart';
 
 @injectable
@@ -24,7 +25,7 @@ class PodcastFeedsWithDownloadsManager {
   }) => Family.of(
     '$PodcastFeedsWithDownloadsManager',
     () => PodcastFeedsWithDownloadsManager._(podcastManager: podcastManager),
-    shouldDispose: (m) => m.command.listenerCount == 0,
+    shouldDispose: (m) => m.command.safeToDispose,
     onDispose: (m) => m.command.dispose(),
   );
 

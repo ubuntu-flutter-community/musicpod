@@ -5,6 +5,7 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 import '../../common/data/audio.dart';
 import '../../common/logging.dart';
 import '../../common/util/family.dart';
+import '../../extensions/command_x.dart';
 import '../data/change_metadata_capsule.dart';
 import '../service/local_audio_service.dart';
 
@@ -28,7 +29,7 @@ class ChangeLocalMetaDataManager {
       audio: audio,
       localAudioService: localAudioService,
     ),
-    shouldDispose: (m) => m.command.listenerCount == 0 && !m.draft.hasListeners,
+    shouldDispose: (m) => m.command.safeToDispose && !m.draft.hasListeners,
     onDispose: (m) {
       m.command.dispose();
       m.draft.dispose();

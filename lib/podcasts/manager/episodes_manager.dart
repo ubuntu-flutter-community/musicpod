@@ -110,7 +110,7 @@ class EpisodesManager {
       downloadsManager: downloadsManager,
       playerManager: playerManager,
     ),
-    shouldDispose: (instance) => instance.command.listenerCount == 0,
+    shouldDispose: (instance) => instance.command.safeToDispose,
     onDispose: (instance) {
       instance.command.dispose();
       instance.updatesOnlySubscription?.cancel();

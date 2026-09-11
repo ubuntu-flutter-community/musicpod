@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/util/family.dart';
+import '../../extensions/command_x.dart';
 import 'radio_manager.dart';
 
 @injectable
@@ -22,7 +23,7 @@ class StationManager {
   }) => Family.of(
     uuid,
     () => StationManager._(uuid: uuid, radioManager: radioManager),
-    shouldDispose: (m) => m.command.listenerCount == 0,
+    shouldDispose: (m) => m.command.safeToDispose,
     onDispose: (m) => m.command.dispose(),
   );
 
@@ -49,7 +50,7 @@ class StationNameManager {
   }) => Family.of(
     uuid,
     () => StationNameManager._(uuid: uuid, radioManager: radioManager),
-    shouldDispose: (m) => m.command.listenerCount == 0,
+    shouldDispose: (m) => m.command.safeToDispose,
     onDispose: (m) => m.command.dispose(),
   );
 
@@ -76,7 +77,7 @@ class StationImageManager {
   }) => Family.of(
     uuid,
     () => StationImageManager._(uuid: uuid, radioManager: radioManager),
-    shouldDispose: (m) => m.command.listenerCount == 0,
+    shouldDispose: (m) => m.command.safeToDispose,
     onDispose: (m) => m.command.dispose(),
   );
 

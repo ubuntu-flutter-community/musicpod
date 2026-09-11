@@ -68,6 +68,7 @@ import 'podcasts/manager/podcast_genre_manager.dart' as _i990;
 import 'podcasts/manager/podcast_load_genres_manager.dart' as _i141;
 import 'podcasts/manager/podcast_manager.dart' as _i819;
 import 'podcasts/manager/podcast_short_info_manager.dart' as _i212;
+import 'podcasts/manager/podcast_updated_feeds_manager.dart' as _i605;
 import 'podcasts/manager/podcast_updates_manager.dart' as _i851;
 import 'podcasts/manager/subscribed_podcasts_manager.dart' as _i1055;
 import 'podcasts/persistence/podcast_dao.dart' as _i597;
@@ -289,8 +290,8 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioDao: gh<_i688.LocalAudioDao>(),
       ),
     );
-    gh.factory<_i851.PodcastUpdatesManager>(
-      () => _i851.PodcastUpdatesManager.create(
+    gh.factory<_i605.PodcastUpdatedFeedsManager>(
+      () => _i605.PodcastUpdatedFeedsManager.create(
         podcastService: gh<_i529.PodcastService>(),
       ),
     );
@@ -399,6 +400,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i76.LocalAudioManager>(
       () => _i76.LocalAudioManager(
         localAudioService: gh<_i985.LocalAudioService>(),
+      ),
+    );
+    gh.factory<_i851.PodcastUpdatesManager>(
+      () => _i851.PodcastUpdatesManager.create(
+        podcastService: gh<_i529.PodcastService>(),
+        feedsManager: gh<_i605.PodcastUpdatedFeedsManager>(),
       ),
     );
     gh.factory<_i354.SearchManager>(

@@ -16,7 +16,7 @@ import '../logging.dart';
 /// static MyManager create({@factoryParam required String id, ...}) => Family.of(
 ///       id,
 ///       () => MyManager._(...),
-///       shouldDispose: (m) => m.command.listenerCount == 0,
+///       shouldDispose: (m) => m.command.safeToDispose,
 ///       onDispose: (m) => m.command.dispose(),
 ///     );
 /// ```
@@ -25,28 +25,44 @@ abstract final class Family {
 
   static final _entries = <(Type, Object?), _FamilyEntry>{};
 
+  /// The total number of currently registered instances in [Family].
+  static int get count => _entries.length;
+
+  /// All currently registered `(Type, id)` keys.
+  static List<(Type, Object?)> get activeKeys => _entries.keys.toList();
+
+  /// Returns true if an instance of type [T] with [id] is currently registered.
+  static bool isRegistered<T extends Object>(Object? id) =>
+      _entries.containsKey((T, id));
+
   /// Returns the cached instance for `([T], [id])` or creates, caches and
   /// returns a new one.
   ///
   /// After [autoDisposeAfter] the instance is checked via [shouldDispose]:
   /// while it returns `false` the instance is kept alive and re-checked; once
   /// it returns `true` the instance is removed and [onDispose] is called.
+  ///
+  /// If the instance already exists, accessing it resets the [autoDisposeAfter]
+  /// timer to grant a new grace period.
   static T of<T extends Object>(
     Object? id,
     T Function() create, {
     required bool Function(T instance) shouldDispose,
-    FutureOr<void> Function(T instance)? onDispose,
+    required FutureOr<void> Function(T instance) onDispose,
     Duration autoDisposeAfter = const Duration(seconds: 5),
   }) {
     final key = (T, id);
     final existing = _entries[key];
-    if (existing != null) return existing.instance as T;
+    if (existing != null) {
+      _scheduleDispose(key, autoDisposeAfter);
+      return existing.instance as T;
+    }
 
     final instance = create();
     _entries[key] = _FamilyEntry(
       instance: instance,
       canDispose: () => shouldDispose(instance),
-      onDisposeInstance: () => onDispose?.call(instance),
+      onDisposeInstance: () => onDispose(instance),
     );
     Logger.o(tag: '$T:$id');
     _scheduleDispose(key, autoDisposeAfter);
@@ -59,16 +75,42 @@ abstract final class Family {
       _entries[(T, id)]?.instance as T?;
 
   static void _scheduleDispose((Type, Object?) key, Duration after) {
-    Future.delayed(after, () {
-      final entry = _entries[key];
-      if (entry == null) return;
-      if (!entry.canDispose()) {
-        // Logger.o(tag: '${key.$1}:${key.$2}', message: 'kept alive!');
+    final entry = _entries[key];
+    if (entry == null) return;
+    entry.timer?.cancel();
+    entry.timer = Timer(after, () {
+      final currentEntry = _entries[key];
+      if (currentEntry == null) return;
+
+      bool canDispose;
+      try {
+        canDispose = currentEntry.canDispose();
+      } catch (e, s) {
+        Logger.e(e, trace: s, tag: '${key.$1}:${key.$2}');
+        canDispose = false;
+      }
+
+      if (!canDispose) {
+        currentEntry.rescheduleCount++;
+        if (currentEntry.rescheduleCount % 60 == 0) {
+          Logger.w(
+            'Instance ${key.$1}:${key.$2} has been kept alive across '
+            '${currentEntry.rescheduleCount} reschedule cycles. '
+            'Verify listeners are being removed properly.',
+            tag: 'Family',
+          );
+        }
         _scheduleDispose(key, after);
         return;
       }
+
       _entries.remove(key);
-      entry.onDisposeInstance();
+      currentEntry.timer?.cancel();
+      try {
+        currentEntry.onDisposeInstance();
+      } catch (e, s) {
+        Logger.e(e, trace: s, tag: '${key.$1}:${key.$2}');
+      }
       Logger.o(tag: '${key.$1}:${key.$2}', message: 'removed!');
     });
   }
@@ -78,7 +120,12 @@ abstract final class Family {
   static T? dispose<T extends Object>(Object? id) {
     final entry = _entries.remove((T, id));
     if (entry == null) return null;
-    entry.onDisposeInstance();
+    entry.timer?.cancel();
+    try {
+      entry.onDisposeInstance();
+    } catch (e, s) {
+      Logger.e(e, trace: s, tag: '$T:$id');
+    }
     return entry.instance as T;
   }
 
@@ -87,7 +134,15 @@ abstract final class Family {
   static void disposeAll<T extends Object>() {
     final keys = _entries.keys.where((key) => key.$1 == T).toList();
     for (final key in keys) {
-      _entries.remove(key)?.onDisposeInstance();
+      final entry = _entries.remove(key);
+      if (entry != null) {
+        entry.timer?.cancel();
+        try {
+          entry.onDisposeInstance();
+        } catch (e, s) {
+          Logger.e(e, trace: s, tag: '${key.$1}:${key.$2}');
+        }
+      }
     }
   }
 
@@ -96,7 +151,12 @@ abstract final class Family {
     final entries = _entries.values.toList();
     _entries.clear();
     for (final entry in entries) {
-      await entry.onDisposeInstance();
+      entry.timer?.cancel();
+      try {
+        await entry.onDisposeInstance();
+      } catch (e, s) {
+        Logger.e(e, trace: s, tag: 'Family.reset');
+      }
     }
   }
 }
@@ -111,4 +171,6 @@ class _FamilyEntry {
   final Object instance;
   final bool Function() canDispose;
   final FutureOr<void> Function() onDisposeInstance;
+  Timer? timer;
+  int rescheduleCount = 0;
 }

@@ -12,6 +12,7 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/logging.dart';
+import '../../extensions/command_x.dart';
 import '../../extensions/media_file_x.dart';
 import '../../external_path/service/external_path_service.dart';
 import '../../local_audio/data/playlist_action.dart';
@@ -61,7 +62,7 @@ class CustomContentManager {
       radioService: radioService,
     ),
     shouldDispose: (m) =>
-        m.importExternalPlaylistsCommand.listenerCount == 0 &&
+        m.importExternalPlaylistsCommand.safeToDispose &&
         !m.playlistName.hasListeners,
     onDispose: (m) {
       m.importExternalPlaylistsCommand.dispose();
