@@ -44,9 +44,7 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
-    final hasTracks = watchValue(
-      (HasTracksManager m) => m.command.results,
-    );
+    final hasTracks = watchValue((HasTracksManager m) => m.command.results);
     if (!hasTracks.isRunning && !(hasTracks.data ?? true)) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,

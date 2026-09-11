@@ -475,7 +475,9 @@ class PlayerService {
   }
 
   Future<void> _estimateNext() async {
-    if (audio == null || queue.audios.isEmpty || !queue.audios.contains(audio)) {
+    if (audio == null ||
+        queue.audios.isEmpty ||
+        !queue.audios.contains(audio)) {
       nextAudio = null;
       return;
     }

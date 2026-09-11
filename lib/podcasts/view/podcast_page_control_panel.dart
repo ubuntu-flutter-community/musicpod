@@ -36,11 +36,9 @@ class PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
 
     if (allEpisodes.isEmpty) return;
 
-    if (!episodesManager.hasMore || loadedEpisodes.length >= allEpisodes.length) {
-      playerManager.play(
-        audios: allEpisodes,
-        listName: feedUrl,
-      );
+    if (!episodesManager.hasMore ||
+        loadedEpisodes.length >= allEpisodes.length) {
+      playerManager.play(audios: allEpisodes, listName: feedUrl);
       return;
     }
 
@@ -52,14 +50,10 @@ class PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
       ),
       confirmLabel: '${context.l10n.playAll} (${allEpisodes.length})',
       cancelLabel: '${context.l10n.play} (${loadedEpisodes.length})',
-      onConfirm: () => playerManager.play(
-        audios: allEpisodes,
-        listName: feedUrl,
-      ),
-      onCancel: () => playerManager.play(
-        audios: loadedEpisodes,
-        listName: feedUrl,
-      ),
+      onConfirm: () =>
+          playerManager.play(audios: allEpisodes, listName: feedUrl),
+      onCancel: () =>
+          playerManager.play(audios: loadedEpisodes, listName: feedUrl),
     );
   }
 

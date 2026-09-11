@@ -30,16 +30,15 @@ class LikedAudiosManager {
   static LikedAudiosManager create({
     required LocalAudioManager localAudioManager,
     required LikedAudioPathsManager pathsManager,
-  }) =>
-      Family.of(
-        '$LikedAudiosManager',
-        () => LikedAudiosManager._(
-          localAudioManager: localAudioManager,
-          pathsManager: pathsManager,
-        ),
-        shouldDispose: (m) => m.command.safeToDispose,
-        onDispose: (m) => m.command.dispose(),
-      );
+  }) => Family.of(
+    '$LikedAudiosManager',
+    () => LikedAudiosManager._(
+      localAudioManager: localAudioManager,
+      pathsManager: pathsManager,
+    ),
+    shouldDispose: (m) => m.command.safeToDispose,
+    onDispose: (m) => m.command.dispose(),
+  );
 
   late final Command<PlaylistChange?, List<Audio>> command;
 

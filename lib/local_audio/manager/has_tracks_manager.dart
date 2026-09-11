@@ -18,13 +18,12 @@ class HasTracksManager {
   @factoryMethod
   static HasTracksManager create({
     required LocalAudioManager localAudioManager,
-  }) =>
-      Family.of(
-        '$HasTracksManager',
-        () => HasTracksManager._(localAudioManager: localAudioManager),
-        shouldDispose: (m) => m.command.safeToDispose,
-        onDispose: (m) => m.command.dispose(),
-      );
+  }) => Family.of(
+    '$HasTracksManager',
+    () => HasTracksManager._(localAudioManager: localAudioManager),
+    shouldDispose: (m) => m.command.safeToDispose,
+    onDispose: (m) => m.command.dispose(),
+  );
 
   late final Command<void, bool> command;
 }

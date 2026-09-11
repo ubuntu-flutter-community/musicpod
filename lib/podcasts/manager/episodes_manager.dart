@@ -32,8 +32,10 @@ class EpisodesManager {
 
   void loadMore() {
     if (!hasMore) return;
-    displayedCount.value =
-        (displayedCount.value + pageSize).clamp(0, _allEpisodes.length);
+    displayedCount.value = (displayedCount.value + pageSize).clamp(
+      0,
+      _allEpisodes.length,
+    );
     if (command.value != null) {
       command.value = (
         episodes: _allEpisodes.take(displayedCount.value).toList(),
@@ -132,13 +134,10 @@ class EpisodesManager {
 
         final theOrder =
             (await podcastManager.ascendingPodcasts).contains(feedUrl)
-                ? AudioSortOrder.ascending
-                : AudioSortOrder.descending;
+            ? AudioSortOrder.ascending
+            : AudioSortOrder.descending;
 
-        return (
-          episodes: visible,
-          order: theOrder,
-        );
+        return (episodes: visible, order: theOrder);
       },
       initialValue: null,
       includeLastResultInCommandResults: true,

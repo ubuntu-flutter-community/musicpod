@@ -73,16 +73,17 @@ class FakeEpisodesManagerForControlPanel extends SafeChangeNotifier
     required this.allEpisodes,
     required this.hasMoreEpisodes,
   }) {
-    command = Command.createSync<
-      ({AudioSortOrder? order})?,
-      ({List<Audio>? episodes, AudioSortOrder? order})?
-    >(
-      (_) => (episodes: loadedEpisodes, order: AudioSortOrder.descending),
-      initialValue: (
-        episodes: loadedEpisodes,
-        order: AudioSortOrder.descending,
-      ),
-    );
+    command =
+        Command.createSync<
+          ({AudioSortOrder? order})?,
+          ({List<Audio>? episodes, AudioSortOrder? order})?
+        >(
+          (_) => (episodes: loadedEpisodes, order: AudioSortOrder.descending),
+          initialValue: (
+            episodes: loadedEpisodes,
+            order: AudioSortOrder.descending,
+          ),
+        );
   }
 
   final List<Audio> loadedEpisodes;

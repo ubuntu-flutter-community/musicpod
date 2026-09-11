@@ -128,16 +128,21 @@ class WindowSizeToSettingsListener implements WindowListener {
       if (_debounce?.isActive ?? false) _debounce?.cancel();
       _debounce = Timer(const Duration(seconds: 5), () {
         if (_isClosing) return;
-        _windowManager.getSize().then((v) {
-          if (_isClosing) return;
-          if (_sp.getBool(SPKeys.saveWindowSize) ?? false) {
-            _sp
-                .setInt(SPKeys.windowHeight, v.height.toInt())
-                .then((_) => _sp.setInt(SPKeys.windowWidth, v.width.toInt()));
-          }
-        }).catchError((e, s) {
-          Logger.e(e, trace: s, tag: '$WindowSizeToSettingsListener');
-        });
+        _windowManager
+            .getSize()
+            .then((v) {
+              if (_isClosing) return;
+              if (_sp.getBool(SPKeys.saveWindowSize) ?? false) {
+                _sp
+                    .setInt(SPKeys.windowHeight, v.height.toInt())
+                    .then(
+                      (_) => _sp.setInt(SPKeys.windowWidth, v.width.toInt()),
+                    );
+              }
+            })
+            .catchError((e, s) {
+              Logger.e(e, trace: s, tag: '$WindowSizeToSettingsListener');
+            });
       });
     }
   }
@@ -146,16 +151,19 @@ class WindowSizeToSettingsListener implements WindowListener {
   void onWindowResized() {
     if (_isClosing) return;
     if (isMacOS) {
-      _windowManager.getSize().then((v) {
-        if (_isClosing) return;
-        if (_sp.getBool(SPKeys.saveWindowSize) ?? false) {
-          _sp
-              .setInt(SPKeys.windowHeight, v.height.toInt())
-              .then((_) => _sp.setInt(SPKeys.windowWidth, v.width.toInt()));
-        }
-      }).catchError((e, s) {
-        Logger.e(e, trace: s, tag: '$WindowSizeToSettingsListener');
-      });
+      _windowManager
+          .getSize()
+          .then((v) {
+            if (_isClosing) return;
+            if (_sp.getBool(SPKeys.saveWindowSize) ?? false) {
+              _sp
+                  .setInt(SPKeys.windowHeight, v.height.toInt())
+                  .then((_) => _sp.setInt(SPKeys.windowWidth, v.width.toInt()));
+            }
+          })
+          .catchError((e, s) {
+            Logger.e(e, trace: s, tag: '$WindowSizeToSettingsListener');
+          });
     }
   }
 

@@ -101,20 +101,23 @@ void main() {
     expect(fakeWindowManager.preventCloseSet, isTrue);
   });
 
-  test('onWindowClose invokes PlayerService.shutdown and windowManager.destroy', () async {
-    final listener = WindowSizeToSettingsListener(
-      sharedPreferences: sp,
-      playerService: fakePlayerService,
-      windowManager: fakeWindowManager,
-    );
-    await listener.init();
+  test(
+    'onWindowClose invokes PlayerService.shutdown and windowManager.destroy',
+    () async {
+      final listener = WindowSizeToSettingsListener(
+        sharedPreferences: sp,
+        playerService: fakePlayerService,
+        windowManager: fakeWindowManager,
+      );
+      await listener.init();
 
-    await listener.onWindowClose();
+      await listener.onWindowClose();
 
-    expect(fakePlayerService.shutdownCalled, isTrue);
-    expect(fakeWindowManager.destroyed, isTrue);
-    expect(fakeWindowManager.destroyCallCount, 1);
-  });
+      expect(fakePlayerService.shutdownCalled, isTrue);
+      expect(fakeWindowManager.destroyed, isTrue);
+      expect(fakeWindowManager.destroyCallCount, 1);
+    },
+  );
 
   test('onWindowClose is idempotent and guards against re-entrancy', () async {
     final listener = WindowSizeToSettingsListener(
@@ -135,39 +138,45 @@ void main() {
     expect(fakeWindowManager.destroyCallCount, 1);
   });
 
-  test('onWindowClose always calls windowManager.destroy even if shutdown throws', () async {
-    fakePlayerService.shouldThrowOnShutdown = true;
+  test(
+    'onWindowClose always calls windowManager.destroy even if shutdown throws',
+    () async {
+      fakePlayerService.shouldThrowOnShutdown = true;
 
-    final listener = WindowSizeToSettingsListener(
-      sharedPreferences: sp,
-      playerService: fakePlayerService,
-      windowManager: fakeWindowManager,
-    );
-    await listener.init();
+      final listener = WindowSizeToSettingsListener(
+        sharedPreferences: sp,
+        playerService: fakePlayerService,
+        windowManager: fakeWindowManager,
+      );
+      await listener.init();
 
-    await listener.onWindowClose();
+      await listener.onWindowClose();
 
-    expect(fakePlayerService.shutdownCalled, isTrue);
-    expect(fakeWindowManager.destroyed, isTrue);
-  });
+      expect(fakePlayerService.shutdownCalled, isTrue);
+      expect(fakeWindowManager.destroyed, isTrue);
+    },
+  );
 
-  test('onWindowClose saves window dimensions if saveWindowSize is enabled and not maximized', () async {
-    await sp.setBool(SPKeys.saveWindowSize, true);
+  test(
+    'onWindowClose saves window dimensions if saveWindowSize is enabled and not maximized',
+    () async {
+      await sp.setBool(SPKeys.saveWindowSize, true);
 
-    final listener = WindowSizeToSettingsListener(
-      sharedPreferences: sp,
-      playerService: fakePlayerService,
-      windowManager: fakeWindowManager,
-    );
-    await listener.init();
+      final listener = WindowSizeToSettingsListener(
+        sharedPreferences: sp,
+        playerService: fakePlayerService,
+        windowManager: fakeWindowManager,
+      );
+      await listener.init();
 
-    fakeWindowManager.currentSize = const Size(1024, 768);
+      fakeWindowManager.currentSize = const Size(1024, 768);
 
-    await listener.onWindowClose();
+      await listener.onWindowClose();
 
-    expect(sp.getInt(SPKeys.windowWidth), 1024);
-    expect(sp.getInt(SPKeys.windowHeight), 768);
-  });
+      expect(sp.getInt(SPKeys.windowWidth), 1024);
+      expect(sp.getInt(SPKeys.windowHeight), 768);
+    },
+  );
 
   test('dispose removes listener from windowManager', () async {
     final listener = WindowSizeToSettingsListener(

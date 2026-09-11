@@ -26,13 +26,12 @@ class LikedAudioPathsManager {
   @factoryMethod
   static LikedAudioPathsManager create({
     required LocalAudioManager localAudioManager,
-  }) =>
-      Family.of(
-        '$LikedAudioPathsManager',
-        () => LikedAudioPathsManager._(localAudioManager: localAudioManager),
-        shouldDispose: (m) => m.command.safeToDispose,
-        onDispose: (m) => m.command.dispose(),
-      );
+  }) => Family.of(
+    '$LikedAudioPathsManager',
+    () => LikedAudioPathsManager._(localAudioManager: localAudioManager),
+    shouldDispose: (m) => m.command.safeToDispose,
+    onDispose: (m) => m.command.dispose(),
+  );
 
   late final Command<PlaylistChange?, Set<String>> command;
 
