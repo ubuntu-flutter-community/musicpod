@@ -156,6 +156,7 @@ class PlayerService {
     await _errorSub?.cancel();
     _errorSub = null;
     _timer?.cancel();
+    _timer = null;
     if (disposePlayer) {
       await player.dispose();
     }
@@ -178,8 +179,14 @@ class PlayerService {
   }
 
   void clearQueue() {
-    _queue.audios.removeWhere((e) => e != _audio);
-    _nextAudio = _audio;
+    if (_audio != null) {
+      _queue = Queue(name: _queue.name, audios: [_audio!]);
+      _nextAudio = _audio;
+    } else {
+      _queue = const Queue.empty();
+      _nextAudio = null;
+    }
+    _oldQueue = const Queue.empty();
     _propertiesChangedController.add(true);
   }
 
@@ -195,6 +202,7 @@ class PlayerService {
     }
     if (value?.audioType != _audio?.audioType) {
       _shuffle = false;
+      _oldQueue = const Queue.empty();
       if (value?.isRadio ?? false) {
         // NOTE: this is when the radio stream might stop/stutter/end, so it should start again immediately
         _playlistMode = PlaylistMode.loop;
@@ -221,7 +229,7 @@ class PlayerService {
   Audio? _nextAudio;
   Audio? get nextAudio => _nextAudio;
   set nextAudio(Audio? value) {
-    if (value == null || value == _nextAudio) return;
+    if (value == _nextAudio) return;
     _nextAudio = value;
     _propertiesChangedController.add(true);
   }
@@ -289,10 +297,14 @@ class PlayerService {
         audios: List.from(_queue.audios)..shuffle(),
       );
       setQueue(queue);
-    } else if (_oldQueue != null &&
-        _oldQueue?.name != null &&
-        _oldQueue!.name == _queue.name) {
-      setQueue(_oldQueue!);
+    } else {
+      if (_oldQueue != null &&
+          _oldQueue?.name != null &&
+          _oldQueue!.name == _queue.name &&
+          _oldQueue!.audios.isNotEmpty) {
+        setQueue(_oldQueue!);
+      }
+      _oldQueue = const Queue.empty();
     }
     await _estimateNext();
     _propertiesChangedController.add(true);
@@ -455,21 +467,25 @@ class PlayerService {
 
   Future<void> remove(Audio deleteMe) async {
     _queue.audios.remove(deleteMe);
+    if (_oldQueue != null && _oldQueue!.audios.isNotEmpty) {
+      _oldQueue!.audios.remove(deleteMe);
+    }
     await _estimateNext();
     _propertiesChangedController.add(true);
   }
 
   Future<void> _estimateNext() async {
-    if (audio == null) return;
+    if (audio == null || queue.audios.isEmpty || !queue.audios.contains(audio)) {
+      nextAudio = null;
+      return;
+    }
 
-    if (queue.audios.isNotEmpty && queue.audios.contains(audio)) {
-      final currentIndex = queue.audios.indexOf(audio!);
+    final currentIndex = queue.audios.indexOf(audio!);
 
-      if (currentIndex == queue.audios.length - 1) {
-        nextAudio = queue.audios.elementAt(0);
-      } else {
-        nextAudio = queue.audios.elementAt(queue.audios.indexOf(audio!) + 1);
-      }
+    if (currentIndex == queue.audios.length - 1) {
+      nextAudio = queue.audios.elementAt(0);
+    } else {
+      nextAudio = queue.audios.elementAt(currentIndex + 1);
     }
   }
 
@@ -511,6 +527,7 @@ class PlayerService {
       await _setAudio(audios.elementAtOrNull(index)!);
     } else {
       await setShuffle(false);
+      _oldQueue = const Queue.empty();
       setQueue(Queue(name: listName, audios: audios.toList()));
       await _setAudio(
         (index != null && audios.elementAtOrNull(index) != null)
@@ -610,6 +627,12 @@ class PlayerService {
   }) async {
     if (!markComplete) {
       await _dao.deleteLastPositions(audios);
+      for (final e in audios) {
+        if (e.url != null) {
+          _lastPositions.remove(e.url!);
+        }
+      }
+      _propertiesChangedController.add(true);
       return;
     }
 
@@ -622,6 +645,7 @@ class PlayerService {
     for (final e in valid) {
       _lastPositions[e.url!] = Duration(milliseconds: e.durationMs!.toInt());
     }
+    _propertiesChangedController.add(true);
   }
 
   Future<void> clearAllLastPositions() async {
@@ -805,6 +829,7 @@ class PlayerService {
 
     _nextAudio = null;
     _queue = const Queue.empty();
+    _oldQueue = const Queue.empty();
     _position = Duration.zero;
     _duration = null;
     _buffer = null;
@@ -816,5 +841,40 @@ class PlayerService {
     await player.stop();
     _propertiesChangedController.add(true);
     await dispose(disposePlayer: false);
+  }
+
+  Future<void> shutdown() async {
+    try {
+      _setMediaControlsStop();
+    } catch (e, s) {
+      Logger.e(e, trace: s, tag: '$PlayerService');
+    }
+
+    try {
+      await persistPlayerState();
+    } catch (e, s) {
+      Logger.e(e, trace: s, tag: '$PlayerService');
+    }
+
+    try {
+      await _exposeService.exposeTitleOnline(
+        title: '',
+        artist: '',
+        additionalInfo: '',
+        imageUrl: null,
+      );
+    } catch (_) {}
+
+    try {
+      await player.stop();
+    } catch (e, s) {
+      Logger.e(e, trace: s, tag: '$PlayerService');
+    }
+
+    try {
+      await dispose(disposePlayer: true);
+    } catch (e, s) {
+      Logger.e(e, trace: s, tag: '$PlayerService');
+    }
   }
 }

@@ -51,8 +51,6 @@ extension ObjectX on Object? {
               AppConfig.appTitle,
               '${(this as DioException).requestOptions.uri.host}',
             )
-          : (this as DioException).response?.statusCode == 404
-          ? l10n.noLyricsFound
           : (this as DioException).message ?? (this as DioException).toString(),
     PlayAnywhereBadAudiosException() => switch ((this
             as PlayAnywhereBadAudiosException)

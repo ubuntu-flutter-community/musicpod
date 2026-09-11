@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 
+import '../common/logging.dart';
 import 'app_config.dart';
 import '../player/service/player_service.dart';
 import '../settings/data/shared_preferences_keys.dart';
@@ -27,9 +28,14 @@ class WindowSizeToSettingsListener implements WindowListener {
   final SharedPreferences _sp;
   final PlayerService _playerService;
 
+  bool _isClosing = false;
+  Timer? _debounce;
+
   @PostConstruct(preResolve: true)
   Future<void> init() async {
     if (!AppConfig.windowManagerImplemented) return;
+
+    await _windowManager.setPreventClose(true);
 
     if (_sp.getBool(SPKeys.saveWindowSize) == null) {
       await _sp.setBool(SPKeys.saveWindowSize, true);
@@ -50,7 +56,38 @@ class WindowSizeToSettingsListener implements WindowListener {
   void onWindowBlur() {}
 
   @override
-  Future<void> onWindowClose() => _playerService.persistPlayerState();
+  Future<void> onWindowClose() async {
+    if (_isClosing) return;
+    _isClosing = true;
+
+    _debounce?.cancel();
+
+    try {
+      if (_sp.getBool(SPKeys.saveWindowSize) ?? false) {
+        final isMaximized = _sp.getBool(SPKeys.windowMaximized) ?? false;
+        final isFullscreen = _sp.getBool(SPKeys.windowFullscreen) ?? false;
+        if (!isMaximized && !isFullscreen) {
+          try {
+            final size = await _windowManager.getSize();
+            if (size.width > 0 && size.height > 0) {
+              await _sp.setInt(SPKeys.windowHeight, size.height.toInt());
+              await _sp.setInt(SPKeys.windowWidth, size.width.toInt());
+            }
+          } catch (_) {}
+        }
+      }
+
+      await _playerService.shutdown();
+    } catch (e, s) {
+      Logger.e(e, trace: s, tag: '$WindowSizeToSettingsListener');
+    } finally {
+      try {
+        await _windowManager.destroy();
+      } catch (e, s) {
+        Logger.e(e, trace: s, tag: '$WindowSizeToSettingsListener');
+      }
+    }
+  }
 
   @override
   void onWindowDocked() {}
@@ -79,21 +116,27 @@ class WindowSizeToSettingsListener implements WindowListener {
   @override
   void onWindowMoved() {}
 
-  // Note: linux and windows do not have window resized, so we need to use window resize
-  // and debounce it
-  Timer? _debounce;
-  void dispose() => _debounce?.cancel();
+  void dispose() {
+    _debounce?.cancel();
+    _windowManager.removeListener(this);
+  }
+
   @override
   void onWindowResize() {
+    if (_isClosing) return;
     if (isLinux || isWindows) {
       if (_debounce?.isActive ?? false) _debounce?.cancel();
       _debounce = Timer(const Duration(seconds: 5), () {
-        WindowManager.instance.getSize().then((v) {
+        if (_isClosing) return;
+        _windowManager.getSize().then((v) {
+          if (_isClosing) return;
           if (_sp.getBool(SPKeys.saveWindowSize) ?? false) {
             _sp
                 .setInt(SPKeys.windowHeight, v.height.toInt())
                 .then((_) => _sp.setInt(SPKeys.windowWidth, v.width.toInt()));
           }
+        }).catchError((e, s) {
+          Logger.e(e, trace: s, tag: '$WindowSizeToSettingsListener');
         });
       });
     }
@@ -101,13 +144,17 @@ class WindowSizeToSettingsListener implements WindowListener {
 
   @override
   void onWindowResized() {
+    if (_isClosing) return;
     if (isMacOS) {
-      WindowManager.instance.getSize().then((v) {
+      _windowManager.getSize().then((v) {
+        if (_isClosing) return;
         if (_sp.getBool(SPKeys.saveWindowSize) ?? false) {
           _sp
               .setInt(SPKeys.windowHeight, v.height.toInt())
               .then((_) => _sp.setInt(SPKeys.windowWidth, v.width.toInt()));
         }
+      }).catchError((e, s) {
+        Logger.e(e, trace: s, tag: '$WindowSizeToSettingsListener');
       });
     }
   }
