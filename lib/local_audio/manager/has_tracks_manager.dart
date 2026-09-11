@@ -6,31 +6,24 @@ import '../../extensions/command_x.dart';
 import 'local_audio_manager.dart';
 
 @injectable
-class FindAlbumNameManager {
-  FindAlbumNameManager._({
-    required int albumId,
-    required LocalAudioManager localAudioManager,
-  }) {
+class HasTracksManager {
+  HasTracksManager._({required LocalAudioManager localAudioManager}) {
     command = Command.createAsyncNoParam(
-      () => localAudioManager.findAlbumName(albumId),
-      initialValue: null,
+      localAudioManager.hasTracks,
+      initialValue: true,
     );
     command.run();
   }
 
   @factoryMethod
-  static FindAlbumNameManager create({
-    @factoryParam required int albumId,
+  static HasTracksManager create({
     required LocalAudioManager localAudioManager,
   }) => Family.of(
-    albumId,
-    () => FindAlbumNameManager._(
-      albumId: albumId,
-      localAudioManager: localAudioManager,
-    ),
+    '$HasTracksManager',
+    () => HasTracksManager._(localAudioManager: localAudioManager),
     shouldDispose: (m) => m.command.safeToDispose,
     onDispose: (m) => m.command.dispose(),
   );
 
-  late final Command<void, String?> command;
+  late final Command<void, bool> command;
 }

@@ -118,16 +118,12 @@ class _PodcastPage extends StatelessWidget with WatchItMixin {
       body: RefreshIndicator(
         onRefresh:
             di<SubscribedPodcastsManager>().command.value.contains(feedUrl)
-            ? () async => di<PodcastUpdatesManager>().command
-                  .runAsync(
-                    PodcastUpdateCapsule(
-                      feedUrls: [feedUrl],
-                      type: PodcastUpdateType.update,
-                    ),
-                  )
-                  .then(
-                    (_) => di<EpisodesManager>(param1: feedUrl).command.run(),
-                  )
+            ? () async => di<PodcastUpdatesManager>().command.runAsync(
+                PodcastUpdateCapsule(
+                  feedUrls: [feedUrl],
+                  type: PodcastUpdateType.update,
+                ),
+              )
             : () async {},
         child: AdaptiveMultiLayoutBody(
           header: PodcastPageHeader(feedUrl: feedUrl),

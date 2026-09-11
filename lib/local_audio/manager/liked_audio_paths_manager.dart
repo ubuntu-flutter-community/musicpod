@@ -6,41 +6,34 @@ import '../../common/data/audio.dart';
 import '../../common/util/family.dart';
 import '../../extensions/command_x.dart';
 import '../data/playlist_action.dart';
-import 'liked_audio_paths_manager.dart';
+import 'liked_audios_manager.dart';
 import 'local_audio_manager.dart';
 
 @injectable
-class LikedAudiosManager {
-  LikedAudiosManager._({
-    required LocalAudioManager localAudioManager,
-    required LikedAudioPathsManager pathsManager,
-  }) {
+class LikedAudioPathsManager {
+  LikedAudioPathsManager._({required LocalAudioManager localAudioManager}) {
     command = Command.createAsync((param) async {
       if (param != null) {
         await localAudioManager.createOrChangeLikedAudios(param);
-        pathsManager.command.run();
+        Family.get<LikedAudiosManager>('$LikedAudiosManager')?.command.run();
       }
 
-      return (await localAudioManager.findLikedAudios()) ?? [];
-    }, initialValue: []);
+      return localAudioManager.findLikedAudioPaths();
+    }, initialValue: {});
     command.run();
   }
 
   @factoryMethod
-  static LikedAudiosManager create({
+  static LikedAudioPathsManager create({
     required LocalAudioManager localAudioManager,
-    required LikedAudioPathsManager pathsManager,
   }) => Family.of(
-    '$LikedAudiosManager',
-    () => LikedAudiosManager._(
-      localAudioManager: localAudioManager,
-      pathsManager: pathsManager,
-    ),
+    '$LikedAudioPathsManager',
+    () => LikedAudioPathsManager._(localAudioManager: localAudioManager),
     shouldDispose: (m) => m.command.safeToDispose,
     onDispose: (m) => m.command.dispose(),
   );
 
-  late final Command<PlaylistChange?, List<Audio>> command;
+  late final Command<PlaylistChange?, Set<String>> command;
 
   void addLikedAudios(List<Audio> audios) => command.run(
     PlaylistChange(
@@ -49,6 +42,7 @@ class LikedAudiosManager {
       audios: audios,
     ),
   );
+
   void removeLikedAudios(List<Audio> audios) => command.run(
     PlaylistChange(
       id: PageIDs.likedAudios,

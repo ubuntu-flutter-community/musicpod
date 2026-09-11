@@ -4,6 +4,7 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/util/family.dart';
+import '../../extensions/command_x.dart';
 import 'local_audio_manager.dart';
 
 @injectable
@@ -29,7 +30,8 @@ class PlaylistManager {
       playlistId: playlistId,
       localAudioManager: localAudioManager,
     ),
-    shouldDispose: (t) => t.command.listenerCount == 0,
+    shouldDispose: (t) => t.command.safeToDispose,
+    onDispose: (t) => t.command.dispose(),
   );
 
   late final Command<void, List<Audio>?> command;

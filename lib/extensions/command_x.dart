@@ -5,6 +5,8 @@ import 'package:flutter_it/flutter_it.dart';
 enum RunWhen { paramChanges, hasNoValueAndNoErrors }
 
 extension CommandX<TParam, TResult> on Command<TParam, TResult> {
+  bool get safeToDispose => !isRunning.value && listenerCount == 0;
+
   void runRestricted({
     TParam? param,
     bool immediatelyClearErrors = false,

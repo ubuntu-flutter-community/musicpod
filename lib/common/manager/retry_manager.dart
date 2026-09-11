@@ -23,6 +23,7 @@ class RetryManager {
         capsule.retryViewId,
         () => RetryManager._(capsule: capsule),
         shouldDispose: (t) => !t.cooldown.hasListeners,
+        onDispose: (t) => t.retryTicker?.cancel(),
         autoDisposeAfter: const Duration(minutes: 5),
       );
 

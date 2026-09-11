@@ -7,6 +7,7 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../common/util/family.dart';
 import '../../common/view/icons.dart';
+import '../../extensions/command_x.dart';
 import '../../extensions/platform_x.dart';
 import '../../local_audio/service/local_audio_service.dart';
 import '../../lyrics/data/online_lyrics_source.dart';
@@ -282,7 +283,7 @@ class SettingsTypeManager {
       type: type,
       settingsService: settingsService,
     ),
-    shouldDispose: (t) => t.command.listenerCount == 0,
+    shouldDispose: (t) => t.command.safeToDispose,
     onDispose: (t) => t.command.dispose(),
   );
 }

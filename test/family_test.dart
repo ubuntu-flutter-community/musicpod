@@ -23,11 +23,13 @@ void main() {
         'item-1',
         () => _TestResource('item-1'),
         shouldDispose: (r) => r.canDispose,
+        onDispose: (r) => r.isDisposed = true,
       );
       final a2 = Family.of(
         'item-1',
         () => _TestResource('item-1'),
         shouldDispose: (r) => r.canDispose,
+        onDispose: (r) => r.isDisposed = true,
       );
 
       expect(identical(a1, a2), isTrue);
@@ -38,11 +40,13 @@ void main() {
         'item-1',
         () => _TestResource('item-1'),
         shouldDispose: (r) => r.canDispose,
+        onDispose: (r) => r.isDisposed = true,
       );
       final b = Family.of(
         'item-2',
         () => _TestResource('item-2'),
         shouldDispose: (r) => r.canDispose,
+        onDispose: (r) => r.isDisposed = true,
       );
 
       expect(identical(a, b), isFalse);
@@ -57,11 +61,13 @@ void main() {
           '$_TestResource',
           () => _TestResource('scoped'),
           shouldDispose: (r) => r.canDispose,
+          onDispose: (r) => r.isDisposed = true,
         );
         final b = Family.of(
           '$_TestResource',
           () => _TestResource('scoped'),
           shouldDispose: (r) => r.canDispose,
+          onDispose: (r) => r.isDisposed = true,
         );
 
         expect(identical(a, b), isTrue);
@@ -77,6 +83,7 @@ void main() {
           'lookup-1',
           () => _TestResource('lookup-1'),
           shouldDispose: (r) => r.canDispose,
+          onDispose: (r) => r.isDisposed = true,
         );
 
         expect(Family.get<_TestResource>('lookup-1'), equals(a));
@@ -103,6 +110,7 @@ void main() {
         'manual-1',
         () => _TestResource('manual-1'),
         shouldDispose: (r) => r.canDispose,
+        onDispose: (r) => r.isDisposed = true,
       );
       expect(identical(fresh, a), isFalse);
     });
@@ -161,6 +169,78 @@ void main() {
       res.canDispose = true;
       await Future.delayed(const Duration(milliseconds: 100));
       expect(res.isDisposed, isTrue);
+    });
+
+    test('exposes diagnostic count, activeKeys, and isRegistered', () {
+      expect(Family.count, equals(0));
+      expect(Family.activeKeys, isEmpty);
+      expect(Family.isRegistered<_TestResource>('diag-1'), isFalse);
+
+      final res = Family.of(
+        'diag-1',
+        () => _TestResource('diag-1'),
+        shouldDispose: (r) => r.canDispose,
+        onDispose: (r) => r.isDisposed = true,
+      );
+
+      expect(res.id, equals('diag-1'));
+      expect(Family.count, equals(1));
+      expect(Family.activeKeys, contains((_TestResource, 'diag-1')));
+      expect(Family.isRegistered<_TestResource>('diag-1'), isTrue);
+
+      Family.dispose<_TestResource>('diag-1');
+      expect(Family.count, equals(0));
+      expect(Family.isRegistered<_TestResource>('diag-1'), isFalse);
+    });
+
+    test(
+      're-accessing an existing instance refreshes the auto-dispose timer',
+      () async {
+        final res = Family.of(
+          'refresh-1',
+          () => _TestResource('refresh-1'),
+          shouldDispose: (r) => r.canDispose,
+          onDispose: (r) => r.isDisposed = true,
+          autoDisposeAfter: const Duration(milliseconds: 60),
+        );
+
+        res.canDispose = true;
+
+        // At 30ms, re-accessing the instance resets the 60ms timer (now expires at ~90ms)
+        await Future.delayed(const Duration(milliseconds: 30));
+        Family.of(
+          'refresh-1',
+          () => _TestResource('refresh-1'),
+          shouldDispose: (r) => r.canDispose,
+          onDispose: (r) => r.isDisposed = true,
+          autoDisposeAfter: const Duration(milliseconds: 60),
+        );
+
+        // At 70ms: original timer (60ms) would have disposed it, but timer was refreshed
+        await Future.delayed(const Duration(milliseconds: 40));
+        expect(res.isDisposed, isFalse);
+        expect(Family.isRegistered<_TestResource>('refresh-1'), isTrue);
+
+        // At 120ms: refreshed timer has now elapsed and disposed it
+        await Future.delayed(const Duration(milliseconds: 50));
+        expect(res.isDisposed, isTrue);
+        expect(Family.isRegistered<_TestResource>('refresh-1'), isFalse);
+      },
+    );
+
+    test('handles exceptions in onDispose gracefully without crashing', () {
+      Family.of(
+        'throw-dispose',
+        () => _TestResource('throw-dispose'),
+        shouldDispose: (r) => r.canDispose,
+        onDispose: (r) => throw Exception('Disposal failure'),
+      );
+
+      expect(
+        () => Family.dispose<_TestResource>('throw-dispose'),
+        returnsNormally,
+      );
+      expect(Family.isRegistered<_TestResource>('throw-dispose'), isFalse);
     });
   });
 }

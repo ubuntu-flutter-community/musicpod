@@ -2,6 +2,7 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../common/util/family.dart';
+import '../../extensions/command_x.dart';
 import '../service/podcast_service.dart';
 
 @injectable
@@ -34,7 +35,7 @@ class PodcastGenreManager {
     () =>
         PodcastGenreManager._(feedUrl: feedUrl, podcastService: podcastService),
     shouldDispose: (m) =>
-        m.findCommand.listenerCount == 0 && m.updateCommand.listenerCount == 0,
+        m.findCommand.safeToDispose && m.updateCommand.safeToDispose,
     onDispose: (m) {
       m.findCommand.dispose();
       m.updateCommand.dispose();

@@ -44,6 +44,8 @@ import 'local_audio/manager/find_all_genres_manager.dart' as _i429;
 import 'local_audio/manager/find_all_tracks_manager.dart' as _i178;
 import 'local_audio/manager/find_artist_of_album_manager.dart' as _i88;
 import 'local_audio/manager/find_titles_of_artist_manager.dart' as _i665;
+import 'local_audio/manager/has_tracks_manager.dart' as _i754;
+import 'local_audio/manager/liked_audio_paths_manager.dart' as _i311;
 import 'local_audio/manager/liked_audios_manager.dart' as _i372;
 import 'local_audio/manager/local_audio_manager.dart' as _i76;
 import 'local_audio/manager/local_cover_manager.dart' as _i612;
@@ -68,6 +70,7 @@ import 'podcasts/manager/podcast_genre_manager.dart' as _i990;
 import 'podcasts/manager/podcast_load_genres_manager.dart' as _i141;
 import 'podcasts/manager/podcast_manager.dart' as _i819;
 import 'podcasts/manager/podcast_short_info_manager.dart' as _i212;
+import 'podcasts/manager/podcast_updated_feeds_manager.dart' as _i605;
 import 'podcasts/manager/podcast_updates_manager.dart' as _i851;
 import 'podcasts/manager/subscribed_podcasts_manager.dart' as _i1055;
 import 'podcasts/persistence/podcast_dao.dart' as _i597;
@@ -289,8 +292,8 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioDao: gh<_i688.LocalAudioDao>(),
       ),
     );
-    gh.factory<_i851.PodcastUpdatesManager>(
-      () => _i851.PodcastUpdatesManager.create(
+    gh.factory<_i605.PodcastUpdatedFeedsManager>(
+      () => _i605.PodcastUpdatedFeedsManager.create(
         podcastService: gh<_i529.PodcastService>(),
       ),
     );
@@ -401,6 +404,12 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioService: gh<_i985.LocalAudioService>(),
       ),
     );
+    gh.factory<_i851.PodcastUpdatesManager>(
+      () => _i851.PodcastUpdatesManager.create(
+        podcastService: gh<_i529.PodcastService>(),
+        feedsManager: gh<_i605.PodcastUpdatedFeedsManager>(),
+      ),
+    );
     gh.factory<_i354.SearchManager>(
       () => _i354.SearchManager.create(
         radioManager: gh<_i443.RadioManager>(),
@@ -417,6 +426,16 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i399.PodcastFeedsWithDownloadsManager>(
       () => _i399.PodcastFeedsWithDownloadsManager.create(
         podcastManager: gh<_i819.PodcastManager>(),
+      ),
+    );
+    gh.factory<_i754.HasTracksManager>(
+      () => _i754.HasTracksManager.create(
+        localAudioManager: gh<_i76.LocalAudioManager>(),
+      ),
+    );
+    gh.factory<_i311.LikedAudioPathsManager>(
+      () => _i311.LikedAudioPathsManager.create(
+        localAudioManager: gh<_i76.LocalAudioManager>(),
       ),
     );
     gh.lazySingleton<_i1030.PinnedAlbumIDsManager>(
@@ -483,13 +502,16 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i178.FindAllTracksManager>(
       () => _i178.FindAllTracksManager.create(gh<_i76.LocalAudioManager>()),
     );
-    gh.factory<_i372.LikedAudiosManager>(
-      () => _i372.LikedAudiosManager.create(gh<_i76.LocalAudioManager>()),
-    );
     gh.factoryParam<_i438.PlaylistManager, String, dynamic>(
       (playlistId, _) => _i438.PlaylistManager.create(
         playlistId: playlistId,
         localAudioManager: gh<_i76.LocalAudioManager>(),
+      ),
+    );
+    gh.factory<_i372.LikedAudiosManager>(
+      () => _i372.LikedAudiosManager.create(
+        localAudioManager: gh<_i76.LocalAudioManager>(),
+        pathsManager: gh<_i311.LikedAudioPathsManager>(),
       ),
     );
     gh.factory<_i925.CustomContentManager>(

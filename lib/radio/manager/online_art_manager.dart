@@ -2,6 +2,7 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../common/util/family.dart';
+import '../../extensions/command_x.dart';
 import '../service/online_art_service.dart';
 
 @injectable
@@ -25,7 +26,8 @@ class OnlineArtManager {
       icyTitle: icyTitle,
       onlineArtService: di<OnlineArtService>(),
     ),
-    shouldDispose: (t) => t.command.listenerCount == 0,
+    shouldDispose: (t) => t.command.safeToDispose,
+    onDispose: (t) => t.command.dispose(),
     autoDisposeAfter: const Duration(minutes: 5),
   );
 

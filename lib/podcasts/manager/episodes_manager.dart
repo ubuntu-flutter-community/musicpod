@@ -14,11 +14,39 @@ import 'podcast_short_info_manager.dart';
 
 @injectable
 class EpisodesManager {
+  static const int pageSize = 25;
+
   ListenableSubscription? updatesOnlySubscription;
   ListenableSubscription? downloadsOnlySubscription;
   ListenableSubscription? downloadCommandsSubscription;
   ListenableSubscription? searchQuerySubscription;
   ListenableSubscription? filterSubscription;
+
+  List<Audio> _allEpisodes = [];
+
+  final displayedCount = SafeValueNotifier<int>(pageSize);
+
+  bool get hasMore => displayedCount.value < _allEpisodes.length;
+  int get totalCount => _allEpisodes.length;
+  List<Audio> get allFilteredEpisodes => List.unmodifiable(_allEpisodes);
+
+  void loadMore() {
+    if (!hasMore) return;
+    displayedCount.value = (displayedCount.value + pageSize).clamp(
+      0,
+      _allEpisodes.length,
+    );
+    if (command.value != null) {
+      command.value = (
+        episodes: _allEpisodes.take(displayedCount.value).toList(),
+        order: command.value!.order,
+      );
+    }
+  }
+
+  void _resetPaging() {
+    displayedCount.value = pageSize;
+  }
 
   EpisodesManager._({
     required String feedUrl,
@@ -26,20 +54,32 @@ class EpisodesManager {
     required DownloadManager downloadsManager,
     required PlayerManager playerManager,
   }) {
-    updatesOnlySubscription ??= podcastManager.updatesOnly.listen(
-      (_, _) => command.run(),
-    );
-    downloadsOnlySubscription ??= podcastManager.downloadsOnly.listen(
-      (_, _) => command.run(),
-    );
+    updatesOnlySubscription ??= podcastManager.updatesOnly.listen((_, _) {
+      _resetPaging();
+      command.run();
+    });
+    downloadsOnlySubscription ??= podcastManager.downloadsOnly.listen((_, _) {
+      _resetPaging();
+      command.run();
+    });
     downloadCommandsSubscription ??= downloadsManager.downloadCommands
         .select((v) => v.entries.any((e) => e.key.feedUrl == feedUrl))
         .listen((_, _) => command.run());
-    searchQuerySubscription ??= searchQuery.listen((_, _) => command.run());
-    filterSubscription ??= filter.listen((_, _) => command.run());
+    searchQuerySubscription ??= searchQuery.listen((_, _) {
+      _resetPaging();
+      command.run();
+    });
+    filterSubscription ??= filter.listen((_, _) {
+      _resetPaging();
+      command.run();
+    });
 
     command = Command.createAsync(
       (param) async {
+        if (param?.order != null) {
+          _resetPaging();
+        }
+
         final searchQuery = this.searchQuery.value;
         final filter = this.filter.value;
         final hideCompletedEpisodes = podcastManager.updatesOnly.value;
@@ -82,12 +122,22 @@ class EpisodesManager {
 
         di<PodcastShortInfoManager>(param1: feedUrl).command.runRestricted();
 
-        return (
-          episodes: episodes,
-          order: (await podcastManager.ascendingPodcasts).contains(feedUrl)
-              ? AudioSortOrder.ascending
-              : AudioSortOrder.descending,
-        );
+        _allEpisodes = episodes;
+        final currentCount = displayedCount.value.clamp(0, _allEpisodes.length);
+        final visible = _allEpisodes
+            .take(
+              currentCount == 0 && _allEpisodes.isNotEmpty
+                  ? pageSize
+                  : currentCount,
+            )
+            .toList();
+
+        final theOrder =
+            (await podcastManager.ascendingPodcasts).contains(feedUrl)
+            ? AudioSortOrder.ascending
+            : AudioSortOrder.descending;
+
+        return (episodes: visible, order: theOrder);
       },
       initialValue: null,
       includeLastResultInCommandResults: true,
@@ -110,7 +160,7 @@ class EpisodesManager {
       downloadsManager: downloadsManager,
       playerManager: playerManager,
     ),
-    shouldDispose: (instance) => instance.command.listenerCount == 0,
+    shouldDispose: (instance) => instance.command.safeToDispose,
     onDispose: (instance) {
       instance.command.dispose();
       instance.updatesOnlySubscription?.cancel();
@@ -118,6 +168,10 @@ class EpisodesManager {
       instance.downloadCommandsSubscription?.cancel();
       instance.searchQuerySubscription?.cancel();
       instance.filterSubscription?.cancel();
+      instance.displayedCount.dispose();
+      instance.showSearch.dispose();
+      instance.searchQuery.dispose();
+      instance.filter.dispose();
     },
   );
 

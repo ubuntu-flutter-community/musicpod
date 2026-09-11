@@ -5,6 +5,7 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 import '../../common/data/audio.dart';
 import '../../common/util/family.dart';
 import '../../common/view/audio_filter.dart';
+import '../../extensions/command_x.dart';
 import 'local_audio_manager.dart';
 
 @injectable
@@ -31,7 +32,7 @@ class FindTitlesOfArtistManager {
       localAudioManager: localAudioManager,
     ),
     shouldDispose: (m) =>
-        m.command.listenerCount == 0 && !m.useArtistGridView.hasListeners,
+        m.command.safeToDispose && !m.useArtistGridView.hasListeners,
     onDispose: (m) {
       m.command.dispose();
       m.useArtistGridView.dispose();

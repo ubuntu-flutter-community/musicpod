@@ -2,6 +2,7 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../common/util/family.dart';
+import '../../extensions/command_x.dart';
 import 'local_audio_manager.dart';
 
 @injectable
@@ -27,7 +28,7 @@ class FindArtistOfAlbumManager {
       albumId: albumId,
       localAudioManager: localAudioManager,
     ),
-    shouldDispose: (m) => m.command.listenerCount == 0,
+    shouldDispose: (m) => m.command.safeToDispose,
     onDispose: (m) => m.command.dispose(),
   );
 

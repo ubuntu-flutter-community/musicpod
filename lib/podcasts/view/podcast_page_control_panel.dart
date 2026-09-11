@@ -4,7 +4,10 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/audio_tile_option_button.dart';
 import '../../common/view/avatar_play_button.dart';
+import '../../common/view/confirm.dart';
 import '../../common/view/theme.dart';
+import '../../extensions/build_context_x.dart';
+import '../../player/manager/player_manager.dart';
 import '../manager/episodes_manager.dart';
 import '../manager/podcast_short_info_manager.dart';
 import 'podcast_mark_done_button.dart';
@@ -17,6 +20,42 @@ class PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
   const PodcastPageControlPanel({super.key, required this.feedUrl});
 
   final String feedUrl;
+
+  void _onPlayAllPressed(BuildContext context) {
+    final playerManager = di<PlayerManager>();
+    final pageIsQueue = playerManager.queue.name == feedUrl;
+
+    if (pageIsQueue) {
+      playerManager.playOrPause();
+      return;
+    }
+
+    final episodesManager = di<EpisodesManager>(param1: feedUrl);
+    final allEpisodes = episodesManager.allFilteredEpisodes;
+    final loadedEpisodes = episodesManager.command.value?.episodes ?? [];
+
+    if (allEpisodes.isEmpty) return;
+
+    if (!episodesManager.hasMore ||
+        loadedEpisodes.length >= allEpisodes.length) {
+      playerManager.play(audios: allEpisodes, listName: feedUrl);
+      return;
+    }
+
+    ConfirmationDialog.show(
+      context: context,
+      title: Text(context.l10n.playAll),
+      content: Text(
+        'Play only the ${loadedEpisodes.length} loaded episodes or all ${allEpisodes.length} episodes?',
+      ),
+      confirmLabel: '${context.l10n.playAll} (${allEpisodes.length})',
+      cancelLabel: '${context.l10n.play} (${loadedEpisodes.length})',
+      onConfirm: () =>
+          playerManager.play(audios: allEpisodes, listName: feedUrl),
+      onCancel: () =>
+          playerManager.play(audios: loadedEpisodes, listName: feedUrl),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +82,7 @@ class PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
           AvatarPlayButton(
             pageId: feedUrl,
             audioPageType: AudioPageType.podcast,
+            onPressed: () => _onPlayAllPressed(context),
           ),
           PodcastPageSearchButton(feedUrl: feedUrl),
           PodcastReorderButton(feedUrl: feedUrl),

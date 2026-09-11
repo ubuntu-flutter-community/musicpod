@@ -2,6 +2,7 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../common/util/family.dart';
+import '../../extensions/command_x.dart';
 import '../service/local_audio_service.dart';
 
 @injectable
@@ -10,8 +11,8 @@ class AlbumIDsOfGenreManager {
     required String genre,
     required LocalAudioService service,
   }) {
-    command = Command.createAsync(
-      (genre) => service.findAlbumIDsOfGenre(genre),
+    command = Command.createAsyncNoParam(
+      () => service.findAlbumIDsOfGenre(genre),
       initialValue: null,
     );
 
@@ -25,9 +26,9 @@ class AlbumIDsOfGenreManager {
   }) => Family.of(
     genre,
     () => AlbumIDsOfGenreManager._(genre: genre, service: service),
-    shouldDispose: (m) => m.command.listenerCount == 0,
+    shouldDispose: (m) => m.command.safeToDispose,
     onDispose: (m) => m.command.dispose(),
   );
 
-  late final Command<String, List<int>?> command;
+  late final Command<void, List<int>?> command;
 }

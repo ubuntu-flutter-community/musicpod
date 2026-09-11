@@ -4,6 +4,7 @@ import 'package:injectable/injectable.dart';
 import '../../common/logging.dart';
 import '../../common/persistence/database.dart';
 import '../../common/util/family.dart';
+import '../../extensions/command_x.dart';
 import '../../local_audio/manager/local_audio_manager.dart';
 import '../../local_audio/manager/pinned_album_ids_manager.dart';
 import '../../local_audio/manager/playlist_ids_manager.dart';
@@ -90,7 +91,7 @@ class WipeManager {
       playerManager: playerManager,
       database: database,
     ),
-    shouldDispose: (m) => m.command.listenerCount == 0,
+    shouldDispose: (m) => m.command.safeToDispose,
     onDispose: (m) => m.command.dispose(),
   );
 

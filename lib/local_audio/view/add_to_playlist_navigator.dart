@@ -9,7 +9,7 @@ import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../manager/liked_audios_manager.dart';
+import '../manager/liked_audio_paths_manager.dart';
 import '../manager/local_audio_manager.dart';
 import '../data/playlist_action.dart';
 import '../manager/playlist_ids_manager.dart';
@@ -111,7 +111,7 @@ class _PlaylistTile extends StatelessWidget {
       contentPadding: padding,
       onTap: () {
         if (playlistId == PageIDs.likedAudios) {
-          di<LikedAudiosManager>().addLikedAudios(audios);
+          di<LikedAudioPathsManager>().addLikedAudios(audios);
         } else {
           di<PlaylistIDsManager>().command.run(
             PlaylistChange(

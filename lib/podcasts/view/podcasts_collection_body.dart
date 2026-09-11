@@ -6,6 +6,7 @@ import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
+import '../../common/view/clean_up_caches.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/default_page_body.dart';
 import '../../common/view/error_page.dart';
@@ -31,9 +32,10 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    callOnceAfterThisBuild(
-      (context) => di<PodcastCleanManager>().command.run(),
-    );
+    callOnceAfterThisBuild((context) {
+      clearInMemoryImageCache();
+      di<PodcastCleanManager>().command.run();
+    });
 
     onDispose(PodcastUpdatesManager.dispose);
 

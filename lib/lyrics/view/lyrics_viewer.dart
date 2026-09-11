@@ -120,6 +120,7 @@ class _PlayerLyricsState extends State<_PlayerLyrics> {
             onError: (error, lastResult, param) => Center(
               child: ErrorRetryBody(
                 error: error,
+                errorText: context.l10n.fetchingLyricsOnlineFailed,
                 stackTrace:
                     di<LyricsManager>().command.errors.value?.stackTrace ??
                     StackTrace.current,

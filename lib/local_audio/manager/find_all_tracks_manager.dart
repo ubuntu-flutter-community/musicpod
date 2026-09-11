@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/util/family.dart';
+import '../../extensions/command_x.dart';
 import 'local_audio_manager.dart';
 
 @injectable
@@ -20,7 +21,7 @@ class FindAllTracksManager {
       Family.of(
         '$FindAllTracksManager',
         () => FindAllTracksManager._(localAudioManager),
-        shouldDispose: (m) => m.command.listenerCount == 0,
+        shouldDispose: (m) => m.command.safeToDispose,
         onDispose: (m) => m.command.dispose(),
       );
 
