@@ -691,5 +691,230 @@
     "pictures": "Imagens",
     "localPictureTypeOther": "Outros",
     "localPictureTypeFileIcon32x32": "Ícone 32x32",
-    "localPictureTypeOtherFileIcon": "Ícone de outro arquivo"
+    "localPictureTypeOtherFileIcon": "Ícone de outro arquivo",
+    "useBlurredPlayerBackgroundDescription": "",
+    "findEpisodesTimeoutMessage": "",
+    "@findEpisodesTimeoutMessage": {
+        "placeholders": {
+            "podcastName": {
+                "type": "String"
+            }
+        }
+    },
+    "localPictureTypeLyricistTextWriter": "",
+    "lookUpRadioBrowserHostsTimouted": "",
+    "usePlayerColorTitle": "",
+    "fetchingLyricsOnlineFailed": "",
+    "appendMediaToQueueTitle": "",
+    "geniusAlsoProvidesArt": "",
+    "selectColorShade": "",
+    "localPictureTypeBandOrchestra": "",
+    "onlineLyricsSourceTitle": "",
+    "fetchingLyricsOnlineTimeoutMessage": "",
+    "errorDetails": "",
+    "@errorDetails": {
+        "placeholders": {
+            "details": {
+                "type": "String"
+            }
+        }
+    },
+    "importingPlaylistsPleaseWait": "",
+    "downloadsOfLatestRelease": "",
+    "@downloadsOfLatestRelease": {
+        "placeholders": {
+            "latestRelease": {
+                "type": "String"
+            }
+        }
+    },
+    "podcastFailedHostLookup": "",
+    "importingPodcastsPleaseWait": "",
+    "disc": "",
+    "radioBrowserLoadingTagsTimeouted": "",
+    "lyrics": "",
+    "saveWindowSizeDescription": "",
+    "appCanNotConnectToHost": "",
+    "@appCanNotConnectToHost": {
+        "placeholders": {
+            "appName": {
+                "type": "String"
+            },
+            "host": {
+                "type": "String"
+            }
+        }
+    },
+    "explore": "",
+    "radioBrowserLoadingTagsFailed": "",
+    "removeFromIgnoredHearyHistoryTitles": "",
+    "customThemeColor": "",
+    "useYaruThemeDescription": "",
+    "markEpisodeAsDone": "",
+    "buildingLocalAudioLibraryPleaseWait": "",
+    "genericErrorDescription": "",
+    "onlineLyricsNotSetup": "",
+    "cantUnpinEmptyAlbum": "",
+    "loadingPleaseWait": "",
+    "fetchingLyricsOnline": "",
+    "groupAlbumsOnlyByAlbumNameDescription": "",
+    "radioBrowserServerUnavailable": "",
+    "podcastDoesNotSendEpisodeDuration": "",
+    "tryToFetchLyricsOnlineDescription": "",
+    "radioBrowserServerNotConnected": "",
+    "downloadRemoved": "",
+    "@downloadRemoved": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "podcastEpisodesNotFound": "",
+    "tryToFetchLyricsOnlineTitle": "",
+    "customStationWarning": "",
+    "localPictureTypeConductor": "",
+    "podcastSearchNotSuccessfull": "",
+    "exportingPodcastsPleaseWait": "",
+    "appendMediaToQueueDescription": "",
+    "@appendMediaToQueueDescription": {
+        "type": "text",
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "usePlayerColorDescription": "",
+    "lookUpRadioBrowserHostsFailed": "",
+    "retryngInSeconds": "",
+    "@retryngInSeconds": {
+        "placeholders": {
+            "seconds": {
+                "type": "String"
+            }
+        }
+    },
+    "findStationsTimeoutMessage": "",
+    "retry": "",
+    "reportIssue": "",
+    "cantPinEmptyAlbum": "",
+    "settingsGeniusDescription": "",
+    "selectColorAndItsShades": "",
+    "groupAlbumsOnlyByAlbumName": "",
+    "settingsDoNotAskForGeniusDescription": "",
+    "onlineLyricsSourceLrcLib": "",
+    "appendedToQueue": "",
+    "@appendedToQueue": {
+        "type": "text",
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "onlyLocalAudioForPlaylists": "",
+    "selectIconThemeDescription": "",
+    "localPictureTypeRecordingLocation": "",
+    "localPictureTypeDuringPerformance": "",
+    "ignoredHearyHistoryTitlesTitle": "",
+    "autoMovePlayerTitle": "",
+    "useBlurredPlayerBackgroundTitle": "",
+    "enterYourGeniusApiKey": "",
+    "useCustomThemeColorTitle": "",
+    "tosLink": "",
+    "selectColor": "",
+    "youCanEditTheNameLater": "",
+    "albumNotFound": "",
+    "newEpisodesAvailableFor": "",
+    "@newEpisodesAvailableFor": {
+        "placeholders": {
+            "length": {
+                "type": "int"
+            }
+        }
+    },
+    "keywords": "",
+    "persistingLocalAudioFilesMetadataPleaseWait": "",
+    "favorites": "",
+    "localPictureTypebandArtistLogotype": "",
+    "localPictureTypeIllustration": "",
+    "selectIconThemeTitle": "",
+    "saveWindowSizeTitle": "",
+    "rating": "",
+    "playingMediaTimedOut": "",
+    "playbackTimerCancelled": "",
+    "onlineLyricsSourceDescription": "",
+    "importingStationsPleaseWait": "",
+    "appendToQueue": "",
+    "exportingStationsPleaseWait": "",
+    "settingsDoNotAskForGeniusTitle": "",
+    "path": "",
+    "localPictureTypeBrightColouredFish": "",
+    "useCustomThemeColorDescription": "",
+    "settingsGeniusDisclaimer": "",
+    "stationNotFound": "",
+    "ignoredHearyHistoryTitlesDescription": "",
+    "autoScrolling": "",
+    "ignoreThisTitleInHearingHistory": "",
+    "showCompletedEpisodes": "",
+    "useYaruThemeTitle": "",
+    "oopsSomethingWentWrong": "",
+    "genericErrorTitle": "",
+    "saveYourApiKey": "",
+    "appendMediaToQueue": "",
+    "@appendMediaToQueue": {
+        "type": "text",
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "checkingForUpdatesPleaseWait": "",
+    "@checkingForUpdatesPleaseWait": {
+        "placeholders": {
+            "progress": {
+                "type": "int"
+            }
+        }
+    },
+    "noLyricsFound": "",
+    "localPictureTypepublisherStudioLogotype": "",
+    "playerCouldNotOpenRemoteMedia": "",
+    "@playerCouldNotOpenRemoteMedia": {
+        "placeholders": {
+            "media": {
+                "type": "String"
+            }
+        }
+    },
+    "localPictureTypeDuringRecording": "",
+    "exportingPlaylistsPleaseWait": "",
+    "repeatOff": "",
+    "localPictureTypeMovieVideoScreenCapture": "",
+    "parsingLocalAudioFilesMetadataPleaseWait": "",
+    "retryInSeconds": "",
+    "@retryInSeconds": {
+        "placeholders": {
+            "seconds": {
+                "type": "String"
+            }
+        }
+    },
+    "tosLinkText": "",
+    "author": "",
+    "cleanedUpEpisodesOfUnsubscribedPodcast": "",
+    "@cleanedUpEpisodesOfUnsubscribedPodcast": {
+        "placeholders": {
+            "podcastName": {
+                "type": "String"
+            }
+        }
+    },
+    "autoMovePlayerDescription": "",
+    "localPictureTypeComposer": "",
+    "searchTimeoutMessage": "",
+    "hideCompletedEpisodes": "",
+    "playbackWasPausedByTimer": ""
 }
