@@ -793,7 +793,6 @@
         }
     },
     "appendToQueue": "Přidat na konec fronty",
-    "@appendToQueue": {},
     "appendedToQueue": "Přidáno na konec fronty: {title}",
     "@appendedToQueue": {
         "type": "text",
@@ -813,7 +812,6 @@
         }
     },
     "appendMediaToQueueTitle": "Přidat médium do fronty",
-    "@appendMediaToQueueTitle": {},
     "appendMediaToQueue": "Přidat médium do fronty: {title}",
     "@appendMediaToQueue": {
         "type": "text",
@@ -898,5 +896,25 @@
     "radioBrowserLoadingTagsFailed": "Došlo k chybě při načítání štítků rádií, server může být nedostupný.",
     "radioBrowserLoadingTagsTimeouted": "Načítání štítků trvalo déle, než se očekávalo. Jste připojeni k internetu? Pokud ano, může jít o problém se serverem",
     "podcastSearchNotSuccessfull": "Hledání podcastu nebylo úspěšné. Jste připojeni k internetu? Pokud ano, může jít o problém se serverem.",
-    "podcastFailedHostLookup": "Hledání epizod nebylo úspěšné - nepodařilo se připojit k serveru. Jste připojeni k internetu? Pokud ano, může jít o problém se serverem."
+    "podcastFailedHostLookup": "Hledání epizod nebylo úspěšné - nepodařilo se připojit k serveru. Jste připojeni k internetu? Pokud ano, může jít o problém se serverem.",
+    "fetchingLyricsOnlineFailed": "",
+    "onlineLyricsSourceTitle": "",
+    "fetchingLyricsOnlineTimeoutMessage": "",
+    "appCanNotConnectToHost": "",
+    "@appCanNotConnectToHost": {
+        "placeholders": {
+            "appName": {
+                "type": "String"
+            },
+            "host": {
+                "type": "String"
+            }
+        }
+    },
+    "fetchingLyricsOnline": "",
+    "tryToFetchLyricsOnlineDescription": "",
+    "podcastEpisodesNotFound": "",
+    "tryToFetchLyricsOnlineTitle": "",
+    "onlineLyricsSourceLrcLib": "",
+    "onlineLyricsSourceDescription": ""
 }

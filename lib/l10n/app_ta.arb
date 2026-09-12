@@ -810,5 +810,110 @@
     "settingsDoNotAskForGeniusTitle": "சீனியசைப் பயன்படுத்த வேண்டாம் அல்லது சீனியச் பநிஇ விசையை மீண்டும் கேட்க வேண்டாம்",
     "settingsDoNotAskForGeniusDescription": "இது எதிர்காலத்தில் சீனியச் பநிஇ விசையைத் தூண்டுவதிலிருந்து பயன்பாட்டைத் தடுக்கிறது மற்றும் பாடல் வரிகள் அம்சத்தை உள்ளக எல்ஆர்சி கோப்புகள் அல்லது ஆடியோ மெட்டாடேட்டாவில் உட்பொதிக்கப்பட்ட எல்ஆர்சி சரங்களை முழுமையாகச் சார்ந்திருக்கும்.",
     "tosLink": "https://genius.com/static/terms",
-    "tosLinkText": "சீனியசின் பணி விதிமுறைகளைப் படிக்கவும்"
+    "tosLinkText": "சீனியசின் பணி விதிமுறைகளைப் படிக்கவும்",
+    "findEpisodesTimeoutMessage": "",
+    "@findEpisodesTimeoutMessage": {
+        "placeholders": {
+            "podcastName": {
+                "type": "String"
+            }
+        }
+    },
+    "lookUpRadioBrowserHostsTimouted": "",
+    "fetchingLyricsOnlineFailed": "",
+    "geniusAlsoProvidesArt": "",
+    "onlineLyricsSourceTitle": "",
+    "fetchingLyricsOnlineTimeoutMessage": "",
+    "podcastFailedHostLookup": "",
+    "radioBrowserLoadingTagsTimeouted": "",
+    "appCanNotConnectToHost": "",
+    "@appCanNotConnectToHost": {
+        "placeholders": {
+            "appName": {
+                "type": "String"
+            },
+            "host": {
+                "type": "String"
+            }
+        }
+    },
+    "radioBrowserLoadingTagsFailed": "",
+    "removeFromIgnoredHearyHistoryTitles": "",
+    "buildingLocalAudioLibraryPleaseWait": "",
+    "fetchingLyricsOnline": "",
+    "radioBrowserServerUnavailable": "",
+    "podcastDoesNotSendEpisodeDuration": "",
+    "tryToFetchLyricsOnlineDescription": "",
+    "radioBrowserServerNotConnected": "",
+    "downloadRemoved": "",
+    "@downloadRemoved": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "podcastEpisodesNotFound": "",
+    "tryToFetchLyricsOnlineTitle": "",
+    "podcastSearchNotSuccessfull": "",
+    "lookUpRadioBrowserHostsFailed": "",
+    "retryngInSeconds": "",
+    "@retryngInSeconds": {
+        "placeholders": {
+            "seconds": {
+                "type": "String"
+            }
+        }
+    },
+    "findStationsTimeoutMessage": "",
+    "retry": "",
+    "reportIssue": "",
+    "onlineLyricsSourceLrcLib": "",
+    "ignoredHearyHistoryTitlesTitle": "",
+    "enterYourGeniusApiKey": "",
+    "youCanEditTheNameLater": "",
+    "persistingLocalAudioFilesMetadataPleaseWait": "",
+    "playingMediaTimedOut": "",
+    "playbackTimerCancelled": "",
+    "onlineLyricsSourceDescription": "",
+    "ignoredHearyHistoryTitlesDescription": "",
+    "ignoreThisTitleInHearingHistory": "",
+    "oopsSomethingWentWrong": "",
+    "saveYourApiKey": "",
+    "checkingForUpdatesPleaseWait": "",
+    "@checkingForUpdatesPleaseWait": {
+        "placeholders": {
+            "progress": {
+                "type": "int"
+            }
+        }
+    },
+    "playerCouldNotOpenRemoteMedia": "",
+    "@playerCouldNotOpenRemoteMedia": {
+        "placeholders": {
+            "media": {
+                "type": "String"
+            }
+        }
+    },
+    "repeatOff": "",
+    "parsingLocalAudioFilesMetadataPleaseWait": "",
+    "retryInSeconds": "",
+    "@retryInSeconds": {
+        "placeholders": {
+            "seconds": {
+                "type": "String"
+            }
+        }
+    },
+    "cleanedUpEpisodesOfUnsubscribedPodcast": "",
+    "@cleanedUpEpisodesOfUnsubscribedPodcast": {
+        "placeholders": {
+            "podcastName": {
+                "type": "String"
+            }
+        }
+    },
+    "searchTimeoutMessage": "",
+    "playbackWasPausedByTimer": ""
 }
