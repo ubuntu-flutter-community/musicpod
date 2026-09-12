@@ -793,7 +793,6 @@
         }
     },
     "appendToQueue": "إلحاق بقائمة الانتظار",
-    "@appendToQueue": {},
     "appendedToQueue": "تم الإلحاق بقائمة الانتظار: {title}",
     "@appendedToQueue": {
         "type": "text",
@@ -813,7 +812,6 @@
         }
     },
     "appendMediaToQueueTitle": "إلحاق الوسائط بقائمة الانتظار",
-    "@appendMediaToQueueTitle": {},
     "appendMediaToQueue": "إلحاق الوسائط بقائمة الانتظار: {title}",
     "@appendMediaToQueue": {
         "type": "text",
@@ -898,5 +896,25 @@
     "radioBrowserLoadingTagsFailed": "حدث خطأ أثناء تحميل وسوم الراديو، قد يكون الخادم غير متوفر.",
     "radioBrowserLoadingTagsTimeouted": "استغرق تحميل الوسوم وقتاً أطول من المتوقع، هل أنت متصل بالإنترنت؟ إذا كان الأمر كذلك، فقد تكون هذه مشكلة في الخادم",
     "podcastSearchNotSuccessfull": "لم ينجح البحث عن هذا البودكاست، هل أنت متصل بالإنترنت؟ إذا كان الأمر كذلك، فقد تكون هذه مشكلة في الخادم.",
-    "podcastFailedHostLookup": "لم ينجح العثور على الحلقات - تعذر الاتصال بالخادم. هل أنت متصل بالإنترنت؟ إذا كان الأمر كذلك، فقد تكون هذه مشكلة في الخادم."
+    "podcastFailedHostLookup": "لم ينجح العثور على الحلقات - تعذر الاتصال بالخادم. هل أنت متصل بالإنترنت؟ إذا كان الأمر كذلك، فقد تكون هذه مشكلة في الخادم.",
+    "fetchingLyricsOnlineFailed": "",
+    "onlineLyricsSourceTitle": "",
+    "fetchingLyricsOnlineTimeoutMessage": "",
+    "appCanNotConnectToHost": "",
+    "@appCanNotConnectToHost": {
+        "placeholders": {
+            "appName": {
+                "type": "String"
+            },
+            "host": {
+                "type": "String"
+            }
+        }
+    },
+    "fetchingLyricsOnline": "",
+    "tryToFetchLyricsOnlineDescription": "",
+    "podcastEpisodesNotFound": "",
+    "tryToFetchLyricsOnlineTitle": "",
+    "onlineLyricsSourceLrcLib": "",
+    "onlineLyricsSourceDescription": ""
 }
