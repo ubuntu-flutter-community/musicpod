@@ -2452,12 +2452,10 @@ class AppLocalizationsDa extends AppLocalizations {
       'Henter sangtekster online, vent venligst ...';
 
   @override
-  String get fetchingLyricsOnlineTimeoutMessage =>
-      'Fetching lyrics online takes longer than usual. Are you connected to the internet? If yes, this might be a server issue or the song might not be available';
+  String get fetchingLyricsOnlineTimeoutMessage => '';
 
   @override
-  String get fetchingLyricsOnlineFailed =>
-      'Fetching lyrics online failed. This might be a server issue or the song might not be available';
+  String get fetchingLyricsOnlineFailed => '';
 
   @override
   String get onlineLyricsSourceTitle => 'Online kilde til sangtekster';

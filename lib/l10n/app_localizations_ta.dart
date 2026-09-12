@@ -30,7 +30,7 @@ class AppLocalizationsTa extends AppLocalizations {
   String get repeatAll => 'அனைத்தையும் மீண்டும் செய்யவும்';
 
   @override
-  String get repeatOff => 'Repeat Off';
+  String get repeatOff => '';
 
   @override
   String get next => 'அடுத்தது';
@@ -458,7 +458,7 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String downloadRemoved(String name) {
-    return 'Download removed: $name';
+    return '';
   }
 
   @override
@@ -2209,16 +2209,13 @@ class AppLocalizationsTa extends AppLocalizations {
   String get loadingPleaseWait => 'ஏற்றுகிறது, காத்திருக்கவும்...';
 
   @override
-  String get parsingLocalAudioFilesMetadataPleaseWait =>
-      'Parsing local audio files metadata, please wait ...';
+  String get parsingLocalAudioFilesMetadataPleaseWait => '';
 
   @override
-  String get persistingLocalAudioFilesMetadataPleaseWait =>
-      'Persisting local audio files metadata, please wait ...';
+  String get persistingLocalAudioFilesMetadataPleaseWait => '';
 
   @override
-  String get buildingLocalAudioLibraryPleaseWait =>
-      'Building local audio library, please wait ...';
+  String get buildingLocalAudioLibraryPleaseWait => '';
 
   @override
   String get importingPodcastsPleaseWait =>
@@ -2246,7 +2243,7 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String checkingForUpdatesPleaseWait(int progress) {
-    return 'Checking for updates $progress%';
+    return '';
   }
 
   @override
@@ -2345,155 +2342,134 @@ class AppLocalizationsTa extends AppLocalizations {
   String get tosLinkText => 'சீனியசின் பணி விதிமுறைகளைப் படிக்கவும்';
 
   @override
-  String get oopsSomethingWentWrong => 'Oops, something went wrong!';
+  String get oopsSomethingWentWrong => '';
 
   @override
-  String get retry => 'Retry';
+  String get retry => '';
 
   @override
-  String get reportIssue => 'Report this issue';
+  String get reportIssue => '';
 
   @override
-  String get ignoreThisTitleInHearingHistory =>
-      'Ignore this title in hearing history';
+  String get ignoreThisTitleInHearingHistory => '';
 
   @override
-  String get removeFromIgnoredHearyHistoryTitles =>
-      'Remove from ignored titles';
+  String get removeFromIgnoredHearyHistoryTitles => '';
 
   @override
-  String get ignoredHearyHistoryTitlesTitle => 'Ignored titles';
+  String get ignoredHearyHistoryTitlesTitle => '';
 
   @override
-  String get ignoredHearyHistoryTitlesDescription =>
-      'These titles will be ignored in the hearing history and will not be shown in the recently played list.';
+  String get ignoredHearyHistoryTitlesDescription => '';
 
   @override
-  String get playingMediaTimedOut =>
-      'Playing media timed out. This might be caused by a network error or server issues.';
+  String get playingMediaTimedOut => '';
 
   @override
-  String get playbackWasPausedByTimer => 'Playback was paused by timer';
+  String get playbackWasPausedByTimer => '';
 
   @override
-  String get playbackTimerCancelled => 'Playback timer cancelled';
+  String get playbackTimerCancelled => '';
 
   @override
-  String get podcastDoesNotSendEpisodeDuration =>
-      'This podcast does not send episode duration. The mark done feature might not work as expected.';
+  String get podcastDoesNotSendEpisodeDuration => '';
 
   @override
   String cleanedUpEpisodesOfUnsubscribedPodcast(String podcastName) {
-    return 'Cleaned up episodes of unsubscribed podcast: $podcastName';
+    return '';
   }
 
   @override
   String findEpisodesTimeoutMessage(String podcastName) {
-    return 'Finding episodes takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+    return '';
   }
 
   @override
-  String get radioBrowserServerUnavailable =>
-      'The radio browser server is currently unavailable. This might be a temporary issue. Please try again later.';
+  String get radioBrowserServerUnavailable => '';
 
   @override
-  String get findStationsTimeoutMessage =>
-      'Finding (this) station(s) takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+  String get findStationsTimeoutMessage => '';
 
   @override
   String retryInSeconds(String seconds) {
-    return 'Retry in $seconds seconds';
+    return '';
   }
 
   @override
   String retryngInSeconds(String seconds) {
-    return 'Retryng in $seconds seconds';
+    return '';
   }
 
   @override
   String playerCouldNotOpenRemoteMedia(String media) {
-    return 'The player could not open or maintain to play remote media \'$media\'. Are you connected to the internet? If yes, this might be a server issue.';
+    return '';
   }
 
   @override
-  String get searchTimeoutMessage =>
-      'Searching takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+  String get searchTimeoutMessage => '';
 
   @override
-  String get youCanEditTheNameLater => 'You can edit the name later.';
+  String get youCanEditTheNameLater => '';
 
   @override
-  String get geniusAlsoProvidesArt =>
-      'Genius also provides artwork for most songs. If you enable Genius to fetch lyrics, the online art in the player will also use Genius instead of MusicBrainz.';
+  String get geniusAlsoProvidesArt => '';
 
   @override
-  String get enterYourGeniusApiKey => 'Enter your Genius API key';
+  String get enterYourGeniusApiKey => '';
 
   @override
-  String get saveYourApiKey => 'Save API Key';
+  String get saveYourApiKey => '';
 
   @override
-  String get lookUpRadioBrowserHostsFailed =>
-      'Looking up radio browser hosts failed. Are you connected to the internet? If yes, this might be a server issue.';
+  String get lookUpRadioBrowserHostsFailed => '';
 
   @override
-  String get lookUpRadioBrowserHostsTimouted =>
-      'Finding Radio Browser hosts takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+  String get lookUpRadioBrowserHostsTimouted => '';
 
   @override
-  String get radioBrowserServerNotConnected =>
-      'You are not connected to any radio browser server';
+  String get radioBrowserServerNotConnected => '';
 
   @override
-  String get radioBrowserLoadingTagsFailed =>
-      'An error occurred while loading radio tags, the server might be unavailable.';
+  String get radioBrowserLoadingTagsFailed => '';
 
   @override
-  String get radioBrowserLoadingTagsTimeouted =>
-      'Loading tags took longer than expected, are you connected to the internet? If yes, this might be a server issue';
+  String get radioBrowserLoadingTagsTimeouted => '';
 
   @override
-  String get podcastSearchNotSuccessfull =>
-      'This podcast search was not successfull, are you connected to the internet? If yes this might be a server issue.';
+  String get podcastSearchNotSuccessfull => '';
 
   @override
-  String get podcastFailedHostLookup =>
-      'Finding episodes was not successfull - could not connect to the server. Are you connected to the internet? If yes this might be a server issue.';
+  String get podcastFailedHostLookup => '';
 
   @override
-  String get tryToFetchLyricsOnlineTitle => 'Try to fetch lyrics online';
+  String get tryToFetchLyricsOnlineTitle => '';
 
   @override
-  String get tryToFetchLyricsOnlineDescription =>
-      'Do you want to try to fetch the lyrics online?';
+  String get tryToFetchLyricsOnlineDescription => '';
 
   @override
-  String get fetchingLyricsOnline => 'Fetching lyrics online, please wait ...';
+  String get fetchingLyricsOnline => '';
 
   @override
-  String get fetchingLyricsOnlineTimeoutMessage =>
-      'Fetching lyrics online takes longer than usual. Are you connected to the internet? If yes, this might be a server issue or the song might not be available';
+  String get fetchingLyricsOnlineTimeoutMessage => '';
 
   @override
-  String get fetchingLyricsOnlineFailed =>
-      'Fetching lyrics online failed. This might be a server issue or the song might not be available';
+  String get fetchingLyricsOnlineFailed => '';
 
   @override
-  String get onlineLyricsSourceTitle => 'Online lyrics source';
+  String get onlineLyricsSourceTitle => '';
 
   @override
-  String get onlineLyricsSourceDescription =>
-      'Select the source for online lyrics.';
+  String get onlineLyricsSourceDescription => '';
 
   @override
-  String get onlineLyricsSourceLrcLib => 'LrcLib';
+  String get onlineLyricsSourceLrcLib => '';
 
   @override
   String appCanNotConnectToHost(String appName, String host) {
-    return '$appName can not connect to $host. Are you connected to the internet?';
+    return '';
   }
 
   @override
-  String get podcastEpisodesNotFound =>
-      'No episodes found for this podcast. They might have been removed or the podcast might not be available anymore with this feed URL.';
+  String get podcastEpisodesNotFound => '';
 }

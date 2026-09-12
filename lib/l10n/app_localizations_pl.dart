@@ -9,7 +9,7 @@ class AppLocalizationsPl extends AppLocalizations {
   AppLocalizationsPl([String locale = 'pl']) : super(locale);
 
   @override
-  String get home => 'Home';
+  String get home => '';
 
   @override
   String get play => 'Odtwórz';
@@ -27,43 +27,43 @@ class AppLocalizationsPl extends AppLocalizations {
   String get repeat => 'Powtarzaj';
 
   @override
-  String get repeatAll => 'Repeat All';
+  String get repeatAll => '';
 
   @override
-  String get repeatOff => 'Repeat Off';
+  String get repeatOff => '';
 
   @override
-  String get next => 'Next';
+  String get next => '';
 
   @override
-  String get back => 'Back';
+  String get back => '';
 
   @override
-  String get fastForward30 => '30 seconds fast forward';
+  String get fastForward30 => '';
 
   @override
-  String get rewind10 => 'Rewind 10 seconds';
+  String get rewind10 => '';
 
   @override
-  String get fullWindow => 'Enter full window mode';
+  String get fullWindow => '';
 
   @override
-  String get leaveFullWindow => 'Leave full window mode';
+  String get leaveFullWindow => '';
 
   @override
-  String get fullScreen => 'Enter full screen mode';
+  String get fullScreen => '';
 
   @override
-  String get leaveFullScreen => 'Leave full screen mode';
+  String get leaveFullScreen => '';
 
   @override
-  String get playbackRate => 'Playback rate';
+  String get playbackRate => '';
 
   @override
-  String get addToFavorites => 'Add to favorites';
+  String get addToFavorites => '';
 
   @override
-  String get removeFromFavorites => 'Remove from favorites';
+  String get removeFromFavorites => '';
 
   @override
   String get share => 'Udostępnij';
@@ -129,7 +129,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get save => 'Zapisz';
 
   @override
-  String get saveAndAuthorize => 'Save and authorize';
+  String get saveAndAuthorize => '';
 
   @override
   String get title => 'Tytuł';
@@ -147,10 +147,10 @@ class AppLocalizationsPl extends AppLocalizations {
   String get artists => 'Artyści';
 
   @override
-  String get showArtistPage => 'Show artist page';
+  String get showArtistPage => '';
 
   @override
-  String get showAlbumPage => 'Show album page';
+  String get showAlbumPage => '';
 
   @override
   String get album => 'Album';
@@ -337,7 +337,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get queue => 'Kolejka';
 
   @override
-  String get clearQueue => 'Clear queue';
+  String get clearQueue => '';
 
   @override
   String get limit => 'Limit';
@@ -456,91 +456,83 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String downloadRemoved(String name) {
-    return 'Download removed: $name';
+    return '';
   }
 
   @override
-  String get markAllEpisodesAsDone => 'Mark all episodes as done';
+  String get markAllEpisodesAsDone => '';
 
   @override
-  String get markEpisodeAsDone => 'Mark episode as done';
+  String get markEpisodeAsDone => '';
 
   @override
-  String get hideCompletedEpisodes => 'Hide completed episodes';
+  String get hideCompletedEpisodes => '';
 
   @override
-  String get showCompletedEpisodes => 'Show completed episodes';
+  String get showCompletedEpisodes => '';
 
   @override
-  String get reset => 'Reset';
+  String get reset => '';
 
   @override
-  String get resetAllSettings => 'Reset all settings';
+  String get resetAllSettings => '';
 
   @override
-  String get resetAllSettingsConfirm =>
-      'Are you absolutely sure to reset all settings, your podcast subscriptions, your podcast progress, your starred stations and your pinned albums?  The app will be closed after and you need to re-open it.';
+  String get resetAllSettingsConfirm => '';
 
   @override
-  String get confirm => 'Confirm';
+  String get confirm => '';
 
   @override
   String get confirmation => 'Potwierdzenie';
 
   @override
-  String get isMaybeLowBandwidthDialogTitle => 'No WIFI/Ethernet';
+  String get isMaybeLowBandwidthDialogTitle => '';
 
   @override
-  String get isMaybeLowBandwidthDialogBody =>
-      'You are not connected to WIFI or Ethernet. Do you want to enable data safe mode?';
+  String get isMaybeLowBandwidthDialogBody => '';
 
   @override
-  String get isBackInWifiDialogTitle => 'Back in WIFI/Ethernet';
+  String get isBackInWifiDialogTitle => '';
 
   @override
-  String get isBackInWifiDialogBody =>
-      'You are connected to WIFI or Ethernet. Do you want to disable data safe mode?';
+  String get isBackInWifiDialogBody => '';
 
   @override
-  String get enableDataSafeModeSettingTitle => 'Data safe mode';
+  String get enableDataSafeModeSettingTitle => '';
 
   @override
-  String get dataSafeModeEnabled =>
-      'Mobile Connection: Data safe mode enabled.';
+  String get dataSafeModeEnabled => '';
 
   @override
-  String get dataSafeModeDisabled => 'Wifi/Ethernet: Data safe mode disabled.';
+  String get dataSafeModeDisabled => '';
 
   @override
-  String get enableDataSafeModeSettingDescription =>
-      'When active the player will not try to download artwork of titles send from radio stations.';
+  String get enableDataSafeModeSettingDescription => '';
 
   @override
-  String get stopToNotifyAboutDataSafeMode => 'Stop to notify me';
+  String get stopToNotifyAboutDataSafeMode => '';
 
   @override
-  String get notifyMeAboutDataSafeModeTitle => 'Data safe mode notifications';
+  String get notifyMeAboutDataSafeModeTitle => '';
 
   @override
-  String get notifyMeAboutDataSafeModeDescription =>
-      'Notify me about data safe mode';
+  String get notifyMeAboutDataSafeModeDescription => '';
 
   @override
-  String get resourceSectionTitle => 'Device resources';
+  String get resourceSectionTitle => '';
 
   @override
   String get downloadsOnly => 'Tylko pobrane';
 
   @override
-  String get downloadsDirectory => 'Location of your downloads';
+  String get downloadsDirectory => '';
 
   @override
-  String get downloadsDirectoryDescription =>
-      'Make sure MusicPod can access this directory!';
+  String get downloadsDirectoryDescription => '';
 
   @override
-  String get downloadsChangeWarning =>
-      'Changing the downloads directory deletes all current downloads. Do you want to proceed?';
+  String get downloadsChangeWarning => '';
 
   @override
   String get moreOptions => 'Więcej opcji';
@@ -552,13 +544,13 @@ class AppLocalizationsPl extends AppLocalizations {
   String get connectedTo => 'Połączono z';
 
   @override
-  String get connectedToDiscord => 'Connected to Discord';
+  String get connectedToDiscord => '';
 
   @override
-  String get disconnectedFrom => 'Disconnected from';
+  String get disconnectedFrom => '';
 
   @override
-  String get disconnectedFromDiscord => 'Disconnected from Discord';
+  String get disconnectedFromDiscord => '';
 
   @override
   String get tryReconnect => 'Spróbuj ponownie';
@@ -601,19 +593,16 @@ class AppLocalizationsPl extends AppLocalizations {
   String get theme => 'Motyw';
 
   @override
-  String get useMoreAnimationsTitle => 'Use more animations';
+  String get useMoreAnimationsTitle => '';
 
   @override
-  String get useMoreAnimationsDescription =>
-      'This will slightly increase the CPU usage, which might be undesired on older hardware.';
+  String get useMoreAnimationsDescription => '';
 
   @override
-  String get showPositionDurationTitle =>
-      'Show position / duration in bottom player';
+  String get showPositionDurationTitle => '';
 
   @override
-  String get showPositionDurationDescription =>
-      'It is otherwise always shown on track hover and in the full screen player.';
+  String get showPositionDurationDescription => '';
 
   @override
   String get license => 'Licencja';
@@ -946,133 +935,121 @@ class AppLocalizationsPl extends AppLocalizations {
   String get writeMetadata => 'Zapisz metadane';
 
   @override
-  String get reorder => 'Reorder';
+  String get reorder => '';
 
   @override
   String get move => 'Przenieś';
 
   @override
-  String get pinAlbum => 'Pin album to sidebar';
+  String get pinAlbum => '';
 
   @override
-  String get unPinAlbum => 'Unpin album from sidebar';
+  String get unPinAlbum => '';
 
   @override
-  String get playAll => 'Play all';
+  String get playAll => '';
 
   @override
-  String get hearingHistory => 'Hearing history';
+  String get hearingHistory => '';
 
   @override
-  String get emptyHearingHistory =>
-      'You did not listen to radio in this app session yet';
+  String get emptyHearingHistory => '';
 
   @override
-  String get searchForRadioStationsWithGenreName =>
-      'Search for radio stations with this genre';
+  String get searchForRadioStationsWithGenreName => '';
 
   @override
-  String get clearPlaylist => 'Delete all media from the playlist';
+  String get clearPlaylist => '';
 
   @override
-  String get editPlaylist => 'Edit playlist';
+  String get editPlaylist => '';
 
   @override
-  String get stationUrl => 'Station Url';
+  String get stationUrl => '';
 
   @override
-  String get podcastFeedUrl => 'Podcast feed url';
+  String get podcastFeedUrl => '';
 
   @override
-  String get stationName => 'Station name';
+  String get stationName => '';
 
   @override
-  String get podcastName => 'Podcast name';
+  String get podcastName => '';
 
   @override
   String get url => 'Adres URL';
 
   @override
-  String get loadFromFileOptional => 'Load from file (optional)';
+  String get loadFromFileOptional => '';
 
   @override
-  String get exportPinnedAlbumsToM3UFiles =>
-      'Export pinned albums to M3U files';
+  String get exportPinnedAlbumsToM3UFiles => '';
 
   @override
-  String get exportPinnedAlbumToM3UFile => 'Export pinned albums to M3U file';
+  String get exportPinnedAlbumToM3UFile => '';
 
   @override
-  String get exportPlaylistToM3UFile => 'Export playlist to M3U';
+  String get exportPlaylistToM3UFile => '';
 
   @override
-  String get exportPlaylistsAndAlbumsToM3UFiles =>
-      'Export playlists and albums to M3U files';
+  String get exportPlaylistsAndAlbumsToM3UFiles => '';
 
   @override
-  String get exportPodcastsToOpmlFile => 'Export podcasts to OPML file';
+  String get exportPodcastsToOpmlFile => '';
 
   @override
-  String get importPodcastsFromOpmlFile => 'Import podcasts from OPML file';
+  String get importPodcastsFromOpmlFile => '';
 
   @override
-  String get exportStarredStationsToOpmlFile =>
-      'Export starred stations to OPML file';
+  String get exportStarredStationsToOpmlFile => '';
 
   @override
-  String get importStarredStationsFromOpmlFile =>
-      'Import starred stations from OPML file';
+  String get importStarredStationsFromOpmlFile => '';
 
   @override
-  String get removeAllStarredStations => 'Remove all starred stations';
+  String get removeAllStarredStations => '';
 
   @override
-  String get removeAllStarredStationsConfirm =>
-      'Are you sure you want to remove all starred stations?';
+  String get removeAllStarredStationsConfirm => '';
 
   @override
-  String get removeAllStarredStationsDescription =>
-      'This will remove all your starred stations.';
+  String get removeAllStarredStationsDescription => '';
 
   @override
-  String get removeAllPodcasts => 'Remove all podcasts';
+  String get removeAllPodcasts => '';
 
   @override
-  String get removeAllPodcastsConfirm =>
-      'Are you sure you want to remove all podcasts?';
+  String get removeAllPodcastsConfirm => '';
 
   @override
-  String get removeAllPodcastsDescription =>
-      'This will remove all your podcast subscriptions and progress.';
+  String get removeAllPodcastsDescription => '';
 
   @override
-  String get customContentTitle => 'Add custom content';
+  String get customContentTitle => '';
 
   @override
-  String get customContentDescription =>
-      'If you do not want to use the radiobrowser or podcast search feature you can add your own content here, or you can add empty playlists or import playlists from M3U and PLS files.';
+  String get customContentDescription => '';
 
   @override
-  String get setPlaylistNameAndAddMoreLater =>
-      'Set playlist name and add more titles later';
+  String get setPlaylistNameAndAddMoreLater => '';
 
   @override
   String get or => 'lub';
 
   @override
-  String get loadMore => 'Load more';
+  String get loadMore => '';
 
   @override
-  String get searchOnline => 'Search online';
+  String get searchOnline => '';
 
   @override
-  String get shareThisEpisode => 'Share this episode';
+  String get shareThisEpisode => '';
 
   @override
-  String get downloadEpisode => 'Download episode';
+  String get downloadEpisode => '';
 
   @override
-  String get removeDownloadEpisode => 'Remove episode download';
+  String get removeDownloadEpisode => '';
 
   @override
   String get language => 'Język';
@@ -1081,53 +1058,50 @@ class AppLocalizationsPl extends AppLocalizations {
   String get duration => 'Czas trwania';
 
   @override
-  String get radioTagDisclaimerTitle => 'This station sends a lot of tags.';
+  String get radioTagDisclaimerTitle => '';
 
   @override
-  String get radioTagDisclaimerSubTitle =>
-      'Sometimes stations send tags that do not match music genres. MusicPod is not responsible for the content!';
+  String get radioTagDisclaimerSubTitle => '';
 
   @override
-  String get podcastFeedLoadingTimeout =>
-      'Loading the podcast feed takes longer than usual...';
+  String get podcastFeedLoadingTimeout => '';
 
   @override
-  String get gitHubClientConnectError =>
-      'Could not load online version from GitHub.';
+  String get gitHubClientConnectError => '';
 
   @override
-  String get replayEpisode => 'Replay episode';
+  String get replayEpisode => '';
 
   @override
-  String get replayAllEpisodes => 'Replay all episodes';
+  String get replayAllEpisodes => '';
 
   @override
-  String get checkForUpdates => 'Check for updates';
+  String get checkForUpdates => '';
 
   @override
   String checkForUpdatesConfirm(String length) {
-    return 'Are you sure you want to check for updates for $length podcasts?';
+    return '';
   }
 
   @override
   String playbackWillStopIn(String duration, String timeOfDay) {
-    return 'Playback will stop in: $duration ($timeOfDay)';
+    return '';
   }
 
   @override
-  String get schedulePlaybackStopTimer => 'Schedule a time to stop playback';
+  String get schedulePlaybackStopTimer => '';
 
   @override
   String get alwaysAsk => 'Zawsze pytaj';
 
   @override
-  String get hideToTray => 'Hide to tray';
+  String get hideToTray => '';
 
   @override
-  String get closeBtnAction => 'Close Button Action';
+  String get closeBtnAction => '';
 
   @override
-  String get whenCloseBtnClicked => 'When close button is clicked';
+  String get whenCloseBtnClicked => '';
 
   @override
   String get closeApp => 'Zamknij program';
@@ -1136,32 +1110,31 @@ class AppLocalizationsPl extends AppLocalizations {
   String get closeMusicPod => 'Zamknąć MusicPod?';
 
   @override
-  String get confirmCloseOrHideTip =>
-      'Please confirm if you need to close the application or hide it';
+  String get confirmCloseOrHideTip => '';
 
   @override
   String get doNotAskAgain => 'Nie pytaj ponownie';
 
   @override
-  String get skipToLivStream => 'Skip to live stream';
+  String get skipToLivStream => '';
 
   @override
-  String get searchSimilarStation => 'Search similar station';
+  String get searchSimilarStation => '';
 
   @override
-  String get onlineArtError => 'Online art lookup is currently not available';
+  String get onlineArtError => '';
 
   @override
-  String get clicks => 'clicks';
+  String get clicks => '';
 
   @override
-  String get theClick => 'click';
+  String get theClick => '';
 
   @override
-  String get toClick => 'click';
+  String get toClick => '';
 
   @override
-  String get exposeOnlineHeadline => 'Expose your listening activity online';
+  String get exposeOnlineHeadline => '';
 
   @override
   String get exposeToDiscordTitle => 'Discord';
@@ -1178,29 +1151,29 @@ class AppLocalizationsPl extends AppLocalizations {
       'Artysta i tytuł utworu/stacji/podkastu którego aktualnie słuchasz są współdzielone.';
 
   @override
-  String get lastfmApiKey => 'Last.fm API key';
+  String get lastfmApiKey => '';
 
   @override
-  String get lastfmSecret => 'Last.fm secret';
+  String get lastfmSecret => '';
 
   @override
-  String get lastfmApiKeyEmpty => 'Please enter an API key';
+  String get lastfmApiKeyEmpty => '';
 
   @override
-  String get lastfmSecretEmpty => 'Please enter the shared secret';
+  String get lastfmSecretEmpty => '';
 
   @override
-  String get exposeToListenBrainzTitle => 'ListenBrainz';
+  String get exposeToListenBrainzTitle => '';
 
   @override
   String get exposeToListenBrainzSubTitle =>
       'Artysta i tytuł utworu/stacji/podkastu którego aktualnie słuchasz są współdzielone.';
 
   @override
-  String get listenBrainzApiKey => 'ListenBrainz API key';
+  String get listenBrainzApiKey => '';
 
   @override
-  String get listenBrainzApiKeyEmpty => 'Please enter an API key';
+  String get listenBrainzApiKeyEmpty => '';
 
   @override
   String get featureDisabledOnPlatform =>
@@ -1213,7 +1186,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get regionAfghanistan => 'Afganistan';
 
   @override
-  String get regionAlandislands => 'Alandislands';
+  String get regionAlandislands => '';
 
   @override
   String get regionAlbania => 'Albania';
@@ -1222,22 +1195,22 @@ class AppLocalizationsPl extends AppLocalizations {
   String get regionAlgeria => 'Algieria';
 
   @override
-  String get regionAmericansamoa => 'Americansamoa';
+  String get regionAmericansamoa => '';
 
   @override
   String get regionAndorra => 'Andora';
 
   @override
-  String get regionAngolia => 'Angolia';
+  String get regionAngolia => '';
 
   @override
-  String get regionAnguilla => 'Anguilla';
+  String get regionAnguilla => '';
 
   @override
   String get regionAntarctica => 'Antarktyda';
 
   @override
-  String get regionAntiguaandbarbuda => 'Antiguaandbarbuda';
+  String get regionAntiguaandbarbuda => '';
 
   @override
   String get regionArgentina => 'Argentyna';
@@ -1246,7 +1219,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get regionArmenia => 'Armenia';
 
   @override
-  String get regionAruba => 'Aruba';
+  String get regionAruba => '';
 
   @override
   String get regionAustralia => 'Australia';
@@ -1255,19 +1228,19 @@ class AppLocalizationsPl extends AppLocalizations {
   String get regionAustria => 'Austria';
 
   @override
-  String get regionAzerbaijan => 'Azerbaijan';
+  String get regionAzerbaijan => '';
 
   @override
-  String get regionBahamas => 'Bahamas';
+  String get regionBahamas => '';
 
   @override
-  String get regionBahrain => 'Bahrain';
+  String get regionBahrain => '';
 
   @override
-  String get regionBangladesh => 'Bangladesh';
+  String get regionBangladesh => '';
 
   @override
-  String get regionBarbados => 'Barbados';
+  String get regionBarbados => '';
 
   @override
   String get regionBelarus => 'Białoruś';
@@ -1276,13 +1249,13 @@ class AppLocalizationsPl extends AppLocalizations {
   String get regionBelgium => 'Belgia';
 
   @override
-  String get regionBelize => 'Belize';
+  String get regionBelize => '';
 
   @override
-  String get regionBenin => 'Benin';
+  String get regionBenin => '';
 
   @override
-  String get regionBermuda => 'Bermuda';
+  String get regionBermuda => '';
 
   @override
   String get regionBhutan => 'Bhutan';
@@ -1291,93 +1264,91 @@ class AppLocalizationsPl extends AppLocalizations {
   String get regionBolivia => 'Boliwia';
 
   @override
-  String get regionBonaire => 'Bonaire';
+  String get regionBonaire => '';
 
   @override
   String get regionBosniaandherzegovina => 'Bośnia i Hercegowina';
 
   @override
-  String get regionBotswana => 'Botswana';
+  String get regionBotswana => '';
 
   @override
-  String get regionBouvetisland => 'Bouvet Island';
+  String get regionBouvetisland => '';
 
   @override
   String get regionBrazil => 'Brazylia';
 
   @override
-  String get regionBritishindianoceanterrirory =>
-      'British Indian Ocean Territory';
+  String get regionBritishindianoceanterrirory => '';
 
   @override
-  String get regionBritishvirginislands => 'British Virgin Islands';
+  String get regionBritishvirginislands => '';
 
   @override
-  String get regionBruneidarussalam => 'Brunei Darussalam';
+  String get regionBruneidarussalam => '';
 
   @override
   String get regionBulgaria => 'Bułgaria';
 
   @override
-  String get regionBurkinafaso => 'Burkina Faso';
+  String get regionBurkinafaso => '';
 
   @override
-  String get regionBurundi => 'Burundi';
+  String get regionBurundi => '';
 
   @override
-  String get regionCaboverde => 'Caboverde';
+  String get regionCaboverde => '';
 
   @override
-  String get regionCambodia => 'Cambodia';
+  String get regionCambodia => '';
 
   @override
-  String get regionCameroon => 'Cameroon';
+  String get regionCameroon => '';
 
   @override
   String get regionCanada => 'Kanada';
 
   @override
-  String get regionCaymanislands => 'Cayman Islands';
+  String get regionCaymanislands => '';
 
   @override
-  String get regionCentralafricanrepublic => 'Central African Republic';
+  String get regionCentralafricanrepublic => '';
 
   @override
-  String get regionChad => 'Chad';
+  String get regionChad => '';
 
   @override
-  String get regionChile => 'Chile';
+  String get regionChile => '';
 
   @override
   String get regionChina => 'Chiny';
 
   @override
-  String get regionChristmasisland => 'Christmas Island';
+  String get regionChristmasisland => '';
 
   @override
-  String get regionCocosislands => 'Coco Islands';
+  String get regionCocosislands => '';
 
   @override
-  String get regionColombia => 'Colombia';
+  String get regionColombia => '';
 
   @override
-  String get regionComoros => 'Comoros';
+  String get regionComoros => '';
 
   @override
   String get regionCongo => 'Kongo';
 
   @override
-  String get regionCongodemocraticrepublicof =>
-      'Democratic Republic of the Congo';
+  String get regionCongodemocraticrepublicof => '';
 
   @override
-  String get regionCookislands => 'Cook Islands';
+  String get regionCookislands => '';
 
   @override
-  String get regionCostarica => 'Costarica';
+  String get regionCostarica => '';
 
   @override
-  String get regionCotedivoire => 'Coted Ivoire';
+  String get regionCotedivoire => '';
 
   @override
   String get regionCroatia => 'Chorwacja';
@@ -1386,7 +1357,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get regionCuba => 'Kuba';
 
   @override
-  String get regionCuracao => 'Curacao';
+  String get regionCuracao => '';
 
   @override
   String get regionCyprus => 'Cypr';
@@ -1398,7 +1369,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get regionDenmark => 'Dania';
 
   @override
-  String get regionDjibouti => 'Djibouti';
+  String get regionDjibouti => '';
 
   @override
   String get regionDominica => 'Dominika';
@@ -1413,13 +1384,13 @@ class AppLocalizationsPl extends AppLocalizations {
   String get regionEgypt => 'Egipt';
 
   @override
-  String get regionElsalvador => 'El Salvador';
+  String get regionElsalvador => '';
 
   @override
-  String get regionEquatorialguinea => 'Equatorial Guinea';
+  String get regionEquatorialguinea => '';
 
   @override
-  String get regionEritrea => 'Eritrea';
+  String get regionEritrea => '';
 
   @override
   String get regionEstonia => 'Estonia';
@@ -1428,13 +1399,13 @@ class AppLocalizationsPl extends AppLocalizations {
   String get regionEthiopia => 'Etiopia';
 
   @override
-  String get regionFalklandislands => 'Falkland Islands';
+  String get regionFalklandislands => '';
 
   @override
-  String get regionFaroeislands => 'Faroe Islands';
+  String get regionFaroeislands => '';
 
   @override
-  String get regionFiji => 'Fiji';
+  String get regionFiji => '';
 
   @override
   String get regionFinland => 'Finlandia';
@@ -1443,19 +1414,19 @@ class AppLocalizationsPl extends AppLocalizations {
   String get regionFrance => 'Francja';
 
   @override
-  String get regionFrenchguiana => 'French Guiana';
+  String get regionFrenchguiana => '';
 
   @override
-  String get regionFrenchpolynesia => 'French Polynesia';
+  String get regionFrenchpolynesia => '';
 
   @override
-  String get regionFrenchsouthernterritories => 'French Southern Territories';
+  String get regionFrenchsouthernterritories => '';
 
   @override
-  String get regionGabon => 'Gabon';
+  String get regionGabon => '';
 
   @override
-  String get regionGambia => 'Gambia';
+  String get regionGambia => '';
 
   @override
   String get regionGeorgia => 'Gruzja';
@@ -1464,53 +1435,52 @@ class AppLocalizationsPl extends AppLocalizations {
   String get regionGermany => 'Niemcy';
 
   @override
-  String get regionGhana => 'Ghana';
+  String get regionGhana => '';
 
   @override
-  String get regionGibraltar => 'Gibraltar';
+  String get regionGibraltar => '';
 
   @override
   String get regionGreece => 'Grecja';
 
   @override
-  String get regionGreenland => 'Greenland';
+  String get regionGreenland => '';
 
   @override
-  String get regionGrenada => 'Grenada';
+  String get regionGrenada => '';
 
   @override
-  String get regionGuadeloupe => 'Guadeloupe';
+  String get regionGuadeloupe => '';
 
   @override
-  String get regionGuam => 'Guam';
+  String get regionGuam => '';
 
   @override
-  String get regionGuatemala => 'Guatemala';
+  String get regionGuatemala => '';
 
   @override
-  String get regionGuernsey => 'Guernsey';
+  String get regionGuernsey => '';
 
   @override
-  String get regionGuinea => 'Guinea';
+  String get regionGuinea => '';
 
   @override
-  String get regionGuineabissau => 'Guinea-Bissau';
+  String get regionGuineabissau => '';
 
   @override
-  String get regionGuyana => 'Guyana';
+  String get regionGuyana => '';
 
   @override
-  String get regionHaiti => 'Hait';
+  String get regionHaiti => '';
 
   @override
-  String get regionHeardislandandmcdonaldislands =>
-      'Heard Island and McDonald Islands';
+  String get regionHeardislandandmcdonaldislands => '';
 
   @override
-  String get regionHonduras => 'Honduras';
+  String get regionHonduras => '';
 
   @override
-  String get regionHongkong => 'Hong Kong';
+  String get regionHongkong => '';
 
   @override
   String get regionHungary => 'Węgry';
@@ -1519,10 +1489,10 @@ class AppLocalizationsPl extends AppLocalizations {
   String get regionIceland => 'Islandia';
 
   @override
-  String get regionIndia => 'India';
+  String get regionIndia => '';
 
   @override
-  String get regionIndonesia => 'Indonesia';
+  String get regionIndonesia => '';
 
   @override
   String get regionIran => 'Iran';
@@ -1534,7 +1504,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get regionIreland => 'Irlandia';
 
   @override
-  String get regionIsleofman => 'Isle of Man';
+  String get regionIsleofman => '';
 
   @override
   String get regionIsrael => 'Izrael';
@@ -1543,34 +1513,34 @@ class AppLocalizationsPl extends AppLocalizations {
   String get regionItaly => 'Włochy';
 
   @override
-  String get regionJamaica => 'Jamaica';
+  String get regionJamaica => '';
 
   @override
   String get regionJapan => 'Japonia';
 
   @override
-  String get regionJersey => 'Jersey';
+  String get regionJersey => '';
 
   @override
-  String get regionJordan => 'Jordan';
+  String get regionJordan => '';
 
   @override
-  String get regionKazakhstan => 'Kazakhstan';
+  String get regionKazakhstan => '';
 
   @override
   String get regionKenya => 'Kenia';
 
   @override
-  String get regionKiribati => 'Kiribati';
+  String get regionKiribati => '';
 
   @override
-  String get regionKuwait => 'Kuwait';
+  String get regionKuwait => '';
 
   @override
-  String get regionKyrgyzstan => 'Kyrgyzstan';
+  String get regionKyrgyzstan => '';
 
   @override
-  String get regionLaos => 'Laos';
+  String get regionLaos => '';
 
   @override
   String get regionLatvia => 'Łotwa';
@@ -1579,16 +1549,16 @@ class AppLocalizationsPl extends AppLocalizations {
   String get regionLebanon => 'Liban';
 
   @override
-  String get regionLesotho => 'Lesotho';
+  String get regionLesotho => '';
 
   @override
-  String get regionLiberia => 'Liberia';
+  String get regionLiberia => '';
 
   @override
   String get regionLibya => 'Libia';
 
   @override
-  String get regionLiechtenstein => 'Liettenstein';
+  String get regionLiechtenstein => '';
 
   @override
   String get regionLithuania => 'Litwa';
@@ -1597,55 +1567,55 @@ class AppLocalizationsPl extends AppLocalizations {
   String get regionLuxembourg => 'Luksemburg';
 
   @override
-  String get regionMacao => 'Macao';
+  String get regionMacao => '';
 
   @override
-  String get regionMacedonia => 'Macedonia';
+  String get regionMacedonia => '';
 
   @override
   String get regionMadagascar => 'Madagaskar';
 
   @override
-  String get regionMalawi => 'Malawi';
+  String get regionMalawi => '';
 
   @override
-  String get regionMalaysia => 'Malaysia';
+  String get regionMalaysia => '';
 
   @override
-  String get regionMaldives => 'Maldives';
+  String get regionMaldives => '';
 
   @override
-  String get regionMali => 'Mali';
+  String get regionMali => '';
 
   @override
   String get regionMalta => 'Malta';
 
   @override
-  String get regionMarshallislands => 'Marshall Islands';
+  String get regionMarshallislands => '';
 
   @override
-  String get regionMartinique => 'Martinique';
+  String get regionMartinique => '';
 
   @override
-  String get regionMauritania => 'Mauritania';
+  String get regionMauritania => '';
 
   @override
-  String get regionMauritius => 'Mauritius';
+  String get regionMauritius => '';
 
   @override
-  String get regionMayotte => 'Mayotte';
+  String get regionMayotte => '';
 
   @override
   String get regionMexico => 'Meksyk';
 
   @override
-  String get regionMicronesia => 'Micronesia';
+  String get regionMicronesia => '';
 
   @override
   String get regionMoldova => 'Mołdawia';
 
   @override
-  String get regionMonaco => 'Monaco';
+  String get regionMonaco => '';
 
   @override
   String get regionMongolia => 'Mongolia';
@@ -1654,88 +1624,88 @@ class AppLocalizationsPl extends AppLocalizations {
   String get regionMontenegro => 'Czarnogóra';
 
   @override
-  String get regionMontserrat => 'Montserrat';
+  String get regionMontserrat => '';
 
   @override
   String get regionMorocco => 'Maroko';
 
   @override
-  String get regionMozambique => 'Mozambique';
+  String get regionMozambique => '';
 
   @override
-  String get regionMyanmar => 'Myanmar';
+  String get regionMyanmar => '';
 
   @override
-  String get regionNamibia => 'Namibia';
+  String get regionNamibia => '';
 
   @override
-  String get regionNauru => 'Nauru';
+  String get regionNauru => '';
 
   @override
-  String get regionNepal => 'Nepal';
+  String get regionNepal => '';
 
   @override
-  String get regionNetherlands => 'Netherlands';
+  String get regionNetherlands => '';
 
   @override
-  String get regionNewcaledonia => 'Newcaledonia';
+  String get regionNewcaledonia => '';
 
   @override
   String get regionNewzealand => 'Nowa Zelandia';
 
   @override
-  String get regionNicaragua => 'Nicaragua';
+  String get regionNicaragua => '';
 
   @override
-  String get regionNiger => 'Niger';
+  String get regionNiger => '';
 
   @override
-  String get regionNigeria => 'Nigeria';
+  String get regionNigeria => '';
 
   @override
-  String get regionNiue => 'Niue';
+  String get regionNiue => '';
 
   @override
-  String get regionNorfolkisland => 'Norfolkisland';
+  String get regionNorfolkisland => '';
 
   @override
   String get regionNorthkorea => 'Korea Północna';
 
   @override
-  String get regionNorthernmarianaislands => 'Northernmarianaislands';
+  String get regionNorthernmarianaislands => '';
 
   @override
   String get regionNorway => 'Norwegia';
 
   @override
-  String get regionOman => 'Oman';
+  String get regionOman => '';
 
   @override
-  String get regionPakistan => 'Pakistan';
+  String get regionPakistan => '';
 
   @override
-  String get regionPalau => 'Palau';
+  String get regionPalau => '';
 
   @override
   String get regionPalestine => 'Palestyna';
 
   @override
-  String get regionPanama => 'Panama';
+  String get regionPanama => '';
 
   @override
-  String get regionPapuanewguinea => 'Papuanewguinea';
+  String get regionPapuanewguinea => '';
 
   @override
   String get regionParaguay => 'Paragwaj';
 
   @override
-  String get regionPeru => 'Peru';
+  String get regionPeru => '';
 
   @override
-  String get regionPhilippines => 'Philippines';
+  String get regionPhilippines => '';
 
   @override
-  String get regionPitcairn => 'Pitcairn';
+  String get regionPitcairn => '';
 
   @override
   String get regionPoland => 'Polska';
@@ -1744,13 +1714,13 @@ class AppLocalizationsPl extends AppLocalizations {
   String get regionPortugal => 'Portugalia';
 
   @override
-  String get regionPuertorico => 'Puerto Rico';
+  String get regionPuertorico => '';
 
   @override
-  String get regionQatar => 'Qatar';
+  String get regionQatar => '';
 
   @override
-  String get regionReunion => 'Reunion';
+  String get regionReunion => '';
 
   @override
   String get regionRomania => 'Rumunia';
@@ -1759,102 +1729,100 @@ class AppLocalizationsPl extends AppLocalizations {
   String get regionRussianfederation => 'Federacja Rosyjska';
 
   @override
-  String get regionRwanda => 'Rwanda';
+  String get regionRwanda => '';
 
   @override
-  String get regionSaintbarthelemy => 'Saintbarthelemy';
+  String get regionSaintbarthelemy => '';
 
   @override
-  String get regionSainthelena => 'Sainthelena';
+  String get regionSainthelena => '';
 
   @override
-  String get regionSaintkittsandnevis => 'Saintkittsandnevis';
+  String get regionSaintkittsandnevis => '';
 
   @override
-  String get regionSaintlucia => 'Saintlucia';
+  String get regionSaintlucia => '';
 
   @override
-  String get regionSaintmartin => 'Saintmartin';
+  String get regionSaintmartin => '';
 
   @override
-  String get regionSaintpierreandmiquelon => 'Saintpierreandmiquelon';
+  String get regionSaintpierreandmiquelon => '';
 
   @override
-  String get regionSaintvincentandthegrenadines =>
-      'Saintvincentandthegrenadines';
+  String get regionSaintvincentandthegrenadines => '';
 
   @override
-  String get regionSamoa => 'Samoa';
+  String get regionSamoa => '';
 
   @override
-  String get regionSanmarino => 'San Marino';
+  String get regionSanmarino => '';
 
   @override
-  String get regionSaotomeandprincipe => 'São Tomé and Príncipe';
+  String get regionSaotomeandprincipe => '';
 
   @override
-  String get regionSaudiarabia => 'Saudiarabia';
+  String get regionSaudiarabia => '';
 
   @override
-  String get regionSenegal => 'Senegal';
+  String get regionSenegal => '';
 
   @override
-  String get regionSerbia => 'Serbia';
+  String get regionSerbia => '';
 
   @override
-  String get regionSeychelles => 'Seychelles';
+  String get regionSeychelles => '';
 
   @override
-  String get regionSierraleone => 'Sierraleone';
+  String get regionSierraleone => '';
 
   @override
-  String get regionSingapore => 'Singapore';
+  String get regionSingapore => '';
 
   @override
-  String get regionSintmaarten => 'Sint Maarten';
+  String get regionSintmaarten => '';
 
   @override
   String get regionSlovakia => 'Słowacja';
 
   @override
-  String get regionSlovenia => 'Slovenia';
+  String get regionSlovenia => '';
 
   @override
-  String get regionSolomonislands => 'Solomon Islands';
+  String get regionSolomonislands => '';
 
   @override
-  String get regionSomalia => 'Somalia';
+  String get regionSomalia => '';
 
   @override
   String get regionSouthafrica => 'Południowa Afryka';
 
   @override
-  String get regionSouthgeorgiaandthesouthsandwichislands =>
-      'South Georgia and the South Sandwich Islands';
+  String get regionSouthgeorgiaandthesouthsandwichislands => '';
 
   @override
-  String get regionSouthkorea => 'Southen Korea';
+  String get regionSouthkorea => '';
 
   @override
-  String get regionSouthsudan => 'South Sudan';
+  String get regionSouthsudan => '';
 
   @override
   String get regionSpain => 'Hiszpania';
 
   @override
-  String get regionSrilanka => 'Srilanka';
+  String get regionSrilanka => '';
 
   @override
-  String get regionSudan => 'Sudan';
+  String get regionSudan => '';
 
   @override
-  String get regionSuriname => 'Suriname';
+  String get regionSuriname => '';
 
   @override
-  String get regionSvalbardandjanmayen => 'Svalbard and Jan Mayen';
+  String get regionSvalbardandjanmayen => '';
 
   @override
-  String get regionSwaziland => 'Swaziland';
+  String get regionSwaziland => '';
 
   @override
   String get regionSweden => 'Szwecja';
@@ -1863,34 +1831,34 @@ class AppLocalizationsPl extends AppLocalizations {
   String get regionSwitzerland => 'Szwajcaria';
 
   @override
-  String get regionSyrianarabrepublic => 'Syrian Arab Republic';
+  String get regionSyrianarabrepublic => '';
 
   @override
   String get regionTaiwan => 'Republika Chińska';
 
   @override
-  String get regionTajikistan => 'Tajikistan';
+  String get regionTajikistan => '';
 
   @override
-  String get regionTanzania => 'Tanzania';
+  String get regionTanzania => '';
 
   @override
   String get regionThailand => 'Tajlandia';
 
   @override
-  String get regionTimorleste => 'Timor-Leste';
+  String get regionTimorleste => '';
 
   @override
-  String get regionTogo => 'Togo';
+  String get regionTogo => '';
 
   @override
-  String get regionTokelau => 'Tokelau';
+  String get regionTokelau => '';
 
   @override
-  String get regionTonga => 'Tonga';
+  String get regionTonga => '';
 
   @override
-  String get regionTrinidadandtobago => 'Trinidad and Tobago';
+  String get regionTrinidadandtobago => '';
 
   @override
   String get regionTunisia => 'Tunezja';
@@ -1899,16 +1867,16 @@ class AppLocalizationsPl extends AppLocalizations {
   String get regionTurkey => 'Turcja';
 
   @override
-  String get regionTurkmenistan => 'Turkmenistan';
+  String get regionTurkmenistan => '';
 
   @override
-  String get regionTurksandcaicosislands => 'Turks and Caicos Islands';
+  String get regionTurksandcaicosislands => '';
 
   @override
-  String get regionTuvalu => 'Tuvalu';
+  String get regionTuvalu => '';
 
   @override
-  String get regionUganda => 'Uganda';
+  String get regionUganda => '';
 
   @override
   String get regionUkraine => 'Ukraina';
@@ -1923,76 +1891,70 @@ class AppLocalizationsPl extends AppLocalizations {
   String get regionUnitedstates => 'Stany Zjednoczone Ameryki';
 
   @override
-  String get regionUnitedstatesminoroutlyingislands =>
-      'United States Minor Outlying Islands';
+  String get regionUnitedstatesminoroutlyingislands => '';
 
   @override
   String get regionUruguay => 'Urugwaj';
 
   @override
-  String get regionUsvirginislands => 'Usvirgin Islands';
+  String get regionUsvirginislands => '';
 
   @override
-  String get regionUzbekistan => 'Uzbekistan';
+  String get regionUzbekistan => '';
 
   @override
-  String get regionVanuatu => 'Vanuatu';
+  String get regionVanuatu => '';
 
   @override
-  String get regionVaticancity => 'Vatican City';
+  String get regionVaticancity => '';
 
   @override
-  String get regionVenezuela => 'Venezuela';
+  String get regionVenezuela => '';
 
   @override
-  String get regionVietnam => 'Vietnam';
+  String get regionVietnam => '';
 
   @override
-  String get regionWallisandfutuna => 'Wallis And Futuna';
+  String get regionWallisandfutuna => '';
 
   @override
-  String get regionWesternsahara => 'Western Sahara';
+  String get regionWesternsahara => '';
 
   @override
-  String get regionYemen => 'Yemen';
+  String get regionYemen => '';
 
   @override
-  String get regionZambia => 'Zambia';
+  String get regionZambia => '';
 
   @override
-  String get regionZimbabwe => 'Zimbabwe';
+  String get regionZimbabwe => '';
 
   @override
-  String get failedToReadMetadata =>
-      'Failed to read metadata for the following media files:';
+  String get failedToReadMetadata => '';
 
   @override
-  String get failedToReadMetadataDescription =>
-      'The metadata of this file could not be read. This is usually caused by a missing codec or a corrupted file.';
+  String get failedToReadMetadataDescription => '';
 
   @override
-  String get breakingChangesPleaseBackupTitle =>
-      'Breaking changes: Please backup!';
+  String get breakingChangesPleaseBackupTitle => '';
 
   @override
-  String get breakingChangesPleaseBackupDescription =>
-      'The next version of MusicPod will have breaking changes. Please backup your playlists, podcast subscriptions and pinned albums before updating.';
+  String get breakingChangesPleaseBackupDescription => '';
 
   @override
-  String get breakingChangesPleaseBackupConfirmation =>
-      'I confirm that I have backed up my:';
+  String get breakingChangesPleaseBackupConfirmation => '';
 
   @override
-  String get pinnedAlbumsAndPlaylists => 'Pinned albums and playlists';
+  String get pinnedAlbumsAndPlaylists => '';
 
   @override
-  String get starredStations => 'Starred stations';
+  String get starredStations => '';
 
   @override
-  String get podcastSubscriptions => 'Podcast subscriptions';
+  String get podcastSubscriptions => '';
 
   @override
-  String get pinnedAlbums => 'Pinned albums';
+  String get pinnedAlbums => '';
 
   @override
   String get export => 'Eksport';
@@ -2001,24 +1963,22 @@ class AppLocalizationsPl extends AppLocalizations {
   String get import => 'Import';
 
   @override
-  String get exportYourData => 'Export your data';
+  String get exportYourData => '';
 
   @override
-  String get exportYourDataDescription =>
-      'Export your podcast subscriptions, starred stations and pinned albums.';
+  String get exportYourDataDescription => '';
 
   @override
-  String get localAudioWatchDialogTitle => 'Local audio directory was modified';
+  String get localAudioWatchDialogTitle => '';
 
   @override
-  String get localAudioWatchDialogDescription =>
-      'Do you want to reload the local audio directory?';
+  String get localAudioWatchDialogDescription => '';
 
   @override
   String get external => 'zewnętrzne';
 
   @override
-  String get externalPlaylist => 'External playlist';
+  String get externalPlaylist => '';
 
   @override
   String get pictures => 'Obrazy';
@@ -2027,31 +1987,31 @@ class AppLocalizationsPl extends AppLocalizations {
   String get localPictureTypeOther => 'Inne';
 
   @override
-  String get localPictureTypeFileIcon32x32 => 'Icon 32x32';
+  String get localPictureTypeFileIcon32x32 => '';
 
   @override
-  String get localPictureTypeOtherFileIcon => 'Other file icon';
+  String get localPictureTypeOtherFileIcon => '';
 
   @override
-  String get localPictureTypeCoverFront => 'Cover front';
+  String get localPictureTypeCoverFront => '';
 
   @override
-  String get localPictureTypeCoverBack => 'Cover back';
+  String get localPictureTypeCoverBack => '';
 
   @override
-  String get localPictureTypeLeafletPage => 'Leaflet page';
+  String get localPictureTypeLeafletPage => '';
 
   @override
-  String get localPictureTypeMediaLabelCD => 'Media label CD';
+  String get localPictureTypeMediaLabelCD => '';
 
   @override
-  String get localPictureTypeLeadArtist => 'Lead artist';
+  String get localPictureTypeLeadArtist => '';
 
   @override
-  String get localPictureTypeArtistPerformer => 'Artist/Performer';
+  String get localPictureTypeArtistPerformer => '';
 
   @override
-  String get localPictureTypeConductor => 'Conductor';
+  String get localPictureTypeConductor => '';
 
   @override
   String get localPictureTypeBandOrchestra => 'Zespół/Orkiestra';
@@ -2060,419 +2020,367 @@ class AppLocalizationsPl extends AppLocalizations {
   String get localPictureTypeComposer => 'Kompozytor';
 
   @override
-  String get localPictureTypeLyricistTextWriter => 'Lyricist/Text writer';
+  String get localPictureTypeLyricistTextWriter => '';
 
   @override
-  String get localPictureTypeRecordingLocation => 'Recording location';
+  String get localPictureTypeRecordingLocation => '';
 
   @override
-  String get localPictureTypeDuringRecording => 'During recording';
+  String get localPictureTypeDuringRecording => '';
 
   @override
-  String get localPictureTypeDuringPerformance => 'During performance';
+  String get localPictureTypeDuringPerformance => '';
 
   @override
-  String get localPictureTypeMovieVideoScreenCapture =>
-      'Movie/Video screen capture';
+  String get localPictureTypeMovieVideoScreenCapture => '';
 
   @override
-  String get localPictureTypeBrightColouredFish => 'Bright coloured fish';
+  String get localPictureTypeBrightColouredFish => '';
 
   @override
-  String get localPictureTypeIllustration => 'Illustration';
+  String get localPictureTypeIllustration => '';
 
   @override
-  String get localPictureTypebandArtistLogotype => 'Band/Artist logotype';
+  String get localPictureTypebandArtistLogotype => '';
 
   @override
-  String get localPictureTypepublisherStudioLogotype =>
-      'Publisher/Studio logotype';
+  String get localPictureTypepublisherStudioLogotype => '';
 
   @override
-  String get cantPinEmptyAlbum =>
-      'You can\'t pin albums without empty album metadata!';
+  String get cantPinEmptyAlbum => '';
 
   @override
-  String get cantUnpinEmptyAlbum =>
-      'You can\'t unpin albums without empty album metadata!';
+  String get cantUnpinEmptyAlbum => '';
 
   @override
   String get path => 'Ścieżka';
 
   @override
-  String get albumNotFound =>
-      'This album does not exist or you have removed the external playlist (M3U/PLS file) where it has been loaded from.';
+  String get albumNotFound => '';
 
   @override
-  String get stationNotFound =>
-      'This station does not exist or it has been removed from the radiobrowser server.';
+  String get stationNotFound => '';
 
   @override
-  String get onlyLocalAudioForPlaylists =>
-      'Only local audio is supported for playlist imports! Please search for them in the radio feature and add them with the star button to your library!';
+  String get onlyLocalAudioForPlaylists => '';
 
   @override
-  String get customStationWarning =>
-      'The provided URL must exist on the radiobrowser server, otherwise it will not be added to you library! Ideally search for them in the radio feature and add them with the star button to your library!';
+  String get customStationWarning => '';
 
   @override
   String get disc => 'Dysk';
 
   @override
-  String get groupAlbumsOnlyByAlbumName => 'Group albums only by album name';
+  String get groupAlbumsOnlyByAlbumName => '';
 
   @override
-  String get groupAlbumsOnlyByAlbumNameDescription =>
-      'This will group albums only by album name and not by artist name + album name, which assumes that the album name is unique inside your library!';
+  String get groupAlbumsOnlyByAlbumNameDescription => '';
 
   @override
-  String get useYaruThemeTitle => 'Use Yaru theme';
+  String get useYaruThemeTitle => '';
 
   @override
-  String get useYaruThemeDescription =>
-      'This will use the Yaru theme for the application. This is the default theme for Ubuntu.';
+  String get useYaruThemeDescription => '';
 
   @override
-  String get customThemeColor => 'Custom theme color';
+  String get customThemeColor => '';
 
   @override
-  String get useCustomThemeColorTitle => 'Use custom accent color';
+  String get useCustomThemeColorTitle => '';
 
   @override
-  String get useCustomThemeColorDescription =>
-      'This will let you chose a custom accent color for the current theme.';
+  String get useCustomThemeColorDescription => '';
 
   @override
-  String get usePlayerColorTitle => 'Use player color';
+  String get usePlayerColorTitle => '';
 
   @override
-  String get usePlayerColorDescription =>
-      'This will use the dominant color has been extracted out of the current artwork (if available) for the whole app.';
+  String get usePlayerColorDescription => '';
 
   @override
-  String get selectColor => 'Select color';
+  String get selectColor => '';
 
   @override
-  String get selectColorShade => 'Select color shade';
+  String get selectColorShade => '';
 
   @override
-  String get selectColorAndItsShades => 'Select color and its shades';
+  String get selectColorAndItsShades => '';
 
   @override
-  String get selectIconThemeTitle => 'Select icon theme';
+  String get selectIconThemeTitle => '';
 
   @override
-  String get selectIconThemeDescription =>
-      'Chose an icon theme for the application. The default theme depends on your operating system. This reloads the application!';
+  String get selectIconThemeDescription => '';
 
   @override
-  String get saveWindowSizeTitle => 'Save window size';
+  String get saveWindowSizeTitle => '';
 
   @override
-  String get saveWindowSizeDescription =>
-      'This will save the window size and position of the application.';
+  String get saveWindowSizeDescription => '';
 
   @override
   String downloadsOfLatestRelease(String latestRelease) {
-    return 'Downloaded $latestRelease times outside of snapstore and flathub';
+    return '';
   }
 
   @override
-  String get useBlurredPlayerBackgroundTitle => 'Use blurred player background';
+  String get useBlurredPlayerBackgroundTitle => '';
 
   @override
-  String get useBlurredPlayerBackgroundDescription =>
-      'This will blur the background of the player. This might lead to lower performance on some devices.';
+  String get useBlurredPlayerBackgroundDescription => '';
 
   @override
-  String get loadingPleaseWait => 'Loading, please wait ...';
+  String get loadingPleaseWait => '';
 
   @override
-  String get parsingLocalAudioFilesMetadataPleaseWait =>
-      'Parsing local audio files metadata, please wait ...';
+  String get parsingLocalAudioFilesMetadataPleaseWait => '';
 
   @override
-  String get persistingLocalAudioFilesMetadataPleaseWait =>
-      'Persisting local audio files metadata, please wait ...';
+  String get persistingLocalAudioFilesMetadataPleaseWait => '';
 
   @override
-  String get buildingLocalAudioLibraryPleaseWait =>
-      'Building local audio library, please wait ...';
+  String get buildingLocalAudioLibraryPleaseWait => '';
 
   @override
-  String get importingPodcastsPleaseWait =>
-      'Importing your podcasts, please wait ...';
+  String get importingPodcastsPleaseWait => '';
 
   @override
-  String get exportingPodcastsPleaseWait =>
-      'Exporting your podcasts, please wait ...';
+  String get exportingPodcastsPleaseWait => '';
 
   @override
-  String get importingStationsPleaseWait =>
-      'Importing your stations, please wait ...';
+  String get importingStationsPleaseWait => '';
 
   @override
-  String get exportingStationsPleaseWait =>
-      'Exporting your stations, please wait ...';
+  String get exportingStationsPleaseWait => '';
 
   @override
-  String get importingPlaylistsPleaseWait =>
-      'Importing your playlists, please wait ...';
+  String get importingPlaylistsPleaseWait => '';
 
   @override
-  String get exportingPlaylistsPleaseWait =>
-      'Exporting your playlists, please wait ...';
+  String get exportingPlaylistsPleaseWait => '';
 
   @override
   String checkingForUpdatesPleaseWait(int progress) {
-    return 'Checking for updates $progress%';
+    return '';
   }
 
   @override
-  String get author => 'Author';
+  String get author => '';
 
   @override
-  String get rating => 'Rating';
+  String get rating => '';
 
   @override
-  String get keywords => 'Keywords';
+  String get keywords => '';
 
   @override
   String newEpisodesAvailableFor(int length) {
-    return 'New episodes available for $length podcasts';
+    return '';
   }
 
   @override
-  String get lyrics => 'Lyrics';
+  String get lyrics => '';
 
   @override
-  String get noLyricsFound => 'No lyrics found';
+  String get noLyricsFound => '';
 
   @override
-  String get autoScrolling => 'Auto scroll';
+  String get autoScrolling => '';
 
   @override
-  String get genericErrorTitle => 'An error occurred';
+  String get genericErrorTitle => '';
 
   @override
-  String get genericErrorDescription =>
-      'An unexpected error occurred. Please try again later.';
+  String get genericErrorDescription => '';
 
   @override
   String errorDetails(String details) {
-    return 'Error details: $details';
+    return '';
   }
 
   @override
-  String get appendToQueue => 'Append to queue';
+  String get appendToQueue => '';
 
   @override
   String appendedToQueue(String title) {
-    return 'Appended to queue: $title';
+    return '';
   }
 
   @override
   String appendMediaToQueueDescription(String title) {
-    return '$title is already inside the queue. Do you want to append it to the end of the queue?';
+    return '';
   }
 
   @override
-  String get appendMediaToQueueTitle => 'Append media to queue';
+  String get appendMediaToQueueTitle => '';
 
   @override
   String appendMediaToQueue(String title) {
-    return 'Append media to queue: $title';
+    return '';
   }
 
   @override
-  String get explore => 'Explore';
+  String get explore => '';
 
   @override
-  String get favorites => 'Favorites';
+  String get favorites => '';
 
   @override
-  String get autoMovePlayerTitle => 'Auto move player';
+  String get autoMovePlayerTitle => '';
 
   @override
-  String get autoMovePlayerDescription =>
-      'Move the player to the right if there is enough horizontal space';
+  String get autoMovePlayerDescription => '';
 
   @override
-  String get onlineLyricsNotSetup =>
-      'If you want to fetch lyrics from Genius, please provide an API key in the settings.';
+  String get onlineLyricsNotSetup => '';
 
   @override
-  String get settingsGeniusDisclaimer =>
-      'MusicPod, its contributors, and the Genius API are not responsible for any misuse of the API key. By providing your API key, you agree to use it responsibly and in accordance with Genius terms of service.\n\n';
+  String get settingsGeniusDisclaimer => '';
 
   @override
-  String get settingsGeniusDescription =>
-      'To fetch lyrics from Genius, you need to provide a Genius API Key. You can obtain an API key by creating an account on Genius and registering an application to get your access token.';
+  String get settingsGeniusDescription => '';
 
   @override
-  String get settingsDoNotAskForGeniusTitle =>
-      'Do not use Genius or ask for Genius API Key again';
+  String get settingsDoNotAskForGeniusTitle => '';
 
   @override
-  String get settingsDoNotAskForGeniusDescription =>
-      'This prevents the app from prompting for the Genius API key in the future and makes the lyrics feature fully rely on local LRC files or LRC strings embedded in audio metadata.';
+  String get settingsDoNotAskForGeniusDescription => '';
 
   @override
-  String get tosLink => 'https://genius.com/static/terms';
+  String get tosLink => '';
 
   @override
-  String get tosLinkText => 'Read Genius\'s Terms of Service';
+  String get tosLinkText => '';
 
   @override
-  String get oopsSomethingWentWrong => 'Oops, something went wrong!';
+  String get oopsSomethingWentWrong => '';
 
   @override
-  String get retry => 'Retry';
+  String get retry => '';
 
   @override
-  String get reportIssue => 'Report this issue';
+  String get reportIssue => '';
 
   @override
-  String get ignoreThisTitleInHearingHistory =>
-      'Ignore this title in hearing history';
+  String get ignoreThisTitleInHearingHistory => '';
 
   @override
-  String get removeFromIgnoredHearyHistoryTitles =>
-      'Remove from ignored titles';
+  String get removeFromIgnoredHearyHistoryTitles => '';
 
   @override
-  String get ignoredHearyHistoryTitlesTitle => 'Ignored titles';
+  String get ignoredHearyHistoryTitlesTitle => '';
 
   @override
-  String get ignoredHearyHistoryTitlesDescription =>
-      'These titles will be ignored in the hearing history and will not be shown in the recently played list.';
+  String get ignoredHearyHistoryTitlesDescription => '';
 
   @override
-  String get playingMediaTimedOut =>
-      'Playing media timed out. This might be caused by a network error or server issues.';
+  String get playingMediaTimedOut => '';
 
   @override
-  String get playbackWasPausedByTimer => 'Playback was paused by timer';
+  String get playbackWasPausedByTimer => '';
 
   @override
-  String get playbackTimerCancelled => 'Playback timer cancelled';
+  String get playbackTimerCancelled => '';
 
   @override
-  String get podcastDoesNotSendEpisodeDuration =>
-      'This podcast does not send episode duration. The mark done feature might not work as expected.';
+  String get podcastDoesNotSendEpisodeDuration => '';
 
   @override
   String cleanedUpEpisodesOfUnsubscribedPodcast(String podcastName) {
-    return 'Cleaned up episodes of unsubscribed podcast: $podcastName';
+    return '';
   }
 
   @override
   String findEpisodesTimeoutMessage(String podcastName) {
-    return 'Finding episodes takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+    return '';
   }
 
   @override
-  String get radioBrowserServerUnavailable =>
-      'The radio browser server is currently unavailable. This might be a temporary issue. Please try again later.';
+  String get radioBrowserServerUnavailable => '';
 
   @override
-  String get findStationsTimeoutMessage =>
-      'Finding (this) station(s) takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+  String get findStationsTimeoutMessage => '';
 
   @override
   String retryInSeconds(String seconds) {
-    return 'Retry in $seconds seconds';
+    return '';
   }
 
   @override
   String retryngInSeconds(String seconds) {
-    return 'Retryng in $seconds seconds';
+    return '';
   }
 
   @override
   String playerCouldNotOpenRemoteMedia(String media) {
-    return 'The player could not open or maintain to play remote media \'$media\'. Are you connected to the internet? If yes, this might be a server issue.';
+    return '';
   }
 
   @override
-  String get searchTimeoutMessage =>
-      'Searching takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+  String get searchTimeoutMessage => '';
 
   @override
-  String get youCanEditTheNameLater => 'You can edit the name later.';
+  String get youCanEditTheNameLater => '';
 
   @override
-  String get geniusAlsoProvidesArt =>
-      'Genius also provides artwork for most songs. If you enable Genius to fetch lyrics, the online art in the player will also use Genius instead of MusicBrainz.';
+  String get geniusAlsoProvidesArt => '';
 
   @override
-  String get enterYourGeniusApiKey => 'Enter your Genius API key';
+  String get enterYourGeniusApiKey => '';
 
   @override
-  String get saveYourApiKey => 'Save API Key';
+  String get saveYourApiKey => '';
 
   @override
-  String get lookUpRadioBrowserHostsFailed =>
-      'Looking up radio browser hosts failed. Are you connected to the internet? If yes, this might be a server issue.';
+  String get lookUpRadioBrowserHostsFailed => '';
 
   @override
-  String get lookUpRadioBrowserHostsTimouted =>
-      'Finding Radio Browser hosts takes longer than usual. Are you connected to the internet? If yes, this might be a server issue.';
+  String get lookUpRadioBrowserHostsTimouted => '';
 
   @override
-  String get radioBrowserServerNotConnected =>
-      'You are not connected to any radio browser server';
+  String get radioBrowserServerNotConnected => '';
 
   @override
-  String get radioBrowserLoadingTagsFailed =>
-      'An error occurred while loading radio tags, the server might be unavailable.';
+  String get radioBrowserLoadingTagsFailed => '';
 
   @override
-  String get radioBrowserLoadingTagsTimeouted =>
-      'Loading tags took longer than expected, are you connected to the internet? If yes, this might be a server issue';
+  String get radioBrowserLoadingTagsTimeouted => '';
 
   @override
-  String get podcastSearchNotSuccessfull =>
-      'This podcast search was not successfull, are you connected to the internet? If yes this might be a server issue.';
+  String get podcastSearchNotSuccessfull => '';
 
   @override
-  String get podcastFailedHostLookup =>
-      'Finding episodes was not successfull - could not connect to the server. Are you connected to the internet? If yes this might be a server issue.';
+  String get podcastFailedHostLookup => '';
 
   @override
-  String get tryToFetchLyricsOnlineTitle => 'Try to fetch lyrics online';
+  String get tryToFetchLyricsOnlineTitle => '';
 
   @override
-  String get tryToFetchLyricsOnlineDescription =>
-      'Do you want to try to fetch the lyrics online?';
+  String get tryToFetchLyricsOnlineDescription => '';
 
   @override
-  String get fetchingLyricsOnline => 'Fetching lyrics online, please wait ...';
+  String get fetchingLyricsOnline => '';
 
   @override
-  String get fetchingLyricsOnlineTimeoutMessage =>
-      'Fetching lyrics online takes longer than usual. Are you connected to the internet? If yes, this might be a server issue or the song might not be available';
+  String get fetchingLyricsOnlineTimeoutMessage => '';
 
   @override
-  String get fetchingLyricsOnlineFailed =>
-      'Fetching lyrics online failed. This might be a server issue or the song might not be available';
+  String get fetchingLyricsOnlineFailed => '';
 
   @override
-  String get onlineLyricsSourceTitle => 'Online lyrics source';
+  String get onlineLyricsSourceTitle => '';
 
   @override
-  String get onlineLyricsSourceDescription =>
-      'Select the source for online lyrics.';
+  String get onlineLyricsSourceDescription => '';
 
   @override
-  String get onlineLyricsSourceLrcLib => 'LrcLib';
+  String get onlineLyricsSourceLrcLib => '';
 
   @override
   String appCanNotConnectToHost(String appName, String host) {
-    return '$appName can not connect to $host. Are you connected to the internet?';
+    return '';
   }
 
   @override
-  String get podcastEpisodesNotFound =>
-      'No episodes found for this podcast. They might have been removed or the podcast might not be available anymore with this feed URL.';
+  String get podcastEpisodesNotFound => '';
 }
