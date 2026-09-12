@@ -896,5 +896,25 @@
     "radioBrowserLoadingTagsFailed": "Ett fel uppstod när radiotaggar skulle laddas in. Servern kanske inte är tillgänglig.",
     "radioBrowserLoadingTagsTimeouted": "Det tog längre tid än väntat att ladda taggarna. Är du ansluten till internet? Om ja, kan det vara ett serverproblem",
     "podcastSearchNotSuccessfull": "Den här podcastsökningen misslyckades, är du ansluten till internet? Om ja, kan det vara ett serverproblem.",
-    "podcastFailedHostLookup": "Det gick inte att hitta avsnitten – det gick inte att ansluta till servern. Är du ansluten till internet? Om ja, kan det vara ett serverproblem."
+    "podcastFailedHostLookup": "Det gick inte att hitta avsnitten – det gick inte att ansluta till servern. Är du ansluten till internet? Om ja, kan det vara ett serverproblem.",
+    "fetchingLyricsOnlineFailed": "",
+    "onlineLyricsSourceTitle": "",
+    "fetchingLyricsOnlineTimeoutMessage": "",
+    "appCanNotConnectToHost": "",
+    "@appCanNotConnectToHost": {
+        "placeholders": {
+            "appName": {
+                "type": "String"
+            },
+            "host": {
+                "type": "String"
+            }
+        }
+    },
+    "fetchingLyricsOnline": "",
+    "tryToFetchLyricsOnlineDescription": "",
+    "podcastEpisodesNotFound": "",
+    "tryToFetchLyricsOnlineTitle": "",
+    "onlineLyricsSourceLrcLib": "",
+    "onlineLyricsSourceDescription": ""
 }
