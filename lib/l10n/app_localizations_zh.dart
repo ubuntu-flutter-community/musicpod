@@ -2392,6 +2392,16 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get podcastEpisodesNotFound =>
       '未找到此播客的节目。它们可能已被移除，或者该播客可能不再通过此订阅源网址提供服务。';
+
+  @override
+  String playAllEpisodes(String length) {
+    return 'Play all $length';
+  }
+
+  @override
+  String playOnlyLoadedEpisodes(String length) {
+    return 'Play only $length';
+  }
 }
 
 /// The translations for Chinese, as used in Hong Kong (`zh_HK`).

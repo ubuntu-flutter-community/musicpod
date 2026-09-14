@@ -59,19 +59,18 @@ class RadioSection extends StatelessWidget with WatchItMixin {
                   semanticLabel: l10n.removeAllStarredStations,
                 ),
                 tooltip: context.l10n.removeAllStarredStations,
-                onPressed: () => context.dialog(
-                  (context) => ConfirmationDialog(
-                    modalLevel: ModalLevel.error,
-                    headerIconData: Iconz.remove,
-                    barrierDismissible: false,
-                    title: Text(l10n.removeAllStarredStationsConfirm),
-                    content: SizedBox(
-                      width: 350,
-                      child: Text(l10n.removeAllStarredStationsDescription),
-                    ),
-                    onConfirm: () =>
-                        di<WipeManager>().command.runAsync({WipeType.radio}),
+                onPressed: () => ConfirmationDialog.show(
+                  context: context,
+                  modalLevel: ModalLevel.error,
+                  headerIconData: Iconz.remove,
+                  barrierDismissible: false,
+                  title: Text(l10n.removeAllStarredStationsConfirm),
+                  content: SizedBox(
+                    width: 350,
+                    child: Text(l10n.removeAllStarredStationsDescription),
                   ),
+                  onConfirm: () =>
+                      di<WipeManager>().command.runAsync({WipeType.radio}),
                 ),
               ),
             ],

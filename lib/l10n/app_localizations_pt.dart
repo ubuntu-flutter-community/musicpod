@@ -2429,6 +2429,16 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get podcastEpisodesNotFound => '';
+
+  @override
+  String playAllEpisodes(String length) {
+    return 'Play all $length';
+  }
+
+  @override
+  String playOnlyLoadedEpisodes(String length) {
+    return 'Play only $length';
+  }
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).

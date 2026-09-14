@@ -5,6 +5,7 @@ import '../../common/view/audio_page_type.dart';
 import '../../common/view/audio_tile_option_button.dart';
 import '../../common/view/avatar_play_button.dart';
 import '../../common/view/confirm.dart';
+import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../player/manager/player_manager.dart';
@@ -43,17 +44,28 @@ class PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
     }
 
     ConfirmationDialog.show(
+      dialogWidth: DialogWidth.medium,
+      modalLevel: ModalLevel.success,
+      headerIconData: Iconz.playFilled,
+      showCancel: false,
       context: context,
-      title: Text(context.l10n.playAll),
-      content: Text(
-        'Play only the ${loadedEpisodes.length} loaded episodes or all ${allEpisodes.length} episodes?',
-      ),
-      confirmLabel: '${context.l10n.playAll} (${allEpisodes.length})',
-      cancelLabel: '${context.l10n.play} (${loadedEpisodes.length})',
+      title: Text(context.l10n.playAll + '?'),
+      confirmLabel: context.l10n.playAllEpisodes(allEpisodes.length.toString()),
       onConfirm: () =>
           playerManager.play(audios: allEpisodes, listName: feedUrl),
-      onCancel: () =>
-          playerManager.play(audios: loadedEpisodes, listName: feedUrl),
+      additionalActions: [
+        OutlinedButton(
+          onPressed: () {
+            Navigator.pop(context);
+            playerManager.play(audios: loadedEpisodes, listName: feedUrl);
+          },
+          child: Text(
+            context.l10n.playOnlyLoadedEpisodes(
+              loadedEpisodes.length.toString(),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

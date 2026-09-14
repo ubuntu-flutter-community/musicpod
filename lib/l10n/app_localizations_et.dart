@@ -2483,4 +2483,14 @@ class AppLocalizationsEt extends AppLocalizations {
   @override
   String get podcastEpisodesNotFound =>
       'Selle taskuhäälingu jaoks ei leidu osi. Nad võivad olla lihtsalt eemaldatud või pole taskuhääling enam sellel võrguaadressil saadaval.';
+
+  @override
+  String playAllEpisodes(String length) {
+    return 'Play all $length';
+  }
+
+  @override
+  String playOnlyLoadedEpisodes(String length) {
+    return 'Play only $length';
+  }
 }

@@ -166,4 +166,4 @@ dependency_overrides:
   watch_it:
     git:
       url: https://github.com/Feichtmeier/watch_it
-      ref: 8992c04aef1703f81d90c59eed36bff83ce33edf
+      ref: 5451b1e287528f7b5793e7cee21a6b71dddbaa1b

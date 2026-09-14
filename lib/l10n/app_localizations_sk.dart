@@ -2482,4 +2482,14 @@ class AppLocalizationsSk extends AppLocalizations {
   @override
   String get podcastEpisodesNotFound =>
       'Pre tento podcast sa nenašli žiadne epizódy. Mohli byť odstránené alebo podcast už nemusí byť dostupný na tejto adrese URL kanála.';
+
+  @override
+  String playAllEpisodes(String length) {
+    return 'Play all $length';
+  }
+
+  @override
+  String playOnlyLoadedEpisodes(String length) {
+    return 'Play only $length';
+  }
 }

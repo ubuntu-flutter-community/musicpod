@@ -935,5 +935,21 @@
             }
         }
     },
-    "podcastEpisodesNotFound": "No episodes found for this podcast. They might have been removed or the podcast might not be available anymore with this feed URL."
+    "podcastEpisodesNotFound": "No episodes found for this podcast. They might have been removed or the podcast might not be available anymore with this feed URL.",
+    "playAllEpisodes": "Play all {length}",
+    "@playAllEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    },
+    "playOnlyLoadedEpisodes": "Play only {length}",
+    "@playOnlyLoadedEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    }    
 }

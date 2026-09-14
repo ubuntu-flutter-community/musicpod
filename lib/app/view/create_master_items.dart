@@ -146,7 +146,8 @@ Iterable<MasterItem> createPodcastMasterItems(List<String> podcastFeedUrls) =>
         subtitleBuilder: (_) => PodcastPageSubTitle(feedUrl: feedUrl),
         pageId: feedUrl,
         pageBuilder: (_) => PodcastPage(feedUrl: feedUrl),
-        iconBuilder: (selected) => PodcastPageSideBarIcon(feedUrl: feedUrl),
+        iconBuilder: (selected) =>
+            PodcastPageSideBarIcon(key: ValueKey(feedUrl), feedUrl: feedUrl),
         audioPageType: AudioPageType.podcast,
       ),
     );

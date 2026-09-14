@@ -4768,6 +4768,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No episodes found for this podcast. They might have been removed or the podcast might not be available anymore with this feed URL.'**
   String get podcastEpisodesNotFound;
+
+  /// No description provided for @playAllEpisodes.
+  ///
+  /// In en, this message translates to:
+  /// **'Play all {length}'**
+  String playAllEpisodes(String length);
+
+  /// No description provided for @playOnlyLoadedEpisodes.
+  ///
+  /// In en, this message translates to:
+  /// **'Play only {length}'**
+  String playOnlyLoadedEpisodes(String length);
 }
 
 class _AppLocalizationsDelegate
