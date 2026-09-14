@@ -2416,4 +2416,14 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get podcastEpisodesNotFound =>
       'このポッドキャストのエピソードは見つかりませんでした。削除されたか、あるいはこのフィードURLでは利用できなくなった可能性があります。';
+
+  @override
+  String playAllEpisodes(String length) {
+    return 'Play all $length';
+  }
+
+  @override
+  String playOnlyLoadedEpisodes(String length) {
+    return 'Play only $length';
+  }
 }

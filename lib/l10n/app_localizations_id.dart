@@ -2483,4 +2483,14 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get podcastEpisodesNotFound =>
       'Tidak ada episode yang ditemukan untuk podcast ini. Episode mungkin telah dihapus atau podcast mungkin tidak tersedia lagi dengan URL umpan ini.';
+
+  @override
+  String playAllEpisodes(String length) {
+    return 'Play all $length';
+  }
+
+  @override
+  String playOnlyLoadedEpisodes(String length) {
+    return 'Play only $length';
+  }
 }

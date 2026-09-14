@@ -2449,4 +2449,14 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get podcastEpisodesNotFound => '';
+
+  @override
+  String playAllEpisodes(String length) {
+    return 'Play all $length';
+  }
+
+  @override
+  String playOnlyLoadedEpisodes(String length) {
+    return 'Play only $length';
+  }
 }

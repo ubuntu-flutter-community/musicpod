@@ -2494,4 +2494,14 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get podcastEpisodesNotFound =>
       'No se encontraron episodios para este pódcast. Es posible que hayan sido eliminados o que el pódcast ya no esté disponible con esta URL de feed.';
+
+  @override
+  String playAllEpisodes(String length) {
+    return 'Play all $length';
+  }
+
+  @override
+  String playOnlyLoadedEpisodes(String length) {
+    return 'Play only $length';
+  }
 }

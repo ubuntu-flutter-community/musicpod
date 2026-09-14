@@ -2496,4 +2496,14 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get podcastEpisodesNotFound =>
       'Δεν βρέθηκαν επισόδεια αυτού του podcast. Μπορεί να έχουν αφαιρεθεί ή το podcast μπορεί να μην είναι πλέον διαθέσιμο από αυτό το URL τροφοδοσίας.';
+
+  @override
+  String playAllEpisodes(String length) {
+    return 'Play all $length';
+  }
+
+  @override
+  String playOnlyLoadedEpisodes(String length) {
+    return 'Play only $length';
+  }
 }

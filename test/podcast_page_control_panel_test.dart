@@ -264,13 +264,10 @@ void main() {
 
       // Dialog is displayed
       expect(find.byType(ConfirmationDialog), findsOneWidget);
-      expect(
-        find.textContaining('Play only the 25 loaded episodes or all 60'),
-        findsOneWidget,
-      );
+      expect(find.text('Play all?'), findsOneWidget);
 
-      // Choose loaded subset: "Play (25)"
-      final playSubsetButton = find.textContaining('(25)');
+      // Choose loaded subset: "Play only 25"
+      final playSubsetButton = find.text('Play only 25');
       expect(playSubsetButton, findsOneWidget);
       await tester.tap(playSubsetButton);
       await tester.pumpAndSettle();
@@ -302,8 +299,11 @@ void main() {
       await tester.tap(playAllButton);
       await tester.pumpAndSettle();
 
-      // Choose all episodes: "Play all (60)"
-      final playAllOption = find.textContaining('(60)');
+      // Dialog is displayed
+      expect(find.byType(ConfirmationDialog), findsOneWidget);
+
+      // Choose all episodes: "Play all 60"
+      final playAllOption = find.text('Play all 60');
       expect(playAllOption, findsOneWidget);
       await tester.tap(playAllOption);
       await tester.pumpAndSettle();

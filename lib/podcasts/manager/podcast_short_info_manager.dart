@@ -30,6 +30,7 @@ class PodcastShortInfoManager {
       feedUrl: feedUrl,
       podcastManager: podcastManager,
     ),
+    autoDisposeAfter: const Duration(minutes: 5),
     shouldDispose: (t) => t.command.safeToDispose,
     onDispose: (t) => t.command.dispose(),
   );

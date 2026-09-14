@@ -34,6 +34,11 @@ class ConfirmationDialog<T> extends StatefulWidget {
     this.onErrorConfirm,
     this.loadingIndicator,
     this.dialogWidth = DialogWidth.medium,
+    this.titlePadding,
+    this.contentPadding,
+    this.headerPadding,
+    this.subtitlePadding,
+    this.actionsPadding,
     this.modalLevel = ModalLevel.info,
     this.presentAsBottomSheet = false,
     this.avatarModalLevel,
@@ -68,9 +73,24 @@ class ConfirmationDialog<T> extends StatefulWidget {
   final DestructiveActionStyle destructiveActionStyle;
   final CancelButtonStyle cancelButtonStyle;
   final DialogWidth dialogWidth;
+  final EdgeInsetsGeometry? titlePadding;
+  final EdgeInsetsGeometry? contentPadding;
+  final EdgeInsetsGeometry? headerPadding;
+  final EdgeInsetsGeometry? subtitlePadding;
+  final EdgeInsetsGeometry? actionsPadding;
+
   final bool presentAsBottomSheet;
   final bool barrierDismissible;
 
+  /// Shows the confirmation as a modal.
+  ///
+  /// When [adaptive] is `true` the modal is presented as a bottom sheet in
+  /// [BuildContextExtension.portraitMode] (e.g. phones held upright) and as a
+  /// centered dialog otherwise (tablets / landscape / desktop / web).
+  ///
+  /// Returns a [Result] similar to `showFutureLoadingDialog`: the value of
+  /// [initialFuture] / [onConfirm] on success, or a [Failure] when the
+  /// modal is cancelled or dismissed.
   static Future<Result<T, Exception>> show<T>({
     required BuildContext context,
     Key? key,
@@ -102,6 +122,11 @@ class ConfirmationDialog<T> extends StatefulWidget {
         DestructiveActionStyle.outlined,
     CancelButtonStyle cancelButtonStyle = CancelButtonStyle.outlined,
     DialogWidth dialogWidth = DialogWidth.medium,
+    EdgeInsetsGeometry? titlePadding,
+    EdgeInsetsGeometry? contentPadding,
+    EdgeInsetsGeometry? headerPadding,
+    EdgeInsetsGeometry? subtitlePadding,
+    EdgeInsetsGeometry? actionsPadding,
     Widget Function(BuildContext context, bool asBottomSheet)? builder,
   }) async {
     final asBottomSheet = context.isPortrait;
@@ -137,8 +162,19 @@ class ConfirmationDialog<T> extends StatefulWidget {
           presentAsBottomSheet: asBottomSheet,
           barrierDismissible: barrierDismissible,
           dialogWidth: dialogWidth,
+          titlePadding: titlePadding,
+          contentPadding: contentPadding,
+          headerPadding: headerPadding,
+          subtitlePadding: subtitlePadding,
+          actionsPadding: actionsPadding,
         );
 
+    // The route is typed `Result<dynamic, Exception>` on purpose: when an
+    // AdaptiveModal is embedded via [builder] it is built as
+    // AdaptiveModal<dynamic> and pops a Result<dynamic, Exception>. A
+    // Result<T, Exception> route would reject that value (generics are
+    // invariant), aborting the pop. Every Result<S, Exception> is a subtype of
+    // Result<dynamic, Exception>, so any embedding pops successfully.
     final Result<dynamic, Exception>? result;
     if (asBottomSheet) {
       result = await showModalBottomSheet<Result<dynamic, Exception>>(
@@ -313,9 +349,11 @@ class _ConfirmationDialogState<T> extends State<ConfirmationDialog<T>> {
       final dialogTheme = context.theme.dialogTheme;
       return SafeArea(
         bottom: isAndroid,
+        top: true,
         child: Padding(
           // this padding is the gap to the screen!
           padding: EdgeInsets.only(
+            top: 64,
             left: 16,
             right: 16,
             bottom: 16 + MediaQuery.viewInsetsOf(context).bottom,
@@ -324,7 +362,7 @@ class _ConfirmationDialogState<T> extends State<ConfirmationDialog<T>> {
             alignment: Alignment.topCenter,
             children: [
               Container(
-                // this is the content padding
+                // this is the padding around whe whole bottom sheet!
                 padding: const EdgeInsets.only(
                   top: 40,
                   left: 24,
@@ -335,154 +373,169 @@ class _ConfirmationDialogState<T> extends State<ConfirmationDialog<T>> {
                   color: dialogTheme.backgroundColor,
                   borderRadius: BorderRadius.circular(kYaruContainerRadius),
                 ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 24,
-                  children: [
-                    if (title != null)
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
                       Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          if (widget.initialFuture == null)
-                            widget.headerIcon ??
+                          Padding(
+                            padding: widget.headerPadding ?? EdgeInsets.zero,
+                            child:
+                                widget.headerIcon ??
                                 ModalAvatar(
+                                  iconData: widget.headerIconData,
                                   type:
                                       widget.avatarModalLevel ??
                                       widget.modalLevel,
                                   icon: widget.avatarContent,
-                                  iconData: widget.headerIconData,
-                                )
-                          else
-                            const SizedBox(height: 40),
-                          widget.headerIcon ??
-                              ModalAvatar(
-                                type:
-                                    widget.avatarModalLevel ??
-                                    widget.modalLevel,
-                                icon: widget.avatarContent,
-                                iconData: widget.headerIconData,
-                              ),
-                          const SizedBox(height: 16),
-                          DefaultTextStyle(
-                            style: dialogTitleTextStyle(context.colorScheme),
-                            textAlign: TextAlign.center,
-                            child: title,
+                                ),
                           ),
-                          if (widget.subtitle != null)
+                          if (title != null)
                             Padding(
-                              padding: const EdgeInsets.only(
-                                top: 8,
-                                bottom: 24,
-                              ),
+                              padding:
+                                  widget.titlePadding ??
+                                  const EdgeInsets.only(top: 8),
                               child: DefaultTextStyle(
-                                style: dialogSubtitleTextStyle(
+                                style: dialogTitleTextStyle(
                                   context.colorScheme,
                                 ),
                                 textAlign: TextAlign.center,
+                                child: title,
+                              ),
+                            )
+                          else
+                            const SizedBox(height: 8),
+                          if (widget.subtitle != null)
+                            Padding(
+                              padding:
+                                  widget.subtitlePadding ??
+                                  const EdgeInsets.only(top: 16),
+                              child: DefaultTextStyle(
+                                style:
+                                    // Note: there is no subtitleTextStyle in the dialogTheme, so we use our own
+                                    dialogSubtitleTextStyle(
+                                      context.colorScheme,
+                                    ),
+                                textAlign: TextAlign.center,
                                 child: widget.subtitle!,
                               ),
-                            ),
+                            )
+                          else
+                            const SizedBox(height: 16),
                         ],
                       ),
-                    if (content != null)
-                      Flexible(
-                        child: SingleChildScrollView(
-                          physics: const ClampingScrollPhysics(),
-                          child: DefaultTextStyle(
-                            style: dialogSubtitleTextStyle(context.colorScheme),
-                            textAlign: TextAlign.center,
-                            child: content,
+                      if (content != null)
+                        Flexible(
+                          child: SingleChildScrollView(
+                            padding: widget.contentPadding ?? EdgeInsets.zero,
+                            physics: const ClampingScrollPhysics(),
+                            child: DefaultTextStyle(
+                              style: dialogSubtitleTextStyle(
+                                context.colorScheme,
+                              ),
+                              textAlign: TextAlign.center,
+                              child: content,
+                            ),
                           ),
                         ),
-                      ),
-                    // Actions
-                    Column(
-                      spacing: 8,
-                      children: _error != null
-                          ? [
-                              SizedBox(
-                                width: double.infinity,
-                                child: OutlinedButton(
-                                  onPressed: onConfirmErrorPressed,
-                                  child: Text(l10n.ok),
-                                ),
-                              ),
-                            ]
-                          : widget.initialFuture != null
-                          ? [
-                              if (widget.showConfirm)
-                                SizedBox(
-                                  width: double.infinity,
-                                  child:
-                                      widget.modalLevel == ModalLevel.error &&
-                                          widget.destructiveActionStyle ==
-                                              DestructiveActionStyle.outlined
-                                      ? OutlinedButton(
-                                          onPressed: onConfirmPressed,
-                                          style: OutlinedButton.styleFrom(
-                                            foregroundColor:
-                                                context.colorScheme.error,
-                                            side: BorderSide(
-                                              color: context.colorScheme.error,
-                                            ),
-                                          ),
-                                          child: Text(
-                                            widget.confirmLabel ?? l10n.ok,
-                                          ),
-                                        )
-                                      : ElevatedButton(
-                                          onPressed: onConfirmPressed,
-                                          style:
-                                              widget.modalLevel ==
-                                                  ModalLevel.error
-                                              ? context
-                                                    .theme
-                                                    .elevatedButtonTheme
-                                                    .style
-                                                    ?.copyWith(
-                                                      foregroundColor:
-                                                          WidgetStateProperty.all(
-                                                            context
-                                                                .colorScheme
-                                                                .onError,
-                                                          ),
-                                                      backgroundColor:
-                                                          WidgetStateProperty.all(
-                                                            context
-                                                                .colorScheme
-                                                                .error,
-                                                          ),
+                      // Actions
+                      Padding(
+                        padding:
+                            widget.actionsPadding ??
+                            const EdgeInsets.only(top: 16),
+                        child: Column(
+                          spacing: 8,
+                          children: _error != null
+                              ? [
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: OutlinedButton(
+                                      onPressed: onConfirmErrorPressed,
+                                      child: Text(l10n.ok),
+                                    ),
+                                  ),
+                                ]
+                              : widget.initialFuture == null
+                              ? [
+                                  if (widget.showConfirm)
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child:
+                                          widget.modalLevel ==
+                                                  ModalLevel.error &&
+                                              widget.destructiveActionStyle ==
+                                                  DestructiveActionStyle
+                                                      .outlined
+                                          ? OutlinedButton(
+                                              onPressed: onConfirmPressed,
+                                              style: OutlinedButton.styleFrom(
+                                                foregroundColor:
+                                                    context.colorScheme.error,
+                                                side: BorderSide(
+                                                  color:
+                                                      context.colorScheme.error,
+                                                ),
+                                              ),
+                                              child: Text(
+                                                widget.confirmLabel ?? l10n.ok,
+                                              ),
+                                            )
+                                          : ElevatedButton(
+                                              onPressed: onConfirmPressed,
+                                              style:
+                                                  widget.modalLevel ==
+                                                      ModalLevel.error
+                                                  ? ElevatedButton.styleFrom(
+                                                      backgroundColor: context
+                                                          .colorScheme
+                                                          .error,
+                                                      foregroundColor: context
+                                                          .colorScheme
+                                                          .onError,
                                                     )
-                                              : null,
-                                          child: Text(
-                                            widget.confirmLabel ?? l10n.ok,
-                                          ),
-                                        ),
-                                ),
-                              ...?widget.additionalActions,
-                              if (widget.showCancel)
-                                SizedBox(
-                                  width: double.infinity,
-                                  child:
-                                      widget.cancelButtonStyle ==
-                                          CancelButtonStyle.outlined
-                                      ? OutlinedButton(
-                                          onPressed: onCancelPressed,
-                                          child: Text(
-                                            widget.cancelLabel ?? l10n.cancel,
-                                          ),
-                                        )
-                                      : ElevatedButton(
-                                          onPressed: onCancelPressed,
-                                          child: Text(
-                                            widget.cancelLabel ?? l10n.cancel,
-                                          ),
-                                        ),
-                                ),
-                            ]
-                          : [],
-                    ),
-                  ],
+                                                  : null,
+                                              child: Text(
+                                                widget.confirmLabel ?? l10n.ok,
+                                              ),
+                                            ),
+                                    ),
+                                  if (widget.additionalActions != null)
+                                    ...widget.additionalActions!.map(
+                                      (e) => SizedBox(
+                                        width: double.infinity,
+                                        child: e,
+                                      ),
+                                    ),
+                                  if (widget.showCancel)
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child:
+                                          widget.cancelButtonStyle ==
+                                              CancelButtonStyle.outlined
+                                          ? OutlinedButton(
+                                              onPressed: onCancelPressed,
+                                              child: Text(
+                                                widget.cancelLabel ??
+                                                    l10n.cancel,
+                                              ),
+                                            )
+                                          : ElevatedButton(
+                                              onPressed: onCancelPressed,
+                                              child: Text(
+                                                widget.cancelLabel ??
+                                                    l10n.cancel,
+                                              ),
+                                            ),
+                                    ),
+                                ]
+                              : [],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               if (widget.barrierDismissible)
@@ -531,7 +584,8 @@ class _ConfirmationDialogState<T> extends State<ConfirmationDialog<T>> {
               const SizedBox(height: 16),
               if (title != null)
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
+                  padding:
+                      widget.titlePadding ?? const EdgeInsets.only(bottom: 12),
                   child: DefaultTextStyle(
                     style: dialogTitleTextStyle(context.colorScheme),
                     textAlign: TextAlign.center,
@@ -540,7 +594,9 @@ class _ConfirmationDialogState<T> extends State<ConfirmationDialog<T>> {
                 ),
               if (widget.subtitle != null)
                 Padding(
-                  padding: const EdgeInsets.only(top: 8),
+                  padding:
+                      widget.subtitlePadding ??
+                      const EdgeInsets.only(top: 8, left: 16, right: 16),
                   child: DefaultTextStyle(
                     style: dialogSubtitleTextStyle(context.colorScheme),
                     textAlign: TextAlign.center,
@@ -565,10 +621,13 @@ class _ConfirmationDialogState<T> extends State<ConfirmationDialog<T>> {
       ),
       scrollable: widget.scrollable,
       content: content,
-      contentPadding: const EdgeInsets.only(left: 24, right: 24, top: 12),
+      contentPadding:
+          widget.contentPadding ??
+          const EdgeInsets.only(left: 24, right: 24, top: 12),
       actionsAlignment: MainAxisAlignment.end,
       actionsOverflowAlignment: OverflowBarAlignment.center,
       actionsPadding: const EdgeInsets.all(16),
+      actionsOverflowButtonSpacing: kMediumSpace,
       actions: [
         if (_error != null)
           OutlinedButton(onPressed: onConfirmErrorPressed, child: Text(l10n.ok))
@@ -624,42 +683,54 @@ class ModalAvatar extends StatelessWidget {
     this.icon,
     this.iconData,
     this.avatarRadius = 24,
+    this.iconSize,
   }) : _type = type;
+
   const ModalAvatar.info({
     super.key,
     this.icon,
     this.iconData,
     this.avatarRadius = 24,
+    this.iconSize,
   }) : _type = ModalLevel.info;
+
   const ModalAvatar.warning({
     super.key,
     this.icon,
     this.iconData,
     this.avatarRadius = 24,
+    this.iconSize,
   }) : _type = ModalLevel.warning;
+
   const ModalAvatar.error({
     super.key,
     this.icon,
     this.iconData,
     this.avatarRadius = 24,
+    this.iconSize,
   }) : _type = ModalLevel.error;
+
   const ModalAvatar.success({
     super.key,
     this.icon,
     this.iconData,
     this.avatarRadius = 24,
+    this.iconSize,
   }) : _type = ModalLevel.success;
+
   const ModalAvatar.neutral({
     super.key,
     this.icon,
     this.iconData,
     this.avatarRadius = 24,
+    this.iconSize,
   }) : _type = ModalLevel.neutral;
 
   final ModalLevel _type;
   final Widget? icon;
   final IconData? iconData;
   final double avatarRadius;
+  final double? iconSize;
 
   @override
   Widget build(BuildContext context) {
@@ -678,11 +749,27 @@ class ModalAvatar extends StatelessWidget {
           icon ??
           (iconData != null ? Icon(iconData, color: color) : null) ??
           switch (_type) {
-            ModalLevel.warning => Icon(Iconz.warning, color: color),
-            ModalLevel.error => Icon(Iconz.warning, color: color),
-            ModalLevel.info => Icon(Iconz.info, color: color),
-            ModalLevel.success => Icon(Iconz.check, color: color),
-            ModalLevel.neutral => Icon(Iconz.info, color: color),
+            ModalLevel.warning => Icon(
+              Iconz.warning,
+              color: color,
+              size: iconSize,
+            ),
+            ModalLevel.error => Icon(
+              Iconz.warning,
+              color: color,
+              size: iconSize,
+            ),
+            ModalLevel.info => Icon(Iconz.info, color: color, size: iconSize),
+            ModalLevel.success => Icon(
+              Iconz.check,
+              color: color,
+              size: iconSize,
+            ),
+            ModalLevel.neutral => Icon(
+              Iconz.info,
+              color: color,
+              size: iconSize,
+            ),
           },
     );
   }
