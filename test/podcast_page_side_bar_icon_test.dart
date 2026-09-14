@@ -13,17 +13,14 @@ import 'package:musicpod/settings/service/settings_service.dart';
 
 class FakePodcastShortInfoManagerForIcon implements PodcastShortInfoManager {
   FakePodcastShortInfoManagerForIcon(this.feedUrl, {this.imageUrl})
-      : command = Command.createAsyncNoParam(
-          () async {
-            await Future<void>.delayed(const Duration(milliseconds: 20));
-            return PodcastShortInfo(
-              name: 'Podcast $feedUrl',
-              artist: 'Artist',
-              imageUrl: imageUrl ?? 'https://example.com/$feedUrl.png',
-            );
-          },
-          initialValue: null,
-        ) {
+    : command = Command.createAsyncNoParam(() async {
+        await Future<void>.delayed(const Duration(milliseconds: 20));
+        return PodcastShortInfo(
+          name: 'Podcast $feedUrl',
+          artist: 'Artist',
+          imageUrl: imageUrl ?? 'https://example.com/$feedUrl.png',
+        );
+      }, initialValue: null) {
     command.run();
   }
 
@@ -98,7 +95,8 @@ void main() {
                           feedUrl: feed1,
                         ),
                       ElevatedButton(
-                        onPressed: () => setState(() => showWidget = !showWidget),
+                        onPressed: () =>
+                            setState(() => showWidget = !showWidget),
                         child: const Text('Toggle'),
                       ),
                     ],
@@ -119,7 +117,9 @@ void main() {
 
         // Loaded
         expect(find.byType(SafeNetworkImage), findsOneWidget);
-        final image1 = tester.widget<SafeNetworkImage>(find.byType(SafeNetworkImage));
+        final image1 = tester.widget<SafeNetworkImage>(
+          find.byType(SafeNetworkImage),
+        );
         expect(image1.url, 'https://example.com/$feed1.png');
 
         // Unmount widget to simulate drawer closing or scrolling away
@@ -144,7 +144,9 @@ void main() {
 
         // Instance 2 image is successfully loaded and displayed!
         expect(find.byType(SafeNetworkImage), findsOneWidget);
-        final image2 = tester.widget<SafeNetworkImage>(find.byType(SafeNetworkImage));
+        final image2 = tester.widget<SafeNetworkImage>(
+          find.byType(SafeNetworkImage),
+        );
         expect(image2.url, 'https://example.com/$feed1.png');
 
         // Clean up widget tree and drain pending Family & Command timers
