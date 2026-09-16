@@ -50,6 +50,7 @@ class MasterList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => const CustomScrollView(
+    key: PageStorageKey('master_panel_scroll'),
     slivers: [
       PermanentPageList(),
       PlaylistList(),
