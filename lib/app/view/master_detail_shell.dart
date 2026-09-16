@@ -65,8 +65,8 @@ class MasterDetailShell extends StatelessWidget
         ),
         bottomNavigationBar: isMobile
             ? ((!context.showMasterPanel && !isInFullWindowMode)
-                ? const Hero(tag: 'bottomPlayer', child: MobileBottomBar())
-                : null)
+                  ? const Hero(tag: 'bottomPlayer', child: MobileBottomBar())
+                  : null)
             : const PlayerView.bottom(),
       ),
     );
