@@ -11,10 +11,7 @@ import '../../l10n/app_localizations.dart';
 import '../../player/manager/player_manager.dart';
 import '../../settings/manager/settings_manager.dart';
 import '../app_config.dart';
-import '../page_ids.dart';
 import '../routing_manager.dart';
-import 'master_item_page.dart';
-import 'mobile_page.dart';
 
 class MobileMusicPodApp extends StatefulWidget with WatchItStatefulWidgetMixin {
   const MobileMusicPodApp({super.key, this.accent});
@@ -61,17 +58,8 @@ class _MobileMusicPodAppState extends State<MobileMusicPodApp> {
         ? dark
         : applyChineseFontToTheme(theme: dark);
 
-    return MaterialApp(
-      navigatorKey: routingManager.masterNavigatorKey,
-      navigatorObservers: [routingManager],
-      initialRoute: watchValue((RoutingManager m) => m.selectedPageIdCommand),
-      onGenerateRoute: (settings) => PageRouteBuilder(
-        settings: settings,
-        maintainState: false,
-        pageBuilder: (_, __, ___) => MobilePage(
-          page: MasterItemPage(pageId: settings.name ?? PageIDs.searchPage),
-        ),
-      ),
+    return MaterialApp.router(
+      routerConfig: routingManager.router,
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.values[themeIndex],
       theme: phoenixLightWithFont,

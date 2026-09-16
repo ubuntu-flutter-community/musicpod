@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app/routing_manager.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/platform_x.dart';
 import 'global_keys.dart';
@@ -51,7 +50,8 @@ class HeaderBar extends StatelessWidget
         masterScaffoldKey.currentState?.isDrawerOpen == false) {
       defaultLeading = const SidebarButton();
     } else {
-      if (useBackButton && di<RoutingManager>().canPop) {
+      final canPop = ModalRoute.of(context)?.canPop == true;
+      if (useBackButton && canPop) {
         defaultLeading = const NavBackButton();
       } else {
         defaultLeading = isMobile ? const SizedBox(width: 60) : null;

@@ -2,19 +2,20 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:injectable/injectable.dart';
 
-import '../extensions/platform_x.dart';
 import '../local_audio/service/local_audio_service.dart';
 import '../podcasts/service/podcast_service.dart';
 import '../radio/service/radio_service.dart';
+import '../search/view/search_page.dart';
 import '../settings/data/shared_preferences_keys.dart';
 import '../settings/service/settings_service.dart';
+import 'app_router.dart';
 import 'page_ids.dart';
-import 'view/mobile_page.dart';
 
 @lazySingleton
-class RoutingManager extends NavigatorObserver {
+class RoutingManager {
   RoutingManager({
     required PodcastService podcastService,
     required LocalAudioService localAudioService,
@@ -32,7 +33,23 @@ class RoutingManager extends NavigatorObserver {
   final RadioService _radioService;
   final SettingsService _settingsService;
 
-  String? currentRouteName;
+  String? _topRouteName;
+
+  late final GoRouter router = createAppRouter(
+    initialLocation: locationForPageId(
+      _settingsService.getString(SPKeys.selectedPage) ?? PageIDs.searchPage,
+    ),
+  );
+
+  GlobalKey<NavigatorState> get masterNavigatorKey => shellNavigatorKey;
+
+  String? get currentRouteName {
+    if (_topRouteName != null) {
+      return _topRouteName;
+    }
+    final uri = router.routeInformationProvider.value.uri;
+    return pageIdForLocation(uri);
+  }
 
   Future<bool> isPageInLibrary(String? pageId) async =>
       pageId != null &&
@@ -68,61 +85,78 @@ class RoutingManager extends NavigatorObserver {
       return;
     }
 
-    final inLibrary = await isPageInLibrary(pageId);
-    assert(inLibrary || builder != null);
+    if (pageId == PageIDs.searchPage && currentRouteName != null) {
+      final previousPageId = currentRouteName;
+      final currentLoc = router.routeInformationProvider.value.uri.path;
+      _topRouteName = pageId;
+      selectedPageIdCommand(pageId);
 
-    selectedPageIdCommand(pageId);
-
-    if (inLibrary) {
-      await _masterNavigatorKey.currentState?.pushNamedAndRemoveUntil(
-        pageId,
-        (route) => false,
-      );
-    } else if (builder != null) {
       final materialPageRoute = PageRouteBuilder(
         maintainState: maintainState,
-        settings: RouteSettings(name: pageId),
-        pageBuilder: (context, __, ___) =>
-            isMobile ? MobilePage(page: builder(context)) : builder(context),
+        settings: const RouteSettings(name: PageIDs.searchPage),
+        pageBuilder: (context, __, ___) => const SearchPage(),
       );
 
       if (replace) {
-        await _masterNavigatorKey.currentState?.pushReplacement(
+        await shellNavigatorKey.currentState?.pushReplacement(
           materialPageRoute,
         );
       } else {
-        await _masterNavigatorKey.currentState?.push(materialPageRoute);
+        await shellNavigatorKey.currentState?.push(materialPageRoute);
+        if (router.routeInformationProvider.value.uri.path == currentLoc) {
+          _topRouteName = previousPageId;
+          if (previousPageId != null) {
+            selectedPageIdCommand(previousPageId);
+          }
+        }
+      }
+      return;
+    }
+
+    final inLibrary = await isPageInLibrary(pageId);
+    assert(inLibrary || builder != null);
+
+    if (inLibrary) {
+      _topRouteName = null;
+      selectedPageIdCommand(pageId);
+      router.go(locationForPageId(pageId));
+    } else if (builder != null) {
+      final previousPageId = currentRouteName;
+      final currentLoc = router.routeInformationProvider.value.uri.path;
+      _topRouteName = pageId;
+      selectedPageIdCommand(pageId);
+
+      final materialPageRoute = PageRouteBuilder(
+        maintainState: maintainState,
+        settings: RouteSettings(name: pageId),
+        pageBuilder: (context, __, ___) => builder(context),
+      );
+
+      if (replace) {
+        await shellNavigatorKey.currentState?.pushReplacement(
+          materialPageRoute,
+        );
+      } else {
+        await shellNavigatorKey.currentState?.push(materialPageRoute);
+        if (router.routeInformationProvider.value.uri.path == currentLoc) {
+          _topRouteName = previousPageId;
+          if (previousPageId != null) {
+            selectedPageIdCommand(previousPageId);
+          }
+        }
       }
     }
   }
 
-  void pop() => _masterNavigatorKey.currentState?.maybePop();
-
-  bool get canPop => _masterNavigatorKey.currentState?.canPop() == true;
-
-  final GlobalKey<NavigatorState> _masterNavigatorKey =
-      GlobalKey<NavigatorState>();
-  GlobalKey<NavigatorState> get masterNavigatorKey => _masterNavigatorKey;
-
-  @override
-  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    currentRouteName = route.settings.name;
-  }
-
-  @override
-  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    currentRouteName = previousRoute?.settings.name;
-  }
-
-  @override
-  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
-    currentRouteName = newRoute?.settings.name;
-  }
-
-  @override
-  void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    if (route.settings.name == currentRouteName) {
-      currentRouteName = previousRoute?.settings.name;
+  void pop() {
+    if (shellNavigatorKey.currentState?.canPop() == true) {
+      shellNavigatorKey.currentState?.maybePop();
+    } else if (rootNavigatorKey.currentState?.canPop() == true) {
+      rootNavigatorKey.currentState?.maybePop();
     }
   }
+
+  bool get canPop =>
+      (shellNavigatorKey.currentState?.canPop() == true) ||
+      (rootNavigatorKey.currentState?.canPop() == true);
 }

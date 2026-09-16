@@ -11,7 +11,7 @@ import '../../extensions/platform_x.dart';
 import '../../l10n/app_localizations.dart';
 import '../../settings/manager/settings_manager.dart';
 import '../app_config.dart';
-import 'desktop_home_page.dart';
+import '../routing_manager.dart';
 import 'mouse_and_keyboard_command_wrapper.dart';
 
 class DesktopMusicPodApp extends StatelessWidget with WatchItMixin {
@@ -53,23 +53,25 @@ class DesktopMusicPodApp extends StatelessWidget with WatchItMixin {
             ? lightDarkTheme(color)
             : applyChineseFontToTheme(theme: lightDarkTheme(color)));
 
-    return MaterialApp(
+    return MaterialApp.router(
+      routerConfig: di<RoutingManager>().router,
+      builder: (context, child) =>
+          MouseAndKeyboardCommandWrapper(child: child ?? const SizedBox()),
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.values[themeIndex],
       highContrastTheme: highContrastTheme,
       highContrastDarkTheme: highContrastDarkTheme,
       // TODO: pin down why we need to apply the emoji font on Linux, and if we can do it in a cleaner way
       // because this causes heavy lags if used on Windows and MacOS
-      theme: isLinux
+      theme: (isLinux || isWindows)
           ? theTheme?.copyWith(textTheme: textThemeWithEmojis(theTheme))
           : theTheme,
-      darkTheme: isLinux
+      darkTheme: (isLinux || isWindows)
           ? theDarkTheme?.copyWith(textTheme: textThemeWithEmojis(theDarkTheme))
           : theDarkTheme,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: supportedLocales,
       onGenerateTitle: (context) => AppConfig.appTitle,
-      home: const MouseAndKeyboardCommandWrapper(child: DesktopHomePage()),
       scrollBehavior: const MaterialScrollBehavior().copyWith(
         dragDevices: {
           PointerDeviceKind.mouse,
