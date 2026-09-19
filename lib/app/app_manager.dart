@@ -116,6 +116,18 @@ class AppManager {
   bool recentPatchNotesDisposed() =>
       _settingsService.getString(SPKeys.patchNotesDisposed) == version;
 
+  late final Command<void, bool?> specialNotesDisposedCommand =
+      Command.createSyncNoParam(
+        () =>
+            _settingsService.getString(SPKeys.specialNotesDisposed) == version,
+        initialValue: null,
+      );
+
+  Future<void> disposeSpecialNotes() async {
+    await _settingsService.setValue(SPKeys.specialNotesDisposed, version);
+    specialNotesDisposedCommand.run();
+  }
+
   late final Command<bool, bool> saveBackupCommand = Command.createAsync(
     setBackupSaved,
     initialValue: false,

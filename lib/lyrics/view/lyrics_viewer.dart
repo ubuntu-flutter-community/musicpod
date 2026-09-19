@@ -109,6 +109,11 @@ class _PlayerLyricsState extends State<_PlayerLyrics> {
       handler: (context, _, __) => Family.dispose<RetryManager>(retryViewId),
     );
 
+    const padding = EdgeInsets.symmetric(
+      vertical: kLargestSpace,
+      horizontal: 2 * kLargestSpace,
+    );
+
     return Column(
       spacing: kLargestSpace,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,13 +149,14 @@ class _PlayerLyricsState extends State<_PlayerLyrics> {
             onData: (result, param) =>
                 result!.lrcLines != null && result.lrcLines!.isNotEmpty
                 ? _LrcLineViewer(
+                    padding: padding,
                     lrc: result.lrcLines!,
                     autoScroll: _autoScroll,
                     highlightCurrentLine: widget.highlightCurrentLine,
                   )
                 : result.plainLyrics != null && result.plainLyrics!.isNotEmpty
                 ? SingleChildScrollView(
-                    padding: const EdgeInsets.all(kLargestSpace),
+                    padding: padding,
                     child: SelectableText(
                       result.plainLyrics!.trim(),
                       style: getPlayerLyricsTextStyle(theme: context.theme),
@@ -160,7 +166,9 @@ class _PlayerLyricsState extends State<_PlayerLyrics> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: kMediumPlusSpace),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 2 * kLargestSpace + kMediumPlusSpace,
+          ),
           child: YaruExpandable(
             header: Text(l10n.settings),
             child: Column(
@@ -207,11 +215,13 @@ class _LrcLineViewer extends StatefulWidget with WatchItStatefulWidgetMixin {
     required this.lrc,
     required this.autoScroll,
     this.highlightCurrentLine = true,
+    required this.padding,
   });
 
   final bool autoScroll;
   final List<LrcLine> lrc;
   final bool highlightCurrentLine;
+  final EdgeInsets padding;
 
   @override
   State<_LrcLineViewer> createState() => _LrcLineViewerState();
@@ -259,6 +269,7 @@ class _LrcLineViewerState extends State<_LrcLineViewer> {
         context,
       ).copyWith(scrollbars: !widget.autoScroll),
       child: ListView.builder(
+        padding: widget.padding,
         controller: _controller,
         itemCount: widget.lrc.length,
         itemBuilder: (context, index) => AutoScrollTag(

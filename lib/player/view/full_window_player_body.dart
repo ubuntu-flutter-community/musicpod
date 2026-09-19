@@ -31,7 +31,16 @@ class FullWindowPlayerBody extends StatelessWidget with WatchItMixin {
               children: [
                 const SizedBox(
                   width: kPlayerExplorerWidth,
-                  child: FullWindowPlayerImage(),
+                  child: Column(
+                    spacing: kLargestSpace,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      FullWindowPlayerImage(),
+                      PlayerTitleAndArtist(
+                        playerPosition: PlayerPosition.fullWindow,
+                      ),
+                    ],
+                  ),
                 ),
                 ConstrainedBox(
                   constraints: BoxConstraints(
@@ -47,19 +56,27 @@ class FullWindowPlayerBody extends StatelessWidget with WatchItMixin {
             ),
           )
         : Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               if (isMobile) const SizedBox(height: 1 * kLargestSpace),
               Expanded(
                 child: PlayerExplorer(
                   selectedColor: context.colorScheme.onSurface,
-                  firstChild: Padding(
-                    padding: isMobile
-                        ? EdgeInsets.zero
-                        : const EdgeInsets.only(bottom: 2 * kLargestSpace),
-                    child: FullWindowPlayerImage(
-                      dimension: isMobile
-                          ? kFullWindowPlayerImageSize + 45
-                          : null,
+                  firstChild: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      spacing: kLargestSpace,
+                      children: [
+                        FullWindowPlayerImage(
+                          dimension: isMobile
+                              ? kFullWindowPlayerImageSize + 45
+                              : null,
+                        ),
+                        if (!isMobile)
+                          const PlayerTitleAndArtist(
+                            playerPosition: PlayerPosition.fullWindow,
+                          ),
+                      ],
                     ),
                   ),
                 ),

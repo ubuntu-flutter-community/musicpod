@@ -22,6 +22,7 @@ class SPKeys {
   static const favLanguageCodes = 'favLanguageCodes';
   static const ascendingFeeds = 'ascendingfeed:::';
   static const patchNotesDisposed = 'kPatchNotesDisposed';
+  static const specialNotesDisposed = 'kSpecialNotesDisposed';
   static const closeBtnAction = 'closeBtnAction';
   static const useMoreAnimations = 'useMoreAnimations';
   static const showPositionDuration = 'showPositionDuration';
