@@ -5,22 +5,20 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../app/app_config.dart';
 import '../app/app_manager.dart';
+import '../common/view/confirm.dart';
 import '../common/view/progress.dart';
 import '../extensions/build_context_x.dart';
 
 class PatchNotesDialog extends StatefulWidget {
-  const PatchNotesDialog({
-    super.key,
-    this.onClose,
-    this.contentPadding,
-    this.actionsPadding,
-    this.insetPadding,
-  });
+  const PatchNotesDialog({super.key, required this.presentAsBottomSheet});
 
-  final VoidCallback? onClose;
-  final EdgeInsetsGeometry? contentPadding;
-  final EdgeInsetsGeometry? actionsPadding;
-  final EdgeInsets? insetPadding;
+  final bool presentAsBottomSheet;
+
+  static Future<void> show(BuildContext context) => ConfirmationDialog.show(
+    context: context,
+    builder: (context, asBottomSheet) =>
+        PatchNotesDialog(presentAsBottomSheet: asBottomSheet),
+  );
 
   @override
   State<PatchNotesDialog> createState() => _PatchNotesDialogState();
@@ -36,46 +34,32 @@ class _PatchNotesDialogState extends State<PatchNotesDialog> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      contentPadding: widget.contentPadding,
-      insetPadding: widget.insetPadding,
-      scrollable: true,
-      content: FutureBuilder(
-        future: _markdown,
-        builder: (context, snapshot) => snapshot.hasError
-            ? Center(child: Text(snapshot.error.toString()))
-            : snapshot.hasData
-            ? MarkdownBody(
-                onTapLink: (text, href, title) {
-                  if (href == null) return;
-                  final uri = Uri.tryParse(href);
-                  if (uri == null) return;
-                  launchUrl(uri);
-                },
-                data: snapshot.data!,
-              )
-            : const Center(child: Progress()),
-      ),
-      actionsPadding: widget.actionsPadding ?? const EdgeInsets.all(20),
-      actions: [
-        TextButton(
-          onPressed: () {
-            launchUrl(Uri.parse(AppConfig.sponsorLink));
-            if (context.mounted) context.pop();
-            widget.onClose?.call();
-          },
-          child: const Text('Sponsor Me'),
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            await di<AppManager>().disposePatchNotes();
-            if (context.mounted) context.pop();
-            widget.onClose?.call();
-          },
-          child: Text(context.l10n.ok),
-        ),
-      ],
-    );
-  }
+  Widget build(BuildContext context) => ConfirmationDialog(
+    barrierDismissible: false,
+    presentAsBottomSheet: widget.presentAsBottomSheet,
+    scrollable: true,
+    content: FutureBuilder(
+      future: _markdown,
+      builder: (context, snapshot) => snapshot.hasError
+          ? Center(child: Text(snapshot.error.toString()))
+          : snapshot.hasData
+          ? MarkdownBody(
+              onTapLink: (text, href, title) {
+                if (href == null) return;
+                final uri = Uri.tryParse(href);
+                if (uri == null) return;
+                launchUrl(uri);
+              },
+              data: snapshot.data!,
+            )
+          : const Center(child: Progress()),
+    ),
+    onCancel: () {
+      di<AppManager>().disposePatchNotes();
+      return launchUrl(Uri.parse(AppConfig.sponsorLink));
+    },
+    cancelLabel: 'Sponsor Me',
+    onConfirm: () => di<AppManager>().disposePatchNotes(),
+    confirmLabel: context.l10n.ok,
+  );
 }
