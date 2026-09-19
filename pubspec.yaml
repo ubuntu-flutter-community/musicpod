@@ -20,7 +20,7 @@ dependencies:
   chinese_font_library: ^1.2.0
   collection: ^1.19.1
   cupertino_icons: ^1.0.9
-  desktop_drop: ^0.7.1
+  desktop_drop: ^0.8.0
   dio: ^5.9.2
   drift: ^2.33.0
   drift_flutter: ^0.3.0
