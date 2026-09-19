@@ -10,5 +10,6 @@ final specialNotes = <String, String>{
       'Additionally:\n'
       '1. Many thanks to the wonderful people who helped me with the translation of the app - it is now available in many more languages!\n'
       '2. A big thanks to my sponsors! You people are awesome and the reason I can continue working on this project for free! :)\n'
-      '3. Have fun with MusicPod 3.0.0+!',
+      '3. There are many more improvements across the board since the last release, too many to count, but MusicPod is now better in disposing used system resources and faster overall!\n'
+      '4. Have fun with MusicPod 3.0.0+!',
 };
