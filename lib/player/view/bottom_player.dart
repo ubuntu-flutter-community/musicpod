@@ -137,10 +137,7 @@ class _BottomPlayerRowState extends State<_BottomPlayerRow> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
-            padding: const EdgeInsets.only(
-              left: 10,
-              right: kLargestSpace,
-            ),
+            padding: const EdgeInsets.only(left: 10, right: kLargestSpace),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(4),
               child: BottomPlayerImage(
@@ -161,16 +158,12 @@ class _BottomPlayerRowState extends State<_BottomPlayerRow> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                if (!compactBottomPlayer)
-                  const BottomPlayerLikeAndStarButton(),
+                if (!compactBottomPlayer) const BottomPlayerLikeAndStarButton(),
               ],
             ),
           ),
           if (!compactBottomPlayer)
-            Expanded(
-              flex: 6,
-              child: PlayerMainControls(active: active),
-            ),
+            Expanded(flex: 6, child: PlayerMainControls(active: active)),
           if (!compactBottomPlayer)
             Flexible(
               flex: 4,
@@ -217,4 +210,3 @@ class _BottomPlayerRowState extends State<_BottomPlayerRow> {
     );
   }
 }
-

@@ -56,14 +56,17 @@ void main() {
       expect(FailedImageUrls.contains(url2), isFalse);
     });
 
-    test('handles null and empty strings gracefully in add, remove, contains', () {
-      FailedImageUrls.add(null);
-      FailedImageUrls.add('');
-      expect(FailedImageUrls.contains(null), isFalse);
-      expect(FailedImageUrls.contains(''), isFalse);
+    test(
+      'handles null and empty strings gracefully in add, remove, contains',
+      () {
+        FailedImageUrls.add(null);
+        FailedImageUrls.add('');
+        expect(FailedImageUrls.contains(null), isFalse);
+        expect(FailedImageUrls.contains(''), isFalse);
 
-      FailedImageUrls.remove(null);
-      FailedImageUrls.remove('');
-    });
+        FailedImageUrls.remove(null);
+        FailedImageUrls.remove('');
+      },
+    );
   });
 }

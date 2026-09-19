@@ -110,10 +110,7 @@ class _SafeNetworkImageState extends State<SafeNetworkImage> {
         _scheduleRetry(delay: delay);
       } else {
         // Exceeded max failures: retry after cooldown so persistent widgets recover
-        _scheduleRetry(
-          delay: FailedImageUrls.cooldown,
-          resetFailedUrl: true,
-        );
+        _scheduleRetry(delay: FailedImageUrls.cooldown, resetFailedUrl: true);
       }
     }
   }
@@ -139,10 +136,7 @@ class _SafeNetworkImageState extends State<SafeNetworkImage> {
           url.isNotEmpty &&
           FailedImageUrls.contains(url) &&
           _retryTimer == null) {
-        _scheduleRetry(
-          delay: FailedImageUrls.cooldown,
-          resetFailedUrl: true,
-        );
+        _scheduleRetry(delay: FailedImageUrls.cooldown, resetFailedUrl: true);
       }
       return errorWidget;
     }
