@@ -173,7 +173,8 @@ class PodcastDao {
       newFeedsWithDownloads = remainingRows.map((r) => r.feedUrl).toSet();
     }
 
-    final realDownloadFilePaths = downloadsDir != null
+    final realDownloadFilePaths =
+        downloadsDir != null && Directory(downloadsDir).existsSync()
         ? Directory(
             downloadsDir,
           ).listSync().whereType<File>().map((f) => f.path).toSet()

@@ -4,13 +4,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/audio_page_type.dart';
+import '../../common/view/confirm.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/object_x.dart';
-import '../../extensions/platform_x.dart';
 import '../../notifications/notifications_service.dart';
 import '../../patch_notes/patch_notes_dialog.dart';
+import '../../patch_notes/special_notes.dart';
 import '../../player/data/play_timeout_exception.dart';
 import '../../player/manager/player_manager.dart';
 import '../../podcasts/data/podcast_download.dart';
@@ -26,6 +27,8 @@ import '../play_anywhere_manager.dart';
 mixin CommonHandlersAndCommandsMixin {
   void callCommonCommands() => callOnceAfterThisBuild((_) {
     di<PodcastCleanManager>().command.run();
+    di<AppManager>().recentPatchNotesDisposedCommand.run();
+    di<AppManager>().specialNotesDisposedCommand.run();
   });
 
   void registerCommonHandlers(BuildContext context) {
@@ -182,17 +185,26 @@ mixin CommonHandlersAndCommandsMixin {
       select: (AppManager m) => m.recentPatchNotesDisposedCommand,
       handler: (context, newValue, cancel) {
         if (newValue == false) {
-          if (isMobile) {
-            context.bottomSheet(
-              (context) => const PatchNotesDialog(
-                insetPadding: EdgeInsets.all(kMediumSpace),
-                contentPadding: EdgeInsets.all(kMediumSpace),
-                actionsPadding: EdgeInsets.all(kMediumSpace),
-              ),
-            );
-          } else {
-            context.dialog((context) => const PatchNotesDialog());
-          }
+          PatchNotesDialog.show(context);
+        }
+      },
+    );
+
+    registerHandler(
+      select: (AppManager m) => m.specialNotesDisposedCommand,
+      handler: (context, newValue, cancel) {
+        if (newValue == false &&
+            specialNotes[di<AppManager>().version] != null) {
+          final appManager = di<AppManager>();
+          ConfirmationDialog.show(
+            context: context,
+            barrierDismissible: false,
+            showCancel: false,
+            title: Text('Special notes for ${appManager.version}'),
+            content: Text(specialNotes[appManager.version]!),
+            confirmLabel: context.l10n.ok,
+            onConfirm: () => appManager.disposeSpecialNotes(),
+          );
         }
       },
     );
