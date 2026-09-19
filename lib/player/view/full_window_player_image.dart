@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:yaru/constants.dart';
 
 import '../../common/view/ui_constants.dart';
 import '../../local_audio/view/local_cover.dart';
@@ -51,11 +52,16 @@ class FullWindowPlayerImage extends StatelessWidget with WatchItMixin {
       );
     }
 
-    return ClipRRect(
-      borderRadius: borderRadius ?? BorderRadius.circular(10),
-      child: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 200),
-        child: image,
+    final bR = borderRadius ?? BorderRadius.circular(kYaruContainerRadius);
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: bR),
+      child: ClipRRect(
+        borderRadius: bR,
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          child: image,
+        ),
       ),
     );
   }
