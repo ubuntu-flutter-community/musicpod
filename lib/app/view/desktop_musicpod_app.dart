@@ -63,10 +63,11 @@ class DesktopMusicPodApp extends StatelessWidget with WatchItMixin {
       highContrastDarkTheme: highContrastDarkTheme,
       // TODO: pin down why we need to apply the emoji font on Linux, and if we can do it in a cleaner way
       // because this causes heavy lags if used on Windows and MacOS
-      theme: (isLinux || isWindows)
+      // In Windows this trick does not work unless we include a 20 MB Special windows font...
+      theme: isLinux
           ? theTheme?.copyWith(textTheme: textThemeWithEmojis(theTheme))
           : theTheme,
-      darkTheme: (isLinux || isWindows)
+      darkTheme: isLinux
           ? theDarkTheme?.copyWith(textTheme: textThemeWithEmojis(theDarkTheme))
           : theDarkTheme,
       localizationsDelegates: AppLocalizations.localizationsDelegates,

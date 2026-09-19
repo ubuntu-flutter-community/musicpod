@@ -63,6 +63,12 @@ class WindowSizeToSettingsListener implements WindowListener {
     _debounce?.cancel();
 
     try {
+      await _windowManager.hide();
+    } catch (e, s) {
+      Logger.e(e, trace: s, tag: '$WindowSizeToSettingsListener');
+    }
+
+    try {
       if (_sp.getBool(SPKeys.saveWindowSize) ?? false) {
         final isMaximized = _sp.getBool(SPKeys.windowMaximized) ?? false;
         final isFullscreen = _sp.getBool(SPKeys.windowFullscreen) ?? false;

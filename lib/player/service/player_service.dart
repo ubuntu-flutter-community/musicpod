@@ -859,11 +859,13 @@ class PlayerService {
     }
 
     try {
-      await _exposeService.exposeTitleOnline(
-        title: '',
-        artist: '',
-        additionalInfo: '',
-        imageUrl: null,
+      unawaited(
+        _exposeService.exposeTitleOnline(
+          title: '',
+          artist: '',
+          additionalInfo: '',
+          imageUrl: null,
+        ),
       );
     } catch (_) {}
 
@@ -874,7 +876,7 @@ class PlayerService {
     }
 
     try {
-      await dispose(disposePlayer: true);
+      unawaited(dispose(disposePlayer: true));
     } catch (e, s) {
       Logger.e(e, trace: s, tag: '$PlayerService');
     }
