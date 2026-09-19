@@ -77,33 +77,37 @@ class _BottomPlayerImageState extends State<BottomPlayerImage> {
       );
     }
 
-    return MouseRegion(
-      onEnter: (_) => setState(() => _hovered = true),
-      onExit: (_) => setState(() => _hovered = false),
-      child: Stack(
-        children: [
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 200),
-            child: child,
-          ),
-          if (_hovered || fullWindowMode)
-            Positioned.fill(
-              child: Container(
-                color: fullWindowMode
-                    ? Colors.transparent
-                    : const Color.fromARGB(192, 0, 0, 0),
-                child: Center(
-                  child: IconButton(
-                    onPressed: () => di<AppManager>().toggleFullWindowMode(),
-                    icon: Icon(
-                      fullWindowMode ? Iconz.fullScreenExit : Iconz.fullScreen,
-                      color: fullWindowMode ? null : Colors.white,
+    return RepaintBoundary(
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit: (_) => setState(() => _hovered = false),
+        child: Stack(
+          children: [
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              child: child,
+            ),
+            if (_hovered || fullWindowMode)
+              Positioned.fill(
+                child: Container(
+                  color: fullWindowMode
+                      ? Colors.transparent
+                      : const Color.fromARGB(192, 0, 0, 0),
+                  child: Center(
+                    child: IconButton(
+                      onPressed: () => di<AppManager>().toggleFullWindowMode(),
+                      icon: Icon(
+                        fullWindowMode
+                            ? Iconz.fullScreenExit
+                            : Iconz.fullScreen,
+                        color: fullWindowMode ? null : Colors.white,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -37,10 +37,7 @@ class PlayerView extends StatelessWidget with WatchItMixin {
     return RepaintBoundary(
       child: Material(
         child: Container(
-          decoration: BoxDecoration(
-            color: _position != PlayerPosition.bottom ? null : playerBg,
-            gradient: _position.getGradient(playerBg),
-          ),
+          decoration: BoxDecoration(gradient: _position.getGradient(playerBg)),
           child: _position != PlayerPosition.bottom
               ? FullWindowPlayer(playerPosition: _position)
               : const BottomPlayer(),

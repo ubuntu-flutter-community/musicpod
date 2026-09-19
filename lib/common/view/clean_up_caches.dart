@@ -4,6 +4,8 @@ import 'package:flutter_it/flutter_it.dart';
 
 import '../../podcasts/manager/podcast_clean_manager.dart';
 
+import '../util/failed_image_urls.dart';
+
 void cleanUpUnusedPodcasts() => di<PodcastCleanManager>().command.run();
 
 /// Evicts all decoded textures from Flutter's in-memory image cache,
@@ -21,5 +23,6 @@ Future<void> clearDiskImageCache() =>
 /// Evicts the in-memory image cache and empties the on-disk cache.
 Future<void> clearNetworkImageCache() async {
   clearInMemoryImageCache();
+  FailedImageUrls.clear();
   await clearDiskImageCache();
 }
