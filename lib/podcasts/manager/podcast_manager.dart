@@ -6,6 +6,7 @@ import 'package:podcast_search/podcast_search.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../common/data/audio.dart';
+import '../../common/util/family.dart';
 import '../../common/view/audio_filter.dart';
 import '../data/podcast_short_info.dart';
 import '../service/podcast_service.dart';
@@ -41,8 +42,13 @@ class PodcastManager {
   Future<void> updateAudioDuration(Audio audio) =>
       _podcastService.updateAudioDuration(audio);
 
-  Future<void> togglePodcastSubscription({required String feedUrl}) =>
-      _podcastService.togglePodcastSubscription(feedUrl: feedUrl);
+  Future<void> togglePodcastSubscription({required String feedUrl}) async {
+    await _podcastService.togglePodcastSubscription(feedUrl: feedUrl);
+    final isSubscribed = await _podcastService.isPodcastSubscribed(feedUrl);
+    if (!isSubscribed) {
+      Family.disposeById(feedUrl);
+    }
+  }
 
   Future<Set<String>> getSubscribedPodcasts() =>
       _podcastService.getSubscribedPodcasts();

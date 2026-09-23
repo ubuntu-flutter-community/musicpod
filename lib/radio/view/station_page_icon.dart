@@ -27,17 +27,28 @@ class StationPageIcon extends StatelessWidget with WatchItMixin {
       color: context.theme.cardColor,
       height: dimension ?? sideBarImageSize,
       width: dimension ?? sideBarImageSize,
-      child: SafeNetworkImage(
-        fallbackWidget: _getIcon(context.theme.colorScheme, selected),
-        errorWidget: _getIcon(context.theme.colorScheme, selected),
-        height: dimension ?? sideBarImageSize,
-        width: dimension ?? sideBarImageSize,
-        cacheHeight: ((dimension ?? sideBarImageSize) * 2).toInt(),
-        cacheWidth: ((dimension ?? sideBarImageSize) * 2).toInt(),
-        fit: BoxFit.fitHeight,
-        url: watchValue((StationImageManager m) => m.command, param1: uuid),
-        filterQuality: FilterQuality.medium,
-      ),
+      child:
+          watchValue(
+            (StationImageManager m) => m.command.results,
+            param1: uuid,
+          ).toWidget(
+            onError: (error, lastResult, param) =>
+                _getIcon(context.theme.colorScheme, selected),
+            whileRunning: (lastResult, param) =>
+                _getIcon(context.colorScheme, selected),
+            onData: (url, param) => url == null
+                ? _getIcon(context.colorScheme, selected)
+                : SafeNetworkImage(
+                    errorWidget: _getIcon(context.theme.colorScheme, selected),
+                    height: dimension ?? sideBarImageSize,
+                    width: dimension ?? sideBarImageSize,
+                    cacheHeight: ((dimension ?? sideBarImageSize) * 2).toInt(),
+                    cacheWidth: ((dimension ?? sideBarImageSize) * 2).toInt(),
+                    fit: BoxFit.fitHeight,
+                    url: url,
+                    filterQuality: FilterQuality.medium,
+                  ),
+          ),
     ),
   );
 

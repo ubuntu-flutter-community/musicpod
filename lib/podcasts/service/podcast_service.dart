@@ -380,6 +380,8 @@ class PodcastService {
 
   Future<Set<String>?> deleteUnsubscribedPodcastData() =>
       _dao.deleteUnsubscribedPodcastData();
+
+  Future<void> reclaimDiskSpace() => _dao.reclaimDiskSpace();
 }
 
 Future<Podcast> loadPodcast(String url) async {

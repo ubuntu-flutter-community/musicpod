@@ -28,13 +28,13 @@ class PodcastCard extends StatelessWidget with WatchItMixin {
     return AudioCard(
       bottom: AudioCardBottom(text: item.collectionName ?? item.trackName),
       image: SafeNetworkImage(
-        url: item.artworkUrl600,
+        url: item.artworkUrl600!,
         fit: BoxFit.cover,
         height: audioCardDimension,
         width: audioCardDimension,
         cacheHeight: audioCardDimension.toInt(),
         cacheWidth: audioCardDimension.toInt(),
-        fallbackWidget: const Center(),
+        loadingWidget: const Center(),
         errorWidget: Center(
           child: Icon(Iconz.podcast, size: audioCardDimension * 0.7),
         ),

@@ -35,7 +35,7 @@ class PodcastPageSideBarIcon extends StatelessWidget with WatchItMixin {
           cacheWidth: (sideBarImageSize * 2).toInt(),
           fit: BoxFit.fitHeight,
           filterQuality: FilterQuality.medium,
-          fallbackWidget: Icon(Iconz.podcast),
+          loadingWidget: Icon(Iconz.podcast),
           errorWidget: Icon(Iconz.podcast),
         ),
       ),

@@ -6,6 +6,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../app/app_config.dart';
 import '../../app/app_manager.dart';
+import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/tapable_text.dart';
@@ -101,18 +102,20 @@ class _AboutPageState extends State<_AboutPage> {
                                 dimension: _kTileSize,
                                 child: ClipRRect(
                                   borderRadius: const BorderRadius.all(radius),
-                                  child: SafeNetworkImage(
-                                    fit: BoxFit.cover,
-                                    url: e.avatarUrl,
-                                    fallbackWidget: const YaruPlaceholderIcon(
-                                      borderRadius:
-                                          BorderRadiusDirectional.vertical(
-                                            top: radius,
-                                            bottom: radius,
+                                  child: e.avatarUrl == null
+                                      ? Icon(Iconz.artist)
+                                      : SafeNetworkImage(
+                                          fit: BoxFit.cover,
+                                          url: e.avatarUrl!,
+                                          loadingWidget: const YaruPlaceholderIcon(
+                                            borderRadius:
+                                                BorderRadiusDirectional.vertical(
+                                                  top: radius,
+                                                  bottom: radius,
+                                                ),
+                                            size: Size.square(_kTileSize),
                                           ),
-                                      size: Size.square(_kTileSize),
-                                    ),
-                                  ),
+                                        ),
                                 ),
                               ),
                             ),

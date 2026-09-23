@@ -19,9 +19,10 @@ Future<void> main() async {
 
   when(mockSettingsService.getBool(any)).thenAnswer((realInvocation) => false);
 
+  final dao = PodcastDao(db: Database(NativeDatabase.memory()));
   final service = PodcastService(
     settingsService: mockSettingsService,
-    dao: PodcastDao(db: Database(NativeDatabase.memory())),
+    dao: dao,
   );
 
   test('searchByQuery', () async {
@@ -50,4 +51,35 @@ Future<void> main() async {
     );
     expect(result?.items.isNotEmpty, true);
   });
+
+  test(
+    'togglePodcastSubscription subscribe, unsubscribe, check status',
+    () async {
+      const feedUrl = 'https://example.com/test_podcast.xml';
+      // Initially not subscribed
+      expect(await service.isPodcastSubscribed(feedUrl), false);
+
+      // 1. First add podcast like findEpisodes does
+      await dao.addPodcast(
+        feedUrl: feedUrl,
+        subscribe: false,
+        imageUrl: 'https://example.com/image.png',
+        name: 'Test Podcast',
+        artist: 'Test Artist',
+      );
+      expect(await service.isPodcastSubscribed(feedUrl), false);
+
+      // 2. Subscribe
+      await service.togglePodcastSubscription(feedUrl: feedUrl);
+      expect(await service.isPodcastSubscribed(feedUrl), true);
+
+      // 3. Unsubscribe
+      await service.togglePodcastSubscription(feedUrl: feedUrl);
+      expect(await service.isPodcastSubscribed(feedUrl), false);
+
+      // 4. cleanUpUnusedPodcasts
+      await service.deleteUnsubscribedPodcastData();
+      expect(await service.isPodcastSubscribed(feedUrl), false);
+    },
+  );
 }
