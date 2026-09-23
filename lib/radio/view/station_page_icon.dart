@@ -36,6 +36,7 @@ class StationPageIcon extends StatelessWidget with WatchItMixin {
                 _getIcon(context.theme.colorScheme, selected),
             whileRunning: (lastResult, param) =>
                 _getIcon(context.colorScheme, selected),
+            onNullData: (param) => _getIcon(context.colorScheme, selected),
             onData: (url, param) => url == null
                 ? _getIcon(context.colorScheme, selected)
                 : SafeNetworkImage(
@@ -54,8 +55,8 @@ class StationPageIcon extends StatelessWidget with WatchItMixin {
 
   SideBarFallBackImage _getIcon(ColorScheme colorScheme, bool selected) =>
       SideBarFallBackImage(
-        height: dimension ?? audioCardDimension,
-        width: dimension ?? audioCardDimension,
+        height: dimension ?? sideBarImageSize,
+        width: dimension ?? sideBarImageSize,
         color: getAlphabetColor(uuid),
         child: Icon(
           selected ? Iconz.starFilled : Iconz.star,
