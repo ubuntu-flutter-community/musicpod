@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.1](https://github.com/ubuntu-flutter-community/musicpod/compare/v3.0.0...v3.0.1) (2026-09-23)
+
+
+### Bug Fixes
+
+* routing on subbing and unsubbing podcasts and simplify image loading ([#1684](https://github.com/ubuntu-flutter-community/musicpod/issues/1684)) ([4a51ab2](https://github.com/ubuntu-flutter-community/musicpod/commit/4a51ab22ca61c1cb69800c01b344153dc1f52688))
+
 ## [3.0.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v2.16.0...v3.0.0) (2026-09-19)
 
 
