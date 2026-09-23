@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.2](https://github.com/ubuntu-flutter-community/musicpod/compare/v3.0.1...v3.0.2) (2026-09-23)
+
+
+### Bug Fixes
+
+* npes and null data icon ([#1686](https://github.com/ubuntu-flutter-community/musicpod/issues/1686)) ([ae1f4cb](https://github.com/ubuntu-flutter-community/musicpod/commit/ae1f4cb4a0a8130687adace0e6bb0fd7d3e1e3dd))
+
 ## [3.0.1](https://github.com/ubuntu-flutter-community/musicpod/compare/v3.0.0...v3.0.1) (2026-09-23)
 
 
