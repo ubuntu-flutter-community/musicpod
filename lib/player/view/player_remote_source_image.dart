@@ -34,12 +34,12 @@ class PlayerRemoteSourceImage extends StatelessWidget with WatchItMixin {
       color: theme.cardColor.scale(lightness: theme.isLight ? -0.15 : 0.3),
       height: height,
       width: width,
-      child: remoteImageUrl?.isEmpty == true
+      child: remoteImageUrl == null
           ? fallBackIcon
           : SafeNetworkImage(
               onImageLoaded:
                   di<PlayerManager>().setRemoteColorFromImageProvider,
-              url: remoteImageUrl!,
+              url: remoteImageUrl,
               filterQuality: FilterQuality.medium,
               fit: fit ?? BoxFit.scaleDown,
               loadingWidget: fallBackIcon,
