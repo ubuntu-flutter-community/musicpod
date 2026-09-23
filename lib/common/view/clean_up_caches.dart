@@ -1,12 +1,7 @@
 import 'package:cached_network_image_ce/cached_network_image.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_it/flutter_it.dart';
-
-import '../../podcasts/manager/podcast_clean_manager.dart';
 
 import '../util/failed_image_urls.dart';
-
-void cleanUpUnusedPodcasts() => di<PodcastCleanManager>().command.run();
 
 /// Evicts all decoded textures from Flutter's in-memory image cache,
 /// freeing RAM without touching cached image files on disk.

@@ -134,6 +134,28 @@ void main() {
       expect(b.isDisposed, isTrue);
     });
 
+    test(
+      'disposeById disposes all instances with specified id regardless of Type',
+      () {
+        final a = Family.of(
+          'shared-id',
+          () => _TestResource('shared-id'),
+          shouldDispose: (r) => r.canDispose,
+          onDispose: (r) => r.isDisposed = true,
+        );
+        final b = Family.of(
+          'other-id',
+          () => _TestResource('other-id'),
+          shouldDispose: (r) => r.canDispose,
+          onDispose: (r) => r.isDisposed = true,
+        );
+
+        Family.disposeById('shared-id');
+        expect(a.isDisposed, isTrue);
+        expect(b.isDisposed, isFalse);
+      },
+    );
+
     test('auto-disposes instance when shouldDispose returns true', () async {
       final res = Family.of(
         'auto-1',

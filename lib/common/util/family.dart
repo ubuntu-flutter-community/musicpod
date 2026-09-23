@@ -129,6 +129,23 @@ abstract final class Family {
     return entry.instance as T;
   }
 
+  /// Removes and disposes every registered instance with [id], regardless of
+  /// its type.
+  static void disposeById(Object? id) {
+    final keys = _entries.keys.where((key) => key.$2 == id).toList();
+    for (final key in keys) {
+      final entry = _entries.remove(key);
+      if (entry != null) {
+        entry.timer?.cancel();
+        try {
+          entry.onDisposeInstance();
+        } catch (e, s) {
+          Logger.e(e, trace: s, tag: '${key.$1}:${key.$2}');
+        }
+      }
+    }
+  }
+
   /// Removes and disposes every registered instance of type [T], regardless of
   /// its id.
   static void disposeAll<T extends Object>() {

@@ -28,16 +28,18 @@ class AudioTileImage extends StatelessWidget {
         fallback: fallbackIcon,
       );
     } else {
-      image = SafeNetworkImage(
-        url: audio?.imageUrl ?? audio?.albumArtUrl,
-        height: size,
-        width: size,
-        cacheHeight: (size * 2).toInt(),
-        cacheWidth: (size * 2).toInt(),
-        fit: BoxFit.cover,
-        fallbackWidget: fallbackIcon,
-        errorWidget: fallbackIcon,
-      );
+      image = audio?.imageUrl == null
+          ? fallbackIcon
+          : SafeNetworkImage(
+              url: audio!.imageUrl!,
+              height: size,
+              width: size,
+              cacheHeight: (size * 2).toInt(),
+              cacheWidth: (size * 2).toInt(),
+              fit: BoxFit.cover,
+              loadingWidget: fallbackIcon,
+              errorWidget: fallbackIcon,
+            );
     }
 
     return SizedBox.square(

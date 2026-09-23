@@ -26,7 +26,7 @@ import '../play_anywhere_manager.dart';
 
 mixin CommonHandlersAndCommandsMixin {
   void callCommonCommands() => callOnceAfterThisBuild((_) {
-    di<PodcastCleanManager>().command.run();
+    di<PodcastCleanManager>().command.run((reclaimDiskSpace: true));
     di<AppManager>().recentPatchNotesDisposedCommand.run();
     di<AppManager>().specialNotesDisposedCommand.run();
   });

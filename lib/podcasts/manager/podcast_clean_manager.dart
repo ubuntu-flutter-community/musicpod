@@ -10,7 +10,6 @@ import '../service/podcast_service.dart';
 class PodcastCleanManager {
   PodcastCleanManager._(this._podcastService) {
     Logger.o(tag: '$PodcastCleanManager');
-    command.run();
   }
 
   @factoryMethod
@@ -23,13 +22,21 @@ class PodcastCleanManager {
 
   final PodcastService _podcastService;
 
-  late final Command<void, Set<String>?> command = Command.createAsyncNoParam(
-    () async {
-      final unsubscribedPodcasts = await _podcastService
-          .deleteUnsubscribedPodcastData();
+  late final Command<({bool reclaimDiskSpace}), Set<String>?> command =
+      Command.createAsync((options) async {
+        final unsubscribedPodcasts = await _podcastService
+            .deleteUnsubscribedPodcastData();
 
-      return Set.from(unsubscribedPodcasts ?? {});
-    },
-    initialValue: null,
-  );
+        if (unsubscribedPodcasts != null) {
+          for (final feedUrl in unsubscribedPodcasts) {
+            Family.disposeById(feedUrl);
+          }
+        }
+
+        if (options.reclaimDiskSpace) {
+          await _podcastService.reclaimDiskSpace();
+        }
+
+        return Set.from(unsubscribedPodcasts ?? {});
+      }, initialValue: null);
 }

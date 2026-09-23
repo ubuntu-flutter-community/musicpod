@@ -83,20 +83,26 @@ class _StationPageBody extends StatelessWidget with WatchItMixin {
                 width: kAudioHeaderDescriptionWidth,
                 child: RadioPageTagBar(station: station),
               ),
-              image: SafeNetworkImage(
-                fallbackWidget: AudioFallBackIcon(
-                  iconSize: kMaxAudioPageHeaderHeight / 2,
-                  audio: station,
-                  color: getAlphabetColor(station.uuid ?? 'a'),
-                ),
-                errorWidget: AudioFallBackIcon(
-                  iconSize: kMaxAudioPageHeaderHeight / 2,
-                  audio: station,
-                  color: getAlphabetColor(station.uuid ?? 'a'),
-                ),
-                url: station.imageUrl,
-                fit: BoxFit.scaleDown,
-              ),
+              image: station.imageUrl == null
+                  ? AudioFallBackIcon(
+                      iconSize: kMaxAudioPageHeaderHeight / 2,
+                      audio: station,
+                      color: getAlphabetColor(station.uuid ?? 'a'),
+                    )
+                  : SafeNetworkImage(
+                      loadingWidget: AudioFallBackIcon(
+                        iconSize: kMaxAudioPageHeaderHeight / 2,
+                        audio: station,
+                        color: getAlphabetColor(station.uuid ?? 'a'),
+                      ),
+                      errorWidget: AudioFallBackIcon(
+                        iconSize: kMaxAudioPageHeaderHeight / 2,
+                        audio: station,
+                        color: getAlphabetColor(station.uuid ?? 'a'),
+                      ),
+                      url: station.imageUrl!,
+                      fit: BoxFit.scaleDown,
+                    ),
             ),
             sliverBody: (constraints) => SliverRadioHistoryList(
               filter: station.title,

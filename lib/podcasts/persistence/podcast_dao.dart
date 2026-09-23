@@ -458,10 +458,6 @@ class PodcastDao {
       });
     });
 
-    if (deleteMeUrls.isNotEmpty) {
-      await _db.reclaimDiskSpace();
-    }
-
     return deleteMeUrls;
   }
 
@@ -575,4 +571,6 @@ class PodcastDao {
 
     return unsubscribedFeedUrls;
   }
+
+  Future<void> reclaimDiskSpace() => _db.reclaimDiskSpace();
 }

@@ -34,7 +34,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     callOnceAfterThisBuild((context) {
       clearInMemoryImageCache();
-      di<PodcastCleanManager>().command.run();
+      di<PodcastCleanManager>().command.run((reclaimDiskSpace: false));
     });
 
     onDispose(PodcastUpdatesManager.dispose);

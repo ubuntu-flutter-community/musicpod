@@ -8,14 +8,13 @@ import 'package:injectable/injectable.dart';
 import '../local_audio/service/local_audio_service.dart';
 import '../podcasts/service/podcast_service.dart';
 import '../radio/service/radio_service.dart';
-import '../search/view/search_page.dart';
 import '../settings/data/shared_preferences_keys.dart';
 import '../settings/service/settings_service.dart';
 import 'app_router.dart';
 import 'page_ids.dart';
 
 @lazySingleton
-class RoutingManager {
+class RoutingManager extends NavigatorObserver {
   RoutingManager({
     required PodcastService podcastService,
     required LocalAudioService localAudioService,
@@ -28,6 +27,11 @@ class RoutingManager {
     selectedPageIdCommand.run();
   }
 
+  // Note: Navigator.initState ensures assert(observer.navigator == null);
+  // Afterwards the Navigator itself!!! sets the navigator of its observers...
+  @override
+  NavigatorState? get navigator => null;
+
   final PodcastService _podcastService;
   final LocalAudioService _localAudioService;
   final RadioService _radioService;
@@ -39,6 +43,7 @@ class RoutingManager {
     initialLocation: locationForPageId(
       _settingsService.getString(SPKeys.selectedPage) ?? PageIDs.searchPage,
     ),
+    observers: [this],
   );
 
   GlobalKey<NavigatorState> get masterNavigatorKey => shellNavigatorKey;
@@ -49,6 +54,57 @@ class RoutingManager {
     }
     final uri = router.routeInformationProvider.value.uri;
     return pageIdForLocation(uri);
+  }
+
+  bool _isTopRoute(String? name) => name != null && !name.startsWith('/');
+
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    if (_isTopRoute(route.settings.name)) {
+      _topRouteName = route.settings.name;
+      selectedPageIdCommand(_topRouteName);
+    }
+  }
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    final prevName = previousRoute?.settings.name;
+    if (_isTopRoute(prevName)) {
+      _topRouteName = prevName;
+      selectedPageIdCommand(_topRouteName);
+    } else {
+      _topRouteName = null;
+      final basePageId = pageIdForLocation(
+        router.routeInformationProvider.value.uri,
+      );
+      selectedPageIdCommand(basePageId);
+    }
+  }
+
+  @override
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
+    final newName = newRoute?.settings.name;
+    if (_isTopRoute(newName)) {
+      _topRouteName = newName;
+      selectedPageIdCommand(_topRouteName);
+    }
+  }
+
+  @override
+  void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    if (route.settings.name == _topRouteName) {
+      final prevName = previousRoute?.settings.name;
+      if (_isTopRoute(prevName)) {
+        _topRouteName = prevName;
+        selectedPageIdCommand(_topRouteName);
+      } else {
+        _topRouteName = null;
+        final basePageId = pageIdForLocation(
+          router.routeInformationProvider.value.uri,
+        );
+        selectedPageIdCommand(basePageId);
+      }
+    }
   }
 
   Future<bool> isPageInLibrary(String? pageId) async =>
@@ -85,47 +141,25 @@ class RoutingManager {
       return;
     }
 
-    if (pageId == PageIDs.searchPage && currentRouteName != null) {
-      final previousPageId = currentRouteName;
-      final currentLoc = router.routeInformationProvider.value.uri.path;
-      _topRouteName = pageId;
-      selectedPageIdCommand(pageId);
+    if (pageId == PageIDs.searchPage) {
+      if (shellNavigatorKey.currentState?.canPop() == true) {
+        shellNavigatorKey.currentState?.popUntil((route) => route.isFirst);
+      }
 
-      final materialPageRoute = PageRouteBuilder(
-        maintainState: maintainState,
-        settings: const RouteSettings(name: PageIDs.searchPage),
-        pageBuilder: (context, __, ___) => const SearchPage(),
-      );
+      _topRouteName = null;
+      selectedPageIdCommand(PageIDs.searchPage);
 
-      if (replace) {
-        await shellNavigatorKey.currentState?.pushReplacement(
-          materialPageRoute,
-        );
-      } else {
-        await shellNavigatorKey.currentState?.push(materialPageRoute);
-        if (router.routeInformationProvider.value.uri.path == currentLoc) {
-          _topRouteName = previousPageId;
-          if (previousPageId != null) {
-            selectedPageIdCommand(previousPageId);
-          }
-        }
+      final isAtSearchRoot =
+          router.routeInformationProvider.value.uri.path ==
+          locationForPageId(PageIDs.searchPage);
+
+      if (!isAtSearchRoot) {
+        router.go(locationForPageId(PageIDs.searchPage));
       }
       return;
     }
 
-    final inLibrary = await isPageInLibrary(pageId);
-    assert(inLibrary || builder != null);
-
-    if (inLibrary) {
-      _topRouteName = null;
-      selectedPageIdCommand(pageId);
-      router.go(locationForPageId(pageId));
-    } else if (builder != null) {
-      final previousPageId = currentRouteName;
-      final currentLoc = router.routeInformationProvider.value.uri.path;
-      _topRouteName = pageId;
-      selectedPageIdCommand(pageId);
-
+    if (builder != null) {
       final materialPageRoute = PageRouteBuilder(
         maintainState: maintainState,
         settings: RouteSettings(name: pageId),
@@ -133,19 +167,24 @@ class RoutingManager {
       );
 
       if (replace) {
-        await shellNavigatorKey.currentState?.pushReplacement(
-          materialPageRoute,
+        unawaited(
+          shellNavigatorKey.currentState?.pushReplacement(materialPageRoute),
         );
       } else {
-        await shellNavigatorKey.currentState?.push(materialPageRoute);
-        if (router.routeInformationProvider.value.uri.path == currentLoc) {
-          _topRouteName = previousPageId;
-          if (previousPageId != null) {
-            selectedPageIdCommand(previousPageId);
-          }
-        }
+        unawaited(shellNavigatorKey.currentState?.push(materialPageRoute));
       }
+      return;
     }
+
+    final inLibrary = await isPageInLibrary(pageId);
+    assert(inLibrary);
+
+    if (shellNavigatorKey.currentState?.canPop() == true) {
+      shellNavigatorKey.currentState?.popUntil((route) => route.isFirst);
+    }
+    _topRouteName = null;
+    selectedPageIdCommand(pageId);
+    router.go(locationForPageId(pageId));
   }
 
   void pop() {

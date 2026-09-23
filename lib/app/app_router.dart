@@ -45,6 +45,7 @@ GoRouter createAppRouter({
   routes: [
     ShellRoute(
       navigatorKey: shellNavigatorKey,
+      observers: observers,
       builder: (context, state, child) => MasterDetailShell(child: child),
       routes: [
         GoRoute(path: '/', redirect: (_, __) => initialLocation),
