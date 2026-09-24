@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.3](https://github.com/ubuntu-flutter-community/musicpod/compare/v3.0.2...v3.0.3) (2026-09-24)
+
+
+### Bug Fixes
+
+* change db location to XDG standard and migrate for not-flatpak/other OS ([#1689](https://github.com/ubuntu-flutter-community/musicpod/issues/1689)) ([cbc5fd5](https://github.com/ubuntu-flutter-community/musicpod/commit/cbc5fd54d276c8e49f39c6fff7ce603ece30887c)), closes [#1682](https://github.com/ubuntu-flutter-community/musicpod/issues/1682)
+
 ## [3.0.2](https://github.com/ubuntu-flutter-community/musicpod/compare/v3.0.1...v3.0.2) (2026-09-23)
 
 
