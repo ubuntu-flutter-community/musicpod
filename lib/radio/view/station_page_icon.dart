@@ -43,6 +43,9 @@ class StationPageIcon extends StatelessWidget with WatchItMixin {
                     errorWidget: _getIcon(context.theme.colorScheme, selected),
                     height: dimension ?? sideBarImageSize,
                     width: dimension ?? sideBarImageSize,
+                    loadingWidget: Center(
+                      child: _getIcon(context.theme.colorScheme, selected),
+                    ),
                     cacheHeight: ((dimension ?? sideBarImageSize) * 2).toInt(),
                     cacheWidth: ((dimension ?? sideBarImageSize) * 2).toInt(),
                     fit: BoxFit.fitHeight,
