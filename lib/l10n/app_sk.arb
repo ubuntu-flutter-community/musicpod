@@ -909,5 +909,21 @@
             }
         }
     },
-    "podcastEpisodesNotFound": "Pre tento podcast sa nenašli žiadne epizódy. Mohli byť odstránené alebo podcast už nemusí byť dostupný na tejto adrese URL kanála."
+    "podcastEpisodesNotFound": "Pre tento podcast sa nenašli žiadne epizódy. Mohli byť odstránené alebo podcast už nemusí byť dostupný na tejto adrese URL kanála.",
+    "playAllEpisodes": "Prehrať všetko {length}",
+    "@playAllEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    },
+    "playOnlyLoadedEpisodes": "Prehrať iba {length}",
+    "@playOnlyLoadedEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    }
 }
