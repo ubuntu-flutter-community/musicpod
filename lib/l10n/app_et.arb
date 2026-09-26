@@ -909,5 +909,21 @@
             }
         }
     },
-    "podcastEpisodesNotFound": "Selle taskuhäälingu jaoks ei leidu osi. Nad võivad olla lihtsalt eemaldatud või pole taskuhääling enam sellel võrguaadressil saadaval."
+    "podcastEpisodesNotFound": "Selle taskuhäälingu jaoks ei leidu osi. Nad võivad olla lihtsalt eemaldatud või pole taskuhääling enam sellel võrguaadressil saadaval.",
+    "playAllEpisodes": "Esita kõik osad kestusega {length}",
+    "@playAllEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    },
+    "playOnlyLoadedEpisodes": "Esita vaid laaditud osad kestusega {length}",
+    "@playOnlyLoadedEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    }
 }
