@@ -917,5 +917,21 @@
             }
         }
     },
-    "podcastEpisodesNotFound": ""
+    "podcastEpisodesNotFound": "Nessun episodio trovato per questo podcast. Potrebbero essere stati rimossi o il podcast potrebbe non essere più disponibile con questo URL del feed.",
+    "playAllEpisodes": "Riproduci tutto {length}",
+    "@playAllEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    },
+    "playOnlyLoadedEpisodes": "Riproduci solo {length}",
+    "@playOnlyLoadedEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    }
 }
