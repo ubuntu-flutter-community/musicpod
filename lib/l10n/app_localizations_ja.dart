@@ -2419,11 +2419,11 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String playAllEpisodes(String length) {
-    return 'Play all $length';
+    return '($length) をすべて再生';
   }
 
   @override
   String playOnlyLoadedEpisodes(String length) {
-    return 'Play only $length';
+    return '$length のみ再生';
   }
 }
