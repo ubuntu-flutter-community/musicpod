@@ -909,5 +909,21 @@
             }
         }
     },
-    "podcastEpisodesNotFound": "このポッドキャストのエピソードは見つかりませんでした。削除されたか、あるいはこのフィードURLでは利用できなくなった可能性があります。"
+    "podcastEpisodesNotFound": "このポッドキャストのエピソードは見つかりませんでした。削除されたか、あるいはこのフィードURLでは利用できなくなった可能性があります。",
+    "playAllEpisodes": "({length}) をすべて再生",
+    "@playAllEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    },
+    "playOnlyLoadedEpisodes": "{length} のみ再生",
+    "@playOnlyLoadedEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    }
 }
