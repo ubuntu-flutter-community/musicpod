@@ -2471,15 +2471,16 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get podcastEpisodesNotFound => '';
+  String get podcastEpisodesNotFound =>
+      'Nessun episodio trovato per questo podcast. Potrebbero essere stati rimossi o il podcast potrebbe non essere più disponibile con questo URL del feed.';
 
   @override
   String playAllEpisodes(String length) {
-    return 'Play all $length';
+    return 'Riproduci tutto $length';
   }
 
   @override
   String playOnlyLoadedEpisodes(String length) {
-    return 'Play only $length';
+    return 'Riproduci solo $length';
   }
 }
