@@ -897,10 +897,10 @@
     "radioBrowserLoadingTagsTimeouted": "Det tog längre tid än väntat att ladda taggarna. Är du ansluten till internet? Om ja, kan det vara ett serverproblem",
     "podcastSearchNotSuccessfull": "Den här podcastsökningen misslyckades, är du ansluten till internet? Om ja, kan det vara ett serverproblem.",
     "podcastFailedHostLookup": "Det gick inte att hitta avsnitten – det gick inte att ansluta till servern. Är du ansluten till internet? Om ja, kan det vara ett serverproblem.",
-    "fetchingLyricsOnlineFailed": "",
-    "onlineLyricsSourceTitle": "",
-    "fetchingLyricsOnlineTimeoutMessage": "",
-    "appCanNotConnectToHost": "",
+    "fetchingLyricsOnlineFailed": "Hämtning av låttext online misslyckades. Det kan bero på ett serverproblem, eller så kanske låten inte är tillgänglig",
+    "onlineLyricsSourceTitle": "Online källa för låttexter",
+    "fetchingLyricsOnlineTimeoutMessage": "Att hämta låttext online tar längre tid än vanligt. Är du ansluten till internet? Om så är fallet kan det bero på ett serverproblem, eller så kanske låten inte är tillgänglig",
+    "appCanNotConnectToHost": "{appName} kan inte ansluta till {host}. Är du ansluten till internet?",
     "@appCanNotConnectToHost": {
         "placeholders": {
             "appName": {
@@ -911,10 +911,26 @@
             }
         }
     },
-    "fetchingLyricsOnline": "",
-    "tryToFetchLyricsOnlineDescription": "",
-    "podcastEpisodesNotFound": "",
-    "tryToFetchLyricsOnlineTitle": "",
-    "onlineLyricsSourceLrcLib": "",
-    "onlineLyricsSourceDescription": ""
+    "fetchingLyricsOnline": "Hämtar låttext online, vänligen vänta ...",
+    "tryToFetchLyricsOnlineDescription": "Vill du försöka hämta låttext online?",
+    "podcastEpisodesNotFound": "Inga avsnitt hittades för denna podcast. Den kan ha tagits bort, eller så kanske podcasten inte längre är tillgänglig via denna flödesadress.",
+    "tryToFetchLyricsOnlineTitle": "Försök hämta låttext online",
+    "onlineLyricsSourceLrcLib": "LrcLib",
+    "onlineLyricsSourceDescription": "Välj källa för online låttexter.",
+    "playAllEpisodes": "Spela alla {length}",
+    "@playAllEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    },
+    "playOnlyLoadedEpisodes": "Spela endast {length}",
+    "@playOnlyLoadedEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    }
 }
