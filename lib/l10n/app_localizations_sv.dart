@@ -2439,44 +2439,50 @@ class AppLocalizationsSv extends AppLocalizations {
       'Det gick inte att hitta avsnitten – det gick inte att ansluta till servern. Är du ansluten till internet? Om ja, kan det vara ett serverproblem.';
 
   @override
-  String get tryToFetchLyricsOnlineTitle => '';
+  String get tryToFetchLyricsOnlineTitle => 'Försök hämta låttext online';
 
   @override
-  String get tryToFetchLyricsOnlineDescription => '';
+  String get tryToFetchLyricsOnlineDescription =>
+      'Vill du försöka hämta låttext online?';
 
   @override
-  String get fetchingLyricsOnline => '';
+  String get fetchingLyricsOnline =>
+      'Hämtar låttext online, vänligen vänta ...';
 
   @override
-  String get fetchingLyricsOnlineTimeoutMessage => '';
+  String get fetchingLyricsOnlineTimeoutMessage =>
+      'Att hämta låttext online tar längre tid än vanligt. Är du ansluten till internet? Om så är fallet kan det bero på ett serverproblem, eller så kanske låten inte är tillgänglig';
 
   @override
-  String get fetchingLyricsOnlineFailed => '';
+  String get fetchingLyricsOnlineFailed =>
+      'Hämtning av låttext online misslyckades. Det kan bero på ett serverproblem, eller så kanske låten inte är tillgänglig';
 
   @override
-  String get onlineLyricsSourceTitle => '';
+  String get onlineLyricsSourceTitle => 'Online källa för låttexter';
 
   @override
-  String get onlineLyricsSourceDescription => '';
+  String get onlineLyricsSourceDescription =>
+      'Välj källa för online låttexter.';
 
   @override
-  String get onlineLyricsSourceLrcLib => '';
+  String get onlineLyricsSourceLrcLib => 'LrcLib';
 
   @override
   String appCanNotConnectToHost(String appName, String host) {
-    return '';
+    return '$appName kan inte ansluta till $host. Är du ansluten till internet?';
   }
 
   @override
-  String get podcastEpisodesNotFound => '';
+  String get podcastEpisodesNotFound =>
+      'Inga avsnitt hittades för denna podcast. Den kan ha tagits bort, eller så kanske podcasten inte längre är tillgänglig via denna flödesadress.';
 
   @override
   String playAllEpisodes(String length) {
-    return 'Play all $length';
+    return 'Spela alla $length';
   }
 
   @override
   String playOnlyLoadedEpisodes(String length) {
-    return 'Play only $length';
+    return 'Spela endast $length';
   }
 }
