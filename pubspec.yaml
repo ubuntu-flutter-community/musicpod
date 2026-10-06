@@ -50,6 +50,7 @@ dependencies:
   local_notifier: ^0.1.6
   lrc: ^1.0.2
   m3u_parser_nullsafe: ^1.0.3
+  macos_secure_bookmarks: ^0.3.0
   media_kit:
     git:
       url: https://github.com/Predidit/media-kit.git

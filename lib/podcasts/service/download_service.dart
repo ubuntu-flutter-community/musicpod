@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:path/path.dart' as p;
 
 import '../../external_path/service/external_path_service.dart';
+import '../../external_path/service/secure_bookmark_service.dart';
 import '../../settings/service/settings_service.dart';
 import '../../settings/data/shared_preferences_keys.dart';
 
@@ -14,13 +15,16 @@ class DownloadService {
     required ExternalPathService externalPathService,
     required SettingsService settingsService,
     required Dio dio,
+    required SecureBookmarkService secureBookmarkService,
   }) : _externalPathService = externalPathService,
        _settingsService = settingsService,
-       _dio = dio;
+       _dio = dio,
+       _secureBookmarkService = secureBookmarkService;
 
   final ExternalPathService _externalPathService;
   final SettingsService _settingsService;
   final Dio _dio;
+  final SecureBookmarkService _secureBookmarkService;
 
   Future<String?> setDownloadsDirectory({required bool getDefault}) async {
     String? dirError;
@@ -48,6 +52,10 @@ class DownloadService {
     } else {
       if (directoryPath != null) {
         await _settingsService.setValue(SPKeys.downloads, directoryPath);
+        await _secureBookmarkService.saveBookmarkFor(
+          spKey: SPKeys.downloadsBookmark,
+          path: directoryPath,
+        );
         return _settingsService.downloadsDirOrDefault;
       }
     }

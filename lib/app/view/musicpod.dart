@@ -41,7 +41,8 @@ class _MusicPodState extends State<MusicPod> {
                   addQuitButton: true,
                 ),
               )
-            : snapshot.hasData
+            : (snapshot.hasData ||
+                  snapshot.connectionState == ConnectionState.done)
             ? isLinux
                   ? GtkApplication(
                       onCommandLine: (args) =>

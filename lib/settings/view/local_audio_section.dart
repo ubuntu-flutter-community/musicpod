@@ -5,7 +5,9 @@ import '../../common/logging.dart';
 import '../../common/view/common_widgets.dart';
 import '../../extensions/build_context_x.dart';
 import '../../external_path/service/external_path_service.dart';
+import '../../external_path/service/secure_bookmark_service.dart';
 import '../../local_audio/manager/local_audio_manager.dart';
+import '../data/shared_preferences_keys.dart';
 import '../manager/settings_manager.dart';
 import '../manager/wipe_manager.dart';
 import 'settings_list_tile.dart';
@@ -37,6 +39,10 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
                   .getPathOfDirectory();
               Logger.i('Selected directory: $directoryPath');
               if (directoryPath != null) {
+                await di<SecureBookmarkService>().saveBookmarkFor(
+                  spKey: SPKeys.directoryBookmark,
+                  path: directoryPath,
+                );
                 await di<WipeManager>().command.runAsync({WipeType.localAudio});
                 di<LocalAudioManager>().initAudiosCommand.run((
                   forceInit: true,
