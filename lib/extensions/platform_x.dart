@@ -15,6 +15,7 @@ bool get isWindows => !kIsWeb && Platform.isWindows;
 bool get isIOS => !kIsWeb && Platform.isIOS;
 bool get isAndroid => !kIsWeb && Platform.isAndroid;
 bool get isFuchsia => !kIsWeb && Platform.isFuchsia;
+bool get isTest => !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
 
 extension PlatformX on Platform {
   static Future<String?> get downloadsDefaultDir async {
