@@ -12,22 +12,20 @@ import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/logging.dart';
 import '../../common/view/languages.dart';
-import '../../extensions/command_x.dart';
 import '../../extensions/string_x.dart';
 import '../../local_audio/data/local_search_result.dart';
 import '../../local_audio/service/local_audio_service.dart';
 import '../../podcasts/data/podcast_genre.dart';
 import '../../podcasts/service/podcast_service.dart';
-import '../../common/util/family.dart';
 import '../../radio/manager/radio_manager.dart';
 import '../../settings/service/settings_service.dart';
 import '../../settings/data/shared_preferences_keys.dart';
 import '../data/search_timeout_exception.dart';
 import '../data/search_type.dart';
 
-@injectable
+@Injectable(cache: true)
 class SearchManager {
-  SearchManager._({
+  SearchManager({
     required RadioManager radioManager,
     required PodcastService podcastService,
     required LocalAudioService localAudioService,
@@ -69,30 +67,6 @@ class SearchManager {
     );
   }
 
-  @factoryMethod
-  static SearchManager create({
-    required RadioManager radioManager,
-    required PodcastService podcastService,
-    required LocalAudioService localAudioService,
-    required SettingsService settingsService,
-  }) => Family.of(
-    '$SearchManager',
-    () => SearchManager._(
-      radioManager: radioManager,
-      podcastService: podcastService,
-      localAudioService: localAudioService,
-      settingsService: settingsService,
-    ),
-    shouldDispose: (m) =>
-        m.searchCommand.safeToDispose && !m.searchQuery.hasListeners,
-    onDispose: (m) {
-      m.searchCommand.dispose();
-      m.searchQuery.dispose();
-      m.radioSearchResult.dispose();
-      m.localSearchResult.dispose();
-      m.podcastSearchResult.dispose();
-    },
-  );
 
   final RadioManager _radioManager;
   final PodcastService _podcastService;

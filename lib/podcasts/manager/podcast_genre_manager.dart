@@ -1,14 +1,12 @@
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../common/util/family.dart';
-import '../../extensions/command_x.dart';
 import '../service/podcast_service.dart';
 
-@injectable
+@Injectable(cache: true)
 class PodcastGenreManager {
-  PodcastGenreManager._({
-    required String feedUrl,
+  PodcastGenreManager({
+    @factoryParam required String feedUrl,
     required PodcastService podcastService,
   }) {
     findCommand = Command.createAsyncNoParam(
@@ -25,22 +23,6 @@ class PodcastGenreManager {
 
     findCommand.run();
   }
-
-  @factoryMethod
-  static PodcastGenreManager create({
-    @factoryParam required String feedUrl,
-    required PodcastService podcastService,
-  }) => Family.of(
-    feedUrl,
-    () =>
-        PodcastGenreManager._(feedUrl: feedUrl, podcastService: podcastService),
-    shouldDispose: (m) =>
-        m.findCommand.safeToDispose && m.updateCommand.safeToDispose,
-    onDispose: (m) {
-      m.findCommand.dispose();
-      m.updateCommand.dispose();
-    },
-  );
 
   late final Command<void, String?> findCommand;
 

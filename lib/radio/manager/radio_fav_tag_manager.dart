@@ -1,13 +1,11 @@
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../common/util/family.dart';
-import '../../extensions/command_x.dart';
 import '../service/radio_service.dart';
 
-@injectable
+@Injectable(cache: true)
 class RadioFavTagManager {
-  RadioFavTagManager._({required RadioService service}) {
+  RadioFavTagManager({required RadioService service}) {
     command = Command.createAsync((tag) async {
       if (tag != null) {
         await service.toggleFavRadioTag(tag);
@@ -18,15 +16,6 @@ class RadioFavTagManager {
 
     command.run();
   }
-
-  @factoryMethod
-  static RadioFavTagManager create({required RadioService service}) =>
-      Family.of(
-        '$RadioFavTagManager',
-        () => RadioFavTagManager._(service: service),
-        shouldDispose: (m) => m.command.safeToDispose,
-        onDispose: (m) => m.command.dispose(),
-      );
 
   late final Command<String?, Set<String>> command;
 }

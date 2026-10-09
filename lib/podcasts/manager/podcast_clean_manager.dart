@@ -3,22 +3,13 @@ import 'package:injectable/injectable.dart';
 
 import '../../common/logging.dart';
 import '../../common/util/family.dart';
-import '../../extensions/command_x.dart';
 import '../service/podcast_service.dart';
 
-@injectable
+@Injectable(cache: true)
 class PodcastCleanManager {
-  PodcastCleanManager._(this._podcastService) {
+  PodcastCleanManager(this._podcastService) {
     Logger.o(tag: '$PodcastCleanManager');
   }
-
-  @factoryMethod
-  static PodcastCleanManager create(PodcastService podcastService) => Family.of(
-    '$PodcastCleanManager',
-    () => PodcastCleanManager._(podcastService),
-    shouldDispose: (m) => m.command.safeToDispose,
-    onDispose: (m) => m.command.dispose(),
-  );
 
   final PodcastService _podcastService;
 

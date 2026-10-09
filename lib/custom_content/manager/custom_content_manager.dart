@@ -12,7 +12,6 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/logging.dart';
-import '../../extensions/command_x.dart';
 import '../../extensions/media_file_x.dart';
 import '../../external_path/service/external_path_service.dart';
 import '../../local_audio/data/playlist_action.dart';
@@ -23,15 +22,14 @@ import '../../local_audio/manager/playlist_manager.dart';
 import '../../podcasts/data/podcast_toggle_capsule.dart';
 import '../../podcasts/manager/episodes_manager.dart';
 import '../../podcasts/manager/podcast_short_info_manager.dart';
-import '../../common/util/family.dart';
 import '../../podcasts/manager/subscribed_podcasts_manager.dart';
 import '../../radio/manager/radio_manager.dart';
 import '../../radio/manager/radio_star_station_manager.dart';
 import '../../radio/service/radio_service.dart';
 
-@injectable
+@Injectable(cache: true)
 class CustomContentManager {
-  CustomContentManager._({
+  CustomContentManager({
     required ExternalPathService externalPathService,
     required PlaylistIDsManager playlistIDsManager,
     required PinnedAlbumIDsManager pinnedAlbumIDsManager,
@@ -45,31 +43,6 @@ class CustomContentManager {
     Logger.o(tag: '$CustomContentManager');
   }
 
-  @factoryMethod
-  static CustomContentManager create({
-    required ExternalPathService externalPathService,
-    required PlaylistIDsManager playlistIDsManager,
-    required PinnedAlbumIDsManager pinnedAlbumIDsManager,
-    required SubscribedPodcastsManager podcastService,
-    required RadioService radioService,
-  }) => Family.of(
-    '$CustomContentManager',
-    () => CustomContentManager._(
-      externalPathService: externalPathService,
-      playlistIDsManager: playlistIDsManager,
-      pinnedAlbumIDsManager: pinnedAlbumIDsManager,
-      podcastService: podcastService,
-      radioService: radioService,
-    ),
-    shouldDispose: (m) =>
-        m.importExternalPlaylistsCommand.safeToDispose &&
-        !m.playlistName.hasListeners,
-    onDispose: (m) {
-      m.importExternalPlaylistsCommand.dispose();
-      m.externalPlaylistsDraft.dispose();
-      m.playlistName.dispose();
-    },
-  );
 
   final ExternalPathService _externalPathService;
   final SubscribedPodcastsManager _subscribedPodcastsManager;

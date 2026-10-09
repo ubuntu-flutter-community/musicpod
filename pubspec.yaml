@@ -31,7 +31,7 @@ dependencies:
   flex_color_picker: ^3.8.0
   flutter:
     sdk: flutter
-  flutter_it: ^2.1.2
+  flutter_it: ^2.2.0
   flutter_localizations:
     sdk: flutter
   flutter_markdown: ^0.7.7+1
@@ -131,10 +131,6 @@ flutter:
           style: normal
 
 dependency_overrides:
-  listen_it:
-    git:
-      url: https://github.com/flutter-it/listen_it
-      ref: 8a578591162350887accbdb4c3d4aeede161d5ef
   media_kit_libs_android_video:
     git:
       url: https://github.com/Predidit/media-kit.git
@@ -165,7 +161,3 @@ dependency_overrides:
       url: https://github.com/Predidit/media-kit.git
       ref: df5a969e617a1ce038d5cca46bedcfa1970a7dc6
       path: ./libs/windows/media_kit_libs_windows_video
-  watch_it:
-    git:
-      url: https://github.com/Feichtmeier/watch_it
-      ref: 5451b1e287528f7b5793e7cee21a6b71dddbaa1b

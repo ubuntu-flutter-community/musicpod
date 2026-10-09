@@ -217,11 +217,11 @@ void main() {
         );
 
         GetIt.I.registerSingleton<PodcastUpdatedFeedsManager>(
-          PodcastUpdatedFeedsManager.create(podcastService: fakeService),
+          PodcastUpdatedFeedsManager(podcastService: fakeService),
         );
         final feedsManager = di<PodcastUpdatedFeedsManager>();
 
-        final manager = PodcastUpdatesManager.create(
+        final manager = PodcastUpdatesManager(
           podcastService: fakeService,
           feedsManager: feedsManager,
         );
@@ -317,10 +317,10 @@ void main() {
         // Register dependencies in GetIt
         GetIt.I.registerSingleton<PodcastService>(fakeService);
         GetIt.I.registerSingleton<PodcastUpdatedFeedsManager>(
-          PodcastUpdatedFeedsManager.create(podcastService: fakeService),
+          PodcastUpdatedFeedsManager(podcastService: fakeService),
         );
         GetIt.I.registerSingleton<PodcastUpdatesManager>(
-          PodcastUpdatesManager.create(
+          PodcastUpdatesManager(
             podcastService: fakeService,
             feedsManager: di<PodcastUpdatedFeedsManager>(),
           ),
@@ -442,15 +442,15 @@ void main() {
 
         GetIt.I.registerSingleton<PodcastService>(fakeService);
         GetIt.I.registerSingleton<PodcastUpdatedFeedsManager>(
-          PodcastUpdatedFeedsManager.create(podcastService: fakeService),
+          PodcastUpdatedFeedsManager(podcastService: fakeService),
         );
         GetIt.I.registerSingleton<PodcastUpdatesManager>(
-          PodcastUpdatesManager.create(
+          PodcastUpdatesManager(
             podcastService: fakeService,
             feedsManager: di<PodcastUpdatedFeedsManager>(),
           ),
         );
-        GetIt.I.registerFactoryParam<PodcastShortInfoManager, String, void>(
+        GetIt.I.registerCachedFactoryParam<PodcastShortInfoManager, String, void>(
           (url, _) => FakePodcastShortInfoManager(name: 'Tech Talk'),
         );
 

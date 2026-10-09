@@ -3,6 +3,7 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+
 import 'dart:async' as _i5;
 
 import 'package:drift/drift.dart' as _i2;
@@ -1070,6 +1071,29 @@ class MockDatabase extends _i1.Mock implements _i3.Database {
               this,
               Invocation.method(
                 #$writeInsertable,
+                [table, insertable],
+                {#startIndex: startIndex},
+              ),
+            ),
+          )
+          as _i2.GenerationContext);
+
+  @override
+  _i2.GenerationContext $writeUpdateInsertable(
+    _i2.TableInfo<_i2.Table, dynamic>? table,
+    _i2.Insertable<dynamic>? insertable, {
+    int? startIndex,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(
+              #$writeUpdateInsertable,
+              [table, insertable],
+              {#startIndex: startIndex},
+            ),
+            returnValue: _FakeGenerationContext_37(
+              this,
+              Invocation.method(
+                #$writeUpdateInsertable,
                 [table, insertable],
                 {#startIndex: startIndex},
               ),

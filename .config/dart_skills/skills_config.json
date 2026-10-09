@@ -1,0 +1,53 @@
+{
+  "version": 2,
+  "installations": {
+    "generic": {
+      "https://github.com/flutter-it/flutter_it.git": {
+        "skills": [
+          {
+            "name": "flutter-it-watch-it",
+            "installedAt": "2026-10-09T10:30:20.165851Z",
+            "contentHash": "aeWOWdzoZ36Ig0Kwb8/y/Q==",
+            "path": "skills/flutter-it-watch-it"
+          },
+          {
+            "name": "flutter-it-overview",
+            "installedAt": "2026-10-09T10:30:20.170409Z",
+            "contentHash": "G+h7mT2XmKOW0bBOgLY34g==",
+            "path": "skills/flutter-it-overview"
+          },
+          {
+            "name": "flutter-it-listen-it",
+            "installedAt": "2026-10-09T10:30:20.173815Z",
+            "contentHash": "dVf0co/2/UBk+WZAL87o5g==",
+            "path": "skills/flutter-it-listen-it"
+          },
+          {
+            "name": "flutter-it-architecture",
+            "installedAt": "2026-10-09T10:30:20.176185Z",
+            "contentHash": "BL57BLnLk9HIPXuKhFOoKg==",
+            "path": "skills/flutter-it-architecture"
+          },
+          {
+            "name": "flutter-it-command-it",
+            "installedAt": "2026-10-09T10:30:20.178059Z",
+            "contentHash": "WcSaAC3S75kpAi9gM3zfXQ==",
+            "path": "skills/flutter-it-command-it"
+          },
+          {
+            "name": "flutter-it-feed-datasource",
+            "installedAt": "2026-10-09T10:30:20.179592Z",
+            "contentHash": "aH60RkE+OC1x3mNWlc60uA==",
+            "path": "skills/flutter-it-feed-datasource"
+          },
+          {
+            "name": "flutter-it-get-it",
+            "installedAt": "2026-10-09T10:30:20.181012Z",
+            "contentHash": "IOA0KF/GznGStbe4djIkig==",
+            "path": "skills/flutter-it-get-it"
+          }
+        ]
+      }
+    }
+  }
+}

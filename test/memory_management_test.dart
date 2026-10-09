@@ -163,7 +163,7 @@ void main() {
       final fakeLocalAudio = FakeLocalAudioManager();
       fakeLocalAudio.libraryHasTracks = false;
 
-      final manager = HasTracksManager.create(
+      final manager = HasTracksManager(
         localAudioManager: fakeLocalAudio,
       );
 
@@ -195,7 +195,7 @@ void main() {
         fakeLocalAudio.likedPaths.add(song1.path!);
         fakeLocalAudio.likedAudios.add(song1);
 
-        final pathsManager = LikedAudioPathsManager.create(
+        final pathsManager = LikedAudioPathsManager(
           localAudioManager: fakeLocalAudio,
         );
 
@@ -240,7 +240,7 @@ void main() {
       'LikedAudioPathsManager does not eagerly instantiate LikedAudiosManager when not in Family',
       () async {
         final fakeLocalAudio = FakeLocalAudioManager();
-        final pathsManager = LikedAudioPathsManager.create(
+        final pathsManager = LikedAudioPathsManager(
           localAudioManager: fakeLocalAudio,
         );
 
@@ -263,10 +263,10 @@ void main() {
       'Synchronizes LikedAudioPathsManager when LikedAudiosManager is active',
       () async {
         final fakeLocalAudio = FakeLocalAudioManager();
-        final pathsManager = LikedAudioPathsManager.create(
+        final pathsManager = LikedAudioPathsManager(
           localAudioManager: fakeLocalAudio,
         );
-        final audiosManager = LikedAudiosManager.create(
+        final audiosManager = LikedAudiosManager(
           localAudioManager: fakeLocalAudio,
           pathsManager: pathsManager,
         );
@@ -343,7 +343,7 @@ void main() {
     }
 
     test('initially loads only pageSize episodes into command.value', () async {
-      final manager = EpisodesManager.create(
+      final manager = EpisodesManager(
         feedUrl: feedUrl,
         podcastManager: fakePodcastManager,
         downloadsManager: fakeDownloadManager,
@@ -366,7 +366,7 @@ void main() {
     test(
       'loadMore increments displayedCount and updates command.value synchronously',
       () async {
-        final manager = EpisodesManager.create(
+        final manager = EpisodesManager(
           feedUrl: feedUrl,
           podcastManager: fakePodcastManager,
           downloadsManager: fakeDownloadManager,
@@ -396,7 +396,7 @@ void main() {
     );
 
     test('search query reset restores displayedCount to pageSize', () async {
-      final manager = EpisodesManager.create(
+      final manager = EpisodesManager(
         feedUrl: feedUrl,
         podcastManager: fakePodcastManager,
         downloadsManager: fakeDownloadManager,
@@ -418,7 +418,7 @@ void main() {
     });
 
     test('changing filter type restores displayedCount to pageSize', () async {
-      final manager = EpisodesManager.create(
+      final manager = EpisodesManager(
         feedUrl: feedUrl,
         podcastManager: fakePodcastManager,
         downloadsManager: fakeDownloadManager,

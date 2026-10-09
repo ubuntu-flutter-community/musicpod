@@ -3,14 +3,12 @@ import 'dart:typed_data';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../common/util/family.dart';
-import '../../extensions/command_x.dart';
 import '../service/local_cover_service.dart';
 
-@injectable
+@Injectable(cache: true)
 class LocalCoverManager {
-  LocalCoverManager._({
-    required int albumId,
+  LocalCoverManager({
+    @factoryParam required int albumId,
     required LocalCoverService localCoverService,
   }) {
     command = Command.createAsyncNoParam(
@@ -19,20 +17,6 @@ class LocalCoverManager {
     );
     command.run();
   }
-
-  @factoryMethod
-  factory LocalCoverManager.create({
-    @factoryParam required int albumId,
-    required LocalCoverService localCoverService,
-  }) => Family.of(
-    albumId,
-    () => LocalCoverManager._(
-      albumId: albumId,
-      localCoverService: localCoverService,
-    ),
-    shouldDispose: (m) => m.command.safeToDispose,
-    onDispose: (m) => m.command.dispose(),
-  );
 
   late final Command<void, Uint8List?> command;
 }

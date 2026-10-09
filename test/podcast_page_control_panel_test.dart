@@ -199,7 +199,7 @@ void main() {
     GetIt.I.registerSingleton<PlayerManager>(playerManager);
     GetIt.I.registerSingleton<SettingsManager>(settingsManager);
     GetIt.I.registerSingleton<SubscribedPodcastsManager>(subscribedManager);
-    GetIt.I.registerFactoryParam<PodcastShortInfoManager, String, void>(
+    GetIt.I.registerCachedFactoryParam<PodcastShortInfoManager, String, void>(
       (url, _) => FakePodcastShortInfoManagerForControlPanel(),
     );
   });
@@ -220,7 +220,7 @@ void main() {
   testWidgets('plays all directly when all episodes are already loaded', (
     tester,
   ) async {
-    GetIt.I.registerFactoryParam<EpisodesManager, String, void>(
+    GetIt.I.registerCachedFactoryParam<EpisodesManager, String, void>(
       (url, _) => FakeEpisodesManagerForControlPanel(
         loadedEpisodes: allEpisodes,
         allEpisodes: allEpisodes,
@@ -247,7 +247,7 @@ void main() {
   testWidgets(
     'shows confirmation dialog when more episodes exist, and allows playing loaded subset',
     (tester) async {
-      GetIt.I.registerFactoryParam<EpisodesManager, String, void>(
+      GetIt.I.registerCachedFactoryParam<EpisodesManager, String, void>(
         (url, _) => FakeEpisodesManagerForControlPanel(
           loadedEpisodes: loadedEpisodes,
           allEpisodes: allEpisodes,
@@ -284,7 +284,7 @@ void main() {
   testWidgets(
     'shows confirmation dialog when more episodes exist, and allows playing all episodes',
     (tester) async {
-      GetIt.I.registerFactoryParam<EpisodesManager, String, void>(
+      GetIt.I.registerCachedFactoryParam<EpisodesManager, String, void>(
         (url, _) => FakeEpisodesManagerForControlPanel(
           loadedEpisodes: loadedEpisodes,
           allEpisodes: allEpisodes,
@@ -322,7 +322,7 @@ void main() {
     (tester) async {
       playerManager.queue = Queue(name: feedUrl, audios: allEpisodes);
 
-      GetIt.I.registerFactoryParam<EpisodesManager, String, void>(
+      GetIt.I.registerCachedFactoryParam<EpisodesManager, String, void>(
         (url, _) => FakeEpisodesManagerForControlPanel(
           loadedEpisodes: loadedEpisodes,
           allEpisodes: allEpisodes,

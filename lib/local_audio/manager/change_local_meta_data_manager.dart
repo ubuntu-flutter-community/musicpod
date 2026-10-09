@@ -4,37 +4,19 @@ import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/logging.dart';
-import '../../common/util/family.dart';
-import '../../extensions/command_x.dart';
 import '../data/change_metadata_capsule.dart';
 import '../service/local_audio_service.dart';
 
-@injectable
+@Injectable(cache: true)
 class ChangeLocalMetaDataManager {
-  ChangeLocalMetaDataManager._({
-    required Audio audio,
+  ChangeLocalMetaDataManager({
+    @factoryParam required Audio audio,
     required LocalAudioService localAudioService,
   }) : _audio = audio,
        _localAudioService = localAudioService {
     Logger.o(tag: '$ChangeLocalMetaDataManager:${audio.path}');
   }
 
-  @factoryMethod
-  static ChangeLocalMetaDataManager create({
-    @factoryParam required Audio audio,
-    required LocalAudioService localAudioService,
-  }) => Family.of(
-    audio.path ?? audio.url ?? audio.hashCode,
-    () => ChangeLocalMetaDataManager._(
-      audio: audio,
-      localAudioService: localAudioService,
-    ),
-    shouldDispose: (m) => m.command.safeToDispose && !m.draft.hasListeners,
-    onDispose: (m) {
-      m.command.dispose();
-      m.draft.dispose();
-    },
-  );
 
   final Audio _audio;
 

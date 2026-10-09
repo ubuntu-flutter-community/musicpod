@@ -5,9 +5,7 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-import '../../common/util/family.dart';
 import '../../common/view/icons.dart';
-import '../../extensions/command_x.dart';
 import '../../extensions/platform_x.dart';
 import '../../local_audio/service/local_audio_service.dart';
 import '../../lyrics/data/online_lyrics_source.dart';
@@ -241,11 +239,11 @@ class SettingsManager extends SafeChangeNotifier {
   }
 }
 
-@injectable
+@Injectable(cache: true)
 class SettingsTypeManager {
-  SettingsTypeManager._({
-    required String key,
-    required dynamic type,
+  SettingsTypeManager({
+    @factoryParam required String key,
+    @factoryParam required dynamic type,
     required SettingsService settingsService,
   }) {
     command = Command.createAsync((value) async {
@@ -270,22 +268,6 @@ class SettingsTypeManager {
   }
 
   late final Command<dynamic, dynamic> command;
-
-  @factoryMethod
-  static SettingsTypeManager create({
-    @factoryParam required String key,
-    @factoryParam required dynamic type,
-    required SettingsService settingsService,
-  }) => Family.of(
-    key,
-    () => SettingsTypeManager._(
-      key: key,
-      type: type,
-      settingsService: settingsService,
-    ),
-    shouldDispose: (t) => t.command.safeToDispose,
-    onDispose: (t) => t.command.dispose(),
-  );
 }
 
 class SettingsException implements Exception {

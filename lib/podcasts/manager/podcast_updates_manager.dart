@@ -2,15 +2,14 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 import '../../common/data/audio.dart';
 import '../../common/util/family.dart';
-import '../../extensions/command_x.dart';
 import '../data/podcast_update_capsule.dart';
 import '../service/podcast_service.dart';
 import 'episodes_manager.dart';
 import 'podcast_updated_feeds_manager.dart';
 
-@injectable
+@Injectable(cache: true)
 class PodcastUpdatesManager {
-  PodcastUpdatesManager._({
+  PodcastUpdatesManager({
     required PodcastService podcastService,
     required PodcastUpdatedFeedsManager feedsManager,
   }) {
@@ -47,20 +46,6 @@ class PodcastUpdatesManager {
     }, initialValue: {});
   }
 
-  @factoryMethod
-  static PodcastUpdatesManager create({
-    required PodcastService podcastService,
-    required PodcastUpdatedFeedsManager feedsManager,
-  }) => Family.of(
-    '$PodcastUpdatesManager',
-    () => PodcastUpdatesManager._(
-      podcastService: podcastService,
-      feedsManager: feedsManager,
-    ),
-    shouldDispose: (t) => t.command.safeToDispose,
-    autoDisposeAfter: const Duration(minutes: 1),
-    onDispose: (t) => t.command.dispose(),
-  );
 
   /// Holds the Map of new episode Audios and handles update check and removal.
   late final Command<PodcastUpdateCapsule, Map<String, Set<Audio>>> command;

@@ -3,14 +3,12 @@ import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../common/data/audio.dart';
-import '../../common/util/family.dart';
-import '../../extensions/command_x.dart';
 import 'local_audio_manager.dart';
 
-@injectable
+@Injectable(cache: true)
 class PlaylistManager {
-  PlaylistManager._({
-    required String playlistId,
+  PlaylistManager({
+    @factoryParam required String playlistId,
     required LocalAudioManager localAudioManager,
   }) {
     command = Command.createAsyncNoParam(
@@ -19,20 +17,6 @@ class PlaylistManager {
     );
     command.run();
   }
-
-  @factoryMethod
-  static PlaylistManager create({
-    @factoryParam required String playlistId,
-    required LocalAudioManager localAudioManager,
-  }) => Family.of(
-    playlistId,
-    () => PlaylistManager._(
-      playlistId: playlistId,
-      localAudioManager: localAudioManager,
-    ),
-    shouldDispose: (t) => t.command.safeToDispose,
-    onDispose: (t) => t.command.dispose(),
-  );
 
   late final Command<void, List<Audio>?> command;
 

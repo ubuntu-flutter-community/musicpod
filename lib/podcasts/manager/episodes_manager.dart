@@ -3,7 +3,6 @@ import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../common/data/audio.dart';
-import '../../common/util/family.dart';
 import '../../common/view/audio_filter.dart';
 import '../../extensions/command_x.dart';
 import '../../player/manager/player_manager.dart';
@@ -12,7 +11,7 @@ import 'download_manager.dart';
 import 'podcast_manager.dart';
 import 'podcast_short_info_manager.dart';
 
-@injectable
+@Injectable(cache: true)
 class EpisodesManager {
   static const int pageSize = 25;
 
@@ -48,8 +47,8 @@ class EpisodesManager {
     displayedCount.value = pageSize;
   }
 
-  EpisodesManager._({
-    required String feedUrl,
+  EpisodesManager({
+    @factoryParam required String feedUrl,
     required PodcastManager podcastManager,
     required DownloadManager downloadsManager,
     required PlayerManager playerManager,
@@ -146,34 +145,6 @@ class EpisodesManager {
     command.run();
   }
 
-  @factoryMethod
-  static EpisodesManager create({
-    @factoryParam required String feedUrl,
-    required PodcastManager podcastManager,
-    required DownloadManager downloadsManager,
-    required PlayerManager playerManager,
-  }) => Family.of(
-    feedUrl,
-    () => EpisodesManager._(
-      feedUrl: feedUrl,
-      podcastManager: podcastManager,
-      downloadsManager: downloadsManager,
-      playerManager: playerManager,
-    ),
-    shouldDispose: (instance) => instance.command.safeToDispose,
-    onDispose: (instance) {
-      instance.command.dispose();
-      instance.updatesOnlySubscription?.cancel();
-      instance.downloadsOnlySubscription?.cancel();
-      instance.downloadCommandsSubscription?.cancel();
-      instance.searchQuerySubscription?.cancel();
-      instance.filterSubscription?.cancel();
-      instance.displayedCount.dispose();
-      instance.showSearch.dispose();
-      instance.searchQuery.dispose();
-      instance.filter.dispose();
-    },
-  );
 
   late final Command<
     ({AudioSortOrder? order})?,

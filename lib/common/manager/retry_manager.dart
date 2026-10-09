@@ -4,28 +4,17 @@ import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../data/retry_capsule.dart';
-import '../util/family.dart';
 
-@injectable
+@Injectable(cache: true)
 class RetryManager {
   late RetryCapsule _capsule;
 
-  RetryManager._({required RetryCapsule capsule}) {
+  RetryManager({@factoryParam required RetryCapsule capsule}) {
     _capsule = capsule;
     cooldown = SafeValueNotifier<int>(_capsule.cooldownStartValue);
 
     _retryTicker = _createTimer();
   }
-
-  @factoryMethod
-  static RetryManager create({@factoryParam required RetryCapsule capsule}) =>
-      Family.of(
-        capsule.retryViewId,
-        () => RetryManager._(capsule: capsule),
-        shouldDispose: (t) => !t.cooldown.hasListeners,
-        onDispose: (t) => t.retryTicker?.cancel(),
-        autoDisposeAfter: const Duration(minutes: 5),
-      );
 
   void manualRetry() {
     _capsule.onRetry();

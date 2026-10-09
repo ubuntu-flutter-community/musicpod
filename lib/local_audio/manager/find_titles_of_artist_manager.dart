@@ -3,15 +3,13 @@ import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../common/data/audio.dart';
-import '../../common/util/family.dart';
 import '../../common/view/audio_filter.dart';
-import '../../extensions/command_x.dart';
 import 'local_audio_manager.dart';
 
-@injectable
+@Injectable(cache: true)
 class FindTitlesOfArtistManager {
-  FindTitlesOfArtistManager._({
-    required String artist,
+  FindTitlesOfArtistManager({
+    @factoryParam required String artist,
     required LocalAudioManager localAudioManager,
   }) {
     command = Command.createAsyncNoParam(
@@ -20,24 +18,6 @@ class FindTitlesOfArtistManager {
     );
     command.run();
   }
-
-  @factoryMethod
-  static FindTitlesOfArtistManager create({
-    @factoryParam required String artist,
-    required LocalAudioManager localAudioManager,
-  }) => Family.of(
-    artist,
-    () => FindTitlesOfArtistManager._(
-      artist: artist,
-      localAudioManager: localAudioManager,
-    ),
-    shouldDispose: (m) =>
-        m.command.safeToDispose && !m.useArtistGridView.hasListeners,
-    onDispose: (m) {
-      m.command.dispose();
-      m.useArtistGridView.dispose();
-    },
-  );
 
   late final Command<void, List<Audio>?> command;
 
