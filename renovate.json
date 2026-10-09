@@ -1,5 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "enabledManagers": [
+    "github-actions",
+    "pub"
+  ],
   "extends": [
     "config:recommended",
     ":semanticCommitTypeAll(chore)"
