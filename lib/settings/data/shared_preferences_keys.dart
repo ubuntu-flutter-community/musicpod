@@ -1,6 +1,8 @@
 class SPKeys {
   static const directory = 'directory';
   static const downloads = 'downloadsCustomDir';
+  static const downloadsBookmark = 'downloadsBookmark';
+  static const directoryBookmark = 'directoryBookmark';
   static const localAudioIndex = 'localAudioIndex';
   static const neverShowImportFails = 'neverShowImportFails';
   static const enableDiscord = 'enableDiscordRPC';

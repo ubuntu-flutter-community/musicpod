@@ -2486,11 +2486,11 @@ class AppLocalizationsEt extends AppLocalizations {
 
   @override
   String playAllEpisodes(String length) {
-    return 'Play all $length';
+    return 'Esita kõik osad kestusega $length';
   }
 
   @override
   String playOnlyLoadedEpisodes(String length) {
-    return 'Play only $length';
+    return 'Esita vaid laaditud osad kestusega $length';
   }
 }

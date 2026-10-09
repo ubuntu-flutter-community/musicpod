@@ -32,7 +32,9 @@ import 'expose/manager/expose_manager.dart' as _i960;
 import 'expose/service/expose_service.dart' as _i313;
 import 'expose/service/lastfm_service.dart' as _i61;
 import 'expose/service/listenbrainz_service.dart' as _i821;
+import 'external_path/manager/secure_bookmark_manager.dart' as _i1069;
 import 'external_path/service/external_path_service.dart' as _i415;
+import 'external_path/service/secure_bookmark_service.dart' as _i395;
 import 'local_audio/manager/album_ids_of_artist_manager.dart' as _i483;
 import 'local_audio/manager/album_ids_of_genre_manager.dart' as _i475;
 import 'local_audio/manager/change_local_meta_data_manager.dart' as _i978;
@@ -214,18 +216,16 @@ extension GetItInjectableX on _i174.GetIt {
         onlineLyricsService: gh<_i546.OnlineLyricsService>(),
       ),
     );
-    gh.lazySingleton<_i881.DownloadService>(
-      () => _i881.DownloadService(
-        externalPathService: gh<_i415.ExternalPathService>(),
-        settingsService: gh<_i862.SettingsService>(),
-        dio: gh<_i361.Dio>(),
-      ),
-    );
     gh.lazySingleton<_i61.LastfmService>(
       () => _i61.LastfmService(settingsService: gh<_i862.SettingsService>()),
     );
     gh.lazySingleton<_i821.ListenBrainzService>(
       () => _i821.ListenBrainzService(
+        settingsService: gh<_i862.SettingsService>(),
+      ),
+    );
+    gh.lazySingleton<_i395.SecureBookmarkService>(
+      () => _i395.SecureBookmarkService(
         settingsService: gh<_i862.SettingsService>(),
       ),
     );
@@ -317,6 +317,19 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i740.WindowManager>(),
       ),
       preResolve: true,
+    );
+    gh.lazySingleton<_i881.DownloadService>(
+      () => _i881.DownloadService(
+        externalPathService: gh<_i415.ExternalPathService>(),
+        settingsService: gh<_i862.SettingsService>(),
+        dio: gh<_i361.Dio>(),
+        secureBookmarkService: gh<_i395.SecureBookmarkService>(),
+      ),
+    );
+    gh.lazySingleton<_i1069.SecureBookmarkManager>(
+      () => _i1069.SecureBookmarkManager(
+        service: gh<_i395.SecureBookmarkService>(),
+      ),
     );
     gh.factoryParam<_i212.PodcastShortInfoManager, String, dynamic>(
       (feedUrl, _) => _i212.PodcastShortInfoManager.create(

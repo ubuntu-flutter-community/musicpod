@@ -606,7 +606,7 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get useMoreAnimationsDescription =>
-      'Toto mierne zvýši využitie CPU, čo môže byť nežiaduce na staršom hardvéri.';
+      'Toto mierne zvýši využitie procesora, čo môže byť nežiadúce na staršom hardvéri.';
 
   @override
   String get showPositionDurationTitle =>
@@ -1034,7 +1034,7 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get removeAllStarredStationsDescription =>
-      'Toto odstráni všetky vaše označené stanice.';
+      'Toto odstráni všetky vaše zviazané stanice.';
 
   @override
   String get removeAllPodcasts => 'Odstrániť všetky podcasty';
@@ -2485,11 +2485,11 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String playAllEpisodes(String length) {
-    return 'Play all $length';
+    return 'Prehrať všetko $length';
   }
 
   @override
   String playOnlyLoadedEpisodes(String length) {
-    return 'Play only $length';
+    return 'Prehrať iba $length';
   }
 }

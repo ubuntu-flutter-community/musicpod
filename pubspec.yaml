@@ -20,7 +20,7 @@ dependencies:
   chinese_font_library: ^1.2.0
   collection: ^1.19.1
   cupertino_icons: ^1.0.9
-  desktop_drop: ^0.7.1
+  desktop_drop: ^0.8.0
   dio: ^5.9.2
   drift: ^2.33.0
   drift_flutter: ^0.3.0
@@ -39,7 +39,7 @@ dependencies:
   flutter_widget_from_html_core: ^0.17.2
   genius_lyrics: ^1.0.1
   github: ^9.25.0
-  go_router: ^14.8.1
+  go_router: ^18.0.0
   gtk: ^2.1.0
   handy_window: ^0.4.2
   injectable: ^3.0.0
@@ -50,6 +50,7 @@ dependencies:
   local_notifier: ^0.1.6
   lrc: ^1.0.2
   m3u_parser_nullsafe: ^1.0.3
+  macos_secure_bookmarks: ^0.3.0
   media_kit:
     git:
       url: https://github.com/Predidit/media-kit.git
@@ -71,7 +72,7 @@ dependencies:
   package_info_plus: ^8.3.1
   path: ^1.9.1
   path_provider: ^2.1.5
-  permission_handler: ^12.0.1
+  permission_handler: ^13.0.0
   phoenix_theme:
     git:
       url: https://github.com/ubuntu-flutter-community/phoenix_theme

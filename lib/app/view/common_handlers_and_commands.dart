@@ -17,6 +17,7 @@ import '../../player/manager/player_manager.dart';
 import '../../podcasts/data/podcast_download.dart';
 import '../../podcasts/data/podcast_update_capsule.dart';
 import '../../podcasts/manager/download_manager.dart';
+import '../../external_path/manager/secure_bookmark_manager.dart';
 import '../../podcasts/manager/podcast_clean_manager.dart';
 import '../../podcasts/manager/podcast_short_info_manager.dart';
 import '../../podcasts/manager/podcast_updates_manager.dart';
@@ -29,6 +30,7 @@ mixin CommonHandlersAndCommandsMixin {
     di<PodcastCleanManager>().command.run((reclaimDiskSpace: true));
     di<AppManager>().recentPatchNotesDisposedCommand.run();
     di<AppManager>().specialNotesDisposedCommand.run();
+    di<SecureBookmarkManager>().command.run();
   });
 
   void registerCommonHandlers(BuildContext context) {
