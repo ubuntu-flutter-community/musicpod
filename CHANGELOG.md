@@ -1,5 +1,22 @@
 # Changelog
 
+## [3.1.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v3.0.3...v3.1.0) (2026-10-10)
+
+
+### Features
+
+* Translated using Weblate (Italian) ([#1699](https://github.com/ubuntu-flutter-community/musicpod/issues/1699)) ([4bf09f0](https://github.com/ubuntu-flutter-community/musicpod/commit/4bf09f0401f7f7ef72a77cba5d5f3f1665712809))
+* Translated using Weblate (Japanese) ([#1705](https://github.com/ubuntu-flutter-community/musicpod/issues/1705)) ([e818eb4](https://github.com/ubuntu-flutter-community/musicpod/commit/e818eb4b2fd69124698f89c70c88a633847f3252))
+* Translated using Weblate (Slovak) ([#1712](https://github.com/ubuntu-flutter-community/musicpod/issues/1712)) ([b5300e9](https://github.com/ubuntu-flutter-community/musicpod/commit/b5300e9271dc0312c02871163d54cd4a5314340c))
+* Translated using Weblate (Slovak) ([#1718](https://github.com/ubuntu-flutter-community/musicpod/issues/1718)) ([46d7bdd](https://github.com/ubuntu-flutter-community/musicpod/commit/46d7bdd698dc1a84cbc382e71e7242fb37fa0a91))
+* Translated using Weblate (Swedish) ([#1708](https://github.com/ubuntu-flutter-community/musicpod/issues/1708)) ([10f7955](https://github.com/ubuntu-flutter-community/musicpod/commit/10f7955a61501dd6b34029592753d50ea4b6c331))
+* Translations update from Hosted Weblate ([#1691](https://github.com/ubuntu-flutter-community/musicpod/issues/1691)) ([78c601f](https://github.com/ubuntu-flutter-community/musicpod/commit/78c601faca4100824bb5e18581966713f07afc5b))
+
+
+### Bug Fixes
+
+* introduce secure bookmark service and manager for macos directories ([#1710](https://github.com/ubuntu-flutter-community/musicpod/issues/1710)) ([e3e1925](https://github.com/ubuntu-flutter-community/musicpod/commit/e3e1925f65f81f6aee76f1cc844a59ba885b8b1a))
+
 ## [3.0.3](https://github.com/ubuntu-flutter-community/musicpod/compare/v3.0.2...v3.0.3) (2026-09-24)
 
 
