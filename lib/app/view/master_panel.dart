@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/view/header_bar.dart';
@@ -87,17 +88,21 @@ class PlaylistList extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final playlistIDs = watchValue((PlaylistIDsManager m) => m.command);
-    final masterItems = createPlaylistMasterItems(playlistIDs);
     final selectedPageId = watchValue(
       (RoutingManager m) => m.selectedPageIdCommand,
     );
-    return SliverList.builder(
-      itemCount: masterItems.length,
-      itemBuilder: (context, index) => MasterTile(
-        item: masterItems.elementAt(index),
-        selectedPageId: selectedPageId,
-      ),
+    return Consumer(
+      builder: (context, ref, _) {
+        final playlistIDs = ref.watch(playlistIDsManagerProvider).value ?? [];
+        final masterItems = createPlaylistMasterItems(playlistIDs);
+        return SliverList.builder(
+          itemCount: masterItems.length,
+          itemBuilder: (context, index) => MasterTile(
+            item: masterItems.elementAt(index),
+            selectedPageId: selectedPageId,
+          ),
+        );
+      },
     );
   }
 }
@@ -127,19 +132,23 @@ class StationsList extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final starredStationIDs = watchValue(
-      (RadioStarStationManager m) => m.command,
-    );
-    final masterItems = createStarredStationsMasterItems(starredStationIDs);
     final selectedPageId = watchValue(
       (RoutingManager m) => m.selectedPageIdCommand,
     );
-    return SliverList.builder(
-      itemCount: masterItems.length,
-      itemBuilder: (context, index) => MasterTile(
-        item: masterItems.elementAt(index),
-        selectedPageId: selectedPageId,
-      ),
+    return Consumer(
+      builder: (context, ref, _) {
+        final starredStationIDs =
+            ref.watch(radioStarStationManagerProvider).value ?? {};
+        final masterItems =
+            createStarredStationsMasterItems(starredStationIDs);
+        return SliverList.builder(
+          itemCount: masterItems.length,
+          itemBuilder: (context, index) => MasterTile(
+            item: masterItems.elementAt(index),
+            selectedPageId: selectedPageId,
+          ),
+        );
+      },
     );
   }
 }
@@ -149,17 +158,22 @@ class AlbumsList extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final pinnedAlbums = watchValue((PinnedAlbumIDsManager m) => m.command);
-    final masterItems = createPinnedAlbumsMasterItems(pinnedAlbums);
     final selectedPageId = watchValue(
       (RoutingManager m) => m.selectedPageIdCommand,
     );
-    return SliverList.builder(
-      itemCount: masterItems.length,
-      itemBuilder: (context, index) => MasterTile(
-        item: masterItems.elementAt(index),
-        selectedPageId: selectedPageId,
-      ),
+    return Consumer(
+      builder: (context, ref, _) {
+        final pinnedAlbums =
+            ref.watch(pinnedAlbumIDsManagerProvider).value ?? [];
+        final masterItems = createPinnedAlbumsMasterItems(pinnedAlbums);
+        return SliverList.builder(
+          itemCount: masterItems.length,
+          itemBuilder: (context, index) => MasterTile(
+            item: masterItems.elementAt(index),
+            selectedPageId: selectedPageId,
+          ),
+        );
+      },
     );
   }
 }

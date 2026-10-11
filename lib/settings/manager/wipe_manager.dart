@@ -1,101 +1,84 @@
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
+import 'dart:async';
 
-import '../../common/logging.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import '../../common/persistence/database.dart';
-import '../../common/util/family.dart';
-import '../../extensions/command_x.dart';
+import '../../dependencies.dart';
+import '../../local_audio/manager/find_all_album_i_ds_manager.dart';
+import '../../local_audio/manager/find_all_artists_manager.dart';
+import '../../local_audio/manager/find_all_genres_manager.dart';
+import '../../local_audio/manager/find_all_tracks_manager.dart';
+import '../../local_audio/manager/has_tracks_manager.dart';
+import '../../local_audio/manager/liked_audio_paths_manager.dart';
+import '../../local_audio/manager/liked_audios_manager.dart';
 import '../../local_audio/manager/local_audio_manager.dart';
 import '../../local_audio/manager/pinned_album_ids_manager.dart';
 import '../../local_audio/manager/playlist_ids_manager.dart';
+import '../../local_audio/manager/tracks_synced_manager.dart';
+import '../../local_audio/service/local_audio_service.dart';
 import '../../player/manager/player_manager.dart';
 import '../../podcasts/manager/subscribed_podcasts_manager.dart';
 import '../../podcasts/service/podcast_service.dart';
+import '../../radio/manager/radio_fav_tag_manager.dart';
 import '../../radio/manager/radio_star_station_manager.dart';
 import '../../radio/service/radio_service.dart';
 import 'settings_manager.dart';
 
-@injectable
-class WipeManager {
-  WipeManager._({
-    required SettingsManager settingsManager,
-    required PodcastService podcastService,
-    required PinnedAlbumIDsManager pinnedAlbumIDsManager,
-    required PlaylistIDsManager playlistIDsManager,
-    required SubscribedPodcastsManager subscribedPodcastsManager,
-    required RadioStarStationManager radioStarStationManager,
-    required RadioService radioService,
-    required LocalAudioManager localAudioManager,
-    required PlayerManager playerManager,
-    required Database database,
-  }) {
-    Logger.o(tag: '$WipeManager');
-    command = Command.createAsyncNoResult((param) async {
+part 'wipe_manager.g.dart';
+
+enum WipeType { podcasts, radio, localAudio, player, settings }
+
+@Riverpod(keepAlive: true)
+class WipeManager extends _$WipeManager {
+  @override
+  FutureOr<void> build() {}
+
+  Future<void> wipe([Set<WipeType>? param]) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
       final wipeTypes = param ?? WipeType.values.toSet();
 
       if (wipeTypes.contains(WipeType.podcasts)) {
-        await podcastService.wipeAndBuildPodcastLibrary();
-        await playerManager.clearAllLastPositions();
-        await subscribedPodcastsManager.command.runAsync();
+        await di<PodcastService>().wipeAndBuildPodcastLibrary();
+        await di<PlayerManager>().clearAllLastPositions();
+        await di<SubscribedPodcastsManager>().command.runAsync();
       }
 
       if (wipeTypes.contains(WipeType.radio)) {
-        await radioService.wipeRadioLibrary();
-        await radioStarStationManager.command.runAsync();
+        await di<RadioService>().wipeRadioLibrary();
+        ref.invalidate(radioStarStationManagerProvider);
+        ref.invalidate(radioFavTagManagerProvider);
       }
 
       if (wipeTypes.contains(WipeType.localAudio)) {
-        await localAudioManager.initAudiosCommand.runAsync((
-          directory: '',
+        await di<LocalAudioService>().init(
+          newDirectory: '',
           forceInit: true,
-        ));
-        await pinnedAlbumIDsManager.command.runAsync();
-        await playlistIDsManager.command.runAsync();
+        );
+        ref.invalidate(localAudioManagerProvider);
+        ref.invalidate(pinnedAlbumIDsManagerProvider);
+        ref.invalidate(likedAudiosManagerProvider);
+        ref.invalidate(likedAudioPathsManagerProvider);
+        ref.invalidate(playlistIDsManagerProvider);
+        ref.invalidate(tracksSyncedManagerProvider);
+        ref.invalidate(findAllTracksManagerProvider);
+        ref.invalidate(findAllAlbumIDsManagerProvider);
+        ref.invalidate(findAllArtistsManagerProvider);
+        ref.invalidate(findAllGenresManagerProvider);
+        ref.invalidate(hasTracksManagerProvider);
       }
 
       if (wipeTypes.contains(WipeType.player)) {
-        await playerManager.resetPlayerState();
+        await di<PlayerManager>().resetPlayerState();
       }
 
       if (wipeTypes.contains(WipeType.settings)) {
-        await settingsManager.wipeAllSettingsCommand.runAsync();
+        await di<SettingsManager>().wipeAllSettingsCommand.runAsync();
+        ref.invalidate(localAudioManagerProvider);
+        ref.invalidate(pinnedAlbumIDsManagerProvider);
       }
 
-      await database.reclaimDiskSpace();
+      await di<Database>().reclaimDiskSpace();
     });
   }
-
-  @factoryMethod
-  static WipeManager create({
-    required SettingsManager settingsManager,
-    required PodcastService podcastService,
-    required PinnedAlbumIDsManager pinnedAlbumIDsManager,
-    required PlaylistIDsManager playlistIDsManager,
-    required SubscribedPodcastsManager subscribedPodcastsManager,
-    required RadioStarStationManager radioStarStationManager,
-    required RadioService radioService,
-    required LocalAudioManager localAudioManager,
-    required PlayerManager playerManager,
-    required Database database,
-  }) => Family.of(
-    '$WipeManager',
-    () => WipeManager._(
-      settingsManager: settingsManager,
-      podcastService: podcastService,
-      pinnedAlbumIDsManager: pinnedAlbumIDsManager,
-      playlistIDsManager: playlistIDsManager,
-      subscribedPodcastsManager: subscribedPodcastsManager,
-      radioStarStationManager: radioStarStationManager,
-      radioService: radioService,
-      localAudioManager: localAudioManager,
-      playerManager: playerManager,
-      database: database,
-    ),
-    shouldDispose: (m) => m.command.safeToDispose,
-    onDispose: (m) => m.command.dispose(),
-  );
-
-  late final Command<Set<WipeType>?, void> command;
 }
-
-enum WipeType { podcasts, radio, localAudio, player, settings }

@@ -1,6 +1,6 @@
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:musicpod/app/page_ids.dart';
 import 'package:musicpod/common/data/audio.dart';
 import 'package:musicpod/common/data/audio_type.dart';
 import 'package:musicpod/common/util/family.dart';
@@ -10,6 +10,7 @@ import 'package:musicpod/local_audio/manager/has_tracks_manager.dart';
 import 'package:musicpod/local_audio/manager/liked_audio_paths_manager.dart';
 import 'package:musicpod/local_audio/manager/liked_audios_manager.dart';
 import 'package:musicpod/local_audio/manager/local_audio_manager.dart';
+import 'package:musicpod/local_audio/service/local_audio_service.dart';
 import 'package:musicpod/player/manager/player_manager.dart';
 import 'package:musicpod/podcasts/data/podcast_download.dart';
 import 'package:musicpod/podcasts/data/podcast_short_info.dart';
@@ -21,7 +22,12 @@ import 'package:musicpod/podcasts/service/download_service.dart';
 import 'package:musicpod/podcasts/service/podcast_service.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-class FakeLocalAudioManager extends Fake implements LocalAudioManager {
+class FakeLocalAudioManager extends LocalAudioManager {
+  @override
+  Future<LocalAudioState> build() async => const LocalAudioState();
+}
+
+class FakeLocalAudioService extends Fake implements LocalAudioService {
   Set<String> likedPaths = {};
   List<Audio> likedAudios = [];
   bool libraryHasTracks = false;
@@ -30,7 +36,7 @@ class FakeLocalAudioManager extends Fake implements LocalAudioManager {
   Future<Set<String>> findLikedAudioPaths() async => Set.from(likedPaths);
 
   @override
-  Future<List<Audio>?> findLikedAudios() async => List.from(likedAudios);
+  Future<List<Audio>> findLikedAudios() async => List.from(likedAudios);
 
   @override
   Future<bool> hasTracks() async => libraryHasTracks;
@@ -161,18 +167,22 @@ void main() {
   group('HasTracksManager lightweight boolean check', () {
     test('returns true/false without loading track list', () async {
       final fakeLocalAudio = FakeLocalAudioManager();
-      fakeLocalAudio.libraryHasTracks = false;
+      final fakeLocalAudioService = FakeLocalAudioService();
+      GetIt.I.registerSingleton<LocalAudioService>(fakeLocalAudioService);
+      fakeLocalAudioService.libraryHasTracks = false;
 
-      final manager = HasTracksManager.create(
-        localAudioManager: fakeLocalAudio,
+      final container = ProviderContainer(
+        overrides: [
+          localAudioManagerProvider.overrideWith(() => fakeLocalAudio),
+        ],
       );
+      addTearDown(container.dispose);
 
-      await manager.command.runAsync();
-      expect(manager.command.value, isFalse);
+      expect(await container.read(hasTracksManagerProvider.future), isFalse);
 
-      fakeLocalAudio.libraryHasTracks = true;
-      await manager.command.runAsync();
-      expect(manager.command.value, isTrue);
+      fakeLocalAudioService.libraryHasTracks = true;
+      container.invalidate(hasTracksManagerProvider);
+      expect(await container.read(hasTracksManagerProvider.future), isTrue);
     });
   });
 
@@ -192,70 +202,73 @@ void main() {
       'LikedAudioPathsManager operates strictly with path Strings',
       () async {
         final fakeLocalAudio = FakeLocalAudioManager();
-        fakeLocalAudio.likedPaths.add(song1.path!);
-        fakeLocalAudio.likedAudios.add(song1);
+        final fakeLocalAudioService = FakeLocalAudioService();
+        GetIt.I.registerSingleton<LocalAudioService>(fakeLocalAudioService);
+        fakeLocalAudioService.likedPaths.add(song1.path!);
+        fakeLocalAudioService.likedAudios.add(song1);
 
-        final pathsManager = LikedAudioPathsManager.create(
-          localAudioManager: fakeLocalAudio,
+        final container = ProviderContainer(
+          overrides: [
+            localAudioManagerProvider.overrideWith(() => fakeLocalAudio),
+          ],
         );
+        addTearDown(container.dispose);
 
-        await pathsManager.command.runAsync();
-        expect(pathsManager.command.value, isA<Set<String>>());
-        expect(pathsManager.command.value, contains(song1.path));
-        expect(pathsManager.command.value.contains(song2.path), isFalse);
+        final initialPaths =
+            await container.read(likedAudioPathsManagerProvider.future);
+        expect(initialPaths, isA<Set<String>>());
+        expect(initialPaths, contains(song1.path));
+        expect(initialPaths.contains(song2.path), isFalse);
 
         // Add song2 via pathsManager
-        await pathsManager.command.runAsync(
-          PlaylistChange(
-            id: PageIDs.likedAudios,
-            action: PlaylistAction.addTo,
-            audios: [song2],
-          ),
-        );
+        await container
+            .read(likedAudioPathsManagerProvider.notifier)
+            .addLikedAudios([song2]);
 
+        final updatedPaths =
+            await container.read(likedAudioPathsManagerProvider.future);
         expect(
-          pathsManager.command.value,
+          updatedPaths,
           containsAll([song1.path, song2.path]),
         );
         expect(
-          fakeLocalAudio.likedPaths,
+          fakeLocalAudioService.likedPaths,
           containsAll([song1.path, song2.path]),
         );
 
         // Remove song1 via pathsManager
-        await pathsManager.command.runAsync(
-          PlaylistChange(
-            id: PageIDs.likedAudios,
-            action: PlaylistAction.removeFrom,
-            audios: [song1],
-          ),
-        );
+        await container
+            .read(likedAudioPathsManagerProvider.notifier)
+            .removeLikedAudios([song1]);
 
-        expect(pathsManager.command.value.contains(song1.path), isFalse);
-        expect(pathsManager.command.value, contains(song2.path));
+        final remainingPaths =
+            await container.read(likedAudioPathsManagerProvider.future);
+        expect(remainingPaths.contains(song1.path), isFalse);
+        expect(remainingPaths, contains(song2.path));
       },
     );
 
     test(
-      'LikedAudioPathsManager does not eagerly instantiate LikedAudiosManager when not in Family',
+      'LikedAudioPathsManager does not eagerly instantiate LikedAudiosManager',
       () async {
         final fakeLocalAudio = FakeLocalAudioManager();
-        final pathsManager = LikedAudioPathsManager.create(
-          localAudioManager: fakeLocalAudio,
+        final fakeLocalAudioService = FakeLocalAudioService();
+        GetIt.I.registerSingleton<LocalAudioService>(fakeLocalAudioService);
+        final container = ProviderContainer(
+          overrides: [
+            localAudioManagerProvider.overrideWith(() => fakeLocalAudio),
+          ],
         );
+        addTearDown(container.dispose);
 
-        expect(Family.get<LikedAudiosManager>('$LikedAudiosManager'), isNull);
+        expect(container.exists(likedAudiosManagerProvider), isFalse);
 
-        await pathsManager.command.runAsync(
-          PlaylistChange(
-            id: PageIDs.likedAudios,
-            action: PlaylistAction.addTo,
-            audios: [song1],
-          ),
-        );
+        await container.read(likedAudioPathsManagerProvider.future);
+        await container
+            .read(likedAudioPathsManagerProvider.notifier)
+            .addLikedAudios([song1]);
 
-        // LikedAudiosManager should NOT have been instantiated
-        expect(Family.get<LikedAudiosManager>('$LikedAudiosManager'), isNull);
+        expect(container.exists(likedAudiosManagerProvider), isFalse);
       },
     );
 
@@ -263,45 +276,47 @@ void main() {
       'Synchronizes LikedAudioPathsManager when LikedAudiosManager is active',
       () async {
         final fakeLocalAudio = FakeLocalAudioManager();
-        final pathsManager = LikedAudioPathsManager.create(
-          localAudioManager: fakeLocalAudio,
+        final fakeLocalAudioService = FakeLocalAudioService();
+        GetIt.I.registerSingleton<LocalAudioService>(fakeLocalAudioService);
+        final container = ProviderContainer(
+          overrides: [
+            localAudioManagerProvider.overrideWith(() => fakeLocalAudio),
+          ],
         );
-        final audiosManager = LikedAudiosManager.create(
-          localAudioManager: fakeLocalAudio,
-          pathsManager: pathsManager,
-        );
+        addTearDown(container.dispose);
 
-        await pumpEventQueue();
-        expect(
-          Family.get<LikedAudiosManager>('$LikedAudiosManager'),
-          isNotNull,
-        );
+        await container.read(likedAudioPathsManagerProvider.future);
+        await container.read(likedAudiosManagerProvider.future);
+
+        expect(container.exists(likedAudiosManagerProvider), isTrue);
 
         // 1. Add via audiosManager updates both
-        await audiosManager.command.runAsync(
-          PlaylistChange(
-            id: PageIDs.likedAudios,
-            action: PlaylistAction.addTo,
-            audios: [song1],
-          ),
-        );
+        await container
+            .read(likedAudiosManagerProvider.notifier)
+            .addLikedAudios([song1]);
 
-        await pumpEventQueue();
-        expect(audiosManager.command.value, contains(song1));
-        expect(pathsManager.command.value, contains(song1.path));
+        expect(
+          await container.read(likedAudiosManagerProvider.future),
+          contains(song1),
+        );
+        expect(
+          await container.read(likedAudioPathsManagerProvider.future),
+          contains(song1.path),
+        );
 
         // 2. Add via pathsManager updates audiosManager as well
-        await pathsManager.command.runAsync(
-          PlaylistChange(
-            id: PageIDs.likedAudios,
-            action: PlaylistAction.addTo,
-            audios: [song2],
-          ),
-        );
+        await container
+            .read(likedAudioPathsManagerProvider.notifier)
+            .addLikedAudios([song2]);
 
-        await pumpEventQueue();
-        expect(pathsManager.command.value, contains(song2.path));
-        expect(audiosManager.command.value, contains(song2));
+        expect(
+          await container.read(likedAudioPathsManagerProvider.future),
+          contains(song2.path),
+        );
+        expect(
+          await container.read(likedAudiosManagerProvider.future),
+          contains(song2),
+        );
       },
     );
   });

@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/page_ids.dart';
@@ -15,24 +16,44 @@ import '../../local_audio/manager/has_tracks_manager.dart';
 import '../../local_audio/manager/playlist_ids_manager.dart';
 import '../../search/manager/search_manager.dart';
 import '../../settings/view/settings_action.dart';
-import '../manager/custom_content_manager.dart';
+import '../manager/external_playlist_drafts_manager.dart';
 
-class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
+class CustomPlaylistsSection extends ConsumerStatefulWidget {
   const CustomPlaylistsSection({super.key, this.shownInDialog = false});
 
   final bool shownInDialog;
 
-  Future<void> _createEmptyPlaylist(
-    BuildContext context,
-    String playlistName,
-  ) async {
-    if (shownInDialog && context.canPop()) {
+  @override
+  ConsumerState<CustomPlaylistsSection> createState() =>
+      _CustomPlaylistsSectionState();
+}
+
+class _CustomPlaylistsSectionState
+    extends ConsumerState<CustomPlaylistsSection> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> _createEmptyPlaylist(String playlistName) async {
+    if (widget.shownInDialog && context.canPop()) {
       context.pop();
     }
 
-    di<PlaylistIDsManager>().command.run(
-      PlaylistChange(id: playlistName, action: PlaylistAction.create),
-    );
+    await ref
+        .read(playlistIDsManagerProvider.notifier)
+        .createOrChangePlaylist(
+          PlaylistChange(id: playlistName, action: PlaylistAction.create),
+        );
 
     await Future.delayed(
       const Duration(milliseconds: 200),
@@ -43,9 +64,9 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final hasTracks = ref.watch(hasTracksManagerProvider);
 
-    final hasTracks = watchValue((HasTracksManager m) => m.command.results);
-    if (!hasTracks.isRunning && !(hasTracks.data ?? true)) {
+    if (!hasTracks.isLoading && hasTracks.value == false) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -57,10 +78,7 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
       );
     }
 
-    final playlistName = watchValue((CustomContentManager m) => m.playlistName);
-    final playlists = watchValue(
-      (CustomContentManager m) => m.externalPlaylistsDraft,
-    );
+    final playlists = ref.watch(externalPlaylistDraftsManagerProvider);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -69,32 +87,38 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
           padding: const EdgeInsets.only(bottom: 10),
           child: SizedBox(
             height: 45,
-            child: TextField(
-              autofocus: true,
-              onSubmitted: (playlistName?.isNotEmpty ?? false)
-                  ? (_) => _createEmptyPlaylist(context, playlistName!)
-                  : null,
-              decoration: InputDecoration(
-                label: Text(l10n.name),
-                suffixIcon: SizedBox(
-                  height: 45,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(kYaruButtonRadius),
-                          bottomRight: Radius.circular(kYaruButtonRadius),
+            child: ListenableBuilder(
+              listenable: _controller,
+              builder: (context, _) {
+                final hasText = _controller.text.trim().isNotEmpty;
+                return TextField(
+                  controller: _controller,
+                  autofocus: true,
+                  onSubmitted: hasText
+                      ? (_) => _createEmptyPlaylist(_controller.text.trim())
+                      : null,
+                  decoration: InputDecoration(
+                    label: Text(l10n.name),
+                    suffixIcon: SizedBox(
+                      height: 45,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(kYaruButtonRadius),
+                              bottomRight: Radius.circular(kYaruButtonRadius),
+                            ),
+                          ),
                         ),
+                        onPressed: hasText
+                            ? () => _createEmptyPlaylist(_controller.text.trim())
+                            : null,
+                        child: Text(l10n.add),
                       ),
                     ),
-                    onPressed: (playlistName?.isNotEmpty ?? false)
-                        ? () => _createEmptyPlaylist(context, playlistName!)
-                        : null,
-                    child: Text(l10n.add),
                   ),
-                ),
-              ),
-              onChanged: di<CustomContentManager>().setPlaylistName,
+                );
+              },
             ),
           ),
         ),
@@ -111,7 +135,9 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
         TextButton(
           onPressed: () => ConfirmationDialog.show(
             context: context,
-            initialFuture: () => di<CustomContentManager>().addPlaylists(),
+            initialFuture: () => ref
+                .read(externalPlaylistDraftsManagerProvider.notifier)
+                .addPlaylists(),
             cancelLabel: context.l10n.back,
             loadingTitle: Text(context.l10n.importingPlaylistsPleaseWait),
           ),
@@ -124,9 +150,13 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
               subtitle: Text('${e.value.length} ${l10n.titles}'),
               trailing: IconButton(
                 tooltip: l10n.deletePlaylist,
-                icon: Icon(Iconz.remove, semanticLabel: l10n.deletePlaylist),
-                onPressed: () => di<CustomContentManager>()
-                    .removeExternalPlaylistFromDraft(name: e.key),
+                icon: Icon(
+                  Iconz.remove,
+                  semanticLabel: l10n.deletePlaylist,
+                ),
+                onPressed: () => ref
+                    .read(externalPlaylistDraftsManagerProvider.notifier)
+                    .removePlaylist(name: e.key),
               ),
             );
           } else {
@@ -162,21 +192,21 @@ class CustomPlaylistsSection extends StatelessWidget with WatchItMixin {
             runSpacing: 10,
             children: [
               ElevatedButton(
-                onPressed:
-                    playlists.isNotEmpty &&
+                onPressed: playlists.isNotEmpty &&
                         playlists.entries.any(
                           (e) => e.value.any((e) => e.isLocal),
                         )
                     ? () async {
-                        if (shownInDialog && context.canPop()) {
+                        if (widget.shownInDialog && context.canPop()) {
                           context.pop();
                         }
-                        await di<CustomContentManager>()
-                            .importExternalPlaylistsCommand
-                            .runAsync();
+                        final firstKey = playlists.entries.first.key;
+                        await ref
+                            .read(externalPlaylistDraftsManagerProvider.notifier)
+                            .importPlaylists();
 
                         await di<RoutingManager>().push(
-                          pageId: playlists.entries.first.key,
+                          pageId: firstKey,
                         );
                       }
                     : null,

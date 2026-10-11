@@ -1,32 +1,19 @@
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../common/util/family.dart';
-import '../../extensions/command_x.dart';
+import '../../dependencies.dart';
 import '../service/radio_service.dart';
 
-@injectable
-class RadioFavTagManager {
-  RadioFavTagManager._({required RadioService service}) {
-    command = Command.createAsync((tag) async {
-      if (tag != null) {
-        await service.toggleFavRadioTag(tag);
-      }
+part 'radio_fav_tag_manager.g.dart';
 
-      return service.getFavRadioTags();
-    }, initialValue: {});
+@Riverpod(keepAlive: true)
+class RadioFavTagManager extends _$RadioFavTagManager {
+  @override
+  Future<Set<String>> build() => di<RadioService>().getFavRadioTags();
 
-    command.run();
+  Future<void> toggleFavRadioTag(String? tag) async {
+    if (tag != null) {
+      await di<RadioService>().toggleFavRadioTag(tag);
+    }
+    state = AsyncData(await di<RadioService>().getFavRadioTags());
   }
-
-  @factoryMethod
-  static RadioFavTagManager create({required RadioService service}) =>
-      Family.of(
-        '$RadioFavTagManager',
-        () => RadioFavTagManager._(service: service),
-        shouldDispose: (m) => m.command.safeToDispose,
-        onDispose: (m) => m.command.dispose(),
-      );
-
-  late final Command<String?, Set<String>> command;
 }

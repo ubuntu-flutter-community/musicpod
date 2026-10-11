@@ -1,28 +1,16 @@
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../common/util/family.dart';
-import '../../extensions/command_x.dart';
+import '../../dependencies.dart';
 import '../service/local_audio_service.dart';
+import 'local_audio_manager.dart';
 
-@injectable
-class FindAllAlbumIDsManager {
-  FindAllAlbumIDsManager._(LocalAudioService localAudioService) {
-    command = Command.createAsyncNoParam(
-      localAudioService.findAllAlbumIDs,
-      initialValue: null,
-    );
-    command.run();
+part 'find_all_album_i_ds_manager.g.dart';
+
+@riverpod
+class FindAllAlbumIDsManager extends _$FindAllAlbumIDsManager {
+  @override
+  Future<List<int>?> build() async {
+    await ref.watch(localAudioManagerProvider.future);
+    return di<LocalAudioService>().findAllAlbumIDs();
   }
-
-  @factoryMethod
-  static FindAllAlbumIDsManager create(LocalAudioService localAudioService) =>
-      Family.of(
-        '$FindAllAlbumIDsManager',
-        () => FindAllAlbumIDsManager._(localAudioService),
-        shouldDispose: (m) => m.command.safeToDispose,
-        onDispose: (m) => m.command.dispose(),
-      );
-
-  late final Command<void, List<int>?> command;
 }

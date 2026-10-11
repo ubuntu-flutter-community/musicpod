@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:yaru/constants.dart';
 
@@ -121,25 +122,31 @@ class TagAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final searchManager = di<SearchManager>();
     final tag = watchValue((SearchManager m) => m.tag);
-    final favRadioTags = watchValue((RadioFavTagManager m) => m.command);
-    final tags = watchValue((RadioLoadTagsManager m) => m.command);
-    return TagAutoComplete(
-      suffixIcon: AudioTypeFilterButton(mode: OverlayMode.platformModalMode),
-      value: tag,
-      toggleFav: (tag) {
-        if (tag?.name == null) return;
-        di<RadioFavTagManager>().command.run(tag!.name);
+    return Consumer(
+      builder: (context, ref, _) {
+        final favRadioTags =
+            ref.watch(radioFavTagManagerProvider).value ?? {};
+        final tags = ref.watch(radioLoadTagsManagerProvider).value ?? [];
+        return TagAutoComplete(
+          suffixIcon: AudioTypeFilterButton(mode: OverlayMode.platformModalMode),
+          value: tag,
+          toggleFav: (tag) {
+            if (tag?.name == null) return;
+            ref
+                .read(radioFavTagManagerProvider.notifier)
+                .toggleFavRadioTag(tag!.name);
+          },
+          favs: favRadioTags,
+          onSelected: (v) {
+            searchManager.setTag(v);
+            searchManager.search();
+          },
+          tags: [
+            ...tags.where((e) => favRadioTags.contains(e.name)),
+            ...tags.where((e) => !favRadioTags.contains(e.name)),
+          ],
+        );
       },
-
-      favs: favRadioTags,
-      onSelected: (v) {
-        searchManager.setTag(v);
-        searchManager.search();
-      },
-      tags: [
-        ...tags.where((e) => favRadioTags.contains(e.name)),
-        ...tags.where((e) => !favRadioTags.contains(e.name)),
-      ],
     );
   }
 }

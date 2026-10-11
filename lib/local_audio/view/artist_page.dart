@@ -1,6 +1,5 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
@@ -20,12 +19,14 @@ import '../../common/view/search_button.dart';
 import '../../common/view/sliver_local_audio_tile_list.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
+import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
-import '../../search/manager/search_manager.dart';
 import '../../search/data/search_type.dart';
+import '../../search/manager/search_manager.dart';
 import '../manager/album_ids_of_artist_manager.dart';
+import '../manager/artist_grid_view_manager.dart';
 import '../manager/find_titles_of_artist_manager.dart';
-import '../manager/local_audio_manager.dart';
+import '../service/local_audio_service.dart';
 import 'album_page.dart';
 import 'album_view.dart';
 import 'artist_image.dart';
@@ -60,24 +61,17 @@ class ArtistPage extends StatelessWidget {
   );
 }
 
-class _ArtistPageBody extends StatelessWidget with WatchItMixin {
+class _ArtistPageBody extends ConsumerWidget {
   const _ArtistPageBody({required this.pageId});
 
   final String pageId;
 
   @override
-  Widget build(BuildContext context) {
-    final useGridView = watchValue(
-      (FindTitlesOfArtistManager m) => m.useArtistGridView,
-      param1: pageId,
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final useGridView = ref.watch(artistGridViewManagerProvider(pageId));
+    final results = ref.watch(findTitlesOfArtistManagerProvider(pageId));
 
-    final results = watchValue(
-      (FindTitlesOfArtistManager m) => m.command.results,
-      param1: pageId,
-    );
-
-    if (results.isRunning) {
+    if (results.isLoading) {
       return const Center(child: Progress());
     }
 
@@ -85,7 +79,7 @@ class _ArtistPageBody extends StatelessWidget with WatchItMixin {
       return Center(child: Text(results.error.toString()));
     }
 
-    final artistAudios = results.data ?? [];
+    final artistAudios = results.value ?? [];
 
     return AdaptiveMultiLayoutBody(
       header: AudioPageHeader(
@@ -124,7 +118,7 @@ class _ArtistPageBody extends StatelessWidget with WatchItMixin {
     required String text,
     required BuildContext context,
   }) async {
-    final id = await di<LocalAudioManager>().findAlbumId(
+    final id = await di<LocalAudioService>().findAlbumIdForArtistAndAlbum(
       artist: pageId,
       album: text,
     );
@@ -141,35 +135,29 @@ class _ArtistPageBody extends StatelessWidget with WatchItMixin {
   }
 }
 
-class _AlbumsOfArtistGridView extends StatelessWidget with WatchItMixin {
+class _AlbumsOfArtistGridView extends ConsumerWidget {
   const _AlbumsOfArtistGridView({required this.artist});
 
   final String artist;
 
   @override
-  Widget build(BuildContext context) => AlbumsView(
-    albumIDs: watchValue(
-      (AlbumIDsOfArtistManager m) => m.command,
-      param1: artist,
-    ),
+  Widget build(BuildContext context, WidgetRef ref) => AlbumsView(
+    albumIDs: ref.watch(albumIDsOfArtistManagerProvider(artist)).value,
   );
 }
 
-class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
-  const _ArtistPageControlPanel({required this.audios, required this.pageId});
+class _ArtistPageControlPanel extends ConsumerWidget {
+  const _ArtistPageControlPanel({
+    required this.audios,
+    required this.pageId,
+  });
 
   final List<Audio> audios;
   final String pageId;
 
   @override
-  Widget build(BuildContext context) {
-    final useGridView = watchValue(
-      (FindTitlesOfArtistManager m) => m.useArtistGridView,
-      param1: pageId,
-    );
-    final setUseGridView = di<FindTitlesOfArtistManager>(
-      param1: pageId,
-    ).setUseArtistGridView;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final useGridView = ref.watch(artistGridViewManagerProvider(pageId));
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -179,22 +167,29 @@ class _ArtistPageControlPanel extends StatelessWidget with WatchItMixin {
           IconButton(
             icon: Icon(Iconz.grid),
             isSelected: useGridView,
-            onPressed: () => setUseGridView(true),
+            onPressed: () => ref
+                .read(artistGridViewManagerProvider(pageId).notifier)
+                .setUseArtistGridView(true),
           ),
           IconButton(
             icon: Icon(Iconz.list),
             isSelected: !useGridView,
-            onPressed: () => setUseGridView(false),
+            onPressed: () => ref
+                .read(artistGridViewManagerProvider(pageId).notifier)
+                .setUseArtistGridView(false),
           ),
-          AvatarPlayButton(pageId: pageId, audioPageType: AudioPageType.artist),
+          AvatarPlayButton(
+            pageId: pageId,
+            audioPageType: AudioPageType.artist,
+          ),
           LikeAllIconButton(audios: audios),
           AudioTileOptionButton(
             audios: audios,
             playlistId: pageId,
             allowRemove: false,
-            searchTerm: audios.firstOrNull?.artist ?? '',
-            title: Text(audios.firstOrNull?.artist ?? ''),
-            subTitle: Text(audios.firstOrNull?.genre ?? ''),
+            searchTerm: pageId,
+            title: Text(pageId),
+            subTitle: const SizedBox.shrink(),
           ),
         ],
       ),

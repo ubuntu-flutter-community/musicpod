@@ -8,7 +8,7 @@ import '../../common/view/common_widgets.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../manager/custom_content_manager.dart';
+import '../service/custom_content_service.dart';
 
 class BackupDialog extends StatelessWidget with WatchItMixin {
   const BackupDialog({super.key, this.breakingChange = true});
@@ -102,7 +102,7 @@ class BackupDialog extends StatelessWidget with WatchItMixin {
                             ListTile(
                               title: ElevatedButton(
                                 onPressed: () {
-                                  di<CustomContentManager>()
+                                  di<CustomContentService>()
                                       .exportPlaylistsAndPinnedAlbumsToM3Us()
                                       .then(
                                         (v) =>
@@ -121,7 +121,7 @@ class BackupDialog extends StatelessWidget with WatchItMixin {
                             ListTile(
                               title: ElevatedButton(
                                 child: Text(l10n.exportPodcastsToOpmlFile),
-                                onPressed: () => di<CustomContentManager>()
+                                onPressed: () => di<CustomContentService>()
                                     .exportPodcastsToOpmlFile()
                                     .then(
                                       (v) => appManager.setPodcastBackup(v),
@@ -134,7 +134,7 @@ class BackupDialog extends StatelessWidget with WatchItMixin {
                           children: [
                             ListTile(
                               title: ElevatedButton(
-                                onPressed: () => di<CustomContentManager>()
+                                onPressed: () => di<CustomContentService>()
                                     .exportStarredStationsToOpmlFile()
                                     .then((v) => appManager.setRadioBackup(v)),
                                 child: Text(

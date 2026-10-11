@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
-import '../../custom_content/manager/custom_content_manager.dart';
+import '../../custom_content/service/custom_content_service.dart';
 import '../../extensions/build_context_x.dart';
 import '../manager/wipe_manager.dart';
 import 'settings_list_tile.dart';
@@ -33,7 +34,7 @@ class RadioSection extends StatelessWidget with WatchItMixin {
                 ),
                 onPressed: () => ConfirmationDialog.show(
                   context: context,
-                  initialFuture: () => di<CustomContentManager>()
+                  initialFuture: () => di<CustomContentService>()
                       .exportStarredStationsToOpmlFile(),
                   loadingTitle: Text(context.l10n.exportingStationsPleaseWait),
                   cancelLabel: context.l10n.back,
@@ -47,30 +48,33 @@ class RadioSection extends StatelessWidget with WatchItMixin {
                 ),
                 onPressed: () => ConfirmationDialog.show(
                   context: context,
-                  initialFuture: () => di<CustomContentManager>()
+                  initialFuture: () => di<CustomContentService>()
                       .importStarredStationsFromOpmlFile(),
                   loadingTitle: Text(context.l10n.importingStationsPleaseWait),
                   cancelLabel: context.l10n.back,
                 ),
               ),
-              IconButton(
-                icon: Icon(
-                  Iconz.remove,
-                  semanticLabel: l10n.removeAllStarredStations,
-                ),
-                tooltip: context.l10n.removeAllStarredStations,
-                onPressed: () => ConfirmationDialog.show(
-                  context: context,
-                  modalLevel: ModalLevel.error,
-                  headerIconData: Iconz.remove,
-                  barrierDismissible: false,
-                  title: Text(l10n.removeAllStarredStationsConfirm),
-                  content: SizedBox(
-                    width: 350,
-                    child: Text(l10n.removeAllStarredStationsDescription),
+              Consumer(
+                builder: (context, ref, _) => IconButton(
+                  icon: Icon(
+                    Iconz.remove,
+                    semanticLabel: l10n.removeAllStarredStations,
                   ),
-                  onConfirm: () =>
-                      di<WipeManager>().command.runAsync({WipeType.radio}),
+                  tooltip: context.l10n.removeAllStarredStations,
+                  onPressed: () => ConfirmationDialog.show(
+                    context: context,
+                    modalLevel: ModalLevel.error,
+                    headerIconData: Iconz.remove,
+                    barrierDismissible: false,
+                    title: Text(l10n.removeAllStarredStationsConfirm),
+                    content: SizedBox(
+                      width: 350,
+                      child: Text(l10n.removeAllStarredStationsDescription),
+                    ),
+                    onConfirm: () => ref
+                        .read(wipeManagerProvider.notifier)
+                        .wipe({WipeType.radio}),
+                  ),
                 ),
               ),
             ],

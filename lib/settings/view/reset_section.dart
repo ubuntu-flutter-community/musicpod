@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/app_manager.dart';
 import '../../common/view/confirm.dart';
@@ -11,11 +12,11 @@ import '../manager/wipe_manager.dart';
 import 'settings_list_tile.dart';
 import 'settings_section.dart';
 
-class ResetSection extends StatelessWidget {
+class ResetSection extends ConsumerWidget {
   const ResetSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final theme = context.theme;
     return SettingsSection(
@@ -55,7 +56,7 @@ class ResetSection extends StatelessWidget {
                 padding: const EdgeInsets.all(kMediumPlusSpace),
                 child: Text(l10n.resetAllSettingsConfirm),
               ),
-              onConfirm: () => di<WipeManager>().command.runAsync(),
+              onConfirm: () => ref.read(wipeManagerProvider.notifier).wipe(),
             ),
             child: Text(
               l10n.reset,

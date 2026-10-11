@@ -1,29 +1,29 @@
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../common/logging.dart';
+import '../../dependencies.dart';
 import '../data/playlist_action.dart';
+import '../service/local_audio_service.dart';
 import 'local_audio_manager.dart';
 import 'playlist_manager.dart';
 
-@lazySingleton
-class PlaylistIDsManager {
-  PlaylistIDsManager({required LocalAudioManager localAudioManager}) {
-    Logger.o(tag: '$PlaylistIDsManager');
-    command = Command.createAsync((param) async {
-      if (param != null) {
-        await localAudioManager.createOrChangePlaylist(param);
+part 'playlist_ids_manager.g.dart';
 
-        await di<PlaylistManager>(param1: param.id).command.runAsync();
-      }
+@Riverpod(keepAlive: true)
+class PlaylistIDsManager extends _$PlaylistIDsManager {
+  late final LocalAudioService _service = di<LocalAudioService>();
 
-      return localAudioManager.findAllPlaylistIDs();
-    }, initialValue: []);
-
-    localAudioManager.initAudiosCommand.listen((_, _) => command.value = []);
-
-    command.run();
+  @override
+  Future<List<String>> build() async {
+    await ref.watch(localAudioManagerProvider.future);
+    return _service.findAllPlaylistIDs();
   }
 
-  late final Command<PlaylistChange?, List<String>> command;
+  Future<void> createOrChangePlaylist(PlaylistChange param) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      await _service.createOrChangePlaylist(param);
+      ref.invalidate(playlistManagerProvider(param.id));
+      return _service.findAllPlaylistIDs();
+    });
+  }
 }

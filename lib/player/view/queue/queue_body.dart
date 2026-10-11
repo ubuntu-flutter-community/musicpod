@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../../../common/data/audio.dart';
@@ -162,15 +163,17 @@ class _QueueBodyState extends State<QueueBody>
                             ],
                           ),
                           onConfirm: () {
-                            di<PlaylistIDsManager>().command.run(
-                              PlaylistChange(
-                                id: '${l10n.queue} ${DateTime.now()}',
-                                audios: List.from(
-                                  queue.audios.where((e) => e.isLocal),
-                                ),
-                                action: PlaylistAction.create,
-                              ),
-                            );
+                            ProviderScope.containerOf(context, listen: false)
+                                .read(playlistIDsManagerProvider.notifier)
+                                .createOrChangePlaylist(
+                                  PlaylistChange(
+                                    id: '${l10n.queue} ${DateTime.now()}',
+                                    audios: List.from(
+                                      queue.audios.where((e) => e.isLocal),
+                                    ),
+                                    action: PlaylistAction.create,
+                                  ),
+                                );
                             if (widget.shownInDialog && context.canPop()) {
                               context.pop();
                             }

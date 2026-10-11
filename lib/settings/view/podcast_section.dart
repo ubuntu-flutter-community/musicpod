@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:yaru/yaru.dart';
 
@@ -7,7 +8,7 @@ import '../../common/view/common_widgets.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
-import '../../custom_content/manager/custom_content_manager.dart';
+import '../../custom_content/service/custom_content_service.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
 import '../../podcasts/manager/download_manager.dart';
@@ -207,7 +208,7 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
             onPressed: () => ConfirmationDialog.show(
               context: context,
               initialFuture: () =>
-                  di<CustomContentManager>().exportPodcastsToOpmlFile(),
+                  di<CustomContentService>().exportPodcastsToOpmlFile(),
               cancelLabel: context.l10n.back,
               loadingTitle: Text(context.l10n.exportingPodcastsPleaseWait),
             ),
@@ -221,24 +222,27 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
             onPressed: () => ConfirmationDialog.show(
               context: context,
               initialFuture: () =>
-                  di<CustomContentManager>().importPodcastsFromOpmlFile(),
+                  di<CustomContentService>().importPodcastsFromOpmlFile(),
               loadingTitle: Text(context.l10n.importingPodcastsPleaseWait),
               cancelLabel: context.l10n.back,
             ),
           ),
-          IconButton(
-            icon: Icon(Iconz.remove),
-            tooltip: context.l10n.podcasts,
-            onPressed: () => ConfirmationDialog.show(
-              modalLevel: ModalLevel.error,
-              headerIconData: Iconz.remove,
-              context: context,
-              title: Text(context.l10n.removeAllPodcastsConfirm),
-              content: Text(context.l10n.removeAllPodcastsDescription),
-              confirmLabel: context.l10n.ok,
-              cancelLabel: context.l10n.cancel,
-              onConfirm: () =>
-                  di<WipeManager>().command.runAsync({WipeType.podcasts}),
+          Consumer(
+            builder: (context, ref, _) => IconButton(
+              icon: Icon(Iconz.remove),
+              tooltip: context.l10n.podcasts,
+              onPressed: () => ConfirmationDialog.show(
+                modalLevel: ModalLevel.error,
+                headerIconData: Iconz.remove,
+                context: context,
+                title: Text(context.l10n.removeAllPodcastsConfirm),
+                content: Text(context.l10n.removeAllPodcastsDescription),
+                confirmLabel: context.l10n.ok,
+                cancelLabel: context.l10n.cancel,
+                onConfirm: () => ref
+                    .read(wipeManagerProvider.notifier)
+                    .wipe({WipeType.podcasts}),
+              ),
             ),
           ),
         ],

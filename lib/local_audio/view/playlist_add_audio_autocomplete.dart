@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/progress.dart';
@@ -15,19 +16,16 @@ import '../manager/playlist_manager.dart';
 import '../manager/local_audio_manager.dart';
 import '../data/playlist_action.dart';
 import '../manager/playlist_ids_manager.dart';
+import '../manager/show_playlist_add_audios_manager.dart';
 
-class PlaylistAddAudioAutoCompleteOrShrink extends StatelessWidget
-    with WatchItMixin {
+class PlaylistAddAudioAutoCompleteOrShrink extends ConsumerWidget {
   const PlaylistAddAudioAutoCompleteOrShrink({super.key, required this.pageId});
 
   final String pageId;
 
   @override
-  Widget build(BuildContext context) {
-    final show = watchValue(
-      (PlaylistManager m) => m.showPlaylistAddAudios,
-      param1: pageId,
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final show = ref.watch(showPlaylistAddAudiosManagerProvider(pageId));
 
     return AnimatedContainer(
       width: 400,
@@ -39,8 +37,7 @@ class PlaylistAddAudioAutoCompleteOrShrink extends StatelessWidget
   }
 }
 
-class PlaylistAddAudioAutoComplete extends StatefulWidget
-    with WatchItStatefulWidgetMixin {
+class PlaylistAddAudioAutoComplete extends ConsumerStatefulWidget {
   const PlaylistAddAudioAutoComplete({
     super.key,
     required this.pageId,
@@ -51,12 +48,12 @@ class PlaylistAddAudioAutoComplete extends StatefulWidget
   final TextStyle? textStyle;
 
   @override
-  State<PlaylistAddAudioAutoComplete> createState() =>
+  ConsumerState<PlaylistAddAudioAutoComplete> createState() =>
       _PlaylistAddAudioAutoCompleteState();
 }
 
 class _PlaylistAddAudioAutoCompleteState
-    extends State<PlaylistAddAudioAutoComplete> {
+    extends ConsumerState<PlaylistAddAudioAutoComplete> {
   final FocusNode _focusNode = FocusNode();
   final TextEditingController _controller = TextEditingController();
 
@@ -77,17 +74,11 @@ class _PlaylistAddAudioAutoCompleteState
     final useYaruTheme = watchPropertyValue(
       (SettingsManager m) => m.useYaruTheme,
     );
-    final allAudiosResults = watchValue(
-      (LocalAudioManager m) => m.initAudiosCommand.results,
-    );
-    final allAudios = watchValue((FindAllTracksManager m) => m.command);
-    final isRunning = allAudiosResults.isRunning;
-    final error = allAudiosResults.error;
-    final playListResult = watchValue(
-      (PlaylistManager m) => m.command.results,
-      param1: widget.pageId,
-    );
-    final playlist = playListResult.data ?? [];
+    final localAudioState = ref.watch(localAudioManagerProvider);
+    final allAudios = ref.watch(findAllTracksManagerProvider).value;
+    final isRunning = localAudioState.isLoading;
+    final error = localAudioState.error;
+    final playlist = ref.watch(playlistManagerProvider(widget.pageId)).value ?? [];
 
     return Padding(
       padding: const EdgeInsets.only(bottom: kMediumSpace),
@@ -238,13 +229,15 @@ class _PlaylistAddAudioAutoCompleteState
                     ),
                   );
                 },
-                onSelected: (option) => di<PlaylistIDsManager>().command.run(
-                  PlaylistChange(
-                    id: widget.pageId,
-                    audios: [option],
-                    action: PlaylistAction.addTo,
-                  ),
-                ),
+                onSelected: (option) => ref
+                    .read(playlistIDsManagerProvider.notifier)
+                    .createOrChangePlaylist(
+                      PlaylistChange(
+                        id: widget.pageId,
+                        audios: [option],
+                        action: PlaylistAction.addTo,
+                      ),
+                    ),
               ),
       ),
     );

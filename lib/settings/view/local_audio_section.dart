@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/logging.dart';
 import '../../common/view/common_widgets.dart';
@@ -33,27 +36,33 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
           position: ListTilePosition.first,
           title: Text(l10n.musicCollectionLocation),
           subtitle: Text(directory),
-          trailing: ElevatedButton(
-            onPressed: () async {
-              final directoryPath = await di<ExternalPathService>()
-                  .getPathOfDirectory();
-              Logger.i('Selected directory: $directoryPath');
-              if (directoryPath != null) {
-                await di<SecureBookmarkService>().saveBookmarkFor(
-                  spKey: SPKeys.directoryBookmark,
-                  path: directoryPath,
-                );
-                await di<WipeManager>().command.runAsync({WipeType.localAudio});
-                di<LocalAudioManager>().initAudiosCommand.run((
-                  forceInit: true,
-                  directory: directoryPath,
-                ));
-              }
-            },
-            child: Text(
-              l10n.select,
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
+          trailing: Consumer(
+            builder: (context, ref, _) => ElevatedButton(
+              onPressed: () async {
+                final directoryPath = await di<ExternalPathService>()
+                    .getPathOfDirectory();
+                Logger.i('Selected directory: $directoryPath');
+                if (directoryPath != null) {
+                  await di<SecureBookmarkService>().saveBookmarkFor(
+                    spKey: SPKeys.directoryBookmark,
+                    path: directoryPath,
+                  );
+                  await ref
+                      .read(wipeManagerProvider.notifier)
+                      .wipe({WipeType.localAudio});
+                  unawaited(
+                    ref.read(localAudioManagerProvider.notifier).initAudios(
+                      forceInit: true,
+                      directory: directoryPath,
+                    ),
+                  );
+                }
+              },
+              child: Text(
+                l10n.select,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ),
         ),

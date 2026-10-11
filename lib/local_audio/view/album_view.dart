@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/sliver_fill_remaining_progress.dart';
@@ -7,7 +7,7 @@ import '../../common/view/theme.dart';
 import '../manager/pinned_album_ids_manager.dart';
 import 'album_card.dart';
 
-class AlbumsView extends StatelessWidget with WatchItMixin {
+class AlbumsView extends ConsumerWidget {
   const AlbumsView({
     super.key,
     required this.albumIDs,
@@ -19,7 +19,7 @@ class AlbumsView extends StatelessWidget with WatchItMixin {
   final Widget? noResultMessage, noResultIcon;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     if (albumIDs == null) {
       return const SliverFillRemainingProgress();
     }
@@ -31,10 +31,12 @@ class AlbumsView extends StatelessWidget with WatchItMixin {
       );
     }
 
-    final pinnedAlbumIDs = watchValue((PinnedAlbumIDsManager m) => m.command);
+    final pinnedAlbumIDs =
+        ref.watch(pinnedAlbumIDsManagerProvider).value ?? [];
 
     final pinned = albumIDs?.where((e) => pinnedAlbumIDs.contains(e)) ?? [];
-    final notPinned = albumIDs?.where((e) => !pinnedAlbumIDs.contains(e)) ?? [];
+    final notPinned =
+        albumIDs?.where((e) => !pinnedAlbumIDs.contains(e)) ?? [];
     final sortedAlbums = [...pinned, ...notPinned];
 
     return SliverGrid.builder(

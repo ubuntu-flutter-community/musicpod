@@ -1,4 +1,5 @@
 import 'package:flutter_it/flutter_it.dart';
+export 'package:flutter_it/flutter_it.dart' show di;
 import 'package:injectable/injectable.dart';
 
 import 'dependencies.config.dart';

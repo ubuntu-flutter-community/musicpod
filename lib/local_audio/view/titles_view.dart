@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
@@ -11,10 +12,11 @@ import '../../common/view/sliver_local_audio_tile_list.dart';
 import '../../common/view/sliver_fill_remaining_progress.dart';
 import '../../extensions/build_context_x.dart';
 import '../manager/local_audio_manager.dart';
+import '../service/local_audio_service.dart';
 import 'album_page.dart';
 import 'artist_page.dart';
 
-class TitlesView extends StatelessWidget with WatchItMixin {
+class TitlesView extends ConsumerWidget {
   const TitlesView({
     super.key,
     required this.audios,
@@ -30,9 +32,9 @@ class TitlesView extends StatelessWidget with WatchItMixin {
   final bool startNewPlaylistOnTap;
 
   @override
-  Widget build(BuildContext context) {
-    final importing = watchValue(
-      (LocalAudioManager m) => m.initAudiosCommand.isRunning,
+  Widget build(BuildContext context, WidgetRef ref) {
+    final importing = ref.watch(
+      localAudioManagerProvider.select((s) => s.isLoading),
     );
 
     if (audios == null || importing) {
@@ -61,7 +63,7 @@ class TitlesView extends StatelessWidget with WatchItMixin {
           context.toast(Text(context.l10n.nothingFound));
           return;
         }
-        final id = await di<LocalAudioManager>().findAlbumId(
+        final id = await di<LocalAudioService>().findAlbumIdForArtistAndAlbum(
           artist: audio.artist!,
           album: audio.album!,
         );

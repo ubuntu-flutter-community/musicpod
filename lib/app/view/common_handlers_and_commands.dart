@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/confirm.dart';
@@ -138,9 +139,11 @@ mixin CommonHandlersAndCommandsMixin {
           switch (results.data!.param.audioPageType) {
             case AudioPageType.radio:
               results.data!.audios.singleOrNull?.uuid != null
-                  ? di<ClickStationManager>().command.run(
-                      results.data!.audios.singleOrNull!.uuid,
-                    )
+                  ? di<ProviderContainer>()
+                      .read(clickStationManagerProvider.notifier)
+                      .clickStation(
+                        results.data!.audios.singleOrNull!.uuid,
+                      )
                   : context.toast(Text(context.l10n.noStationFound));
             default:
               break;

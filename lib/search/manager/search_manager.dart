@@ -25,15 +25,15 @@ import '../../settings/data/shared_preferences_keys.dart';
 import '../data/search_timeout_exception.dart';
 import '../data/search_type.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 @injectable
 class SearchManager {
   SearchManager._({
-    required RadioManager radioManager,
     required PodcastService podcastService,
     required LocalAudioService localAudioService,
     required SettingsService settingsService,
-  }) : _radioManager = radioManager,
-       _settingsService = settingsService,
+  }) : _settingsService = settingsService,
        _podcastService = podcastService,
        _localAudioService = localAudioService {
     Logger.o(tag: '$SearchManager');
@@ -71,14 +71,12 @@ class SearchManager {
 
   @factoryMethod
   static SearchManager create({
-    required RadioManager radioManager,
     required PodcastService podcastService,
     required LocalAudioService localAudioService,
     required SettingsService settingsService,
   }) => Family.of(
     '$SearchManager',
     () => SearchManager._(
-      radioManager: radioManager,
       podcastService: podcastService,
       localAudioService: localAudioService,
       settingsService: settingsService,
@@ -94,7 +92,8 @@ class SearchManager {
     },
   );
 
-  final RadioManager _radioManager;
+  RadioManager get _radioManager =>
+      di<ProviderContainer>().read(radioManagerProvider.notifier);
   final PodcastService _podcastService;
   final LocalAudioService _localAudioService;
   final SettingsService _settingsService;

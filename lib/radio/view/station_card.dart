@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/data/play_anywhere_param.dart';
 import '../../app/play_anywhere_manager.dart';
@@ -28,40 +29,40 @@ class StationCard extends StatelessWidget with WatchItMixin {
       (PlayerManager m) => m.isPlaying,
     );
 
-    final stationResult = watchValue(
-      (StationManager m) => m.command.results,
-      param1: uuid,
-    );
+    return Consumer(
+      builder: (context, ref, _) {
+        final stationResult = ref.watch(stationManagerProvider(uuid));
 
-    final station = stationResult.data;
-    final error = stationResult.error;
+        if (stationResult.hasError) {
+          return AudioCard(
+            image: Center(child: Icon(Iconz.imageMissing, size: 70)),
+          );
+        }
 
-    if (error != null)
-      return AudioCard(
-        image: Center(child: Icon(Iconz.imageMissing, size: 70)),
-      );
+        final station = stationResult.value;
+        if (station == null) return const AudioCard();
 
-    if (station == null) return const AudioCard();
+        final iconData = isSelected && isPlayerPlaying
+            ? Iconz.pause
+            : Iconz.playFilled;
 
-    final iconData = isSelected && isPlayerPlaying
-        ? Iconz.pause
-        : Iconz.playFilled;
-
-    return AudioCard(
-      bottom: AudioCardBottom(child: StationTitle(uuid: uuid)),
-      playIcon: iconData,
-      seleted: isSelected,
-      onPlay: () => di<PlayAnywhereManager>().command.run(
-        PlayAnywhereParam(pageId: uuid, audioPageType: AudioPageType.radio),
-      ),
-      onTap: () => di<RoutingManager>().push(pageId: uuid),
-      image: SizedBox.expand(
-        child: StationPageIcon(
-          uuid: uuid,
-          selected: false,
-          dimension: audioCardDimension,
-        ),
-      ),
+        return AudioCard(
+          bottom: AudioCardBottom(child: StationTitle(uuid: uuid)),
+          playIcon: iconData,
+          seleted: isSelected,
+          onPlay: () => di<PlayAnywhereManager>().command.run(
+            PlayAnywhereParam(pageId: uuid, audioPageType: AudioPageType.radio),
+          ),
+          onTap: () => di<RoutingManager>().push(pageId: uuid),
+          image: SizedBox.expand(
+            child: StationPageIcon(
+              uuid: uuid,
+              selected: isSelected,
+              dimension: audioCardDimension,
+            ),
+          ),
+        );
+      },
     );
   }
 }

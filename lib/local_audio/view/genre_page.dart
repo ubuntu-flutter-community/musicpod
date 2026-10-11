@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:radio_browser_api/radio_browser_api.dart' hide State;
 
 import '../../app/page_ids.dart';
@@ -9,19 +9,20 @@ import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
+import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
-import '../../search/manager/search_manager.dart';
 import '../../search/data/search_type.dart';
+import '../../search/manager/search_manager.dart';
 import '../manager/album_ids_of_genre_manager.dart';
 import 'album_view.dart';
 
-class GenrePage extends StatelessWidget with WatchItMixin {
+class GenrePage extends ConsumerWidget {
   const GenrePage({required this.genre, super.key});
 
   final String genre;
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context, WidgetRef ref) => Scaffold(
     appBar: HeaderBar(
       titleSpacing: 0,
       title: Row(
@@ -50,11 +51,7 @@ class GenrePage extends StatelessWidget with WatchItMixin {
           padding: kGridPadding.copyWith(bottom: bottomPlayerPageGap),
           sliver: AlbumsView(
             albumIDs:
-                watchValue(
-                  (AlbumIDsOfGenreManager m) => m.command,
-                  param1: genre,
-                ) ??
-                [],
+                ref.watch(albumIDsOfGenreManagerProvider(genre)).value ?? [],
           ),
         ),
       ],

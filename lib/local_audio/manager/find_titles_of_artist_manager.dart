@@ -1,49 +1,21 @@
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
-import 'package:safe_change_notifier/safe_change_notifier.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../common/data/audio.dart';
-import '../../common/util/family.dart';
 import '../../common/view/audio_filter.dart';
-import '../../extensions/command_x.dart';
+import '../../dependencies.dart';
+import '../service/local_audio_service.dart';
 import 'local_audio_manager.dart';
 
-@injectable
-class FindTitlesOfArtistManager {
-  FindTitlesOfArtistManager._({
-    required String artist,
-    required LocalAudioManager localAudioManager,
-  }) {
-    command = Command.createAsyncNoParam(
-      () => localAudioManager.findTitlesOfArtist(artist, AudioFilter.album),
-      initialValue: null,
-    );
-    command.run();
-  }
+part 'find_titles_of_artist_manager.g.dart';
 
-  @factoryMethod
-  static FindTitlesOfArtistManager create({
-    @factoryParam required String artist,
-    required LocalAudioManager localAudioManager,
-  }) => Family.of(
-    artist,
-    () => FindTitlesOfArtistManager._(
-      artist: artist,
-      localAudioManager: localAudioManager,
-    ),
-    shouldDispose: (m) =>
-        m.command.safeToDispose && !m.useArtistGridView.hasListeners,
-    onDispose: (m) {
-      m.command.dispose();
-      m.useArtistGridView.dispose();
-    },
-  );
-
-  late final Command<void, List<Audio>?> command;
-
-  final useArtistGridView = SafeValueNotifier<bool>(true);
-  void setUseArtistGridView(bool value) {
-    if (value == useArtistGridView.value) return;
-    useArtistGridView.value = value;
+@riverpod
+class FindTitlesOfArtistManager extends _$FindTitlesOfArtistManager {
+  @override
+  Future<List<Audio>?> build(
+    String artist, [
+    AudioFilter filter = AudioFilter.album,
+  ]) async {
+    await ref.watch(localAudioManagerProvider.future);
+    return di<LocalAudioService>().findTitlesOfArtist(artist, filter);
   }
 }

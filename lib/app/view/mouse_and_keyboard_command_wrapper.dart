@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/data/audio_type.dart';
 import '../../player/manager/player_manager.dart';
@@ -109,7 +112,21 @@ class MouseAndKeyboardCommandWrapper extends StatelessWidget {
             if (audio == null) return;
 
             if (audio.isRadio) {
-              di<RadioManager>().findSimilarStationCommand.run(audio);
+              if (di.isRegistered<ProviderContainer>()) {
+                unawaited(
+                  di<ProviderContainer>()
+                      .read(similarStationManagerProvider.notifier)
+                      .findSimilarStation(audio)
+                      .then((similar) {
+                    if (similar != null) {
+                      playerManager.play(
+                        audios: [similar],
+                        listName: similar.uuid ?? '',
+                      );
+                    }
+                  }),
+                );
+              }
             } else {
               playerManager.playNext();
             }

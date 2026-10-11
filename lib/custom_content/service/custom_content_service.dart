@@ -1,106 +1,46 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:injectable/injectable.dart';
 import 'package:m3u_parser_nullsafe/m3u_parser_nullsafe.dart';
 import 'package:opml/opml.dart';
 import 'package:path/path.dart';
 import 'package:pls/pls.dart';
-import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/logging.dart';
-import '../../extensions/command_x.dart';
+import '../../dependencies.dart';
 import '../../extensions/media_file_x.dart';
 import '../../external_path/service/external_path_service.dart';
-import '../../local_audio/data/playlist_action.dart';
-import '../../local_audio/manager/find_album_manager.dart';
-import '../../local_audio/manager/pinned_album_ids_manager.dart';
-import '../../local_audio/manager/playlist_ids_manager.dart';
-import '../../local_audio/manager/playlist_manager.dart';
+import '../../local_audio/service/local_audio_service.dart';
 import '../../podcasts/data/podcast_toggle_capsule.dart';
 import '../../podcasts/manager/episodes_manager.dart';
 import '../../podcasts/manager/podcast_short_info_manager.dart';
-import '../../common/util/family.dart';
 import '../../podcasts/manager/subscribed_podcasts_manager.dart';
 import '../../radio/manager/radio_manager.dart';
 import '../../radio/manager/radio_star_station_manager.dart';
 import '../../radio/service/radio_service.dart';
 
-@injectable
-class CustomContentManager {
-  CustomContentManager._({
+@lazySingleton
+class CustomContentService {
+  CustomContentService({
     required ExternalPathService externalPathService,
-    required PlaylistIDsManager playlistIDsManager,
-    required PinnedAlbumIDsManager pinnedAlbumIDsManager,
+    required LocalAudioService localAudioService,
     required SubscribedPodcastsManager podcastService,
     required RadioService radioService,
   }) : _externalPathService = externalPathService,
+       _localAudioService = localAudioService,
        _subscribedPodcastsManager = podcastService,
-       _radioService = radioService,
-       _playlistIDsManager = playlistIDsManager,
-       _pinnedAlbumIDsManager = pinnedAlbumIDsManager {
-    Logger.o(tag: '$CustomContentManager');
-  }
-
-  @factoryMethod
-  static CustomContentManager create({
-    required ExternalPathService externalPathService,
-    required PlaylistIDsManager playlistIDsManager,
-    required PinnedAlbumIDsManager pinnedAlbumIDsManager,
-    required SubscribedPodcastsManager podcastService,
-    required RadioService radioService,
-  }) => Family.of(
-    '$CustomContentManager',
-    () => CustomContentManager._(
-      externalPathService: externalPathService,
-      playlistIDsManager: playlistIDsManager,
-      pinnedAlbumIDsManager: pinnedAlbumIDsManager,
-      podcastService: podcastService,
-      radioService: radioService,
-    ),
-    shouldDispose: (m) =>
-        m.importExternalPlaylistsCommand.safeToDispose &&
-        !m.playlistName.hasListeners,
-    onDispose: (m) {
-      m.importExternalPlaylistsCommand.dispose();
-      m.externalPlaylistsDraft.dispose();
-      m.playlistName.dispose();
-    },
-  );
+       _radioService = radioService;
 
   final ExternalPathService _externalPathService;
+  final LocalAudioService _localAudioService;
   final SubscribedPodcastsManager _subscribedPodcastsManager;
-  final PlaylistIDsManager _playlistIDsManager;
-  final PinnedAlbumIDsManager _pinnedAlbumIDsManager;
   final RadioService _radioService;
 
-  final externalPlaylistsDraft = MapNotifier<String, List<Audio>>();
-  Future<void> addPlaylists() async {
-    final more = await _loadPlaylistsFromFile();
-    externalPlaylistsDraft.addEntries(more.entries);
-  }
-
-  void removeExternalPlaylistFromDraft({required String name}) =>
-      externalPlaylistsDraft.remove(name);
-
-  late final Command<void, void> importExternalPlaylistsCommand =
-      Command.createAsyncNoParamNoResult(() async {
-        for (final entry in externalPlaylistsDraft.entries) {
-          await _playlistIDsManager.command.runAsync(
-            PlaylistChange(
-              id: entry.key,
-              audios: entry.value,
-              action: PlaylistAction.create,
-              external: true,
-            ),
-          );
-        }
-      });
-
-  Future<Map<String, List<Audio>>> _loadPlaylistsFromFile() async {
+  Future<Map<String, List<Audio>>> loadPlaylistsFromFiles() async {
     final Map<String, List<Audio>> lists = {};
 
     try {
@@ -113,7 +53,7 @@ class CustomContentManager {
         }
       }
     } on Exception catch (e, s) {
-      Logger.e(e, trace: s, tag: '$CustomContentManager');
+      Logger.e(e, trace: s, tag: '$CustomContentService');
     }
 
     return lists;
@@ -130,20 +70,24 @@ class CustomContentManager {
 
   Future<bool> exportPlaylistsAndPinnedAlbumsToM3Us() async {
     final albums = <({String id, List<Audio> audios})>[];
-    for (var e in (await _pinnedAlbumIDsManager.command.runAsync())) {
+    for (var e in (await _localAudioService.findPinnedAlbumIDs())) {
       albums.add((
         id: e.toString(),
-        audios: await di<FindAlbumManager>(param1: e).command.runAsync() ?? [],
+        audios: await _localAudioService.findAlbum(e) ?? [],
+      ));
+    }
+
+    final playlistIds = await _localAudioService.findAllPlaylistIDs();
+    final playlists = <({String id, List<Audio> audios})>[];
+    for (var id in playlistIds) {
+      playlists.add((
+        id: id,
+        audios: await _localAudioService.findPlaylistById(id) ?? [],
       ));
     }
 
     final List<({String id, List<Audio> audios})> list = [
-      ...(await _playlistIDsManager.command.runAsync()).map(
-        (e) => (
-          id: e,
-          audios: (di<PlaylistManager>(param1: e).command.value) ?? [],
-        ),
-      ),
+      ...playlists,
       ...albums,
     ];
 
@@ -175,7 +119,7 @@ class CustomContentManager {
     try {
       File(join(basePath, '$id.m3u')).writeAsStringSync(m3uAsString.toString());
     } on Exception catch (e, s) {
-      Logger.e(e, trace: s, tag: '$CustomContentManager');
+      Logger.e(e, trace: s, tag: '$CustomContentService');
     }
   }
 
@@ -313,17 +257,20 @@ class CustomContentManager {
       }
       if (starredStations.isNotEmpty) {
         for (final uuid in starredStations) {
-          final station = await di<RadioManager>().getAudioByUUID(uuid);
-          await di<RadioStarStationManager>().command.runAsync(station);
+          final station = di.isRegistered<ProviderContainer>()
+              ? await di<ProviderContainer>()
+                  .read(radioManagerProvider.notifier)
+                  .getAudioByUUID(uuid)
+              : await _radioService.getAudioByUUID(uuid, fromDBOnly: false);
+          if (station != null) {
+            await _radioService.toggleStarredStation(station);
+          }
+        }
+        if (di.isRegistered<ProviderContainer>()) {
+          di<ProviderContainer>().invalidate(radioStarStationManagerProvider);
         }
       }
     }
-  }
-
-  final playlistName = SafeValueNotifier<String?>(null);
-  void setPlaylistName(String? value) {
-    if (playlistName.value == value) return;
-    playlistName.value = value;
   }
 }
 

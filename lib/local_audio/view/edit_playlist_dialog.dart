@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
@@ -9,15 +10,14 @@ import '../../common/data/audio.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
-import '../../custom_content/manager/custom_content_manager.dart';
+import '../../custom_content/service/custom_content_service.dart';
 import '../../extensions/build_context_x.dart';
 import '../../settings/manager/settings_manager.dart';
 import '../data/local_audio_view.dart';
 import '../data/playlist_action.dart';
 import '../manager/playlist_ids_manager.dart';
 
-class EditPlaylistDialog extends StatefulWidget
-    with WatchItStatefulWidgetMixin {
+class EditPlaylistDialog extends ConsumerStatefulWidget {
   const EditPlaylistDialog({
     super.key,
     this.playlistName,
@@ -29,10 +29,10 @@ class EditPlaylistDialog extends StatefulWidget
   final String? playlistName, initialValue;
 
   @override
-  State<EditPlaylistDialog> createState() => _EditPlaylistDialogState();
+  ConsumerState<EditPlaylistDialog> createState() => _EditPlaylistDialogState();
 }
 
-class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
+class _EditPlaylistDialogState extends ConsumerState<EditPlaylistDialog> {
   late TextEditingController _controller;
 
   @override
@@ -44,7 +44,6 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
   @override
   void dispose() {
     _controller.dispose();
-
     super.dispose();
   }
 
@@ -79,7 +78,7 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
                   onPressed:
                       widget.playlistName == null || widget.audios == null
                       ? null
-                      : () => di<CustomContentManager>().exportPlaylistToM3u(
+                      : () => di<CustomContentService>().exportPlaylistToM3u(
                           id: widget.playlistName!,
                           audios: widget.audios!,
                         ),
@@ -98,7 +97,7 @@ class _EditPlaylistDialogState extends State<EditPlaylistDialog> {
         await di<SettingsManager>().setLocalAudioindex(
           LocalAudioView.playlists.index,
         );
-        di<PlaylistIDsManager>().command.run(
+        await ref.read(playlistIDsManagerProvider.notifier).createOrChangePlaylist(
           PlaylistChange(
             id: widget.playlistName!,
             action: PlaylistAction.updateName,

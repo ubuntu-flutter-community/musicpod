@@ -1,29 +1,16 @@
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../common/util/family.dart';
-import '../../extensions/command_x.dart';
+import '../../dependencies.dart';
+import '../service/local_audio_service.dart';
 import 'local_audio_manager.dart';
 
-@injectable
-class HasTracksManager {
-  HasTracksManager._({required LocalAudioManager localAudioManager}) {
-    command = Command.createAsyncNoParam(
-      localAudioManager.hasTracks,
-      initialValue: true,
-    );
-    command.run();
+part 'has_tracks_manager.g.dart';
+
+@riverpod
+class HasTracksManager extends _$HasTracksManager {
+  @override
+  Future<bool> build() async {
+    await ref.watch(localAudioManagerProvider.future);
+    return di<LocalAudioService>().hasTracks();
   }
-
-  @factoryMethod
-  static HasTracksManager create({
-    required LocalAudioManager localAudioManager,
-  }) => Family.of(
-    '$HasTracksManager',
-    () => HasTracksManager._(localAudioManager: localAudioManager),
-    shouldDispose: (m) => m.command.safeToDispose,
-    onDispose: (m) => m.command.dispose(),
-  );
-
-  late final Command<void, bool> command;
 }

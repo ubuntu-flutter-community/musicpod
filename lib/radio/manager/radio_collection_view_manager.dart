@@ -1,15 +1,16 @@
-import 'package:injectable/injectable.dart';
-import 'package:safe_change_notifier/safe_change_notifier.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../data/radio_collection_view.dart';
 
-@lazySingleton
-class RadioCollectionViewManager {
-  final radioCollectionView = SafeValueNotifier<RadioCollectionView>(
-    RadioCollectionView.stations,
-  );
+part 'radio_collection_view_manager.g.dart';
+
+@Riverpod(keepAlive: true)
+class RadioCollectionViewManager extends _$RadioCollectionViewManager {
+  @override
+  RadioCollectionView build() => RadioCollectionView.stations;
+
   void setRadioCollectionView(RadioCollectionView value) {
-    if (value == radioCollectionView.value) return;
-    radioCollectionView.value = value;
+    if (value == state) return;
+    state = value;
   }
 }

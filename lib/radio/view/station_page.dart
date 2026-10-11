@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
@@ -56,72 +57,73 @@ class StationPage extends StatelessWidget {
   );
 }
 
-class _StationPageBody extends StatelessWidget with WatchItMixin {
+class _StationPageBody extends ConsumerWidget {
   const _StationPageBody({required this.uuid});
 
   final String uuid;
 
   @override
-  Widget build(BuildContext context) =>
-      watchValue(
-        (StationManager m) => m.command.results,
-        param1: uuid,
-      ).toWidget(
-        whileRunning: (lastResult, param) => const Center(child: Progress()),
-        onError: (error, lastResult, param) =>
-            StationErrorPage(uuid: uuid, error: error),
-        onNullData: (param) =>
-            NoSearchResultPage(message: Text(context.l10n.stationNotFound)),
-        onData: (result, param) {
-          final station = result!;
-          return AdaptiveMultiLayoutBody(
-            header: AudioPageHeader(
-              title: station.title ?? station.uuid ?? '',
-              subTitle: station.codec == null ? null : station.codec ?? '',
-              label: '${context.l10n.station} · ${station.bitRate ?? ''} kbps',
-              description: SizedBox(
-                width: kAudioHeaderDescriptionWidth,
-                child: RadioPageTagBar(station: station),
-              ),
-              image: station.imageUrl == null
-                  ? AudioFallBackIcon(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final stationAsync = ref.watch(stationManagerProvider(uuid));
+
+    return stationAsync.when(
+      loading: () => const Center(child: Progress()),
+      error: (error, _) => StationErrorPage(uuid: uuid, error: error),
+      data: (station) {
+        if (station == null) {
+          return NoSearchResultPage(
+            message: Text(context.l10n.stationNotFound),
+          );
+        }
+        return AdaptiveMultiLayoutBody(
+          header: AudioPageHeader(
+            title: station.title ?? station.uuid ?? '',
+            subTitle: station.codec == null ? null : station.codec ?? '',
+            label: '${context.l10n.station} · ${station.bitRate ?? ''} kbps',
+            description: SizedBox(
+              width: kAudioHeaderDescriptionWidth,
+              child: RadioPageTagBar(station: station),
+            ),
+            image: station.imageUrl == null
+                ? AudioFallBackIcon(
+                    iconSize: kMaxAudioPageHeaderHeight / 2,
+                    audio: station,
+                    color: getAlphabetColor(station.uuid ?? 'a'),
+                  )
+                : SafeNetworkImage(
+                    loadingWidget: AudioFallBackIcon(
                       iconSize: kMaxAudioPageHeaderHeight / 2,
                       audio: station,
                       color: getAlphabetColor(station.uuid ?? 'a'),
-                    )
-                  : SafeNetworkImage(
-                      loadingWidget: AudioFallBackIcon(
-                        iconSize: kMaxAudioPageHeaderHeight / 2,
-                        audio: station,
-                        color: getAlphabetColor(station.uuid ?? 'a'),
-                      ),
-                      errorWidget: AudioFallBackIcon(
-                        iconSize: kMaxAudioPageHeaderHeight / 2,
-                        audio: station,
-                        color: getAlphabetColor(station.uuid ?? 'a'),
-                      ),
-                      url: station.imageUrl!,
-                      fit: BoxFit.scaleDown,
                     ),
-            ),
-            sliverBody: (constraints) => SliverRadioHistoryList(
-              filter: station.title,
-              allowNavigation: false,
-            ),
-            controlPanel: _StationPageControlPanel(uuid: uuid),
-          );
-        },
-      );
+                    errorWidget: AudioFallBackIcon(
+                      iconSize: kMaxAudioPageHeaderHeight / 2,
+                      audio: station,
+                      color: getAlphabetColor(station.uuid ?? 'a'),
+                    ),
+                    url: station.imageUrl!,
+                    fit: BoxFit.scaleDown,
+                  ),
+          ),
+          sliverBody: (constraints) => SliverRadioHistoryList(
+            filter: station.title,
+            allowNavigation: false,
+          ),
+          controlPanel: _StationPageControlPanel(uuid: uuid),
+        );
+      },
+    );
+  }
 }
 
-class _StationPageTitle extends StatelessWidget with WatchItMixin {
+class _StationPageTitle extends ConsumerWidget {
   const _StationPageTitle({required this.uuid});
 
   final String uuid;
 
   @override
-  Widget build(BuildContext context) {
-    final station = watchValue((StationManager m) => m.command, param1: uuid);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final station = ref.watch(stationManagerProvider(uuid)).value;
     return Text(
       station?.title ?? station?.uuid ?? context.l10n.station,
       overflow: TextOverflow.ellipsis,
@@ -129,14 +131,14 @@ class _StationPageTitle extends StatelessWidget with WatchItMixin {
   }
 }
 
-class _StationPageControlPanel extends WatchingWidget {
+class _StationPageControlPanel extends ConsumerWidget {
   const _StationPageControlPanel({required this.uuid});
 
   final String uuid;
 
   @override
-  Widget build(BuildContext context) {
-    final station = watchValue((StationManager m) => m.command, param1: uuid);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final station = ref.watch(stationManagerProvider(uuid)).value;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/common_control_panel.dart';
 import '../../extensions/build_context_x.dart';
@@ -13,18 +14,23 @@ class LocalAudioControlPanel extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final index = watchPropertyValue((SettingsManager m) => m.localAudioindex);
-    final importing = watchValue(
-      (LocalAudioManager m) => m.initAudiosCommand.isRunning,
-    );
 
-    return CommonControlPanel(
-      labels: LocalAudioView.values
-          .map((e) => Text(e.localize(context.l10n)))
-          .toList(),
-      isSelected: LocalAudioView.values
-          .map((e) => e == LocalAudioView.values[index])
-          .toList(),
-      onSelected: importing ? null : di<SettingsManager>().setLocalAudioindex,
+    return Consumer(
+      builder: (context, ref, _) {
+        final importing = ref.watch(
+          localAudioManagerProvider.select((s) => s.isLoading),
+        );
+
+        return CommonControlPanel(
+          labels: LocalAudioView.values
+              .map((e) => Text(e.localize(context.l10n)))
+              .toList(),
+          isSelected: LocalAudioView.values
+              .map((e) => e == LocalAudioView.values[index])
+              .toList(),
+          onSelected: importing ? null : di<SettingsManager>().setLocalAudioindex,
+        );
+      },
     );
   }
 }

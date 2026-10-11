@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/page_ids.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
-import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../manager/liked_audio_paths_manager.dart';
-import '../manager/local_audio_manager.dart';
 import '../data/playlist_action.dart';
 import '../manager/playlist_ids_manager.dart';
 import 'add_to_playlist_snack_bar.dart';
@@ -38,14 +36,14 @@ class AddToPlaylistNavigator extends StatelessWidget {
   }
 }
 
-class _PlaylistTilesList extends StatelessWidget with WatchItMixin {
+class _PlaylistTilesList extends ConsumerWidget {
   const _PlaylistTilesList({required this.audios});
 
   final List<Audio> audios;
 
   @override
-  Widget build(BuildContext context) {
-    final playlistNames = watchValue((PlaylistIDsManager m) => m.command);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final playlistNames = ref.watch(playlistIDsManagerProvider).value ?? [];
 
     final children = [
       ListTile(
@@ -61,18 +59,12 @@ class _PlaylistTilesList extends StatelessWidget with WatchItMixin {
         playlistId: PageIDs.likedAudios,
         title: context.l10n.likedSongs,
         iconData: Iconz.heartFilled,
-        localAudioManager: di<LocalAudioManager>(),
         audios: audios,
       ),
       ...playlistNames.map(
-        (playlistId) => Builder(
-          builder: (context) {
-            return _PlaylistTile(
-              playlistId: playlistId,
-              localAudioManager: di<LocalAudioManager>(),
-              audios: audios,
-            );
-          },
+        (playlistId) => _PlaylistTile(
+          playlistId: playlistId,
+          audios: audios,
         ),
       ),
     ];
@@ -87,16 +79,14 @@ class _PlaylistTilesList extends StatelessWidget with WatchItMixin {
   }
 }
 
-class _PlaylistTile extends StatelessWidget {
+class _PlaylistTile extends ConsumerWidget {
   const _PlaylistTile({
-    required this.localAudioManager,
     required this.audios,
     required this.playlistId,
     this.title,
     this.iconData,
   });
 
-  final LocalAudioManager localAudioManager;
   final List<Audio> audios;
   final String playlistId;
   final String? title;
@@ -106,14 +96,14 @@ class _PlaylistTile extends StatelessWidget {
       const EdgeInsets.symmetric(horizontal: 10, vertical: 5);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ListTile(
       contentPadding: padding,
       onTap: () {
         if (playlistId == PageIDs.likedAudios) {
-          di<LikedAudioPathsManager>().addLikedAudios(audios);
+          ref.read(likedAudioPathsManagerProvider.notifier).addLikedAudios(audios);
         } else {
-          di<PlaylistIDsManager>().command.run(
+          ref.read(playlistIDsManagerProvider.notifier).createOrChangePlaylist(
             PlaylistChange(
               id: playlistId,
               audios: audios,
@@ -123,27 +113,26 @@ class _PlaylistTile extends StatelessWidget {
         }
 
         Navigator.of(context, rootNavigator: true).maybePop();
-        showAddedToPlaylistSnackBar(context: context, id: playlistId);
       },
       leading: SideBarFallBackImage(
-        color: getAlphabetColor(playlistId),
-        child: Icon(iconData ?? Iconz.starFilled),
+        color: Colors.transparent,
+        child: Icon(iconData ?? Iconz.playlist),
       ),
       title: Text(title ?? playlistId),
     );
   }
 }
 
-class _NewView extends StatefulWidget {
+class _NewView extends ConsumerStatefulWidget {
   const _NewView({required this.audios});
 
   final List<Audio> audios;
 
   @override
-  State<_NewView> createState() => _NewViewState();
+  ConsumerState<_NewView> createState() => _NewViewState();
 }
 
-class _NewViewState extends State<_NewView> {
+class _NewViewState extends ConsumerState<_NewView> {
   late TextEditingController _controller;
 
   @override
@@ -185,7 +174,7 @@ class _NewViewState extends State<_NewView> {
                   ElevatedButton(
                     onPressed: () {
                       context.pop();
-                      di<PlaylistIDsManager>().command.run(
+                      ref.read(playlistIDsManagerProvider.notifier).createOrChangePlaylist(
                         PlaylistChange(
                           id: _controller.text,
                           audios: widget.audios,

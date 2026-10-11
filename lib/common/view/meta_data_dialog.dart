@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
@@ -14,7 +14,7 @@ import 'local_metadata_tile.dart';
 import 'modals.dart';
 import 'ui_constants.dart';
 
-class MetaDataContent extends StatelessWidget with WatchItMixin {
+class MetaDataContent extends ConsumerWidget {
   const MetaDataContent.dialog({
     super.key,
     required this.audio,
@@ -34,27 +34,20 @@ class MetaDataContent extends StatelessWidget with WatchItMixin {
   static const double dimension = 300.0;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    ListenableSubscription? _sub;
 
-    final manager = di<ChangeLocalMetaDataManager>(param1: audio);
-    final command = manager.command;
-
-    final wasChanged = watch(manager.draft).value != null;
-
-    callOnceAfterThisBuild((context) {
-      _sub = command.listen((res, sub) {
-        if (res != null) {
-          context.toast(const Text('Changed metadata successfully'));
-          if (audio.albumDbId != null) {
-            di<FindAlbumManager>(param1: audio.albumDbId!).command.run();
-          }
+    ref.listen(changeLocalMetaDataManagerProvider(audio), (prev, next) {
+      if (next.savedAudio != null && prev?.savedAudio != next.savedAudio) {
+        context.toast(const Text('Changed metadata successfully'));
+        if (audio.albumDbId != null) {
+          ref.invalidate(findAlbumManagerProvider(audio.albumDbId!));
         }
-      });
+      }
     });
 
-    onDispose(() => _sub?.cancel());
+    final wasChanged =
+        ref.watch(changeLocalMetaDataManagerProvider(audio)).draft != null;
 
     final body = SizedBox(
       width: MetaDataContent.dimension,
@@ -94,7 +87,9 @@ class MetaDataContent extends StatelessWidget with WatchItMixin {
           if (audio.isLocal)
             ElevatedButton(
               onPressed: wasChanged
-                  ? di<ChangeLocalMetaDataManager>(param1: audio).command.run
+                  ? () => ref
+                      .read(changeLocalMetaDataManagerProvider(audio).notifier)
+                      .save()
                   : null,
               child: Text(context.l10n.save),
             ),
@@ -142,7 +137,7 @@ class MetaDataContent extends StatelessWidget with WatchItMixin {
   }
 }
 
-class LocalMetdadataItems extends StatelessWidget with WatchItMixin {
+class LocalMetdadataItems extends StatelessWidget {
   const LocalMetdadataItems({super.key, required this.audio});
 
   final Audio audio;

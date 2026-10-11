@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
@@ -12,12 +13,12 @@ import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../settings/manager/settings_manager.dart';
 import '../data/local_audio_view.dart';
-import '../manager/playlist_manager.dart';
+import '../manager/show_playlist_add_audios_manager.dart';
 import '../data/playlist_action.dart';
 import '../manager/playlist_ids_manager.dart';
 import 'edit_playlist_dialog.dart';
 
-class PlaylistControlPanel extends StatelessWidget with WatchItMixin {
+class PlaylistControlPanel extends ConsumerWidget {
   const PlaylistControlPanel({
     super.key,
     required this.pageId,
@@ -28,7 +29,7 @@ class PlaylistControlPanel extends StatelessWidget with WatchItMixin {
   final List<Audio> audios;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
 
     return Row(
@@ -49,28 +50,27 @@ class PlaylistControlPanel extends StatelessWidget with WatchItMixin {
           IconButton(
             tooltip: l10n.clearPlaylist,
             icon: Icon(Iconz.clearAll),
-            onPressed: () => di<PlaylistIDsManager>().command.run(
-              PlaylistChange(
-                id: pageId,
-                audios: [],
-                action: PlaylistAction.replaceWith,
-              ),
-            ),
+            onPressed: () => ref
+                .read(playlistIDsManagerProvider.notifier)
+                .createOrChangePlaylist(
+                  PlaylistChange(
+                    id: pageId,
+                    audios: [],
+                    action: PlaylistAction.replaceWith,
+                  ),
+                ),
           ),
           AvatarPlayButton(
             pageId: pageId,
             audioPageType: AudioPageType.playlist,
           ),
           IconButton(
-            isSelected: watchValue(
-              (PlaylistManager m) => m.showPlaylistAddAudios,
-              param1: pageId,
-            ),
+            isSelected: ref.watch(showPlaylistAddAudiosManagerProvider(pageId)),
             tooltip: l10n.add,
             icon: Icon(Iconz.plus),
-            onPressed: () => di<PlaylistManager>(
-              param1: pageId,
-            ).toggleShowPlaylistAddAudios(),
+            onPressed: () => ref
+                .read(showPlaylistAddAudiosManagerProvider(pageId).notifier)
+                .toggle(),
           ),
           IconButton(
             icon: Icon(Iconz.remove),
@@ -84,7 +84,7 @@ class PlaylistControlPanel extends StatelessWidget with WatchItMixin {
                   context.pop();
                 }
 
-                di<PlaylistIDsManager>().command.run(
+                ref.read(playlistIDsManagerProvider.notifier).createOrChangePlaylist(
                   PlaylistChange(id: pageId, action: PlaylistAction.delete),
                 );
 

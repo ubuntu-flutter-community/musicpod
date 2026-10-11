@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
+import '../../dependencies.dart';
 import '../../common/view/copy_clipboard_content.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/modals.dart';
@@ -21,7 +22,7 @@ import 'station_page.dart';
 
 enum _RadioHistoryTileVariant { regular, simple }
 
-class RadioHistoryTile extends StatelessWidget with WatchItMixin {
+class RadioHistoryTile extends ConsumerWidget {
   const RadioHistoryTile({
     super.key,
     required this.icyTitle,
@@ -42,7 +43,7 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
   final bool allowNavigation;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final icyName = di<MpvMetadataManager>().getMetadata(icyTitle)?.icyName;
 
     return switch (_variant) {
@@ -69,9 +70,9 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
                   case RadioHistoryTileOption.streamprovider:
                     break;
                   case RadioHistoryTileOption.showMetadata:
-                    final imageUrl = di<OnlineArtManager>(
-                      param1: icyTitle,
-                    ).command.value;
+                    final imageUrl = ref
+                        .read(onlineArtManagerProvider(icyTitle))
+                        .value;
                     final metadata = di<MpvMetadataManager>().getMetadata(
                       icyTitle,
                     );

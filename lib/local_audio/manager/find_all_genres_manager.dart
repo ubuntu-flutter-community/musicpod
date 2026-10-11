@@ -1,31 +1,16 @@
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../common/util/family.dart';
-import '../../extensions/command_x.dart';
+import '../../dependencies.dart';
 import '../service/local_audio_service.dart';
+import 'local_audio_manager.dart';
 
-@injectable
-class FindAllGenresManager {
-  FindAllGenresManager._(LocalAudioService localAudioService)
-    : _localAudioService = localAudioService {
-    command = Command.createAsyncNoParam(
-      _localAudioService.findAllGenres,
-      initialValue: null,
-    );
-    command.run();
+part 'find_all_genres_manager.g.dart';
+
+@riverpod
+class FindAllGenresManager extends _$FindAllGenresManager {
+  @override
+  Future<List<String>?> build() async {
+    await ref.watch(localAudioManagerProvider.future);
+    return di<LocalAudioService>().findAllGenres();
   }
-
-  @factoryMethod
-  static FindAllGenresManager create(LocalAudioService localAudioService) =>
-      Family.of(
-        '$FindAllGenresManager',
-        () => FindAllGenresManager._(localAudioService),
-        shouldDispose: (m) => m.command.safeToDispose,
-        onDispose: (m) => m.command.dispose(),
-      );
-
-  final LocalAudioService _localAudioService;
-
-  late final Command<void, List<String>?> command;
 }

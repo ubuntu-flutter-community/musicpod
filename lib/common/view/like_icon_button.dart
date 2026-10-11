@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/page_ids.dart';
 import '../../extensions/build_context_x.dart';
@@ -8,20 +8,19 @@ import '../../local_audio/view/add_to_playlist_snack_bar.dart';
 import '../data/audio.dart';
 import 'animated_like_icon.dart';
 
-class LikeIconButton extends StatelessWidget with WatchItMixin {
+class LikeIconButton extends ConsumerWidget {
   const LikeIconButton({super.key, required this.audio, this.color});
 
   final Audio? audio;
-
   final Color? color;
 
   @override
-  Widget build(BuildContext context) {
-    final likedAudioPathsManager = di<LikedAudioPathsManager>();
-
-    final liked = watchValue(
-      (LikedAudioPathsManager m) => m.command.select(
-        (paths) => audio?.path != null && paths.contains(audio!.path),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final liked = ref.watch(
+      likedAudioPathsManagerProvider.select(
+        (asyncPaths) =>
+            audio?.path != null &&
+            (asyncPaths.value?.contains(audio!.path) ?? false),
       ),
     );
 
@@ -31,9 +30,13 @@ class LikeIconButton extends StatelessWidget with WatchItMixin {
     } else {
       onLike = () {
         if (liked) {
-          likedAudioPathsManager.removeLikedAudios([audio!]);
+          ref
+              .read(likedAudioPathsManagerProvider.notifier)
+              .removeLikedAudios([audio!]);
         } else {
-          likedAudioPathsManager.addLikedAudios([audio!]);
+          ref
+              .read(likedAudioPathsManagerProvider.notifier)
+              .addLikedAudios([audio!]);
           showAddedToPlaylistSnackBar(
             context: context,
             id: PageIDs.likedAudios,

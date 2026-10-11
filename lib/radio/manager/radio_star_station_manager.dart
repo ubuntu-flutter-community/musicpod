@@ -1,22 +1,20 @@
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../common/data/audio.dart';
-import '../../common/logging.dart';
+import '../../dependencies.dart';
 import '../service/radio_service.dart';
 
-@lazySingleton
-class RadioStarStationManager {
-  RadioStarStationManager({required RadioService service}) {
-    Logger.o(tag: '$RadioStarStationManager');
-    command = Command.createAsync((station) async {
-      if (station != null) {
-        await service.toggleStarredStation(station);
-      }
-      return service.getStarredStations();
-    }, initialValue: {});
+part 'radio_star_station_manager.g.dart';
 
-    command.run();
+@Riverpod(keepAlive: true)
+class RadioStarStationManager extends _$RadioStarStationManager {
+  @override
+  Future<Set<String>> build() => di<RadioService>().getStarredStations();
+
+  Future<void> toggleStarredStation(Audio? station) async {
+    if (station != null) {
+      await di<RadioService>().toggleStarredStation(station);
+    }
+    state = AsyncData(await di<RadioService>().getStarredStations());
   }
-  late final Command<Audio?, Set<String>> command;
 }

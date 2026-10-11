@@ -1,129 +1,54 @@
-import 'dart:async';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
-
-import '../../common/data/audio.dart';
-import '../../common/view/audio_filter.dart';
+import '../../dependencies.dart';
 import '../service/local_audio_service.dart';
-import '../data/playlist_action.dart';
 
-@lazySingleton
-class LocalAudioManager {
-  LocalAudioManager({required LocalAudioService localAudioService})
-    : _localAudioService = localAudioService;
+part 'local_audio_manager.g.dart';
 
-  final LocalAudioService _localAudioService;
+class LocalAudioState {
+  const LocalAudioState({
+    this.failedImports,
+  });
 
-  late final Command<
-    ({bool forceInit, String? directory}),
-    ({List<String> failedImports})?
-  >
-  initAudiosCommand = Command.createAsyncWithProgress((param, handle) async {
-    final localAudioResult = await _localAudioService.init(
-      forceInit: param.forceInit,
-      newDirectory: param.directory,
-      updateProgress: handle.updateProgress,
+  final List<String>? failedImports;
+
+  LocalAudioState copyWith({
+    List<String>? failedImports,
+  }) => LocalAudioState(
+    failedImports: failedImports ?? this.failedImports,
+  );
+}
+
+@Riverpod(keepAlive: true)
+class LocalAudioManager extends _$LocalAudioManager {
+  late final LocalAudioService _localAudioService = di<LocalAudioService>();
+
+  @override
+  Future<LocalAudioState> build() async {
+    final result = await _localAudioService.init(
+      forceInit: false,
+      updateProgress: (p) => state = AsyncLoading(progress: p),
     );
-
-    await areTracksSyncedCommand.runAsync();
-
-    return localAudioResult;
-  }, initialValue: null);
-
-  Future<void> _runInitIfNeeded() async {
-    if (initAudiosCommand.value == null) {
-      await initAudiosCommand.runAsync((directory: null, forceInit: false));
-    }
+    return LocalAudioState(
+      failedImports: result.failedImports,
+    );
   }
 
-  late final Command<void, bool> areTracksSyncedCommand =
-      Command.createAsyncNoParam(
-        _localAudioService.areTracksSynced,
-        initialValue: true,
-      );
-
-  Future<int?> findAlbumId({
-    required String artist,
-    required String album,
+  Future<LocalAudioState> initAudios({
+    bool forceInit = false,
+    String? directory,
   }) async {
-    await _runInitIfNeeded();
-    return _localAudioService.findAlbumIdForArtistAndAlbum(
-      artist: artist,
-      album: album,
-    );
-  }
-
-  Future<String?> findAlbumName(int albumId) async {
-    await _runInitIfNeeded();
-    return _localAudioService.findAlbumName(albumId);
-  }
-
-  Future<String?> findArtistOfAlbum(int albumId) async {
-    await _runInitIfNeeded();
-    return _localAudioService.findArtistOfAlbum(albumId);
-  }
-
-  Future<List<Audio>?> findAlbum(int albumId) async {
-    await _runInitIfNeeded();
-    return _localAudioService.findAlbum(albumId);
-  }
-
-  Future<List<Audio>?> findTitlesOfArtist(
-    String artist, [
-    AudioFilter audioFilter = AudioFilter.album,
-  ]) async {
-    await _runInitIfNeeded();
-    return _localAudioService.findTitlesOfArtist(artist, audioFilter);
-  }
-
-  Future<void> createOrChangePlaylist(PlaylistChange param) async {
-    await _runInitIfNeeded();
-    return _localAudioService.createOrChangePlaylist(param);
-  }
-
-  Future<List<Audio>?> findPlaylistById(String playlistId) async {
-    await _runInitIfNeeded();
-    return _localAudioService.findPlaylistById(playlistId);
-  }
-
-  Future<List<String>> findAllPlaylistIDs() async {
-    await _runInitIfNeeded();
-    return _localAudioService.findAllPlaylistIDs();
-  }
-
-  Future<List<Audio>> findAllTracks() async {
-    await _runInitIfNeeded();
-    return _localAudioService.findAllTracks();
-  }
-
-  Future<bool> hasTracks() async {
-    await _runInitIfNeeded();
-    return _localAudioService.hasTracks();
-  }
-
-  Future<List<int>> togglePinAlbum(int? id) async {
-    await _runInitIfNeeded();
-    return _localAudioService.togglePinAlbum(id);
-  }
-
-  Future<List<int>> findPinnedAlbumIDs() async {
-    await _runInitIfNeeded();
-    return _localAudioService.findPinnedAlbumIDs();
-  }
-
-  Future<List<Audio>?> findLikedAudios() async {
-    await _runInitIfNeeded();
-    return _localAudioService.findLikedAudios();
-  }
-
-  Future<Set<String>> findLikedAudioPaths() async {
-    await _runInitIfNeeded();
-    return _localAudioService.findLikedAudioPaths();
-  }
-
-  Future<void> createOrChangeLikedAudios(PlaylistChange param) async {
-    await _runInitIfNeeded();
-    return _localAudioService.createOrChangeLikedAudios(param);
+    state = const AsyncLoading(progress: 0.0);
+    state = await AsyncValue.guard(() async {
+      final result = await _localAudioService.init(
+        forceInit: forceInit,
+        newDirectory: directory,
+        updateProgress: (p) => state = AsyncLoading(progress: p),
+      );
+      return LocalAudioState(
+        failedImports: result.failedImports,
+      );
+    });
+    return state.value ?? const LocalAudioState();
   }
 }

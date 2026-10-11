@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../app/app_manager.dart';
@@ -11,6 +12,7 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
 import '../../extensions/platform_x.dart';
 import '../../local_audio/manager/local_audio_manager.dart';
+import '../../local_audio/service/local_audio_service.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
 import '../../podcasts/view/podcast_page.dart';
@@ -30,10 +32,6 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final theme = context.theme;
 
-    final localAudioIsInitializing = watchValue(
-      (LocalAudioManager m) => m.initAudiosCommand.isRunning,
-    );
-
     final audio = watchPropertyValue((PlayerManager m) => m.audio);
 
     final icyTitle = watchValue(
@@ -44,99 +42,108 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     );
 
     final hoverColor = theme.colorScheme.primary.withValues(alpha: 0.3);
-    return Column(
-      mainAxisSize: switch (playerPosition) {
-        PlayerPosition.bottom => MainAxisSize.max,
-        _ => MainAxisSize.min,
-      },
-      mainAxisAlignment: switch (playerPosition) {
-        PlayerPosition.bottom => MainAxisAlignment.center,
-        _ => isMobile ? MainAxisAlignment.start : MainAxisAlignment.center,
-      },
-      crossAxisAlignment: switch (playerPosition) {
-        PlayerPosition.bottom => CrossAxisAlignment.start,
-        _ => isMobile ? CrossAxisAlignment.start : CrossAxisAlignment.center,
-      },
-      children: [
-        Material(
-          color: Colors.transparent,
-          borderRadius: switch (playerPosition) {
-            PlayerPosition.bottom => BorderRadius.circular(4),
-            _ => BorderRadius.circular(10),
+    return Consumer(
+      builder: (context, ref, _) {
+        final localAudioIsInitializing = ref.watch(
+          localAudioManagerProvider.select((s) => s.isLoading),
+        );
+
+        return Column(
+          mainAxisSize: switch (playerPosition) {
+            PlayerPosition.bottom => MainAxisSize.max,
+            _ => MainAxisSize.min,
           },
-          child: InkWell(
-            hoverColor: hoverColor,
-            borderRadius: switch (playerPosition) {
-              PlayerPosition.bottom => BorderRadius.circular(4),
-              _ => BorderRadius.circular(10),
-            },
-            onTap: localAudioIsInitializing || audio == null
-                ? null
-                : () => _onTitleTap(
-                    audio: audio,
-                    text: icyTitle,
-                    context: context,
+          mainAxisAlignment: switch (playerPosition) {
+            PlayerPosition.bottom => MainAxisAlignment.center,
+            _ => isMobile ? MainAxisAlignment.start : MainAxisAlignment.center,
+          },
+          crossAxisAlignment: switch (playerPosition) {
+            PlayerPosition.bottom => CrossAxisAlignment.start,
+            _ => isMobile ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+          },
+          children: [
+            Material(
+              color: Colors.transparent,
+              borderRadius: switch (playerPosition) {
+                PlayerPosition.bottom => BorderRadius.circular(4),
+                _ => BorderRadius.circular(10),
+              },
+              child: InkWell(
+                hoverColor: hoverColor,
+                borderRadius: switch (playerPosition) {
+                  PlayerPosition.bottom => BorderRadius.circular(4),
+                  _ => BorderRadius.circular(10),
+                },
+                onTap: localAudioIsInitializing || audio == null
+                    ? null
+                    : () => _onTitleTap(
+                        audio: audio,
+                        text: icyTitle,
+                        context: context,
+                        ref: ref,
+                      ),
+                child: Tooltip(
+                  message: _title(audio: audio, icyTitle: icyTitle),
+                  child: Text(
+                    _title(audio: audio, icyTitle: icyTitle),
+                    style: switch (playerPosition) {
+                      PlayerPosition.bottom => _bottomTitleTextStyle(),
+                      _ => _fullHeightTitleTextStyle(theme),
+                    },
+                    textAlign: _textAlign(),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-            child: Tooltip(
-              message: _title(audio: audio, icyTitle: icyTitle),
-              child: Text(
-                _title(audio: audio, icyTitle: icyTitle),
-                style: switch (playerPosition) {
-                  PlayerPosition.bottom => _bottomTitleTextStyle(),
-                  _ => _fullHeightTitleTextStyle(theme),
-                },
-                textAlign: _textAlign(),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
-          ),
-        ),
-        Material(
-          borderRadius: switch (playerPosition) {
-            PlayerPosition.bottom => BorderRadius.circular(4),
-            _ => BorderRadius.circular(8),
-          },
-          color: Colors.transparent,
-          child: InkWell(
-            hoverColor: hoverColor,
-            borderRadius: switch (playerPosition) {
-              PlayerPosition.bottom => BorderRadius.circular(4),
-              _ => BorderRadius.circular(8),
-            },
-            onTap: localAudioIsInitializing || audio == null
-                ? null
-                : () => _onArtistTap(context: context, audio: audio),
-            child: Tooltip(
-              message: _subTitle(audio),
-              child: Text(
-                _subTitle(audio),
-                style: switch (playerPosition) {
-                  PlayerPosition.bottom => _bottomArtistTextStyle(),
-                  _ => _fullHeightArtistTextStyle(theme),
+            Material(
+              borderRadius: switch (playerPosition) {
+                PlayerPosition.bottom => BorderRadius.circular(4),
+                _ => BorderRadius.circular(8),
+              },
+              color: Colors.transparent,
+              child: InkWell(
+                hoverColor: hoverColor,
+                borderRadius: switch (playerPosition) {
+                  PlayerPosition.bottom => BorderRadius.circular(4),
+                  _ => BorderRadius.circular(8),
                 },
-                textAlign: _textAlign(),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
+                onTap: localAudioIsInitializing || audio == null
+                    ? null
+                    : () => _onArtistTap(context: context, audio: audio),
+                child: Tooltip(
+                  message: _subTitle(audio),
+                  child: Text(
+                    _subTitle(audio),
+                    style: switch (playerPosition) {
+                      PlayerPosition.bottom => _bottomArtistTextStyle(),
+                      _ => _fullHeightArtistTextStyle(theme),
+                    },
+                    textAlign: _textAlign(),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-        if (playerPosition == PlayerPosition.bottom &&
-            audio?.audioType != AudioType.radio &&
-            showPositionDuration)
-          const Padding(
-            padding: EdgeInsets.only(top: 2, bottom: 5),
-            child: PlayerSimpleTrack(),
-          )
-        else
-          SizedBox(
-            height: switch (playerPosition) {
-              PlayerPosition.bottom => 3,
-              _ => 0,
-            },
-          ),
-      ].map((e) => Flexible(child: e)).toList(),
+            if (playerPosition == PlayerPosition.bottom &&
+                audio?.audioType != AudioType.radio &&
+                showPositionDuration)
+              const Padding(
+                padding: EdgeInsets.only(top: 2, bottom: 5),
+                child: PlayerSimpleTrack(),
+              )
+            else
+              SizedBox(
+                height: switch (playerPosition) {
+                  PlayerPosition.bottom => 3,
+                  _ => 0,
+                },
+              ),
+          ].map((e) => Flexible(child: e)).toList(),
+        );
+      },
     );
   }
 
@@ -181,6 +188,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     required Audio audio,
     String? text,
     required BuildContext context,
+    required WidgetRef ref,
   }) {
     if (text?.isNotEmpty == true && audio.audioType == AudioType.radio) {
       context.toast(CopyClipboardContent(text: text!));
@@ -189,7 +197,7 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
 
     switch (audio.audioType) {
       case AudioType.local:
-        _onLocalAudioTitleTap(context: context, audio: audio);
+        _onLocalAudioTitleTap(context: context, audio: audio, ref: ref);
         return;
       case AudioType.radio:
       case AudioType.podcast:
@@ -207,10 +215,11 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
   Future<void> _onLocalAudioTitleTap({
     required BuildContext context,
     required Audio audio,
+    required WidgetRef ref,
   }) async {
     final id =
         audio.albumDbId ??
-        await di<LocalAudioManager>().findAlbumId(
+        await di<LocalAudioService>().findAlbumIdForArtistAndAlbum(
           artist: audio.artist!,
           album: audio.album!,
         );

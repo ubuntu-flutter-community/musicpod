@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/data/play_anywhere_param.dart';
 import '../../app/play_anywhere_manager.dart';
@@ -16,16 +17,15 @@ import '../manager/pinned_album_ids_manager.dart';
 import 'album_page.dart';
 import 'local_cover.dart';
 
-class AlbumCard extends StatelessWidget with WatchItMixin {
+class AlbumCard extends ConsumerWidget {
   const AlbumCard({super.key, required this.id});
 
   final int id;
 
   @override
-  Widget build(BuildContext context) {
-    final pinned = watchValue(
-      (PinnedAlbumIDsManager m) => m.command,
-    ).contains(id);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pinned =
+        ref.watch(pinnedAlbumIDsManagerProvider).value?.contains(id) ?? false;
 
     return _AlbumCard(
       id: id,
@@ -35,7 +35,9 @@ class AlbumCard extends StatelessWidget with WatchItMixin {
               bottom: 0,
               child: AudioCardVignette(
                 iconData: Iconz.pinFilled,
-                onTap: () => di<PinnedAlbumIDsManager>().command.run(id),
+                onTap: () => ref
+                    .read(pinnedAlbumIDsManagerProvider.notifier)
+                    .togglePinAlbum(id),
               ),
             )
           : null,
@@ -43,16 +45,16 @@ class AlbumCard extends StatelessWidget with WatchItMixin {
   }
 }
 
-class _AlbumCard extends StatelessWidget with WatchItMixin {
+class _AlbumCard extends ConsumerWidget {
   const _AlbumCard({required this.id, this.overlay});
 
   final int id;
   final Widget? overlay;
 
   @override
-  Widget build(BuildContext context) => AudioCard(
+  Widget build(BuildContext context, WidgetRef ref) => AudioCard(
     bottom: AudioCardBottom(
-      text: watchValue((FindAlbumNameManager m) => m.command, param1: id),
+      text: ref.watch(findAlbumNameManagerProvider(id)).value,
     ),
     image: LocalCover(
       dimension: audioCardDimension,

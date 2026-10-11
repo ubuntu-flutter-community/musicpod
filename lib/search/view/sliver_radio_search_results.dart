@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/no_search_result_page.dart';
 import '../../extensions/build_context_x.dart';
@@ -8,16 +9,27 @@ import '../../radio/view/radio_connect_mixin.dart';
 import '../manager/search_manager.dart';
 import 'radio_search_result_tile.dart';
 
-class SliverRadioSearchResults extends StatelessWidget
-    with WatchItMixin, RadioConnectMixin {
+class SliverRadioSearchResults extends StatelessWidget with RadioConnectMixin {
   const SliverRadioSearchResults({super.key, required this.width});
 
   final double width;
 
   @override
-  Widget build(BuildContext context) {
-    registerRadioConnectHandler(context);
+  Widget build(BuildContext context) => Consumer(
+    builder: (context, ref, _) {
+      registerRadioConnectHandler(context, ref);
+      return _Content(width: width);
+    },
+  );
+}
 
+class _Content extends StatelessWidget with WatchItMixin {
+  _Content({required this.width});
+
+  final double width;
+
+  @override
+  Widget build(BuildContext context) {
     final radioSearchResult = watchValue(
       (SearchManager m) => m.radioSearchResult,
     )?.where((e) => e.uuid != null);

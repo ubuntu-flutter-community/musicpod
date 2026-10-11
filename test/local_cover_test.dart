@@ -2,11 +2,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:musicpod/common/logging.dart';
-import 'package:musicpod/common/util/family.dart';
-import 'package:musicpod/extensions/command_x.dart';
-import 'package:musicpod/local_audio/manager/local_cover_manager.dart';
 import 'package:musicpod/local_audio/service/local_cover_service.dart';
 import 'package:musicpod/local_audio/view/local_cover.dart';
 
@@ -28,16 +25,14 @@ class FakeLocalCoverService extends Fake implements LocalCoverService {
 
 void main() {
   setUp(() async {
-    await Family.reset();
     await GetIt.I.reset();
   });
 
   tearDown(() async {
-    await Family.reset();
     await GetIt.I.reset();
   });
 
-  testWidgets('Check listenerCount and safeToDispose for LocalCover', (
+  testWidgets('LocalCover loads image via class-based Riverpod provider', (
     tester,
   ) async {
     final fakeService = FakeLocalCoverService(
@@ -45,61 +40,35 @@ void main() {
       bytesToReturn: Uint8List.fromList([1, 2, 3, 4]),
     );
 
-    GetIt.I.registerFactoryParam<LocalCoverManager, int, void>(
-      (albumId, _) => LocalCoverManager.create(
-        albumId: albumId,
-        localCoverService: fakeService,
-      ),
-    );
+    GetIt.I.registerSingleton<LocalCoverService>(fakeService);
 
     await tester.pumpWidget(
-      const MaterialApp(
-        home: Scaffold(
-          body: LocalCover(
-            albumId: 42,
-            dimension: 100,
-            fallback: const Text('FALLBACK'),
+      const ProviderScope(
+        child: MaterialApp(
+          home: Scaffold(
+            body: LocalCover(
+              albumId: 42,
+              dimension: 100,
+              fallback: Text('FALLBACK'),
+              loadingWidget: Text('LOADING'),
+            ),
           ),
         ),
       ),
     );
 
-    final manager = di<LocalCoverManager>(param1: 42);
-    Logger.i('During run:');
-    Logger.i('  isRunning: ${manager.command.isRunning.value}');
-    Logger.i('  command.listenerCount: ${manager.command.listenerCount}');
-    Logger.i('  safeToDispose: ${manager.command.safeToDispose}');
+    // Initial frame: loading
+    expect(find.text('LOADING'), findsOneWidget);
+    expect(find.byType(Image), findsNothing);
 
-    await tester.pump(const Duration(milliseconds: 100));
-    await tester.pump();
+    // Advance past delay & settle
+    await tester.pump(const Duration(milliseconds: 60));
+    await tester.pumpAndSettle();
 
-    Logger.i('After run (while widget is mounted):');
-    Logger.i('  isRunning: ${manager.command.isRunning.value}');
-    Logger.i('  command.listenerCount: ${manager.command.listenerCount}');
-    Logger.i('  safeToDispose: ${manager.command.safeToDispose}');
-    Logger.i('  Found Image: ${find.byType(Image).evaluate().length}');
-    Logger.i('  Found FALLBACK: ${find.text('FALLBACK').evaluate().length}');
-
-    // Let 6 seconds pass: should NOT be disposed while mounted!
-    await tester.pump(const Duration(seconds: 6));
-    Logger.i('After 6 seconds (while widget is still mounted):');
-    Logger.i(
-      '  isRegistered in Family: ${Family.isRegistered<LocalCoverManager>(42)}',
-    );
-
-    // Now unmount widget
-    await tester.pumpWidget(const SizedBox());
-    Logger.i('After unmount:');
-    Logger.i('  command.listenerCount: ${manager.command.listenerCount}');
-    Logger.i('  safeToDispose: ${manager.command.safeToDispose}');
-
-    // Let 6 seconds pass after unmount: SHOULD be disposed now!
-    await tester.pump(const Duration(seconds: 6));
-    Logger.i('After 6 seconds (after unmount):');
-    Logger.i(
-      '  isRegistered in Family: ${Family.isRegistered<LocalCoverManager>(42)}',
-    );
-
-    await Family.reset();
+    // After async load: Image is rendered!
+    expect(find.byType(Image), findsOneWidget);
+    expect(find.text('LOADING'), findsNothing);
+    expect(find.text('FALLBACK'), findsNothing);
+    expect(fakeService.callCount, 1);
   });
 }

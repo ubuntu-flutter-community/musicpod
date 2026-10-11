@@ -3,16 +3,16 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/app_manager.dart';
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/command_x.dart';
 import '../../extensions/platform_x.dart';
 import '../../local_audio/data/playlist_action.dart';
-import '../../local_audio/manager/find_album_manager.dart';
 import '../../local_audio/manager/liked_audios_manager.dart';
+import '../../local_audio/service/local_audio_service.dart';
 import '../../local_audio/manager/playlist_ids_manager.dart';
 import '../../local_audio/view/add_to_playlist_dialog.dart';
 import '../../local_audio/view/album_page.dart';
@@ -115,14 +115,18 @@ class AudioTileOptionButton extends StatelessWidget {
           if (allowRemove)
             PopupMenuItem(
               onTap: () => playlistId == PageIDs.likedAudios
-                  ? di<LikedAudiosManager>().removeLikedAudios(audios)
-                  : di<PlaylistIDsManager>().command.run(
-                      PlaylistChange(
-                        id: playlistId,
-                        audios: audios,
-                        action: PlaylistAction.removeFrom,
+                  ? ProviderScope.containerOf(context, listen: false)
+                      .read(likedAudiosManagerProvider.notifier)
+                      .removeLikedAudios(audios)
+                  : ProviderScope.containerOf(context, listen: false)
+                      .read(playlistIDsManagerProvider.notifier)
+                      .createOrChangePlaylist(
+                        PlaylistChange(
+                          id: playlistId,
+                          audios: audios,
+                          action: PlaylistAction.removeFrom,
+                        ),
                       ),
-                    ),
               child: ListTile(
                 leading: Icon(Iconz.remove),
                 title: Text(
@@ -163,9 +167,9 @@ class AudioTileOptionButton extends StatelessWidget {
               onTap: () async {
                 final albumId = audios.firstOrNull?.albumDbId;
                 if (albumId != null) {
-                  final albumAudios = await di<FindAlbumManager>(
-                    param1: albumId,
-                  ).command.runRestrictedAsync();
+                  final albumAudios = await di<LocalAudioService>().findAlbum(
+                    albumId,
+                  );
                   if (albumAudios != null) {
                     unawaited(
                       di<RoutingManager>().push(
