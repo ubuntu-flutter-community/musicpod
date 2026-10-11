@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
-import '../../extensions/build_context_x.dart';
 import '../manager/local_cover_manager.dart';
 
 class LocalCover extends StatelessWidget with WatchItMixin {
@@ -28,6 +27,40 @@ class LocalCover extends StatelessWidget with WatchItMixin {
         ? (dimension * dpr).round().clamp(1, maxDecodeDimension)
         : maxDecodeDimension;
 
+    final coverBytes = watchValue(
+      (LocalCoverManager m) => m.command,
+      param1: albumId,
+    );
+    final isRunning = loadingWidget != null
+        ? watchValue(
+            (LocalCoverManager m) => m.command.isRunning,
+            param1: albumId,
+          )
+        : false;
+
+    final Widget child;
+    if (coverBytes != null) {
+      child = Image.memory(
+        coverBytes,
+        key: const ValueKey('cover_image'),
+        fit: fit,
+        height: dimension,
+        width: dimension,
+        cacheHeight: cacheDim,
+        cacheWidth: cacheDim,
+      );
+    } else if (isRunning && loadingWidget != null) {
+      child = KeyedSubtree(
+        key: const ValueKey('cover_loading'),
+        child: loadingWidget!,
+      );
+    } else {
+      child = KeyedSubtree(
+        key: const ValueKey('cover_fallback'),
+        child: fallback,
+      );
+    }
+
     return SizedBox.square(
       dimension: dimension,
       child: AnimatedSwitcher(
@@ -35,33 +68,7 @@ class LocalCover extends StatelessWidget with WatchItMixin {
         transitionBuilder: (Widget child, Animation<double> animation) =>
             FadeTransition(opacity: animation, child: child),
         reverseDuration: const Duration(milliseconds: 200),
-        child:
-            watchValue(
-              (LocalCoverManager m) => m.command.results,
-              param1: albumId,
-            ).toWidget(
-              whileRunning: (lastResult, param) =>
-                  loadingWidget ??
-                  Container(
-                    decoration: BoxDecoration(
-                      color: context.colorScheme.onSurface.withValues(
-                        alpha: 0.05,
-                      ),
-                    ),
-                  ),
-              onError: (error, lastResult, param) => fallback,
-              onNullData: (_) => fallback,
-              onData: (result, param) => result == null
-                  ? fallback
-                  : Image.memory(
-                      result,
-                      fit: fit,
-                      height: dimension,
-                      width: dimension,
-                      cacheHeight: cacheDim,
-                      cacheWidth: cacheDim,
-                    ),
-            ),
+        child: child,
       ),
     );
   }

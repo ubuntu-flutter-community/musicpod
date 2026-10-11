@@ -88,7 +88,7 @@ class LocalCoverService {
   bool _maybeImageInFolderExists({
     required File file,
     required String suffix,
-  }) => Directory(p.join(file.parent.path, suffix)).existsSync();
+  }) => File(p.join(file.parent.path, suffix)).existsSync();
 
   Future<Uri?> createMediaControlsArtUri({Audio? audio}) async {
     if (audio?.imageUrl != null || audio?.albumArtUrl != null) {
