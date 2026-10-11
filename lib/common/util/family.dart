@@ -111,7 +111,7 @@ abstract final class Family {
       } catch (e, s) {
         Logger.e(e, trace: s, tag: '${key.$1}:${key.$2}');
       }
-      Logger.o(tag: '${key.$1}:${key.$2}', message: 'removed!');
+      Logger.o(tag: '${key.$1}:${key.$2}', created: false);
     });
   }
 
@@ -126,6 +126,7 @@ abstract final class Family {
     } catch (e, s) {
       Logger.e(e, trace: s, tag: '$T:$id');
     }
+    Logger.o(tag: '$T:$id', created: false);
     return entry.instance as T;
   }
 
@@ -142,6 +143,7 @@ abstract final class Family {
         } catch (e, s) {
           Logger.e(e, trace: s, tag: '${key.$1}:${key.$2}');
         }
+        Logger.o(tag: '${key.$1}:${key.$2}', created: false);
       }
     }
   }
@@ -159,6 +161,7 @@ abstract final class Family {
         } catch (e, s) {
           Logger.e(e, trace: s, tag: '${key.$1}:${key.$2}');
         }
+        Logger.o(tag: '${key.$1}:${key.$2}', created: false);
       }
     }
   }
