@@ -3,11 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/common_control_panel.dart';
 import '../../common/view/confirm.dart';
-import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
 import '../data/podcast_update_capsule.dart';
 import '../manager/podcast_collection_filter_manager.dart';
-import '../manager/podcast_manager.dart';
 import '../manager/podcast_updates_manager.dart';
 import '../manager/subscribed_podcasts_manager.dart';
 
@@ -36,7 +34,6 @@ class PodcastCollectionControlPanel extends ConsumerWidget {
                   ref
                       .read(podcastUpdatesOnlyManagerProvider.notifier)
                       .setUpdatesOnly(false);
-                  di<PodcastManager>().setUpdatesOnly(false);
                 } else {
                   final subLength =
                       ref
@@ -69,15 +66,12 @@ class PodcastCollectionControlPanel extends ConsumerWidget {
                   ref
                       .read(podcastDownloadsOnlyManagerProvider.notifier)
                       .setDownloadsOnly(false);
-                  di<PodcastManager>().setUpdatesOnly(true);
-                  di<PodcastManager>().setDownloadsOnly(false);
                 }
               } else {
                 if (downloadsOnly) {
                   ref
                       .read(podcastDownloadsOnlyManagerProvider.notifier)
                       .setDownloadsOnly(false);
-                  di<PodcastManager>().setDownloadsOnly(false);
                 } else {
                   ref
                       .read(podcastDownloadsOnlyManagerProvider.notifier)
@@ -85,8 +79,6 @@ class PodcastCollectionControlPanel extends ConsumerWidget {
                   ref
                       .read(podcastUpdatesOnlyManagerProvider.notifier)
                       .setUpdatesOnly(false);
-                  di<PodcastManager>().setDownloadsOnly(true);
-                  di<PodcastManager>().setUpdatesOnly(false);
                 }
               }
             },

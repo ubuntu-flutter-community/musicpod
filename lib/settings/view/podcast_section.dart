@@ -13,7 +13,7 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
 import '../../podcasts/manager/download_manager.dart';
 import '../../podcasts/manager/podcast_load_genres_manager.dart';
-import '../../podcasts/manager/podcast_manager.dart';
+import '../../podcasts/service/podcast_service.dart';
 import '../data/shared_preferences_keys.dart';
 import '../manager/settings_manager.dart';
 import '../manager/wipe_manager.dart';
@@ -84,9 +84,10 @@ class _PodcastSectionState extends State<PodcastSection> {
                     context: context,
                     title: Text(l10n.iTunes + '?'),
                     onConfirm: () async {
-                      di<PodcastManager>().initSearchCommand.run((
-                        searchProvider: const ITunesProvider(),
-                      ));
+                      di<PodcastService>().initSearchProvider(
+                        const ITunesProvider(),
+                      );
+                      await di<PodcastService>().loadGenres(force: true);
 
                       await model.setUsePodcastIndex(v);
 
@@ -169,13 +170,15 @@ class _PodcastSectionState extends State<PodcastSection> {
                       : () => ConfirmationDialog.show(
                           context: context,
                           title: Text(l10n.usePodcastIndex + '?'),
-                          onConfirm: () async =>
-                              di<PodcastManager>().initSearchCommand.run((
-                                searchProvider: PodcastIndexProvider(
-                                  key: model.podcastIndexApiKey!,
-                                  secret: model.podcastIndexApiSecret!,
-                                ),
-                              )),
+                          onConfirm: () async {
+                            di<PodcastService>().initSearchProvider(
+                              PodcastIndexProvider(
+                                key: model.podcastIndexApiKey!,
+                                secret: model.podcastIndexApiSecret!,
+                              ),
+                            );
+                            await di<PodcastService>().loadGenres(force: true);
+                          },
                         ),
                   child: Text(context.l10n.confirm),
                 ),
@@ -253,28 +256,20 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
   }
 }
 
-class _DownloadsTile extends StatefulWidget with WatchItStatefulWidgetMixin {
+class _DownloadsTile extends ConsumerWidget {
   const _DownloadsTile();
 
   @override
-  State<_DownloadsTile> createState() => _DownloadsTileState();
-}
-
-class _DownloadsTileState extends State<_DownloadsTile> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
 
-    final downloadsDirResults = watchValue(
-      (DownloadManager m) => m.downloadsDirCommand.results,
-    );
-    final error = downloadsDirResults.error;
-    final downloadsDir = downloadsDirResults.data;
+    final downloadState = ref.watch(downloadManagerProvider).value;
+    final downloadsDir = downloadState?.downloadsDirectory;
 
     return SettingsListTile(
       position: ListTilePosition.first,
       title: Text(l10n.downloadsDirectory),
-      subtitle: Text(error?.toString() ?? downloadsDir ?? ''),
+      subtitle: Text(downloadsDir ?? ''),
       trailing: ElevatedButton(
         onPressed: () {
           context.dialog(
@@ -286,8 +281,9 @@ class _DownloadsTileState extends State<_DownloadsTile> {
                   style: context.textTheme.bodyLarge,
                 ),
               ),
-              onConfirm: () async => di<DownloadManager>().downloadsDirCommand
-                  .runAsync((getDefault: false)),
+              onConfirm: () async => ref
+                  .read(downloadManagerProvider.notifier)
+                  .setDownloadsDirectory(getDefault: false),
             ),
           );
         },

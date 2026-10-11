@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/data/audio.dart';
+import '../../dependencies.dart';
 import '../../player/manager/player_manager.dart';
 import '../manager/episodes_manager.dart';
 import '../manager/subscribed_podcasts_manager.dart';
 import 'podcast_audio_tile.dart';
 
-class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
+class SliverPodcastPageList extends ConsumerWidget {
   const SliverPodcastPageList({
     super.key,
     required this.feedUrl,
@@ -21,70 +21,76 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
   final bool includePodcastImage;
 
   @override
-  Widget build(BuildContext context) {
-    final audios =
-        this.audios ??
-        watchValue((EpisodesManager m) => m.command, param1: feedUrl)?.episodes;
-    final selectedAudio = watchPropertyValue((PlayerManager m) => m.audio);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final episodesState = this.audios == null
+        ? ref.watch(episodesManagerProvider(feedUrl)).value
+        : null;
+    final audios = this.audios ?? episodesState?.episodes;
 
     final isPaginated = this.audios == null;
-    final hasMore = isPaginated && di<EpisodesManager>(param1: feedUrl).hasMore;
+    final hasMore = isPaginated && (episodesState?.hasMore ?? false);
     final count = audios?.length ?? 0;
 
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        childCount: count + (hasMore ? 1 : 0),
-        (context, index) {
-          if (hasMore && index >= count - 4) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              di<EpisodesManager>(param1: feedUrl).loadMore();
-            });
-          }
+    return ListenableBuilder(
+      listenable: di<PlayerManager>(),
+      builder: (context, _) {
+        final selectedAudio = di<PlayerManager>().audio;
+        return SliverList(
+          delegate: SliverChildBuilderDelegate(
+            childCount: count + (hasMore ? 1 : 0),
+            (context, index) {
+              if (hasMore && index >= count - 4) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  ref.read(episodesManagerProvider(feedUrl).notifier).loadMore();
+                });
+              }
 
-          if (index >= count) {
-            return const Padding(
-              padding: EdgeInsets.symmetric(vertical: 24.0),
-              child: Center(
-                child: SizedBox.square(
-                  dimension: 24,
-                  child: CircularProgressIndicator.adaptive(strokeWidth: 2),
-                ),
-              ),
-            );
-          }
-
-          final episode = audios?.elementAt(index);
-
-          if (episode == null) {
-            return const SizedBox.shrink();
-          }
-
-          return Consumer(
-            builder: (context, ref, _) {
-              return PodcastAudioTile(
-                key: ValueKey('${episode.path ?? episode.url}'),
-                audio: episode,
-                addPodcast: () => ref
-                    .read(subscribedPodcastsManagerProvider.notifier)
-                    .togglePodcastSubscription(
-                      feedUrl: episode.feedUrl!,
-                      imageUrl: episode.albumArtUrl ?? episode.imageUrl ?? '',
-                      name: episode.podcastTitle ?? '',
-                      artist: episode.copyright ?? '',
+              if (index >= count) {
+                return const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 24.0),
+                  child: Center(
+                    child: SizedBox.square(
+                      dimension: 24,
+                      child: CircularProgressIndicator.adaptive(strokeWidth: 2),
                     ),
-                isExpanded: episode == selectedAudio,
-                selected: episode == selectedAudio,
-                play: () => di<PlayerManager>().play(
-                  audios: [episode],
-                  listName: feedUrl,
-                  index: 0,
-                ),
-                includePodcastImage: includePodcastImage,
+                  ),
+                );
+              }
+
+              final episode = audios?.elementAt(index);
+
+              if (episode == null) {
+                return const SizedBox.shrink();
+              }
+
+              return Consumer(
+                builder: (context, ref, _) {
+                  return PodcastAudioTile(
+                    key: ValueKey('${episode.path ?? episode.url}'),
+                    audio: episode,
+                    addPodcast: () => ref
+                        .read(subscribedPodcastsManagerProvider.notifier)
+                        .togglePodcastSubscription(
+                          feedUrl: episode.feedUrl!,
+                          imageUrl: episode.albumArtUrl ?? episode.imageUrl ?? '',
+                          name: episode.podcastTitle ?? '',
+                          artist: episode.copyright ?? '',
+                        ),
+                    isExpanded: episode == selectedAudio,
+                    selected: episode == selectedAudio,
+                    play: () => di<PlayerManager>().play(
+                      audios: [episode],
+                      listName: feedUrl,
+                      index: 0,
+                    ),
+                    includePodcastImage: includePodcastImage,
+                  );
+                },
               );
             },
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

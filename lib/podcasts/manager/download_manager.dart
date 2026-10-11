@@ -1,171 +1,209 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/logging.dart';
-import '../../common/util/cached_streamcontroller.dart';
+import '../../dependencies.dart';
 import '../data/podcast_download.dart';
 import '../service/download_service.dart';
 import '../service/podcast_service.dart';
 
-@lazySingleton
-class DownloadManager {
-  DownloadManager({
-    required PodcastService podcastService,
-    required DownloadService downloadService,
-  }) : _podcastService = podcastService,
-       _downloadService = downloadService {
-    downloadsDirCommand.run((getDefault: true));
-    Logger.o(tag: '$DownloadManager');
-  }
+part 'download_manager.g.dart';
 
-  final PodcastService _podcastService;
-  final DownloadService _downloadService;
+class DownloadManagerState {
+  final String? downloadsDirectory;
+  final Set<Audio> activeDownloads;
+  final List<Audio> recentDownloads;
+  final PodcastDownload? lastEvent;
 
-  final downloadCommands = MapNotifier<Audio, Command<void, PodcastDownload?>>(
-    notificationMode: CustomNotifierMode.manual,
+  const DownloadManagerState({
+    this.downloadsDirectory,
+    this.activeDownloads = const {},
+    this.recentDownloads = const [],
+    this.lastEvent,
+  });
+
+  bool get hasActiveDownloads => activeDownloads.isNotEmpty;
+  bool get hasRecentDownloads => recentDownloads.isNotEmpty;
+
+  DownloadManagerState copyWith({
+    String? downloadsDirectory,
+    Set<Audio>? activeDownloads,
+    List<Audio>? recentDownloads,
+    PodcastDownload? lastEvent,
+  }) => DownloadManagerState(
+    downloadsDirectory: downloadsDirectory ?? this.downloadsDirectory,
+    activeDownloads: activeDownloads ?? this.activeDownloads,
+    recentDownloads: recentDownloads ?? this.recentDownloads,
+    lastEvent: lastEvent ?? this.lastEvent,
   );
+}
+
+@Riverpod(keepAlive: true)
+class DownloadManager extends _$DownloadManager {
+  late final PodcastService _podcastService = di<PodcastService>();
+  late final DownloadService _downloadService = di<DownloadService>();
+
+  @override
+  Future<DownloadManagerState> build() async {
+    Logger.o(tag: '$DownloadManager');
+    final dir = await _downloadService.setDownloadsDirectory(
+      getDefault: true,
+    );
+    return DownloadManagerState(downloadsDirectory: dir);
+  }
 
   bool hasDownload(Audio audio) =>
-      downloadCommands[audio]?.value?.isDownload(audio) ??
-      (_podcastService.getDownloadPath(audio) != null);
+      _podcastService.getDownloadPath(audio) != null;
 
-  Command<void, PodcastDownload?> getCommand(Audio audio) =>
-      downloadCommands.putIfAbsent(audio, () => _createDownloadCommand(audio));
-
-  void cancelDownload(Audio audio) {
-    final command = downloadCommands[audio];
-    if (command != null) {
-      command.cancel();
-      downloadCommands.remove(audio);
-      downloadCommands.notifyListeners();
+  Future<String?> setDownloadsDirectory({bool getDefault = false}) async {
+    final dir = await _downloadService.setDownloadsDirectory(
+      getDefault: getDefault,
+    );
+    if (!getDefault) {
+      await _podcastService.removeAllDownloads();
     }
+    state = AsyncData(
+      (state.value ?? const DownloadManagerState()).copyWith(
+        downloadsDirectory: dir,
+        recentDownloads: getDefault ? null : [],
+      ),
+    );
+    return dir;
   }
 
-  Command<void, PodcastDownload> _createDownloadCommand(Audio audio) =>
-      Command.createAsyncNoParamWithProgress(
-        (handle) async {
-          final cancelToken = CancelToken();
+  void notifyEvent(PodcastDownload download) {
+    final current = state.value ?? const DownloadManagerState();
+    final newActive = Set<Audio>.from(current.activeDownloads);
+    final newRecent = List<Audio>.from(current.recentDownloads);
 
-          try {
-            if (_podcastService.getDownloadPath(audio) == null) {
-              handle.isCanceled.listen((canceled, subscription) {
-                if (canceled) {
-                  handle.updateProgress(0.0);
-                  cancelToken.cancel();
-                  subscription.cancel();
-                }
-              });
-              _updateStream(
-                PodcastDownload(
-                  status: DownloadStatus.inProgress,
-                  audio: audio,
-                  path: null,
-                ),
-              );
-              final theDownload = await this.download(
-                episode: audio,
-                cancelToken: cancelToken,
-                onProgress: (received, total) {
-                  handle.updateProgress(received / total);
-                },
-              );
-              return _updateStream(
-                PodcastDownload(
-                  status: DownloadStatus.completed,
-                  audio: audio,
-                  path: theDownload,
-                ),
-              );
-            } else {
-              await _podcastService.removeDownload(
-                url: audio.url!,
-                feedUrl: audio.feedUrl!,
-              );
-
-              return _updateStream(
-                PodcastDownload(
-                  status: DownloadStatus.removed,
-                  audio: audio,
-                  path: null,
-                ),
-              );
-            }
-          } on Exception catch (_) {
-            return _updateStream(
-              PodcastDownload(
-                status: DownloadStatus.cancelled,
-                audio: audio,
-                path: null,
-              ),
-            );
-          } finally {
-            downloadCommands.notifyListeners();
-          }
-        },
-        initialValue: PodcastDownload.initial(
-          audio: audio,
-          path: _podcastService.getDownloadPath(audio),
-        ),
-      );
-
-  late final Command<({bool getDefault}), String?> downloadsDirCommand =
-      Command.createAsync((param) async {
-        final dir = await _downloadService.setDownloadsDirectory(
-          getDefault: param.getDefault,
-        );
-
-        if (!param.getDefault) {
-          await _podcastService.removeAllDownloads();
-          downloadCommands.clear();
-          downloadCommands.notifyListeners();
+    if (download.status == DownloadStatus.inProgress) {
+      newActive.add(download.audio);
+    } else {
+      newActive.remove(download.audio);
+      if (download.status == DownloadStatus.completed) {
+        if (!newRecent.contains(download.audio)) {
+          newRecent.insert(0, download.audio);
         }
-
-        return dir;
-      }, initialValue: null);
-
-  final _downloadController = CachedStreamController<PodcastDownload?>();
-  PodcastDownload _updateStream(PodcastDownload result) {
-    _downloadController.add(result);
-    return result;
-  }
-
-  Stream<PodcastDownload?> get downloadStream => _downloadController.stream;
-  PodcastDownload? get lastDownload => _downloadController.value;
-
-  Future<String?> download({
-    required Audio episode,
-    required CancelToken cancelToken,
-    required void Function(int received, int total) onProgress,
-  }) async {
-    final targetUrl = episode.url;
-    final feedUrl = episode.feedUrl;
-    if (targetUrl == null || feedUrl == null) {
-      throw Exception('Invalid media, missing URL or feed URL for download');
+      } else if (download.status == DownloadStatus.removed) {
+        newRecent.remove(download.audio);
+      }
     }
 
-    final path = await _downloadService.download(
-      targetUrl: targetUrl,
-      podcastDownloadId: episode.podcastDownloadId,
-      cancelToken: cancelToken,
-      onProgress: onProgress,
+    state = AsyncData(
+      current.copyWith(
+        activeDownloads: newActive,
+        recentDownloads: newRecent,
+        lastEvent: download,
+      ),
+    );
+  }
+}
+
+@riverpod
+class PodcastEpisodeDownloadManager extends _$PodcastEpisodeDownloadManager {
+  late final PodcastService _podcastService = di<PodcastService>();
+  late final DownloadService _downloadService = di<DownloadService>();
+
+  CancelToken? _cancelToken;
+
+  @override
+  Future<PodcastDownload> build(Audio audio) async {
+    ref.onDispose(() {
+      _cancelToken?.cancel();
+      _cancelToken = null;
+    });
+
+    final path = _podcastService.getDownloadPath(audio);
+    return PodcastDownload.initial(audio: audio, path: path);
+  }
+
+  Future<void> startDownload() async {
+    final cancelToken = CancelToken();
+    _cancelToken = cancelToken;
+    state = const AsyncLoading(progress: 0.0);
+
+    ref.read(downloadManagerProvider.notifier).notifyEvent(
+      PodcastDownload(
+        status: DownloadStatus.inProgress,
+        audio: audio,
+        path: null,
+      ),
     );
 
-    if (path != null) {
-      await _podcastService.addDownload(
-        url: targetUrl,
-        path: path,
-        feedUrl: feedUrl,
+    try {
+      final downloadedPath = await _downloadService.download(
+        targetUrl: audio.url!,
+        podcastDownloadId: audio.podcastDownloadId,
+        cancelToken: cancelToken,
+        onProgress: (received, total) {
+          if (total > 0) {
+            state = AsyncLoading(progress: received / total);
+          }
+        },
       );
-      return path;
-    }
 
-    return null;
+      if (downloadedPath != null) {
+        await _podcastService.addDownload(
+          url: audio.url!,
+          path: downloadedPath,
+          feedUrl: audio.feedUrl!,
+        );
+        final completed = PodcastDownload(
+          status: DownloadStatus.completed,
+          audio: audio,
+          path: downloadedPath,
+        );
+        state = AsyncData(completed);
+        ref.read(downloadManagerProvider.notifier).notifyEvent(completed);
+      }
+    } on Exception catch (e) {
+      final isCancelled = e is DioException && CancelToken.isCancel(e);
+      final status = isCancelled
+          ? DownloadStatus.cancelled
+          : DownloadStatus.removed;
+      final event = PodcastDownload(
+        status: status,
+        audio: audio,
+        path: null,
+      );
+      state = AsyncData(event);
+      ref.read(downloadManagerProvider.notifier).notifyEvent(event);
+    } finally {
+      if (_cancelToken == cancelToken) {
+        _cancelToken = null;
+      }
+    }
   }
 
-  @disposeMethod
-  Future<void> dispose() => _downloadController.close();
+  Future<void> removeDownload() async {
+    await _podcastService.removeDownload(
+      url: audio.url!,
+      feedUrl: audio.feedUrl!,
+    );
+    final removed = PodcastDownload(
+      status: DownloadStatus.removed,
+      audio: audio,
+      path: null,
+    );
+    state = AsyncData(removed);
+    ref.read(downloadManagerProvider.notifier).notifyEvent(removed);
+  }
+
+  void cancelDownload() {
+    _cancelToken?.cancel();
+    _cancelToken = null;
+  }
+
+  Future<void> toggleDownload() async {
+    if (_cancelToken != null) {
+      cancelDownload();
+    } else if (state.value?.path != null) {
+      await removeDownload();
+    } else {
+      await startDownload();
+    }
+  }
 }

@@ -44,9 +44,6 @@ import 'player/manager/mpv_metadata_manager.dart' as _i507;
 import 'player/manager/player_manager.dart' as _i95;
 import 'player/persistence/player_dao.dart' as _i443;
 import 'player/service/player_service.dart' as _i456;
-import 'podcasts/manager/download_manager.dart' as _i167;
-import 'podcasts/manager/episodes_manager.dart' as _i776;
-import 'podcasts/manager/podcast_manager.dart' as _i819;
 import 'podcasts/persistence/podcast_dao.dart' as _i597;
 import 'podcasts/service/download_service.dart' as _i881;
 import 'podcasts/service/podcast_service.dart' as _i529;
@@ -197,9 +194,6 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioDao: gh<_i688.LocalAudioDao>(),
       ),
     );
-    gh.lazySingleton<_i819.PodcastManager>(
-      () => _i819.PodcastManager(podcastService: gh<_i529.PodcastService>()),
-    );
     gh.lazySingleton<_i314.CustomContentService>(
       () => _i314.CustomContentService(
         externalPathService: gh<_i415.ExternalPathService>(),
@@ -234,13 +228,6 @@ extension GetItInjectableX on _i174.GetIt {
         exposeService: gh<_i313.ExposeService>(),
         settingsService: gh<_i862.SettingsService>(),
       ),
-    );
-    gh.lazySingleton<_i167.DownloadManager>(
-      () => _i167.DownloadManager(
-        podcastService: gh<_i529.PodcastService>(),
-        downloadService: gh<_i881.DownloadService>(),
-      ),
-      dispose: (i) => i.dispose(),
     );
     gh.factory<_i354.SearchManager>(
       () => _i354.SearchManager.create(
@@ -289,14 +276,6 @@ extension GetItInjectableX on _i174.GetIt {
     }, preResolve: true);
     gh.factory<_i164.PlayAnywhereManager>(
       () => _i164.PlayAnywhereManager.create(
-        playerManager: gh<_i95.PlayerManager>(),
-      ),
-    );
-    gh.factoryParam<_i776.EpisodesManager, String, dynamic>(
-      (feedUrl, _) => _i776.EpisodesManager.create(
-        feedUrl: feedUrl,
-        podcastManager: gh<_i819.PodcastManager>(),
-        downloadsManager: gh<_i167.DownloadManager>(),
         playerManager: gh<_i95.PlayerManager>(),
       ),
     );

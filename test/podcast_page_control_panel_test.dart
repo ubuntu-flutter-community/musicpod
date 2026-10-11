@@ -15,22 +15,27 @@ import 'package:musicpod/player/data/queue.dart';
 import 'package:musicpod/player/manager/player_manager.dart';
 import 'package:musicpod/podcasts/data/podcast_short_info.dart';
 import 'package:musicpod/podcasts/manager/episodes_manager.dart';
+import 'package:musicpod/podcasts/service/podcast_service.dart';
 import 'package:musicpod/podcasts/view/podcast_page_control_panel.dart';
 import 'package:musicpod/settings/manager/settings_manager.dart';
 import 'package:musicpod/settings/service/settings_service.dart';
-import 'package:safe_change_notifier/safe_change_notifier.dart';
-
-import 'package:musicpod/podcasts/service/podcast_service.dart';
 
 import 'podcast_page_control_panel_test.mocks.dart';
 
 @GenerateMocks([
   PlayerManager,
-  EpisodesManager,
   SettingsManager,
   SettingsService,
   PodcastService,
 ])
+class FakeEpisodesManager extends EpisodesManager {
+  FakeEpisodesManager(this.episodesState);
+  final EpisodesState episodesState;
+
+  @override
+  Future<EpisodesState> build(String feedUrl) async => episodesState;
+}
+
 void main() {
   const feedUrl = 'https://example.com/podcast.xml';
 
@@ -41,28 +46,19 @@ void main() {
   late List<Audio> allEpisodes;
   late List<Audio> loadedEpisodes;
 
-  MockEpisodesManager createMockEpisodesManager({
+  EpisodesState createEpisodesState({
     required List<Audio> loadedEpisodes,
     required List<Audio> allEpisodes,
     required bool hasMoreEpisodes,
   }) {
-    final mock = MockEpisodesManager();
-    final cmd = Command.createSync<
-      ({AudioSortOrder? order})?,
-      ({List<Audio>? episodes, AudioSortOrder? order})?
-    >(
-      (_) => (episodes: loadedEpisodes, order: AudioSortOrder.descending),
-      initialValue: (
-        episodes: loadedEpisodes,
-        order: AudioSortOrder.descending,
-      ),
+    return EpisodesState(
+      allEpisodes: allEpisodes,
+      episodes: loadedEpisodes,
+      displayedCount: loadedEpisodes.length,
+      totalCount: allEpisodes.length,
+      hasMore: hasMoreEpisodes,
+      order: AudioSortOrder.descending,
     );
-    when(mock.command).thenReturn(cmd);
-    when(mock.hasMore).thenReturn(hasMoreEpisodes);
-    when(mock.totalCount).thenReturn(allEpisodes.length);
-    when(mock.allFilteredEpisodes).thenReturn(allEpisodes);
-    when(mock.showSearch).thenReturn(SafeValueNotifier(false));
-    return mock;
   }
 
   setUp(() async {
@@ -85,10 +81,11 @@ void main() {
     mockSettingsService = MockSettingsService();
     mockPodcastService = MockPodcastService();
 
-    final toggleCmd = Command.createAsync<
-      ({List<Audio> audios, bool markComplete})?,
-      Map<String, Duration>?
-    >((_) async => {}, initialValue: null);
+    final toggleCmd =
+        Command.createAsync<
+          ({List<Audio> audios, bool markComplete})?,
+          Map<String, Duration>?
+        >((_) async => {}, initialValue: null);
     when(mockPlayerManager.toggleAudiosProgressCommand).thenReturn(toggleCmd);
     when(mockPlayerManager.isPlaying).thenReturn(false);
     when(mockPlayerManager.queue).thenReturn(const Queue.empty());
@@ -125,8 +122,14 @@ void main() {
     await GetIt.I.reset();
   });
 
-  Widget buildWidget(String url) {
+  Widget buildWidget(String url, {EpisodesState? state}) {
     return ProviderScope(
+      overrides: [
+        if (state != null)
+          episodesManagerProvider(url).overrideWith(
+            () => FakeEpisodesManager(state),
+          ),
+      ],
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
@@ -138,16 +141,13 @@ void main() {
   testWidgets('plays all directly when all episodes are already loaded', (
     tester,
   ) async {
-    final mockEpisodesManager = createMockEpisodesManager(
+    final state = createEpisodesState(
       loadedEpisodes: allEpisodes,
       allEpisodes: allEpisodes,
       hasMoreEpisodes: false,
     );
-    GetIt.I.registerFactoryParam<EpisodesManager, String, void>(
-      (url, _) => mockEpisodesManager,
-    );
 
-    await tester.pumpWidget(buildWidget(feedUrl));
+    await tester.pumpWidget(buildWidget(feedUrl, state: state));
     await tester.pump();
 
     final playAllButton = find.byType(AvatarPlayButton);
@@ -167,16 +167,13 @@ void main() {
   testWidgets(
     'shows confirmation dialog when more episodes exist, and allows playing loaded subset',
     (tester) async {
-      final mockEpisodesManager = createMockEpisodesManager(
+      final state = createEpisodesState(
         loadedEpisodes: loadedEpisodes,
         allEpisodes: allEpisodes,
         hasMoreEpisodes: true,
       );
-      GetIt.I.registerFactoryParam<EpisodesManager, String, void>(
-        (url, _) => mockEpisodesManager,
-      );
 
-      await tester.pumpWidget(buildWidget(feedUrl));
+      await tester.pumpWidget(buildWidget(feedUrl, state: state));
       await tester.pump();
 
       final playAllButton = find.byType(AvatarPlayButton);
@@ -206,16 +203,13 @@ void main() {
   testWidgets(
     'shows confirmation dialog when more episodes exist, and allows playing all episodes',
     (tester) async {
-      final mockEpisodesManager = createMockEpisodesManager(
+      final state = createEpisodesState(
         loadedEpisodes: loadedEpisodes,
         allEpisodes: allEpisodes,
         hasMoreEpisodes: true,
       );
-      GetIt.I.registerFactoryParam<EpisodesManager, String, void>(
-        (url, _) => mockEpisodesManager,
-      );
 
-      await tester.pumpWidget(buildWidget(feedUrl));
+      await tester.pumpWidget(buildWidget(feedUrl, state: state));
       await tester.pump();
 
       final playAllButton = find.byType(AvatarPlayButton);
@@ -248,16 +242,13 @@ void main() {
         mockPlayerManager.queue,
       ).thenReturn(Queue(name: feedUrl, audios: allEpisodes));
 
-      final mockEpisodesManager = createMockEpisodesManager(
+      final state = createEpisodesState(
         loadedEpisodes: loadedEpisodes,
         allEpisodes: allEpisodes,
         hasMoreEpisodes: true,
       );
-      GetIt.I.registerFactoryParam<EpisodesManager, String, void>(
-        (url, _) => mockEpisodesManager,
-      );
 
-      await tester.pumpWidget(buildWidget(feedUrl));
+      await tester.pumpWidget(buildWidget(feedUrl, state: state));
       await tester.pump();
 
       final playAllButton = find.byType(AvatarPlayButton);

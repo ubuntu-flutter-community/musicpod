@@ -37,13 +37,17 @@ mixin CommonHandlersAndCommandsMixin {
   });
 
   void registerCommonHandlers(BuildContext context) {
-    registerStreamHandler(
-      select: (DownloadManager m) => m.downloadStream,
-      handler: (context, asyncData, cancel) {
-        if (!asyncData.hasData ||
-            asyncData.data?.status == DownloadStatus.inProgress)
+    final container = ProviderScope.containerOf(context, listen: false);
+
+    container.listen<AsyncValue<DownloadManagerState>>(
+      downloadManagerProvider,
+      (prev, next) {
+        final result = next.value?.lastEvent;
+        if (result == null ||
+            result == prev?.value?.lastEvent ||
+            result.status == DownloadStatus.inProgress) {
           return;
-        final result = asyncData.data!;
+        }
         context.toast(
           Text(switch (result) {
             final PodcastDownload r when r.status == DownloadStatus.completed =>
@@ -57,8 +61,6 @@ mixin CommonHandlersAndCommandsMixin {
         );
       },
     );
-
-    final container = ProviderScope.containerOf(context, listen: false);
 
     container.listen<PodcastUpdatesState>(podcastUpdatesManagerProvider, (prev, res) {
       if (res.isRunning) {

@@ -1,195 +1,230 @@
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
-import 'package:safe_change_notifier/safe_change_notifier.dart';
+import 'dart:async';
+
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../common/data/audio.dart';
-import '../../common/util/family.dart';
 import '../../common/view/audio_filter.dart';
-import '../../extensions/command_x.dart';
+import '../../dependencies.dart';
 import '../../player/manager/player_manager.dart';
 import '../data/podcast_episode_filter.dart';
+import '../service/podcast_service.dart';
 import 'download_manager.dart';
-import 'podcast_manager.dart';
+import 'podcast_collection_filter_manager.dart';
 
-@injectable
-class EpisodesManager {
+part 'episodes_manager.g.dart';
+
+class EpisodesState {
+  final List<Audio> allEpisodes;
+  final List<Audio> episodes;
+  final int displayedCount;
+  final int totalCount;
+  final bool hasMore;
+  final AudioSortOrder order;
+  final bool showSearch;
+  final String? searchQuery;
+  final PodcastEpisodeFilter filter;
+
+  const EpisodesState({
+    required this.allEpisodes,
+    required this.episodes,
+    required this.displayedCount,
+    required this.totalCount,
+    required this.hasMore,
+    required this.order,
+    this.showSearch = false,
+    this.searchQuery,
+    this.filter = PodcastEpisodeFilter.title,
+  });
+
+  EpisodesState copyWith({
+    List<Audio>? allEpisodes,
+    List<Audio>? episodes,
+    int? displayedCount,
+    int? totalCount,
+    bool? hasMore,
+    AudioSortOrder? order,
+    bool? showSearch,
+    String? Function()? searchQuery,
+    PodcastEpisodeFilter? filter,
+  }) => EpisodesState(
+    allEpisodes: allEpisodes ?? this.allEpisodes,
+    episodes: episodes ?? this.episodes,
+    displayedCount: displayedCount ?? this.displayedCount,
+    totalCount: totalCount ?? this.totalCount,
+    hasMore: hasMore ?? this.hasMore,
+    order: order ?? this.order,
+    showSearch: showSearch ?? this.showSearch,
+    searchQuery: searchQuery != null ? searchQuery() : this.searchQuery,
+    filter: filter ?? this.filter,
+  );
+}
+
+@riverpod
+class EpisodesManager extends _$EpisodesManager {
   static const int pageSize = 25;
 
-  ListenableSubscription? updatesOnlySubscription;
-  ListenableSubscription? downloadsOnlySubscription;
-  ListenableSubscription? downloadCommandsSubscription;
-  ListenableSubscription? searchQuerySubscription;
-  ListenableSubscription? filterSubscription;
+  late final PodcastService _podcastService = di<PodcastService>();
+  late final PlayerManager _playerManager = di<PlayerManager>();
 
-  List<Audio> _allEpisodes = [];
+  List<Audio> _rawEpisodes = [];
+  int _displayedCount = pageSize;
+  bool _showSearch = false;
+  String? _searchQuery;
+  PodcastEpisodeFilter _filter = PodcastEpisodeFilter.title;
+  AudioSortOrder? _order;
 
-  final displayedCount = SafeValueNotifier<int>(pageSize);
+  @override
+  Future<EpisodesState> build(String feedUrl) async {
+    final hideCompleted = ref.watch(podcastUpdatesOnlyManagerProvider);
+    final showDownloadsOnly = ref.watch(podcastDownloadsOnlyManagerProvider);
+    ref.watch(downloadManagerProvider);
 
-  bool get hasMore => displayedCount.value < _allEpisodes.length;
-  int get totalCount => _allEpisodes.length;
-  List<Audio> get allFilteredEpisodes => List.unmodifiable(_allEpisodes);
+    if (_rawEpisodes.isEmpty) {
+      _rawEpisodes = await _podcastService.findEpisodes(
+        feedUrl: feedUrl,
+        tryFromDbOnly: true,
+        order: _order,
+      );
+    }
+
+    if (_order == null) {
+      final ascendingFeeds = await _podcastService.ascendingPodcasts;
+      _order = ascendingFeeds.contains(feedUrl)
+          ? AudioSortOrder.ascending
+          : AudioSortOrder.descending;
+    }
+
+    return _computeState(
+      hideCompletedEpisodes: hideCompleted,
+      showDownloadsOnly: showDownloadsOnly,
+    );
+  }
+
+  EpisodesState _computeState({
+    required bool hideCompletedEpisodes,
+    required bool showDownloadsOnly,
+  }) {
+    final downloadManager = ref.read(downloadManagerProvider.notifier);
+
+    final filtered = _rawEpisodes
+        .where((a) {
+          if (_searchQuery == null || _searchQuery!.trim().isEmpty) return true;
+          return switch (_filter) {
+            PodcastEpisodeFilter.title =>
+              a.title?.toLowerCase().contains(_searchQuery!.toLowerCase()) ?? false,
+            PodcastEpisodeFilter.description =>
+              a.episodeDescription?.toLowerCase().contains(_searchQuery!.toLowerCase()) ?? false,
+          };
+        })
+        .where((audio) {
+          if (!hideCompletedEpisodes) return true;
+          if (audio.url == null) return false;
+          return audio.durationMs != null &&
+              _playerManager.lastPositions?[audio.url]?.inMilliseconds !=
+                  audio.durationMs?.toInt();
+        })
+        .where((audio) {
+          if (!showDownloadsOnly) return true;
+          return downloadManager.hasDownload(audio);
+        })
+        .toList();
+
+    final count = _displayedCount.clamp(0, filtered.length);
+    final visible = filtered
+        .take(count == 0 && filtered.isNotEmpty ? pageSize : count)
+        .toList();
+
+    return EpisodesState(
+      allEpisodes: filtered,
+      episodes: visible,
+      displayedCount: _displayedCount,
+      totalCount: filtered.length,
+      hasMore: _displayedCount < filtered.length,
+      order: _order ?? AudioSortOrder.descending,
+      showSearch: _showSearch,
+      searchQuery: _searchQuery,
+      filter: _filter,
+    );
+  }
 
   void loadMore() {
-    if (!hasMore) return;
-    displayedCount.value = (displayedCount.value + pageSize).clamp(
-      0,
-      _allEpisodes.length,
-    );
-    if (command.value != null) {
-      command.value = (
-        episodes: _allEpisodes.take(displayedCount.value).toList(),
-        order: command.value!.order,
-      );
+    final current = state.value;
+    if (current == null || !current.hasMore) return;
+    _displayedCount =
+        (_displayedCount + pageSize).clamp(0, current.allEpisodes.length);
+    final visible = current.allEpisodes.take(_displayedCount).toList();
+    state = AsyncData(current.copyWith(
+      displayedCount: _displayedCount,
+      episodes: visible,
+      hasMore: _displayedCount < current.allEpisodes.length,
+    ));
+  }
+
+  void toggleShowSearch() {
+    _showSearch = !_showSearch;
+    final current = state.value;
+    if (current != null) {
+      state = AsyncData(current.copyWith(showSearch: _showSearch));
     }
   }
 
-  void _resetPaging() {
-    displayedCount.value = pageSize;
+  void setSearchQuery(String value) {
+    _searchQuery = value;
+    _displayedCount = pageSize;
+    final hideCompleted = ref.read(podcastUpdatesOnlyManagerProvider);
+    final showDownloadsOnly = ref.read(podcastDownloadsOnlyManagerProvider);
+    state = AsyncData(_computeState(
+      hideCompletedEpisodes: hideCompleted,
+      showDownloadsOnly: showDownloadsOnly,
+    ));
   }
 
-  EpisodesManager._({
-    required String feedUrl,
-    required PodcastManager podcastManager,
-    required DownloadManager downloadsManager,
-    required PlayerManager playerManager,
-  }) {
-    updatesOnlySubscription ??= podcastManager.updatesOnly.listen((_, _) {
-      _resetPaging();
-      command.run();
-    });
-    downloadsOnlySubscription ??= podcastManager.downloadsOnly.listen((_, _) {
-      _resetPaging();
-      command.run();
-    });
-    downloadCommandsSubscription ??= downloadsManager.downloadCommands
-        .select((v) => v.entries.any((e) => e.key.feedUrl == feedUrl))
-        .listen((_, _) => command.run());
-    searchQuerySubscription ??= searchQuery.listen((_, _) {
-      _resetPaging();
-      command.run();
-    });
-    filterSubscription ??= filter.listen((_, _) {
-      _resetPaging();
-      command.run();
-    });
-
-    command = Command.createAsync(
-      (param) async {
-        if (param?.order != null) {
-          _resetPaging();
-        }
-
-        final searchQuery = this.searchQuery.value;
-        final filter = this.filter.value;
-        final hideCompletedEpisodes = podcastManager.updatesOnly.value;
-        final showDownloadsOnly = podcastManager.downloadsOnly.value;
-        final episodes =
-            (await podcastManager.findEpisodes(
-                  feedUrl: feedUrl,
-                  tryFromDbOnly: true,
-                  order: param?.order,
-                ))
-                .where((a) => a.title != null && a.episodeDescription != null)
-                .where(
-                  (a) => (searchQuery == null || searchQuery.trim().isEmpty)
-                      ? true
-                      : switch (filter) {
-                          PodcastEpisodeFilter.title =>
-                            a.title!.toLowerCase().contains(
-                              searchQuery.toLowerCase(),
-                            ),
-                          PodcastEpisodeFilter.description =>
-                            a.episodeDescription!.toLowerCase().contains(
-                              searchQuery.toLowerCase(),
-                            ),
-                        },
-                )
-                .where((audio) {
-                  if (!hideCompletedEpisodes) return true;
-                  if (audio.url == null) return false;
-
-                  return audio.durationMs != null &&
-                      playerManager.lastPositions?[audio.url]?.inMilliseconds !=
-                          audio.durationMs?.toInt();
-                })
-                .where((audio) {
-                  if (!showDownloadsOnly) return true;
-
-                  return downloadsManager.hasDownload(audio);
-                })
-                .toList();
-
-        _allEpisodes = episodes;
-        final currentCount = displayedCount.value.clamp(0, _allEpisodes.length);
-        final visible = _allEpisodes
-            .take(
-              currentCount == 0 && _allEpisodes.isNotEmpty
-                  ? pageSize
-                  : currentCount,
-            )
-            .toList();
-
-        final theOrder =
-            (await podcastManager.ascendingPodcasts).contains(feedUrl)
-            ? AudioSortOrder.ascending
-            : AudioSortOrder.descending;
-
-        return (episodes: visible, order: theOrder);
-      },
-      initialValue: null,
-      includeLastResultInCommandResults: true,
-    );
-
-    command.run();
+  void setFilter() {
+    _filter = switch (_filter) {
+      PodcastEpisodeFilter.title => PodcastEpisodeFilter.description,
+      PodcastEpisodeFilter.description => PodcastEpisodeFilter.title,
+    };
+    _displayedCount = pageSize;
+    final hideCompleted = ref.read(podcastUpdatesOnlyManagerProvider);
+    final showDownloadsOnly = ref.read(podcastDownloadsOnlyManagerProvider);
+    state = AsyncData(_computeState(
+      hideCompletedEpisodes: hideCompleted,
+      showDownloadsOnly: showDownloadsOnly,
+    ));
   }
 
-  @factoryMethod
-  static EpisodesManager create({
-    @factoryParam required String feedUrl,
-    required PodcastManager podcastManager,
-    required DownloadManager downloadsManager,
-    required PlayerManager playerManager,
-  }) => Family.of(
-    feedUrl,
-    () => EpisodesManager._(
+  Future<void> reorder(AudioSortOrder order) async {
+    _order = order;
+    _displayedCount = pageSize;
+    await _podcastService.reorderPodcast(feedUrl: feedUrl, order: order);
+    _rawEpisodes = await _podcastService.findEpisodes(
       feedUrl: feedUrl,
-      podcastManager: podcastManager,
-      downloadsManager: downloadsManager,
-      playerManager: playerManager,
-    ),
-    shouldDispose: (instance) => instance.command.safeToDispose,
-    onDispose: (instance) {
-      instance.command.dispose();
-      instance.updatesOnlySubscription?.cancel();
-      instance.downloadsOnlySubscription?.cancel();
-      instance.downloadCommandsSubscription?.cancel();
-      instance.searchQuerySubscription?.cancel();
-      instance.filterSubscription?.cancel();
-      instance.displayedCount.dispose();
-      instance.showSearch.dispose();
-      instance.searchQuery.dispose();
-      instance.filter.dispose();
-    },
-  );
+      tryFromDbOnly: true,
+      order: order,
+    );
+    final hideCompleted = ref.read(podcastUpdatesOnlyManagerProvider);
+    final showDownloadsOnly = ref.read(podcastDownloadsOnlyManagerProvider);
+    state = AsyncData(_computeState(
+      hideCompletedEpisodes: hideCompleted,
+      showDownloadsOnly: showDownloadsOnly,
+    ));
+  }
 
-  late final Command<
-    ({AudioSortOrder? order})?,
-    ({List<Audio>? episodes, AudioSortOrder? order})?
-  >
-  command;
-
-  final showSearch = SafeValueNotifier(false);
-
-  void toggleShowSearch() => showSearch.value = !showSearch.value;
-
-  final searchQuery = SafeValueNotifier<String?>(null);
-  void setSearchQuery(String value) => searchQuery.value = value;
-
-  final filter = SafeValueNotifier<PodcastEpisodeFilter>(
-    PodcastEpisodeFilter.title,
-  );
-  void setFilter() => filter.value = switch (filter.value) {
-    PodcastEpisodeFilter.title => PodcastEpisodeFilter.description,
-    PodcastEpisodeFilter.description => PodcastEpisodeFilter.title,
-  };
+  Future<void> refresh() async {
+    _displayedCount = pageSize;
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      _rawEpisodes = await _podcastService.findEpisodes(
+        feedUrl: feedUrl,
+        tryFromDbOnly: false,
+        order: _order,
+      );
+      final hideCompleted = ref.read(podcastUpdatesOnlyManagerProvider);
+      final showDownloadsOnly = ref.read(podcastDownloadsOnlyManagerProvider);
+      return _computeState(
+        hideCompletedEpisodes: hideCompleted,
+        showDownloadsOnly: showDownloadsOnly,
+      );
+    });
+  }
 }

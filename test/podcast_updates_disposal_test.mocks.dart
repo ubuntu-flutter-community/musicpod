@@ -6,7 +6,6 @@
 import 'dart:async' as _i6;
 import 'dart:ui' as _i16;
 
-import 'package:dio/dio.dart' as _i23;
 import 'package:flutter/widgets.dart' as _i15;
 import 'package:flutter_it/flutter_it.dart' as _i4;
 import 'package:media_kit/media_kit.dart' as _i14;
@@ -19,10 +18,8 @@ import 'package:musicpod/common/view/languages.dart' as _i9;
 import 'package:musicpod/lyrics/data/online_lyrics_source.dart' as _i19;
 import 'package:musicpod/player/data/queue.dart' as _i3;
 import 'package:musicpod/player/manager/player_manager.dart' as _i13;
-import 'package:musicpod/podcasts/data/podcast_download.dart' as _i22;
 import 'package:musicpod/podcasts/data/podcast_genre.dart' as _i8;
 import 'package:musicpod/podcasts/data/podcast_short_info.dart' as _i12;
-import 'package:musicpod/podcasts/manager/download_manager.dart' as _i21;
 import 'package:musicpod/podcasts/service/podcast_service.dart' as _i5;
 import 'package:musicpod/settings/manager/settings_manager.dart' as _i17;
 import 'package:musicpod/settings/service/settings_service.dart' as _i20;
@@ -57,12 +54,6 @@ class _FakeQueue_1 extends _i1.SmartFake implements _i3.Queue {
 class _FakeCommand_2<TParam, TResult> extends _i1.SmartFake
     implements _i4.Command<TParam, TResult> {
   _FakeCommand_2(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
-}
-
-class _FakeMapNotifier_3<K, V> extends _i1.SmartFake
-    implements _i4.MapNotifier<K, V> {
-  _FakeMapNotifier_3(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
@@ -1395,100 +1386,6 @@ class MockSettingsService extends _i1.Mock implements _i20.SettingsService {
             returnValueForMissingStub: _i6.Future<void>.value(),
           )
           as _i6.Future<void>);
-
-  @override
-  _i6.Future<void> dispose() =>
-      (super.noSuchMethod(
-            Invocation.method(#dispose, []),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-}
-
-/// A class which mocks [DownloadManager].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockDownloadManager extends _i1.Mock implements _i21.DownloadManager {
-  MockDownloadManager() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  _i4.MapNotifier<_i10.Audio, _i4.Command<void, _i22.PodcastDownload?>>
-  get downloadCommands =>
-      (super.noSuchMethod(
-            Invocation.getter(#downloadCommands),
-            returnValue:
-                _FakeMapNotifier_3<
-                  _i10.Audio,
-                  _i4.Command<void, _i22.PodcastDownload?>
-                >(this, Invocation.getter(#downloadCommands)),
-          )
-          as _i4.MapNotifier<
-            _i10.Audio,
-            _i4.Command<void, _i22.PodcastDownload?>
-          >);
-
-  @override
-  _i4.Command<({bool getDefault}), String?> get downloadsDirCommand =>
-      (super.noSuchMethod(
-            Invocation.getter(#downloadsDirCommand),
-            returnValue: _FakeCommand_2<({bool getDefault}), String?>(
-              this,
-              Invocation.getter(#downloadsDirCommand),
-            ),
-          )
-          as _i4.Command<({bool getDefault}), String?>);
-
-  @override
-  _i6.Stream<_i22.PodcastDownload?> get downloadStream =>
-      (super.noSuchMethod(
-            Invocation.getter(#downloadStream),
-            returnValue: _i6.Stream<_i22.PodcastDownload?>.empty(),
-          )
-          as _i6.Stream<_i22.PodcastDownload?>);
-
-  @override
-  bool hasDownload(_i10.Audio? audio) =>
-      (super.noSuchMethod(
-            Invocation.method(#hasDownload, [audio]),
-            returnValue: false,
-          )
-          as bool);
-
-  @override
-  _i4.Command<void, _i22.PodcastDownload?> getCommand(_i10.Audio? audio) =>
-      (super.noSuchMethod(
-            Invocation.method(#getCommand, [audio]),
-            returnValue: _FakeCommand_2<void, _i22.PodcastDownload?>(
-              this,
-              Invocation.method(#getCommand, [audio]),
-            ),
-          )
-          as _i4.Command<void, _i22.PodcastDownload?>);
-
-  @override
-  void cancelDownload(_i10.Audio? audio) => super.noSuchMethod(
-    Invocation.method(#cancelDownload, [audio]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  _i6.Future<String?> download({
-    required _i10.Audio? episode,
-    required _i23.CancelToken? cancelToken,
-    required void Function(int, int)? onProgress,
-  }) =>
-      (super.noSuchMethod(
-            Invocation.method(#download, [], {
-              #episode: episode,
-              #cancelToken: cancelToken,
-              #onProgress: onProgress,
-            }),
-            returnValue: _i6.Future<String?>.value(),
-          )
-          as _i6.Future<String?>);
 
   @override
   _i6.Future<void> dispose() =>

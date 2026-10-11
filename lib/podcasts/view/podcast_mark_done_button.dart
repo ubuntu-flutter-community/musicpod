@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
@@ -8,36 +9,36 @@ import '../../player/manager/player_manager.dart';
 import '../manager/episodes_manager.dart';
 import 'podcast_icon_button_progress.dart';
 
-class PodcastMarkDoneButton extends StatelessWidget with WatchItMixin {
+class PodcastMarkDoneButton extends ConsumerWidget {
   const PodcastMarkDoneButton({super.key, required this.feedUrl});
 
   final String feedUrl;
 
   @override
-  Widget build(BuildContext context) {
-    final podcast = watchValue(
-      (EpisodesManager m) => m.command,
-      param1: feedUrl,
-    )?.episodes;
-    final isToggling = watchValue(
-      (PlayerManager m) => m.toggleAudiosProgressCommand.isRunning,
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final podcast = ref.watch(episodesManagerProvider(feedUrl)).value?.episodes;
 
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        IconButton(
-          tooltip: context.l10n.markAllEpisodesAsDone,
-          onPressed: isToggling
-              ? null
-              : () => di<PlayerManager>().toggleAudiosProgressCommand.run((
-                  audios: podcast ?? [],
-                  markComplete: true,
-                )),
-          icon: Icon(Iconz.markAllRead),
-        ),
-        if (isToggling) const PodcastIconButtonProgress(),
-      ],
+    return ValueListenableBuilder<bool>(
+      valueListenable:
+          di<PlayerManager>().toggleAudiosProgressCommand.isRunning,
+      builder: (context, isToggling, _) {
+        return Stack(
+          alignment: Alignment.center,
+          children: [
+            IconButton(
+              tooltip: context.l10n.markAllEpisodesAsDone,
+              onPressed: isToggling
+                  ? null
+                  : () => di<PlayerManager>().toggleAudiosProgressCommand.run((
+                      audios: podcast ?? [],
+                      markComplete: true,
+                    )),
+              icon: Icon(Iconz.markAllRead),
+            ),
+            if (isToggling) const PodcastIconButtonProgress(),
+          ],
+        );
+      },
     );
   }
 }

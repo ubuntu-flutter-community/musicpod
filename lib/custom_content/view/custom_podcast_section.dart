@@ -4,7 +4,7 @@ import 'package:flutter_it/flutter_it.dart';
 import '../../app/routing_manager.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../podcasts/manager/episodes_manager.dart';
+import '../../podcasts/service/podcast_service.dart';
 import '../../podcasts/view/podcast_page.dart';
 
 class CustomPodcastSection extends StatefulWidget {
@@ -55,13 +55,15 @@ class _CustomPodcastSectionState extends State<CustomPodcastSection> {
                           !_urlController.text.startsWith('http')
                       ? null
                       : () {
-                          di<EpisodesManager>(
-                            param1: _urlController.text,
-                          ).command.runAsync().then((v) {
-                            if (v?.episodes?.isEmpty ??
-                                true && context.mounted) {
+                          di<PodcastService>()
+                              .findEpisodes(
+                                feedUrl: _urlController.text,
+                                tryFromDbOnly: false,
+                              )
+                              .then((episodes) {
+                            if (episodes.isEmpty && context.mounted) {
                               context.toast(Text(context.l10n.noPodcastFound));
-                            } else {
+                            } else if (context.mounted) {
                               di<RoutingManager>().push(
                                 pageId: _urlController.text,
                                 builder: (context) =>

@@ -10,7 +10,7 @@ import '../common/view/audio_page_type.dart';
 import '../extensions/command_x.dart';
 import '../local_audio/service/local_audio_service.dart';
 import '../player/manager/player_manager.dart';
-import '../podcasts/manager/episodes_manager.dart';
+import '../podcasts/service/podcast_service.dart';
 import '../radio/manager/station_manager.dart';
 import '../radio/service/radio_service.dart';
 import 'data/play_anywhere_bad_audios_exception.dart';
@@ -101,10 +101,10 @@ class PlayAnywhereManager {
     ),
     AudioPageType.podcast => PlayAnywhereResult(
       audios:
-          (await di<EpisodesManager>(
-            param1: param.pageId,
-          ).command.runRestrictedAsync())?.episodes ??
-          [],
+          await di<PodcastService>().findEpisodes(
+            feedUrl: param.pageId,
+            tryFromDbOnly: true,
+          ),
       param: param,
     ),
     AudioPageType.artist => PlayAnywhereResult(

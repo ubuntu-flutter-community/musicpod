@@ -23,7 +23,7 @@ class PodcastPageControlPanel extends ConsumerWidget {
 
   final String feedUrl;
 
-  void _onPlayAllPressed(BuildContext context) {
+  void _onPlayAllPressed(BuildContext context, WidgetRef ref) {
     final playerManager = di<PlayerManager>();
     final pageIsQueue = playerManager.queue.name == feedUrl;
 
@@ -32,13 +32,13 @@ class PodcastPageControlPanel extends ConsumerWidget {
       return;
     }
 
-    final episodesManager = di<EpisodesManager>(param1: feedUrl);
-    final allEpisodes = episodesManager.allFilteredEpisodes;
-    final loadedEpisodes = episodesManager.command.value?.episodes ?? [];
+    final episodesState = ref.read(episodesManagerProvider(feedUrl)).value;
+    final allEpisodes = episodesState?.allEpisodes ?? [];
+    final loadedEpisodes = episodesState?.episodes ?? [];
 
     if (allEpisodes.isEmpty) return;
 
-    if (!episodesManager.hasMore ||
+    if (!(episodesState?.hasMore ?? false) ||
         loadedEpisodes.length >= allEpisodes.length) {
       playerManager.play(audios: allEpisodes, listName: feedUrl);
       return;
@@ -93,7 +93,7 @@ class PodcastPageControlPanel extends ConsumerWidget {
           AvatarPlayButton(
             pageId: feedUrl,
             audioPageType: AudioPageType.podcast,
-            onPressed: () => _onPlayAllPressed(context),
+            onPressed: () => _onPlayAllPressed(context, ref),
           ),
           PodcastPageSearchButton(feedUrl: feedUrl),
           PodcastReorderButton(feedUrl: feedUrl),
@@ -108,7 +108,7 @@ class PodcastPageControlPanel extends ConsumerWidget {
   }
 }
 
-class PodcastPageOptionButton extends StatelessWidget with WatchItMixin {
+class PodcastPageOptionButton extends ConsumerWidget {
   const PodcastPageOptionButton({
     super.key,
     required this.feedUrl,
@@ -121,14 +121,11 @@ class PodcastPageOptionButton extends StatelessWidget with WatchItMixin {
   final String? artist;
 
   @override
-  Widget build(BuildContext context) {
-    final episodeResults = watchValue(
-      (EpisodesManager m) => m.command.results,
-      param1: feedUrl,
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final episodeResults = ref.watch(episodesManagerProvider(feedUrl));
     return AudioTileOptionButton(
-      enabled: !episodeResults.isRunning && !episodeResults.hasError,
-      audios: episodeResults.data?.episodes ?? [],
+      enabled: !episodeResults.isLoading && !episodeResults.hasError,
+      audios: episodeResults.value?.episodes ?? [],
       playlistId: feedUrl,
       allowRemove: false,
       searchTerm: title ?? '',

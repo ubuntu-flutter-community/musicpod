@@ -8,10 +8,8 @@ import 'package:musicpod/common/data/audio.dart';
 import 'package:musicpod/common/data/audio_type.dart';
 import 'package:musicpod/l10n/app_localizations.dart';
 import 'package:musicpod/player/manager/player_manager.dart';
-import 'package:musicpod/podcasts/data/podcast_download.dart';
 import 'package:musicpod/podcasts/data/podcast_short_info.dart';
 import 'package:musicpod/podcasts/data/podcast_update_capsule.dart';
-import 'package:musicpod/podcasts/manager/download_manager.dart';
 import 'package:musicpod/podcasts/manager/podcast_updated_feeds_manager.dart';
 import 'package:musicpod/podcasts/manager/podcast_updates_manager.dart';
 import 'package:musicpod/podcasts/service/podcast_service.dart';
@@ -27,7 +25,6 @@ import 'podcast_updates_disposal_test.mocks.dart';
   PlayerManager,
   SettingsManager,
   SettingsService,
-  DownloadManager,
 ])
 void main() {
   const feedUrl = 'https://example.com/podcast.xml';
@@ -50,7 +47,6 @@ void main() {
   late MockPlayerManager mockPlayerManager;
   late MockSettingsManager mockSettingsManager;
   late MockSettingsService mockSettingsService;
-  late MockDownloadManager mockDownloadManager;
 
   setUp(() async {
     await GetIt.I.reset();
@@ -58,7 +54,6 @@ void main() {
     mockPlayerManager = MockPlayerManager();
     mockSettingsManager = MockSettingsManager();
     mockSettingsService = MockSettingsService();
-    mockDownloadManager = MockDownloadManager();
 
     final toggleCmd =
         Command.createAsync<
@@ -73,18 +68,12 @@ void main() {
     when(mockSettingsService.getInt(any)).thenReturn(0);
     when(mockSettingsService.getBool(any)).thenReturn(false);
     when(mockSettingsService.getString(any)).thenReturn(null);
-    when(mockDownloadManager.downloadCommands).thenReturn(MapNotifier());
-    when(mockDownloadManager.hasDownload(any)).thenReturn(false);
-    when(mockDownloadManager.getCommand(any)).thenReturn(
-      Command.createAsyncNoParam<PodcastDownload?>(() async => null, initialValue: null),
-    );
     when(mockPodcastService.getSubscribedPodcasts()).thenAnswer((_) async => {});
 
     GetIt.I.registerSingleton<PodcastService>(mockPodcastService);
     GetIt.I.registerSingleton<PlayerManager>(mockPlayerManager);
     GetIt.I.registerSingleton<SettingsManager>(mockSettingsManager);
     GetIt.I.registerSingleton<SettingsService>(mockSettingsService);
-    GetIt.I.registerSingleton<DownloadManager>(mockDownloadManager);
   });
 
   tearDown(() async {

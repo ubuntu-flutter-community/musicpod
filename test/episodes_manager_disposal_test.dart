@@ -1,211 +1,169 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:musicpod/common/util/family.dart';
-import 'package:musicpod/extensions/command_x.dart';
 import 'package:musicpod/player/manager/player_manager.dart';
-import 'package:musicpod/podcasts/manager/download_manager.dart';
 import 'package:musicpod/podcasts/manager/episodes_manager.dart';
-import 'package:musicpod/podcasts/manager/podcast_manager.dart';
-import 'package:safe_change_notifier/safe_change_notifier.dart';
+import 'package:musicpod/podcasts/service/download_service.dart';
+import 'package:musicpod/podcasts/service/podcast_service.dart';
 
 import 'episodes_manager_disposal_test.mocks.dart';
 
-@GenerateMocks([PodcastManager, PlayerManager, DownloadManager])
-
-class EpisodeWatcherWidget extends WatchingWidget {
+@GenerateMocks([PodcastService, PlayerManager, DownloadService])
+class EpisodeWatcherWidget extends ConsumerWidget {
   const EpisodeWatcherWidget({super.key, required this.feedUrl});
   final String feedUrl;
 
   @override
-  Widget build(BuildContext context) {
-    final data = watchValue((EpisodesManager m) => m.command, param1: feedUrl);
-    return Text('Episodes: ${data?.episodes?.length ?? 0}');
-  }
-}
-
-class EpisodeResultsWatcherWidget extends WatchingWidget {
-  const EpisodeResultsWatcherWidget({super.key, required this.feedUrl});
-  final String feedUrl;
-
-  @override
-  Widget build(BuildContext context) {
-    final results = watchValue(
-      (EpisodesManager m) => m.command.results,
-      param1: feedUrl,
-    );
-    return Text('IsRunning: ${results.isRunning}');
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(episodesManagerProvider(feedUrl)).value;
+    return Text('Episodes: ${state?.episodes.length ?? 0}');
   }
 }
 
 void main() {
   const feedUrl = 'https://example.com/podcast.xml';
 
+  late MockPodcastService mockPodcastService;
+  late MockPlayerManager mockPlayerManager;
+  late MockDownloadService mockDownloadService;
+
   setUp(() async {
-    await Family.reset();
     await GetIt.I.reset();
 
-    final mockPodcastManager = MockPodcastManager();
-    final mockDownloadManager = MockDownloadManager();
-    final mockPlayerManager = MockPlayerManager();
+    mockPodcastService = MockPodcastService();
+    mockPlayerManager = MockPlayerManager();
+    mockDownloadService = MockDownloadService();
 
-    when(mockPodcastManager.updatesOnly).thenReturn(SafeValueNotifier(false));
-    when(mockPodcastManager.downloadsOnly).thenReturn(SafeValueNotifier(false));
-    when(mockPodcastManager.ascendingPodcasts).thenAnswer((_) async => {});
-    when(mockPodcastManager.findEpisodes(
+    when(mockPodcastService.ascendingPodcasts).thenAnswer((_) async => {});
+    when(mockPodcastService.findEpisodes(
       feedUrl: anyNamed('feedUrl'),
       tryFromDbOnly: anyNamed('tryFromDbOnly'),
       order: anyNamed('order'),
     )).thenAnswer((_) async => []);
+    when(mockPodcastService.getDownloadPath(any)).thenReturn(null);
 
     when(mockPlayerManager.lastPositions).thenReturn(null);
 
-    when(mockDownloadManager.downloadCommands).thenReturn(MapNotifier());
-    when(mockDownloadManager.hasDownload(any)).thenReturn(false);
-
-    GetIt.I.registerSingleton<PodcastManager>(mockPodcastManager);
-    GetIt.I.registerSingleton<DownloadManager>(mockDownloadManager);
-    GetIt.I.registerSingleton<PlayerManager>(mockPlayerManager);
-
-    GetIt.I.registerFactoryParam<EpisodesManager, String, void>(
-      (url, _) => EpisodesManager.create(
-        feedUrl: url,
-        podcastManager: mockPodcastManager,
-        downloadsManager: mockDownloadManager,
-        playerManager: mockPlayerManager,
+    when(
+      mockDownloadService.setDownloadsDirectory(
+        getDefault: anyNamed('getDefault'),
       ),
-    );
+    ).thenAnswer((_) async => '/fake/downloads');
+
+    GetIt.I.registerSingleton<PodcastService>(mockPodcastService);
+    GetIt.I.registerSingleton<PlayerManager>(mockPlayerManager);
+    GetIt.I.registerSingleton<DownloadService>(mockDownloadService);
   });
 
   tearDown(() async {
-    await Family.reset();
     await GetIt.I.reset();
   });
 
   testWidgets(
-    'EpisodesManager is created in Family when watched, and removed when widget is disposed',
+    'episodesManagerProvider is created when watched, and auto-disposes when widget unmounts',
     (tester) async {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
       bool showWidget = true;
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: StatefulBuilder(
-            builder: (context, setState) {
-              return Scaffold(
-                body: Column(
-                  children: [
-                    if (showWidget)
-                      const EpisodeWatcherWidget(feedUrl: feedUrl),
-                    ElevatedButton(
-                      onPressed: () => setState(() => showWidget = false),
-                      child: const Text('Close'),
-                    ),
-                  ],
-                ),
-              );
-            },
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            home: StatefulBuilder(
+              builder: (context, setState) {
+                return Scaffold(
+                  body: Column(
+                    children: [
+                      if (showWidget)
+                        const EpisodeWatcherWidget(feedUrl: feedUrl),
+                      ElevatedButton(
+                        onPressed: () => setState(() => showWidget = false),
+                        child: const Text('Close'),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         ),
       );
 
-      // Wait for initial command to finish running
       await tester.pumpAndSettle();
 
-      // 1. EpisodesManager is registered and active in Family
-      expect(Family.isRegistered<EpisodesManager>(feedUrl), isTrue);
-      final manager = Family.get<EpisodesManager>(feedUrl)!;
-      expect(manager.command.listenerCount, greaterThan(0));
-      expect(manager.command.safeToDispose, isFalse);
+      // 1. episodesManagerProvider is active
+      expect(container.exists(episodesManagerProvider(feedUrl)), isTrue);
 
-      // 2. Widget unmounts (e.g. user leaves the podcast page)
+      // 2. Unmount widget
       await tester.tap(find.text('Close'));
-      await tester.pump();
+      await tester.pumpAndSettle();
 
-      // The listener is removed!
-      expect(find.byType(EpisodeWatcherWidget), findsNothing);
-      expect(manager.command.listenerCount, equals(0));
-      expect(manager.command.safeToDispose, isTrue);
-
-      // Still in Family during grace period (5 seconds)
-      expect(Family.isRegistered<EpisodesManager>(feedUrl), isTrue);
-
-      // 3. Fast-forward past the 5-second grace period
-      await tester.pump(const Duration(seconds: 6));
-
-      // 4. VERIFY: EpisodesManager is COMPLETELY REMOVED from Family!
-      expect(Family.isRegistered<EpisodesManager>(feedUrl), isFalse);
-      expect(Family.get<EpisodesManager>(feedUrl), isNull);
+      // 3. Provider auto-disposes
+      expect(container.exists(episodesManagerProvider(feedUrl)), isFalse);
     },
   );
 
   testWidgets(
-    'EpisodesManager stays alive while at least one widget watches it, and disposes after all unmount',
+    'episodesManagerProvider stays active while at least one widget watches it',
     (tester) async {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
       bool showWidgetA = true;
       bool showWidgetB = true;
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: StatefulBuilder(
-            builder: (context, setState) {
-              return Scaffold(
-                body: Column(
-                  children: [
-                    if (showWidgetA)
-                      const EpisodeWatcherWidget(feedUrl: feedUrl),
-                    if (showWidgetB)
-                      const EpisodeWatcherWidget(feedUrl: feedUrl),
-                    ElevatedButton(
-                      onPressed: () => setState(() => showWidgetA = false),
-                      child: const Text('Close A'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () => setState(() => showWidgetB = false),
-                      child: const Text('Close B'),
-                    ),
-                  ],
-                ),
-              );
-            },
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            home: StatefulBuilder(
+              builder: (context, setState) {
+                return Scaffold(
+                  body: Column(
+                    children: [
+                      if (showWidgetA)
+                        const EpisodeWatcherWidget(feedUrl: feedUrl),
+                      if (showWidgetB)
+                        const EpisodeWatcherWidget(feedUrl: feedUrl),
+                      ElevatedButton(
+                        onPressed: () => setState(() => showWidgetA = false),
+                        child: const Text('Close A'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => setState(() => showWidgetB = false),
+                        child: const Text('Close B'),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         ),
       );
 
       await tester.pumpAndSettle();
 
-      expect(Family.isRegistered<EpisodesManager>(feedUrl), isTrue);
-      final manager = Family.get<EpisodesManager>(feedUrl)!;
-      expect(manager.command.listenerCount, equals(2));
+      expect(container.exists(episodesManagerProvider(feedUrl)), isTrue);
 
-      // 1. Close Widget A only (Widget B is still watching)
+      // Close Widget A only
       await tester.tap(find.text('Close A'));
-      await tester.pump();
+      await tester.pumpAndSettle();
 
-      expect(manager.command.listenerCount, equals(1));
-      expect(manager.command.safeToDispose, isFalse);
+      // Still alive because Widget B is watching
+      expect(container.exists(episodesManagerProvider(feedUrl)), isTrue);
 
-      // Fast forward past 5s grace period — must STILL be alive because Widget B is alive
-      await tester.pump(const Duration(seconds: 6));
-      expect(Family.isRegistered<EpisodesManager>(feedUrl), isTrue);
-
-      // 2. Close Widget B (last remaining watcher)
+      // Close Widget B (last remaining watcher)
       await tester.tap(find.text('Close B'));
-      await tester.pump();
+      await tester.pumpAndSettle();
 
-      expect(manager.command.listenerCount, equals(0));
-      expect(manager.command.safeToDispose, isTrue);
-
-      // Still alive during grace period
-      expect(Family.isRegistered<EpisodesManager>(feedUrl), isTrue);
-
-      // Fast forward past 5s grace period
-      await tester.pump(const Duration(seconds: 6));
-
-      // Completely removed and disposed!
-      expect(Family.isRegistered<EpisodesManager>(feedUrl), isFalse);
-      expect(Family.get<EpisodesManager>(feedUrl), isNull);
+      // Auto-disposed!
+      expect(container.exists(episodesManagerProvider(feedUrl)), isFalse);
     },
   );
 }

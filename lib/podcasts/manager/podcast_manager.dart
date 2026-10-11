@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
@@ -10,7 +9,6 @@ import '../../common/view/audio_filter.dart';
 import '../data/podcast_short_info.dart';
 import '../service/podcast_service.dart';
 
-@lazySingleton
 class PodcastManager {
   PodcastManager({required PodcastService podcastService})
     : _podcastService = podcastService;
