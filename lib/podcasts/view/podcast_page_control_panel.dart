@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/audio_tile_option_button.dart';
@@ -17,7 +18,7 @@ import 'podcast_reorder_button.dart';
 import 'podcast_replay_button.dart';
 import 'podcast_sub_button.dart';
 
-class PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
+class PodcastPageControlPanel extends ConsumerWidget {
   const PodcastPageControlPanel({super.key, required this.feedUrl});
 
   final String feedUrl;
@@ -70,11 +71,9 @@ class PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final shortInfo = watchValue(
-      (PodcastShortInfoManager m) => m.command,
-      param1: feedUrl,
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final shortInfo =
+        ref.watch(podcastShortInfoManagerProvider(feedUrl)).value;
 
     final artist = shortInfo?.artist ?? '';
     final title = shortInfo?.name ?? '';

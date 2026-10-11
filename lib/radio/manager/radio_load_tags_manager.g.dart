@@ -34,7 +34,7 @@ final class RadioLoadTagsManagerProvider
 }
 
 String _$radioLoadTagsManagerHash() =>
-    r'be98e8bce59d30e9feb7d251843fef27d3e0d5d5';
+    r'76116c48d7098bfbc604fa1f7ec9693849a820ed';
 
 abstract class _$RadioLoadTagsManager extends $AsyncNotifier<List<Tag>> {
   FutureOr<List<Tag>> build();

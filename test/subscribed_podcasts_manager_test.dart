@@ -1,71 +1,87 @@
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:musicpod/podcasts/data/podcast_toggle_capsule.dart';
-import 'package:musicpod/podcasts/manager/podcast_manager.dart';
 import 'package:musicpod/podcasts/manager/subscribed_podcasts_manager.dart';
+import 'package:musicpod/podcasts/service/podcast_service.dart';
 
 import 'subscribed_podcasts_manager_test.mocks.dart';
 import 'test_audios.dart';
 
-@GenerateMocks([PodcastManager])
-Future<void> main() async {
-  late SubscribedPodcastsManager manager;
-  late MockPodcastManager mockPodcastManager;
+@GenerateMocks([PodcastService])
+void main() {
+  late MockPodcastService mockPodcastService;
 
-  setUpAll(() {
-    Command.globalExceptionHandler = (error, stackTrace) {};
+  setUp(() async {
+    await GetIt.I.reset();
+    mockPodcastService = MockPodcastService();
+    GetIt.I.registerSingleton<PodcastService>(mockPodcastService);
   });
 
-  setUp(() {
-    mockPodcastManager = MockPodcastManager();
-    when(
-      mockPodcastManager.getSubscribedPodcasts(),
-    ).thenAnswer((_) async => {episodeOneAudio.feedUrl!});
-    when(mockPodcastManager.feedsWithDownloads).thenReturn({});
-
-    manager = SubscribedPodcastsManager(podcastManager: mockPodcastManager);
+  tearDown(() async {
+    await GetIt.I.reset();
   });
 
-  group('PodcastManager', () {
-    test('togglePodcastCommand', () async {
-      manager.command.run();
+  group('SubscribedPodcastsManager', () {
+    test('loads subscribed podcasts', () async {
+      when(mockPodcastService.getSubscribedPodcasts())
+          .thenAnswer((_) async => {episodeOneAudio.feedUrl!});
 
-      manager.command.listen((result, sub) {
-        expect(result, isA<Set<String>>());
-        expect(result, contains(episodeOneAudio.feedUrl));
-        sub.cancel();
-      });
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+
+      final result =
+          await container.read(subscribedPodcastsManagerProvider.future);
+      expect(result, contains(episodeOneAudio.feedUrl));
     });
 
-    test('togglePodcastCommand with adding a feed', () async {
+    test('togglePodcastSubscription adds and removes feed', () async {
       const newFeedUrl = 'https://example.com/new_feed.xml';
-      when(
-        mockPodcastManager.getSubscribedPodcasts(),
-      ).thenAnswer((_) async => {episodeOneAudio.feedUrl!, newFeedUrl});
+      final feeds = <String>{episodeOneAudio.feedUrl!};
 
-      manager.command.run(PodcastToggleCapsule(feedUrl: newFeedUrl));
-
-      manager.command.listen((result, sub) {
-        expect(result, isA<Set<String>>());
-        expect(result, contains(episodeOneAudio.feedUrl));
-        expect(result, contains(newFeedUrl));
-        sub.cancel();
+      when(mockPodcastService.getSubscribedPodcasts())
+          .thenAnswer((_) async => Set.from(feeds));
+      when(mockPodcastService.togglePodcastSubscription(feedUrl: newFeedUrl))
+          .thenAnswer((_) async {
+        if (feeds.contains(newFeedUrl)) {
+          feeds.remove(newFeedUrl);
+        } else {
+          feeds.add(newFeedUrl);
+        }
       });
-    });
+      when(mockPodcastService.isPodcastSubscribed(newFeedUrl))
+          .thenAnswer((_) async => feeds.contains(newFeedUrl));
 
-    test('togglePodcastCommand with removing a feed', () async {
-      const newFeedUrl = 'https://example.com/new_feed.xml';
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
 
-      await manager.command.runAsync(PodcastToggleCapsule(feedUrl: newFeedUrl));
-      manager.command.run(PodcastToggleCapsule(feedUrl: newFeedUrl));
+      // Initial read
+      expect(
+        await container.read(subscribedPodcastsManagerProvider.future),
+        contains(episodeOneAudio.feedUrl),
+      );
 
-      manager.command.listen((result, sub) {
-        expect(result, isA<Set<String>>());
-        expect(result, isNot(contains(newFeedUrl)));
-        sub.cancel();
-      });
+      // Add feed
+      await container
+          .read(subscribedPodcastsManagerProvider.notifier)
+          .togglePodcastSubscription(feedUrl: newFeedUrl);
+
+      expect(
+        container.read(subscribedPodcastsManagerProvider).value,
+        contains(newFeedUrl),
+      );
+
+      // Remove feed
+      await container
+          .read(subscribedPodcastsManagerProvider.notifier)
+          .toggleSubscription(PodcastToggleCapsule(feedUrl: newFeedUrl));
+
+      expect(
+        container.read(subscribedPodcastsManagerProvider).value,
+        isNot(contains(newFeedUrl)),
+      );
     });
   });
 }

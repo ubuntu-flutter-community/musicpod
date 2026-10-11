@@ -33,7 +33,7 @@ final class WipeManagerProvider
   WipeManager create() => WipeManager();
 }
 
-String _$wipeManagerHash() => r'85329e6a2178f075e6e56ddd1dae9bab7c1dd75b';
+String _$wipeManagerHash() => r'abb718689a206b6af0acd79cf93f6d61f8eab11c';
 
 abstract class _$WipeManager extends $AsyncNotifier<void> {
   FutureOr<void> build();

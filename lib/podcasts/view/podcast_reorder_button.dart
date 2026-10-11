@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/audio_filter.dart';
 import '../../common/view/icons.dart';
@@ -22,29 +23,34 @@ class PodcastReorderButton extends StatelessWidget with WatchItMixin {
       param1: feedUrl,
     );
 
-    final podcastSubscribed = watchValue(
-      (SubscribedPodcastsManager m) =>
-          m.command.select((v) => v.contains(feedUrl)),
-    );
+    return Consumer(
+      builder: (context, ref, _) {
+        final podcastSubscribed = ref
+                .watch(subscribedPodcastsManagerProvider)
+                .value
+                ?.contains(feedUrl) ??
+            false;
 
-    return IconButton(
-      tooltip: context.l10n.reorder,
-      onPressed: podcastSubscribed
-          ? () => di<EpisodesManager>(param1: feedUrl).command.run((
-              order: ascending
-                  ? AudioSortOrder.descending
-                  : AudioSortOrder.ascending,
-            ))
-          : null,
-      icon: Iconz.ascending == Iconz.materialAscending && ascending
-          ? Transform.flip(
-              flipX: true,
-              child: Transform.rotate(
-                angle: pi,
-                child: Icon(Iconz.materialAscending),
-              ),
-            )
-          : Icon(ascending ? Iconz.ascending : Iconz.descending),
+        return IconButton(
+          tooltip: context.l10n.reorder,
+          onPressed: podcastSubscribed
+              ? () => di<EpisodesManager>(param1: feedUrl).command.run((
+                  order: ascending
+                      ? AudioSortOrder.descending
+                      : AudioSortOrder.ascending,
+                ))
+              : null,
+          icon: Iconz.ascending == Iconz.materialAscending && ascending
+              ? Transform.flip(
+                  flipX: true,
+                  child: Transform.rotate(
+                    angle: pi,
+                    child: Icon(Iconz.materialAscending),
+                  ),
+                )
+              : Icon(ascending ? Iconz.ascending : Iconz.descending),
+        );
+      },
     );
   }
 }

@@ -34,7 +34,7 @@ final class RadioStarStationManagerProvider
 }
 
 String _$radioStarStationManagerHash() =>
-    r'831b923d7e8bc5bbb8aeedf31d183a95d7f18730';
+    r'6de56a28eea131d84006671d634af3bd6907a907';
 
 abstract class _$RadioStarStationManager extends $AsyncNotifier<Set<String>> {
   FutureOr<Set<String>> build();

@@ -10,7 +10,6 @@ import '../../player/manager/player_manager.dart';
 import '../data/podcast_episode_filter.dart';
 import 'download_manager.dart';
 import 'podcast_manager.dart';
-import 'podcast_short_info_manager.dart';
 
 @injectable
 class EpisodesManager {
@@ -119,8 +118,6 @@ class EpisodesManager {
                   return downloadsManager.hasDownload(audio);
                 })
                 .toList();
-
-        di<PodcastShortInfoManager>(param1: feedUrl).command.runRestricted();
 
         _allEpisodes = episodes;
         final currentCount = displayedCount.value.clamp(0, _allEpisodes.length);

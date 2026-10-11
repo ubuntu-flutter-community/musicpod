@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
@@ -36,52 +37,56 @@ class DownloadButton extends StatelessWidget with WatchItMixin {
 
     final hasDownload = result?.path != null;
 
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        IconButton(
-          isSelected: hasDownload,
-          tooltip: hasDownload
-              ? context.l10n.removeDownloadEpisode
-              : context.l10n.downloadEpisode,
-          icon: Icon(
-            hasDownload ? Iconz.downloadFilled : Iconz.download,
-            color: hasDownload ? theme.colorScheme.primary : null,
-          ),
-          onPressed: () {
-            final downloadCommand = di<DownloadManager>().getCommand(audio);
-            if (!di<SubscribedPodcastsManager>().command.value.contains(
-              audio.feedUrl,
-            )) {
-              addPodcast();
-            }
+    return Consumer(
+      builder: (context, ref, _) {
+        final subs =
+            ref.watch(subscribedPodcastsManagerProvider).value ?? <String>{};
+        return Stack(
+          alignment: Alignment.center,
+          children: [
+            IconButton(
+              isSelected: hasDownload,
+              tooltip: hasDownload
+                  ? context.l10n.removeDownloadEpisode
+                  : context.l10n.downloadEpisode,
+              icon: Icon(
+                hasDownload ? Iconz.downloadFilled : Iconz.download,
+                color: hasDownload ? theme.colorScheme.primary : null,
+              ),
+              onPressed: () {
+                final downloadCommand = di<DownloadManager>().getCommand(audio);
+                if (!subs.contains(audio.feedUrl)) {
+                  addPodcast();
+                }
 
-            if (isRunning) {
-              di<DownloadManager>().cancelDownload(audio);
-            } else {
-              downloadCommand.run(audio);
-            }
-          },
-          iconSize: iconSize,
-          color: hasDownload
-              ? theme.contrastyPrimary
-              : theme.colorScheme.onSurface,
-        ),
-        if (isRunning)
-          Positioned.fill(
-            child: IgnorePointer(
-              child: Padding(
-                padding: const EdgeInsets.all(1.5),
-                child: Progress(
-                  adaptive: false,
-                  padding: EdgeInsets.zero,
-                  value: progress == 1.0 ? 0 : progress,
-                  backgroundColor: Colors.transparent,
+                if (isRunning) {
+                  di<DownloadManager>().cancelDownload(audio);
+                } else {
+                  downloadCommand.run(audio);
+                }
+              },
+              iconSize: iconSize,
+              color: hasDownload
+                  ? theme.contrastyPrimary
+                  : theme.colorScheme.onSurface,
+            ),
+            if (isRunning)
+              Positioned.fill(
+                child: IgnorePointer(
+                  child: Padding(
+                    padding: const EdgeInsets.all(1.5),
+                    child: Progress(
+                      adaptive: false,
+                      padding: EdgeInsets.zero,
+                      value: progress == 1.0 ? 0 : progress,
+                      backgroundColor: Colors.transparent,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-      ],
+          ],
+        );
+      },
     );
   }
 }

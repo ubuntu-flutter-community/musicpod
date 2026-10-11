@@ -1,26 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
 import '../manager/podcast_short_info_manager.dart';
 import '../manager/podcast_updated_feeds_manager.dart';
 
-class PodcastPageTitle extends StatelessWidget with WatchItMixin {
+class PodcastPageTitle extends ConsumerWidget {
   const PodcastPageTitle({super.key, required this.feedUrl});
 
   final String feedUrl;
 
   @override
-  Widget build(BuildContext context) {
-    final title = watchValue(
-      (PodcastShortInfoManager m) => m.command,
-      param1: feedUrl,
-    )?.name;
-    final visible = watchValue(
-      (PodcastUpdatedFeedsManager m) =>
-          m.command.select((e) => e.contains(feedUrl)),
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final visible =
+        ref.watch(podcastUpdatedFeedsManagerProvider).value?.contains(feedUrl) ??
+        false;
+    final title =
+        ref.watch(podcastShortInfoManagerProvider(feedUrl)).value?.name;
+
     return Badge(
       backgroundColor: context.theme.colorScheme.primary,
       isLabelVisible: visible,
@@ -33,17 +31,13 @@ class PodcastPageTitle extends StatelessWidget with WatchItMixin {
   }
 }
 
-class PodcastPageSubTitle extends StatelessWidget with WatchItMixin {
+class PodcastPageSubTitle extends ConsumerWidget {
   const PodcastPageSubTitle({super.key, required this.feedUrl});
 
   final String feedUrl;
 
   @override
-  Widget build(BuildContext context) => Text(
-    watchValue(
-          (PodcastShortInfoManager m) => m.command,
-          param1: feedUrl,
-        )?.artist ??
-        '',
+  Widget build(BuildContext context, WidgetRef ref) => Text(
+    ref.watch(podcastShortInfoManagerProvider(feedUrl)).value?.artist ?? '',
   );
 }

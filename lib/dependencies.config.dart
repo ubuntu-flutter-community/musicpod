@@ -46,15 +46,7 @@ import 'player/persistence/player_dao.dart' as _i443;
 import 'player/service/player_service.dart' as _i456;
 import 'podcasts/manager/download_manager.dart' as _i167;
 import 'podcasts/manager/episodes_manager.dart' as _i776;
-import 'podcasts/manager/podcast_clean_manager.dart' as _i599;
-import 'podcasts/manager/podcast_feeds_with_downloads_manager.dart' as _i399;
-import 'podcasts/manager/podcast_genre_manager.dart' as _i990;
-import 'podcasts/manager/podcast_load_genres_manager.dart' as _i141;
 import 'podcasts/manager/podcast_manager.dart' as _i819;
-import 'podcasts/manager/podcast_short_info_manager.dart' as _i212;
-import 'podcasts/manager/podcast_updated_feeds_manager.dart' as _i605;
-import 'podcasts/manager/podcast_updates_manager.dart' as _i851;
-import 'podcasts/manager/subscribed_podcasts_manager.dart' as _i1055;
 import 'podcasts/persistence/podcast_dao.dart' as _i597;
 import 'podcasts/service/download_service.dart' as _i881;
 import 'podcasts/service/podcast_service.dart' as _i529;
@@ -194,12 +186,6 @@ extension GetItInjectableX on _i174.GetIt {
       );
       return i.init().then((_) => i);
     }, preResolve: true);
-    gh.factoryParam<_i990.PodcastGenreManager, String, dynamic>(
-      (feedUrl, _) => _i990.PodcastGenreManager.create(
-        feedUrl: feedUrl,
-        podcastService: gh<_i529.PodcastService>(),
-      ),
-    );
     gh.factory<_i960.ExposeManager>(
       () =>
           _i960.ExposeManager.create(exposeService: gh<_i313.ExposeService>()),
@@ -211,18 +197,16 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioDao: gh<_i688.LocalAudioDao>(),
       ),
     );
-    gh.factory<_i605.PodcastUpdatedFeedsManager>(
-      () => _i605.PodcastUpdatedFeedsManager.create(
-        podcastService: gh<_i529.PodcastService>(),
-      ),
-    );
-    gh.lazySingleton<_i141.PodcastLoadGenresManager>(
-      () => _i141.PodcastLoadGenresManager(
-        podcastService: gh<_i529.PodcastService>(),
-      ),
-    );
     gh.lazySingleton<_i819.PodcastManager>(
       () => _i819.PodcastManager(podcastService: gh<_i529.PodcastService>()),
+    );
+    gh.lazySingleton<_i314.CustomContentService>(
+      () => _i314.CustomContentService(
+        externalPathService: gh<_i415.ExternalPathService>(),
+        localAudioService: gh<_i985.LocalAudioService>(),
+        podcastService: gh<_i529.PodcastService>(),
+        radioService: gh<_i506.RadioService>(),
+      ),
     );
     await gh.factoryAsync<_i739.AudioServiceHandler>(
       () => audioServiceModule.audioServiceHandler(
@@ -244,15 +228,6 @@ extension GetItInjectableX on _i174.GetIt {
         service: gh<_i395.SecureBookmarkService>(),
       ),
     );
-    gh.factoryParam<_i212.PodcastShortInfoManager, String, dynamic>(
-      (feedUrl, _) => _i212.PodcastShortInfoManager.create(
-        feedUrl: feedUrl,
-        podcastManager: gh<_i819.PodcastManager>(),
-      ),
-    );
-    gh.factory<_i599.PodcastCleanManager>(
-      () => _i599.PodcastCleanManager.create(gh<_i529.PodcastService>()),
-    );
     gh.lazySingleton<_i507.MpvMetadataManager>(
       () => _i507.MpvMetadataManager(
         playerService: gh<_i456.PlayerService>(),
@@ -266,6 +241,14 @@ extension GetItInjectableX on _i174.GetIt {
         downloadService: gh<_i881.DownloadService>(),
       ),
       dispose: (i) => i.dispose(),
+    );
+    gh.factory<_i354.SearchManager>(
+      () => _i354.SearchManager.create(
+        radioService: gh<_i506.RadioService>(),
+        podcastService: gh<_i529.PodcastService>(),
+        localAudioService: gh<_i985.LocalAudioService>(),
+        settingsService: gh<_i862.SettingsService>(),
+      ),
     );
     gh.lazySingleton<_i971.RoutingManager>(
       () => _i971.RoutingManager(
@@ -296,13 +279,6 @@ extension GetItInjectableX on _i174.GetIt {
         playerService: gh<_i456.PlayerService>(),
       ),
     );
-    gh.factory<_i354.SearchManager>(
-      () => _i354.SearchManager.create(
-        podcastService: gh<_i529.PodcastService>(),
-        localAudioService: gh<_i985.LocalAudioService>(),
-        settingsService: gh<_i862.SettingsService>(),
-      ),
-    );
     await gh.singletonAsync<_i517.WindowSizeToSettingsListener>(() {
       final i = _i517.WindowSizeToSettingsListener(
         sharedPreferences: gh<_i460.SharedPreferences>(),
@@ -311,22 +287,6 @@ extension GetItInjectableX on _i174.GetIt {
       );
       return i.init().then((_) => i);
     }, preResolve: true);
-    gh.factory<_i851.PodcastUpdatesManager>(
-      () => _i851.PodcastUpdatesManager.create(
-        podcastService: gh<_i529.PodcastService>(),
-        feedsManager: gh<_i605.PodcastUpdatedFeedsManager>(),
-      ),
-    );
-    gh.lazySingleton<_i1055.SubscribedPodcastsManager>(
-      () => _i1055.SubscribedPodcastsManager(
-        podcastManager: gh<_i819.PodcastManager>(),
-      ),
-    );
-    gh.factory<_i399.PodcastFeedsWithDownloadsManager>(
-      () => _i399.PodcastFeedsWithDownloadsManager.create(
-        podcastManager: gh<_i819.PodcastManager>(),
-      ),
-    );
     gh.factory<_i164.PlayAnywhereManager>(
       () => _i164.PlayAnywhereManager.create(
         playerManager: gh<_i95.PlayerManager>(),
@@ -338,14 +298,6 @@ extension GetItInjectableX on _i174.GetIt {
         podcastManager: gh<_i819.PodcastManager>(),
         downloadsManager: gh<_i167.DownloadManager>(),
         playerManager: gh<_i95.PlayerManager>(),
-      ),
-    );
-    gh.lazySingleton<_i314.CustomContentService>(
-      () => _i314.CustomContentService(
-        externalPathService: gh<_i415.ExternalPathService>(),
-        localAudioService: gh<_i985.LocalAudioService>(),
-        podcastService: gh<_i1055.SubscribedPodcastsManager>(),
-        radioService: gh<_i506.RadioService>(),
       ),
     );
     return this;

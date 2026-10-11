@@ -23,7 +23,7 @@ class MobilePage extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    callCommonCommands();
+    callCommonCommands(context);
     registerCommonHandlers(context);
 
     final fullWindowMode = watchValue((AppManager m) => m.fullWindowMode);

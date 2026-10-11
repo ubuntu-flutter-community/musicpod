@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
@@ -14,62 +14,70 @@ import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
+import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
 import '../../search/manager/search_manager.dart';
 import '../../settings/view/settings_action.dart';
 import '../data/podcast_update_capsule.dart';
 import '../manager/podcast_clean_manager.dart';
+import '../manager/podcast_collection_filter_manager.dart';
 import '../manager/podcast_feeds_with_downloads_manager.dart';
-import '../manager/podcast_manager.dart';
 import '../manager/podcast_updates_manager.dart';
 import '../manager/subscribed_podcasts_manager.dart';
 import 'podcast_collection_card.dart';
 import 'podcast_collection_control_panel.dart';
 import 'sliver_podcast_page_list.dart';
 
-class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
+class PodcastsCollectionBody extends ConsumerStatefulWidget {
   const PodcastsCollectionBody({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    callOnceAfterThisBuild((context) {
+  ConsumerState<PodcastsCollectionBody> createState() =>
+      _PodcastsCollectionBodyState();
+}
+
+class _PodcastsCollectionBodyState
+    extends ConsumerState<PodcastsCollectionBody> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       clearInMemoryImageCache();
-      di<PodcastCleanManager>().command.run((reclaimDiskSpace: false));
+      ref
+          .read(podcastCleanManagerProvider.notifier)
+          .clean(reclaimDiskSpace: false);
     });
+  }
 
-    onDispose(PodcastUpdatesManager.dispose);
+  @override
+  Widget build(BuildContext context) {
+    final updatesState = ref.watch(podcastUpdatesManagerProvider);
+    final updates = updatesState.updates;
+    final checkingForUpdates = updatesState.isRunning;
+    final progress = updatesState.progress;
 
-    final subsResults = watchValue(
-      (SubscribedPodcastsManager m) => m.command.results,
-    );
-    final subs = subsResults.data ?? {};
-    final updates = watchValue((PodcastUpdatesManager m) => m.command);
-    final updatesOnly = watchValue((PodcastManager m) => m.updatesOnly);
-    final downloadsOnly = watchValue((PodcastManager m) => m.downloadsOnly);
-
-    final subsLength = subs.length;
-    final feedsWithDownloads = watchValue(
-      (PodcastFeedsWithDownloadsManager m) => m.command,
-    );
-    final feedsWithDownloadLength = feedsWithDownloads.length;
-
-    final checkingForUpdates = watchValue(
-      (PodcastUpdatesManager m) => m.command.isRunning,
-    );
-    final progress = watchValue(
-      (PodcastUpdatesManager m) => m.command.progress,
-    );
-
-    if (subsResults.hasError) {
+    final subsAsync = ref.watch(subscribedPodcastsManagerProvider);
+    if (subsAsync.hasError) {
       return SliverFillRemaining(
         hasScrollBody: false,
         child: ErrorBody(
-          error: subsResults.error!,
-          stackTrace: subsResults.stackTrace,
-          onRetry: () => di<SubscribedPodcastsManager>().command.run(),
+          error: subsAsync.error!,
+          stackTrace: subsAsync.stackTrace,
+          onRetry: () =>
+              ref.read(subscribedPodcastsManagerProvider.notifier).refresh(),
         ),
       );
     }
+
+    final subs = subsAsync.value ?? <String>{};
+    final subsLength = subs.length;
+
+    final updatesOnly = ref.watch(podcastUpdatesOnlyManagerProvider);
+    final downloadsOnly = ref.watch(podcastDownloadsOnlyManagerProvider);
+    final feedsWithDownloads =
+        ref.watch(podcastFeedsWithDownloadsManagerProvider).value ??
+        <String>{};
+    final feedsWithDownloadLength = feedsWithDownloads.length;
 
     final itemCount = updatesOnly
         ? updates.length
@@ -87,14 +95,14 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
             content: Text(
               context.l10n.checkForUpdatesConfirm(subsLength.toString()),
             ),
-            onConfirm: () => di<PodcastUpdatesManager>().command.runAsync(
-              const PodcastUpdateCapsule.updateAll(),
-            ),
+            onConfirm: () => ref
+                .read(podcastUpdatesManagerProvider.notifier)
+                .run(const PodcastUpdateCapsule.updateAll()),
           );
         } else {
-          await di<PodcastUpdatesManager>().command.runAsync(
-            const PodcastUpdateCapsule.updateAll(),
-          );
+          await ref
+              .read(podcastUpdatesManagerProvider.notifier)
+              .run(const PodcastUpdateCapsule.updateAll());
         }
       },
       sliverContentBuilder: (context, constraints) => checkingForUpdates
@@ -145,10 +153,7 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
                 if (downloadsOnly) {
                   feedUrl = subs
                       .where(
-                        (e) => di<PodcastFeedsWithDownloadsManager>()
-                            .command
-                            .value
-                            .contains(e),
+                        (e) => feedsWithDownloads.contains(e),
                       )
                       .elementAtOrNull(index);
                 } else {
@@ -170,24 +175,43 @@ class PodcastsCollectionBody extends StatelessWidget with WatchItMixin {
   }
 }
 
-class SliverNewEpispdesList extends StatelessWidget with WatchItMixin {
+class SliverNewEpispdesList extends ConsumerStatefulWidget {
   const SliverNewEpispdesList({super.key, required this.updates});
 
   final Map<String, Set<Audio>> updates;
 
   @override
-  Widget build(BuildContext context) {
-    onDispose(
-      () => di<PodcastUpdatesManager>().command.run(
+  ConsumerState<SliverNewEpispdesList> createState() =>
+      _SliverNewEpispdesListState();
+}
+
+class _SliverNewEpispdesListState
+    extends ConsumerState<SliverNewEpispdesList> {
+  late final PodcastUpdatesManager _updatesManager;
+
+  @override
+  void initState() {
+    super.initState();
+    _updatesManager = ref.read(podcastUpdatesManagerProvider.notifier);
+  }
+
+  @override
+  void dispose() {
+    Future(() {
+      _updatesManager.run(
         PodcastUpdateCapsule(
-          feedUrls: updates.keys.toList(),
+          feedUrls: widget.updates.keys.toList(),
           type: PodcastUpdateType.remove,
         ),
-      ),
-    );
+      );
+    });
+    super.dispose();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return SliverPodcastPageList(
-      audios: updates.values.expand((e) => e).toList(),
+      audios: widget.updates.values.expand((e) => e).toList(),
       feedUrl: 'newPodcastEpisodes',
       includePodcastImage: true,
     );

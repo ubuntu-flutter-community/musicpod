@@ -74,30 +74,32 @@ class _PodcastSectionState extends State<PodcastSection> {
               ? ListTilePosition.middle
               : ListTilePosition.last,
           title: Text(l10n.usePodcastIndex),
-          trailing: CommonSwitch(
-            value: usePodcastIndex,
-            onChanged: (v) {
-              if (!v) {
-                ConfirmationDialog.show(
-                  modalLevel: ModalLevel.warning,
-                  context: context,
-                  title: Text(l10n.iTunes + '?'),
-                  onConfirm: () async {
-                    di<PodcastManager>().initSearchCommand.run((
-                      searchProvider: const ITunesProvider(),
-                    ));
+          trailing: Consumer(
+            builder: (context, ref, _) => CommonSwitch(
+              value: usePodcastIndex,
+              onChanged: (v) {
+                if (!v) {
+                  ConfirmationDialog.show(
+                    modalLevel: ModalLevel.warning,
+                    context: context,
+                    title: Text(l10n.iTunes + '?'),
+                    onConfirm: () async {
+                      di<PodcastManager>().initSearchCommand.run((
+                        searchProvider: const ITunesProvider(),
+                      ));
 
-                    await model.setUsePodcastIndex(v);
+                      await model.setUsePodcastIndex(v);
 
-                    await di<PodcastLoadGenresManager>().command.runAsync((
-                      force: true,
-                    ));
-                  },
-                );
-              } else {
-                model.setUsePodcastIndex(v);
-              }
-            },
+                      await ref
+                          .read(podcastLoadGenresManagerProvider.notifier)
+                          .loadGenres(force: true);
+                    },
+                  );
+                } else {
+                  model.setUsePodcastIndex(v);
+                }
+              },
+            ),
           ),
         ),
         if (usePodcastIndex) ...[

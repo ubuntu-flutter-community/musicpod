@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:musicpod/common/data/audio.dart';
 import 'package:musicpod/common/data/audio_type.dart';
 import 'package:musicpod/common/util/family.dart';
@@ -11,170 +14,56 @@ import 'package:musicpod/l10n/app_localizations.dart';
 import 'package:musicpod/player/data/queue.dart';
 import 'package:musicpod/player/manager/player_manager.dart';
 import 'package:musicpod/podcasts/data/podcast_short_info.dart';
-import 'package:musicpod/podcasts/data/podcast_toggle_capsule.dart';
 import 'package:musicpod/podcasts/manager/episodes_manager.dart';
-import 'package:musicpod/podcasts/manager/podcast_short_info_manager.dart';
-import 'package:musicpod/podcasts/manager/subscribed_podcasts_manager.dart';
 import 'package:musicpod/podcasts/view/podcast_page_control_panel.dart';
 import 'package:musicpod/settings/manager/settings_manager.dart';
 import 'package:musicpod/settings/service/settings_service.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-class FakePlayerManagerForControlPanel extends SafeChangeNotifier
-    implements PlayerManager {
-  @override
-  Future<void> dispose() async {
-    super.dispose();
-  }
+import 'package:musicpod/podcasts/service/podcast_service.dart';
 
-  @override
-  bool isPlaying = false;
+import 'podcast_page_control_panel_test.mocks.dart';
 
-  @override
-  Queue queue = const Queue.empty();
-
-  List<Audio>? lastPlayedAudios;
-  String? lastPlayedListName;
-
-  @override
-  Future<void> play({
-    required List<Audio> audios,
-    String? listName,
-    int? index,
-  }) async {
-    lastPlayedAudios = audios;
-    lastPlayedListName = listName;
-  }
-
-  bool playOrPauseCalled = false;
-  @override
-  Future<void> playOrPause() async {
-    playOrPauseCalled = true;
-  }
-
-  @override
-  late final Command<
-    ({List<Audio> audios, bool markComplete})?,
-    Map<String, Duration>?
-  >
-  toggleAudiosProgressCommand = Command.createAsync(
-    (_) async => {},
-    initialValue: null,
-  );
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
-}
-
-class FakeEpisodesManagerForControlPanel extends SafeChangeNotifier
-    implements EpisodesManager {
-  FakeEpisodesManagerForControlPanel({
-    required this.loadedEpisodes,
-    required this.allEpisodes,
-    required this.hasMoreEpisodes,
-  }) {
-    command =
-        Command.createSync<
-          ({AudioSortOrder? order})?,
-          ({List<Audio>? episodes, AudioSortOrder? order})?
-        >(
-          (_) => (episodes: loadedEpisodes, order: AudioSortOrder.descending),
-          initialValue: (
-            episodes: loadedEpisodes,
-            order: AudioSortOrder.descending,
-          ),
-        );
-  }
-
-  final List<Audio> loadedEpisodes;
-  final List<Audio> allEpisodes;
-  final bool hasMoreEpisodes;
-
-  @override
-  late final Command<
-    ({AudioSortOrder? order})?,
-    ({List<Audio>? episodes, AudioSortOrder? order})?
-  >
-  command;
-
-  @override
-  bool get hasMore => hasMoreEpisodes;
-
-  @override
-  int get totalCount => allEpisodes.length;
-
-  @override
-  List<Audio> get allFilteredEpisodes => allEpisodes;
-
-  @override
-  final showSearch = SafeValueNotifier(false);
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
-}
-
-class FakeSubscribedPodcastsManagerForControlPanel extends SafeChangeNotifier
-    implements SubscribedPodcastsManager {
-  @override
-  late final Command<PodcastToggleCapsule?, Set<String>> command =
-      Command.createAsync((_) async => <String>{}, initialValue: <String>{});
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
-}
-
-class FakePodcastShortInfoManagerForControlPanel extends SafeChangeNotifier
-    implements PodcastShortInfoManager {
-  @override
-  late final Command<void, PodcastShortInfo?> command =
-      Command.createSyncNoParam(
-        () => const PodcastShortInfo(name: 'Test Podcast', artist: 'Test Host'),
-        initialValue: const PodcastShortInfo(
-          name: 'Test Podcast',
-          artist: 'Test Host',
-        ),
-      );
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
-}
-
-class FakeSettingsManagerForControlPanel extends SafeChangeNotifier
-    implements SettingsManager {
-  @override
-  Future<void> dispose() async {
-    super.dispose();
-  }
-
-  @override
-  bool useYaruTheme = false;
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
-}
-
-class FakeSettingsService implements SettingsService {
-  @override
-  int? getInt(String key) => 0;
-
-  @override
-  bool? getBool(String key) => false;
-
-  @override
-  String? getString(String key) => null;
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
-}
-
+@GenerateMocks([
+  PlayerManager,
+  EpisodesManager,
+  SettingsManager,
+  SettingsService,
+  PodcastService,
+])
 void main() {
   const feedUrl = 'https://example.com/podcast.xml';
 
-  late FakePlayerManagerForControlPanel playerManager;
-  late FakeSettingsManagerForControlPanel settingsManager;
-  late FakeSubscribedPodcastsManagerForControlPanel subscribedManager;
+  late MockPlayerManager mockPlayerManager;
+  late MockSettingsManager mockSettingsManager;
+  late MockSettingsService mockSettingsService;
+  late MockPodcastService mockPodcastService;
   late List<Audio> allEpisodes;
   late List<Audio> loadedEpisodes;
+
+  MockEpisodesManager createMockEpisodesManager({
+    required List<Audio> loadedEpisodes,
+    required List<Audio> allEpisodes,
+    required bool hasMoreEpisodes,
+  }) {
+    final mock = MockEpisodesManager();
+    final cmd = Command.createSync<
+      ({AudioSortOrder? order})?,
+      ({List<Audio>? episodes, AudioSortOrder? order})?
+    >(
+      (_) => (episodes: loadedEpisodes, order: AudioSortOrder.descending),
+      initialValue: (
+        episodes: loadedEpisodes,
+        order: AudioSortOrder.descending,
+      ),
+    );
+    when(mock.command).thenReturn(cmd);
+    when(mock.hasMore).thenReturn(hasMoreEpisodes);
+    when(mock.totalCount).thenReturn(allEpisodes.length);
+    when(mock.allFilteredEpisodes).thenReturn(allEpisodes);
+    when(mock.showSearch).thenReturn(SafeValueNotifier(false));
+    return mock;
+  }
 
   setUp(() async {
     await Family.reset();
@@ -191,17 +80,44 @@ void main() {
     );
     loadedEpisodes = allEpisodes.take(25).toList();
 
-    playerManager = FakePlayerManagerForControlPanel();
-    settingsManager = FakeSettingsManagerForControlPanel();
-    subscribedManager = FakeSubscribedPodcastsManagerForControlPanel();
+    mockPlayerManager = MockPlayerManager();
+    mockSettingsManager = MockSettingsManager();
+    mockSettingsService = MockSettingsService();
+    mockPodcastService = MockPodcastService();
 
-    GetIt.I.registerSingleton<SettingsService>(FakeSettingsService());
-    GetIt.I.registerSingleton<PlayerManager>(playerManager);
-    GetIt.I.registerSingleton<SettingsManager>(settingsManager);
-    GetIt.I.registerSingleton<SubscribedPodcastsManager>(subscribedManager);
-    GetIt.I.registerFactoryParam<PodcastShortInfoManager, String, void>(
-      (url, _) => FakePodcastShortInfoManagerForControlPanel(),
+    final toggleCmd = Command.createAsync<
+      ({List<Audio> audios, bool markComplete})?,
+      Map<String, Duration>?
+    >((_) async => {}, initialValue: null);
+    when(mockPlayerManager.toggleAudiosProgressCommand).thenReturn(toggleCmd);
+    when(mockPlayerManager.isPlaying).thenReturn(false);
+    when(mockPlayerManager.queue).thenReturn(const Queue.empty());
+    when(
+      mockPlayerManager.play(
+        audios: anyNamed('audios'),
+        listName: anyNamed('listName'),
+        index: anyNamed('index'),
+      ),
+    ).thenAnswer((_) async {});
+    when(mockPlayerManager.playOrPause()).thenAnswer((_) async {});
+
+    when(mockSettingsManager.useYaruTheme).thenReturn(false);
+
+    when(mockSettingsService.getInt(any)).thenReturn(0);
+    when(mockSettingsService.getBool(any)).thenReturn(false);
+    when(mockSettingsService.getString(any)).thenReturn(null);
+
+    when(mockPodcastService.getPodcastShortInfo(any)).thenAnswer(
+      (_) async => const PodcastShortInfo(
+        name: 'Test Podcast',
+        artist: 'Test Host',
+      ),
     );
+
+    GetIt.I.registerSingleton<SettingsService>(mockSettingsService);
+    GetIt.I.registerSingleton<PlayerManager>(mockPlayerManager);
+    GetIt.I.registerSingleton<SettingsManager>(mockSettingsManager);
+    GetIt.I.registerSingleton<PodcastService>(mockPodcastService);
   });
 
   tearDown(() async {
@@ -210,22 +126,25 @@ void main() {
   });
 
   Widget buildWidget(String url) {
-    return MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: Scaffold(body: PodcastPageControlPanel(feedUrl: url)),
+    return ProviderScope(
+      child: MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(body: PodcastPageControlPanel(feedUrl: url)),
+      ),
     );
   }
 
   testWidgets('plays all directly when all episodes are already loaded', (
     tester,
   ) async {
+    final mockEpisodesManager = createMockEpisodesManager(
+      loadedEpisodes: allEpisodes,
+      allEpisodes: allEpisodes,
+      hasMoreEpisodes: false,
+    );
     GetIt.I.registerFactoryParam<EpisodesManager, String, void>(
-      (url, _) => FakeEpisodesManagerForControlPanel(
-        loadedEpisodes: allEpisodes,
-        allEpisodes: allEpisodes,
-        hasMoreEpisodes: false,
-      ),
+      (url, _) => mockEpisodesManager,
     );
 
     await tester.pumpWidget(buildWidget(feedUrl));
@@ -240,19 +159,21 @@ void main() {
     // No dialog shown
     expect(find.byType(ConfirmationDialog), findsNothing);
     // Player called with all episodes
-    expect(playerManager.lastPlayedAudios?.length, equals(60));
-    expect(playerManager.lastPlayedListName, equals(feedUrl));
+    verify(
+      mockPlayerManager.play(audios: allEpisodes, listName: feedUrl),
+    ).called(1);
   });
 
   testWidgets(
     'shows confirmation dialog when more episodes exist, and allows playing loaded subset',
     (tester) async {
+      final mockEpisodesManager = createMockEpisodesManager(
+        loadedEpisodes: loadedEpisodes,
+        allEpisodes: allEpisodes,
+        hasMoreEpisodes: true,
+      );
       GetIt.I.registerFactoryParam<EpisodesManager, String, void>(
-        (url, _) => FakeEpisodesManagerForControlPanel(
-          loadedEpisodes: loadedEpisodes,
-          allEpisodes: allEpisodes,
-          hasMoreEpisodes: true,
-        ),
+        (url, _) => mockEpisodesManager,
       );
 
       await tester.pumpWidget(buildWidget(feedUrl));
@@ -276,20 +197,22 @@ void main() {
       expect(find.byType(ConfirmationDialog), findsNothing);
 
       // Only loaded episodes played
-      expect(playerManager.lastPlayedAudios?.length, equals(25));
-      expect(playerManager.lastPlayedListName, equals(feedUrl));
+      verify(
+        mockPlayerManager.play(audios: loadedEpisodes, listName: feedUrl),
+      ).called(1);
     },
   );
 
   testWidgets(
     'shows confirmation dialog when more episodes exist, and allows playing all episodes',
     (tester) async {
+      final mockEpisodesManager = createMockEpisodesManager(
+        loadedEpisodes: loadedEpisodes,
+        allEpisodes: allEpisodes,
+        hasMoreEpisodes: true,
+      );
       GetIt.I.registerFactoryParam<EpisodesManager, String, void>(
-        (url, _) => FakeEpisodesManagerForControlPanel(
-          loadedEpisodes: loadedEpisodes,
-          allEpisodes: allEpisodes,
-          hasMoreEpisodes: true,
-        ),
+        (url, _) => mockEpisodesManager,
       );
 
       await tester.pumpWidget(buildWidget(feedUrl));
@@ -312,22 +235,26 @@ void main() {
       expect(find.byType(ConfirmationDialog), findsNothing);
 
       // All episodes played
-      expect(playerManager.lastPlayedAudios?.length, equals(60));
-      expect(playerManager.lastPlayedListName, equals(feedUrl));
+      verify(
+        mockPlayerManager.play(audios: allEpisodes, listName: feedUrl),
+      ).called(1);
     },
   );
 
   testWidgets(
     'toggles play/pause when page feedUrl is already the active queue',
     (tester) async {
-      playerManager.queue = Queue(name: feedUrl, audios: allEpisodes);
+      when(
+        mockPlayerManager.queue,
+      ).thenReturn(Queue(name: feedUrl, audios: allEpisodes));
 
+      final mockEpisodesManager = createMockEpisodesManager(
+        loadedEpisodes: loadedEpisodes,
+        allEpisodes: allEpisodes,
+        hasMoreEpisodes: true,
+      );
       GetIt.I.registerFactoryParam<EpisodesManager, String, void>(
-        (url, _) => FakeEpisodesManagerForControlPanel(
-          loadedEpisodes: loadedEpisodes,
-          allEpisodes: allEpisodes,
-          hasMoreEpisodes: true,
-        ),
+        (url, _) => mockEpisodesManager,
       );
 
       await tester.pumpWidget(buildWidget(feedUrl));
@@ -337,8 +264,13 @@ void main() {
       await tester.tap(playAllButton);
       await tester.pump();
 
-      expect(playerManager.playOrPauseCalled, isTrue);
-      expect(playerManager.lastPlayedAudios, isNull);
+      verify(mockPlayerManager.playOrPause()).called(1);
+      verifyNever(
+        mockPlayerManager.play(
+          audios: anyNamed('audios'),
+          listName: anyNamed('listName'),
+        ),
+      );
       expect(find.byType(ConfirmationDialog), findsNothing);
     },
   );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
@@ -17,6 +18,7 @@ import '../data/podcast_update_capsule.dart';
 import '../manager/episodes_manager.dart';
 import '../manager/podcast_clean_manager.dart';
 import '../manager/podcast_genre_manager.dart';
+import '../manager/podcast_short_info_manager.dart';
 import '../manager/podcast_updates_manager.dart';
 import '../manager/subscribed_podcasts_manager.dart';
 import 'podcast_error_page.dart';
@@ -48,14 +50,14 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
       },
     );
 
-    callOnceAfterThisBuild((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!context.mounted) return;
+      final container = ProviderScope.containerOf(context, listen: false);
       if (genre != null) {
-        di<PodcastGenreManager>(
-          param1: feedUrl,
-        ).updateCommand.run((genre: genre!));
+        container.read(podcastGenreManagerProvider(feedUrl).notifier).updateGenre(genre!);
       }
 
-      di<PodcastUpdatesManager>().command.run(
+      container.read(podcastUpdatesManagerProvider.notifier).run(
         PodcastUpdateCapsule(
           feedUrls: [feedUrl],
           type: PodcastUpdateType.remove,
@@ -64,7 +66,10 @@ class PodcastPage extends StatelessWidget with WatchItMixin {
     });
 
     onDispose(
-      () => di<PodcastCleanManager>().command.run((reclaimDiskSpace: false)),
+      () => ProviderScope.containerOf(
+        context,
+        listen: false,
+      ).read(podcastCleanManagerProvider.notifier).clean(reclaimDiskSpace: false),
     );
 
     return watchValue(
@@ -117,29 +122,44 @@ class _PodcastPage extends StatelessWidget with WatchItMixin {
           ),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh:
-            di<SubscribedPodcastsManager>().command.value.contains(feedUrl)
-            ? () async => di<PodcastUpdatesManager>().command.runAsync(
-                PodcastUpdateCapsule(
-                  feedUrls: [feedUrl],
-                  type: PodcastUpdateType.update,
-                ),
-              )
-            : () async {},
-        child: AdaptiveMultiLayoutBody(
-          header: PodcastPageHeader(feedUrl: feedUrl),
-          sliverBody: (constraints) => SliverPodcastPageList(feedUrl: feedUrl),
-          controlPanel: PodcastPageControlPanel(feedUrl: feedUrl),
-          secondControlPanel: (showSearch
-              ? PodcastPageSearchField(feedUrl: feedUrl, sliver: false)
-              : null),
-          secondSliverControlPanel: (showSearch
-              ? PodcastPageSearchField(feedUrl: feedUrl, sliver: true)
-              : null),
-        ),
-
-        //
+      body: Consumer(
+        builder: (context, ref, _) {
+          final isSubscribed =
+              ref
+                  .watch(subscribedPodcastsManagerProvider)
+                  .value
+                  ?.contains(feedUrl) ??
+              false;
+          final shortInfo =
+              ref.watch(podcastShortInfoManagerProvider(feedUrl)).value;
+          if (shortInfo == null) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              ref.invalidate(podcastShortInfoManagerProvider(feedUrl));
+            });
+          }
+          return RefreshIndicator(
+            onRefresh: isSubscribed
+                ? () => ref.read(podcastUpdatesManagerProvider.notifier).run(
+                    PodcastUpdateCapsule(
+                      feedUrls: [feedUrl],
+                      type: PodcastUpdateType.update,
+                    ),
+                  )
+                : () async {},
+            child: AdaptiveMultiLayoutBody(
+              header: PodcastPageHeader(feedUrl: feedUrl),
+              sliverBody: (constraints) =>
+                  SliverPodcastPageList(feedUrl: feedUrl),
+              controlPanel: PodcastPageControlPanel(feedUrl: feedUrl),
+              secondControlPanel: (showSearch
+                  ? PodcastPageSearchField(feedUrl: feedUrl, sliver: false)
+                  : null),
+              secondSliverControlPanel: (showSearch
+                  ? PodcastPageSearchField(feedUrl: feedUrl, sliver: true)
+                  : null),
+            ),
+          );
+        },
       ),
     );
   }

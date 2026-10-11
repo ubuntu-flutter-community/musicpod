@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/data/audio.dart';
 import '../../player/manager/player_manager.dart';
-import '../data/podcast_toggle_capsule.dart';
 import '../manager/episodes_manager.dart';
 import '../manager/subscribed_podcasts_manager.dart';
 import 'podcast_audio_tile.dart';
@@ -59,25 +59,29 @@ class SliverPodcastPageList extends StatelessWidget with WatchItMixin {
             return const SizedBox.shrink();
           }
 
-          return PodcastAudioTile(
-            key: ValueKey('${episode.path ?? episode.url}'),
-            audio: episode,
-            addPodcast: () => di<SubscribedPodcastsManager>().command.run(
-              PodcastToggleCapsule(
-                feedUrl: episode.feedUrl!,
-                imageUrl: episode.albumArtUrl ?? episode.imageUrl ?? '',
-                name: episode.podcastTitle ?? '',
-                artist: episode.copyright ?? '',
-              ),
-            ),
-            isExpanded: episode == selectedAudio,
-            selected: episode == selectedAudio,
-            play: () => di<PlayerManager>().play(
-              audios: [episode],
-              listName: feedUrl,
-              index: 0,
-            ),
-            includePodcastImage: includePodcastImage,
+          return Consumer(
+            builder: (context, ref, _) {
+              return PodcastAudioTile(
+                key: ValueKey('${episode.path ?? episode.url}'),
+                audio: episode,
+                addPodcast: () => ref
+                    .read(subscribedPodcastsManagerProvider.notifier)
+                    .togglePodcastSubscription(
+                      feedUrl: episode.feedUrl!,
+                      imageUrl: episode.albumArtUrl ?? episode.imageUrl ?? '',
+                      name: episode.podcastTitle ?? '',
+                      artist: episode.copyright ?? '',
+                    ),
+                isExpanded: episode == selectedAudio,
+                selected: episode == selectedAudio,
+                play: () => di<PlayerManager>().play(
+                  audios: [episode],
+                  listName: feedUrl,
+                  index: 0,
+                ),
+                includePodcastImage: includePodcastImage,
+              );
+            },
           );
         },
       ),

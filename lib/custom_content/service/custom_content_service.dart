@@ -15,10 +15,7 @@ import '../../dependencies.dart';
 import '../../extensions/media_file_x.dart';
 import '../../external_path/service/external_path_service.dart';
 import '../../local_audio/service/local_audio_service.dart';
-import '../../podcasts/data/podcast_toggle_capsule.dart';
-import '../../podcasts/manager/episodes_manager.dart';
-import '../../podcasts/manager/podcast_short_info_manager.dart';
-import '../../podcasts/manager/subscribed_podcasts_manager.dart';
+import '../../podcasts/service/podcast_service.dart';
 import '../../radio/manager/radio_manager.dart';
 import '../../radio/manager/radio_star_station_manager.dart';
 import '../../radio/service/radio_service.dart';
@@ -28,16 +25,16 @@ class CustomContentService {
   CustomContentService({
     required ExternalPathService externalPathService,
     required LocalAudioService localAudioService,
-    required SubscribedPodcastsManager podcastService,
+    required PodcastService podcastService,
     required RadioService radioService,
   }) : _externalPathService = externalPathService,
        _localAudioService = localAudioService,
-       _subscribedPodcastsManager = podcastService,
+       _podcastService = podcastService,
        _radioService = radioService;
 
   final ExternalPathService _externalPathService;
   final LocalAudioService _localAudioService;
-  final SubscribedPodcastsManager _subscribedPodcastsManager;
+  final PodcastService _podcastService;
   final RadioService _radioService;
 
   Future<Map<String, List<Audio>>> loadPlaylistsFromFiles() async {
@@ -149,22 +146,8 @@ class CustomContentService {
 
     if (podcasts.isNotEmpty) {
       for (final podcast in podcasts) {
-        final episodes = (await di<EpisodesManager>(
-          param1: podcast.feedUrl,
-        ).command.runAsync())?.episodes;
-        final shortInfo = await di<PodcastShortInfoManager>(
-          param1: podcast.feedUrl,
-        ).command.runAsync();
-        final artist = shortInfo?.artist;
-        final imageUrl = shortInfo?.imageUrl;
-        final name = episodes?.firstOrNull?.podcastTitle ?? '';
-        await di<SubscribedPodcastsManager>().command.runAsync(
-          PodcastToggleCapsule(
-            feedUrl: podcast.feedUrl,
-            imageUrl: imageUrl,
-            name: name,
-            artist: artist,
-          ),
+        await _podcastService.togglePodcastSubscription(
+          feedUrl: podcast.feedUrl,
         );
       }
     }
@@ -184,10 +167,8 @@ class CustomContentService {
     final body = <OpmlOutline>[];
     final category = OpmlOutlineBuilder();
 
-    for (var feedUrl in (await _subscribedPodcastsManager.command.runAsync())) {
-      final shortInfo = di<PodcastShortInfoManager>(
-        param1: feedUrl,
-      ).command.value;
+    for (var feedUrl in (await _podcastService.getSubscribedPodcasts())) {
+      final shortInfo = await _podcastService.getPodcastShortInfo(feedUrl);
       final name = shortInfo?.name;
       final artist = shortInfo?.artist;
       final builder = OpmlOutlineBuilder().type('rss').xmlUrl(feedUrl);

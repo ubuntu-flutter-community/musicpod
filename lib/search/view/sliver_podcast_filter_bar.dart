@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/common_control_panel.dart';
 import '../../common/view/progress.dart';
@@ -14,19 +15,23 @@ class SliverPodcastFilterBar extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     final podcastGenre = watchValue((SearchManager m) => m.podcastGenre);
 
-    return watchValue(
-      (PodcastLoadGenresManager m) => m.command.results,
-    ).toWidget(
-      whileRunning: (lastResult, param) => const Progress(),
-      onError: (_, lastResult, _) => const SizedBox.shrink(),
-      onData: (result, param) => CommonControlPanel(
-        labels: result.map((e) => Text(e.localize(context.l10n))).toList(),
-        isSelected: result.map((e) => e == podcastGenre).toList(),
-        onSelected: (i) => di<SearchManager>()
-          ..setSearchQuery(null)
-          ..setPodcastGenre(result[i])
-          ..search(clear: true),
-      ),
+    return Consumer(
+      builder: (context, ref, _) {
+        final genresAsync = ref.watch(podcastLoadGenresManagerProvider);
+
+        return genresAsync.when(
+          loading: () => const Progress(),
+          error: (_, __) => const SizedBox.shrink(),
+          data: (result) => CommonControlPanel(
+            labels: result.map((e) => Text(e.localize(context.l10n))).toList(),
+            isSelected: result.map((e) => e == podcastGenre).toList(),
+            onSelected: (i) => di<SearchManager>()
+              ..setSearchQuery(null)
+              ..setPodcastGenre(result[i])
+              ..search(clear: true),
+          ),
+        );
+      },
     );
   }
 }

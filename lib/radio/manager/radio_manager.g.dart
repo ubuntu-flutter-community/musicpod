@@ -33,7 +33,7 @@ final class RadioManagerProvider
   RadioManager create() => RadioManager();
 }
 
-String _$radioManagerHash() => r'12b7f7899cc3e9ebcb9dfbc18098a0de65ca2fd6';
+String _$radioManagerHash() => r'a67f35f144352bf622cc8f0949cd46f90cddd663';
 
 abstract class _$RadioManager extends $AsyncNotifier<String?> {
   FutureOr<String?> build();

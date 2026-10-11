@@ -50,7 +50,7 @@ final class StationManagerProvider
   }
 }
 
-String _$stationManagerHash() => r'daac25cb703b236856d02d8443b6c2c997447f32';
+String _$stationManagerHash() => r'10f23f0c0d36744570b4649954397518f7a9a5d9';
 
 final class StationManagerFamily extends $Family
     with
@@ -140,7 +140,7 @@ final class StationNameManagerProvider
 }
 
 String _$stationNameManagerHash() =>
-    r'e2767bb835a52b1991ee22a875e3137a03230883';
+    r'705ca676bec4800a21d1178ace0ec01337e94bd0';
 
 final class StationNameManagerFamily extends $Family
     with
@@ -230,7 +230,7 @@ final class StationImageManagerProvider
 }
 
 String _$stationImageManagerHash() =>
-    r'5ff613ac3f0db9ef33e3d723907866085697c42a';
+    r'78a129b88feb0a0761ceefd3cd16407957000765';
 
 final class StationImageManagerFamily extends $Family
     with

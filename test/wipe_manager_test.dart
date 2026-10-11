@@ -8,7 +8,6 @@ import 'package:musicpod/local_audio/manager/local_audio_manager.dart';
 import 'package:musicpod/local_audio/manager/pinned_album_ids_manager.dart';
 import 'package:musicpod/local_audio/service/local_audio_service.dart';
 import 'package:musicpod/player/manager/player_manager.dart';
-import 'package:musicpod/podcasts/data/podcast_toggle_capsule.dart';
 import 'package:musicpod/podcasts/manager/subscribed_podcasts_manager.dart';
 import 'package:musicpod/podcasts/service/podcast_service.dart';
 import 'package:musicpod/radio/manager/radio_fav_tag_manager.dart';
@@ -25,7 +24,6 @@ import 'wipe_manager_test.mocks.dart';
   LocalAudioService,
   Database,
   PlayerManager,
-  SubscribedPodcastsManager,
   SettingsManager,
 ])
 void main() {
@@ -34,7 +32,6 @@ void main() {
   late MockLocalAudioService mockLocalAudioService;
   late MockDatabase mockDatabase;
   late MockPlayerManager mockPlayerManager;
-  late MockSubscribedPodcastsManager mockSubscribedPodcastsManager;
   late MockSettingsManager mockSettingsManager;
 
   setUp(() async {
@@ -45,7 +42,6 @@ void main() {
     mockLocalAudioService = MockLocalAudioService();
     mockDatabase = MockDatabase();
     mockPlayerManager = MockPlayerManager();
-    mockSubscribedPodcastsManager = MockSubscribedPodcastsManager();
     mockSettingsManager = MockSettingsManager();
 
     // Default stubbing
@@ -65,12 +61,6 @@ void main() {
     when(mockPlayerManager.clearAllLastPositions()).thenAnswer((_) async {});
     when(mockPlayerManager.resetPlayerState()).thenAnswer((_) async {});
 
-    final subCmd = Command.createAsync<PodcastToggleCapsule?, Set<String>>(
-      (_) async => {},
-      initialValue: {},
-    );
-    when(mockSubscribedPodcastsManager.command).thenReturn(subCmd);
-
     final settingsCmd = Command.createAsyncNoParamNoResult(() async {});
     when(mockSettingsManager.wipeAllSettingsCommand).thenReturn(settingsCmd);
 
@@ -79,9 +69,6 @@ void main() {
     GetIt.I.registerSingleton<LocalAudioService>(mockLocalAudioService);
     GetIt.I.registerSingleton<Database>(mockDatabase);
     GetIt.I.registerSingleton<PlayerManager>(mockPlayerManager);
-    GetIt.I.registerSingleton<SubscribedPodcastsManager>(
-      mockSubscribedPodcastsManager,
-    );
     GetIt.I.registerSingleton<SettingsManager>(mockSettingsManager);
   });
 
@@ -125,6 +112,14 @@ void main() {
     var starStationInvalidated = false;
     var favTagInvalidated = false;
 
+    when(mockRadioService.getStarredStations())
+        .thenAnswer((_) async => <String>{});
+    when(mockRadioService.getFavRadioTags())
+        .thenAnswer((_) async => <String>{});
+
+    await container.read(radioStarStationManagerProvider.future);
+    await container.read(radioFavTagManagerProvider.future);
+
     container.listen(radioStarStationManagerProvider, (_, __) {
       starStationInvalidated = true;
     });
@@ -133,6 +128,7 @@ void main() {
     });
 
     await container.read(wipeManagerProvider.notifier).wipe({WipeType.radio});
+    await pumpEventQueue();
 
     verify(mockRadioService.wipeRadioLibrary()).called(1);
     verify(mockDatabase.reclaimDiskSpace()).called(1);
@@ -140,15 +136,25 @@ void main() {
     expect(favTagInvalidated, isTrue);
   });
 
-  test('wipe({WipeType.podcasts}) wipes podcast library, clears positions, and runs subscribed command', () async {
+  test('wipe({WipeType.podcasts}) wipes podcast library, clears positions, and invalidates subscribed podcasts provider', () async {
     final container = ProviderContainer();
     addTearDown(container.dispose);
 
+    var subscribedInvalidated = false;
+    container.listen(subscribedPodcastsManagerProvider, (_, __) {
+      subscribedInvalidated = true;
+    });
+
+    when(mockPodcastService.getSubscribedPodcasts())
+        .thenAnswer((_) async => {});
+
     await container.read(wipeManagerProvider.notifier).wipe({WipeType.podcasts});
+    await pumpEventQueue();
 
     verify(mockPodcastService.wipeAndBuildPodcastLibrary()).called(1);
     verify(mockPlayerManager.clearAllLastPositions()).called(1);
     verify(mockDatabase.reclaimDiskSpace()).called(1);
+    expect(subscribedInvalidated, isTrue);
   });
 
   test('wipe() with no arguments wipes all types and reclaims disk space', () async {

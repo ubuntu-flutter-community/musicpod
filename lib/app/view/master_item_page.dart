@@ -22,27 +22,25 @@ class MasterItemPage extends StatelessWidget with WatchItMixin {
       (RoutingManager m) => m.selectedPageIdCommand.isRunning,
     );
 
-    final subscribedPodcastIdResults = watchValue(
-      (SubscribedPodcastsManager m) => m.command.results,
-    );
-
     return Consumer(
       builder: (context, ref, _) {
         final playlistIdAsync = ref.watch(playlistIDsManagerProvider);
         final pinnedAlbumIdAsync = ref.watch(pinnedAlbumIDsManagerProvider);
         final starredStationIdAsync = ref.watch(radioStarStationManagerProvider);
+        final subscribedPodcastsAsync =
+            ref.watch(subscribedPodcastsManagerProvider);
 
         final loadingPlaylists = playlistIdAsync.isLoading;
         final loadingAlbums = pinnedAlbumIdAsync.isLoading;
         final loadingStations = starredStationIdAsync.isLoading;
-        final loadingPodcasts = subscribedPodcastIdResults.isRunning;
+        final loadingPodcasts = subscribedPodcastsAsync.isLoading;
 
         final masterItems = getAllMasterItems(
           playlistIDs: playlistIdAsync.value ?? [],
           pinnedAlbumIDs: pinnedAlbumIdAsync.value ?? [],
           starredStationIDs: starredStationIdAsync.value ?? {},
           subscribedPodcastFeedUrls:
-              subscribedPodcastIdResults.data?.toList() ?? [],
+              subscribedPodcastsAsync.value?.toList() ?? [],
         );
         final item = masterItems.firstWhereOrNull((e) => e.pageId == pageId);
         if (item != null && !routingManagerInitializing)

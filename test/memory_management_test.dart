@@ -13,11 +13,9 @@ import 'package:musicpod/local_audio/manager/local_audio_manager.dart';
 import 'package:musicpod/local_audio/service/local_audio_service.dart';
 import 'package:musicpod/player/manager/player_manager.dart';
 import 'package:musicpod/podcasts/data/podcast_download.dart';
-import 'package:musicpod/podcasts/data/podcast_short_info.dart';
 import 'package:musicpod/podcasts/manager/download_manager.dart';
 import 'package:musicpod/podcasts/manager/episodes_manager.dart';
 import 'package:musicpod/podcasts/manager/podcast_manager.dart';
-import 'package:musicpod/podcasts/manager/podcast_short_info_manager.dart';
 import 'package:musicpod/podcasts/service/download_service.dart';
 import 'package:musicpod/podcasts/service/podcast_service.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
@@ -96,13 +94,6 @@ class FakeDownloadManagerForEpisodes extends Fake implements DownloadManager {
 
   @override
   bool hasDownload(Audio audio) => false;
-}
-
-class FakePodcastShortInfoManagerForEpisodes extends Fake
-    implements PodcastShortInfoManager {
-  @override
-  late final Command<void, PodcastShortInfo?> command =
-      Command.createSyncNoParam(() => null, initialValue: null);
 }
 
 void main() {
@@ -329,10 +320,6 @@ void main() {
     late List<Audio> mockEpisodes;
 
     setUp(() {
-      GetIt.I.registerFactoryParam<PodcastShortInfoManager, String, void>(
-        (url, _) => FakePodcastShortInfoManagerForEpisodes(),
-      );
-
       mockEpisodes = List.generate(
         60,
         (i) => Audio(

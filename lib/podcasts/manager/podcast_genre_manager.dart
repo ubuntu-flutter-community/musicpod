@@ -1,48 +1,23 @@
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../common/util/family.dart';
-import '../../extensions/command_x.dart';
+import '../../dependencies.dart';
 import '../service/podcast_service.dart';
 
-@injectable
-class PodcastGenreManager {
-  PodcastGenreManager._({
-    required String feedUrl,
-    required PodcastService podcastService,
-  }) {
-    findCommand = Command.createAsyncNoParam(
-      () => podcastService.findPodcastGenre(feedUrl),
-      initialValue: null,
-    );
+part 'podcast_genre_manager.g.dart';
 
-    updateCommand = Command.createAsyncNoResult(
-      (param) => podcastService.addPodcastGenre(
-        feedUrl: feedUrl,
-        genreName: param.genre,
-      ),
-    );
+@riverpod
+class PodcastGenreManager extends _$PodcastGenreManager {
+  late final PodcastService _podcastService = di<PodcastService>();
 
-    findCommand.run();
+  @override
+  Future<String?> build(String feedUrl) =>
+      _podcastService.findPodcastGenre(feedUrl);
+
+  Future<void> updateGenre(String genre) async {
+    await _podcastService.addPodcastGenre(
+      feedUrl: feedUrl,
+      genreName: genre,
+    );
+    state = AsyncData(genre);
   }
-
-  @factoryMethod
-  static PodcastGenreManager create({
-    @factoryParam required String feedUrl,
-    required PodcastService podcastService,
-  }) => Family.of(
-    feedUrl,
-    () =>
-        PodcastGenreManager._(feedUrl: feedUrl, podcastService: podcastService),
-    shouldDispose: (m) =>
-        m.findCommand.safeToDispose && m.updateCommand.safeToDispose,
-    onDispose: (m) {
-      m.findCommand.dispose();
-      m.updateCommand.dispose();
-    },
-  );
-
-  late final Command<void, String?> findCommand;
-
-  late final Command<({String genre}), void> updateCommand;
 }

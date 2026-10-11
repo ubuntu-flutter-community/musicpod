@@ -6,11 +6,9 @@ import 'package:podcast_search/podcast_search.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../common/data/audio.dart';
-import '../../common/util/family.dart';
 import '../../common/view/audio_filter.dart';
 import '../data/podcast_short_info.dart';
 import '../service/podcast_service.dart';
-import 'podcast_load_genres_manager.dart';
 
 @lazySingleton
 class PodcastManager {
@@ -22,7 +20,7 @@ class PodcastManager {
   late final Command<({SearchProvider searchProvider}), void>
   initSearchCommand = Command.createSyncNoResult((param) async {
     _podcastService.initSearchProvider(param.searchProvider);
-    await di<PodcastLoadGenresManager>().command.runAsync((force: true));
+    await _podcastService.loadGenres(force: true);
   });
 
   final updatesOnly = SafeValueNotifier<bool>(false);
@@ -41,17 +39,6 @@ class PodcastManager {
 
   Future<void> updateAudioDuration(Audio audio) =>
       _podcastService.updateAudioDuration(audio);
-
-  Future<void> togglePodcastSubscription({required String feedUrl}) async {
-    await _podcastService.togglePodcastSubscription(feedUrl: feedUrl);
-    final isSubscribed = await _podcastService.isPodcastSubscribed(feedUrl);
-    if (!isSubscribed) {
-      Family.disposeById(feedUrl);
-    }
-  }
-
-  Future<Set<String>> getSubscribedPodcasts() =>
-      _podcastService.getSubscribedPodcasts();
 
   Future<void> loadDownloads() => _podcastService.loadDownloads();
 

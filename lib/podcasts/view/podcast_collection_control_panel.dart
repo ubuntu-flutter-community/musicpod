@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/common_control_panel.dart';
 import '../../common/view/confirm.dart';
+import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
 import '../data/podcast_update_capsule.dart';
+import '../manager/podcast_collection_filter_manager.dart';
 import '../manager/podcast_manager.dart';
 import '../manager/podcast_updates_manager.dart';
 import '../manager/subscribed_podcasts_manager.dart';
 
-class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
+class PodcastCollectionControlPanel extends ConsumerWidget {
   const PodcastCollectionControlPanel({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final manager = di<PodcastManager>();
-
-    final updatesOnly = watchValue((PodcastManager m) => m.updatesOnly);
-    final downloadsOnly = watchValue((PodcastManager m) => m.downloadsOnly);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isRunning = ref.watch(
+      podcastUpdatesManagerProvider.select((s) => s.isRunning),
+    );
+    final updatesOnly = ref.watch(podcastUpdatesOnlyManagerProvider);
+    final downloadsOnly = ref.watch(podcastDownloadsOnlyManagerProvider);
 
     return CommonControlPanel(
       labels: [
@@ -25,15 +28,22 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
         Text(context.l10n.downloadsOnly),
       ],
       isSelected: [updatesOnly, downloadsOnly],
-      onSelected: watchValue((PodcastUpdatesManager m) => m.command.isRunning)
+      onSelected: isRunning
           ? null
           : (index) {
               if (index == 0) {
                 if (updatesOnly) {
-                  manager.setUpdatesOnly(false);
+                  ref
+                      .read(podcastUpdatesOnlyManagerProvider.notifier)
+                      .setUpdatesOnly(false);
+                  di<PodcastManager>().setUpdatesOnly(false);
                 } else {
                   final subLength =
-                      di<SubscribedPodcastsManager>().command.value.length;
+                      ref
+                          .read(subscribedPodcastsManagerProvider)
+                          .value
+                          ?.length ??
+                      0;
                   if (subLength > 10) {
                     ConfirmationDialog.show(
                       context: context,
@@ -44,23 +54,39 @@ class PodcastCollectionControlPanel extends StatelessWidget with WatchItMixin {
                           subLength.toString(),
                         ),
                       ),
-                      onConfirm: () => di<PodcastUpdatesManager>().command
-                          .runAsync(const PodcastUpdateCapsule.updateAll()),
+                      onConfirm: () => ref
+                          .read(podcastUpdatesManagerProvider.notifier)
+                          .run(const PodcastUpdateCapsule.updateAll()),
                     );
                   } else {
-                    di<PodcastUpdatesManager>().command.run(
-                      const PodcastUpdateCapsule.updateAll(),
-                    );
+                    ref
+                        .read(podcastUpdatesManagerProvider.notifier)
+                        .run(const PodcastUpdateCapsule.updateAll());
                   }
-                  manager.setUpdatesOnly(true);
-                  manager.setDownloadsOnly(false);
+                  ref
+                      .read(podcastUpdatesOnlyManagerProvider.notifier)
+                      .setUpdatesOnly(true);
+                  ref
+                      .read(podcastDownloadsOnlyManagerProvider.notifier)
+                      .setDownloadsOnly(false);
+                  di<PodcastManager>().setUpdatesOnly(true);
+                  di<PodcastManager>().setDownloadsOnly(false);
                 }
               } else {
                 if (downloadsOnly) {
-                  manager.setDownloadsOnly(false);
+                  ref
+                      .read(podcastDownloadsOnlyManagerProvider.notifier)
+                      .setDownloadsOnly(false);
+                  di<PodcastManager>().setDownloadsOnly(false);
                 } else {
-                  manager.setDownloadsOnly(true);
-                  manager.setUpdatesOnly(false);
+                  ref
+                      .read(podcastDownloadsOnlyManagerProvider.notifier)
+                      .setDownloadsOnly(true);
+                  ref
+                      .read(podcastUpdatesOnlyManagerProvider.notifier)
+                      .setUpdatesOnly(false);
+                  di<PodcastManager>().setDownloadsOnly(true);
+                  di<PodcastManager>().setUpdatesOnly(false);
                 }
               }
             },

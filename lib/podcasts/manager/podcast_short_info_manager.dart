@@ -1,39 +1,23 @@
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../common/util/family.dart';
-import '../../extensions/command_x.dart';
+import '../../dependencies.dart';
 import '../data/podcast_short_info.dart';
-import 'podcast_manager.dart';
+import '../service/podcast_service.dart';
 
-@injectable
-class PodcastShortInfoManager {
-  PodcastShortInfoManager._({
-    required String feedUrl,
-    required PodcastManager podcastManager,
-  }) {
-    command = Command.createAsyncNoParam(
-      () => podcastManager.getPodcastShortInfo(feedUrl),
-      initialValue: null,
-    );
+part 'podcast_short_info_manager.g.dart';
 
-    command.run();
+@riverpod
+class PodcastShortInfoManager extends _$PodcastShortInfoManager {
+  @override
+  Future<PodcastShortInfo?> build(String feedUrl) =>
+      di<PodcastService>().getPodcastShortInfo(feedUrl);
+
+  Future<void> reload() async {
+    state = const AsyncLoading();
+    state = AsyncData(await di<PodcastService>().getPodcastShortInfo(feedUrl));
   }
 
-  @factoryMethod
-  static PodcastShortInfoManager create({
-    @factoryParam required String feedUrl,
-    required PodcastManager podcastManager,
-  }) => Family.of(
-    feedUrl,
-    () => PodcastShortInfoManager._(
-      feedUrl: feedUrl,
-      podcastManager: podcastManager,
-    ),
-    autoDisposeAfter: const Duration(minutes: 5),
-    shouldDispose: (t) => t.command.safeToDispose,
-    onDispose: (t) => t.command.dispose(),
-  );
-
-  late final Command<void, PodcastShortInfo?> command;
+  void setShortInfo(PodcastShortInfo info) {
+    state = AsyncData(info);
+  }
 }

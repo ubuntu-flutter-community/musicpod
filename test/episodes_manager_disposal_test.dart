@@ -1,55 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:musicpod/common/data/audio.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:musicpod/common/util/family.dart';
-import 'package:musicpod/common/view/audio_filter.dart';
 import 'package:musicpod/extensions/command_x.dart';
 import 'package:musicpod/player/manager/player_manager.dart';
-import 'package:musicpod/podcasts/data/podcast_download.dart';
-import 'package:musicpod/podcasts/data/podcast_short_info.dart';
 import 'package:musicpod/podcasts/manager/download_manager.dart';
 import 'package:musicpod/podcasts/manager/episodes_manager.dart';
 import 'package:musicpod/podcasts/manager/podcast_manager.dart';
-import 'package:musicpod/podcasts/manager/podcast_short_info_manager.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-class FakePodcastManagerForEpisodes extends Fake implements PodcastManager {
-  final updatesOnly = SafeValueNotifier<bool>(false);
-  final downloadsOnly = SafeValueNotifier<bool>(false);
-  List<Audio> episodesToReturn = [];
+import 'episodes_manager_disposal_test.mocks.dart';
 
-  @override
-  Future<Set<String>> get ascendingPodcasts async => {};
-
-  @override
-  Future<List<Audio>> findEpisodes({
-    required String feedUrl,
-    required bool tryFromDbOnly,
-    AudioSortOrder? order,
-  }) async => List.from(episodesToReturn);
-}
-
-class FakePlayerManagerForEpisodes extends Fake implements PlayerManager {
-  @override
-  Map<String, Duration>? lastPositions;
-}
-
-class FakeDownloadManagerForEpisodes extends Fake implements DownloadManager {
-  @override
-  final downloadCommands =
-      MapNotifier<Audio, Command<void, PodcastDownload?>>();
-
-  @override
-  bool hasDownload(Audio audio) => false;
-}
-
-class FakePodcastShortInfoManagerForEpisodes extends Fake
-    implements PodcastShortInfoManager {
-  @override
-  late final Command<void, PodcastShortInfo?> command =
-      Command.createSyncNoParam(() => null, initialValue: null);
-}
+@GenerateMocks([PodcastManager, PlayerManager, DownloadManager])
 
 class EpisodeWatcherWidget extends WatchingWidget {
   const EpisodeWatcherWidget({super.key, required this.feedUrl});
@@ -83,24 +47,34 @@ void main() {
     await Family.reset();
     await GetIt.I.reset();
 
-    final fakePodcastManager = FakePodcastManagerForEpisodes();
-    final fakeDownloadManager = FakeDownloadManagerForEpisodes();
-    final fakePlayerManager = FakePlayerManagerForEpisodes();
+    final mockPodcastManager = MockPodcastManager();
+    final mockDownloadManager = MockDownloadManager();
+    final mockPlayerManager = MockPlayerManager();
 
-    GetIt.I.registerSingleton<PodcastManager>(fakePodcastManager);
-    GetIt.I.registerSingleton<DownloadManager>(fakeDownloadManager);
-    GetIt.I.registerSingleton<PlayerManager>(fakePlayerManager);
+    when(mockPodcastManager.updatesOnly).thenReturn(SafeValueNotifier(false));
+    when(mockPodcastManager.downloadsOnly).thenReturn(SafeValueNotifier(false));
+    when(mockPodcastManager.ascendingPodcasts).thenAnswer((_) async => {});
+    when(mockPodcastManager.findEpisodes(
+      feedUrl: anyNamed('feedUrl'),
+      tryFromDbOnly: anyNamed('tryFromDbOnly'),
+      order: anyNamed('order'),
+    )).thenAnswer((_) async => []);
 
-    GetIt.I.registerFactoryParam<PodcastShortInfoManager, String, void>(
-      (url, _) => FakePodcastShortInfoManagerForEpisodes(),
-    );
+    when(mockPlayerManager.lastPositions).thenReturn(null);
+
+    when(mockDownloadManager.downloadCommands).thenReturn(MapNotifier());
+    when(mockDownloadManager.hasDownload(any)).thenReturn(false);
+
+    GetIt.I.registerSingleton<PodcastManager>(mockPodcastManager);
+    GetIt.I.registerSingleton<DownloadManager>(mockDownloadManager);
+    GetIt.I.registerSingleton<PlayerManager>(mockPlayerManager);
 
     GetIt.I.registerFactoryParam<EpisodesManager, String, void>(
       (url, _) => EpisodesManager.create(
         feedUrl: url,
-        podcastManager: fakePodcastManager,
-        downloadsManager: fakeDownloadManager,
-        playerManager: fakePlayerManager,
+        podcastManager: mockPodcastManager,
+        downloadsManager: mockDownloadManager,
+        playerManager: mockPlayerManager,
       ),
     );
   });

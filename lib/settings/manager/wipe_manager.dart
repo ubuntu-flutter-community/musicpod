@@ -41,7 +41,7 @@ class WipeManager extends _$WipeManager {
       if (wipeTypes.contains(WipeType.podcasts)) {
         await di<PodcastService>().wipeAndBuildPodcastLibrary();
         await di<PlayerManager>().clearAllLastPositions();
-        await di<SubscribedPodcastsManager>().command.runAsync();
+        ref.invalidate(subscribedPodcastsManagerProvider);
       }
 
       if (wipeTypes.contains(WipeType.radio)) {

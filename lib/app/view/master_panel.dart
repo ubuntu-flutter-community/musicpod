@@ -112,17 +112,22 @@ class PodcastList extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final subs = watchValue((SubscribedPodcastsManager m) => m.command);
-    final masterItems = createPodcastMasterItems(subs.toList());
     final selectedPageId = watchValue(
       (RoutingManager m) => m.selectedPageIdCommand,
     );
-    return SliverList.builder(
-      itemCount: masterItems.length,
-      itemBuilder: (context, index) => MasterTile(
-        item: masterItems.elementAt(index),
-        selectedPageId: selectedPageId,
-      ),
+    return Consumer(
+      builder: (context, ref, _) {
+        final subs =
+            ref.watch(subscribedPodcastsManagerProvider).value ?? <String>{};
+        final masterItems = createPodcastMasterItems(subs.toList());
+        return SliverList.builder(
+          itemCount: masterItems.length,
+          itemBuilder: (context, index) => MasterTile(
+            item: masterItems.elementAt(index),
+            selectedPageId: selectedPageId,
+          ),
+        );
+      },
     );
   }
 }

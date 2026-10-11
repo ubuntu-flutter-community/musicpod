@@ -19,21 +19,21 @@ import '../../local_audio/service/local_audio_service.dart';
 import '../../podcasts/data/podcast_genre.dart';
 import '../../podcasts/service/podcast_service.dart';
 import '../../common/util/family.dart';
-import '../../radio/manager/radio_manager.dart';
+import '../../radio/service/radio_service.dart';
 import '../../settings/service/settings_service.dart';
 import '../../settings/data/shared_preferences_keys.dart';
 import '../data/search_timeout_exception.dart';
 import '../data/search_type.dart';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 @injectable
 class SearchManager {
   SearchManager._({
+    required RadioService radioService,
     required PodcastService podcastService,
     required LocalAudioService localAudioService,
     required SettingsService settingsService,
-  }) : _settingsService = settingsService,
+  }) : _radioService = radioService,
+       _settingsService = settingsService,
        _podcastService = podcastService,
        _localAudioService = localAudioService {
     Logger.o(tag: '$SearchManager');
@@ -71,12 +71,14 @@ class SearchManager {
 
   @factoryMethod
   static SearchManager create({
+    required RadioService radioService,
     required PodcastService podcastService,
     required LocalAudioService localAudioService,
     required SettingsService settingsService,
   }) => Family.of(
     '$SearchManager',
     () => SearchManager._(
+      radioService: radioService,
       podcastService: podcastService,
       localAudioService: localAudioService,
       settingsService: settingsService,
@@ -92,8 +94,7 @@ class SearchManager {
     },
   );
 
-  RadioManager get _radioManager =>
-      di<ProviderContainer>().read(radioManagerProvider.notifier);
+  final RadioService _radioService;
   final PodcastService _podcastService;
   final LocalAudioService _localAudioService;
   final SettingsService _settingsService;
@@ -199,7 +200,7 @@ class SearchManager {
 
     return (switch (searchType.value) {
       SearchType.radioName =>
-        _radioManager
+        _radioService
             .search(name: searchQuery.value, limit: _radioLimit)
             .then(
               (v) => _setRadioSearchResult(
@@ -209,18 +210,18 @@ class SearchManager {
               ),
             ),
       SearchType.radioTag =>
-        _radioManager
+        _radioService
             .search(tag: tag.value?.name, limit: _radioLimit)
             .then((v) => _setRadioSearchResult(v)),
       SearchType.radioCountry =>
-        _radioManager
+        _radioService
             .search(
               country: country.value?.name.camelToSentence,
               limit: _radioLimit,
             )
             .then((v) => _setRadioSearchResult(v)),
       SearchType.radioLanguage =>
-        _radioManager
+        _radioService
             .search(
               language: language.value?.name.toLowerCase(),
               limit: _radioLimit,
@@ -280,5 +281,5 @@ class SearchManager {
   }
 
   Future<List<Audio>?> radioNameSearch(String? searchQuery) async =>
-      _radioManager.search(name: searchQuery, limit: _radioLimit);
+      _radioService.search(name: searchQuery, limit: _radioLimit);
 }

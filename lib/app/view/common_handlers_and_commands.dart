@@ -20,15 +20,17 @@ import '../../podcasts/data/podcast_update_capsule.dart';
 import '../../podcasts/manager/download_manager.dart';
 import '../../external_path/manager/secure_bookmark_manager.dart';
 import '../../podcasts/manager/podcast_clean_manager.dart';
-import '../../podcasts/manager/podcast_short_info_manager.dart';
+import '../../podcasts/service/podcast_service.dart';
 import '../../podcasts/manager/podcast_updates_manager.dart';
 import '../../radio/manager/click_station_manager.dart';
 import '../app_manager.dart';
 import '../play_anywhere_manager.dart';
 
 mixin CommonHandlersAndCommandsMixin {
-  void callCommonCommands() => callOnceAfterThisBuild((_) {
-    di<PodcastCleanManager>().command.run((reclaimDiskSpace: true));
+  void callCommonCommands(BuildContext context) => callOnceAfterThisBuild((_) {
+    ProviderScope.containerOf(context, listen: false)
+        .read(podcastCleanManagerProvider.notifier)
+        .clean(reclaimDiskSpace: true);
     di<AppManager>().recentPatchNotesDisposedCommand.run();
     di<AppManager>().specialNotesDisposedCommand.run();
     di<SecureBookmarkManager>().command.run();
@@ -56,39 +58,36 @@ mixin CommonHandlersAndCommandsMixin {
       },
     );
 
-    registerHandler(
-      select: (PodcastUpdatesManager m) => m.command.results,
-      handler: (context, res, cancel) {
-        if (res.isRunning) {
-          return;
-        } else if (res.hasError) {
-          context.toast(Text(res.error.toString()));
-        } else if (res.paramData?.type == PodcastUpdateType.remove) {
-          return;
-        } else if (res.hasData) {
-          final feedsWithUpdates = res.data ?? {};
-          if (feedsWithUpdates.isEmpty) {
-          } else {
-            if (feedsWithUpdates.length == 1) {
-              di<PodcastShortInfoManager>(
-                param1: feedsWithUpdates.entries.first.key,
-              ).command.runAsync().then(
-                (info) => di<NotificationsService>().notify(
-                  message: feedsWithUpdates.length == 1
-                      ? '${context.l10n.newEpisodeAvailable} ${info?.name ?? ''}'
-                      : '${context.l10n.newEpisodesAvailableFor(feedsWithUpdates.length)}',
-                ),
-              );
-            } else {
-              di<NotificationsService>().notify(
+    final container = ProviderScope.containerOf(context, listen: false);
+
+    container.listen<PodcastUpdatesState>(podcastUpdatesManagerProvider, (prev, res) {
+      if (res.isRunning) {
+        return;
+      } else if (res.error != null) {
+        context.toast(Text(res.error.toString()));
+      } else if (res.lastCapsule?.type == PodcastUpdateType.remove) {
+        return;
+      } else {
+        final feedsWithUpdates = res.updates;
+        if (feedsWithUpdates.isNotEmpty) {
+          if (feedsWithUpdates.length == 1) {
+            di<PodcastService>()
+                .getPodcastShortInfo(feedsWithUpdates.entries.first.key)
+                .then(
+              (info) => di<NotificationsService>().notify(
                 message:
-                    '${context.l10n.newEpisodesAvailableFor(feedsWithUpdates.length)}',
-              );
-            }
+                    '${context.l10n.newEpisodeAvailable} ${info?.name ?? ''}',
+              ),
+            );
+          } else {
+            di<NotificationsService>().notify(
+              message:
+                  context.l10n.newEpisodesAvailableFor(feedsWithUpdates.length),
+            );
           }
         }
-      },
-    );
+      }
+    });
 
     registerStreamHandler(
       select: (PlayerManager m) => m.messageStream,
@@ -152,39 +151,36 @@ mixin CommonHandlersAndCommandsMixin {
       },
     );
 
-    registerHandler(
-      select: (PodcastCleanManager m) => m.command.results,
-      handler: (context, results, cancel) {
-        if (results.isRunning) return;
-        if (results.hasError) {
-          context.toast(
-            Text(results.error.toString()),
-            duration: const Duration(seconds: 15),
-            showCloseIcon: true,
-            action: SnackBarAction(
-              label: '📋',
-              onPressed: () => Clipboard.setData(
-                ClipboardData(text: results.error.toString()),
-              ),
+    container.listen<AsyncValue<Set<String>?>>(podcastCleanManagerProvider, (prev, results) {
+      if (results.isLoading) return;
+      if (results.hasError) {
+        context.toast(
+          Text(results.error.toString()),
+          duration: const Duration(seconds: 15),
+          showCloseIcon: true,
+          action: SnackBarAction(
+            label: '📋',
+            onPressed: () => Clipboard.setData(
+              ClipboardData(text: results.error.toString()),
             ),
-          );
-        } else if (results.hasData &&
-            results.data != null &&
-            results.data!.isNotEmpty) {
-          final message = results.data!
-              .mapIndexed((index, name) => '${index + 1}. $name')
-              .join('\n');
-          context.toast(
-            Text(
-              context.l10n.cleanedUpEpisodesOfUnsubscribedPodcast(
-                '\n' + message,
-              ),
+          ),
+        );
+      } else if (results.hasValue &&
+          results.value != null &&
+          results.value!.isNotEmpty) {
+        final message = results.value!
+            .mapIndexed((index, name) => '${index + 1}. $name')
+            .join('\n');
+        context.toast(
+          Text(
+            context.l10n.cleanedUpEpisodesOfUnsubscribedPodcast(
+              '\n' + message,
             ),
-            duration: const Duration(seconds: 10),
-          );
-        }
-      },
-    );
+          ),
+          duration: const Duration(seconds: 10),
+        );
+      }
+    });
 
     registerHandler(
       select: (AppManager m) => m.recentPatchNotesDisposedCommand,

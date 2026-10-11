@@ -34,7 +34,7 @@ final class RadioFavTagManagerProvider
 }
 
 String _$radioFavTagManagerHash() =>
-    r'44fe58a3340ae15cfd6969803b3dcf485f1686ae';
+    r'08eee4e6223ce9c60169266aa871c51923ac7d67';
 
 abstract class _$RadioFavTagManager extends $AsyncNotifier<Set<String>> {
   FutureOr<Set<String>> build();

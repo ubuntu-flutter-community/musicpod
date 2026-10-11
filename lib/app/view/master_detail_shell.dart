@@ -21,7 +21,7 @@ class MasterDetailShell extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    callCommonCommands();
+    callCommonCommands(context);
     registerCommonHandlers(context);
 
     final isInFullWindowMode = watchValue((AppManager m) => m.fullWindowMode);

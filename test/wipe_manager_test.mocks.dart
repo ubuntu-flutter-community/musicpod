@@ -22,17 +22,14 @@ import 'package:musicpod/local_audio/data/change_metadata_capsule.dart' as _i21;
 import 'package:musicpod/local_audio/data/local_search_result.dart' as _i19;
 import 'package:musicpod/local_audio/data/playlist_action.dart' as _i20;
 import 'package:musicpod/local_audio/service/local_audio_service.dart' as _i18;
-import 'package:musicpod/lyrics/data/online_lyrics_source.dart' as _i30;
+import 'package:musicpod/lyrics/data/online_lyrics_source.dart' as _i28;
 import 'package:musicpod/player/data/queue.dart' as _i7;
 import 'package:musicpod/player/manager/player_manager.dart' as _i23;
 import 'package:musicpod/podcasts/data/podcast_genre.dart' as _i11;
 import 'package:musicpod/podcasts/data/podcast_short_info.dart' as _i15;
-import 'package:musicpod/podcasts/data/podcast_toggle_capsule.dart' as _i28;
-import 'package:musicpod/podcasts/manager/subscribed_podcasts_manager.dart'
-    as _i27;
 import 'package:musicpod/podcasts/service/podcast_service.dart' as _i9;
 import 'package:musicpod/radio/service/radio_service.dart' as _i16;
-import 'package:musicpod/settings/manager/settings_manager.dart' as _i29;
+import 'package:musicpod/settings/manager/settings_manager.dart' as _i27;
 import 'package:podcast_search/podcast_search.dart' as _i10;
 import 'package:radio_browser_api/radio_browser_api.dart' as _i17;
 
@@ -2322,39 +2319,10 @@ class MockPlayerManager extends _i1.Mock implements _i23.PlayerManager {
   );
 }
 
-/// A class which mocks [SubscribedPodcastsManager].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockSubscribedPodcastsManager extends _i1.Mock
-    implements _i27.SubscribedPodcastsManager {
-  MockSubscribedPodcastsManager() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  _i8.Command<_i28.PodcastToggleCapsule?, Set<String>> get command =>
-      (super.noSuchMethod(
-            Invocation.getter(#command),
-            returnValue:
-                _FakeCommand_40<_i28.PodcastToggleCapsule?, Set<String>>(
-                  this,
-                  Invocation.getter(#command),
-                ),
-          )
-          as _i8.Command<_i28.PodcastToggleCapsule?, Set<String>>);
-
-  @override
-  set command(_i8.Command<_i28.PodcastToggleCapsule?, Set<String>>? value) =>
-      super.noSuchMethod(
-        Invocation.setter(#command, value),
-        returnValueForMissingStub: null,
-      );
-}
-
 /// A class which mocks [SettingsManager].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSettingsManager extends _i1.Mock implements _i29.SettingsManager {
+class MockSettingsManager extends _i1.Mock implements _i27.SettingsManager {
   MockSettingsManager() {
     _i1.throwOnMissingStub(this);
   }
@@ -2559,12 +2527,12 @@ class MockSettingsManager extends _i1.Mock implements _i29.SettingsManager {
           as _i8.Command<void, void>);
 
   @override
-  _i30.OnlineLyricsSource get onlineLyricsSource =>
+  _i28.OnlineLyricsSource get onlineLyricsSource =>
       (super.noSuchMethod(
             Invocation.getter(#onlineLyricsSource),
-            returnValue: _i30.OnlineLyricsSource.lrcLib,
+            returnValue: _i28.OnlineLyricsSource.lrcLib,
           )
-          as _i30.OnlineLyricsSource);
+          as _i28.OnlineLyricsSource);
 
   @override
   set scrollIndex(int? value) => super.noSuchMethod(
@@ -2851,7 +2819,7 @@ class MockSettingsManager extends _i1.Mock implements _i29.SettingsManager {
   );
 
   @override
-  void setOnlineLyricsSource(_i30.OnlineLyricsSource? value) =>
+  void setOnlineLyricsSource(_i28.OnlineLyricsSource? value) =>
       super.noSuchMethod(
         Invocation.method(#setOnlineLyricsSource, [value]),
         returnValueForMissingStub: null,
