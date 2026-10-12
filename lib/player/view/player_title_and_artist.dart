@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -8,9 +7,10 @@ import '../../app/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/copy_clipboard_content.dart';
+import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/string_x.dart';
 import '../../extensions/platform_x.dart';
+import '../../extensions/string_x.dart';
 import '../../local_audio/manager/local_audio_manager.dart';
 import '../../local_audio/service/local_audio_service.dart';
 import '../../local_audio/view/album_page.dart';
@@ -19,37 +19,35 @@ import '../../podcasts/view/podcast_page.dart';
 import '../../radio/view/station_page.dart';
 import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
+import '../manager/current_audio_manager.dart';
 import '../manager/mpv_metadata_manager.dart';
-import '../manager/player_manager.dart';
 import 'player_track.dart';
 import 'player_view.dart';
 
-class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
+class PlayerTitleAndArtist extends ConsumerWidget {
   const PlayerTitleAndArtist({super.key, required this.playerPosition});
 
   final PlayerPosition playerPosition;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.theme;
 
-    final audio = watchPropertyValue((PlayerManager m) => m.audio);
+    final audio = ref.watch(currentAudioManagerProvider);
 
     final hoverColor = theme.colorScheme.primary.withValues(alpha: 0.3);
-    return Consumer(
-      builder: (context, ref, _) {
-        final icyTitle =
-            ref.watch(mpvMetadataManagerProvider.select((m) => m?.icyTitle));
-        final showPositionDuration =
-            ref.watch(
-              settingsBoolManagerProvider(SPKeys.showPositionDuration),
-            ) ??
-            false;
-        final localAudioIsInitializing = ref.watch(
-          localAudioManagerProvider.select((s) => s.isLoading),
-        );
+    final icyTitle =
+        ref.watch(mpvMetadataManagerProvider.select((m) => m?.icyTitle));
+    final showPositionDuration =
+        ref.watch(
+          settingsBoolManagerProvider(SPKeys.showPositionDuration),
+        ) ??
+        false;
+    final localAudioIsInitializing = ref.watch(
+      localAudioManagerProvider.select((s) => s.isLoading),
+    );
 
-        return Column(
+    return Column(
           mainAxisSize: switch (playerPosition) {
             PlayerPosition.bottom => MainAxisSize.max,
             _ => MainAxisSize.min,
@@ -143,8 +141,6 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
                 },
               ),
           ].map((e) => Flexible(child: e)).toList(),
-        );
-      },
     );
   }
 

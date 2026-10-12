@@ -41,7 +41,7 @@ final class PauseTimerManagerProvider
   }
 }
 
-String _$pauseTimerManagerHash() => r'd283ba631db907793260763869179228263c3de7';
+String _$pauseTimerManagerHash() => r'fd809f3c4adbeb0c0fe9938a632899a6efbed610';
 
 abstract class _$PauseTimerManager extends $Notifier<bool> {
   bool build();

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
-import '../manager/player_manager.dart';
+import '../manager/position_manager.dart';
 
-class SeekButton extends StatelessWidget {
+class SeekButton extends ConsumerWidget {
   const SeekButton({
     super.key,
     required this.active,
@@ -17,9 +17,8 @@ class SeekButton extends StatelessWidget {
   final Color? iconColor;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.theme;
-    final playerManager = di<PlayerManager>();
 
     final icon = Icon(
       forward ? Iconz.forward30 : Iconz.backward10,
@@ -29,7 +28,11 @@ class SeekButton extends StatelessWidget {
       color:
           iconColor ??
           (active ? (theme.colorScheme.onSurface) : theme.disabledColor),
-      onPressed: () => playerManager.seekInSeconds(forward ? 30 : -10),
+      onPressed: active
+          ? () => ref
+              .read(positionManagerProvider.notifier)
+              .seekInSeconds(forward ? 30 : -10)
+          : null,
       icon: Iconz.yaru
           ? Stack(
               alignment: Alignment.center,

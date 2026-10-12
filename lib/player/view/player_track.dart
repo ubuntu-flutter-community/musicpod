@@ -1,33 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/data/audio_type.dart';
 import '../../common/view/custom_track_shape.dart';
 import '../../common/view/progress.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';
-import '../manager/player_manager.dart';
+import '../manager/buffer_manager.dart';
+import '../manager/current_audio_manager.dart';
+import '../manager/duration_manager.dart';
+import '../manager/play_pause_manager.dart';
+import '../manager/position_manager.dart';
 
-class PlayerTrack extends StatelessWidget with WatchItMixin {
+class PlayerTrack extends ConsumerWidget {
   const PlayerTrack({super.key, this.bottomPlayer = false, this.active = true});
 
   final bool bottomPlayer, active;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.theme;
 
     final mainColor = theme.colorScheme.onSurface;
 
-    final isPlaying = watchPropertyValue((PlayerManager m) => m.isPlaying);
+    final isPlaying = ref.watch(playPauseManagerProvider);
 
-    final position = watchPropertyValue((PlayerManager m) => m.position);
-    final buffer = watchPropertyValue((PlayerManager m) => m.buffer);
-    final audioType = watchPropertyValue(
-      (PlayerManager m) => m.audio?.audioType,
+    final position = ref.watch(positionManagerProvider);
+    final buffer = ref.watch(bufferManagerProvider);
+    final audioType = ref.watch(
+      currentAudioManagerProvider.select((a) => a?.audioType),
     );
 
-    final duration = watchPropertyValue((PlayerManager m) => m.duration);
+    final duration = ref.watch(durationManagerProvider);
 
     final sliderActive =
         active &&
@@ -106,9 +110,9 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
                         ? buffer.inSeconds.toDouble()
                         : null,
                     onChanged: sliderActive
-                        ? (v) => di<PlayerManager>().seek(
-                            Duration(seconds: v.toInt()),
-                          )
+                        ? (v) => ref
+                            .read(positionManagerProvider.notifier)
+                            .seek(Duration(seconds: v.toInt()))
                         : null,
                   ),
                 ),
@@ -163,16 +167,16 @@ class PlayerTrack extends StatelessWidget with WatchItMixin {
   }
 }
 
-class PlayerSimpleTrack extends StatelessWidget with WatchItMixin {
+class PlayerSimpleTrack extends ConsumerWidget {
   const PlayerSimpleTrack({super.key, this.active = true});
 
   final bool active;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.theme;
-    final position = watchPropertyValue((PlayerManager m) => m.position);
-    final duration = watchPropertyValue((PlayerManager m) => m.duration);
+    final position = ref.watch(positionManagerProvider);
+    final duration = ref.watch(durationManagerProvider);
     final textStyle = TextStyle(
       fontSize: 10,
       color: !active ? theme.disabledColor : null,
