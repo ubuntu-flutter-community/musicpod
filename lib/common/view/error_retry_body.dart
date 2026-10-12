@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../extensions/object_x.dart';
@@ -10,7 +10,7 @@ import 'error_page.dart';
 import 'no_search_result_page.dart';
 import 'ui_constants.dart';
 
-class ErrorRetryBody extends StatelessWidget with WatchItMixin {
+class ErrorRetryBody extends ConsumerStatefulWidget {
   const ErrorRetryBody({
     super.key,
     required this.error,
@@ -31,21 +31,25 @@ class ErrorRetryBody extends StatelessWidget with WatchItMixin {
   final bool logError;
 
   @override
-  Widget build(BuildContext context) {
-    if (logError) {
-      callOnceAfterThisBuild((_) {
-        Logger.e(error, trace: stackTrace, tag: '$ErrorRetryBody');
-      });
-    }
+  ConsumerState<ErrorRetryBody> createState() => _ErrorRetryBodyState();
+}
 
-    final cooldownValue = watchValue(
-      (RetryManager m) => m.cooldown,
-      param1: retryCapsule,
-    );
+class _ErrorRetryBodyState extends ConsumerState<ErrorRetryBody> {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.logError) {
+      Logger.e(widget.error, trace: widget.stackTrace, tag: '$ErrorRetryBody');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cooldownValue = ref.watch(retryManagerProvider(widget.retryCapsule));
 
     final errorText = Text(
-      this.errorText ?? error.localizedErrorMessage(context.l10n),
-      style: errorTextStyle,
+      widget.errorText ?? widget.error.localizedErrorMessage(context.l10n),
+      style: widget.errorTextStyle,
     );
 
     final retryButton = Column(
@@ -55,21 +59,23 @@ class ErrorRetryBody extends StatelessWidget with WatchItMixin {
         FilledButton(
           onPressed: cooldownValue > 0
               ? null
-              : retryCapsule.autoRetry
-              ? retryCapsule.onRetry
-              : di<RetryManager>(param1: retryCapsule).manualRetry,
+              : widget.retryCapsule.autoRetry
+              ? widget.retryCapsule.onRetry
+              : () => ref
+                  .read(retryManagerProvider(widget.retryCapsule).notifier)
+                  .manualRetry(),
           child: Text(
             cooldownValue == 0
                 ? context.l10n.retry
                 : context.l10n.retryngInSeconds(cooldownValue.toString()),
           ),
         ),
-        if (!retryCapsule.autoRetry && cooldownValue == 0)
-          ErrorReportButton(error: error, stackTrace: stackTrace),
+        if (!widget.retryCapsule.autoRetry && cooldownValue == 0)
+          ErrorReportButton(error: widget.error, stackTrace: widget.stackTrace),
       ],
     );
 
-    if (sliver) {
+    if (widget.sliver) {
       return SliverNoSearchResultPage(icon: retryButton, message: errorText);
     }
 

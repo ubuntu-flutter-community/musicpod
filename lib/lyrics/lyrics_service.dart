@@ -104,7 +104,7 @@ class OnlineLyricsService {
 
     _completer = Completer<LyricsAndArtResult?>();
 
-    _debounceTimer = Timer(const Duration(seconds: 2), () async {
+    _debounceTimer = Timer(const Duration(seconds: 1), () async {
       try {
         Logger.i(
           'Trying to fetch lyrics and art from lrcLib for "$artist - $title"',
@@ -171,6 +171,12 @@ class OnlineLyricsService {
 
     _dio.options.headers['user-agent'] =
         '${AppConfig.appTitle} (${AppConfig.repoUrl})';
+    _dio.options.connectTimeout =
+        FetchOnlineLyricsTimeoutException.timeoutDuration;
+    _dio.options.receiveTimeout =
+        FetchOnlineLyricsTimeoutException.timeoutDuration;
+    _dio.options.sendTimeout =
+        FetchOnlineLyricsTimeoutException.timeoutDuration;
 
     // Note: we do not want to activate the RetryManager for client errors (4xx),
     // as these are not recoverable by retrying. We only want to retry on server errors (5xx).

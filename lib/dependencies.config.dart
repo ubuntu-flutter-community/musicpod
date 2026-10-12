@@ -20,8 +20,6 @@ import 'package:shared_preferences/shared_preferences.dart' as _i460;
 import 'package:window_manager/window_manager.dart' as _i740;
 
 import 'app/window_size_to_settings_listener.dart' as _i517;
-import 'common/data/retry_capsule.dart' as _i327;
-import 'common/manager/retry_manager.dart' as _i305;
 import 'common/persistence/database.dart' as _i115;
 import 'custom_content/service/custom_content_service.dart' as _i314;
 import 'expose/service/expose_service.dart' as _i313;
@@ -116,9 +114,6 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i862.SettingsService(
         sharedPreferences: gh<_i460.SharedPreferences>(),
       ),
-    );
-    gh.factoryParam<_i305.RetryManager, _i327.RetryCapsule, dynamic>(
-      (capsule, _) => _i305.RetryManager.create(capsule: capsule),
     );
     gh.lazySingleton<_i57.NotificationsService>(
       () => _i57.NotificationsService(localNotifier: gh<_i527.LocalNotifier>()),

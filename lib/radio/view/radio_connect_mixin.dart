@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../common/manager/retry_manager.dart';
-import '../../common/util/family.dart';
 import '../../extensions/build_context_x.dart';
 import '../manager/radio_manager.dart';
 
@@ -12,8 +10,6 @@ mixin RadioConnectMixin {
       radioManagerProvider,
       (previous, next) {
         if (next.isLoading) return;
-
-        Family.dispose<RetryManager>('connected_host');
 
         final connectedHost = next.value;
         final hasError = next.hasError;
