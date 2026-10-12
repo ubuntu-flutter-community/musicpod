@@ -50,7 +50,7 @@ final class EpisodesManagerProvider
   }
 }
 
-String _$episodesManagerHash() => r'48f07a2e7becda362a0118115d16a8db167d839c';
+String _$episodesManagerHash() => r'15dc5070d57b61552ac2095174aaf477bc9e1d21';
 
 final class EpisodesManagerFamily extends $Family
     with

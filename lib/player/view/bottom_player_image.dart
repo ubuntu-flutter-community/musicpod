@@ -7,7 +7,7 @@ import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../dependencies.dart';
 import '../../local_audio/view/local_cover.dart';
-import '../manager/player_manager.dart';
+import '../service/player_service.dart';
 import 'player_fall_back_image.dart';
 import 'player_remote_source_image.dart';
 
@@ -53,7 +53,7 @@ class _BottomPlayerImageState extends ConsumerState<BottomPlayerImage> {
               height: widget.size,
               width: widget.size,
               filterQuality: FilterQuality.medium,
-              controller: di<PlayerManager>().controller,
+              controller: di<PlayerService>().controller,
               controls: (state) {
                 return const SizedBox.shrink();
               },

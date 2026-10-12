@@ -5,7 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/audio_filter.dart';
 import '../../dependencies.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/audio_progress_manager.dart';
 import '../data/podcast_episode_filter.dart';
 import '../service/podcast_service.dart';
 import 'download_manager.dart';
@@ -64,7 +64,6 @@ class EpisodesManager extends _$EpisodesManager {
   static const int pageSize = 25;
 
   late final PodcastService _podcastService = di<PodcastService>();
-  late final PlayerManager _playerManager = di<PlayerManager>();
 
   List<Audio> _rawEpisodes = [];
   int _displayedCount = pageSize;
@@ -77,6 +76,7 @@ class EpisodesManager extends _$EpisodesManager {
   Future<EpisodesState> build(String feedUrl) async {
     final hideCompleted = ref.watch(podcastUpdatesOnlyManagerProvider);
     final showDownloadsOnly = ref.watch(podcastDownloadsOnlyManagerProvider);
+    ref.watch(audioProgressManagerProvider);
     ref.watch(downloadManagerProvider);
 
     if (_rawEpisodes.isEmpty) {
@@ -105,6 +105,7 @@ class EpisodesManager extends _$EpisodesManager {
     required bool showDownloadsOnly,
   }) {
     final downloadManager = ref.read(downloadManagerProvider.notifier);
+    final lastPositions = ref.read(audioProgressManagerProvider).lastPositions;
 
     final filtered = _rawEpisodes
         .where((a) {
@@ -120,7 +121,7 @@ class EpisodesManager extends _$EpisodesManager {
           if (!hideCompletedEpisodes) return true;
           if (audio.url == null) return false;
           return audio.durationMs != null &&
-              _playerManager.lastPositions?[audio.url]?.inMilliseconds !=
+              lastPositions[audio.url]?.inMilliseconds !=
                   audio.durationMs?.toInt();
         })
         .where((audio) {

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/page_ids.dart';
@@ -13,15 +12,17 @@ import '../../common/view/adaptive_multi_layout_body.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/clean_up_caches.dart';
-import '../../common/view/local_audio_tile.dart';
 import '../../common/view/genre_bar.dart';
 import '../../common/view/header_bar.dart';
+import '../../common/view/local_audio_tile.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../player/data/queue.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/current_audio_manager.dart';
+import '../../player/manager/play_pause_manager.dart';
+import '../../player/manager/queue_manager.dart';
 import '../../search/manager/search_manager.dart';
 import '../../search/data/search_type.dart';
 import '../manager/playlist_manager.dart';
@@ -35,20 +36,18 @@ import 'playlist_add_audio_autocomplete.dart';
 import 'playlist_control_panel.dart';
 import 'playlist_header_image.dart';
 
-class PlaylistPage extends StatelessWidget with WatchItMixin {
+class PlaylistPage extends ConsumerWidget {
   const PlaylistPage({super.key, required this.pageId});
 
   final String pageId;
 
   @override
-  Widget build(BuildContext context) {
-    callOnceAfterThisBuild((context) => clearInMemoryImageCache());
+  Widget build(BuildContext context, WidgetRef ref) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => clearInMemoryImageCache());
 
-    return Consumer(
-      builder: (context, ref, _) {
-        final isInitializing = ref.watch(
-          localAudioManagerProvider.select((s) => s.isLoading),
-        );
+    final isInitializing = ref.watch(
+      localAudioManagerProvider.select((s) => s.isLoading),
+    );
 
         return DropTarget(
       onDragDone: (details) => ref
@@ -120,14 +119,12 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
                 image: PlaylistHeaderImage(pageId: pageId),
                 pageId: pageId,
               ),
-        ),
-      );
-    },
-  );
+      ),
+    );
   }
 }
 
-class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
+class _PlaylistPageBody extends ConsumerWidget {
   const _PlaylistPageBody({
     required this.pageId,
     this.image,
@@ -142,15 +139,11 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
   final void Function(Audio audio)? onAlbumTap;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final isPlaying = watchPropertyValue((PlayerManager m) => m.isPlaying);
-    final currentAudio = watchPropertyValue((PlayerManager m) => m.audio);
-    final playerManager = di<PlayerManager>();
-
-    return Consumer(
-      builder: (context, ref, _) {
-        final audios = ref.watch(playlistManagerProvider(pageId)).value ?? [];
+    final isPlaying = ref.watch(playPauseManagerProvider);
+    final currentAudio = ref.watch(currentAudioManagerProvider);
+    final audios = ref.watch(playlistManagerProvider(pageId)).value ?? [];
 
     final audioPageHeader = AudioPageHeader(
       title: pageId,
@@ -211,12 +204,12 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
                   onTap: () {
                     if (audioSelected) {
                       if (isPlaying) {
-                        playerManager.pause();
+                        ref.read(playPauseManagerProvider.notifier).pause();
                       } else {
-                        playerManager.resume();
+                        ref.read(playPauseManagerProvider.notifier).resume();
                       }
                     } else {
-                      playerManager.play(
+                      ref.read(currentAudioManagerProvider.notifier).play(
                         audios: audios,
                         listName: pageId,
                         index: index,
@@ -232,8 +225,8 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
             );
           },
           onReorderItem: (oldIndex, newIndex) {
-            if (playerManager.queue == Queue(name: pageId, audios: audios)) {
-              playerManager.moveAudioInQueue(oldIndex, newIndex);
+            if (ref.read(queueManagerProvider) == Queue(name: pageId, audios: audios)) {
+              ref.read(queueManagerProvider.notifier).moveAudioInQueue(oldIndex, newIndex);
             }
 
             ref.read(playlistIDsManagerProvider.notifier).createOrChangePlaylist(
@@ -249,7 +242,5 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
         );
       },
     );
-  },
-);
   }
 }

@@ -7,7 +7,7 @@ import 'package:musicpod/common/persistence/database.dart';
 import 'package:musicpod/local_audio/manager/local_audio_manager.dart';
 import 'package:musicpod/local_audio/manager/pinned_album_ids_manager.dart';
 import 'package:musicpod/local_audio/service/local_audio_service.dart';
-import 'package:musicpod/player/manager/player_manager.dart';
+import 'package:musicpod/player/service/player_service.dart';
 import 'package:musicpod/podcasts/manager/subscribed_podcasts_manager.dart';
 import 'package:musicpod/podcasts/service/podcast_service.dart';
 import 'package:musicpod/radio/manager/radio_fav_tag_manager.dart';
@@ -17,14 +17,14 @@ import 'package:musicpod/settings/service/settings_service.dart';
 import 'package:musicpod/settings/manager/settings_manager.dart';
 import 'package:musicpod/settings/manager/wipe_manager.dart';
 
-import 'wipe_manager_test.mocks.dart';
+import 'mpv_metadata_manager_test.mocks.dart';
+import 'wipe_manager_test.mocks.dart' hide MockSettingsService;
 
 @GenerateMocks([
   PodcastService,
   RadioService,
   LocalAudioService,
   Database,
-  PlayerManager,
   SettingsService,
 ])
 void main() {
@@ -32,7 +32,7 @@ void main() {
   late MockRadioService mockRadioService;
   late MockLocalAudioService mockLocalAudioService;
   late MockDatabase mockDatabase;
-  late MockPlayerManager mockPlayerManager;
+  late MockPlayerService mockPlayerService;
   late MockSettingsService mockSettingsService;
 
   setUp(() async {
@@ -42,7 +42,7 @@ void main() {
     mockRadioService = MockRadioService();
     mockLocalAudioService = MockLocalAudioService();
     mockDatabase = MockDatabase();
-    mockPlayerManager = MockPlayerManager();
+    mockPlayerService = MockPlayerService();
     mockSettingsService = MockSettingsService();
 
     // Default stubbing
@@ -59,8 +59,10 @@ void main() {
     when(mockLocalAudioService.findPinnedAlbumIDs())
         .thenAnswer((_) async => const <int>[]);
     when(mockDatabase.reclaimDiskSpace()).thenAnswer((_) async {});
-    when(mockPlayerManager.clearAllLastPositions()).thenAnswer((_) async {});
-    when(mockPlayerManager.resetPlayerState()).thenAnswer((_) async {});
+    when(mockPlayerService.changes).thenAnswer((_) => const Stream.empty());
+    when(mockPlayerService.lastPositions).thenReturn({});
+    when(mockPlayerService.clearAllLastPositions()).thenAnswer((_) async {});
+    when(mockPlayerService.resetPlayerState()).thenAnswer((_) async {});
 
     when(mockSettingsService.wipeAllSettings()).thenAnswer((_) async => true);
 
@@ -68,7 +70,7 @@ void main() {
     GetIt.I.registerSingleton<RadioService>(mockRadioService);
     GetIt.I.registerSingleton<LocalAudioService>(mockLocalAudioService);
     GetIt.I.registerSingleton<Database>(mockDatabase);
-    GetIt.I.registerSingleton<PlayerManager>(mockPlayerManager);
+    GetIt.I.registerSingleton<PlayerService>(mockPlayerService);
     GetIt.I.registerSingleton<SettingsService>(mockSettingsService);
   });
 
@@ -152,7 +154,7 @@ void main() {
     await pumpEventQueue();
 
     verify(mockPodcastService.wipeAndBuildPodcastLibrary()).called(1);
-    verify(mockPlayerManager.clearAllLastPositions()).called(1);
+    verify(mockPlayerService.clearAllLastPositions()).called(1);
     verify(mockDatabase.reclaimDiskSpace()).called(1);
     expect(subscribedInvalidated, isTrue);
   });
@@ -213,7 +215,7 @@ void main() {
         forceInit: true,
       ),
     ).called(1);
-    verify(mockPlayerManager.resetPlayerState()).called(1);
+    verify(mockPlayerService.resetPlayerState()).called(1);
     verify(mockSettingsService.wipeAllSettings()).called(greaterThanOrEqualTo(1));
     verify(mockDatabase.reclaimDiskSpace()).called(1);
   });

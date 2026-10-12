@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/current_audio_manager.dart';
 import '../manager/download_manager.dart';
 import 'download_button.dart';
 
@@ -114,7 +113,7 @@ class RecentDownloads extends ConsumerWidget {
         final episode = downloads[index];
         return ListTile(
           onTap: () {
-            di<PlayerManager>().play(
+            ref.read(currentAudioManagerProvider.notifier).play(
               audios: [episode],
               listName: 'Recent Downloads',
               index: 0,

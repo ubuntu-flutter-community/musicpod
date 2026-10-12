@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/full_window_mode_manager.dart';
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
+import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/platform_x.dart';
 import '../../local_audio/data/playlist_action.dart';
@@ -18,7 +18,8 @@ import '../../local_audio/manager/playlist_ids_manager.dart';
 import '../../local_audio/view/add_to_playlist_dialog.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/current_audio_manager.dart';
+import '../../player/manager/queue_manager.dart';
 import '../../podcasts/data/podcast_update_capsule.dart';
 import '../../podcasts/manager/podcast_collection_filter_manager.dart';
 import '../../podcasts/manager/podcast_updates_manager.dart';
@@ -89,8 +90,7 @@ class AudioTileOptionButton extends ConsumerWidget {
             false;
         final showDownloadsOnly =
             ref.watch(podcastDownloadsOnlyManagerProvider);
-        final playerManager = di<PlayerManager>();
-        final currentAudio = playerManager.audio;
+        final currentAudio = ref.watch(currentAudioManagerProvider);
         final currentlyLocalPlaying =
             currentAudio != null && currentAudio.isLocal;
         return [
@@ -100,20 +100,22 @@ class AudioTileOptionButton extends ConsumerWidget {
             PopupMenuItem(
               onTap: () {
                 if (currentlyLocalPlaying) {
-                  playerManager.insertIntoQueue(audios);
+                  ref.read(queueManagerProvider.notifier).insertIntoQueue(audios);
                   context.toast(
                     Text('${l10n.addedTo} ${l10n.queue}: $searchTerm'),
                     action: SnackBarAction(
                       label: l10n.queue,
-                      onPressed: () => ProviderScope.containerOf(
-                        context,
-                        listen: false,
-                      ).read(fullWindowModeManagerProvider.notifier).setFullWindowMode(true),
+                      onPressed: () => ref
+                          .read(fullWindowModeManagerProvider.notifier)
+                          .setFullWindowMode(true),
                     ),
                     showCloseIcon: true,
                   );
                 } else {
-                  playerManager.play(audios: audios, listName: playlistId);
+                  ref.read(currentAudioManagerProvider.notifier).play(
+                    audios: audios,
+                    listName: playlistId,
+                  );
                 }
               },
               child: ListTile(
@@ -126,10 +128,10 @@ class AudioTileOptionButton extends ConsumerWidget {
           if (allowRemove)
             PopupMenuItem(
               onTap: () => playlistId == PageIDs.likedAudios
-                  ? ProviderScope.containerOf(context, listen: false)
+                  ? ref
                       .read(likedAudiosManagerProvider.notifier)
                       .removeLikedAudios(audios)
-                  : ProviderScope.containerOf(context, listen: false)
+                  : ref
                       .read(playlistIDsManagerProvider.notifier)
                       .createOrChangePlaylist(
                         PlaylistChange(

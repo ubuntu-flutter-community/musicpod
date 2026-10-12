@@ -1,26 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/platform_x.dart';
-import '../manager/player_manager.dart';
-import 'full_window_video_player.dart';
+import '../manager/current_audio_manager.dart';
+import '../manager/is_video_manager.dart';
 import 'full_window_player_body.dart';
 import 'full_window_player_header_bar.dart';
+import 'full_window_video_player.dart';
 import 'player_view.dart';
 
-class FullWindowPlayer extends StatelessWidget with WatchItMixin {
+class FullWindowPlayer extends ConsumerWidget {
   const FullWindowPlayer({super.key, required this.playerPosition});
 
   final PlayerPosition playerPosition;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.theme;
 
-    final audio = watchPropertyValue((PlayerManager m) => m.audio);
-    final isVideo = watchPropertyValue((PlayerManager m) => m.isVideo == true);
+    final audio = ref.watch(currentAudioManagerProvider);
+    final isVideo = ref.watch(isVideoManagerProvider);
     final active = audio != null;
     final iconColor = isVideo ? Colors.white : theme.colorScheme.onSurface;
 

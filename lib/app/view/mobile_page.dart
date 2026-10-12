@@ -1,12 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/queue_manager.dart';
 import '../../player/view/player_main_controls.dart';
 import '../../player/view/player_view.dart';
 import '../full_window_mode_manager.dart';
@@ -35,8 +34,8 @@ class MobilePage extends ConsumerWidget {
   }
 }
 
-class _MobilePageContent extends StatelessWidget
-    with WatchItMixin, CommonHandlersAndCommandsMixin {
+class _MobilePageContent extends ConsumerWidget
+    with CommonHandlersAndCommandsMixin {
   const _MobilePageContent({
     required this.fullWindowMode,
     required this.onDismissFullWindowMode,
@@ -48,7 +47,7 @@ class _MobilePageContent extends StatelessWidget
   final Widget page;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     callCommonCommands(context);
     registerCommonHandlers(context);
 
@@ -89,9 +88,9 @@ class _MobilePageContent extends StatelessWidget
                         onHorizontalDragEnd: (details) {
                           if (details.primaryVelocity != null) {
                             if (details.primaryVelocity! < -150) {
-                              di<PlayerManager>().playNext();
+                              ref.read(queueManagerProvider.notifier).playNext();
                             } else if (details.primaryVelocity! > 150) {
-                              di<PlayerManager>().playPrevious();
+                              ref.read(queueManagerProvider.notifier).playPrevious();
                             }
                           }
                         },

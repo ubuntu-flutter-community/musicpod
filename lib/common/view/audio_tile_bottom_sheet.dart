@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' hide StreamProvider;
 
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
+import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
 import '../../local_audio/manager/liked_audios_manager.dart';
 import '../../local_audio/service/local_audio_service.dart';
@@ -15,7 +15,7 @@ import '../../local_audio/manager/playlist_ids_manager.dart';
 import '../../local_audio/view/add_to_playlist_dialog.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/queue_manager.dart';
 import '../data/audio.dart';
 import '../data/audio_type.dart';
 import 'audio_tile_image.dart';
@@ -117,7 +117,9 @@ class AudioTileBottomSheet extends ConsumerWidget {
                             children: [
                               _Button(
                                 onPressed: () {
-                                  di<PlayerManager>().insertIntoQueue(audios);
+                                  ref
+                                      .read(queueManagerProvider.notifier)
+                                      .insertIntoQueue(audios);
                                   context
                                     ..pop()
                                     ..toast(

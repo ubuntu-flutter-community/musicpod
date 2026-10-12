@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/audio_page_type.dart';
@@ -11,7 +10,8 @@ import '../../common/view/spaced_divider.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/play_pause_manager.dart';
+import '../../player/manager/queue_manager.dart';
 import '../data/play_anywhere_param.dart';
 import '../page_ids.dart';
 import '../play_anywhere_manager.dart';
@@ -154,8 +154,7 @@ class _FramedMasterTile extends StatelessWidget {
   }
 }
 
-class _PlayAbleMasterTile extends StatefulWidget
-    with WatchItStatefulWidgetMixin {
+class _PlayAbleMasterTile extends ConsumerStatefulWidget {
   const _PlayAbleMasterTile({
     required this.pageId,
     required this.tile,
@@ -169,10 +168,10 @@ class _PlayAbleMasterTile extends StatefulWidget
   final bool? selected;
 
   @override
-  State<_PlayAbleMasterTile> createState() => __PlayAbleMasterTileState();
+  ConsumerState<_PlayAbleMasterTile> createState() => __PlayAbleMasterTileState();
 }
 
-class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
+class __PlayAbleMasterTileState extends ConsumerState<_PlayAbleMasterTile> {
   bool _hovered = false;
 
   @override
@@ -183,63 +182,59 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
       return widget.tile;
     }
 
-    final isEnQueued = watchPropertyValue(
-      (PlayerManager m) => m.queue.name == widget.pageId,
+    final isEnQueued = ref.watch(
+      queueManagerProvider.select((q) => q.name == widget.pageId),
     );
-    final isPlaying = watchPropertyValue((PlayerManager m) => m.isPlaying);
+    final isPlaying = ref.watch(playPauseManagerProvider);
 
-    return Consumer(
-      builder: (context, ref, child) {
-        final playAnywhereAsync = ref.watch(playAnywhereManagerProvider);
-        final isRunning = playAnywhereAsync.isLoading;
-        final paramPageId =
-            ref.read(playAnywhereManagerProvider.notifier).activeParam?.pageId;
-        final busy = isRunning && paramPageId == widget.pageId;
+    final playAnywhereAsync = ref.watch(playAnywhereManagerProvider);
+    final isRunning = playAnywhereAsync.isLoading;
+    final paramPageId =
+        ref.read(playAnywhereManagerProvider.notifier).activeParam?.pageId;
+    final busy = isRunning && paramPageId == widget.pageId;
 
-        return MouseRegion(
-          onEnter: (e) => setState(() => _hovered = true),
-          onExit: (e) => setState(() => _hovered = false),
-          child: Stack(
-            children: [
-              widget.tile,
-              if (isEnQueued || _hovered || widget.selected == true)
-                Positioned(
-                  right: 25,
-                  top: 12,
-                  child: SizedBox.square(
-                    dimension: kTinyButtonSize,
-                    child: IconButton(
-                      style: tonedIconButtonStyle(context.colorScheme),
-                      onPressed: isRunning
-                          ? null
-                          : () => ref
-                              .read(playAnywhereManagerProvider.notifier)
-                              .play(
-                                PlayAnywhereParam(
-                                  pageId: widget.pageId,
-                                  audioPageType: widget.audioPageType,
-                                ),
-                              ),
-                      icon: busy
-                          ? const SizedBox(
-                              width: 15,
-                              height: 15,
-                              child: Progress(strokeWidth: 1),
-                            )
-                          : Icon(
-                              isPlaying && isEnQueued
-                                  ? Iconz.pause
-                                  : Iconz.playFilled,
-                              size: kTinyButtonIconSize,
-                              color: context.theme.colorScheme.onSurface,
+    return MouseRegion(
+      onEnter: (e) => setState(() => _hovered = true),
+      onExit: (e) => setState(() => _hovered = false),
+      child: Stack(
+        children: [
+          widget.tile,
+          if (isEnQueued || _hovered || widget.selected == true)
+            Positioned(
+              right: 25,
+              top: 12,
+              child: SizedBox.square(
+                dimension: kTinyButtonSize,
+                child: IconButton(
+                  style: tonedIconButtonStyle(context.colorScheme),
+                  onPressed: isRunning
+                      ? null
+                      : () => ref
+                          .read(playAnywhereManagerProvider.notifier)
+                          .play(
+                            PlayAnywhereParam(
+                              pageId: widget.pageId,
+                              audioPageType: widget.audioPageType,
                             ),
-                    ),
-                  ),
+                          ),
+                  icon: busy
+                      ? const SizedBox(
+                          width: 15,
+                          height: 15,
+                          child: Progress(strokeWidth: 1),
+                        )
+                      : Icon(
+                          isPlaying && isEnQueued
+                              ? Iconz.pause
+                              : Iconz.playFilled,
+                          size: kTinyButtonIconSize,
+                          color: context.theme.colorScheme.onSurface,
+                        ),
                 ),
-            ],
-          ),
-        );
-      },
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

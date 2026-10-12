@@ -7,41 +7,43 @@ import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 import 'package:musicpod/common/data/audio.dart';
 import 'package:musicpod/common/data/audio_type.dart';
-import 'package:musicpod/l10n/app_localizations.dart';
 import 'package:musicpod/common/view/progress.dart';
+import 'package:musicpod/l10n/app_localizations.dart';
+import 'package:musicpod/player/data/player_change.dart';
 import 'package:musicpod/player/data/queue.dart';
-import 'package:musicpod/player/manager/player_manager.dart';
+import 'package:musicpod/player/service/player_service.dart';
 import 'package:musicpod/player/view/queue/queue_body.dart';
 import 'package:musicpod/settings/service/settings_service.dart';
 
-import 'podcast_page_control_panel_test.mocks.dart';
+import 'mpv_metadata_manager_test.mocks.dart';
 
 void main() {
   group('QueueBody widget', () {
-    late MockPlayerManager mockPlayerManager;
+    late MockPlayerService mockPlayerService;
     late MockSettingsService mockSettingsService;
-    late StreamController<Audio?> newAudioController;
+    late StreamController<PlayerChange> changesController;
 
     setUp(() async {
       await GetIt.I.reset();
-      mockPlayerManager = MockPlayerManager();
+      mockPlayerService = MockPlayerService();
       mockSettingsService = MockSettingsService();
-      newAudioController = StreamController<Audio?>.broadcast();
+      changesController = StreamController<PlayerChange>.broadcast();
 
-      when(mockPlayerManager.newAudioStream)
-          .thenAnswer((_) => newAudioController.stream);
-      when(mockPlayerManager.isPlaying).thenReturn(false);
+      when(mockPlayerService.changes)
+          .thenAnswer((_) => changesController.stream);
+      when(mockPlayerService.audio).thenReturn(null);
+      when(mockPlayerService.queue).thenReturn(const Queue.empty());
 
       when(mockSettingsService.getInt(any)).thenReturn(0);
       when(mockSettingsService.getBool(any)).thenReturn(false);
       when(mockSettingsService.getString(any)).thenReturn(null);
 
-      GetIt.I.registerSingleton<PlayerManager>(mockPlayerManager);
+      GetIt.I.registerSingleton<PlayerService>(mockPlayerService);
       GetIt.I.registerSingleton<SettingsService>(mockSettingsService);
     });
 
     tearDown(() async {
-      await newAudioController.close();
+      await changesController.close();
       await GetIt.I.reset();
     });
 
@@ -60,8 +62,8 @@ void main() {
       );
 
       const queue = Queue(name: 'Test Queue', audios: [audio1, audio2]);
-      when(mockPlayerManager.audio).thenReturn(audio1);
-      when(mockPlayerManager.queue).thenReturn(queue);
+      when(mockPlayerService.audio).thenReturn(audio1);
+      when(mockPlayerService.queue).thenReturn(queue);
 
       await tester.pumpWidget(
         const ProviderScope(
@@ -100,8 +102,8 @@ void main() {
         );
 
         const queue = Queue(name: 'Test Queue', audios: [audio1, audio2]);
-        when(mockPlayerManager.audio).thenReturn(audio1);
-        when(mockPlayerManager.queue).thenReturn(queue);
+        when(mockPlayerService.audio).thenReturn(audio1);
+        when(mockPlayerService.queue).thenReturn(queue);
 
         await tester.pumpWidget(
           const ProviderScope(
@@ -117,8 +119,8 @@ void main() {
         await tester.pumpAndSettle();
 
         // Simulate track change to song 2
-        when(mockPlayerManager.audio).thenReturn(audio2);
-        newAudioController.add(audio2);
+        when(mockPlayerService.audio).thenReturn(audio2);
+        changesController.add(const AudioChange(audio2));
 
         // Advance frames during jump transition
         await tester.pump();
@@ -134,3 +136,4 @@ void main() {
     );
   });
 }
+

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
@@ -15,7 +14,7 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';
 import '../../extensions/int_x.dart';
 import '../../extensions/platform_x.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/queue_manager.dart';
 import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
 import 'download_button.dart';
@@ -51,7 +50,6 @@ class PodcastAudioTile extends ConsumerWidget {
         : context.l10n.unknown;
     final label = '$date, ${context.l10n.duration}: $duration';
 
-    final playerManager = di<PlayerManager>();
     final useYaruTheme =
         ref.watch(settingsBoolManagerProvider(SPKeys.useYaruTheme)) ?? isLinux;
     final radius =
@@ -136,7 +134,9 @@ class PodcastAudioTile extends ConsumerWidget {
                             onPressed: () {
                               final text =
                                   '${audio.title != null ? '${audio.podcastTitle} - ' : ''}${audio.title ?? ''}';
-                              playerManager.insertIntoQueue([audio]);
+                              ref
+                                  .read(queueManagerProvider.notifier)
+                                  .insertIntoQueue([audio]);
                               context.toast(
                                 Text(context.l10n.insertedIntoQueue(text)),
                               );

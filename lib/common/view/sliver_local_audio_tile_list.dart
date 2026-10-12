@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/current_audio_manager.dart';
+import '../../player/manager/play_pause_manager.dart';
 import '../data/audio.dart';
 import 'audio_page_type.dart';
 import 'local_audio_tile.dart';
 import 'ui_constants.dart';
 
-class SliverLocalAudioTileList extends StatelessWidget with WatchItMixin {
+class SliverLocalAudioTileList extends ConsumerWidget {
   const SliverLocalAudioTileList({
     super.key,
     required this.audios,
@@ -30,15 +31,13 @@ class SliverLocalAudioTileList extends StatelessWidget with WatchItMixin {
   final bool startNewPlaylistOnTap;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final mqSize = constraints.maxWidth;
 
     final width = mqSize;
 
-    final playerManager = di<PlayerManager>();
-    final isPlaying = watchPropertyValue((PlayerManager m) => m.isPlaying);
-
-    final currentAudio = watchPropertyValue((PlayerManager m) => m.audio);
+    final isPlaying = ref.watch(playPauseManagerProvider);
+    final currentAudio = ref.watch(currentAudioManagerProvider);
     final allowLeadingImage =
         audios.length < kShowLeadingThreshold &&
         audioPageType != AudioPageType.allTitlesView;
@@ -67,12 +66,12 @@ class SliverLocalAudioTileList extends StatelessWidget with WatchItMixin {
             onTap: () {
               if (audioSelected) {
                 if (isPlaying) {
-                  playerManager.pause();
+                  ref.read(playPauseManagerProvider.notifier).pause();
                 } else {
-                  playerManager.resume();
+                  ref.read(playPauseManagerProvider.notifier).resume();
                 }
               } else {
-                playerManager.play(
+                ref.read(currentAudioManagerProvider.notifier).play(
                   audios: startNewPlaylistOnTap ? audios : [audio],
                   listName: pageId,
                   index: index,
@@ -89,3 +88,4 @@ class SliverLocalAudioTileList extends StatelessWidget with WatchItMixin {
     );
   }
 }
+

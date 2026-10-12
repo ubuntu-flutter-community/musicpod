@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lrc/lrc.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
@@ -17,46 +16,42 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
 import '../../extensions/theme_data_x.dart';
+import '../../player/manager/current_audio_manager.dart';
 import '../../player/manager/mpv_metadata_manager.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/position_manager.dart';
 import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
 import '../data/lyrics_and_art_result_and_param.dart';
 import '../lyrics_manager.dart';
 
-class LyricsViewer extends StatelessWidget with WatchItMixin {
+class LyricsViewer extends ConsumerWidget {
   const LyricsViewer({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final audio = watchPropertyValue((PlayerManager m) => m.audio);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final audio = ref.watch(currentAudioManagerProvider);
+    final splitByDash =
+        ref.watch(mpvMetadataManagerProvider)?.icyTitle.splitByDash;
+    final title = audio?.audioType != AudioType.radio
+        ? null
+        : splitByDash?.songName;
+    final artist = audio?.audioType != AudioType.radio
+        ? null
+        : splitByDash?.artist;
 
-    return Consumer(
-      builder: (context, ref, _) {
-        final splitByDash =
-            ref.watch(mpvMetadataManagerProvider)?.icyTitle.splitByDash;
-        final title = audio?.audioType != AudioType.radio
-            ? null
-            : splitByDash?.songName;
-        final artist = audio?.audioType != AudioType.radio
-            ? null
-            : splitByDash?.artist;
+    final tryToFetchOnline =
+        ref.watch(
+          settingsBoolManagerProvider(SPKeys.tryToFetchLyricsOnline),
+        ) ??
+        true;
 
-        final tryToFetchOnline =
-            ref.watch(
-              settingsBoolManagerProvider(SPKeys.tryToFetchLyricsOnline),
-            ) ??
-            true;
-
-        return _PlayerLyrics(
-          audio: audio,
-          title: title,
-          artist: artist,
-          tryToFetchOnline: tryToFetchOnline,
-          autoScroll: audio?.isLocal ?? false,
-          highlightCurrentLine: audio?.isLocal ?? false,
-        );
-      },
+    return _PlayerLyrics(
+      audio: audio,
+      title: title,
+      artist: artist,
+      tryToFetchOnline: tryToFetchOnline,
+      autoScroll: audio?.isLocal ?? false,
+      highlightCurrentLine: audio?.isLocal ?? false,
     );
   }
 }
@@ -210,7 +205,7 @@ class NoLyricsFound extends StatelessWidget {
   );
 }
 
-class _LrcLineViewer extends StatefulWidget with WatchItStatefulWidgetMixin {
+class _LrcLineViewer extends ConsumerStatefulWidget {
   const _LrcLineViewer({
     required this.lrc,
     required this.autoScroll,
@@ -224,10 +219,10 @@ class _LrcLineViewer extends StatefulWidget with WatchItStatefulWidgetMixin {
   final EdgeInsets padding;
 
   @override
-  State<_LrcLineViewer> createState() => _LrcLineViewerState();
+  ConsumerState<_LrcLineViewer> createState() => _LrcLineViewerState();
 }
 
-class _LrcLineViewerState extends State<_LrcLineViewer> {
+class _LrcLineViewerState extends ConsumerState<_LrcLineViewer> {
   late AutoScrollController _controller;
   int? _selectedIndex;
 
@@ -245,16 +240,13 @@ class _LrcLineViewerState extends State<_LrcLineViewer> {
 
   @override
   Widget build(BuildContext context) {
-    watchPropertyValue((PlayerManager m) {
-      final maybe = widget.lrc.firstWhereOrNull(
-        (e) => e.timestamp.inSeconds == m.position?.inSeconds,
-      );
-      if (maybe != null && widget.highlightCurrentLine) {
-        _selectedIndex = widget.lrc.indexOf(maybe);
-      }
-
-      return m.position;
-    });
+    final position = ref.watch(positionManagerProvider);
+    final maybe = widget.lrc.firstWhereOrNull(
+      (e) => e.timestamp.inSeconds == position?.inSeconds,
+    );
+    if (maybe != null && widget.highlightCurrentLine) {
+      _selectedIndex = widget.lrc.indexOf(maybe);
+    }
 
     if (_selectedIndex != null && widget.autoScroll) {
       _controller.scrollToIndex(

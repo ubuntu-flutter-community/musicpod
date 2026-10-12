@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/audio_page_type.dart';
@@ -9,7 +8,9 @@ import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/current_audio_manager.dart';
+import '../../player/manager/play_pause_manager.dart';
+import '../../player/manager/queue_manager.dart';
 import '../manager/episodes_manager.dart';
 import '../manager/podcast_short_info_manager.dart';
 import 'podcast_mark_done_button.dart';
@@ -24,11 +25,10 @@ class PodcastPageControlPanel extends ConsumerWidget {
   final String feedUrl;
 
   void _onPlayAllPressed(BuildContext context, WidgetRef ref) {
-    final playerManager = di<PlayerManager>();
-    final pageIsQueue = playerManager.queue.name == feedUrl;
+    final pageIsQueue = ref.read(queueManagerProvider).name == feedUrl;
 
     if (pageIsQueue) {
-      playerManager.playOrPause();
+      ref.read(playPauseManagerProvider.notifier).playOrPause();
       return;
     }
 
@@ -40,7 +40,9 @@ class PodcastPageControlPanel extends ConsumerWidget {
 
     if (!(episodesState?.hasMore ?? false) ||
         loadedEpisodes.length >= allEpisodes.length) {
-      playerManager.play(audios: allEpisodes, listName: feedUrl);
+      ref
+          .read(currentAudioManagerProvider.notifier)
+          .play(audios: allEpisodes, listName: feedUrl);
       return;
     }
 
@@ -52,13 +54,16 @@ class PodcastPageControlPanel extends ConsumerWidget {
       context: context,
       title: Text(context.l10n.playAll + '?'),
       confirmLabel: context.l10n.playAllEpisodes(allEpisodes.length.toString()),
-      onConfirm: () =>
-          playerManager.play(audios: allEpisodes, listName: feedUrl),
+      onConfirm: () => ref
+          .read(currentAudioManagerProvider.notifier)
+          .play(audios: allEpisodes, listName: feedUrl),
       additionalActions: [
         OutlinedButton(
           onPressed: () {
             Navigator.pop(context);
-            playerManager.play(audios: loadedEpisodes, listName: feedUrl);
+            ref
+                .read(currentAudioManagerProvider.notifier)
+                .play(audios: loadedEpisodes, listName: feedUrl);
           },
           child: Text(
             context.l10n.playOnlyLoadedEpisodes(

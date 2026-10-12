@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
+import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
 import '../../player/manager/audio_progress_manager.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/current_audio_manager.dart';
+import '../../player/manager/play_pause_manager.dart';
 import '../service/podcast_service.dart';
 import 'podcast_tile_progress.dart';
 
-class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
+class PodcastTilePlayButton extends ConsumerWidget {
   const PodcastTilePlayButton({
     super.key,
     required this.selected,
@@ -25,12 +26,8 @@ class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
   final void Function() play;
 
   @override
-  Widget build(BuildContext context) {
-    final isPlayerPlaying = watchPropertyValue(
-      (PlayerManager m) => m.isPlaying,
-    );
-
-    final playerManager = di<PlayerManager>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isPlayerPlaying = ref.watch(playPauseManagerProvider);
 
     String label;
     final l10n = context.l10n;
@@ -43,6 +40,12 @@ class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
     } else {
       label = l10n.playAll;
     }
+
+    final lastPosition = ref.watch(
+      audioProgressManagerProvider.select(
+        (s) => audio.url != null ? s.lastPositions[audio.url] : null,
+      ),
+    );
 
     return Stack(
       alignment: Alignment.center,
@@ -63,12 +66,15 @@ class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
             di<PodcastService>().updateAudioDuration(audio);
             if (selected) {
               if (isPlayerPlaying) {
-                playerManager.pause();
+                ref.read(playPauseManagerProvider.notifier).pause();
               } else {
-                playerManager.resume();
+                ref.read(playPauseManagerProvider.notifier).resume();
               }
             } else {
-              playerManager.safeCurrentAudioPosition().then((value) {
+              ref
+                  .read(currentAudioManagerProvider.notifier)
+                  .safeCurrentAudioPosition()
+                  .then((value) {
                 play();
               });
             }
@@ -78,23 +84,12 @@ class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
           child: IgnorePointer(
             child: Padding(
               padding: const EdgeInsets.all(1.5),
-              child: Consumer(
-                builder: (context, ref, _) {
-                  final lastPosition = ref.watch(
-                    audioProgressManagerProvider.select(
-                      (s) => audio.url != null
-                          ? s.lastPositions[audio.url]
-                          : null,
-                    ),
-                  );
-                  return PodcastTileProgress(
-                    selected: selected,
-                    lastPosition: lastPosition,
-                    duration: audio.durationMs == null
-                        ? null
-                        : Duration(milliseconds: audio.durationMs!.toInt()),
-                  );
-                },
+              child: PodcastTileProgress(
+                selected: selected,
+                lastPosition: lastPosition,
+                duration: audio.durationMs == null
+                    ? null
+                    : Duration(milliseconds: audio.durationMs!.toInt()),
               ),
             ),
           ),
@@ -103,3 +98,4 @@ class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
     );
   }
 }
+

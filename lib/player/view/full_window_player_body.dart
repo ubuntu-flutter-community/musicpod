@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
@@ -11,7 +10,7 @@ import 'player_title_and_artist.dart';
 import 'player_track.dart';
 import 'player_view.dart';
 
-class FullWindowPlayerBody extends StatelessWidget with WatchItMixin {
+class FullWindowPlayerBody extends StatelessWidget {
   const FullWindowPlayerBody({super.key, required this.active});
 
   final bool active;

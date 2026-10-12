@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/constants.dart';
 
 import '../../common/view/ui_constants.dart';
 import '../../local_audio/view/local_cover.dart';
-import '../manager/player_manager.dart';
+import '../manager/current_audio_manager.dart';
 import 'player_fall_back_image.dart';
 import 'player_remote_source_image.dart';
 
-class FullWindowPlayerImage extends StatelessWidget with WatchItMixin {
+class FullWindowPlayerImage extends ConsumerWidget {
   const FullWindowPlayerImage({
     super.key,
     this.fit,
@@ -23,8 +23,8 @@ class FullWindowPlayerImage extends StatelessWidget with WatchItMixin {
   final bool emptyFallBack;
 
   @override
-  Widget build(BuildContext context) {
-    final audio = watchPropertyValue((PlayerManager m) => m.audio);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final audio = ref.watch(currentAudioManagerProvider);
 
     final fallBackImage = PlayerFallBackImage(
       noIcon: emptyFallBack,

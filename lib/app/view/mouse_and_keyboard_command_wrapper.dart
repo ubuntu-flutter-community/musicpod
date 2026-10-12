@@ -3,11 +3,12 @@ import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/data/audio_type.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/current_audio_manager.dart';
+import '../../player/manager/play_pause_manager.dart';
+import '../../player/manager/queue_manager.dart';
 import '../../radio/manager/radio_manager.dart';
 import '../../search/manager/search_manager.dart';
 import '../full_window_mode_manager.dart';
@@ -108,16 +109,14 @@ class MouseAndKeyboardCommandWrapper extends ConsumerWidget {
         ),
         _PlayPauseIntent: CallbackAction<_PlayPauseIntent>(
           onInvoke: (intent) {
-            di<PlayerManager>().playOrPause();
+            ref.read(playPauseManagerProvider.notifier).playOrPause();
             return null;
           },
         ),
         _PlayNextIntent: CallbackAction<_PlayNextIntent>(
           onInvoke: (intent) {
-            final playerManager = di<PlayerManager>();
-
-            final audio = playerManager.audio;
-            if (audio == null) return;
+            final audio = ref.read(currentAudioManagerProvider);
+            if (audio == null) return null;
 
             if (audio.isRadio) {
               unawaited(
@@ -126,7 +125,7 @@ class MouseAndKeyboardCommandWrapper extends ConsumerWidget {
                     .findSimilarStation(audio)
                     .then((similar) {
                   if (similar != null) {
-                    playerManager.play(
+                    ref.read(playPauseManagerProvider.notifier).play(
                       audios: [similar],
                       listName: similar.uuid ?? '',
                     );
@@ -134,22 +133,20 @@ class MouseAndKeyboardCommandWrapper extends ConsumerWidget {
                 }),
               );
             } else {
-              playerManager.playNext();
+              ref.read(queueManagerProvider.notifier).playNext();
             }
             return null;
           },
         ),
         _PlayPreviousIntent: CallbackAction<_PlayPreviousIntent>(
           onInvoke: (intent) {
-            final playerManager = di<PlayerManager>();
-
-            final audio = playerManager.audio;
-            if (audio == null) return;
+            final audio = ref.read(currentAudioManagerProvider);
+            if (audio == null) return null;
 
             if (audio.isRadio) {
-              playerManager.playNext();
+              ref.read(queueManagerProvider.notifier).playNext();
             } else {
-              playerManager.playPrevious();
+              ref.read(queueManagerProvider.notifier).playPrevious();
             }
             return null;
           },

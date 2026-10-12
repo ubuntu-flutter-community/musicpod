@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:package_info_plus/package_info_plus.dart';
@@ -10,6 +9,7 @@ import '../../common/view/audio_page_type.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/ui_constants.dart';
+import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/object_x.dart';
 import '../../notifications/notifications_service.dart';
@@ -18,7 +18,8 @@ import '../../patch_notes/manager/special_notes_disposed_manager.dart';
 import '../../patch_notes/patch_notes_dialog.dart';
 import '../../patch_notes/special_notes.dart';
 import '../../player/data/play_timeout_exception.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/current_audio_manager.dart';
+import '../../player/manager/player_message_manager.dart';
 import '../../podcasts/data/podcast_download.dart';
 import '../../podcasts/data/podcast_update_capsule.dart';
 import '../../podcasts/manager/download_manager.dart';
@@ -31,34 +32,37 @@ import '../data/play_anywhere_result.dart';
 import '../play_anywhere_manager.dart';
 
 mixin CommonHandlersAndCommandsMixin {
-  void callCommonCommands(BuildContext context) => callOnceAfterThisBuild((_) {
-    final container = ProviderScope.containerOf(context, listen: false);
-    container
-        .read(podcastCleanManagerProvider.notifier)
-        .clean(reclaimDiskSpace: true);
+  void callCommonCommands(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!context.mounted) return;
+      final container = ProviderScope.containerOf(context, listen: false);
+      container
+          .read(podcastCleanManagerProvider.notifier)
+          .clean(reclaimDiskSpace: true);
 
-    if (!container.read(recentPatchNotesDisposedManagerProvider)) {
-      PatchNotesDialog.show(context);
-    }
+      if (!container.read(recentPatchNotesDisposedManagerProvider)) {
+        PatchNotesDialog.show(context);
+      }
 
-    final version = di<PackageInfo>().version;
-    if (!container.read(specialNotesDisposedManagerProvider) &&
-        specialNotes[version] != null) {
-      ConfirmationDialog.show(
-        context: context,
-        barrierDismissible: false,
-        showCancel: false,
-        title: Text('Special notes for $version'),
-        content: Text(specialNotes[version]!),
-        confirmLabel: context.l10n.ok,
-        onConfirm: () => container
-            .read(specialNotesDisposedManagerProvider.notifier)
-            .disposeNotes(),
-      );
-    }
+      final version = di<PackageInfo>().version;
+      if (!container.read(specialNotesDisposedManagerProvider) &&
+          specialNotes[version] != null) {
+        ConfirmationDialog.show(
+          context: context,
+          barrierDismissible: false,
+          showCancel: false,
+          title: Text('Special notes for $version'),
+          content: Text(specialNotes[version]!),
+          confirmLabel: context.l10n.ok,
+          onConfirm: () => container
+              .read(specialNotesDisposedManagerProvider.notifier)
+              .disposeNotes(),
+        );
+      }
 
-    container.read(secureBookmarkManagerProvider.notifier).restore();
-  });
+      container.read(secureBookmarkManagerProvider.notifier).restore();
+    });
+  }
 
   void registerCommonHandlers(BuildContext context) {
     final container = ProviderScope.containerOf(context, listen: false);
@@ -115,25 +119,26 @@ mixin CommonHandlersAndCommandsMixin {
       }
     });
 
-    registerStreamHandler(
-      select: (PlayerManager m) => m.messageStream,
-      handler: (context, newValue, cancel) {
-        if (newValue.hasError) {
-          final audio = di<PlayerManager>().audio;
+    container.listen<AsyncValue<String>>(
+      playerMessageProvider,
+      (prev, next) {
+        if (next.hasError) {
+          final audio = container.read(currentAudioManagerProvider);
+          final error = next.error;
 
           context.toast(
             Text(
-              (newValue.error is PlayTimeoutException) || audio?.url != null
+              (error is PlayTimeoutException) || audio?.url != null
                   ? context.l10n.playerCouldNotOpenRemoteMedia(
                       audio?.title ?? '',
                     )
-                  : newValue.error.toString(),
+                  : error.toString(),
             ),
             duration: const Duration(seconds: 8),
             showCloseIcon: true,
           );
-        } else if (newValue.hasData) {
-          context.toast(Text(newValue.data!));
+        } else if (next.hasValue && next.value != null) {
+          context.toast(Text(next.value!));
         }
       },
     );

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
 import '../../common/data/audio.dart';
@@ -7,9 +6,10 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/ui_constants.dart';
+import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/platform_x.dart';
-import '../manager/player_manager.dart';
+import '../service/player_service.dart';
 import 'player_main_controls.dart';
 import 'player_track.dart';
 import 'player_view.dart';
@@ -206,7 +206,7 @@ class SimpleFullHeightVideoPlayer extends StatelessWidget {
         ? const EdgeInsets.only(bottom: 40)
         : EdgeInsets.zero,
     child: Video(
-      controller: di<PlayerManager>().controller,
+      controller: di<PlayerService>().controller,
       controls: controls,
     ),
   );

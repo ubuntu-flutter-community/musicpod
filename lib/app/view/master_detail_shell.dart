@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/global_keys.dart';
@@ -34,7 +33,7 @@ class MasterDetailShell extends ConsumerWidget {
 }
 
 class _MasterDetailShellContent extends StatelessWidget
-    with WatchItMixin, CommonHandlersAndCommandsMixin {
+    with CommonHandlersAndCommandsMixin {
   const _MasterDetailShellContent({
     required this.isInFullWindowMode,
     required this.onDismissFullWindowMode,

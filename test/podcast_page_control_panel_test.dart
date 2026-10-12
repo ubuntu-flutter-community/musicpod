@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,18 +13,19 @@ import 'package:musicpod/common/view/audio_filter.dart';
 import 'package:musicpod/common/view/avatar_play_button.dart';
 import 'package:musicpod/common/view/confirm.dart';
 import 'package:musicpod/l10n/app_localizations.dart';
+import 'package:musicpod/player/data/player_change.dart';
 import 'package:musicpod/player/data/queue.dart';
-import 'package:musicpod/player/manager/player_manager.dart';
+import 'package:musicpod/player/service/player_service.dart';
 import 'package:musicpod/podcasts/data/podcast_short_info.dart';
 import 'package:musicpod/podcasts/manager/episodes_manager.dart';
 import 'package:musicpod/podcasts/service/podcast_service.dart';
 import 'package:musicpod/podcasts/view/podcast_page_control_panel.dart';
 import 'package:musicpod/settings/service/settings_service.dart';
 
-import 'podcast_page_control_panel_test.mocks.dart';
+import 'mpv_metadata_manager_test.mocks.dart';
+import 'podcast_page_control_panel_test.mocks.dart' hide MockSettingsService;
 
 @GenerateMocks([
-  PlayerManager,
   SettingsService,
   PodcastService,
 ])
@@ -37,7 +40,8 @@ class FakeEpisodesManager extends EpisodesManager {
 void main() {
   const feedUrl = 'https://example.com/podcast.xml';
 
-  late MockPlayerManager mockPlayerManager;
+  late MockPlayerService mockPlayerService;
+  late StreamController<PlayerChange> changesController;
   late MockSettingsService mockSettingsService;
   late MockPodcastService mockPodcastService;
   late List<Audio> allEpisodes;
@@ -73,20 +77,25 @@ void main() {
     );
     loadedEpisodes = allEpisodes.take(25).toList();
 
-    mockPlayerManager = MockPlayerManager();
+    mockPlayerService = MockPlayerService();
+    changesController = StreamController<PlayerChange>.broadcast();
     mockSettingsService = MockSettingsService();
     mockPodcastService = MockPodcastService();
 
-    when(mockPlayerManager.isPlaying).thenReturn(false);
-    when(mockPlayerManager.queue).thenReturn(const Queue.empty());
+    when(mockPlayerService.changes)
+        .thenAnswer((_) => changesController.stream);
+    when(mockPlayerService.isPlaying).thenReturn(false);
+    when(mockPlayerService.queue).thenReturn(const Queue.empty());
+    when(mockPlayerService.lastPositions).thenReturn({});
+    when(mockPlayerService.audio).thenReturn(null);
     when(
-      mockPlayerManager.play(
+      mockPlayerService.play(
         audios: anyNamed('audios'),
         listName: anyNamed('listName'),
         index: anyNamed('index'),
       ),
     ).thenAnswer((_) async {});
-    when(mockPlayerManager.playOrPause()).thenAnswer((_) async {});
+    when(mockPlayerService.playOrPause()).thenAnswer((_) async {});
 
     when(mockSettingsService.getInt(any)).thenReturn(0);
     when(mockSettingsService.getBool(any)).thenReturn(false);
@@ -100,11 +109,12 @@ void main() {
     );
 
     GetIt.I.registerSingleton<SettingsService>(mockSettingsService);
-    GetIt.I.registerSingleton<PlayerManager>(mockPlayerManager);
+    GetIt.I.registerSingleton<PlayerService>(mockPlayerService);
     GetIt.I.registerSingleton<PodcastService>(mockPodcastService);
   });
 
   tearDown(() async {
+    await changesController.close();
     await Family.reset();
     await GetIt.I.reset();
   });
@@ -147,7 +157,7 @@ void main() {
     expect(find.byType(ConfirmationDialog), findsNothing);
     // Player called with all episodes
     verify(
-      mockPlayerManager.play(audios: allEpisodes, listName: feedUrl),
+      mockPlayerService.play(audios: allEpisodes, listName: feedUrl),
     ).called(1);
   });
 
@@ -182,7 +192,7 @@ void main() {
 
       // Only loaded episodes played
       verify(
-        mockPlayerManager.play(audios: loadedEpisodes, listName: feedUrl),
+        mockPlayerService.play(audios: loadedEpisodes, listName: feedUrl),
       ).called(1);
     },
   );
@@ -217,7 +227,7 @@ void main() {
 
       // All episodes played
       verify(
-        mockPlayerManager.play(audios: allEpisodes, listName: feedUrl),
+        mockPlayerService.play(audios: allEpisodes, listName: feedUrl),
       ).called(1);
     },
   );
@@ -226,7 +236,7 @@ void main() {
     'toggles play/pause when page feedUrl is already the active queue',
     (tester) async {
       when(
-        mockPlayerManager.queue,
+        mockPlayerService.queue,
       ).thenReturn(Queue(name: feedUrl, audios: allEpisodes));
 
       final state = createEpisodesState(
@@ -242,9 +252,9 @@ void main() {
       await tester.tap(playAllButton);
       await tester.pump();
 
-      verify(mockPlayerManager.playOrPause()).called(1);
+      verify(mockPlayerService.playOrPause()).called(1);
       verifyNever(
-        mockPlayerManager.play(
+        mockPlayerService.play(
           audios: anyNamed('audios'),
           listName: anyNamed('listName'),
         ),
@@ -253,3 +263,4 @@ void main() {
     },
   );
 }
+

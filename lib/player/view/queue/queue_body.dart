@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
@@ -12,20 +11,22 @@ import '../../../extensions/build_context_x.dart';
 import '../../../local_audio/data/playlist_action.dart';
 import '../../../local_audio/manager/playlist_ids_manager.dart';
 import '../../data/queue.dart';
-import '../../manager/player_manager.dart';
+import '../../manager/current_audio_manager.dart';
+import '../../manager/queue_manager.dart';
 import '../../manager/queue_scroll_manager.dart';
+import '../../manager/shuffle_manager.dart';
 
-class QueueBody extends StatefulWidget with WatchItStatefulWidgetMixin {
+class QueueBody extends ConsumerStatefulWidget {
   const QueueBody({super.key, this.selectedColor, this.shownInDialog = false});
 
   final Color? selectedColor;
   final bool shownInDialog;
 
   @override
-  State<QueueBody> createState() => _QueueBodyState();
+  ConsumerState<QueueBody> createState() => _QueueBodyState();
 }
 
-class _QueueBodyState extends State<QueueBody>
+class _QueueBodyState extends ConsumerState<QueueBody>
     with AutomaticKeepAliveClientMixin {
   final AutoScrollController _controller = AutoScrollController();
   bool _initialJumpDone = false;
@@ -35,11 +36,10 @@ class _QueueBodyState extends State<QueueBody>
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      final container = ProviderScope.containerOf(context);
-      final scrollState = container.read(queueScrollManagerProvider);
+      final scrollState = ref.read(queueScrollManagerProvider);
       if (scrollState.autoScroll && !_initialJumpDone) {
         _initialJumpDone = true;
-        final notifier = container.read(queueScrollManagerProvider.notifier);
+        final notifier = ref.read(queueScrollManagerProvider.notifier);
         _jump(
           isJumping: scrollState.isJumping,
           autoScrollEnabled: scrollState.autoScroll,
@@ -51,6 +51,12 @@ class _QueueBodyState extends State<QueueBody>
     });
   }
 
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   void _jump({
     required bool isJumping,
     required bool autoScrollEnabled,
@@ -58,14 +64,14 @@ class _QueueBodyState extends State<QueueBody>
     required void Function(bool) setShowSpinner,
     bool showSpinner = false,
   }) {
-    final model = di<PlayerManager>();
-    final currentAudio = model.audio;
+    final currentAudio = ref.read(currentAudioManagerProvider);
+    final queue = ref.read(queueManagerProvider);
     if (!isJumping &&
         autoScrollEnabled &&
         currentAudio != null &&
-        model.queue.audios.isNotEmpty &&
+        queue.audios.isNotEmpty &&
         _controller.hasClients) {
-      final targetIndex = model.queue.audios.indexOf(currentAudio);
+      final targetIndex = queue.audios.indexOf(currentAudio);
       if (targetIndex < 0) return;
       setJumping(true);
       if (showSpinner) {
@@ -92,172 +98,153 @@ class _QueueBodyState extends State<QueueBody>
     final theme = context.theme;
     final colorScheme = theme.colorScheme;
 
-    onDispose(_controller.dispose);
-
-    registerStreamHandler(
-      select: (PlayerManager m) => m.newAudioStream,
-      handler: (context, snapshot, cancel) {
-        if (!snapshot.hasData) return;
-        final container = ProviderScope.containerOf(context);
-        final scrollState = container.read(queueScrollManagerProvider);
-        if (scrollState.autoScroll) {
-          final notifier = container.read(queueScrollManagerProvider.notifier);
-          _jump(
-            isJumping: scrollState.isJumping,
-            autoScrollEnabled: scrollState.autoScroll,
-            setJumping: notifier.setJumping,
-            setShowSpinner: notifier.setShowSpinner,
-          );
-        }
-      },
-    );
-
-    final currentAudio = watchPropertyValue((PlayerManager m) => m.audio);
-    final queue = watchPropertyValue((PlayerManager m) => m.queue);
-
-    return Consumer(
-      builder: (context, ref, _) {
-        final jumping = ref.watch(
-          queueScrollManagerProvider.select((s) => s.isJumping),
-        );
-        final showSpinnerWhileJumping = ref.watch(
-          queueScrollManagerProvider.select((s) => s.showSpinner),
-        );
-        final queueAutoScroll = ref.watch(
-          queueScrollManagerProvider.select((s) => s.autoScroll),
-        );
+    ref.listen(currentAudioManagerProvider, (previous, next) {
+      if (next == null) return;
+      final scrollState = ref.read(queueScrollManagerProvider);
+      if (scrollState.autoScroll) {
         final notifier = ref.read(queueScrollManagerProvider.notifier);
-
-        return SizedBox(
-          width: 400,
-          height: 500,
-          child: Column(
-            spacing: kLargestSpace,
-            children: [
-              Expanded(
-                child: Stack(
-                  children: [
-                    if (jumping && showSpinnerWhileJumping)
-                      const Center(child: Progress()),
-                    Opacity(
-                      opacity: jumping && showSpinnerWhileJumping ? 0.0 : 1,
-                      child: ReorderableListView.builder(
-                        scrollController: _controller,
-                        padding: const EdgeInsets.only(left: 25, right: 25),
-                        buildDefaultDragHandles: false,
-                        proxyDecorator: (child, index, animation) => Material(
-                          color: colorScheme.onSurface.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(6),
-                          child: child,
-                        ),
-                        itemBuilder: (context, index) {
-                          final audio = queue.audios.elementAt(index);
-                          final selected = audio == currentAudio;
-
-                          return _QueueTile(
-                            key: ValueKey(index),
-                            index: index,
-                            controller: _controller,
-                            selectedColor: colorScheme.onSurface,
-                            queue: queue,
-                            audio: audio,
-                            selected: selected,
-                          );
-                        },
-                        itemCount: queue.audios.length,
-                        onReorderItem: di<PlayerManager>().moveAudioInQueue,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 3 * kLargestSpace),
-                child: Row(
-                  spacing: kMediumSpace,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    IconButton(
-                      tooltip: l10n.createNewPlaylist,
-                      onPressed: queue.audios.where((e) => e.isLocal).isEmpty
-                          ? null
-                          : () => ConfirmationDialog.show(
-                              context: context,
-                              title: Text(l10n.createNewPlaylist + '?'),
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                spacing: kMediumSpace,
-                                children: [
-                                  Text(
-                                    '"${l10n.queue} ${DateTime.now()}"',
-                                    style: theme.textTheme.titleMedium,
-                                  ),
-                                  Text(l10n.youCanEditTheNameLater),
-                                ],
-                              ),
-                              onConfirm: () {
-                                ProviderScope.containerOf(
-                                      context,
-                                      listen: false,
-                                    )
-                                    .read(playlistIDsManagerProvider.notifier)
-                                    .createOrChangePlaylist(
-                                      PlaylistChange(
-                                        id: '${l10n.queue} ${DateTime.now()}',
-                                        audios: List.from(
-                                          queue.audios.where((e) => e.isLocal),
-                                        ),
-                                        action: PlaylistAction.create,
-                                      ),
-                                    );
-                                if (widget.shownInDialog && context.canPop()) {
-                                  context.pop();
-                                }
-                              },
-                            ),
-                      icon: Icon(
-                        Iconz.createPlaylist,
-                        color: queue.audios.where((e) => e.isLocal).isEmpty
-                            ? theme.disabledColor
-                            : widget.selectedColor,
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Iconz.clearAll,
-                        semanticLabel: l10n.clearQueue,
-                      ),
-                      tooltip: l10n.clearQueue,
-                      onPressed:
-                          queue.audios.isEmpty ||
-                              di<PlayerManager>().audio == null
-                          ? null
-                          : () => di<PlayerManager>().clearQueue(),
-                    ),
-                    IconButton(
-                      tooltip: l10n.autoScrolling,
-                      isSelected: queueAutoScroll,
-                      icon: Icon(Iconz.autoScrollOn),
-                      onPressed: () {
-                        if (!queueAutoScroll) {
-                          _jump(
-                            isJumping: jumping,
-                            autoScrollEnabled: true,
-                            setJumping: notifier.setJumping,
-                            setShowSpinner: notifier.setShowSpinner,
-                          );
-                        }
-                        notifier.toggleAutoScroll();
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: kLargestSpace),
-            ],
-          ),
+        _jump(
+          isJumping: scrollState.isJumping,
+          autoScrollEnabled: scrollState.autoScroll,
+          setJumping: notifier.setJumping,
+          setShowSpinner: notifier.setShowSpinner,
         );
-      },
+      }
+    });
+
+    final currentAudio = ref.watch(currentAudioManagerProvider);
+    final queue = ref.watch(queueManagerProvider);
+    final scrollState = ref.watch(queueScrollManagerProvider);
+    final jumping = scrollState.isJumping;
+    final showSpinnerWhileJumping = scrollState.showSpinner;
+    final queueAutoScroll = scrollState.autoScroll;
+    final notifier = ref.read(queueScrollManagerProvider.notifier);
+
+    return SizedBox(
+      width: 400,
+      height: 500,
+      child: Column(
+        spacing: kLargestSpace,
+        children: [
+          Expanded(
+            child: Stack(
+              children: [
+                if (jumping && showSpinnerWhileJumping)
+                  const Center(child: Progress()),
+                Opacity(
+                  opacity: jumping && showSpinnerWhileJumping ? 0.0 : 1,
+                  child: ReorderableListView.builder(
+                    scrollController: _controller,
+                    padding: const EdgeInsets.only(left: 25, right: 25),
+                    buildDefaultDragHandles: false,
+                    proxyDecorator: (child, index, animation) => Material(
+                      color: colorScheme.onSurface.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(6),
+                      child: child,
+                    ),
+                    itemBuilder: (context, index) {
+                      final audio = queue.audios.elementAt(index);
+                      final selected = audio == currentAudio;
+
+                      return _QueueTile(
+                        key: ValueKey(index),
+                        index: index,
+                        controller: _controller,
+                        selectedColor: colorScheme.onSurface,
+                        queue: queue,
+                        audio: audio,
+                        selected: selected,
+                      );
+                    },
+                    itemCount: queue.audios.length,
+                    onReorderItem:
+                        ref.read(queueManagerProvider.notifier).moveAudioInQueue,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 3 * kLargestSpace),
+            child: Row(
+              spacing: kMediumSpace,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                IconButton(
+                  tooltip: l10n.createNewPlaylist,
+                  onPressed: queue.audios.where((e) => e.isLocal).isEmpty
+                      ? null
+                      : () => ConfirmationDialog.show(
+                          context: context,
+                          title: Text(l10n.createNewPlaylist + '?'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            spacing: kMediumSpace,
+                            children: [
+                              Text(
+                                '"${l10n.queue} ${DateTime.now()}"',
+                                style: theme.textTheme.titleMedium,
+                              ),
+                              Text(l10n.youCanEditTheNameLater),
+                            ],
+                          ),
+                          onConfirm: () {
+                            ref
+                                .read(playlistIDsManagerProvider.notifier)
+                                .createOrChangePlaylist(
+                                  PlaylistChange(
+                                    id: '${l10n.queue} ${DateTime.now()}',
+                                    audios: List.from(
+                                      queue.audios.where((e) => e.isLocal),
+                                    ),
+                                    action: PlaylistAction.create,
+                                  ),
+                                );
+                            if (widget.shownInDialog && context.canPop()) {
+                              context.pop();
+                            }
+                          },
+                        ),
+                  icon: Icon(
+                    Iconz.createPlaylist,
+                    color: queue.audios.where((e) => e.isLocal).isEmpty
+                        ? theme.disabledColor
+                        : widget.selectedColor,
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(
+                    Iconz.clearAll,
+                    semanticLabel: l10n.clearQueue,
+                  ),
+                  tooltip: l10n.clearQueue,
+                  onPressed:
+                      queue.audios.isEmpty || currentAudio == null
+                      ? null
+                      : () => ref.read(queueManagerProvider.notifier).clearQueue(),
+                ),
+                IconButton(
+                  tooltip: l10n.autoScrolling,
+                  isSelected: queueAutoScroll,
+                  icon: Icon(Iconz.autoScrollOn),
+                  onPressed: () {
+                    if (!queueAutoScroll) {
+                      _jump(
+                        isJumping: jumping,
+                        autoScrollEnabled: true,
+                        setJumping: notifier.setJumping,
+                        setShowSpinner: notifier.setShowSpinner,
+                      );
+                    }
+                    notifier.toggleAutoScroll();
+                  },
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: kLargestSpace),
+        ],
+      ),
     );
   }
 
@@ -265,7 +252,7 @@ class _QueueBodyState extends State<QueueBody>
   bool get wantKeepAlive => true;
 }
 
-class _QueueTile extends StatefulWidget {
+class _QueueTile extends ConsumerStatefulWidget {
   const _QueueTile({
     required super.key,
     required this.queue,
@@ -284,10 +271,10 @@ class _QueueTile extends StatefulWidget {
   final AutoScrollController controller;
 
   @override
-  State<_QueueTile> createState() => _QueueTileState();
+  ConsumerState<_QueueTile> createState() => _QueueTileState();
 }
 
-class _QueueTileState extends State<_QueueTile> {
+class _QueueTileState extends ConsumerState<_QueueTile> {
   bool _hovered = false;
 
   @override
@@ -307,8 +294,8 @@ class _QueueTileState extends State<_QueueTile> {
               borderRadius: BorderRadius.circular(6),
             ),
             onTap: () async {
-              await di<PlayerManager>().setShuffle(false);
-              await di<PlayerManager>().play(
+              await ref.read(shuffleManagerProvider.notifier).setShuffle(false);
+              await ref.read(currentAudioManagerProvider.notifier).play(
                 listName: widget.queue.name,
                 audios: widget.queue.audios,
                 index: widget.queue.audios.indexOf(widget.audio),
@@ -331,7 +318,9 @@ class _QueueTileState extends State<_QueueTile> {
                     dimension: 30,
                     child: IconButton(
                       padding: EdgeInsets.zero,
-                      onPressed: () => di<PlayerManager>().remove(widget.audio),
+                      onPressed: () => ref
+                          .read(queueManagerProvider.notifier)
+                          .remove(widget.audio),
                       icon: Icon(Iconz.remove),
                     ),
                   )

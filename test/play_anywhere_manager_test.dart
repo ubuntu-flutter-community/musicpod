@@ -1,6 +1,6 @@
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:musicpod/app/data/play_anywhere_bad_audios_exception.dart';
@@ -8,15 +8,17 @@ import 'package:musicpod/app/data/play_anywhere_param.dart';
 import 'package:musicpod/app/data/play_anywhere_result.dart';
 import 'package:musicpod/app/play_anywhere_manager.dart';
 import 'package:musicpod/common/data/audio.dart';
+import 'package:musicpod/common/data/audio_type.dart';
 import 'package:musicpod/common/view/audio_page_type.dart';
+import 'package:musicpod/dependencies.dart';
 import 'package:musicpod/local_audio/service/local_audio_service.dart';
 import 'package:musicpod/player/data/queue.dart';
-import 'package:musicpod/player/manager/player_manager.dart';
+import 'package:musicpod/player/service/player_service.dart';
 import 'package:musicpod/podcasts/service/podcast_service.dart';
-import 'package:musicpod/common/data/audio_type.dart';
 import 'package:musicpod/radio/manager/station_manager.dart';
 import 'package:musicpod/radio/service/radio_service.dart';
 
+import 'mpv_metadata_manager_test.mocks.dart';
 import 'play_anywhere_manager_test.mocks.dart';
 
 class FakeStationManager extends StationManager {
@@ -27,12 +29,12 @@ class FakeStationManager extends StationManager {
   Future<Audio?> build(String uuid) async => audio;
 }
 
-@GenerateMocks([PlayerManager, LocalAudioService, PodcastService, RadioService])
+@GenerateMocks([LocalAudioService, PodcastService, RadioService])
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   late ProviderContainer container;
-  late MockPlayerManager mockPlayerManager;
+  late MockPlayerService mockPlayerService;
   late MockLocalAudioService mockLocalAudioService;
   late MockPodcastService mockPodcastService;
   late MockRadioService mockRadioService;
@@ -47,21 +49,23 @@ void main() {
   setUp(() async {
     await GetIt.I.reset();
 
-    mockPlayerManager = MockPlayerManager();
+    mockPlayerService = MockPlayerService();
     mockLocalAudioService = MockLocalAudioService();
     mockPodcastService = MockPodcastService();
     mockRadioService = MockRadioService();
 
-    when(mockPlayerManager.queue).thenReturn(const Queue.empty());
-    when(mockPlayerManager.isPlaying).thenReturn(false);
-    when(mockPlayerManager.play(
+    when(mockPlayerService.changes).thenAnswer((_) => const Stream.empty());
+    when(mockPlayerService.queue).thenReturn(const Queue.empty());
+    when(mockPlayerService.isPlaying).thenReturn(false);
+    when(mockPlayerService.play(
       audios: anyNamed('audios'),
       listName: anyNamed('listName'),
+      index: anyNamed('index'),
     )).thenAnswer((_) async {});
-    when(mockPlayerManager.pause()).thenAnswer((_) async {});
-    when(mockPlayerManager.resume()).thenAnswer((_) async {});
+    when(mockPlayerService.pause()).thenAnswer((_) async {});
+    when(mockPlayerService.resume()).thenAnswer((_) async {});
 
-    di.registerSingleton<PlayerManager>(mockPlayerManager);
+    di.registerSingleton<PlayerService>(mockPlayerService);
     di.registerSingleton<LocalAudioService>(mockLocalAudioService);
     di.registerSingleton<PodcastService>(mockPodcastService);
     di.registerSingleton<RadioService>(mockRadioService);
@@ -98,20 +102,20 @@ void main() {
       expect(container.read(playAnywhereManagerProvider).value, result);
       expect(notifier.activeParam, isNull);
 
-      verify(mockPlayerManager.play(
+      verify(mockPlayerService.play(
         audios: [testAudio],
         listName: 'playlist-1',
       )).called(1);
-      verifyNever(mockPlayerManager.pause());
-      verifyNever(mockPlayerManager.resume());
+      verifyNever(mockPlayerService.pause());
+      verifyNever(mockPlayerService.resume());
     });
 
     test('pauses if playlist is already enqueued and playing', () async {
       when(mockLocalAudioService.findPlaylistById('playlist-1'))
           .thenAnswer((_) async => [testAudio]);
-      when(mockPlayerManager.queue)
+      when(mockPlayerService.queue)
           .thenReturn(const Queue(name: 'playlist-1', audios: [testAudio]));
-      when(mockPlayerManager.isPlaying).thenReturn(true);
+      when(mockPlayerService.isPlaying).thenReturn(true);
 
       final notifier = container.read(playAnywhereManagerProvider.notifier);
       final result = await notifier.play(
@@ -122,8 +126,8 @@ void main() {
       );
 
       expect(result, isNotNull);
-      verify(mockPlayerManager.pause()).called(1);
-      verifyNever(mockPlayerManager.play(
+      verify(mockPlayerService.pause()).called(1);
+      verifyNever(mockPlayerService.play(
         audios: anyNamed('audios'),
         listName: anyNamed('listName'),
       ));
@@ -132,9 +136,9 @@ void main() {
     test('resumes if playlist is already enqueued and not playing', () async {
       when(mockLocalAudioService.findPlaylistById('playlist-1'))
           .thenAnswer((_) async => [testAudio]);
-      when(mockPlayerManager.queue)
+      when(mockPlayerService.queue)
           .thenReturn(const Queue(name: 'playlist-1', audios: [testAudio]));
-      when(mockPlayerManager.isPlaying).thenReturn(false);
+      when(mockPlayerService.isPlaying).thenReturn(false);
 
       final notifier = container.read(playAnywhereManagerProvider.notifier);
       final result = await notifier.play(
@@ -145,8 +149,8 @@ void main() {
       );
 
       expect(result, isNotNull);
-      verify(mockPlayerManager.resume()).called(1);
-      verifyNever(mockPlayerManager.play(
+      verify(mockPlayerService.resume()).called(1);
+      verifyNever(mockPlayerService.play(
         audios: anyNamed('audios'),
         listName: anyNamed('listName'),
       ));
@@ -165,7 +169,7 @@ void main() {
       );
 
       expect(result?.audios, [testAudio]);
-      verify(mockPlayerManager.play(
+      verify(mockPlayerService.play(
         audios: [testAudio],
         listName: 'liked',
       )).called(1);
@@ -184,7 +188,7 @@ void main() {
       );
 
       expect(result?.audios, [testAudio]);
-      verify(mockPlayerManager.play(
+      verify(mockPlayerService.play(
         audios: [testAudio],
         listName: '42',
       )).called(1);
@@ -203,7 +207,7 @@ void main() {
       );
 
       expect(result?.audios, [testAudio]);
-      verify(mockPlayerManager.play(
+      verify(mockPlayerService.play(
         audios: [testAudio],
         listName: 'Artist X',
       )).called(1);
@@ -224,7 +228,7 @@ void main() {
       );
 
       expect(result?.audios, [testAudio]);
-      verify(mockPlayerManager.play(
+      verify(mockPlayerService.play(
         audios: [testAudio],
         listName: 'https://feed.xml',
       )).called(1);
@@ -248,7 +252,7 @@ void main() {
       );
 
       expect(result?.audios, [testAudio]);
-      verify(mockPlayerManager.play(
+      verify(mockPlayerService.play(
         audios: [testAudio],
         listName: 'station-uuid',
       )).called(1);
@@ -267,7 +271,7 @@ void main() {
       );
 
       expect(result?.audios, [testAudio]);
-      verify(mockPlayerManager.play(
+      verify(mockPlayerService.play(
         audios: [testAudio],
         listName: 'station-uuid',
       )).called(1);
@@ -290,7 +294,7 @@ void main() {
       expect(state.hasError, isTrue);
       expect(state.error, isA<PlayAnywhereBadAudiosException>());
       expect(notifier.activeParam, isNull);
-      verifyNever(mockPlayerManager.play(
+      verifyNever(mockPlayerService.play(
         audios: anyNamed('audios'),
         listName: anyNamed('listName'),
       ));

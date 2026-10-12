@@ -16,7 +16,8 @@ import '../../local_audio/manager/pinned_album_ids_manager.dart';
 import '../../local_audio/manager/playlist_ids_manager.dart';
 import '../../local_audio/manager/tracks_synced_manager.dart';
 import '../../local_audio/service/local_audio_service.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/audio_progress_manager.dart';
+import '../../player/service/player_service.dart';
 import '../../podcasts/manager/subscribed_podcasts_manager.dart';
 import '../../podcasts/service/podcast_service.dart';
 import '../../radio/manager/radio_fav_tag_manager.dart';
@@ -41,7 +42,7 @@ class WipeManager extends _$WipeManager {
 
       if (wipeTypes.contains(WipeType.podcasts)) {
         await di<PodcastService>().wipeAndBuildPodcastLibrary();
-        await di<PlayerManager>().clearAllLastPositions();
+        await ref.read(audioProgressManagerProvider.notifier).clearAll();
         ref.invalidate(subscribedPodcastsManagerProvider);
       }
 
@@ -70,7 +71,7 @@ class WipeManager extends _$WipeManager {
       }
 
       if (wipeTypes.contains(WipeType.player)) {
-        await di<PlayerManager>().resetPlayerState();
+        await di<PlayerService>().resetPlayerState();
       }
 
       if (wipeTypes.contains(WipeType.settings)) {

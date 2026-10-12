@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/data/play_anywhere_param.dart';
 import '../../app/play_anywhere_manager.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/play_pause_manager.dart';
+import '../../player/manager/queue_manager.dart';
 import 'audio_page_type.dart';
 import 'icons.dart';
 import 'ui_constants.dart';
 
-class AvatarPlayButton extends StatelessWidget with WatchItMixin {
+class AvatarPlayButton extends ConsumerWidget {
   const AvatarPlayButton({
     super.key,
     required this.pageId,
@@ -23,13 +23,11 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
   final VoidCallback? onPressed;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.theme;
-    final isPlayerPlaying = watchPropertyValue(
-      (PlayerManager m) => m.isPlaying,
-    );
-    final pageIsQueue = watchPropertyValue(
-      (PlayerManager m) => m.queue.name == pageId,
+    final isPlayerPlaying = ref.watch(playPauseManagerProvider);
+    final pageIsQueue = ref.watch(
+      queueManagerProvider.select((q) => q.name == pageId),
     );
     final iconData = isPlayerPlaying && pageIsQueue
         ? Iconz.pause
@@ -57,7 +55,7 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
         tooltip: label,
         onPressed:
             onPressed ??
-            () => ProviderScope.containerOf(context, listen: false)
+            () => ref
                 .read(playAnywhereManagerProvider.notifier)
                 .play(
                   PlayAnywhereParam(
@@ -74,3 +72,4 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
     );
   }
 }
+

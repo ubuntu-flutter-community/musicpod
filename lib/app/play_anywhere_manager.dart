@@ -7,7 +7,8 @@ import '../common/logging.dart';
 import '../common/view/audio_page_type.dart';
 import '../dependencies.dart';
 import '../local_audio/service/local_audio_service.dart';
-import '../player/manager/player_manager.dart';
+import '../player/manager/play_pause_manager.dart';
+import '../player/manager/queue_manager.dart';
 import '../podcasts/service/podcast_service.dart';
 import '../radio/manager/station_manager.dart';
 import '../radio/service/radio_service.dart';
@@ -46,7 +47,6 @@ class PlayAnywhereManager extends _$PlayAnywhereManager {
   }
 
   Future<PlayAnywhereResult?> _playAudiosById(PlayAnywhereParam param) async {
-    final playerManager = di<PlayerManager>();
     final result = await _getAudiosById(param: param);
 
     if (result == null || result.audios.isEmpty) {
@@ -55,13 +55,15 @@ class PlayAnywhereManager extends _$PlayAnywhereManager {
       );
     }
 
-    final isEnQueued = playerManager.queue.name == param.pageId;
+    final isEnQueued = ref.read(queueManagerProvider).name == param.pageId;
     if (isEnQueued) {
-      playerManager.isPlaying
-          ? await playerManager.pause()
-          : await playerManager.resume();
+      ref.read(playPauseManagerProvider)
+          ? await ref.read(playPauseManagerProvider.notifier).pause()
+          : await ref.read(playPauseManagerProvider.notifier).resume();
     } else {
-      await playerManager.play(audios: result.audios, listName: param.pageId);
+      await ref
+          .read(playPauseManagerProvider.notifier)
+          .play(audios: result.audios, listName: param.pageId);
     }
 
     return result;

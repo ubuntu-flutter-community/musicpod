@@ -1,15 +1,15 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
+import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/platform_x.dart';
 import '../../l10n/app_localizations.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/service/player_service.dart';
 import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
 import '../app_config.dart';
@@ -41,7 +41,7 @@ class _MobileMusicPodAppState extends ConsumerState<MobileMusicPodApp> {
 
   Future<void> _onStateChanged(AppLifecycleState state) async {
     if (state == AppLifecycleState.paused) {
-      await di<PlayerManager>().persistPlayerState();
+      await di<PlayerService>().persistPlayerState();
     }
   }
 
