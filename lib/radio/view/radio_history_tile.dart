@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
-import '../../dependencies.dart';
 import '../../common/view/copy_clipboard_content.dart';
+import '../../dependencies.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/modals.dart';
 import '../../common/view/mpv_metadata_dialog.dart';
@@ -13,7 +13,8 @@ import '../../common/view/tapable_text.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../../player/manager/mpv_metadata_manager.dart';
+import '../../player/manager/blocked_icy_titles_manager.dart';
+import '../../player/manager/mpv_metadata_history_manager.dart';
 import '../../search/data/search_type.dart';
 import '../../search/manager/search_manager.dart';
 import '../manager/online_art_manager.dart';
@@ -44,7 +45,8 @@ class RadioHistoryTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final icyName = di<MpvMetadataManager>().getMetadata(icyTitle)?.icyName;
+    final icyName =
+        ref.watch(mpvMetadataHistoryManagerProvider.select((m) => m[icyTitle]?.icyName));
 
     return switch (_variant) {
       _RadioHistoryTileVariant.simple => _SimpleRadioHistoryTile(
@@ -73,9 +75,8 @@ class RadioHistoryTile extends ConsumerWidget {
                     final imageUrl = ref
                         .read(onlineArtManagerProvider(icyTitle))
                         .value;
-                    final metadata = di<MpvMetadataManager>().getMetadata(
-                      icyTitle,
-                    );
+                    final metadata =
+                        ref.read(mpvMetadataHistoryManagerProvider)[icyTitle];
                     if (metadata == null) return;
 
                     showModal(
@@ -88,10 +89,9 @@ class RadioHistoryTile extends ConsumerWidget {
                       ),
                     );
                   case RadioHistoryTileOption.ignoreTitle:
-                    di<MpvMetadataManager>().editBlockedIcyTitleCommand.run((
-                      title: icyTitle,
-                      addOrRemove: EditIcyTitleInHistory.add,
-                    ));
+                    ref
+                        .read(blockedIcyTitlesManagerProvider.notifier)
+                        .add(icyTitle);
                 }
               },
               itemBuilder: (context) => [
@@ -163,7 +163,7 @@ class RadioHistoryTile extends ConsumerWidget {
 
 enum RadioHistoryTileOption { showMetadata, ignoreTitle, streamprovider }
 
-class _SimpleRadioHistoryTile extends StatelessWidget {
+class _SimpleRadioHistoryTile extends ConsumerWidget {
   const _SimpleRadioHistoryTile({
     required this.icyTitle,
     required this.selected,
@@ -173,7 +173,7 @@ class _SimpleRadioHistoryTile extends StatelessWidget {
   final bool selected;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ListTile(
       selected: selected,
       selectedColor: context.theme.colorScheme.onSurface,
@@ -187,7 +187,7 @@ class _SimpleRadioHistoryTile extends StatelessWidget {
         onTap: () => context.toast(CopyClipboardContent(text: icyTitle)),
       ),
       subtitle: Text(
-        di<MpvMetadataManager>().getMetadata(icyTitle)?.icyName ??
+        ref.watch(mpvMetadataHistoryManagerProvider.select((m) => m[icyTitle]?.icyName)) ??
             context.l10n.station,
       ),
     );

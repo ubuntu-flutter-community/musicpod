@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../player/manager/mpv_metadata_history_manager.dart';
 import '../../player/manager/mpv_metadata_manager.dart';
 import 'radio_history_tile.dart';
 
-class RadioHistoryList extends StatelessWidget with WatchItMixin {
+class RadioHistoryList extends ConsumerWidget {
   const RadioHistoryList({
     super.key,
     this.filter,
@@ -24,13 +25,14 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin {
   final bool simpleList;
 
   @override
-  Widget build(BuildContext context) {
-    watchValue((MpvMetadataManager m) => m.mpvMetadataHistory);
-    final length = di<MpvMetadataManager>()
-        .filteredMpvMetaDataHistory(filter: filter)
-        .length;
-
-    final current = watchValue((MpvMetadataManager m) => m.mpvMetaDataCommand);
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(mpvMetadataHistoryManagerProvider);
+    final filtered = ref
+        .read(mpvMetadataHistoryManagerProvider.notifier)
+        .filteredHistory(filter: filter)
+        .toList();
+    final length = filtered.length;
+    final current = ref.watch(mpvMetadataManagerProvider);
 
     if (length == 0) {
       return NoSearchResultPage(
@@ -45,9 +47,7 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin {
         itemCount: length,
         itemBuilder: (context, index) {
           final reversedIndex = length - index - 1;
-          final e = di<MpvMetadataManager>()
-              .filteredMpvMetaDataHistory(filter: filter)
-              .elementAt(reversedIndex);
+          final e = filtered[reversedIndex];
           return simpleList
               ? RadioHistoryTile.simple(
                   key: ValueKey(
@@ -76,7 +76,7 @@ class RadioHistoryList extends StatelessWidget with WatchItMixin {
   }
 }
 
-class SliverRadioHistoryList extends StatelessWidget with WatchItMixin {
+class SliverRadioHistoryList extends ConsumerWidget {
   const SliverRadioHistoryList({
     super.key,
     this.filter,
@@ -93,13 +93,14 @@ class SliverRadioHistoryList extends StatelessWidget with WatchItMixin {
   final bool allowNavigation;
 
   @override
-  Widget build(BuildContext context) {
-    watchValue((MpvMetadataManager m) => m.mpvMetadataHistory);
-    final length = di<MpvMetadataManager>()
-        .filteredMpvMetaDataHistory(filter: filter)
-        .length;
-
-    final current = watchValue((MpvMetadataManager m) => m.mpvMetaDataCommand);
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(mpvMetadataHistoryManagerProvider);
+    final filtered = ref
+        .read(mpvMetadataHistoryManagerProvider.notifier)
+        .filteredHistory(filter: filter)
+        .toList();
+    final length = filtered.length;
+    final current = ref.watch(mpvMetadataManagerProvider);
 
     if (length == 0) {
       return SliverToBoxAdapter(
@@ -112,9 +113,7 @@ class SliverRadioHistoryList extends StatelessWidget with WatchItMixin {
     return SliverList(
       delegate: SliverChildBuilderDelegate((context, index) {
         final reversedIndex = length - index - 1;
-        final e = di<MpvMetadataManager>()
-            .filteredMpvMetaDataHistory(filter: filter)
-            .elementAt(reversedIndex);
+        final e = filtered[reversedIndex];
         return RadioHistoryTile(
           key: ValueKey(e.key),
           icyTitle: e.key,

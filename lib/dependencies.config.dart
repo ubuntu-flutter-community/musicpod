@@ -34,7 +34,6 @@ import 'local_audio/service/local_audio_service.dart' as _i985;
 import 'local_audio/service/local_cover_service.dart' as _i582;
 import 'lyrics/lyrics_service.dart' as _i546;
 import 'notifications/notifications_service.dart' as _i57;
-import 'player/manager/mpv_metadata_manager.dart' as _i507;
 import 'player/manager/player_manager.dart' as _i95;
 import 'player/persistence/player_dao.dart' as _i443;
 import 'player/service/player_service.dart' as _i456;
@@ -197,13 +196,6 @@ extension GetItInjectableX on _i174.GetIt {
         settingsService: gh<_i862.SettingsService>(),
         dio: gh<_i361.Dio>(),
         secureBookmarkService: gh<_i395.SecureBookmarkService>(),
-      ),
-    );
-    gh.lazySingleton<_i507.MpvMetadataManager>(
-      () => _i507.MpvMetadataManager(
-        playerService: gh<_i456.PlayerService>(),
-        exposeService: gh<_i313.ExposeService>(),
-        settingsService: gh<_i862.SettingsService>(),
       ),
     );
     gh.factory<_i354.SearchManager>(

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/app_config.dart';
 import '../../common/view/common_widgets.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/manager/mpv_metadata_manager.dart';
 import '../data/shared_preferences_keys.dart';
 import '../manager/settings_manager.dart';
 import 'settings_list_tile.dart';
@@ -21,6 +19,9 @@ class ResourceSection extends ConsumerWidget {
     final useMoreAnimations =
         ref.watch(settingsBoolManagerProvider(SPKeys.useMoreAnimations)) ??
         false;
+
+    final dataSafeMode =
+        ref.watch(settingsBoolManagerProvider(SPKeys.dataSafeMode)) ?? false;
 
     final saveWindowSize =
         ref.watch(settingsBoolManagerProvider(SPKeys.saveWindowSize)) ?? false;
@@ -47,13 +48,15 @@ class ResourceSection extends ConsumerWidget {
           position: ListTilePosition.middle,
           title: Text(l10n.enableDataSafeModeSettingTitle),
           subtitle: Text(l10n.enableDataSafeModeSettingDescription),
-          trailing: ValueListenableBuilder<bool>(
-            valueListenable: di<MpvMetadataManager>().dataSafeMode,
-            builder: (context, dataSafeMode, _) => CommonSwitch(
-              onChanged: (value) =>
-                  di<MpvMetadataManager>().dataSafeMode.value = value,
-              value: dataSafeMode,
-            ),
+          trailing: CommonSwitch(
+            onChanged: (value) => ref
+                .read(
+                  settingsBoolManagerProvider(
+                    SPKeys.dataSafeMode,
+                  ).notifier,
+                )
+                .set(value),
+            value: dataSafeMode,
           ),
         ),
         SettingsListTile(

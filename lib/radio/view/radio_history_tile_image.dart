@@ -6,10 +6,9 @@ import '../../common/view/modals.dart';
 import '../../common/view/mpv_metadata_dialog.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/ui_constants.dart';
-import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/platform_x.dart';
-import '../../player/manager/mpv_metadata_manager.dart';
+import '../../player/manager/mpv_metadata_history_manager.dart';
 import '../manager/online_art_manager.dart';
 
 class RadioHistoryTileImage extends ConsumerWidget {
@@ -38,7 +37,8 @@ class RadioHistoryTileImage extends ConsumerWidget {
         child: InkWell(
           borderRadius: bR,
           onTap: () {
-            final metadata = di<MpvMetadataManager>().getMetadata(icyTitle);
+            final metadata =
+                ref.read(mpvMetadataHistoryManagerProvider.notifier).getMetadata(icyTitle);
             if (metadata == null) return;
             showModal(
               mode: ModalMode.platformModalMode,

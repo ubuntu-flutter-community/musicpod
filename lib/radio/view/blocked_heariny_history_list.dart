@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/manager/mpv_metadata_manager.dart';
+import '../../player/manager/blocked_icy_titles_manager.dart';
 
-class BlockedHearinyHistoryList extends StatelessWidget with WatchItMixin {
+class BlockedHearinyHistoryList extends ConsumerWidget {
   const BlockedHearinyHistoryList({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final blockedIcyTitles = watchValue(
-      (MpvMetadataManager m) => m.editBlockedIcyTitleCommand,
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final blockedIcyTitles = ref.watch(blockedIcyTitlesManagerProvider);
     return SliverList.builder(
       itemCount: blockedIcyTitles.length,
       itemBuilder: (context, index) {
@@ -22,8 +20,9 @@ class BlockedHearinyHistoryList extends StatelessWidget with WatchItMixin {
           title: Text(title),
           leading: IconButton(
             tooltip: context.l10n.removeFromIgnoredHearyHistoryTitles,
-            onPressed: () => di<MpvMetadataManager>().editBlockedIcyTitleCommand
-                .run((title: title, addOrRemove: EditIcyTitleInHistory.remove)),
+            onPressed: () => ref
+                .read(blockedIcyTitlesManagerProvider.notifier)
+                .remove(title),
             icon: Icon(Iconz.remove),
           ),
         );

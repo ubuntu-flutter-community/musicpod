@@ -35,13 +35,11 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
 
     final audio = watchPropertyValue((PlayerManager m) => m.audio);
 
-    final icyTitle = watchValue(
-      (MpvMetadataManager m) => m.mpvMetaDataCommand,
-    )?.icyTitle;
-
     final hoverColor = theme.colorScheme.primary.withValues(alpha: 0.3);
     return Consumer(
       builder: (context, ref, _) {
+        final icyTitle =
+            ref.watch(mpvMetadataManagerProvider.select((m) => m?.icyTitle));
         final showPositionDuration =
             ref.watch(
               settingsBoolManagerProvider(SPKeys.showPositionDuration),
