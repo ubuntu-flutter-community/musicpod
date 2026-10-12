@@ -55,7 +55,7 @@ Thank you [@tomassasovsky](https://github.com/tomassasovsky) for the [dart imple
 
 Thank you [@ClementBeal](https://github.com/ClementBeal) for the super fast, pure dart [Audio Metadata Reader](https://github.com/ClementBeal/audio_metadata_reader)!
 
-Thank you [@escamoteur](https://github.com/escamoteur) for creating [get_it](https://pub.dev/packages/get_it), [watch_it](https://pub.dev/packages/watch_it), [command_it](https://pub.dev/packages/command_it) and [listen_it](https://pub.dev/packages/listen_it), which made my application faster and the source code cleaner!
+Thank you [@escamoteur](https://github.com/escamoteur) for creating [get_it](https://pub.dev/packages/get_it), which made my application faster and the source code cleaner!
 
 ## Contributing
 
@@ -193,19 +193,46 @@ Stateful widgets work fine and exactly as they should and dispose the data insta
 
 ### Resulting package choices
 
-So I found my personal favorite solution with [get_it](https://pub.dev/packages/get_it) plus [watch_it](https://pub.dev/packages/watch_it) plus [command_it](https://pub.dev/packages/command_it) and [listen_it](https://pub.dev/packages/listen_it). Additionally, to make my life easier when connecting the dependencies of classes I use [Injectable](https://pub.dev/packages/injectable) for code generation of the dependency graph of get_it, by annotating the constructors of my classes and then running the `build_runner` command to generate the code for get_it.
-
-(get_it, watch_it, listen_it and command_it be obtained with [flutter_it](https://pub.dev/packages/flutter_it) which is a meta package for all of them.)
+We use [get_it](https://pub.dev/packages/get_it) for stateless classes like services and DAOs and [Riverpod](https://pub.dev/packages/flutter_riverpod) for managers because of auto dispose and family. Additionally, to make my life easier when connecting the dependencies of classes I use [Injectable](https://pub.dev/packages/injectable) for code generation of the dependency graph of get_it, by annotating the constructors of my classes and then running the `build_runner` command to generate the code for get_it.
 
 ### Architecture
 
+```mermaid
+flowchart TD
+    subgraph UI ["UI / Presentation Layer"]
+        Views["Views & Widgets (ConsumerWidget)"]
+    end
+
+    subgraph State ["State Management (Riverpod)"]
+        Managers["Manager Notifiers (autoDispose & family)"]
+    end
+
+    subgraph Services ["Service Layer (GetIt & Injectable)"]
+        ServiceList["Stateless Services (PlayerService, PodcastService, etc.)"]
+        External["External APIs, MediaKit & Isolates"]
+    end
+
+    subgraph Persistence ["Persistence Layer"]
+        DAOs["DAOs (Data Access Objects)"]
+        DB[("SQLite Database (Drift)")]
+        Prefs[("SharedPreferences")]
+    end
+
+    Views -->|"watches state"| Managers
+    Views -.->|"triggers actions"| Managers
+    Managers -->|"calls via di<Service>()"| ServiceList
+    ServiceList --> External
+    ServiceList --> DAOs
+    ServiceList --> Prefs
+    DAOs --> DB
+```
+
 - UI / View
   - with widgets builds methods cut as small as possible, to keep the build methods fast and to not lose the overview of the UI code
-- Manager classes, updating the state and thus the UI
-  - they provide ["commands"](https://flutter-it.dev/documentation/command_it/getting_started#core-concept), which are async/sync operations which update their data, loading and error state
-  - key to memory success is using a lightweight `Family` registry with auto-disposal: screen- and item-scoped managers are automatically disposed and garbage collected when their commands have no active listeners! (Much to my regret, `flutter_it` does not provide such a family / auto-dispose feature out of the box, so I had to implement my own.)
-- Service classes, defining the actualy operations in form of methods of a service class
-- [DAO](https://en.wikipedia.org/wiki/Data_access_object)-classes, as an abstration layer for the database
+- Manager classes (Riverpod), updating the state and thus the UI
+  - screen- and item-scoped managers are automatically disposed and garbage collected when they have no active listeners thanks to Riverpod's built-in `autoDispose` and `family` support
+- Service classes, defining the actual operations in form of methods of a service class
+- [DAO](https://en.wikipedia.org/wiki/Data_access_object)-classes, as an abstraction layer for the database
 - a database, which is currently implemented with [drift](https://pub.dev/packages/drift) and sqlite, to persist data, and make it available across app restarts
 
 ### Examples
@@ -215,8 +242,8 @@ WIP
 
 ### Performance
 
-Reading the local covers and fetching remote covers for radio data happens inside additional second [dart isolates](https://dart.dev/language/isolates). When idle MusiPod's CPU power consumption is 0%. For a 10 years old intel dual core, the CPU usage is about 2% while playing music, since only the parts are redrawn which need to be, thanks to watch_it.
-Memory allocation can temporarily spike when loading large datasets on a page, but page-scoped managers and their data are automatically dereferenced and scheduled for disposal 5 seconds after navigation when listener counts drop to zero, keeping the active heap lean without retaining dormant screen state (the same behaviour can ofc be achieved with flutter's stateful widgets, but I prefer this architecture for the reasons mentioned above in the "state" section).
+Reading the local covers and fetching remote covers for radio data happens inside additional second [dart isolates](https://dart.dev/language/isolates). When idle MusiPod's CPU power consumption is 0%. For a 10 years old intel dual core, the CPU usage is about 2% while playing music, since only the parts are redrawn which need to be, thanks to Riverpod.
+Memory allocation can temporarily spike when loading large datasets on a page, but page-scoped managers and their data are automatically disposed when listener counts drop to zero thanks to Riverpod's `autoDispose` and `family` support, keeping the active heap lean without retaining dormant screen state (the same behaviour can ofc be achieved with flutter's stateful widgets, but I prefer this architecture for the reasons mentioned above in the "state" section).
 
 ### Persistence
 
