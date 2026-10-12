@@ -19,6 +19,7 @@ import '../../extensions/string_x.dart';
 import '../../local_audio/service/local_cover_service.dart';
 import '../../podcasts/service/podcast_service.dart';
 import '../data/play_timeout_exception.dart';
+import '../data/player_change.dart';
 import '../data/queue.dart';
 import '../persistence/player_dao.dart';
 
@@ -65,8 +66,9 @@ class PlayerService {
   StreamSubscription<String>? _errorSub;
 
   // Used to notify whoever is listening
-  final _propertiesChangedController = StreamController<bool>.broadcast();
-  Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
+  final _changesController = StreamController<PlayerChange>.broadcast();
+  Stream<PlayerChange> get changes => _changesController.stream;
+  Stream<PlayerChange> get propertiesChanged => _changesController.stream;
 
   /// All stream subscriptions and the initial [PlayerState] are set here
   @PostConstruct(preResolve: true)
@@ -109,12 +111,12 @@ class PlayerService {
 
     _volumeSub ??= player.stream.volume.listen((value) {
       _volume = value;
-      _propertiesChangedController.add(true);
+      _changesController.add(VolumeChange(_volume));
     });
 
     _rateSub ??= player.stream.rate.listen((value) {
       _rate = value;
-      _propertiesChangedController.add(true);
+      _changesController.add(RateChange(_rate));
     });
 
     _tracksSub ??= player.stream.tracks.listen((tracks) {
@@ -167,14 +169,14 @@ class PlayerService {
   void setQueue(Queue value) {
     if (value.audios.isEmpty) return;
     _queue = value;
-    _propertiesChangedController.add(true);
+    _changesController.add(QueueChange(_queue));
   }
 
   bool _queueAutoScroll = true;
   bool get queueAutoScroll => _queueAutoScroll;
   void toggleQueueAutoScroll() {
     _queueAutoScroll = !_queueAutoScroll;
-    _propertiesChangedController.add(true);
+    _changesController.add(const ResetChange());
   }
 
   void clearQueue() {
@@ -186,7 +188,7 @@ class PlayerService {
       _nextAudio = null;
     }
     _oldQueue = const Queue.empty();
-    _propertiesChangedController.add(true);
+    _changesController.add(QueueChange(_queue));
   }
 
   StreamController<Audio?> _newAudioControllerStream =
@@ -200,18 +202,26 @@ class PlayerService {
       _setColor(null);
     }
     if (value?.audioType != _audio?.audioType) {
+      final oldShuffle = _shuffle;
       _shuffle = false;
       _oldQueue = const Queue.empty();
+      if (oldShuffle != _shuffle) {
+        _changesController.add(const ShuffleChange(false));
+      }
+      final oldMode = _playlistMode;
       if (value?.isRadio ?? false) {
         // NOTE: this is when the radio stream might stop/stutter/end, so it should start again immediately
         _playlistMode = PlaylistMode.loop;
       } else {
         _playlistMode = PlaylistMode.none;
       }
+      if (oldMode != _playlistMode) {
+        _changesController.add(PlaylistModeChange(_playlistMode));
+      }
       await setRate(1);
     }
     _audio = value;
-    _propertiesChangedController.add(true);
+    _changesController.add(AudioChange(_audio));
     _newAudioControllerStream.add(_audio);
     await _setLocalColor(_audio);
   }
@@ -222,7 +232,7 @@ class PlayerService {
     if (value == _isVideo) return;
     Logger.i('Loaded a video: $value', tag: '$PlayerService');
     _isVideo = value;
-    _propertiesChangedController.add(true);
+    _changesController.add(IsVideoChange(_isVideo));
   }
 
   Audio? _nextAudio;
@@ -230,7 +240,7 @@ class PlayerService {
   set nextAudio(Audio? value) {
     if (value == _nextAudio) return;
     _nextAudio = value;
-    _propertiesChangedController.add(true);
+    _changesController.add(NextAudioChange(_nextAudio));
   }
 
   bool _isPlaying = false;
@@ -238,7 +248,7 @@ class PlayerService {
   void setIsPlaying(bool value) {
     if (value == _isPlaying) return;
     _isPlaying = value;
-    _propertiesChangedController.add(true);
+    _changesController.add(IsPlayingChange(_isPlaying));
     _setMediaControlsIsPlaying(value);
   }
 
@@ -247,7 +257,7 @@ class PlayerService {
   void setDuration(Duration? value) {
     if (value?.inSeconds == _duration?.inSeconds) return;
     _duration = value;
-    _propertiesChangedController.add(true);
+    _changesController.add(DurationChange(_duration));
     _setMediaControlDuration(value);
   }
 
@@ -256,7 +266,7 @@ class PlayerService {
   void setPosition(Duration? value) {
     if (position?.inSeconds == value?.inSeconds) return;
     _position = value;
-    _propertiesChangedController.add(true);
+    _changesController.add(PositionChange(_position));
     _setMediaControlPosition(value);
   }
 
@@ -265,7 +275,7 @@ class PlayerService {
   void setBuffer(Duration? value) {
     if (buffer?.inSeconds == value?.inSeconds) return;
     _buffer = value;
-    _propertiesChangedController.add(true);
+    _changesController.add(BufferChange(_buffer));
   }
 
   PlaylistMode _playlistMode = PlaylistMode.none;
@@ -277,7 +287,7 @@ class PlayerService {
       PlaylistMode.single => PlaylistMode.none,
     };
     _estimateNext();
-    _propertiesChangedController.add(true);
+    _changesController.add(PlaylistModeChange(_playlistMode));
   }
 
   bool _shuffle = false;
@@ -302,7 +312,7 @@ class PlayerService {
       _oldQueue = const Queue.empty();
     }
     await _estimateNext();
-    _propertiesChangedController.add(true);
+    _changesController.add(ShuffleChange(_shuffle));
   }
 
   double? _volume;
@@ -401,11 +411,11 @@ class PlayerService {
       _timer = Timer(duration, () async {
         await pause();
         _timer = null;
-        _propertiesChangedController.add(true);
+        _changesController.add(const TimerChange(false));
         _messageController.add(message);
       });
     }
-    _propertiesChangedController.add(true);
+    _changesController.add(TimerChange(_timer != null));
   }
 
   Future<void> seek(Duration position) => player.seek(position);
@@ -456,7 +466,7 @@ class PlayerService {
 
       await _estimateNext();
 
-      _propertiesChangedController.add(true);
+      _changesController.add(QueueChange(_queue));
     }
   }
 
@@ -466,7 +476,7 @@ class PlayerService {
       _oldQueue!.audios.remove(deleteMe);
     }
     await _estimateNext();
-    _propertiesChangedController.add(true);
+    _changesController.add(QueueChange(_queue));
   }
 
   Future<void> _estimateNext() async {
@@ -546,7 +556,7 @@ class PlayerService {
 
     _remoteImageUrl = url;
 
-    _propertiesChangedController.add(true);
+    _changesController.add(ColorChange(_color));
   }
 
   Future<void> setRemoteColorFromImageProvider(ImageProvider provider) async {
@@ -565,7 +575,7 @@ class PlayerService {
   void _setColor(Color? value) {
     if (value == _color) return;
     _color = value;
-    _propertiesChangedController.add(true);
+    _changesController.add(ColorChange(_color));
   }
 
   Future<void> _setLocalColor(Audio? audio) async {
@@ -601,7 +611,7 @@ class PlayerService {
     try {
       await _dao.addLastPosition(key, lastPosition);
       _lastPositions[key] = lastPosition;
-      _propertiesChangedController.add(true);
+      _changesController.add(LastPositionsChange(_lastPositions));
     } on Exception catch (e, st) {
       Logger.e(e, trace: st, tag: '$PlayerService');
       _messageController.addError('Error while saving last position for $key');
@@ -629,7 +639,7 @@ class PlayerService {
           _lastPositions.remove(e.url!);
         }
       }
-      _propertiesChangedController.add(true);
+      _changesController.add(LastPositionsChange(_lastPositions));
       return;
     }
 
@@ -642,13 +652,13 @@ class PlayerService {
     for (final e in valid) {
       _lastPositions[e.url!] = Duration(milliseconds: e.durationMs!.toInt());
     }
-    _propertiesChangedController.add(true);
+    _changesController.add(LastPositionsChange(_lastPositions));
   }
 
   Future<void> clearAllLastPositions() async {
     await _dao.resetAllLastPositions();
     _lastPositions.clear();
-    _propertiesChangedController.add(true);
+    _changesController.add(LastPositionsChange(_lastPositions));
   }
 
   Duration? getLastPosition(String? url) => _lastPositions[url];
@@ -831,12 +841,18 @@ class PlayerService {
     _duration = null;
     _buffer = null;
     _isPlaying = false;
-    _playlistMode = PlaylistMode.none;
-    _shuffle = false;
+    if (_playlistMode != PlaylistMode.none) {
+      _playlistMode = PlaylistMode.none;
+      _changesController.add(const PlaylistModeChange(PlaylistMode.none));
+    }
+    if (_shuffle) {
+      _shuffle = false;
+      _changesController.add(const ShuffleChange(false));
+    }
     setRemoteImageUrl(null);
     _setColor(null);
     await player.stop();
-    _propertiesChangedController.add(true);
+    _changesController.add(const ResetChange());
     await dispose(disposePlayer: false);
   }
 

@@ -6,6 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 import 'package:musicpod/common/data/audio.dart';
 import 'package:musicpod/common/data/audio_type.dart';
+import 'package:musicpod/player/data/player_change.dart';
 import 'package:musicpod/player/manager/audio_progress_manager.dart';
 
 import 'mpv_metadata_manager_test.mocks.dart';
@@ -13,16 +14,16 @@ import 'mpv_metadata_manager_test.mocks.dart';
 void main() {
   group('AudioProgressManager', () {
     late MockPlayerService mockPlayerService;
-    late StreamController<bool> propertiesChangedController;
+    late StreamController<PlayerChange> changesController;
     late ProviderContainer container;
 
     setUp(() async {
       await GetIt.I.reset();
       mockPlayerService = MockPlayerService();
-      propertiesChangedController = StreamController<bool>.broadcast();
+      changesController = StreamController<PlayerChange>.broadcast();
 
-      when(mockPlayerService.propertiesChanged)
-          .thenAnswer((_) => propertiesChangedController.stream);
+      when(mockPlayerService.changes)
+          .thenAnswer((_) => changesController.stream);
       when(mockPlayerService.lastPositions).thenReturn({});
 
       container = ProviderContainer(
@@ -36,7 +37,7 @@ void main() {
 
     tearDown(() async {
       container.dispose();
-      await propertiesChangedController.close();
+      await changesController.close();
       await GetIt.I.reset();
     });
 
@@ -142,13 +143,12 @@ void main() {
       expect(state.lastPositions, isEmpty);
     });
 
-    test('updates lastPositions on propertiesChanged stream event', () async {
+    test('updates lastPositions on LastPositionsChange event', () async {
       expect(container.read(audioProgressManagerProvider).lastPositions, isEmpty);
 
-      when(mockPlayerService.lastPositions).thenReturn({
-        'url2': const Duration(seconds: 45),
-      });
-      propertiesChangedController.add(true);
+      changesController.add(const LastPositionsChange({
+        'url2': Duration(seconds: 45),
+      }));
       await pumpEventQueue();
 
       final state = container.read(audioProgressManagerProvider);

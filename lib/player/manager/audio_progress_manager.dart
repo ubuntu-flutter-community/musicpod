@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../common/data/audio.dart';
 import '../../dependencies.dart';
+import '../data/player_change.dart';
 import '../service/player_service.dart';
 
 part 'audio_progress_manager.g.dart';
@@ -63,7 +64,7 @@ class AudioProgressManager extends _$AudioProgressManager {
     return null;
   }
 
-  StreamSubscription<bool>? _sub;
+  StreamSubscription<PlayerChange>? _sub;
 
   @override
   AudioProgressState build() {
@@ -73,15 +74,13 @@ class AudioProgressManager extends _$AudioProgressManager {
       return const AudioProgressState();
     }
 
-    _sub = service.propertiesChanged.listen((_) {
-      final current = service.lastPositions;
-      if (!const MapEquality<String, Duration>().equals(
-        state.lastPositions,
-        current,
-      )) {
-        state = state.copyWith(lastPositions: Map.unmodifiable(current));
-      }
-    });
+    _sub = service.changes
+        .whereType<LastPositionsChange>()
+        .listen((change) {
+          state = state.copyWith(
+            lastPositions: Map.unmodifiable(change.lastPositions),
+          );
+        });
 
     ref.onDispose(() {
       _sub?.cancel();

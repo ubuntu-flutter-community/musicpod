@@ -4,19 +4,20 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i7;
-import 'dart:typed_data' as _i14;
+import 'dart:typed_data' as _i15;
 
-import 'package:flutter/material.dart' as _i9;
+import 'package:flutter/material.dart' as _i10;
 import 'package:media_kit/media_kit.dart' as _i3;
 import 'package:media_kit_video/media_kit_video.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:musicpod/common/data/audio.dart' as _i8;
-import 'package:musicpod/common/data/audio_type.dart' as _i10;
-import 'package:musicpod/expose/service/expose_service.dart' as _i11;
+import 'package:musicpod/common/data/audio.dart' as _i9;
+import 'package:musicpod/common/data/audio_type.dart' as _i11;
+import 'package:musicpod/expose/service/expose_service.dart' as _i12;
+import 'package:musicpod/player/data/player_change.dart' as _i8;
 import 'package:musicpod/player/data/queue.dart' as _i4;
 import 'package:musicpod/player/service/player_service.dart' as _i6;
-import 'package:musicpod/radio/service/online_art_service.dart' as _i12;
-import 'package:musicpod/settings/service/settings_service.dart' as _i13;
+import 'package:musicpod/radio/service/online_art_service.dart' as _i13;
+import 'package:musicpod/settings/service/settings_service.dart' as _i14;
 import 'package:safe_change_notifier/safe_change_notifier.dart' as _i5;
 
 // ignore_for_file: type=lint
@@ -94,12 +95,20 @@ class MockPlayerService extends _i1.Mock implements _i6.PlayerService {
           as _i3.Player);
 
   @override
-  _i7.Stream<bool> get propertiesChanged =>
+  _i7.Stream<_i8.PlayerChange> get changes =>
+      (super.noSuchMethod(
+            Invocation.getter(#changes),
+            returnValue: _i7.Stream<_i8.PlayerChange>.empty(),
+          )
+          as _i7.Stream<_i8.PlayerChange>);
+
+  @override
+  _i7.Stream<_i8.PlayerChange> get propertiesChanged =>
       (super.noSuchMethod(
             Invocation.getter(#propertiesChanged),
-            returnValue: _i7.Stream<bool>.empty(),
+            returnValue: _i7.Stream<_i8.PlayerChange>.empty(),
           )
-          as _i7.Stream<bool>);
+          as _i7.Stream<_i8.PlayerChange>);
 
   @override
   _i4.Queue get queue =>
@@ -118,12 +127,12 @@ class MockPlayerService extends _i1.Mock implements _i6.PlayerService {
           as bool);
 
   @override
-  _i7.Stream<_i8.Audio?> get newAudioStream =>
+  _i7.Stream<_i9.Audio?> get newAudioStream =>
       (super.noSuchMethod(
             Invocation.getter(#newAudioStream),
-            returnValue: _i7.Stream<_i8.Audio?>.empty(),
+            returnValue: _i7.Stream<_i9.Audio?>.empty(),
           )
-          as _i7.Stream<_i8.Audio?>);
+          as _i7.Stream<_i9.Audio?>);
 
   @override
   bool get isVideo =>
@@ -170,7 +179,7 @@ class MockPlayerService extends _i1.Mock implements _i6.PlayerService {
           as Map<String, Duration>);
 
   @override
-  set nextAudio(_i8.Audio? value) => super.noSuchMethod(
+  set nextAudio(_i9.Audio? value) => super.noSuchMethod(
     Invocation.setter(#nextAudio, value),
     returnValueForMissingStub: null,
   );
@@ -321,7 +330,7 @@ class MockPlayerService extends _i1.Mock implements _i6.PlayerService {
           as _i7.Future<void>);
 
   @override
-  _i7.Future<void> insertIntoQueue(List<_i8.Audio>? newAudios) =>
+  _i7.Future<void> insertIntoQueue(List<_i9.Audio>? newAudios) =>
       (super.noSuchMethod(
             Invocation.method(#insertIntoQueue, [newAudios]),
             returnValue: _i7.Future<void>.value(),
@@ -339,7 +348,7 @@ class MockPlayerService extends _i1.Mock implements _i6.PlayerService {
           as _i7.Future<void>);
 
   @override
-  _i7.Future<void> remove(_i8.Audio? deleteMe) =>
+  _i7.Future<void> remove(_i9.Audio? deleteMe) =>
       (super.noSuchMethod(
             Invocation.method(#remove, [deleteMe]),
             returnValue: _i7.Future<void>.value(),
@@ -358,7 +367,7 @@ class MockPlayerService extends _i1.Mock implements _i6.PlayerService {
 
   @override
   _i7.Future<void> play({
-    required List<_i8.Audio>? audios,
+    required List<_i9.Audio>? audios,
     required String? listName,
     int? index,
   }) =>
@@ -381,7 +390,7 @@ class MockPlayerService extends _i1.Mock implements _i6.PlayerService {
 
   @override
   _i7.Future<void> setRemoteColorFromImageProvider(
-    _i9.ImageProvider<Object>? provider,
+    _i10.ImageProvider<Object>? provider,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#setRemoteColorFromImageProvider, [provider]),
@@ -401,7 +410,7 @@ class MockPlayerService extends _i1.Mock implements _i6.PlayerService {
 
   @override
   _i7.Future<void> toggleAudiosProgress(
-    List<_i8.Audio>? audios, {
+    List<_i9.Audio>? audios, {
     bool? markComplete = true,
   }) =>
       (super.noSuchMethod(
@@ -436,12 +445,12 @@ class MockPlayerService extends _i1.Mock implements _i6.PlayerService {
   @override
   void registerMediaControlsCallBacks({
     required _i7.Future<void> Function({
-      required _i10.AudioType? audioType,
+      required _i11.AudioType? audioType,
       required bool isPlaying,
       required bool queueNotEmpty,
     })?
     onIsPlaying,
-    required void Function({required Uri? artUri, required _i8.Audio audio})?
+    required void Function({required Uri? artUri, required _i9.Audio audio})?
     onSetMetaData,
     required void Function(Duration?)? onSetPosition,
     required void Function(Duration?)? onSetDuration,
@@ -458,7 +467,7 @@ class MockPlayerService extends _i1.Mock implements _i6.PlayerService {
   );
 
   @override
-  _i7.Future<void> setMediaControlsMetaData({required _i8.Audio? audio}) =>
+  _i7.Future<void> setMediaControlsMetaData({required _i9.Audio? audio}) =>
       (super.noSuchMethod(
             Invocation.method(#setMediaControlsMetaData, [], {#audio: audio}),
             returnValue: _i7.Future<void>.value(),
@@ -512,7 +521,7 @@ class MockPlayerService extends _i1.Mock implements _i6.PlayerService {
 /// A class which mocks [ExposeService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockExposeService extends _i1.Mock implements _i11.ExposeService {
+class MockExposeService extends _i1.Mock implements _i12.ExposeService {
   MockExposeService() {
     _i1.throwOnMissingStub(this);
   }
@@ -575,7 +584,7 @@ class MockExposeService extends _i1.Mock implements _i11.ExposeService {
 /// A class which mocks [OnlineArtService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockOnlineArtService extends _i1.Mock implements _i12.OnlineArtService {
+class MockOnlineArtService extends _i1.Mock implements _i13.OnlineArtService {
   MockOnlineArtService() {
     _i1.throwOnMissingStub(this);
   }
@@ -592,7 +601,7 @@ class MockOnlineArtService extends _i1.Mock implements _i12.OnlineArtService {
 /// A class which mocks [SettingsService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSettingsService extends _i1.Mock implements _i13.SettingsService {
+class MockSettingsService extends _i1.Mock implements _i14.SettingsService {
   MockSettingsService() {
     _i1.throwOnMissingStub(this);
   }
@@ -897,7 +906,7 @@ class MockPlayer extends _i1.Mock implements _i3.Player {
           as _i7.Future<void>);
 
   @override
-  _i7.Future<_i14.Uint8List?> screenshot({
+  _i7.Future<_i15.Uint8List?> screenshot({
     String? format = 'image/jpeg',
     bool? includeLibassSubtitles = false,
   }) =>
@@ -906,12 +915,12 @@ class MockPlayer extends _i1.Mock implements _i3.Player {
               #format: format,
               #includeLibassSubtitles: includeLibassSubtitles,
             }),
-            returnValue: _i7.Future<_i14.Uint8List?>.value(),
+            returnValue: _i7.Future<_i15.Uint8List?>.value(),
           )
-          as _i7.Future<_i14.Uint8List?>);
+          as _i7.Future<_i15.Uint8List?>);
 
   @override
-  _i7.Future<_i14.Uint8List?> safeScreenshot({
+  _i7.Future<_i15.Uint8List?> safeScreenshot({
     String? format = 'image/jpeg',
     bool? includeLibassSubtitles = false,
   }) =>
@@ -920,9 +929,9 @@ class MockPlayer extends _i1.Mock implements _i3.Player {
               #format: format,
               #includeLibassSubtitles: includeLibassSubtitles,
             }),
-            returnValue: _i7.Future<_i14.Uint8List?>.value(),
+            returnValue: _i7.Future<_i15.Uint8List?>.value(),
           )
-          as _i7.Future<_i14.Uint8List?>);
+          as _i7.Future<_i15.Uint8List?>);
 }
 
 /// A class which mocks [PlayerStream].

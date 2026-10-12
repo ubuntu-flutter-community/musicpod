@@ -42,7 +42,7 @@ final class AudioProgressManagerProvider
 }
 
 String _$audioProgressManagerHash() =>
-    r'3a9592c196b9b9b8e6669bec3c658a945e18f5a0';
+    r'064da433f4de0544c51149bdfc160ac2cf85418c';
 
 abstract class _$AudioProgressManager extends $Notifier<AudioProgressState> {
   AudioProgressState build();

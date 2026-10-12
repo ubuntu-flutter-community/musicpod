@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phoenix_theme/phoenix_theme.dart' hide CustomTrackShape;
-import 'package:flutter_it/flutter_it.dart';
-
-import '../../common/view/icons.dart';
-import '../../extensions/build_context_x.dart';
 
 import '../../common/view/custom_track_shape.dart';
+import '../../common/view/icons.dart';
+import '../../extensions/build_context_x.dart';
+import '../manager/volume_manager.dart';
 
-import '../manager/player_manager.dart';
-
-class VolumeSliderPopup extends StatelessWidget with WatchItMixin {
+class VolumeSliderPopup extends ConsumerWidget {
   const VolumeSliderPopup({super.key, this.color});
 
   final Color? color;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.theme;
-    final volume = watchPropertyValue((PlayerManager m) => m.volume);
+    final volume = ref.watch(volumeManagerProvider);
     IconData iconData;
     if (volume != null && volume <= 0) {
       iconData = Iconz.speakerMutedFilled;
@@ -43,19 +41,19 @@ class VolumeSliderPopup extends StatelessWidget with WatchItMixin {
   }
 }
 
-class VolumeSlider extends StatelessWidget with WatchItMixin {
+class VolumeSlider extends ConsumerWidget {
   const VolumeSlider({this.direction = Axis.vertical, super.key});
 
   final Axis direction;
 
   @override
-  Widget build(BuildContext context) {
-    final volume = watchPropertyValue((PlayerManager m) => m.volume);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final volume = ref.watch(volumeManagerProvider);
     final slider = SliderTheme(
       data: context.theme.sliderTheme.copyWith(trackShape: CustomTrackShape()),
       child: Slider(
         value: volume ?? 100.0,
-        onChanged: di<PlayerManager>().setVolume,
+        onChanged: (val) => ref.read(volumeManagerProvider.notifier).setVolume(val),
         max: 100,
         min: 0,
       ),

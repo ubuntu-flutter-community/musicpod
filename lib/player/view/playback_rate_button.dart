@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
-import '../manager/player_manager.dart';
+import '../manager/rate_manager.dart';
 
-class PlaybackRateButton extends StatelessWidget with WatchItMixin {
+class PlaybackRateButton extends ConsumerWidget {
   const PlaybackRateButton({super.key, this.color});
 
   final Color? color;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.theme;
-    final rate = watchPropertyValue((PlayerManager m) => m.rate);
+    final rate = ref.watch(rateManagerProvider);
 
     return PopupMenuButton(
       tooltip: 'x$rate',
@@ -30,10 +30,10 @@ class PlaybackRateButton extends StatelessWidget with WatchItMixin {
                 : (theme.colorScheme.onSurface)),
       ),
       initialValue: rate,
-      itemBuilder: (context) => PlayerManager.rateValues
+      itemBuilder: (context) => RateManager.rateValues
           .map(
             (e) => PopupMenuItem(
-              onTap: () => di<PlayerManager>().setRate(e),
+              onTap: () => ref.read(rateManagerProvider.notifier).setRate(e),
               child: Text('x$e'),
             ),
           )

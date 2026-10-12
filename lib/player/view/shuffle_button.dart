@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
-
 import '../../extensions/theme_data_x.dart';
-import '../manager/player_manager.dart';
+import '../manager/shuffle_manager.dart';
 
-class ShuffleButton extends StatelessWidget with WatchItMixin {
+class ShuffleButton extends ConsumerWidget {
   const ShuffleButton({super.key, required this.active, this.iconColor});
 
   final bool active;
   final Color? iconColor;
 
   @override
-  Widget build(BuildContext context) {
-    final shuffle = watchPropertyValue((PlayerManager m) => m.shuffle);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final shuffle = ref.watch(shuffleManagerProvider);
 
     final color = shuffle ? context.theme.contrastyPrimary : iconColor;
 
@@ -26,7 +25,7 @@ class ShuffleButton extends StatelessWidget with WatchItMixin {
       icon: Icon(Iconz.shuffle),
       onPressed: !active
           ? null
-          : () => di<PlayerManager>().setShuffle(!shuffle),
+          : () => ref.read(shuffleManagerProvider.notifier).toggle(),
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
+import 'package:musicpod/player/data/player_change.dart';
 import 'package:musicpod/player/manager/pause_timer_manager.dart';
 
 import 'mpv_metadata_manager_test.mocks.dart';
@@ -11,16 +12,16 @@ import 'mpv_metadata_manager_test.mocks.dart';
 void main() {
   group('PauseTimerManager', () {
     late MockPlayerService mockPlayerService;
-    late StreamController<bool> propertiesChangedController;
+    late StreamController<PlayerChange> changesController;
     late ProviderContainer container;
 
     setUp(() async {
       await GetIt.I.reset();
       mockPlayerService = MockPlayerService();
-      propertiesChangedController = StreamController<bool>.broadcast();
+      changesController = StreamController<PlayerChange>.broadcast();
 
-      when(mockPlayerService.propertiesChanged)
-          .thenAnswer((_) => propertiesChangedController.stream);
+      when(mockPlayerService.changes)
+          .thenAnswer((_) => changesController.stream);
       when(mockPlayerService.timer).thenReturn(null);
 
       container = ProviderContainer(
@@ -34,7 +35,7 @@ void main() {
 
     tearDown(() async {
       container.dispose();
-      await propertiesChangedController.close();
+      await changesController.close();
       await GetIt.I.reset();
     });
 
@@ -105,14 +106,10 @@ void main() {
       expect(container.read(pauseTimerManagerProvider), isFalse);
     });
 
-    test('updates state on propertiesChanged stream event', () async {
+    test('updates state on TimerChange event directly from payload', () async {
       expect(container.read(pauseTimerManagerProvider), isFalse);
 
-      final timer = Timer(const Duration(minutes: 1), () {});
-      addTearDown(timer.cancel);
-      when(mockPlayerService.timer).thenReturn(timer);
-
-      propertiesChangedController.add(true);
+      changesController.add(const TimerChange(true));
       await pumpEventQueue();
 
       expect(container.read(pauseTimerManagerProvider), isTrue);

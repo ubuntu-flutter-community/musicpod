@@ -7,6 +7,7 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../common/data/audio.dart';
+import '../data/player_change.dart';
 import '../data/queue.dart';
 import '../service/player_service.dart';
 
@@ -24,7 +25,7 @@ class PlayerManager extends SafeChangeNotifier {
 
   VideoController get controller => _playerService.controller;
 
-  StreamSubscription<bool>? _propertiesChangedSub;
+  StreamSubscription<PlayerChange>? _propertiesChangedSub;
 
   Stream<String> get messageStream => _playerService.messageStream;
 

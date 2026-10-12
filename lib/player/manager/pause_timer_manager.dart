@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../dependencies.dart';
+import '../data/player_change.dart';
 import '../service/player_service.dart';
 
 part 'pause_timer_manager.g.dart';
@@ -19,7 +20,7 @@ class PauseTimerManager extends _$PauseTimerManager {
     return null;
   }
 
-  StreamSubscription<bool>? _sub;
+  StreamSubscription<PlayerChange>? _sub;
 
   @override
   bool build() {
@@ -27,12 +28,11 @@ class PauseTimerManager extends _$PauseTimerManager {
     final service = _playerService;
     if (service == null) return false;
 
-    _sub = service.propertiesChanged.listen((_) {
-      final isTimerActive = service.timer != null;
-      if (state != isTimerActive) {
-        state = isTimerActive;
-      }
-    });
+    _sub = service.changes
+        .whereType<TimerChange>()
+        .listen((change) {
+          state = change.isTimerActive;
+        });
 
     ref.onDispose(() {
       _sub?.cancel();
@@ -41,13 +41,10 @@ class PauseTimerManager extends _$PauseTimerManager {
     return service.timer != null;
   }
 
-  void setTimer(Duration? duration, {required String message}) {
+  Future<void> setTimer(Duration? duration, {required String message}) async {
     final service = _playerService;
-    if (service != null) {
-      service.setPauseTimer(duration, message: message);
-      state = service.timer != null;
-    } else {
-      state = false;
-    }
+    if (service == null) return;
+    service.setPauseTimer(duration, message: message);
+    state = service.timer != null;
   }
 }

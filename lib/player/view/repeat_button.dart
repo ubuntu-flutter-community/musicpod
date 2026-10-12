@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:media_kit/media_kit.dart';
 
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
-
 import '../../extensions/theme_data_x.dart';
-import '../manager/player_manager.dart';
+import '../manager/playlist_mode_manager.dart';
 
-class PlaylistModeButton extends StatelessWidget with WatchItMixin {
+class PlaylistModeButton extends ConsumerWidget {
   const PlaylistModeButton({super.key, required this.active, this.iconColor});
 
   final bool active;
   final Color? iconColor;
 
   @override
-  Widget build(BuildContext context) {
-    final playlistMode = watchPropertyValue(
-      (PlayerManager m) => m.playlistMode,
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final playlistMode = ref.watch(playlistModeManagerProvider);
 
     final isSelected = playlistMode != PlaylistMode.none;
     final color = isSelected ? context.theme.contrastyPrimary : iconColor;
@@ -35,7 +32,9 @@ class PlaylistModeButton extends StatelessWidget with WatchItMixin {
         PlaylistMode.single => Icon(Iconz.repeatSingle, color: color),
         PlaylistMode.loop => Icon(Iconz.repeatAll, color: color),
       },
-      onPressed: !active ? null : () => di<PlayerManager>().setPlaylistMode(),
+      onPressed: !active
+          ? null
+          : () => ref.read(playlistModeManagerProvider.notifier).cycle(),
     );
   }
 }
