@@ -1,4 +1,4 @@
-import 'package:flutter_it/flutter_it.dart';
+import 'package:musicpod/dependencies.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -40,33 +40,39 @@ void main() {
 
   group('RecentPatchNotesDisposedManager', () {
     test('initial state is false when stored version does not match', () {
-      when(mockSettingsService.getString(SPKeys.patchNotesDisposed))
-          .thenReturn('1.9.0');
+      when(
+        mockSettingsService.getString(SPKeys.patchNotesDisposed),
+      ).thenReturn('1.9.0');
 
       final state = container.read(recentPatchNotesDisposedManagerProvider);
       expect(state, isFalse);
     });
 
-    test('initial state is true when stored version matches current version',
-        () {
-      when(mockSettingsService.getString(SPKeys.patchNotesDisposed))
-          .thenReturn('2.0.0');
+    test(
+      'initial state is true when stored version matches current version',
+      () {
+        when(
+          mockSettingsService.getString(SPKeys.patchNotesDisposed),
+        ).thenReturn('2.0.0');
 
-      final state = container.read(recentPatchNotesDisposedManagerProvider);
-      expect(state, isTrue);
-    });
+        final state = container.read(recentPatchNotesDisposedManagerProvider);
+        expect(state, isTrue);
+      },
+    );
 
     test('disposeNotes updates state to true and saves to settings', () async {
-      when(mockSettingsService.getString(SPKeys.patchNotesDisposed))
-          .thenReturn(null);
+      when(
+        mockSettingsService.getString(SPKeys.patchNotesDisposed),
+      ).thenReturn(null);
       when(
         mockSettingsService.setValue(SPKeys.patchNotesDisposed, '2.0.0'),
       ).thenAnswer((_) async => true);
 
       expect(container.read(recentPatchNotesDisposedManagerProvider), isFalse);
 
-      final notifier =
-          container.read(recentPatchNotesDisposedManagerProvider.notifier);
+      final notifier = container.read(
+        recentPatchNotesDisposedManagerProvider.notifier,
+      );
       await notifier.disposeNotes();
 
       expect(container.read(recentPatchNotesDisposedManagerProvider), isTrue);
@@ -78,33 +84,39 @@ void main() {
 
   group('SpecialNotesDisposedManager', () {
     test('initial state is false when stored version does not match', () {
-      when(mockSettingsService.getString(SPKeys.specialNotesDisposed))
-          .thenReturn('1.9.0');
+      when(
+        mockSettingsService.getString(SPKeys.specialNotesDisposed),
+      ).thenReturn('1.9.0');
 
       final state = container.read(specialNotesDisposedManagerProvider);
       expect(state, isFalse);
     });
 
-    test('initial state is true when stored version matches current version',
-        () {
-      when(mockSettingsService.getString(SPKeys.specialNotesDisposed))
-          .thenReturn('2.0.0');
+    test(
+      'initial state is true when stored version matches current version',
+      () {
+        when(
+          mockSettingsService.getString(SPKeys.specialNotesDisposed),
+        ).thenReturn('2.0.0');
 
-      final state = container.read(specialNotesDisposedManagerProvider);
-      expect(state, isTrue);
-    });
+        final state = container.read(specialNotesDisposedManagerProvider);
+        expect(state, isTrue);
+      },
+    );
 
     test('disposeNotes updates state to true and saves to settings', () async {
-      when(mockSettingsService.getString(SPKeys.specialNotesDisposed))
-          .thenReturn(null);
+      when(
+        mockSettingsService.getString(SPKeys.specialNotesDisposed),
+      ).thenReturn(null);
       when(
         mockSettingsService.setValue(SPKeys.specialNotesDisposed, '2.0.0'),
       ).thenAnswer((_) async => true);
 
       expect(container.read(specialNotesDisposedManagerProvider), isFalse);
 
-      final notifier =
-          container.read(specialNotesDisposedManagerProvider.notifier);
+      final notifier = container.read(
+        specialNotesDisposedManagerProvider.notifier,
+      );
       await notifier.disposeNotes();
 
       expect(container.read(specialNotesDisposedManagerProvider), isTrue);

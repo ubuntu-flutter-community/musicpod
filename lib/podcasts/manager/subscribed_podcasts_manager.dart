@@ -1,10 +1,10 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../common/logging.dart';
-import '../../common/util/family.dart';
 import '../../dependencies.dart';
 import '../data/podcast_toggle_capsule.dart';
 import '../service/podcast_service.dart';
+import 'episodes_manager.dart';
 import 'podcast_genre_manager.dart';
 import 'podcast_short_info_manager.dart';
 
@@ -27,7 +27,7 @@ class SubscribedPodcastsManager extends _$SubscribedPodcastsManager {
     await di<PodcastService>().togglePodcastSubscription(feedUrl: feedUrl);
     final isSubscribed = await di<PodcastService>().isPodcastSubscribed(feedUrl);
     if (!isSubscribed) {
-      Family.disposeById(feedUrl);
+      ref.invalidate(episodesManagerProvider(feedUrl));
       ref.invalidate(podcastShortInfoManagerProvider(feedUrl));
       ref.invalidate(podcastGenreManagerProvider(feedUrl));
     }

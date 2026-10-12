@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
@@ -47,7 +46,7 @@ class ErrorPage extends StatelessWidget {
   }
 }
 
-class ErrorBody extends StatelessWidget with WatchItMixin {
+class ErrorBody extends StatelessWidget {
   const ErrorBody({
     super.key,
     required this.error,
@@ -67,7 +66,7 @@ class ErrorBody extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    callOnceAfterThisBuild(
+    WidgetsBinding.instance.addPostFrameCallback(
       (_) => Logger.e(
         '${error.toString()} \n StackTrace: ${(stackTrace ?? StackTrace.current).toString()}',
         tag: '$ErrorPage',

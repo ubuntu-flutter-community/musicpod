@@ -1,8 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../common/util/family.dart';
 import '../../dependencies.dart';
 import '../service/podcast_service.dart';
+import 'episodes_manager.dart';
 import 'podcast_genre_manager.dart';
 import 'podcast_short_info_manager.dart';
 
@@ -23,7 +23,7 @@ class PodcastCleanManager extends _$PodcastCleanManager {
 
       if (unsubscribedPodcasts != null) {
         for (final feedUrl in unsubscribedPodcasts) {
-          Family.disposeById(feedUrl);
+          ref.invalidate(episodesManagerProvider(feedUrl));
           ref.invalidate(podcastShortInfoManagerProvider(feedUrl));
           ref.invalidate(podcastGenreManagerProvider(feedUrl));
         }

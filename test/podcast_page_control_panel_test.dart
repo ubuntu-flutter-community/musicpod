@@ -8,7 +8,6 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:musicpod/common/data/audio.dart';
 import 'package:musicpod/common/data/audio_type.dart';
-import 'package:musicpod/common/util/family.dart';
 import 'package:musicpod/common/view/audio_filter.dart';
 import 'package:musicpod/common/view/avatar_play_button.dart';
 import 'package:musicpod/common/view/confirm.dart';
@@ -63,7 +62,6 @@ void main() {
   }
 
   setUp(() async {
-    await Family.reset();
     await GetIt.I.reset();
 
     allEpisodes = List.generate(
@@ -115,7 +113,6 @@ void main() {
 
   tearDown(() async {
     await changesController.close();
-    await Family.reset();
     await GetIt.I.reset();
   });
 

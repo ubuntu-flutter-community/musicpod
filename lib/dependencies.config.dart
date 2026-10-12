@@ -32,7 +32,6 @@ import 'local_audio/service/local_audio_service.dart' as _i985;
 import 'local_audio/service/local_cover_service.dart' as _i582;
 import 'lyrics/lyrics_service.dart' as _i546;
 import 'notifications/notifications_service.dart' as _i57;
-import 'player/manager/player_manager.dart' as _i95;
 import 'player/persistence/player_dao.dart' as _i443;
 import 'player/service/player_service.dart' as _i456;
 import 'podcasts/persistence/podcast_dao.dart' as _i597;
@@ -73,7 +72,6 @@ extension GetItInjectableX on _i174.GetIt {
       () => const _i415.ExternalPathService(),
     );
     gh.factory<_i546.LocalLyricsService>(() => _i546.LocalLyricsService());
-    gh.factory<_i1009.LicenseStore>(() => _i1009.LicenseStore.create());
     gh.factory<_i361.Dio>(() => dioModule.create());
     gh.factory<_i535.GitHub>(() => githubModule.gitHub);
     await gh.factoryAsync<_i527.LocalNotifier>(
@@ -93,6 +91,7 @@ extension GetItInjectableX on _i174.GetIt {
       () => windowManagerModule.create(),
       preResolve: true,
     );
+    gh.lazySingleton<_i1009.LicenseStore>(() => _i1009.LicenseStore());
     gh.lazySingleton<_i115.Database>(() => databaseModule.database);
     gh.factory<_i852.OnlineArtService>(
       () => _i852.OnlineArtService(dio: gh<_i361.Dio>()),
@@ -191,10 +190,6 @@ extension GetItInjectableX on _i174.GetIt {
         dio: gh<_i361.Dio>(),
         secureBookmarkService: gh<_i395.SecureBookmarkService>(),
       ),
-    );
-    gh.lazySingleton<_i95.PlayerManager>(
-      () => _i95.PlayerManager(service: gh<_i456.PlayerService>()),
-      dispose: (i) => i.dispose(),
     );
     await gh.singletonAsync<_i517.WindowSizeToSettingsListener>(() {
       final i = _i517.WindowSizeToSettingsListener(

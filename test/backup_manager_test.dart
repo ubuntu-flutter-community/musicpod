@@ -1,4 +1,4 @@
-import 'package:flutter_it/flutter_it.dart';
+import 'package:musicpod/dependencies.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -48,13 +48,19 @@ void main() {
 
     test('confirmEnabled is true only when all three are true', () {
       expect(
-        const BackupState(localAudio: true, podcast: true, radio: false)
-            .confirmEnabled,
+        const BackupState(
+          localAudio: true,
+          podcast: true,
+          radio: false,
+        ).confirmEnabled,
         isFalse,
       );
       expect(
-        const BackupState(localAudio: true, podcast: true, radio: true)
-            .confirmEnabled,
+        const BackupState(
+          localAudio: true,
+          podcast: true,
+          radio: true,
+        ).confirmEnabled,
         isTrue,
       );
     });
@@ -105,7 +111,9 @@ void main() {
 
     test('setBackupSaved writes version key and returns result', () async {
       final key = SPKeys.backupSaved + packageInfo.version;
-      when(mockSettingsService.setValue(key, true)).thenAnswer((_) async => true);
+      when(
+        mockSettingsService.setValue(key, true),
+      ).thenAnswer((_) async => true);
       when(mockSettingsService.getBool(key)).thenReturn(true);
 
       final notifier = container.read(backupManagerProvider.notifier);

@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:get_it/get_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:musicpod/player/manager/player_manager.dart';
 import 'package:musicpod/podcasts/manager/episodes_manager.dart';
 import 'package:musicpod/podcasts/service/download_service.dart';
 import 'package:musicpod/podcasts/service/podcast_service.dart';
 
 import 'episodes_manager_disposal_test.mocks.dart';
 
-@GenerateMocks([PodcastService, PlayerManager, DownloadService])
+@GenerateMocks([PodcastService, DownloadService])
 class EpisodeWatcherWidget extends ConsumerWidget {
   const EpisodeWatcherWidget({super.key, required this.feedUrl});
   final String feedUrl;
@@ -27,25 +26,23 @@ void main() {
   const feedUrl = 'https://example.com/podcast.xml';
 
   late MockPodcastService mockPodcastService;
-  late MockPlayerManager mockPlayerManager;
   late MockDownloadService mockDownloadService;
 
   setUp(() async {
     await GetIt.I.reset();
 
     mockPodcastService = MockPodcastService();
-    mockPlayerManager = MockPlayerManager();
     mockDownloadService = MockDownloadService();
 
     when(mockPodcastService.ascendingPodcasts).thenAnswer((_) async => {});
-    when(mockPodcastService.findEpisodes(
-      feedUrl: anyNamed('feedUrl'),
-      tryFromDbOnly: anyNamed('tryFromDbOnly'),
-      order: anyNamed('order'),
-    )).thenAnswer((_) async => []);
+    when(
+      mockPodcastService.findEpisodes(
+        feedUrl: anyNamed('feedUrl'),
+        tryFromDbOnly: anyNamed('tryFromDbOnly'),
+        order: anyNamed('order'),
+      ),
+    ).thenAnswer((_) async => []);
     when(mockPodcastService.getDownloadPath(any)).thenReturn(null);
-
-    when(mockPlayerManager.lastPositions).thenReturn(null);
 
     when(
       mockDownloadService.setDownloadsDirectory(
@@ -54,7 +51,6 @@ void main() {
     ).thenAnswer((_) async => '/fake/downloads');
 
     GetIt.I.registerSingleton<PodcastService>(mockPodcastService);
-    GetIt.I.registerSingleton<PlayerManager>(mockPlayerManager);
     GetIt.I.registerSingleton<DownloadService>(mockDownloadService);
   });
 

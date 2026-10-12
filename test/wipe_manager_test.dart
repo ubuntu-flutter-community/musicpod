@@ -1,4 +1,4 @@
-import 'package:flutter_it/flutter_it.dart';
+import 'package:get_it/get_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -46,8 +46,9 @@ void main() {
     mockSettingsService = MockSettingsService();
 
     // Default stubbing
-    when(mockPodcastService.wipeAndBuildPodcastLibrary())
-        .thenAnswer((_) async {});
+    when(
+      mockPodcastService.wipeAndBuildPodcastLibrary(),
+    ).thenAnswer((_) async {});
     when(mockRadioService.wipeRadioLibrary()).thenAnswer((_) async {});
     when(
       mockLocalAudioService.init(
@@ -56,8 +57,9 @@ void main() {
         updateProgress: anyNamed('updateProgress'),
       ),
     ).thenAnswer((_) async => (failedImports: <String>[]));
-    when(mockLocalAudioService.findPinnedAlbumIDs())
-        .thenAnswer((_) async => const <int>[]);
+    when(
+      mockLocalAudioService.findPinnedAlbumIDs(),
+    ).thenAnswer((_) async => const <int>[]);
     when(mockDatabase.reclaimDiskSpace()).thenAnswer((_) async {});
     when(mockPlayerService.changes).thenAnswer((_) => const Stream.empty());
     when(mockPlayerService.lastPositions).thenReturn({});
@@ -78,145 +80,167 @@ void main() {
     await GetIt.I.reset();
   });
 
-  test('wipe({WipeType.localAudio}) initializes localAudioService with empty directory and invalidates providers', () async {
-    final container = ProviderContainer();
-    addTearDown(container.dispose);
+  test(
+    'wipe({WipeType.localAudio}) initializes localAudioService with empty directory and invalidates providers',
+    () async {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
 
-    var localAudioInvalidated = false;
-    var pinnedAlbumsInvalidated = false;
+      var localAudioInvalidated = false;
+      var pinnedAlbumsInvalidated = false;
 
-    container.listen(localAudioManagerProvider, (_, __) {
-      localAudioInvalidated = true;
-    });
-    container.listen(pinnedAlbumIDsManagerProvider, (_, __) {
-      pinnedAlbumsInvalidated = true;
-    });
+      container.listen(localAudioManagerProvider, (_, __) {
+        localAudioInvalidated = true;
+      });
+      container.listen(pinnedAlbumIDsManagerProvider, (_, __) {
+        pinnedAlbumsInvalidated = true;
+      });
 
-    await container.read(wipeManagerProvider.notifier).wipe({WipeType.localAudio});
-    await pumpEventQueue();
+      await container.read(wipeManagerProvider.notifier).wipe({
+        WipeType.localAudio,
+      });
+      await pumpEventQueue();
 
-    verify(
-      mockLocalAudioService.init(
-        newDirectory: '',
-        forceInit: true,
-      ),
-    ).called(1);
+      verify(
+        mockLocalAudioService.init(newDirectory: '', forceInit: true),
+      ).called(1);
 
-    verify(mockDatabase.reclaimDiskSpace()).called(1);
-    expect(localAudioInvalidated, isTrue);
-    expect(pinnedAlbumsInvalidated, isTrue);
-  });
+      verify(mockDatabase.reclaimDiskSpace()).called(1);
+      expect(localAudioInvalidated, isTrue);
+      expect(pinnedAlbumsInvalidated, isTrue);
+    },
+  );
 
-  test('wipe({WipeType.radio}) wipes radio library and invalidates star station and fav tag providers', () async {
-    final container = ProviderContainer();
-    addTearDown(container.dispose);
+  test(
+    'wipe({WipeType.radio}) wipes radio library and invalidates star station and fav tag providers',
+    () async {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
 
-    var starStationInvalidated = false;
-    var favTagInvalidated = false;
+      var starStationInvalidated = false;
+      var favTagInvalidated = false;
 
-    when(mockRadioService.getStarredStations())
-        .thenAnswer((_) async => <String>{});
-    when(mockRadioService.getFavRadioTags())
-        .thenAnswer((_) async => <String>{});
+      when(
+        mockRadioService.getStarredStations(),
+      ).thenAnswer((_) async => <String>{});
+      when(
+        mockRadioService.getFavRadioTags(),
+      ).thenAnswer((_) async => <String>{});
 
-    await container.read(radioStarStationManagerProvider.future);
-    await container.read(radioFavTagManagerProvider.future);
+      await container.read(radioStarStationManagerProvider.future);
+      await container.read(radioFavTagManagerProvider.future);
 
-    container.listen(radioStarStationManagerProvider, (_, __) {
-      starStationInvalidated = true;
-    });
-    container.listen(radioFavTagManagerProvider, (_, __) {
-      favTagInvalidated = true;
-    });
+      container.listen(radioStarStationManagerProvider, (_, __) {
+        starStationInvalidated = true;
+      });
+      container.listen(radioFavTagManagerProvider, (_, __) {
+        favTagInvalidated = true;
+      });
 
-    await container.read(wipeManagerProvider.notifier).wipe({WipeType.radio});
-    await pumpEventQueue();
+      await container.read(wipeManagerProvider.notifier).wipe({WipeType.radio});
+      await pumpEventQueue();
 
-    verify(mockRadioService.wipeRadioLibrary()).called(1);
-    verify(mockDatabase.reclaimDiskSpace()).called(1);
-    expect(starStationInvalidated, isTrue);
-    expect(favTagInvalidated, isTrue);
-  });
+      verify(mockRadioService.wipeRadioLibrary()).called(1);
+      verify(mockDatabase.reclaimDiskSpace()).called(1);
+      expect(starStationInvalidated, isTrue);
+      expect(favTagInvalidated, isTrue);
+    },
+  );
 
-  test('wipe({WipeType.podcasts}) wipes podcast library, clears positions, and invalidates subscribed podcasts provider', () async {
-    final container = ProviderContainer();
-    addTearDown(container.dispose);
+  test(
+    'wipe({WipeType.podcasts}) wipes podcast library, clears positions, and invalidates subscribed podcasts provider',
+    () async {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
 
-    var subscribedInvalidated = false;
-    container.listen(subscribedPodcastsManagerProvider, (_, __) {
-      subscribedInvalidated = true;
-    });
+      var subscribedInvalidated = false;
+      container.listen(subscribedPodcastsManagerProvider, (_, __) {
+        subscribedInvalidated = true;
+      });
 
-    when(mockPodcastService.getSubscribedPodcasts())
-        .thenAnswer((_) async => {});
+      when(
+        mockPodcastService.getSubscribedPodcasts(),
+      ).thenAnswer((_) async => {});
 
-    await container.read(wipeManagerProvider.notifier).wipe({WipeType.podcasts});
-    await pumpEventQueue();
+      await container.read(wipeManagerProvider.notifier).wipe({
+        WipeType.podcasts,
+      });
+      await pumpEventQueue();
 
-    verify(mockPodcastService.wipeAndBuildPodcastLibrary()).called(1);
-    verify(mockPlayerService.clearAllLastPositions()).called(1);
-    verify(mockDatabase.reclaimDiskSpace()).called(1);
-    expect(subscribedInvalidated, isTrue);
-  });
+      verify(mockPodcastService.wipeAndBuildPodcastLibrary()).called(1);
+      verify(mockPlayerService.clearAllLastPositions()).called(1);
+      verify(mockDatabase.reclaimDiskSpace()).called(1);
+      expect(subscribedInvalidated, isTrue);
+    },
+  );
 
-  test('wipe({WipeType.settings}) wipes settings and invalidates settings providers', () async {
-    final container = ProviderContainer();
-    addTearDown(container.dispose);
+  test(
+    'wipe({WipeType.settings}) wipes settings and invalidates settings providers',
+    () async {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
 
-    var hasWiped = false;
-    when(mockSettingsService.getBool('test_bool'))
-        .thenAnswer((_) => hasWiped ? null : true);
-    when(mockSettingsService.getInt('test_int'))
-        .thenAnswer((_) => hasWiped ? null : 42);
-    when(mockSettingsService.wipeAllSettings()).thenAnswer((_) async {
-      hasWiped = true;
-    });
+      var hasWiped = false;
+      when(
+        mockSettingsService.getBool('test_bool'),
+      ).thenAnswer((_) => hasWiped ? null : true);
+      when(
+        mockSettingsService.getInt('test_int'),
+      ).thenAnswer((_) => hasWiped ? null : 42);
+      when(mockSettingsService.wipeAllSettings()).thenAnswer((_) async {
+        hasWiped = true;
+      });
 
-    container.read(settingsScrollIndexProvider.notifier).set(5);
+      container.read(settingsScrollIndexProvider.notifier).set(5);
 
-    container.read(settingsBoolManagerProvider('test_bool'));
-    container.read(settingsIntManagerProvider('test_int'));
-    container.read(settingsScrollIndexProvider);
+      container.read(settingsBoolManagerProvider('test_bool'));
+      container.read(settingsIntManagerProvider('test_int'));
+      container.read(settingsScrollIndexProvider);
 
-    var boolInvalidated = false;
-    var intInvalidated = false;
-    var scrollInvalidated = false;
+      var boolInvalidated = false;
+      var intInvalidated = false;
+      var scrollInvalidated = false;
 
-    container.listen(settingsBoolManagerProvider('test_bool'), (_, __) {
-      boolInvalidated = true;
-    });
-    container.listen(settingsIntManagerProvider('test_int'), (_, __) {
-      intInvalidated = true;
-    });
-    container.listen(settingsScrollIndexProvider, (_, __) {
-      scrollInvalidated = true;
-    });
+      container.listen(settingsBoolManagerProvider('test_bool'), (_, __) {
+        boolInvalidated = true;
+      });
+      container.listen(settingsIntManagerProvider('test_int'), (_, __) {
+        intInvalidated = true;
+      });
+      container.listen(settingsScrollIndexProvider, (_, __) {
+        scrollInvalidated = true;
+      });
 
-    await container.read(wipeManagerProvider.notifier).wipe({WipeType.settings});
-    await pumpEventQueue();
+      await container.read(wipeManagerProvider.notifier).wipe({
+        WipeType.settings,
+      });
+      await pumpEventQueue();
 
-    verify(mockSettingsService.wipeAllSettings()).called(1);
-    expect(boolInvalidated, isTrue);
-    expect(intInvalidated, isTrue);
-    expect(scrollInvalidated, isTrue);
-  });
+      verify(mockSettingsService.wipeAllSettings()).called(1);
+      expect(boolInvalidated, isTrue);
+      expect(intInvalidated, isTrue);
+      expect(scrollInvalidated, isTrue);
+    },
+  );
 
-  test('wipe() with no arguments wipes all types and reclaims disk space', () async {
-    final container = ProviderContainer();
-    addTearDown(container.dispose);
+  test(
+    'wipe() with no arguments wipes all types and reclaims disk space',
+    () async {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
 
-    await container.read(wipeManagerProvider.notifier).wipe();
+      await container.read(wipeManagerProvider.notifier).wipe();
 
-    verify(mockPodcastService.wipeAndBuildPodcastLibrary()).called(1);
-    verify(mockRadioService.wipeRadioLibrary()).called(1);
-    verify(
-      mockLocalAudioService.init(
-        newDirectory: '',
-        forceInit: true,
-      ),
-    ).called(1);
-    verify(mockPlayerService.resetPlayerState()).called(1);
-    verify(mockSettingsService.wipeAllSettings()).called(greaterThanOrEqualTo(1));
-    verify(mockDatabase.reclaimDiskSpace()).called(1);
-  });
+      verify(mockPodcastService.wipeAndBuildPodcastLibrary()).called(1);
+      verify(mockRadioService.wipeRadioLibrary()).called(1);
+      verify(
+        mockLocalAudioService.init(newDirectory: '', forceInit: true),
+      ).called(1);
+      verify(mockPlayerService.resetPlayerState()).called(1);
+      verify(
+        mockSettingsService.wipeAllSettings(),
+      ).called(greaterThanOrEqualTo(1));
+      verify(mockDatabase.reclaimDiskSpace()).called(1);
+    },
+  );
 }

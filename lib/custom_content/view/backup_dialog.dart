@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
+
+import '../../dependencies.dart';
 
 import '../../common/data/audio_type.dart';
 import '../../common/view/common_widgets.dart';

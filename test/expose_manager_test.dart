@@ -1,4 +1,4 @@
-import 'package:flutter_it/flutter_it.dart';
+import 'package:musicpod/dependencies.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -68,16 +68,20 @@ void main() {
           .read(exposeManagerProvider.notifier)
           .initListenBrains('test-listenbrainz-key');
 
-      verify(mockExposeService.initListenBrains('test-listenbrainz-key')).called(1);
+      verify(
+        mockExposeService.initListenBrains('test-listenbrainz-key'),
+      ).called(1);
     });
 
     test('authorizeLastFm forwards credentials to ExposeService', () async {
-      await container.read(exposeManagerProvider.notifier).authorizeLastFm(
-        LastFmCredentials(
-          apiKey: 'test-lastfm-key',
-          apiSecret: 'test-lastfm-secret',
-        ),
-      );
+      await container
+          .read(exposeManagerProvider.notifier)
+          .authorizeLastFm(
+            LastFmCredentials(
+              apiKey: 'test-lastfm-key',
+              apiSecret: 'test-lastfm-secret',
+            ),
+          );
 
       verify(
         mockExposeService.authorizeLastFm(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:musicpod/dependencies.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:musicpod/app/app_router.dart';
@@ -28,15 +28,24 @@ void main() {
     container.dispose();
   });
 
-  test('initial state and setSelectedPageId updates state and selectedPageId', () async {
-    final routingManager = container.read(routingManagerProvider.notifier);
-    expect(container.read(routingManagerProvider), equals(PageIDs.searchPage));
-    expect(routingManager.selectedPageId, equals(PageIDs.searchPage));
+  test(
+    'initial state and setSelectedPageId updates state and selectedPageId',
+    () async {
+      final routingManager = container.read(routingManagerProvider.notifier);
+      expect(
+        container.read(routingManagerProvider),
+        equals(PageIDs.searchPage),
+      );
+      expect(routingManager.selectedPageId, equals(PageIDs.searchPage));
 
-    await routingManager.setSelectedPageId(PageIDs.localAudio);
-    expect(container.read(routingManagerProvider), equals(PageIDs.localAudio));
-    expect(routingManager.selectedPageId, equals(PageIDs.localAudio));
-  });
+      await routingManager.setSelectedPageId(PageIDs.localAudio);
+      expect(
+        container.read(routingManagerProvider),
+        equals(PageIDs.localAudio),
+      );
+      expect(routingManager.selectedPageId, equals(PageIDs.localAudio));
+    },
+  );
 
   testWidgets('RoutingManager push and pop updates currentRouteName', (
     tester,
@@ -116,51 +125,48 @@ void main() {
     },
   );
 
-  testWidgets(
-    'RoutingManager push, pop, and push again',
-    (tester) async {
-      final routingManager = container.read(routingManagerProvider.notifier);
+  testWidgets('RoutingManager push, pop, and push again', (tester) async {
+    final routingManager = container.read(routingManagerProvider.notifier);
 
-      await tester.pumpWidget(
-        UncontrolledProviderScope(
-          container: container,
-          child: MaterialApp(
-            navigatorKey: shellNavigatorKey,
-            navigatorObservers: [routingManager],
-            home: const Scaffold(body: Text('Search Page')),
-          ),
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          navigatorKey: shellNavigatorKey,
+          navigatorObservers: [routingManager],
+          home: const Scaffold(body: Text('Search Page')),
         ),
-      );
-      await tester.pumpAndSettle();
+      ),
+    );
+    await tester.pumpAndSettle();
 
-      expect(routingManager.currentRouteName, equals(PageIDs.searchPage));
+    expect(routingManager.currentRouteName, equals(PageIDs.searchPage));
 
-      // 1. Push podcast page
-      const feedUrl = 'https://example.com/podcast.xml';
-      await routingManager.push(
-        pageId: feedUrl,
-        builder: (context) => const Scaffold(body: Text('Podcast Page')),
-      );
-      await tester.pumpAndSettle();
+    // 1. Push podcast page
+    const feedUrl = 'https://example.com/podcast.xml';
+    await routingManager.push(
+      pageId: feedUrl,
+      builder: (context) => const Scaffold(body: Text('Podcast Page')),
+    );
+    await tester.pumpAndSettle();
 
-      expect(routingManager.currentRouteName, equals(feedUrl));
+    expect(routingManager.currentRouteName, equals(feedUrl));
 
-      // 2. Navigate back
-      routingManager.pop();
-      await tester.pumpAndSettle();
+    // 2. Navigate back
+    routingManager.pop();
+    await tester.pumpAndSettle();
 
-      expect(routingManager.currentRouteName, equals(PageIDs.searchPage));
+    expect(routingManager.currentRouteName, equals(PageIDs.searchPage));
 
-      // 3. Click on podcast_card again
-      await routingManager.push(
-        pageId: feedUrl,
-        builder: (context) => const Scaffold(body: Text('Podcast Page')),
-      );
-      await tester.pumpAndSettle();
+    // 3. Click on podcast_card again
+    await routingManager.push(
+      pageId: feedUrl,
+      builder: (context) => const Scaffold(body: Text('Podcast Page')),
+    );
+    await tester.pumpAndSettle();
 
-      expect(routingManager.currentRouteName, equals(feedUrl));
-    },
-  );
+    expect(routingManager.currentRouteName, equals(feedUrl));
+  });
 
   testWidgets(
     'RoutingManager correctly ignores GoRouter route names starting with /',

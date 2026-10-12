@@ -1,4 +1,4 @@
-import 'package:flutter_it/flutter_it.dart';
+import 'package:musicpod/dependencies.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -34,28 +34,34 @@ void main() {
       verifyNever(mockService.restoreAllSavedBookmarks());
     });
 
-    test('restore calls restoreAllSavedBookmarks and updates state to true', () async {
-      final result = await container
-          .read(secureBookmarkManagerProvider.notifier)
-          .restore();
+    test(
+      'restore calls restoreAllSavedBookmarks and updates state to true',
+      () async {
+        final result = await container
+            .read(secureBookmarkManagerProvider.notifier)
+            .restore();
 
-      expect(result, isTrue);
-      expect(container.read(secureBookmarkManagerProvider), isTrue);
-      verify(mockService.restoreAllSavedBookmarks()).called(1);
-    });
+        expect(result, isTrue);
+        expect(container.read(secureBookmarkManagerProvider), isTrue);
+        verify(mockService.restoreAllSavedBookmarks()).called(1);
+      },
+    );
 
-    test('consecutive restore calls do not re-invoke service if already true', () async {
-      final first = await container
-          .read(secureBookmarkManagerProvider.notifier)
-          .restore();
-      expect(first, isTrue);
+    test(
+      'consecutive restore calls do not re-invoke service if already true',
+      () async {
+        final first = await container
+            .read(secureBookmarkManagerProvider.notifier)
+            .restore();
+        expect(first, isTrue);
 
-      final second = await container
-          .read(secureBookmarkManagerProvider.notifier)
-          .restore();
-      expect(second, isTrue);
+        final second = await container
+            .read(secureBookmarkManagerProvider.notifier)
+            .restore();
+        expect(second, isTrue);
 
-      verify(mockService.restoreAllSavedBookmarks()).called(1);
-    });
+        verify(mockService.restoreAllSavedBookmarks()).called(1);
+      },
+    );
   });
 }

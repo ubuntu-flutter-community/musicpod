@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../dependencies.dart';
 
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
@@ -96,21 +97,17 @@ class _EditPlaylistDialogState extends ConsumerState<EditPlaylistDialog> {
           routingManager.push(pageId: PageIDs.localAudio, replace: true),
         );
         await ref
-            .read(
-              settingsIntManagerProvider(
-                SPKeys.localAudioIndex,
-              ).notifier,
-            )
+            .read(settingsIntManagerProvider(SPKeys.localAudioIndex).notifier)
             .set(LocalAudioView.playlists.index);
         await ref
             .read(playlistIDsManagerProvider.notifier)
             .createOrChangePlaylist(
-          PlaylistChange(
-            id: widget.playlistName!,
-            action: PlaylistAction.updateName,
-            newName: _controller.text,
-          ),
-        );
+              PlaylistChange(
+                id: widget.playlistName!,
+                action: PlaylistAction.updateName,
+                newName: _controller.text,
+              ),
+            );
       },
     );
   }

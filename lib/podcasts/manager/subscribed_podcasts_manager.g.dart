@@ -34,7 +34,7 @@ final class SubscribedPodcastsManagerProvider
 }
 
 String _$subscribedPodcastsManagerHash() =>
-    r'7f904528ddcfc37ad6777e0c62a0f4cba11cb174';
+    r'8ae06cc5b57c67b62a1668742535ec060f190fdb';
 
 abstract class _$SubscribedPodcastsManager extends $AsyncNotifier<Set<String>> {
   FutureOr<Set<String>> build();

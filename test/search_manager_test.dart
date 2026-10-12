@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:get_it/get_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -19,7 +19,6 @@ import 'package:podcast_search/podcast_search.dart';
 import 'package:radio_browser_api/radio_browser_api.dart' hide Country;
 
 import 'package:musicpod/l10n/app_localizations.dart';
-import 'package:musicpod/player/manager/player_manager.dart';
 import 'package:musicpod/search/view/sliver_radio_search_results.dart';
 
 import 'search_manager_test.mocks.dart';
@@ -29,7 +28,6 @@ import 'search_manager_test.mocks.dart';
   PodcastService,
   LocalAudioService,
   SettingsService,
-  PlayerManager,
 ])
 void main() {
   late MockRadioService mockRadioService;
@@ -44,14 +42,16 @@ void main() {
     mockLocalAudioService = MockLocalAudioService();
     mockSettingsService = MockSettingsService();
 
-    when(mockSettingsService.getString(SPKeys.lastCountryCode))
-        .thenReturn(null);
-    when(mockSettingsService.getString(SPKeys.lastLanguageCode))
-        .thenReturn(null);
-    when(mockSettingsService.getString(SPKeys.selectedSearchAudioType))
-        .thenReturn(null);
-    when(mockSettingsService.setValue(any, any))
-        .thenAnswer((_) async => true);
+    when(
+      mockSettingsService.getString(SPKeys.lastCountryCode),
+    ).thenReturn(null);
+    when(
+      mockSettingsService.getString(SPKeys.lastLanguageCode),
+    ).thenReturn(null);
+    when(
+      mockSettingsService.getString(SPKeys.selectedSearchAudioType),
+    ).thenReturn(null);
+    when(mockSettingsService.setValue(any, any)).thenAnswer((_) async => true);
 
     GetIt.I.registerSingleton<RadioService>(mockRadioService);
     GetIt.I.registerSingleton<PodcastService>(mockPodcastService);
@@ -69,9 +69,7 @@ void main() {
 
     final state = container.read(searchManagerProvider);
     expect(state.audioType, AudioType.podcast);
-    expect(state.searchTypes, {
-      SearchType.podcastTitle,
-    });
+    expect(state.searchTypes, {SearchType.podcastTitle});
     expect(state.searchType, SearchType.podcastTitle);
     expect(state.podcastLimit, SearchManager.podcastDefaultLimit);
     expect(state.radioLimit, SearchManager.radioDefaultLimit);
@@ -142,8 +140,9 @@ void main() {
       title: 'Station 1',
       audioType: AudioType.radio,
     );
-    when(mockRadioService.search(name: 'test', limit: 64))
-        .thenAnswer((_) async => [stationAudio]);
+    when(
+      mockRadioService.search(name: 'test', limit: 64),
+    ).thenAnswer((_) async => [stationAudio]);
 
     final notifier = container.read(searchManagerProvider.notifier);
     notifier.setAudioType(AudioType.radio);
@@ -201,12 +200,9 @@ void main() {
     expect(container.read(searchManagerProvider).searchQuery, isNull);
   });
 
-  testWidgets('SliverRadioSearchResults builds without WatchIt assertion error', (tester) async {
-    final mockPlayerManager = MockPlayerManager();
-    when(mockPlayerManager.isPlaying).thenReturn(false);
-    when(mockPlayerManager.audio).thenReturn(null);
-    GetIt.I.registerSingleton<PlayerManager>(mockPlayerManager);
-
+  testWidgets('SliverRadioSearchResults builds without assertion error', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       const ProviderScope(
         child: MaterialApp(
@@ -214,9 +210,7 @@ void main() {
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
             body: CustomScrollView(
-              slivers: [
-                SliverRadioSearchResults(width: 800),
-              ],
+              slivers: [SliverRadioSearchResults(width: 800)],
             ),
           ),
         ),

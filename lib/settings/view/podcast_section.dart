@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../dependencies.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:yaru/yaru.dart';
 
@@ -35,11 +36,13 @@ class _PodcastSectionState extends ConsumerState<PodcastSection> {
   @override
   void initState() {
     super.initState();
-    _initialKey =
-        ref.read(settingsStringManagerProvider(SPKeys.podcastIndexApiKey));
+    _initialKey = ref.read(
+      settingsStringManagerProvider(SPKeys.podcastIndexApiKey),
+    );
     _keyController = TextEditingController(text: _initialKey);
-    _initialSecret =
-        ref.read(settingsStringManagerProvider(SPKeys.podcastIndexApiSecret));
+    _initialSecret = ref.read(
+      settingsStringManagerProvider(SPKeys.podcastIndexApiSecret),
+    );
     _secretController = TextEditingController(text: _initialSecret);
   }
 
@@ -57,10 +60,12 @@ class _PodcastSectionState extends ConsumerState<PodcastSection> {
 
     final usePodcastIndex =
         ref.watch(settingsBoolManagerProvider(SPKeys.usePodcastIndex)) ?? false;
-    final podcastIndexApiKey =
-        ref.watch(settingsStringManagerProvider(SPKeys.podcastIndexApiKey));
-    final podcastIndexApiSecret =
-        ref.watch(settingsStringManagerProvider(SPKeys.podcastIndexApiSecret));
+    final podcastIndexApiKey = ref.watch(
+      settingsStringManagerProvider(SPKeys.podcastIndexApiKey),
+    );
+    final podcastIndexApiSecret = ref.watch(
+      settingsStringManagerProvider(SPKeys.podcastIndexApiSecret),
+    );
 
     return SettingsSection(
       heading: l10n.podcasts,
@@ -260,9 +265,9 @@ class _ControlCollectionTile extends ConsumerWidget {
               content: Text(context.l10n.removeAllPodcastsDescription),
               confirmLabel: context.l10n.ok,
               cancelLabel: context.l10n.cancel,
-              onConfirm: () => ref
-                  .read(wipeManagerProvider.notifier)
-                  .wipe({WipeType.podcasts}),
+              onConfirm: () => ref.read(wipeManagerProvider.notifier).wipe({
+                WipeType.podcasts,
+              }),
             ),
           ),
         ],

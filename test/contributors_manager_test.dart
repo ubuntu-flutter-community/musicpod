@@ -1,4 +1,4 @@
-import 'package:flutter_it/flutter_it.dart';
+import 'package:musicpod/dependencies.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:github/github.dart';
@@ -49,7 +49,9 @@ void main() {
         mockRepositoriesService.listContributors(
           RepositorySlug.full(AppConfig.gitHubShortLink),
         ),
-      ).thenAnswer((_) => Stream.fromIterable([userContributor, botContributor]));
+      ).thenAnswer(
+        (_) => Stream.fromIterable([userContributor, botContributor]),
+      );
 
       final result = await container.read(contributorsManagerProvider.future);
 
@@ -59,10 +61,7 @@ void main() {
     });
 
     test('supports constructor injection for gitHub', () async {
-      final userContributor = Contributor(
-        login: 'custom_user',
-        type: 'User',
-      );
+      final userContributor = Contributor(login: 'custom_user', type: 'User');
 
       when(
         mockRepositoriesService.listContributors(
@@ -72,12 +71,12 @@ void main() {
 
       final manager = ContributorsManager(gitHub: mockGitHub);
       final overrideContainer = ProviderContainer(
-        overrides: [
-          contributorsManagerProvider.overrideWith(() => manager),
-        ],
+        overrides: [contributorsManagerProvider.overrideWith(() => manager)],
       );
 
-      final result = await overrideContainer.read(contributorsManagerProvider.future);
+      final result = await overrideContainer.read(
+        contributorsManagerProvider.future,
+      );
 
       expect(result.length, 2);
       expect(result.first.login, 'custom_user');

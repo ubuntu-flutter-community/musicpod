@@ -1,4 +1,4 @@
-import 'package:flutter_it/flutter_it.dart';
+import 'package:musicpod/dependencies.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:musicpod/settings/manager/settings_manager.dart';
@@ -56,10 +56,7 @@ void main() {
       await container
           .read(settingsBoolManagerProvider('test_bool').notifier)
           .set(false);
-      expect(
-        container.read(settingsBoolManagerProvider('test_bool')),
-        isFalse,
-      );
+      expect(container.read(settingsBoolManagerProvider('test_bool')), isFalse);
       expect(prefs.getBool('test_bool'), isFalse);
     });
 
@@ -67,18 +64,12 @@ void main() {
       await container
           .read(settingsBoolManagerProvider('test_bool').notifier)
           .toggle();
-      expect(
-        container.read(settingsBoolManagerProvider('test_bool')),
-        isFalse,
-      );
+      expect(container.read(settingsBoolManagerProvider('test_bool')), isFalse);
 
       await container
           .read(settingsBoolManagerProvider('test_bool').notifier)
           .toggle();
-      expect(
-        container.read(settingsBoolManagerProvider('test_bool')),
-        isTrue,
-      );
+      expect(container.read(settingsBoolManagerProvider('test_bool')), isTrue);
     });
 
     test('toggling missing key defaults from false to true', () async {
@@ -107,14 +98,19 @@ void main() {
       await container
           .read(settingsIntManagerProvider('test_int').notifier)
           .set(100);
-      expect(container.read(settingsIntManagerProvider('test_int')), equals(100));
+      expect(
+        container.read(settingsIntManagerProvider('test_int')),
+        equals(100),
+      );
       expect(prefs.getInt('test_int'), equals(100));
     });
   });
 
   group('SettingsDoubleManager', () {
     test('reads existing double value', () {
-      final value = container.read(settingsDoubleManagerProvider('test_double'));
+      final value = container.read(
+        settingsDoubleManagerProvider('test_double'),
+      );
       expect(value, equals(3.14));
     });
 
@@ -139,7 +135,9 @@ void main() {
 
   group('SettingsStringManager', () {
     test('reads existing string value', () {
-      final value = container.read(settingsStringManagerProvider('test_string'));
+      final value = container.read(
+        settingsStringManagerProvider('test_string'),
+      );
       expect(value, equals('hello'));
     });
 

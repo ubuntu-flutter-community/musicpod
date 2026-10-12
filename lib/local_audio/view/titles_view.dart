@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../dependencies.dart';
 
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';

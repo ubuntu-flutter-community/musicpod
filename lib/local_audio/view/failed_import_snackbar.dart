@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
+
+import '../../dependencies.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../settings/data/shared_preferences_keys.dart';

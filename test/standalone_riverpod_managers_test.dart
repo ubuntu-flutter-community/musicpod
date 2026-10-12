@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:get_it/get_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:musicpod/common/data/audio.dart';
@@ -75,9 +75,7 @@ void main() {
 
   test('FindAlbumNameManager returns album name using arrow syntax', () async {
     final container = ProviderContainer(
-      overrides: [
-        localAudioManagerProvider.overrideWith(() => fakeLocalAudio),
-      ],
+      overrides: [localAudioManagerProvider.overrideWith(() => fakeLocalAudio)],
     );
     addTearDown(container.dispose);
 
@@ -87,9 +85,7 @@ void main() {
 
   test('FindArtistOfAlbumManager returns artist using arrow syntax', () async {
     final container = ProviderContainer(
-      overrides: [
-        localAudioManagerProvider.overrideWith(() => fakeLocalAudio),
-      ],
+      overrides: [localAudioManagerProvider.overrideWith(() => fakeLocalAudio)],
     );
     addTearDown(container.dispose);
 
@@ -101,9 +97,7 @@ void main() {
 
   test('FindAlbumManager returns tracks using arrow syntax', () async {
     final container = ProviderContainer(
-      overrides: [
-        localAudioManagerProvider.overrideWith(() => fakeLocalAudio),
-      ],
+      overrides: [localAudioManagerProvider.overrideWith(() => fakeLocalAudio)],
     );
     addTearDown(container.dispose);
 
@@ -116,7 +110,9 @@ void main() {
     final container = ProviderContainer();
     addTearDown(container.dispose);
 
-    final emptyArt = await container.read(onlineArtManagerProvider(null).future);
+    final emptyArt = await container.read(
+      onlineArtManagerProvider(null).future,
+    );
     expect(emptyArt, isNull);
 
     final art = await container.read(
@@ -154,19 +150,21 @@ void main() {
 
   test('PinnedAlbumIDsManager reads and toggles pinned albums', () async {
     final container = ProviderContainer(
-      overrides: [
-        localAudioManagerProvider.overrideWith(() => fakeLocalAudio),
-      ],
+      overrides: [localAudioManagerProvider.overrideWith(() => fakeLocalAudio)],
     );
     addTearDown(container.dispose);
 
     final initial = await container.read(pinnedAlbumIDsManagerProvider.future);
     expect(initial, [10, 20]);
 
-    await container.read(pinnedAlbumIDsManagerProvider.notifier).togglePinAlbum(30);
+    await container
+        .read(pinnedAlbumIDsManagerProvider.notifier)
+        .togglePinAlbum(30);
     expect(container.read(pinnedAlbumIDsManagerProvider).value, [10, 20, 30]);
 
-    await container.read(pinnedAlbumIDsManagerProvider.notifier).togglePinAlbum(10);
+    await container
+        .read(pinnedAlbumIDsManagerProvider.notifier)
+        .togglePinAlbum(10);
     expect(container.read(pinnedAlbumIDsManagerProvider).value, [20, 30]);
   });
 }

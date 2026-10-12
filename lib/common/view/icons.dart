@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
+
+import '../../dependencies.dart';
 
 import '../../settings/data/shared_preferences_keys.dart';
 import '../../extensions/platform_x.dart';

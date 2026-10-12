@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter_it/flutter_it.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../dependencies.dart';
 import '../service/settings_service.dart';
 
 part 'settings_manager.g.dart';

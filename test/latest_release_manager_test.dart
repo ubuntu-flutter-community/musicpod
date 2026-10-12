@@ -1,4 +1,4 @@
-import 'package:flutter_it/flutter_it.dart';
+import 'package:musicpod/dependencies.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:github/github.dart';
@@ -80,28 +80,33 @@ void main() {
       expect(result.updateAvailable, isFalse);
     });
 
-    test('updateAvailable is false when online version is older or same', () async {
-      final release = Release(tagName: 'v1.0.0');
+    test(
+      'updateAvailable is false when online version is older or same',
+      () async {
+        final release = Release(tagName: 'v1.0.0');
 
-      when(
-        mockRepositoriesService.listReleases(
-          RepositorySlug.full(AppConfig.gitHubShortLink),
-        ),
-      ).thenAnswer((_) => Stream.fromIterable([release]));
+        when(
+          mockRepositoriesService.listReleases(
+            RepositorySlug.full(AppConfig.gitHubShortLink),
+          ),
+        ).thenAnswer((_) => Stream.fromIterable([release]));
 
-      when(
-        mockRepositoriesService.listReleaseAssets(
-          RepositorySlug.full(AppConfig.gitHubShortLink),
-          release,
-        ),
-      ).thenAnswer((_) => const Stream.empty());
+        when(
+          mockRepositoriesService.listReleaseAssets(
+            RepositorySlug.full(AppConfig.gitHubShortLink),
+            release,
+          ),
+        ).thenAnswer((_) => const Stream.empty());
 
-      final result = await container.read(latestReleaseManagerProvider.future);
+        final result = await container.read(
+          latestReleaseManagerProvider.future,
+        );
 
-      expect(result.onlineVersion, 'v1.0.0');
-      expect(result.downloadCount, 0);
-      expect(result.updateAvailable, isFalse);
-    });
+        expect(result.onlineVersion, 'v1.0.0');
+        expect(result.downloadCount, 0);
+        expect(result.updateAvailable, isFalse);
+      },
+    );
 
     test('supports constructor injection for gitHub and packageInfo', () async {
       final customPackageInfo = PackageInfo(
@@ -131,9 +136,7 @@ void main() {
       );
 
       final overrideContainer = ProviderContainer(
-        overrides: [
-          latestReleaseManagerProvider.overrideWith(() => manager),
-        ],
+        overrides: [latestReleaseManagerProvider.overrideWith(() => manager)],
       );
 
       final result = await overrideContainer.read(

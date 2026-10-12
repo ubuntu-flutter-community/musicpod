@@ -1,18 +1,16 @@
-import 'package:flutter_it/flutter_it.dart';
+import 'package:get_it/get_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:musicpod/common/data/audio.dart';
 import 'package:musicpod/common/data/audio_type.dart';
-import 'package:musicpod/common/util/family.dart';
 import 'package:musicpod/local_audio/data/playlist_action.dart';
 import 'package:musicpod/local_audio/manager/has_tracks_manager.dart';
 import 'package:musicpod/local_audio/manager/liked_audio_paths_manager.dart';
 import 'package:musicpod/local_audio/manager/liked_audios_manager.dart';
 import 'package:musicpod/local_audio/manager/local_audio_manager.dart';
 import 'package:musicpod/local_audio/service/local_audio_service.dart';
-import 'package:musicpod/player/manager/player_manager.dart';
 import 'package:musicpod/podcasts/manager/download_manager.dart';
 import 'package:musicpod/podcasts/manager/episodes_manager.dart';
 import 'package:musicpod/podcasts/service/download_service.dart';
@@ -20,12 +18,7 @@ import 'package:musicpod/podcasts/service/podcast_service.dart';
 
 import 'memory_management_test.mocks.dart';
 
-@GenerateMocks([
-  LocalAudioService,
-  DownloadService,
-  PodcastService,
-  PlayerManager,
-])
+@GenerateMocks([LocalAudioService, DownloadService, PodcastService])
 class FakeLocalAudioManager extends LocalAudioManager {
   @override
   Future<LocalAudioState> build() async => const LocalAudioState();
@@ -33,53 +26,47 @@ class FakeLocalAudioManager extends LocalAudioManager {
 
 void main() {
   setUp(() async {
-    await Family.reset();
     await GetIt.I.reset();
   });
 
   tearDown(() async {
-    await Family.reset();
     await GetIt.I.reset();
   });
 
   group('DownloadManager memory optimization', () {
-    test(
-      'hasDownload checks download status directly from PodcastService',
-      () {
-        final mockPodcastService = MockPodcastService();
-        final mockDownloadService = MockDownloadService();
-        GetIt.I.registerSingleton<PodcastService>(mockPodcastService);
-        GetIt.I.registerSingleton<DownloadService>(mockDownloadService);
+    test('hasDownload checks download status directly from PodcastService', () {
+      final mockPodcastService = MockPodcastService();
+      final mockDownloadService = MockDownloadService();
+      GetIt.I.registerSingleton<PodcastService>(mockPodcastService);
+      GetIt.I.registerSingleton<DownloadService>(mockDownloadService);
 
-        when(
-          mockDownloadService.setDownloadsDirectory(
-            getDefault: anyNamed('getDefault'),
-          ),
-        ).thenAnswer((_) async => '/fake/downloads');
+      when(
+        mockDownloadService.setDownloadsDirectory(
+          getDefault: anyNamed('getDefault'),
+        ),
+      ).thenAnswer((_) async => '/fake/downloads');
 
-        final container = ProviderContainer();
-        addTearDown(container.dispose);
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
 
-        const audio1 = Audio(
-          audioType: AudioType.podcast,
-          url: 'https://example.com/ep1.mp3',
-        );
-        const audio2 = Audio(
-          audioType: AudioType.podcast,
-          url: 'https://example.com/ep2.mp3',
-        );
+      const audio1 = Audio(
+        audioType: AudioType.podcast,
+        url: 'https://example.com/ep1.mp3',
+      );
+      const audio2 = Audio(
+        audioType: AudioType.podcast,
+        url: 'https://example.com/ep2.mp3',
+      );
 
-        when(mockPodcastService.getDownloadPath(audio1)).thenReturn(null);
-        when(
-          mockPodcastService.getDownloadPath(audio2),
-        ).thenReturn('/fake/path/ep2.mp3');
+      when(mockPodcastService.getDownloadPath(audio1)).thenReturn(null);
+      when(
+        mockPodcastService.getDownloadPath(audio2),
+      ).thenReturn('/fake/path/ep2.mp3');
 
-        final downloadManager =
-            container.read(downloadManagerProvider.notifier);
-        expect(downloadManager.hasDownload(audio1), isFalse);
-        expect(downloadManager.hasDownload(audio2), isTrue);
-      },
-    );
+      final downloadManager = container.read(downloadManagerProvider.notifier);
+      expect(downloadManager.hasDownload(audio1), isFalse);
+      expect(downloadManager.hasDownload(audio2), isTrue);
+    });
   });
 
   group('HasTracksManager lightweight boolean check', () {
@@ -126,12 +113,15 @@ void main() {
       likedPaths = {};
       likedAudios = [];
 
-      when(mockLocalAudioService.findLikedAudioPaths())
-          .thenAnswer((_) async => Set.from(likedPaths));
-      when(mockLocalAudioService.findLikedAudios())
-          .thenAnswer((_) async => List.from(likedAudios));
-      when(mockLocalAudioService.createOrChangeLikedAudios(any))
-          .thenAnswer((inv) async {
+      when(
+        mockLocalAudioService.findLikedAudioPaths(),
+      ).thenAnswer((_) async => Set.from(likedPaths));
+      when(
+        mockLocalAudioService.findLikedAudios(),
+      ).thenAnswer((_) async => List.from(likedAudios));
+      when(mockLocalAudioService.createOrChangeLikedAudios(any)).thenAnswer((
+        inv,
+      ) async {
         final param = inv.positionalArguments[0] as PlaylistChange;
         if (param.action == PlaylistAction.addTo && param.audios != null) {
           likedAudios.addAll(param.audios!);
@@ -160,8 +150,9 @@ void main() {
         );
         addTearDown(container.dispose);
 
-        final initialPaths =
-            await container.read(likedAudioPathsManagerProvider.future);
+        final initialPaths = await container.read(
+          likedAudioPathsManagerProvider.future,
+        );
         expect(initialPaths, isA<Set<String>>());
         expect(initialPaths, contains(song1.path));
         expect(initialPaths.contains(song2.path), isFalse);
@@ -171,24 +162,20 @@ void main() {
             .read(likedAudioPathsManagerProvider.notifier)
             .addLikedAudios([song2]);
 
-        final updatedPaths =
-            await container.read(likedAudioPathsManagerProvider.future);
-        expect(
-          updatedPaths,
-          containsAll([song1.path, song2.path]),
+        final updatedPaths = await container.read(
+          likedAudioPathsManagerProvider.future,
         );
-        expect(
-          likedPaths,
-          containsAll([song1.path, song2.path]),
-        );
+        expect(updatedPaths, containsAll([song1.path, song2.path]));
+        expect(likedPaths, containsAll([song1.path, song2.path]));
 
         // Remove song1 via pathsManager
         await container
             .read(likedAudioPathsManagerProvider.notifier)
             .removeLikedAudios([song1]);
 
-        final remainingPaths =
-            await container.read(likedAudioPathsManagerProvider.future);
+        final remainingPaths = await container.read(
+          likedAudioPathsManagerProvider.future,
+        );
         expect(remainingPaths.contains(song1.path), isFalse);
         expect(remainingPaths, contains(song2.path));
       },
@@ -266,7 +253,6 @@ void main() {
   group('EpisodesManager chunking & pagination', () {
     const feedUrl = 'https://example.com/podcast.xml';
     late MockPodcastService mockPodcastService;
-    late MockPlayerManager mockPlayerManager;
     late MockDownloadService mockDownloadService;
     late List<Audio> mockEpisodes;
 
@@ -283,18 +269,17 @@ void main() {
       );
 
       mockPodcastService = MockPodcastService();
-      mockPlayerManager = MockPlayerManager();
       mockDownloadService = MockDownloadService();
 
       when(mockPodcastService.ascendingPodcasts).thenAnswer((_) async => {});
-      when(mockPodcastService.findEpisodes(
-        feedUrl: anyNamed('feedUrl'),
-        tryFromDbOnly: anyNamed('tryFromDbOnly'),
-        order: anyNamed('order'),
-      )).thenAnswer((_) async => List.from(mockEpisodes));
+      when(
+        mockPodcastService.findEpisodes(
+          feedUrl: anyNamed('feedUrl'),
+          tryFromDbOnly: anyNamed('tryFromDbOnly'),
+          order: anyNamed('order'),
+        ),
+      ).thenAnswer((_) async => List.from(mockEpisodes));
       when(mockPodcastService.getDownloadPath(any)).thenReturn(null);
-
-      when(mockPlayerManager.lastPositions).thenReturn(null);
 
       when(
         mockDownloadService.setDownloadsDirectory(
@@ -303,19 +288,21 @@ void main() {
       ).thenAnswer((_) async => '/fake/downloads');
 
       GetIt.I.registerSingleton<PodcastService>(mockPodcastService);
-      GetIt.I.registerSingleton<PlayerManager>(mockPlayerManager);
       GetIt.I.registerSingleton<DownloadService>(mockDownloadService);
     });
 
     test('initially loads only pageSize episodes into state', () async {
       final container = ProviderContainer();
       addTearDown(container.dispose);
-      final sub =
-          container.listen(episodesManagerProvider(feedUrl), (_, __) {});
+      final sub = container.listen(
+        episodesManagerProvider(feedUrl),
+        (_, __) {},
+      );
       addTearDown(sub.close);
 
-      final state =
-          await container.read(episodesManagerProvider(feedUrl).future);
+      final state = await container.read(
+        episodesManagerProvider(feedUrl).future,
+      );
 
       expect(state.episodes.length, equals(EpisodesManager.pageSize));
       expect(state.displayedCount, equals(EpisodesManager.pageSize));
@@ -324,45 +311,46 @@ void main() {
       expect(state.allEpisodes.length, equals(60));
     });
 
-    test(
-      'loadMore increments displayedCount and updates state',
-      () async {
-        final container = ProviderContainer();
-        addTearDown(container.dispose);
-        final sub =
-            container.listen(episodesManagerProvider(feedUrl), (_, __) {});
-        addTearDown(sub.close);
+    test('loadMore increments displayedCount and updates state', () async {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      final sub = container.listen(
+        episodesManagerProvider(feedUrl),
+        (_, __) {},
+      );
+      addTearDown(sub.close);
 
-        await container.read(episodesManagerProvider(feedUrl).future);
+      await container.read(episodesManagerProvider(feedUrl).future);
 
-        // First loadMore: 25 -> 50
-        container.read(episodesManagerProvider(feedUrl).notifier).loadMore();
-        var state = container.read(episodesManagerProvider(feedUrl)).value!;
-        expect(state.displayedCount, equals(50));
-        expect(state.episodes.length, equals(50));
-        expect(state.hasMore, isTrue);
+      // First loadMore: 25 -> 50
+      container.read(episodesManagerProvider(feedUrl).notifier).loadMore();
+      var state = container.read(episodesManagerProvider(feedUrl)).value!;
+      expect(state.displayedCount, equals(50));
+      expect(state.episodes.length, equals(50));
+      expect(state.hasMore, isTrue);
 
-        // Second loadMore: 50 -> 60 (clamped to total 60)
-        container.read(episodesManagerProvider(feedUrl).notifier).loadMore();
-        state = container.read(episodesManagerProvider(feedUrl)).value!;
-        expect(state.displayedCount, equals(60));
-        expect(state.episodes.length, equals(60));
-        expect(state.hasMore, isFalse);
+      // Second loadMore: 50 -> 60 (clamped to total 60)
+      container.read(episodesManagerProvider(feedUrl).notifier).loadMore();
+      state = container.read(episodesManagerProvider(feedUrl)).value!;
+      expect(state.displayedCount, equals(60));
+      expect(state.episodes.length, equals(60));
+      expect(state.hasMore, isFalse);
 
-        // Third loadMore when !hasMore: no-op
-        container.read(episodesManagerProvider(feedUrl).notifier).loadMore();
-        state = container.read(episodesManagerProvider(feedUrl)).value!;
-        expect(state.displayedCount, equals(60));
-        expect(state.episodes.length, equals(60));
-        expect(state.hasMore, isFalse);
-      },
-    );
+      // Third loadMore when !hasMore: no-op
+      container.read(episodesManagerProvider(feedUrl).notifier).loadMore();
+      state = container.read(episodesManagerProvider(feedUrl)).value!;
+      expect(state.displayedCount, equals(60));
+      expect(state.episodes.length, equals(60));
+      expect(state.hasMore, isFalse);
+    });
 
     test('search query reset restores displayedCount to pageSize', () async {
       final container = ProviderContainer();
       addTearDown(container.dispose);
-      final sub =
-          container.listen(episodesManagerProvider(feedUrl), (_, __) {});
+      final sub = container.listen(
+        episodesManagerProvider(feedUrl),
+        (_, __) {},
+      );
       addTearDown(sub.close);
 
       await container.read(episodesManagerProvider(feedUrl).future);
@@ -385,8 +373,10 @@ void main() {
     test('changing filter type restores displayedCount to pageSize', () async {
       final container = ProviderContainer();
       addTearDown(container.dispose);
-      final sub =
-          container.listen(episodesManagerProvider(feedUrl), (_, __) {});
+      final sub = container.listen(
+        episodesManagerProvider(feedUrl),
+        (_, __) {},
+      );
       addTearDown(sub.close);
 
       await container.read(episodesManagerProvider(feedUrl).future);

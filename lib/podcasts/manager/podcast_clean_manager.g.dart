@@ -42,7 +42,7 @@ final class PodcastCleanManagerProvider
 }
 
 String _$podcastCleanManagerHash() =>
-    r'310ed8b30fd6f5dce00c151111aaa59655b34644';
+    r'58959e885790c75fa814abefdf146f0333de81e0';
 
 abstract class _$PodcastCleanManager
     extends $Notifier<AsyncValue<Set<String>?>> {

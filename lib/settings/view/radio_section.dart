@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../custom_content/service/custom_content_service.dart';
+import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
 import '../manager/wipe_manager.dart';
 import 'settings_list_tile.dart';
 import 'settings_section.dart';
 
-class RadioSection extends StatelessWidget with WatchItMixin {
+class RadioSection extends StatelessWidget {
   const RadioSection({super.key});
 
   @override

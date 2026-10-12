@@ -7,7 +7,6 @@ import 'package:mockito/mockito.dart';
 import 'package:musicpod/common/data/audio.dart';
 import 'package:musicpod/common/data/audio_type.dart';
 import 'package:musicpod/l10n/app_localizations.dart';
-import 'package:musicpod/player/manager/player_manager.dart';
 import 'package:musicpod/podcasts/data/podcast_short_info.dart';
 import 'package:musicpod/podcasts/data/podcast_update_capsule.dart';
 import 'package:musicpod/podcasts/manager/podcast_updated_feeds_manager.dart';
@@ -21,7 +20,6 @@ import 'podcast_updates_disposal_test.mocks.dart';
 
 @GenerateMocks([
   PodcastService,
-  PlayerManager,
   SettingsService,
 ])
 void main() {
@@ -42,25 +40,18 @@ void main() {
   );
 
   late MockPodcastService mockPodcastService;
-  late MockPlayerManager mockPlayerManager;
   late MockSettingsService mockSettingsService;
 
   setUp(() async {
     await GetIt.I.reset();
     mockPodcastService = MockPodcastService();
-    mockPlayerManager = MockPlayerManager();
     mockSettingsService = MockSettingsService();
-
-    when(mockPlayerManager.isPlaying).thenReturn(false);
-    when(mockPlayerManager.audio).thenReturn(null);
-    when(mockPlayerManager.lastPositions).thenReturn(null);
     when(mockSettingsService.getInt(any)).thenReturn(0);
     when(mockSettingsService.getBool(any)).thenReturn(false);
     when(mockSettingsService.getString(any)).thenReturn(null);
     when(mockPodcastService.getSubscribedPodcasts()).thenAnswer((_) async => {});
 
     GetIt.I.registerSingleton<PodcastService>(mockPodcastService);
-    GetIt.I.registerSingleton<PlayerManager>(mockPlayerManager);
     GetIt.I.registerSingleton<SettingsService>(mockSettingsService);
   });
 

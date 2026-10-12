@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../dependencies.dart';
 
 import '../../common/logging.dart';
 import '../../common/view/common_widgets.dart';
@@ -52,14 +53,13 @@ class LocalAudioSection extends ConsumerWidget {
                   spKey: SPKeys.directoryBookmark,
                   path: directoryPath,
                 );
-                await ref
-                    .read(wipeManagerProvider.notifier)
-                    .wipe({WipeType.localAudio});
+                await ref.read(wipeManagerProvider.notifier).wipe({
+                  WipeType.localAudio,
+                });
                 unawaited(
-                  ref.read(localAudioManagerProvider.notifier).initAudios(
-                    forceInit: true,
-                    directory: directoryPath,
-                  ),
+                  ref
+                      .read(localAudioManagerProvider.notifier)
+                      .initAudios(forceInit: true, directory: directoryPath),
                 );
               }
             },

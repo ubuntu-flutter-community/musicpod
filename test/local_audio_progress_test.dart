@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:musicpod/app/routing_manager.dart';
@@ -19,7 +19,12 @@ import 'package:yaru/yaru.dart';
 
 import 'local_audio_progress_test.mocks.dart';
 
-@GenerateMocks([LocalAudioService, SettingsService, RoutingManager, SearchManager])
+@GenerateMocks([
+  LocalAudioService,
+  SettingsService,
+  RoutingManager,
+  SearchManager,
+])
 void main() {
   late MockLocalAudioService mockAudioService;
   late MockSettingsService mockSettingsService;
@@ -48,7 +53,9 @@ void main() {
     when(mockAudioService.findAllAlbumIDs()).thenAnswer((_) async => const []);
     when(mockAudioService.findAllArtists()).thenAnswer((_) async => const []);
     when(mockAudioService.findAllGenres()).thenAnswer((_) async => const []);
-    when(mockAudioService.findAllPlaylistIDs()).thenAnswer((_) async => const []);
+    when(
+      mockAudioService.findAllPlaylistIDs(),
+    ).thenAnswer((_) async => const []);
   }
 
   void setupMockSettingsService() {
@@ -161,13 +168,22 @@ void main() {
 
         // Simulate scanning progress steps
         emitProgress(0.25);
-        expect(container.read(localAudioManagerProvider).progress, equals(0.25));
+        expect(
+          container.read(localAudioManagerProvider).progress,
+          equals(0.25),
+        );
 
         emitProgress(0.50);
-        expect(container.read(localAudioManagerProvider).progress, equals(0.50));
+        expect(
+          container.read(localAudioManagerProvider).progress,
+          equals(0.50),
+        );
 
         emitProgress(0.75);
-        expect(container.read(localAudioManagerProvider).progress, equals(0.75));
+        expect(
+          container.read(localAudioManagerProvider).progress,
+          equals(0.75),
+        );
 
         // Complete initAudios
         completeInit();
@@ -235,7 +251,9 @@ void main() {
           equals(0.50),
         );
         expect(
-          find.text('50% ... ${l10n.persistingLocalAudioFilesMetadataPleaseWait}'),
+          find.text(
+            '50% ... ${l10n.persistingLocalAudioFilesMetadataPleaseWait}',
+          ),
           findsOneWidget,
         );
 
@@ -283,7 +301,9 @@ void main() {
         final yaruProgressFinder = find.byType(YaruCircularProgressIndicator);
         expect(yaruProgressFinder, findsOneWidget);
         expect(
-          tester.widget<YaruCircularProgressIndicator>(yaruProgressFinder).value,
+          tester
+              .widget<YaruCircularProgressIndicator>(yaruProgressFinder)
+              .value,
           equals(0.50),
         );
 
@@ -292,55 +312,54 @@ void main() {
       },
     );
 
-    testWidgets(
-      'UI shows loading progress when initAudios() is retriggered',
-      (tester) async {
-        // Mount page and finish initial scan
-        await tester.pumpWidget(
-          const ProviderScope(
-            child: MaterialApp(
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              supportedLocales: AppLocalizations.supportedLocales,
-              home: LocalAudioPage(),
-            ),
+    testWidgets('UI shows loading progress when initAudios() is retriggered', (
+      tester,
+    ) async {
+      // Mount page and finish initial scan
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: LocalAudioPage(),
           ),
-        );
-        emitProgress(1.0);
-        completeInit();
-        await tester.pumpAndSettle();
+        ),
+      );
+      emitProgress(1.0);
+      completeInit();
+      await tester.pumpAndSettle();
 
-        expect(find.byType(Progress), findsNothing);
+      expect(find.byType(Progress), findsNothing);
 
-        // Trigger initAudios via the notifier
-        final container = ProviderScope.containerOf(
-          tester.element(find.byType(LocalAudioPage)),
-        );
-        unawaited(
-          container
-              .read(localAudioManagerProvider.notifier)
-              .initAudios(forceInit: true),
-        );
-        await tester.pump();
+      // Trigger initAudios via the notifier
+      final container = ProviderScope.containerOf(
+        tester.element(find.byType(LocalAudioPage)),
+      );
+      unawaited(
+        container
+            .read(localAudioManagerProvider.notifier)
+            .initAudios(forceInit: true),
+      );
+      await tester.pump();
 
-        // Shows 0.0 initially
-        final progressFinder = find.byType(Progress);
-        expect(progressFinder, findsOneWidget);
-        expect(tester.widget<Progress>(progressFinder).value, equals(0.0));
-        expect(find.textContaining('0% ...'), findsOneWidget);
+      // Shows 0.0 initially
+      final progressFinder = find.byType(Progress);
+      expect(progressFinder, findsOneWidget);
+      expect(tester.widget<Progress>(progressFinder).value, equals(0.0));
+      expect(find.textContaining('0% ...'), findsOneWidget);
 
-        // Update to 0.50
-        emitProgress(0.50);
-        await tester.pump();
+      // Update to 0.50
+      emitProgress(0.50);
+      await tester.pump();
 
-        expect(tester.widget<Progress>(progressFinder).value, equals(0.50));
-        expect(find.textContaining('50% ...'), findsOneWidget);
+      expect(tester.widget<Progress>(progressFinder).value, equals(0.50));
+      expect(find.textContaining('50% ...'), findsOneWidget);
 
-        // Complete
-        completeInit();
-        await tester.pumpAndSettle();
+      // Complete
+      completeInit();
+      await tester.pumpAndSettle();
 
-        expect(find.byType(Progress), findsNothing);
-      },
-    );
+      expect(find.byType(Progress), findsNothing);
+    });
   });
 }
