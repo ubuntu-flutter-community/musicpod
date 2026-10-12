@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
@@ -12,11 +12,11 @@ import '../../search/manager/search_manager.dart';
 import '../../search/data/search_type.dart';
 import 'radio_lib_page.dart';
 
-class RadioPage extends StatelessWidget {
+class RadioPage extends ConsumerWidget {
   const RadioPage({super.key});
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context, WidgetRef ref) => Scaffold(
     appBar: HeaderBar(
       actions: [
         Flexible(
@@ -25,8 +25,10 @@ class RadioPage extends StatelessWidget {
             child: SearchButton(
               active: false,
               onPressed: () {
-                di<RoutingManager>().push(pageId: PageIDs.searchPage);
-                final searchManager = di<SearchManager>();
+                ref
+                    .read(routingManagerProvider.notifier)
+                    .push(pageId: PageIDs.searchPage);
+                final searchManager = ref.read(searchManagerProvider.notifier);
                 if (searchManager.audioType != AudioType.radio) {
                   searchManager
                     ..setAudioType(AudioType.radio)

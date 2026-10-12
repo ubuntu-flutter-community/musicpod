@@ -13,12 +13,6 @@ class SettingsService {
     : _sharedPreferences = sharedPreferences;
 
   final SharedPreferences _sharedPreferences;
-  final _propertiesChangedController = StreamController<bool>.broadcast();
-  Stream<bool> get propertiesChanged => _propertiesChangedController.stream;
-  bool notify(bool saved) {
-    if (saved) _propertiesChangedController.add(true);
-    return saved;
-  }
 
   String? getString(String key) {
     try {
@@ -74,14 +68,17 @@ class SettingsService {
     bool throwOnError = true,
   }) async {
     try {
-      return notify(await switch (value) {
+      if (value == null) {
+        return await _sharedPreferences.remove(key);
+      }
+      return await switch (value) {
         (bool _) => _sharedPreferences.setBool(key, value),
         (String _) => _sharedPreferences.setString(key, value),
         (int _) => _sharedPreferences.setInt(key, value),
         (double _) => _sharedPreferences.setDouble(key, value),
         (List<String> _) => _sharedPreferences.setStringList(key, value),
         _ => Future.error('Unsupported value type: ${value.runtimeType}'),
-      });
+      };
     } on Exception catch (e, s) {
       Logger.e(e, trace: s, tag: '$SettingsService');
       return throwOnError ? Future.error(e) : false;
@@ -92,7 +89,4 @@ class SettingsService {
 
   Future<String?> get downloadsDirOrDefault async =>
       getString(SPKeys.downloads) ?? await PlatformX.downloadsDefaultDir;
-
-  @disposeMethod
-  Future<void> dispose() async => _propertiesChangedController.close();
 }

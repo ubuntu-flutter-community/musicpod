@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/global_keys.dart';
@@ -10,14 +10,15 @@ import '../../common/view/spaced_divider.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/play_pause_manager.dart';
+import '../../player/manager/queue_manager.dart';
 import '../data/play_anywhere_param.dart';
 import '../page_ids.dart';
 import '../play_anywhere_manager.dart';
 import '../routing_manager.dart';
 import 'master_item.dart';
 
-class MasterTile extends StatelessWidget {
+class MasterTile extends ConsumerWidget {
   const MasterTile({
     super.key,
     required this.item,
@@ -28,10 +29,11 @@ class MasterTile extends StatelessWidget {
   final String? selectedPageId;
 
   @override
-  Widget build(BuildContext context) => _MasterTile(
+  Widget build(BuildContext context, WidgetRef ref) => _MasterTile(
     key: ValueKey(item.pageId),
     audioPageType: item.audioPageType,
-    onTap: () => di<RoutingManager>().push(pageId: item.pageId),
+    onTap: () =>
+        ref.read(routingManagerProvider.notifier).push(pageId: item.pageId),
     pageId: item.pageId,
     leading: item.iconBuilder(selectedPageId == item.pageId),
     title: item.titleBuilder(context),
@@ -151,8 +153,7 @@ class _FramedMasterTile extends StatelessWidget {
   }
 }
 
-class _PlayAbleMasterTile extends StatefulWidget
-    with WatchItStatefulWidgetMixin {
+class _PlayAbleMasterTile extends ConsumerStatefulWidget {
   const _PlayAbleMasterTile({
     required this.pageId,
     required this.tile,
@@ -166,10 +167,11 @@ class _PlayAbleMasterTile extends StatefulWidget
   final bool? selected;
 
   @override
-  State<_PlayAbleMasterTile> createState() => __PlayAbleMasterTileState();
+  ConsumerState<_PlayAbleMasterTile> createState() =>
+      __PlayAbleMasterTileState();
 }
 
-class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
+class __PlayAbleMasterTileState extends ConsumerState<_PlayAbleMasterTile> {
   bool _hovered = false;
 
   @override
@@ -180,18 +182,17 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
       return widget.tile;
     }
 
-    final isEnQueued = watchPropertyValue(
-      (PlayerManager m) => m.queue.name == widget.pageId,
+    final isEnQueued = ref.watch(
+      queueManagerProvider.select((q) => q.name == widget.pageId),
     );
-    final isPlaying = watchPropertyValue((PlayerManager m) => m.isPlaying);
+    final isPlaying = ref.watch(playPauseManagerProvider);
 
-    final playAudiosByIdCommandResults = watchValue(
-      (PlayAnywhereManager m) => m.command.results,
-    );
-
-    final isRunning = playAudiosByIdCommandResults.isRunning;
-    final paramPageId = playAudiosByIdCommandResults.paramData;
-
+    final playAnywhereAsync = ref.watch(playAnywhereManagerProvider);
+    final isRunning = playAnywhereAsync.isLoading;
+    final paramPageId = ref
+        .read(playAnywhereManagerProvider.notifier)
+        .activeParam
+        ?.pageId;
     final busy = isRunning && paramPageId == widget.pageId;
 
     return MouseRegion(
@@ -210,12 +211,14 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
                   style: tonedIconButtonStyle(context.colorScheme),
                   onPressed: isRunning
                       ? null
-                      : () => di<PlayAnywhereManager>().command.run(
-                          PlayAnywhereParam(
-                            pageId: widget.pageId,
-                            audioPageType: widget.audioPageType,
-                          ),
-                        ),
+                      : () => ref
+                            .read(playAnywhereManagerProvider.notifier)
+                            .play(
+                              PlayAnywhereParam(
+                                pageId: widget.pageId,
+                                audioPageType: widget.audioPageType,
+                              ),
+                            ),
                   icon: busy
                       ? const SizedBox(
                           width: 15,

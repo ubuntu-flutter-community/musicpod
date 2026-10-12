@@ -7026,7 +7026,7 @@ final class $$ArtistTableTableReferences
   static MultiTypedResultKey<$AlbumTableTable, List<AlbumTableData>>
   _albumTableRefsTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.albumTable,
-    aliasName: $_aliasNameGenerator(db.artistTable.name, db.albumTable.artist),
+    aliasName: 'artist_table__name__album_table__artist',
   );
 
   $$AlbumTableTableProcessedTableManager get albumTableRefs {
@@ -7044,7 +7044,7 @@ final class $$ArtistTableTableReferences
   static MultiTypedResultKey<$TrackTableTable, List<TrackTableData>>
   _tracksByArtistTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.trackTable,
-    aliasName: $_aliasNameGenerator(db.artistTable.name, db.trackTable.artist),
+    aliasName: 'artist_table__name__track_table__artist',
   );
 
   $$TrackTableTableProcessedTableManager get tracksByArtist {
@@ -7062,10 +7062,7 @@ final class $$ArtistTableTableReferences
   static MultiTypedResultKey<$TrackTableTable, List<TrackTableData>>
   _tracksByAlbumArtistTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.trackTable,
-    aliasName: $_aliasNameGenerator(
-      db.artistTable.name,
-      db.trackTable.albumArtist,
-    ),
+    aliasName: 'artist_table__name__track_table__album_artist',
   );
 
   $$TrackTableTableProcessedTableManager get tracksByAlbumArtist {
@@ -7318,7 +7315,7 @@ class $$ArtistTableTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$ArtistTableTable, ArtistTableData>(table),
                   $$ArtistTableTableReferences(db, table, e),
                 ),
               )
@@ -7448,9 +7445,7 @@ final class $$AlbumTableTableReferences
   $$AlbumTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
   static $ArtistTableTable _artistTable(_$Database db) =>
-      db.artistTable.createAlias(
-        $_aliasNameGenerator(db.albumTable.artist, db.artistTable.name),
-      );
+      db.artistTable.createAlias('album_table__artist__artist_table__name');
 
   $$ArtistTableTableProcessedTableManager get artist {
     final $_column = $_itemColumn<String>('artist')!;
@@ -7469,7 +7464,7 @@ final class $$AlbumTableTableReferences
   static MultiTypedResultKey<$AlbumArtTableTable, List<AlbumArtTableData>>
   _albumArtTableRefsTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.albumArtTable,
-    aliasName: $_aliasNameGenerator(db.albumTable.id, db.albumArtTable.album),
+    aliasName: 'album_table__id__album_art_table__album',
   );
 
   $$AlbumArtTableTableProcessedTableManager get albumArtTableRefs {
@@ -7487,7 +7482,7 @@ final class $$AlbumTableTableReferences
   static MultiTypedResultKey<$TrackTableTable, List<TrackTableData>>
   _trackTableRefsTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.trackTable,
-    aliasName: $_aliasNameGenerator(db.albumTable.id, db.trackTable.album),
+    aliasName: 'album_table__id__track_table__album',
   );
 
   $$TrackTableTableProcessedTableManager get trackTableRefs {
@@ -7798,7 +7793,7 @@ class $$AlbumTableTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$AlbumTableTable, AlbumTableData>(table),
                   $$AlbumTableTableReferences(db, table, e),
                 ),
               )
@@ -7942,9 +7937,7 @@ final class $$AlbumArtTableTableReferences
   );
 
   static $AlbumTableTable _albumTable(_$Database db) =>
-      db.albumTable.createAlias(
-        $_aliasNameGenerator(db.albumArtTable.album, db.albumTable.id),
-      );
+      db.albumTable.createAlias('album_art_table__album__album_table__id');
 
   $$AlbumTableTableProcessedTableManager get album {
     final $_column = $_itemColumn<int>('album')!;
@@ -8156,7 +8149,7 @@ class $$AlbumArtTableTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$AlbumArtTableTable, AlbumArtTableData>(table),
                   $$AlbumArtTableTableReferences(db, table, e),
                 ),
               )
@@ -8232,7 +8225,7 @@ final class $$GenreTableTableReferences
   static MultiTypedResultKey<$TrackTableTable, List<TrackTableData>>
   _tracksByGenreTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.trackTable,
-    aliasName: $_aliasNameGenerator(db.genreTable.name, db.trackTable.genre),
+    aliasName: 'genre_table__name__track_table__genre',
   );
 
   $$TrackTableTableProcessedTableManager get tracksByGenre {
@@ -8380,7 +8373,7 @@ class $$GenreTableTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$GenreTableTable, GenreTableData>(table),
                   $$GenreTableTableReferences(db, table, e),
                 ),
               )
@@ -8470,8 +8463,8 @@ final class $$TrackTableTableReferences
     extends BaseReferences<_$Database, $TrackTableTable, TrackTableData> {
   $$TrackTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $AlbumTableTable _albumTable(_$Database db) => db.albumTable
-      .createAlias($_aliasNameGenerator(db.trackTable.album, db.albumTable.id));
+  static $AlbumTableTable _albumTable(_$Database db) =>
+      db.albumTable.createAlias('track_table__album__album_table__id');
 
   $$AlbumTableTableProcessedTableManager? get album {
     final $_column = $_itemColumn<int>('album');
@@ -8488,9 +8481,7 @@ final class $$TrackTableTableReferences
   }
 
   static $ArtistTableTable _artistTable(_$Database db) =>
-      db.artistTable.createAlias(
-        $_aliasNameGenerator(db.trackTable.artist, db.artistTable.name),
-      );
+      db.artistTable.createAlias('track_table__artist__artist_table__name');
 
   $$ArtistTableTableProcessedTableManager? get artist {
     final $_column = $_itemColumn<String>('artist');
@@ -8506,10 +8497,8 @@ final class $$TrackTableTableReferences
     );
   }
 
-  static $ArtistTableTable _albumArtistTable(_$Database db) =>
-      db.artistTable.createAlias(
-        $_aliasNameGenerator(db.trackTable.albumArtist, db.artistTable.name),
-      );
+  static $ArtistTableTable _albumArtistTable(_$Database db) => db.artistTable
+      .createAlias('track_table__album_artist__artist_table__name');
 
   $$ArtistTableTableProcessedTableManager? get albumArtist {
     final $_column = $_itemColumn<String>('album_artist');
@@ -8526,9 +8515,7 @@ final class $$TrackTableTableReferences
   }
 
   static $GenreTableTable _genreTable(_$Database db) =>
-      db.genreTable.createAlias(
-        $_aliasNameGenerator(db.trackTable.genre, db.genreTable.name),
-      );
+      db.genreTable.createAlias('track_table__genre__genre_table__name');
 
   $$GenreTableTableProcessedTableManager? get genre {
     final $_column = $_itemColumn<String>('genre');
@@ -8550,10 +8537,7 @@ final class $$TrackTableTableReferences
   >
   _playlistTrackTableRefsTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.playlistTrackTable,
-    aliasName: $_aliasNameGenerator(
-      db.trackTable.path,
-      db.playlistTrackTable.track,
-    ),
+    aliasName: 'track_table__path__playlist_track_table__track',
   );
 
   $$PlaylistTrackTableTableProcessedTableManager get playlistTrackTableRefs {
@@ -8573,10 +8557,7 @@ final class $$TrackTableTableReferences
   static MultiTypedResultKey<$LikedTrackTableTable, List<LikedTrackTableData>>
   _likedTrackTableRefsTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.likedTrackTable,
-    aliasName: $_aliasNameGenerator(
-      db.trackTable.path,
-      db.likedTrackTable.trackId,
-    ),
+    aliasName: 'track_table__path__liked_track_table__track_id',
   );
 
   $$LikedTrackTableTableProcessedTableManager get likedTrackTableRefs {
@@ -9207,7 +9188,7 @@ class $$TrackTableTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$TrackTableTable, TrackTableData>(table),
                   $$TrackTableTableReferences(db, table, e),
                 ),
               )
@@ -9402,10 +9383,7 @@ final class $$PlaylistTableTableReferences
   >
   _playlistTrackTableRefsTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.playlistTrackTable,
-    aliasName: $_aliasNameGenerator(
-      db.playlistTable.id,
-      db.playlistTrackTable.playlist,
-    ),
+    aliasName: 'playlist_table__id__playlist_track_table__playlist',
   );
 
   $$PlaylistTrackTableTableProcessedTableManager get playlistTrackTableRefs {
@@ -9594,7 +9572,7 @@ class $$PlaylistTableTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$PlaylistTableTable, PlaylistTableData>(table),
                   $$PlaylistTableTableReferences(db, table, e),
                 ),
               )
@@ -9675,13 +9653,8 @@ final class $$PlaylistTrackTableTableReferences
     super.$_typedResult,
   );
 
-  static $PlaylistTableTable _playlistTable(_$Database db) =>
-      db.playlistTable.createAlias(
-        $_aliasNameGenerator(
-          db.playlistTrackTable.playlist,
-          db.playlistTable.id,
-        ),
-      );
+  static $PlaylistTableTable _playlistTable(_$Database db) => db.playlistTable
+      .createAlias('playlist_track_table__playlist__playlist_table__id');
 
   $$PlaylistTableTableProcessedTableManager get playlist {
     final $_column = $_itemColumn<int>('playlist')!;
@@ -9697,10 +9670,8 @@ final class $$PlaylistTrackTableTableReferences
     );
   }
 
-  static $TrackTableTable _trackTable(_$Database db) =>
-      db.trackTable.createAlias(
-        $_aliasNameGenerator(db.playlistTrackTable.track, db.trackTable.path),
-      );
+  static $TrackTableTable _trackTable(_$Database db) => db.trackTable
+      .createAlias('playlist_track_table__track__track_table__path');
 
   $$TrackTableTableProcessedTableManager get track {
     final $_column = $_itemColumn<String>('track')!;
@@ -9952,7 +9923,9 @@ class $$PlaylistTrackTableTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$PlaylistTrackTableTable, PlaylistTrackTableData>(
+                    table,
+                  ),
                   $$PlaylistTrackTableTableReferences(db, table, e),
                 ),
               )
@@ -10047,10 +10020,8 @@ final class $$LikedTrackTableTableReferences
     super.$_typedResult,
   );
 
-  static $TrackTableTable _trackIdTable(_$Database db) =>
-      db.trackTable.createAlias(
-        $_aliasNameGenerator(db.likedTrackTable.trackId, db.trackTable.path),
-      );
+  static $TrackTableTable _trackIdTable(_$Database db) => db.trackTable
+      .createAlias('liked_track_table__track_id__track_table__path');
 
   $$TrackTableTableProcessedTableManager get trackId {
     final $_column = $_itemColumn<String>('track_id')!;
@@ -10218,7 +10189,9 @@ class $$LikedTrackTableTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$LikedTrackTableTable, LikedTrackTableData>(
+                    table,
+                  ),
                   $$LikedTrackTableTableReferences(db, table, e),
                 ),
               )
@@ -10975,7 +10948,19 @@ class $$StarredStationTableTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<
+                    $StarredStationTableTable,
+                    StarredStationTableData
+                  >(table),
+                  BaseReferences<
+                    _$Database,
+                    $StarredStationTableTable,
+                    StarredStationTableData
+                  >(db, table, e),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -11115,7 +11100,19 @@ class $$FavoriteRadioTagTableTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<
+                    $FavoriteRadioTagTableTable,
+                    FavoriteRadioTagTableData
+                  >(table),
+                  BaseReferences<
+                    _$Database,
+                    $FavoriteRadioTagTableTable,
+                    FavoriteRadioTagTableData
+                  >(db, table, e),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -11178,10 +11175,8 @@ final class $$PodcastTableTableReferences
   >
   _podcastUpdateTableRefsTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.podcastUpdateTable,
-    aliasName: $_aliasNameGenerator(
-      db.podcastTable.feedUrl,
-      db.podcastUpdateTable.podcastFeedUrl,
-    ),
+    aliasName:
+        'podcast_table__feed_url__podcast_update_table__podcast_feed_url',
   );
 
   $$PodcastUpdateTableTableProcessedTableManager get podcastUpdateTableRefs {
@@ -11209,10 +11204,8 @@ final class $$PodcastTableTableReferences
   >
   _episodesByFeedUrlTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.podcastEpisodeTable,
-    aliasName: $_aliasNameGenerator(
-      db.podcastTable.feedUrl,
-      db.podcastEpisodeTable.podcastFeedUrl,
-    ),
+    aliasName:
+        'podcast_table__feed_url__podcast_episode_table__podcast_feed_url',
   );
 
   $$PodcastEpisodeTableTableProcessedTableManager get episodesByFeedUrl {
@@ -11238,10 +11231,8 @@ final class $$PodcastTableTableReferences
   >
   _episodesByDescriptionTable(_$Database db) => MultiTypedResultKey.fromTable(
     db.podcastEpisodeTable,
-    aliasName: $_aliasNameGenerator(
-      db.podcastTable.description,
-      db.podcastEpisodeTable.podcastDescription,
-    ),
+    aliasName:
+        'podcast_table__description__podcast_episode_table__podcast_description',
   );
 
   $$PodcastEpisodeTableTableProcessedTableManager get episodesByDescription {
@@ -11270,10 +11261,8 @@ final class $$PodcastTableTableReferences
   _podcastGenreRelationTableRefsTable(_$Database db) =>
       MultiTypedResultKey.fromTable(
         db.podcastGenreRelationTable,
-        aliasName: $_aliasNameGenerator(
-          db.podcastTable.feedUrl,
-          db.podcastGenreRelationTable.feedUrl,
-        ),
+        aliasName:
+            'podcast_table__feed_url__podcast_genre_relation_table__feed_url',
       );
 
   $$PodcastGenreRelationTableTableProcessedTableManager
@@ -11720,7 +11709,7 @@ class $$PodcastTableTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$PodcastTableTable, PodcastTableData>(table),
                   $$PodcastTableTableReferences(db, table, e),
                 ),
               )
@@ -11881,10 +11870,7 @@ final class $$PodcastUpdateTableTableReferences
 
   static $PodcastTableTable _podcastFeedUrlTable(_$Database db) =>
       db.podcastTable.createAlias(
-        $_aliasNameGenerator(
-          db.podcastUpdateTable.podcastFeedUrl,
-          db.podcastTable.feedUrl,
-        ),
+        'podcast_update_table__podcast_feed_url__podcast_table__feed_url',
       );
 
   $$PodcastTableTableProcessedTableManager get podcastFeedUrl {
@@ -12064,7 +12050,9 @@ class $$PodcastUpdateTableTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$PodcastUpdateTableTable, PodcastUpdateTableData>(
+                    table,
+                  ),
                   $$PodcastUpdateTableTableReferences(db, table, e),
                 ),
               )
@@ -12172,10 +12160,7 @@ final class $$PodcastEpisodeTableTableReferences
 
   static $PodcastTableTable _podcastFeedUrlTable(_$Database db) =>
       db.podcastTable.createAlias(
-        $_aliasNameGenerator(
-          db.podcastEpisodeTable.podcastFeedUrl,
-          db.podcastTable.feedUrl,
-        ),
+        'podcast_episode_table__podcast_feed_url__podcast_table__feed_url',
       );
 
   $$PodcastTableTableProcessedTableManager get podcastFeedUrl {
@@ -12192,13 +12177,11 @@ final class $$PodcastEpisodeTableTableReferences
     );
   }
 
-  static $PodcastTableTable _podcastDescriptionTable(_$Database db) =>
-      db.podcastTable.createAlias(
-        $_aliasNameGenerator(
-          db.podcastEpisodeTable.podcastDescription,
-          db.podcastTable.description,
-        ),
-      );
+  static $PodcastTableTable _podcastDescriptionTable(
+    _$Database db,
+  ) => db.podcastTable.createAlias(
+    'podcast_episode_table__podcast_description__podcast_table__description',
+  );
 
   $$PodcastTableTableProcessedTableManager get podcastDescription {
     final $_column = $_itemColumn<String>('podcast_description')!;
@@ -12218,14 +12201,13 @@ final class $$PodcastEpisodeTableTableReferences
     $DownloadedPodcastEpisodeTableTable,
     List<DownloadedPodcastEpisodeTableData>
   >
-  _downloadedPodcastEpisodeTableRefsTable(_$Database db) =>
-      MultiTypedResultKey.fromTable(
-        db.downloadedPodcastEpisodeTable,
-        aliasName: $_aliasNameGenerator(
-          db.podcastEpisodeTable.contentUrl,
-          db.downloadedPodcastEpisodeTable.episodeId,
-        ),
-      );
+  _downloadedPodcastEpisodeTableRefsTable(
+    _$Database db,
+  ) => MultiTypedResultKey.fromTable(
+    db.downloadedPodcastEpisodeTable,
+    aliasName:
+        'podcast_episode_table__content_url__downloaded_podcast_episode_table__episode_id',
+  );
 
   $$DownloadedPodcastEpisodeTableTableProcessedTableManager
   get downloadedPodcastEpisodeTableRefs {
@@ -12664,7 +12646,10 @@ class $$PodcastEpisodeTableTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<
+                    $PodcastEpisodeTableTable,
+                    PodcastEpisodeTableData
+                  >(table),
                   $$PodcastEpisodeTableTableReferences(db, table, e),
                 ),
               )
@@ -12804,10 +12789,8 @@ final class $$PodcastGenreTableTableReferences
   _podcastGenreRelationTableRefsTable(_$Database db) =>
       MultiTypedResultKey.fromTable(
         db.podcastGenreRelationTable,
-        aliasName: $_aliasNameGenerator(
-          db.podcastGenreTable.id,
-          db.podcastGenreRelationTable.genreId,
-        ),
+        aliasName:
+            'podcast_genre_table__id__podcast_genre_relation_table__genre_id',
       );
 
   $$PodcastGenreRelationTableTableProcessedTableManager
@@ -12978,7 +12961,9 @@ class $$PodcastGenreTableTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$PodcastGenreTableTable, PodcastGenreTableData>(
+                    table,
+                  ),
                   $$PodcastGenreTableTableReferences(db, table, e),
                 ),
               )
@@ -13061,10 +13046,7 @@ final class $$PodcastGenreRelationTableTableReferences
 
   static $PodcastTableTable _feedUrlTable(_$Database db) =>
       db.podcastTable.createAlias(
-        $_aliasNameGenerator(
-          db.podcastGenreRelationTable.feedUrl,
-          db.podcastTable.feedUrl,
-        ),
+        'podcast_genre_relation_table__feed_url__podcast_table__feed_url',
       );
 
   $$PodcastTableTableProcessedTableManager get feedUrl {
@@ -13083,10 +13065,7 @@ final class $$PodcastGenreRelationTableTableReferences
 
   static $PodcastGenreTableTable _genreIdTable(_$Database db) =>
       db.podcastGenreTable.createAlias(
-        $_aliasNameGenerator(
-          db.podcastGenreRelationTable.genreId,
-          db.podcastGenreTable.id,
-        ),
+        'podcast_genre_relation_table__genre_id__podcast_genre_table__id',
       );
 
   $$PodcastGenreTableTableProcessedTableManager get genreId {
@@ -13336,7 +13315,10 @@ class $$PodcastGenreRelationTableTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<
+                    $PodcastGenreRelationTableTable,
+                    PodcastGenreRelationTableData
+                  >(table),
                   $$PodcastGenreRelationTableTableReferences(db, table, e),
                 ),
               )
@@ -13446,13 +13428,11 @@ final class $$DownloadedPodcastEpisodeTableTableReferences
     super.$_typedResult,
   );
 
-  static $PodcastEpisodeTableTable _episodeIdTable(_$Database db) =>
-      db.podcastEpisodeTable.createAlias(
-        $_aliasNameGenerator(
-          db.downloadedPodcastEpisodeTable.episodeId,
-          db.podcastEpisodeTable.contentUrl,
-        ),
-      );
+  static $PodcastEpisodeTableTable _episodeIdTable(
+    _$Database db,
+  ) => db.podcastEpisodeTable.createAlias(
+    'downloaded_podcast_episode_table__episode_id__podcast_episode_table__content_url',
+  );
 
   $$PodcastEpisodeTableTableProcessedTableManager get episodeId {
     final $_column = $_itemColumn<String>('episode_id')!;
@@ -13659,7 +13639,10 @@ class $$DownloadedPodcastEpisodeTableTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<
+                    $DownloadedPodcastEpisodeTableTable,
+                    DownloadedPodcastEpisodeTableData
+                  >(table),
                   $$DownloadedPodcastEpisodeTableTableReferences(db, table, e),
                 ),
               )
@@ -13866,7 +13849,16 @@ class $$DownloadTableTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$DownloadTableTable, DownloadTableData>(table),
+                  BaseReferences<
+                    _$Database,
+                    $DownloadTableTable,
+                    DownloadTableData
+                  >(db, table, e),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -14085,7 +14077,18 @@ class $$PlayerStateTableTableTableManager
                 rate: rate,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$PlayerStateTableTable, PlayerStateTableData>(
+                    table,
+                  ),
+                  BaseReferences<
+                    _$Database,
+                    $PlayerStateTableTable,
+                    PlayerStateTableData
+                  >(db, table, e),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),

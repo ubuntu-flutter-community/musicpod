@@ -1,46 +1,31 @@
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
-import 'package:safe_change_notifier/safe_change_notifier.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../common/util/family.dart';
-import '../../extensions/command_x.dart';
+import '../../dependencies.dart';
 import '../data/last_fm_credentials.dart';
 import '../service/expose_service.dart';
 
-@injectable
-class ExposeManager {
-  ExposeManager._({required ExposeService exposeService})
-    : _exposeService = exposeService;
+part 'expose_manager.g.dart';
 
-  @factoryMethod
-  static ExposeManager create({required ExposeService exposeService}) =>
-      Family.of(
-        '$ExposeManager',
-        () => ExposeManager._(exposeService: exposeService),
-        shouldDispose: (m) =>
-            m.initListenBrainsCommand.safeToDispose &&
-            m.authorizeLastFmCommand.safeToDispose,
-        onDispose: (m) {
-          m.initListenBrainsCommand.dispose();
-          m.authorizeLastFmCommand.dispose();
-        },
-      );
+@Riverpod(keepAlive: true)
+class ExposeManager extends _$ExposeManager {
+  @override
+  bool build() {
+    final exposeService = di<ExposeService>();
+    final notifier = exposeService.isLastFmAuthorized;
+    void listener() => state = notifier.value;
+    notifier.addListener(listener);
+    ref.onDispose(() => notifier.removeListener(listener));
+    return notifier.value;
+  }
 
-  final ExposeService _exposeService;
+  bool get isLastFmAuthorized => state;
 
-  late final Command<String, void> initListenBrainsCommand =
-      Command.createAsyncNoResult(
-        (apiKey) => _exposeService.initListenBrains(apiKey),
-      );
+  Future<void> initListenBrains(String apiKey) =>
+      di<ExposeService>().initListenBrains(apiKey);
 
-  SafeValueNotifier<bool> get isLastFmAuthorized =>
-      _exposeService.isLastFmAuthorized;
-
-  late final Command<LastFmCredentials, void> authorizeLastFmCommand =
-      Command.createAsyncNoResult(
-        (credentials) => _exposeService.authorizeLastFm(
-          apiKey: credentials.apiKey,
-          apiSecret: credentials.apiSecret,
-        ),
+  Future<void> authorizeLastFm(LastFmCredentials credentials) =>
+      di<ExposeService>().authorizeLastFm(
+        apiKey: credentials.apiKey,
+        apiSecret: credentials.apiSecret,
       );
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/default_page_body.dart';
 import '../../settings/view/settings_action.dart';
@@ -12,17 +12,14 @@ import 'radio_history_list.dart';
 import 'radio_lib_page_control_panel.dart';
 import 'starred_stations_grid.dart';
 
-class RadioLibPage extends StatelessWidget
-    with WatchItMixin, RadioConnectMixin {
+class RadioLibPage extends ConsumerWidget with RadioConnectMixin {
   const RadioLibPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    registerRadioConnectHandler(context);
+  Widget build(BuildContext context, WidgetRef ref) {
+    registerRadioConnectHandler(context, ref);
 
-    final radioCollectionView = watchValue(
-      (RadioCollectionViewManager m) => m.radioCollectionView,
-    );
+    final radioCollectionView = ref.watch(radioCollectionViewManagerProvider);
 
     return DefaultPageBody(
       controlPanel: const RadioLibPageControlPanel(),

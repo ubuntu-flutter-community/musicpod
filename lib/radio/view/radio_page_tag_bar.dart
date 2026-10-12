@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 import 'package:yaru/yaru.dart';
 
@@ -14,7 +14,7 @@ import '../../extensions/theme_data_x.dart';
 import '../../search/manager/search_manager.dart';
 import '../../search/data/search_type.dart';
 
-class RadioPageTagBar extends StatelessWidget {
+class RadioPageTagBar extends ConsumerWidget {
   const RadioPageTagBar({
     super.key,
     required this.station,
@@ -27,7 +27,7 @@ class RadioPageTagBar extends StatelessWidget {
   final TextStyle? style;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final style = this.style ?? context.theme.pageHeaderDescription;
     final tags = station.tags?.take(tagLimit ?? station.tags!.length).toList();
     if (tags == null || tags.isEmpty) return const SizedBox.shrink();
@@ -39,6 +39,7 @@ class RadioPageTagBar extends StatelessWidget {
         crossAxisAlignment: WrapCrossAlignment.center,
         children: tapAbleTags(
           context: context,
+          ref: ref,
           tags: tags,
           style: style,
           limit: tagLimit,
@@ -70,6 +71,7 @@ class RadioPageTagBar extends StatelessWidget {
 
   List<Widget> tapAbleTags({
     required BuildContext context,
+    required WidgetRef ref,
     required List<String> tags,
     required TextStyle? style,
     int? limit,
@@ -84,8 +86,10 @@ class RadioPageTagBar extends StatelessWidget {
                 style: style,
                 wrapInFlexible: false,
                 onTap: () {
-                  di<RoutingManager>().push(pageId: PageIDs.searchPage);
-                  di<SearchManager>()
+                  ref
+                      .read(routingManagerProvider.notifier)
+                      .push(pageId: PageIDs.searchPage);
+                  ref.read(searchManagerProvider.notifier)
                     ..setTag(Tag(name: e, stationCount: 1))
                     ..setAudioType(AudioType.radio)
                     ..setSearchType(SearchType.radioTag)

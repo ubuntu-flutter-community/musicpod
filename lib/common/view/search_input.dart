@@ -1,14 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../extensions/platform_x.dart';
+import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
 import 'theme.dart';
 
-class SearchInput extends StatefulWidget with WatchItStatefulWidgetMixin {
+class SearchInput extends ConsumerStatefulWidget {
   const SearchInput({
     super.key,
     this.text,
@@ -30,10 +31,10 @@ class SearchInput extends StatefulWidget with WatchItStatefulWidgetMixin {
   final bool autoFocus;
 
   @override
-  State<SearchInput> createState() => _SearchInputState();
+  ConsumerState<SearchInput> createState() => _SearchInputState();
 }
 
-class _SearchInputState extends State<SearchInput> {
+class _SearchInputState extends ConsumerState<SearchInput> {
   late TextEditingController _controller;
   Timer? _debounce;
 
@@ -59,9 +60,8 @@ class _SearchInputState extends State<SearchInput> {
 
   @override
   Widget build(BuildContext context) {
-    final useYaruTheme = watchPropertyValue(
-      (SettingsManager m) => m.useYaruTheme,
-    );
+    final useYaruTheme =
+        ref.watch(settingsBoolManagerProvider(SPKeys.useYaruTheme)) ?? isLinux;
     final theme = context.theme;
     return SizedBox(
       height: useYaruTheme || isMobile ? null : 38,

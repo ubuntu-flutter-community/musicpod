@@ -1,178 +1,93 @@
-import 'package:flutter_it/flutter_it.dart';
+import 'package:get_it/get_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:musicpod/app/page_ids.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:musicpod/common/data/audio.dart';
 import 'package:musicpod/common/data/audio_type.dart';
-import 'package:musicpod/common/util/family.dart';
-import 'package:musicpod/common/view/audio_filter.dart';
 import 'package:musicpod/local_audio/data/playlist_action.dart';
 import 'package:musicpod/local_audio/manager/has_tracks_manager.dart';
 import 'package:musicpod/local_audio/manager/liked_audio_paths_manager.dart';
 import 'package:musicpod/local_audio/manager/liked_audios_manager.dart';
 import 'package:musicpod/local_audio/manager/local_audio_manager.dart';
-import 'package:musicpod/player/manager/player_manager.dart';
-import 'package:musicpod/podcasts/data/podcast_download.dart';
-import 'package:musicpod/podcasts/data/podcast_short_info.dart';
+import 'package:musicpod/local_audio/service/local_audio_service.dart';
 import 'package:musicpod/podcasts/manager/download_manager.dart';
 import 'package:musicpod/podcasts/manager/episodes_manager.dart';
-import 'package:musicpod/podcasts/manager/podcast_manager.dart';
-import 'package:musicpod/podcasts/manager/podcast_short_info_manager.dart';
 import 'package:musicpod/podcasts/service/download_service.dart';
 import 'package:musicpod/podcasts/service/podcast_service.dart';
-import 'package:safe_change_notifier/safe_change_notifier.dart';
 
-class FakeLocalAudioManager extends Fake implements LocalAudioManager {
-  Set<String> likedPaths = {};
-  List<Audio> likedAudios = [];
-  bool libraryHasTracks = false;
+import 'memory_management_test.mocks.dart';
 
+@GenerateMocks([LocalAudioService, DownloadService, PodcastService])
+class FakeLocalAudioManager extends LocalAudioManager {
   @override
-  Future<Set<String>> findLikedAudioPaths() async => Set.from(likedPaths);
-
-  @override
-  Future<List<Audio>?> findLikedAudios() async => List.from(likedAudios);
-
-  @override
-  Future<bool> hasTracks() async => libraryHasTracks;
-
-  @override
-  Future<void> createOrChangeLikedAudios(PlaylistChange param) async {
-    if (param.action == PlaylistAction.addTo && param.audios != null) {
-      likedAudios.addAll(param.audios!);
-      likedPaths.addAll(param.audios!.map((a) => a.path!).whereType<String>());
-    } else if (param.action == PlaylistAction.removeFrom &&
-        param.audios != null) {
-      likedAudios.removeWhere((a) => param.audios!.contains(a));
-      likedPaths.removeAll(param.audios!.map((a) => a.path!));
-    }
-  }
-}
-
-class FakeDownloadService extends Fake implements DownloadService {
-  @override
-  Future<String?> setDownloadsDirectory({required bool getDefault}) async =>
-      '/fake/downloads';
-}
-
-class FakePodcastServiceForDownload extends Fake implements PodcastService {
-  final Map<String, String?> downloadPaths = {};
-
-  @override
-  String? getDownloadPath(Audio? audio) =>
-      audio?.url != null ? downloadPaths[audio!.url] : null;
-}
-
-class FakePodcastManagerForEpisodes extends Fake implements PodcastManager {
-  final updatesOnly = SafeValueNotifier<bool>(false);
-  final downloadsOnly = SafeValueNotifier<bool>(false);
-  List<Audio> episodesToReturn = [];
-
-  @override
-  Future<Set<String>> get ascendingPodcasts async => {};
-
-  @override
-  Future<List<Audio>> findEpisodes({
-    required String feedUrl,
-    required bool tryFromDbOnly,
-    AudioSortOrder? order,
-  }) async => List.from(episodesToReturn);
-}
-
-class FakePlayerManagerForEpisodes extends Fake implements PlayerManager {
-  @override
-  Map<String, Duration>? lastPositions;
-}
-
-class FakeDownloadManagerForEpisodes extends Fake implements DownloadManager {
-  @override
-  final downloadCommands =
-      MapNotifier<Audio, Command<void, PodcastDownload?>>();
-
-  @override
-  bool hasDownload(Audio audio) => false;
-}
-
-class FakePodcastShortInfoManagerForEpisodes extends Fake
-    implements PodcastShortInfoManager {
-  @override
-  late final Command<void, PodcastShortInfo?> command =
-      Command.createSyncNoParam(() => null, initialValue: null);
+  Future<LocalAudioState> build() async => const LocalAudioState();
 }
 
 void main() {
   setUp(() async {
-    await Family.reset();
     await GetIt.I.reset();
   });
 
   tearDown(() async {
-    await Family.reset();
     await GetIt.I.reset();
   });
 
   group('DownloadManager memory optimization', () {
-    test(
-      'hasDownload checks download status without creating or retaining a Command',
-      () {
-        final podcastService = FakePodcastServiceForDownload();
-        final downloadService = FakeDownloadService();
-        final manager = DownloadManager(
-          podcastService: podcastService,
-          downloadService: downloadService,
-        );
+    test('hasDownload checks download status directly from PodcastService', () {
+      final mockPodcastService = MockPodcastService();
+      final mockDownloadService = MockDownloadService();
+      GetIt.I.registerSingleton<PodcastService>(mockPodcastService);
+      GetIt.I.registerSingleton<DownloadService>(mockDownloadService);
 
-        const audio1 = Audio(
-          audioType: AudioType.podcast,
-          url: 'https://example.com/ep1.mp3',
-        );
-        const audio2 = Audio(
-          audioType: AudioType.podcast,
-          url: 'https://example.com/ep2.mp3',
-        );
+      when(
+        mockDownloadService.setDownloadsDirectory(
+          getDefault: anyNamed('getDefault'),
+        ),
+      ).thenAnswer((_) async => '/fake/downloads');
 
-        podcastService.downloadPaths[audio2.url!] = '/fake/path/ep2.mp3';
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
 
-        expect(manager.downloadCommands.containsKey(audio1), isFalse);
-        expect(manager.downloadCommands.containsKey(audio2), isFalse);
+      const audio1 = Audio(
+        audioType: AudioType.podcast,
+        url: 'https://example.com/ep1.mp3',
+      );
+      const audio2 = Audio(
+        audioType: AudioType.podcast,
+        url: 'https://example.com/ep2.mp3',
+      );
 
-        // Calling hasDownload should return correct status without creating a command
-        expect(manager.hasDownload(audio1), isFalse);
-        expect(manager.hasDownload(audio2), isTrue);
+      when(mockPodcastService.getDownloadPath(audio1)).thenReturn(null);
+      when(
+        mockPodcastService.getDownloadPath(audio2),
+      ).thenReturn('/fake/path/ep2.mp3');
 
-        expect(
-          manager.downloadCommands.containsKey(audio1),
-          isFalse,
-          reason: 'hasDownload must not create a command in downloadCommands',
-        );
-        expect(
-          manager.downloadCommands.containsKey(audio2),
-          isFalse,
-          reason: 'hasDownload must not create a command in downloadCommands',
-        );
-
-        // Explicit getCommand should create and register the command
-        final cmd = manager.getCommand(audio1);
-        expect(cmd, isNotNull);
-        expect(manager.downloadCommands.containsKey(audio1), isTrue);
-      },
-    );
+      final downloadManager = container.read(downloadManagerProvider.notifier);
+      expect(downloadManager.hasDownload(audio1), isFalse);
+      expect(downloadManager.hasDownload(audio2), isTrue);
+    });
   });
 
   group('HasTracksManager lightweight boolean check', () {
     test('returns true/false without loading track list', () async {
       final fakeLocalAudio = FakeLocalAudioManager();
-      fakeLocalAudio.libraryHasTracks = false;
+      final mockLocalAudioService = MockLocalAudioService();
+      GetIt.I.registerSingleton<LocalAudioService>(mockLocalAudioService);
+      when(mockLocalAudioService.hasTracks()).thenAnswer((_) async => false);
 
-      final manager = HasTracksManager.create(
-        localAudioManager: fakeLocalAudio,
+      final container = ProviderContainer(
+        overrides: [
+          localAudioManagerProvider.overrideWith(() => fakeLocalAudio),
+        ],
       );
+      addTearDown(container.dispose);
 
-      await manager.command.runAsync();
-      expect(manager.command.value, isFalse);
+      expect(await container.read(hasTracksManagerProvider.future), isFalse);
 
-      fakeLocalAudio.libraryHasTracks = true;
-      await manager.command.runAsync();
-      expect(manager.command.value, isTrue);
+      when(mockLocalAudioService.hasTracks()).thenAnswer((_) async => true);
+      container.invalidate(hasTracksManagerProvider);
+      expect(await container.read(hasTracksManagerProvider.future), isTrue);
     });
   });
 
@@ -188,74 +103,103 @@ void main() {
       title: 'Song 2',
     );
 
+    late MockLocalAudioService mockLocalAudioService;
+    late Set<String> likedPaths;
+    late List<Audio> likedAudios;
+
+    setUp(() {
+      mockLocalAudioService = MockLocalAudioService();
+      GetIt.I.registerSingleton<LocalAudioService>(mockLocalAudioService);
+      likedPaths = {};
+      likedAudios = [];
+
+      when(
+        mockLocalAudioService.findLikedAudioPaths(),
+      ).thenAnswer((_) async => Set.from(likedPaths));
+      when(
+        mockLocalAudioService.findLikedAudios(),
+      ).thenAnswer((_) async => List.from(likedAudios));
+      when(mockLocalAudioService.createOrChangeLikedAudios(any)).thenAnswer((
+        inv,
+      ) async {
+        final param = inv.positionalArguments[0] as PlaylistChange;
+        if (param.action == PlaylistAction.addTo && param.audios != null) {
+          likedAudios.addAll(param.audios!);
+          likedPaths.addAll(
+            param.audios!.map((a) => a.path!).whereType<String>(),
+          );
+        } else if (param.action == PlaylistAction.removeFrom &&
+            param.audios != null) {
+          likedAudios.removeWhere((a) => param.audios!.contains(a));
+          likedPaths.removeAll(param.audios!.map((a) => a.path!));
+        }
+      });
+    });
+
     test(
       'LikedAudioPathsManager operates strictly with path Strings',
       () async {
         final fakeLocalAudio = FakeLocalAudioManager();
-        fakeLocalAudio.likedPaths.add(song1.path!);
-        fakeLocalAudio.likedAudios.add(song1);
+        likedPaths.add(song1.path!);
+        likedAudios.add(song1);
 
-        final pathsManager = LikedAudioPathsManager.create(
-          localAudioManager: fakeLocalAudio,
+        final container = ProviderContainer(
+          overrides: [
+            localAudioManagerProvider.overrideWith(() => fakeLocalAudio),
+          ],
         );
+        addTearDown(container.dispose);
 
-        await pathsManager.command.runAsync();
-        expect(pathsManager.command.value, isA<Set<String>>());
-        expect(pathsManager.command.value, contains(song1.path));
-        expect(pathsManager.command.value.contains(song2.path), isFalse);
+        final initialPaths = await container.read(
+          likedAudioPathsManagerProvider.future,
+        );
+        expect(initialPaths, isA<Set<String>>());
+        expect(initialPaths, contains(song1.path));
+        expect(initialPaths.contains(song2.path), isFalse);
 
         // Add song2 via pathsManager
-        await pathsManager.command.runAsync(
-          PlaylistChange(
-            id: PageIDs.likedAudios,
-            action: PlaylistAction.addTo,
-            audios: [song2],
-          ),
-        );
+        await container
+            .read(likedAudioPathsManagerProvider.notifier)
+            .addLikedAudios([song2]);
 
-        expect(
-          pathsManager.command.value,
-          containsAll([song1.path, song2.path]),
+        final updatedPaths = await container.read(
+          likedAudioPathsManagerProvider.future,
         );
-        expect(
-          fakeLocalAudio.likedPaths,
-          containsAll([song1.path, song2.path]),
-        );
+        expect(updatedPaths, containsAll([song1.path, song2.path]));
+        expect(likedPaths, containsAll([song1.path, song2.path]));
 
         // Remove song1 via pathsManager
-        await pathsManager.command.runAsync(
-          PlaylistChange(
-            id: PageIDs.likedAudios,
-            action: PlaylistAction.removeFrom,
-            audios: [song1],
-          ),
-        );
+        await container
+            .read(likedAudioPathsManagerProvider.notifier)
+            .removeLikedAudios([song1]);
 
-        expect(pathsManager.command.value.contains(song1.path), isFalse);
-        expect(pathsManager.command.value, contains(song2.path));
+        final remainingPaths = await container.read(
+          likedAudioPathsManagerProvider.future,
+        );
+        expect(remainingPaths.contains(song1.path), isFalse);
+        expect(remainingPaths, contains(song2.path));
       },
     );
 
     test(
-      'LikedAudioPathsManager does not eagerly instantiate LikedAudiosManager when not in Family',
+      'LikedAudioPathsManager does not eagerly instantiate LikedAudiosManager',
       () async {
         final fakeLocalAudio = FakeLocalAudioManager();
-        final pathsManager = LikedAudioPathsManager.create(
-          localAudioManager: fakeLocalAudio,
+        final container = ProviderContainer(
+          overrides: [
+            localAudioManagerProvider.overrideWith(() => fakeLocalAudio),
+          ],
         );
+        addTearDown(container.dispose);
 
-        expect(Family.get<LikedAudiosManager>('$LikedAudiosManager'), isNull);
+        expect(container.exists(likedAudiosManagerProvider), isFalse);
 
-        await pathsManager.command.runAsync(
-          PlaylistChange(
-            id: PageIDs.likedAudios,
-            action: PlaylistAction.addTo,
-            audios: [song1],
-          ),
-        );
+        await container.read(likedAudioPathsManagerProvider.future);
+        await container
+            .read(likedAudioPathsManagerProvider.notifier)
+            .addLikedAudios([song1]);
 
-        // LikedAudiosManager should NOT have been instantiated
-        expect(Family.get<LikedAudiosManager>('$LikedAudiosManager'), isNull);
+        expect(container.exists(likedAudiosManagerProvider), isFalse);
       },
     );
 
@@ -263,61 +207,56 @@ void main() {
       'Synchronizes LikedAudioPathsManager when LikedAudiosManager is active',
       () async {
         final fakeLocalAudio = FakeLocalAudioManager();
-        final pathsManager = LikedAudioPathsManager.create(
-          localAudioManager: fakeLocalAudio,
+        final container = ProviderContainer(
+          overrides: [
+            localAudioManagerProvider.overrideWith(() => fakeLocalAudio),
+          ],
         );
-        final audiosManager = LikedAudiosManager.create(
-          localAudioManager: fakeLocalAudio,
-          pathsManager: pathsManager,
-        );
+        addTearDown(container.dispose);
 
-        await pumpEventQueue();
-        expect(
-          Family.get<LikedAudiosManager>('$LikedAudiosManager'),
-          isNotNull,
-        );
+        await container.read(likedAudioPathsManagerProvider.future);
+        await container.read(likedAudiosManagerProvider.future);
+
+        expect(container.exists(likedAudiosManagerProvider), isTrue);
 
         // 1. Add via audiosManager updates both
-        await audiosManager.command.runAsync(
-          PlaylistChange(
-            id: PageIDs.likedAudios,
-            action: PlaylistAction.addTo,
-            audios: [song1],
-          ),
-        );
+        await container
+            .read(likedAudiosManagerProvider.notifier)
+            .addLikedAudios([song1]);
 
-        await pumpEventQueue();
-        expect(audiosManager.command.value, contains(song1));
-        expect(pathsManager.command.value, contains(song1.path));
+        expect(
+          await container.read(likedAudiosManagerProvider.future),
+          contains(song1),
+        );
+        expect(
+          await container.read(likedAudioPathsManagerProvider.future),
+          contains(song1.path),
+        );
 
         // 2. Add via pathsManager updates audiosManager as well
-        await pathsManager.command.runAsync(
-          PlaylistChange(
-            id: PageIDs.likedAudios,
-            action: PlaylistAction.addTo,
-            audios: [song2],
-          ),
-        );
+        await container
+            .read(likedAudioPathsManagerProvider.notifier)
+            .addLikedAudios([song2]);
 
-        await pumpEventQueue();
-        expect(pathsManager.command.value, contains(song2.path));
-        expect(audiosManager.command.value, contains(song2));
+        expect(
+          await container.read(likedAudioPathsManagerProvider.future),
+          contains(song2.path),
+        );
+        expect(
+          await container.read(likedAudiosManagerProvider.future),
+          contains(song2),
+        );
       },
     );
   });
 
   group('EpisodesManager chunking & pagination', () {
     const feedUrl = 'https://example.com/podcast.xml';
-    late FakePodcastManagerForEpisodes fakePodcastManager;
-    late FakePlayerManagerForEpisodes fakePlayerManager;
-    late FakeDownloadManagerForEpisodes fakeDownloadManager;
+    late MockPodcastService mockPodcastService;
+    late MockDownloadService mockDownloadService;
     late List<Audio> mockEpisodes;
 
     setUp(() {
-      GetIt.I.registerFactoryParam<PodcastShortInfoManager, String, void>(
-        (url, _) => FakePodcastShortInfoManagerForEpisodes(),
-      );
-
       mockEpisodes = List.generate(
         60,
         (i) => Audio(
@@ -329,111 +268,127 @@ void main() {
         ),
       );
 
-      fakePodcastManager = FakePodcastManagerForEpisodes();
-      fakePodcastManager.episodesToReturn = mockEpisodes;
-      fakePlayerManager = FakePlayerManagerForEpisodes();
-      fakeDownloadManager = FakeDownloadManagerForEpisodes();
+      mockPodcastService = MockPodcastService();
+      mockDownloadService = MockDownloadService();
+
+      when(mockPodcastService.ascendingPodcasts).thenAnswer((_) async => {});
+      when(
+        mockPodcastService.findEpisodes(
+          feedUrl: anyNamed('feedUrl'),
+          tryFromDbOnly: anyNamed('tryFromDbOnly'),
+          order: anyNamed('order'),
+        ),
+      ).thenAnswer((_) async => List.from(mockEpisodes));
+      when(mockPodcastService.getDownloadPath(any)).thenReturn(null);
+
+      when(
+        mockDownloadService.setDownloadsDirectory(
+          getDefault: anyNamed('getDefault'),
+        ),
+      ).thenAnswer((_) async => '/fake/downloads');
+
+      GetIt.I.registerSingleton<PodcastService>(mockPodcastService);
+      GetIt.I.registerSingleton<DownloadService>(mockDownloadService);
     });
 
-    Future<void> waitForCommand(EpisodesManager manager) async {
-      await pumpEventQueue();
-      while (manager.command.isRunning.value) {
-        await pumpEventQueue();
-      }
-    }
+    test('initially loads only pageSize episodes into state', () async {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      final sub = container.listen(
+        episodesManagerProvider(feedUrl),
+        (_, __) {},
+      );
+      addTearDown(sub.close);
 
-    test('initially loads only pageSize episodes into command.value', () async {
-      final manager = EpisodesManager.create(
-        feedUrl: feedUrl,
-        podcastManager: fakePodcastManager,
-        downloadsManager: fakeDownloadManager,
-        playerManager: fakePlayerManager,
+      final state = await container.read(
+        episodesManagerProvider(feedUrl).future,
       );
 
-      await waitForCommand(manager);
-
-      expect(manager.command.value, isNotNull);
-      expect(
-        manager.command.value!.episodes?.length,
-        equals(EpisodesManager.pageSize),
-      );
-      expect(manager.displayedCount.value, equals(EpisodesManager.pageSize));
-      expect(manager.totalCount, equals(60));
-      expect(manager.hasMore, isTrue);
-      expect(manager.allFilteredEpisodes.length, equals(60));
+      expect(state.episodes.length, equals(EpisodesManager.pageSize));
+      expect(state.displayedCount, equals(EpisodesManager.pageSize));
+      expect(state.totalCount, equals(60));
+      expect(state.hasMore, isTrue);
+      expect(state.allEpisodes.length, equals(60));
     });
 
-    test(
-      'loadMore increments displayedCount and updates command.value synchronously',
-      () async {
-        final manager = EpisodesManager.create(
-          feedUrl: feedUrl,
-          podcastManager: fakePodcastManager,
-          downloadsManager: fakeDownloadManager,
-          playerManager: fakePlayerManager,
-        );
+    test('loadMore increments displayedCount and updates state', () async {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      final sub = container.listen(
+        episodesManagerProvider(feedUrl),
+        (_, __) {},
+      );
+      addTearDown(sub.close);
 
-        await waitForCommand(manager);
+      await container.read(episodesManagerProvider(feedUrl).future);
 
-        // First loadMore: 25 -> 50
-        manager.loadMore();
-        expect(manager.displayedCount.value, equals(50));
-        expect(manager.command.value!.episodes?.length, equals(50));
-        expect(manager.hasMore, isTrue);
+      // First loadMore: 25 -> 50
+      container.read(episodesManagerProvider(feedUrl).notifier).loadMore();
+      var state = container.read(episodesManagerProvider(feedUrl)).value!;
+      expect(state.displayedCount, equals(50));
+      expect(state.episodes.length, equals(50));
+      expect(state.hasMore, isTrue);
 
-        // Second loadMore: 50 -> 60 (clamped to total 60)
-        manager.loadMore();
-        expect(manager.displayedCount.value, equals(60));
-        expect(manager.command.value!.episodes?.length, equals(60));
-        expect(manager.hasMore, isFalse);
+      // Second loadMore: 50 -> 60 (clamped to total 60)
+      container.read(episodesManagerProvider(feedUrl).notifier).loadMore();
+      state = container.read(episodesManagerProvider(feedUrl)).value!;
+      expect(state.displayedCount, equals(60));
+      expect(state.episodes.length, equals(60));
+      expect(state.hasMore, isFalse);
 
-        // Third loadMore when !hasMore: no-op
-        manager.loadMore();
-        expect(manager.displayedCount.value, equals(60));
-        expect(manager.command.value!.episodes?.length, equals(60));
-        expect(manager.hasMore, isFalse);
-      },
-    );
+      // Third loadMore when !hasMore: no-op
+      container.read(episodesManagerProvider(feedUrl).notifier).loadMore();
+      state = container.read(episodesManagerProvider(feedUrl)).value!;
+      expect(state.displayedCount, equals(60));
+      expect(state.episodes.length, equals(60));
+      expect(state.hasMore, isFalse);
+    });
 
     test('search query reset restores displayedCount to pageSize', () async {
-      final manager = EpisodesManager.create(
-        feedUrl: feedUrl,
-        podcastManager: fakePodcastManager,
-        downloadsManager: fakeDownloadManager,
-        playerManager: fakePlayerManager,
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      final sub = container.listen(
+        episodesManagerProvider(feedUrl),
+        (_, __) {},
       );
+      addTearDown(sub.close);
 
-      await waitForCommand(manager);
+      await container.read(episodesManagerProvider(feedUrl).future);
 
       // Expand to 50
-      manager.loadMore();
-      expect(manager.displayedCount.value, equals(50));
+      container.read(episodesManagerProvider(feedUrl).notifier).loadMore();
+      var state = container.read(episodesManagerProvider(feedUrl)).value!;
+      expect(state.displayedCount, equals(50));
 
-      // Setting search query triggers _resetPaging and re-runs command
-      manager.setSearchQuery('Episode 1');
-      await waitForCommand(manager);
+      // Setting search query triggers reset to pageSize
+      container
+          .read(episodesManagerProvider(feedUrl).notifier)
+          .setSearchQuery('Episode 1');
+      state = container.read(episodesManagerProvider(feedUrl)).value!;
 
-      expect(manager.displayedCount.value, equals(EpisodesManager.pageSize));
-      expect(manager.totalCount, lessThan(60));
+      expect(state.displayedCount, equals(EpisodesManager.pageSize));
+      expect(state.totalCount, lessThan(60));
     });
 
     test('changing filter type restores displayedCount to pageSize', () async {
-      final manager = EpisodesManager.create(
-        feedUrl: feedUrl,
-        podcastManager: fakePodcastManager,
-        downloadsManager: fakeDownloadManager,
-        playerManager: fakePlayerManager,
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      final sub = container.listen(
+        episodesManagerProvider(feedUrl),
+        (_, __) {},
       );
+      addTearDown(sub.close);
 
-      await waitForCommand(manager);
+      await container.read(episodesManagerProvider(feedUrl).future);
 
-      manager.loadMore();
-      expect(manager.displayedCount.value, equals(50));
+      container.read(episodesManagerProvider(feedUrl).notifier).loadMore();
+      var state = container.read(episodesManagerProvider(feedUrl)).value!;
+      expect(state.displayedCount, equals(50));
 
-      manager.setFilter();
-      await waitForCommand(manager);
+      container.read(episodesManagerProvider(feedUrl).notifier).setFilter();
+      state = container.read(episodesManagerProvider(feedUrl)).value!;
 
-      expect(manager.displayedCount.value, equals(EpisodesManager.pageSize));
+      expect(state.displayedCount, equals(EpisodesManager.pageSize));
     });
   });
 }

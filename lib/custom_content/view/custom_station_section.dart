@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/page_ids.dart';
@@ -11,14 +11,14 @@ import '../../radio/manager/radio_star_station_manager.dart';
 import '../../radio/manager/radio_manager.dart';
 import '../../search/manager/search_manager.dart';
 
-class CustomStationSection extends StatefulWidget {
+class CustomStationSection extends ConsumerStatefulWidget {
   const CustomStationSection({super.key});
 
   @override
-  State<CustomStationSection> createState() => _AddStationDialogState();
+  ConsumerState<CustomStationSection> createState() => _AddStationDialogState();
 }
 
-class _AddStationDialogState extends State<CustomStationSection> {
+class _AddStationDialogState extends ConsumerState<CustomStationSection> {
   late TextEditingController _urlController;
 
   @override
@@ -58,8 +58,12 @@ class _AddStationDialogState extends State<CustomStationSection> {
                 foregroundColor: YaruInfoType.warning.getColor(context),
               ),
               onPressed: () {
-                di<SearchManager>().setAudioType(AudioType.radio);
-                di<RoutingManager>().push(pageId: PageIDs.searchPage);
+                ref
+                    .read(searchManagerProvider.notifier)
+                    .setAudioType(AudioType.radio);
+                ref
+                    .read(routingManagerProvider.notifier)
+                    .push(pageId: PageIDs.searchPage);
               },
               child: Text(l10n.search),
             ),
@@ -82,7 +86,8 @@ class _AddStationDialogState extends State<CustomStationSection> {
                             !_urlController.text.startsWith('http')
                         ? null
                         : () {
-                            di<RadioManager>()
+                            ref
+                                .read(radioManagerProvider.notifier)
                                 .getStationByUrl(_urlController.text)
                                 .then((v) {
                                   if (v?.uuid == null) {
@@ -94,9 +99,12 @@ class _AddStationDialogState extends State<CustomStationSection> {
 
                                     return;
                                   } else {
-                                    di<RadioStarStationManager>().command.run(
-                                      v,
-                                    );
+                                    ref
+                                        .read(
+                                          radioStarStationManagerProvider
+                                              .notifier,
+                                        )
+                                        .toggleStarredStation(v);
                                   }
                                 });
                           },

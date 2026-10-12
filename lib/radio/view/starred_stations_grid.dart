@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/no_search_result_page.dart';
 import '../../common/view/theme.dart';
@@ -10,12 +10,12 @@ import '../manager/radio_star_station_manager.dart';
 import 'open_radio_discover_page_button.dart';
 import 'station_card.dart';
 
-class StarredStationsGrid extends StatelessWidget with WatchItMixin {
+class StarredStationsGrid extends ConsumerWidget {
   const StarredStationsGrid({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final stations = watchValue((RadioStarStationManager m) => m.command);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final stations = ref.watch(radioStarStationManagerProvider).value ?? {};
     final length = stations.length;
 
     if (length == 0) {

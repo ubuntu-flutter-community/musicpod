@@ -1,24 +1,28 @@
+import 'dart:async';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/data/audio_type.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/current_audio_manager.dart';
+import '../../player/manager/play_pause_manager.dart';
+import '../../player/manager/queue_manager.dart';
 import '../../radio/manager/radio_manager.dart';
 import '../../search/manager/search_manager.dart';
-import '../app_manager.dart';
+import '../full_window_mode_manager.dart';
 import '../page_ids.dart';
 import '../routing_manager.dart';
 import 'back_gesture.dart';
 
-class MouseAndKeyboardCommandWrapper extends StatelessWidget {
+class MouseAndKeyboardCommandWrapper extends ConsumerWidget {
   const MouseAndKeyboardCommandWrapper({super.key, required this.child});
 
   final Widget child;
 
   @override
-  Widget build(BuildContext context) => Shortcuts(
+  Widget build(BuildContext context, WidgetRef ref) => Shortcuts(
     shortcuts: <LogicalKeySet, Intent>{
       LogicalKeySet(LogicalKeyboardKey.keyF, LogicalKeyboardKey.meta):
           const _SearchIntent(),
@@ -47,25 +51,30 @@ class MouseAndKeyboardCommandWrapper extends StatelessWidget {
       actions: <Type, Action<Intent>>{
         _SearchIntent: CallbackAction<_SearchIntent>(
           onInvoke: (intent) {
-            final currentPageId =
-                di<RoutingManager>().selectedPageIdCommand.value;
+            final routingManager = ref.read(routingManagerProvider.notifier);
+            final currentPageId = ref.read(routingManagerProvider);
+            final fullWindowNotifier = ref.read(
+              fullWindowModeManagerProvider.notifier,
+            );
 
             if (currentPageId == PageIDs.searchPage) {
-              if (di<AppManager>().fullWindowMode.value) {
-                di<AppManager>().setFullWindowMode(false);
+              if (ref.read(fullWindowModeManagerProvider)) {
+                fullWindowNotifier.setFullWindowMode(false);
               } else {
-                di<RoutingManager>().pop();
+                routingManager.pop();
               }
             } else {
-              if (di<AppManager>().fullWindowMode.value) {
-                di<AppManager>().setFullWindowMode(false);
+              if (ref.read(fullWindowModeManagerProvider)) {
+                fullWindowNotifier.setFullWindowMode(false);
               }
-              di<SearchManager>().setAudioType(switch (currentPageId) {
-                PageIDs.localAudio => AudioType.local,
-                PageIDs.radio => AudioType.radio,
-                _ => AudioType.podcast,
-              });
-              di<RoutingManager>().push(pageId: PageIDs.searchPage);
+              ref.read(searchManagerProvider.notifier).setAudioType(
+                switch (currentPageId) {
+                  PageIDs.localAudio => AudioType.local,
+                  PageIDs.radio => AudioType.radio,
+                  _ => AudioType.podcast,
+                },
+              );
+              routingManager.push(pageId: PageIDs.searchPage);
             }
 
             return null;
@@ -73,60 +82,78 @@ class MouseAndKeyboardCommandWrapper extends StatelessWidget {
         ),
         _SettingsIntent: CallbackAction<_SettingsIntent>(
           onInvoke: (intent) {
-            if (di<AppManager>().fullWindowMode.value) {
-              di<AppManager>().setFullWindowMode(false);
+            if (ref.read(fullWindowModeManagerProvider)) {
+              ref
+                  .read(fullWindowModeManagerProvider.notifier)
+                  .setFullWindowMode(false);
             }
-            di<RoutingManager>().push(pageId: PageIDs.settings);
+            ref
+                .read(routingManagerProvider.notifier)
+                .push(pageId: PageIDs.settings);
             return null;
           },
         ),
         _BackIntent: CallbackAction<_BackIntent>(
           onInvoke: (intent) {
-            if (di<AppManager>().fullWindowMode.value) {
-              di<AppManager>().setFullWindowMode(false);
+            if (ref.read(fullWindowModeManagerProvider)) {
+              ref
+                  .read(fullWindowModeManagerProvider.notifier)
+                  .setFullWindowMode(false);
             }
-            di<RoutingManager>().pop();
+            ref.read(routingManagerProvider.notifier).pop();
             return null;
           },
         ),
         _FullWindowIntent: CallbackAction<_FullWindowIntent>(
           onInvoke: (intent) {
-            di<AppManager>().toggleFullWindowMode();
+            ref
+                .read(fullWindowModeManagerProvider.notifier)
+                .toggleFullWindowMode();
             return null;
           },
         ),
         _PlayPauseIntent: CallbackAction<_PlayPauseIntent>(
           onInvoke: (intent) {
-            di<PlayerManager>().playOrPause();
+            ref.read(playPauseManagerProvider.notifier).playOrPause();
             return null;
           },
         ),
         _PlayNextIntent: CallbackAction<_PlayNextIntent>(
           onInvoke: (intent) {
-            final playerManager = di<PlayerManager>();
-
-            final audio = playerManager.audio;
-            if (audio == null) return;
+            final audio = ref.read(currentAudioManagerProvider);
+            if (audio == null) return null;
 
             if (audio.isRadio) {
-              di<RadioManager>().findSimilarStationCommand.run(audio);
+              unawaited(
+                ref
+                    .read(similarStationManagerProvider.notifier)
+                    .findSimilarStation(audio)
+                    .then((similar) {
+                      if (similar != null) {
+                        ref
+                            .read(playPauseManagerProvider.notifier)
+                            .play(
+                              audios: [similar],
+                              listName: similar.uuid ?? '',
+                            );
+                      }
+                    }),
+              );
             } else {
-              playerManager.playNext();
+              ref.read(queueManagerProvider.notifier).playNext();
             }
             return null;
           },
         ),
         _PlayPreviousIntent: CallbackAction<_PlayPreviousIntent>(
           onInvoke: (intent) {
-            final playerManager = di<PlayerManager>();
-
-            final audio = playerManager.audio;
-            if (audio == null) return;
+            final audio = ref.read(currentAudioManagerProvider);
+            if (audio == null) return null;
 
             if (audio.isRadio) {
-              playerManager.playNext();
+              ref.read(queueManagerProvider.notifier).playNext();
             } else {
-              playerManager.playPrevious();
+              ref.read(queueManagerProvider.notifier).playPrevious();
             }
             return null;
           },
@@ -139,7 +166,7 @@ class MouseAndKeyboardCommandWrapper extends StatelessWidget {
                 () => _MouseBackButtonRecognizer(),
                 (instance) =>
                     instance.onTapDown = (details) =>
-                        di<RoutingManager>().pop(),
+                        ref.read(routingManagerProvider.notifier).pop(),
               ),
         },
         child: BackGesture(child: child),

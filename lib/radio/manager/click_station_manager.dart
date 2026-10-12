@@ -1,13 +1,18 @@
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../dependencies.dart';
 import '../service/radio_service.dart';
 
-@lazySingleton
-class ClickStationManager {
-  ClickStationManager({required RadioService radioService}) {
-    command = Command.createAsyncNoResult(radioService.clickStation);
-  }
+part 'click_station_manager.g.dart';
 
-  late final Command<String, void> command;
+@Riverpod(keepAlive: true)
+class ClickStationManager extends _$ClickStationManager {
+  @override
+  void build() {}
+
+  Future<void> clickStation(String? uuid) async {
+    if (uuid != null) {
+      await di<RadioService>().clickStation(uuid);
+    }
+  }
 }

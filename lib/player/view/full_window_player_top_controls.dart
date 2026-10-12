@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
-import '../../app/app_manager.dart';
+import '../../app/full_window_mode_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/platform_x.dart';
-import '../manager/player_manager.dart';
+import '../manager/current_audio_manager.dart';
 import 'playback_rate_button.dart';
 import 'player_pause_timer_button.dart';
 import 'volume_popup.dart';
 
-class FullWindowPlayerTopControls extends StatelessWidget with WatchItMixin {
+class FullWindowPlayerTopControls extends ConsumerWidget {
   const FullWindowPlayerTopControls({
     super.key,
     required this.iconColor,
@@ -26,8 +26,8 @@ class FullWindowPlayerTopControls extends StatelessWidget with WatchItMixin {
   final bool video;
 
   @override
-  Widget build(BuildContext context) {
-    final audio = watchPropertyValue((PlayerManager m) => m.audio);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final audio = ref.watch(currentAudioManagerProvider);
 
     final isFullScreen = isFullscreen(context);
 
@@ -45,7 +45,9 @@ class FullWindowPlayerTopControls extends StatelessWidget with WatchItMixin {
             IconButton(
               tooltip: context.l10n.leaveFullWindow,
               icon: Icon(Iconz.fullWindowExit, color: iconColor),
-              onPressed: () => di<AppManager>().setFullWindowMode(false),
+              onPressed: () => ref
+                  .read(fullWindowModeManagerProvider.notifier)
+                  .setFullWindowMode(false),
             ),
         ],
       ),

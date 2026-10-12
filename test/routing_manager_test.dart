@@ -1,58 +1,65 @@
 import 'package:flutter/material.dart';
+import 'package:musicpod/dependencies.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 import 'package:musicpod/app/app_router.dart';
 import 'package:musicpod/app/page_ids.dart';
 import 'package:musicpod/app/routing_manager.dart';
-import 'package:musicpod/local_audio/service/local_audio_service.dart';
-import 'package:musicpod/podcasts/service/podcast_service.dart';
-import 'package:musicpod/radio/service/radio_service.dart';
 import 'package:musicpod/settings/service/settings_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class MockPodcastService extends Mock implements PodcastService {
-  @override
-  Future<bool> isPodcastSubscribed(String? feedUrl) async => false;
-}
-
-class MutableMockPodcastService extends Mock implements PodcastService {
-  bool subscribed = false;
-  @override
-  Future<bool> isPodcastSubscribed(String? feedUrl) async => subscribed;
-}
-
-class MockLocalAudioService extends Mock implements LocalAudioService {
-  @override
-  Future<bool> isPinnedAlbum(int? id) async => false;
-  @override
-  Future<bool> isPlaylistSaved(String? id) async => false;
-}
-
-class MockRadioService extends Mock implements RadioService {
-  @override
-  Future<bool> isStarredStation(String? id) async => false;
-}
-
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  late ProviderContainer container;
+  late SettingsService settingsService;
+
+  setUp(() async {
+    await GetIt.I.reset();
+    SharedPreferences.setMockInitialValues({});
+    final sp = await SharedPreferences.getInstance();
+    settingsService = SettingsService(sharedPreferences: sp);
+    di.registerSingleton<SettingsService>(settingsService);
+
+    container = ProviderContainer();
+  });
+
+  tearDown(() {
+    container.dispose();
+  });
+
+  test(
+    'initial state and setSelectedPageId updates state and selectedPageId',
+    () async {
+      final routingManager = container.read(routingManagerProvider.notifier);
+      expect(
+        container.read(routingManagerProvider),
+        equals(PageIDs.searchPage),
+      );
+      expect(routingManager.selectedPageId, equals(PageIDs.searchPage));
+
+      await routingManager.setSelectedPageId(PageIDs.localAudio);
+      expect(
+        container.read(routingManagerProvider),
+        equals(PageIDs.localAudio),
+      );
+      expect(routingManager.selectedPageId, equals(PageIDs.localAudio));
+    },
+  );
+
   testWidgets('RoutingManager push and pop updates currentRouteName', (
     tester,
   ) async {
-    SharedPreferences.setMockInitialValues({});
-    final sp = await SharedPreferences.getInstance();
-    final settingsService = SettingsService(sharedPreferences: sp);
-
-    final routingManager = RoutingManager(
-      podcastService: MockPodcastService(),
-      localAudioService: MockLocalAudioService(),
-      radioService: MockRadioService(),
-      settingsService: settingsService,
-    );
+    final routingManager = container.read(routingManagerProvider.notifier);
 
     await tester.pumpWidget(
-      MaterialApp(
-        navigatorKey: shellNavigatorKey,
-        navigatorObservers: [routingManager],
-        home: const Scaffold(body: Text('Home')),
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          navigatorKey: shellNavigatorKey,
+          navigatorObservers: [routingManager],
+          home: const Scaffold(body: Text('Home')),
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -82,22 +89,16 @@ void main() {
   testWidgets(
     'RoutingManager navigating back to search via push(pageId: searchPage)',
     (tester) async {
-      SharedPreferences.setMockInitialValues({});
-      final sp = await SharedPreferences.getInstance();
-      final settingsService = SettingsService(sharedPreferences: sp);
-
-      final routingManager = RoutingManager(
-        podcastService: MockPodcastService(),
-        localAudioService: MockLocalAudioService(),
-        radioService: MockRadioService(),
-        settingsService: settingsService,
-      );
+      final routingManager = container.read(routingManagerProvider.notifier);
 
       await tester.pumpWidget(
-        MaterialApp(
-          navigatorKey: shellNavigatorKey,
-          navigatorObservers: [routingManager],
-          home: const Scaffold(body: Text('Search Page')),
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            navigatorKey: shellNavigatorKey,
+            navigatorObservers: [routingManager],
+            home: const Scaffold(body: Text('Search Page')),
+          ),
         ),
       );
       await tester.pumpAndSettle();
@@ -124,89 +125,67 @@ void main() {
     },
   );
 
-  testWidgets(
-    'RoutingManager push, subscribe, unsubscribe, pop, and push again',
-    (tester) async {
-      SharedPreferences.setMockInitialValues({});
-      final sp = await SharedPreferences.getInstance();
-      final settingsService = SettingsService(sharedPreferences: sp);
-      final podcastService = MutableMockPodcastService();
+  testWidgets('RoutingManager push, pop, and push again', (tester) async {
+    final routingManager = container.read(routingManagerProvider.notifier);
 
-      final routingManager = RoutingManager(
-        podcastService: podcastService,
-        localAudioService: MockLocalAudioService(),
-        radioService: MockRadioService(),
-        settingsService: settingsService,
-      );
-
-      await tester.pumpWidget(
-        MaterialApp(
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
           navigatorKey: shellNavigatorKey,
           navigatorObservers: [routingManager],
           home: const Scaffold(body: Text('Search Page')),
         ),
-      );
-      await tester.pumpAndSettle();
+      ),
+    );
+    await tester.pumpAndSettle();
 
-      expect(routingManager.currentRouteName, equals(PageIDs.searchPage));
+    expect(routingManager.currentRouteName, equals(PageIDs.searchPage));
 
-      // 1. Click on podcast_card: push podcast page
-      const feedUrl = 'https://example.com/podcast.xml';
-      await routingManager.push(
-        pageId: feedUrl,
-        builder: (context) => const Scaffold(body: Text('Podcast Page')),
-      );
-      await tester.pumpAndSettle();
+    // 1. Push podcast page
+    const feedUrl = 'https://example.com/podcast.xml';
+    await routingManager.push(
+      pageId: feedUrl,
+      builder: (context) => const Scaffold(body: Text('Podcast Page')),
+    );
+    await tester.pumpAndSettle();
 
-      expect(routingManager.currentRouteName, equals(feedUrl));
+    expect(routingManager.currentRouteName, equals(feedUrl));
 
-      // 2. Subscribe to podcast
-      podcastService.subscribed = true;
+    // 2. Navigate back
+    routingManager.pop();
+    await tester.pumpAndSettle();
 
-      // 3. Unsubscribe from podcast
-      podcastService.subscribed = false;
+    expect(routingManager.currentRouteName, equals(PageIDs.searchPage));
 
-      // 4. Navigate back
-      routingManager.pop();
-      await tester.pumpAndSettle();
+    // 3. Click on podcast_card again
+    await routingManager.push(
+      pageId: feedUrl,
+      builder: (context) => const Scaffold(body: Text('Podcast Page')),
+    );
+    await tester.pumpAndSettle();
 
-      expect(routingManager.currentRouteName, equals(PageIDs.searchPage));
-
-      // 5. Click on podcast_card again
-      await routingManager.push(
-        pageId: feedUrl,
-        builder: (context) => const Scaffold(body: Text('Podcast Page')),
-      );
-      await tester.pumpAndSettle();
-
-      expect(routingManager.currentRouteName, equals(feedUrl));
-    },
-  );
+    expect(routingManager.currentRouteName, equals(feedUrl));
+  });
 
   testWidgets(
     'RoutingManager correctly ignores GoRouter route names starting with /',
     (tester) async {
-      SharedPreferences.setMockInitialValues({});
-      final sp = await SharedPreferences.getInstance();
-      final settingsService = SettingsService(sharedPreferences: sp);
-
-      final routingManager = RoutingManager(
-        podcastService: MockPodcastService(),
-        localAudioService: MockLocalAudioService(),
-        radioService: MockRadioService(),
-        settingsService: settingsService,
-      );
+      final routingManager = container.read(routingManagerProvider.notifier);
 
       await tester.pumpWidget(
-        MaterialApp(
-          navigatorKey: shellNavigatorKey,
-          navigatorObservers: [routingManager],
-          onGenerateRoute: (settings) {
-            return MaterialPageRoute(
-              settings: const RouteSettings(name: '/search'),
-              builder: (context) => const Scaffold(body: Text('Search Page')),
-            );
-          },
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            navigatorKey: shellNavigatorKey,
+            navigatorObservers: [routingManager],
+            onGenerateRoute: (settings) {
+              return MaterialPageRoute(
+                settings: const RouteSettings(name: '/search'),
+                builder: (context) => const Scaffold(body: Text('Search Page')),
+              );
+            },
+          ),
         ),
       );
       await tester.pumpAndSettle();

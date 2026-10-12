@@ -1,34 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../app/app_manager.dart';
+import '../../dependencies.dart';
+
 import '../../common/data/audio_type.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../manager/custom_content_manager.dart';
+import '../manager/backup_manager.dart';
+import '../service/custom_content_service.dart';
 
-class BackupDialog extends StatelessWidget with WatchItMixin {
+class BackupDialog extends ConsumerWidget {
   const BackupDialog({super.key, this.breakingChange = true});
 
   final bool breakingChange;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final theme = context.theme;
-    final appManager = di<AppManager>();
-    final radioBackup = watchValue((AppManager m) => m.radioBackup);
-    final localAudioBackup = watchValue((AppManager m) => m.localAudioBackup);
-    final podcastBackup = watchValue((AppManager m) => m.podcastBackup);
-    final confirmEnabled = radioBackup && localAudioBackup && podcastBackup;
+    final backupState = ref.watch(backupManagerProvider);
+    final backupNotifier = ref.read(backupManagerProvider.notifier);
+    final radioBackup = backupState.radio;
+    final localAudioBackup = backupState.localAudio;
+    final podcastBackup = backupState.podcast;
+    final confirmEnabled = backupState.confirmEnabled;
 
     return ConfirmationDialog(
       showCancel: false,
       barrierDismissible: !breakingChange,
-      onConfirm: confirmEnabled ? () => appManager.setBackupSaved(true) : null,
+      onConfirm: confirmEnabled
+          ? () => backupNotifier.setBackupSaved(true)
+          : null,
       title: Text(
         breakingChange
             ? l10n.breakingChangesPleaseBackupTitle
@@ -79,13 +84,13 @@ class BackupDialog extends StatelessWidget with WatchItMixin {
                               AudioType.radio => radioBackup,
                             },
                             onChanged: (v) => switch (e) {
-                              AudioType.podcast => appManager.setPodcastBackup(
+                              AudioType.podcast => backupNotifier.setPodcast(
                                 v ?? false,
                               ),
-                              AudioType.local => appManager.setLocalAudioBackup(
+                              AudioType.local => backupNotifier.setLocalAudio(
                                 v ?? false,
                               ),
-                              AudioType.radio => appManager.setRadioBackup(
+                              AudioType.radio => backupNotifier.setRadio(
                                 v ?? false,
                               ),
                             },
@@ -102,11 +107,10 @@ class BackupDialog extends StatelessWidget with WatchItMixin {
                             ListTile(
                               title: ElevatedButton(
                                 onPressed: () {
-                                  di<CustomContentManager>()
+                                  di<CustomContentService>()
                                       .exportPlaylistsAndPinnedAlbumsToM3Us()
                                       .then(
-                                        (v) =>
-                                            appManager.setLocalAudioBackup(v),
+                                        (v) => backupNotifier.setLocalAudio(v),
                                       );
                                 },
                                 child: Text(
@@ -121,11 +125,9 @@ class BackupDialog extends StatelessWidget with WatchItMixin {
                             ListTile(
                               title: ElevatedButton(
                                 child: Text(l10n.exportPodcastsToOpmlFile),
-                                onPressed: () => di<CustomContentManager>()
+                                onPressed: () => di<CustomContentService>()
                                     .exportPodcastsToOpmlFile()
-                                    .then(
-                                      (v) => appManager.setPodcastBackup(v),
-                                    ),
+                                    .then((v) => backupNotifier.setPodcast(v)),
                               ),
                             ),
                           ],
@@ -134,9 +136,9 @@ class BackupDialog extends StatelessWidget with WatchItMixin {
                           children: [
                             ListTile(
                               title: ElevatedButton(
-                                onPressed: () => di<CustomContentManager>()
+                                onPressed: () => di<CustomContentService>()
                                     .exportStarredStationsToOpmlFile()
-                                    .then((v) => appManager.setRadioBackup(v)),
+                                    .then((v) => backupNotifier.setRadio(v)),
                                 child: Text(
                                   l10n.exportStarredStationsToOpmlFile,
                                 ),

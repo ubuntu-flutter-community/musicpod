@@ -9,8 +9,11 @@ Future<void> observeProperty({
 }) async {
   NativePlayer? nativePlayer;
   try {
-    nativePlayer = player.platform as NativePlayer;
-  } on Exception catch (e, s) {
+    final platform = player.platform;
+    if (platform is NativePlayer) {
+      nativePlayer = platform;
+    }
+  } catch (e, s) {
     Logger.e(e, trace: s, tag: 'MpvProperty:$property');
   }
 

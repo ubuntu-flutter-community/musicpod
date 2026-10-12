@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/audio_tile_option_button.dart';
@@ -8,7 +8,9 @@ import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/current_audio_manager.dart';
+import '../../player/manager/play_pause_manager.dart';
+import '../../player/manager/queue_manager.dart';
 import '../manager/episodes_manager.dart';
 import '../manager/podcast_short_info_manager.dart';
 import 'podcast_mark_done_button.dart';
@@ -17,29 +19,30 @@ import 'podcast_reorder_button.dart';
 import 'podcast_replay_button.dart';
 import 'podcast_sub_button.dart';
 
-class PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
+class PodcastPageControlPanel extends ConsumerWidget {
   const PodcastPageControlPanel({super.key, required this.feedUrl});
 
   final String feedUrl;
 
-  void _onPlayAllPressed(BuildContext context) {
-    final playerManager = di<PlayerManager>();
-    final pageIsQueue = playerManager.queue.name == feedUrl;
+  void _onPlayAllPressed(BuildContext context, WidgetRef ref) {
+    final pageIsQueue = ref.read(queueManagerProvider).name == feedUrl;
 
     if (pageIsQueue) {
-      playerManager.playOrPause();
+      ref.read(playPauseManagerProvider.notifier).playOrPause();
       return;
     }
 
-    final episodesManager = di<EpisodesManager>(param1: feedUrl);
-    final allEpisodes = episodesManager.allFilteredEpisodes;
-    final loadedEpisodes = episodesManager.command.value?.episodes ?? [];
+    final episodesState = ref.read(episodesManagerProvider(feedUrl)).value;
+    final allEpisodes = episodesState?.allEpisodes ?? [];
+    final loadedEpisodes = episodesState?.episodes ?? [];
 
     if (allEpisodes.isEmpty) return;
 
-    if (!episodesManager.hasMore ||
+    if (!(episodesState?.hasMore ?? false) ||
         loadedEpisodes.length >= allEpisodes.length) {
-      playerManager.play(audios: allEpisodes, listName: feedUrl);
+      ref
+          .read(currentAudioManagerProvider.notifier)
+          .play(audios: allEpisodes, listName: feedUrl);
       return;
     }
 
@@ -51,13 +54,16 @@ class PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
       context: context,
       title: Text(context.l10n.playAll + '?'),
       confirmLabel: context.l10n.playAllEpisodes(allEpisodes.length.toString()),
-      onConfirm: () =>
-          playerManager.play(audios: allEpisodes, listName: feedUrl),
+      onConfirm: () => ref
+          .read(currentAudioManagerProvider.notifier)
+          .play(audios: allEpisodes, listName: feedUrl),
       additionalActions: [
         OutlinedButton(
           onPressed: () {
             Navigator.pop(context);
-            playerManager.play(audios: loadedEpisodes, listName: feedUrl);
+            ref
+                .read(currentAudioManagerProvider.notifier)
+                .play(audios: loadedEpisodes, listName: feedUrl);
           },
           child: Text(
             context.l10n.playOnlyLoadedEpisodes(
@@ -70,11 +76,8 @@ class PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final shortInfo = watchValue(
-      (PodcastShortInfoManager m) => m.command,
-      param1: feedUrl,
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final shortInfo = ref.watch(podcastShortInfoManagerProvider(feedUrl)).value;
 
     final artist = shortInfo?.artist ?? '';
     final title = shortInfo?.name ?? '';
@@ -94,7 +97,7 @@ class PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
           AvatarPlayButton(
             pageId: feedUrl,
             audioPageType: AudioPageType.podcast,
-            onPressed: () => _onPlayAllPressed(context),
+            onPressed: () => _onPlayAllPressed(context, ref),
           ),
           PodcastPageSearchButton(feedUrl: feedUrl),
           PodcastReorderButton(feedUrl: feedUrl),
@@ -109,7 +112,7 @@ class PodcastPageControlPanel extends StatelessWidget with WatchItMixin {
   }
 }
 
-class PodcastPageOptionButton extends StatelessWidget with WatchItMixin {
+class PodcastPageOptionButton extends ConsumerWidget {
   const PodcastPageOptionButton({
     super.key,
     required this.feedUrl,
@@ -122,14 +125,11 @@ class PodcastPageOptionButton extends StatelessWidget with WatchItMixin {
   final String? artist;
 
   @override
-  Widget build(BuildContext context) {
-    final episodeResults = watchValue(
-      (EpisodesManager m) => m.command.results,
-      param1: feedUrl,
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final episodeResults = ref.watch(episodesManagerProvider(feedUrl));
     return AudioTileOptionButton(
-      enabled: !episodeResults.isRunning && !episodeResults.hasError,
-      audios: episodeResults.data?.episodes ?? [],
+      enabled: !episodeResults.isLoading && !episodeResults.hasError,
+      audios: episodeResults.value?.episodes ?? [],
       playlistId: feedUrl,
       allowRemove: false,
       searchTerm: title ?? '',

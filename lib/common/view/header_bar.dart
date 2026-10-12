@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
@@ -8,9 +7,7 @@ import 'global_keys.dart';
 import 'icons.dart';
 import 'nav_back_button.dart';
 
-class HeaderBar extends StatelessWidget
-    with WatchItMixin
-    implements PreferredSizeWidget {
+class HeaderBar extends StatelessWidget implements PreferredSizeWidget {
   const HeaderBar({
     super.key,
     this.title,

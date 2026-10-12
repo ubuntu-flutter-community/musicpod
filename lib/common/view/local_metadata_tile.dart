@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
@@ -10,7 +10,7 @@ import '../data/audio.dart';
 import 'icons.dart';
 import 'ui_constants.dart';
 
-class LocalMetadataTile extends StatefulWidget with WatchItStatefulWidgetMixin {
+class LocalMetadataTile extends ConsumerStatefulWidget {
   const LocalMetadataTile.title({super.key, required this.audio, this.pageId})
     : type = LocalMetadataTileType.title;
 
@@ -46,16 +46,22 @@ class LocalMetadataTile extends StatefulWidget with WatchItStatefulWidgetMixin {
   final String? pageId;
 
   @override
-  State<LocalMetadataTile> createState() => _LocalMetadataTileState();
+  ConsumerState<LocalMetadataTile> createState() => _LocalMetadataTileState();
 }
 
-class _LocalMetadataTileState extends State<LocalMetadataTile> {
+class _LocalMetadataTileState extends ConsumerState<LocalMetadataTile> {
   late TextEditingController _controller;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController(text: _initText());
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   String _initText([Audio? newAudio]) => switch (widget.type) {
@@ -79,9 +85,10 @@ class _LocalMetadataTileState extends State<LocalMetadataTile> {
 
   @override
   Widget build(BuildContext context) {
-    final manager = di<ChangeLocalMetaDataManager>(param1: widget.audio);
-
-    final changedAudio = watch(manager.command).value;
+    final metaState = ref.watch(
+      changeLocalMetaDataManagerProvider(widget.audio),
+    );
+    final changedAudio = metaState.savedAudio;
 
     final audioChangePersisted =
         changedAudio != null &&
@@ -109,16 +116,12 @@ class _LocalMetadataTileState extends State<LocalMetadataTile> {
                 widget.audio.genre != null,
         };
 
-    onDispose(() {
-      _controller.dispose();
-    });
-
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: kLargestSpace),
       subtitle: TextField(
         controller: _controller,
-        onSubmitted: (text) => updateDraft(text, manager),
-        onChanged: (text) => updateDraft(text, manager),
+        onSubmitted: updateDraft,
+        onChanged: updateDraft,
         decoration: InputDecoration(
           suffixIcon: ListenableBuilder(
             listenable: _controller,
@@ -155,7 +158,11 @@ class _LocalMetadataTileState extends State<LocalMetadataTile> {
                             ? context.colorScheme.success
                             : context.colorScheme.onSurface,
                       ),
-                onPressed: manager.command.run,
+                onPressed: () => ref
+                    .read(
+                      changeLocalMetaDataManagerProvider(widget.audio).notifier,
+                    )
+                    .save(),
               );
             },
           ),
@@ -165,30 +172,26 @@ class _LocalMetadataTileState extends State<LocalMetadataTile> {
     );
   }
 
-  void updateDraft(String text, ChangeLocalMetaDataManager manager) {
-    return switch (widget.type) {
-      LocalMetadataTileType.title => manager.updateDraft(
-        ChangeMetadataCapsule(title: text),
-      ),
-      LocalMetadataTileType.album => manager.updateDraft(
-        ChangeMetadataCapsule(album: text),
-      ),
-      LocalMetadataTileType.artist => manager.updateDraft(
-        ChangeMetadataCapsule(artist: text),
-      ),
-      LocalMetadataTileType.trackNumber => manager.updateDraft(
-        ChangeMetadataCapsule(trackNumber: text),
-      ),
-      LocalMetadataTileType.diskNumber => manager.updateDraft(
-        ChangeMetadataCapsule(discNumber: text),
-      ),
-      LocalMetadataTileType.totalDisks => manager.updateDraft(
-        ChangeMetadataCapsule(discTotal: text),
-      ),
-      LocalMetadataTileType.genre => manager.updateDraft(
-        ChangeMetadataCapsule(genre: text),
-      ),
-    };
+  void updateDraft(String text) {
+    final notifier = ref.read(
+      changeLocalMetaDataManagerProvider(widget.audio).notifier,
+    );
+    switch (widget.type) {
+      case LocalMetadataTileType.title:
+        notifier.updateDraft(ChangeMetadataCapsule(title: text));
+      case LocalMetadataTileType.album:
+        notifier.updateDraft(ChangeMetadataCapsule(album: text));
+      case LocalMetadataTileType.artist:
+        notifier.updateDraft(ChangeMetadataCapsule(artist: text));
+      case LocalMetadataTileType.trackNumber:
+        notifier.updateDraft(ChangeMetadataCapsule(trackNumber: text));
+      case LocalMetadataTileType.diskNumber:
+        notifier.updateDraft(ChangeMetadataCapsule(discNumber: text));
+      case LocalMetadataTileType.totalDisks:
+        notifier.updateDraft(ChangeMetadataCapsule(discTotal: text));
+      case LocalMetadataTileType.genre:
+        notifier.updateDraft(ChangeMetadataCapsule(genre: text));
+    }
   }
 }
 

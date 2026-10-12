@@ -1,33 +1,16 @@
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../common/util/family.dart';
-import '../../extensions/command_x.dart';
+import '../../dependencies.dart';
 import '../service/local_audio_service.dart';
+import 'local_audio_manager.dart';
 
-@injectable
-class AlbumIDsOfArtistManager {
-  AlbumIDsOfArtistManager._({
-    required String artist,
-    required LocalAudioService service,
-  }) {
-    command = Command.createAsyncNoParam(
-      () => service.findAlbumIDsOfArtist(artist),
-      initialValue: null,
-    );
-    command.run(artist);
+part 'album_ids_of_artist_manager.g.dart';
+
+@riverpod
+class AlbumIDsOfArtistManager extends _$AlbumIDsOfArtistManager {
+  @override
+  Future<List<int>?> build(String artist) async {
+    await ref.watch(localAudioManagerProvider.future);
+    return di<LocalAudioService>().findAlbumIDsOfArtist(artist);
   }
-
-  @factoryMethod
-  static AlbumIDsOfArtistManager create({
-    @factoryParam required String artist,
-    required LocalAudioService service,
-  }) => Family.of(
-    artist,
-    () => AlbumIDsOfArtistManager._(artist: artist, service: service),
-    shouldDispose: (m) => m.command.safeToDispose,
-    onDispose: (m) => m.command.dispose(),
-  );
-
-  late final Command<void, List<int>?> command;
 }

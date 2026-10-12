@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
-import '../../player/manager/player_manager.dart';
-import '../data/podcast_download.dart';
+import '../../player/manager/current_audio_manager.dart';
 import '../manager/download_manager.dart';
 import 'download_button.dart';
 
-class RecentDownloadsButton extends StatefulWidget
-    with WatchItStatefulWidgetMixin {
+class RecentDownloadsButton extends ConsumerStatefulWidget {
   const RecentDownloadsButton({super.key});
 
   @override
-  State<RecentDownloadsButton> createState() => _RecentDownloadsButtonState();
+  ConsumerState<RecentDownloadsButton> createState() =>
+      _RecentDownloadsButtonState();
 }
 
-class _RecentDownloadsButtonState extends State<RecentDownloadsButton>
+class _RecentDownloadsButtonState extends ConsumerState<RecentDownloadsButton>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _animation;
@@ -44,22 +43,11 @@ class _RecentDownloadsButtonState extends State<RecentDownloadsButton>
   Widget build(BuildContext context) {
     final theme = context.theme;
 
-    final lastDownload = watchStream(
-      (DownloadManager m) => m.downloadStream,
-      initialValue: di<DownloadManager>().lastDownload,
-    ).data;
-
-    final downloadCommands = watchValue(
-      (DownloadManager m) => m.downloadCommands,
-    );
-    final downloads = downloadCommands.keys.where(
-      (audio) => di<DownloadManager>().hasDownload(audio),
-    );
-
-    final hasActiveDownloads =
-        lastDownload?.status == DownloadStatus.inProgress;
-
-    final hasRecentDownloads = downloads.isNotEmpty;
+    final downloadState =
+        ref.watch(downloadManagerProvider).value ??
+        const DownloadManagerState();
+    final hasActiveDownloads = downloadState.hasActiveDownloads;
+    final hasRecentDownloads = downloadState.hasRecentDownloads;
 
     if (hasActiveDownloads) {
       if (!_controller.isAnimating) {
@@ -92,7 +80,7 @@ class _RecentDownloadsButtonState extends State<RecentDownloadsButton>
                 context: context,
                 builder: (context) => const AlertDialog(
                   titlePadding: EdgeInsets.zero,
-                  title: const YaruDialogTitleBar(
+                  title: YaruDialogTitleBar(
                     title: Text('Recent Downloads'),
                     border: BorderSide.none,
                     backgroundColor: Colors.transparent,
@@ -110,27 +98,28 @@ class _RecentDownloadsButtonState extends State<RecentDownloadsButton>
   }
 }
 
-class RecentDownloads extends StatelessWidget with WatchItMixin {
+class RecentDownloads extends ConsumerWidget {
   const RecentDownloads({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final downloadCommands = watchValue(
-      (DownloadManager m) => m.downloadCommands,
-    );
-    final downloads = downloadCommands.keys.where(
-      (audio) => di<DownloadManager>().hasDownload(audio),
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final downloadState =
+        ref.watch(downloadManagerProvider).value ??
+        const DownloadManagerState();
+    final downloads = downloadState.recentDownloads;
+
     return SliverList.builder(
       itemBuilder: (context, index) {
-        final episode = downloads.elementAt(index);
+        final episode = downloads[index];
         return ListTile(
           onTap: () {
-            di<PlayerManager>().play(
-              audios: [episode],
-              listName: 'Recent Downloads',
-              index: 0,
-            );
+            ref
+                .read(currentAudioManagerProvider.notifier)
+                .play(
+                  audios: [episode],
+                  listName: 'Recent Downloads',
+                  index: 0,
+                );
           },
           title: Text(episode.title ?? context.l10n.unknown),
           subtitle: Text(episode.artist ?? context.l10n.unknown),

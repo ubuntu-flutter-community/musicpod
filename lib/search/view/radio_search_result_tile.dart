@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/data/play_anywhere_param.dart';
 import '../../app/play_anywhere_manager.dart';
@@ -15,7 +15,7 @@ import '../../extensions/theme_data_x.dart';
 import '../../radio/view/radio_page_tag_bar.dart';
 import '../../radio/view/station_page.dart';
 
-class RadioSearchResultTile extends StatelessWidget {
+class RadioSearchResultTile extends ConsumerWidget {
   const RadioSearchResultTile({
     super.key,
     required this.station,
@@ -32,7 +32,7 @@ class RadioSearchResultTile extends StatelessWidget {
   final bool playing;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     const maxLines = 1;
     final theme = context.theme;
 
@@ -49,10 +49,12 @@ class RadioSearchResultTile extends StatelessWidget {
               children: [
                 TapAbleText(
                   text: station.title ?? context.l10n.unknown,
-                  onTap: () => di<RoutingManager>().push(
-                    pageId: station.uuid!,
-                    builder: (context) => StationPage(uuid: station.uuid!),
-                  ),
+                  onTap: () => ref
+                      .read(routingManagerProvider.notifier)
+                      .push(
+                        pageId: station.uuid!,
+                        builder: (context) => StationPage(uuid: station.uuid!),
+                      ),
                   maxLines: maxLines,
                 ),
                 Align(
@@ -112,12 +114,14 @@ class RadioSearchResultTile extends StatelessWidget {
             ? theme.contrastyPrimary
             : null,
       ),
-      onTap: () => di<PlayAnywhereManager>().command.run(
-        PlayAnywhereParam(
-          pageId: station.uuid!,
-          audioPageType: AudioPageType.radio,
-        ),
-      ),
+      onTap: () => ref
+          .read(playAnywhereManagerProvider.notifier)
+          .play(
+            PlayAnywhereParam(
+              pageId: station.uuid!,
+              audioPageType: AudioPageType.radio,
+            ),
+          ),
     );
   }
 }

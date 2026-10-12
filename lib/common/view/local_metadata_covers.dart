@@ -2,10 +2,11 @@ import 'dart:io';
 
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mime/mime.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/picture_type_x.dart';
 import '../../external_path/service/external_path_service.dart';
@@ -17,24 +18,18 @@ import 'icons.dart';
 import 'meta_data_dialog.dart';
 import 'ui_constants.dart';
 
-class LocalMetadataCovers extends StatefulWidget
-    with WatchItStatefulWidgetMixin {
+class LocalMetadataCovers extends ConsumerWidget {
   const LocalMetadataCovers({super.key, required this.audio});
 
   final Audio audio;
 
   @override
-  State<LocalMetadataCovers> createState() => _LocalMetadataCoversState();
-}
-
-class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     const dimension = MetaDataContent.dimension;
 
-    final manager = di<ChangeLocalMetaDataManager>(param1: widget.audio);
-
-    final draft = watch(manager.draft).value;
+    final draft = ref.watch(
+      changeLocalMetaDataManagerProvider(audio).select((s) => s.draft),
+    );
 
     return Padding(
       padding: const EdgeInsets.only(bottom: kLargestSpace),
@@ -43,10 +38,10 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
         child: Stack(
           children: [
             draft?.pictures?.isEmpty ?? true
-                ? widget.audio.path == null || widget.audio.albumDbId == null
+                ? audio.path == null || audio.albumDbId == null
                       ? const SizedBox.shrink()
                       : LocalCover(
-                          albumId: widget.audio.albumDbId!,
+                          albumId: audio.albumDbId!,
                           fallback: Icon(Iconz.musicNote, size: dimension / 2),
                           dimension: dimension,
                         )
@@ -80,7 +75,7 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
                                         ),
                                         borderRadius: BorderRadius.circular(20),
                                       ),
-                                      child: DropdownButton(
+                                      child: DropdownButton<PictureType>(
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: kMediumSpace,
                                         ),
@@ -109,28 +104,36 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
                                               ),
                                             )
                                             .toList(),
-                                        onChanged: (v) => manager.updateDraft(
-                                          ChangeMetadataCapsule(
-                                            pictures: draft.pictures!.map((e) {
-                                              if (v != null &&
-                                                  e.pictureType != v &&
-                                                  File.fromRawPath(
-                                                        e.bytes,
-                                                      ).path ==
+                                        onChanged: (v) => ref
+                                            .read(
+                                              changeLocalMetaDataManagerProvider(
+                                                audio,
+                                              ).notifier,
+                                            )
+                                            .updateDraft(
+                                              ChangeMetadataCapsule(
+                                                pictures: draft.pictures!.map((
+                                                  e,
+                                                ) {
+                                                  if (v != null &&
+                                                      e.pictureType != v &&
                                                       File.fromRawPath(
-                                                        picture.bytes,
-                                                      ).path) {
-                                                return Picture(
-                                                  e.bytes,
-                                                  e.mimetype,
-                                                  v,
-                                                );
-                                              } else {
-                                                return e;
-                                              }
-                                            }).toList(),
-                                          ),
-                                        ),
+                                                            e.bytes,
+                                                          ).path ==
+                                                          File.fromRawPath(
+                                                            picture.bytes,
+                                                          ).path) {
+                                                    return Picture(
+                                                      e.bytes,
+                                                      e.mimetype,
+                                                      v,
+                                                    );
+                                                  } else {
+                                                    return e;
+                                                  }
+                                                }).toList(),
+                                              ),
+                                            ),
                                       ),
                                     ),
                                   ),
@@ -148,19 +151,21 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
                 onPressed: () async {
                   final paths = await di<ExternalPathService>()
                       .getPathsOfFiles();
-                  manager.updateDraft(
-                    ChangeMetadataCapsule(
-                      pictures: paths
-                          .map(
-                            (e) => Picture(
-                              File(e).readAsBytesSync(),
-                              lookupMimeType(e) ?? '',
-                              PictureType.coverFront,
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  );
+                  ref
+                      .read(changeLocalMetaDataManagerProvider(audio).notifier)
+                      .updateDraft(
+                        ChangeMetadataCapsule(
+                          pictures: paths
+                              .map(
+                                (e) => Picture(
+                                  File(e).readAsBytesSync(),
+                                  lookupMimeType(e) ?? '',
+                                  PictureType.coverFront,
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      );
                 },
               ),
             ),
@@ -172,19 +177,21 @@ class _LocalMetadataCoversState extends State<LocalMetadataCovers> {
                 onPressed: () async {
                   final paths = await di<ExternalPathService>()
                       .getPathsOfFiles();
-                  manager.updateDraft(
-                    ChangeMetadataCapsule(
-                      pictures: [
-                        ...paths.map(
-                          (e) => Picture(
-                            File(e).readAsBytesSync(),
-                            lookupMimeType(e) ?? '',
-                            PictureType.coverFront,
-                          ),
+                  ref
+                      .read(changeLocalMetaDataManagerProvider(audio).notifier)
+                      .updateDraft(
+                        ChangeMetadataCapsule(
+                          pictures: [
+                            ...paths.map(
+                              (e) => Picture(
+                                File(e).readAsBytesSync(),
+                                lookupMimeType(e) ?? '',
+                                PictureType.coverFront,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  );
+                      );
                 },
               ),
             ),

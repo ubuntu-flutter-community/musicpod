@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/view/header_bar.dart';
@@ -61,17 +61,15 @@ class MasterList extends StatelessWidget {
   );
 }
 
-class PermanentPageList extends StatelessWidget with WatchItMixin {
+class PermanentPageList extends ConsumerWidget {
   const PermanentPageList({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final masterItems = permanentMasterItems.whereNot(
       (e) => e.pageId == PageIDs.settings,
     );
-    final selectedPageId = watchValue(
-      (RoutingManager m) => m.selectedPageIdCommand,
-    );
+    final selectedPageId = ref.watch(routingManagerProvider);
     return SliverList.builder(
       itemCount: masterItems.length,
       itemBuilder: (context, index) => MasterTile(
@@ -82,16 +80,14 @@ class PermanentPageList extends StatelessWidget with WatchItMixin {
   }
 }
 
-class PlaylistList extends StatelessWidget with WatchItMixin {
+class PlaylistList extends ConsumerWidget {
   const PlaylistList({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final playlistIDs = watchValue((PlaylistIDsManager m) => m.command);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedPageId = ref.watch(routingManagerProvider);
+    final playlistIDs = ref.watch(playlistIDsManagerProvider).value ?? [];
     final masterItems = createPlaylistMasterItems(playlistIDs);
-    final selectedPageId = watchValue(
-      (RoutingManager m) => m.selectedPageIdCommand,
-    );
     return SliverList.builder(
       itemCount: masterItems.length,
       itemBuilder: (context, index) => MasterTile(
@@ -102,16 +98,15 @@ class PlaylistList extends StatelessWidget with WatchItMixin {
   }
 }
 
-class PodcastList extends StatelessWidget with WatchItMixin {
+class PodcastList extends ConsumerWidget {
   const PodcastList({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final subs = watchValue((SubscribedPodcastsManager m) => m.command);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedPageId = ref.watch(routingManagerProvider);
+    final subs =
+        ref.watch(subscribedPodcastsManagerProvider).value ?? <String>{};
     final masterItems = createPodcastMasterItems(subs.toList());
-    final selectedPageId = watchValue(
-      (RoutingManager m) => m.selectedPageIdCommand,
-    );
     return SliverList.builder(
       itemCount: masterItems.length,
       itemBuilder: (context, index) => MasterTile(
@@ -122,18 +117,15 @@ class PodcastList extends StatelessWidget with WatchItMixin {
   }
 }
 
-class StationsList extends StatelessWidget with WatchItMixin {
+class StationsList extends ConsumerWidget {
   const StationsList({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final starredStationIDs = watchValue(
-      (RadioStarStationManager m) => m.command,
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedPageId = ref.watch(routingManagerProvider);
+    final starredStationIDs =
+        ref.watch(radioStarStationManagerProvider).value ?? {};
     final masterItems = createStarredStationsMasterItems(starredStationIDs);
-    final selectedPageId = watchValue(
-      (RoutingManager m) => m.selectedPageIdCommand,
-    );
     return SliverList.builder(
       itemCount: masterItems.length,
       itemBuilder: (context, index) => MasterTile(
@@ -144,16 +136,14 @@ class StationsList extends StatelessWidget with WatchItMixin {
   }
 }
 
-class AlbumsList extends StatelessWidget with WatchItMixin {
+class AlbumsList extends ConsumerWidget {
   const AlbumsList({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final pinnedAlbums = watchValue((PinnedAlbumIDsManager m) => m.command);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedPageId = ref.watch(routingManagerProvider);
+    final pinnedAlbums = ref.watch(pinnedAlbumIDsManagerProvider).value ?? [];
     final masterItems = createPinnedAlbumsMasterItems(pinnedAlbums);
-    final selectedPageId = watchValue(
-      (RoutingManager m) => m.selectedPageIdCommand,
-    );
     return SliverList.builder(
       itemCount: masterItems.length,
       itemBuilder: (context, index) => MasterTile(

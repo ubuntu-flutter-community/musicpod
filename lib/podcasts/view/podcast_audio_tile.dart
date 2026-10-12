@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/routing_manager.dart';
@@ -14,14 +14,15 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';
 import '../../extensions/int_x.dart';
 import '../../extensions/platform_x.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/queue_manager.dart';
+import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
 import 'download_button.dart';
 import 'podcast_mark_done_button.dart';
 import 'podcast_replay_button.dart';
 import 'podcast_tile_play_button.dart';
 
-class PodcastAudioTile extends StatelessWidget with WatchItMixin {
+class PodcastAudioTile extends ConsumerWidget {
   const PodcastAudioTile({
     super.key,
     required this.audio,
@@ -42,17 +43,15 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
   final bool includePodcastImage;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final date = audio.publicationDate.unixTimeToDateString;
     final duration = audio.durationMs != null
         ? Duration(milliseconds: audio.durationMs!.toInt()).formattedTime
         : context.l10n.unknown;
     final label = '$date, ${context.l10n.duration}: $duration';
 
-    final playerManager = di<PlayerManager>();
-    final useYaruTheme = watchPropertyValue(
-      (SettingsManager m) => m.useYaruTheme,
-    );
+    final useYaruTheme =
+        ref.watch(settingsBoolManagerProvider(SPKeys.useYaruTheme)) ?? isLinux;
     final radius =
         (useYaruTheme
             ? kYaruTitleBarItemHeight
@@ -92,8 +91,9 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
                   InkWell(
                     borderRadius: BorderRadius.circular(radius / 2),
                     onTap: audio.feedUrl != null
-                        ? () =>
-                              di<RoutingManager>().push(pageId: audio.feedUrl!)
+                        ? () => ref
+                              .read(routingManagerProvider.notifier)
+                              .push(pageId: audio.feedUrl!)
                         : null,
                     child: AudioTileImage(audio: audio, size: radius * 2),
                   ),
@@ -134,7 +134,9 @@ class PodcastAudioTile extends StatelessWidget with WatchItMixin {
                             onPressed: () {
                               final text =
                                   '${audio.title != null ? '${audio.podcastTitle} - ' : ''}${audio.title ?? ''}';
-                              playerManager.insertIntoQueue([audio]);
+                              ref
+                                  .read(queueManagerProvider.notifier)
+                                  .insertIntoQueue([audio]);
                               context.toast(
                                 Text(context.l10n.insertedIntoQueue(text)),
                               );
@@ -200,17 +202,16 @@ class _Center extends StatelessWidget {
   }
 }
 
-class _Description extends StatelessWidget with WatchItMixin {
+class _Description extends ConsumerWidget {
   const _Description({required this.description, required this.title});
 
   final String? description;
   final String? title;
 
   @override
-  Widget build(BuildContext context) {
-    final useYaruTheme = watchPropertyValue(
-      (SettingsManager m) => m.useYaruTheme,
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final useYaruTheme =
+        ref.watch(settingsBoolManagerProvider(SPKeys.useYaruTheme)) ?? isLinux;
     final theme = context.theme;
     return InkWell(
       borderRadius: BorderRadius.circular(8),

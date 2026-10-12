@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../dependencies.dart';
 
 import '../../common/logging.dart';
 import '../../common/view/common_widgets.dart';
@@ -13,19 +17,25 @@ import '../manager/wipe_manager.dart';
 import 'settings_list_tile.dart';
 import 'settings_section.dart';
 
-class LocalAudioSection extends StatelessWidget with WatchItMixin {
+class LocalAudioSection extends ConsumerWidget {
   const LocalAudioSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final directory = watchPropertyValue(
-      (SettingsManager m) => m.directory ?? '',
-    );
+    final directory =
+        ref.watch(settingsStringManagerProvider(SPKeys.directory)) ?? '';
 
-    final groupAlbumsOnlyByAlbumName = watchPropertyValue(
-      (SettingsManager m) => m.groupAlbumsOnlyByAlbumName,
-    );
+    final neverShowFailedImports =
+        ref.watch(settingsBoolManagerProvider(SPKeys.neverShowImportFails)) ??
+        false;
+
+    final groupAlbumsOnlyByAlbumName =
+        ref.watch(
+          settingsBoolManagerProvider(SPKeys.groupAlbumsOnlyByAlbumName),
+        ) ??
+        false;
+
     return SettingsSection(
       heading: l10n.localAudio,
       children: [
@@ -43,11 +53,14 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
                   spKey: SPKeys.directoryBookmark,
                   path: directoryPath,
                 );
-                await di<WipeManager>().command.runAsync({WipeType.localAudio});
-                di<LocalAudioManager>().initAudiosCommand.run((
-                  forceInit: true,
-                  directory: directoryPath,
-                ));
+                await ref.read(wipeManagerProvider.notifier).wipe({
+                  WipeType.localAudio,
+                });
+                unawaited(
+                  ref
+                      .read(localAudioManagerProvider.notifier)
+                      .initAudios(forceInit: true, directory: directoryPath),
+                );
               }
             },
             child: Text(
@@ -65,10 +78,14 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
                 '"${l10n.failedToImport.replaceAll(':', '')}"',
           ),
           trailing: CommonSwitch(
-            value: watchPropertyValue(
-              (SettingsManager m) => m.neverShowFailedImports,
-            ),
-            onChanged: di<SettingsManager>().setNeverShowFailedImports,
+            value: neverShowFailedImports,
+            onChanged: (v) => ref
+                .read(
+                  settingsBoolManagerProvider(
+                    SPKeys.neverShowImportFails,
+                  ).notifier,
+                )
+                .set(v),
           ),
         ),
         SettingsListTile(
@@ -77,7 +94,13 @@ class LocalAudioSection extends StatelessWidget with WatchItMixin {
           subtitle: Text(l10n.groupAlbumsOnlyByAlbumNameDescription),
           trailing: CommonSwitch(
             value: groupAlbumsOnlyByAlbumName,
-            onChanged: di<SettingsManager>().setGroupAlbumsOnlyByAlbumName,
+            onChanged: (v) => ref
+                .read(
+                  settingsBoolManagerProvider(
+                    SPKeys.groupAlbumsOnlyByAlbumName,
+                  ).notifier,
+                )
+                .set(v),
           ),
         ),
       ],

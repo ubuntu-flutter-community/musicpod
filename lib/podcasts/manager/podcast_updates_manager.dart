@@ -1,69 +1,98 @@
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import '../../common/data/audio.dart';
-import '../../common/util/family.dart';
-import '../../extensions/command_x.dart';
+import '../../dependencies.dart';
 import '../data/podcast_update_capsule.dart';
 import '../service/podcast_service.dart';
-import 'episodes_manager.dart';
 import 'podcast_updated_feeds_manager.dart';
 
-@injectable
-class PodcastUpdatesManager {
-  PodcastUpdatesManager._({
-    required PodcastService podcastService,
-    required PodcastUpdatedFeedsManager feedsManager,
-  }) {
-    command = Command.createAsyncWithProgress((capsule, handle) async {
+part 'podcast_updates_manager.g.dart';
+
+class PodcastUpdatesState {
+  final bool isRunning;
+  final double progress;
+  final Map<String, Set<Audio>> updates;
+  final Object? error;
+  final StackTrace? stackTrace;
+  final PodcastUpdateCapsule? lastCapsule;
+
+  const PodcastUpdatesState({
+    this.isRunning = false,
+    this.progress = 0.0,
+    this.updates = const {},
+    this.error,
+    this.stackTrace,
+    this.lastCapsule,
+  });
+
+  PodcastUpdatesState copyWith({
+    bool? isRunning,
+    double? progress,
+    Map<String, Set<Audio>>? updates,
+    Object? error,
+    StackTrace? stackTrace,
+    PodcastUpdateCapsule? lastCapsule,
+  }) => PodcastUpdatesState(
+    isRunning: isRunning ?? this.isRunning,
+    progress: progress ?? this.progress,
+    updates: updates ?? this.updates,
+    error: error,
+    stackTrace: stackTrace,
+    lastCapsule: lastCapsule ?? this.lastCapsule,
+  );
+}
+
+@Riverpod(keepAlive: true)
+class PodcastUpdatesManager extends _$PodcastUpdatesManager {
+  late final PodcastService _podcastService = di<PodcastService>();
+
+  @override
+  PodcastUpdatesState build() => const PodcastUpdatesState();
+
+  Future<void> run(PodcastUpdateCapsule capsule) async {
+    state = state.copyWith(
+      isRunning: true,
+      progress: 0.0,
+      error: null,
+      lastCapsule: capsule,
+    );
+
+    try {
       if (capsule.type == PodcastUpdateType.remove) {
-        await podcastService.removePodcastUpdates(
+        await _podcastService.removePodcastUpdates(
           feedUrls: capsule.feedUrls,
-          updateProgress: handle.updateProgress,
+          updateProgress: (p) => state = state.copyWith(progress: p),
         );
 
-        feedsManager.command.run();
+        ref.invalidate(podcastUpdatedFeedsManagerProvider);
 
-        return podcastService.getPodcastUpdates().then((updates) async {
-          final result = <String, Set<Audio>>{};
-          for (final feedUrl in updates) {
-            result[feedUrl] = {};
-          }
-          return result;
-        });
+        final updatedFeeds = await _podcastService.getPodcastUpdates();
+        final result = <String, Set<Audio>>{
+          for (final feedUrl in updatedFeeds) feedUrl: {},
+        };
+
+        state = state.copyWith(
+          isRunning: false,
+          progress: 1.0,
+          updates: result,
+        );
+        return;
       }
 
-      final updates = await podcastService.checkForUpdates(
+      final updates = await _podcastService.checkForUpdates(
         feedUrls: capsule.feedUrls,
-        updateProgress: handle.updateProgress,
+        updateProgress: (p) => state = state.copyWith(progress: p),
       );
 
-      feedsManager.command.run();
+      ref.invalidate(podcastUpdatedFeedsManagerProvider);
 
-      for (final feedUrl in updates.keys) {
-        await Family.get<EpisodesManager>(feedUrl)?.command.runAsync();
-      }
-
-      return updates;
-    }, initialValue: {});
+      state = state.copyWith(isRunning: false, progress: 1.0, updates: updates);
+    } catch (e, st) {
+      state = state.copyWith(isRunning: false, error: e, stackTrace: st);
+    }
   }
 
-  @factoryMethod
-  static PodcastUpdatesManager create({
-    required PodcastService podcastService,
-    required PodcastUpdatedFeedsManager feedsManager,
-  }) => Family.of(
-    '$PodcastUpdatesManager',
-    () => PodcastUpdatesManager._(
-      podcastService: podcastService,
-      feedsManager: feedsManager,
-    ),
-    shouldDispose: (t) => t.command.safeToDispose,
-    autoDisposeAfter: const Duration(minutes: 1),
-    onDispose: (t) => t.command.dispose(),
-  );
-
-  /// Holds the Map of new episode Audios and handles update check and removal.
-  late final Command<PodcastUpdateCapsule, Map<String, Set<Audio>>> command;
-
-  static void dispose() => Family.disposeAll<PodcastUpdatesManager>();
+  void clear() {
+    state = const PodcastUpdatesState();
+  }
 }

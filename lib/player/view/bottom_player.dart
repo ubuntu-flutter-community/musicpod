@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/app_manager.dart';
+import '../../app/full_window_mode_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
-import '../../l10n/app_localizations.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/share_button.dart';
 import '../../common/view/theme.dart';
@@ -12,7 +11,9 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/platform_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../manager/player_manager.dart';
+import '../../l10n/app_localizations.dart';
+import '../manager/current_audio_manager.dart';
+import '../manager/is_video_manager.dart';
 import 'bottom_player_image.dart';
 import 'bottom_player_like_and_star_button.dart';
 import 'playback_rate_button.dart';
@@ -24,15 +25,26 @@ import 'player_view.dart';
 import 'stop_button.dart';
 import 'volume_popup.dart';
 
-class BottomPlayer extends StatelessWidget with WatchItMixin {
+class BottomPlayer extends ConsumerWidget {
   const BottomPlayer({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final fullWindowMode = ref.watch(fullWindowModeManagerProvider);
+    return _BottomPlayerContent(fullWindowMode: fullWindowMode);
+  }
+}
+
+class _BottomPlayerContent extends ConsumerWidget {
+  const _BottomPlayerContent({required this.fullWindowMode});
+
+  final bool fullWindowMode;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final audio = watchPropertyValue((PlayerManager m) => m.audio);
-    final isVideo = watchPropertyValue((PlayerManager m) => m.isVideo);
-    final fullWindowMode = watchValue((AppManager m) => m.fullWindowMode);
+    final audio = ref.watch(currentAudioManagerProvider);
+    final isVideo = ref.watch(isVideoManagerProvider);
 
     final active = audio != null;
 
@@ -177,20 +189,24 @@ class _BottomPlayerRowState extends State<_BottomPlayerRow> {
                   ShareButton(audio: audio, active: active),
                   if (!isMobile) const VolumeSliderPopup(),
 
-                  IconButton(
-                    isSelected: fullWindowMode,
-                    color: fullWindowMode
-                        ? context.theme.contrastyPrimary
-                        : context.colorScheme.onSurface,
-                    tooltip: audio == null || !audio.isRadio
-                        ? l10n.queue
-                        : l10n.hearingHistory,
-                    icon: Icon(
-                      audio == null || !audio.isRadio
-                          ? Iconz.playlist
-                          : Iconz.radioHistory,
+                  Consumer(
+                    builder: (context, ref, _) => IconButton(
+                      isSelected: fullWindowMode,
+                      color: fullWindowMode
+                          ? context.theme.contrastyPrimary
+                          : context.colorScheme.onSurface,
+                      tooltip: audio == null || !audio.isRadio
+                          ? l10n.queue
+                          : l10n.hearingHistory,
+                      icon: Icon(
+                        audio == null || !audio.isRadio
+                            ? Iconz.playlist
+                            : Iconz.radioHistory,
+                      ),
+                      onPressed: () => ref
+                          .read(fullWindowModeManagerProvider.notifier)
+                          .toggleFullWindowMode(),
                     ),
-                    onPressed: di<AppManager>().toggleFullWindowMode,
                   ),
                 ],
               ),

@@ -1,35 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/view/theme.dart';
 import '../../extensions/platform_x.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/player_color_manager.dart';
+import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
 import 'desktop_musicpod_app.dart';
 import 'mobile_musicpod_app.dart';
 
-class YaruMusicPodApp extends StatelessWidget with WatchItMixin {
+class YaruMusicPodApp extends ConsumerWidget {
   const YaruMusicPodApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final useCustomThemeColor = watchPropertyValue(
-      (SettingsManager m) => m.useCustomThemeColor,
-    );
-    final customThemeColor = watchPropertyValue(
-      (SettingsManager m) => m.customThemeColor,
+  Widget build(BuildContext context, WidgetRef ref) {
+    final playerColor = ref.watch(playerColorManagerProvider);
+
+    final useCustomThemeColor =
+        ref.watch(settingsBoolManagerProvider(SPKeys.useCustomThemeColor)) ??
+        false;
+    final customThemeColor = ref.watch(
+      settingsIntManagerProvider(SPKeys.customThemeColor),
     );
 
-    final usePlayerColor = watchPropertyValue(
-      (SettingsManager m) => m.usePlayerColor,
-    );
-    final playerColor = watchPropertyValue((PlayerManager m) => m.color);
+    final usePlayerColor =
+        ref.watch(settingsBoolManagerProvider(SPKeys.usePlayerColor)) ?? true;
 
-    final useYaruTheme = watchPropertyValue(
-      (SettingsManager m) => m.useYaruTheme,
-    );
+    final useYaruTheme =
+        ref.watch(settingsBoolManagerProvider(SPKeys.useYaruTheme)) ?? isLinux;
 
     return YaruTheme(
       builder: (context, yaru, child) {
@@ -60,22 +60,22 @@ class YaruMusicPodApp extends StatelessWidget with WatchItMixin {
   }
 }
 
-class MaterialMusicPodApp extends StatelessWidget with WatchItMixin {
+class MaterialMusicPodApp extends ConsumerWidget {
   const MaterialMusicPodApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final useCustomThemeColor = watchPropertyValue(
-      (SettingsManager m) => m.useCustomThemeColor,
-    );
-    final customThemeColor = watchPropertyValue(
-      (SettingsManager m) => m.customThemeColor,
+  Widget build(BuildContext context, WidgetRef ref) {
+    final playerColor = ref.watch(playerColorManagerProvider);
+
+    final useCustomThemeColor =
+        ref.watch(settingsBoolManagerProvider(SPKeys.useCustomThemeColor)) ??
+        false;
+    final customThemeColor = ref.watch(
+      settingsIntManagerProvider(SPKeys.customThemeColor),
     );
 
-    final usePlayerColor = watchPropertyValue(
-      (SettingsManager m) => m.usePlayerColor,
-    );
-    final playerColor = watchPropertyValue((PlayerManager m) => m.color);
+    final usePlayerColor =
+        ref.watch(settingsBoolManagerProvider(SPKeys.usePlayerColor)) ?? true;
 
     return SystemThemeBuilder(
       builder: (context, accent) {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 import 'package:yaru/yaru.dart';
 
@@ -16,12 +16,12 @@ import '../../search/data/search_type.dart';
 import '../manager/radio_fav_tag_manager.dart';
 import 'open_radio_discover_page_button.dart';
 
-class FavoriteRadioTagsGrid extends StatelessWidget with WatchItMixin {
+class FavoriteRadioTagsGrid extends ConsumerWidget {
   const FavoriteRadioTagsGrid({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final favTags = watchValue((RadioFavTagManager m) => m.command);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final favTags = ref.watch(radioFavTagManagerProvider).value ?? {};
     final favTagsLength = favTags.length;
 
     if (favTagsLength == 0) {
@@ -47,8 +47,10 @@ class FavoriteRadioTagsGrid extends StatelessWidget with WatchItMixin {
         return YaruSelectableContainer(
           selected: false,
           onTap: () {
-            di<RoutingManager>().push(pageId: PageIDs.searchPage);
-            di<SearchManager>()
+            ref
+                .read(routingManagerProvider.notifier)
+                .push(pageId: PageIDs.searchPage);
+            ref.read(searchManagerProvider.notifier)
               ..setSearchType(SearchType.radioTag)
               ..setTag(Tag(name: tag.toLowerCase(), stationCount: 1))
               ..setAudioType(AudioType.radio)

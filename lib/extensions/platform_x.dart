@@ -17,6 +17,9 @@ bool get isAndroid => !kIsWeb && Platform.isAndroid;
 bool get isFuchsia => !kIsWeb && Platform.isFuchsia;
 bool get isTest => !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
 
+String? get systemCountryCode =>
+    PlatformDispatcher.instance.locale.countryCode?.toLowerCase();
+
 extension PlatformX on Platform {
   static Future<String?> get downloadsDefaultDir async {
     String? path;

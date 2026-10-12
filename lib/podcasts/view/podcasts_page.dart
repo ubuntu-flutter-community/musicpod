@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
@@ -12,11 +12,11 @@ import '../../search/data/search_type.dart';
 import '../../search/manager/search_manager.dart';
 import 'podcasts_collection_body.dart';
 
-class PodcastsPage extends StatelessWidget with WatchItMixin {
+class PodcastsPage extends ConsumerWidget {
   const PodcastsPage({super.key});
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context, WidgetRef ref) => Scaffold(
     appBar: HeaderBar(
       titleSpacing: 0,
       actions: [
@@ -24,8 +24,10 @@ class PodcastsPage extends StatelessWidget with WatchItMixin {
           padding: appBarSingleActionSpacing,
           child: SearchButton(
             onPressed: () {
-              final searchManager = di<SearchManager>();
-              di<RoutingManager>().push(pageId: PageIDs.searchPage);
+              final searchManager = ref.read(searchManagerProvider.notifier);
+              ref
+                  .read(routingManagerProvider.notifier)
+                  .push(pageId: PageIDs.searchPage);
               if (searchManager.audioType != AudioType.podcast) {
                 searchManager
                   ..setAudioType(AudioType.podcast)

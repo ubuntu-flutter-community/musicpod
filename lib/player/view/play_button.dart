@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
-import '../manager/player_manager.dart';
+import '../manager/play_pause_manager.dart';
 
-class PlayButton extends StatelessWidget with WatchItMixin {
+class PlayButton extends ConsumerWidget {
   const PlayButton({
     super.key,
     required this.active,
@@ -18,11 +18,8 @@ class PlayButton extends StatelessWidget with WatchItMixin {
   final ButtonStyle? buttonStyle;
 
   @override
-  Widget build(BuildContext context) {
-    final playerManager = di<PlayerManager>();
-    final pause = playerManager.pause;
-    final playOrPause = playerManager.playOrPause;
-    final isPlaying = watchPropertyValue((PlayerManager m) => m.isPlaying);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isPlaying = ref.watch(playPauseManagerProvider);
     final tooltip = isPlaying ? context.l10n.pause : context.l10n.play;
     return IconButton(
       style: buttonStyle,
@@ -30,10 +27,11 @@ class PlayButton extends StatelessWidget with WatchItMixin {
       onPressed: !active
           ? null
           : () {
+              final notifier = ref.read(playPauseManagerProvider.notifier);
               if (isPlaying) {
-                pause();
+                notifier.pause();
               } else {
-                playOrPause();
+                notifier.playOrPause();
               }
             },
       icon: Icon(

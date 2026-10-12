@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/global_keys.dart';
 import '../../common/view/icons.dart';
@@ -7,31 +7,54 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/platform_x.dart';
 import '../../player/view/player_view.dart';
-import '../app_manager.dart';
+import '../full_window_mode_manager.dart';
 import 'common_handlers_and_commands.dart';
 import 'master_panel.dart';
 import 'mobile_bottom_bar.dart';
 import 'mobile_page.dart';
 
-class MasterDetailShell extends StatelessWidget
-    with WatchItMixin, CommonHandlersAndCommandsMixin {
+class MasterDetailShell extends ConsumerWidget {
   const MasterDetailShell({super.key, required this.child});
 
   final Widget child;
 
   @override
-  Widget build(BuildContext context) {
-    callCommonCommands();
-    registerCommonHandlers(context);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isInFullWindowMode = ref.watch(fullWindowModeManagerProvider);
 
-    final isInFullWindowMode = watchValue((AppManager m) => m.fullWindowMode);
+    return _MasterDetailShellContent(
+      isInFullWindowMode: isInFullWindowMode,
+      onDismissFullWindowMode: () => ref
+          .read(fullWindowModeManagerProvider.notifier)
+          .setFullWindowMode(false),
+      child: child,
+    );
+  }
+}
+
+class _MasterDetailShellContent extends StatelessWidget
+    with CommonHandlersAndCommandsMixin {
+  const _MasterDetailShellContent({
+    required this.isInFullWindowMode,
+    required this.onDismissFullWindowMode,
+    required this.child,
+  });
+
+  final bool isInFullWindowMode;
+  final VoidCallback onDismissFullWindowMode;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    callCommonCommands(context);
+    registerCommonHandlers(context);
 
     return PopScope(
       canPop: !isInFullWindowMode,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
         if (isInFullWindowMode) {
-          di<AppManager>().setFullWindowMode(false);
+          onDismissFullWindowMode();
         }
       },
       child: Scaffold(

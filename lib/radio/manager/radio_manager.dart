@@ -1,30 +1,25 @@
 import 'dart:async';
 
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
 import 'package:radio_browser_api/src/models/tag.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../common/data/audio.dart';
-import '../../extensions/command_x.dart';
+import '../../dependencies.dart';
 import '../service/radio_service.dart';
 
-@lazySingleton
-class RadioManager {
-  final RadioService _radioService;
+part 'radio_manager.g.dart';
 
-  RadioManager({required RadioService radioService})
-    : _radioService = radioService;
+@Riverpod(keepAlive: true)
+class RadioManager extends _$RadioManager {
+  late final RadioService _radioService = di<RadioService>();
 
-  late final Command<void, String?> connectCommand = Command.createAsyncNoParam(
-    _radioService.connectToServer,
-    initialValue: null,
-  );
+  @override
+  Future<String?> build() => _radioService.connectToServer();
 
-  late final Command<Audio, Audio?> findSimilarStationCommand =
-      Command.createAsync((audio) async {
-        await connectCommand.runRestrictedAsync();
-        return _radioService.findSimilarStation(audio);
-      }, initialValue: null);
+  Future<void> reconnect() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() => _radioService.connectToServer());
+  }
 
   Future<List<Audio>?> search({
     String? country,
@@ -34,7 +29,7 @@ class RadioManager {
     String? language,
     required int limit,
   }) async {
-    await connectCommand.runRestrictedAsync();
+    await future;
     return _radioService.search(
       country: country,
       name: name,
@@ -50,18 +45,23 @@ class RadioManager {
     if (fromDb != null) {
       return fromDb;
     }
-    await connectCommand.runRestrictedAsync();
+    await future;
     return _radioService.getAudioByUUID(uuid, fromDBOnly: false);
   }
 
   Future<Audio?> getStationByUrl(String url) async {
-    await connectCommand.runRestrictedAsync();
+    await future;
     return _radioService.getAudioByUrl(url);
   }
 
   Future<List<Tag>> loadTags() async {
-    await connectCommand.runRestrictedAsync();
+    await future;
     return _radioService.loadTags();
+  }
+
+  Future<Audio?> findSimilarStation(Audio audio) async {
+    await future;
+    return _radioService.findSimilarStation(audio);
   }
 
   Future<String?> getStationNameByUUID(String uuid) =>
@@ -69,4 +69,19 @@ class RadioManager {
 
   Future<String?> getStationImageByUUID(String uuid) =>
       _radioService.getStationImageByUUID(uuid);
+}
+
+@riverpod
+class SimilarStationManager extends _$SimilarStationManager {
+  @override
+  FutureOr<Audio?> build() => null;
+
+  Future<Audio?> findSimilarStation(Audio audio) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      await ref.watch(radioManagerProvider.future);
+      return ref.watch(radioManagerProvider.notifier).findSimilarStation(audio);
+    });
+    return state.value;
+  }
 }

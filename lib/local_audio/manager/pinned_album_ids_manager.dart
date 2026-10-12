@@ -1,19 +1,21 @@
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../dependencies.dart';
+import '../service/local_audio_service.dart';
 import 'local_audio_manager.dart';
 
-@lazySingleton
-class PinnedAlbumIDsManager {
-  PinnedAlbumIDsManager({required LocalAudioManager localAudioManager}) {
-    command = Command.createAsync(
-      localAudioManager.togglePinAlbum,
-      initialValue: [],
-    );
-    command.run();
+part 'pinned_album_ids_manager.g.dart';
 
-    localAudioManager.initAudiosCommand.listen((_, _) => command.value = []);
+@Riverpod(keepAlive: true)
+class PinnedAlbumIDsManager extends _$PinnedAlbumIDsManager {
+  late final LocalAudioService _service = di<LocalAudioService>();
+
+  @override
+  Future<List<int>> build() async {
+    await ref.watch(localAudioManagerProvider.future);
+    return _service.findPinnedAlbumIDs();
   }
 
-  late final Command<int?, List<int>> command;
+  Future<void> togglePinAlbum(int? id) async =>
+      state = await AsyncValue.guard(() => _service.togglePinAlbum(id));
 }

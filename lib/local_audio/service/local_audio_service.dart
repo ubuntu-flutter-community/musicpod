@@ -23,6 +23,7 @@ import '../data/playlist_action.dart';
 class LocalAudioService {
   final SettingsService _settingsService;
   final LocalAudioDao _dao;
+  bool _justScanned = false;
 
   LocalAudioService({
     required LocalCoverService localCoverService,
@@ -111,6 +112,11 @@ class LocalAudioService {
         failedImports = result.failedImports;
 
         await _dao.persistAudios(result.audios);
+        await _settingsService.setValue(
+          SPKeys.lastScannedFilesCount,
+          result.filesCount,
+        );
+        _justScanned = true;
       }
       updateProgress?.call(0.75);
       await Future<void>.delayed(Duration.zero);
@@ -123,10 +129,18 @@ class LocalAudioService {
   }
 
   Future<bool> areTracksSynced() async {
+    if (_justScanned) {
+      _justScanned = false;
+      return true;
+    }
     final dir = _settingsService.getString(SPKeys.directory);
     if (dir == null || dir.isEmpty) return true;
-    final trackCount = await _dao.getTrackCount();
     final results = await _readMediaFilesFromDirectory(dir);
+    final lastCount = _settingsService.getInt(SPKeys.lastScannedFilesCount);
+    if (lastCount != null) {
+      return results.files.length == lastCount;
+    }
+    final trackCount = await _dao.getTrackCount();
     return trackCount == results.files.length;
   }
 
@@ -398,9 +412,11 @@ class LocalAudioService {
 FutureOr<ImportResult> _readAudiosFromDirectory(String? directory) async {
   final List<Audio> newAudios = [];
   final List<String> failedImports = [];
+  int filesCount = 0;
 
   if (directory != null && Directory(directory).existsSync()) {
     final results = await _readMediaFilesFromDirectory(directory);
+    filesCount = results.files.length;
     failedImports.addAll(results.failedImports);
 
     for (final e in results.files) {
@@ -418,7 +434,11 @@ FutureOr<ImportResult> _readAudiosFromDirectory(String? directory) async {
     tag: '$LocalAudioService',
   );
 
-  return (audios: newAudios, failedImports: failedImports);
+  return (
+    audios: newAudios,
+    failedImports: failedImports,
+    filesCount: filesCount,
+  );
 }
 
 Future<({Iterable<File> files, List<String> failedImports})>
@@ -436,7 +456,11 @@ _readMediaFilesFromDirectory(String directory) async {
   return (files: files, failedImports: failedImports);
 }
 
-typedef ImportResult = ({List<String> failedImports, List<Audio> audios});
+typedef ImportResult = ({
+  List<String> failedImports,
+  List<Audio> audios,
+  int filesCount,
+});
 
 void _updateMetadata(Audio audio, ChangeMetadataCapsule capsule) {
   if (audio.path == null) {

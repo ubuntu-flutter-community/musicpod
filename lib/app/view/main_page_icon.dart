@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/data/audio_type.dart';
 import '../../common/view/audio_signal_indicator.dart';
@@ -8,10 +8,12 @@ import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../local_audio/manager/local_audio_manager.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/current_audio_manager.dart';
+import '../../player/manager/play_pause_manager.dart';
+import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
 
-class MainPageIcon extends StatelessWidget with WatchItMixin {
+class MainPageIcon extends ConsumerWidget {
   const MainPageIcon({
     super.key,
     required this.selected,
@@ -22,14 +24,14 @@ class MainPageIcon extends StatelessWidget with WatchItMixin {
   final AudioType audioType;
 
   @override
-  Widget build(BuildContext context) {
-    final currentAudioType = watchPropertyValue(
-      (PlayerManager m) => m.audio?.audioType,
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentAudioType = ref.watch(
+      currentAudioManagerProvider.select((m) => m?.audioType),
     );
-    final isPlaying = watchPropertyValue((PlayerManager m) => m.isPlaying);
-    final useMoreAnimations = watchPropertyValue(
-      (SettingsManager m) => m.useMoreAnimations,
-    );
+    final isPlaying = ref.watch(playPauseManagerProvider);
+    final useMoreAnimations =
+        ref.watch(settingsBoolManagerProvider(SPKeys.useMoreAnimations)) ??
+        false;
 
     if (audioType == AudioType.local) {
       return LocalMainPageIcon(
@@ -60,7 +62,7 @@ class MainPageIcon extends StatelessWidget with WatchItMixin {
   }
 }
 
-class LocalMainPageIcon extends StatelessWidget with WatchItMixin {
+class LocalMainPageIcon extends ConsumerWidget {
   const LocalMainPageIcon({
     super.key,
     required this.selected,
@@ -75,12 +77,12 @@ class LocalMainPageIcon extends StatelessWidget with WatchItMixin {
   final bool isCurrentlyPlaying;
 
   @override
-  Widget build(BuildContext context) {
-    final isLocalAudioImporting = watchValue(
-      (LocalAudioManager m) => m.initAudiosCommand.isRunning,
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isLocalAudioImporting = ref.watch(
+      localAudioManagerProvider.select((s) => s.isLoading),
     );
 
-    if (isLocalAudioImporting)
+    if (isLocalAudioImporting) {
       return Padding(
         padding: mainPageIconPadding,
         child: const SizedBox(
@@ -89,6 +91,7 @@ class LocalMainPageIcon extends StatelessWidget with WatchItMixin {
           child: Progress(strokeWidth: 2),
         ),
       );
+    }
 
     if (useMoreAnimations && isCurrentlyPlaying && isPlaying) {
       return const ActiveAudioSignalIndicator(thickness: 2);

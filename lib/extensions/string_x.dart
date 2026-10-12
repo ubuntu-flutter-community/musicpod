@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import 'package:html/parser.dart';
 
 extension StringExtension on String {
@@ -92,4 +94,13 @@ extension NullableStringX on String? {
   }
 
   String? get unEscapeHtml => HtmlParser(this).parseFragment().text ?? this;
+
+  int? get extendedVersion {
+    var version = this;
+    if (version == null) return null;
+    version = version.replaceAll('v', '');
+    List versionCells = version.split('.');
+    versionCells = versionCells.map((i) => int.parse(i)).toList();
+    return versionCells[0] * 100000 + versionCells[1] * 1000 + versionCells[2];
+  }
 }

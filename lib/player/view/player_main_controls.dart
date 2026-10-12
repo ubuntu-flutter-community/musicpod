@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/app_manager.dart';
-
+import '../../app/full_window_mode_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
@@ -10,16 +9,17 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/platform_x.dart';
 import '../../extensions/theme_data_x.dart';
-
 import '../../radio/view/next_station_button.dart';
+import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
-import '../manager/player_manager.dart';
+import '../manager/current_audio_manager.dart';
+import '../manager/queue_manager.dart';
 import 'play_button.dart';
 import 'repeat_button.dart';
 import 'seek_button.dart';
 import 'shuffle_button.dart';
 
-class PlayerMainControls extends StatelessWidget with WatchItMixin {
+class PlayerMainControls extends ConsumerWidget {
   const PlayerMainControls({
     super.key,
     required this.active,
@@ -41,15 +41,15 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
   final Widget? trailing;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.theme;
 
-    final audio = watchPropertyValue((PlayerManager m) => m.audio);
+    final audio = ref.watch(currentAudioManagerProvider);
     final defaultColor =
         iconColor ??
         (!active ? theme.disabledColor : theme.colorScheme.onSurface);
-    final queueLength = watchPropertyValue(
-      (PlayerManager m) => m.queue.audios.length,
+    final queueLength = ref.watch(
+      queueManagerProvider.select((q) => q.audios.length),
     );
     final showSkipButtons =
         queueLength > 1 || audio?.audioType == AudioType.local;
@@ -76,14 +76,17 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
           : null,
     );
 
-    final useYaruTheme = watchPropertyValue(
-      (SettingsManager m) => m.useYaruTheme,
+    final playButton = Consumer(
+      builder: (context, ref, _) {
+        final useYaruTheme =
+            ref.watch(settingsBoolManagerProvider(SPKeys.useYaruTheme)) ??
+            isLinux;
+        final radius = getBigAvatarButtonRadius(useYaruTheme);
+        return avatarPlayButton
+            ? SizedBox.square(dimension: 2 * radius, child: rawPlayButton)
+            : rawPlayButton;
+      },
     );
-
-    final radius = getBigAvatarButtonRadius(useYaruTheme);
-    final playButton = avatarPlayButton
-        ? SizedBox.square(dimension: 2 * radius, child: rawPlayButton)
-        : rawPlayButton;
 
     final children = <Widget>[
       ?leading,
@@ -99,7 +102,9 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
         ),
         AudioType.radio => IconButton(
           tooltip: context.l10n.skipToLivStream,
-          onPressed: active ? di<PlayerManager>().playNext : null,
+          onPressed: active
+              ? () => ref.read(queueManagerProvider.notifier).playNext()
+              : null,
           icon: Icon(Iconz.refresh, color: defaultColor),
         ),
         _ => const SizedBox.shrink(),
@@ -108,7 +113,9 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
         IconButton(
           tooltip: context.l10n.back,
           color: defaultColor,
-          onPressed: !active ? null : () => di<PlayerManager>().playPrevious(),
+          onPressed: !active
+              ? null
+              : () => ref.read(queueManagerProvider.notifier).playPrevious(),
           icon: Icon(Iconz.skipBackward, color: defaultColor),
         ),
       playButton,
@@ -118,7 +125,7 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
           color: defaultColor,
           onPressed: !active || queueLength < 2
               ? null
-              : () => di<PlayerManager>().playNext(),
+              : () => ref.read(queueManagerProvider.notifier).playNext(),
           icon: Icon(Iconz.skipForward, color: defaultColor),
         ),
 
@@ -151,7 +158,7 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
   }
 }
 
-class PlayerCompactControls extends StatelessWidget with WatchItMixin {
+class PlayerCompactControls extends ConsumerWidget {
   const PlayerCompactControls({
     super.key,
     this.iconColor,
@@ -165,9 +172,9 @@ class PlayerCompactControls extends StatelessWidget with WatchItMixin {
   final MainAxisSize mainAxisSize;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.theme;
-    final audio = watchPropertyValue((PlayerManager m) => m.audio);
+    final audio = ref.watch(currentAudioManagerProvider);
 
     final active = audio != null;
 
@@ -176,11 +183,15 @@ class PlayerCompactControls extends StatelessWidget with WatchItMixin {
       active: active,
     );
 
-    final useYaruTheme = watchPropertyValue(
-      (SettingsManager m) => m.useYaruTheme,
-    );
-
+    final useYaruTheme =
+        ref.watch(settingsBoolManagerProvider(SPKeys.useYaruTheme)) ?? isLinux;
     final radius = getSmallAvatarButtonRadius(useYaruTheme);
+    final playButtonWidget = CircleAvatar(
+      radius: radius,
+      backgroundColor:
+          avatarColor ?? (theme.isLight ? Colors.black : Colors.white),
+      child: SizedBox.square(dimension: 2 * radius, child: rawPlayButton),
+    );
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20),
@@ -190,14 +201,11 @@ class PlayerCompactControls extends StatelessWidget with WatchItMixin {
         mainAxisAlignment: mainAxisAlignment,
         children: [
           ShuffleButton(active: active),
-          CircleAvatar(
-            radius: radius,
-            backgroundColor:
-                avatarColor ?? (theme.isLight ? Colors.black : Colors.white),
-            child: SizedBox.square(dimension: 2 * radius, child: rawPlayButton),
-          ),
+          playButtonWidget,
           IconButton(
-            onPressed: () => di<AppManager>().setFullWindowMode(true),
+            onPressed: () => ref
+                .read(fullWindowModeManagerProvider.notifier)
+                .setFullWindowMode(true),
             icon: Icon(Iconz.fullScreen),
           ),
         ],

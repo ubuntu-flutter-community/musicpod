@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podcast_search/podcast_search.dart';
 
 import '../../common/view/icons.dart';
@@ -7,19 +7,22 @@ import '../../extensions/build_context_x.dart';
 import '../../l10n/app_localizations.dart';
 import '../manager/search_manager.dart';
 
-class PodcastSearchAttributePopupButton extends StatelessWidget
-    with WatchItMixin {
+class PodcastSearchAttributePopupButton extends ConsumerWidget {
   const PodcastSearchAttributePopupButton({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final attribute = watchValue((SearchManager m) => m.podcastSearchAttribute);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final attribute = ref.watch(
+      searchManagerProvider.select((s) => s.podcastSearchAttribute),
+    );
     return PopupMenuButton<Attribute>(
       icon: Icon(attribute.iconData),
       initialValue: attribute,
-      onSelected: (value) => di<SearchManager>()
-        ..setPodcastSearchAttribute(value)
-        ..search(clear: true),
+      onSelected: (value) {
+        ref.read(searchManagerProvider.notifier)
+          ..setPodcastSearchAttribute(value)
+          ..search(clear: true);
+      },
       itemBuilder: (context) => Attribute.values
           .map(
             (e) => PopupMenuItem(

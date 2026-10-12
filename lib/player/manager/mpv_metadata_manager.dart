@@ -1,37 +1,64 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
-import 'package:safe_change_notifier/safe_change_notifier.dart';
+import 'package:flutter/painting.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/logging.dart';
+import '../../dependencies.dart';
 import '../../expose/service/expose_service.dart';
 import '../../extensions/string_x.dart';
-import '../../radio/manager/online_art_manager.dart';
+import '../../radio/service/online_art_service.dart';
 import '../../settings/data/shared_preferences_keys.dart';
-import '../../settings/service/settings_service.dart';
+import '../../settings/manager/settings_manager.dart';
 import '../data/mpv_meta_data.dart';
 import '../data/observe_property/observe_property.dart';
 import '../service/player_service.dart';
+import 'blocked_icy_titles_manager.dart';
+import 'mpv_metadata_history_manager.dart';
 
-@lazySingleton
-class MpvMetadataManager {
+part 'mpv_metadata_manager.g.dart';
+
+@Riverpod(keepAlive: true)
+class MpvMetadataManager extends _$MpvMetadataManager {
   MpvMetadataManager({
-    required PlayerService playerService,
-    required ExposeService exposeService,
-    required SettingsService settingsService,
-  }) : _playerService = playerService,
-       _exposeService = exposeService,
-       _settingsService = settingsService {
-    Logger.o(tag: '$MpvMetadataManager');
+    PlayerService? playerService,
+    ExposeService? exposeService,
+    OnlineArtService? onlineArtService,
+  }) : _playerServiceOverride = playerService,
+       _exposeServiceOverride = exposeService,
+       _onlineArtServiceOverride = onlineArtService;
 
-    // Note: the observeProperty stream allocates memory
-    // we need to unobserve when we don't need it anymore!
-    // it would be desireably if mediakit would provide a stream for this, but it doesn't
-    _playerService.player.stream.playing.listen((playing) {
+  final PlayerService? _playerServiceOverride;
+  final ExposeService? _exposeServiceOverride;
+  final OnlineArtService? _onlineArtServiceOverride;
+
+  PlayerService get _playerService =>
+      _playerServiceOverride ?? di<PlayerService>();
+  ExposeService get _exposeService =>
+      _exposeServiceOverride ?? di<ExposeService>();
+  OnlineArtService get _onlineArtService =>
+      _onlineArtServiceOverride ?? di<OnlineArtService>();
+
+  StreamSubscription<bool>? _playingSub;
+  StreamSubscription<Audio?>? _audioSub;
+  Timer? _debounceTimer;
+
+  @override
+  MpvMetaData? build() {
+    ref.onDispose(() {
+      _debounceTimer?.cancel();
+      _playingSub?.cancel();
+      _audioSub?.cancel();
+      observeProperty(
+        property: 'metadata',
+        player: _playerService.player,
+        listener: null,
+      );
+    });
+
+    _playingSub = _playerService.player.stream.playing.listen((playing) {
       if (_playerService.audio?.audioType != AudioType.radio) {
         observeProperty(
           property: 'metadata',
@@ -43,140 +70,78 @@ class MpvMetadataManager {
       }
     });
 
-    editBlockedIcyTitleCommand.run((
-      title: '',
-      addOrRemove: EditIcyTitleInHistory.init,
-    ));
+    _audioSub = _playerService.newAudioStream.listen((audio) {
+      if (audio?.audioType != AudioType.radio) {
+        observeProperty(
+          property: 'metadata',
+          player: _playerService.player,
+          listener: null,
+        );
+      } else if (_playerService.player.state.playing) {
+        _toggleObserve(true);
+      }
+    });
+
+    return null;
   }
 
-  Timer? _debounceTimer;
   void _toggleObserve(bool observe) {
     _debounceTimer?.cancel();
     _debounceTimer = Timer(const Duration(milliseconds: 300), () {
       observeProperty(
         property: 'metadata',
         player: _playerService.player,
-        listener: observe ? _onMpvMetadata : null,
+        listener: observe ? onMpvMetadata : null,
       );
     });
   }
 
-  final PlayerService _playerService;
-  final ExposeService _exposeService;
-  final SettingsService _settingsService;
-
-  final dataSafeMode = SafeValueNotifier<bool>(false);
-
-  Future<void> _onMpvMetadata(data) async {
+  Future<void> onMpvMetadata(String data) async {
     if (!data.contains('icy-title')) {
       return;
     }
     final newData = MpvMetaData.fromJson(data);
     final parsedIcyTitle = newData.icyTitle.unEscapeHtml;
-    if (parsedIcyTitle == null ||
-        parsedIcyTitle == mpvMetaDataCommand.value?.icyTitle) {
+    if (parsedIcyTitle == null || parsedIcyTitle == state?.icyTitle) {
       return;
     }
 
-    mpvMetaDataCommand.run(newData.copyWith(icyTitle: parsedIcyTitle));
+    await digestMpvMetaData(newData.copyWith(icyTitle: parsedIcyTitle));
   }
 
-  late final Command<MpvMetaData?, MpvMetaData?> mpvMetaDataCommand =
-      Command.createAsync(
-        (param) async => _digestMpvMetaData(param),
-        initialValue: null,
+  Future<void> digestMpvMetaData(MpvMetaData value) async {
+    if (isValidHistoryElement(value)) {
+      final finalData = value.copyWith(
+        icyName: _playerService.audio?.title?.trim() ?? value.icyName,
       );
 
-  Future<MpvMetaData?> _digestMpvMetaData(MpvMetaData? value) async {
-    if (_isValidHistoryElement(value)) {
-      _addMpvMetaDataHistoryElement(
-        icyTitle: value!.icyTitle,
-        mpvMetaData: value.copyWith(
-          icyName: _playerService.audio?.title?.trim() ?? value.icyName,
-        ),
-      );
+      ref
+          .read(mpvMetadataHistoryManagerProvider.notifier)
+          .add(icyTitle: value.icyTitle, mpvMetaData: finalData);
 
-      await _processParsedIcyTitle(value.icyTitle);
-      return value;
+      state = finalData;
+
+      await processParsedIcyTitle(value.icyTitle);
     }
-    return null;
   }
 
-  final _defaultBlockedIcyTitles = <String>{
-    '.westlotto.de',
-    'lidl',
-    'kaufland',
-    'Verbraucherinformation',
-    'Werbung',
-    'Advertisement',
-  };
-
-  Set<String> get blockedIcyTitles {
-    final set = _settingsService
-        .getStringList(SPKeys.blockedIcyTitles)
-        ?.toSet();
-    return set ?? {};
-  }
-
-  late final Command<
-    ({String title, EditIcyTitleInHistory addOrRemove}),
-    Set<String>
-  >
-  editBlockedIcyTitleCommand = Command.createAsync((param) async {
-    final title = param.title;
-    final addOrRemove = param.addOrRemove;
-    if (addOrRemove == EditIcyTitleInHistory.add) {
-      await _addBlockedIcyTitles([title]);
-      _removeMpvMetaDataHistoryElement(title);
-    } else if (addOrRemove == EditIcyTitleInHistory.remove) {
-      await _removeBlockedIcyTitle(title);
-    } else if (addOrRemove == EditIcyTitleInHistory.init) {
-      if (_settingsService.getStringList(SPKeys.blockedIcyTitles) == null ||
-          _settingsService.getStringList(SPKeys.blockedIcyTitles)!.isEmpty) {
-        await _settingsService.setValue(
-          SPKeys.blockedIcyTitles,
-          _defaultBlockedIcyTitles.toList(),
-        );
-      }
-    }
-    return blockedIcyTitles;
-  }, initialValue: blockedIcyTitles);
-
-  Future<void> _removeBlockedIcyTitle(String title) async {
-    final current = _settingsService.getStringList(SPKeys.blockedIcyTitles);
-    if (current == null || !current.contains(title)) {
-      return;
-    }
-    final newList = current.where((t) => t != title).toList();
-    await _settingsService.setValue(SPKeys.blockedIcyTitles, newList);
-  }
-
-  Future<void> _addBlockedIcyTitles(List<String> blockedTitles) async {
-    final current =
-        _settingsService.getStringList(SPKeys.blockedIcyTitles) ?? [];
-    final newList = {...current, ...blockedTitles}.toList();
-    await _settingsService.setValue(SPKeys.blockedIcyTitles, newList);
-  }
-
-  bool _isValidHistoryElement(MpvMetaData? data) {
-    final icyTitle = data?.icyTitle;
-    if (icyTitle == null || icyTitle.isEmpty) {
+  bool isValidHistoryElement(MpvMetaData data) {
+    final icyTitle = data.icyTitle;
+    if (icyTitle.isEmpty) {
       return false;
     }
-    if (blockedIcyTitles.any(
-      (b) => icyTitle.toLowerCase().contains(b.toLowerCase()),
-    )) {
+    final blocked = ref.read(blockedIcyTitlesManagerProvider);
+    if (blocked.any((b) => icyTitle.toLowerCase().contains(b.toLowerCase()))) {
       Logger.i('Blocked icy-title: $icyTitle', tag: '$MpvMetadataManager');
       Logger.i(
-        'Blocked because it contains: ${blockedIcyTitles.firstWhere((b) => icyTitle.toLowerCase().contains(b.toLowerCase()))}',
+        'Blocked because it contains: ${blocked.firstWhere((b) => icyTitle.toLowerCase().contains(b.toLowerCase()))}',
         tag: '$MpvMetadataManager',
       );
       return false;
     }
 
-    // This is often the title of the station
-    final icyDescription = data?.icyDescription;
-    if (icyDescription == null || icyDescription.isEmpty) {
+    final icyDescription = data.icyDescription;
+    if (icyDescription.isEmpty) {
       return true;
     }
 
@@ -185,18 +150,20 @@ class MpvMetadataManager {
       '',
     );
 
-    return !icyTitle.toLowerCase().contains(icyDescription) &&
+    return !icyTitle.toLowerCase().contains(icyDescription.toLowerCase()) &&
         !icyTitle.toLowerCase().contains(sanitizedDescription);
   }
 
-  Future<void> _processParsedIcyTitle(String parsedIcyTitle) async {
+  Future<void> processParsedIcyTitle(String parsedIcyTitle) async {
     final songInfo = parsedIcyTitle.splitByDash;
     String? albumArt;
 
-    if (!dataSafeMode.value) {
-      albumArt = await di<OnlineArtManager>(
-        param1: parsedIcyTitle,
-      ).command.runAsync();
+    final isDataSafeMode =
+        ref.read(settingsBoolManagerProvider(SPKeys.dataSafeMode)) ?? false;
+    if (!isDataSafeMode) {
+      albumArt = await _onlineArtService.fetchAlbumArt(
+        icyTitle: parsedIcyTitle,
+      );
     }
 
     final mergedAudio =
@@ -224,41 +191,4 @@ class MpvMetadataManager {
       imageUrl: albumArt,
     );
   }
-
-  final mpvMetadataHistory = SafeValueNotifier<Map<String, MpvMetaData>>({});
-
-  void _addMpvMetaDataHistoryElement({
-    required String icyTitle,
-    required MpvMetaData mpvMetaData,
-  }) {
-    if (!mpvMetadataHistory.value.containsKey(icyTitle)) {
-      mpvMetadataHistory.value = {
-        ...mpvMetadataHistory.value,
-        icyTitle: mpvMetaData,
-      };
-    }
-  }
-
-  void _removeMpvMetaDataHistoryElement(String icyTitle) {
-    final newMap = {...mpvMetadataHistory.value}..remove(icyTitle);
-    mpvMetadataHistory.value = newMap;
-  }
-
-  String getMpvMetaDataHistoryList({String? filter}) =>
-      filteredMpvMetaDataHistory(
-        filter: filter,
-      ).map((e) => '${e.value.icyTitle}\n').toList().reversed.join();
-
-  MpvMetaData? getMetadata(String? icyTitle) =>
-      icyTitle == null ? null : mpvMetadataHistory.value[icyTitle];
-
-  Iterable<MapEntry<String, MpvMetaData>> filteredMpvMetaDataHistory({
-    required String? filter,
-  }) => mpvMetadataHistory.value.entries.where(
-    (e) => filter == null
-        ? true
-        : e.value.icyName.contains(filter) || filter.contains(e.value.icyName),
-  );
 }
-
-enum EditIcyTitleInHistory { add, remove, init }

@@ -1,7 +1,7 @@
 // Code by @whiskeyPeak
 
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
@@ -11,16 +11,16 @@ import '../routing_manager.dart';
 const double _kButtonSize = 50;
 const double _kMaxExtent = 400;
 
-class BackGesture extends StatefulWidget {
+class BackGesture extends ConsumerStatefulWidget {
   final Widget child;
 
   const BackGesture({super.key, required this.child});
 
   @override
-  State<BackGesture> createState() => _BackGestureState();
+  ConsumerState<BackGesture> createState() => _BackGestureState();
 }
 
-class _BackGestureState extends State<BackGesture>
+class _BackGestureState extends ConsumerState<BackGesture>
     with SingleTickerProviderStateMixin {
   late AnimationController _swipeBackController;
   double _xPosition = 0;
@@ -86,12 +86,15 @@ class _BackGestureState extends State<BackGesture>
       });
     });
     if (_currentExtent > (_kMaxExtent / 2)) {
-      di<RoutingManager>().pop();
+      ref.read(routingManagerProvider.notifier).pop();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(routingManagerProvider);
+    final canPop = ref.read(routingManagerProvider.notifier).canPop;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         return GestureDetector(
@@ -102,7 +105,7 @@ class _BackGestureState extends State<BackGesture>
           child: Stack(
             children: <Widget>[
               widget.child,
-              if (di<RoutingManager>().canPop)
+              if (canPop)
                 AnimatedBuilder(
                   animation: _swipeBackController,
                   builder: (context, child) {

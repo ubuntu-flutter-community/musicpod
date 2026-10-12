@@ -2,17 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../common/util/family.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
+import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
 
-class LicensesDialog extends StatefulWidget with WatchItStatefulWidgetMixin {
+class LicensesDialog extends StatefulWidget {
   const LicensesDialog({super.key});
 
   @override
@@ -20,60 +19,57 @@ class LicensesDialog extends StatefulWidget with WatchItStatefulWidgetMixin {
 }
 
 class _LicensesDialogState extends State<LicensesDialog> {
+  final _store = di<LicenseStore>();
+
   @override
   void initState() {
     super.initState();
-    final store = di<LicenseStore>();
-    if (store.packages.isEmpty) {
-      store.load(LicenseRegistry.licenses);
+    if (_store.packages.isEmpty) {
+      _store.load(LicenseRegistry.licenses);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final packages = watchPropertyValue((LicenseStore s) => s.packages);
-    final model = di<LicenseStore>();
-    return Dialog(
-      child: SizedBox(
-        height: 800,
-        width: 800,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(kYaruContainerRadius),
-          child: YaruMasterDetailPage(
-            appBar: YaruDialogTitleBar(
-              shape: const RoundedRectangleBorder(),
-              backgroundColor: YaruMasterDetailTheme.of(context).sideBarColor,
-              border: BorderSide.none,
-              isClosable: false,
-              title: Text(context.l10n.dependencies),
-            ),
-            length: packages.length,
-            tileBuilder: (context, index, selected, availableWidth) =>
-                YaruMasterTile(
-                  selected: selected,
-                  title: Text(packages[index]),
+    return ListenableBuilder(
+      listenable: _store,
+      builder: (context, _) {
+        final packages = _store.packages;
+        return Dialog(
+          child: SizedBox(
+            height: 800,
+            width: 800,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(kYaruContainerRadius),
+              child: YaruMasterDetailPage(
+                appBar: YaruDialogTitleBar(
+                  shape: const RoundedRectangleBorder(),
+                  backgroundColor: YaruMasterDetailTheme.of(
+                    context,
+                  ).sideBarColor,
+                  border: BorderSide.none,
+                  isClosable: false,
+                  title: Text(context.l10n.dependencies),
                 ),
-            pageBuilder: (context, index) =>
-                LicenseView(licenses: model.licenses(model.packages[index])),
+                length: packages.length,
+                tileBuilder: (context, index, selected, availableWidth) =>
+                    YaruMasterTile(
+                      selected: selected,
+                      title: Text(packages[index]),
+                    ),
+                pageBuilder: (context, index) =>
+                    LicenseView(licenses: _store.licenses(packages[index])),
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
 
-@injectable
+@lazySingleton
 class LicenseStore extends SafeChangeNotifier {
-  LicenseStore._();
-
-  @factoryMethod
-  static LicenseStore create() => Family.of(
-    '$LicenseStore',
-    LicenseStore._,
-    shouldDispose: (s) => !s.hasListeners,
-    onDispose: (s) => s.dispose(),
-  );
-
   final _licenses = <String, List<LicenseEntry>>{};
 
   List<String> get packages => _licenses.keys.toList();

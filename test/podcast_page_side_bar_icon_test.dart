@@ -1,53 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:musicpod/common/util/family.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:musicpod/common/view/safe_network_image.dart';
 import 'package:musicpod/common/view/side_bar_fall_back_image.dart';
-import 'package:musicpod/extensions/command_x.dart';
 import 'package:musicpod/podcasts/data/podcast_short_info.dart';
-import 'package:musicpod/podcasts/manager/podcast_short_info_manager.dart';
+import 'package:musicpod/podcasts/service/podcast_service.dart';
 import 'package:musicpod/podcasts/view/podcast_page_side_bar_icon.dart';
-
 import 'package:musicpod/settings/service/settings_service.dart';
 
-class FakePodcastShortInfoManagerForIcon implements PodcastShortInfoManager {
-  FakePodcastShortInfoManagerForIcon(this.feedUrl, {this.imageUrl})
-    : command = Command.createAsyncNoParam(() async {
-        await Future<void>.delayed(const Duration(milliseconds: 20));
-        return PodcastShortInfo(
-          name: 'Podcast $feedUrl',
-          artist: 'Artist',
-          imageUrl: imageUrl ?? 'https://example.com/$feedUrl.png',
-        );
-      }, initialValue: null) {
-    command.run();
-  }
+import 'podcast_page_side_bar_icon_test.mocks.dart';
 
-  final String feedUrl;
-  final String? imageUrl;
-
-  @override
-  final Command<void, PodcastShortInfo?> command;
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
-}
-
-class FakeSettingsService implements SettingsService {
-  @override
-  int? getInt(String key) => 0;
-
-  @override
-  bool? getBool(String key) => false;
-
-  @override
-  String? getString(String key) => null;
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
-}
-
+@GenerateMocks([SettingsService, PodcastService])
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -56,62 +22,69 @@ void main() {
 
   setUp(() async {
     await GetIt.I.reset();
-    await Family.reset();
+    final mockSettings = MockSettingsService();
+    when(mockSettings.getInt(any)).thenReturn(0);
+    when(mockSettings.getBool(any)).thenReturn(false);
+    when(mockSettings.getString(any)).thenReturn(null);
+    GetIt.I.registerSingleton<SettingsService>(mockSettings);
 
-    GetIt.I.registerSingleton<SettingsService>(FakeSettingsService());
-
-    GetIt.I.registerFactoryParam<PodcastShortInfoManager, String, void>(
-      (feedUrl, _) => Family.of(
-        feedUrl,
-        () => FakePodcastShortInfoManagerForIcon(feedUrl),
-        autoDisposeAfter: const Duration(milliseconds: 50),
-        shouldDispose: (m) => m.command.safeToDispose,
-        onDispose: (m) => m.command.dispose(),
-      ),
-    );
+    final mockPodcastService = MockPodcastService();
+    when(mockPodcastService.getPodcastShortInfo(any)).thenAnswer((
+      invocation,
+    ) async {
+      final feedUrl = invocation.positionalArguments[0] as String;
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      return PodcastShortInfo(
+        name: 'Podcast $feedUrl',
+        artist: 'Artist',
+        imageUrl: 'https://example.com/$feedUrl.png',
+      );
+    });
+    GetIt.I.registerSingleton<PodcastService>(mockPodcastService);
   });
 
   tearDown(() async {
-    await Family.reset();
     await GetIt.I.reset();
   });
 
-  group('PodcastPageSideBarIcon & Family & watchValue lifecycle', () {
+  group('PodcastPageSideBarIcon & Riverpod lifecycle', () {
     testWidgets(
-      're-subscribes and loads correctly after manager disposal and recreation',
+      're-subscribes and loads correctly after widget unmount and remount',
       (WidgetTester tester) async {
         bool showWidget = true;
 
         await tester.pumpWidget(
-          MaterialApp(
-            home: StatefulBuilder(
-              builder: (context, setState) {
-                return Scaffold(
-                  body: Column(
-                    children: [
-                      if (showWidget)
-                        const PodcastPageSideBarIcon(
-                          key: ValueKey(feed1),
-                          feedUrl: feed1,
+          ProviderScope(
+            child: MaterialApp(
+              home: StatefulBuilder(
+                builder: (context, setState) {
+                  return Scaffold(
+                    body: Column(
+                      children: [
+                        if (showWidget)
+                          const PodcastPageSideBarIcon(
+                            key: ValueKey(feed1),
+                            feedUrl: feed1,
+                          ),
+                        ElevatedButton(
+                          onPressed: () =>
+                              setState(() => showWidget = !showWidget),
+                          child: const Text('Toggle'),
                         ),
-                      ElevatedButton(
-                        onPressed: () =>
-                            setState(() => showWidget = !showWidget),
-                        child: const Text('Toggle'),
-                      ),
-                    ],
-                  ),
-                );
-              },
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         );
 
-        // Initially loading (command is running)
+        // Initially loading
         expect(find.byType(SideBarFallBackImage), findsOneWidget);
         expect(find.byType(SafeNetworkImage), findsNothing);
 
-        // Wait for command to complete
+        // Wait for future to complete
         await tester.pump(const Duration(milliseconds: 50));
         await tester.pump();
 
@@ -127,31 +100,23 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.byType(PodcastPageSideBarIcon), findsNothing);
 
-        // Wait for Family auto-dispose timer (50ms) to fire and dispose instance 1
-        await tester.pump(const Duration(milliseconds: 100));
-        expect(Family.get<PodcastShortInfoManager>(feed1), isNull);
-
-        // Remount widget (instance 2 is created by Family)
+        // Remount widget - because provider auto-disposes on unmount, it reloads
         await tester.tap(find.byType(ElevatedButton));
         await tester.pump();
 
-        // While instance 2 runs, fallback is shown
+        // While it reloads, fallback is shown
         expect(find.byType(SideBarFallBackImage), findsOneWidget);
 
-        // Wait for instance 2 command to complete
+        // Wait for future to complete
         await tester.pump(const Duration(milliseconds: 50));
         await tester.pump();
 
-        // Instance 2 image is successfully loaded and displayed!
+        // Image is successfully loaded and displayed!
         expect(find.byType(SafeNetworkImage), findsOneWidget);
         final image2 = tester.widget<SafeNetworkImage>(
           find.byType(SafeNetworkImage),
         );
         expect(image2.url, 'https://example.com/$feed1.png');
-
-        // Clean up widget tree and drain pending Family & Command timers
-        await tester.pumpWidget(const SizedBox());
-        await tester.pump(const Duration(milliseconds: 150));
       },
     );
 
@@ -161,22 +126,24 @@ void main() {
         String currentFeed = feed1;
 
         await tester.pumpWidget(
-          MaterialApp(
-            home: StatefulBuilder(
-              builder: (context, setState) {
-                return Scaffold(
-                  body: Column(
-                    children: [
-                      // Reused element by not changing key
-                      PodcastPageSideBarIcon(feedUrl: currentFeed),
-                      ElevatedButton(
-                        onPressed: () => setState(() => currentFeed = feed2),
-                        child: const Text('Switch'),
-                      ),
-                    ],
-                  ),
-                );
-              },
+          ProviderScope(
+            child: MaterialApp(
+              home: StatefulBuilder(
+                builder: (context, setState) {
+                  return Scaffold(
+                    body: Column(
+                      children: [
+                        // Reused element by not changing key
+                        PodcastPageSideBarIcon(feedUrl: currentFeed),
+                        ElevatedButton(
+                          onPressed: () => setState(() => currentFeed = feed2),
+                          child: const Text('Switch'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         );
@@ -184,6 +151,7 @@ void main() {
         // Wait for feed1 to load
         await tester.pump(const Duration(milliseconds: 50));
         await tester.pump();
+        expect(find.byType(SideBarFallBackImage), findsNothing);
         expect(find.byType(SafeNetworkImage), findsOneWidget);
         expect(
           tester.widget<SafeNetworkImage>(find.byType(SafeNetworkImage)).url,
@@ -194,7 +162,7 @@ void main() {
         await tester.tap(find.byType(ElevatedButton));
         await tester.pump();
 
-        // Wait for feed2 command to complete
+        // Wait for feed2 to complete
         await tester.pump(const Duration(milliseconds: 50));
         await tester.pump();
 
@@ -204,10 +172,6 @@ void main() {
           tester.widget<SafeNetworkImage>(find.byType(SafeNetworkImage)).url,
           'https://example.com/$feed2.png',
         );
-
-        // Clean up widget tree and drain pending Family & Command timers
-        await tester.pumpWidget(const SizedBox());
-        await tester.pump(const Duration(milliseconds: 150));
       },
     );
   });

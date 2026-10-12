@@ -1,43 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../common/manager/retry_manager.dart';
-import '../../common/util/family.dart';
-import '../../common/view/progress.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/command_x.dart';
 import '../manager/radio_manager.dart';
 
-mixin RadioConnectMixin on WatchItMixin {
-  void registerRadioConnectHandler(BuildContext context) {
-    registerHandler(
-      select: (RadioManager m) => m.connectCommand.results,
-      handler: (context, results, cancel) {
-        if (!results.hasData) {
-          return;
-        }
+mixin RadioConnectMixin {
+  void registerRadioConnectHandler(BuildContext context, WidgetRef ref) {
+    ref.listen<AsyncValue<String?>>(radioManagerProvider, (previous, next) {
+      if (next.isLoading) return;
 
-        Family.dispose<RetryManager>('connected_host');
-
-        final connectedHost = results.data;
-        final isRunning = results.isRunning;
-        context.toast(
-          isRunning
-              ? const Progress()
-              : Text(
-                  connectedHost != null
-                      ? '${context.l10n.connectedTo}: $connectedHost'
-                      : context.l10n.noRadioServerFound,
-                ),
-          action: connectedHost == null && !isRunning
-              ? SnackBarAction(
-                  label: context.l10n.tryReconnect,
-                  onPressed: () => di<RadioManager>().connectCommand
-                      .runRestricted(immediatelyClearErrors: true),
-                )
-              : null,
-        );
-      },
-    );
+      final connectedHost = next.value;
+      final hasError = next.hasError;
+      context.toast(
+        Text(
+          connectedHost != null
+              ? '${context.l10n.connectedTo}: $connectedHost'
+              : context.l10n.noRadioServerFound,
+        ),
+        action: (connectedHost == null || hasError)
+            ? SnackBarAction(
+                label: context.l10n.tryReconnect,
+                onPressed: () =>
+                    ref.read(radioManagerProvider.notifier).reconnect(),
+              )
+            : null,
+      );
+    });
   }
 }

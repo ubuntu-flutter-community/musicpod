@@ -1,39 +1,62 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/queue_manager.dart';
 import '../../player/view/player_main_controls.dart';
 import '../../player/view/player_view.dart';
-import '../app_manager.dart';
+import '../full_window_mode_manager.dart';
 import '../page_ids.dart';
 import '../routing_manager.dart';
 import 'common_handlers_and_commands.dart';
 import 'create_master_items.dart';
 import 'mobile_bottom_bar.dart';
 
-class MobilePage extends StatelessWidget
-    with WatchItMixin, CommonHandlersAndCommandsMixin {
+class MobilePage extends ConsumerWidget {
   const MobilePage({super.key, required this.page});
 
   final Widget page;
 
   @override
-  Widget build(BuildContext context) {
-    callCommonCommands();
-    registerCommonHandlers(context);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final fullWindowMode = ref.watch(fullWindowModeManagerProvider);
 
-    final fullWindowMode = watchValue((AppManager m) => m.fullWindowMode);
+    return _MobilePageContent(
+      fullWindowMode: fullWindowMode,
+      onDismissFullWindowMode: () => ref
+          .read(fullWindowModeManagerProvider.notifier)
+          .setFullWindowMode(false),
+      page: page,
+    );
+  }
+}
+
+class _MobilePageContent extends ConsumerWidget
+    with CommonHandlersAndCommandsMixin {
+  const _MobilePageContent({
+    required this.fullWindowMode,
+    required this.onDismissFullWindowMode,
+    required this.page,
+  });
+
+  final bool fullWindowMode;
+  final VoidCallback onDismissFullWindowMode;
+  final Widget page;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    callCommonCommands(context);
+    registerCommonHandlers(context);
 
     return PopScope(
       canPop: !fullWindowMode,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
         if (fullWindowMode) {
-          di<AppManager>().setFullWindowMode(false);
+          onDismissFullWindowMode();
         }
       },
       child: Scaffold(
@@ -65,16 +88,20 @@ class MobilePage extends StatelessWidget
                         onHorizontalDragEnd: (details) {
                           if (details.primaryVelocity != null) {
                             if (details.primaryVelocity! < -150) {
-                              di<PlayerManager>().playNext();
+                              ref
+                                  .read(queueManagerProvider.notifier)
+                                  .playNext();
                             } else if (details.primaryVelocity! > 150) {
-                              di<PlayerManager>().playPrevious();
+                              ref
+                                  .read(queueManagerProvider.notifier)
+                                  .playPrevious();
                             }
                           }
                         },
                         onVerticalDragEnd: (details) {
                           if (details.primaryVelocity != null &&
                               details.primaryVelocity! > 150) {
-                            di<AppManager>().setFullWindowMode(false);
+                            onDismissFullWindowMode();
                           }
                         },
                         child: const PlayerView.fullWindow(),
@@ -90,14 +117,12 @@ class MobilePage extends StatelessWidget
   }
 }
 
-class MasterRail extends StatelessWidget with WatchItMixin {
+class MasterRail extends ConsumerWidget {
   const MasterRail({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final selectedPageId = watchValue(
-      (RoutingManager m) => m.selectedPageIdCommand,
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedPageId = ref.watch(routingManagerProvider);
 
     final destinations = permanentMasterItems
         .map(
@@ -122,9 +147,9 @@ class MasterRail extends StatelessWidget with WatchItMixin {
       scrollable: true,
       extended: true,
       minExtendedWidth: 180,
-      onDestinationSelected: (index) => di<RoutingManager>().push(
-        pageId: permanentMasterItems.elementAt(index).pageId,
-      ),
+      onDestinationSelected: (index) => ref
+          .read(routingManagerProvider.notifier)
+          .push(pageId: permanentMasterItems.elementAt(index).pageId),
       destinations: destinations,
       selectedIndex: selectedItem == null
           ? 0

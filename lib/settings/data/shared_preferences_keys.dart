@@ -38,6 +38,7 @@ class SPKeys {
   static const externalPlaylists = 'externalPlaylists';
   static const favoriteAlbums = 'favoriteAlbums';
   static const favoriteAudios = 'favoriteAudios';
+  static const lastScannedFilesCount = 'lastScannedFilesCount';
   static const starredStations = 'starredStations';
   static const podcastUpdates = 'podcastUpdates';
   static const playlistIDs = 'playlistIDs';

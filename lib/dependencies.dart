@@ -1,7 +1,10 @@
-import 'package:flutter_it/flutter_it.dart';
+import 'package:get_it/get_it.dart';
+export 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
 import 'dependencies.config.dart';
+
+GetIt get di => GetIt.instance;
 
 @InjectableInit(
   initializerName: 'init', // default

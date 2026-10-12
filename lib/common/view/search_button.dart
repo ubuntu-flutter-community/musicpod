@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../extensions/build_context_x.dart';
 import 'icons.dart';
 
-class SearchButton extends StatelessWidget {
+class SearchButton extends ConsumerWidget {
   const SearchButton({
     super.key,
     this.onPressed,
@@ -21,10 +21,12 @@ class SearchButton extends StatelessWidget {
   final Color? iconColor;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final onTap =
         onPressed ??
-        () => di<RoutingManager>().push(pageId: PageIDs.searchPage);
+        () => ref
+            .read(routingManagerProvider.notifier)
+            .push(pageId: PageIDs.searchPage);
     final iconSize = context.theme.iconTheme.size ?? 24.0;
 
     final label = context.l10n.search;

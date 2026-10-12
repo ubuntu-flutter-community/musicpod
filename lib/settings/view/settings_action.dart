@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/app_manager.dart';
+import '../../app/full_window_mode_manager.dart';
 import '../../app/routing_manager.dart';
 import '../../app/page_ids.dart';
 import '../../common/view/icons.dart';
@@ -12,7 +12,7 @@ import 'settings_tile.dart';
 
 enum _SettingsButtonMode { icon, important, tile }
 
-class SettingsButton extends StatelessWidget {
+class SettingsButton extends ConsumerWidget {
   const SettingsButton.icon({super.key, this.scrollIndex = 0})
     : _mode = _SettingsButtonMode.icon;
 
@@ -26,13 +26,17 @@ class SettingsButton extends StatelessWidget {
   final int scrollIndex;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     Future<void> onPressed() async {
-      await di<AppManager>().setFullWindowMode(false);
+      await ref
+          .read(fullWindowModeManagerProvider.notifier)
+          .setFullWindowMode(false);
       await Future.delayed(const Duration(milliseconds: 300));
-      di<SettingsManager>().scrollIndex = scrollIndex;
-      await di<RoutingManager>().push(pageId: PageIDs.settings);
+      ref.read(settingsScrollIndexProvider.notifier).set(scrollIndex);
+      await ref
+          .read(routingManagerProvider.notifier)
+          .push(pageId: PageIDs.settings);
     }
 
     return switch (_mode) {

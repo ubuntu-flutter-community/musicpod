@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
-import '../../app/app_manager.dart';
+import '../../app/full_window_mode_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
+import '../../dependencies.dart';
 import '../../local_audio/view/local_cover.dart';
-import '../manager/player_manager.dart';
+import '../service/player_service.dart';
 import 'player_fall_back_image.dart';
 import 'player_remote_source_image.dart';
 
-class BottomPlayerImage extends StatefulWidget with WatchItStatefulWidgetMixin {
+class BottomPlayerImage extends ConsumerStatefulWidget {
   const BottomPlayerImage({
     super.key,
     this.audio,
@@ -22,15 +23,15 @@ class BottomPlayerImage extends StatefulWidget with WatchItStatefulWidgetMixin {
   final bool? isVideo;
 
   @override
-  State<BottomPlayerImage> createState() => _BottomPlayerImageState();
+  ConsumerState<BottomPlayerImage> createState() => _BottomPlayerImageState();
 }
 
-class _BottomPlayerImageState extends State<BottomPlayerImage> {
+class _BottomPlayerImageState extends ConsumerState<BottomPlayerImage> {
   bool _hovered = false;
 
   @override
   Widget build(BuildContext context) {
-    final fullWindowMode = watchValue((AppManager m) => m.fullWindowMode);
+    final fullWindowMode = ref.watch(fullWindowModeManagerProvider);
 
     Widget child;
 
@@ -46,12 +47,14 @@ class _BottomPlayerImageState extends State<BottomPlayerImage> {
         child: MouseRegion(
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
-            onTap: () => di<AppManager>().toggleFullWindowMode(),
+            onTap: () => ref
+                .read(fullWindowModeManagerProvider.notifier)
+                .toggleFullWindowMode(),
             child: Video(
               height: widget.size,
               width: widget.size,
               filterQuality: FilterQuality.medium,
-              controller: di<PlayerManager>().controller,
+              controller: di<PlayerService>().controller,
               controls: (state) {
                 return const SizedBox.shrink();
               },
@@ -95,7 +98,9 @@ class _BottomPlayerImageState extends State<BottomPlayerImage> {
                       : const Color.fromARGB(192, 0, 0, 0),
                   child: Center(
                     child: IconButton(
-                      onPressed: () => di<AppManager>().toggleFullWindowMode(),
+                      onPressed: () => ref
+                          .read(fullWindowModeManagerProvider.notifier)
+                          .toggleFullWindowMode(),
                       icon: Icon(
                         fullWindowMode
                             ? Iconz.fullScreenExit

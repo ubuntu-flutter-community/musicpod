@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
 import '../../common/view/common_widgets.dart';
@@ -7,19 +7,20 @@ import '../../common/view/theme.dart';
 import '../../expose/data/last_fm_credentials.dart';
 import '../../expose/manager/expose_manager.dart';
 import '../../extensions/build_context_x.dart';
+import '../data/shared_preferences_keys.dart';
 import '../manager/settings_manager.dart';
 import 'settings_list_tile.dart';
 import 'settings_section.dart';
 
-class ExposeOnlineSection extends StatefulWidget
-    with WatchItStatefulWidgetMixin {
+class ExposeOnlineSection extends ConsumerStatefulWidget {
   const ExposeOnlineSection({super.key});
 
   @override
-  State<ExposeOnlineSection> createState() => _ExposeOnlineSectionState();
+  ConsumerState<ExposeOnlineSection> createState() =>
+      _ExposeOnlineSectionState();
 }
 
-class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
+class _ExposeOnlineSectionState extends ConsumerState<ExposeOnlineSection> {
   late TextEditingController _lastFmApiKeyController;
   late TextEditingController _lastFmSecretController;
   late TextEditingController _listenBrainzApiKeyController;
@@ -30,11 +31,20 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
   void initState() {
     super.initState();
 
-    final model = di<SettingsManager>();
-    _lastFmApiKeyController = TextEditingController(text: model.lastFmApiKey);
-    _lastFmSecretController = TextEditingController(text: model.lastFmSecret);
+    final lastFmApiKey = ref.read(
+      settingsStringManagerProvider(SPKeys.lastFmApiKey),
+    );
+    final lastFmSecret = ref.read(
+      settingsStringManagerProvider(SPKeys.lastFmSecret),
+    );
+    final listenBrainzApiKey = ref.read(
+      settingsStringManagerProvider(SPKeys.listenBrainzApiKey),
+    );
+
+    _lastFmApiKeyController = TextEditingController(text: lastFmApiKey);
+    _lastFmSecretController = TextEditingController(text: lastFmSecret);
     _listenBrainzApiKeyController = TextEditingController(
-      text: model.listenBrainzApiKey,
+      text: listenBrainzApiKey,
     );
   }
 
@@ -51,13 +61,14 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
-    final lastFmEnabled = watchPropertyValue(
-      (SettingsManager m) => m.enableLastFmScrobbling,
-    );
+    final lastFmEnabled =
+        ref.watch(settingsBoolManagerProvider(SPKeys.enableLastFm)) ?? false;
 
-    final listenBrainzEnabled = watchPropertyValue(
-      (SettingsManager m) => m.enableListenBrainzScrobbling,
-    );
+    final listenBrainzEnabled =
+        ref.watch(settingsBoolManagerProvider(SPKeys.enableListenBrainz)) ??
+        false;
+
+    final isLastFmAuthorized = ref.watch(exposeManagerProvider);
 
     return SettingsSection(
       heading: l10n.exposeOnlineHeadline,
@@ -68,9 +79,7 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
             children: space(
               children: [
                 const Icon(TablerIcons.brand_lastfm),
-                if (lastFmEnabled &&
-                    watchValue((ExposeManager m) => m.isLastFmAuthorized))
-                  Text(l10n.connectedTo),
+                if (lastFmEnabled && isLastFmAuthorized) Text(l10n.connectedTo),
                 Text(l10n.exposeToLastfmTitle),
               ],
             ),
@@ -79,7 +88,11 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
           trailing: CommonSwitch(
             value: lastFmEnabled,
             onChanged: (v) {
-              di<SettingsManager>().setEnableLastFmScrobbling(v);
+              ref
+                  .read(
+                    settingsBoolManagerProvider(SPKeys.enableLastFm).notifier,
+                  )
+                  .set(v);
             },
           ),
         ),
@@ -110,7 +123,13 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
                       onChanged: (_) => _lastFmFormKey.currentState?.validate(),
                       onFieldSubmitted: (value) async {
                         if (_lastFmFormKey.currentState!.validate()) {
-                          di<SettingsManager>().setLastFmApiKey(value);
+                          await ref
+                              .read(
+                                settingsStringManagerProvider(
+                                  SPKeys.lastFmApiKey,
+                                ).notifier,
+                              )
+                              .set(value);
                         }
                       },
                     ),
@@ -130,13 +149,20 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
                       onChanged: (_) => _lastFmFormKey.currentState?.validate(),
                       onFieldSubmitted: (value) async {
                         if (_lastFmFormKey.currentState!.validate()) {
-                          di<SettingsManager>().setLastFmSecret(value);
+                          await ref
+                              .read(
+                                settingsStringManagerProvider(
+                                  SPKeys.lastFmSecret,
+                                ).notifier,
+                              )
+                              .set(value);
                         }
                       },
                     ),
                     ElevatedButton(
-                      onPressed: () =>
-                          di<ExposeManager>().authorizeLastFmCommand.run(
+                      onPressed: () => ref
+                          .read(exposeManagerProvider.notifier)
+                          .authorizeLastFm(
                             LastFmCredentials(
                               apiKey: _lastFmApiKeyController.text,
                               apiSecret: _lastFmSecretController.text,
@@ -167,7 +193,13 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
           subtitle: Text(l10n.exposeToListenBrainzSubTitle),
           trailing: CommonSwitch(
             value: listenBrainzEnabled,
-            onChanged: di<SettingsManager>().setEnableListenBrainzScrobbling,
+            onChanged: (v) => ref
+                .read(
+                  settingsBoolManagerProvider(
+                    SPKeys.enableListenBrainz,
+                  ).notifier,
+                )
+                .set(v),
           ),
         ),
         if (listenBrainzEnabled) ...[
@@ -200,9 +232,13 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
                               _listenBrainzFormKey.currentState?.validate(),
                           onFieldSubmitted: (value) async {
                             if (_listenBrainzFormKey.currentState!.validate()) {
-                              di<SettingsManager>().setListenBrainzApiKey(
-                                value,
-                              );
+                              await ref
+                                  .read(
+                                    settingsStringManagerProvider(
+                                      SPKeys.listenBrainzApiKey,
+                                    ).notifier,
+                                  )
+                                  .set(value);
                             }
                           },
                         ),
@@ -210,8 +246,9 @@ class _ExposeOnlineSectionState extends State<ExposeOnlineSection> {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () => di<ExposeManager>().initListenBrainsCommand
-                        .run(_listenBrainzApiKeyController.text),
+                    onPressed: () => ref
+                        .read(exposeManagerProvider.notifier)
+                        .initListenBrains(_listenBrainzApiKeyController.text),
                     child: Text(l10n.save),
                   ),
                 ],

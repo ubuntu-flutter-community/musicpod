@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
@@ -12,7 +12,8 @@ import '../../common/view/tapable_text.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
-import '../../player/manager/mpv_metadata_manager.dart';
+import '../../player/manager/blocked_icy_titles_manager.dart';
+import '../../player/manager/mpv_metadata_history_manager.dart';
 import '../../search/data/search_type.dart';
 import '../../search/manager/search_manager.dart';
 import '../manager/online_art_manager.dart';
@@ -21,7 +22,7 @@ import 'station_page.dart';
 
 enum _RadioHistoryTileVariant { regular, simple }
 
-class RadioHistoryTile extends StatelessWidget with WatchItMixin {
+class RadioHistoryTile extends ConsumerWidget {
   const RadioHistoryTile({
     super.key,
     required this.icyTitle,
@@ -42,8 +43,10 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
   final bool allowNavigation;
 
   @override
-  Widget build(BuildContext context) {
-    final icyName = di<MpvMetadataManager>().getMetadata(icyTitle)?.icyName;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final icyName = ref.watch(
+      mpvMetadataHistoryManagerProvider.select((m) => m[icyTitle]?.icyName),
+    );
 
     return switch (_variant) {
       _RadioHistoryTileVariant.simple => _SimpleRadioHistoryTile(
@@ -69,12 +72,12 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
                   case RadioHistoryTileOption.streamprovider:
                     break;
                   case RadioHistoryTileOption.showMetadata:
-                    final imageUrl = di<OnlineArtManager>(
-                      param1: icyTitle,
-                    ).command.value;
-                    final metadata = di<MpvMetadataManager>().getMetadata(
-                      icyTitle,
-                    );
+                    final imageUrl = ref
+                        .read(onlineArtManagerProvider(icyTitle))
+                        .value;
+                    final metadata = ref.read(
+                      mpvMetadataHistoryManagerProvider,
+                    )[icyTitle];
                     if (metadata == null) return;
 
                     showModal(
@@ -87,10 +90,9 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
                       ),
                     );
                   case RadioHistoryTileOption.ignoreTitle:
-                    di<MpvMetadataManager>().editBlockedIcyTitleCommand.run((
-                      title: icyTitle,
-                      addOrRemove: EditIcyTitleInHistory.add,
-                    ));
+                    ref
+                        .read(blockedIcyTitlesManagerProvider.notifier)
+                        .add(icyTitle);
                 }
               },
               itemBuilder: (context) => [
@@ -142,18 +144,22 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
           text: icyName ?? context.l10n.station,
           onTap: !allowNavigation || icyName == null
               ? null
-              : () => di<SearchManager>()
-                  ..setSearchType(SearchType.radioName)
-                  ..setSearchQuery(icyName)
-                  ..setAudioType(AudioType.radio)
-                  ..radioNameSearch(icyName).then((v) {
+              : () {
+                  final searchManager = ref.read(searchManagerProvider.notifier)
+                    ..setSearchType(SearchType.radioName)
+                    ..setSearchQuery(icyName)
+                    ..setAudioType(AudioType.radio);
+                  searchManager.radioNameSearch(icyName).then((v) {
                     if (v?.firstOrNull?.uuid != null) {
-                      di<RoutingManager>().push(
-                        builder: (_) => StationPage(uuid: v.first.uuid!),
-                        pageId: v!.first.uuid!,
-                      );
+                      ref
+                          .read(routingManagerProvider.notifier)
+                          .push(
+                            builder: (_) => StationPage(uuid: v.first.uuid!),
+                            pageId: v!.first.uuid!,
+                          );
                     }
-                  }),
+                  });
+                },
         ),
       ),
     };
@@ -162,7 +168,7 @@ class RadioHistoryTile extends StatelessWidget with WatchItMixin {
 
 enum RadioHistoryTileOption { showMetadata, ignoreTitle, streamprovider }
 
-class _SimpleRadioHistoryTile extends StatelessWidget {
+class _SimpleRadioHistoryTile extends ConsumerWidget {
   const _SimpleRadioHistoryTile({
     required this.icyTitle,
     required this.selected,
@@ -172,7 +178,7 @@ class _SimpleRadioHistoryTile extends StatelessWidget {
   final bool selected;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ListTile(
       selected: selected,
       selectedColor: context.theme.colorScheme.onSurface,
@@ -186,7 +192,11 @@ class _SimpleRadioHistoryTile extends StatelessWidget {
         onTap: () => context.toast(CopyClipboardContent(text: icyTitle)),
       ),
       subtitle: Text(
-        di<MpvMetadataManager>().getMetadata(icyTitle)?.icyName ??
+        ref.watch(
+              mpvMetadataHistoryManagerProvider.select(
+                (m) => m[icyTitle]?.icyName,
+              ),
+            ) ??
             context.l10n.station,
       ),
     );

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
+import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
-import '../manager/player_manager.dart';
+import '../manager/player_color_manager.dart';
 import 'bottom_player.dart';
 import 'full_window_player.dart';
 
-class PlayerView extends StatelessWidget with WatchItMixin {
+class PlayerView extends ConsumerWidget {
   const PlayerView.bottom({super.key}) : _position = PlayerPosition.bottom;
 
   const PlayerView.fullWindow({super.key})
@@ -18,17 +19,19 @@ class PlayerView extends StatelessWidget with WatchItMixin {
   final PlayerPosition _position;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.theme;
     final baseColor = theme.cardColor;
-    final usePlayerColor = watchPropertyValue(
-      (SettingsManager m) => m.usePlayerColor,
-    );
+    final playerColor = ref.watch(playerColorManagerProvider) ?? baseColor;
+
+    final usePlayerColor =
+        ref.watch(settingsBoolManagerProvider(SPKeys.usePlayerColor)) ?? true;
+
     final playerBg = !usePlayerColor
         ? baseColor
         : getPlayerBg(
             theme,
-            watchPropertyValue((PlayerManager m) => m.color ?? baseColor),
+            playerColor,
             blendAmount: _position == PlayerPosition.bottom
                 ? (theme.isLight ? 0.2 : 0.3)
                 : 0.3,

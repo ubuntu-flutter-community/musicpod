@@ -1,28 +1,30 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
+import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/platform_x.dart';
 import '../../l10n/app_localizations.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/service/player_service.dart';
+import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
 import '../app_config.dart';
 import '../routing_manager.dart';
 
-class MobileMusicPodApp extends StatefulWidget with WatchItStatefulWidgetMixin {
+class MobileMusicPodApp extends ConsumerStatefulWidget {
   const MobileMusicPodApp({super.key, this.accent});
 
   final Color? accent;
 
   @override
-  State<MobileMusicPodApp> createState() => _MobileMusicPodAppState();
+  ConsumerState<MobileMusicPodApp> createState() => _MobileMusicPodAppState();
 }
 
-class _MobileMusicPodAppState extends State<MobileMusicPodApp> {
+class _MobileMusicPodAppState extends ConsumerState<MobileMusicPodApp> {
   late final AppLifecycleListener _listener;
   @override
   void initState() {
@@ -39,15 +41,14 @@ class _MobileMusicPodAppState extends State<MobileMusicPodApp> {
 
   Future<void> _onStateChanged(AppLifecycleState state) async {
     if (state == AppLifecycleState.paused) {
-      await di<PlayerManager>().persistPlayerState();
+      await di<PlayerService>().persistPlayerState();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final themeIndex = watchPropertyValue((SettingsManager m) => m.themeIndex);
-
-    final routingManager = di<RoutingManager>();
+    final themeIndex =
+        ref.watch(settingsIntManagerProvider(SPKeys.themeIndex)) ?? 0;
 
     final light = lightBaseTheme(widget.accent ?? kMusicPodDefaultColor);
     final phoenixLightWithFont = isLinux
@@ -59,7 +60,7 @@ class _MobileMusicPodAppState extends State<MobileMusicPodApp> {
         : applyChineseFontToTheme(theme: dark);
 
     return MaterialApp.router(
-      routerConfig: routingManager.router,
+      routerConfig: ref.watch(routingManagerProvider.notifier).router,
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.values[themeIndex],
       theme: phoenixLightWithFont,

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podcast_search/podcast_search.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../extensions/country_x.dart';
+import '../../extensions/platform_x.dart';
+import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
 import 'icons.dart';
 import 'theme.dart';
 
-class CountryAutoComplete extends StatelessWidget with WatchItMixin {
+class CountryAutoComplete extends ConsumerWidget {
   const CountryAutoComplete({
     super.key,
     this.onSelected,
@@ -49,11 +51,10 @@ class CountryAutoComplete extends StatelessWidget with WatchItMixin {
   final bool autofocus;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.theme;
-    final useYaruTheme = watchPropertyValue(
-      (SettingsManager m) => m.useYaruTheme,
-    );
+    final useYaruTheme =
+        ref.watch(settingsBoolManagerProvider(SPKeys.useYaruTheme)) ?? isLinux;
     final inputHeight = getInputHeight();
 
     return SizedBox(

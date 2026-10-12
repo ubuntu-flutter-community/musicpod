@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gtk/gtk.dart';
 
 import '../../common/view/error_page.dart';
@@ -20,11 +20,22 @@ class MusicPod extends StatefulWidget {
 
 class _MusicPodState extends State<MusicPod> {
   late Future<void> _allReady;
+  late final ProviderContainer _container = ProviderContainer();
 
   @override
   void initState() {
     super.initState();
-    _allReady = configureDependencies();
+    _allReady = configureDependencies().then((_) {
+      if (!di.isRegistered<ProviderContainer>()) {
+        di.registerSingleton<ProviderContainer>(_container);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _container.dispose();
+    super.dispose();
   }
 
   @override
@@ -43,13 +54,16 @@ class _MusicPodState extends State<MusicPod> {
               )
             : (snapshot.hasData ||
                   snapshot.connectionState == ConnectionState.done)
-            ? isLinux
-                  ? GtkApplication(
-                      onCommandLine: (args) =>
-                          di<PlayerService>().playPath(args.firstOrNull),
-                      child: const YaruMusicPodApp(),
-                    )
-                  : const MaterialMusicPodApp()
+            ? UncontrolledProviderScope(
+                container: _container,
+                child: isLinux
+                    ? GtkApplication(
+                        onCommandLine: (args) =>
+                            di<PlayerService>().playPath(args.firstOrNull),
+                        child: const YaruMusicPodApp(),
+                      )
+                    : const MaterialMusicPodApp(),
+              )
             : const SplashScreen(),
       );
     },

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:yaru/yaru.dart' show YaruWindowTitleBar;
 
@@ -18,11 +17,6 @@ Future<void> main(List<String> args) async {
   PaintingBinding.instance.imageCache.maximumSize = 100;
 
   FlutterError.onError = Logger.fe;
-
-  Command.globalExceptionHandler =
-      (CommandError<dynamic> error, StackTrace stackTrace) {
-        Logger.e(error.error, trace: stackTrace, tag: 'CommandError');
-      };
 
   if (isWindows) {
     await SystemTheme.accentColor.load();

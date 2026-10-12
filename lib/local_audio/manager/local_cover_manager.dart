@@ -1,38 +1,15 @@
 import 'dart:typed_data';
 
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../common/util/family.dart';
-import '../../extensions/command_x.dart';
+import '../../dependencies.dart';
 import '../service/local_cover_service.dart';
 
-@injectable
-class LocalCoverManager {
-  LocalCoverManager._({
-    required int albumId,
-    required LocalCoverService localCoverService,
-  }) {
-    command = Command.createAsyncNoParam(
-      () => localCoverService.getCover(albumId: albumId),
-      initialValue: null,
-    );
-    command.run();
-  }
+part 'local_cover_manager.g.dart';
 
-  @factoryMethod
-  factory LocalCoverManager.create({
-    @factoryParam required int albumId,
-    required LocalCoverService localCoverService,
-  }) => Family.of(
-    albumId,
-    () => LocalCoverManager._(
-      albumId: albumId,
-      localCoverService: localCoverService,
-    ),
-    shouldDispose: (m) => m.command.safeToDispose,
-    onDispose: (m) => m.command.dispose(),
-  );
-
-  late final Command<void, Uint8List?> command;
+@riverpod
+class LocalCoverManager extends _$LocalCoverManager {
+  @override
+  Future<Uint8List?> build(int albumId) =>
+      di<LocalCoverService>().getCover(albumId: albumId);
 }

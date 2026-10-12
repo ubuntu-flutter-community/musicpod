@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/routing_manager.dart';
 import '../data/audio.dart';
@@ -9,13 +9,13 @@ import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../local_audio/view/genre_page.dart';
 
-class GenreBar extends StatelessWidget {
+class GenreBar extends ConsumerWidget {
   const GenreBar({super.key, required this.audios});
 
   final List<Audio> audios;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final style = context.theme.pageHeaderDescription;
     final Set<String> genres = {};
     for (var e in audios) {
@@ -39,10 +39,12 @@ class GenreBar extends StatelessWidget {
                     style: style,
                     wrapInFlexible: false,
                     text: e,
-                    onTap: () => di<RoutingManager>().push(
-                      builder: (context) => GenrePage(genre: e),
-                      pageId: e,
-                    ),
+                    onTap: () => ref
+                        .read(routingManagerProvider.notifier)
+                        .push(
+                          builder: (context) => GenrePage(genre: e),
+                          pageId: e,
+                        ),
                   ),
                   if (i != genres.length - 1) const Text(' · '),
                 ],

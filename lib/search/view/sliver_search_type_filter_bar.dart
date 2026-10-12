@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/common_control_panel.dart';
 import '../../extensions/build_context_x.dart';
@@ -7,18 +7,24 @@ import '../../local_audio/data/local_search_result.dart';
 import '../manager/search_manager.dart';
 import '../data/search_type.dart';
 
-class SearchTypeFilterBar extends StatelessWidget with WatchItMixin {
+class SearchTypeFilterBar extends ConsumerWidget {
   const SearchTypeFilterBar({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final searchManager = di<SearchManager>();
-    final searchType = watchValue((SearchManager m) => m.searchType);
-    final searchTypes = watchValue((SearchManager m) => m.searchTypes);
-    final localSearchResult = watchValue(
-      (SearchManager m) => m.localSearchResult,
+  Widget build(BuildContext context, WidgetRef ref) {
+    final searchManager = ref.read(searchManagerProvider.notifier);
+    final searchType = ref.watch(
+      searchManagerProvider.select((s) => s.searchType),
     );
-    final searchQuery = watchValue((SearchManager m) => m.searchQuery);
+    final searchTypes = ref.watch(
+      searchManagerProvider.select((s) => s.searchTypes),
+    );
+    final localSearchResult = ref.watch(
+      searchManagerProvider.select((s) => s.localSearchResult),
+    );
+    final searchQuery = ref.watch(
+      searchManagerProvider.select((s) => s.searchQuery),
+    );
 
     return CommonControlPanel(
       onSelected: (i) {

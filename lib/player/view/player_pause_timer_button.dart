@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/view/icons.dart';
@@ -9,8 +9,7 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';
 import '../../extensions/platform_x.dart';
-
-import '../manager/player_manager.dart';
+import '../manager/pause_timer_manager.dart';
 
 Duration durationUntilNextTimeOfDay({
   required TimeOfDay targetTime,
@@ -31,16 +30,16 @@ Duration durationUntilNextTimeOfDay({
   return targetDateTime.difference(now);
 }
 
-class PlayerPauseTimerButton extends StatelessWidget with WatchItMixin {
+class PlayerPauseTimerButton extends ConsumerWidget {
   const PlayerPauseTimerButton({super.key, this.iconColor});
 
   final Color? iconColor;
 
   @override
-  Widget build(BuildContext context) {
-    final timer = watchPropertyValue((PlayerManager m) => m.timer);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isTimerActive = ref.watch(pauseTimerManagerProvider);
     return IconButton(
-      isSelected: timer != null,
+      isSelected: isTimerActive,
       tooltip: context.l10n.schedulePlaybackStopTimer,
       onPressed: () => showModal(
         context: context,
@@ -48,21 +47,21 @@ class PlayerPauseTimerButton extends StatelessWidget with WatchItMixin {
         content: isMobile ? const _BottomSheet() : const _Dialog(),
       ),
       icon: Icon(
-        timer != null ? Iconz.sleepFilled : Iconz.sleep,
+        isTimerActive ? Iconz.sleepFilled : Iconz.sleep,
         color: iconColor,
       ),
     );
   }
 }
 
-class _Dialog extends StatefulWidget {
+class _Dialog extends ConsumerStatefulWidget {
   const _Dialog();
 
   @override
-  State<_Dialog> createState() => _DialogState();
+  ConsumerState<_Dialog> createState() => _DialogState();
 }
 
-class _DialogState extends State<_Dialog> {
+class _DialogState extends ConsumerState<_Dialog> {
   TimeOfDay _timeOfDay = TimeOfDay.now();
   @override
   Widget build(BuildContext context) {
@@ -79,10 +78,9 @@ class _DialogState extends State<_Dialog> {
       actions: [
         TextButton(
           onPressed: () {
-            di<PlayerManager>().setTimer(
-              null,
-              message: context.l10n.playbackTimerCancelled,
-            );
+            ref
+                .read(pauseTimerManagerProvider.notifier)
+                .setTimer(null, message: context.l10n.playbackTimerCancelled);
             context.pop();
           },
           child: Text(context.l10n.cancel),
@@ -93,10 +91,12 @@ class _DialogState extends State<_Dialog> {
               targetTime: _timeOfDay,
               now: DateTime.now(),
             );
-            di<PlayerManager>().setTimer(
-              duration,
-              message: context.l10n.playbackWasPausedByTimer,
-            );
+            ref
+                .read(pauseTimerManagerProvider.notifier)
+                .setTimer(
+                  duration,
+                  message: context.l10n.playbackWasPausedByTimer,
+                );
             context.toast(
               Text(
                 context.l10n.playbackWillStopIn(
@@ -114,14 +114,14 @@ class _DialogState extends State<_Dialog> {
   }
 }
 
-class _BottomSheet extends StatefulWidget {
+class _BottomSheet extends ConsumerStatefulWidget {
   const _BottomSheet();
 
   @override
-  State<_BottomSheet> createState() => _BottomSheetState();
+  ConsumerState<_BottomSheet> createState() => _BottomSheetState();
 }
 
-class _BottomSheetState extends State<_BottomSheet> {
+class _BottomSheetState extends ConsumerState<_BottomSheet> {
   TimeOfDay _timeOfDay = TimeOfDay.now();
   @override
   Widget build(BuildContext context) {
@@ -156,10 +156,13 @@ class _BottomSheetState extends State<_BottomSheet> {
                           children: [
                             TextButton(
                               onPressed: () {
-                                di<PlayerManager>().setTimer(
-                                  null,
-                                  message: context.l10n.playbackTimerCancelled,
-                                );
+                                ref
+                                    .read(pauseTimerManagerProvider.notifier)
+                                    .setTimer(
+                                      null,
+                                      message:
+                                          context.l10n.playbackTimerCancelled,
+                                    );
                                 context.pop();
                               },
                               child: Text(context.l10n.cancel),
@@ -170,11 +173,13 @@ class _BottomSheetState extends State<_BottomSheet> {
                                   targetTime: _timeOfDay,
                                   now: DateTime.now(),
                                 );
-                                di<PlayerManager>().setTimer(
-                                  duration,
-                                  message:
-                                      context.l10n.playbackWasPausedByTimer,
-                                );
+                                ref
+                                    .read(pauseTimerManagerProvider.notifier)
+                                    .setTimer(
+                                      duration,
+                                      message:
+                                          context.l10n.playbackWasPausedByTimer,
+                                    );
                                 context.toast(
                                   Text(
                                     context.l10n.playbackWillStopIn(

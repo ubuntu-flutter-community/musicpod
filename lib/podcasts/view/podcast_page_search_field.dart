@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/view/icons.dart';
 import '../../common/view/sliver_app_bar_bottom_space.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../data/podcast_episode_filter.dart';
 import '../manager/episodes_manager.dart';
 
-class PodcastPageSearchField extends StatefulWidget
-    with WatchItStatefulWidgetMixin {
+class PodcastPageSearchField extends ConsumerStatefulWidget {
   const PodcastPageSearchField({
     super.key,
     required this.feedUrl,
@@ -20,17 +20,21 @@ class PodcastPageSearchField extends StatefulWidget
   final bool sliver;
 
   @override
-  State<PodcastPageSearchField> createState() => _PodcastPageSearchFieldState();
+  ConsumerState<PodcastPageSearchField> createState() =>
+      _PodcastPageSearchFieldState();
 }
 
-class _PodcastPageSearchFieldState extends State<PodcastPageSearchField> {
+class _PodcastPageSearchFieldState
+    extends ConsumerState<PodcastPageSearchField> {
   late TextEditingController _textEditingController;
+
   @override
   void initState() {
     super.initState();
-    _textEditingController = TextEditingController(
-      text: di<EpisodesManager>(param1: widget.feedUrl).searchQuery.value,
-    );
+    final initialQuery =
+        ref.read(episodesManagerProvider(widget.feedUrl)).value?.searchQuery ??
+        '';
+    _textEditingController = TextEditingController(text: initialQuery);
   }
 
   @override
@@ -42,10 +46,11 @@ class _PodcastPageSearchFieldState extends State<PodcastPageSearchField> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final filter = watchValue(
-      (EpisodesManager m) => m.filter,
-      param1: widget.feedUrl,
-    ).localize(l10n);
+    final episodesState = ref
+        .watch(episodesManagerProvider(widget.feedUrl))
+        .value;
+    final filter = (episodesState?.filter ?? PodcastEpisodeFilter.title)
+        .localize(l10n);
 
     final field = Padding(
       padding: const EdgeInsets.symmetric(horizontal: kLargestSpace),
@@ -57,7 +62,9 @@ class _PodcastPageSearchFieldState extends State<PodcastPageSearchField> {
           decoration: InputDecoration(
             label: Text(l10n.search),
             prefix: InkWell(
-              onTap: di<EpisodesManager>(param1: widget.feedUrl).setFilter,
+              onTap: ref
+                  .read(episodesManagerProvider(widget.feedUrl).notifier)
+                  .setFilter,
               child: Text('$filter: '),
             ),
             suffixIcon: IconButton(
@@ -70,22 +77,25 @@ class _PodcastPageSearchFieldState extends State<PodcastPageSearchField> {
                   ),
                 ),
               ),
-              onPressed: di<EpisodesManager>(
-                param1: widget.feedUrl,
-              ).toggleShowSearch,
+              onPressed: ref
+                  .read(episodesManagerProvider(widget.feedUrl).notifier)
+                  .toggleShowSearch,
               icon: Icon(Iconz.search, semanticLabel: context.l10n.search),
             ),
           ),
-          onChanged: di<EpisodesManager>(param1: widget.feedUrl).setSearchQuery,
+          onChanged: ref
+              .read(episodesManagerProvider(widget.feedUrl).notifier)
+              .setSearchQuery,
         ),
       ),
     );
 
-    if (!widget.sliver)
+    if (!widget.sliver) {
       return Padding(
         padding: const EdgeInsets.only(top: kLargestSpace),
         child: field,
       );
+    }
 
     return SliverPadding(
       padding: const EdgeInsets.only(bottom: 10),

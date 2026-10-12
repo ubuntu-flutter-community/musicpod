@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/icons.dart';
 import '../../common/view/modals.dart';
@@ -8,10 +8,10 @@ import '../../common/view/safe_network_image.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/platform_x.dart';
-import '../../player/manager/mpv_metadata_manager.dart';
+import '../../player/manager/mpv_metadata_history_manager.dart';
 import '../manager/online_art_manager.dart';
 
-class RadioHistoryTileImage extends StatelessWidget with WatchItMixin {
+class RadioHistoryTileImage extends ConsumerWidget {
   const RadioHistoryTileImage({
     super.key,
     required this.icyTitle,
@@ -26,12 +26,9 @@ class RadioHistoryTileImage extends StatelessWidget with WatchItMixin {
   final BoxFit? fit;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final bR = BorderRadius.circular(4);
-    final imageUrl = watchValue(
-      (OnlineArtManager m) => m.command,
-      param1: icyTitle,
-    );
+    final imageUrl = ref.watch(onlineArtManagerProvider(icyTitle)).value;
 
     return Tooltip(
       message: context.l10n.metadata,
@@ -40,7 +37,9 @@ class RadioHistoryTileImage extends StatelessWidget with WatchItMixin {
         child: InkWell(
           borderRadius: bR,
           onTap: () {
-            final metadata = di<MpvMetadataManager>().getMetadata(icyTitle);
+            final metadata = ref
+                .read(mpvMetadataHistoryManagerProvider.notifier)
+                .getMetadata(icyTitle);
             if (metadata == null) return;
             showModal(
               mode: ModalMode.platformModalMode,

@@ -2,20 +2,20 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' hide StreamProvider;
 
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
+import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/command_x.dart';
-import '../../local_audio/manager/find_album_manager.dart';
 import '../../local_audio/manager/liked_audios_manager.dart';
+import '../../local_audio/service/local_audio_service.dart';
 import '../../local_audio/data/playlist_action.dart';
 import '../../local_audio/manager/playlist_ids_manager.dart';
 import '../../local_audio/view/add_to_playlist_dialog.dart';
 import '../../local_audio/view/album_page.dart';
 import '../../local_audio/view/artist_page.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/queue_manager.dart';
 import '../data/audio.dart';
 import '../data/audio_type.dart';
 import 'audio_tile_image.dart';
@@ -28,7 +28,7 @@ import 'stream_provider_share_button.dart';
 import 'theme.dart';
 import 'ui_constants.dart';
 
-class AudioTileBottomSheet extends StatelessWidget {
+class AudioTileBottomSheet extends ConsumerWidget {
   const AudioTileBottomSheet({
     super.key,
     required this.allowRemove,
@@ -47,9 +47,9 @@ class AudioTileBottomSheet extends StatelessWidget {
   final List<Audio> audios;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final routingManager = di<RoutingManager>();
+    final routingManager = ref.read(routingManagerProvider.notifier);
     return BottomSheet(
       enableDrag: false,
       onClosing: () {},
@@ -117,7 +117,9 @@ class AudioTileBottomSheet extends StatelessWidget {
                             children: [
                               _Button(
                                 onPressed: () {
-                                  di<PlayerManager>().insertIntoQueue(audios);
+                                  ref
+                                      .read(queueManagerProvider.notifier)
+                                      .insertIntoQueue(audios);
                                   context
                                     ..pop()
                                     ..toast(
@@ -137,15 +139,31 @@ class AudioTileBottomSheet extends StatelessWidget {
                               _Button(
                                 onPressed: () {
                                   playlistId == PageIDs.likedAudios
-                                      ? di<LikedAudiosManager>()
+                                      ? ProviderScope.containerOf(
+                                              context,
+                                              listen: false,
+                                            )
+                                            .read(
+                                              likedAudiosManagerProvider
+                                                  .notifier,
+                                            )
                                             .removeLikedAudios(audios)
-                                      : di<PlaylistIDsManager>().command.run(
-                                          PlaylistChange(
-                                            id: playlistId,
-                                            audios: audios,
-                                            action: PlaylistAction.removeFrom,
-                                          ),
-                                        );
+                                      : ProviderScope.containerOf(
+                                              context,
+                                              listen: false,
+                                            )
+                                            .read(
+                                              playlistIDsManagerProvider
+                                                  .notifier,
+                                            )
+                                            .createOrChangePlaylist(
+                                              PlaylistChange(
+                                                id: playlistId,
+                                                audios: audios,
+                                                action:
+                                                    PlaylistAction.removeFrom,
+                                              ),
+                                            );
                                   context.pop();
                                 },
                                 icon: Icon(Iconz.remove),
@@ -216,9 +234,8 @@ class AudioTileBottomSheet extends StatelessWidget {
                           onTap: () async {
                             final albumId = audios.firstOrNull?.albumDbId;
                             if (albumId != null) {
-                              final albumAudios = await di<FindAlbumManager>(
-                                param1: albumId,
-                              ).command.runRestrictedAsync();
+                              final albumAudios = await di<LocalAudioService>()
+                                  .findAlbum(albumId);
                               if (albumAudios != null) {
                                 unawaited(
                                   routingManager.push(

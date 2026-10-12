@@ -1,70 +1,69 @@
 import 'dart:async';
 
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../common/data/app_exceptions.dart';
 import '../common/logging.dart';
 import '../common/view/audio_page_type.dart';
-import '../extensions/command_x.dart';
-import '../local_audio/manager/find_album_manager.dart';
-import '../local_audio/manager/find_titles_of_artist_manager.dart';
-import '../local_audio/manager/liked_audios_manager.dart';
-import '../local_audio/manager/playlist_manager.dart';
-import '../player/manager/player_manager.dart';
-import '../podcasts/manager/episodes_manager.dart';
+import '../dependencies.dart';
+import '../local_audio/service/local_audio_service.dart';
+import '../player/manager/play_pause_manager.dart';
+import '../player/manager/queue_manager.dart';
+import '../podcasts/service/podcast_service.dart';
 import '../radio/manager/station_manager.dart';
+import '../radio/service/radio_service.dart';
 import 'data/play_anywhere_bad_audios_exception.dart';
 import 'data/play_anywhere_param.dart';
 import 'data/play_anywhere_result.dart';
 
-import '../common/util/family.dart';
+part 'play_anywhere_manager.g.dart';
 
-@injectable
-class PlayAnywhereManager {
-  final PlayerManager _playerManager;
+@Riverpod(keepAlive: true)
+class PlayAnywhereManager extends _$PlayAnywhereManager {
+  PlayAnywhereParam? _activeParam;
+  PlayAnywhereParam? get activeParam => _activeParam;
 
-  PlayAnywhereManager._({required PlayerManager playerManager})
-    : _playerManager = playerManager {
+  @override
+  AsyncValue<PlayAnywhereResult?> build() {
     Logger.o(tag: '$PlayAnywhereManager');
+    return const AsyncData(null);
   }
 
-  @factoryMethod
-  static PlayAnywhereManager create({required PlayerManager playerManager}) =>
-      Family.of(
-        '$PlayAnywhereManager',
-        () => PlayAnywhereManager._(playerManager: playerManager),
-        shouldDispose: (m) => m.command.safeToDispose,
-        onDispose: (m) => m.command.dispose(),
-      );
+  Future<PlayAnywhereResult?> play(PlayAnywhereParam param) async {
+    _activeParam = param;
+    state = const AsyncLoading();
 
-  late final Command<PlayAnywhereParam, PlayAnywhereResult?> command =
-      Command.createAsync(
-        (param) => _playAudiosById(param).timeout(
-          PlayAudiosByIdTimeoutException.timeoutDuration,
-          onTimeout: () {
-            throw PlayAudiosByIdTimeoutException(param.pageId);
-          },
-        ),
-        initialValue: null,
+    state = await AsyncValue.guard(() {
+      return _playAudiosById(param).timeout(
+        PlayAudiosByIdTimeoutException.timeoutDuration,
+        onTimeout: () {
+          throw PlayAudiosByIdTimeoutException(param.pageId);
+        },
       );
+    });
+
+    _activeParam = null;
+    return state.value;
+  }
 
   Future<PlayAnywhereResult?> _playAudiosById(PlayAnywhereParam param) async {
     final result = await _getAudiosById(param: param);
 
     if (result == null || result.audios.isEmpty) {
       throw PlayAnywhereBadAudiosException(
-        result ?? PlayAnywhereResult(audios: [], param: param),
+        result ?? PlayAnywhereResult(audios: const [], param: param),
       );
     }
 
-    final isEnQueued = _playerManager.queue.name == param.pageId;
+    final isEnQueued = ref.read(queueManagerProvider).name == param.pageId;
     if (isEnQueued) {
-      _playerManager.isPlaying
-          ? await _playerManager.pause()
-          : await _playerManager.resume();
+      ref.read(playPauseManagerProvider)
+          ? await ref.read(playPauseManagerProvider.notifier).pause()
+          : await ref.read(playPauseManagerProvider.notifier).resume();
     } else {
-      await _playerManager.play(audios: result.audios, listName: param.pageId);
+      await ref
+          .read(playPauseManagerProvider.notifier)
+          .play(audios: result.audios, listName: param.pageId);
     }
 
     return result;
@@ -75,46 +74,41 @@ class PlayAnywhereManager {
   }) async => switch (param.audioPageType) {
     AudioPageType.playlist => PlayAnywhereResult(
       audios:
-          await di<PlaylistManager>(
-            param1: param.pageId,
-          ).command.runRestrictedAsync() ??
-          [],
+          await di<LocalAudioService>().findPlaylistById(param.pageId) ?? [],
       param: param,
     ),
     AudioPageType.likedAudio => PlayAnywhereResult(
-      audios: await di<LikedAudiosManager>().command.runRestrictedAsync(),
+      audios: await di<LocalAudioService>().findLikedAudios(),
       param: param,
     ),
     AudioPageType.album => PlayAnywhereResult(
       audios:
-          await di<FindAlbumManager>(
-            param1: int.parse(param.pageId),
-          ).command.runRestrictedAsync() ??
+          await di<LocalAudioService>().findAlbum(int.parse(param.pageId)) ??
           [],
       param: param,
     ),
     AudioPageType.radio => PlayAnywhereResult(
       audios: [
-        ?(await di<StationManager>(
-          param1: param.pageId,
-        ).command.runRestrictedAsync(param: (fromDbOnly: false))),
+        ?(await ref
+                .read(stationManagerProvider(param.pageId).future)
+                .catchError((_) => null) ??
+            await di<RadioService>().getAudioByUUID(
+              param.pageId,
+              fromDBOnly: false,
+            )),
       ],
       param: param,
     ),
     AudioPageType.podcast => PlayAnywhereResult(
-      audios:
-          (await di<EpisodesManager>(
-            param1: param.pageId,
-          ).command.runRestrictedAsync())?.episodes ??
-          [],
+      audios: await di<PodcastService>().findEpisodes(
+        feedUrl: param.pageId,
+        tryFromDbOnly: true,
+      ),
       param: param,
     ),
     AudioPageType.artist => PlayAnywhereResult(
       audios:
-          await di<FindTitlesOfArtistManager>(
-            param1: param.pageId,
-          ).command.runRestrictedAsync() ??
-          [],
+          await di<LocalAudioService>().findTitlesOfArtist(param.pageId) ?? [],
       param: param,
     ),
     _ => null,

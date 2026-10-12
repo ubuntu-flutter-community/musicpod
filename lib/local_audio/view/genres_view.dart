@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/routing_manager.dart';
@@ -10,7 +10,7 @@ import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import 'genre_page.dart';
 
-class GenresView extends StatelessWidget {
+class GenresView extends ConsumerWidget {
   const GenresView({
     super.key,
     this.genres,
@@ -22,7 +22,7 @@ class GenresView extends StatelessWidget {
   final Widget? noResultMessage, noResultIcon;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     if (genres == null) {
       return const SliverFillRemainingProgress();
     }
@@ -42,10 +42,12 @@ class GenresView extends StatelessWidget {
         final textColor = contrastColor(color);
         return YaruSelectableContainer(
           selected: false,
-          onTap: () => di<RoutingManager>().push(
-            builder: (_) => GenrePage(genre: text),
-            pageId: text,
-          ),
+          onTap: () => ref
+              .read(routingManagerProvider.notifier)
+              .push(
+                builder: (_) => GenrePage(genre: text),
+                pageId: text,
+              ),
           borderRadius: BorderRadius.circular(300),
           child: Stack(
             alignment: Alignment.center,

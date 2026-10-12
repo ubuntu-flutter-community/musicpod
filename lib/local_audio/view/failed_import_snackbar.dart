@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
+import '../../dependencies.dart';
+
 import '../../extensions/build_context_x.dart';
+import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
 
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason>?
@@ -12,19 +15,33 @@ showFailedImportsSnackBarIfNotBlocked({
   bool failedToImport = false,
 }) {
   if (context.mounted == false) return null;
-  final settingsManager = di<SettingsManager>();
+  final container = di.isRegistered<ProviderContainer>()
+      ? di<ProviderContainer>()
+      : ProviderScope.containerOf(context, listen: false);
+  final neverShow =
+      container.read(
+        settingsBoolManagerProvider(SPKeys.neverShowImportFails),
+      ) ??
+      false;
   final l10n = context.l10n;
-  if (settingsManager.neverShowFailedImports) return null;
+  if (neverShow) return null;
   return context.toast(
     _Content(
       message: failedToImport ? l10n.failedToImport : l10n.failedToReadMetadata,
       failedImports: failedImports,
-      onNeverShowFailedImports: () =>
-          settingsManager.setNeverShowFailedImports(true),
+      onNeverShowFailedImports: () => container
+          .read(
+            settingsBoolManagerProvider(SPKeys.neverShowImportFails).notifier,
+          )
+          .set(true),
     ),
     action: SnackBarAction(
       onPressed: () {
-        settingsManager.setNeverShowFailedImports(true);
+        container
+            .read(
+              settingsBoolManagerProvider(SPKeys.neverShowImportFails).notifier,
+            )
+            .set(true);
         ScaffoldMessenger.of(context).clearSnackBars();
       },
       label: context.l10n.dontShowAgain,

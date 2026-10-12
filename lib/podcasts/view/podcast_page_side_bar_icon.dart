@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/icons.dart';
 import '../../common/view/safe_network_image.dart';
@@ -7,17 +7,17 @@ import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
 import '../manager/podcast_short_info_manager.dart';
 
-class PodcastPageSideBarIcon extends StatelessWidget with WatchItMixin {
+class PodcastPageSideBarIcon extends ConsumerWidget {
   const PodcastPageSideBarIcon({super.key, required this.feedUrl});
 
   final String feedUrl;
 
   @override
-  Widget build(BuildContext context) {
-    final imageUrl = watchValue(
-      (PodcastShortInfoManager m) => m.command,
-      param1: feedUrl,
-    )?.imageUrl;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final imageUrl = ref
+        .watch(podcastShortInfoManagerProvider(feedUrl))
+        .value
+        ?.imageUrl;
     if (imageUrl == null) {
       return SideBarFallBackImage(child: Icon(Iconz.podcast));
     }

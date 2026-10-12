@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/duration_manager.dart';
+import '../../player/manager/position_manager.dart';
 
-class PodcastTileProgress extends StatelessWidget with WatchItMixin {
+class PodcastTileProgress extends ConsumerWidget {
   const PodcastTileProgress({
     super.key,
     this.lastPosition,
@@ -19,19 +20,15 @@ class PodcastTileProgress extends StatelessWidget with WatchItMixin {
   final bool selected;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.theme;
 
     final pos =
-        (selected
-            ? watchPropertyValue((PlayerManager m) => m.position)
-            : lastPosition) ??
+        (selected ? ref.watch(positionManagerProvider) : lastPosition) ??
         const Duration(seconds: 0);
 
     final dur =
-        (selected
-            ? watchPropertyValue((PlayerManager m) => m.duration)
-            : duration) ??
+        (selected ? ref.watch(durationManagerProvider) : duration) ??
         const Duration(seconds: 1);
 
     final sliderActive = dur.inSeconds > 0 && dur.inSeconds >= pos.inSeconds;

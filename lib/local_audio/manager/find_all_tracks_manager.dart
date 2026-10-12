@@ -1,29 +1,17 @@
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../common/data/audio.dart';
-import '../../common/util/family.dart';
-import '../../extensions/command_x.dart';
+import '../../dependencies.dart';
+import '../service/local_audio_service.dart';
 import 'local_audio_manager.dart';
 
-@injectable
-class FindAllTracksManager {
-  FindAllTracksManager._(LocalAudioManager localAudioManager) {
-    command = Command.createAsyncNoParam(
-      localAudioManager.findAllTracks,
-      initialValue: null,
-    );
-    command.run();
+part 'find_all_tracks_manager.g.dart';
+
+@riverpod
+class FindAllTracksManager extends _$FindAllTracksManager {
+  @override
+  Future<List<Audio>> build() async {
+    await ref.watch(localAudioManagerProvider.future);
+    return di<LocalAudioService>().findAllTracks();
   }
-
-  @factoryMethod
-  static FindAllTracksManager create(LocalAudioManager localAudioManager) =>
-      Family.of(
-        '$FindAllTracksManager',
-        () => FindAllTracksManager._(localAudioManager),
-        shouldDispose: (m) => m.command.safeToDispose,
-        onDispose: (m) => m.command.dispose(),
-      );
-
-  late final Command<void, List<Audio>?> command;
 }

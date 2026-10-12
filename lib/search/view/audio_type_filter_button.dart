@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/data/audio_type.dart';
 import '../../common/view/modals.dart';
@@ -21,14 +21,16 @@ class AudioTypeFilterButton extends StatelessWidget {
   };
 }
 
-class AudioTypeFilterSwitcher extends StatelessWidget with WatchItMixin {
+class AudioTypeFilterSwitcher extends ConsumerWidget {
   const AudioTypeFilterSwitcher({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final searchManager = di<SearchManager>();
-    final audioType = watchValue((SearchManager m) => m.audioType);
+    final searchManager = ref.read(searchManagerProvider.notifier);
+    final audioType = ref.watch(
+      searchManagerProvider.select((s) => s.audioType),
+    );
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -72,15 +74,16 @@ class AudioTypeFilterSwitcher extends StatelessWidget with WatchItMixin {
   }
 }
 
-class AudioTypeFilterBottomSheetButton extends StatelessWidget
-    with WatchItMixin {
+class AudioTypeFilterBottomSheetButton extends ConsumerWidget {
   const AudioTypeFilterBottomSheetButton({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final searchManager = di<SearchManager>();
-    final audioType = watchValue((SearchManager m) => m.audioType);
+    final searchManager = ref.read(searchManagerProvider.notifier);
+    final audioType = ref.watch(
+      searchManagerProvider.select((s) => s.audioType),
+    );
 
     return IconButton(
       padding: EdgeInsets.zero,

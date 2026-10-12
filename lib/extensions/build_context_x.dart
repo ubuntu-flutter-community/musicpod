@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:yaru/yaru.dart';
 
 import '../common/view/ui_constants.dart';
@@ -34,7 +35,7 @@ extension BuildContextX on BuildContext {
   void pop<T extends Object?>([T? result]) => navigator.pop(result);
   ScaffoldFeatureController<SnackBar, SnackBarClosedReason> toast(
     Widget content, {
-    Duration duration = const Duration(seconds: 2),
+    Duration duration = const Duration(seconds: 12),
     SnackBarAction? action,
     bool clear = true,
     bool showCloseIcon = false,
@@ -58,11 +59,29 @@ extension BuildContextX on BuildContext {
     if (clear) {
       messenger.clearSnackBars();
     }
+    final String? textToCopy = switch (content) {
+      Text(data: final text?) => text,
+      Text(textSpan: final span?) => span.toPlainText(),
+      _ => null,
+    };
+    SnackBarAction? effectiveAction = action;
+    if (effectiveAction == null &&
+        textToCopy != null &&
+        textToCopy.isNotEmpty) {
+      String label = '📋';
+      try {
+        label = l10n.copyToClipBoard;
+      } catch (_) {}
+      effectiveAction = SnackBarAction(
+        label: label,
+        onPressed: () => Clipboard.setData(ClipboardData(text: textToCopy)),
+      );
+    }
     return messenger.showSnackBar(
       SnackBar(
         content: content,
         duration: duration,
-        action: action,
+        action: effectiveAction,
         showCloseIcon: showCloseIcon,
         actionOverflowThreshold: actionOverflowThreshold ?? 0.65,
         backgroundColor: backgroundColor,

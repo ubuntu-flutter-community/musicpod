@@ -1,59 +1,49 @@
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../app/page_ids.dart';
 import '../../common/data/audio.dart';
-import '../../common/util/family.dart';
-import '../../extensions/command_x.dart';
+import '../../dependencies.dart';
 import '../data/playlist_action.dart';
+import '../service/local_audio_service.dart';
 import 'liked_audio_paths_manager.dart';
 import 'local_audio_manager.dart';
 
-@injectable
-class LikedAudiosManager {
-  LikedAudiosManager._({
-    required LocalAudioManager localAudioManager,
-    required LikedAudioPathsManager pathsManager,
-  }) {
-    command = Command.createAsync((param) async {
-      if (param != null) {
-        await localAudioManager.createOrChangeLikedAudios(param);
-        pathsManager.command.run();
-      }
+part 'liked_audios_manager.g.dart';
 
-      return (await localAudioManager.findLikedAudios()) ?? [];
-    }, initialValue: []);
-    command.run();
+@Riverpod(keepAlive: true)
+class LikedAudiosManager extends _$LikedAudiosManager {
+  late final LocalAudioService _service = di<LocalAudioService>();
+
+  @override
+  Future<List<Audio>?> build() async {
+    await ref.watch(localAudioManagerProvider.future);
+    return _service.findLikedAudios();
   }
 
-  @factoryMethod
-  static LikedAudiosManager create({
-    required LocalAudioManager localAudioManager,
-    required LikedAudioPathsManager pathsManager,
-  }) => Family.of(
-    '$LikedAudiosManager',
-    () => LikedAudiosManager._(
-      localAudioManager: localAudioManager,
-      pathsManager: pathsManager,
-    ),
-    shouldDispose: (m) => m.command.safeToDispose,
-    onDispose: (m) => m.command.dispose(),
-  );
+  Future<void> createOrChangeLikedAudios(PlaylistChange param) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      await _service.createOrChangeLikedAudios(param);
+      ref.invalidate(likedAudioPathsManagerProvider);
+      return _service.findLikedAudios();
+    });
+  }
 
-  late final Command<PlaylistChange?, List<Audio>> command;
+  Future<void> addLikedAudios(List<Audio> audios) async =>
+      createOrChangeLikedAudios(
+        PlaylistChange(
+          id: PageIDs.likedAudios,
+          action: PlaylistAction.addTo,
+          audios: audios,
+        ),
+      );
 
-  void addLikedAudios(List<Audio> audios) => command.run(
-    PlaylistChange(
-      id: PageIDs.likedAudios,
-      action: PlaylistAction.addTo,
-      audios: audios,
-    ),
-  );
-  void removeLikedAudios(List<Audio> audios) => command.run(
-    PlaylistChange(
-      id: PageIDs.likedAudios,
-      action: PlaylistAction.removeFrom,
-      audios: audios,
-    ),
-  );
+  Future<void> removeLikedAudios(List<Audio> audios) async =>
+      createOrChangeLikedAudios(
+        PlaylistChange(
+          id: PageIDs.likedAudios,
+          action: PlaylistAction.removeFrom,
+          audios: audios,
+        ),
+      );
 }

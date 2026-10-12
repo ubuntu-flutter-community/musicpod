@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../extensions/duration_x.dart';
@@ -178,7 +178,7 @@ class _LocalAudioTileState extends State<LocalAudioTile> {
       widget.audio.discTotal! > 1;
 }
 
-class _AudioTileTrailing extends StatelessWidget with WatchItMixin {
+class _AudioTileTrailing extends ConsumerWidget {
   const _AudioTileTrailing({
     required this.audio,
     required this.selected,
@@ -198,10 +198,11 @@ class _AudioTileTrailing extends StatelessWidget with WatchItMixin {
   final Color selectedColor;
 
   @override
-  Widget build(BuildContext context) {
-    final liked = watchValue(
-      (LikedAudioPathsManager m) => m.command.select(
-        (paths) => audio.path != null && paths.contains(audio.path),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final liked = ref.watch(
+      likedAudioPathsManagerProvider.select(
+        (paths) =>
+            audio.path != null && (paths.value?.contains(audio.path) ?? false),
       ),
     );
 

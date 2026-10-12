@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
-import '../data/podcast_toggle_capsule.dart';
 import '../manager/subscribed_podcasts_manager.dart';
 
-class PodcastSubButton extends StatelessWidget with WatchItMixin {
+class PodcastSubButton extends ConsumerWidget {
   const PodcastSubButton({
     super.key,
     required this.pageId,
@@ -21,10 +20,10 @@ class PodcastSubButton extends StatelessWidget with WatchItMixin {
   final String artist;
 
   @override
-  Widget build(BuildContext context) {
-    final subscribed = watchValue(
-      (SubscribedPodcastsManager m) => m.command,
-    ).contains(pageId);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final subscribed =
+        ref.watch(subscribedPodcastsManagerProvider).value?.contains(pageId) ??
+        false;
 
     final disabled = pageId.isEmpty;
     return IconButton(
@@ -38,14 +37,14 @@ class PodcastSubButton extends StatelessWidget with WatchItMixin {
       ),
       onPressed: disabled
           ? null
-          : () => di<SubscribedPodcastsManager>().command.run(
-              PodcastToggleCapsule(
-                feedUrl: pageId,
-                imageUrl: imageUrl,
-                name: name,
-                artist: artist,
-              ),
-            ),
+          : () => ref
+                .read(subscribedPodcastsManagerProvider.notifier)
+                .togglePodcastSubscription(
+                  feedUrl: pageId,
+                  imageUrl: imageUrl,
+                  name: name,
+                  artist: artist,
+                ),
     );
   }
 }

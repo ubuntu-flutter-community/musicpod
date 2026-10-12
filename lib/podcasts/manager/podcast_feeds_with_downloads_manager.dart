@@ -1,33 +1,20 @@
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../common/util/family.dart';
-import '../../extensions/command_x.dart';
-import 'podcast_manager.dart';
+import '../../dependencies.dart';
+import '../service/podcast_service.dart';
 
-@injectable
-class PodcastFeedsWithDownloadsManager {
-  PodcastFeedsWithDownloadsManager._({required PodcastManager podcastManager}) {
-    command = Command.createAsyncNoParam(() async {
-      if (podcastManager.feedsWithDownloads.isEmpty) {
-        await podcastManager.loadDownloads();
-      }
+part 'podcast_feeds_with_downloads_manager.g.dart';
 
-      return podcastManager.feedsWithDownloads;
-    }, initialValue: podcastManager.feedsWithDownloads);
+@riverpod
+class PodcastFeedsWithDownloadsManager
+    extends _$PodcastFeedsWithDownloadsManager {
+  late final PodcastService _podcastService = di<PodcastService>();
 
-    command.run();
+  @override
+  Future<Set<String>> build() async {
+    if (_podcastService.feedsWithDownloads.isEmpty) {
+      await _podcastService.loadDownloads();
+    }
+    return _podcastService.feedsWithDownloads;
   }
-
-  @factoryMethod
-  static PodcastFeedsWithDownloadsManager create({
-    required PodcastManager podcastManager,
-  }) => Family.of(
-    '$PodcastFeedsWithDownloadsManager',
-    () => PodcastFeedsWithDownloadsManager._(podcastManager: podcastManager),
-    shouldDispose: (m) => m.command.safeToDispose,
-    onDispose: (m) => m.command.dispose(),
-  );
-
-  late final Command<void, Set<String>> command;
 }

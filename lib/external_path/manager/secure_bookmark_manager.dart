@@ -1,20 +1,20 @@
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../common/logging.dart';
+import '../../dependencies.dart';
 import '../service/secure_bookmark_service.dart';
 
-@lazySingleton
-class SecureBookmarkManager {
-  final SecureBookmarkService _service;
+part 'secure_bookmark_manager.g.dart';
 
-  SecureBookmarkManager({required SecureBookmarkService service})
-    : _service = service {
-    Logger.o(tag: '$SecureBookmarkManager');
+@Riverpod(keepAlive: true)
+class SecureBookmarkManager extends _$SecureBookmarkManager {
+  @override
+  bool build() => false;
+
+  Future<bool> restore() async {
+    if (state) return true;
+    final success = await di<SecureBookmarkService>()
+        .restoreAllSavedBookmarks();
+    state = success;
+    return success;
   }
-
-  late final Command<void, bool> command = Command.createAsyncNoParam(() async {
-    if (command.value == true) return true;
-    return _service.restoreAllSavedBookmarks();
-  }, initialValue: false);
 }

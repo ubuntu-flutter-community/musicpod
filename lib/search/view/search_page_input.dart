@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podcast_search/podcast_search.dart';
 import 'package:yaru/constants.dart';
 
@@ -15,22 +15,31 @@ import '../../podcasts/data/podcast_genre.dart';
 import '../../radio/manager/radio_fav_tag_manager.dart';
 import '../../radio/manager/radio_load_tags_manager.dart';
 import '../../radio/view/tag_auto_complete.dart';
+import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
 import '../manager/search_manager.dart';
 import '../data/search_type.dart';
 import 'audio_type_filter_button.dart';
 import 'podcast_search_input_prefix.dart';
 
-class SearchPageInput extends StatelessWidget with WatchItMixin {
+class SearchPageInput extends ConsumerWidget {
   const SearchPageInput({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final searchManager = di<SearchManager>();
-    final searchQuery = watchValue((SearchManager m) => m.searchQuery);
-    final searchType = watchValue((SearchManager m) => m.searchType);
-    final audioType = watchValue((SearchManager m) => m.audioType);
-    final yaruTheme = watchPropertyValue((SettingsManager m) => m.useYaruTheme);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final searchManager = ref.read(searchManagerProvider.notifier);
+    final searchQuery = ref.watch(
+      searchManagerProvider.select((s) => s.searchQuery),
+    );
+    final searchType = ref.watch(
+      searchManagerProvider.select((s) => s.searchType),
+    );
+    final audioType = ref.watch(
+      searchManagerProvider.select((s) => s.audioType),
+    );
+    final yaruTheme =
+        ref.watch(settingsBoolManagerProvider(SPKeys.useYaruTheme)) ?? isLinux;
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(yaruTheme ? kYaruButtonRadius : 100),
       child: SizedBox(
@@ -71,17 +80,16 @@ class SearchPageInput extends StatelessWidget with WatchItMixin {
   }
 }
 
-class CountryAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
+class CountryAutoCompleteWithSuffix extends ConsumerWidget {
   const CountryAutoCompleteWithSuffix({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final searchManager = di<SearchManager>();
-    final country = watchValue((SearchManager m) => m.country);
-    watchPropertyValue((SettingsManager m) => m.favoriteCountryCodeLength);
-    final favCountryCodes = watchPropertyValue(
-      (SettingsManager m) => m.favoriteCountryCode,
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final searchManager = ref.read(searchManagerProvider.notifier);
+    final country = ref.watch(searchManagerProvider.select((s) => s.country));
+    final favCountryCodes =
+        ref.watch(settingsStringListManagerProvider(SPKeys.favCountryCodes)) ??
+        <String>[];
 
     return CountryAutoComplete(
       suffixIcon: AudioTypeFilterButton(mode: OverlayMode.platformModalMode),
@@ -96,41 +104,59 @@ class CountryAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
       onSelected: (c) {
         searchManager.setCountry(c);
         if (c?.code != null) {
-          di<SettingsManager>().setLastCountryCode(c!.code);
+          ref
+              .read(
+                settingsStringManagerProvider(SPKeys.lastCountryCode).notifier,
+              )
+              .set(c!.code);
         }
         searchManager.search();
       },
       value: country,
       addFav: (v) {
-        if (country?.code == null) return;
-        di<SettingsManager>().addFavoriteCountryCode(v!.code);
+        if (v?.code == null) return;
+        ref
+            .read(
+              settingsStringListManagerProvider(
+                SPKeys.favCountryCodes,
+              ).notifier,
+            )
+            .addToStringList(v!.code);
       },
       removeFav: (v) {
-        if (country?.code == null) return;
-        di<SettingsManager>().removeFavoriteCountryCode(v!.code);
+        if (v?.code == null) return;
+        ref
+            .read(
+              settingsStringListManagerProvider(
+                SPKeys.favCountryCodes,
+              ).notifier,
+            )
+            .removeFromStringList(v!.code);
       },
-      favs: favCountryCodes,
+      favs: favCountryCodes.toSet(),
     );
   }
 }
 
-class TagAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
+class TagAutoCompleteWithSuffix extends ConsumerWidget {
   const TagAutoCompleteWithSuffix({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final searchManager = di<SearchManager>();
-    final tag = watchValue((SearchManager m) => m.tag);
-    final favRadioTags = watchValue((RadioFavTagManager m) => m.command);
-    final tags = watchValue((RadioLoadTagsManager m) => m.command);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final searchManager = ref.read(searchManagerProvider.notifier);
+    final tag = ref.watch(searchManagerProvider.select((s) => s.tag));
+    final favRadioTags = ref.watch(radioFavTagManagerProvider).value ?? {};
+    final tags = ref.watch(radioLoadTagsManagerProvider).value ?? [];
+
     return TagAutoComplete(
       suffixIcon: AudioTypeFilterButton(mode: OverlayMode.platformModalMode),
       value: tag,
       toggleFav: (tag) {
         if (tag?.name == null) return;
-        di<RadioFavTagManager>().command.run(tag!.name);
+        ref
+            .read(radioFavTagManagerProvider.notifier)
+            .toggleFavRadioTag(tag!.name);
       },
-
       favs: favRadioTags,
       onSelected: (v) {
         searchManager.setTag(v);
@@ -144,35 +170,52 @@ class TagAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
   }
 }
 
-class LanguageAutoCompleteWithSuffix extends StatelessWidget with WatchItMixin {
+class LanguageAutoCompleteWithSuffix extends ConsumerWidget {
   const LanguageAutoCompleteWithSuffix({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final language = watchValue((SearchManager m) => m.language);
-    watchPropertyValue((SettingsManager m) => m.favoriteLanguageCodeLength);
-    final favLanguageCodes = watchPropertyValue(
-      (SettingsManager m) => m.favoriteLanguageCode,
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final searchManager = ref.read(searchManagerProvider.notifier);
+    final language = ref.watch(searchManagerProvider.select((s) => s.language));
+    final favLanguageCodes =
+        ref.watch(settingsStringListManagerProvider(SPKeys.favLanguageCodes)) ??
+        <String>[];
+
     return LanguageAutoComplete(
       suffixIcon: AudioTypeFilterButton(mode: OverlayMode.platformModalMode),
       value: language,
       onSelected: (language) {
-        di<SearchManager>()
+        searchManager
           ..setLanguage(language)
           ..search();
         if (language?.isoCode != null) {
-          di<SettingsManager>().setLastLanguageCode(language!.isoCode);
+          ref
+              .read(
+                settingsStringManagerProvider(SPKeys.lastLanguageCode).notifier,
+              )
+              .set(language!.isoCode);
         }
       },
-      favs: favLanguageCodes,
+      favs: favLanguageCodes.toSet(),
       addFav: (language) {
         if (language?.isoCode == null) return;
-        di<SettingsManager>().addFavoriteLanguageCode(language!.isoCode);
+        ref
+            .read(
+              settingsStringListManagerProvider(
+                SPKeys.favLanguageCodes,
+              ).notifier,
+            )
+            .addToStringList(language!.isoCode);
       },
       removeFav: (language) {
         if (language?.isoCode == null) return;
-        di<SettingsManager>().removeFavoriteLanguageCode(language!.isoCode);
+        ref
+            .read(
+              settingsStringListManagerProvider(
+                SPKeys.favLanguageCodes,
+              ).notifier,
+            )
+            .removeFromStringList(language!.isoCode);
       },
     );
   }
