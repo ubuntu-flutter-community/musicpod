@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:yaru/yaru.dart';
@@ -66,6 +67,7 @@ extension BuildContextX on BuildContext {
     };
     SnackBarAction? effectiveAction = action;
     if (effectiveAction == null &&
+        kDebugMode &&
         textToCopy != null &&
         textToCopy.isNotEmpty) {
       String label = '📋';
