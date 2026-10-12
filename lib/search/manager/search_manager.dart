@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:podcast_search/podcast_search.dart';
@@ -13,6 +12,7 @@ import '../../common/data/audio_type.dart';
 import '../../common/logging.dart';
 import '../../common/view/languages.dart';
 import '../../extensions/command_x.dart';
+import '../../extensions/platform_x.dart';
 import '../../extensions/string_x.dart';
 import '../../local_audio/data/local_search_result.dart';
 import '../../local_audio/service/local_audio_service.dart';
@@ -42,8 +42,7 @@ class SearchManager {
       (c) =>
           c.code ==
           (settingsService.getString(SPKeys.lastCountryCode) ??
-              WidgetsBinding.instance.platformDispatcher.locale.countryCode
-                  ?.toLowerCase()),
+              systemCountryCode),
     );
 
     language.value ??= Languages.defaultLanguages.firstWhereOrNull(

@@ -11,7 +11,6 @@ import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/local_audio_page.dart';
-import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../manager/liked_audios_manager.dart';
@@ -33,10 +32,11 @@ class LikedAudioPage extends ConsumerWidget {
           stackTrace: st,
         ),
         data: (likedAudios) => LocalAudioPage(
-            onPageLabelTab: (text) => di<RoutingManager>().push(
-              builder: (_) => ArtistPage(pageId: text),
-              pageId: text,
-            ),
+            onPageLabelTab: (text) =>
+                ref.read(routingManagerProvider.notifier).push(
+                      builder: (_) => ArtistPage(pageId: text),
+                      pageId: text,
+                    ),
             noSearchResultMessage: Text(context.l10n.likedSongsSubtitle),
             audios: likedAudios,
             audioPageType: AudioPageType.likedAudio,

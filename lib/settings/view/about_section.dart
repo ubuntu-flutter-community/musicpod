@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart' hide AboutDialog, LicensePage;
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart' as p;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/app_config.dart';
-import '../../app/app_manager.dart';
+import '../../app/latest_release_manager.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/tapable_text.dart';
+import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/theme_data_x.dart';
 import 'about_page.dart';
@@ -15,7 +17,7 @@ import 'licenses_dialog.dart';
 import 'settings_list_tile.dart';
 import 'settings_section.dart';
 
-class AboutSection extends StatelessWidget with WatchItMixin {
+class AboutSection extends StatelessWidget {
   const AboutSection({super.key});
 
   @override
@@ -25,42 +27,27 @@ class AboutSection extends StatelessWidget with WatchItMixin {
   );
 }
 
-class _AboutTile extends StatelessWidget with WatchItMixin {
+class _AboutTile extends ConsumerWidget {
   const _AboutTile();
 
   @override
-  Widget build(BuildContext context) {
-    callOnceAfterThisBuild((context) {
-      final appManager = di<AppManager>();
-      if (appManager.checkForUpdateCommand.value == null) {
-        appManager.checkForUpdateCommand.run();
-      }
-      if (appManager.fetchNumberOfDownloadsCommand.value == 0) {
-        appManager.fetchNumberOfDownloadsCommand.run();
-      }
-    });
-
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.theme;
-    final appManager = di<AppManager>();
-    final updateAvailableResults = watchValue(
-      (AppManager m) => m.checkForUpdateCommand.results,
-    );
-    final error = updateAvailableResults.error;
-    final updateAvailable = updateAvailableResults.data == true;
-    final onlineVersion = watchValue((AppManager m) => m.onlineVersion);
-    final downloads = watchValue(
-      (AppManager m) => m.fetchNumberOfDownloadsCommand,
-    );
-    final currentVersion = di<AppManager>().version;
+    final releaseAsync = ref.watch(latestReleaseManagerProvider);
+    final currentVersion = di<PackageInfo>().version;
+
+    final downloads = releaseAsync.value?.downloadCount ?? 0;
+    final onlineVersion = releaseAsync.value?.onlineVersion;
+    final updateAvailable = releaseAsync.value?.updateAvailable ?? false;
 
     return SettingsListTile(
       position: ListTilePosition.first,
       subtitle: Text(
         context.l10n.downloadsOfLatestRelease(downloads.toString()),
       ),
-      title: error != null || !appManager.allowManualUpdate
-          ? Text(di<AppManager>().version)
-          : updateAvailableResults.isRunning
+      title: releaseAsync.hasError || !AppConfig.allowManualUpdate
+          ? Text(currentVersion)
+          : releaseAsync.isLoading
           ? const SizedBox.square(
               dimension: 15,
               child: Progress(padding: EdgeInsets.all(10), strokeWidth: 2),
@@ -76,11 +63,20 @@ class _AboutTile extends StatelessWidget with WatchItMixin {
                       ),
                     )
                   : null,
-              onTap: () => launchUrl(
-                Uri.parse(
-                  p.join(AppConfig.repoUrl, 'releases', 'tag', onlineVersion),
-                ),
-              ),
+              onTap: () {
+                if (onlineVersion != null) {
+                  launchUrl(
+                    Uri.parse(
+                      p.join(
+                        AppConfig.repoUrl,
+                        'releases',
+                        'tag',
+                        onlineVersion,
+                      ),
+                    ),
+                  );
+                }
+              },
             ),
       trailing: OutlinedButton(
         onPressed: () => context.dialog((context) => const AboutDialog()),

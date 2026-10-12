@@ -23,4 +23,5 @@ class AppConfig {
   static const scheme = 'https';
   static const String repoUrl = '$scheme://$host/$owner/$appName';
   static const String repoReportIssueUrl = '$owner/$appName/issues/new';
+  static final bool allowManualUpdate = !isLinux;
 }

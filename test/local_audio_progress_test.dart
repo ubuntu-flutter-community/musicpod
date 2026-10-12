@@ -23,7 +23,6 @@ import 'local_audio_progress_test.mocks.dart';
 void main() {
   late MockLocalAudioService mockAudioService;
   late MockSettingsService mockSettingsService;
-  late MockRoutingManager mockRoutingManager;
   late MockSearchManager mockSearchManager;
 
   void Function(double progress)? capturedUpdateProgress;
@@ -62,15 +61,12 @@ void main() {
     await GetIt.I.reset();
     mockAudioService = MockLocalAudioService();
     mockSettingsService = MockSettingsService();
-    mockRoutingManager = MockRoutingManager();
     mockSearchManager = MockSearchManager();
-
     setupMockAudioService();
     setupMockSettingsService();
 
     GetIt.I.registerSingleton<LocalAudioService>(mockAudioService);
     GetIt.I.registerSingleton<SettingsService>(mockSettingsService);
-    GetIt.I.registerSingleton<RoutingManager>(mockRoutingManager);
     GetIt.I.registerSingleton<SearchManager>(mockSearchManager);
   });
 

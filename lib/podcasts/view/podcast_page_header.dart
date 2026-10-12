@@ -52,12 +52,16 @@ class PodcastPageHeader extends ConsumerWidget {
             ),
       title: title ?? shortInfo?.name.unEscapeHtml ?? '',
       onLabelTab: (text) => _onGenreTap(l10n: l10n, text: text, ref: ref),
-      onSubTitleTab: (text) => _onArtistTap(l10n: l10n, text: text),
+      onSubTitleTab: (text) => _onArtistTap(l10n: l10n, text: text, ref: ref),
     );
   }
 
-  void _onArtistTap({required AppLocalizations l10n, required String text}) {
-    di<RoutingManager>().push(pageId: PageIDs.searchPage);
+  void _onArtistTap({
+    required AppLocalizations l10n,
+    required String text,
+    required WidgetRef ref,
+  }) {
+    ref.read(routingManagerProvider.notifier).push(pageId: PageIDs.searchPage);
     di<SearchManager>()
       ..setAudioType(AudioType.podcast)
       ..setSearchQuery(text)
@@ -84,11 +88,13 @@ class PodcastPageHeader extends ConsumerWidget {
         ..setPodcastGenre(genreOrNull)
         ..search();
     } else {
-      _onArtistTap(l10n: l10n, text: text);
+      _onArtistTap(l10n: l10n, text: text, ref: ref);
     }
 
     await Future.delayed(const Duration(milliseconds: 100));
 
-    await di<RoutingManager>().push(pageId: PageIDs.searchPage);
+    await ref
+        .read(routingManagerProvider.notifier)
+        .push(pageId: PageIDs.searchPage);
   }
 }

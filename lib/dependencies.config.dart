@@ -19,25 +19,19 @@ import 'package:package_info_plus/package_info_plus.dart' as _i655;
 import 'package:shared_preferences/shared_preferences.dart' as _i460;
 import 'package:window_manager/window_manager.dart' as _i740;
 
-import 'app/app_manager.dart' as _i369;
-import 'app/play_anywhere_manager.dart' as _i164;
-import 'app/routing_manager.dart' as _i971;
 import 'app/window_size_to_settings_listener.dart' as _i517;
 import 'common/data/retry_capsule.dart' as _i327;
 import 'common/manager/retry_manager.dart' as _i305;
 import 'common/persistence/database.dart' as _i115;
 import 'custom_content/service/custom_content_service.dart' as _i314;
-import 'expose/manager/expose_manager.dart' as _i960;
 import 'expose/service/expose_service.dart' as _i313;
 import 'expose/service/lastfm_service.dart' as _i61;
 import 'expose/service/listenbrainz_service.dart' as _i821;
-import 'external_path/manager/secure_bookmark_manager.dart' as _i1069;
 import 'external_path/service/external_path_service.dart' as _i415;
 import 'external_path/service/secure_bookmark_service.dart' as _i395;
 import 'local_audio/persistence/local_audio_dao.dart' as _i688;
 import 'local_audio/service/local_audio_service.dart' as _i985;
 import 'local_audio/service/local_cover_service.dart' as _i582;
-import 'lyrics/lyrics_manager.dart' as _i23;
 import 'lyrics/lyrics_service.dart' as _i546;
 import 'notifications/notifications_service.dart' as _i57;
 import 'player/manager/mpv_metadata_manager.dart' as _i507;
@@ -140,12 +134,6 @@ extension GetItInjectableX on _i174.GetIt {
         localAudioDao: gh<_i688.LocalAudioDao>(),
       ),
     );
-    gh.factory<_i23.LyricsManager>(
-      () => _i23.LyricsManager.create(
-        localLyricsService: gh<_i546.LocalLyricsService>(),
-        onlineLyricsService: gh<_i546.OnlineLyricsService>(),
-      ),
-    );
     gh.lazySingleton<_i61.LastfmService>(
       () => _i61.LastfmService(settingsService: gh<_i862.SettingsService>()),
     );
@@ -181,10 +169,6 @@ extension GetItInjectableX on _i174.GetIt {
       );
       return i.init().then((_) => i);
     }, preResolve: true);
-    gh.factory<_i960.ExposeManager>(
-      () =>
-          _i960.ExposeManager.create(exposeService: gh<_i313.ExposeService>()),
-    );
     gh.lazySingleton<_i985.LocalAudioService>(
       () => _i985.LocalAudioService(
         localCoverService: gh<_i582.LocalCoverService>(),
@@ -215,11 +199,6 @@ extension GetItInjectableX on _i174.GetIt {
         secureBookmarkService: gh<_i395.SecureBookmarkService>(),
       ),
     );
-    gh.lazySingleton<_i1069.SecureBookmarkManager>(
-      () => _i1069.SecureBookmarkManager(
-        service: gh<_i395.SecureBookmarkService>(),
-      ),
-    );
     gh.lazySingleton<_i507.MpvMetadataManager>(
       () => _i507.MpvMetadataManager(
         playerService: gh<_i456.PlayerService>(),
@@ -235,25 +214,9 @@ extension GetItInjectableX on _i174.GetIt {
         settingsService: gh<_i862.SettingsService>(),
       ),
     );
-    gh.lazySingleton<_i971.RoutingManager>(
-      () => _i971.RoutingManager(
-        podcastService: gh<_i529.PodcastService>(),
-        localAudioService: gh<_i985.LocalAudioService>(),
-        radioService: gh<_i506.RadioService>(),
-        settingsService: gh<_i862.SettingsService>(),
-      ),
-    );
     gh.lazySingleton<_i95.PlayerManager>(
       () => _i95.PlayerManager(service: gh<_i456.PlayerService>()),
       dispose: (i) => i.dispose(),
-    );
-    gh.lazySingleton<_i369.AppManager>(
-      () => _i369.AppManager(
-        packageInfo: gh<_i655.PackageInfo>(),
-        settingsService: gh<_i862.SettingsService>(),
-        gitHub: gh<_i535.GitHub>(),
-        localAudioService: gh<_i985.LocalAudioService>(),
-      ),
     );
     await gh.singletonAsync<_i517.WindowSizeToSettingsListener>(() {
       final i = _i517.WindowSizeToSettingsListener(
@@ -263,11 +226,6 @@ extension GetItInjectableX on _i174.GetIt {
       );
       return i.init().then((_) => i);
     }, preResolve: true);
-    gh.factory<_i164.PlayAnywhereManager>(
-      () => _i164.PlayAnywhereManager.create(
-        playerManager: gh<_i95.PlayerManager>(),
-      ),
-    );
     return this;
   }
 }

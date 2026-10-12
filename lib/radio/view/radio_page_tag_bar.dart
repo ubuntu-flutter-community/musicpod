@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 import 'package:yaru/yaru.dart';
 
@@ -84,7 +85,9 @@ class RadioPageTagBar extends StatelessWidget {
                 style: style,
                 wrapInFlexible: false,
                 onTap: () {
-                  di<RoutingManager>().push(pageId: PageIDs.searchPage);
+                  ProviderScope.containerOf(context, listen: false)
+                      .read(routingManagerProvider.notifier)
+                      .push(pageId: PageIDs.searchPage);
                   di<SearchManager>()
                     ..setTag(Tag(name: e, stationCount: 1))
                     ..setAudioType(AudioType.radio)

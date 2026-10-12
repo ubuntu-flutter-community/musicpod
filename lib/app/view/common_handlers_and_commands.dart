@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:package_info_plus/package_info_plus.dart';
+
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/progress.dart';
@@ -11,6 +13,8 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/object_x.dart';
 import '../../notifications/notifications_service.dart';
+import '../../patch_notes/manager/recent_patch_notes_disposed_manager.dart';
+import '../../patch_notes/manager/special_notes_disposed_manager.dart';
 import '../../patch_notes/patch_notes_dialog.dart';
 import '../../patch_notes/special_notes.dart';
 import '../../player/data/play_timeout_exception.dart';
@@ -23,17 +27,37 @@ import '../../podcasts/manager/podcast_clean_manager.dart';
 import '../../podcasts/service/podcast_service.dart';
 import '../../podcasts/manager/podcast_updates_manager.dart';
 import '../../radio/manager/click_station_manager.dart';
-import '../app_manager.dart';
+import '../data/play_anywhere_result.dart';
 import '../play_anywhere_manager.dart';
 
 mixin CommonHandlersAndCommandsMixin {
   void callCommonCommands(BuildContext context) => callOnceAfterThisBuild((_) {
-    ProviderScope.containerOf(context, listen: false)
+    final container = ProviderScope.containerOf(context, listen: false);
+    container
         .read(podcastCleanManagerProvider.notifier)
         .clean(reclaimDiskSpace: true);
-    di<AppManager>().recentPatchNotesDisposedCommand.run();
-    di<AppManager>().specialNotesDisposedCommand.run();
-    di<SecureBookmarkManager>().command.run();
+
+    if (!container.read(recentPatchNotesDisposedManagerProvider)) {
+      PatchNotesDialog.show(context);
+    }
+
+    final version = di<PackageInfo>().version;
+    if (!container.read(specialNotesDisposedManagerProvider) &&
+        specialNotes[version] != null) {
+      ConfirmationDialog.show(
+        context: context,
+        barrierDismissible: false,
+        showCancel: false,
+        title: Text('Special notes for $version'),
+        content: Text(specialNotes[version]!),
+        confirmLabel: context.l10n.ok,
+        onConfirm: () => container
+            .read(specialNotesDisposedManagerProvider.notifier)
+            .disposeNotes(),
+      );
+    }
+
+    container.read(secureBookmarkManagerProvider.notifier).restore();
   });
 
   void registerCommonHandlers(BuildContext context) {
@@ -114,10 +138,10 @@ mixin CommonHandlersAndCommandsMixin {
       },
     );
 
-    registerHandler(
-      select: (PlayAnywhereManager m) => m.command.results,
-      handler: (context, results, cancel) {
-        if (results.isRunning) {
+    container.listen<AsyncValue<PlayAnywhereResult?>>(
+      playAnywhereManagerProvider,
+      (prev, next) {
+        if (next.isLoading) {
           context.toast(
             Row(
               spacing: kMediumSpace,
@@ -131,19 +155,19 @@ mixin CommonHandlersAndCommandsMixin {
             ),
             duration: const Duration(seconds: 99),
           );
-        } else if (results.hasError) {
+        } else if (next.hasError) {
           context.toast(
-            Text(results.error.localizedErrorMessage(context.l10n)),
+            Text(next.error.localizedErrorMessage(context.l10n)),
           );
-        } else if (results.hasData && results.data != null) {
+        } else if (next.hasValue && next.value != null) {
           context.clearToasts();
-          switch (results.data!.param.audioPageType) {
+          switch (next.value!.param.audioPageType) {
             case AudioPageType.radio:
-              results.data!.audios.singleOrNull?.uuid != null
-                  ? di<ProviderContainer>()
+              next.value!.audios.singleOrNull?.uuid != null
+                  ? container
                       .read(clickStationManagerProvider.notifier)
                       .clickStation(
-                        results.data!.audios.singleOrNull!.uuid,
+                        next.value!.audios.singleOrNull!.uuid,
                       )
                   : context.toast(Text(context.l10n.noStationFound));
             default:
@@ -183,33 +207,5 @@ mixin CommonHandlersAndCommandsMixin {
         );
       }
     });
-
-    registerHandler(
-      select: (AppManager m) => m.recentPatchNotesDisposedCommand,
-      handler: (context, newValue, cancel) {
-        if (newValue == false) {
-          PatchNotesDialog.show(context);
-        }
-      },
-    );
-
-    registerHandler(
-      select: (AppManager m) => m.specialNotesDisposedCommand,
-      handler: (context, newValue, cancel) {
-        if (newValue == false &&
-            specialNotes[di<AppManager>().version] != null) {
-          final appManager = di<AppManager>();
-          ConfirmationDialog.show(
-            context: context,
-            barrierDismissible: false,
-            showCancel: false,
-            title: Text('Special notes for ${appManager.version}'),
-            content: Text(specialNotes[appManager.version]!),
-            confirmLabel: context.l10n.ok,
-            onConfirm: () => appManager.disposeSpecialNotes(),
-          );
-        }
-      },
-    );
   }
 }

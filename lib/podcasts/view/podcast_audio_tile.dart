@@ -93,8 +93,9 @@ class PodcastAudioTile extends ConsumerWidget {
                   InkWell(
                     borderRadius: BorderRadius.circular(radius / 2),
                     onTap: audio.feedUrl != null
-                        ? () =>
-                              di<RoutingManager>().push(pageId: audio.feedUrl!)
+                        ? () => ref
+                              .read(routingManagerProvider.notifier)
+                              .push(pageId: audio.feedUrl!)
                         : null,
                     child: AudioTileImage(audio: audio, size: radius * 2),
                   ),

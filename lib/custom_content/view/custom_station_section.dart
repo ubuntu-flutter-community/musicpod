@@ -60,7 +60,9 @@ class _AddStationDialogState extends ConsumerState<CustomStationSection> {
               ),
               onPressed: () {
                 di<SearchManager>().setAudioType(AudioType.radio);
-                di<RoutingManager>().push(pageId: PageIDs.searchPage);
+                ref
+                    .read(routingManagerProvider.notifier)
+                    .push(pageId: PageIDs.searchPage);
               },
               child: Text(l10n.search),
             ),

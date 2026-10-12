@@ -1,52 +1,32 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:injectable/injectable.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../local_audio/service/local_audio_service.dart';
-import '../podcasts/service/podcast_service.dart';
-import '../radio/service/radio_service.dart';
+import '../dependencies.dart';
 import '../settings/data/shared_preferences_keys.dart';
 import '../settings/service/settings_service.dart';
 import 'app_router.dart';
 import 'page_ids.dart';
 
-@lazySingleton
-class RoutingManager extends NavigatorObserver {
-  RoutingManager({
-    required PodcastService podcastService,
-    required LocalAudioService localAudioService,
-    required RadioService radioService,
-    required SettingsService settingsService,
-  }) : _podcastService = podcastService,
-       _localAudioService = localAudioService,
-       _radioService = radioService,
-       _settingsService = settingsService {
-    selectedPageIdCommand.run();
-  }
+part 'routing_manager.g.dart';
 
-  // Note: Navigator.initState ensures assert(observer.navigator == null);
-  // Afterwards the Navigator itself!!! sets the navigator of its observers...
-  @override
-  NavigatorState? get navigator => null;
-
-  final PodcastService _podcastService;
-  final LocalAudioService _localAudioService;
-  final RadioService _radioService;
-  final SettingsService _settingsService;
+@Riverpod(keepAlive: true)
+class RoutingManager extends _$RoutingManager implements NavigatorObserver {
+  SettingsService get _settingsService => di<SettingsService>();
 
   String? _topRouteName;
 
   late final GoRouter router = createAppRouter(
-    initialLocation: locationForPageId(
-      _settingsService.getString(SPKeys.selectedPage) ?? PageIDs.searchPage,
-    ),
+    initialLocation: locationForPageId(state),
     observers: [this],
   );
 
   GlobalKey<NavigatorState> get masterNavigatorKey => shellNavigatorKey;
+
+  @override
+  NavigatorState? get navigator => null;
 
   String? get currentRouteName {
     if (_topRouteName != null) {
@@ -59,10 +39,26 @@ class RoutingManager extends NavigatorObserver {
   bool _isTopRoute(String? name) => name != null && !name.startsWith('/');
 
   @override
+  String build() {
+    return _settingsService.getString(SPKeys.selectedPage) ?? PageIDs.searchPage;
+  }
+
+  String get selectedPageId => state;
+
+  Future<void> setSelectedPageId(String? pageId) async {
+    if (pageId != null) {
+      await _settingsService.setValue(SPKeys.selectedPage, pageId);
+      state = pageId;
+    } else {
+      state = _settingsService.getString(SPKeys.selectedPage) ?? PageIDs.searchPage;
+    }
+  }
+
+  @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
     if (_isTopRoute(route.settings.name)) {
       _topRouteName = route.settings.name;
-      selectedPageIdCommand(_topRouteName);
+      unawaited(setSelectedPageId(_topRouteName));
     }
   }
 
@@ -71,13 +67,13 @@ class RoutingManager extends NavigatorObserver {
     final prevName = previousRoute?.settings.name;
     if (_isTopRoute(prevName)) {
       _topRouteName = prevName;
-      selectedPageIdCommand(_topRouteName);
+      unawaited(setSelectedPageId(_topRouteName));
     } else {
       _topRouteName = null;
       final basePageId = pageIdForLocation(
         router.routeInformationProvider.value.uri,
       );
-      selectedPageIdCommand(basePageId);
+      unawaited(setSelectedPageId(basePageId));
     }
   }
 
@@ -86,7 +82,7 @@ class RoutingManager extends NavigatorObserver {
     final newName = newRoute?.settings.name;
     if (_isTopRoute(newName)) {
       _topRouteName = newName;
-      selectedPageIdCommand(_topRouteName);
+      unawaited(setSelectedPageId(_topRouteName));
     }
   }
 
@@ -96,40 +92,25 @@ class RoutingManager extends NavigatorObserver {
       final prevName = previousRoute?.settings.name;
       if (_isTopRoute(prevName)) {
         _topRouteName = prevName;
-        selectedPageIdCommand(_topRouteName);
+        unawaited(setSelectedPageId(_topRouteName));
       } else {
         _topRouteName = null;
         final basePageId = pageIdForLocation(
           router.routeInformationProvider.value.uri,
         );
-        selectedPageIdCommand(basePageId);
+        unawaited(setSelectedPageId(basePageId));
       }
     }
   }
 
-  Future<bool> isPageInLibrary(String? pageId) async =>
-      pageId != null &&
-      (PageIDs.permanent.contains(pageId) ||
-          (int.tryParse(pageId) != null &&
-              await _localAudioService.isPinnedAlbum(int.parse(pageId))) ||
-          await _radioService.isStarredStation(pageId) ||
-          await _localAudioService.isPlaylistSaved(pageId) ||
-          await _podcastService.isPodcastSubscribed(pageId));
+  @override
+  void didChangeTop(Route<dynamic> topRoute, Route<dynamic>? previousTopRoute) {}
 
-  late final Command<String?, String> selectedPageIdCommand =
-      Command.createAsync(
-        (String? pageId) async {
-          if (pageId != null) {
-            await _settingsService.setValue(SPKeys.selectedPage, pageId);
-          }
+  @override
+  void didStartUserGesture(Route<dynamic> route, Route<dynamic>? previousRoute) {}
 
-          return _settingsService.getString(SPKeys.selectedPage) ??
-              PageIDs.searchPage;
-        },
-        initialValue:
-            _settingsService.getString(SPKeys.selectedPage) ??
-            PageIDs.searchPage,
-      );
+  @override
+  void didStopUserGesture() {}
 
   Future<void> push({
     required String pageId,
@@ -147,7 +128,7 @@ class RoutingManager extends NavigatorObserver {
       }
 
       _topRouteName = null;
-      selectedPageIdCommand(PageIDs.searchPage);
+      unawaited(setSelectedPageId(PageIDs.searchPage));
 
       final isAtSearchRoot =
           router.routeInformationProvider.value.uri.path ==
@@ -176,14 +157,12 @@ class RoutingManager extends NavigatorObserver {
       return;
     }
 
-    final inLibrary = await isPageInLibrary(pageId);
-    assert(inLibrary);
 
     if (shellNavigatorKey.currentState?.canPop() == true) {
       shellNavigatorKey.currentState?.popUntil((route) => route.isFirst);
     }
     _topRouteName = null;
-    selectedPageIdCommand(pageId);
+    unawaited(setSelectedPageId(pageId));
     router.go(locationForPageId(pageId));
   }
 

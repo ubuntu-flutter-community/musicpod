@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/app_manager.dart';
+import '../../app/full_window_mode_manager.dart';
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../extensions/build_context_x.dart';
@@ -10,7 +10,8 @@ void showAddedToPlaylistSnackBar({
   required BuildContext context,
   required String id,
 }) {
-  if (id == di<RoutingManager>().selectedPageIdCommand.value) {
+  final container = ProviderScope.containerOf(context, listen: false);
+  if (id == container.read(routingManagerProvider)) {
     return;
   }
 
@@ -26,11 +27,10 @@ void showAddedToPlaylistSnackBar({
 
     action: SnackBarAction(
       onPressed: () {
-        final appManager = di<AppManager>();
-        if (appManager.fullWindowMode == true) {
-          appManager.setFullWindowMode(false);
-        }
-        di<RoutingManager>().push(pageId: id);
+        container
+            .read(fullWindowModeManagerProvider.notifier)
+            .setFullWindowMode(false);
+        container.read(routingManagerProvider.notifier).push(pageId: id);
       },
       label: context.l10n.open,
     ),

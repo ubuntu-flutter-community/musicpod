@@ -96,7 +96,9 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
                 child: SearchButton(
                   active: false,
                   onPressed: () {
-                    di<RoutingManager>().push(pageId: PageIDs.searchPage);
+                    ref
+                        .read(routingManagerProvider.notifier)
+                        .push(pageId: PageIDs.searchPage);
                     final searchManager = di<SearchManager>();
                     searchManager
                       ..setAudioType(AudioType.local)

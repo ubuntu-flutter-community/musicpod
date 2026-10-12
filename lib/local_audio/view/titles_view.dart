@@ -54,7 +54,7 @@ class TitlesView extends ConsumerWidget {
       audios: audios!,
       audioPageType: AudioPageType.allTitlesView,
       pageId: PageIDs.localAudio,
-      onSubTitleTab: (artist) => di<RoutingManager>().push(
+      onSubTitleTab: (artist) => ref.read(routingManagerProvider.notifier).push(
         builder: (_) => ArtistPage(pageId: artist),
         pageId: artist,
       ),
@@ -73,7 +73,7 @@ class TitlesView extends ConsumerWidget {
           return;
         }
 
-        await di<RoutingManager>().push(
+        await ref.read(routingManagerProvider.notifier).push(
           builder: (_) => AlbumPage(id: id),
           pageId: id.toString(),
         );

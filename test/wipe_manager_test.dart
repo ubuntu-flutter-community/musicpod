@@ -14,6 +14,7 @@ import 'package:musicpod/radio/manager/radio_fav_tag_manager.dart';
 import 'package:musicpod/radio/manager/radio_star_station_manager.dart';
 import 'package:musicpod/radio/service/radio_service.dart';
 import 'package:musicpod/settings/service/settings_service.dart';
+import 'package:musicpod/settings/manager/settings_manager.dart';
 import 'package:musicpod/settings/manager/wipe_manager.dart';
 
 import 'wipe_manager_test.mocks.dart';
@@ -154,6 +155,48 @@ void main() {
     verify(mockPlayerManager.clearAllLastPositions()).called(1);
     verify(mockDatabase.reclaimDiskSpace()).called(1);
     expect(subscribedInvalidated, isTrue);
+  });
+
+  test('wipe({WipeType.settings}) wipes settings and invalidates settings providers', () async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    var hasWiped = false;
+    when(mockSettingsService.getBool('test_bool'))
+        .thenAnswer((_) => hasWiped ? null : true);
+    when(mockSettingsService.getInt('test_int'))
+        .thenAnswer((_) => hasWiped ? null : 42);
+    when(mockSettingsService.wipeAllSettings()).thenAnswer((_) async {
+      hasWiped = true;
+    });
+
+    container.read(settingsScrollIndexProvider.notifier).set(5);
+
+    container.read(settingsBoolManagerProvider('test_bool'));
+    container.read(settingsIntManagerProvider('test_int'));
+    container.read(settingsScrollIndexProvider);
+
+    var boolInvalidated = false;
+    var intInvalidated = false;
+    var scrollInvalidated = false;
+
+    container.listen(settingsBoolManagerProvider('test_bool'), (_, __) {
+      boolInvalidated = true;
+    });
+    container.listen(settingsIntManagerProvider('test_int'), (_, __) {
+      intInvalidated = true;
+    });
+    container.listen(settingsScrollIndexProvider, (_, __) {
+      scrollInvalidated = true;
+    });
+
+    await container.read(wipeManagerProvider.notifier).wipe({WipeType.settings});
+    await pumpEventQueue();
+
+    verify(mockSettingsService.wipeAllSettings()).called(1);
+    expect(boolInvalidated, isTrue);
+    expect(intInvalidated, isTrue);
+    expect(scrollInvalidated, isTrue);
   });
 
   test('wipe() with no arguments wipes all types and reclaims disk space', () async {

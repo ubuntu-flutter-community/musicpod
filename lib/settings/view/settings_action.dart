@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/app_manager.dart';
+import '../../app/full_window_mode_manager.dart';
 import '../../app/routing_manager.dart';
 import '../../app/page_ids.dart';
 import '../../common/view/icons.dart';
@@ -30,10 +29,12 @@ class SettingsButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     Future<void> onPressed() async {
-      await di<AppManager>().setFullWindowMode(false);
+      await ref.read(fullWindowModeManagerProvider.notifier).setFullWindowMode(false);
       await Future.delayed(const Duration(milliseconds: 300));
       ref.read(settingsScrollIndexProvider.notifier).set(scrollIndex);
-      await di<RoutingManager>().push(pageId: PageIDs.settings);
+      await ref
+          .read(routingManagerProvider.notifier)
+          .push(pageId: PageIDs.settings);
     }
 
     return switch (_mode) {

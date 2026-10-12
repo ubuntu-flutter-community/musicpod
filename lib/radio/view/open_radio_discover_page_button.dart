@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
+import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
 import '../../search/manager/search_manager.dart';
 import '../../search/data/search_type.dart';
 
-class OpenRadioSearchButton extends StatelessWidget with WatchItMixin {
+class OpenRadioSearchButton extends ConsumerWidget {
   const OpenRadioSearchButton({super.key, required this.searchType});
 
   final SearchType searchType;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ElevatedButton(
       onPressed: () {
-        di<RoutingManager>().push(pageId: PageIDs.searchPage);
+        ref
+            .read(routingManagerProvider.notifier)
+            .push(pageId: PageIDs.searchPage);
         di<SearchManager>()
           ..setAudioType(AudioType.radio)
           ..setSearchType(searchType)

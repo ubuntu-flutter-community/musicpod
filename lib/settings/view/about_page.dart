@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
-import 'package:github/github.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/app_config.dart';
-import '../../app/app_manager.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/tapable_text.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../manager/contributors_manager.dart';
 
 const _kTileSize = 50.0;
 
@@ -34,24 +33,11 @@ class AboutDialog extends StatelessWidget {
   }
 }
 
-class _AboutPage extends StatefulWidget with WatchItStatefulWidgetMixin {
+class _AboutPage extends ConsumerWidget {
   const _AboutPage();
 
   @override
-  State<StatefulWidget> createState() => _AboutPageState();
-}
-
-class _AboutPageState extends State<_AboutPage> {
-  late Future<List<Contributor>> _contributors;
-
-  @override
-  void initState() {
-    super.initState();
-    _contributors = di<AppManager>().getContributors();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.theme;
     const radius = Radius.circular(8);
 
@@ -61,76 +47,70 @@ class _AboutPageState extends State<_AboutPage> {
     );
     const maxLines = 3;
 
+    final contributorsAsync = ref.watch(contributorsManagerProvider);
+
     return Column(
       children: [
         Expanded(
           child: CustomScrollView(
             slivers: [
-              FutureBuilder<List<Contributor>>(
-                future: _contributors,
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: Center(child: Text(snapshot.error.toString())),
-                    );
-                  }
-                  if (snapshot.hasData) {
-                    return SliverPadding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: kLargestSpace,
-                        vertical: kSmallestSpace,
-                      ),
-                      sliver: SliverGrid.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithMaxCrossAxisExtent(
-                              maxCrossAxisExtent: _kTileSize,
-                              mainAxisSpacing: 5,
-                              crossAxisSpacing: 5,
+              switch (contributorsAsync) {
+                AsyncError(:final error) => SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(child: Text(error.toString())),
+                ),
+                AsyncData(:final value) => SliverPadding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: kLargestSpace,
+                    vertical: kSmallestSpace,
+                  ),
+                  sliver: SliverGrid.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: _kTileSize,
+                          mainAxisSpacing: 5,
+                          crossAxisSpacing: 5,
+                        ),
+                    itemCount: value.length,
+                    itemBuilder: (context, index) {
+                      final e = value.elementAt(index);
+                      return Tooltip(
+                        message: e.login,
+                        child: YaruBanner(
+                          padding: EdgeInsets.zero,
+                          onTap: e.htmlUrl == null
+                              ? null
+                              : () => launchUrl(Uri.parse(e.htmlUrl!)),
+                          child: SizedBox.square(
+                            dimension: _kTileSize,
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.all(radius),
+                              child: e.avatarUrl == null
+                                  ? Icon(Iconz.artist)
+                                  : SafeNetworkImage(
+                                      fit: BoxFit.cover,
+                                      url: e.avatarUrl!,
+                                      loadingWidget: const YaruPlaceholderIcon(
+                                        borderRadius:
+                                            BorderRadiusDirectional.vertical(
+                                              top: radius,
+                                              bottom: radius,
+                                            ),
+                                        size: Size.square(_kTileSize),
+                                      ),
+                                    ),
                             ),
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          final e = snapshot.data!.elementAt(index);
-                          return Tooltip(
-                            message: e.login,
-                            child: YaruBanner(
-                              padding: EdgeInsets.zero,
-                              onTap: e.htmlUrl == null
-                                  ? null
-                                  : () => launchUrl(Uri.parse(e.htmlUrl!)),
-                              child: SizedBox.square(
-                                dimension: _kTileSize,
-                                child: ClipRRect(
-                                  borderRadius: const BorderRadius.all(radius),
-                                  child: e.avatarUrl == null
-                                      ? Icon(Iconz.artist)
-                                      : SafeNetworkImage(
-                                          fit: BoxFit.cover,
-                                          url: e.avatarUrl!,
-                                          loadingWidget: const YaruPlaceholderIcon(
-                                            borderRadius:
-                                                BorderRadiusDirectional.vertical(
-                                                  top: radius,
-                                                  bottom: radius,
-                                                ),
-                                            size: Size.square(_kTileSize),
-                                          ),
-                                        ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  } else {
-                    return const SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: Center(child: Progress()),
-                    );
-                  }
-                },
-              ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                _ => const SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(child: Progress()),
+                ),
+              },
               SliverPadding(
                 padding: const EdgeInsets.only(
                   left: kLargestSpace,

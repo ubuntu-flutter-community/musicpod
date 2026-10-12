@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/routing_manager.dart';
@@ -10,7 +10,7 @@ import '../../common/view/theme.dart';
 import 'artist_image.dart';
 import 'artist_page.dart';
 
-class ArtistsView extends StatelessWidget {
+class ArtistsView extends ConsumerWidget {
   const ArtistsView({
     super.key,
     this.artists,
@@ -22,7 +22,7 @@ class ArtistsView extends StatelessWidget {
   final Widget? noResultMessage, noResultIcon;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     if (artists == null) {
       return const SliverFillRemainingProgress();
     }
@@ -44,7 +44,7 @@ class ArtistsView extends StatelessWidget {
         return YaruSelectableContainer(
           key: ValueKey(artistName),
           selected: false,
-          onTap: () => di<RoutingManager>().push(
+          onTap: () => ref.read(routingManagerProvider.notifier).push(
             builder: (_) => ArtistPage(pageId: artistName),
             pageId: artistName,
           ),

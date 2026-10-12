@@ -149,7 +149,7 @@ class RadioHistoryTile extends ConsumerWidget {
                   ..setAudioType(AudioType.radio)
                   ..radioNameSearch(icyName).then((v) {
                     if (v?.firstOrNull?.uuid != null) {
-                      di<RoutingManager>().push(
+                      ref.read(routingManagerProvider.notifier).push(
                         builder: (_) => StationPage(uuid: v.first.uuid!),
                         pageId: v!.first.uuid!,
                       );

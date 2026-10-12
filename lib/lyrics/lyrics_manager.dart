@@ -1,57 +1,21 @@
-import 'package:flutter_it/flutter_it.dart';
-import 'package:injectable/injectable.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../common/data/audio.dart';
-import '../common/util/family.dart';
-import '../extensions/command_x.dart';
+import '../dependencies.dart';
 import 'data/lyrics_and_art_result_and_param.dart';
 import 'lyrics_service.dart';
 
-@injectable
-class LyricsManager {
-  LyricsManager._({
-    required LocalLyricsService localLyricsService,
-    required OnlineLyricsService onlineLyricsService,
-  }) : _localLyricsService = localLyricsService,
-       _onlineLyricsService = onlineLyricsService;
+part 'lyrics_manager.g.dart';
 
-  @factoryMethod
-  static LyricsManager create({
-    required LocalLyricsService localLyricsService,
-    required OnlineLyricsService onlineLyricsService,
-  }) => Family.of(
-    '$LyricsManager',
-    () => LyricsManager._(
-      localLyricsService: localLyricsService,
-      onlineLyricsService: onlineLyricsService,
-    ),
-    shouldDispose: (m) => m.command.safeToDispose,
-    onDispose: (m) => m.command.dispose(),
-  );
+@Riverpod(keepAlive: true)
+class LyricsManager extends _$LyricsManager {
+  @override
+  Future<LyricsAndArtResult?> build(LyricsAndArtParam param) async {
+    final localLyricsService = di<LocalLyricsService>();
+    final onlineLyricsService = di<OnlineLyricsService>();
 
-  final LocalLyricsService _localLyricsService;
-  final OnlineLyricsService _onlineLyricsService;
-
-  late final Command<LyricsAndArtParam, LyricsAndArtResult?> command =
-      Command.createAsync(
-        (param) => _getLyrics(
-          audio: param.audio,
-          title: param.title,
-          artist: param.artist,
-          searchOnline: param.tryToFetchOnline,
-        ),
-        initialValue: null,
-      );
-
-  Future<LyricsAndArtResult?> _getLyrics({
-    required Audio? audio,
-    required String? title,
-    required String? artist,
-    required bool searchOnline,
-  }) async {
-    final local = _localLyricsService.parseLocalLyrics(
-      filePath: audio?.path,
-      inputString: audio?.lyrics,
+    final local = localLyricsService.parseLocalLyrics(
+      filePath: param.audio?.path,
+      inputString: param.audio?.lyrics,
     );
 
     if ((local?.lrcLines?.isNotEmpty ?? false) ||
@@ -63,12 +27,12 @@ class LyricsManager {
       );
     }
 
-    if (searchOnline) {
-      return _onlineLyricsService.fetchOnlineLyrics(
-        title: title ?? audio?.title ?? '',
-        artist: artist ?? audio?.artist,
-        durationMs: audio?.durationMs?.toInt(),
-        album: audio?.album,
+    if (param.tryToFetchOnline) {
+      return onlineLyricsService.fetchOnlineLyrics(
+        title: param.title ?? param.audio?.title ?? '',
+        artist: param.artist ?? param.audio?.artist,
+        durationMs: param.audio?.durationMs?.toInt(),
+        album: param.audio?.album,
       );
     }
 

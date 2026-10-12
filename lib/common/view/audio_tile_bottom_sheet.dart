@@ -28,7 +28,7 @@ import 'stream_provider_share_button.dart';
 import 'theme.dart';
 import 'ui_constants.dart';
 
-class AudioTileBottomSheet extends StatelessWidget {
+class AudioTileBottomSheet extends ConsumerWidget {
   const AudioTileBottomSheet({
     super.key,
     required this.allowRemove,
@@ -47,9 +47,9 @@ class AudioTileBottomSheet extends StatelessWidget {
   final List<Audio> audios;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final routingManager = di<RoutingManager>();
+    final routingManager = ref.read(routingManagerProvider.notifier);
     return BottomSheet(
       enableDrag: false,
       onClosing: () {},

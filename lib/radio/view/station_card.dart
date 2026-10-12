@@ -50,10 +50,11 @@ class StationCard extends StatelessWidget with WatchItMixin {
           bottom: AudioCardBottom(child: StationTitle(uuid: uuid)),
           playIcon: iconData,
           seleted: isSelected,
-          onPlay: () => di<PlayAnywhereManager>().command.run(
+          onPlay: () => ref.read(playAnywhereManagerProvider.notifier).play(
             PlayAnywhereParam(pageId: uuid, audioPageType: AudioPageType.radio),
           ),
-          onTap: () => di<RoutingManager>().push(pageId: uuid),
+          onTap: () =>
+              ref.read(routingManagerProvider.notifier).push(pageId: uuid),
           image: SizedBox.expand(
             child: StationPageIcon(
               uuid: uuid,

@@ -83,7 +83,6 @@ class _PodcastPageState extends ConsumerState<PodcastPage> {
         .toggleAudiosProgressCommand
         .results
         .removeListener(_onProgressResults);
-    ref.read(podcastCleanManagerProvider.notifier).clean(reclaimDiskSpace: false);
     super.dispose();
   }
 
@@ -91,7 +90,7 @@ class _PodcastPageState extends ConsumerState<PodcastPage> {
   Widget build(BuildContext context) {
     final episodesAsync = ref.watch(episodesManagerProvider(widget.feedUrl));
 
-    return episodesAsync.when(
+    final page = episodesAsync.when(
       data: (_) => _PodcastPage(feedUrl: widget.feedUrl),
       loading: () => episodesAsync.hasValue
           ? _PodcastPage(feedUrl: widget.feedUrl)
@@ -101,6 +100,18 @@ class _PodcastPageState extends ConsumerState<PodcastPage> {
         feedUrl: widget.feedUrl,
         stackTrace: stackTrace,
       ),
+    );
+
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) {
+          ref
+              .read(podcastCleanManagerProvider.notifier)
+              .clean(reclaimDiskSpace: false);
+        }
+      },
+      child: page,
     );
   }
 }
@@ -137,7 +148,9 @@ class _PodcastPage extends ConsumerWidget {
             padding: appBarSingleActionSpacing,
             child: SearchButton(
               onPressed: () {
-                di<RoutingManager>().push(pageId: PageIDs.searchPage);
+                ref
+                    .read(routingManagerProvider.notifier)
+                    .push(pageId: PageIDs.searchPage);
                 di<SearchManager>()
                   ..setAudioType(AudioType.podcast)
                   ..setSearchType(SearchType.podcastTitle);

@@ -10,7 +10,6 @@ import '../../common/view/audio_page_type.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/safe_network_image.dart';
 import '../../common/view/theme.dart';
-import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
 import '../manager/podcast_short_info_manager.dart';
 
@@ -57,13 +56,14 @@ class PodcastCollectionCard extends ConsumerWidget {
             : null,
         text: shortInfo?.name ?? context.l10n.podcast,
       ),
-      onPlay: () => di<PlayAnywhereManager>().command.run(
+      onPlay: () => ref.read(playAnywhereManagerProvider.notifier).play(
         PlayAnywhereParam(
           pageId: feedUrl,
           audioPageType: AudioPageType.podcast,
         ),
       ),
-      onTap: () => di<RoutingManager>().push(pageId: feedUrl),
+      onTap: () =>
+          ref.read(routingManagerProvider.notifier).push(pageId: feedUrl),
     );
   }
 }

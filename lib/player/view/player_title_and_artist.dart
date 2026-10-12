@@ -3,7 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../app/app_manager.dart';
+import '../../app/full_window_mode_manager.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
@@ -232,25 +232,30 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
       return;
     }
 
-    await di<AppManager>().setFullWindowMode(false);
-    await di<RoutingManager>().push(
+    final container = ProviderScope.containerOf(context, listen: false);
+    await container
+        .read(fullWindowModeManagerProvider.notifier)
+        .setFullWindowMode(false);
+    await container.read(routingManagerProvider.notifier).push(
       builder: (_) => AlbumPage(id: id),
       pageId: id.toString(),
     );
   }
 
   void _onArtistTap({required BuildContext context, required Audio audio}) {
-    final routingManager = di<RoutingManager>();
+    final routingManager =
+        ProviderScope.containerOf(context, listen: false)
+            .read(routingManagerProvider.notifier);
     switch (audio.audioType) {
       case AudioType.local:
-        _onLocalAudioArtistTap(audio: audio);
+        _onLocalAudioArtistTap(context: context, audio: audio);
         return;
       case AudioType.radio:
-        _onRadioArtistTap(audio: audio);
+        _onRadioArtistTap(context: context, audio: audio);
         return;
       case AudioType.podcast:
         if (audio.feedUrl != null &&
-            routingManager.selectedPageIdCommand.value != audio.feedUrl) {
+            routingManager.selectedPageId != audio.feedUrl) {
           final feedUrl = audio.feedUrl!;
 
           routingManager.push(
@@ -262,11 +267,16 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     }
   }
 
-  void _onRadioArtistTap({required Audio audio}) {
-    final routingManager = di<RoutingManager>();
+  void _onRadioArtistTap({
+    required BuildContext context,
+    required Audio audio,
+  }) {
+    final routingManager =
+        ProviderScope.containerOf(context, listen: false)
+            .read(routingManagerProvider.notifier);
     if (audio.url == null ||
         audio.uuid == null ||
-        routingManager.selectedPageIdCommand.value == audio.uuid) {
+        routingManager.selectedPageId == audio.uuid) {
       return;
     }
     routingManager.push(
@@ -275,11 +285,17 @@ class PlayerTitleAndArtist extends StatelessWidget with WatchItMixin {
     );
   }
 
-  void _onLocalAudioArtistTap({required Audio audio}) {
+  void _onLocalAudioArtistTap({
+    required BuildContext context,
+    required Audio audio,
+  }) {
     final artistId = audio.artist;
     if (artistId == null) return;
-    di<AppManager>().setFullWindowMode(false);
-    di<RoutingManager>().push(
+    final container = ProviderScope.containerOf(context, listen: false);
+    container
+        .read(fullWindowModeManagerProvider.notifier)
+        .setFullWindowMode(false);
+    container.read(routingManagerProvider.notifier).push(
       builder: (_) => ArtistPage(pageId: artistId),
       pageId: artistId,
     );

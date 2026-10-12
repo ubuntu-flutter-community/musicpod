@@ -50,7 +50,7 @@ class _EditPlaylistDialogState extends ConsumerState<EditPlaylistDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final routingManager = di<RoutingManager>();
+    final routingManager = ref.read(routingManagerProvider.notifier);
     final l10n = context.l10n;
     return ConfirmationDialog(
       scrollable: true,

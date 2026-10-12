@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/data/play_anywhere_param.dart';
@@ -61,11 +60,11 @@ class _AlbumCard extends ConsumerWidget {
       albumId: id,
       fallback: CoverBackground(dimension: audioCardDimension),
     ),
-    onTap: () => di<RoutingManager>().push(
+    onTap: () => ref.read(routingManagerProvider.notifier).push(
       builder: (context) => AlbumPage(id: id),
       pageId: id.toString(),
     ),
-    onPlay: () => di<PlayAnywhereManager>().command.run(
+    onPlay: () => ref.read(playAnywhereManagerProvider.notifier).play(
       PlayAnywhereParam(
         pageId: id.toString(),
         audioPageType: AudioPageType.album,

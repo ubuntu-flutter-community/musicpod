@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podcast_search/podcast_search.dart';
 
 import '../../app/data/play_anywhere_param.dart';
@@ -15,13 +15,13 @@ import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../podcasts/view/podcast_page.dart';
 
-class PodcastCard extends StatelessWidget with WatchItMixin {
+class PodcastCard extends ConsumerWidget {
   const PodcastCard({super.key, required this.item});
 
   final Item item;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final feedUrl = item.feedUrl;
     final genre = item.primaryGenreName ?? item.genre?.firstOrNull?.name;
 
@@ -41,18 +41,20 @@ class PodcastCard extends StatelessWidget with WatchItMixin {
       ),
       onPlay: feedUrl == null
           ? null
-          : () => di<PlayAnywhereManager>().command.run(
-              PlayAnywhereParam(
-                pageId: feedUrl,
-                audioPageType: AudioPageType.podcast,
+          : () => ref
+              .read(playAnywhereManagerProvider.notifier)
+              .play(
+                PlayAnywhereParam(
+                  pageId: feedUrl,
+                  audioPageType: AudioPageType.podcast,
+                ),
               ),
-            ),
       onTap: () {
         if (feedUrl == null || feedUrl.isEmpty) {
           context.toast(Text(context.l10n.podcastFeedIsEmpty));
           return;
         }
-        di<RoutingManager>().push(
+        ref.read(routingManagerProvider.notifier).push(
           builder: (context) => PodcastPage(feedUrl: feedUrl, genre: genre),
           pageId: feedUrl,
         );

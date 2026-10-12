@@ -9,15 +9,12 @@ import 'package:yaru/yaru.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/data/retry_capsule.dart';
-import '../../common/manager/retry_manager.dart';
-import '../../common/util/family.dart';
 import '../../common/view/common_widgets.dart';
 import '../../common/view/error_retry_body.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/command_x.dart';
 import '../../extensions/string_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../player/manager/mpv_metadata_manager.dart';
@@ -64,7 +61,7 @@ class LyricsViewer extends StatelessWidget with WatchItMixin {
   }
 }
 
-class _PlayerLyrics extends StatefulWidget with WatchItStatefulWidgetMixin {
+class _PlayerLyrics extends ConsumerStatefulWidget {
   const _PlayerLyrics({
     this.audio,
     this.title,
@@ -82,10 +79,10 @@ class _PlayerLyrics extends StatefulWidget with WatchItStatefulWidgetMixin {
   final bool highlightCurrentLine;
 
   @override
-  State<_PlayerLyrics> createState() => _PlayerLyricsState();
+  ConsumerState<_PlayerLyrics> createState() => _PlayerLyricsState();
 }
 
-class _PlayerLyricsState extends State<_PlayerLyrics> {
+class _PlayerLyricsState extends ConsumerState<_PlayerLyrics> {
   late bool _autoScroll;
 
   @override
@@ -100,22 +97,13 @@ class _PlayerLyricsState extends State<_PlayerLyrics> {
     final retryViewId =
         '${widget.audio?.toString() ?? ''}_${widget.title ?? ''}_${widget.artist ?? ''}';
 
-    callAfterEveryBuild((_, _) {
-      di<LyricsManager>().command.runRestricted(
-        param: LyricsAndArtParam(
-          audio: widget.audio,
-          title: widget.title,
-          artist: widget.artist,
-          tryToFetchOnline: widget.tryToFetchOnline,
-        ),
-        runWhen: RunWhen.paramChanges,
-      );
-    });
-
-    registerHandler(
-      select: (LyricsManager m) => m.command,
-      handler: (context, _, __) => Family.dispose<RetryManager>(retryViewId),
+    final param = LyricsAndArtParam(
+      audio: widget.audio,
+      title: widget.title,
+      artist: widget.artist,
+      tryToFetchOnline: widget.tryToFetchOnline,
     );
+    final lyricsAsync = ref.watch(lyricsManagerProvider(param));
 
     const padding = EdgeInsets.symmetric(
       vertical: kLargestSpace,
@@ -127,51 +115,40 @@ class _PlayerLyricsState extends State<_PlayerLyrics> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: watchValue((LyricsManager m) => m.command.results).toWidget(
-            whileRunning: (lastResult, param) =>
-                const Center(child: Progress()),
-            onError: (error, lastResult, param) => Center(
+          child: switch (lyricsAsync) {
+            AsyncLoading() => const Center(child: Progress()),
+            AsyncError(:final error, :final stackTrace) => Center(
               child: ErrorRetryBody(
                 error: error,
                 errorText: context.l10n.fetchingLyricsOnlineFailed,
-                stackTrace:
-                    di<LyricsManager>().command.errors.value?.stackTrace ??
-                    StackTrace.current,
+                stackTrace: stackTrace,
                 errorTextStyle: context.textTheme.bodyLarge,
                 retryCapsule: RetryCapsule(
                   retryViewId: retryViewId,
-                  onRetry: () => di<LyricsManager>().command.runRestricted(
-                    param: LyricsAndArtParam(
-                      audio: widget.audio,
-                      title: widget.title,
-                      artist: widget.artist,
-                      tryToFetchOnline: widget.tryToFetchOnline,
-                    ),
-                    immediatelyClearErrors: true,
-                    runWhen: RunWhen.hasNoValueAndNoErrors,
-                  ),
+                  onRetry: () => ref.invalidate(lyricsManagerProvider(param)),
                 ),
               ),
             ),
-            onNullData: (param) => const NoLyricsFound(),
-            onData: (result, param) =>
-                result!.lrcLines != null && result.lrcLines!.isNotEmpty
-                ? _LrcLineViewer(
-                    padding: padding,
-                    lrc: result.lrcLines!,
-                    autoScroll: _autoScroll,
-                    highlightCurrentLine: widget.highlightCurrentLine,
-                  )
-                : result.plainLyrics != null && result.plainLyrics!.isNotEmpty
-                ? SingleChildScrollView(
-                    padding: padding,
-                    child: SelectableText(
-                      result.plainLyrics!.trim(),
-                      style: getPlayerLyricsTextStyle(theme: context.theme),
-                    ),
-                  )
-                : const NoLyricsFound(),
-          ),
+            AsyncData(value: final result) =>
+              result == null
+                  ? const NoLyricsFound()
+                  : result.lrcLines != null && result.lrcLines!.isNotEmpty
+                  ? _LrcLineViewer(
+                      padding: padding,
+                      lrc: result.lrcLines!,
+                      autoScroll: _autoScroll,
+                      highlightCurrentLine: widget.highlightCurrentLine,
+                    )
+                  : result.plainLyrics != null && result.plainLyrics!.isNotEmpty
+                  ? SingleChildScrollView(
+                      padding: padding,
+                      child: SelectableText(
+                        result.plainLyrics!.trim(),
+                        style: getPlayerLyricsTextStyle(theme: context.theme),
+                      ),
+                    )
+                  : const NoLyricsFound(),
+          },
         ),
         Padding(
           padding: const EdgeInsets.symmetric(

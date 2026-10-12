@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
@@ -62,17 +61,15 @@ class MasterList extends StatelessWidget {
   );
 }
 
-class PermanentPageList extends StatelessWidget with WatchItMixin {
+class PermanentPageList extends ConsumerWidget {
   const PermanentPageList({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final masterItems = permanentMasterItems.whereNot(
       (e) => e.pageId == PageIDs.settings,
     );
-    final selectedPageId = watchValue(
-      (RoutingManager m) => m.selectedPageIdCommand,
-    );
+    final selectedPageId = ref.watch(routingManagerProvider);
     return SliverList.builder(
       itemCount: masterItems.length,
       itemBuilder: (context, index) => MasterTile(
@@ -83,102 +80,78 @@ class PermanentPageList extends StatelessWidget with WatchItMixin {
   }
 }
 
-class PlaylistList extends StatelessWidget with WatchItMixin {
+class PlaylistList extends ConsumerWidget {
   const PlaylistList({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final selectedPageId = watchValue(
-      (RoutingManager m) => m.selectedPageIdCommand,
-    );
-    return Consumer(
-      builder: (context, ref, _) {
-        final playlistIDs = ref.watch(playlistIDsManagerProvider).value ?? [];
-        final masterItems = createPlaylistMasterItems(playlistIDs);
-        return SliverList.builder(
-          itemCount: masterItems.length,
-          itemBuilder: (context, index) => MasterTile(
-            item: masterItems.elementAt(index),
-            selectedPageId: selectedPageId,
-          ),
-        );
-      },
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedPageId = ref.watch(routingManagerProvider);
+    final playlistIDs = ref.watch(playlistIDsManagerProvider).value ?? [];
+    final masterItems = createPlaylistMasterItems(playlistIDs);
+    return SliverList.builder(
+      itemCount: masterItems.length,
+      itemBuilder: (context, index) => MasterTile(
+        item: masterItems.elementAt(index),
+        selectedPageId: selectedPageId,
+      ),
     );
   }
 }
 
-class PodcastList extends StatelessWidget with WatchItMixin {
+class PodcastList extends ConsumerWidget {
   const PodcastList({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final selectedPageId = watchValue(
-      (RoutingManager m) => m.selectedPageIdCommand,
-    );
-    return Consumer(
-      builder: (context, ref, _) {
-        final subs =
-            ref.watch(subscribedPodcastsManagerProvider).value ?? <String>{};
-        final masterItems = createPodcastMasterItems(subs.toList());
-        return SliverList.builder(
-          itemCount: masterItems.length,
-          itemBuilder: (context, index) => MasterTile(
-            item: masterItems.elementAt(index),
-            selectedPageId: selectedPageId,
-          ),
-        );
-      },
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedPageId = ref.watch(routingManagerProvider);
+    final subs =
+        ref.watch(subscribedPodcastsManagerProvider).value ?? <String>{};
+    final masterItems = createPodcastMasterItems(subs.toList());
+    return SliverList.builder(
+      itemCount: masterItems.length,
+      itemBuilder: (context, index) => MasterTile(
+        item: masterItems.elementAt(index),
+        selectedPageId: selectedPageId,
+      ),
     );
   }
 }
 
-class StationsList extends StatelessWidget with WatchItMixin {
+class StationsList extends ConsumerWidget {
   const StationsList({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final selectedPageId = watchValue(
-      (RoutingManager m) => m.selectedPageIdCommand,
-    );
-    return Consumer(
-      builder: (context, ref, _) {
-        final starredStationIDs =
-            ref.watch(radioStarStationManagerProvider).value ?? {};
-        final masterItems =
-            createStarredStationsMasterItems(starredStationIDs);
-        return SliverList.builder(
-          itemCount: masterItems.length,
-          itemBuilder: (context, index) => MasterTile(
-            item: masterItems.elementAt(index),
-            selectedPageId: selectedPageId,
-          ),
-        );
-      },
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedPageId = ref.watch(routingManagerProvider);
+    final starredStationIDs =
+        ref.watch(radioStarStationManagerProvider).value ?? {};
+    final masterItems =
+        createStarredStationsMasterItems(starredStationIDs);
+    return SliverList.builder(
+      itemCount: masterItems.length,
+      itemBuilder: (context, index) => MasterTile(
+        item: masterItems.elementAt(index),
+        selectedPageId: selectedPageId,
+      ),
     );
   }
 }
 
-class AlbumsList extends StatelessWidget with WatchItMixin {
+class AlbumsList extends ConsumerWidget {
   const AlbumsList({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final selectedPageId = watchValue(
-      (RoutingManager m) => m.selectedPageIdCommand,
-    );
-    return Consumer(
-      builder: (context, ref, _) {
-        final pinnedAlbums =
-            ref.watch(pinnedAlbumIDsManagerProvider).value ?? [];
-        final masterItems = createPinnedAlbumsMasterItems(pinnedAlbums);
-        return SliverList.builder(
-          itemCount: masterItems.length,
-          itemBuilder: (context, index) => MasterTile(
-            item: masterItems.elementAt(index),
-            selectedPageId: selectedPageId,
-          ),
-        );
-      },
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedPageId = ref.watch(routingManagerProvider);
+    final pinnedAlbums =
+        ref.watch(pinnedAlbumIDsManagerProvider).value ?? [];
+    final masterItems = createPinnedAlbumsMasterItems(pinnedAlbums);
+    return SliverList.builder(
+      itemCount: masterItems.length,
+      itemBuilder: (context, index) => MasterTile(
+        item: masterItems.elementAt(index),
+        selectedPageId: selectedPageId,
+      ),
     );
   }
 }

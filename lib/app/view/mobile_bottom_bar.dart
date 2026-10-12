@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../player/view/bottom_player.dart';
-import '../app_manager.dart';
+import '../full_window_mode_manager.dart';
 import 'mobile_navigation_bar.dart';
 
-class MobileBottomBar extends StatelessWidget {
+class MobileBottomBar extends ConsumerWidget {
   const MobileBottomBar({super.key});
 
   @override
-  Widget build(BuildContext context) => SizedBox(
+  Widget build(BuildContext context, WidgetRef ref) => SizedBox(
     width: context.mediaQuerySize.width,
     child: RepaintBoundary(
       child: Material(
@@ -22,7 +22,9 @@ class MobileBottomBar extends StatelessWidget {
               onVerticalDragEnd: (details) {
                 if (details.primaryVelocity != null &&
                     details.primaryVelocity! < 150) {
-                  di<AppManager>().setFullWindowMode(true);
+                  ref
+                      .read(fullWindowModeManagerProvider.notifier)
+                      .setFullWindowMode(true);
                 }
               },
               child: const BottomPlayer(),

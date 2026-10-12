@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/data/play_anywhere_param.dart';
 import '../../app/play_anywhere_manager.dart';
@@ -56,9 +57,14 @@ class AvatarPlayButton extends StatelessWidget with WatchItMixin {
         tooltip: label,
         onPressed:
             onPressed ??
-            () => di<PlayAnywhereManager>().command.run(
-              PlayAnywhereParam(audioPageType: audioPageType, pageId: pageId),
-            ),
+            () => ProviderScope.containerOf(context, listen: false)
+                .read(playAnywhereManagerProvider.notifier)
+                .play(
+                  PlayAnywhereParam(
+                    audioPageType: audioPageType,
+                    pageId: pageId,
+                  ),
+                ),
         icon: Icon(
           iconData,
           color: theme.colorScheme.onInverseSurface,

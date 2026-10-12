@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/page_ids.dart';
@@ -11,7 +11,7 @@ import '../../custom_content/view/custom_playlists_section.dart';
 import '../../extensions/build_context_x.dart';
 import 'playlist_page.dart';
 
-class PlaylistsView extends StatelessWidget {
+class PlaylistsView extends ConsumerWidget {
   const PlaylistsView({
     super.key,
     this.noResultMessage,
@@ -25,7 +25,7 @@ class PlaylistsView extends StatelessWidget {
   final int? take;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final lists = [
       PageIDs.customContent,
       PageIDs.likedAudios,
@@ -54,7 +54,7 @@ class PlaylistsView extends StatelessWidget {
                     ),
                   ),
                 )
-              : di<RoutingManager>().push(
+              : ref.read(routingManagerProvider.notifier).push(
                   builder: (_) => PlaylistPage(pageId: id),
                   pageId: id,
                 ),

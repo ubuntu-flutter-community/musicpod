@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/audio_page_type.dart';
 import '../../common/view/global_keys.dart';
@@ -17,7 +18,7 @@ import '../play_anywhere_manager.dart';
 import '../routing_manager.dart';
 import 'master_item.dart';
 
-class MasterTile extends StatelessWidget {
+class MasterTile extends ConsumerWidget {
   const MasterTile({
     super.key,
     required this.item,
@@ -28,10 +29,12 @@ class MasterTile extends StatelessWidget {
   final String? selectedPageId;
 
   @override
-  Widget build(BuildContext context) => _MasterTile(
+  Widget build(BuildContext context, WidgetRef ref) => _MasterTile(
     key: ValueKey(item.pageId),
     audioPageType: item.audioPageType,
-    onTap: () => di<RoutingManager>().push(pageId: item.pageId),
+    onTap: () => ref
+        .read(routingManagerProvider.notifier)
+        .push(pageId: item.pageId),
     pageId: item.pageId,
     leading: item.iconBuilder(selectedPageId == item.pageId),
     title: item.titleBuilder(context),
@@ -185,55 +188,58 @@ class __PlayAbleMasterTileState extends State<_PlayAbleMasterTile> {
     );
     final isPlaying = watchPropertyValue((PlayerManager m) => m.isPlaying);
 
-    final playAudiosByIdCommandResults = watchValue(
-      (PlayAnywhereManager m) => m.command.results,
-    );
+    return Consumer(
+      builder: (context, ref, child) {
+        final playAnywhereAsync = ref.watch(playAnywhereManagerProvider);
+        final isRunning = playAnywhereAsync.isLoading;
+        final paramPageId =
+            ref.read(playAnywhereManagerProvider.notifier).activeParam?.pageId;
+        final busy = isRunning && paramPageId == widget.pageId;
 
-    final isRunning = playAudiosByIdCommandResults.isRunning;
-    final paramPageId = playAudiosByIdCommandResults.paramData;
-
-    final busy = isRunning && paramPageId == widget.pageId;
-
-    return MouseRegion(
-      onEnter: (e) => setState(() => _hovered = true),
-      onExit: (e) => setState(() => _hovered = false),
-      child: Stack(
-        children: [
-          widget.tile,
-          if (isEnQueued || _hovered || widget.selected == true)
-            Positioned(
-              right: 25,
-              top: 12,
-              child: SizedBox.square(
-                dimension: kTinyButtonSize,
-                child: IconButton(
-                  style: tonedIconButtonStyle(context.colorScheme),
-                  onPressed: isRunning
-                      ? null
-                      : () => di<PlayAnywhereManager>().command.run(
-                          PlayAnywhereParam(
-                            pageId: widget.pageId,
-                            audioPageType: widget.audioPageType,
-                          ),
-                        ),
-                  icon: busy
-                      ? const SizedBox(
-                          width: 15,
-                          height: 15,
-                          child: Progress(strokeWidth: 1),
-                        )
-                      : Icon(
-                          isPlaying && isEnQueued
-                              ? Iconz.pause
-                              : Iconz.playFilled,
-                          size: kTinyButtonIconSize,
-                          color: context.theme.colorScheme.onSurface,
-                        ),
+        return MouseRegion(
+          onEnter: (e) => setState(() => _hovered = true),
+          onExit: (e) => setState(() => _hovered = false),
+          child: Stack(
+            children: [
+              widget.tile,
+              if (isEnQueued || _hovered || widget.selected == true)
+                Positioned(
+                  right: 25,
+                  top: 12,
+                  child: SizedBox.square(
+                    dimension: kTinyButtonSize,
+                    child: IconButton(
+                      style: tonedIconButtonStyle(context.colorScheme),
+                      onPressed: isRunning
+                          ? null
+                          : () => ref
+                              .read(playAnywhereManagerProvider.notifier)
+                              .play(
+                                PlayAnywhereParam(
+                                  pageId: widget.pageId,
+                                  audioPageType: widget.audioPageType,
+                                ),
+                              ),
+                      icon: busy
+                          ? const SizedBox(
+                              width: 15,
+                              height: 15,
+                              child: Progress(strokeWidth: 1),
+                            )
+                          : Icon(
+                              isPlaying && isEnQueued
+                                  ? Iconz.pause
+                                  : Iconz.playFilled,
+                              size: kTinyButtonIconSize,
+                              color: context.theme.colorScheme.onSurface,
+                            ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-        ],
-      ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

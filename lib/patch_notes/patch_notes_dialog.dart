@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../app/app_config.dart';
-import '../app/app_manager.dart';
 import '../common/view/confirm.dart';
 import '../common/view/progress.dart';
 import '../extensions/build_context_x.dart';
+import 'manager/recent_patch_notes_disposed_manager.dart';
 
-class PatchNotesDialog extends StatefulWidget {
+class PatchNotesDialog extends ConsumerStatefulWidget {
   const PatchNotesDialog({super.key, required this.presentAsBottomSheet});
 
   final bool presentAsBottomSheet;
@@ -21,10 +21,10 @@ class PatchNotesDialog extends StatefulWidget {
   );
 
   @override
-  State<PatchNotesDialog> createState() => _PatchNotesDialogState();
+  ConsumerState<PatchNotesDialog> createState() => _PatchNotesDialogState();
 }
 
-class _PatchNotesDialogState extends State<PatchNotesDialog> {
+class _PatchNotesDialogState extends ConsumerState<PatchNotesDialog> {
   late Future<String?> _markdown;
 
   @override
@@ -55,11 +55,15 @@ class _PatchNotesDialogState extends State<PatchNotesDialog> {
           : const Center(child: Progress()),
     ),
     onCancel: () {
-      di<AppManager>().disposePatchNotes();
+      ref
+          .read(recentPatchNotesDisposedManagerProvider.notifier)
+          .disposeNotes();
       return launchUrl(Uri.parse(AppConfig.sponsorLink));
     },
     cancelLabel: 'Sponsor Me',
-    onConfirm: () => di<AppManager>().disposePatchNotes(),
+    onConfirm: () => ref
+        .read(recentPatchNotesDisposedManagerProvider.notifier)
+        .disposeNotes(),
     confirmLabel: context.l10n.ok,
   );
 }

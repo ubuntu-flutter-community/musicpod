@@ -15,7 +15,6 @@ import '../../common/view/progress.dart';
 import '../../common/view/side_bar_fall_back_image.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
-import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
 import '../manager/find_album_manager.dart';
 import '../manager/find_album_name_manager.dart';
@@ -48,6 +47,12 @@ class AlbumPage extends ConsumerWidget {
             );
           }
 
+          void onArtistTap(String text) =>
+              ref.read(routingManagerProvider.notifier).push(
+                    builder: (_) => ArtistPage(pageId: text),
+                    pageId: text,
+                  );
+
           return LocalAudioPage(
             pageId: id.toString(),
             audioPageType: AudioPageType.album,
@@ -65,11 +70,6 @@ class AlbumPage extends ConsumerWidget {
           );
         },
       );
-
-  void onArtistTap(String text) => di<RoutingManager>().push(
-    builder: (_) => ArtistPage(pageId: text),
-    pageId: text,
-  );
 }
 
 class AlbumPageSideBarName extends ConsumerWidget {

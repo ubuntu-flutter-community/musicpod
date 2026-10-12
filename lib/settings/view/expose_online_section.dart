@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
@@ -66,6 +65,8 @@ class _ExposeOnlineSectionState extends ConsumerState<ExposeOnlineSection> {
         ref.watch(settingsBoolManagerProvider(SPKeys.enableListenBrainz)) ??
         false;
 
+    final isLastFmAuthorized = ref.watch(exposeManagerProvider);
+
     return SettingsSection(
       heading: l10n.exposeOnlineHeadline,
       children: [
@@ -75,14 +76,8 @@ class _ExposeOnlineSectionState extends ConsumerState<ExposeOnlineSection> {
             children: space(
               children: [
                 const Icon(TablerIcons.brand_lastfm),
-                if (lastFmEnabled)
-                  ValueListenableBuilder<bool>(
-                    valueListenable: di<ExposeManager>().isLastFmAuthorized,
-                    builder: (context, isAuthorized, _) {
-                      if (!isAuthorized) return const SizedBox.shrink();
-                      return Text(l10n.connectedTo);
-                    },
-                  ),
+                if (lastFmEnabled && isLastFmAuthorized)
+                  Text(l10n.connectedTo),
                 Text(l10n.exposeToLastfmTitle),
               ],
             ),
@@ -165,8 +160,9 @@ class _ExposeOnlineSectionState extends ConsumerState<ExposeOnlineSection> {
                       },
                     ),
                     ElevatedButton(
-                      onPressed: () =>
-                          di<ExposeManager>().authorizeLastFmCommand.run(
+                      onPressed: () => ref
+                          .read(exposeManagerProvider.notifier)
+                          .authorizeLastFm(
                             LastFmCredentials(
                               apiKey: _lastFmApiKeyController.text,
                               apiSecret: _lastFmSecretController.text,
@@ -250,8 +246,9 @@ class _ExposeOnlineSectionState extends ConsumerState<ExposeOnlineSection> {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () => di<ExposeManager>().initListenBrainsCommand
-                        .run(_listenBrainzApiKeyController.text),
+                    onPressed: () => ref
+                        .read(exposeManagerProvider.notifier)
+                        .initListenBrains(_listenBrainzApiKeyController.text),
                     child: Text(l10n.save),
                   ),
                 ],

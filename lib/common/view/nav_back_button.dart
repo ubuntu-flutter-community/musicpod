@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/routing_manager.dart';
-import '../../dependencies.dart';
 import '../../extensions/platform_x.dart';
 import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
@@ -16,7 +15,7 @@ class NavBackButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     void onTap() {
       ref.read(settingsScrollIndexProvider.notifier).set(0);
-      di<RoutingManager>().pop();
+      ref.read(routingManagerProvider.notifier).pop();
     }
 
     final useYaruTheme =

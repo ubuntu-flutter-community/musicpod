@@ -134,7 +134,9 @@ class _PodcastsCollectionBodyState
                   const SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: () {
-                      di<RoutingManager>().push(pageId: PageIDs.searchPage);
+                      ref
+                          .read(routingManagerProvider.notifier)
+                          .push(pageId: PageIDs.searchPage);
                       di<SearchManager>()
                         ..setAudioType(AudioType.podcast)
                         ..setSearchQuery(null)

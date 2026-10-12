@@ -23,6 +23,7 @@ import '../../radio/manager/radio_fav_tag_manager.dart';
 import '../../radio/manager/radio_star_station_manager.dart';
 import '../../radio/service/radio_service.dart';
 import '../service/settings_service.dart';
+import 'settings_manager.dart';
 
 part 'wipe_manager.g.dart';
 
@@ -76,6 +77,12 @@ class WipeManager extends _$WipeManager {
         await di<SettingsService>().wipeAllSettings();
         ref.invalidate(localAudioManagerProvider);
         ref.invalidate(pinnedAlbumIDsManagerProvider);
+        ref.invalidate(settingsBoolManagerProvider);
+        ref.invalidate(settingsIntManagerProvider);
+        ref.invalidate(settingsDoubleManagerProvider);
+        ref.invalidate(settingsStringManagerProvider);
+        ref.invalidate(settingsStringListManagerProvider);
+        ref.invalidate(settingsScrollIndexProvider);
       }
 
       await di<Database>().reclaimDiskSpace();

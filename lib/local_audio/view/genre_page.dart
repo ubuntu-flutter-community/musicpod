@@ -31,7 +31,9 @@ class GenrePage extends ConsumerWidget {
           IconButton(
             tooltip: context.l10n.searchForRadioStationsWithGenreName,
             onPressed: () {
-              di<RoutingManager>().push(pageId: PageIDs.searchPage);
+              ref
+                  .read(routingManagerProvider.notifier)
+                  .push(pageId: PageIDs.searchPage);
               di<SearchManager>()
                 ..setTag(Tag(name: genre.toLowerCase(), stationCount: 1))
                 ..setAudioType(AudioType.radio)

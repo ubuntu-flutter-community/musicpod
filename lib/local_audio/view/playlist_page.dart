@@ -86,7 +86,9 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
               padding: appBarSingleActionSpacing,
               child: SearchButton(
                 onPressed: () {
-                  di<RoutingManager>().push(pageId: PageIDs.searchPage);
+                  ref
+                      .read(routingManagerProvider.notifier)
+                      .push(pageId: PageIDs.searchPage);
                   final searchManager = di<SearchManager>();
                   searchManager
                     ..setAudioType(AudioType.local)
@@ -100,19 +102,20 @@ class PlaylistPage extends StatelessWidget with WatchItMixin {
         body: isInitializing
             ? const Center(child: CircularProgressIndicator())
             : _PlaylistPageBody(
-                onArtistTap: (text) => di<RoutingManager>().push(
-                  builder: (_) => ArtistPage(pageId: text),
-                  pageId: text,
-                ),
+                onArtistTap: (text) =>
+                    ref.read(routingManagerProvider.notifier).push(
+                          builder: (_) => ArtistPage(pageId: text),
+                          pageId: text,
+                        ),
                 onAlbumTap: (audio) {
                   if (audio.albumDbId == null) {
                     context.toast(Text(context.l10n.nothingFound));
                     return;
                   }
-                  di<RoutingManager>().push(
-                    builder: (_) => AlbumPage(id: audio.albumDbId!),
-                    pageId: audio.albumDbId!.toString(),
-                  );
+                  ref.read(routingManagerProvider.notifier).push(
+                        builder: (_) => AlbumPage(id: audio.albumDbId!),
+                        pageId: audio.albumDbId!.toString(),
+                      );
                 },
                 image: PlaylistHeaderImage(pageId: pageId),
                 pageId: pageId,
@@ -141,15 +144,13 @@ class _PlaylistPageBody extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final isPlaying = watchPropertyValue((PlayerManager m) => m.isPlaying);
+    final currentAudio = watchPropertyValue((PlayerManager m) => m.audio);
+    final playerManager = di<PlayerManager>();
 
     return Consumer(
       builder: (context, ref, _) {
         final audios = ref.watch(playlistManagerProvider(pageId)).value ?? [];
-
-    final isPlaying = watchPropertyValue((PlayerManager m) => m.isPlaying);
-    final playerManager = di<PlayerManager>();
-
-    final currentAudio = watchPropertyValue((PlayerManager m) => m.audio);
 
     final audioPageHeader = AudioPageHeader(
       title: pageId,

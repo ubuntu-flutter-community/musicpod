@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/routing_manager.dart';
 import '../../common/view/ui_constants.dart';
+import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
 import '../../podcasts/service/podcast_service.dart';
 import '../../podcasts/view/podcast_page.dart';
 
-class CustomPodcastSection extends StatefulWidget {
+class CustomPodcastSection extends ConsumerStatefulWidget {
   const CustomPodcastSection({super.key});
 
   @override
-  State<CustomPodcastSection> createState() => _CustomPodcastSectionState();
+  ConsumerState<CustomPodcastSection> createState() =>
+      _CustomPodcastSectionState();
 }
 
-class _CustomPodcastSectionState extends State<CustomPodcastSection> {
+class _CustomPodcastSectionState extends ConsumerState<CustomPodcastSection> {
   late TextEditingController _urlController;
 
   @override
@@ -64,7 +66,7 @@ class _CustomPodcastSectionState extends State<CustomPodcastSection> {
                             if (episodes.isEmpty && context.mounted) {
                               context.toast(Text(context.l10n.noPodcastFound));
                             } else if (context.mounted) {
-                              di<RoutingManager>().push(
+                              ref.read(routingManagerProvider.notifier).push(
                                 pageId: _urlController.text,
                                 builder: (context) =>
                                     PodcastPage(feedUrl: _urlController.text),

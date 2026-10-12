@@ -6,25 +6,28 @@
 import 'dart:async' as _i7;
 
 import 'package:flutter/material.dart' as _i3;
-import 'package:flutter_it/flutter_it.dart' as _i4;
+import 'package:flutter_it/flutter_it.dart' as _i5;
 import 'package:go_router/go_router.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:mockito/src/dummies.dart' as _i15;
 import 'package:musicpod/app/routing_manager.dart' as _i14;
 import 'package:musicpod/common/data/audio.dart' as _i8;
-import 'package:musicpod/common/data/audio_type.dart' as _i17;
+import 'package:musicpod/common/data/audio_type.dart' as _i20;
 import 'package:musicpod/common/view/audio_filter.dart' as _i9;
-import 'package:musicpod/common/view/languages.dart' as _i19;
+import 'package:musicpod/common/view/languages.dart' as _i22;
 import 'package:musicpod/local_audio/data/change_metadata_capsule.dart' as _i12;
 import 'package:musicpod/local_audio/data/local_search_result.dart' as _i10;
 import 'package:musicpod/local_audio/data/playlist_action.dart' as _i11;
 import 'package:musicpod/local_audio/service/local_audio_service.dart' as _i6;
-import 'package:musicpod/podcasts/data/podcast_genre.dart' as _i21;
-import 'package:musicpod/search/data/search_type.dart' as _i16;
-import 'package:musicpod/search/manager/search_manager.dart' as _i15;
+import 'package:musicpod/podcasts/data/podcast_genre.dart' as _i24;
+import 'package:musicpod/search/data/search_type.dart' as _i19;
+import 'package:musicpod/search/manager/search_manager.dart' as _i18;
 import 'package:musicpod/settings/service/settings_service.dart' as _i13;
-import 'package:podcast_search/podcast_search.dart' as _i18;
-import 'package:radio_browser_api/radio_browser_api.dart' as _i20;
-import 'package:safe_change_notifier/safe_change_notifier.dart' as _i5;
+import 'package:podcast_search/podcast_search.dart' as _i21;
+import 'package:radio_browser_api/radio_browser_api.dart' as _i23;
+import 'package:riverpod_annotation/riverpod_annotation.dart' as _i16;
+import 'package:safe_change_notifier/safe_change_notifier.dart' as _i4;
+import 'package:state_notifier/state_notifier.dart' as _i17;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -53,15 +56,15 @@ class _FakeGlobalKey_1<T extends _i3.State<_i3.StatefulWidget>>
     : super(parent, parentInvocation);
 }
 
-class _FakeCommand_2<TParam, TResult> extends _i1.SmartFake
-    implements _i4.Command<TParam, TResult> {
-  _FakeCommand_2(Object parent, Invocation parentInvocation)
+class _FakeSafeValueNotifier_2<T> extends _i1.SmartFake
+    implements _i4.SafeValueNotifier<T> {
+  _FakeSafeValueNotifier_2(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
-class _FakeSafeValueNotifier_3<T> extends _i1.SmartFake
-    implements _i5.SafeValueNotifier<T> {
-  _FakeSafeValueNotifier_3(Object parent, Invocation parentInvocation)
+class _FakeCommand_3<TParam, TResult> extends _i1.SmartFake
+    implements _i5.Command<TParam, TResult> {
+  _FakeCommand_3(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
@@ -453,20 +456,68 @@ class MockRoutingManager extends _i1.Mock implements _i14.RoutingManager {
           as _i3.GlobalKey<_i3.NavigatorState>);
 
   @override
-  _i4.Command<String?, String> get selectedPageIdCommand =>
+  String get selectedPageId =>
       (super.noSuchMethod(
-            Invocation.getter(#selectedPageIdCommand),
-            returnValue: _FakeCommand_2<String?, String>(
+            Invocation.getter(#selectedPageId),
+            returnValue: _i15.dummyValue<String>(
               this,
-              Invocation.getter(#selectedPageIdCommand),
+              Invocation.getter(#selectedPageId),
             ),
           )
-          as _i4.Command<String?, String>);
+          as String);
 
   @override
   bool get canPop =>
       (super.noSuchMethod(Invocation.getter(#canPop), returnValue: false)
           as bool);
+
+  @override
+  _i16.Ref get ref =>
+      (super.noSuchMethod(
+            Invocation.getter(#ref),
+            returnValue: _i15.dummyValue<_i16.Ref>(
+              this,
+              Invocation.getter(#ref),
+            ),
+          )
+          as _i16.Ref);
+
+  @override
+  String get state =>
+      (super.noSuchMethod(
+            Invocation.getter(#state),
+            returnValue: _i15.dummyValue<String>(
+              this,
+              Invocation.getter(#state),
+            ),
+          )
+          as String);
+
+  @override
+  set state(String? newState) => super.noSuchMethod(
+    Invocation.setter(#state, newState),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  String build() =>
+      (super.noSuchMethod(
+            Invocation.method(#build, []),
+            returnValue: _i15.dummyValue<String>(
+              this,
+              Invocation.method(#build, []),
+            ),
+          )
+          as String);
+
+  @override
+  _i7.Future<void> setSelectedPageId(String? pageId) =>
+      (super.noSuchMethod(
+            Invocation.method(#setSelectedPageId, [pageId]),
+            returnValue: _i7.Future<void>.value(),
+            returnValueForMissingStub: _i7.Future<void>.value(),
+          )
+          as _i7.Future<void>);
 
   @override
   void didPush(_i3.Route<dynamic>? route, _i3.Route<dynamic>? previousRoute) =>
@@ -504,12 +555,28 @@ class MockRoutingManager extends _i1.Mock implements _i14.RoutingManager {
   );
 
   @override
-  _i7.Future<bool> isPageInLibrary(String? pageId) =>
-      (super.noSuchMethod(
-            Invocation.method(#isPageInLibrary, [pageId]),
-            returnValue: _i7.Future<bool>.value(false),
-          )
-          as _i7.Future<bool>);
+  void didChangeTop(
+    _i3.Route<dynamic>? topRoute,
+    _i3.Route<dynamic>? previousTopRoute,
+  ) => super.noSuchMethod(
+    Invocation.method(#didChangeTop, [topRoute, previousTopRoute]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void didStartUserGesture(
+    _i3.Route<dynamic>? route,
+    _i3.Route<dynamic>? previousRoute,
+  ) => super.noSuchMethod(
+    Invocation.method(#didStartUserGesture, [route, previousRoute]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void didStopUserGesture() => super.noSuchMethod(
+    Invocation.method(#didStopUserGesture, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
   _i7.Future<void> push({
@@ -537,251 +604,246 @@ class MockRoutingManager extends _i1.Mock implements _i14.RoutingManager {
   );
 
   @override
-  void didChangeTop(
-    _i3.Route<dynamic>? topRoute,
-    _i3.Route<dynamic>? previousTopRoute,
-  ) => super.noSuchMethod(
-    Invocation.method(#didChangeTop, [topRoute, previousTopRoute]),
-    returnValueForMissingStub: null,
-  );
+  _i17.RemoveListener listenSelf(
+    void Function(String?, String)? listener, {
+    void Function(Object, StackTrace)? onError,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#listenSelf, [listener], {#onError: onError}),
+            returnValue: () {},
+          )
+          as _i17.RemoveListener);
 
   @override
-  void didStartUserGesture(
-    _i3.Route<dynamic>? route,
-    _i3.Route<dynamic>? previousRoute,
-  ) => super.noSuchMethod(
-    Invocation.method(#didStartUserGesture, [route, previousRoute]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void didStopUserGesture() => super.noSuchMethod(
-    Invocation.method(#didStopUserGesture, []),
-    returnValueForMissingStub: null,
-  );
+  bool updateShouldNotify(String? previous, String? next) =>
+      (super.noSuchMethod(
+            Invocation.method(#updateShouldNotify, [previous, next]),
+            returnValue: false,
+          )
+          as bool);
 }
 
 /// A class which mocks [SearchManager].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSearchManager extends _i1.Mock implements _i15.SearchManager {
+class MockSearchManager extends _i1.Mock implements _i18.SearchManager {
   MockSearchManager() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.SafeValueNotifier<Set<_i16.SearchType>> get searchTypes =>
+  _i4.SafeValueNotifier<Set<_i19.SearchType>> get searchTypes =>
       (super.noSuchMethod(
             Invocation.getter(#searchTypes),
-            returnValue: _FakeSafeValueNotifier_3<Set<_i16.SearchType>>(
+            returnValue: _FakeSafeValueNotifier_2<Set<_i19.SearchType>>(
               this,
               Invocation.getter(#searchTypes),
             ),
           )
-          as _i5.SafeValueNotifier<Set<_i16.SearchType>>);
+          as _i4.SafeValueNotifier<Set<_i19.SearchType>>);
 
   @override
-  _i5.SafeValueNotifier<_i17.AudioType> get audioType =>
+  _i4.SafeValueNotifier<_i20.AudioType> get audioType =>
       (super.noSuchMethod(
             Invocation.getter(#audioType),
-            returnValue: _FakeSafeValueNotifier_3<_i17.AudioType>(
+            returnValue: _FakeSafeValueNotifier_2<_i20.AudioType>(
               this,
               Invocation.getter(#audioType),
             ),
           )
-          as _i5.SafeValueNotifier<_i17.AudioType>);
+          as _i4.SafeValueNotifier<_i20.AudioType>);
 
   @override
-  _i5.SafeValueNotifier<_i16.SearchType> get searchType =>
+  _i4.SafeValueNotifier<_i19.SearchType> get searchType =>
       (super.noSuchMethod(
             Invocation.getter(#searchType),
-            returnValue: _FakeSafeValueNotifier_3<_i16.SearchType>(
+            returnValue: _FakeSafeValueNotifier_2<_i19.SearchType>(
               this,
               Invocation.getter(#searchType),
             ),
           )
-          as _i5.SafeValueNotifier<_i16.SearchType>);
+          as _i4.SafeValueNotifier<_i19.SearchType>);
 
   @override
-  _i5.SafeValueNotifier<String?> get searchQuery =>
+  _i4.SafeValueNotifier<String?> get searchQuery =>
       (super.noSuchMethod(
             Invocation.getter(#searchQuery),
-            returnValue: _FakeSafeValueNotifier_3<String?>(
+            returnValue: _FakeSafeValueNotifier_2<String?>(
               this,
               Invocation.getter(#searchQuery),
             ),
           )
-          as _i5.SafeValueNotifier<String?>);
+          as _i4.SafeValueNotifier<String?>);
 
   @override
-  _i5.SafeValueNotifier<_i18.Country?> get country =>
+  _i4.SafeValueNotifier<_i21.Country?> get country =>
       (super.noSuchMethod(
             Invocation.getter(#country),
-            returnValue: _FakeSafeValueNotifier_3<_i18.Country?>(
+            returnValue: _FakeSafeValueNotifier_2<_i21.Country?>(
               this,
               Invocation.getter(#country),
             ),
           )
-          as _i5.SafeValueNotifier<_i18.Country?>);
+          as _i4.SafeValueNotifier<_i21.Country?>);
 
   @override
-  _i5.SafeValueNotifier<_i19.SimpleLanguage?> get language =>
+  _i4.SafeValueNotifier<_i22.SimpleLanguage?> get language =>
       (super.noSuchMethod(
             Invocation.getter(#language),
-            returnValue: _FakeSafeValueNotifier_3<_i19.SimpleLanguage?>(
+            returnValue: _FakeSafeValueNotifier_2<_i22.SimpleLanguage?>(
               this,
               Invocation.getter(#language),
             ),
           )
-          as _i5.SafeValueNotifier<_i19.SimpleLanguage?>);
+          as _i4.SafeValueNotifier<_i22.SimpleLanguage?>);
 
   @override
-  _i5.SafeValueNotifier<_i20.Tag?> get tag =>
+  _i4.SafeValueNotifier<_i23.Tag?> get tag =>
       (super.noSuchMethod(
             Invocation.getter(#tag),
-            returnValue: _FakeSafeValueNotifier_3<_i20.Tag?>(
+            returnValue: _FakeSafeValueNotifier_2<_i23.Tag?>(
               this,
               Invocation.getter(#tag),
             ),
           )
-          as _i5.SafeValueNotifier<_i20.Tag?>);
+          as _i4.SafeValueNotifier<_i23.Tag?>);
 
   @override
-  _i5.SafeValueNotifier<_i21.PodcastGenre> get podcastGenre =>
+  _i4.SafeValueNotifier<_i24.PodcastGenre> get podcastGenre =>
       (super.noSuchMethod(
             Invocation.getter(#podcastGenre),
-            returnValue: _FakeSafeValueNotifier_3<_i21.PodcastGenre>(
+            returnValue: _FakeSafeValueNotifier_2<_i24.PodcastGenre>(
               this,
               Invocation.getter(#podcastGenre),
             ),
           )
-          as _i5.SafeValueNotifier<_i21.PodcastGenre>);
+          as _i4.SafeValueNotifier<_i24.PodcastGenre>);
 
   @override
-  _i5.SafeValueNotifier<_i18.Attribute> get podcastSearchAttribute =>
+  _i4.SafeValueNotifier<_i21.Attribute> get podcastSearchAttribute =>
       (super.noSuchMethod(
             Invocation.getter(#podcastSearchAttribute),
-            returnValue: _FakeSafeValueNotifier_3<_i18.Attribute>(
+            returnValue: _FakeSafeValueNotifier_2<_i21.Attribute>(
               this,
               Invocation.getter(#podcastSearchAttribute),
             ),
           )
-          as _i5.SafeValueNotifier<_i18.Attribute>);
+          as _i4.SafeValueNotifier<_i21.Attribute>);
 
   @override
-  _i4.Command<({bool clear, bool manualFilter}), void> get searchCommand =>
+  _i5.Command<({bool clear, bool manualFilter}), void> get searchCommand =>
       (super.noSuchMethod(
             Invocation.getter(#searchCommand),
             returnValue:
-                _FakeCommand_2<({bool clear, bool manualFilter}), void>(
+                _FakeCommand_3<({bool clear, bool manualFilter}), void>(
                   this,
                   Invocation.getter(#searchCommand),
                 ),
           )
-          as _i4.Command<({bool clear, bool manualFilter}), void>);
+          as _i5.Command<({bool clear, bool manualFilter}), void>);
 
   @override
-  _i5.SafeValueNotifier<List<_i8.Audio>?> get radioSearchResult =>
+  _i4.SafeValueNotifier<List<_i8.Audio>?> get radioSearchResult =>
       (super.noSuchMethod(
             Invocation.getter(#radioSearchResult),
-            returnValue: _FakeSafeValueNotifier_3<List<_i8.Audio>?>(
+            returnValue: _FakeSafeValueNotifier_2<List<_i8.Audio>?>(
               this,
               Invocation.getter(#radioSearchResult),
             ),
           )
-          as _i5.SafeValueNotifier<List<_i8.Audio>?>);
+          as _i4.SafeValueNotifier<List<_i8.Audio>?>);
 
   @override
-  _i5.SafeValueNotifier<_i10.LocalSearchResult?> get localSearchResult =>
+  _i4.SafeValueNotifier<_i10.LocalSearchResult?> get localSearchResult =>
       (super.noSuchMethod(
             Invocation.getter(#localSearchResult),
-            returnValue: _FakeSafeValueNotifier_3<_i10.LocalSearchResult?>(
+            returnValue: _FakeSafeValueNotifier_2<_i10.LocalSearchResult?>(
               this,
               Invocation.getter(#localSearchResult),
             ),
           )
-          as _i5.SafeValueNotifier<_i10.LocalSearchResult?>);
+          as _i4.SafeValueNotifier<_i10.LocalSearchResult?>);
 
   @override
-  _i5.SafeValueNotifier<_i18.SearchResult?> get podcastSearchResult =>
+  _i4.SafeValueNotifier<_i21.SearchResult?> get podcastSearchResult =>
       (super.noSuchMethod(
             Invocation.getter(#podcastSearchResult),
-            returnValue: _FakeSafeValueNotifier_3<_i18.SearchResult?>(
+            returnValue: _FakeSafeValueNotifier_2<_i21.SearchResult?>(
               this,
               Invocation.getter(#podcastSearchResult),
             ),
           )
-          as _i5.SafeValueNotifier<_i18.SearchResult?>);
+          as _i4.SafeValueNotifier<_i21.SearchResult?>);
 
   @override
-  set searchTypes(_i5.SafeValueNotifier<Set<_i16.SearchType>>? value) =>
+  set searchTypes(_i4.SafeValueNotifier<Set<_i19.SearchType>>? value) =>
       super.noSuchMethod(
         Invocation.setter(#searchTypes, value),
         returnValueForMissingStub: null,
       );
 
   @override
-  set audioType(_i5.SafeValueNotifier<_i17.AudioType>? value) =>
+  set audioType(_i4.SafeValueNotifier<_i20.AudioType>? value) =>
       super.noSuchMethod(
         Invocation.setter(#audioType, value),
         returnValueForMissingStub: null,
       );
 
   @override
-  set searchType(_i5.SafeValueNotifier<_i16.SearchType>? value) =>
+  set searchType(_i4.SafeValueNotifier<_i19.SearchType>? value) =>
       super.noSuchMethod(
         Invocation.setter(#searchType, value),
         returnValueForMissingStub: null,
       );
 
   @override
-  set searchQuery(_i5.SafeValueNotifier<String?>? value) => super.noSuchMethod(
+  set searchQuery(_i4.SafeValueNotifier<String?>? value) => super.noSuchMethod(
     Invocation.setter(#searchQuery, value),
     returnValueForMissingStub: null,
   );
 
   @override
-  set country(_i5.SafeValueNotifier<_i18.Country?>? value) =>
+  set country(_i4.SafeValueNotifier<_i21.Country?>? value) =>
       super.noSuchMethod(
         Invocation.setter(#country, value),
         returnValueForMissingStub: null,
       );
 
   @override
-  set language(_i5.SafeValueNotifier<_i19.SimpleLanguage?>? value) =>
+  set language(_i4.SafeValueNotifier<_i22.SimpleLanguage?>? value) =>
       super.noSuchMethod(
         Invocation.setter(#language, value),
         returnValueForMissingStub: null,
       );
 
   @override
-  set tag(_i5.SafeValueNotifier<_i20.Tag?>? value) => super.noSuchMethod(
+  set tag(_i4.SafeValueNotifier<_i23.Tag?>? value) => super.noSuchMethod(
     Invocation.setter(#tag, value),
     returnValueForMissingStub: null,
   );
 
   @override
-  set podcastGenre(_i5.SafeValueNotifier<_i21.PodcastGenre>? value) =>
+  set podcastGenre(_i4.SafeValueNotifier<_i24.PodcastGenre>? value) =>
       super.noSuchMethod(
         Invocation.setter(#podcastGenre, value),
         returnValueForMissingStub: null,
       );
 
   @override
-  set podcastSearchAttribute(_i5.SafeValueNotifier<_i18.Attribute>? value) =>
+  set podcastSearchAttribute(_i4.SafeValueNotifier<_i21.Attribute>? value) =>
       super.noSuchMethod(
         Invocation.setter(#podcastSearchAttribute, value),
         returnValueForMissingStub: null,
       );
 
   @override
-  void setAudioType(_i17.AudioType? value) => super.noSuchMethod(
+  void setAudioType(_i20.AudioType? value) => super.noSuchMethod(
     Invocation.method(#setAudioType, [value]),
     returnValueForMissingStub: null,
   );
 
   @override
-  void setSearchType(_i16.SearchType? value) => super.noSuchMethod(
+  void setSearchType(_i19.SearchType? value) => super.noSuchMethod(
     Invocation.method(#setSearchType, [value]),
     returnValueForMissingStub: null,
   );
@@ -793,25 +855,25 @@ class MockSearchManager extends _i1.Mock implements _i15.SearchManager {
   );
 
   @override
-  void setCountry(_i18.Country? value) => super.noSuchMethod(
+  void setCountry(_i21.Country? value) => super.noSuchMethod(
     Invocation.method(#setCountry, [value]),
     returnValueForMissingStub: null,
   );
 
   @override
-  void setLanguage(_i19.SimpleLanguage? value) => super.noSuchMethod(
+  void setLanguage(_i22.SimpleLanguage? value) => super.noSuchMethod(
     Invocation.method(#setLanguage, [value]),
     returnValueForMissingStub: null,
   );
 
   @override
-  void setTag(_i20.Tag? value) => super.noSuchMethod(
+  void setTag(_i23.Tag? value) => super.noSuchMethod(
     Invocation.method(#setTag, [value]),
     returnValueForMissingStub: null,
   );
 
   @override
-  void setPodcastGenre(_i21.PodcastGenre? value) => super.noSuchMethod(
+  void setPodcastGenre(_i24.PodcastGenre? value) => super.noSuchMethod(
     Invocation.method(#setPodcastGenre, [value]),
     returnValueForMissingStub: null,
   );
@@ -835,7 +897,7 @@ class MockSearchManager extends _i1.Mock implements _i15.SearchManager {
   );
 
   @override
-  void setPodcastSearchAttribute(_i18.Attribute? value) => super.noSuchMethod(
+  void setPodcastSearchAttribute(_i21.Attribute? value) => super.noSuchMethod(
     Invocation.method(#setPodcastSearchAttribute, [value]),
     returnValueForMissingStub: null,
   );

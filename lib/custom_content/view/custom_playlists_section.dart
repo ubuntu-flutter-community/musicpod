@@ -57,7 +57,9 @@ class _CustomPlaylistsSectionState
 
     await Future.delayed(
       const Duration(milliseconds: 200),
-      () => di<RoutingManager>().push(pageId: playlistName),
+      () => ref
+          .read(routingManagerProvider.notifier)
+          .push(pageId: playlistName),
     );
   }
 
@@ -178,7 +180,9 @@ class _CustomPlaylistsSectionState
                 ),
                 onPressed: () {
                   di<SearchManager>().setAudioType(AudioType.radio);
-                  di<RoutingManager>().push(pageId: PageIDs.searchPage);
+                  ref
+                      .read(routingManagerProvider.notifier)
+                      .push(pageId: PageIDs.searchPage);
                 },
                 child: Text(l10n.search),
               ),
@@ -205,9 +209,11 @@ class _CustomPlaylistsSectionState
                             .read(externalPlaylistDraftsManagerProvider.notifier)
                             .importPlaylists();
 
-                        await di<RoutingManager>().push(
-                          pageId: firstKey,
-                        );
+                        await ref
+                            .read(routingManagerProvider.notifier)
+                            .push(
+                              pageId: firstKey,
+                            );
                       }
                     : null,
                 child: Text(l10n.add),

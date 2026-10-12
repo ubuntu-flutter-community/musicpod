@@ -25,7 +25,6 @@ void main() {
   setUp(() async {
     await GetIt.I.reset();
     mockService = MockPodcastService();
-    final mockRouting = MockRoutingManager();
     final mockSearch = MockSearchManager();
     final mockSettings = MockSettingsService();
     when(mockSettings.getInt(any)).thenReturn(0);
@@ -33,7 +32,6 @@ void main() {
     when(mockSettings.getString(any)).thenReturn(null);
 
     GetIt.I.registerSingleton<PodcastService>(mockService);
-    GetIt.I.registerSingleton<RoutingManager>(mockRouting);
     GetIt.I.registerSingleton<SearchManager>(mockSearch);
     GetIt.I.registerSingleton<SettingsService>(mockSettings);
 

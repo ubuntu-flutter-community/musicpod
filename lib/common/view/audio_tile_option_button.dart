@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/app_manager.dart';
+import '../../app/full_window_mode_manager.dart';
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../extensions/build_context_x.dart';
@@ -105,7 +105,10 @@ class AudioTileOptionButton extends ConsumerWidget {
                     Text('${l10n.addedTo} ${l10n.queue}: $searchTerm'),
                     action: SnackBarAction(
                       label: l10n.queue,
-                      onPressed: () => di<AppManager>().setFullWindowMode(true),
+                      onPressed: () => ProviderScope.containerOf(
+                        context,
+                        listen: false,
+                      ).read(fullWindowModeManagerProvider.notifier).setFullWindowMode(true),
                     ),
                     showCloseIcon: true,
                   );
@@ -160,7 +163,7 @@ class AudioTileOptionButton extends ConsumerWidget {
               onTap: () {
                 final artistId = audios.firstOrNull?.artist;
                 if (artistId != null) {
-                  di<RoutingManager>().push(
+                  ref.read(routingManagerProvider.notifier).push(
                     pageId: artistId,
                     builder: (c) => ArtistPage(pageId: artistId),
                   );
@@ -180,7 +183,7 @@ class AudioTileOptionButton extends ConsumerWidget {
                   );
                   if (albumAudios != null) {
                     unawaited(
-                      di<RoutingManager>().push(
+                      ref.read(routingManagerProvider.notifier).push(
                         pageId: albumId.toString(),
                         builder: (context) => AlbumPage(id: albumId),
                       ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
@@ -7,16 +7,14 @@ import '../../extensions/build_context_x.dart';
 import '../page_ids.dart';
 import '../routing_manager.dart';
 
-class MobileNavigationBar extends StatelessWidget with WatchItMixin {
+class MobileNavigationBar extends ConsumerWidget {
   const MobileNavigationBar({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-
-    final selectedPageId = watchValue(
-      (RoutingManager m) => m.selectedPageIdCommand,
-    );
+    final selectedPageId = ref.watch(routingManagerProvider);
+    final routing = ref.read(routingManagerProvider.notifier);
 
     final sizedBox = SizedBox(
       height:
@@ -34,8 +32,7 @@ class MobileNavigationBar extends StatelessWidget with WatchItMixin {
               selectedIcon: Icon(Iconz.search, semanticLabel: l10n.search),
               icon: Icon(Iconz.search, semanticLabel: l10n.search),
               tooltip: l10n.search,
-              onPressed: () =>
-                  di<RoutingManager>().push(pageId: PageIDs.searchPage),
+              onPressed: () => routing.push(pageId: PageIDs.searchPage),
             ),
             IconButton(
               isSelected: selectedPageId == PageIDs.localAudio,
@@ -45,15 +42,14 @@ class MobileNavigationBar extends StatelessWidget with WatchItMixin {
               ),
               icon: Icon(Iconz.localAudio, semanticLabel: l10n.local),
               tooltip: l10n.local,
-              onPressed: () =>
-                  di<RoutingManager>().push(pageId: PageIDs.localAudio),
+              onPressed: () => routing.push(pageId: PageIDs.localAudio),
             ),
             IconButton(
               isSelected: selectedPageId == PageIDs.radio,
               selectedIcon: Icon(Iconz.radioFilled, semanticLabel: l10n.radio),
               icon: Icon(Iconz.radio, semanticLabel: l10n.radio),
               tooltip: l10n.radio,
-              onPressed: () => di<RoutingManager>().push(pageId: PageIDs.radio),
+              onPressed: () => routing.push(pageId: PageIDs.radio),
             ),
             IconButton(
               isSelected: selectedPageId == PageIDs.podcasts,
@@ -63,8 +59,7 @@ class MobileNavigationBar extends StatelessWidget with WatchItMixin {
               ),
               icon: Icon(Iconz.podcast, semanticLabel: l10n.podcasts),
               tooltip: l10n.podcasts,
-              onPressed: () =>
-                  di<RoutingManager>().push(pageId: PageIDs.podcasts),
+              onPressed: () => routing.push(pageId: PageIDs.podcasts),
             ),
             IconButton(
               isSelected: selectedPageId == PageIDs.settings,
@@ -74,8 +69,7 @@ class MobileNavigationBar extends StatelessWidget with WatchItMixin {
               ),
               icon: Icon(Iconz.settings, semanticLabel: l10n.settings),
               tooltip: l10n.settings,
-              onPressed: () =>
-                  di<RoutingManager>().push(pageId: PageIDs.settings),
+              onPressed: () => routing.push(pageId: PageIDs.settings),
             ),
           ],
         ),

@@ -3,7 +3,7 @@ import 'package:flutter_it/flutter_it.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/app_manager.dart';
+import '../../app/full_window_mode_manager.dart';
 
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
@@ -206,9 +206,13 @@ class PlayerCompactControls extends StatelessWidget with WatchItMixin {
         children: [
           ShuffleButton(active: active),
           playButtonWidget,
-          IconButton(
-            onPressed: () => di<AppManager>().setFullWindowMode(true),
-            icon: Icon(Iconz.fullScreen),
+          Consumer(
+            builder: (context, ref, _) => IconButton(
+              onPressed: () => ref
+                  .read(fullWindowModeManagerProvider.notifier)
+                  .setFullWindowMode(true),
+              icon: Icon(Iconz.fullScreen),
+            ),
           ),
         ],
       ),

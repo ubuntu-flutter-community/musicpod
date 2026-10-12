@@ -48,7 +48,9 @@ class FavoriteRadioTagsGrid extends ConsumerWidget {
         return YaruSelectableContainer(
           selected: false,
           onTap: () {
-            di<RoutingManager>().push(pageId: PageIDs.searchPage);
+            ref
+                .read(routingManagerProvider.notifier)
+                .push(pageId: PageIDs.searchPage);
             di<SearchManager>()
               ..setSearchType(SearchType.radioTag)
               ..setTag(Tag(name: tag.toLowerCase(), stationCount: 1))

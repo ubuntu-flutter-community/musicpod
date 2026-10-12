@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
-import '../../app/app_manager.dart';
+import '../../app/full_window_mode_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
@@ -42,10 +43,14 @@ class FullWindowPlayerTopControls extends StatelessWidget with WatchItMixin {
           if (video && !isMobile) VolumeSliderPopup(color: iconColor),
           if (video) PlayerPauseTimerButton(iconColor: iconColor),
           if (!isMobile && !isFullScreen)
-            IconButton(
-              tooltip: context.l10n.leaveFullWindow,
-              icon: Icon(Iconz.fullWindowExit, color: iconColor),
-              onPressed: () => di<AppManager>().setFullWindowMode(false),
+            Consumer(
+              builder: (context, ref, _) => IconButton(
+                tooltip: context.l10n.leaveFullWindow,
+                icon: Icon(Iconz.fullWindowExit, color: iconColor),
+                onPressed: () => ref
+                    .read(fullWindowModeManagerProvider.notifier)
+                    .setFullWindowMode(false),
+              ),
             ),
         ],
       ),

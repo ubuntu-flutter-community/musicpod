@@ -32,13 +32,13 @@ import 'album_view.dart';
 import 'artist_image.dart';
 import 'genre_page.dart';
 
-class ArtistPage extends StatelessWidget {
+class ArtistPage extends ConsumerWidget {
   const ArtistPage({super.key, required this.pageId});
 
   final String pageId;
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context, WidgetRef ref) => Scaffold(
     appBar: HeaderBar(
       title: Text(pageId),
       actions: [
@@ -46,7 +46,9 @@ class ArtistPage extends StatelessWidget {
           padding: appBarSingleActionSpacing,
           child: SearchButton(
             onPressed: () {
-              di<RoutingManager>().push(pageId: PageIDs.searchPage);
+              ref
+                  .read(routingManagerProvider.notifier)
+                  .push(pageId: PageIDs.searchPage);
               final searchManager = di<SearchManager>();
               searchManager
                 ..setAudioType(AudioType.local)
@@ -91,8 +93,9 @@ class _ArtistPageBody extends ConsumerWidget {
         ),
         subTitleWidget: GenreBar(audios: artistAudios),
         label: context.l10n.artist,
-        onLabelTab: (text) => onAlbumTap(text: text, context: context),
-        onSubTitleTab: (text) => di<RoutingManager>().push(
+        onLabelTab: (text) =>
+            onAlbumTap(text: text, context: context, ref: ref),
+        onSubTitleTab: (text) => ref.read(routingManagerProvider.notifier).push(
           builder: (context) => GenrePage(genre: text),
           pageId: text,
         ),
@@ -107,7 +110,8 @@ class _ArtistPageBody extends ConsumerWidget {
               audios: artistAudios,
               pageId: pageId,
               audioPageType: AudioPageType.artist,
-              onSubTitleTab: (text) => onAlbumTap(text: text, context: context),
+              onSubTitleTab: (text) =>
+                  onAlbumTap(text: text, context: context, ref: ref),
               constraints: constraints,
               startNewPlaylistOnTap: true,
             ),
@@ -117,6 +121,7 @@ class _ArtistPageBody extends ConsumerWidget {
   Future<void> onAlbumTap({
     required String text,
     required BuildContext context,
+    required WidgetRef ref,
   }) async {
     final id = await di<LocalAudioService>().findAlbumIdForArtistAndAlbum(
       artist: pageId,
@@ -128,7 +133,7 @@ class _ArtistPageBody extends ConsumerWidget {
       return;
     }
 
-    await di<RoutingManager>().push(
+    await ref.read(routingManagerProvider.notifier).push(
       builder: (_) => AlbumPage(id: id),
       pageId: id.toString(),
     );

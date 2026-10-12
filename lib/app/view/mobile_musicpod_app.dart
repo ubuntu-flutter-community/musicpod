@@ -50,8 +50,6 @@ class _MobileMusicPodAppState extends ConsumerState<MobileMusicPodApp> {
     final themeIndex =
         ref.watch(settingsIntManagerProvider(SPKeys.themeIndex)) ?? 0;
 
-    final routingManager = di<RoutingManager>();
-
     final light = lightBaseTheme(widget.accent ?? kMusicPodDefaultColor);
     final phoenixLightWithFont = isLinux
         ? light
@@ -62,7 +60,7 @@ class _MobileMusicPodAppState extends ConsumerState<MobileMusicPodApp> {
         : applyChineseFontToTheme(theme: dark);
 
     return MaterialApp.router(
-      routerConfig: routingManager.router,
+      routerConfig: ref.watch(routingManagerProvider.notifier).router,
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.values[themeIndex],
       theme: phoenixLightWithFont,

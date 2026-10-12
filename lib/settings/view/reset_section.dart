@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/app_manager.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
@@ -31,10 +29,10 @@ class ResetSection extends ConsumerWidget {
             child: Text(l10n.exportYourDataDescription),
           ),
           trailing: ElevatedButton(
-            onPressed: () => context.dialog((context) {
-              di<AppManager>().resetBackupSettings();
-              return const BackupDialog(breakingChange: false);
-            }, barrierDismissible: false),
+            onPressed: () => context.dialog(
+              (context) => const BackupDialog(breakingChange: false),
+              barrierDismissible: false,
+            ),
             child: Text(l10n.export),
           ),
         ),

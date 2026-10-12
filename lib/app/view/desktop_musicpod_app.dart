@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
@@ -56,7 +55,7 @@ class DesktopMusicPodApp extends ConsumerWidget {
             : applyChineseFontToTheme(theme: lightDarkTheme(color)));
 
     return MaterialApp.router(
-      routerConfig: di<RoutingManager>().router,
+      routerConfig: ref.watch(routingManagerProvider.notifier).router,
       builder: (context, child) =>
           MouseAndKeyboardCommandWrapper(child: child ?? const SizedBox()),
       debugShowCheckedModeBanner: false,

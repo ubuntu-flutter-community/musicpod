@@ -28,13 +28,13 @@ import 'radio_page_copy_histoy_button.dart';
 import 'radio_page_tag_bar.dart';
 import 'station_error_page.dart';
 
-class StationPage extends StatelessWidget {
+class StationPage extends ConsumerWidget {
   const StationPage({super.key, required this.uuid});
 
   final String uuid;
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context, WidgetRef ref) => Scaffold(
     appBar: HeaderBar(
       title: isMobile ? null : _StationPageTitle(uuid: uuid),
       actions: [
@@ -42,7 +42,9 @@ class StationPage extends StatelessWidget {
           padding: appBarSingleActionSpacing,
           child: SearchButton(
             onPressed: () {
-              di<RoutingManager>().push(pageId: PageIDs.searchPage);
+              ref
+                  .read(routingManagerProvider.notifier)
+                  .push(pageId: PageIDs.searchPage);
               di<SearchManager>()
                 ..setAudioType(AudioType.radio)
                 ..setSearchType(SearchType.radioName)
