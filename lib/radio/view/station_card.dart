@@ -46,11 +46,12 @@ class StationCard extends ConsumerWidget {
       bottom: AudioCardBottom(child: StationTitle(uuid: uuid)),
       playIcon: iconData,
       seleted: isSelected,
-      onPlay: () => ref.read(playAnywhereManagerProvider.notifier).play(
-        PlayAnywhereParam(pageId: uuid, audioPageType: AudioPageType.radio),
-      ),
-      onTap: () =>
-          ref.read(routingManagerProvider.notifier).push(pageId: uuid),
+      onPlay: () => ref
+          .read(playAnywhereManagerProvider.notifier)
+          .play(
+            PlayAnywhereParam(pageId: uuid, audioPageType: AudioPageType.radio),
+          ),
+      onTap: () => ref.read(routingManagerProvider.notifier).push(pageId: uuid),
       image: SizedBox.expand(
         child: StationPageIcon(
           uuid: uuid,
@@ -61,4 +62,3 @@ class StationCard extends ConsumerWidget {
     );
   }
 }
-

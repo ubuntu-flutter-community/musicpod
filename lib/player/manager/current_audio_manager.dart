@@ -12,7 +12,7 @@ part 'current_audio_manager.g.dart';
 @Riverpod(keepAlive: true)
 class CurrentAudioManager extends _$CurrentAudioManager {
   CurrentAudioManager({PlayerService? playerService})
-      : _playerServiceOverride = playerService;
+    : _playerServiceOverride = playerService;
 
   final PlayerService? _playerServiceOverride;
   PlayerService? get _playerService {
@@ -29,11 +29,9 @@ class CurrentAudioManager extends _$CurrentAudioManager {
     final service = _playerService;
     if (service == null) return null;
 
-    _sub = service.changes
-        .whereType<AudioChange>()
-        .listen((change) {
-          state = change.audio;
-        });
+    _sub = service.changes.whereType<AudioChange>().listen((change) {
+      state = change.audio;
+    });
 
     ref.onDispose(() {
       _sub?.cancel();

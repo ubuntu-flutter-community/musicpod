@@ -32,8 +32,7 @@ class PodcastPageHeader extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
 
-    final shortInfo =
-        ref.watch(podcastShortInfoManagerProvider(feedUrl)).value;
+    final shortInfo = ref.watch(podcastShortInfoManagerProvider(feedUrl)).value;
     final genre = ref.watch(podcastGenreManagerProvider(feedUrl)).value;
 
     return AudioPageHeader(

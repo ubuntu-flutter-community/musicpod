@@ -12,7 +12,7 @@ part 'play_pause_manager.g.dart';
 @Riverpod(keepAlive: true)
 class PlayPauseManager extends _$PlayPauseManager {
   PlayPauseManager({PlayerService? playerService})
-      : _playerServiceOverride = playerService;
+    : _playerServiceOverride = playerService;
 
   final PlayerService? _playerServiceOverride;
   PlayerService? get _playerService {
@@ -29,11 +29,9 @@ class PlayPauseManager extends _$PlayPauseManager {
     final service = _playerService;
     if (service == null) return false;
 
-    _sub = service.changes
-        .whereType<IsPlayingChange>()
-        .listen((change) {
-          state = change.isPlaying;
-        });
+    _sub = service.changes.whereType<IsPlayingChange>().listen((change) {
+      state = change.isPlaying;
+    });
 
     ref.onDispose(() {
       _sub?.cancel();

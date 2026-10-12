@@ -36,7 +36,9 @@ class LocalAudioPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) => clearInMemoryImageCache());
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => clearInMemoryImageCache(),
+    );
 
     final l10n = context.l10n;
 
@@ -44,11 +46,8 @@ class LocalAudioPage extends StatelessWidget {
       builder: (context, ref, _) {
         final index =
             ref.watch(settingsIntManagerProvider(SPKeys.localAudioIndex)) ?? 0;
-        final localAudioView =
-            LocalAudioView.values[index.clamp(
-              0,
-              LocalAudioView.values.length - 1,
-            )];
+        final localAudioView = LocalAudioView
+            .values[index.clamp(0, LocalAudioView.values.length - 1)];
         ref.listen<AsyncValue<LocalAudioState>>(localAudioManagerProvider, (
           prev,
           next,
@@ -66,10 +65,7 @@ class LocalAudioPage extends StatelessWidget {
           }
         });
 
-        ref.listen<AsyncValue<bool>>(tracksSyncedManagerProvider, (
-          prev,
-          next,
-        ) {
+        ref.listen<AsyncValue<bool>>(tracksSyncedManagerProvider, (prev, next) {
           if (next.value == false && prev?.value != false) {
             ConfirmationDialog.show(
               context: context,
@@ -98,7 +94,9 @@ class LocalAudioPage extends StatelessWidget {
                     ref
                         .read(routingManagerProvider.notifier)
                         .push(pageId: PageIDs.searchPage);
-                    final searchManager = ref.read(searchManagerProvider.notifier);
+                    final searchManager = ref.read(
+                      searchManagerProvider.notifier,
+                    );
                     searchManager
                       ..setAudioType(AudioType.local)
                       ..setSearchType(SearchType.localTitle)
@@ -115,10 +113,7 @@ class LocalAudioPage extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     spacing: kLargestSpace,
                     children: [
-                      Progress(
-                        value: progress,
-                        adaptive: false,
-                      ),
+                      Progress(value: progress, adaptive: false),
                       Text(
                         '${'${(progress * 100).toStringAsFixed(0)}%'} ... ${switch (progress) {
                           0.25 => l10n.parsingLocalAudioFilesMetadataPleaseWait,

@@ -46,10 +46,11 @@ class _PodcastPageSearchFieldState
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final episodesState =
-        ref.watch(episodesManagerProvider(widget.feedUrl)).value;
-    final filter =
-        (episodesState?.filter ?? PodcastEpisodeFilter.title).localize(l10n);
+    final episodesState = ref
+        .watch(episodesManagerProvider(widget.feedUrl))
+        .value;
+    final filter = (episodesState?.filter ?? PodcastEpisodeFilter.title)
+        .localize(l10n);
 
     final field = Padding(
       padding: const EdgeInsets.symmetric(horizontal: kLargestSpace),

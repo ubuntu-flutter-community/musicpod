@@ -16,7 +16,6 @@ class PinnedAlbumIDsManager extends _$PinnedAlbumIDsManager {
     return _service.findPinnedAlbumIDs();
   }
 
-  Future<void> togglePinAlbum(int? id) async => state = await AsyncValue.guard(
-    () => _service.togglePinAlbum(id),
-  );
+  Future<void> togglePinAlbum(int? id) async =>
+      state = await AsyncValue.guard(() => _service.togglePinAlbum(id));
 }

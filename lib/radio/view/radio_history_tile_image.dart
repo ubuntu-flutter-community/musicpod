@@ -37,8 +37,9 @@ class RadioHistoryTileImage extends ConsumerWidget {
         child: InkWell(
           borderRadius: bR,
           onTap: () {
-            final metadata =
-                ref.read(mpvMetadataHistoryManagerProvider.notifier).getMetadata(icyTitle);
+            final metadata = ref
+                .read(mpvMetadataHistoryManagerProvider.notifier)
+                .getMetadata(icyTitle);
             if (metadata == null) return;
             showModal(
               mode: ModalMode.platformModalMode,

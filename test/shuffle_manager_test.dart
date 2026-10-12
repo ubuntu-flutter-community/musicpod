@@ -20,8 +20,9 @@ void main() {
       mockPlayerService = MockPlayerService();
       changesController = StreamController<PlayerChange>.broadcast();
 
-      when(mockPlayerService.changes)
-          .thenAnswer((_) => changesController.stream);
+      when(
+        mockPlayerService.changes,
+      ).thenAnswer((_) => changesController.stream);
       when(mockPlayerService.shuffle).thenReturn(false);
 
       container = ProviderContainer(
@@ -57,14 +58,17 @@ void main() {
       verify(mockPlayerService.setShuffle(true)).called(1);
     });
 
-    test('updates state on ShuffleChange event directly from payload', () async {
-      expect(container.read(shuffleManagerProvider), isFalse);
+    test(
+      'updates state on ShuffleChange event directly from payload',
+      () async {
+        expect(container.read(shuffleManagerProvider), isFalse);
 
-      changesController.add(const ShuffleChange(true));
-      await pumpEventQueue();
+        changesController.add(const ShuffleChange(true));
+        await pumpEventQueue();
 
-      expect(container.read(shuffleManagerProvider), isTrue);
-    });
+        expect(container.read(shuffleManagerProvider), isTrue);
+      },
+    );
 
     test('ignores unrelated PlayerChange events like PositionChange', () async {
       expect(container.read(shuffleManagerProvider), isFalse);
@@ -75,10 +79,13 @@ void main() {
       expect(container.read(shuffleManagerProvider), isFalse);
     });
 
-    test('gracefully defaults to false when PlayerService is not registered', () {
-      final emptyContainer = ProviderContainer();
-      expect(emptyContainer.read(shuffleManagerProvider), isFalse);
-      emptyContainer.dispose();
-    });
+    test(
+      'gracefully defaults to false when PlayerService is not registered',
+      () {
+        final emptyContainer = ProviderContainer();
+        expect(emptyContainer.read(shuffleManagerProvider), isFalse);
+        emptyContainer.dispose();
+      },
+    );
   });
 }

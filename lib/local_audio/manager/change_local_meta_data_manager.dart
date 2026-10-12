@@ -8,10 +8,7 @@ import '../service/local_audio_service.dart';
 part 'change_local_meta_data_manager.g.dart';
 
 class ChangeLocalMetaDataState {
-  const ChangeLocalMetaDataState({
-    this.draft,
-    this.savedAudio,
-  });
+  const ChangeLocalMetaDataState({this.draft, this.savedAudio});
 
   final ChangeMetadataCapsule? draft;
   final Audio? savedAudio;
@@ -28,22 +25,25 @@ class ChangeLocalMetaDataState {
 @riverpod
 class ChangeLocalMetaDataManager extends _$ChangeLocalMetaDataManager {
   @override
-  ChangeLocalMetaDataState build(Audio audio) => const ChangeLocalMetaDataState();
+  ChangeLocalMetaDataState build(Audio audio) =>
+      const ChangeLocalMetaDataState();
 
   void updateDraft(ChangeMetadataCapsule newDraft) {
     final currentDraft = state.draft;
-    final updated = currentDraft?.copyWith(
-      title: newDraft.title,
-      artist: newDraft.artist,
-      album: newDraft.album,
-      genre: newDraft.genre,
-      discTotal: newDraft.discTotal,
-      discNumber: newDraft.discNumber,
-      trackNumber: newDraft.trackNumber,
-      durationMs: newDraft.durationMs,
-      year: newDraft.year,
-      pictures: newDraft.pictures,
-    ) ?? newDraft;
+    final updated =
+        currentDraft?.copyWith(
+          title: newDraft.title,
+          artist: newDraft.artist,
+          album: newDraft.album,
+          genre: newDraft.genre,
+          discTotal: newDraft.discTotal,
+          discNumber: newDraft.discNumber,
+          trackNumber: newDraft.trackNumber,
+          durationMs: newDraft.durationMs,
+          year: newDraft.year,
+          pictures: newDraft.pictures,
+        ) ??
+        newDraft;
     state = state.copyWith(draft: () => updated);
   }
 

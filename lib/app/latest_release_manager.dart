@@ -31,16 +31,16 @@ class LatestReleaseState {
 
   @override
   int get hashCode =>
-      onlineVersion.hashCode ^ downloadCount.hashCode ^ updateAvailable.hashCode;
+      onlineVersion.hashCode ^
+      downloadCount.hashCode ^
+      updateAvailable.hashCode;
 }
 
 @Riverpod(keepAlive: true)
 class LatestReleaseManager extends _$LatestReleaseManager {
-  LatestReleaseManager({
-    GitHub? gitHub,
-    PackageInfo? packageInfo,
-  })  : _gitHubOverride = gitHub,
-        _packageInfoOverride = packageInfo;
+  LatestReleaseManager({GitHub? gitHub, PackageInfo? packageInfo})
+    : _gitHubOverride = gitHub,
+      _packageInfoOverride = packageInfo;
 
   final GitHub? _gitHubOverride;
   final PackageInfo? _packageInfoOverride;
@@ -71,8 +71,7 @@ class LatestReleaseManager extends _$LatestReleaseManager {
 
     final downloadCount = assets.fold<int>(
       0,
-      (previousValue, element) =>
-          previousValue + (element.downloadCount ?? 0),
+      (previousValue, element) => previousValue + (element.downloadCount ?? 0),
     );
 
     return LatestReleaseState(

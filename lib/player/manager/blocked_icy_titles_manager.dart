@@ -19,7 +19,7 @@ const defaultBlockedIcyTitles = <String>{
 @Riverpod(keepAlive: true)
 class BlockedIcyTitlesManager extends _$BlockedIcyTitlesManager {
   BlockedIcyTitlesManager({SettingsService? settingsService})
-      : _settingsServiceOverride = settingsService;
+    : _settingsServiceOverride = settingsService;
 
   final SettingsService? _settingsServiceOverride;
   SettingsService get _settingsService =>

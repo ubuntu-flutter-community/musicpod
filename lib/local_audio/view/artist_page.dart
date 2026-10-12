@@ -95,10 +95,12 @@ class _ArtistPageBody extends ConsumerWidget {
         label: context.l10n.artist,
         onLabelTab: (text) =>
             onAlbumTap(text: text, context: context, ref: ref),
-        onSubTitleTab: (text) => ref.read(routingManagerProvider.notifier).push(
-          builder: (context) => GenrePage(genre: text),
-          pageId: text,
-        ),
+        onSubTitleTab: (text) => ref
+            .read(routingManagerProvider.notifier)
+            .push(
+              builder: (context) => GenrePage(genre: text),
+              pageId: text,
+            ),
       ),
       controlPanel: _ArtistPageControlPanel(
         pageId: pageId,
@@ -133,10 +135,12 @@ class _ArtistPageBody extends ConsumerWidget {
       return;
     }
 
-    await ref.read(routingManagerProvider.notifier).push(
-      builder: (_) => AlbumPage(id: id),
-      pageId: id.toString(),
-    );
+    await ref
+        .read(routingManagerProvider.notifier)
+        .push(
+          builder: (_) => AlbumPage(id: id),
+          pageId: id.toString(),
+        );
   }
 }
 
@@ -152,10 +156,7 @@ class _AlbumsOfArtistGridView extends ConsumerWidget {
 }
 
 class _ArtistPageControlPanel extends ConsumerWidget {
-  const _ArtistPageControlPanel({
-    required this.audios,
-    required this.pageId,
-  });
+  const _ArtistPageControlPanel({required this.audios, required this.pageId});
 
   final List<Audio> audios;
   final String pageId;
@@ -183,10 +184,7 @@ class _ArtistPageControlPanel extends ConsumerWidget {
                 .read(artistGridViewManagerProvider(pageId).notifier)
                 .setUseArtistGridView(false),
           ),
-          AvatarPlayButton(
-            pageId: pageId,
-            audioPageType: AudioPageType.artist,
-          ),
+          AvatarPlayButton(pageId: pageId, audioPageType: AudioPageType.artist),
           LikeAllIconButton(audios: audios),
           AudioTileOptionButton(
             audios: audios,

@@ -240,8 +240,8 @@ class CustomContentService {
         for (final uuid in starredStations) {
           final station = di.isRegistered<ProviderContainer>()
               ? await di<ProviderContainer>()
-                  .read(radioManagerProvider.notifier)
-                  .getAudioByUUID(uuid)
+                    .read(radioManagerProvider.notifier)
+                    .getAudioByUUID(uuid)
               : await _radioService.getAudioByUUID(uuid, fromDBOnly: false);
           if (station != null) {
             await _radioService.toggleStarredStation(station);

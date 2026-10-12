@@ -90,7 +90,10 @@ mixin CommonHandlersAndCommandsMixin {
       },
     );
 
-    container.listen<PodcastUpdatesState>(podcastUpdatesManagerProvider, (prev, res) {
+    container.listen<PodcastUpdatesState>(podcastUpdatesManagerProvider, (
+      prev,
+      res,
+    ) {
       if (res.isRunning) {
         return;
       } else if (res.error != null) {
@@ -104,44 +107,40 @@ mixin CommonHandlersAndCommandsMixin {
             di<PodcastService>()
                 .getPodcastShortInfo(feedsWithUpdates.entries.first.key)
                 .then(
-              (info) => di<NotificationsService>().notify(
-                message:
-                    '${context.l10n.newEpisodeAvailable} ${info?.name ?? ''}',
-              ),
-            );
+                  (info) => di<NotificationsService>().notify(
+                    message:
+                        '${context.l10n.newEpisodeAvailable} ${info?.name ?? ''}',
+                  ),
+                );
           } else {
             di<NotificationsService>().notify(
-              message:
-                  context.l10n.newEpisodesAvailableFor(feedsWithUpdates.length),
+              message: context.l10n.newEpisodesAvailableFor(
+                feedsWithUpdates.length,
+              ),
             );
           }
         }
       }
     });
 
-    container.listen<AsyncValue<String>>(
-      playerMessageProvider,
-      (prev, next) {
-        if (next.hasError) {
-          final audio = container.read(currentAudioManagerProvider);
-          final error = next.error;
+    container.listen<AsyncValue<String>>(playerMessageProvider, (prev, next) {
+      if (next.hasError) {
+        final audio = container.read(currentAudioManagerProvider);
+        final error = next.error;
 
-          context.toast(
-            Text(
-              (error is PlayTimeoutException) || audio?.url != null
-                  ? context.l10n.playerCouldNotOpenRemoteMedia(
-                      audio?.title ?? '',
-                    )
-                  : error.toString(),
-            ),
-            duration: const Duration(seconds: 8),
-            showCloseIcon: true,
-          );
-        } else if (next.hasValue && next.value != null) {
-          context.toast(Text(next.value!));
-        }
-      },
-    );
+        context.toast(
+          Text(
+            (error is PlayTimeoutException) || audio?.url != null
+                ? context.l10n.playerCouldNotOpenRemoteMedia(audio?.title ?? '')
+                : error.toString(),
+          ),
+          duration: const Duration(seconds: 8),
+          showCloseIcon: true,
+        );
+      } else if (next.hasValue && next.value != null) {
+        context.toast(Text(next.value!));
+      }
+    });
 
     container.listen<AsyncValue<PlayAnywhereResult?>>(
       playAnywhereManagerProvider,
@@ -161,19 +160,15 @@ mixin CommonHandlersAndCommandsMixin {
             duration: const Duration(seconds: 99),
           );
         } else if (next.hasError) {
-          context.toast(
-            Text(next.error.localizedErrorMessage(context.l10n)),
-          );
+          context.toast(Text(next.error.localizedErrorMessage(context.l10n)));
         } else if (next.hasValue && next.value != null) {
           context.clearToasts();
           switch (next.value!.param.audioPageType) {
             case AudioPageType.radio:
               next.value!.audios.singleOrNull?.uuid != null
                   ? container
-                      .read(clickStationManagerProvider.notifier)
-                      .clickStation(
-                        next.value!.audios.singleOrNull!.uuid,
-                      )
+                        .read(clickStationManagerProvider.notifier)
+                        .clickStation(next.value!.audios.singleOrNull!.uuid)
                   : context.toast(Text(context.l10n.noStationFound));
             default:
               break;
@@ -182,7 +177,10 @@ mixin CommonHandlersAndCommandsMixin {
       },
     );
 
-    container.listen<AsyncValue<Set<String>?>>(podcastCleanManagerProvider, (prev, results) {
+    container.listen<AsyncValue<Set<String>?>>(podcastCleanManagerProvider, (
+      prev,
+      results,
+    ) {
       if (results.isLoading) return;
       if (results.hasError) {
         context.toast(
@@ -204,9 +202,7 @@ mixin CommonHandlersAndCommandsMixin {
             .join('\n');
         context.toast(
           Text(
-            context.l10n.cleanedUpEpisodesOfUnsubscribedPodcast(
-              '\n' + message,
-            ),
+            context.l10n.cleanedUpEpisodesOfUnsubscribedPodcast('\n' + message),
           ),
           duration: const Duration(seconds: 10),
         );

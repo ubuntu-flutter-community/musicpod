@@ -26,8 +26,7 @@ class PodcastCollectionCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.theme;
-    final shortInfo =
-        ref.watch(podcastShortInfoManagerProvider(feedUrl)).value;
+    final shortInfo = ref.watch(podcastShortInfoManagerProvider(feedUrl)).value;
     return AudioCard(
       image: shortInfo?.imageUrl == null
           ? Center(child: Icon(Iconz.podcast, size: audioCardDimension * 0.7))
@@ -56,12 +55,14 @@ class PodcastCollectionCard extends ConsumerWidget {
             : null,
         text: shortInfo?.name ?? context.l10n.podcast,
       ),
-      onPlay: () => ref.read(playAnywhereManagerProvider.notifier).play(
-        PlayAnywhereParam(
-          pageId: feedUrl,
-          audioPageType: AudioPageType.podcast,
-        ),
-      ),
+      onPlay: () => ref
+          .read(playAnywhereManagerProvider.notifier)
+          .play(
+            PlayAnywhereParam(
+              pageId: feedUrl,
+              audioPageType: AudioPageType.podcast,
+            ),
+          ),
       onTap: () =>
           ref.read(routingManagerProvider.notifier).push(pageId: feedUrl),
     );

@@ -11,7 +11,7 @@ part 'shuffle_manager.g.dart';
 @Riverpod(keepAlive: true)
 class ShuffleManager extends _$ShuffleManager {
   ShuffleManager({PlayerService? playerService})
-      : _playerServiceOverride = playerService;
+    : _playerServiceOverride = playerService;
 
   final PlayerService? _playerServiceOverride;
   PlayerService? get _playerService {
@@ -28,11 +28,9 @@ class ShuffleManager extends _$ShuffleManager {
     final service = _playerService;
     if (service == null) return false;
 
-    _sub = service.changes
-        .whereType<ShuffleChange>()
-        .listen((change) {
-          state = change.shuffle;
-        });
+    _sub = service.changes.whereType<ShuffleChange>().listen((change) {
+      state = change.shuffle;
+    });
 
     ref.onDispose(() {
       _sub?.cancel();

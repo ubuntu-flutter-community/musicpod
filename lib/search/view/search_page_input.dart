@@ -41,9 +41,7 @@ class SearchPageInput extends ConsumerWidget {
         ref.watch(settingsBoolManagerProvider(SPKeys.useYaruTheme)) ?? isLinux;
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(
-        yaruTheme ? kYaruButtonRadius : 100,
-      ),
+      borderRadius: BorderRadius.circular(yaruTheme ? kYaruButtonRadius : 100),
       child: SizedBox(
         width: searchBarWidth,
         height: getInputHeight(),
@@ -88,17 +86,13 @@ class CountryAutoCompleteWithSuffix extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchManager = ref.read(searchManagerProvider.notifier);
-    final country = ref.watch(
-      searchManagerProvider.select((s) => s.country),
-    );
+    final country = ref.watch(searchManagerProvider.select((s) => s.country));
     final favCountryCodes =
         ref.watch(settingsStringListManagerProvider(SPKeys.favCountryCodes)) ??
         <String>[];
 
     return CountryAutoComplete(
-      suffixIcon: AudioTypeFilterButton(
-        mode: OverlayMode.platformModalMode,
-      ),
+      suffixIcon: AudioTypeFilterButton(mode: OverlayMode.platformModalMode),
       countries: [
         ...[
           ...Country.values,
@@ -112,9 +106,7 @@ class CountryAutoCompleteWithSuffix extends ConsumerWidget {
         if (c?.code != null) {
           ref
               .read(
-                settingsStringManagerProvider(
-                  SPKeys.lastCountryCode,
-                ).notifier,
+                settingsStringManagerProvider(SPKeys.lastCountryCode).notifier,
               )
               .set(c!.code);
         }
@@ -184,19 +176,13 @@ class LanguageAutoCompleteWithSuffix extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchManager = ref.read(searchManagerProvider.notifier);
-    final language = ref.watch(
-      searchManagerProvider.select((s) => s.language),
-    );
+    final language = ref.watch(searchManagerProvider.select((s) => s.language));
     final favLanguageCodes =
-        ref.watch(
-          settingsStringListManagerProvider(SPKeys.favLanguageCodes),
-        ) ??
+        ref.watch(settingsStringListManagerProvider(SPKeys.favLanguageCodes)) ??
         <String>[];
 
     return LanguageAutoComplete(
-      suffixIcon: AudioTypeFilterButton(
-        mode: OverlayMode.platformModalMode,
-      ),
+      suffixIcon: AudioTypeFilterButton(mode: OverlayMode.platformModalMode),
       value: language,
       onSelected: (language) {
         searchManager
@@ -205,9 +191,7 @@ class LanguageAutoCompleteWithSuffix extends ConsumerWidget {
         if (language?.isoCode != null) {
           ref
               .read(
-                settingsStringManagerProvider(
-                  SPKeys.lastLanguageCode,
-                ).notifier,
+                settingsStringManagerProvider(SPKeys.lastLanguageCode).notifier,
               )
               .set(language!.isoCode);
         }

@@ -37,12 +37,10 @@ class LocalAudioControlPanel extends ConsumerWidget {
       onSelected: importing
           ? null
           : (idx) => ref
-              .read(
-                settingsIntManagerProvider(
-                  SPKeys.localAudioIndex,
-                ).notifier,
-              )
-              .set(idx),
+                .read(
+                  settingsIntManagerProvider(SPKeys.localAudioIndex).notifier,
+                )
+                .set(idx),
     );
   }
 }

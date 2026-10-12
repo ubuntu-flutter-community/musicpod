@@ -111,8 +111,8 @@ class PlayerTrack extends ConsumerWidget {
                         : null,
                     onChanged: sliderActive
                         ? (v) => ref
-                            .read(positionManagerProvider.notifier)
-                            .seek(Duration(seconds: v.toInt()))
+                              .read(positionManagerProvider.notifier)
+                              .seek(Duration(seconds: v.toInt()))
                         : null,
                   ),
                 ),

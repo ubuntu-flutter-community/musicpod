@@ -31,13 +31,11 @@ class _SliverPodcastSearchResultsState
 
   @override
   Widget build(BuildContext context) {
-    final loading = ref.watch(
-      searchManagerProvider.select((s) => s.isLoading),
-    );
+    final loading = ref.watch(searchManagerProvider.select((s) => s.isLoading));
 
-    final items = ref.watch(
-      searchManagerProvider.select((s) => s.podcastSearchResult),
-    )?.items;
+    final items = ref
+        .watch(searchManagerProvider.select((s) => s.podcastSearchResult))
+        ?.items;
 
     final searchResultItems = widget.take != null
         ? items?.take(widget.take!)

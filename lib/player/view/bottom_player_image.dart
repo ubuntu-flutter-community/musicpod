@@ -47,8 +47,9 @@ class _BottomPlayerImageState extends ConsumerState<BottomPlayerImage> {
         child: MouseRegion(
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
-            onTap: () =>
-                ref.read(fullWindowModeManagerProvider.notifier).toggleFullWindowMode(),
+            onTap: () => ref
+                .read(fullWindowModeManagerProvider.notifier)
+                .toggleFullWindowMode(),
             child: Video(
               height: widget.size,
               width: widget.size,

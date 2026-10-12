@@ -31,7 +31,9 @@ class BackupDialog extends ConsumerWidget {
     return ConfirmationDialog(
       showCancel: false,
       barrierDismissible: !breakingChange,
-      onConfirm: confirmEnabled ? () => backupNotifier.setBackupSaved(true) : null,
+      onConfirm: confirmEnabled
+          ? () => backupNotifier.setBackupSaved(true)
+          : null,
       title: Text(
         breakingChange
             ? l10n.breakingChangesPleaseBackupTitle
@@ -108,8 +110,7 @@ class BackupDialog extends ConsumerWidget {
                                   di<CustomContentService>()
                                       .exportPlaylistsAndPinnedAlbumsToM3Us()
                                       .then(
-                                        (v) =>
-                                            backupNotifier.setLocalAudio(v),
+                                        (v) => backupNotifier.setLocalAudio(v),
                                       );
                                 },
                                 child: Text(
@@ -126,9 +127,7 @@ class BackupDialog extends ConsumerWidget {
                                 child: Text(l10n.exportPodcastsToOpmlFile),
                                 onPressed: () => di<CustomContentService>()
                                     .exportPodcastsToOpmlFile()
-                                    .then(
-                                      (v) => backupNotifier.setPodcast(v),
-                                    ),
+                                    .then((v) => backupNotifier.setPodcast(v)),
                               ),
                             ),
                           ],

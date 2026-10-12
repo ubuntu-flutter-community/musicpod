@@ -24,10 +24,7 @@ import 'package:musicpod/settings/service/settings_service.dart';
 import 'mpv_metadata_manager_test.mocks.dart';
 import 'podcast_page_control_panel_test.mocks.dart' hide MockSettingsService;
 
-@GenerateMocks([
-  SettingsService,
-  PodcastService,
-])
+@GenerateMocks([SettingsService, PodcastService])
 class FakeEpisodesManager extends EpisodesManager {
   FakeEpisodesManager(this.episodesState);
   final EpisodesState episodesState;
@@ -80,8 +77,7 @@ void main() {
     mockSettingsService = MockSettingsService();
     mockPodcastService = MockPodcastService();
 
-    when(mockPlayerService.changes)
-        .thenAnswer((_) => changesController.stream);
+    when(mockPlayerService.changes).thenAnswer((_) => changesController.stream);
     when(mockPlayerService.isPlaying).thenReturn(false);
     when(mockPlayerService.queue).thenReturn(const Queue.empty());
     when(mockPlayerService.lastPositions).thenReturn({});
@@ -100,10 +96,8 @@ void main() {
     when(mockSettingsService.getString(any)).thenReturn(null);
 
     when(mockPodcastService.getPodcastShortInfo(any)).thenAnswer(
-      (_) async => const PodcastShortInfo(
-        name: 'Test Podcast',
-        artist: 'Test Host',
-      ),
+      (_) async =>
+          const PodcastShortInfo(name: 'Test Podcast', artist: 'Test Host'),
     );
 
     GetIt.I.registerSingleton<SettingsService>(mockSettingsService);
@@ -120,9 +114,9 @@ void main() {
     return ProviderScope(
       overrides: [
         if (state != null)
-          episodesManagerProvider(url).overrideWith(
-            () => FakeEpisodesManager(state),
-          ),
+          episodesManagerProvider(
+            url,
+          ).overrideWith(() => FakeEpisodesManager(state)),
       ],
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -260,4 +254,3 @@ void main() {
     },
   );
 }
-

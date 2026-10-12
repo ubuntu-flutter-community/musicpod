@@ -22,8 +22,9 @@ void main() {
       mockPlayerService = MockPlayerService();
       changesController = StreamController<PlayerChange>.broadcast();
 
-      when(mockPlayerService.changes)
-          .thenAnswer((_) => changesController.stream);
+      when(
+        mockPlayerService.changes,
+      ).thenAnswer((_) => changesController.stream);
       when(mockPlayerService.lastPositions).thenReturn({});
 
       container = ProviderContainer(
@@ -42,9 +43,9 @@ void main() {
     });
 
     test('initial state reads lastPositions from PlayerService', () {
-      when(mockPlayerService.lastPositions).thenReturn({
-        'url1': const Duration(seconds: 10),
-      });
+      when(
+        mockPlayerService.lastPositions,
+      ).thenReturn({'url1': const Duration(seconds: 10)});
 
       final customContainer = ProviderContainer(
         overrides: [
@@ -73,9 +74,9 @@ void main() {
       when(
         mockPlayerService.toggleAudiosProgress([audio], markComplete: true),
       ).thenAnswer((_) async {});
-      when(mockPlayerService.lastPositions).thenReturn({
-        'http://test.mp3': const Duration(seconds: 60),
-      });
+      when(
+        mockPlayerService.lastPositions,
+      ).thenReturn({'http://test.mp3': const Duration(seconds: 60)});
 
       final manager = container.read(audioProgressManagerProvider.notifier);
       await manager.toggleAudiosProgress(audios: [audio], markComplete: true);
@@ -87,81 +88,104 @@ void main() {
       final state = container.read(audioProgressManagerProvider);
       expect(state.hasMissingDuration, isFalse);
       expect(state.isToggling, isFalse);
-      expect(state.lastPositions['http://test.mp3'], const Duration(seconds: 60));
-    });
-
-    test('toggleAudiosProgress with missing duration sets hasMissingDuration true', () async {
-      const audio = Audio(
-        url: 'http://test.mp3',
-        title: 'Episode 1',
-        audioType: AudioType.podcast,
-        durationMs: null,
+      expect(
+        state.lastPositions['http://test.mp3'],
+        const Duration(seconds: 60),
       );
-
-      when(
-        mockPlayerService.toggleAudiosProgress([audio], markComplete: true),
-      ).thenAnswer((_) async {});
-      when(mockPlayerService.lastPositions).thenReturn({});
-
-      final manager = container.read(audioProgressManagerProvider.notifier);
-      await manager.toggleAudiosProgress(audios: [audio], markComplete: true);
-
-      final state = container.read(audioProgressManagerProvider);
-      expect(state.hasMissingDuration, isTrue);
-      expect(state.isToggling, isFalse);
     });
 
-    test('toggleAudiosProgress with markComplete false sets hasMissingDuration false', () async {
-      const audio = Audio(
-        url: 'http://test.mp3',
-        title: 'Episode 1',
-        audioType: AudioType.podcast,
-        durationMs: null,
-      );
+    test(
+      'toggleAudiosProgress with missing duration sets hasMissingDuration true',
+      () async {
+        const audio = Audio(
+          url: 'http://test.mp3',
+          title: 'Episode 1',
+          audioType: AudioType.podcast,
+          durationMs: null,
+        );
 
-      when(
-        mockPlayerService.toggleAudiosProgress([audio], markComplete: false),
-      ).thenAnswer((_) async {});
-      when(mockPlayerService.lastPositions).thenReturn({});
+        when(
+          mockPlayerService.toggleAudiosProgress([audio], markComplete: true),
+        ).thenAnswer((_) async {});
+        when(mockPlayerService.lastPositions).thenReturn({});
 
-      final manager = container.read(audioProgressManagerProvider.notifier);
-      await manager.toggleAudiosProgress(audios: [audio], markComplete: false);
+        final manager = container.read(audioProgressManagerProvider.notifier);
+        await manager.toggleAudiosProgress(audios: [audio], markComplete: true);
 
-      final state = container.read(audioProgressManagerProvider);
-      expect(state.hasMissingDuration, isFalse);
-      expect(state.isToggling, isFalse);
-    });
+        final state = container.read(audioProgressManagerProvider);
+        expect(state.hasMissingDuration, isTrue);
+        expect(state.isToggling, isFalse);
+      },
+    );
 
-    test('clearAll delegates to playerService and empties lastPositions', () async {
-      when(mockPlayerService.clearAllLastPositions()).thenAnswer((_) async {});
+    test(
+      'toggleAudiosProgress with markComplete false sets hasMissingDuration false',
+      () async {
+        const audio = Audio(
+          url: 'http://test.mp3',
+          title: 'Episode 1',
+          audioType: AudioType.podcast,
+          durationMs: null,
+        );
 
-      final manager = container.read(audioProgressManagerProvider.notifier);
-      await manager.clearAll();
+        when(
+          mockPlayerService.toggleAudiosProgress([audio], markComplete: false),
+        ).thenAnswer((_) async {});
+        when(mockPlayerService.lastPositions).thenReturn({});
 
-      verify(mockPlayerService.clearAllLastPositions()).called(1);
-      final state = container.read(audioProgressManagerProvider);
-      expect(state.lastPositions, isEmpty);
-    });
+        final manager = container.read(audioProgressManagerProvider.notifier);
+        await manager.toggleAudiosProgress(
+          audios: [audio],
+          markComplete: false,
+        );
+
+        final state = container.read(audioProgressManagerProvider);
+        expect(state.hasMissingDuration, isFalse);
+        expect(state.isToggling, isFalse);
+      },
+    );
+
+    test(
+      'clearAll delegates to playerService and empties lastPositions',
+      () async {
+        when(
+          mockPlayerService.clearAllLastPositions(),
+        ).thenAnswer((_) async {});
+
+        final manager = container.read(audioProgressManagerProvider.notifier);
+        await manager.clearAll();
+
+        verify(mockPlayerService.clearAllLastPositions()).called(1);
+        final state = container.read(audioProgressManagerProvider);
+        expect(state.lastPositions, isEmpty);
+      },
+    );
 
     test('updates lastPositions on LastPositionsChange event', () async {
-      expect(container.read(audioProgressManagerProvider).lastPositions, isEmpty);
+      expect(
+        container.read(audioProgressManagerProvider).lastPositions,
+        isEmpty,
+      );
 
-      changesController.add(const LastPositionsChange({
-        'url2': Duration(seconds: 45),
-      }));
+      changesController.add(
+        const LastPositionsChange({'url2': Duration(seconds: 45)}),
+      );
       await pumpEventQueue();
 
       final state = container.read(audioProgressManagerProvider);
       expect(state.lastPositions, {'url2': const Duration(seconds: 45)});
     });
 
-    test('gracefully defaults to empty state when PlayerService is not registered', () {
-      final emptyContainer = ProviderContainer();
-      final state = emptyContainer.read(audioProgressManagerProvider);
-      expect(state.lastPositions, isEmpty);
-      expect(state.isToggling, isFalse);
-      expect(state.hasMissingDuration, isFalse);
-      emptyContainer.dispose();
-    });
+    test(
+      'gracefully defaults to empty state when PlayerService is not registered',
+      () {
+        final emptyContainer = ProviderContainer();
+        final state = emptyContainer.read(audioProgressManagerProvider);
+        expect(state.lastPositions, isEmpty);
+        expect(state.isToggling, isFalse);
+        expect(state.hasMissingDuration, isFalse);
+        emptyContainer.dispose();
+      },
+    );
   });
 }

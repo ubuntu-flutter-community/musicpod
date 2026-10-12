@@ -88,9 +88,13 @@ class _MobilePageContent extends ConsumerWidget
                         onHorizontalDragEnd: (details) {
                           if (details.primaryVelocity != null) {
                             if (details.primaryVelocity! < -150) {
-                              ref.read(queueManagerProvider.notifier).playNext();
+                              ref
+                                  .read(queueManagerProvider.notifier)
+                                  .playNext();
                             } else if (details.primaryVelocity! > 150) {
-                              ref.read(queueManagerProvider.notifier).playPrevious();
+                              ref
+                                  .read(queueManagerProvider.notifier)
+                                  .playPrevious();
                             }
                           }
                         },
@@ -143,9 +147,9 @@ class MasterRail extends ConsumerWidget {
       scrollable: true,
       extended: true,
       minExtendedWidth: 180,
-      onDestinationSelected: (index) => ref.read(routingManagerProvider.notifier).push(
-        pageId: permanentMasterItems.elementAt(index).pageId,
-      ),
+      onDestinationSelected: (index) => ref
+          .read(routingManagerProvider.notifier)
+          .push(pageId: permanentMasterItems.elementAt(index).pageId),
       destinations: destinations,
       selectedIndex: selectedItem == null
           ? 0

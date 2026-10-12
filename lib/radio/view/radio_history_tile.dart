@@ -44,8 +44,9 @@ class RadioHistoryTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final icyName =
-        ref.watch(mpvMetadataHistoryManagerProvider.select((m) => m[icyTitle]?.icyName));
+    final icyName = ref.watch(
+      mpvMetadataHistoryManagerProvider.select((m) => m[icyTitle]?.icyName),
+    );
 
     return switch (_variant) {
       _RadioHistoryTileVariant.simple => _SimpleRadioHistoryTile(
@@ -74,8 +75,9 @@ class RadioHistoryTile extends ConsumerWidget {
                     final imageUrl = ref
                         .read(onlineArtManagerProvider(icyTitle))
                         .value;
-                    final metadata =
-                        ref.read(mpvMetadataHistoryManagerProvider)[icyTitle];
+                    final metadata = ref.read(
+                      mpvMetadataHistoryManagerProvider,
+                    )[icyTitle];
                     if (metadata == null) return;
 
                     showModal(
@@ -149,10 +151,12 @@ class RadioHistoryTile extends ConsumerWidget {
                     ..setAudioType(AudioType.radio);
                   searchManager.radioNameSearch(icyName).then((v) {
                     if (v?.firstOrNull?.uuid != null) {
-                      ref.read(routingManagerProvider.notifier).push(
-                        builder: (_) => StationPage(uuid: v.first.uuid!),
-                        pageId: v!.first.uuid!,
-                      );
+                      ref
+                          .read(routingManagerProvider.notifier)
+                          .push(
+                            builder: (_) => StationPage(uuid: v.first.uuid!),
+                            pageId: v!.first.uuid!,
+                          );
                     }
                   });
                 },
@@ -188,7 +192,11 @@ class _SimpleRadioHistoryTile extends ConsumerWidget {
         onTap: () => context.toast(CopyClipboardContent(text: icyTitle)),
       ),
       subtitle: Text(
-        ref.watch(mpvMetadataHistoryManagerProvider.select((m) => m[icyTitle]?.icyName)) ??
+        ref.watch(
+              mpvMetadataHistoryManagerProvider.select(
+                (m) => m[icyTitle]?.icyName,
+              ),
+            ) ??
             context.l10n.station,
       ),
     );

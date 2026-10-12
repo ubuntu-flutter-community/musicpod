@@ -84,9 +84,11 @@ class PlaylistControlPanel extends ConsumerWidget {
                   context.pop();
                 }
 
-                ref.read(playlistIDsManagerProvider.notifier).createOrChangePlaylist(
-                  PlaylistChange(id: pageId, action: PlaylistAction.delete),
-                );
+                ref
+                    .read(playlistIDsManagerProvider.notifier)
+                    .createOrChangePlaylist(
+                      PlaylistChange(id: pageId, action: PlaylistAction.delete),
+                    );
 
                 ref
                     .read(
@@ -95,10 +97,9 @@ class PlaylistControlPanel extends ConsumerWidget {
                       ).notifier,
                     )
                     .set(LocalAudioView.playlists.index);
-                ref.read(routingManagerProvider.notifier).push(
-                  pageId: PageIDs.localAudio,
-                  replace: true,
-                );
+                ref
+                    .read(routingManagerProvider.notifier)
+                    .push(pageId: PageIDs.localAudio, replace: true);
               },
             ),
             tooltip: context.l10n.deletePlaylist,

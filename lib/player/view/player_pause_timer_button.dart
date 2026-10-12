@@ -78,10 +78,9 @@ class _DialogState extends ConsumerState<_Dialog> {
       actions: [
         TextButton(
           onPressed: () {
-            ref.read(pauseTimerManagerProvider.notifier).setTimer(
-                  null,
-                  message: context.l10n.playbackTimerCancelled,
-                );
+            ref
+                .read(pauseTimerManagerProvider.notifier)
+                .setTimer(null, message: context.l10n.playbackTimerCancelled);
             context.pop();
           },
           child: Text(context.l10n.cancel),
@@ -92,7 +91,9 @@ class _DialogState extends ConsumerState<_Dialog> {
               targetTime: _timeOfDay,
               now: DateTime.now(),
             );
-            ref.read(pauseTimerManagerProvider.notifier).setTimer(
+            ref
+                .read(pauseTimerManagerProvider.notifier)
+                .setTimer(
                   duration,
                   message: context.l10n.playbackWasPausedByTimer,
                 );

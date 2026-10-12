@@ -13,7 +13,7 @@ part 'queue_manager.g.dart';
 @Riverpod(keepAlive: true)
 class QueueManager extends _$QueueManager {
   QueueManager({PlayerService? playerService})
-      : _playerServiceOverride = playerService;
+    : _playerServiceOverride = playerService;
 
   final PlayerService? _playerServiceOverride;
   PlayerService? get _playerService {
@@ -30,11 +30,9 @@ class QueueManager extends _$QueueManager {
     final service = _playerService;
     if (service == null) return const Queue.empty();
 
-    _sub = service.changes
-        .whereType<QueueChange>()
-        .listen((change) {
-          state = change.queue;
-        });
+    _sub = service.changes.whereType<QueueChange>().listen((change) {
+      state = change.queue;
+    });
 
     ref.onDispose(() {
       _sub?.cancel();

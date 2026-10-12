@@ -112,9 +112,13 @@ class EpisodesManager extends _$EpisodesManager {
           if (_searchQuery == null || _searchQuery!.trim().isEmpty) return true;
           return switch (_filter) {
             PodcastEpisodeFilter.title =>
-              a.title?.toLowerCase().contains(_searchQuery!.toLowerCase()) ?? false,
+              a.title?.toLowerCase().contains(_searchQuery!.toLowerCase()) ??
+                  false,
             PodcastEpisodeFilter.description =>
-              a.episodeDescription?.toLowerCase().contains(_searchQuery!.toLowerCase()) ?? false,
+              a.episodeDescription?.toLowerCase().contains(
+                    _searchQuery!.toLowerCase(),
+                  ) ??
+                  false,
           };
         })
         .where((audio) {
@@ -151,14 +155,18 @@ class EpisodesManager extends _$EpisodesManager {
   void loadMore() {
     final current = state.value;
     if (current == null || !current.hasMore) return;
-    _displayedCount =
-        (_displayedCount + pageSize).clamp(0, current.allEpisodes.length);
+    _displayedCount = (_displayedCount + pageSize).clamp(
+      0,
+      current.allEpisodes.length,
+    );
     final visible = current.allEpisodes.take(_displayedCount).toList();
-    state = AsyncData(current.copyWith(
-      displayedCount: _displayedCount,
-      episodes: visible,
-      hasMore: _displayedCount < current.allEpisodes.length,
-    ));
+    state = AsyncData(
+      current.copyWith(
+        displayedCount: _displayedCount,
+        episodes: visible,
+        hasMore: _displayedCount < current.allEpisodes.length,
+      ),
+    );
   }
 
   void toggleShowSearch() {
@@ -174,10 +182,12 @@ class EpisodesManager extends _$EpisodesManager {
     _displayedCount = pageSize;
     final hideCompleted = ref.read(podcastUpdatesOnlyManagerProvider);
     final showDownloadsOnly = ref.read(podcastDownloadsOnlyManagerProvider);
-    state = AsyncData(_computeState(
-      hideCompletedEpisodes: hideCompleted,
-      showDownloadsOnly: showDownloadsOnly,
-    ));
+    state = AsyncData(
+      _computeState(
+        hideCompletedEpisodes: hideCompleted,
+        showDownloadsOnly: showDownloadsOnly,
+      ),
+    );
   }
 
   void setFilter() {
@@ -188,10 +198,12 @@ class EpisodesManager extends _$EpisodesManager {
     _displayedCount = pageSize;
     final hideCompleted = ref.read(podcastUpdatesOnlyManagerProvider);
     final showDownloadsOnly = ref.read(podcastDownloadsOnlyManagerProvider);
-    state = AsyncData(_computeState(
-      hideCompletedEpisodes: hideCompleted,
-      showDownloadsOnly: showDownloadsOnly,
-    ));
+    state = AsyncData(
+      _computeState(
+        hideCompletedEpisodes: hideCompleted,
+        showDownloadsOnly: showDownloadsOnly,
+      ),
+    );
   }
 
   Future<void> reorder(AudioSortOrder order) async {
@@ -205,10 +217,12 @@ class EpisodesManager extends _$EpisodesManager {
     );
     final hideCompleted = ref.read(podcastUpdatesOnlyManagerProvider);
     final showDownloadsOnly = ref.read(podcastDownloadsOnlyManagerProvider);
-    state = AsyncData(_computeState(
-      hideCompletedEpisodes: hideCompleted,
-      showDownloadsOnly: showDownloadsOnly,
-    ));
+    state = AsyncData(
+      _computeState(
+        hideCompletedEpisodes: hideCompleted,
+        showDownloadsOnly: showDownloadsOnly,
+      ),
+    );
   }
 
   Future<void> refresh() async {

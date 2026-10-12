@@ -49,9 +49,7 @@ class DownloadManager extends _$DownloadManager {
   @override
   Future<DownloadManagerState> build() async {
     Logger.o(tag: '$DownloadManager');
-    final dir = await _downloadService.setDownloadsDirectory(
-      getDefault: true,
-    );
+    final dir = await _downloadService.setDownloadsDirectory(getDefault: true);
     return DownloadManagerState(downloadsDirectory: dir);
   }
 
@@ -125,13 +123,15 @@ class PodcastEpisodeDownloadManager extends _$PodcastEpisodeDownloadManager {
     _cancelToken = cancelToken;
     state = const AsyncLoading(progress: 0.0);
 
-    ref.read(downloadManagerProvider.notifier).notifyEvent(
-      PodcastDownload(
-        status: DownloadStatus.inProgress,
-        audio: audio,
-        path: null,
-      ),
-    );
+    ref
+        .read(downloadManagerProvider.notifier)
+        .notifyEvent(
+          PodcastDownload(
+            status: DownloadStatus.inProgress,
+            audio: audio,
+            path: null,
+          ),
+        );
 
     try {
       final downloadedPath = await _downloadService.download(
@@ -164,11 +164,7 @@ class PodcastEpisodeDownloadManager extends _$PodcastEpisodeDownloadManager {
       final status = isCancelled
           ? DownloadStatus.cancelled
           : DownloadStatus.removed;
-      final event = PodcastDownload(
-        status: status,
-        audio: audio,
-        path: null,
-      );
+      final event = PodcastDownload(status: status, audio: audio, path: null);
       state = AsyncData(event);
       ref.read(downloadManagerProvider.notifier).notifyEvent(event);
     } finally {

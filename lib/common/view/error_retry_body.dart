@@ -62,8 +62,8 @@ class _ErrorRetryBodyState extends ConsumerState<ErrorRetryBody> {
               : widget.retryCapsule.autoRetry
               ? widget.retryCapsule.onRetry
               : () => ref
-                  .read(retryManagerProvider(widget.retryCapsule).notifier)
-                  .manualRetry(),
+                    .read(retryManagerProvider(widget.retryCapsule).notifier)
+                    .manualRetry(),
           child: Text(
             cooldownValue == 0
                 ? context.l10n.retry

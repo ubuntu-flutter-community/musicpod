@@ -74,8 +74,7 @@ class _PodcastsCollectionBodyState
     final updatesOnly = ref.watch(podcastUpdatesOnlyManagerProvider);
     final downloadsOnly = ref.watch(podcastDownloadsOnlyManagerProvider);
     final feedsWithDownloads =
-        ref.watch(podcastFeedsWithDownloadsManagerProvider).value ??
-        <String>{};
+        ref.watch(podcastFeedsWithDownloadsManagerProvider).value ?? <String>{};
     final feedsWithDownloadLength = feedsWithDownloads.length;
 
     final itemCount = updatesOnly
@@ -153,9 +152,7 @@ class _PodcastsCollectionBodyState
                 final String? feedUrl;
                 if (downloadsOnly) {
                   feedUrl = subs
-                      .where(
-                        (e) => feedsWithDownloads.contains(e),
-                      )
+                      .where((e) => feedsWithDownloads.contains(e))
                       .elementAtOrNull(index);
                 } else {
                   feedUrl = subs.elementAtOrNull(index);
@@ -186,8 +183,7 @@ class SliverNewEpispdesList extends ConsumerStatefulWidget {
       _SliverNewEpispdesListState();
 }
 
-class _SliverNewEpispdesListState
-    extends ConsumerState<SliverNewEpispdesList> {
+class _SliverNewEpispdesListState extends ConsumerState<SliverNewEpispdesList> {
   late final PodcastUpdatesManager _updatesManager;
 
   @override

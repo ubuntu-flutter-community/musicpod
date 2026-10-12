@@ -32,9 +32,8 @@ class MasterTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) => _MasterTile(
     key: ValueKey(item.pageId),
     audioPageType: item.audioPageType,
-    onTap: () => ref
-        .read(routingManagerProvider.notifier)
-        .push(pageId: item.pageId),
+    onTap: () =>
+        ref.read(routingManagerProvider.notifier).push(pageId: item.pageId),
     pageId: item.pageId,
     leading: item.iconBuilder(selectedPageId == item.pageId),
     title: item.titleBuilder(context),
@@ -168,7 +167,8 @@ class _PlayAbleMasterTile extends ConsumerStatefulWidget {
   final bool? selected;
 
   @override
-  ConsumerState<_PlayAbleMasterTile> createState() => __PlayAbleMasterTileState();
+  ConsumerState<_PlayAbleMasterTile> createState() =>
+      __PlayAbleMasterTileState();
 }
 
 class __PlayAbleMasterTileState extends ConsumerState<_PlayAbleMasterTile> {
@@ -189,8 +189,10 @@ class __PlayAbleMasterTileState extends ConsumerState<_PlayAbleMasterTile> {
 
     final playAnywhereAsync = ref.watch(playAnywhereManagerProvider);
     final isRunning = playAnywhereAsync.isLoading;
-    final paramPageId =
-        ref.read(playAnywhereManagerProvider.notifier).activeParam?.pageId;
+    final paramPageId = ref
+        .read(playAnywhereManagerProvider.notifier)
+        .activeParam
+        ?.pageId;
     final busy = isRunning && paramPageId == widget.pageId;
 
     return MouseRegion(
@@ -210,13 +212,13 @@ class __PlayAbleMasterTileState extends ConsumerState<_PlayAbleMasterTile> {
                   onPressed: isRunning
                       ? null
                       : () => ref
-                          .read(playAnywhereManagerProvider.notifier)
-                          .play(
-                            PlayAnywhereParam(
-                              pageId: widget.pageId,
-                              audioPageType: widget.audioPageType,
+                            .read(playAnywhereManagerProvider.notifier)
+                            .play(
+                              PlayAnywhereParam(
+                                pageId: widget.pageId,
+                                audioPageType: widget.audioPageType,
+                              ),
                             ),
-                          ),
                   icon: busy
                       ? const SizedBox(
                           width: 15,

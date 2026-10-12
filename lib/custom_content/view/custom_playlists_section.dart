@@ -56,9 +56,8 @@ class _CustomPlaylistsSectionState
 
     await Future.delayed(
       const Duration(milliseconds: 200),
-      () => ref
-          .read(routingManagerProvider.notifier)
-          .push(pageId: playlistName),
+      () =>
+          ref.read(routingManagerProvider.notifier).push(pageId: playlistName),
     );
   }
 
@@ -112,7 +111,8 @@ class _CustomPlaylistsSectionState
                           ),
                         ),
                         onPressed: hasText
-                            ? () => _createEmptyPlaylist(_controller.text.trim())
+                            ? () =>
+                                  _createEmptyPlaylist(_controller.text.trim())
                             : null,
                         child: Text(l10n.add),
                       ),
@@ -151,10 +151,7 @@ class _CustomPlaylistsSectionState
               subtitle: Text('${e.value.length} ${l10n.titles}'),
               trailing: IconButton(
                 tooltip: l10n.deletePlaylist,
-                icon: Icon(
-                  Iconz.remove,
-                  semanticLabel: l10n.deletePlaylist,
-                ),
+                icon: Icon(Iconz.remove, semanticLabel: l10n.deletePlaylist),
                 onPressed: () => ref
                     .read(externalPlaylistDraftsManagerProvider.notifier)
                     .removePlaylist(name: e.key),
@@ -197,7 +194,8 @@ class _CustomPlaylistsSectionState
             runSpacing: 10,
             children: [
               ElevatedButton(
-                onPressed: playlists.isNotEmpty &&
+                onPressed:
+                    playlists.isNotEmpty &&
                         playlists.entries.any(
                           (e) => e.value.any((e) => e.isLocal),
                         )
@@ -207,14 +205,14 @@ class _CustomPlaylistsSectionState
                         }
                         final firstKey = playlists.entries.first.key;
                         await ref
-                            .read(externalPlaylistDraftsManagerProvider.notifier)
+                            .read(
+                              externalPlaylistDraftsManagerProvider.notifier,
+                            )
                             .importPlaylists();
 
                         await ref
                             .read(routingManagerProvider.notifier)
-                            .push(
-                              pageId: firstKey,
-                            );
+                            .push(pageId: firstKey);
                       }
                     : null,
                 child: Text(l10n.add),

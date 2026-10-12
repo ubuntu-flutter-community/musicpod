@@ -21,8 +21,9 @@ void main() {
       mockPlayerService = MockPlayerService();
       changesController = StreamController<PlayerChange>.broadcast();
 
-      when(mockPlayerService.changes)
-          .thenAnswer((_) => changesController.stream);
+      when(
+        mockPlayerService.changes,
+      ).thenAnswer((_) => changesController.stream);
       when(mockPlayerService.playlistMode).thenReturn(PlaylistMode.none);
 
       container = ProviderContainer(
@@ -49,14 +50,17 @@ void main() {
       verify(mockPlayerService.setPlaylistMode()).called(1);
     });
 
-    test('updates state on PlaylistModeChange event directly from payload', () async {
-      expect(container.read(playlistModeManagerProvider), PlaylistMode.none);
+    test(
+      'updates state on PlaylistModeChange event directly from payload',
+      () async {
+        expect(container.read(playlistModeManagerProvider), PlaylistMode.none);
 
-      changesController.add(const PlaylistModeChange(PlaylistMode.loop));
-      await pumpEventQueue();
+        changesController.add(const PlaylistModeChange(PlaylistMode.loop));
+        await pumpEventQueue();
 
-      expect(container.read(playlistModeManagerProvider), PlaylistMode.loop);
-    });
+        expect(container.read(playlistModeManagerProvider), PlaylistMode.loop);
+      },
+    );
 
     test('ignores unrelated PlayerChange events like PositionChange', () async {
       expect(container.read(playlistModeManagerProvider), PlaylistMode.none);
@@ -67,10 +71,16 @@ void main() {
       expect(container.read(playlistModeManagerProvider), PlaylistMode.none);
     });
 
-    test('gracefully defaults to PlaylistMode.none when PlayerService is not registered', () {
-      final emptyContainer = ProviderContainer();
-      expect(emptyContainer.read(playlistModeManagerProvider), PlaylistMode.none);
-      emptyContainer.dispose();
-    });
+    test(
+      'gracefully defaults to PlaylistMode.none when PlayerService is not registered',
+      () {
+        final emptyContainer = ProviderContainer();
+        expect(
+          emptyContainer.read(playlistModeManagerProvider),
+          PlaylistMode.none,
+        );
+        emptyContainer.dispose();
+      },
+    );
   });
 }

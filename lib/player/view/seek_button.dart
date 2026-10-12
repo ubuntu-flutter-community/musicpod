@@ -30,8 +30,8 @@ class SeekButton extends ConsumerWidget {
           (active ? (theme.colorScheme.onSurface) : theme.disabledColor),
       onPressed: active
           ? () => ref
-              .read(positionManagerProvider.notifier)
-              .seekInSeconds(forward ? 30 : -10)
+                .read(positionManagerProvider.notifier)
+                .seekInSeconds(forward ? 30 : -10)
           : null,
       icon: Iconz.yaru
           ? Stack(

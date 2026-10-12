@@ -20,8 +20,9 @@ void main() {
       mockPlayerService = MockPlayerService();
       changesController = StreamController<PlayerChange>.broadcast();
 
-      when(mockPlayerService.changes)
-          .thenAnswer((_) => changesController.stream);
+      when(
+        mockPlayerService.changes,
+      ).thenAnswer((_) => changesController.stream);
       when(mockPlayerService.position).thenReturn(const Duration(seconds: 10));
 
       container = ProviderContainer(
@@ -40,7 +41,10 @@ void main() {
     });
 
     test('initial state reads position value from PlayerService', () {
-      expect(container.read(positionManagerProvider), const Duration(seconds: 10));
+      expect(
+        container.read(positionManagerProvider),
+        const Duration(seconds: 10),
+      );
     });
 
     test('seek delegates to PlayerService', () async {
@@ -55,35 +59,43 @@ void main() {
     test('seekInSeconds advances position correctly', () async {
       when(mockPlayerService.seek(any)).thenAnswer((_) async {});
 
-      await container
-          .read(positionManagerProvider.notifier)
-          .seekInSeconds(15);
+      await container.read(positionManagerProvider.notifier).seekInSeconds(15);
       verify(mockPlayerService.seek(const Duration(seconds: 25))).called(1);
     });
 
     test('seekInSeconds ignores seeks that would go negative', () async {
-      await container
-          .read(positionManagerProvider.notifier)
-          .seekInSeconds(-20);
+      await container.read(positionManagerProvider.notifier).seekInSeconds(-20);
       verifyNever(mockPlayerService.seek(any));
     });
 
     test('updates state on PositionChange event', () async {
-      expect(container.read(positionManagerProvider), const Duration(seconds: 10));
+      expect(
+        container.read(positionManagerProvider),
+        const Duration(seconds: 10),
+      );
 
       changesController.add(const PositionChange(Duration(seconds: 45)));
       await pumpEventQueue();
 
-      expect(container.read(positionManagerProvider), const Duration(seconds: 45));
+      expect(
+        container.read(positionManagerProvider),
+        const Duration(seconds: 45),
+      );
     });
 
     test('ignores unrelated PlayerChange events', () async {
-      expect(container.read(positionManagerProvider), const Duration(seconds: 10));
+      expect(
+        container.read(positionManagerProvider),
+        const Duration(seconds: 10),
+      );
 
       changesController.add(const IsPlayingChange(true));
       await pumpEventQueue();
 
-      expect(container.read(positionManagerProvider), const Duration(seconds: 10));
+      expect(
+        container.read(positionManagerProvider),
+        const Duration(seconds: 10),
+      );
     });
 
     test('defaults to Duration.zero when PlayerService is not registered', () {

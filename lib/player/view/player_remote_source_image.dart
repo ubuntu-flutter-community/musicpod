@@ -52,4 +52,3 @@ class PlayerRemoteSourceImage extends ConsumerWidget {
     );
   }
 }
-

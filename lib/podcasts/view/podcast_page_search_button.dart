@@ -21,8 +21,9 @@ class PodcastPageSearchButton extends ConsumerWidget {
       isSelected: isSelected,
       onPressed: feedUrl.isEmpty
           ? null
-          : () =>
-              ref.read(episodesManagerProvider(feedUrl).notifier).toggleShowSearch(),
+          : () => ref
+                .read(episodesManagerProvider(feedUrl).notifier)
+                .toggleShowSearch(),
       icon: Icon(Iconz.search, semanticLabel: search),
     );
   }

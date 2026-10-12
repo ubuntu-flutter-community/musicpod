@@ -6,54 +6,53 @@ import 'package:musicpod/extensions/build_context_x.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('context.toast adds copy to clipboard action when none provided', (
-    tester,
-  ) async {
-    String? copiedText;
-    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-      SystemChannels.platform,
-      (methodCall) async {
-        if (methodCall.method == 'Clipboard.setData') {
-          copiedText = (methodCall.arguments as Map)['text'] as String?;
+  testWidgets(
+    'context.toast adds copy to clipboard action when none provided',
+    (tester) async {
+      String? copiedText;
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        (methodCall) async {
+          if (methodCall.method == 'Clipboard.setData') {
+            copiedText = (methodCall.arguments as Map)['text'] as String?;
+            return null;
+          }
+          if (methodCall.method == 'Clipboard.getData') {
+            return {'text': copiedText};
+          }
           return null;
-        }
-        if (methodCall.method == 'Clipboard.getData') {
-          return {'text': copiedText};
-        }
-        return null;
-      },
-    );
+        },
+      );
 
-    late BuildContext targetContext;
+      late BuildContext targetContext;
 
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: Builder(
-            builder: (context) {
-              targetContext = context;
-              return const SizedBox();
-            },
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (context) {
+                targetContext = context;
+                return const SizedBox();
+              },
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    targetContext.toast(const Text('Test error message'));
-    await tester.pumpAndSettle();
+      targetContext.toast(const Text('Test error message'));
+      await tester.pumpAndSettle();
 
-    expect(find.text('Test error message'), findsOneWidget);
-    expect(find.byType(SnackBarAction), findsOneWidget);
+      expect(find.text('Test error message'), findsOneWidget);
+      expect(find.byType(SnackBarAction), findsOneWidget);
 
-    await tester.tap(find.byType(SnackBarAction));
-    await tester.pumpAndSettle();
+      await tester.tap(find.byType(SnackBarAction));
+      await tester.pumpAndSettle();
 
-    expect(copiedText, 'Test error message');
-  });
+      expect(copiedText, 'Test error message');
+    },
+  );
 
-  testWidgets('context.toast uses custom action if provided', (
-    tester,
-  ) async {
+  testWidgets('context.toast uses custom action if provided', (tester) async {
     bool customClicked = false;
     late BuildContext targetContext;
 

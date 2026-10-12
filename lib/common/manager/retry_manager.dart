@@ -39,9 +39,11 @@ class RetryManager extends _$RetryManager {
         final nextRetries = _capsule.retries + 1;
         _capsule = _capsule.copyWith(retries: nextRetries);
 
-        final nextCooldown = _capsule.cooldownStartValue *
+        final nextCooldown =
+            _capsule.cooldownStartValue *
             (_capsule.autoIncrementCooldown ? nextRetries : 1);
-        final clampedCooldown = _capsule.cooldownMaxValue > 0 &&
+        final clampedCooldown =
+            _capsule.cooldownMaxValue > 0 &&
                 nextCooldown > _capsule.cooldownMaxValue
             ? _capsule.cooldownMaxValue
             : nextCooldown;

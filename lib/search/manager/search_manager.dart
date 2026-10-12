@@ -249,10 +249,7 @@ class SearchManager extends _$SearchManager {
   void setAudioType(AudioType? value) {
     if (value == null || value == state.audioType) return;
     unawaited(
-      _settingsService.setValue(
-        SPKeys.selectedSearchAudioType,
-        value.name,
-      ),
+      _settingsService.setValue(SPKeys.selectedSearchAudioType, value.name),
     );
     final newSearchTypes = searchTypesFromAudioType(value);
     state = state.copyWith(
@@ -316,8 +313,7 @@ class SearchManager extends _$SearchManager {
   void search({bool clear = false, bool manualFilter = false}) =>
       unawaited(_search(clear: clear, manualFilter: manualFilter));
 
-  Future<void> refresh() =>
-      _search(clear: true, manualFilter: false);
+  Future<void> refresh() => _search(clear: true, manualFilter: false);
 
   Future<void> _search({bool clear = false, bool manualFilter = false}) async {
     final executionId = ++_searchExecutionId;
@@ -326,12 +322,15 @@ class SearchManager extends _$SearchManager {
       isLoading: true,
       error: () => null,
       stackTrace: () => null,
-      radioSearchResult:
-          clear && state.audioType == AudioType.radio ? () => null : null,
-      podcastSearchResult:
-          clear && state.audioType == AudioType.podcast ? () => null : null,
-      localSearchResult:
-          clear && state.audioType == AudioType.local ? () => null : null,
+      radioSearchResult: clear && state.audioType == AudioType.radio
+          ? () => null
+          : null,
+      podcastSearchResult: clear && state.audioType == AudioType.podcast
+          ? () => null
+          : null,
+      localSearchResult: clear && state.audioType == AudioType.local
+          ? () => null
+          : null,
     );
 
     try {
@@ -346,73 +345,78 @@ class SearchManager extends _$SearchManager {
       final currentAttribute = state.podcastSearchAttribute;
 
       final Future<void> searchFuture = switch (currentSearchType) {
-        SearchType.radioName => _radioService
-            .search(name: currentQuery, limit: currentRadioLimit)
-            .then((v) {
-              if (executionId != _searchExecutionId) return;
-              state = state.copyWith(
-                radioSearchResult: () =>
-                    currentQuery == null || currentQuery.isEmpty ? null : v,
-              );
-            }),
-        SearchType.radioTag => _radioService
-            .search(tag: currentTag?.name, limit: currentRadioLimit)
-            .then((v) {
-              if (executionId != _searchExecutionId) return;
-              state = state.copyWith(radioSearchResult: () => v);
-            }),
-        SearchType.radioCountry => _radioService
-            .search(
-              country: currentCountry?.name.camelToSentence,
-              limit: currentRadioLimit,
-            )
-            .then((v) {
-              if (executionId != _searchExecutionId) return;
-              state = state.copyWith(radioSearchResult: () => v);
-            }),
-        SearchType.radioLanguage => _radioService
-            .search(
-              language: currentLanguage?.name.toLowerCase(),
-              limit: currentRadioLimit,
-            )
-            .then((v) {
-              if (executionId != _searchExecutionId) return;
-              state = state.copyWith(radioSearchResult: () => v);
-            }),
-        SearchType.podcastTitle => _podcastService
-            .search(
-              searchQuery: currentQuery,
-              limit: currentPodcastLimit,
-              country: currentCountry,
-              language: currentLanguage,
-              podcastGenre: currentPodcastGenre,
-              attribute: currentAttribute,
-            )
-            .then((v) {
-              if (executionId != _searchExecutionId) return;
-              state = state.copyWith(podcastSearchResult: () => v);
-            }),
+        SearchType.radioName =>
+          _radioService
+              .search(name: currentQuery, limit: currentRadioLimit)
+              .then((v) {
+                if (executionId != _searchExecutionId) return;
+                state = state.copyWith(
+                  radioSearchResult: () =>
+                      currentQuery == null || currentQuery.isEmpty ? null : v,
+                );
+              }),
+        SearchType.radioTag =>
+          _radioService
+              .search(tag: currentTag?.name, limit: currentRadioLimit)
+              .then((v) {
+                if (executionId != _searchExecutionId) return;
+                state = state.copyWith(radioSearchResult: () => v);
+              }),
+        SearchType.radioCountry =>
+          _radioService
+              .search(
+                country: currentCountry?.name.camelToSentence,
+                limit: currentRadioLimit,
+              )
+              .then((v) {
+                if (executionId != _searchExecutionId) return;
+                state = state.copyWith(radioSearchResult: () => v);
+              }),
+        SearchType.radioLanguage =>
+          _radioService
+              .search(
+                language: currentLanguage?.name.toLowerCase(),
+                limit: currentRadioLimit,
+              )
+              .then((v) {
+                if (executionId != _searchExecutionId) return;
+                state = state.copyWith(radioSearchResult: () => v);
+              }),
+        SearchType.podcastTitle =>
+          _podcastService
+              .search(
+                searchQuery: currentQuery,
+                limit: currentPodcastLimit,
+                country: currentCountry,
+                language: currentLanguage,
+                podcastGenre: currentPodcastGenre,
+                attribute: currentAttribute,
+              )
+              .then((v) {
+                if (executionId != _searchExecutionId) return;
+                state = state.copyWith(podcastSearchResult: () => v);
+              }),
         _ => _localAudioService.search(currentQuery ?? '').then((v) {
-            if (executionId != _searchExecutionId) return;
-            SearchType nextSearchType = currentSearchType;
-            if (!manualFilter) {
-              if (v?.titles?.isNotEmpty == true) {
-                nextSearchType = SearchType.localTitle;
-              } else if (v?.albums?.isNotEmpty == true) {
-                nextSearchType = SearchType.localAlbum;
-              } else if (v?.artists?.isNotEmpty == true) {
-                nextSearchType = SearchType.localArtist;
-              } else if (v?.genres?.isNotEmpty == true) {
-                nextSearchType = SearchType.localGenreName;
-              } else if (v?.playlists?.isNotEmpty == true) {
-                nextSearchType = SearchType.localPlaylists;
-              }
+          if (executionId != _searchExecutionId) return;
+          SearchType nextSearchType = currentSearchType;
+          if (!manualFilter) {
+            if (v?.titles?.isNotEmpty == true) {
+              nextSearchType = SearchType.localTitle;
+            } else if (v?.albums?.isNotEmpty == true) {
+              nextSearchType = SearchType.localAlbum;
+            } else if (v?.artists?.isNotEmpty == true) {
+              nextSearchType = SearchType.localArtist;
+            } else if (v?.genres?.isNotEmpty == true) {
+              nextSearchType = SearchType.localGenreName;
+            } else if (v?.playlists?.isNotEmpty == true) {
+              nextSearchType = SearchType.localPlaylists;
             }
-            state = state.copyWith(
-              localSearchResult: () => v,
-              searchType: nextSearchType,
-            );
-          }),
+          }
+          state = state.copyWith(
+            localSearchResult: () => v,
+            searchType: nextSearchType,
+          );
+        }),
       };
 
       await searchFuture.timeout(

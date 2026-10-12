@@ -25,10 +25,12 @@ class DownloadButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.theme;
 
-    final downloadAsync =
-        ref.watch(podcastEpisodeDownloadManagerProvider(audio));
+    final downloadAsync = ref.watch(
+      podcastEpisodeDownloadManagerProvider(audio),
+    );
     final isRunning = downloadAsync.isLoading;
-    final progress = (downloadAsync is AsyncLoading
+    final progress =
+        (downloadAsync is AsyncLoading
             ? (downloadAsync as AsyncLoading).progress?.toDouble()
             : null) ??
         0.0;

@@ -29,11 +29,11 @@ class PodcastMarkDoneButton extends ConsumerWidget {
           onPressed: isToggling
               ? null
               : () => ref
-                  .read(audioProgressManagerProvider.notifier)
-                  .toggleAudiosProgress(
-                    audios: podcast ?? [],
-                    markComplete: true,
-                  ),
+                    .read(audioProgressManagerProvider.notifier)
+                    .toggleAudiosProgress(
+                      audios: podcast ?? [],
+                      markComplete: true,
+                    ),
           icon: Icon(Iconz.markAllRead),
         ),
         if (isToggling) const PodcastIconButtonProgress(),
@@ -76,11 +76,11 @@ class EpisodeMarkDownButton extends ConsumerWidget {
           onPressed: isRunning || episode.durationMs == null
               ? null
               : () => ref
-                  .read(audioProgressManagerProvider.notifier)
-                  .toggleAudiosProgress(
-                    audios: [episode],
-                    markComplete: true,
-                  ),
+                    .read(audioProgressManagerProvider.notifier)
+                    .toggleAudiosProgress(
+                      audios: [episode],
+                      markComplete: true,
+                    ),
           icon: Icon(
             Iconz.markAllRead,
             color: isCompleted && !isPlaying ? Colors.green : null,

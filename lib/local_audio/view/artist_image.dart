@@ -16,7 +16,9 @@ class ArtistImage extends ConsumerWidget {
     dimension: dimension,
     backgroundColor: context.theme.cardColor,
     images:
-        ref.watch(albumIDsOfArtistManagerProvider(artist)).value
+        ref
+            .watch(albumIDsOfArtistManagerProvider(artist))
+            .value
             ?.map(
               (e) => LocalCover(
                 albumId: e,

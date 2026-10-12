@@ -11,7 +11,7 @@ part 'is_video_manager.g.dart';
 @Riverpod(keepAlive: true)
 class IsVideoManager extends _$IsVideoManager {
   IsVideoManager({PlayerService? playerService})
-      : _playerServiceOverride = playerService;
+    : _playerServiceOverride = playerService;
 
   final PlayerService? _playerServiceOverride;
   PlayerService? get _playerService {
@@ -28,11 +28,9 @@ class IsVideoManager extends _$IsVideoManager {
     final service = _playerService;
     if (service == null) return false;
 
-    _sub = service.changes
-        .whereType<IsVideoChange>()
-        .listen((change) {
-          state = change.isVideo;
-        });
+    _sub = service.changes.whereType<IsVideoChange>().listen((change) {
+      state = change.isVideo;
+    });
 
     ref.onDispose(() {
       _sub?.cancel();

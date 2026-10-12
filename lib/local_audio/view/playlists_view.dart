@@ -54,10 +54,12 @@ class PlaylistsView extends ConsumerWidget {
                     ),
                   ),
                 )
-              : ref.read(routingManagerProvider.notifier).push(
-                  builder: (_) => PlaylistPage(pageId: id),
-                  pageId: id,
-                ),
+              : ref
+                    .read(routingManagerProvider.notifier)
+                    .push(
+                      builder: (_) => PlaylistPage(pageId: id),
+                      pageId: id,
+                    ),
           borderRadius: BorderRadius.circular(300),
           child: Stack(
             alignment: Alignment.center,

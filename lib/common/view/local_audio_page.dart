@@ -61,7 +61,9 @@ class LocalAudioPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    WidgetsBinding.instance.addPostFrameCallback((_) => clearInMemoryImageCache());
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => clearInMemoryImageCache(),
+    );
     return Scaffold(
       appBar: HeaderBar(
         title: isMobile ? null : Text(pageTitle ?? ''),

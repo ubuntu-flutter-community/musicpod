@@ -28,15 +28,19 @@ void main() {
       url: 'file:///song2.mp3',
       audioType: AudioType.local,
     );
-    const initialQueue = Queue(name: 'Test Queue', audios: [testAudio1, testAudio2]);
+    const initialQueue = Queue(
+      name: 'Test Queue',
+      audios: [testAudio1, testAudio2],
+    );
 
     setUp(() async {
       await GetIt.I.reset();
       mockPlayerService = MockPlayerService();
       changesController = StreamController<PlayerChange>.broadcast();
 
-      when(mockPlayerService.changes)
-          .thenAnswer((_) => changesController.stream);
+      when(
+        mockPlayerService.changes,
+      ).thenAnswer((_) => changesController.stream);
       when(mockPlayerService.queue).thenReturn(initialQueue);
 
       container = ProviderContainer(
@@ -66,14 +70,16 @@ void main() {
     test('insertIntoQueue delegates to PlayerService', () async {
       when(mockPlayerService.insertIntoQueue(any)).thenAnswer((_) async {});
 
-      await container
-          .read(queueManagerProvider.notifier)
-          .insertIntoQueue([testAudio1]);
+      await container.read(queueManagerProvider.notifier).insertIntoQueue([
+        testAudio1,
+      ]);
       verify(mockPlayerService.insertIntoQueue([testAudio1])).called(1);
     });
 
     test('moveAudioInQueue delegates to PlayerService', () async {
-      when(mockPlayerService.moveAudioInQueue(any, any)).thenAnswer((_) async {});
+      when(
+        mockPlayerService.moveAudioInQueue(any, any),
+      ).thenAnswer((_) async {});
 
       await container
           .read(queueManagerProvider.notifier)

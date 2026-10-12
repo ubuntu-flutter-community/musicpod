@@ -31,12 +31,15 @@ class _ExposeOnlineSectionState extends ConsumerState<ExposeOnlineSection> {
   void initState() {
     super.initState();
 
-    final lastFmApiKey =
-        ref.read(settingsStringManagerProvider(SPKeys.lastFmApiKey));
-    final lastFmSecret =
-        ref.read(settingsStringManagerProvider(SPKeys.lastFmSecret));
-    final listenBrainzApiKey =
-        ref.read(settingsStringManagerProvider(SPKeys.listenBrainzApiKey));
+    final lastFmApiKey = ref.read(
+      settingsStringManagerProvider(SPKeys.lastFmApiKey),
+    );
+    final lastFmSecret = ref.read(
+      settingsStringManagerProvider(SPKeys.lastFmSecret),
+    );
+    final listenBrainzApiKey = ref.read(
+      settingsStringManagerProvider(SPKeys.listenBrainzApiKey),
+    );
 
     _lastFmApiKeyController = TextEditingController(text: lastFmApiKey);
     _lastFmSecretController = TextEditingController(text: lastFmSecret);
@@ -76,8 +79,7 @@ class _ExposeOnlineSectionState extends ConsumerState<ExposeOnlineSection> {
             children: space(
               children: [
                 const Icon(TablerIcons.brand_lastfm),
-                if (lastFmEnabled && isLastFmAuthorized)
-                  Text(l10n.connectedTo),
+                if (lastFmEnabled && isLastFmAuthorized) Text(l10n.connectedTo),
                 Text(l10n.exposeToLastfmTitle),
               ],
             ),
@@ -88,9 +90,7 @@ class _ExposeOnlineSectionState extends ConsumerState<ExposeOnlineSection> {
             onChanged: (v) {
               ref
                   .read(
-                    settingsBoolManagerProvider(
-                      SPKeys.enableLastFm,
-                    ).notifier,
+                    settingsBoolManagerProvider(SPKeys.enableLastFm).notifier,
                   )
                   .set(v);
             },

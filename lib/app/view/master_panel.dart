@@ -125,8 +125,7 @@ class StationsList extends ConsumerWidget {
     final selectedPageId = ref.watch(routingManagerProvider);
     final starredStationIDs =
         ref.watch(radioStarStationManagerProvider).value ?? {};
-    final masterItems =
-        createStarredStationsMasterItems(starredStationIDs);
+    final masterItems = createStarredStationsMasterItems(starredStationIDs);
     return SliverList.builder(
       itemCount: masterItems.length,
       itemBuilder: (context, index) => MasterTile(
@@ -143,8 +142,7 @@ class AlbumsList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedPageId = ref.watch(routingManagerProvider);
-    final pinnedAlbums =
-        ref.watch(pinnedAlbumIDsManagerProvider).value ?? [];
+    final pinnedAlbums = ref.watch(pinnedAlbumIDsManagerProvider).value ?? [];
     final masterItems = createPinnedAlbumsMasterItems(pinnedAlbums);
     return SliverList.builder(
       itemCount: masterItems.length,

@@ -63,16 +63,21 @@ class _CustomPodcastSectionState extends ConsumerState<CustomPodcastSection> {
                                 tryFromDbOnly: false,
                               )
                               .then((episodes) {
-                            if (episodes.isEmpty && context.mounted) {
-                              context.toast(Text(context.l10n.noPodcastFound));
-                            } else if (context.mounted) {
-                              ref.read(routingManagerProvider.notifier).push(
-                                pageId: _urlController.text,
-                                builder: (context) =>
-                                    PodcastPage(feedUrl: _urlController.text),
-                              );
-                            }
-                          });
+                                if (episodes.isEmpty && context.mounted) {
+                                  context.toast(
+                                    Text(context.l10n.noPodcastFound),
+                                  );
+                                } else if (context.mounted) {
+                                  ref
+                                      .read(routingManagerProvider.notifier)
+                                      .push(
+                                        pageId: _urlController.text,
+                                        builder: (context) => PodcastPage(
+                                          feedUrl: _urlController.text,
+                                        ),
+                                      );
+                                }
+                              });
                         },
                   child: Text(context.l10n.search),
                 ),

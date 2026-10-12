@@ -70,12 +70,7 @@ class _UpdateButton extends ConsumerWidget {
           tooltip: context.l10n.updateAvailable,
           onPressed: () => launchUrl(
             Uri.parse(
-              p.join(
-                AppConfig.repoUrl,
-                'releases',
-                'tag',
-                state.onlineVersion,
-              ),
+              p.join(AppConfig.repoUrl, 'releases', 'tag', state.onlineVersion),
             ),
           ),
           icon: Icon(

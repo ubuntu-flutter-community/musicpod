@@ -75,8 +75,8 @@ class PodcastTilePlayButton extends ConsumerWidget {
                   .read(currentAudioManagerProvider.notifier)
                   .safeCurrentAudioPosition()
                   .then((value) {
-                play();
-              });
+                    play();
+                  });
             }
           },
         ),
@@ -98,4 +98,3 @@ class PodcastTilePlayButton extends ConsumerWidget {
     );
   }
 }
-

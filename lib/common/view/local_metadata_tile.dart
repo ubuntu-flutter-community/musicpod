@@ -85,7 +85,9 @@ class _LocalMetadataTileState extends ConsumerState<LocalMetadataTile> {
 
   @override
   Widget build(BuildContext context) {
-    final metaState = ref.watch(changeLocalMetaDataManagerProvider(widget.audio));
+    final metaState = ref.watch(
+      changeLocalMetaDataManagerProvider(widget.audio),
+    );
     final changedAudio = metaState.savedAudio;
 
     final audioChangePersisted =
@@ -157,7 +159,9 @@ class _LocalMetadataTileState extends ConsumerState<LocalMetadataTile> {
                             : context.colorScheme.onSurface,
                       ),
                 onPressed: () => ref
-                    .read(changeLocalMetaDataManagerProvider(widget.audio).notifier)
+                    .read(
+                      changeLocalMetaDataManagerProvider(widget.audio).notifier,
+                    )
                     .save(),
               );
             },
@@ -169,8 +173,9 @@ class _LocalMetadataTileState extends ConsumerState<LocalMetadataTile> {
   }
 
   void updateDraft(String text) {
-    final notifier =
-        ref.read(changeLocalMetaDataManagerProvider(widget.audio).notifier);
+    final notifier = ref.read(
+      changeLocalMetaDataManagerProvider(widget.audio).notifier,
+    );
     switch (widget.type) {
       case LocalMetadataTileType.title:
         notifier.updateDraft(ChangeMetadataCapsule(title: text));

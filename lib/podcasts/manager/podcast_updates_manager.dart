@@ -86,17 +86,9 @@ class PodcastUpdatesManager extends _$PodcastUpdatesManager {
 
       ref.invalidate(podcastUpdatedFeedsManagerProvider);
 
-      state = state.copyWith(
-        isRunning: false,
-        progress: 1.0,
-        updates: updates,
-      );
+      state = state.copyWith(isRunning: false, progress: 1.0, updates: updates);
     } catch (e, st) {
-      state = state.copyWith(
-        isRunning: false,
-        error: e,
-        stackTrace: st,
-      );
+      state = state.copyWith(isRunning: false, error: e, stackTrace: st);
     }
   }
 

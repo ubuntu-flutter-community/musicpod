@@ -20,8 +20,9 @@ void main() {
       mockPlayerService = MockPlayerService();
       changesController = StreamController<PlayerChange>.broadcast();
 
-      when(mockPlayerService.changes)
-          .thenAnswer((_) => changesController.stream);
+      when(
+        mockPlayerService.changes,
+      ).thenAnswer((_) => changesController.stream);
       when(mockPlayerService.duration).thenReturn(const Duration(minutes: 3));
 
       container = ProviderContainer(
@@ -40,25 +41,40 @@ void main() {
     });
 
     test('initial state reads duration from PlayerService', () {
-      expect(container.read(durationManagerProvider), const Duration(minutes: 3));
+      expect(
+        container.read(durationManagerProvider),
+        const Duration(minutes: 3),
+      );
     });
 
     test('updates state on DurationChange event', () async {
-      expect(container.read(durationManagerProvider), const Duration(minutes: 3));
+      expect(
+        container.read(durationManagerProvider),
+        const Duration(minutes: 3),
+      );
 
       changesController.add(const DurationChange(Duration(minutes: 4)));
       await pumpEventQueue();
 
-      expect(container.read(durationManagerProvider), const Duration(minutes: 4));
+      expect(
+        container.read(durationManagerProvider),
+        const Duration(minutes: 4),
+      );
     });
 
     test('ignores unrelated PlayerChange events', () async {
-      expect(container.read(durationManagerProvider), const Duration(minutes: 3));
+      expect(
+        container.read(durationManagerProvider),
+        const Duration(minutes: 3),
+      );
 
       changesController.add(const ShuffleChange(true));
       await pumpEventQueue();
 
-      expect(container.read(durationManagerProvider), const Duration(minutes: 3));
+      expect(
+        container.read(durationManagerProvider),
+        const Duration(minutes: 3),
+      );
     });
 
     test('defaults to null when PlayerService is not registered', () {

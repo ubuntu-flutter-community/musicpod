@@ -30,8 +30,10 @@ class LyricsViewer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final audio = ref.watch(currentAudioManagerProvider);
-    final splitByDash =
-        ref.watch(mpvMetadataManagerProvider)?.icyTitle.splitByDash;
+    final splitByDash = ref
+        .watch(mpvMetadataManagerProvider)
+        ?.icyTitle
+        .splitByDash;
     final title = audio?.audioType != AudioType.radio
         ? null
         : splitByDash?.songName;
@@ -40,9 +42,7 @@ class LyricsViewer extends ConsumerWidget {
         : splitByDash?.artist;
 
     final tryToFetchOnline =
-        ref.watch(
-          settingsBoolManagerProvider(SPKeys.tryToFetchLyricsOnline),
-        ) ??
+        ref.watch(settingsBoolManagerProvider(SPKeys.tryToFetchLyricsOnline)) ??
         true;
 
     return _PlayerLyrics(

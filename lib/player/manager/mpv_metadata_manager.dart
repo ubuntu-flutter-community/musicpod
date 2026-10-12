@@ -26,9 +26,9 @@ class MpvMetadataManager extends _$MpvMetadataManager {
     PlayerService? playerService,
     ExposeService? exposeService,
     OnlineArtService? onlineArtService,
-  })  : _playerServiceOverride = playerService,
-        _exposeServiceOverride = exposeService,
-        _onlineArtServiceOverride = onlineArtService;
+  }) : _playerServiceOverride = playerService,
+       _exposeServiceOverride = exposeService,
+       _onlineArtServiceOverride = onlineArtService;
 
   final PlayerService? _playerServiceOverride;
   final ExposeService? _exposeServiceOverride;
@@ -115,10 +115,9 @@ class MpvMetadataManager extends _$MpvMetadataManager {
         icyName: _playerService.audio?.title?.trim() ?? value.icyName,
       );
 
-      ref.read(mpvMetadataHistoryManagerProvider.notifier).add(
-        icyTitle: value.icyTitle,
-        mpvMetaData: finalData,
-      );
+      ref
+          .read(mpvMetadataHistoryManagerProvider.notifier)
+          .add(icyTitle: value.icyTitle, mpvMetaData: finalData);
 
       state = finalData;
 
@@ -132,9 +131,7 @@ class MpvMetadataManager extends _$MpvMetadataManager {
       return false;
     }
     final blocked = ref.read(blockedIcyTitlesManagerProvider);
-    if (blocked.any(
-      (b) => icyTitle.toLowerCase().contains(b.toLowerCase()),
-    )) {
+    if (blocked.any((b) => icyTitle.toLowerCase().contains(b.toLowerCase()))) {
       Logger.i('Blocked icy-title: $icyTitle', tag: '$MpvMetadataManager');
       Logger.i(
         'Blocked because it contains: ${blocked.firstWhere((b) => icyTitle.toLowerCase().contains(b.toLowerCase()))}',

@@ -40,7 +40,8 @@ class RoutingManager extends _$RoutingManager implements NavigatorObserver {
 
   @override
   String build() {
-    return _settingsService.getString(SPKeys.selectedPage) ?? PageIDs.searchPage;
+    return _settingsService.getString(SPKeys.selectedPage) ??
+        PageIDs.searchPage;
   }
 
   String get selectedPageId => state;
@@ -50,7 +51,8 @@ class RoutingManager extends _$RoutingManager implements NavigatorObserver {
       await _settingsService.setValue(SPKeys.selectedPage, pageId);
       state = pageId;
     } else {
-      state = _settingsService.getString(SPKeys.selectedPage) ?? PageIDs.searchPage;
+      state =
+          _settingsService.getString(SPKeys.selectedPage) ?? PageIDs.searchPage;
     }
   }
 
@@ -104,10 +106,16 @@ class RoutingManager extends _$RoutingManager implements NavigatorObserver {
   }
 
   @override
-  void didChangeTop(Route<dynamic> topRoute, Route<dynamic>? previousTopRoute) {}
+  void didChangeTop(
+    Route<dynamic> topRoute,
+    Route<dynamic>? previousTopRoute,
+  ) {}
 
   @override
-  void didStartUserGesture(Route<dynamic> route, Route<dynamic>? previousRoute) {}
+  void didStartUserGesture(
+    Route<dynamic> route,
+    Route<dynamic>? previousRoute,
+  ) {}
 
   @override
   void didStopUserGesture() {}
@@ -156,7 +164,6 @@ class RoutingManager extends _$RoutingManager implements NavigatorObserver {
       }
       return;
     }
-
 
     if (shellNavigatorKey.currentState?.canPop() == true) {
       shellNavigatorKey.currentState?.popUntil((route) => route.isFirst);

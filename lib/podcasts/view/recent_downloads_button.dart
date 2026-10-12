@@ -113,11 +113,13 @@ class RecentDownloads extends ConsumerWidget {
         final episode = downloads[index];
         return ListTile(
           onTap: () {
-            ref.read(currentAudioManagerProvider.notifier).play(
-              audios: [episode],
-              listName: 'Recent Downloads',
-              index: 0,
-            );
+            ref
+                .read(currentAudioManagerProvider.notifier)
+                .play(
+                  audios: [episode],
+                  listName: 'Recent Downloads',
+                  index: 0,
+                );
           },
           title: Text(episode.title ?? context.l10n.unknown),
           subtitle: Text(episode.artist ?? context.l10n.unknown),

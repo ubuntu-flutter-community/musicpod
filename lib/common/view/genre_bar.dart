@@ -39,10 +39,12 @@ class GenreBar extends ConsumerWidget {
                     style: style,
                     wrapInFlexible: false,
                     text: e,
-                    onTap: () => ref.read(routingManagerProvider.notifier).push(
-                      builder: (context) => GenrePage(genre: e),
-                      pageId: e,
-                    ),
+                    onTap: () => ref
+                        .read(routingManagerProvider.notifier)
+                        .push(
+                          builder: (context) => GenrePage(genre: e),
+                          pageId: e,
+                        ),
                   ),
                   if (i != genres.length - 1) const Text(' · '),
                 ],

@@ -44,8 +44,9 @@ class _LicensesDialogState extends State<LicensesDialog> {
               child: YaruMasterDetailPage(
                 appBar: YaruDialogTitleBar(
                   shape: const RoundedRectangleBorder(),
-                  backgroundColor:
-                      YaruMasterDetailTheme.of(context).sideBarColor,
+                  backgroundColor: YaruMasterDetailTheme.of(
+                    context,
+                  ).sideBarColor,
                   border: BorderSide.none,
                   isClosable: false,
                   title: Text(context.l10n.dependencies),
@@ -56,9 +57,8 @@ class _LicensesDialogState extends State<LicensesDialog> {
                       selected: selected,
                       title: Text(packages[index]),
                     ),
-                pageBuilder: (context, index) => LicenseView(
-                  licenses: _store.licenses(packages[index]),
-                ),
+                pageBuilder: (context, index) =>
+                    LicenseView(licenses: _store.licenses(packages[index])),
               ),
             ),
           ),

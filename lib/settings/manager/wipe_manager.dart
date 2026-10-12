@@ -53,10 +53,7 @@ class WipeManager extends _$WipeManager {
       }
 
       if (wipeTypes.contains(WipeType.localAudio)) {
-        await di<LocalAudioService>().init(
-          newDirectory: '',
-          forceInit: true,
-        );
+        await di<LocalAudioService>().init(newDirectory: '', forceInit: true);
         ref.invalidate(localAudioManagerProvider);
         ref.invalidate(pinnedAlbumIDsManagerProvider);
         ref.invalidate(likedAudiosManagerProvider);

@@ -12,8 +12,8 @@ class SpecialNotesDisposedManager extends _$SpecialNotesDisposedManager {
   SpecialNotesDisposedManager({
     SettingsService? settingsService,
     PackageInfo? packageInfo,
-  })  : _settingsServiceOverride = settingsService,
-        _packageInfoOverride = packageInfo;
+  }) : _settingsServiceOverride = settingsService,
+       _packageInfoOverride = packageInfo;
 
   final SettingsService? _settingsServiceOverride;
   final PackageInfo? _packageInfoOverride;

@@ -42,10 +42,12 @@ class GenresView extends ConsumerWidget {
         final textColor = contrastColor(color);
         return YaruSelectableContainer(
           selected: false,
-          onTap: () => ref.read(routingManagerProvider.notifier).push(
-            builder: (_) => GenrePage(genre: text),
-            pageId: text,
-          ),
+          onTap: () => ref
+              .read(routingManagerProvider.notifier)
+              .push(
+                builder: (_) => GenrePage(genre: text),
+                pageId: text,
+              ),
           borderRadius: BorderRadius.circular(300),
           child: Stack(
             alignment: Alignment.center,

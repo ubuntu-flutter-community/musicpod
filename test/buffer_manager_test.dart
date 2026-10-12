@@ -20,8 +20,9 @@ void main() {
       mockPlayerService = MockPlayerService();
       changesController = StreamController<PlayerChange>.broadcast();
 
-      when(mockPlayerService.changes)
-          .thenAnswer((_) => changesController.stream);
+      when(
+        mockPlayerService.changes,
+      ).thenAnswer((_) => changesController.stream);
       when(mockPlayerService.buffer).thenReturn(const Duration(seconds: 5));
 
       container = ProviderContainer(
@@ -49,7 +50,10 @@ void main() {
       changesController.add(const BufferChange(Duration(seconds: 12)));
       await pumpEventQueue();
 
-      expect(container.read(bufferManagerProvider), const Duration(seconds: 12));
+      expect(
+        container.read(bufferManagerProvider),
+        const Duration(seconds: 12),
+      );
     });
 
     test('ignores unrelated PlayerChange events', () async {

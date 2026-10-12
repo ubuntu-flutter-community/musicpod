@@ -88,8 +88,9 @@ class AudioTileOptionButton extends ConsumerWidget {
               settingsBoolManagerProvider(SPKeys.hideCompletedEpisodes),
             ) ??
             false;
-        final showDownloadsOnly =
-            ref.watch(podcastDownloadsOnlyManagerProvider);
+        final showDownloadsOnly = ref.watch(
+          podcastDownloadsOnlyManagerProvider,
+        );
         final currentAudio = ref.watch(currentAudioManagerProvider);
         final currentlyLocalPlaying =
             currentAudio != null && currentAudio.isLocal;
@@ -100,7 +101,9 @@ class AudioTileOptionButton extends ConsumerWidget {
             PopupMenuItem(
               onTap: () {
                 if (currentlyLocalPlaying) {
-                  ref.read(queueManagerProvider.notifier).insertIntoQueue(audios);
+                  ref
+                      .read(queueManagerProvider.notifier)
+                      .insertIntoQueue(audios);
                   context.toast(
                     Text('${l10n.addedTo} ${l10n.queue}: $searchTerm'),
                     action: SnackBarAction(
@@ -112,10 +115,9 @@ class AudioTileOptionButton extends ConsumerWidget {
                     showCloseIcon: true,
                   );
                 } else {
-                  ref.read(currentAudioManagerProvider.notifier).play(
-                    audios: audios,
-                    listName: playlistId,
-                  );
+                  ref
+                      .read(currentAudioManagerProvider.notifier)
+                      .play(audios: audios, listName: playlistId);
                 }
               },
               child: ListTile(
@@ -129,17 +131,17 @@ class AudioTileOptionButton extends ConsumerWidget {
             PopupMenuItem(
               onTap: () => playlistId == PageIDs.likedAudios
                   ? ref
-                      .read(likedAudiosManagerProvider.notifier)
-                      .removeLikedAudios(audios)
+                        .read(likedAudiosManagerProvider.notifier)
+                        .removeLikedAudios(audios)
                   : ref
-                      .read(playlistIDsManagerProvider.notifier)
-                      .createOrChangePlaylist(
-                        PlaylistChange(
-                          id: playlistId,
-                          audios: audios,
-                          action: PlaylistAction.removeFrom,
+                        .read(playlistIDsManagerProvider.notifier)
+                        .createOrChangePlaylist(
+                          PlaylistChange(
+                            id: playlistId,
+                            audios: audios,
+                            action: PlaylistAction.removeFrom,
+                          ),
                         ),
-                      ),
               child: ListTile(
                 leading: Icon(Iconz.remove),
                 title: Text(
@@ -165,10 +167,12 @@ class AudioTileOptionButton extends ConsumerWidget {
               onTap: () {
                 final artistId = audios.firstOrNull?.artist;
                 if (artistId != null) {
-                  ref.read(routingManagerProvider.notifier).push(
-                    pageId: artistId,
-                    builder: (c) => ArtistPage(pageId: artistId),
-                  );
+                  ref
+                      .read(routingManagerProvider.notifier)
+                      .push(
+                        pageId: artistId,
+                        builder: (c) => ArtistPage(pageId: artistId),
+                      );
                 }
               },
               child: ListTile(
@@ -185,10 +189,12 @@ class AudioTileOptionButton extends ConsumerWidget {
                   );
                   if (albumAudios != null) {
                     unawaited(
-                      ref.read(routingManagerProvider.notifier).push(
-                        pageId: albumId.toString(),
-                        builder: (context) => AlbumPage(id: albumId),
-                      ),
+                      ref
+                          .read(routingManagerProvider.notifier)
+                          .push(
+                            pageId: albumId.toString(),
+                            builder: (context) => AlbumPage(id: albumId),
+                          ),
                     );
                   }
                 }
@@ -234,14 +240,13 @@ class AudioTileOptionButton extends ConsumerWidget {
             ),
           if (audios.every((e) => e.audioType == AudioType.podcast)) ...[
             PopupMenuItem(
-              onTap:
-                  () => ref
-                      .read(
-                        settingsBoolManagerProvider(
-                          SPKeys.hideCompletedEpisodes,
-                        ).notifier,
-                      )
-                      .toggle(),
+              onTap: () => ref
+                  .read(
+                    settingsBoolManagerProvider(
+                      SPKeys.hideCompletedEpisodes,
+                    ).notifier,
+                  )
+                  .toggle(),
               child: IgnorePointer(
                 child: ListTile(
                   selectedTileColor: Colors.transparent,
@@ -262,15 +267,14 @@ class AudioTileOptionButton extends ConsumerWidget {
             if (audios.firstOrNull?.feedUrl != null &&
                 subscribedFeeds.contains(audios.first.feedUrl!))
               PopupMenuItem(
-                onTap: () => ProviderScope.containerOf(
-                  context,
-                  listen: false,
-                ).read(podcastUpdatesManagerProvider.notifier).run(
-                  PodcastUpdateCapsule(
-                    type: PodcastUpdateType.update,
-                    feedUrls: [audios.first.feedUrl!],
-                  ),
-                ),
+                onTap: () => ProviderScope.containerOf(context, listen: false)
+                    .read(podcastUpdatesManagerProvider.notifier)
+                    .run(
+                      PodcastUpdateCapsule(
+                        type: PodcastUpdateType.update,
+                        feedUrls: [audios.first.feedUrl!],
+                      ),
+                    ),
                 child: IgnorePointer(
                   child: ListTile(
                     contentPadding: const EdgeInsets.symmetric(horizontal: 10),
@@ -280,7 +284,9 @@ class AudioTileOptionButton extends ConsumerWidget {
                 ),
               ),
             PopupMenuItem(
-              onTap: ref.read(podcastDownloadsOnlyManagerProvider.notifier).toggle,
+              onTap: ref
+                  .read(podcastDownloadsOnlyManagerProvider.notifier)
+                  .toggle,
               child: IgnorePointer(
                 child: ListTile(
                   selectedTileColor: Colors.transparent,

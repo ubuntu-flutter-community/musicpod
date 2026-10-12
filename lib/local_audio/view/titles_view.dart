@@ -55,10 +55,12 @@ class TitlesView extends ConsumerWidget {
       audios: audios!,
       audioPageType: AudioPageType.allTitlesView,
       pageId: PageIDs.localAudio,
-      onSubTitleTab: (artist) => ref.read(routingManagerProvider.notifier).push(
-        builder: (_) => ArtistPage(pageId: artist),
-        pageId: artist,
-      ),
+      onSubTitleTab: (artist) => ref
+          .read(routingManagerProvider.notifier)
+          .push(
+            builder: (_) => ArtistPage(pageId: artist),
+            pageId: artist,
+          ),
       onSubSubTitleTab: (Audio audio) async {
         if (audio.album == null || audio.artist == null) {
           context.toast(Text(context.l10n.nothingFound));
@@ -74,10 +76,12 @@ class TitlesView extends ConsumerWidget {
           return;
         }
 
-        await ref.read(routingManagerProvider.notifier).push(
-          builder: (_) => AlbumPage(id: id),
-          pageId: id.toString(),
-        );
+        await ref
+            .read(routingManagerProvider.notifier)
+            .push(
+              builder: (_) => AlbumPage(id: id),
+              pageId: id.toString(),
+            );
       },
     );
   }

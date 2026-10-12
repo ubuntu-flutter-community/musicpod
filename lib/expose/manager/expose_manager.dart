@@ -29,4 +29,3 @@ class ExposeManager extends _$ExposeManager {
         apiSecret: credentials.apiSecret,
       );
 }
-

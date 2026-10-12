@@ -11,7 +11,7 @@ part 'duration_manager.g.dart';
 @Riverpod(keepAlive: true)
 class DurationManager extends _$DurationManager {
   DurationManager({PlayerService? playerService})
-      : _playerServiceOverride = playerService;
+    : _playerServiceOverride = playerService;
 
   final PlayerService? _playerServiceOverride;
   PlayerService? get _playerService {
@@ -28,11 +28,9 @@ class DurationManager extends _$DurationManager {
     final service = _playerService;
     if (service == null) return null;
 
-    _sub = service.changes
-        .whereType<DurationChange>()
-        .listen((change) {
-          state = change.duration;
-        });
+    _sub = service.changes.whereType<DurationChange>().listen((change) {
+      state = change.duration;
+    });
 
     ref.onDispose(() {
       _sub?.cancel();

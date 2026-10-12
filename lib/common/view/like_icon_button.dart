@@ -30,13 +30,13 @@ class LikeIconButton extends ConsumerWidget {
     } else {
       onLike = () {
         if (liked) {
-          ref
-              .read(likedAudioPathsManagerProvider.notifier)
-              .removeLikedAudios([audio!]);
+          ref.read(likedAudioPathsManagerProvider.notifier).removeLikedAudios([
+            audio!,
+          ]);
         } else {
-          ref
-              .read(likedAudioPathsManagerProvider.notifier)
-              .addLikedAudios([audio!]);
+          ref.read(likedAudioPathsManagerProvider.notifier).addLikedAudios([
+            audio!,
+          ]);
           showAddedToPlaylistSnackBar(
             context: context,
             id: PageIDs.likedAudios,

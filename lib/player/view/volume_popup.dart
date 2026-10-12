@@ -53,7 +53,8 @@ class VolumeSlider extends ConsumerWidget {
       data: context.theme.sliderTheme.copyWith(trackShape: CustomTrackShape()),
       child: Slider(
         value: volume ?? 100.0,
-        onChanged: (val) => ref.read(volumeManagerProvider.notifier).setVolume(val),
+        onChanged: (val) =>
+            ref.read(volumeManagerProvider.notifier).setVolume(val),
         max: 100,
         min: 0,
       ),

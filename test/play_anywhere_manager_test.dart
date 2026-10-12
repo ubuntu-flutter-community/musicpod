@@ -56,11 +56,13 @@ void main() {
     when(mockPlayerService.changes).thenAnswer((_) => const Stream.empty());
     when(mockPlayerService.queue).thenReturn(const Queue.empty());
     when(mockPlayerService.isPlaying).thenReturn(false);
-    when(mockPlayerService.play(
-      audios: anyNamed('audios'),
-      listName: anyNamed('listName'),
-      index: anyNamed('index'),
-    )).thenAnswer((_) async {});
+    when(
+      mockPlayerService.play(
+        audios: anyNamed('audios'),
+        listName: anyNamed('listName'),
+        index: anyNamed('index'),
+      ),
+    ).thenAnswer((_) async {});
     when(mockPlayerService.pause()).thenAnswer((_) async {});
     when(mockPlayerService.resume()).thenAnswer((_) async {});
 
@@ -80,12 +82,16 @@ void main() {
     test('initial state is AsyncData(null) and activeParam is null', () {
       final state = container.read(playAnywhereManagerProvider);
       expect(state, const AsyncData<PlayAnywhereResult?>(null));
-      expect(container.read(playAnywhereManagerProvider.notifier).activeParam, isNull);
+      expect(
+        container.read(playAnywhereManagerProvider.notifier).activeParam,
+        isNull,
+      );
     });
 
     test('plays playlist successfully when not currently enqueued', () async {
-      when(mockLocalAudioService.findPlaylistById('playlist-1'))
-          .thenAnswer((_) async => [testAudio]);
+      when(
+        mockLocalAudioService.findPlaylistById('playlist-1'),
+      ).thenAnswer((_) async => [testAudio]);
 
       final notifier = container.read(playAnywhereManagerProvider.notifier);
       final result = await notifier.play(
@@ -101,19 +107,20 @@ void main() {
       expect(container.read(playAnywhereManagerProvider).value, result);
       expect(notifier.activeParam, isNull);
 
-      verify(mockPlayerService.play(
-        audios: [testAudio],
-        listName: 'playlist-1',
-      )).called(1);
+      verify(
+        mockPlayerService.play(audios: [testAudio], listName: 'playlist-1'),
+      ).called(1);
       verifyNever(mockPlayerService.pause());
       verifyNever(mockPlayerService.resume());
     });
 
     test('pauses if playlist is already enqueued and playing', () async {
-      when(mockLocalAudioService.findPlaylistById('playlist-1'))
-          .thenAnswer((_) async => [testAudio]);
-      when(mockPlayerService.queue)
-          .thenReturn(const Queue(name: 'playlist-1', audios: [testAudio]));
+      when(
+        mockLocalAudioService.findPlaylistById('playlist-1'),
+      ).thenAnswer((_) async => [testAudio]);
+      when(
+        mockPlayerService.queue,
+      ).thenReturn(const Queue(name: 'playlist-1', audios: [testAudio]));
       when(mockPlayerService.isPlaying).thenReturn(true);
 
       final notifier = container.read(playAnywhereManagerProvider.notifier);
@@ -126,17 +133,21 @@ void main() {
 
       expect(result, isNotNull);
       verify(mockPlayerService.pause()).called(1);
-      verifyNever(mockPlayerService.play(
-        audios: anyNamed('audios'),
-        listName: anyNamed('listName'),
-      ));
+      verifyNever(
+        mockPlayerService.play(
+          audios: anyNamed('audios'),
+          listName: anyNamed('listName'),
+        ),
+      );
     });
 
     test('resumes if playlist is already enqueued and not playing', () async {
-      when(mockLocalAudioService.findPlaylistById('playlist-1'))
-          .thenAnswer((_) async => [testAudio]);
-      when(mockPlayerService.queue)
-          .thenReturn(const Queue(name: 'playlist-1', audios: [testAudio]));
+      when(
+        mockLocalAudioService.findPlaylistById('playlist-1'),
+      ).thenAnswer((_) async => [testAudio]);
+      when(
+        mockPlayerService.queue,
+      ).thenReturn(const Queue(name: 'playlist-1', audios: [testAudio]));
       when(mockPlayerService.isPlaying).thenReturn(false);
 
       final notifier = container.read(playAnywhereManagerProvider.notifier);
@@ -149,15 +160,18 @@ void main() {
 
       expect(result, isNotNull);
       verify(mockPlayerService.resume()).called(1);
-      verifyNever(mockPlayerService.play(
-        audios: anyNamed('audios'),
-        listName: anyNamed('listName'),
-      ));
+      verifyNever(
+        mockPlayerService.play(
+          audios: anyNamed('audios'),
+          listName: anyNamed('listName'),
+        ),
+      );
     });
 
     test('plays liked audios', () async {
-      when(mockLocalAudioService.findLikedAudios())
-          .thenAnswer((_) async => [testAudio]);
+      when(
+        mockLocalAudioService.findLikedAudios(),
+      ).thenAnswer((_) async => [testAudio]);
 
       final notifier = container.read(playAnywhereManagerProvider.notifier);
       final result = await notifier.play(
@@ -168,15 +182,15 @@ void main() {
       );
 
       expect(result?.audios, [testAudio]);
-      verify(mockPlayerService.play(
-        audios: [testAudio],
-        listName: 'liked',
-      )).called(1);
+      verify(
+        mockPlayerService.play(audios: [testAudio], listName: 'liked'),
+      ).called(1);
     });
 
     test('plays album', () async {
-      when(mockLocalAudioService.findAlbum(42))
-          .thenAnswer((_) async => [testAudio]);
+      when(
+        mockLocalAudioService.findAlbum(42),
+      ).thenAnswer((_) async => [testAudio]);
 
       final notifier = container.read(playAnywhereManagerProvider.notifier);
       final result = await notifier.play(
@@ -187,15 +201,15 @@ void main() {
       );
 
       expect(result?.audios, [testAudio]);
-      verify(mockPlayerService.play(
-        audios: [testAudio],
-        listName: '42',
-      )).called(1);
+      verify(
+        mockPlayerService.play(audios: [testAudio], listName: '42'),
+      ).called(1);
     });
 
     test('plays artist', () async {
-      when(mockLocalAudioService.findTitlesOfArtist('Artist X'))
-          .thenAnswer((_) async => [testAudio]);
+      when(
+        mockLocalAudioService.findTitlesOfArtist('Artist X'),
+      ).thenAnswer((_) async => [testAudio]);
 
       final notifier = container.read(playAnywhereManagerProvider.notifier);
       final result = await notifier.play(
@@ -206,17 +220,18 @@ void main() {
       );
 
       expect(result?.audios, [testAudio]);
-      verify(mockPlayerService.play(
-        audios: [testAudio],
-        listName: 'Artist X',
-      )).called(1);
+      verify(
+        mockPlayerService.play(audios: [testAudio], listName: 'Artist X'),
+      ).called(1);
     });
 
     test('plays podcast', () async {
-      when(mockPodcastService.findEpisodes(
-        feedUrl: 'https://feed.xml',
-        tryFromDbOnly: true,
-      )).thenAnswer((_) async => [testAudio]);
+      when(
+        mockPodcastService.findEpisodes(
+          feedUrl: 'https://feed.xml',
+          tryFromDbOnly: true,
+        ),
+      ).thenAnswer((_) async => [testAudio]);
 
       final notifier = container.read(playAnywhereManagerProvider.notifier);
       final result = await notifier.play(
@@ -227,22 +242,27 @@ void main() {
       );
 
       expect(result?.audios, [testAudio]);
-      verify(mockPlayerService.play(
-        audios: [testAudio],
-        listName: 'https://feed.xml',
-      )).called(1);
+      verify(
+        mockPlayerService.play(
+          audios: [testAudio],
+          listName: 'https://feed.xml',
+        ),
+      ).called(1);
     });
 
     test('plays radio using stationManagerProvider override', () async {
       final customContainer = ProviderContainer(
         overrides: [
-          stationManagerProvider('station-uuid')
-              .overrideWith(() => FakeStationManager(testAudio)),
+          stationManagerProvider(
+            'station-uuid',
+          ).overrideWith(() => FakeStationManager(testAudio)),
         ],
       );
       addTearDown(customContainer.dispose);
 
-      final notifier = customContainer.read(playAnywhereManagerProvider.notifier);
+      final notifier = customContainer.read(
+        playAnywhereManagerProvider.notifier,
+      );
       final result = await notifier.play(
         const PlayAnywhereParam(
           pageId: 'station-uuid',
@@ -251,15 +271,15 @@ void main() {
       );
 
       expect(result?.audios, [testAudio]);
-      verify(mockPlayerService.play(
-        audios: [testAudio],
-        listName: 'station-uuid',
-      )).called(1);
+      verify(
+        mockPlayerService.play(audios: [testAudio], listName: 'station-uuid'),
+      ).called(1);
     });
 
     test('plays radio falling back to radioService', () async {
-      when(mockRadioService.getAudioByUUID('station-uuid', fromDBOnly: false))
-          .thenAnswer((_) async => testAudio);
+      when(
+        mockRadioService.getAudioByUUID('station-uuid', fromDBOnly: false),
+      ).thenAnswer((_) async => testAudio);
 
       final notifier = container.read(playAnywhereManagerProvider.notifier);
       final result = await notifier.play(
@@ -270,33 +290,38 @@ void main() {
       );
 
       expect(result?.audios, [testAudio]);
-      verify(mockPlayerService.play(
-        audios: [testAudio],
-        listName: 'station-uuid',
-      )).called(1);
+      verify(
+        mockPlayerService.play(audios: [testAudio], listName: 'station-uuid'),
+      ).called(1);
     });
 
-    test('throws PlayAnywhereBadAudiosException when audios is empty', () async {
-      when(mockLocalAudioService.findPlaylistById('empty-pl'))
-          .thenAnswer((_) async => []);
+    test(
+      'throws PlayAnywhereBadAudiosException when audios is empty',
+      () async {
+        when(
+          mockLocalAudioService.findPlaylistById('empty-pl'),
+        ).thenAnswer((_) async => []);
 
-      final notifier = container.read(playAnywhereManagerProvider.notifier);
-      final result = await notifier.play(
-        const PlayAnywhereParam(
-          pageId: 'empty-pl',
-          audioPageType: AudioPageType.playlist,
-        ),
-      );
+        final notifier = container.read(playAnywhereManagerProvider.notifier);
+        final result = await notifier.play(
+          const PlayAnywhereParam(
+            pageId: 'empty-pl',
+            audioPageType: AudioPageType.playlist,
+          ),
+        );
 
-      expect(result, isNull);
-      final state = container.read(playAnywhereManagerProvider);
-      expect(state.hasError, isTrue);
-      expect(state.error, isA<PlayAnywhereBadAudiosException>());
-      expect(notifier.activeParam, isNull);
-      verifyNever(mockPlayerService.play(
-        audios: anyNamed('audios'),
-        listName: anyNamed('listName'),
-      ));
-    });
+        expect(result, isNull);
+        final state = container.read(playAnywhereManagerProvider);
+        expect(state.hasError, isTrue);
+        expect(state.error, isA<PlayAnywhereBadAudiosException>());
+        expect(notifier.activeParam, isNull);
+        verifyNever(
+          mockPlayerService.play(
+            audios: anyNamed('audios'),
+            listName: anyNamed('listName'),
+          ),
+        );
+      },
+    );
   });
 }

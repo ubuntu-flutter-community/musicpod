@@ -33,9 +33,9 @@ class _Content extends ConsumerWidget {
     final playing = ref.watch(playPauseManagerProvider);
     final currentAudio = ref.watch(currentAudioManagerProvider);
 
-    final radioSearchResult = ref.watch(
-      searchManagerProvider.select((s) => s.radioSearchResult),
-    )?.where((e) => e.uuid != null);
+    final radioSearchResult = ref
+        .watch(searchManagerProvider.select((s) => s.radioSearchResult))
+        ?.where((e) => e.uuid != null);
 
     final searchQuery = ref.watch(
       searchManagerProvider.select((s) => s.searchQuery),
@@ -43,9 +43,7 @@ class _Content extends ConsumerWidget {
     final searchType = ref.watch(
       searchManagerProvider.select((s) => s.searchType),
     );
-    final loading = ref.watch(
-      searchManagerProvider.select((s) => s.isLoading),
-    );
+    final loading = ref.watch(searchManagerProvider.select((s) => s.isLoading));
 
     if (radioSearchResult == null ||
         (searchQuery?.isEmpty == true && radioSearchResult.isEmpty == true)) {
@@ -81,4 +79,3 @@ class _Content extends ConsumerWidget {
     );
   }
 }
-

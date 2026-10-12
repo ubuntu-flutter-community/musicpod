@@ -51,12 +51,14 @@ class _PodcastPageState extends ConsumerState<PodcastPage> {
             .updateGenre(widget.genre!);
       }
 
-      ref.read(podcastUpdatesManagerProvider.notifier).run(
-        PodcastUpdateCapsule(
-          feedUrls: [widget.feedUrl],
-          type: PodcastUpdateType.remove,
-        ),
-      );
+      ref
+          .read(podcastUpdatesManagerProvider.notifier)
+          .run(
+            PodcastUpdateCapsule(
+              feedUrls: [widget.feedUrl],
+              type: PodcastUpdateType.remove,
+            ),
+          );
     });
   }
 
@@ -113,13 +115,9 @@ class _PodcastPage extends ConsumerWidget {
         ref.watch(episodesManagerProvider(feedUrl)).value?.showSearch ?? false;
 
     final isSubscribed =
-        ref
-            .watch(subscribedPodcastsManagerProvider)
-            .value
-            ?.contains(feedUrl) ??
+        ref.watch(subscribedPodcastsManagerProvider).value?.contains(feedUrl) ??
         false;
-    final shortInfo =
-        ref.watch(podcastShortInfoManagerProvider(feedUrl)).value;
+    final shortInfo = ref.watch(podcastShortInfoManagerProvider(feedUrl)).value;
     if (shortInfo == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ref.invalidate(podcastShortInfoManagerProvider(feedUrl));
@@ -147,17 +145,18 @@ class _PodcastPage extends ConsumerWidget {
       ),
       body: RefreshIndicator(
         onRefresh: isSubscribed
-            ? () => ref.read(podcastUpdatesManagerProvider.notifier).run(
-                PodcastUpdateCapsule(
-                  feedUrls: [feedUrl],
-                  type: PodcastUpdateType.update,
-                ),
-              )
+            ? () => ref
+                  .read(podcastUpdatesManagerProvider.notifier)
+                  .run(
+                    PodcastUpdateCapsule(
+                      feedUrls: [feedUrl],
+                      type: PodcastUpdateType.update,
+                    ),
+                  )
             : () async {},
         child: AdaptiveMultiLayoutBody(
           header: PodcastPageHeader(feedUrl: feedUrl),
-          sliverBody: (constraints) =>
-              SliverPodcastPageList(feedUrl: feedUrl),
+          sliverBody: (constraints) => SliverPodcastPageList(feedUrl: feedUrl),
           controlPanel: PodcastPageControlPanel(feedUrl: feedUrl),
           secondControlPanel: (showSearch
               ? PodcastPageSearchField(feedUrl: feedUrl, sliver: false)

@@ -15,8 +15,9 @@ class StaredStationIconButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isStarredStation =
-        (ref.watch(radioStarStationManagerProvider).value ?? {})
-            .contains(audio?.uuid);
+        (ref.watch(radioStarStationManagerProvider).value ?? {}).contains(
+          audio?.uuid,
+        );
 
     return IconButton(
       isSelected: isStarredStation,
@@ -27,8 +28,8 @@ class StaredStationIconButton extends ConsumerWidget {
       onPressed: audio?.uuid == null
           ? null
           : () => ref
-              .read(radioStarStationManagerProvider.notifier)
-              .toggleStarredStation(audio),
+                .read(radioStarStationManagerProvider.notifier)
+                .toggleStarredStation(audio),
       color: color,
     );
   }

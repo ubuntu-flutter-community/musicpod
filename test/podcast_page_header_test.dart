@@ -43,9 +43,9 @@ void main() {
         description: 'Test Description',
       ),
     );
-    when(mockService.findPodcastGenre(feedUrl)).thenAnswer(
-      (_) async => 'Technology',
-    );
+    when(
+      mockService.findPodcastGenre(feedUrl),
+    ).thenAnswer((_) async => 'Technology');
   });
 
   tearDown(() async {
@@ -60,9 +60,7 @@ void main() {
         child: MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: Scaffold(
-            body: PodcastPageHeader(feedUrl: feedUrl),
-          ),
+          home: Scaffold(body: PodcastPageHeader(feedUrl: feedUrl)),
         ),
       ),
     );
@@ -83,18 +81,16 @@ void main() {
     'PodcastPageHeader updates image and title after being inserted',
     (tester) async {
       PodcastShortInfo? shortInfo;
-      when(mockService.getPodcastShortInfo(feedUrl)).thenAnswer(
-        (_) async => shortInfo,
-      );
+      when(
+        mockService.getPodcastShortInfo(feedUrl),
+      ).thenAnswer((_) async => shortInfo);
 
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: Scaffold(
-              body: PodcastPageHeader(feedUrl: feedUrl),
-            ),
+            home: Scaffold(body: PodcastPageHeader(feedUrl: feedUrl)),
           ),
         ),
       );

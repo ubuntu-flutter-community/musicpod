@@ -20,8 +20,9 @@ void main() {
       mockPlayerService = MockPlayerService();
       changesController = StreamController<PlayerChange>.broadcast();
 
-      when(mockPlayerService.changes)
-          .thenAnswer((_) => changesController.stream);
+      when(
+        mockPlayerService.changes,
+      ).thenAnswer((_) => changesController.stream);
       when(mockPlayerService.timer).thenReturn(null);
 
       container = ProviderContainer(
@@ -115,11 +116,14 @@ void main() {
       expect(container.read(pauseTimerManagerProvider), isTrue);
     });
 
-    test('gracefully defaults to false when PlayerService is not registered', () {
-      final emptyContainer = ProviderContainer();
-      final state = emptyContainer.read(pauseTimerManagerProvider);
-      expect(state, isFalse);
-      emptyContainer.dispose();
-    });
+    test(
+      'gracefully defaults to false when PlayerService is not registered',
+      () {
+        final emptyContainer = ProviderContainer();
+        final state = emptyContainer.read(pauseTimerManagerProvider);
+        expect(state, isFalse);
+        emptyContainer.dispose();
+      },
+    );
   });
 }

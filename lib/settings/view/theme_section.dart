@@ -31,8 +31,9 @@ class ThemeSection extends ConsumerWidget {
     final useCustomThemeColor =
         ref.watch(settingsBoolManagerProvider(SPKeys.useCustomThemeColor)) ??
         false;
-    final customThemeColor =
-        ref.watch(settingsIntManagerProvider(SPKeys.customThemeColor));
+    final customThemeColor = ref.watch(
+      settingsIntManagerProvider(SPKeys.customThemeColor),
+    );
 
     final usePlayerColor =
         ref.watch(settingsBoolManagerProvider(SPKeys.usePlayerColor)) ?? false;
@@ -91,9 +92,7 @@ class ThemeSection extends ConsumerWidget {
             trailing: CommonSwitch(
               onChanged: (v) => ref
                   .read(
-                    settingsBoolManagerProvider(
-                      SPKeys.useYaruTheme,
-                    ).notifier,
+                    settingsBoolManagerProvider(SPKeys.useYaruTheme).notifier,
                   )
                   .set(v),
               value: useYaruTheme,
@@ -138,9 +137,7 @@ class ThemeSection extends ConsumerWidget {
           trailing: CommonSwitch(
             onChanged: (v) => ref
                 .read(
-                  settingsBoolManagerProvider(
-                    SPKeys.usePlayerColor,
-                  ).notifier,
+                  settingsBoolManagerProvider(SPKeys.usePlayerColor).notifier,
                 )
                 .set(v),
             value: usePlayerColor,
@@ -154,12 +151,12 @@ class ThemeSection extends ConsumerWidget {
             onChanged: usePlayerColor
                 ? null
                 : (v) => ref
-                    .read(
-                      settingsBoolManagerProvider(
-                        SPKeys.useCustomThemeColor,
-                      ).notifier,
-                    )
-                    .set(v),
+                      .read(
+                        settingsBoolManagerProvider(
+                          SPKeys.useCustomThemeColor,
+                        ).notifier,
+                      )
+                      .set(v),
             value: useCustomThemeColor,
           ),
         ),

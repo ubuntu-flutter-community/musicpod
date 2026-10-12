@@ -19,21 +19,17 @@ class YaruMusicPodApp extends ConsumerWidget {
     final playerColor = ref.watch(playerColorManagerProvider);
 
     final useCustomThemeColor =
-        ref.watch(
-          settingsBoolManagerProvider(SPKeys.useCustomThemeColor),
-        ) ??
+        ref.watch(settingsBoolManagerProvider(SPKeys.useCustomThemeColor)) ??
         false;
     final customThemeColor = ref.watch(
       settingsIntManagerProvider(SPKeys.customThemeColor),
     );
 
     final usePlayerColor =
-        ref.watch(settingsBoolManagerProvider(SPKeys.usePlayerColor)) ??
-        true;
+        ref.watch(settingsBoolManagerProvider(SPKeys.usePlayerColor)) ?? true;
 
     final useYaruTheme =
-        ref.watch(settingsBoolManagerProvider(SPKeys.useYaruTheme)) ??
-        isLinux;
+        ref.watch(settingsBoolManagerProvider(SPKeys.useYaruTheme)) ?? isLinux;
 
     return YaruTheme(
       builder: (context, yaru, child) {
@@ -57,9 +53,7 @@ class YaruMusicPodApp extends ConsumerWidget {
           lightTheme: useYaruTheme
               ? yaruLightWithTweaks(yaruLightFlavor)
               : null,
-          darkTheme: useYaruTheme
-              ? yaruDarkWithTweaks(yaruDarkFlavor)
-              : null,
+          darkTheme: useYaruTheme ? yaruDarkWithTweaks(yaruDarkFlavor) : null,
         );
       },
     );
@@ -74,17 +68,14 @@ class MaterialMusicPodApp extends ConsumerWidget {
     final playerColor = ref.watch(playerColorManagerProvider);
 
     final useCustomThemeColor =
-        ref.watch(
-          settingsBoolManagerProvider(SPKeys.useCustomThemeColor),
-        ) ??
+        ref.watch(settingsBoolManagerProvider(SPKeys.useCustomThemeColor)) ??
         false;
     final customThemeColor = ref.watch(
       settingsIntManagerProvider(SPKeys.customThemeColor),
     );
 
     final usePlayerColor =
-        ref.watch(settingsBoolManagerProvider(SPKeys.usePlayerColor)) ??
-        true;
+        ref.watch(settingsBoolManagerProvider(SPKeys.usePlayerColor)) ?? true;
 
     return SystemThemeBuilder(
       builder: (context, accent) {
@@ -101,4 +92,3 @@ class MaterialMusicPodApp extends ConsumerWidget {
     );
   }
 }
-

@@ -72,4 +72,3 @@ class AvatarPlayButton extends ConsumerWidget {
     );
   }
 }
-

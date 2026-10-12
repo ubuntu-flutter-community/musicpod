@@ -31,10 +31,14 @@ class SearchPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = context.colorScheme;
-    final audioType = ref.watch(searchManagerProvider.select((s) => s.audioType));
+    final audioType = ref.watch(
+      searchManagerProvider.select((s) => s.audioType),
+    );
     final loading = ref.watch(searchManagerProvider.select((s) => s.isLoading));
     final error = ref.watch(searchManagerProvider.select((s) => s.error));
-    final stackTrace = ref.watch(searchManagerProvider.select((s) => s.stackTrace));
+    final stackTrace = ref.watch(
+      searchManagerProvider.select((s) => s.stackTrace),
+    );
 
     return Scaffold(
       appBar: HeaderBar(
@@ -62,10 +66,9 @@ class SearchPage extends ConsumerWidget {
               retryCapsule: RetryCapsule(
                 autoRetry: false,
                 retryViewId: PageIDs.searchPage,
-                onRetry: () => ref.read(searchManagerProvider.notifier).search(
-                  clear: true,
-                  manualFilter: false,
-                ),
+                onRetry: () => ref
+                    .read(searchManagerProvider.notifier)
+                    .search(clear: true, manualFilter: false),
               ),
             )
           : Stack(
@@ -91,7 +94,9 @@ class SearchPage extends ConsumerWidget {
                       timeStamp,
                     ) async {
                       if (context.mounted) {
-                        return ref.read(searchManagerProvider.notifier).refresh();
+                        return ref
+                            .read(searchManagerProvider.notifier)
+                            .refresh();
                       }
                     });
                   },

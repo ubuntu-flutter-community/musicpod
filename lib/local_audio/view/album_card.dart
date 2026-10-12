@@ -60,16 +60,20 @@ class _AlbumCard extends ConsumerWidget {
       albumId: id,
       fallback: CoverBackground(dimension: audioCardDimension),
     ),
-    onTap: () => ref.read(routingManagerProvider.notifier).push(
-      builder: (context) => AlbumPage(id: id),
-      pageId: id.toString(),
-    ),
-    onPlay: () => ref.read(playAnywhereManagerProvider.notifier).play(
-      PlayAnywhereParam(
-        pageId: id.toString(),
-        audioPageType: AudioPageType.album,
-      ),
-    ),
+    onTap: () => ref
+        .read(routingManagerProvider.notifier)
+        .push(
+          builder: (context) => AlbumPage(id: id),
+          pageId: id.toString(),
+        ),
+    onPlay: () => ref
+        .read(playAnywhereManagerProvider.notifier)
+        .play(
+          PlayAnywhereParam(
+            pageId: id.toString(),
+            audioPageType: AudioPageType.album,
+          ),
+        ),
     overlay: overlay,
   );
 }

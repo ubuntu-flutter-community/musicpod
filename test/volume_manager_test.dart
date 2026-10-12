@@ -20,8 +20,9 @@ void main() {
       mockPlayerService = MockPlayerService();
       changesController = StreamController<PlayerChange>.broadcast();
 
-      when(mockPlayerService.changes)
-          .thenAnswer((_) => changesController.stream);
+      when(
+        mockPlayerService.changes,
+      ).thenAnswer((_) => changesController.stream);
       when(mockPlayerService.volume).thenReturn(100.0);
 
       container = ProviderContainer(
@@ -68,10 +69,13 @@ void main() {
       expect(container.read(volumeManagerProvider), 100.0);
     });
 
-    test('gracefully defaults to null when PlayerService is not registered', () {
-      final emptyContainer = ProviderContainer();
-      expect(emptyContainer.read(volumeManagerProvider), isNull);
-      emptyContainer.dispose();
-    });
+    test(
+      'gracefully defaults to null when PlayerService is not registered',
+      () {
+        final emptyContainer = ProviderContainer();
+        expect(emptyContainer.read(volumeManagerProvider), isNull);
+        emptyContainer.dispose();
+      },
+    );
   });
 }

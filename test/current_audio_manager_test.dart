@@ -29,8 +29,9 @@ void main() {
       mockPlayerService = MockPlayerService();
       changesController = StreamController<PlayerChange>.broadcast();
 
-      when(mockPlayerService.changes)
-          .thenAnswer((_) => changesController.stream);
+      when(
+        mockPlayerService.changes,
+      ).thenAnswer((_) => changesController.stream);
       when(mockPlayerService.audio).thenReturn(testAudio);
 
       container = ProviderContainer(
@@ -61,11 +62,9 @@ void main() {
         ),
       ).thenAnswer((_) async {});
 
-      await container.read(currentAudioManagerProvider.notifier).play(
-        audios: [testAudio],
-        listName: 'Test Queue',
-        index: 0,
-      );
+      await container
+          .read(currentAudioManagerProvider.notifier)
+          .play(audios: [testAudio], listName: 'Test Queue', index: 0);
 
       verify(
         mockPlayerService.play(
@@ -77,7 +76,9 @@ void main() {
     });
 
     test('safeCurrentAudioPosition delegates to PlayerService', () async {
-      when(mockPlayerService.safeCurrentAudioPosition()).thenAnswer((_) async {});
+      when(
+        mockPlayerService.safeCurrentAudioPosition(),
+      ).thenAnswer((_) async {});
 
       await container
           .read(currentAudioManagerProvider.notifier)

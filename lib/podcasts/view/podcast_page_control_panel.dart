@@ -77,8 +77,7 @@ class PodcastPageControlPanel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final shortInfo =
-        ref.watch(podcastShortInfoManagerProvider(feedUrl)).value;
+    final shortInfo = ref.watch(podcastShortInfoManagerProvider(feedUrl)).value;
 
     final artist = shortInfo?.artist ?? '';
     final title = shortInfo?.name ?? '';

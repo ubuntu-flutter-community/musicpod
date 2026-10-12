@@ -71,8 +71,8 @@ class _PlayerExplorerState extends ConsumerState<PlayerExplorer>
                 widget.firstChild != null
                     ? index
                     : index > 2
-                        ? 2
-                        : index,
+                    ? 2
+                    : index,
               ),
           controller: _controller,
           tabs: [

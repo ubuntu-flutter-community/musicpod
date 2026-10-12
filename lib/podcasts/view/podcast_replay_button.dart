@@ -28,11 +28,11 @@ class PodcastReplayButton extends ConsumerWidget {
           onPressed: isRunning
               ? null
               : () => ref
-                  .read(audioProgressManagerProvider.notifier)
-                  .toggleAudiosProgress(
-                    audios: podcast?.episodes ?? [],
-                    markComplete: false,
-                  ),
+                    .read(audioProgressManagerProvider.notifier)
+                    .toggleAudiosProgress(
+                      audios: podcast?.episodes ?? [],
+                      markComplete: false,
+                    ),
           icon: Icon(Iconz.replay),
         ),
         if (isRunning) const PodcastIconButtonProgress(),
@@ -60,11 +60,8 @@ class PodcastEpisodeResetProgressButton extends ConsumerWidget {
           onPressed: audio.url == null || isRunning
               ? null
               : () => ref
-                  .read(audioProgressManagerProvider.notifier)
-                  .toggleAudiosProgress(
-                    audios: [audio],
-                    markComplete: false,
-                  ),
+                    .read(audioProgressManagerProvider.notifier)
+                    .toggleAudiosProgress(audios: [audio], markComplete: false),
           icon: Icon(Iconz.replay),
         ),
         if (isRunning) const PodcastIconButtonProgress(),

@@ -49,10 +49,12 @@ class RadioSearchResultTile extends ConsumerWidget {
               children: [
                 TapAbleText(
                   text: station.title ?? context.l10n.unknown,
-                  onTap: () => ref.read(routingManagerProvider.notifier).push(
-                    pageId: station.uuid!,
-                    builder: (context) => StationPage(uuid: station.uuid!),
-                  ),
+                  onTap: () => ref
+                      .read(routingManagerProvider.notifier)
+                      .push(
+                        pageId: station.uuid!,
+                        builder: (context) => StationPage(uuid: station.uuid!),
+                      ),
                   maxLines: maxLines,
                 ),
                 Align(
@@ -112,12 +114,14 @@ class RadioSearchResultTile extends ConsumerWidget {
             ? theme.contrastyPrimary
             : null,
       ),
-      onTap: () => ref.read(playAnywhereManagerProvider.notifier).play(
-        PlayAnywhereParam(
-          pageId: station.uuid!,
-          audioPageType: AudioPageType.radio,
-        ),
-      ),
+      onTap: () => ref
+          .read(playAnywhereManagerProvider.notifier)
+          .play(
+            PlayAnywhereParam(
+              pageId: station.uuid!,
+              audioPageType: AudioPageType.radio,
+            ),
+          ),
     );
   }
 }

@@ -31,12 +31,10 @@ class AlbumsView extends ConsumerWidget {
       );
     }
 
-    final pinnedAlbumIDs =
-        ref.watch(pinnedAlbumIDsManagerProvider).value ?? [];
+    final pinnedAlbumIDs = ref.watch(pinnedAlbumIDsManagerProvider).value ?? [];
 
     final pinned = albumIDs?.where((e) => pinnedAlbumIDs.contains(e)) ?? [];
-    final notPinned =
-        albumIDs?.where((e) => !pinnedAlbumIDs.contains(e)) ?? [];
+    final notPinned = albumIDs?.where((e) => !pinnedAlbumIDs.contains(e)) ?? [];
     final sortedAlbums = [...pinned, ...notPinned];
 
     return SliverGrid.builder(

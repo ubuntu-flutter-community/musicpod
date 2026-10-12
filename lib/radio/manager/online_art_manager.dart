@@ -10,6 +10,6 @@ class OnlineArtManager extends _$OnlineArtManager {
   @override
   Future<String?> build(String? icyTitle) async =>
       (icyTitle == null || icyTitle.isEmpty)
-          ? null
-          : di<OnlineArtService>().fetchAlbumArt(icyTitle: icyTitle);
+      ? null
+      : di<OnlineArtService>().fetchAlbumArt(icyTitle: icyTitle);
 }

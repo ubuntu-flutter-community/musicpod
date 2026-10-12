@@ -23,8 +23,9 @@ void main() {
       mockPlayerService = MockPlayerService();
       changesController = StreamController<PlayerChange>.broadcast();
 
-      when(mockPlayerService.changes)
-          .thenAnswer((_) => changesController.stream);
+      when(
+        mockPlayerService.changes,
+      ).thenAnswer((_) => changesController.stream);
       when(mockPlayerService.color).thenReturn(testColor);
 
       container = ProviderContainer(
@@ -46,18 +47,23 @@ void main() {
       expect(container.read(playerColorManagerProvider), testColor);
     });
 
-    test('setRemoteColorFromImageProvider delegates to PlayerService', () async {
-      when(mockPlayerService.setRemoteColorFromImageProvider(any))
-          .thenAnswer((_) async {});
+    test(
+      'setRemoteColorFromImageProvider delegates to PlayerService',
+      () async {
+        when(
+          mockPlayerService.setRemoteColorFromImageProvider(any),
+        ).thenAnswer((_) async {});
 
-      const provider = NetworkImage('https://example.com/cover.jpg');
-      await container
-          .read(playerColorManagerProvider.notifier)
-          .setRemoteColorFromImageProvider(provider);
+        const provider = NetworkImage('https://example.com/cover.jpg');
+        await container
+            .read(playerColorManagerProvider.notifier)
+            .setRemoteColorFromImageProvider(provider);
 
-      verify(mockPlayerService.setRemoteColorFromImageProvider(provider))
-          .called(1);
-    });
+        verify(
+          mockPlayerService.setRemoteColorFromImageProvider(provider),
+        ).called(1);
+      },
+    );
 
     test('updates state on ColorChange event', () async {
       expect(container.read(playerColorManagerProvider), testColor);

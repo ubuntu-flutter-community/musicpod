@@ -78,7 +78,8 @@ class _PlaylistAddAudioAutoCompleteState
     final allAudios = ref.watch(findAllTracksManagerProvider).value;
     final isRunning = localAudioState.isLoading;
     final error = localAudioState.error;
-    final playlist = ref.watch(playlistManagerProvider(widget.pageId)).value ?? [];
+    final playlist =
+        ref.watch(playlistManagerProvider(widget.pageId)).value ?? [];
 
     return Padding(
       padding: const EdgeInsets.only(bottom: kMediumSpace),

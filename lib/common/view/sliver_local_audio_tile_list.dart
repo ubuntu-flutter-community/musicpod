@@ -71,11 +71,13 @@ class SliverLocalAudioTileList extends ConsumerWidget {
                   ref.read(playPauseManagerProvider.notifier).resume();
                 }
               } else {
-                ref.read(currentAudioManagerProvider.notifier).play(
-                  audios: startNewPlaylistOnTap ? audios : [audio],
-                  listName: pageId,
-                  index: index,
-                );
+                ref
+                    .read(currentAudioManagerProvider.notifier)
+                    .play(
+                      audios: startNewPlaylistOnTap ? audios : [audio],
+                      listName: pageId,
+                      index: index,
+                    );
               }
             },
             selected: audioSelected,
@@ -88,4 +90,3 @@ class SliverLocalAudioTileList extends ConsumerWidget {
     );
   }
 }
-

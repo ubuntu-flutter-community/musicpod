@@ -12,7 +12,7 @@ part 'playlist_mode_manager.g.dart';
 @Riverpod(keepAlive: true)
 class PlaylistModeManager extends _$PlaylistModeManager {
   PlaylistModeManager({PlayerService? playerService})
-      : _playerServiceOverride = playerService;
+    : _playerServiceOverride = playerService;
 
   final PlayerService? _playerServiceOverride;
   PlayerService? get _playerService {
@@ -29,11 +29,9 @@ class PlaylistModeManager extends _$PlaylistModeManager {
     final service = _playerService;
     if (service == null) return PlaylistMode.none;
 
-    _sub = service.changes
-        .whereType<PlaylistModeChange>()
-        .listen((change) {
-          state = change.playlistMode;
-        });
+    _sub = service.changes.whereType<PlaylistModeChange>().listen((change) {
+      state = change.playlistMode;
+    });
 
     ref.onDispose(() {
       _sub?.cancel();

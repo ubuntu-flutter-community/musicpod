@@ -19,8 +19,9 @@ class MasterItemPage extends ConsumerWidget {
     final playlistIdAsync = ref.watch(playlistIDsManagerProvider);
     final pinnedAlbumIdAsync = ref.watch(pinnedAlbumIDsManagerProvider);
     final starredStationIdAsync = ref.watch(radioStarStationManagerProvider);
-    final subscribedPodcastsAsync =
-        ref.watch(subscribedPodcastsManagerProvider);
+    final subscribedPodcastsAsync = ref.watch(
+      subscribedPodcastsManagerProvider,
+    );
 
     final loadingPlaylists = playlistIdAsync.isLoading;
     final loadingAlbums = pinnedAlbumIdAsync.isLoading;
@@ -31,8 +32,7 @@ class MasterItemPage extends ConsumerWidget {
       playlistIDs: playlistIdAsync.value ?? [],
       pinnedAlbumIDs: pinnedAlbumIdAsync.value ?? [],
       starredStationIDs: starredStationIdAsync.value ?? {},
-      subscribedPodcastFeedUrls:
-          subscribedPodcastsAsync.value?.toList() ?? [],
+      subscribedPodcastFeedUrls: subscribedPodcastsAsync.value?.toList() ?? [],
     );
     final item = masterItems.firstWhereOrNull((e) => e.pageId == pageId);
     if (item != null) {

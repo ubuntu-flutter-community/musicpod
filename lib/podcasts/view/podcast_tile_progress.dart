@@ -24,15 +24,11 @@ class PodcastTileProgress extends ConsumerWidget {
     final theme = context.theme;
 
     final pos =
-        (selected
-            ? ref.watch(positionManagerProvider)
-            : lastPosition) ??
+        (selected ? ref.watch(positionManagerProvider) : lastPosition) ??
         const Duration(seconds: 0);
 
     final dur =
-        (selected
-            ? ref.watch(durationManagerProvider)
-            : duration) ??
+        (selected ? ref.watch(durationManagerProvider) : duration) ??
         const Duration(seconds: 1);
 
     final sliderActive = dur.inSeconds > 0 && dur.inSeconds >= pos.inSeconds;
@@ -53,4 +49,3 @@ class PodcastTileProgress extends ConsumerWidget {
     );
   }
 }
-

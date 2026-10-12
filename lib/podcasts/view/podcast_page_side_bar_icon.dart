@@ -14,8 +14,10 @@ class PodcastPageSideBarIcon extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final imageUrl =
-        ref.watch(podcastShortInfoManagerProvider(feedUrl)).value?.imageUrl;
+    final imageUrl = ref
+        .watch(podcastShortInfoManagerProvider(feedUrl))
+        .value
+        ?.imageUrl;
     if (imageUrl == null) {
       return SideBarFallBackImage(child: Icon(Iconz.podcast));
     }

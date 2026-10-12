@@ -42,22 +42,24 @@ class PodcastCard extends ConsumerWidget {
       onPlay: feedUrl == null
           ? null
           : () => ref
-              .read(playAnywhereManagerProvider.notifier)
-              .play(
-                PlayAnywhereParam(
-                  pageId: feedUrl,
-                  audioPageType: AudioPageType.podcast,
+                .read(playAnywhereManagerProvider.notifier)
+                .play(
+                  PlayAnywhereParam(
+                    pageId: feedUrl,
+                    audioPageType: AudioPageType.podcast,
+                  ),
                 ),
-              ),
       onTap: () {
         if (feedUrl == null || feedUrl.isEmpty) {
           context.toast(Text(context.l10n.podcastFeedIsEmpty));
           return;
         }
-        ref.read(routingManagerProvider.notifier).push(
-          builder: (context) => PodcastPage(feedUrl: feedUrl, genre: genre),
-          pageId: feedUrl,
-        );
+        ref
+            .read(routingManagerProvider.notifier)
+            .push(
+              builder: (context) => PodcastPage(feedUrl: feedUrl, genre: genre),
+              pageId: feedUrl,
+            );
       },
     );
   }

@@ -20,8 +20,9 @@ class LikedAudioPage extends ConsumerWidget {
   const LikedAudioPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) =>
-      ref.watch(likedAudiosManagerProvider).when(
+  Widget build(BuildContext context, WidgetRef ref) => ref
+      .watch(likedAudiosManagerProvider)
+      .when(
         loading: () => const Center(child: Progress()),
         error: (error, st) => ErrorRetryBody(
           error: error,
@@ -32,25 +33,26 @@ class LikedAudioPage extends ConsumerWidget {
           stackTrace: st,
         ),
         data: (likedAudios) => LocalAudioPage(
-            onPageLabelTab: (text) =>
-                ref.read(routingManagerProvider.notifier).push(
-                      builder: (_) => ArtistPage(pageId: text),
-                      pageId: text,
-                    ),
-            noSearchResultMessage: Text(context.l10n.likedSongsSubtitle),
-            audios: likedAudios,
-            audioPageType: AudioPageType.likedAudio,
-            pageId: PageIDs.likedAudios,
-            pageTitle: context.l10n.likedSongs,
-            pageLabel: context.l10n.playlist,
-            pageSubTitle: '${likedAudios?.length ?? 0} ${context.l10n.titles}',
-            description: Text(
-              context.l10n.likedSongsSubtitle,
-              style: context.theme.pageHeaderDescription,
-            ),
-            image: FallBackHeaderImage(child: Icon(Iconz.heart, size: 65)),
-            startNewPlaylistOnTap: true,
+          onPageLabelTab: (text) => ref
+              .read(routingManagerProvider.notifier)
+              .push(
+                builder: (_) => ArtistPage(pageId: text),
+                pageId: text,
+              ),
+          noSearchResultMessage: Text(context.l10n.likedSongsSubtitle),
+          audios: likedAudios,
+          audioPageType: AudioPageType.likedAudio,
+          pageId: PageIDs.likedAudios,
+          pageTitle: context.l10n.likedSongs,
+          pageLabel: context.l10n.playlist,
+          pageSubTitle: '${likedAudios?.length ?? 0} ${context.l10n.titles}',
+          description: Text(
+            context.l10n.likedSongsSubtitle,
+            style: context.theme.pageHeaderDescription,
           ),
+          image: FallBackHeaderImage(child: Icon(Iconz.heart, size: 65)),
+          startNewPlaylistOnTap: true,
+        ),
       );
 }
 

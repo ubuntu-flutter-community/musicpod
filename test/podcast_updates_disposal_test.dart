@@ -18,10 +18,7 @@ import 'package:musicpod/settings/service/settings_service.dart';
 
 import 'podcast_updates_disposal_test.mocks.dart';
 
-@GenerateMocks([
-  PodcastService,
-  SettingsService,
-])
+@GenerateMocks([PodcastService, SettingsService])
 void main() {
   const feedUrl = 'https://example.com/podcast.xml';
 
@@ -49,7 +46,9 @@ void main() {
     when(mockSettingsService.getInt(any)).thenReturn(0);
     when(mockSettingsService.getBool(any)).thenReturn(false);
     when(mockSettingsService.getString(any)).thenReturn(null);
-    when(mockPodcastService.getSubscribedPodcasts()).thenAnswer((_) async => {});
+    when(
+      mockPodcastService.getSubscribedPodcasts(),
+    ).thenAnswer((_) async => {});
 
     GetIt.I.registerSingleton<PodcastService>(mockPodcastService);
     GetIt.I.registerSingleton<SettingsService>(mockSettingsService);

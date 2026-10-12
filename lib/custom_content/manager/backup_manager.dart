@@ -20,11 +20,7 @@ class BackupState {
 
   bool get confirmEnabled => localAudio && podcast && radio;
 
-  BackupState copyWith({
-    bool? localAudio,
-    bool? podcast,
-    bool? radio,
-  }) {
+  BackupState copyWith({bool? localAudio, bool? podcast, bool? radio}) {
     return BackupState(
       localAudio: localAudio ?? this.localAudio,
       podcast: podcast ?? this.podcast,

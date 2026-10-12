@@ -29,8 +29,9 @@ class AlbumPage extends ConsumerWidget {
   final int id;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) =>
-      ref.watch(findAlbumManagerProvider(id)).when(
+  Widget build(BuildContext context, WidgetRef ref) => ref
+      .watch(findAlbumManagerProvider(id))
+      .when(
         error: (error, stack) => Scaffold(
           appBar: const HeaderBar(),
           body: Center(child: Text(error.toString())),
@@ -47,11 +48,12 @@ class AlbumPage extends ConsumerWidget {
             );
           }
 
-          void onArtistTap(String text) =>
-              ref.read(routingManagerProvider.notifier).push(
-                    builder: (_) => ArtistPage(pageId: text),
-                    pageId: text,
-                  );
+          void onArtistTap(String text) => ref
+              .read(routingManagerProvider.notifier)
+              .push(
+                builder: (_) => ArtistPage(pageId: text),
+                pageId: text,
+              );
 
           return LocalAudioPage(
             pageId: id.toString(),

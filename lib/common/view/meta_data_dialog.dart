@@ -88,8 +88,10 @@ class MetaDataContent extends ConsumerWidget {
             ElevatedButton(
               onPressed: wasChanged
                   ? () => ref
-                      .read(changeLocalMetaDataManagerProvider(audio).notifier)
-                      .save()
+                        .read(
+                          changeLocalMetaDataManagerProvider(audio).notifier,
+                        )
+                        .save()
                   : null,
               child: Text(context.l10n.save),
             ),

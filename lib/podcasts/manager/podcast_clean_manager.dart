@@ -18,8 +18,8 @@ class PodcastCleanManager extends _$PodcastCleanManager {
   Future<Set<String>> clean({bool reclaimDiskSpace = false}) async {
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
-      final unsubscribedPodcasts =
-          await _podcastService.deleteUnsubscribedPodcastData();
+      final unsubscribedPodcasts = await _podcastService
+          .deleteUnsubscribedPodcastData();
 
       if (unsubscribedPodcasts != null) {
         for (final feedUrl in unsubscribedPodcasts) {

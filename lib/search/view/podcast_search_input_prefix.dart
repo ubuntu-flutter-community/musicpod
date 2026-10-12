@@ -19,24 +19,17 @@ class PodcastSearchInputPrefix extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final country = ref.watch(
-      searchManagerProvider.select((s) => s.country),
-    );
+    final country = ref.watch(searchManagerProvider.select((s) => s.country));
     const flagTextStyle = TextStyle(fontSize: 20, height: 1.2);
     final l10n = context.l10n;
 
     final usePodcastIndex =
-        ref.watch(
-          settingsBoolManagerProvider(SPKeys.usePodcastIndex),
-        ) ??
-        false;
+        ref.watch(settingsBoolManagerProvider(SPKeys.usePodcastIndex)) ?? false;
     final tooltip = usePodcastIndex ? l10n.language : l10n.country;
 
     return IconButton(
       style: IconButton.styleFrom(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.zero,
-        ),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       ),
       tooltip: tooltip,
       onPressed: () => showModal(
@@ -98,35 +91,23 @@ class LocationFilter extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchManager = ref.read(searchManagerProvider.notifier);
-    final country = ref.watch(
-      searchManagerProvider.select((s) => s.country),
-    );
-    final language = ref.watch(
-      searchManagerProvider.select((s) => s.language),
-    );
+    final country = ref.watch(searchManagerProvider.select((s) => s.country));
+    final language = ref.watch(searchManagerProvider.select((s) => s.language));
     final theWidth = width ?? 250.0;
     final height = chipHeight;
 
     final usePodcastIndex =
-        ref.watch(
-          settingsBoolManagerProvider(SPKeys.usePodcastIndex),
-        ) ??
-        false;
+        ref.watch(settingsBoolManagerProvider(SPKeys.usePodcastIndex)) ?? false;
     final useYaruTheme =
-        ref.watch(settingsBoolManagerProvider(SPKeys.useYaruTheme)) ??
-        isLinux;
+        ref.watch(settingsBoolManagerProvider(SPKeys.useYaruTheme)) ?? isLinux;
     final countryPillPadding = getCountryPillPadding(useYaruTheme);
 
     final favLanguageCodes =
-        ref.watch(
-          settingsStringListManagerProvider(SPKeys.favLanguageCodes),
-        ) ??
+        ref.watch(settingsStringListManagerProvider(SPKeys.favLanguageCodes)) ??
         <String>[];
 
     final favCountryCodes =
-        ref.watch(
-          settingsStringListManagerProvider(SPKeys.favCountryCodes),
-        ) ??
+        ref.watch(settingsStringListManagerProvider(SPKeys.favCountryCodes)) ??
         <String>[];
 
     void setCountry(Country? country) {
@@ -134,9 +115,7 @@ class LocationFilter extends ConsumerWidget {
       if (country?.code != null) {
         ref
             .read(
-              settingsStringManagerProvider(
-                SPKeys.lastCountryCode,
-              ).notifier,
+              settingsStringManagerProvider(SPKeys.lastCountryCode).notifier,
             )
             .set(country!.code);
       }
@@ -195,12 +174,12 @@ class LocationFilter extends ConsumerWidget {
             width: theWidth,
             height: height,
             countries: [
-              ...[...Country.values].where(
-                (e) => favCountryCodes.contains(e.code) == true,
-              ),
-              ...[...Country.values].where(
-                (e) => favCountryCodes.contains(e.code) == false,
-              ),
+              ...[
+                ...Country.values,
+              ].where((e) => favCountryCodes.contains(e.code) == true),
+              ...[
+                ...Country.values,
+              ].where((e) => favCountryCodes.contains(e.code) == false),
             ]..remove(Country.none),
             onSelected: (country) {
               context.pop();

@@ -83,37 +83,34 @@ class PlayAnywhereManager extends _$PlayAnywhereManager {
     ),
     AudioPageType.album => PlayAnywhereResult(
       audios:
-          await di<LocalAudioService>().findAlbum(
-            int.parse(param.pageId),
-          ) ??
+          await di<LocalAudioService>().findAlbum(int.parse(param.pageId)) ??
           [],
       param: param,
     ),
     AudioPageType.radio => PlayAnywhereResult(
       audios: [
         ?(await ref
-            .read(stationManagerProvider(param.pageId).future)
-            .catchError((_) => null) ??
-          await di<RadioService>()
-              .getAudioByUUID(param.pageId, fromDBOnly: false)),
+                .read(stationManagerProvider(param.pageId).future)
+                .catchError((_) => null) ??
+            await di<RadioService>().getAudioByUUID(
+              param.pageId,
+              fromDBOnly: false,
+            )),
       ],
       param: param,
     ),
     AudioPageType.podcast => PlayAnywhereResult(
-      audios:
-          await di<PodcastService>().findEpisodes(
-            feedUrl: param.pageId,
-            tryFromDbOnly: true,
-          ),
+      audios: await di<PodcastService>().findEpisodes(
+        feedUrl: param.pageId,
+        tryFromDbOnly: true,
+      ),
       param: param,
     ),
     AudioPageType.artist => PlayAnywhereResult(
       audios:
-          await di<LocalAudioService>().findTitlesOfArtist(param.pageId) ??
-          [],
+          await di<LocalAudioService>().findTitlesOfArtist(param.pageId) ?? [],
       param: param,
     ),
     _ => null,
   };
 }
-

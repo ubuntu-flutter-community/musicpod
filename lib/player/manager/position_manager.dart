@@ -11,7 +11,7 @@ part 'position_manager.g.dart';
 @Riverpod(keepAlive: true)
 class PositionManager extends _$PositionManager {
   PositionManager({PlayerService? playerService})
-      : _playerServiceOverride = playerService;
+    : _playerServiceOverride = playerService;
 
   final PlayerService? _playerServiceOverride;
   PlayerService? get _playerService {
@@ -28,11 +28,9 @@ class PositionManager extends _$PositionManager {
     final service = _playerService;
     if (service == null) return Duration.zero;
 
-    _sub = service.changes
-        .whereType<PositionChange>()
-        .listen((change) {
-          state = change.position;
-        });
+    _sub = service.changes.whereType<PositionChange>().listen((change) {
+      state = change.position;
+    });
 
     ref.onDispose(() {
       _sub?.cancel();

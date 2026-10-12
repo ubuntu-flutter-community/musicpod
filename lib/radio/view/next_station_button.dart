@@ -15,8 +15,9 @@ class NextStationButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final audio = ref.watch(currentAudioManagerProvider);
-    final findingSimilarStation =
-        ref.watch(similarStationManagerProvider).isLoading;
+    final findingSimilarStation = ref
+        .watch(similarStationManagerProvider)
+        .isLoading;
 
     return IconButton(
       tooltip: context.l10n.searchSimilarStation,
@@ -31,10 +32,9 @@ class NextStationButton extends ConsumerWidget {
                     newValue.uuid != null &&
                     newValue.uuid !=
                         ref.read(currentAudioManagerProvider)?.uuid) {
-                  await ref.read(currentAudioManagerProvider.notifier).play(
-                    audios: [newValue],
-                    listName: newValue.uuid!,
-                  );
+                  await ref
+                      .read(currentAudioManagerProvider.notifier)
+                      .play(audios: [newValue], listName: newValue.uuid!);
                 } else {
                   context.toast(Text(context.l10n.nothingFound));
                 }
@@ -44,4 +44,3 @@ class NextStationButton extends ConsumerWidget {
     );
   }
 }
-

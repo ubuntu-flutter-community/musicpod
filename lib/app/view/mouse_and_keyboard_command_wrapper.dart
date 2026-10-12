@@ -53,8 +53,9 @@ class MouseAndKeyboardCommandWrapper extends ConsumerWidget {
           onInvoke: (intent) {
             final routingManager = ref.read(routingManagerProvider.notifier);
             final currentPageId = ref.read(routingManagerProvider);
-            final fullWindowNotifier =
-                ref.read(fullWindowModeManagerProvider.notifier);
+            final fullWindowNotifier = ref.read(
+              fullWindowModeManagerProvider.notifier,
+            );
 
             if (currentPageId == PageIDs.searchPage) {
               if (ref.read(fullWindowModeManagerProvider)) {
@@ -66,11 +67,13 @@ class MouseAndKeyboardCommandWrapper extends ConsumerWidget {
               if (ref.read(fullWindowModeManagerProvider)) {
                 fullWindowNotifier.setFullWindowMode(false);
               }
-              ref.read(searchManagerProvider.notifier).setAudioType(switch (currentPageId) {
-                PageIDs.localAudio => AudioType.local,
-                PageIDs.radio => AudioType.radio,
-                _ => AudioType.podcast,
-              });
+              ref.read(searchManagerProvider.notifier).setAudioType(
+                switch (currentPageId) {
+                  PageIDs.localAudio => AudioType.local,
+                  PageIDs.radio => AudioType.radio,
+                  _ => AudioType.podcast,
+                },
+              );
               routingManager.push(pageId: PageIDs.searchPage);
             }
 
@@ -84,7 +87,9 @@ class MouseAndKeyboardCommandWrapper extends ConsumerWidget {
                   .read(fullWindowModeManagerProvider.notifier)
                   .setFullWindowMode(false);
             }
-            ref.read(routingManagerProvider.notifier).push(pageId: PageIDs.settings);
+            ref
+                .read(routingManagerProvider.notifier)
+                .push(pageId: PageIDs.settings);
             return null;
           },
         ),
@@ -124,13 +129,15 @@ class MouseAndKeyboardCommandWrapper extends ConsumerWidget {
                     .read(similarStationManagerProvider.notifier)
                     .findSimilarStation(audio)
                     .then((similar) {
-                  if (similar != null) {
-                    ref.read(playPauseManagerProvider.notifier).play(
-                      audios: [similar],
-                      listName: similar.uuid ?? '',
-                    );
-                  }
-                }),
+                      if (similar != null) {
+                        ref
+                            .read(playPauseManagerProvider.notifier)
+                            .play(
+                              audios: [similar],
+                              listName: similar.uuid ?? '',
+                            );
+                      }
+                    }),
               );
             } else {
               ref.read(queueManagerProvider.notifier).playNext();

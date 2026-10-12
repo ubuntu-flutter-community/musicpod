@@ -19,8 +19,7 @@ class RadioLibPage extends ConsumerWidget with RadioConnectMixin {
   Widget build(BuildContext context, WidgetRef ref) {
     registerRadioConnectHandler(context, ref);
 
-    final radioCollectionView =
-        ref.watch(radioCollectionViewManagerProvider);
+    final radioCollectionView = ref.watch(radioCollectionViewManagerProvider);
 
     return DefaultPageBody(
       controlPanel: const RadioLibPageControlPanel(),

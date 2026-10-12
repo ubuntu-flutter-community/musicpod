@@ -27,14 +27,11 @@ showFailedImportsSnackBarIfNotBlocked({
   if (neverShow) return null;
   return context.toast(
     _Content(
-      message:
-          failedToImport ? l10n.failedToImport : l10n.failedToReadMetadata,
+      message: failedToImport ? l10n.failedToImport : l10n.failedToReadMetadata,
       failedImports: failedImports,
       onNeverShowFailedImports: () => container
           .read(
-            settingsBoolManagerProvider(
-              SPKeys.neverShowImportFails,
-            ).notifier,
+            settingsBoolManagerProvider(SPKeys.neverShowImportFails).notifier,
           )
           .set(true),
     ),
@@ -42,9 +39,7 @@ showFailedImportsSnackBarIfNotBlocked({
       onPressed: () {
         container
             .read(
-              settingsBoolManagerProvider(
-                SPKeys.neverShowImportFails,
-              ).notifier,
+              settingsBoolManagerProvider(SPKeys.neverShowImportFails).notifier,
             )
             .set(true);
         ScaffoldMessenger.of(context).clearSnackBars();

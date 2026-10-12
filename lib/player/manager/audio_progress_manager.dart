@@ -46,16 +46,16 @@ class AudioProgressState {
 
   @override
   int get hashCode => Object.hash(
-        const MapEquality<String, Duration>().hash(lastPositions),
-        isToggling,
-        hasMissingDuration,
-      );
+    const MapEquality<String, Duration>().hash(lastPositions),
+    isToggling,
+    hasMissingDuration,
+  );
 }
 
 @Riverpod(keepAlive: true)
 class AudioProgressManager extends _$AudioProgressManager {
   AudioProgressManager({PlayerService? playerService})
-      : _playerServiceOverride = playerService;
+    : _playerServiceOverride = playerService;
 
   final PlayerService? _playerServiceOverride;
   PlayerService? get _playerService {
@@ -74,13 +74,11 @@ class AudioProgressManager extends _$AudioProgressManager {
       return const AudioProgressState();
     }
 
-    _sub = service.changes
-        .whereType<LastPositionsChange>()
-        .listen((change) {
-          state = state.copyWith(
-            lastPositions: Map.unmodifiable(change.lastPositions),
-          );
-        });
+    _sub = service.changes.whereType<LastPositionsChange>().listen((change) {
+      state = state.copyWith(
+        lastPositions: Map.unmodifiable(change.lastPositions),
+      );
+    });
 
     ref.onDispose(() {
       _sub?.cancel();
@@ -100,10 +98,7 @@ class AudioProgressManager extends _$AudioProgressManager {
     final service = _playerService;
     try {
       if (service != null) {
-        await service.toggleAudiosProgress(
-          audios,
-          markComplete: markComplete,
-        );
+        await service.toggleAudiosProgress(audios, markComplete: markComplete);
       }
     } finally {
       state = state.copyWith(

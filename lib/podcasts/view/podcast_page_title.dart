@@ -14,10 +14,15 @@ class PodcastPageTitle extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final visible =
-        ref.watch(podcastUpdatedFeedsManagerProvider).value?.contains(feedUrl) ??
+        ref
+            .watch(podcastUpdatedFeedsManagerProvider)
+            .value
+            ?.contains(feedUrl) ??
         false;
-    final title =
-        ref.watch(podcastShortInfoManagerProvider(feedUrl)).value?.name;
+    final title = ref
+        .watch(podcastShortInfoManagerProvider(feedUrl))
+        .value
+        ?.name;
 
     return Badge(
       backgroundColor: context.theme.colorScheme.primary,

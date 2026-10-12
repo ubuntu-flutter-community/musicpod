@@ -12,7 +12,7 @@ part 'player_color_manager.g.dart';
 @Riverpod(keepAlive: true)
 class PlayerColorManager extends _$PlayerColorManager {
   PlayerColorManager({PlayerService? playerService})
-      : _playerServiceOverride = playerService;
+    : _playerServiceOverride = playerService;
 
   final PlayerService? _playerServiceOverride;
   PlayerService? get _playerService {
@@ -29,11 +29,9 @@ class PlayerColorManager extends _$PlayerColorManager {
     final service = _playerService;
     if (service == null) return null;
 
-    _sub = service.changes
-        .whereType<ColorChange>()
-        .listen((change) {
-          state = change.color;
-        });
+    _sub = service.changes.whereType<ColorChange>().listen((change) {
+      state = change.color;
+    });
 
     ref.onDispose(() {
       _sub?.cancel();

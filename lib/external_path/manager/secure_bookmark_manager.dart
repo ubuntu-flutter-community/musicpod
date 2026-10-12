@@ -12,10 +12,9 @@ class SecureBookmarkManager extends _$SecureBookmarkManager {
 
   Future<bool> restore() async {
     if (state) return true;
-    final success =
-        await di<SecureBookmarkService>().restoreAllSavedBookmarks();
+    final success = await di<SecureBookmarkService>()
+        .restoreAllSavedBookmarks();
     state = success;
     return success;
   }
 }
-

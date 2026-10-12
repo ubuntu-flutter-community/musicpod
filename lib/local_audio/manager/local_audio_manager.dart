@@ -6,17 +6,12 @@ import '../service/local_audio_service.dart';
 part 'local_audio_manager.g.dart';
 
 class LocalAudioState {
-  const LocalAudioState({
-    this.failedImports,
-  });
+  const LocalAudioState({this.failedImports});
 
   final List<String>? failedImports;
 
-  LocalAudioState copyWith({
-    List<String>? failedImports,
-  }) => LocalAudioState(
-    failedImports: failedImports ?? this.failedImports,
-  );
+  LocalAudioState copyWith({List<String>? failedImports}) =>
+      LocalAudioState(failedImports: failedImports ?? this.failedImports);
 }
 
 @Riverpod(keepAlive: true)
@@ -29,9 +24,7 @@ class LocalAudioManager extends _$LocalAudioManager {
       forceInit: false,
       updateProgress: (p) => state = AsyncLoading(progress: p),
     );
-    return LocalAudioState(
-      failedImports: result.failedImports,
-    );
+    return LocalAudioState(failedImports: result.failedImports);
   }
 
   Future<LocalAudioState> initAudios({
@@ -45,9 +38,7 @@ class LocalAudioManager extends _$LocalAudioManager {
         newDirectory: directory,
         updateProgress: (p) => state = AsyncLoading(progress: p),
       );
-      return LocalAudioState(
-        failedImports: result.failedImports,
-      );
+      return LocalAudioState(failedImports: result.failedImports);
     });
     return state.value ?? const LocalAudioState();
   }

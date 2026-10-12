@@ -19,18 +19,20 @@ class PodcastReorderButton extends ConsumerWidget {
     final episodesState = ref.watch(episodesManagerProvider(feedUrl)).value;
     final ascending = episodesState?.order == AudioSortOrder.ascending;
 
-    final podcastSubscribed = ref
-            .watch(subscribedPodcastsManagerProvider)
-            .value
-            ?.contains(feedUrl) ??
+    final podcastSubscribed =
+        ref.watch(subscribedPodcastsManagerProvider).value?.contains(feedUrl) ??
         false;
 
     return IconButton(
       tooltip: context.l10n.reorder,
       onPressed: podcastSubscribed
-          ? () => ref.read(episodesManagerProvider(feedUrl).notifier).reorder(
-                ascending ? AudioSortOrder.descending : AudioSortOrder.ascending,
-              )
+          ? () => ref
+                .read(episodesManagerProvider(feedUrl).notifier)
+                .reorder(
+                  ascending
+                      ? AudioSortOrder.descending
+                      : AudioSortOrder.ascending,
+                )
           : null,
       icon: Iconz.ascending == Iconz.materialAscending && ascending
           ? Transform.flip(

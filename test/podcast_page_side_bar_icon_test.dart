@@ -29,8 +29,9 @@ void main() {
     GetIt.I.registerSingleton<SettingsService>(mockSettings);
 
     final mockPodcastService = MockPodcastService();
-    when(mockPodcastService.getPodcastShortInfo(any))
-        .thenAnswer((invocation) async {
+    when(mockPodcastService.getPodcastShortInfo(any)).thenAnswer((
+      invocation,
+    ) async {
       final feedUrl = invocation.positionalArguments[0] as String;
       await Future<void>.delayed(const Duration(milliseconds: 20));
       return PodcastShortInfo(

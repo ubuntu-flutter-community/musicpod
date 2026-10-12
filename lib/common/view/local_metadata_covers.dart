@@ -112,7 +112,9 @@ class LocalMetadataCovers extends ConsumerWidget {
                                             )
                                             .updateDraft(
                                               ChangeMetadataCapsule(
-                                                pictures: draft.pictures!.map((e) {
+                                                pictures: draft.pictures!.map((
+                                                  e,
+                                                ) {
                                                   if (v != null &&
                                                       e.pictureType != v &&
                                                       File.fromRawPath(

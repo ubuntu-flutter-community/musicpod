@@ -157,8 +157,9 @@ class _QueueBodyState extends ConsumerState<QueueBody>
                       );
                     },
                     itemCount: queue.audios.length,
-                    onReorderItem:
-                        ref.read(queueManagerProvider.notifier).moveAudioInQueue,
+                    onReorderItem: ref
+                        .read(queueManagerProvider.notifier)
+                        .moveAudioInQueue,
                   ),
                 ),
               ],
@@ -213,15 +214,13 @@ class _QueueBodyState extends ConsumerState<QueueBody>
                   ),
                 ),
                 IconButton(
-                  icon: Icon(
-                    Iconz.clearAll,
-                    semanticLabel: l10n.clearQueue,
-                  ),
+                  icon: Icon(Iconz.clearAll, semanticLabel: l10n.clearQueue),
                   tooltip: l10n.clearQueue,
-                  onPressed:
-                      queue.audios.isEmpty || currentAudio == null
+                  onPressed: queue.audios.isEmpty || currentAudio == null
                       ? null
-                      : () => ref.read(queueManagerProvider.notifier).clearQueue(),
+                      : () => ref
+                            .read(queueManagerProvider.notifier)
+                            .clearQueue(),
                 ),
                 IconButton(
                   tooltip: l10n.autoScrolling,
@@ -295,11 +294,13 @@ class _QueueTileState extends ConsumerState<_QueueTile> {
             ),
             onTap: () async {
               await ref.read(shuffleManagerProvider.notifier).setShuffle(false);
-              await ref.read(currentAudioManagerProvider.notifier).play(
-                listName: widget.queue.name,
-                audios: widget.queue.audios,
-                index: widget.queue.audios.indexOf(widget.audio),
-              );
+              await ref
+                  .read(currentAudioManagerProvider.notifier)
+                  .play(
+                    listName: widget.queue.name,
+                    audios: widget.queue.audios,
+                    index: widget.queue.audios.indexOf(widget.audio),
+                  );
             },
             hoverColor: context.colorScheme.onSurface.withValues(alpha: 0.3),
             leading: Visibility(

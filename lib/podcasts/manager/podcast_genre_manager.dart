@@ -14,10 +14,7 @@ class PodcastGenreManager extends _$PodcastGenreManager {
       _podcastService.findPodcastGenre(feedUrl);
 
   Future<void> updateGenre(String genre) async {
-    await _podcastService.addPodcastGenre(
-      feedUrl: feedUrl,
-      genreName: genre,
-    );
+    await _podcastService.addPodcastGenre(feedUrl: feedUrl, genreName: genre);
     state = AsyncData(genre);
   }
 }

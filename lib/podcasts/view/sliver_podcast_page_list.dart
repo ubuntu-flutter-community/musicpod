@@ -72,11 +72,9 @@ class SliverPodcastPageList extends ConsumerWidget {
                 ),
             isExpanded: episode == selectedAudio,
             selected: episode == selectedAudio,
-            play: () => ref.read(currentAudioManagerProvider.notifier).play(
-              audios: [episode],
-              listName: feedUrl,
-              index: 0,
-            ),
+            play: () => ref
+                .read(currentAudioManagerProvider.notifier)
+                .play(audios: [episode], listName: feedUrl, index: 0),
             includePodcastImage: includePodcastImage,
           );
         },
@@ -84,4 +82,3 @@ class SliverPodcastPageList extends ConsumerWidget {
     );
   }
 }
-

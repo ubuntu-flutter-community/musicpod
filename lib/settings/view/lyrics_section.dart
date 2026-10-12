@@ -19,9 +19,7 @@ class LyricsSection extends ConsumerWidget {
     final l10n = context.l10n;
 
     final tryToFetchLyricsOnline =
-        ref.watch(
-          settingsBoolManagerProvider(SPKeys.tryToFetchLyricsOnline),
-        ) ??
+        ref.watch(settingsBoolManagerProvider(SPKeys.tryToFetchLyricsOnline)) ??
         true;
 
     final sourceName = ref.watch(

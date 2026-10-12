@@ -77,7 +77,9 @@ void main() {
     expect(container.read(retryManagerProvider(capsule)), 5);
   });
 
-  testWidgets('ErrorRetryBody renders and updates with retryManagerProvider', (tester) async {
+  testWidgets('ErrorRetryBody renders and updates with retryManagerProvider', (
+    tester,
+  ) async {
     var retried = false;
     final capsule = RetryCapsule(
       retryViewId: 'error_body_test',

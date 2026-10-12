@@ -11,7 +11,7 @@ part 'buffer_manager.g.dart';
 @Riverpod(keepAlive: true)
 class BufferManager extends _$BufferManager {
   BufferManager({PlayerService? playerService})
-      : _playerServiceOverride = playerService;
+    : _playerServiceOverride = playerService;
 
   final PlayerService? _playerServiceOverride;
   PlayerService? get _playerService {
@@ -28,11 +28,9 @@ class BufferManager extends _$BufferManager {
     final service = _playerService;
     if (service == null) return Duration.zero;
 
-    _sub = service.changes
-        .whereType<BufferChange>()
-        .listen((change) {
-          state = change.buffer;
-        });
+    _sub = service.changes.whereType<BufferChange>().listen((change) {
+      state = change.buffer;
+    });
 
     ref.onDispose(() {
       _sub?.cancel();

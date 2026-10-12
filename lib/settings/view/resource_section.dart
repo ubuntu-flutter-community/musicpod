@@ -50,11 +50,7 @@ class ResourceSection extends ConsumerWidget {
           subtitle: Text(l10n.enableDataSafeModeSettingDescription),
           trailing: CommonSwitch(
             onChanged: (value) => ref
-                .read(
-                  settingsBoolManagerProvider(
-                    SPKeys.dataSafeMode,
-                  ).notifier,
-                )
+                .read(settingsBoolManagerProvider(SPKeys.dataSafeMode).notifier)
                 .set(value),
             value: dataSafeMode,
           ),
@@ -66,12 +62,12 @@ class ResourceSection extends ConsumerWidget {
           trailing: CommonSwitch(
             onChanged: AppConfig.windowManagerImplemented
                 ? (v) => ref
-                    .read(
-                      settingsBoolManagerProvider(
-                        SPKeys.saveWindowSize,
-                      ).notifier,
-                    )
-                    .set(v)
+                      .read(
+                        settingsBoolManagerProvider(
+                          SPKeys.saveWindowSize,
+                        ).notifier,
+                      )
+                      .set(v)
                 : null,
             value: saveWindowSize,
           ),

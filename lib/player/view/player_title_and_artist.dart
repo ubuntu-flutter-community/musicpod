@@ -36,111 +36,110 @@ class PlayerTitleAndArtist extends ConsumerWidget {
     final audio = ref.watch(currentAudioManagerProvider);
 
     final hoverColor = theme.colorScheme.primary.withValues(alpha: 0.3);
-    final icyTitle =
-        ref.watch(mpvMetadataManagerProvider.select((m) => m?.icyTitle));
+    final icyTitle = ref.watch(
+      mpvMetadataManagerProvider.select((m) => m?.icyTitle),
+    );
     final showPositionDuration =
-        ref.watch(
-          settingsBoolManagerProvider(SPKeys.showPositionDuration),
-        ) ??
+        ref.watch(settingsBoolManagerProvider(SPKeys.showPositionDuration)) ??
         false;
     final localAudioIsInitializing = ref.watch(
       localAudioManagerProvider.select((s) => s.isLoading),
     );
 
     return Column(
-          mainAxisSize: switch (playerPosition) {
-            PlayerPosition.bottom => MainAxisSize.max,
-            _ => MainAxisSize.min,
+      mainAxisSize: switch (playerPosition) {
+        PlayerPosition.bottom => MainAxisSize.max,
+        _ => MainAxisSize.min,
+      },
+      mainAxisAlignment: switch (playerPosition) {
+        PlayerPosition.bottom => MainAxisAlignment.center,
+        _ => isMobile ? MainAxisAlignment.start : MainAxisAlignment.center,
+      },
+      crossAxisAlignment: switch (playerPosition) {
+        PlayerPosition.bottom => CrossAxisAlignment.start,
+        _ => isMobile ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+      },
+      children: [
+        Material(
+          color: Colors.transparent,
+          borderRadius: switch (playerPosition) {
+            PlayerPosition.bottom => BorderRadius.circular(4),
+            _ => BorderRadius.circular(10),
           },
-          mainAxisAlignment: switch (playerPosition) {
-            PlayerPosition.bottom => MainAxisAlignment.center,
-            _ => isMobile ? MainAxisAlignment.start : MainAxisAlignment.center,
-          },
-          crossAxisAlignment: switch (playerPosition) {
-            PlayerPosition.bottom => CrossAxisAlignment.start,
-            _ => isMobile ? CrossAxisAlignment.start : CrossAxisAlignment.center,
-          },
-          children: [
-            Material(
-              color: Colors.transparent,
-              borderRadius: switch (playerPosition) {
-                PlayerPosition.bottom => BorderRadius.circular(4),
-                _ => BorderRadius.circular(10),
-              },
-              child: InkWell(
-                hoverColor: hoverColor,
-                borderRadius: switch (playerPosition) {
-                  PlayerPosition.bottom => BorderRadius.circular(4),
-                  _ => BorderRadius.circular(10),
-                },
-                onTap: localAudioIsInitializing || audio == null
-                    ? null
-                    : () => _onTitleTap(
-                        audio: audio,
-                        text: icyTitle,
-                        context: context,
-                        ref: ref,
-                      ),
-                child: Tooltip(
-                  message: _title(audio: audio, icyTitle: icyTitle),
-                  child: Text(
-                    _title(audio: audio, icyTitle: icyTitle),
-                    style: switch (playerPosition) {
-                      PlayerPosition.bottom => _bottomTitleTextStyle(),
-                      _ => _fullHeightTitleTextStyle(theme),
-                    },
-                    textAlign: _textAlign(),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+          child: InkWell(
+            hoverColor: hoverColor,
+            borderRadius: switch (playerPosition) {
+              PlayerPosition.bottom => BorderRadius.circular(4),
+              _ => BorderRadius.circular(10),
+            },
+            onTap: localAudioIsInitializing || audio == null
+                ? null
+                : () => _onTitleTap(
+                    audio: audio,
+                    text: icyTitle,
+                    context: context,
+                    ref: ref,
                   ),
-                ),
+            child: Tooltip(
+              message: _title(audio: audio, icyTitle: icyTitle),
+              child: Text(
+                _title(audio: audio, icyTitle: icyTitle),
+                style: switch (playerPosition) {
+                  PlayerPosition.bottom => _bottomTitleTextStyle(),
+                  _ => _fullHeightTitleTextStyle(theme),
+                },
+                textAlign: _textAlign(),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
-            Material(
-              borderRadius: switch (playerPosition) {
-                PlayerPosition.bottom => BorderRadius.circular(4),
-                _ => BorderRadius.circular(8),
-              },
-              color: Colors.transparent,
-              child: InkWell(
-                hoverColor: hoverColor,
-                borderRadius: switch (playerPosition) {
-                  PlayerPosition.bottom => BorderRadius.circular(4),
-                  _ => BorderRadius.circular(8),
+          ),
+        ),
+        Material(
+          borderRadius: switch (playerPosition) {
+            PlayerPosition.bottom => BorderRadius.circular(4),
+            _ => BorderRadius.circular(8),
+          },
+          color: Colors.transparent,
+          child: InkWell(
+            hoverColor: hoverColor,
+            borderRadius: switch (playerPosition) {
+              PlayerPosition.bottom => BorderRadius.circular(4),
+              _ => BorderRadius.circular(8),
+            },
+            onTap: localAudioIsInitializing || audio == null
+                ? null
+                : () => _onArtistTap(context: context, audio: audio),
+            child: Tooltip(
+              message: _subTitle(audio),
+              child: Text(
+                _subTitle(audio),
+                style: switch (playerPosition) {
+                  PlayerPosition.bottom => _bottomArtistTextStyle(),
+                  _ => _fullHeightArtistTextStyle(theme),
                 },
-                onTap: localAudioIsInitializing || audio == null
-                    ? null
-                    : () => _onArtistTap(context: context, audio: audio),
-                child: Tooltip(
-                  message: _subTitle(audio),
-                  child: Text(
-                    _subTitle(audio),
-                    style: switch (playerPosition) {
-                      PlayerPosition.bottom => _bottomArtistTextStyle(),
-                      _ => _fullHeightArtistTextStyle(theme),
-                    },
-                    textAlign: _textAlign(),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                ),
+                textAlign: _textAlign(),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
               ),
             ),
-            if (playerPosition == PlayerPosition.bottom &&
-                audio?.audioType != AudioType.radio &&
-                showPositionDuration)
-              const Padding(
-                padding: EdgeInsets.only(top: 2, bottom: 5),
-                child: PlayerSimpleTrack(),
-              )
-            else
-              SizedBox(
-                height: switch (playerPosition) {
-                  PlayerPosition.bottom => 3,
-                  _ => 0,
-                },
-              ),
-          ].map((e) => Flexible(child: e)).toList(),
+          ),
+        ),
+        if (playerPosition == PlayerPosition.bottom &&
+            audio?.audioType != AudioType.radio &&
+            showPositionDuration)
+          const Padding(
+            padding: EdgeInsets.only(top: 2, bottom: 5),
+            child: PlayerSimpleTrack(),
+          )
+        else
+          SizedBox(
+            height: switch (playerPosition) {
+              PlayerPosition.bottom => 3,
+              _ => 0,
+            },
+          ),
+      ].map((e) => Flexible(child: e)).toList(),
     );
   }
 
@@ -230,16 +229,19 @@ class PlayerTitleAndArtist extends ConsumerWidget {
     await container
         .read(fullWindowModeManagerProvider.notifier)
         .setFullWindowMode(false);
-    await container.read(routingManagerProvider.notifier).push(
-      builder: (_) => AlbumPage(id: id),
-      pageId: id.toString(),
-    );
+    await container
+        .read(routingManagerProvider.notifier)
+        .push(
+          builder: (_) => AlbumPage(id: id),
+          pageId: id.toString(),
+        );
   }
 
   void _onArtistTap({required BuildContext context, required Audio audio}) {
-    final routingManager =
-        ProviderScope.containerOf(context, listen: false)
-            .read(routingManagerProvider.notifier);
+    final routingManager = ProviderScope.containerOf(
+      context,
+      listen: false,
+    ).read(routingManagerProvider.notifier);
     switch (audio.audioType) {
       case AudioType.local:
         _onLocalAudioArtistTap(context: context, audio: audio);
@@ -265,9 +267,10 @@ class PlayerTitleAndArtist extends ConsumerWidget {
     required BuildContext context,
     required Audio audio,
   }) {
-    final routingManager =
-        ProviderScope.containerOf(context, listen: false)
-            .read(routingManagerProvider.notifier);
+    final routingManager = ProviderScope.containerOf(
+      context,
+      listen: false,
+    ).read(routingManagerProvider.notifier);
     if (audio.url == null ||
         audio.uuid == null ||
         routingManager.selectedPageId == audio.uuid) {
@@ -289,9 +292,11 @@ class PlayerTitleAndArtist extends ConsumerWidget {
     container
         .read(fullWindowModeManagerProvider.notifier)
         .setFullWindowMode(false);
-    container.read(routingManagerProvider.notifier).push(
-      builder: (_) => ArtistPage(pageId: artistId),
-      pageId: artistId,
-    );
+    container
+        .read(routingManagerProvider.notifier)
+        .push(
+          builder: (_) => ArtistPage(pageId: artistId),
+          pageId: artistId,
+        );
   }
 }

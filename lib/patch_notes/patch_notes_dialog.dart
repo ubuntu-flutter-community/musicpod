@@ -55,9 +55,7 @@ class _PatchNotesDialogState extends ConsumerState<PatchNotesDialog> {
           : const Center(child: Progress()),
     ),
     onCancel: () {
-      ref
-          .read(recentPatchNotesDisposedManagerProvider.notifier)
-          .disposeNotes();
+      ref.read(recentPatchNotesDisposedManagerProvider.notifier).disposeNotes();
       return launchUrl(Uri.parse(AppConfig.sponsorLink));
     },
     cancelLabel: 'Sponsor Me',

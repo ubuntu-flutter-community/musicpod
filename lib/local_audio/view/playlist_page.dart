@@ -43,13 +43,15 @@ class PlaylistPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    WidgetsBinding.instance.addPostFrameCallback((_) => clearInMemoryImageCache());
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => clearInMemoryImageCache(),
+    );
 
     final isInitializing = ref.watch(
       localAudioManagerProvider.select((s) => s.isLoading),
     );
 
-        return DropTarget(
+    return DropTarget(
       onDragDone: (details) => ref
           .read(playlistIDsManagerProvider.notifier)
           .createOrChangePlaylist(
@@ -66,10 +68,11 @@ class PlaylistPage extends ConsumerWidget {
                         context: context,
                         failedToImport: true,
                       ),
-                      onParseError: (path) => showFailedImportsSnackBarIfNotBlocked(
-                        failedImports: [path],
-                        context: context,
-                      ),
+                      onParseError: (path) =>
+                          showFailedImportsSnackBarIfNotBlocked(
+                            failedImports: [path],
+                            context: context,
+                          ),
                     ),
                   )
                   .toList(),
@@ -88,7 +91,9 @@ class PlaylistPage extends ConsumerWidget {
                   ref
                       .read(routingManagerProvider.notifier)
                       .push(pageId: PageIDs.searchPage);
-                  final searchManager = ref.read(searchManagerProvider.notifier);
+                  final searchManager = ref.read(
+                    searchManagerProvider.notifier,
+                  );
                   searchManager
                     ..setAudioType(AudioType.local)
                     ..setSearchType(SearchType.localTitle)
@@ -101,17 +106,20 @@ class PlaylistPage extends ConsumerWidget {
         body: isInitializing
             ? const Center(child: CircularProgressIndicator())
             : _PlaylistPageBody(
-                onArtistTap: (text) =>
-                    ref.read(routingManagerProvider.notifier).push(
-                          builder: (_) => ArtistPage(pageId: text),
-                          pageId: text,
-                        ),
+                onArtistTap: (text) => ref
+                    .read(routingManagerProvider.notifier)
+                    .push(
+                      builder: (_) => ArtistPage(pageId: text),
+                      pageId: text,
+                    ),
                 onAlbumTap: (audio) {
                   if (audio.albumDbId == null) {
                     context.toast(Text(context.l10n.nothingFound));
                     return;
                   }
-                  ref.read(routingManagerProvider.notifier).push(
+                  ref
+                      .read(routingManagerProvider.notifier)
+                      .push(
                         builder: (_) => AlbumPage(id: audio.albumDbId!),
                         pageId: audio.albumDbId!.toString(),
                       );
@@ -209,11 +217,9 @@ class _PlaylistPageBody extends ConsumerWidget {
                         ref.read(playPauseManagerProvider.notifier).resume();
                       }
                     } else {
-                      ref.read(currentAudioManagerProvider.notifier).play(
-                        audios: audios,
-                        listName: pageId,
-                        index: index,
-                      );
+                      ref
+                          .read(currentAudioManagerProvider.notifier)
+                          .play(audios: audios, listName: pageId, index: index);
                     }
                   },
                   selected: audioSelected,
@@ -225,19 +231,24 @@ class _PlaylistPageBody extends ConsumerWidget {
             );
           },
           onReorderItem: (oldIndex, newIndex) {
-            if (ref.read(queueManagerProvider) == Queue(name: pageId, audios: audios)) {
-              ref.read(queueManagerProvider.notifier).moveAudioInQueue(oldIndex, newIndex);
+            if (ref.read(queueManagerProvider) ==
+                Queue(name: pageId, audios: audios)) {
+              ref
+                  .read(queueManagerProvider.notifier)
+                  .moveAudioInQueue(oldIndex, newIndex);
             }
 
-            ref.read(playlistIDsManagerProvider.notifier).createOrChangePlaylist(
-              PlaylistChange(
-                id: pageId,
-                audios: [],
-                action: PlaylistAction.moveWithin,
-                oldIndex: oldIndex,
-                newIndex: newIndex,
-              ),
-            );
+            ref
+                .read(playlistIDsManagerProvider.notifier)
+                .createOrChangePlaylist(
+                  PlaylistChange(
+                    id: pageId,
+                    audios: [],
+                    action: PlaylistAction.moveWithin,
+                    oldIndex: oldIndex,
+                    newIndex: newIndex,
+                  ),
+                );
           },
         );
       },

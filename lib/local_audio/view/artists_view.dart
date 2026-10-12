@@ -44,10 +44,12 @@ class ArtistsView extends ConsumerWidget {
         return YaruSelectableContainer(
           key: ValueKey(artistName),
           selected: false,
-          onTap: () => ref.read(routingManagerProvider.notifier).push(
-            builder: (_) => ArtistPage(pageId: artistName),
-            pageId: artistName,
-          ),
+          onTap: () => ref
+              .read(routingManagerProvider.notifier)
+              .push(
+                builder: (_) => ArtistPage(pageId: artistName),
+                pageId: artistName,
+              ),
           borderRadius: radius,
           child: Stack(
             alignment: Alignment.center,

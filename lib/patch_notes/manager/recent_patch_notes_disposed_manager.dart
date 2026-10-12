@@ -13,8 +13,8 @@ class RecentPatchNotesDisposedManager
   RecentPatchNotesDisposedManager({
     SettingsService? settingsService,
     PackageInfo? packageInfo,
-  })  : _settingsServiceOverride = settingsService,
-        _packageInfoOverride = packageInfo;
+  }) : _settingsServiceOverride = settingsService,
+       _packageInfoOverride = packageInfo;
 
   final SettingsService? _settingsServiceOverride;
   final PackageInfo? _packageInfoOverride;

@@ -24,7 +24,9 @@ class SearchButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final onTap =
         onPressed ??
-        () => ref.read(routingManagerProvider.notifier).push(pageId: PageIDs.searchPage);
+        () => ref
+            .read(routingManagerProvider.notifier)
+            .push(pageId: PageIDs.searchPage);
     final iconSize = context.theme.iconTheme.size ?? 24.0;
 
     final label = context.l10n.search;

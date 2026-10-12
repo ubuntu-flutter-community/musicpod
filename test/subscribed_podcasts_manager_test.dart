@@ -26,14 +26,16 @@ void main() {
 
   group('SubscribedPodcastsManager', () {
     test('loads subscribed podcasts', () async {
-      when(mockPodcastService.getSubscribedPodcasts())
-          .thenAnswer((_) async => {episodeOneAudio.feedUrl!});
+      when(
+        mockPodcastService.getSubscribedPodcasts(),
+      ).thenAnswer((_) async => {episodeOneAudio.feedUrl!});
 
       final container = ProviderContainer();
       addTearDown(container.dispose);
 
-      final result =
-          await container.read(subscribedPodcastsManagerProvider.future);
+      final result = await container.read(
+        subscribedPodcastsManagerProvider.future,
+      );
       expect(result, contains(episodeOneAudio.feedUrl));
     });
 
@@ -41,18 +43,21 @@ void main() {
       const newFeedUrl = 'https://example.com/new_feed.xml';
       final feeds = <String>{episodeOneAudio.feedUrl!};
 
-      when(mockPodcastService.getSubscribedPodcasts())
-          .thenAnswer((_) async => Set.from(feeds));
-      when(mockPodcastService.togglePodcastSubscription(feedUrl: newFeedUrl))
-          .thenAnswer((_) async {
+      when(
+        mockPodcastService.getSubscribedPodcasts(),
+      ).thenAnswer((_) async => Set.from(feeds));
+      when(
+        mockPodcastService.togglePodcastSubscription(feedUrl: newFeedUrl),
+      ).thenAnswer((_) async {
         if (feeds.contains(newFeedUrl)) {
           feeds.remove(newFeedUrl);
         } else {
           feeds.add(newFeedUrl);
         }
       });
-      when(mockPodcastService.isPodcastSubscribed(newFeedUrl))
-          .thenAnswer((_) async => feeds.contains(newFeedUrl));
+      when(
+        mockPodcastService.isPodcastSubscribed(newFeedUrl),
+      ).thenAnswer((_) async => feeds.contains(newFeedUrl));
 
       final container = ProviderContainer();
       addTearDown(container.dispose);

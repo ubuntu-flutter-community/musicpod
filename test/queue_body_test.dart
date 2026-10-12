@@ -29,8 +29,9 @@ void main() {
       mockSettingsService = MockSettingsService();
       changesController = StreamController<PlayerChange>.broadcast();
 
-      when(mockPlayerService.changes)
-          .thenAnswer((_) => changesController.stream);
+      when(
+        mockPlayerService.changes,
+      ).thenAnswer((_) => changesController.stream);
       when(mockPlayerService.audio).thenReturn(null);
       when(mockPlayerService.queue).thenReturn(const Queue.empty());
 
@@ -70,9 +71,7 @@ void main() {
           child: MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: Scaffold(
-              body: QueueBody(),
-            ),
+            home: Scaffold(body: QueueBody()),
           ),
         ),
       );
@@ -87,53 +86,49 @@ void main() {
       expect(find.text('Song 2'), findsOneWidget);
     });
 
-    testWidgets(
-      'track transition does not show spinner or drop list opacity',
-      (tester) async {
-        const audio1 = Audio(
-          url: 'http://test.com/1.mp3',
-          title: 'Song 1',
-          audioType: AudioType.local,
-        );
-        const audio2 = Audio(
-          url: 'http://test.com/2.mp3',
-          title: 'Song 2',
-          audioType: AudioType.local,
-        );
+    testWidgets('track transition does not show spinner or drop list opacity', (
+      tester,
+    ) async {
+      const audio1 = Audio(
+        url: 'http://test.com/1.mp3',
+        title: 'Song 1',
+        audioType: AudioType.local,
+      );
+      const audio2 = Audio(
+        url: 'http://test.com/2.mp3',
+        title: 'Song 2',
+        audioType: AudioType.local,
+      );
 
-        const queue = Queue(name: 'Test Queue', audios: [audio1, audio2]);
-        when(mockPlayerService.audio).thenReturn(audio1);
-        when(mockPlayerService.queue).thenReturn(queue);
+      const queue = Queue(name: 'Test Queue', audios: [audio1, audio2]);
+      when(mockPlayerService.audio).thenReturn(audio1);
+      when(mockPlayerService.queue).thenReturn(queue);
 
-        await tester.pumpWidget(
-          const ProviderScope(
-            child: MaterialApp(
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              supportedLocales: AppLocalizations.supportedLocales,
-              home: Scaffold(
-                body: QueueBody(),
-              ),
-            ),
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(body: QueueBody()),
           ),
-        );
-        await tester.pumpAndSettle();
+        ),
+      );
+      await tester.pumpAndSettle();
 
-        // Simulate track change to song 2
-        when(mockPlayerService.audio).thenReturn(audio2);
-        changesController.add(const AudioChange(audio2));
+      // Simulate track change to song 2
+      when(mockPlayerService.audio).thenReturn(audio2);
+      changesController.add(const AudioChange(audio2));
 
-        // Advance frames during jump transition
-        await tester.pump();
+      // Advance frames during jump transition
+      await tester.pump();
 
-        // Spinner must NOT be shown between tracks
-        expect(find.byType(Progress), findsNothing);
-        expect(find.byType(CircularProgressIndicator), findsNothing);
+      // Spinner must NOT be shown between tracks
+      expect(find.byType(Progress), findsNothing);
+      expect(find.byType(CircularProgressIndicator), findsNothing);
 
-        await tester.pumpAndSettle();
-        expect(find.byType(Progress), findsNothing);
-        expect(find.byType(CircularProgressIndicator), findsNothing);
-      },
-    );
+      await tester.pumpAndSettle();
+      expect(find.byType(Progress), findsNothing);
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+    });
   });
 }
-

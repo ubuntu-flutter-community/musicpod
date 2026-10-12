@@ -11,7 +11,7 @@ part 'pause_timer_manager.g.dart';
 @Riverpod(keepAlive: true)
 class PauseTimerManager extends _$PauseTimerManager {
   PauseTimerManager({PlayerService? playerService})
-      : _playerServiceOverride = playerService;
+    : _playerServiceOverride = playerService;
 
   final PlayerService? _playerServiceOverride;
   PlayerService? get _playerService {
@@ -28,11 +28,9 @@ class PauseTimerManager extends _$PauseTimerManager {
     final service = _playerService;
     if (service == null) return false;
 
-    _sub = service.changes
-        .whereType<TimerChange>()
-        .listen((change) {
-          state = change.isTimerActive;
-        });
+    _sub = service.changes.whereType<TimerChange>().listen((change) {
+      state = change.isTimerActive;
+    });
 
     ref.onDispose(() {
       _sub?.cancel();

@@ -9,15 +9,9 @@ class MpvMetadataHistoryManager extends _$MpvMetadataHistoryManager {
   @override
   Map<String, MpvMetaData> build() => const {};
 
-  void add({
-    required String icyTitle,
-    required MpvMetaData mpvMetaData,
-  }) {
+  void add({required String icyTitle, required MpvMetaData mpvMetaData}) {
     if (!state.containsKey(icyTitle)) {
-      state = {
-        ...state,
-        icyTitle: mpvMetaData,
-      };
+      state = {...state, icyTitle: mpvMetaData};
     }
   }
 
@@ -39,8 +33,7 @@ class MpvMetadataHistoryManager extends _$MpvMetadataHistoryManager {
         : e.value.icyName.contains(filter) || filter.contains(e.value.icyName),
   );
 
-  String getHistoryList({String? filter}) =>
-      filteredHistory(
-        filter: filter,
-      ).map((e) => '${e.value.icyTitle}\n').toList().reversed.join();
+  String getHistoryList({String? filter}) => filteredHistory(
+    filter: filter,
+  ).map((e) => '${e.value.icyTitle}\n').toList().reversed.join();
 }

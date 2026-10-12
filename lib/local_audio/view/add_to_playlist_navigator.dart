@@ -62,10 +62,7 @@ class _PlaylistTilesList extends ConsumerWidget {
         audios: audios,
       ),
       ...playlistNames.map(
-        (playlistId) => _PlaylistTile(
-          playlistId: playlistId,
-          audios: audios,
-        ),
+        (playlistId) => _PlaylistTile(playlistId: playlistId, audios: audios),
       ),
     ];
 
@@ -101,15 +98,19 @@ class _PlaylistTile extends ConsumerWidget {
       contentPadding: padding,
       onTap: () {
         if (playlistId == PageIDs.likedAudios) {
-          ref.read(likedAudioPathsManagerProvider.notifier).addLikedAudios(audios);
+          ref
+              .read(likedAudioPathsManagerProvider.notifier)
+              .addLikedAudios(audios);
         } else {
-          ref.read(playlistIDsManagerProvider.notifier).createOrChangePlaylist(
-            PlaylistChange(
-              id: playlistId,
-              audios: audios,
-              action: PlaylistAction.addTo,
-            ),
-          );
+          ref
+              .read(playlistIDsManagerProvider.notifier)
+              .createOrChangePlaylist(
+                PlaylistChange(
+                  id: playlistId,
+                  audios: audios,
+                  action: PlaylistAction.addTo,
+                ),
+              );
         }
 
         Navigator.of(context, rootNavigator: true).maybePop();
@@ -174,13 +175,15 @@ class _NewViewState extends ConsumerState<_NewView> {
                   ElevatedButton(
                     onPressed: () {
                       context.pop();
-                      ref.read(playlistIDsManagerProvider.notifier).createOrChangePlaylist(
-                        PlaylistChange(
-                          id: _controller.text,
-                          audios: widget.audios,
-                          action: PlaylistAction.create,
-                        ),
-                      );
+                      ref
+                          .read(playlistIDsManagerProvider.notifier)
+                          .createOrChangePlaylist(
+                            PlaylistChange(
+                              id: _controller.text,
+                              audios: widget.audios,
+                              action: PlaylistAction.create,
+                            ),
+                          );
                       showAddedToPlaylistSnackBar(
                         context: context,
                         id: _controller.text,

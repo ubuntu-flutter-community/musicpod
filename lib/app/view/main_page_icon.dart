@@ -49,10 +49,7 @@ class MainPageIcon extends ConsumerWidget {
         } else {
           return Padding(
             padding: mainPageIconPadding,
-            child: Icon(
-              Iconz.playFilled,
-              color: context.colorScheme.primary,
-            ),
+            child: Icon(Iconz.playFilled, color: context.colorScheme.primary),
           );
         }
       }
@@ -60,9 +57,7 @@ class MainPageIcon extends ConsumerWidget {
 
     return Padding(
       padding: mainPageIconPadding,
-      child: Icon(
-        selected ? audioType.selectedIconData : audioType.iconData,
-      ),
+      child: Icon(selected ? audioType.selectedIconData : audioType.iconData),
     );
   }
 }

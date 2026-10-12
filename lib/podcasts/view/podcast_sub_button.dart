@@ -38,13 +38,13 @@ class PodcastSubButton extends ConsumerWidget {
       onPressed: disabled
           ? null
           : () => ref
-              .read(subscribedPodcastsManagerProvider.notifier)
-              .togglePodcastSubscription(
-                feedUrl: pageId,
-                imageUrl: imageUrl,
-                name: name,
-                artist: artist,
-              ),
+                .read(subscribedPodcastsManagerProvider.notifier)
+                .togglePodcastSubscription(
+                  feedUrl: pageId,
+                  imageUrl: imageUrl,
+                  name: name,
+                  artist: artist,
+                ),
     );
   }
 }

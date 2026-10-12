@@ -29,7 +29,9 @@ class SettingsButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     Future<void> onPressed() async {
-      await ref.read(fullWindowModeManagerProvider.notifier).setFullWindowMode(false);
+      await ref
+          .read(fullWindowModeManagerProvider.notifier)
+          .setFullWindowMode(false);
       await Future.delayed(const Duration(milliseconds: 300));
       ref.read(settingsScrollIndexProvider.notifier).set(scrollIndex);
       await ref
