@@ -371,28 +371,12 @@ class MockSettingsService extends _i1.Mock implements _i13.SettingsService {
   }
 
   @override
-  _i7.Stream<bool> get propertiesChanged =>
-      (super.noSuchMethod(
-            Invocation.getter(#propertiesChanged),
-            returnValue: _i7.Stream<bool>.empty(),
-          )
-          as _i7.Stream<bool>);
-
-  @override
   _i7.Future<String?> get downloadsDirOrDefault =>
       (super.noSuchMethod(
             Invocation.getter(#downloadsDirOrDefault),
             returnValue: _i7.Future<String?>.value(),
           )
           as _i7.Future<String?>);
-
-  @override
-  bool notify(bool? saved) =>
-      (super.noSuchMethod(
-            Invocation.method(#notify, [saved]),
-            returnValue: false,
-          )
-          as bool);
 
   @override
   String? getString(String? key) =>
@@ -435,15 +419,6 @@ class MockSettingsService extends _i1.Mock implements _i13.SettingsService {
   _i7.Future<void> wipeAllSettings() =>
       (super.noSuchMethod(
             Invocation.method(#wipeAllSettings, []),
-            returnValue: _i7.Future<void>.value(),
-            returnValueForMissingStub: _i7.Future<void>.value(),
-          )
-          as _i7.Future<void>);
-
-  @override
-  _i7.Future<void> dispose() =>
-      (super.noSuchMethod(
-            Invocation.method(#dispose, []),
             returnValue: _i7.Future<void>.value(),
             returnValueForMissingStub: _i7.Future<void>.value(),
           )

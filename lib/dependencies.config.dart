@@ -51,7 +51,6 @@ import 'radio/persistence/radio_dao.dart' as _i414;
 import 'radio/service/online_art_service.dart' as _i852;
 import 'radio/service/radio_service.dart' as _i506;
 import 'search/manager/search_manager.dart' as _i354;
-import 'settings/manager/settings_manager.dart' as _i964;
 import 'settings/service/settings_service.dart' as _i862;
 import 'settings/view/licenses_dialog.dart' as _i1009;
 import 'third_party/audio_service_module.dart' as _i739;
@@ -125,7 +124,6 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i862.SettingsService(
         sharedPreferences: gh<_i460.SharedPreferences>(),
       ),
-      dispose: (i) => i.dispose(),
     );
     gh.factoryParam<_i305.RetryManager, _i327.RetryCapsule, dynamic>(
       (capsule, _) => _i305.RetryManager.create(capsule: capsule),
@@ -255,15 +253,6 @@ extension GetItInjectableX on _i174.GetIt {
         settingsService: gh<_i862.SettingsService>(),
         gitHub: gh<_i535.GitHub>(),
         localAudioService: gh<_i985.LocalAudioService>(),
-      ),
-    );
-    gh.lazySingleton<_i964.SettingsManager>(
-      () => _i964.SettingsManager(
-        service: gh<_i862.SettingsService>(),
-        podcastService: gh<_i529.PodcastService>(),
-        localAudioService: gh<_i985.LocalAudioService>(),
-        radioService: gh<_i506.RadioService>(),
-        playerService: gh<_i456.PlayerService>(),
       ),
     );
     await gh.singletonAsync<_i517.WindowSizeToSettingsListener>(() {

@@ -17,6 +17,7 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../search/manager/search_manager.dart';
 import '../../search/data/search_type.dart';
+import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
 import '../../settings/view/settings_action.dart';
 import '../manager/find_all_album_i_ds_manager.dart';
@@ -38,12 +39,17 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
   Widget build(BuildContext context) {
     callOnceAfterThisBuild((context) => clearInMemoryImageCache());
 
-    final index = watchPropertyValue((SettingsManager m) => m.localAudioindex);
-    final localAudioView = LocalAudioView.values[index];
     final l10n = context.l10n;
 
     return Consumer(
       builder: (context, ref, _) {
+        final index =
+            ref.watch(settingsIntManagerProvider(SPKeys.localAudioIndex)) ?? 0;
+        final localAudioView =
+            LocalAudioView.values[index.clamp(
+              0,
+              LocalAudioView.values.length - 1,
+            )];
         ref.listen<AsyncValue<LocalAudioState>>(localAudioManagerProvider, (
           prev,
           next,

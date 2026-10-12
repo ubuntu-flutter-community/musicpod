@@ -11,6 +11,7 @@ import '../../common/view/confirm.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
+import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
 import '../data/local_audio_view.dart';
 import '../manager/show_playlist_add_audios_manager.dart';
@@ -88,9 +89,13 @@ class PlaylistControlPanel extends ConsumerWidget {
                   PlaylistChange(id: pageId, action: PlaylistAction.delete),
                 );
 
-                di<SettingsManager>().setLocalAudioindex(
-                  LocalAudioView.playlists.index,
-                );
+                ref
+                    .read(
+                      settingsIntManagerProvider(
+                        SPKeys.localAudioIndex,
+                      ).notifier,
+                    )
+                    .set(LocalAudioView.playlists.index);
                 di<RoutingManager>().push(
                   pageId: PageIDs.localAudio,
                   replace: true,

@@ -11,18 +11,15 @@ import 'package:flutter_it/flutter_it.dart' as _i4;
 import 'package:media_kit/media_kit.dart' as _i14;
 import 'package:media_kit_video/media_kit_video.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i18;
 import 'package:musicpod/common/data/audio.dart' as _i10;
 import 'package:musicpod/common/view/audio_filter.dart' as _i11;
 import 'package:musicpod/common/view/languages.dart' as _i9;
-import 'package:musicpod/lyrics/data/online_lyrics_source.dart' as _i19;
 import 'package:musicpod/player/data/queue.dart' as _i3;
 import 'package:musicpod/player/manager/player_manager.dart' as _i13;
 import 'package:musicpod/podcasts/data/podcast_genre.dart' as _i8;
 import 'package:musicpod/podcasts/data/podcast_short_info.dart' as _i12;
 import 'package:musicpod/podcasts/service/podcast_service.dart' as _i5;
-import 'package:musicpod/settings/manager/settings_manager.dart' as _i17;
-import 'package:musicpod/settings/service/settings_service.dart' as _i20;
+import 'package:musicpod/settings/service/settings_service.dart' as _i17;
 import 'package:podcast_search/podcast_search.dart' as _i7;
 
 // ignore_for_file: type=lint
@@ -445,14 +442,6 @@ class MockPlayerManager extends _i1.Mock implements _i13.PlayerManager {
           as double);
 
   @override
-  bool get isUpNextExpanded =>
-      (super.noSuchMethod(
-            Invocation.getter(#isUpNextExpanded),
-            returnValue: false,
-          )
-          as bool);
-
-  @override
   _i4.Command<
     ({List<_i10.Audio> audios, bool markComplete})?,
     Map<String, Duration>?
@@ -470,19 +459,6 @@ class MockPlayerManager extends _i1.Mock implements _i13.PlayerManager {
             ({List<_i10.Audio> audios, bool markComplete})?,
             Map<String, Duration>?
           >);
-
-  @override
-  bool get showAudioVisualizer =>
-      (super.noSuchMethod(
-            Invocation.getter(#showAudioVisualizer),
-            returnValue: false,
-          )
-          as bool);
-
-  @override
-  bool get showQueue =>
-      (super.noSuchMethod(Invocation.getter(#showQueue), returnValue: false)
-          as bool);
 
   @override
   bool get hasListeners =>
@@ -672,12 +648,6 @@ class MockPlayerManager extends _i1.Mock implements _i13.PlayerManager {
           as _i6.Future<void>);
 
   @override
-  void setUpNextExpanded(bool? value) => super.noSuchMethod(
-    Invocation.method(#setUpNextExpanded, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
   _i6.Future<void> safeCurrentAudioPosition() =>
       (super.noSuchMethod(
             Invocation.method(#safeCurrentAudioPosition, []),
@@ -712,18 +682,6 @@ class MockPlayerManager extends _i1.Mock implements _i13.PlayerManager {
           as _i6.Future<void>);
 
   @override
-  void setShowAudioVisalizer(bool? value) => super.noSuchMethod(
-    Invocation.method(#setShowAudioVisalizer, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void setShowQueue(bool? value) => super.noSuchMethod(
-    Invocation.method(#setShowQueue, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
   _i6.Future<void> stop() =>
       (super.noSuchMethod(
             Invocation.method(#stop, []),
@@ -731,12 +689,6 @@ class MockPlayerManager extends _i1.Mock implements _i13.PlayerManager {
             returnValueForMissingStub: _i6.Future<void>.value(),
           )
           as _i6.Future<void>);
-
-  @override
-  void toggleShowQueue() => super.noSuchMethod(
-    Invocation.method(#toggleShowQueue, []),
-    returnValueForMissingStub: null,
-  );
 
   @override
   _i6.Future<void> resetPlayerState() =>
@@ -775,555 +727,13 @@ class MockPlayerManager extends _i1.Mock implements _i13.PlayerManager {
   );
 }
 
-/// A class which mocks [SettingsManager].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockSettingsManager extends _i1.Mock implements _i17.SettingsManager {
-  MockSettingsManager() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  int get scrollIndex =>
-      (super.noSuchMethod(Invocation.getter(#scrollIndex), returnValue: 0)
-          as int);
-
-  @override
-  int get localAudioindex =>
-      (super.noSuchMethod(Invocation.getter(#localAudioindex), returnValue: 0)
-          as int);
-
-  @override
-  bool get neverShowFailedImports =>
-      (super.noSuchMethod(
-            Invocation.getter(#neverShowFailedImports),
-            returnValue: false,
-          )
-          as bool);
-
-  @override
-  bool get groupAlbumsOnlyByAlbumName =>
-      (super.noSuchMethod(
-            Invocation.getter(#groupAlbumsOnlyByAlbumName),
-            returnValue: false,
-          )
-          as bool);
-
-  @override
-  bool get enableLastFmScrobbling =>
-      (super.noSuchMethod(
-            Invocation.getter(#enableLastFmScrobbling),
-            returnValue: false,
-          )
-          as bool);
-
-  @override
-  bool get enableListenBrainzScrobbling =>
-      (super.noSuchMethod(
-            Invocation.getter(#enableListenBrainzScrobbling),
-            returnValue: false,
-          )
-          as bool);
-
-  @override
-  bool get useMoreAnimations =>
-      (super.noSuchMethod(
-            Invocation.getter(#useMoreAnimations),
-            returnValue: false,
-          )
-          as bool);
-
-  @override
-  bool get saveWindowSize =>
-      (super.noSuchMethod(
-            Invocation.getter(#saveWindowSize),
-            returnValue: false,
-          )
-          as bool);
-
-  @override
-  bool get notifyDataSafeMode =>
-      (super.noSuchMethod(
-            Invocation.getter(#notifyDataSafeMode),
-            returnValue: false,
-          )
-          as bool);
-
-  @override
-  bool get usePodcastIndex =>
-      (super.noSuchMethod(
-            Invocation.getter(#usePodcastIndex),
-            returnValue: false,
-          )
-          as bool);
-
-  @override
-  int get themeIndex =>
-      (super.noSuchMethod(Invocation.getter(#themeIndex), returnValue: 0)
-          as int);
-
-  @override
-  bool get useYaruTheme =>
-      (super.noSuchMethod(Invocation.getter(#useYaruTheme), returnValue: false)
-          as bool);
-
-  @override
-  bool get useCustomThemeColor =>
-      (super.noSuchMethod(
-            Invocation.getter(#useCustomThemeColor),
-            returnValue: false,
-          )
-          as bool);
-
-  @override
-  bool get usePlayerColor =>
-      (super.noSuchMethod(
-            Invocation.getter(#usePlayerColor),
-            returnValue: false,
-          )
-          as bool);
-
-  @override
-  int get iconSetIndex =>
-      (super.noSuchMethod(Invocation.getter(#iconSetIndex), returnValue: 0)
-          as int);
-
-  @override
-  int get playerExplorerTabIndex =>
-      (super.noSuchMethod(
-            Invocation.getter(#playerExplorerTabIndex),
-            returnValue: 0,
-          )
-          as int);
-
-  @override
-  bool get showPositionDuration =>
-      (super.noSuchMethod(
-            Invocation.getter(#showPositionDuration),
-            returnValue: false,
-          )
-          as bool);
-
-  @override
-  bool get hideCompletedEpisodes =>
-      (super.noSuchMethod(
-            Invocation.getter(#hideCompletedEpisodes),
-            returnValue: false,
-          )
-          as bool);
-
-  @override
-  bool get showPlayerLyrics =>
-      (super.noSuchMethod(
-            Invocation.getter(#showPlayerLyrics),
-            returnValue: false,
-          )
-          as bool);
-
-  @override
-  bool get tryToFetchLyricsOnline =>
-      (super.noSuchMethod(
-            Invocation.getter(#tryToFetchLyricsOnline),
-            returnValue: false,
-          )
-          as bool);
-
-  @override
-  String get selectedSearchAudioType =>
-      (super.noSuchMethod(
-            Invocation.getter(#selectedSearchAudioType),
-            returnValue: _i18.dummyValue<String>(
-              this,
-              Invocation.getter(#selectedSearchAudioType),
-            ),
-          )
-          as String);
-
-  @override
-  Set<String> get favoriteLanguageCode =>
-      (super.noSuchMethod(
-            Invocation.getter(#favoriteLanguageCode),
-            returnValue: <String>{},
-          )
-          as Set<String>);
-
-  @override
-  int get favoriteLanguageCodeLength =>
-      (super.noSuchMethod(
-            Invocation.getter(#favoriteLanguageCodeLength),
-            returnValue: 0,
-          )
-          as int);
-
-  @override
-  Set<String> get favoriteCountryCode =>
-      (super.noSuchMethod(
-            Invocation.getter(#favoriteCountryCode),
-            returnValue: <String>{},
-          )
-          as Set<String>);
-
-  @override
-  int get favoriteCountryCodeLength =>
-      (super.noSuchMethod(
-            Invocation.getter(#favoriteCountryCodeLength),
-            returnValue: 0,
-          )
-          as int);
-
-  @override
-  _i4.Command<void, void> get wipeAllSettingsCommand =>
-      (super.noSuchMethod(
-            Invocation.getter(#wipeAllSettingsCommand),
-            returnValue: _FakeCommand_2<void, void>(
-              this,
-              Invocation.getter(#wipeAllSettingsCommand),
-            ),
-          )
-          as _i4.Command<void, void>);
-
-  @override
-  _i19.OnlineLyricsSource get onlineLyricsSource =>
-      (super.noSuchMethod(
-            Invocation.getter(#onlineLyricsSource),
-            returnValue: _i19.OnlineLyricsSource.lrcLib,
-          )
-          as _i19.OnlineLyricsSource);
-
-  @override
-  set scrollIndex(int? value) => super.noSuchMethod(
-    Invocation.setter(#scrollIndex, value),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  bool get hasListeners =>
-      (super.noSuchMethod(Invocation.getter(#hasListeners), returnValue: false)
-          as bool);
-
-  @override
-  bool get isDisposed =>
-      (super.noSuchMethod(Invocation.getter(#isDisposed), returnValue: false)
-          as bool);
-
-  @override
-  _i6.Future<void> setDirectory(String? value) =>
-      (super.noSuchMethod(
-            Invocation.method(#setDirectory, [value]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<void> setLocalAudioindex(int? value) =>
-      (super.noSuchMethod(
-            Invocation.method(#setLocalAudioindex, [value]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  void setNeverShowFailedImports(bool? value) => super.noSuchMethod(
-    Invocation.method(#setNeverShowFailedImports, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void setGroupAlbumsOnlyByAlbumName(bool? value) => super.noSuchMethod(
-    Invocation.method(#setGroupAlbumsOnlyByAlbumName, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void setEnableLastFmScrobbling(bool? value) => super.noSuchMethod(
-    Invocation.method(#setEnableLastFmScrobbling, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void setLastFmApiKey(String? value) => super.noSuchMethod(
-    Invocation.method(#setLastFmApiKey, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void setLastFmSecret(String? value) => super.noSuchMethod(
-    Invocation.method(#setLastFmSecret, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void setLastFmSessionKey(String? value) => super.noSuchMethod(
-    Invocation.method(#setLastFmSessionKey, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void setLastFmUsername(String? value) => super.noSuchMethod(
-    Invocation.method(#setLastFmUsername, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void setEnableListenBrainzScrobbling(bool? value) => super.noSuchMethod(
-    Invocation.method(#setEnableListenBrainzScrobbling, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void setListenBrainzApiKey(String? value) => super.noSuchMethod(
-    Invocation.method(#setListenBrainzApiKey, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void setUseMoreAnimations(bool? value) => super.noSuchMethod(
-    Invocation.method(#setUseMoreAnimations, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void setSaveWindowSize(bool? value) => super.noSuchMethod(
-    Invocation.method(#setSaveWindowSize, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void setNotifyDataSafeMode(bool? value) => super.noSuchMethod(
-    Invocation.method(#setNotifyDataSafeMode, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  _i6.Future<void> setUsePodcastIndex(bool? value) =>
-      (super.noSuchMethod(
-            Invocation.method(#setUsePodcastIndex, [value]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  void setThemeIndex(int? value) => super.noSuchMethod(
-    Invocation.method(#setThemeIndex, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void setUseYaruTheme(bool? value) => super.noSuchMethod(
-    Invocation.method(#setUseYaruTheme, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void setCustomThemeColor(int? value) => super.noSuchMethod(
-    Invocation.method(#setCustomThemeColor, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void setUseCustomThemeColor(bool? value) => super.noSuchMethod(
-    Invocation.method(#setUseCustomThemeColor, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  _i6.Future<void> setUsePlayerColor(bool? value) =>
-      (super.noSuchMethod(
-            Invocation.method(#setUsePlayerColor, [value]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  void setIconSetIndex(int? value) => super.noSuchMethod(
-    Invocation.method(#setIconSetIndex, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void setPlayerExplorerTabIndex(int? value) => super.noSuchMethod(
-    Invocation.method(#setPlayerExplorerTabIndex, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  _i6.Future<void> setPodcastIndexApiKey(String? value) =>
-      (super.noSuchMethod(
-            Invocation.method(#setPodcastIndexApiKey, [value]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<void> setPodcastIndexApiSecret(String? value) =>
-      (super.noSuchMethod(
-            Invocation.method(#setPodcastIndexApiSecret, [value]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<void> setShowPositionDuration(bool? value) =>
-      (super.noSuchMethod(
-            Invocation.method(#setShowPositionDuration, [value]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<void> setHideCompletedEpisodes(bool? value) =>
-      (super.noSuchMethod(
-            Invocation.method(#setHideCompletedEpisodes, [value]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<void> toggleHideCompletedEpisodes() =>
-      (super.noSuchMethod(
-            Invocation.method(#toggleHideCompletedEpisodes, []),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<void> setShowPlayerLyrics(bool? value) =>
-      (super.noSuchMethod(
-            Invocation.method(#setShowPlayerLyrics, [value]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<void> setTryToFetchLyricsOnline(bool? value) =>
-      (super.noSuchMethod(
-            Invocation.method(#setTryToFetchLyricsOnline, [value]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<void> setSelectedSearchAudioType(String? value) =>
-      (super.noSuchMethod(
-            Invocation.method(#setSelectedSearchAudioType, [value]),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  void setLastCountryCode(String? value) => super.noSuchMethod(
-    Invocation.method(#setLastCountryCode, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void setLastLanguageCode(String? value) => super.noSuchMethod(
-    Invocation.method(#setLastLanguageCode, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  bool isFavCountryCode(String? value) =>
-      (super.noSuchMethod(
-            Invocation.method(#isFavCountryCode, [value]),
-            returnValue: false,
-          )
-          as bool);
-
-  @override
-  void addFavoriteLanguageCode(String? value) => super.noSuchMethod(
-    Invocation.method(#addFavoriteLanguageCode, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void removeFavoriteLanguageCode(String? value) => super.noSuchMethod(
-    Invocation.method(#removeFavoriteLanguageCode, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  bool isFavLanguageCode(String? value) =>
-      (super.noSuchMethod(
-            Invocation.method(#isFavLanguageCode, [value]),
-            returnValue: false,
-          )
-          as bool);
-
-  @override
-  void addFavoriteCountryCode(String? value) => super.noSuchMethod(
-    Invocation.method(#addFavoriteCountryCode, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void removeFavoriteCountryCode(String? value) => super.noSuchMethod(
-    Invocation.method(#removeFavoriteCountryCode, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void setOnlineLyricsSource(_i19.OnlineLyricsSource? value) =>
-      super.noSuchMethod(
-        Invocation.method(#setOnlineLyricsSource, [value]),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i6.Future<void> dispose() =>
-      (super.noSuchMethod(
-            Invocation.method(#dispose, []),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  void addListener(_i16.VoidCallback? listener) => super.noSuchMethod(
-    Invocation.method(#addListener, [listener]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void removeListener(_i16.VoidCallback? listener) => super.noSuchMethod(
-    Invocation.method(#removeListener, [listener]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void notifyListeners() => super.noSuchMethod(
-    Invocation.method(#notifyListeners, []),
-    returnValueForMissingStub: null,
-  );
-}
-
 /// A class which mocks [SettingsService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSettingsService extends _i1.Mock implements _i20.SettingsService {
+class MockSettingsService extends _i1.Mock implements _i17.SettingsService {
   MockSettingsService() {
     _i1.throwOnMissingStub(this);
   }
-
-  @override
-  _i6.Stream<bool> get propertiesChanged =>
-      (super.noSuchMethod(
-            Invocation.getter(#propertiesChanged),
-            returnValue: _i6.Stream<bool>.empty(),
-          )
-          as _i6.Stream<bool>);
 
   @override
   _i6.Future<String?> get downloadsDirOrDefault =>
@@ -1332,14 +742,6 @@ class MockSettingsService extends _i1.Mock implements _i20.SettingsService {
             returnValue: _i6.Future<String?>.value(),
           )
           as _i6.Future<String?>);
-
-  @override
-  bool notify(bool? saved) =>
-      (super.noSuchMethod(
-            Invocation.method(#notify, [saved]),
-            returnValue: false,
-          )
-          as bool);
 
   @override
   String? getString(String? key) =>
@@ -1382,15 +784,6 @@ class MockSettingsService extends _i1.Mock implements _i20.SettingsService {
   _i6.Future<void> wipeAllSettings() =>
       (super.noSuchMethod(
             Invocation.method(#wipeAllSettings, []),
-            returnValue: _i6.Future<void>.value(),
-            returnValueForMissingStub: _i6.Future<void>.value(),
-          )
-          as _i6.Future<void>);
-
-  @override
-  _i6.Future<void> dispose() =>
-      (super.noSuchMethod(
-            Invocation.method(#dispose, []),
             returnValue: _i6.Future<void>.value(),
             returnValueForMissingStub: _i6.Future<void>.value(),
           )

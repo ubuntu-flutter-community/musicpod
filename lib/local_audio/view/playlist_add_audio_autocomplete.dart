@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/data/audio.dart';
@@ -9,7 +8,9 @@ import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
+import '../../extensions/platform_x.dart';
 import '../../extensions/theme_data_x.dart';
+import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
 import '../manager/find_all_tracks_manager.dart';
 import '../manager/playlist_manager.dart';
@@ -71,9 +72,8 @@ class _PlaylistAddAudioAutoCompleteState
     final fallBackTextStyle = theme.textTheme.bodyMedium?.copyWith(
       fontWeight: FontWeight.w500,
     );
-    final useYaruTheme = watchPropertyValue(
-      (SettingsManager m) => m.useYaruTheme,
-    );
+    final useYaruTheme =
+        ref.watch(settingsBoolManagerProvider(SPKeys.useYaruTheme)) ?? isLinux;
     final localAudioState = ref.watch(localAudioManagerProvider);
     final allAudios = ref.watch(findAllTracksManagerProvider).value;
     final isRunning = localAudioState.isLoading;

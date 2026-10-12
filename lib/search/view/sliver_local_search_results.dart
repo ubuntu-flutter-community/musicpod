@@ -31,41 +31,52 @@ class SliverLocalSearchResult extends StatelessWidget with WatchItMixin {
           );
         }
 
-        final searchType = watchValue((SearchManager m) => m.searchType);
-        final localAudioView = switch (searchType) {
-          SearchType.localAlbum => LocalAudioView.albums,
-          SearchType.localArtist => LocalAudioView.artists,
-          SearchType.localTitle => LocalAudioView.titles,
-          SearchType.localGenreName => LocalAudioView.genres,
-          _ => LocalAudioView.playlists,
-        };
-
-        final localSearchResult = watchValue(
-          (SearchManager m) => m.localSearchResult,
-        );
-        final titles = localSearchResult?.titles;
-        final artists = localSearchResult?.artists;
-        final albums = localSearchResult?.albums;
-        final genresResult = localSearchResult?.genres;
-        final playlistsResult = localSearchResult?.playlists;
-
-        final searchQuery = watchValue((SearchManager m) => m.searchQuery);
-
-        if (searchQuery == null || searchQuery.isEmpty == true) {
-          return SliverNoSearchResultPage(message: Text(context.l10n.search));
-        }
-
-        return LocalAudioBody(
-          localAudioView: localAudioView,
-          titles: titles,
-          artists: artists,
-          albumIDs: albums,
-          genres: genresResult,
-          playlists: playlistsResult,
-          constraints: constraints,
-          startNewPlaylistOnTap: false,
-        );
+        return _Content(constraints: constraints);
       },
+    );
+  }
+}
+
+class _Content extends StatelessWidget with WatchItMixin {
+  _Content({required this.constraints});
+
+  final BoxConstraints constraints;
+
+  @override
+  Widget build(BuildContext context) {
+    final searchType = watchValue((SearchManager m) => m.searchType);
+    final localAudioView = switch (searchType) {
+      SearchType.localAlbum => LocalAudioView.albums,
+      SearchType.localArtist => LocalAudioView.artists,
+      SearchType.localTitle => LocalAudioView.titles,
+      SearchType.localGenreName => LocalAudioView.genres,
+      _ => LocalAudioView.playlists,
+    };
+
+    final localSearchResult = watchValue(
+      (SearchManager m) => m.localSearchResult,
+    );
+    final titles = localSearchResult?.titles;
+    final artists = localSearchResult?.artists;
+    final albums = localSearchResult?.albums;
+    final genresResult = localSearchResult?.genres;
+    final playlistsResult = localSearchResult?.playlists;
+
+    final searchQuery = watchValue((SearchManager m) => m.searchQuery);
+
+    if (searchQuery == null || searchQuery.isEmpty == true) {
+      return SliverNoSearchResultPage(message: Text(context.l10n.search));
+    }
+
+    return LocalAudioBody(
+      localAudioView: localAudioView,
+      titles: titles,
+      artists: artists,
+      albumIDs: albums,
+      genres: genresResult,
+      playlists: playlistsResult,
+      constraints: constraints,
+      startNewPlaylistOnTap: false,
     );
   }
 }

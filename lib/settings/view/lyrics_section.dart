@@ -1,28 +1,37 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/view/common_widgets.dart';
 import '../../extensions/build_context_x.dart';
 import '../../lyrics/data/online_lyrics_source.dart';
+import '../data/shared_preferences_keys.dart';
 import '../manager/settings_manager.dart';
 import 'settings_list_tile.dart';
 import 'settings_section.dart';
 
-class LyricsSection extends StatelessWidget with WatchItMixin {
+class LyricsSection extends ConsumerWidget {
   const LyricsSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
 
-    final tryToFetchLyricsOnline = watchPropertyValue(
-      (SettingsManager m) => m.tryToFetchLyricsOnline,
-    );
+    final tryToFetchLyricsOnline =
+        ref.watch(
+          settingsBoolManagerProvider(SPKeys.tryToFetchLyricsOnline),
+        ) ??
+        true;
 
-    final onlineLyricsSource = watchPropertyValue(
-      (SettingsManager m) => m.onlineLyricsSource,
+    final sourceName = ref.watch(
+      settingsStringManagerProvider(SPKeys.onlineLyricsSource),
     );
+    final onlineLyricsSource =
+        OnlineLyricsSource.values.firstWhereOrNull(
+          (e) => e.name == sourceName,
+        ) ??
+        OnlineLyricsSource.lrcLib;
 
     return SettingsSection(
       heading: l10n.lyrics,
@@ -35,7 +44,13 @@ class LyricsSection extends StatelessWidget with WatchItMixin {
           subtitle: Text(l10n.tryToFetchLyricsOnlineDescription),
           trailing: CommonSwitch(
             value: tryToFetchLyricsOnline,
-            onChanged: di<SettingsManager>().setTryToFetchLyricsOnline,
+            onChanged: (v) => ref
+                .read(
+                  settingsBoolManagerProvider(
+                    SPKeys.tryToFetchLyricsOnline,
+                  ).notifier,
+                )
+                .set(v),
           ),
         ),
         if (tryToFetchLyricsOnline)
@@ -46,7 +61,13 @@ class LyricsSection extends StatelessWidget with WatchItMixin {
             trailing: YaruPopupMenuButton<OnlineLyricsSource>(
               child: Text(onlineLyricsSource.localize(l10n)),
               initialValue: onlineLyricsSource,
-              onSelected: di<SettingsManager>().setOnlineLyricsSource,
+              onSelected: (source) => ref
+                  .read(
+                    settingsStringManagerProvider(
+                      SPKeys.onlineLyricsSource,
+                    ).notifier,
+                  )
+                  .set(source.name),
               itemBuilder: (context) => OnlineLyricsSource.values.map((source) {
                 return PopupMenuItem<OnlineLyricsSource>(
                   value: source,

@@ -17,14 +17,12 @@ import 'package:musicpod/podcasts/data/podcast_short_info.dart';
 import 'package:musicpod/podcasts/manager/episodes_manager.dart';
 import 'package:musicpod/podcasts/service/podcast_service.dart';
 import 'package:musicpod/podcasts/view/podcast_page_control_panel.dart';
-import 'package:musicpod/settings/manager/settings_manager.dart';
 import 'package:musicpod/settings/service/settings_service.dart';
 
 import 'podcast_page_control_panel_test.mocks.dart';
 
 @GenerateMocks([
   PlayerManager,
-  SettingsManager,
   SettingsService,
   PodcastService,
 ])
@@ -40,7 +38,6 @@ void main() {
   const feedUrl = 'https://example.com/podcast.xml';
 
   late MockPlayerManager mockPlayerManager;
-  late MockSettingsManager mockSettingsManager;
   late MockSettingsService mockSettingsService;
   late MockPodcastService mockPodcastService;
   late List<Audio> allEpisodes;
@@ -77,7 +74,6 @@ void main() {
     loadedEpisodes = allEpisodes.take(25).toList();
 
     mockPlayerManager = MockPlayerManager();
-    mockSettingsManager = MockSettingsManager();
     mockSettingsService = MockSettingsService();
     mockPodcastService = MockPodcastService();
 
@@ -98,8 +94,6 @@ void main() {
     ).thenAnswer((_) async {});
     when(mockPlayerManager.playOrPause()).thenAnswer((_) async {});
 
-    when(mockSettingsManager.useYaruTheme).thenReturn(false);
-
     when(mockSettingsService.getInt(any)).thenReturn(0);
     when(mockSettingsService.getBool(any)).thenReturn(false);
     when(mockSettingsService.getString(any)).thenReturn(null);
@@ -113,7 +107,6 @@ void main() {
 
     GetIt.I.registerSingleton<SettingsService>(mockSettingsService);
     GetIt.I.registerSingleton<PlayerManager>(mockPlayerManager);
-    GetIt.I.registerSingleton<SettingsManager>(mockSettingsManager);
     GetIt.I.registerSingleton<PodcastService>(mockPodcastService);
   });
 

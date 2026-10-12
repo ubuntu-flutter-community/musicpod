@@ -10,6 +10,7 @@ import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
 import '../../local_audio/manager/local_audio_manager.dart';
 import '../../player/manager/player_manager.dart';
+import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
 
 class MainPageIcon extends StatelessWidget with WatchItMixin {
@@ -28,35 +29,45 @@ class MainPageIcon extends StatelessWidget with WatchItMixin {
       (PlayerManager m) => m.audio?.audioType,
     );
     final isPlaying = watchPropertyValue((PlayerManager m) => m.isPlaying);
-    final useMoreAnimations = watchPropertyValue(
-      (SettingsManager m) => m.useMoreAnimations,
-    );
 
-    if (audioType == AudioType.local) {
-      return LocalMainPageIcon(
-        isCurrentlyPlaying: currentAudioType == AudioType.local,
-        selected: selected,
-        isPlaying: isPlaying,
-        useMoreAnimations: useMoreAnimations,
-      );
-    }
+    return Consumer(
+      builder: (context, ref, _) {
+        final useMoreAnimations =
+            ref.watch(settingsBoolManagerProvider(SPKeys.useMoreAnimations)) ??
+            false;
 
-    if (currentAudioType == audioType) {
-      if (isPlaying) {
-        if (useMoreAnimations) {
-          return const ActiveAudioSignalIndicator();
-        } else {
-          return Padding(
-            padding: mainPageIconPadding,
-            child: Icon(Iconz.playFilled, color: context.colorScheme.primary),
+        if (audioType == AudioType.local) {
+          return LocalMainPageIcon(
+            isCurrentlyPlaying: currentAudioType == AudioType.local,
+            selected: selected,
+            isPlaying: isPlaying,
+            useMoreAnimations: useMoreAnimations,
           );
         }
-      }
-    }
 
-    return Padding(
-      padding: mainPageIconPadding,
-      child: Icon(selected ? audioType.selectedIconData : audioType.iconData),
+        if (currentAudioType == audioType) {
+          if (isPlaying) {
+            if (useMoreAnimations) {
+              return const ActiveAudioSignalIndicator();
+            } else {
+              return Padding(
+                padding: mainPageIconPadding,
+                child: Icon(
+                  Iconz.playFilled,
+                  color: context.colorScheme.primary,
+                ),
+              );
+            }
+          }
+        }
+
+        return Padding(
+          padding: mainPageIconPadding,
+          child: Icon(
+            selected ? audioType.selectedIconData : audioType.iconData,
+          ),
+        );
+      },
     );
   }
 }

@@ -23,6 +23,7 @@ import '../../podcasts/data/podcast_update_capsule.dart';
 import '../../podcasts/manager/podcast_collection_filter_manager.dart';
 import '../../podcasts/manager/podcast_updates_manager.dart';
 import '../../podcasts/manager/subscribed_podcasts_manager.dart';
+import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
 import '../data/audio.dart';
 import '../data/audio_type.dart';
@@ -82,7 +83,10 @@ class AudioTileOptionButton extends ConsumerWidget {
           playlistId.isNotEmpty,
       itemBuilder: (context) {
         final hideCompletedEpisodes =
-            di<SettingsManager>().hideCompletedEpisodes;
+            ref.watch(
+              settingsBoolManagerProvider(SPKeys.hideCompletedEpisodes),
+            ) ??
+            false;
         final showDownloadsOnly =
             ref.watch(podcastDownloadsOnlyManagerProvider);
         final playerManager = di<PlayerManager>();
@@ -225,7 +229,14 @@ class AudioTileOptionButton extends ConsumerWidget {
             ),
           if (audios.every((e) => e.audioType == AudioType.podcast)) ...[
             PopupMenuItem(
-              onTap: di<SettingsManager>().toggleHideCompletedEpisodes,
+              onTap:
+                  () => ref
+                      .read(
+                        settingsBoolManagerProvider(
+                          SPKeys.hideCompletedEpisodes,
+                        ).notifier,
+                      )
+                      .toggle(),
               child: IgnorePointer(
                 child: ListTile(
                   selectedTileColor: Colors.transparent,

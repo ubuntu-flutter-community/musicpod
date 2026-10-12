@@ -13,7 +13,7 @@ import 'package:musicpod/podcasts/service/podcast_service.dart';
 import 'package:musicpod/radio/manager/radio_fav_tag_manager.dart';
 import 'package:musicpod/radio/manager/radio_star_station_manager.dart';
 import 'package:musicpod/radio/service/radio_service.dart';
-import 'package:musicpod/settings/manager/settings_manager.dart';
+import 'package:musicpod/settings/service/settings_service.dart';
 import 'package:musicpod/settings/manager/wipe_manager.dart';
 
 import 'wipe_manager_test.mocks.dart';
@@ -24,7 +24,7 @@ import 'wipe_manager_test.mocks.dart';
   LocalAudioService,
   Database,
   PlayerManager,
-  SettingsManager,
+  SettingsService,
 ])
 void main() {
   late MockPodcastService mockPodcastService;
@@ -32,7 +32,7 @@ void main() {
   late MockLocalAudioService mockLocalAudioService;
   late MockDatabase mockDatabase;
   late MockPlayerManager mockPlayerManager;
-  late MockSettingsManager mockSettingsManager;
+  late MockSettingsService mockSettingsService;
 
   setUp(() async {
     await GetIt.I.reset();
@@ -42,7 +42,7 @@ void main() {
     mockLocalAudioService = MockLocalAudioService();
     mockDatabase = MockDatabase();
     mockPlayerManager = MockPlayerManager();
-    mockSettingsManager = MockSettingsManager();
+    mockSettingsService = MockSettingsService();
 
     // Default stubbing
     when(mockPodcastService.wipeAndBuildPodcastLibrary())
@@ -61,15 +61,14 @@ void main() {
     when(mockPlayerManager.clearAllLastPositions()).thenAnswer((_) async {});
     when(mockPlayerManager.resetPlayerState()).thenAnswer((_) async {});
 
-    final settingsCmd = Command.createAsyncNoParamNoResult(() async {});
-    when(mockSettingsManager.wipeAllSettingsCommand).thenReturn(settingsCmd);
+    when(mockSettingsService.wipeAllSettings()).thenAnswer((_) async => true);
 
     GetIt.I.registerSingleton<PodcastService>(mockPodcastService);
     GetIt.I.registerSingleton<RadioService>(mockRadioService);
     GetIt.I.registerSingleton<LocalAudioService>(mockLocalAudioService);
     GetIt.I.registerSingleton<Database>(mockDatabase);
     GetIt.I.registerSingleton<PlayerManager>(mockPlayerManager);
-    GetIt.I.registerSingleton<SettingsManager>(mockSettingsManager);
+    GetIt.I.registerSingleton<SettingsService>(mockSettingsService);
   });
 
   tearDown(() async {
@@ -172,7 +171,7 @@ void main() {
       ),
     ).called(1);
     verify(mockPlayerManager.resetPlayerState()).called(1);
-    verify(mockSettingsManager.wipeAllSettingsCommand).called(greaterThanOrEqualTo(1));
+    verify(mockSettingsService.wipeAllSettings()).called(greaterThanOrEqualTo(1));
     verify(mockDatabase.reclaimDiskSpace()).called(1);
   });
 }

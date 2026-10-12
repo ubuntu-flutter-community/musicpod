@@ -12,6 +12,7 @@ import '../../common/view/icons.dart';
 import '../../common/view/ui_constants.dart';
 import '../../custom_content/service/custom_content_service.dart';
 import '../../extensions/build_context_x.dart';
+import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
 import '../data/local_audio_view.dart';
 import '../data/playlist_action.dart';
@@ -94,10 +95,16 @@ class _EditPlaylistDialogState extends ConsumerState<EditPlaylistDialog> {
         unawaited(
           routingManager.push(pageId: PageIDs.localAudio, replace: true),
         );
-        await di<SettingsManager>().setLocalAudioindex(
-          LocalAudioView.playlists.index,
-        );
-        await ref.read(playlistIDsManagerProvider.notifier).createOrChangePlaylist(
+        await ref
+            .read(
+              settingsIntManagerProvider(
+                SPKeys.localAudioIndex,
+              ).notifier,
+            )
+            .set(LocalAudioView.playlists.index);
+        await ref
+            .read(playlistIDsManagerProvider.notifier)
+            .createOrChangePlaylist(
           PlaylistChange(
             id: widget.playlistName!,
             action: PlaylistAction.updateName,

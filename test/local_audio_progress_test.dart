@@ -13,43 +13,18 @@ import 'package:musicpod/local_audio/manager/local_audio_manager.dart';
 import 'package:musicpod/local_audio/service/local_audio_service.dart';
 import 'package:musicpod/local_audio/view/local_audio_page.dart';
 import 'package:musicpod/search/manager/search_manager.dart';
-import 'package:musicpod/settings/manager/settings_manager.dart';
+import 'package:musicpod/settings/data/shared_preferences_keys.dart';
 import 'package:musicpod/settings/service/settings_service.dart';
-import 'package:safe_change_notifier/safe_change_notifier.dart';
 import 'package:yaru/yaru.dart';
 
 import 'local_audio_progress_test.mocks.dart';
 
 @GenerateMocks([LocalAudioService, SettingsService, RoutingManager, SearchManager])
-class FakeSettingsManager extends SafeChangeNotifier
-    implements SettingsManager {
-  @override
-  bool useYaruTheme = false;
-
-  @override
-  int localAudioindex = 0;
-
-  @override
-  Future<void> setLocalAudioindex(int index) async {
-    localAudioindex = index;
-    notifyListeners();
-  }
-
-  @override
-  Future<void> dispose() async {
-    super.dispose();
-  }
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
-}
-
 void main() {
   late MockLocalAudioService mockAudioService;
   late MockSettingsService mockSettingsService;
   late MockRoutingManager mockRoutingManager;
   late MockSearchManager mockSearchManager;
-  late FakeSettingsManager fakeSettingsManager;
 
   void Function(double progress)? capturedUpdateProgress;
   Completer<({List<String> failedImports})>? initCompleter;
@@ -89,14 +64,12 @@ void main() {
     mockSettingsService = MockSettingsService();
     mockRoutingManager = MockRoutingManager();
     mockSearchManager = MockSearchManager();
-    fakeSettingsManager = FakeSettingsManager();
 
     setupMockAudioService();
     setupMockSettingsService();
 
     GetIt.I.registerSingleton<LocalAudioService>(mockAudioService);
     GetIt.I.registerSingleton<SettingsService>(mockSettingsService);
-    GetIt.I.registerSingleton<SettingsManager>(fakeSettingsManager);
     GetIt.I.registerSingleton<RoutingManager>(mockRoutingManager);
     GetIt.I.registerSingleton<SearchManager>(mockSearchManager);
   });
@@ -296,7 +269,7 @@ void main() {
     testWidgets(
       'UI displays updated progress value in YaruCircularProgressIndicator when useYaruTheme is true',
       (tester) async {
-        fakeSettingsManager.useYaruTheme = true;
+        when(mockSettingsService.getBool(SPKeys.useYaruTheme)).thenReturn(true);
 
         await tester.pumpWidget(
           const ProviderScope(

@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lrc/lrc.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:yaru/yaru.dart';
@@ -21,6 +22,7 @@ import '../../extensions/string_x.dart';
 import '../../extensions/theme_data_x.dart';
 import '../../player/manager/mpv_metadata_manager.dart';
 import '../../player/manager/player_manager.dart';
+import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
 import '../data/lyrics_and_art_result_and_param.dart';
 import '../lyrics_manager.dart';
@@ -34,10 +36,6 @@ class LyricsViewer extends StatelessWidget with WatchItMixin {
     final splitByDash = watchValue(
       (MpvMetadataManager m) => m.mpvMetaDataCommand,
     )?.icyTitle.splitByDash;
-    final tryToFetchOnline = watchPropertyValue(
-      (SettingsManager m) => m.tryToFetchLyricsOnline,
-    );
-
     final title = audio?.audioType != AudioType.radio
         ? null
         : splitByDash?.songName;
@@ -45,13 +43,23 @@ class LyricsViewer extends StatelessWidget with WatchItMixin {
         ? null
         : splitByDash?.artist;
 
-    return _PlayerLyrics(
-      audio: audio,
-      title: title,
-      artist: artist,
-      tryToFetchOnline: tryToFetchOnline,
-      autoScroll: audio?.isLocal ?? false,
-      highlightCurrentLine: audio?.isLocal ?? false,
+    return Consumer(
+      builder: (context, ref, _) {
+        final tryToFetchOnline =
+            ref.watch(
+              settingsBoolManagerProvider(SPKeys.tryToFetchLyricsOnline),
+            ) ??
+            true;
+
+        return _PlayerLyrics(
+          audio: audio,
+          title: title,
+          artist: artist,
+          tryToFetchOnline: tryToFetchOnline,
+          autoScroll: audio?.isLocal ?? false,
+          highlightCurrentLine: audio?.isLocal ?? false,
+        );
+      },
     );
   }
 }
@@ -173,14 +181,29 @@ class _PlayerLyricsState extends State<_PlayerLyrics> {
             header: Text(l10n.settings),
             child: Column(
               children: [
-                YaruTile(
-                  title: Text(l10n.tryToFetchLyricsOnlineTitle),
-                  trailing: CommonSwitch(
-                    value: watchPropertyValue(
-                      (SettingsManager m) => m.tryToFetchLyricsOnline,
-                    ),
-                    onChanged: di<SettingsManager>().setTryToFetchLyricsOnline,
-                  ),
+                Consumer(
+                  builder: (context, ref, _) {
+                    final tryToFetch =
+                        ref.watch(
+                          settingsBoolManagerProvider(
+                            SPKeys.tryToFetchLyricsOnline,
+                          ),
+                        ) ??
+                        true;
+                    return YaruTile(
+                      title: Text(l10n.tryToFetchLyricsOnlineTitle),
+                      trailing: CommonSwitch(
+                        value: tryToFetch,
+                        onChanged: (v) => ref
+                            .read(
+                              settingsBoolManagerProvider(
+                                SPKeys.tryToFetchLyricsOnline,
+                              ).notifier,
+                            )
+                            .set(v),
+                      ),
+                    );
+                  },
                 ),
                 YaruTile(
                   trailing: CommonSwitch(

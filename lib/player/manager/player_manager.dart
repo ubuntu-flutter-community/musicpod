@@ -8,7 +8,6 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:safe_change_notifier/safe_change_notifier.dart';
 
 import '../../common/data/audio.dart';
-import '../../extensions/platform_x.dart';
 import '../data/queue.dart';
 import '../service/player_service.dart';
 
@@ -120,14 +119,6 @@ class PlayerManager extends SafeChangeNotifier {
 
   String? get remoteImageUrl => _playerService.remoteImageUrl;
 
-  bool _isUpNextExpanded = false;
-  bool get isUpNextExpanded => _isUpNextExpanded;
-  void setUpNextExpanded(bool value) {
-    if (value == _isUpNextExpanded) return;
-    _isUpNextExpanded = value;
-    notifyListeners();
-  }
-
   Future<void> safeCurrentAudioPosition() =>
       _playerService.safeCurrentAudioPosition();
   Future<void> persistPlayerState() => _playerService.persistPlayerState();
@@ -157,26 +148,9 @@ class PlayerManager extends SafeChangeNotifier {
     super.dispose();
   }
 
-  bool _showAudioVisualizer = false;
-  bool get showAudioVisualizer => _showAudioVisualizer;
-  void setShowAudioVisalizer(bool value) {
-    if (value == _showAudioVisualizer) return;
-    _showAudioVisualizer = value;
-    notifyListeners();
-  }
-
-  bool _showQueue = isDesktop;
-  bool get showQueue => _showQueue;
-
   Map<String, Duration>? get lastPositions => _playerService.lastPositions;
-  void setShowQueue(bool value) {
-    _showQueue = value;
-    notifyListeners();
-  }
 
   Future<void> stop() => _playerService.stop();
-
-  void toggleShowQueue() => setShowQueue(!_showQueue);
 
   Future<void> resetPlayerState() => _playerService.resetPlayerState();
 

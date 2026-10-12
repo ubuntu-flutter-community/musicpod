@@ -480,14 +480,6 @@ class MockPlayerManager extends _i1.Mock implements _i15.PlayerManager {
           as double);
 
   @override
-  bool get isUpNextExpanded =>
-      (super.noSuchMethod(
-            Invocation.getter(#isUpNextExpanded),
-            returnValue: false,
-          )
-          as bool);
-
-  @override
   _i4.Command<
     ({List<_i10.Audio> audios, bool markComplete})?,
     Map<String, Duration>?
@@ -505,19 +497,6 @@ class MockPlayerManager extends _i1.Mock implements _i15.PlayerManager {
             ({List<_i10.Audio> audios, bool markComplete})?,
             Map<String, Duration>?
           >);
-
-  @override
-  bool get showAudioVisualizer =>
-      (super.noSuchMethod(
-            Invocation.getter(#showAudioVisualizer),
-            returnValue: false,
-          )
-          as bool);
-
-  @override
-  bool get showQueue =>
-      (super.noSuchMethod(Invocation.getter(#showQueue), returnValue: false)
-          as bool);
 
   @override
   bool get hasListeners =>
@@ -707,12 +686,6 @@ class MockPlayerManager extends _i1.Mock implements _i15.PlayerManager {
           as _i6.Future<void>);
 
   @override
-  void setUpNextExpanded(bool? value) => super.noSuchMethod(
-    Invocation.method(#setUpNextExpanded, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
   _i6.Future<void> safeCurrentAudioPosition() =>
       (super.noSuchMethod(
             Invocation.method(#safeCurrentAudioPosition, []),
@@ -747,18 +720,6 @@ class MockPlayerManager extends _i1.Mock implements _i15.PlayerManager {
           as _i6.Future<void>);
 
   @override
-  void setShowAudioVisalizer(bool? value) => super.noSuchMethod(
-    Invocation.method(#setShowAudioVisalizer, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  void setShowQueue(bool? value) => super.noSuchMethod(
-    Invocation.method(#setShowQueue, [value]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
   _i6.Future<void> stop() =>
       (super.noSuchMethod(
             Invocation.method(#stop, []),
@@ -766,12 +727,6 @@ class MockPlayerManager extends _i1.Mock implements _i15.PlayerManager {
             returnValueForMissingStub: _i6.Future<void>.value(),
           )
           as _i6.Future<void>);
-
-  @override
-  void toggleShowQueue() => super.noSuchMethod(
-    Invocation.method(#toggleShowQueue, []),
-    returnValueForMissingStub: null,
-  );
 
   @override
   _i6.Future<void> resetPlayerState() =>

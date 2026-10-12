@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../app/app_manager.dart';
 
 import '../../common/data/audio_type.dart';
@@ -12,6 +14,7 @@ import '../../extensions/platform_x.dart';
 import '../../extensions/theme_data_x.dart';
 
 import '../../radio/view/next_station_button.dart';
+import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
 import '../manager/player_manager.dart';
 import 'play_button.dart';
@@ -76,14 +79,17 @@ class PlayerMainControls extends StatelessWidget with WatchItMixin {
           : null,
     );
 
-    final useYaruTheme = watchPropertyValue(
-      (SettingsManager m) => m.useYaruTheme,
+    final playButton = Consumer(
+      builder: (context, ref, _) {
+        final useYaruTheme =
+            ref.watch(settingsBoolManagerProvider(SPKeys.useYaruTheme)) ??
+            isLinux;
+        final radius = getBigAvatarButtonRadius(useYaruTheme);
+        return avatarPlayButton
+            ? SizedBox.square(dimension: 2 * radius, child: rawPlayButton)
+            : rawPlayButton;
+      },
     );
-
-    final radius = getBigAvatarButtonRadius(useYaruTheme);
-    final playButton = avatarPlayButton
-        ? SizedBox.square(dimension: 2 * radius, child: rawPlayButton)
-        : rawPlayButton;
 
     final children = <Widget>[
       ?leading,
@@ -176,11 +182,20 @@ class PlayerCompactControls extends StatelessWidget with WatchItMixin {
       active: active,
     );
 
-    final useYaruTheme = watchPropertyValue(
-      (SettingsManager m) => m.useYaruTheme,
+    final playButtonWidget = Consumer(
+      builder: (context, ref, _) {
+        final useYaruTheme =
+            ref.watch(settingsBoolManagerProvider(SPKeys.useYaruTheme)) ??
+            isLinux;
+        final radius = getSmallAvatarButtonRadius(useYaruTheme);
+        return CircleAvatar(
+          radius: radius,
+          backgroundColor:
+              avatarColor ?? (theme.isLight ? Colors.black : Colors.white),
+          child: SizedBox.square(dimension: 2 * radius, child: rawPlayButton),
+        );
+      },
     );
-
-    final radius = getSmallAvatarButtonRadius(useYaruTheme);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20),
@@ -190,12 +205,7 @@ class PlayerCompactControls extends StatelessWidget with WatchItMixin {
         mainAxisAlignment: mainAxisAlignment,
         children: [
           ShuffleButton(active: active),
-          CircleAvatar(
-            radius: radius,
-            backgroundColor:
-                avatarColor ?? (theme.isLight ? Colors.black : Colors.white),
-            child: SizedBox.square(dimension: 2 * radius, child: rawPlayButton),
-          ),
+          playButtonWidget,
           IconButton(
             onPressed: () => di<AppManager>().setFullWindowMode(true),
             icon: Icon(Iconz.fullScreen),

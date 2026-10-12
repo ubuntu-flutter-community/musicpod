@@ -20,14 +20,14 @@ import '../manager/wipe_manager.dart';
 import 'settings_list_tile.dart';
 import 'settings_section.dart';
 
-class PodcastSection extends StatefulWidget with WatchItStatefulWidgetMixin {
+class PodcastSection extends ConsumerStatefulWidget {
   const PodcastSection({super.key});
 
   @override
-  State<PodcastSection> createState() => _PodcastSectionState();
+  ConsumerState<PodcastSection> createState() => _PodcastSectionState();
 }
 
-class _PodcastSectionState extends State<PodcastSection> {
+class _PodcastSectionState extends ConsumerState<PodcastSection> {
   String? _initialKey;
   String? _initialSecret;
   late TextEditingController _keyController, _secretController;
@@ -35,10 +35,11 @@ class _PodcastSectionState extends State<PodcastSection> {
   @override
   void initState() {
     super.initState();
-    final model = di<SettingsManager>();
-    _initialKey = model.podcastIndexApiKey;
+    _initialKey =
+        ref.read(settingsStringManagerProvider(SPKeys.podcastIndexApiKey));
     _keyController = TextEditingController(text: _initialKey);
-    _initialSecret = model.podcastIndexApiSecret;
+    _initialSecret =
+        ref.read(settingsStringManagerProvider(SPKeys.podcastIndexApiSecret));
     _secretController = TextEditingController(text: _initialSecret);
   }
 
@@ -53,16 +54,13 @@ class _PodcastSectionState extends State<PodcastSection> {
   Widget build(BuildContext context) {
     final theme = context.theme;
     final l10n = context.l10n;
-    final model = di<SettingsManager>();
-    final usePodcastIndex = watchPropertyValue(
-      (SettingsManager m) => m.usePodcastIndex,
-    );
-    final podcastIndexApiKey = watchPropertyValue(
-      (SettingsManager m) => m.podcastIndexApiKey,
-    );
-    final podcastIndexApiSecret = watchPropertyValue(
-      (SettingsManager m) => m.podcastIndexApiSecret,
-    );
+
+    final usePodcastIndex =
+        ref.watch(settingsBoolManagerProvider(SPKeys.usePodcastIndex)) ?? false;
+    final podcastIndexApiKey =
+        ref.watch(settingsStringManagerProvider(SPKeys.podcastIndexApiKey));
+    final podcastIndexApiSecret =
+        ref.watch(settingsStringManagerProvider(SPKeys.podcastIndexApiSecret));
 
     return SettingsSection(
       heading: l10n.podcasts,
@@ -74,33 +72,43 @@ class _PodcastSectionState extends State<PodcastSection> {
               ? ListTilePosition.middle
               : ListTilePosition.last,
           title: Text(l10n.usePodcastIndex),
-          trailing: Consumer(
-            builder: (context, ref, _) => CommonSwitch(
-              value: usePodcastIndex,
-              onChanged: (v) {
-                if (!v) {
-                  ConfirmationDialog.show(
-                    modalLevel: ModalLevel.warning,
-                    context: context,
-                    title: Text(l10n.iTunes + '?'),
-                    onConfirm: () async {
-                      di<PodcastService>().initSearchProvider(
-                        const ITunesProvider(),
-                      );
-                      await di<PodcastService>().loadGenres(force: true);
+          trailing: CommonSwitch(
+            value: usePodcastIndex,
+            onChanged: (v) {
+              if (!v) {
+                ConfirmationDialog.show(
+                  modalLevel: ModalLevel.warning,
+                  context: context,
+                  title: Text(l10n.iTunes + '?'),
+                  onConfirm: () async {
+                    di<PodcastService>().initSearchProvider(
+                      const ITunesProvider(),
+                    );
+                    await di<PodcastService>().loadGenres(force: true);
 
-                      await model.setUsePodcastIndex(v);
+                    await ref
+                        .read(
+                          settingsBoolManagerProvider(
+                            SPKeys.usePodcastIndex,
+                          ).notifier,
+                        )
+                        .set(v);
 
-                      await ref
-                          .read(podcastLoadGenresManagerProvider.notifier)
-                          .loadGenres(force: true);
-                    },
-                  );
-                } else {
-                  model.setUsePodcastIndex(v);
-                }
-              },
-            ),
+                    await ref
+                        .read(podcastLoadGenresManagerProvider.notifier)
+                        .loadGenres(force: true);
+                  },
+                );
+              } else {
+                ref
+                    .read(
+                      settingsBoolManagerProvider(
+                        SPKeys.usePodcastIndex,
+                      ).notifier,
+                    )
+                    .set(v);
+              }
+            },
           ),
         ),
         if (usePodcastIndex) ...[
@@ -114,8 +122,13 @@ class _PodcastSectionState extends State<PodcastSection> {
                 label: Text(SPKeys.podcastIndexApiKey.camelToSentence),
                 suffixIcon: IconButton(
                   tooltip: l10n.save,
-                  onPressed: () =>
-                      model.setPodcastIndexApiKey(_keyController.text),
+                  onPressed: () => ref
+                      .read(
+                        settingsStringManagerProvider(
+                          SPKeys.podcastIndexApiKey,
+                        ).notifier,
+                      )
+                      .set(_keyController.text),
                   icon: Icon(
                     Iconz.check,
                     color: podcastIndexApiKey == _initialKey
@@ -144,9 +157,13 @@ class _PodcastSectionState extends State<PodcastSection> {
                     label: Text(SPKeys.podcastIndexApiSecret.camelToSentence),
                     suffixIcon: IconButton(
                       tooltip: l10n.save,
-                      onPressed: () => model.setPodcastIndexApiSecret(
-                        _secretController.text,
-                      ),
+                      onPressed: () => ref
+                          .read(
+                            settingsStringManagerProvider(
+                              SPKeys.podcastIndexApiSecret,
+                            ).notifier,
+                          )
+                          .set(_secretController.text),
                       icon: Icon(
                         Iconz.check,
                         color: podcastIndexApiSecret == _initialSecret
@@ -173,8 +190,8 @@ class _PodcastSectionState extends State<PodcastSection> {
                           onConfirm: () async {
                             di<PodcastService>().initSearchProvider(
                               PodcastIndexProvider(
-                                key: model.podcastIndexApiKey!,
-                                secret: model.podcastIndexApiSecret!,
+                                key: podcastIndexApiKey!,
+                                secret: podcastIndexApiSecret!,
                               ),
                             );
                             await di<PodcastService>().loadGenres(force: true);
@@ -191,11 +208,11 @@ class _PodcastSectionState extends State<PodcastSection> {
   }
 }
 
-class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
+class _ControlCollectionTile extends ConsumerWidget {
   const _ControlCollectionTile();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
 
     return SettingsListTile(
@@ -232,22 +249,20 @@ class _ControlCollectionTile extends StatelessWidget with WatchItMixin {
               cancelLabel: context.l10n.back,
             ),
           ),
-          Consumer(
-            builder: (context, ref, _) => IconButton(
-              icon: Icon(Iconz.remove),
-              tooltip: context.l10n.podcasts,
-              onPressed: () => ConfirmationDialog.show(
-                modalLevel: ModalLevel.error,
-                headerIconData: Iconz.remove,
-                context: context,
-                title: Text(context.l10n.removeAllPodcastsConfirm),
-                content: Text(context.l10n.removeAllPodcastsDescription),
-                confirmLabel: context.l10n.ok,
-                cancelLabel: context.l10n.cancel,
-                onConfirm: () => ref
-                    .read(wipeManagerProvider.notifier)
-                    .wipe({WipeType.podcasts}),
-              ),
+          IconButton(
+            icon: Icon(Iconz.remove),
+            tooltip: context.l10n.podcasts,
+            onPressed: () => ConfirmationDialog.show(
+              modalLevel: ModalLevel.error,
+              headerIconData: Iconz.remove,
+              context: context,
+              title: Text(context.l10n.removeAllPodcastsConfirm),
+              content: Text(context.l10n.removeAllPodcastsDescription),
+              confirmLabel: context.l10n.ok,
+              cancelLabel: context.l10n.cancel,
+              onConfirm: () => ref
+                  .read(wipeManagerProvider.notifier)
+                  .wipe({WipeType.podcasts}),
             ),
           ),
         ],

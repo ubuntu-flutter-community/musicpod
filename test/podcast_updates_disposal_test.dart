@@ -15,7 +15,6 @@ import 'package:musicpod/podcasts/manager/podcast_updates_manager.dart';
 import 'package:musicpod/podcasts/service/podcast_service.dart';
 import 'package:musicpod/podcasts/view/podcast_page_title.dart';
 import 'package:musicpod/podcasts/view/podcasts_collection_body.dart';
-import 'package:musicpod/settings/manager/settings_manager.dart';
 import 'package:musicpod/settings/service/settings_service.dart';
 
 import 'podcast_updates_disposal_test.mocks.dart';
@@ -23,7 +22,6 @@ import 'podcast_updates_disposal_test.mocks.dart';
 @GenerateMocks([
   PodcastService,
   PlayerManager,
-  SettingsManager,
   SettingsService,
 ])
 void main() {
@@ -45,14 +43,12 @@ void main() {
 
   late MockPodcastService mockPodcastService;
   late MockPlayerManager mockPlayerManager;
-  late MockSettingsManager mockSettingsManager;
   late MockSettingsService mockSettingsService;
 
   setUp(() async {
     await GetIt.I.reset();
     mockPodcastService = MockPodcastService();
     mockPlayerManager = MockPlayerManager();
-    mockSettingsManager = MockSettingsManager();
     mockSettingsService = MockSettingsService();
 
     final toggleCmd =
@@ -64,7 +60,6 @@ void main() {
     when(mockPlayerManager.isPlaying).thenReturn(false);
     when(mockPlayerManager.audio).thenReturn(null);
     when(mockPlayerManager.lastPositions).thenReturn(null);
-    when(mockSettingsManager.useYaruTheme).thenReturn(false);
     when(mockSettingsService.getInt(any)).thenReturn(0);
     when(mockSettingsService.getBool(any)).thenReturn(false);
     when(mockSettingsService.getString(any)).thenReturn(null);
@@ -72,7 +67,6 @@ void main() {
 
     GetIt.I.registerSingleton<PodcastService>(mockPodcastService);
     GetIt.I.registerSingleton<PlayerManager>(mockPlayerManager);
-    GetIt.I.registerSingleton<SettingsManager>(mockSettingsManager);
     GetIt.I.registerSingleton<SettingsService>(mockSettingsService);
   });
 

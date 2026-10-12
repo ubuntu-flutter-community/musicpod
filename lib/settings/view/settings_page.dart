@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../../common/view/header_bar.dart';
@@ -20,14 +20,14 @@ import 'reset_section.dart';
 import 'resource_section.dart';
 import 'theme_section.dart';
 
-class SettingsPage extends StatefulWidget {
+class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
 
   @override
-  State<SettingsPage> createState() => _SettingsPageState();
+  ConsumerState<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _SettingsPageState extends ConsumerState<SettingsPage> {
   final AutoScrollController _scrollController = AutoScrollController();
 
   @override
@@ -35,7 +35,7 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => _scrollController.scrollToIndex(
-        di<SettingsManager>().scrollIndex,
+        ref.read(settingsScrollIndexProvider),
         preferPosition: AutoScrollPosition.begin,
       ),
     );

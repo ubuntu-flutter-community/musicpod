@@ -1,6 +1,6 @@
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../app/view/musicpod.dart';
@@ -10,41 +10,41 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/platform_x.dart';
 import '../../extensions/theme_mode_x.dart';
+import '../data/shared_preferences_keys.dart';
 import '../manager/settings_manager.dart';
 import 'settings_list_tile.dart';
 import 'settings_section.dart';
 import 'theme_tile.dart';
 
-class ThemeSection extends StatelessWidget with WatchItMixin {
+class ThemeSection extends ConsumerWidget {
   const ThemeSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.theme;
-    final model = di<SettingsManager>();
     final l10n = context.l10n;
-    final themeIndex = watchPropertyValue((SettingsManager m) => m.themeIndex);
-    final useYaruTheme = watchPropertyValue(
-      (SettingsManager m) => m.useYaruTheme,
-    );
+    final themeIndex =
+        ref.watch(settingsIntManagerProvider(SPKeys.themeIndex)) ?? 0;
+    final useYaruTheme =
+        ref.watch(settingsBoolManagerProvider(SPKeys.useYaruTheme)) ?? isLinux;
 
-    final useCustomThemeColor = watchPropertyValue(
-      (SettingsManager m) => m.useCustomThemeColor,
-    );
-    final customThemeColor = watchPropertyValue(
-      (SettingsManager m) => m.customThemeColor,
-    );
+    final useCustomThemeColor =
+        ref.watch(settingsBoolManagerProvider(SPKeys.useCustomThemeColor)) ??
+        false;
+    final customThemeColor =
+        ref.watch(settingsIntManagerProvider(SPKeys.customThemeColor));
 
-    final usePlayerColor = watchPropertyValue(
-      (SettingsManager m) => m.usePlayerColor,
-    );
+    final usePlayerColor =
+        ref.watch(settingsBoolManagerProvider(SPKeys.usePlayerColor)) ?? false;
 
     final color = customThemeColor == null
         ? kMusicPodDefaultColor
         : Color(customThemeColor);
-    final iconSetIndex = watchPropertyValue(
-      (SettingsManager m) => m.iconSetIndex,
-    );
+    final iconSetIndex =
+        ref.watch(settingsIntManagerProvider(SPKeys.iconSetIndex)) ?? 0;
+    final showPositionDuration =
+        ref.watch(settingsBoolManagerProvider(SPKeys.showPositionDuration)) ??
+        false;
     return SettingsSection(
       heading: l10n.theme,
       children: [
@@ -64,7 +64,13 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
                       padding: const EdgeInsets.all(1),
                       borderRadius: BorderRadius.circular(15),
                       selected: themeIndex == i,
-                      onTap: () => model.setThemeIndex(i),
+                      onTap: () => ref
+                          .read(
+                            settingsIntManagerProvider(
+                              SPKeys.themeIndex,
+                            ).notifier,
+                          )
+                          .set(i),
                       selectionColor: context.theme.colorScheme.primary,
                       child: ThemeTile(ThemeMode.values[i]),
                     ),
@@ -83,7 +89,13 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
             title: Text(l10n.useYaruThemeTitle),
             subtitle: Text(l10n.useYaruThemeDescription),
             trailing: CommonSwitch(
-              onChanged: model.setUseYaruTheme,
+              onChanged: (v) => ref
+                  .read(
+                    settingsBoolManagerProvider(
+                      SPKeys.useYaruTheme,
+                    ).notifier,
+                  )
+                  .set(v),
               value: useYaruTheme,
             ),
           ),
@@ -103,8 +115,14 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
               initialValue: iconSetIndex,
               onSelected: (int? value) {
                 if (value != null) {
-                  di<SettingsManager>().setIconSetIndex(value);
-                  di<SettingsManager>().scrollIndex = 0;
+                  ref
+                      .read(
+                        settingsIntManagerProvider(
+                          SPKeys.iconSetIndex,
+                        ).notifier,
+                      )
+                      .set(value);
+                  ref.read(settingsScrollIndexProvider.notifier).set(0);
                   appRestartNotifier.value = UniqueKey();
                 }
               },
@@ -118,7 +136,13 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
           title: Text(l10n.usePlayerColorTitle),
           subtitle: Text(l10n.usePlayerColorDescription),
           trailing: CommonSwitch(
-            onChanged: model.setUsePlayerColor,
+            onChanged: (v) => ref
+                .read(
+                  settingsBoolManagerProvider(
+                    SPKeys.usePlayerColor,
+                  ).notifier,
+                )
+                .set(v),
             value: usePlayerColor,
           ),
         ),
@@ -127,7 +151,15 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
           title: Text(l10n.useCustomThemeColorTitle),
           subtitle: Text(l10n.useCustomThemeColorDescription),
           trailing: CommonSwitch(
-            onChanged: usePlayerColor ? null : model.setUseCustomThemeColor,
+            onChanged: usePlayerColor
+                ? null
+                : (v) => ref
+                    .read(
+                      settingsBoolManagerProvider(
+                        SPKeys.useCustomThemeColor,
+                      ).notifier,
+                    )
+                    .set(v),
             value: useCustomThemeColor,
           ),
         ),
@@ -142,8 +174,13 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
               onPressed: () =>
                   ColorPicker(
                     color: color,
-                    onColorChanged: (Color color) => di<SettingsManager>()
-                        .setCustomThemeColor(color.toARGB32()),
+                    onColorChanged: (Color color) => ref
+                        .read(
+                          settingsIntManagerProvider(
+                            SPKeys.customThemeColor,
+                          ).notifier,
+                        )
+                        .set(color.toARGB32()),
                     width: 40,
                     height: 40,
                     borderRadius: 4,
@@ -197,10 +234,14 @@ class ThemeSection extends StatelessWidget with WatchItMixin {
           title: Text(l10n.showPositionDurationTitle),
           subtitle: Text(l10n.showPositionDurationDescription),
           trailing: CommonSwitch(
-            onChanged: di<SettingsManager>().setShowPositionDuration,
-            value: watchPropertyValue(
-              (SettingsManager m) => m.showPositionDuration,
-            ),
+            onChanged: (v) => ref
+                .read(
+                  settingsBoolManagerProvider(
+                    SPKeys.showPositionDuration,
+                  ).notifier,
+                )
+                .set(v),
+            value: showPositionDuration,
           ),
         ),
       ],

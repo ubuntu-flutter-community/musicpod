@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
 import '../../common/view/theme.dart';
@@ -9,12 +10,13 @@ import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/platform_x.dart';
 import '../../l10n/app_localizations.dart';
+import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
 import '../app_config.dart';
 import '../routing_manager.dart';
 import 'mouse_and_keyboard_command_wrapper.dart';
 
-class DesktopMusicPodApp extends StatelessWidget with WatchItMixin {
+class DesktopMusicPodApp extends ConsumerWidget {
   const DesktopMusicPodApp({
     super.key,
     this.lightTheme,
@@ -31,11 +33,11 @@ class DesktopMusicPodApp extends StatelessWidget with WatchItMixin {
   final Color? accent;
 
   @override
-  Widget build(BuildContext context) {
-    final themeIndex = watchPropertyValue((SettingsManager m) => m.themeIndex);
-    final useYaruTheme = watchPropertyValue(
-      (SettingsManager m) => m.useYaruTheme,
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeIndex =
+        ref.watch(settingsIntManagerProvider(SPKeys.themeIndex)) ?? 0;
+    final useYaruTheme =
+        ref.watch(settingsBoolManagerProvider(SPKeys.useYaruTheme)) ?? isLinux;
     final color = accent ?? kMusicPodDefaultColor;
 
     final theTheme =
