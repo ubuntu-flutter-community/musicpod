@@ -151,7 +151,7 @@ class _PodcastPage extends ConsumerWidget {
                 ref
                     .read(routingManagerProvider.notifier)
                     .push(pageId: PageIDs.searchPage);
-                di<SearchManager>()
+                ref.read(searchManagerProvider.notifier)
                   ..setAudioType(AudioType.podcast)
                   ..setSearchType(SearchType.podcastTitle);
               },

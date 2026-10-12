@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
-import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
 import '../../search/manager/search_manager.dart';
 import '../../search/data/search_type.dart';
@@ -21,7 +20,7 @@ class OpenRadioSearchButton extends ConsumerWidget {
         ref
             .read(routingManagerProvider.notifier)
             .push(pageId: PageIDs.searchPage);
-        di<SearchManager>()
+        ref.read(searchManagerProvider.notifier)
           ..setAudioType(AudioType.radio)
           ..setSearchType(searchType)
           ..search(clear: true);

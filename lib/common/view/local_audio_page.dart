@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/page_ids.dart';
@@ -22,7 +21,7 @@ import 'search_button.dart';
 import 'sliver_local_audio_tile_list.dart';
 import 'theme.dart';
 
-class LocalAudioPage extends StatelessWidget with WatchItMixin {
+class LocalAudioPage extends ConsumerWidget {
   const LocalAudioPage({
     super.key,
     required this.pageId,
@@ -61,8 +60,8 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
   final bool startNewPlaylistOnTap;
 
   @override
-  Widget build(BuildContext context) {
-    callOnceAfterThisBuild((context) => clearInMemoryImageCache());
+  Widget build(BuildContext context, WidgetRef ref) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => clearInMemoryImageCache());
     return Scaffold(
       appBar: HeaderBar(
         title: isMobile ? null : Text(pageTitle ?? ''),
@@ -71,10 +70,10 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
             padding: appBarSingleActionSpacing,
             child: SearchButton(
               onPressed: () {
-                ProviderScope.containerOf(context, listen: false)
+                ref
                     .read(routingManagerProvider.notifier)
                     .push(pageId: PageIDs.searchPage);
-                final searchManager = di<SearchManager>();
+                final searchManager = ref.read(searchManagerProvider.notifier);
                 if (searchManager.audioType != AudioType.local) {
                   searchManager
                     ..setAudioType(AudioType.local)

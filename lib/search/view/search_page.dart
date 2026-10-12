@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
@@ -16,7 +15,6 @@ import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
 import '../../extensions/build_context_x.dart';
-import '../../extensions/command_x.dart';
 import '../../extensions/object_x.dart';
 import '../../extensions/platform_x.dart';
 import '../manager/search_manager.dart';
@@ -27,17 +25,16 @@ import 'sliver_podcast_search_results.dart';
 import 'sliver_radio_search_results.dart';
 import 'sliver_search_type_filter_bar.dart';
 
-class SearchPage extends StatelessWidget with WatchItMixin {
+class SearchPage extends ConsumerWidget {
   const SearchPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = context.colorScheme;
-    final audioType = watchValue((SearchManager m) => m.audioType);
-    final loading = watchValue((SearchManager m) => m.searchCommand.isRunning);
-    final errors = watchValue((SearchManager m) => m.searchCommand.errors);
-    final error = errors?.error;
-    final stackTrace = errors?.stackTrace;
+    final audioType = ref.watch(searchManagerProvider.select((s) => s.audioType));
+    final loading = ref.watch(searchManagerProvider.select((s) => s.isLoading));
+    final error = ref.watch(searchManagerProvider.select((s) => s.error));
+    final stackTrace = ref.watch(searchManagerProvider.select((s) => s.stackTrace));
 
     return Scaffold(
       appBar: HeaderBar(
@@ -52,9 +49,7 @@ class SearchPage extends StatelessWidget with WatchItMixin {
             ),
             child: SearchButton(
               active: true,
-              onPressed: () => ProviderScope.containerOf(context, listen: false)
-                  .read(routingManagerProvider.notifier)
-                  .pop(),
+              onPressed: () => ref.read(routingManagerProvider.notifier).pop(),
             ),
           ),
         ],
@@ -67,9 +62,9 @@ class SearchPage extends StatelessWidget with WatchItMixin {
               retryCapsule: RetryCapsule(
                 autoRetry: false,
                 retryViewId: PageIDs.searchPage,
-                onRetry: () => di<SearchManager>().searchCommand.runRestricted(
-                  param: (clear: true, manualFilter: false),
-                  immediatelyClearErrors: true,
+                onRetry: () => ref.read(searchManagerProvider.notifier).search(
+                  clear: true,
+                  manualFilter: false,
                 ),
               ),
             )
@@ -96,7 +91,7 @@ class SearchPage extends StatelessWidget with WatchItMixin {
                       timeStamp,
                     ) async {
                       if (context.mounted) {
-                        return di<SearchManager>().refresh();
+                        return ref.read(searchManagerProvider.notifier).refresh();
                       }
                     });
                   },
@@ -109,7 +104,7 @@ class SearchPage extends StatelessWidget with WatchItMixin {
                           notification.direction == ScrollDirection.reverse &&
                           notification.metrics.pixels >=
                               notification.metrics.maxScrollExtent * 0.6) {
-                        di<SearchManager>()
+                        ref.read(searchManagerProvider.notifier)
                           ..incrementLimit(8)
                           ..search();
                       }
@@ -118,7 +113,7 @@ class SearchPage extends StatelessWidget with WatchItMixin {
                       if (metrics.atEdge) {
                         final isAtBottom = metrics.pixels != 0;
                         if (isAtBottom) {
-                          di<SearchManager>()
+                          ref.read(searchManagerProvider.notifier)
                             ..incrementLimit(16)
                             ..search();
                         }

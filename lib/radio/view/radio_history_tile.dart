@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/copy_clipboard_content.dart';
-import '../../dependencies.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/modals.dart';
 import '../../common/view/mpv_metadata_dialog.dart';
@@ -143,18 +142,20 @@ class RadioHistoryTile extends ConsumerWidget {
           text: icyName ?? context.l10n.station,
           onTap: !allowNavigation || icyName == null
               ? null
-              : () => di<SearchManager>()
-                  ..setSearchType(SearchType.radioName)
-                  ..setSearchQuery(icyName)
-                  ..setAudioType(AudioType.radio)
-                  ..radioNameSearch(icyName).then((v) {
+              : () {
+                  final searchManager = ref.read(searchManagerProvider.notifier)
+                    ..setSearchType(SearchType.radioName)
+                    ..setSearchQuery(icyName)
+                    ..setAudioType(AudioType.radio);
+                  searchManager.radioNameSearch(icyName).then((v) {
                     if (v?.firstOrNull?.uuid != null) {
                       ref.read(routingManagerProvider.notifier).push(
                         builder: (_) => StationPage(uuid: v.first.uuid!),
                         pageId: v!.first.uuid!,
                       );
                     }
-                  }),
+                  });
+                },
         ),
       ),
     };

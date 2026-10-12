@@ -43,7 +43,6 @@ import 'podcasts/service/podcast_service.dart' as _i529;
 import 'radio/persistence/radio_dao.dart' as _i414;
 import 'radio/service/online_art_service.dart' as _i852;
 import 'radio/service/radio_service.dart' as _i506;
-import 'search/manager/search_manager.dart' as _i354;
 import 'settings/service/settings_service.dart' as _i862;
 import 'settings/view/licenses_dialog.dart' as _i1009;
 import 'third_party/audio_service_module.dart' as _i739;
@@ -196,14 +195,6 @@ extension GetItInjectableX on _i174.GetIt {
         settingsService: gh<_i862.SettingsService>(),
         dio: gh<_i361.Dio>(),
         secureBookmarkService: gh<_i395.SecureBookmarkService>(),
-      ),
-    );
-    gh.factory<_i354.SearchManager>(
-      () => _i354.SearchManager.create(
-        radioService: gh<_i506.RadioService>(),
-        podcastService: gh<_i529.PodcastService>(),
-        localAudioService: gh<_i985.LocalAudioService>(),
-        settingsService: gh<_i862.SettingsService>(),
       ),
     );
     gh.lazySingleton<_i95.PlayerManager>(

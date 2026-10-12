@@ -49,7 +49,7 @@ class ArtistPage extends ConsumerWidget {
               ref
                   .read(routingManagerProvider.notifier)
                   .push(pageId: PageIDs.searchPage);
-              final searchManager = di<SearchManager>();
+              final searchManager = ref.read(searchManagerProvider.notifier);
               searchManager
                 ..setAudioType(AudioType.local)
                 ..setSearchType(SearchType.localArtist)

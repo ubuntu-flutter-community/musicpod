@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:radio_browser_api/radio_browser_api.dart';
 import 'package:yaru/yaru.dart';
@@ -51,7 +50,7 @@ class FavoriteRadioTagsGrid extends ConsumerWidget {
             ref
                 .read(routingManagerProvider.notifier)
                 .push(pageId: PageIDs.searchPage);
-            di<SearchManager>()
+            ref.read(searchManagerProvider.notifier)
               ..setSearchType(SearchType.radioTag)
               ..setTag(Tag(name: tag.toLowerCase(), stationCount: 1))
               ..setAudioType(AudioType.radio)

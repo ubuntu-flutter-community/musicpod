@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/page_ids.dart';
@@ -32,12 +31,12 @@ import 'failed_import_snackbar.dart';
 import 'local_audio_body.dart';
 import 'local_audio_control_panel.dart';
 
-class LocalAudioPage extends StatelessWidget with WatchItMixin {
+class LocalAudioPage extends StatelessWidget {
   const LocalAudioPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    callOnceAfterThisBuild((context) => clearInMemoryImageCache());
+    WidgetsBinding.instance.addPostFrameCallback((_) => clearInMemoryImageCache());
 
     final l10n = context.l10n;
 
@@ -99,7 +98,7 @@ class LocalAudioPage extends StatelessWidget with WatchItMixin {
                     ref
                         .read(routingManagerProvider.notifier)
                         .push(pageId: PageIDs.searchPage);
-                    final searchManager = di<SearchManager>();
+                    final searchManager = ref.read(searchManagerProvider.notifier);
                     searchManager
                       ..setAudioType(AudioType.local)
                       ..setSearchType(SearchType.localTitle)

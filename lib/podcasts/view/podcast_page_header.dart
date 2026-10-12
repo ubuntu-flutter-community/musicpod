@@ -7,7 +7,6 @@ import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/audio_page_header_html_description.dart';
-import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/string_x.dart';
 import '../../l10n/app_localizations.dart';
@@ -62,7 +61,7 @@ class PodcastPageHeader extends ConsumerWidget {
     required WidgetRef ref,
   }) {
     ref.read(routingManagerProvider.notifier).push(pageId: PageIDs.searchPage);
-    di<SearchManager>()
+    ref.read(searchManagerProvider.notifier)
       ..setAudioType(AudioType.podcast)
       ..setSearchQuery(text)
       ..search();
@@ -83,7 +82,7 @@ class PodcastPageHeader extends ConsumerWidget {
     );
 
     if (genreOrNull != null) {
-      di<SearchManager>()
+      ref.read(searchManagerProvider.notifier)
         ..setAudioType(AudioType.podcast)
         ..setPodcastGenre(genreOrNull)
         ..search();

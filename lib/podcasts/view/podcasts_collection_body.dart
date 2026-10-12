@@ -14,7 +14,6 @@ import '../../common/view/no_search_result_page.dart';
 import '../../common/view/progress.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
-import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
 import '../../search/manager/search_manager.dart';
 import '../../settings/view/settings_action.dart';
@@ -137,7 +136,7 @@ class _PodcastsCollectionBodyState
                       ref
                           .read(routingManagerProvider.notifier)
                           .push(pageId: PageIDs.searchPage);
-                      di<SearchManager>()
+                      ref.read(searchManagerProvider.notifier)
                         ..setAudioType(AudioType.podcast)
                         ..setSearchQuery(null)
                         ..search();

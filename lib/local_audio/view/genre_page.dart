@@ -9,7 +9,6 @@ import '../../common/view/header_bar.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../common/view/ui_constants.dart';
-import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
 import '../../search/data/search_type.dart';
 import '../../search/manager/search_manager.dart';
@@ -34,7 +33,7 @@ class GenrePage extends ConsumerWidget {
               ref
                   .read(routingManagerProvider.notifier)
                   .push(pageId: PageIDs.searchPage);
-              di<SearchManager>()
+              ref.read(searchManagerProvider.notifier)
                 ..setTag(Tag(name: genre.toLowerCase(), stationCount: 1))
                 ..setAudioType(AudioType.radio)
                 ..setSearchType(SearchType.radioTag)

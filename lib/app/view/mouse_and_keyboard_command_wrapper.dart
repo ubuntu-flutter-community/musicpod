@@ -65,7 +65,7 @@ class MouseAndKeyboardCommandWrapper extends ConsumerWidget {
               if (ref.read(fullWindowModeManagerProvider)) {
                 fullWindowNotifier.setFullWindowMode(false);
               }
-              di<SearchManager>().setAudioType(switch (currentPageId) {
+              ref.read(searchManagerProvider.notifier).setAudioType(switch (currentPageId) {
                 PageIDs.localAudio => AudioType.local,
                 PageIDs.radio => AudioType.radio,
                 _ => AudioType.podcast,

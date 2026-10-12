@@ -30,46 +30,56 @@ class _Content extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final radioSearchResult = watchValue(
-      (SearchManager m) => m.radioSearchResult,
-    )?.where((e) => e.uuid != null);
-
-    final searchQuery = watchValue((SearchManager m) => m.searchQuery);
-    final searchType = watchValue((SearchManager m) => m.searchType);
-    final loading = watchValue((SearchManager m) => m.searchCommand.isRunning);
-
-    if (radioSearchResult == null ||
-        (searchQuery?.isEmpty == true && radioSearchResult.isEmpty == true)) {
-      return SliverNoSearchResultPage(
-        message: Text(
-          '${context.l10n.search} ${searchType.localize(context.l10n)}',
-        ),
-      );
-    }
-    if (radioSearchResult.isEmpty && !loading) {
-      return SliverNoSearchResultPage(
-        message: Text(context.l10n.noStationFound),
-      );
-    }
-
     final playing = watchPropertyValue((PlayerManager m) => m.isPlaying);
     final currentAudio = watchPropertyValue((PlayerManager m) => m.audio);
 
-    return SliverList.builder(
-      itemCount: radioSearchResult.length,
-      itemBuilder: (context, index) {
-        final station = radioSearchResult.elementAt(index);
-        final selected = currentAudio?.uuid == station.uuid;
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 5),
-          child: RadioSearchResultTile(
-            key: ValueKey(station.uuid),
-            station: station,
-            selected: selected,
-            width: width,
-            currentAudio: currentAudio,
-            playing: playing,
-          ),
+    return Consumer(
+      builder: (context, ref, _) {
+        final radioSearchResult = ref.watch(
+          searchManagerProvider.select((s) => s.radioSearchResult),
+        )?.where((e) => e.uuid != null);
+
+        final searchQuery = ref.watch(
+          searchManagerProvider.select((s) => s.searchQuery),
+        );
+        final searchType = ref.watch(
+          searchManagerProvider.select((s) => s.searchType),
+        );
+        final loading = ref.watch(
+          searchManagerProvider.select((s) => s.isLoading),
+        );
+
+        if (radioSearchResult == null ||
+            (searchQuery?.isEmpty == true && radioSearchResult.isEmpty == true)) {
+          return SliverNoSearchResultPage(
+            message: Text(
+              '${context.l10n.search} ${searchType.localize(context.l10n)}',
+            ),
+          );
+        }
+        if (radioSearchResult.isEmpty && !loading) {
+          return SliverNoSearchResultPage(
+            message: Text(context.l10n.noStationFound),
+          );
+        }
+
+        return SliverList.builder(
+          itemCount: radioSearchResult.length,
+          itemBuilder: (context, index) {
+            final station = radioSearchResult.elementAt(index);
+            final selected = currentAudio?.uuid == station.uuid;
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 5),
+              child: RadioSearchResultTile(
+                key: ValueKey(station.uuid),
+                station: station,
+                selected: selected,
+                width: width,
+                currentAudio: currentAudio,
+                playing: playing,
+              ),
+            );
+          },
         );
       },
     );

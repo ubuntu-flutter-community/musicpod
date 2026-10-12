@@ -7,7 +7,6 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
-import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
 import '../../search/manager/search_manager.dart';
 import '../../search/data/search_type.dart';
@@ -29,7 +28,7 @@ class RadioPage extends ConsumerWidget {
                 ref
                     .read(routingManagerProvider.notifier)
                     .push(pageId: PageIDs.searchPage);
-                final searchManager = di<SearchManager>();
+                final searchManager = ref.read(searchManagerProvider.notifier);
                 if (searchManager.audioType != AudioType.radio) {
                   searchManager
                     ..setAudioType(AudioType.radio)
