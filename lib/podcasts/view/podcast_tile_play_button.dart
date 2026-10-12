@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../common/view/theme.dart';
 import '../../extensions/build_context_x.dart';
+import '../../player/manager/audio_progress_manager.dart';
 import '../../player/manager/player_manager.dart';
 import '../service/podcast_service.dart';
 import 'podcast_tile_progress.dart';
@@ -76,14 +78,23 @@ class PodcastTilePlayButton extends StatelessWidget with WatchItMixin {
           child: IgnorePointer(
             child: Padding(
               padding: const EdgeInsets.all(1.5),
-              child: PodcastTileProgress(
-                selected: selected,
-                lastPosition: watchValue(
-                  (PlayerManager m) => m.toggleAudiosProgressCommand,
-                )?[audio.url],
-                duration: audio.durationMs == null
-                    ? null
-                    : Duration(milliseconds: audio.durationMs!.toInt()),
+              child: Consumer(
+                builder: (context, ref, _) {
+                  final lastPosition = ref.watch(
+                    audioProgressManagerProvider.select(
+                      (s) => audio.url != null
+                          ? s.lastPositions[audio.url]
+                          : null,
+                    ),
+                  );
+                  return PodcastTileProgress(
+                    selected: selected,
+                    lastPosition: lastPosition,
+                    duration: audio.durationMs == null
+                        ? null
+                        : Duration(milliseconds: audio.durationMs!.toInt()),
+                  );
+                },
               ),
             ),
           ),

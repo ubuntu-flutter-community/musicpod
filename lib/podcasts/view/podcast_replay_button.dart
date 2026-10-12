@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/audio_progress_manager.dart';
 import '../manager/episodes_manager.dart';
 import 'podcast_icon_button_progress.dart';
 
@@ -17,42 +16,40 @@ class PodcastReplayButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final podcast = ref.watch(episodesManagerProvider(feedUrl)).value;
+    final isRunning = ref.watch(
+      audioProgressManagerProvider.select((s) => s.isToggling),
+    );
 
-    return ValueListenableBuilder<bool>(
-      valueListenable:
-          di<PlayerManager>().toggleAudiosProgressCommand.isRunning,
-      builder: (context, isRunning, _) {
-        return Stack(
-          alignment: Alignment.center,
-          children: [
-            IconButton(
-              tooltip: context.l10n.replayAllEpisodes,
-              onPressed: isRunning
-                  ? null
-                  : () => di<PlayerManager>().toggleAudiosProgressCommand.run((
-                      audios: podcast?.episodes ?? [],
-                      markComplete: false,
-                    )),
-              icon: Icon(Iconz.replay),
-            ),
-            if (isRunning) const PodcastIconButtonProgress(),
-          ],
-        );
-      },
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        IconButton(
+          tooltip: context.l10n.replayAllEpisodes,
+          onPressed: isRunning
+              ? null
+              : () => ref
+                  .read(audioProgressManagerProvider.notifier)
+                  .toggleAudiosProgress(
+                    audios: podcast?.episodes ?? [],
+                    markComplete: false,
+                  ),
+          icon: Icon(Iconz.replay),
+        ),
+        if (isRunning) const PodcastIconButtonProgress(),
+      ],
     );
   }
 }
 
-class PodcastEpisodeResetProgressButton extends StatelessWidget
-    with WatchItMixin {
+class PodcastEpisodeResetProgressButton extends ConsumerWidget {
   const PodcastEpisodeResetProgressButton({super.key, required this.audio});
 
   final Audio audio;
 
   @override
-  Widget build(BuildContext context) {
-    final isRunning = watchValue(
-      (PlayerManager m) => m.toggleAudiosProgressCommand.isRunning,
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isRunning = ref.watch(
+      audioProgressManagerProvider.select((s) => s.isToggling),
     );
 
     return Stack(
@@ -62,10 +59,12 @@ class PodcastEpisodeResetProgressButton extends StatelessWidget
           tooltip: context.l10n.replayEpisode,
           onPressed: audio.url == null || isRunning
               ? null
-              : () => di<PlayerManager>().toggleAudiosProgressCommand.run((
-                  audios: [audio],
-                  markComplete: false,
-                )),
+              : () => ref
+                  .read(audioProgressManagerProvider.notifier)
+                  .toggleAudiosProgress(
+                    audios: [audio],
+                    markComplete: false,
+                  ),
           icon: Icon(Iconz.replay),
         ),
         if (isRunning) const PodcastIconButtonProgress(),

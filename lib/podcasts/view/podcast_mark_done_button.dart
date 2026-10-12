@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../common/data/audio.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
+import '../../player/manager/audio_progress_manager.dart';
 import '../../player/manager/player_manager.dart';
 import '../manager/episodes_manager.dart';
 import 'podcast_icon_button_progress.dart';
@@ -17,28 +18,27 @@ class PodcastMarkDoneButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final podcast = ref.watch(episodesManagerProvider(feedUrl)).value?.episodes;
+    final isToggling = ref.watch(
+      audioProgressManagerProvider.select((s) => s.isToggling),
+    );
 
-    return ValueListenableBuilder<bool>(
-      valueListenable:
-          di<PlayerManager>().toggleAudiosProgressCommand.isRunning,
-      builder: (context, isToggling, _) {
-        return Stack(
-          alignment: Alignment.center,
-          children: [
-            IconButton(
-              tooltip: context.l10n.markAllEpisodesAsDone,
-              onPressed: isToggling
-                  ? null
-                  : () => di<PlayerManager>().toggleAudiosProgressCommand.run((
-                      audios: podcast ?? [],
-                      markComplete: true,
-                    )),
-              icon: Icon(Iconz.markAllRead),
-            ),
-            if (isToggling) const PodcastIconButtonProgress(),
-          ],
-        );
-      },
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        IconButton(
+          tooltip: context.l10n.markAllEpisodesAsDone,
+          onPressed: isToggling
+              ? null
+              : () => ref
+                  .read(audioProgressManagerProvider.notifier)
+                  .toggleAudiosProgress(
+                    audios: podcast ?? [],
+                    markComplete: true,
+                  ),
+          icon: Icon(Iconz.markAllRead),
+        ),
+        if (isToggling) const PodcastIconButtonProgress(),
+      ],
     );
   }
 }
@@ -50,43 +50,50 @@ class EpisodeMarkDownButton extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final progress = watchValue(
-      (PlayerManager m) => m.toggleAudiosProgressCommand,
-    );
-    final isCompleted =
-        progress?[episode.url]?.inMilliseconds == episode.durationMs?.toInt() &&
-        episode.durationMs != null;
-
     final isPlaying = watchPropertyValue((PlayerManager m) {
       final audio = m.audio;
       return audio == episode;
     });
 
-    final isRunning = watchValue(
-      (PlayerManager m) => m.toggleAudiosProgressCommand.isRunning,
-    );
-
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        IconButton(
-          tooltip: episode.durationMs == null
-              ? context.l10n.podcastDoesNotSendEpisodeDuration
-              : context.l10n.markEpisodeAsDone,
-          isSelected: isCompleted,
-          onPressed: isRunning || episode.durationMs == null
-              ? null
-              : () => di<PlayerManager>().toggleAudiosProgressCommand.run((
-                  audios: [episode],
-                  markComplete: true,
-                )),
-          icon: Icon(
-            Iconz.markAllRead,
-            color: isCompleted && !isPlaying ? Colors.green : null,
+    return Consumer(
+      builder: (context, ref, _) {
+        final lastPosition = ref.watch(
+          audioProgressManagerProvider.select(
+            (s) => episode.url != null ? s.lastPositions[episode.url] : null,
           ),
-        ),
-        if (isRunning) const PodcastIconButtonProgress(),
-      ],
+        );
+        final isRunning = ref.watch(
+          audioProgressManagerProvider.select((s) => s.isToggling),
+        );
+        final isCompleted =
+            lastPosition?.inMilliseconds == episode.durationMs?.toInt() &&
+            episode.durationMs != null;
+
+        return Stack(
+          alignment: Alignment.center,
+          children: [
+            IconButton(
+              tooltip: episode.durationMs == null
+                  ? context.l10n.podcastDoesNotSendEpisodeDuration
+                  : context.l10n.markEpisodeAsDone,
+              isSelected: isCompleted,
+              onPressed: isRunning || episode.durationMs == null
+                  ? null
+                  : () => ref
+                      .read(audioProgressManagerProvider.notifier)
+                      .toggleAudiosProgress(
+                        audios: [episode],
+                        markComplete: true,
+                      ),
+              icon: Icon(
+                Iconz.markAllRead,
+                color: isCompleted && !isPlaying ? Colors.green : null,
+              ),
+            ),
+            if (isRunning) const PodcastIconButtonProgress(),
+          ],
+        );
+      },
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
@@ -31,25 +30,6 @@ class PlayerManager extends SafeChangeNotifier {
 
   Queue get queue => _playerService.queue;
   void clearQueue() => _playerService.clearQueue();
-
-  bool get queueAutoScroll => _playerService.queueAutoScroll;
-  void toggleQueueAutoScroll() => _playerService.toggleQueueAutoScroll();
-
-  bool _jumpingQueue = false;
-  bool get jumpingQueue => _jumpingQueue;
-  void setJumpingQueue(bool value) {
-    if (value == _jumpingQueue) return;
-    _jumpingQueue = value;
-    notifyListeners();
-  }
-
-  bool _showSpinnerWhileJumping = false;
-  bool get showSpinnerWhileJumping => _showSpinnerWhileJumping;
-  void setShowSpinnerWhileJumping(bool value) {
-    if (value == _showSpinnerWhileJumping) return;
-    _showSpinnerWhileJumping = value;
-    notifyListeners();
-  }
 
   Stream<Audio?> get newAudioStream => _playerService.newAudioStream;
 
@@ -122,24 +102,6 @@ class PlayerManager extends SafeChangeNotifier {
   Future<void> safeCurrentAudioPosition() =>
       _playerService.safeCurrentAudioPosition();
   Future<void> persistPlayerState() => _playerService.persistPlayerState();
-
-  late final Command<
-    ({List<Audio> audios, bool markComplete})?,
-    Map<String, Duration>?
-  >
-  toggleAudiosProgressCommand = Command.createAsync((params) async {
-    if (params != null) {
-      await _playerService.toggleAudiosProgress(
-        params.audios,
-        markComplete: params.markComplete,
-      );
-    }
-    return _playerService.lastPositions;
-  }, initialValue: _playerService.lastPositions);
-
-  Timer? get timer => _playerService.timer;
-  void setTimer(Duration? duration, {required String message}) =>
-      _playerService.setPauseTimer(duration, message: message);
 
   @disposeMethod
   @override

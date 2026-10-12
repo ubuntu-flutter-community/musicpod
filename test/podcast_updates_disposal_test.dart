@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:musicpod/common/data/audio.dart';
@@ -51,12 +51,6 @@ void main() {
     mockPlayerManager = MockPlayerManager();
     mockSettingsService = MockSettingsService();
 
-    final toggleCmd =
-        Command.createAsync<
-          ({List<Audio> audios, bool markComplete})?,
-          Map<String, Duration>?
-        >((_) async => null, initialValue: null);
-    when(mockPlayerManager.toggleAudiosProgressCommand).thenReturn(toggleCmd);
     when(mockPlayerManager.isPlaying).thenReturn(false);
     when(mockPlayerManager.audio).thenReturn(null);
     when(mockPlayerManager.lastPositions).thenReturn(null);

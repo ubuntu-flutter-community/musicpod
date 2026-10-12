@@ -8,10 +8,9 @@ import '../../common/view/adaptive_multi_layout_body.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/search_button.dart';
 import '../../common/view/theme.dart';
-import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
 import '../../extensions/platform_x.dart';
-import '../../player/manager/player_manager.dart';
+import '../../player/manager/audio_progress_manager.dart';
 import '../../search/data/search_type.dart';
 import '../../search/manager/search_manager.dart';
 import '../data/podcast_update_capsule.dart';
@@ -40,25 +39,9 @@ class PodcastPage extends ConsumerStatefulWidget {
 }
 
 class _PodcastPageState extends ConsumerState<PodcastPage> {
-  void _onProgressResults() {
-    final results =
-        di<PlayerManager>().toggleAudiosProgressCommand.results.value;
-    if (!mounted) return;
-    if (results.paramData?.audios.any((a) => a.durationMs == null) == true) {
-      context.toast(
-        Text(context.l10n.podcastDoesNotSendEpisodeDuration),
-        duration: const Duration(seconds: 5),
-      );
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    di<PlayerManager>()
-        .toggleAudiosProgressCommand
-        .results
-        .addListener(_onProgressResults);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
@@ -78,16 +61,19 @@ class _PodcastPageState extends ConsumerState<PodcastPage> {
   }
 
   @override
-  void dispose() {
-    di<PlayerManager>()
-        .toggleAudiosProgressCommand
-        .results
-        .removeListener(_onProgressResults);
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    ref.listen<bool>(
+      audioProgressManagerProvider.select((s) => s.hasMissingDuration),
+      (previous, hasMissing) {
+        if (hasMissing) {
+          context.toast(
+            Text(context.l10n.podcastDoesNotSendEpisodeDuration),
+            duration: const Duration(seconds: 5),
+          );
+        }
+      },
+    );
+
     final episodesAsync = ref.watch(episodesManagerProvider(widget.feedUrl));
 
     final page = episodesAsync.when(
