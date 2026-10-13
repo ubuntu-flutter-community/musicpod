@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:injectable/injectable.dart';
 import 'package:m3u_parser_nullsafe/m3u_parser_nullsafe.dart';
 import 'package:opml/opml.dart';
@@ -11,13 +10,10 @@ import 'package:pls/pls.dart';
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
 import '../../common/logging.dart';
-import '../../dependencies.dart';
 import '../../extensions/media_file_x.dart';
 import '../../external_path/service/external_path_service.dart';
 import '../../local_audio/service/local_audio_service.dart';
 import '../../podcasts/service/podcast_service.dart';
-import '../../radio/manager/radio_manager.dart';
-import '../../radio/manager/radio_star_station_manager.dart';
 import '../../radio/service/radio_service.dart';
 
 @lazySingleton
@@ -238,17 +234,13 @@ class CustomContentService {
       }
       if (starredStations.isNotEmpty) {
         for (final uuid in starredStations) {
-          final station = di.isRegistered<ProviderContainer>()
-              ? await di<ProviderContainer>()
-                    .read(radioManagerProvider.notifier)
-                    .getAudioByUUID(uuid)
-              : await _radioService.getAudioByUUID(uuid, fromDBOnly: false);
+          final station = await _radioService.getAudioByUUID(
+            uuid,
+            fromDBOnly: false,
+          );
           if (station != null) {
             await _radioService.toggleStarredStation(station);
           }
-        }
-        if (di.isRegistered<ProviderContainer>()) {
-          di<ProviderContainer>().invalidate(radioStarStationManagerProvider);
         }
       }
     }

@@ -9,6 +9,7 @@ import 'package:mockito/mockito.dart';
 import 'package:musicpod/app/routing_manager.dart';
 import 'package:musicpod/common/view/progress.dart';
 import 'package:musicpod/l10n/app_localizations.dart';
+import 'package:musicpod/local_audio/data/local_audio_state.dart';
 import 'package:musicpod/local_audio/manager/local_audio_manager.dart';
 import 'package:musicpod/local_audio/service/local_audio_service.dart';
 import 'package:musicpod/local_audio/view/local_audio_page.dart';

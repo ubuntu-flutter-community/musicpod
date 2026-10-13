@@ -50,7 +50,7 @@ final class OnlineArtManagerProvider
   }
 }
 
-String _$onlineArtManagerHash() => r'7b11c57677aba42757aee11a6fa0473f566b2928';
+String _$onlineArtManagerHash() => r'f73a9e651115d9fd6bcf326d21e81e90110d006d';
 
 final class OnlineArtManagerFamily extends $Family
     with

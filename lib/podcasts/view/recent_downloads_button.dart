@@ -4,6 +4,7 @@ import 'package:yaru/yaru.dart';
 
 import '../../extensions/build_context_x.dart';
 import '../../player/manager/current_audio_manager.dart';
+import '../data/download_manager_state.dart';
 import '../manager/download_manager.dart';
 import 'download_button.dart';
 

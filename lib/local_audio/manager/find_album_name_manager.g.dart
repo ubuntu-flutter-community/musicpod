@@ -51,7 +51,7 @@ final class FindAlbumNameManagerProvider
 }
 
 String _$findAlbumNameManagerHash() =>
-    r'7e5627dfb5ae52d4296d7ba1ead8a47b8b8f7bf6';
+    r'00e586b4f2e6cf41105697f49eea1c4de8676d2c';
 
 final class FindAlbumNameManagerFamily extends $Family
     with

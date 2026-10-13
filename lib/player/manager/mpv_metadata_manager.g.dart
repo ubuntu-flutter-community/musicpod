@@ -42,7 +42,7 @@ final class MpvMetadataManagerProvider
 }
 
 String _$mpvMetadataManagerHash() =>
-    r'e9ccfdc653b15efafc7eeacb5b067f5f00f34041';
+    r'78a9f1402938675220b663cc4f2a3b8ca57be314';
 
 abstract class _$MpvMetadataManager extends $Notifier<MpvMetaData?> {
   MpvMetaData? build();

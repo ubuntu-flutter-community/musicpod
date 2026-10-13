@@ -20,7 +20,7 @@ final class LikedAudiosManagerProvider
         argument: null,
         retry: null,
         name: r'likedAudiosManagerProvider',
-        isAutoDispose: false,
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -34,7 +34,7 @@ final class LikedAudiosManagerProvider
 }
 
 String _$likedAudiosManagerHash() =>
-    r'c62c72dfb16f5c346654910ddda0c79783fbb434';
+    r'827ae508db0d29712abc1c4512fc088a1a1ae41b';
 
 abstract class _$LikedAudiosManager extends $AsyncNotifier<List<Audio>?> {
   FutureOr<List<Audio>?> build();

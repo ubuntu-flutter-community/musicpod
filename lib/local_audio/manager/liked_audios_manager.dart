@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../app/page_ids.dart';
 import '../../common/data/audio.dart';
 import '../../dependencies.dart';
+import '../../extensions/ref_x.dart';
 import '../data/playlist_action.dart';
 import '../service/local_audio_service.dart';
 import 'liked_audio_paths_manager.dart';
@@ -10,12 +11,13 @@ import 'local_audio_manager.dart';
 
 part 'liked_audios_manager.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class LikedAudiosManager extends _$LikedAudiosManager {
   late final LocalAudioService _service = di<LocalAudioService>();
 
   @override
   Future<List<Audio>?> build() async {
+    ref.cacheFor(const Duration(minutes: 5));
     await ref.watch(localAudioManagerProvider.future);
     return _service.findLikedAudios();
   }

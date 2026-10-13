@@ -52,7 +52,7 @@ final class AlbumIDsOfArtistManagerProvider
 }
 
 String _$albumIDsOfArtistManagerHash() =>
-    r'78a4c889bcc2ca118c87f16ba5fd840853cd8ef3';
+    r'45b6cc737c033deafc23e4d2409ebe111c7babb9';
 
 final class AlbumIDsOfArtistManagerFamily extends $Family
     with

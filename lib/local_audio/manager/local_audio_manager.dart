@@ -1,18 +1,10 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../dependencies.dart';
+import '../data/local_audio_state.dart';
 import '../service/local_audio_service.dart';
 
 part 'local_audio_manager.g.dart';
-
-class LocalAudioState {
-  const LocalAudioState({this.failedImports});
-
-  final List<String>? failedImports;
-
-  LocalAudioState copyWith({List<String>? failedImports}) =>
-      LocalAudioState(failedImports: failedImports ?? this.failedImports);
-}
 
 @Riverpod(keepAlive: true)
 class LocalAudioManager extends _$LocalAudioManager {

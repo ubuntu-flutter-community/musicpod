@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:musicpod/common/data/audio.dart';
 import 'package:musicpod/common/data/audio_type.dart';
-import 'package:musicpod/common/view/audio_filter.dart';
+import 'package:musicpod/local_audio/data/local_audio_state.dart';
 import 'package:musicpod/local_audio/manager/find_album_manager.dart';
 import 'package:musicpod/local_audio/manager/find_album_name_manager.dart';
 import 'package:musicpod/local_audio/manager/find_artist_of_album_manager.dart';
@@ -15,58 +17,66 @@ import 'package:musicpod/local_audio/view/album_page.dart';
 import 'package:musicpod/radio/manager/online_art_manager.dart';
 import 'package:musicpod/radio/service/online_art_service.dart';
 
+import 'standalone_riverpod_managers_test.mocks.dart';
+
 class FakeLocalAudioManager extends LocalAudioManager {
   @override
   Future<LocalAudioState> build() async => const LocalAudioState();
 }
 
-class FakeLocalAudioService extends Fake implements LocalAudioService {
-  List<int> pinnedAlbums = [10, 20];
-
-  @override
-  Future<String?> findAlbumName(int albumId) async => 'Album $albumId';
-
-  @override
-  Future<String?> findArtistOfAlbum(int albumId) async => 'Artist $albumId';
-
-  @override
-  Future<List<Audio>?> findAlbum(
-    int albumId, [
-    AudioFilter audioFilter = AudioFilter.album,
-  ]) async => [
-    Audio(title: 'Track 1', albumDbId: albumId, audioType: AudioType.local),
-  ];
-
-  @override
-  Future<List<int>> findPinnedAlbumIDs() async => List.from(pinnedAlbums);
-
-  @override
-  Future<List<int>> togglePinAlbum(int? id) async {
-    if (id != null) {
-      if (pinnedAlbums.contains(id)) {
-        pinnedAlbums.remove(id);
-      } else {
-        pinnedAlbums.add(id);
-      }
-    }
-    return List.from(pinnedAlbums);
-  }
-}
-
-class FakeOnlineArtService extends Fake implements OnlineArtService {
-  @override
-  Future<String?> fetchAlbumArt({required String icyTitle}) async =>
-      'https://example.com/$icyTitle.jpg';
-}
-
+@GenerateMocks([LocalAudioService, OnlineArtService])
 void main() {
   late FakeLocalAudioManager fakeLocalAudio;
+  late MockLocalAudioService mockLocalAudioService;
+  late MockOnlineArtService mockOnlineArtService;
+  late List<int> pinnedAlbums;
 
   setUp(() async {
     await GetIt.I.reset();
     fakeLocalAudio = FakeLocalAudioManager();
-    GetIt.I.registerSingleton<LocalAudioService>(FakeLocalAudioService());
-    GetIt.I.registerSingleton<OnlineArtService>(FakeOnlineArtService());
+    mockLocalAudioService = MockLocalAudioService();
+    mockOnlineArtService = MockOnlineArtService();
+    pinnedAlbums = [10, 20];
+
+    when(
+      mockLocalAudioService.findAlbumName(any),
+    ).thenAnswer((inv) async => 'Album ${inv.positionalArguments[0]}');
+    when(
+      mockLocalAudioService.findArtistOfAlbum(any),
+    ).thenAnswer((inv) async => 'Artist ${inv.positionalArguments[0]}');
+    when(mockLocalAudioService.findAlbum(any, any)).thenAnswer(
+      (inv) async => [
+        Audio(
+          title: 'Track 1',
+          albumDbId: inv.positionalArguments[0] as int,
+          audioType: AudioType.local,
+        ),
+      ],
+    );
+    when(
+      mockLocalAudioService.findPinnedAlbumIDs(),
+    ).thenAnswer((_) async => List.from(pinnedAlbums));
+    when(mockLocalAudioService.togglePinAlbum(any)).thenAnswer((inv) async {
+      final id = inv.positionalArguments[0] as int?;
+      if (id != null) {
+        if (pinnedAlbums.contains(id)) {
+          pinnedAlbums.remove(id);
+        } else {
+          pinnedAlbums.add(id);
+        }
+      }
+      return List.from(pinnedAlbums);
+    });
+
+    when(
+      mockOnlineArtService.fetchAlbumArt(icyTitle: anyNamed('icyTitle')),
+    ).thenAnswer((inv) async {
+      final icyTitle = inv.namedArguments[#icyTitle] as String;
+      return 'https://example.com/$icyTitle.jpg';
+    });
+
+    GetIt.I.registerSingleton<LocalAudioService>(mockLocalAudioService);
+    GetIt.I.registerSingleton<OnlineArtService>(mockOnlineArtService);
   });
 
   tearDown(() async {

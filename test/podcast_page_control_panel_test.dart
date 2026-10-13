@@ -15,6 +15,7 @@ import 'package:musicpod/l10n/app_localizations.dart';
 import 'package:musicpod/player/data/player_change.dart';
 import 'package:musicpod/player/data/queue.dart';
 import 'package:musicpod/player/service/player_service.dart';
+import 'package:musicpod/podcasts/data/episodes_state.dart';
 import 'package:musicpod/podcasts/data/podcast_short_info.dart';
 import 'package:musicpod/podcasts/manager/episodes_manager.dart';
 import 'package:musicpod/podcasts/service/podcast_service.dart';

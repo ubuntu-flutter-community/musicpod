@@ -274,5 +274,79 @@ void main() {
         ),
       ).called(1);
     });
+
+    test(
+      'processParsedIcyTitle handles dashless ICY title and forwards it as title',
+      () async {
+        when(mockSettingsService.getBool(SPKeys.dataSafeMode)).thenReturn(true);
+        when(
+          mockPlayerService.audio,
+        ).thenReturn(const Audio(audioType: AudioType.radio, title: 'Rock FM'));
+        Audio? capturedAudio;
+        when(
+          mockPlayerService.setMediaControlsMetaData(audio: anyNamed('audio')),
+        ).thenAnswer((inv) async {
+          capturedAudio = inv.namedArguments[const Symbol('audio')] as Audio?;
+        });
+        when(
+          mockExposeService.exposeTitleOnline(
+            title: anyNamed('title'),
+            artist: anyNamed('artist'),
+            additionalInfo: anyNamed('additionalInfo'),
+            imageUrl: anyNamed('imageUrl'),
+          ),
+        ).thenAnswer((_) async {});
+
+        final manager = container.read(mpvMetadataManagerProvider.notifier);
+        final meta = createMeta(
+          icyTitle: 'Live In Concert Show',
+          icyName: 'Rock FM',
+        );
+
+        await manager.digestMpvMetaData(meta);
+
+        expect(capturedAudio?.title, 'Live In Concert Show');
+        expect(capturedAudio?.artist, isNull);
+      },
+    );
+
+    test('newAudioStream resets state to null', () async {
+      when(
+        mockPlayerService.audio,
+      ).thenReturn(const Audio(audioType: AudioType.radio, title: 'Rock FM'));
+      when(
+        mockOnlineArtService.fetchAlbumArt(icyTitle: anyNamed('icyTitle')),
+      ).thenAnswer((_) async => null);
+      when(
+        mockPlayerService.setMediaControlsMetaData(audio: anyNamed('audio')),
+      ).thenAnswer((_) async {});
+      when(
+        mockExposeService.exposeTitleOnline(
+          title: anyNamed('title'),
+          artist: anyNamed('artist'),
+          additionalInfo: anyNamed('additionalInfo'),
+          imageUrl: anyNamed('imageUrl'),
+        ),
+      ).thenAnswer((_) async {});
+
+      final manager = container.read(mpvMetadataManagerProvider.notifier);
+      final meta = createMeta(
+        icyTitle: 'Queen - Radio Ga Ga',
+        icyName: 'Rock FM',
+      );
+
+      await manager.digestMpvMetaData(meta);
+      expect(
+        container.read(mpvMetadataManagerProvider)?.icyTitle,
+        'Queen - Radio Ga Ga',
+      );
+
+      newAudioController.add(
+        const Audio(audioType: AudioType.radio, title: 'Jazz FM'),
+      );
+      await pumpEventQueue();
+
+      expect(container.read(mpvMetadataManagerProvider), isNull);
+    });
   });
 }
