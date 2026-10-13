@@ -9,6 +9,7 @@ import '../../common/logging.dart';
 import '../../dependencies.dart';
 import '../../expose/service/expose_service.dart';
 import '../../extensions/string_x.dart';
+import '../../radio/manager/online_art_manager.dart';
 import '../../radio/service/online_art_service.dart';
 import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
@@ -71,6 +72,7 @@ class MpvMetadataManager extends _$MpvMetadataManager {
     });
 
     _audioSub = _playerService.newAudioStream.listen((audio) {
+      state = null;
       if (audio?.audioType != AudioType.radio) {
         observeProperty(
           property: 'metadata',
@@ -81,6 +83,11 @@ class MpvMetadataManager extends _$MpvMetadataManager {
         _toggleObserve(true);
       }
     });
+
+    if (_playerService.audio?.audioType == AudioType.radio &&
+        _playerService.player.state.playing) {
+      _toggleObserve(true);
+    }
 
     return null;
   }
@@ -101,8 +108,10 @@ class MpvMetadataManager extends _$MpvMetadataManager {
       return;
     }
     final newData = MpvMetaData.fromJson(data);
-    final parsedIcyTitle = newData.icyTitle.unEscapeHtml;
-    if (parsedIcyTitle == null || parsedIcyTitle == state?.icyTitle) {
+    final parsedIcyTitle = newData.icyTitle.unEscapeHtml?.trim();
+    if (parsedIcyTitle == null ||
+        parsedIcyTitle.isEmpty ||
+        parsedIcyTitle == state?.icyTitle) {
       return;
     }
 
@@ -156,24 +165,31 @@ class MpvMetadataManager extends _$MpvMetadataManager {
 
   Future<void> processParsedIcyTitle(String parsedIcyTitle) async {
     final songInfo = parsedIcyTitle.splitByDash;
-    String? albumArt;
+    final songTitle = songInfo.songName ?? songInfo.artist ?? parsedIcyTitle;
+    final artist = songInfo.songName != null ? songInfo.artist : null;
+
+    final baseAudio =
+        _playerService.audio ?? const Audio(audioType: AudioType.radio);
+
+    var mergedAudio = baseAudio.copyWith(title: songTitle, artist: artist);
+    await _playerService.setMediaControlsMetaData(audio: mergedAudio);
 
     final isDataSafeMode =
         ref.read(settingsBoolManagerProvider(SPKeys.dataSafeMode)) ?? false;
+    String? albumArt;
     if (!isDataSafeMode) {
-      albumArt = await _onlineArtService.fetchAlbumArt(
-        icyTitle: parsedIcyTitle,
-      );
+      albumArt = await (_onlineArtServiceOverride != null
+          ? _onlineArtService.fetchAlbumArt(icyTitle: parsedIcyTitle)
+          : ref.read(onlineArtManagerProvider(parsedIcyTitle).future));
     }
 
-    final mergedAudio =
-        (_playerService.audio ?? const Audio(audioType: AudioType.radio))
-            .copyWith(
-              imageUrl: albumArt,
-              title: songInfo.songName,
-              artist: songInfo.artist,
-            );
-    await _playerService.setMediaControlsMetaData(audio: mergedAudio);
+    if (_playerService.audio?.audioType != AudioType.radio) return;
+
+    if (albumArt != null) {
+      mergedAudio = mergedAudio.copyWith(imageUrl: albumArt);
+      await _playerService.setMediaControlsMetaData(audio: mergedAudio);
+    }
+
     final url2 =
         albumArt ??
         _playerService.audio?.imageUrl ??

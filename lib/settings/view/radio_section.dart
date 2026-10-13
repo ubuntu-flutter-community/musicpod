@@ -6,6 +6,7 @@ import '../../common/view/icons.dart';
 import '../../custom_content/service/custom_content_service.dart';
 import '../../dependencies.dart';
 import '../../extensions/build_context_x.dart';
+import '../../radio/manager/radio_star_station_manager.dart';
 import '../manager/wipe_manager.dart';
 import 'settings_list_tile.dart';
 import 'settings_section.dart';
@@ -40,18 +41,23 @@ class RadioSection extends StatelessWidget {
                   cancelLabel: context.l10n.back,
                 ),
               ),
-              IconButton(
-                tooltip: l10n.importStarredStationsFromOpmlFile,
-                icon: Icon(
-                  Iconz.import,
-                  semanticLabel: l10n.importStarredStationsFromOpmlFile,
-                ),
-                onPressed: () => ConfirmationDialog.show(
-                  context: context,
-                  initialFuture: () => di<CustomContentService>()
-                      .importStarredStationsFromOpmlFile(),
-                  loadingTitle: Text(context.l10n.importingStationsPleaseWait),
-                  cancelLabel: context.l10n.back,
+              Consumer(
+                builder: (context, ref, _) => IconButton(
+                  tooltip: l10n.importStarredStationsFromOpmlFile,
+                  icon: Icon(Iconz.import),
+                  onPressed: () => ConfirmationDialog.show(
+                    context: context,
+                    initialFuture: () => di<CustomContentService>()
+                        .importStarredStationsFromOpmlFile()
+                        .then(
+                          (_) =>
+                              ref.invalidate(radioStarStationManagerProvider),
+                        ),
+                    loadingTitle: Text(
+                      context.l10n.importingStationsPleaseWait,
+                    ),
+                    cancelLabel: context.l10n.back,
+                  ),
                 ),
               ),
               Consumer(

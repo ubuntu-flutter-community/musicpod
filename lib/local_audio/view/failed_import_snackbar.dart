@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 
-import '../../dependencies.dart';
-
 import '../../extensions/build_context_x.dart';
 import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
@@ -15,9 +13,7 @@ showFailedImportsSnackBarIfNotBlocked({
   bool failedToImport = false,
 }) {
   if (context.mounted == false) return null;
-  final container = di.isRegistered<ProviderContainer>()
-      ? di<ProviderContainer>()
-      : ProviderScope.containerOf(context, listen: false);
+  final container = ProviderScope.containerOf(context, listen: false);
   final neverShow =
       container.read(
         settingsBoolManagerProvider(SPKeys.neverShowImportFails),
@@ -29,11 +25,6 @@ showFailedImportsSnackBarIfNotBlocked({
     _Content(
       message: failedToImport ? l10n.failedToImport : l10n.failedToReadMetadata,
       failedImports: failedImports,
-      onNeverShowFailedImports: () => container
-          .read(
-            settingsBoolManagerProvider(SPKeys.neverShowImportFails).notifier,
-          )
-          .set(true),
     ),
     action: SnackBarAction(
       onPressed: () {
@@ -50,15 +41,10 @@ showFailedImportsSnackBarIfNotBlocked({
 }
 
 class _Content extends StatelessWidget {
-  const _Content({
-    required this.failedImports,
-    required this.onNeverShowFailedImports,
-    required this.message,
-  });
+  const _Content({required this.failedImports, required this.message});
 
   final String message;
   final List<String> failedImports;
-  final void Function() onNeverShowFailedImports;
 
   @override
   Widget build(BuildContext context) {

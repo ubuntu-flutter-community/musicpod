@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gtk/gtk.dart';
 
+import '../../common/logging.dart';
 import '../../common/view/error_page.dart';
 import '../../dependencies.dart';
 import '../../extensions/platform_x.dart';
@@ -20,22 +21,11 @@ class MusicPod extends StatefulWidget {
 
 class _MusicPodState extends State<MusicPod> {
   late Future<void> _allReady;
-  late final ProviderContainer _container = ProviderContainer();
 
   @override
   void initState() {
     super.initState();
-    _allReady = configureDependencies().then((_) {
-      if (!di.isRegistered<ProviderContainer>()) {
-        di.registerSingleton<ProviderContainer>(_container);
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _container.dispose();
-    super.dispose();
+    _allReady = configureDependencies();
   }
 
   @override
@@ -54,8 +44,8 @@ class _MusicPodState extends State<MusicPod> {
               )
             : (snapshot.hasData ||
                   snapshot.connectionState == ConnectionState.done)
-            ? UncontrolledProviderScope(
-                container: _container,
+            ? ProviderScope(
+                observers: const [_MusicPodRiverpodObserver()],
                 child: isLinux
                     ? GtkApplication(
                         onCommandLine: (args) =>
@@ -68,4 +58,37 @@ class _MusicPodState extends State<MusicPod> {
       );
     },
   );
+}
+
+final class _MusicPodRiverpodObserver extends ProviderObserver {
+  const _MusicPodRiverpodObserver();
+
+  @override
+  void didAddProvider(ProviderObserverContext context, Object? value) {
+    Logger.o(
+      tag: context.provider.name ?? '${context.provider.runtimeType}',
+      created: true,
+    );
+  }
+
+  @override
+  void didDisposeProvider(ProviderObserverContext context) {
+    Logger.o(
+      tag: context.provider.name ?? '${context.provider.runtimeType}',
+      created: false,
+    );
+  }
+
+  @override
+  void providerDidFail(
+    ProviderObserverContext context,
+    Object error,
+    StackTrace stackTrace,
+  ) {
+    Logger.e(
+      error,
+      trace: stackTrace,
+      tag: context.provider.name ?? '${context.provider.runtimeType}',
+    );
+  }
 }

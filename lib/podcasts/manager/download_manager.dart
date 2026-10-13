@@ -6,40 +6,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../common/data/audio.dart';
 import '../../common/logging.dart';
 import '../../dependencies.dart';
+import '../data/download_manager_state.dart';
 import '../data/podcast_download.dart';
 import '../service/download_service.dart';
 import '../service/podcast_service.dart';
 
 part 'download_manager.g.dart';
-
-class DownloadManagerState {
-  final String? downloadsDirectory;
-  final Set<Audio> activeDownloads;
-  final List<Audio> recentDownloads;
-  final PodcastDownload? lastEvent;
-
-  const DownloadManagerState({
-    this.downloadsDirectory,
-    this.activeDownloads = const {},
-    this.recentDownloads = const [],
-    this.lastEvent,
-  });
-
-  bool get hasActiveDownloads => activeDownloads.isNotEmpty;
-  bool get hasRecentDownloads => recentDownloads.isNotEmpty;
-
-  DownloadManagerState copyWith({
-    String? downloadsDirectory,
-    Set<Audio>? activeDownloads,
-    List<Audio>? recentDownloads,
-    PodcastDownload? lastEvent,
-  }) => DownloadManagerState(
-    downloadsDirectory: downloadsDirectory ?? this.downloadsDirectory,
-    activeDownloads: activeDownloads ?? this.activeDownloads,
-    recentDownloads: recentDownloads ?? this.recentDownloads,
-    lastEvent: lastEvent ?? this.lastEvent,
-  );
-}
 
 @Riverpod(keepAlive: true)
 class DownloadManager extends _$DownloadManager {

@@ -4,42 +4,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../dependencies.dart';
 import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/service/settings_service.dart';
+import '../data/backup_state.dart';
 
 part 'backup_manager.g.dart';
-
-class BackupState {
-  const BackupState({
-    this.localAudio = false,
-    this.podcast = false,
-    this.radio = false,
-  });
-
-  final bool localAudio;
-  final bool podcast;
-  final bool radio;
-
-  bool get confirmEnabled => localAudio && podcast && radio;
-
-  BackupState copyWith({bool? localAudio, bool? podcast, bool? radio}) {
-    return BackupState(
-      localAudio: localAudio ?? this.localAudio,
-      podcast: podcast ?? this.podcast,
-      radio: radio ?? this.radio,
-    );
-  }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is BackupState &&
-          runtimeType == other.runtimeType &&
-          localAudio == other.localAudio &&
-          podcast == other.podcast &&
-          radio == other.radio;
-
-  @override
-  int get hashCode => Object.hash(localAudio, podcast, radio);
-}
 
 @riverpod
 class BackupManager extends _$BackupManager {

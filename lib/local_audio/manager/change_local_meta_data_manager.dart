@@ -2,25 +2,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../common/data/audio.dart';
 import '../../dependencies.dart';
+import '../data/change_local_meta_data_state.dart';
 import '../data/change_metadata_capsule.dart';
 import '../service/local_audio_service.dart';
 
 part 'change_local_meta_data_manager.g.dart';
-
-class ChangeLocalMetaDataState {
-  const ChangeLocalMetaDataState({this.draft, this.savedAudio});
-
-  final ChangeMetadataCapsule? draft;
-  final Audio? savedAudio;
-
-  ChangeLocalMetaDataState copyWith({
-    ChangeMetadataCapsule? Function()? draft,
-    Audio? Function()? savedAudio,
-  }) => ChangeLocalMetaDataState(
-    draft: draft != null ? draft() : this.draft,
-    savedAudio: savedAudio != null ? savedAudio() : this.savedAudio,
-  );
-}
 
 @riverpod
 class ChangeLocalMetaDataManager extends _$ChangeLocalMetaDataManager {

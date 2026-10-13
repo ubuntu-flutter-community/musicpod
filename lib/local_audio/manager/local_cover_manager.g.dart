@@ -50,7 +50,7 @@ final class LocalCoverManagerProvider
   }
 }
 
-String _$localCoverManagerHash() => r'd9210f51740cc7baacced72534c973ccbd0872ad';
+String _$localCoverManagerHash() => r'e91f234a147e27e3b2a7dae0784e0018e5831cf8';
 
 final class LocalCoverManagerFamily extends $Family
     with
