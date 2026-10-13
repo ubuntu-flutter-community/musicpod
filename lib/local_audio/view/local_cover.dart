@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../common/view/theme.dart';
 import '../manager/local_cover_manager.dart';
 
 class LocalCover extends ConsumerWidget {
@@ -23,9 +24,8 @@ class LocalCover extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final dpr = MediaQuery.maybeDevicePixelRatioOf(context) ?? 2.0;
     const maxDecodeDimension = 1024;
-    final cacheDim = dimension.isFinite
-        ? (dimension * dpr).round().clamp(1, maxDecodeDimension)
-        : maxDecodeDimension;
+    final targetDim = dimension.isFinite ? dimension : audioCardDimension;
+    final cacheDim = (targetDim * dpr).round().clamp(1, maxDecodeDimension);
 
     return SizedBox.square(
       dimension: dimension,

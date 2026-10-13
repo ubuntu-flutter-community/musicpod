@@ -32,20 +32,23 @@ import '../data/play_anywhere_result.dart';
 import '../play_anywhere_manager.dart';
 
 mixin CommonHandlersAndCommandsMixin {
-  void callCommonCommands(BuildContext context) {
+  bool _hasCalledCommonCommands = false;
+
+  void callCommonCommands(BuildContext context, WidgetRef ref) {
+    if (_hasCalledCommonCommands) return;
+    _hasCalledCommonCommands = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!context.mounted) return;
-      final container = ProviderScope.containerOf(context, listen: false);
-      container
+      ref
           .read(podcastCleanManagerProvider.notifier)
           .clean(reclaimDiskSpace: true);
 
-      if (!container.read(recentPatchNotesDisposedManagerProvider)) {
+      if (!ref.read(recentPatchNotesDisposedManagerProvider)) {
         PatchNotesDialog.show(context);
       }
 
       final version = di<PackageInfo>().version;
-      if (!container.read(specialNotesDisposedManagerProvider) &&
+      if (!ref.read(specialNotesDisposedManagerProvider) &&
           specialNotes[version] != null) {
         ConfirmationDialog.show(
           context: context,
@@ -54,64 +57,62 @@ mixin CommonHandlersAndCommandsMixin {
           title: Text('Special notes for $version'),
           content: Text(specialNotes[version]!),
           confirmLabel: context.l10n.ok,
-          onConfirm: () => container
+          onConfirm: () => ref
               .read(specialNotesDisposedManagerProvider.notifier)
               .disposeNotes(),
         );
       }
 
-      container.read(secureBookmarkManagerProvider.notifier).restore();
+      ref.read(secureBookmarkManagerProvider.notifier).restore();
     });
   }
 
-  void registerCommonHandlers(BuildContext context) {
-    final container = ProviderScope.containerOf(context, listen: false);
-
-    container.listen<AsyncValue<DownloadManagerState>>(
-      downloadManagerProvider,
-      (prev, next) {
-        final result = next.value?.lastEvent;
-        if (result == null ||
-            result == prev?.value?.lastEvent ||
-            result.status == DownloadStatus.inProgress) {
-          return;
-        }
-        context.toast(
-          Text(switch (result) {
-            final PodcastDownload r when r.status == DownloadStatus.completed =>
-              context.l10n.downloadFinished(r.audio.title ?? ''),
-            final PodcastDownload r when r.status == DownloadStatus.removed =>
-              context.l10n.downloadRemoved(r.audio.title ?? ''),
-            final PodcastDownload r when r.status == DownloadStatus.cancelled =>
-              context.l10n.downloadCancelled(r.audio.title ?? ''),
-            _ => '',
-          }),
-        );
-      },
-    );
-
-    container.listen<PodcastUpdatesState>(podcastUpdatesManagerProvider, (
+  void registerCommonHandlers(BuildContext context, WidgetRef ref) {
+    ref.listen<AsyncValue<DownloadManagerState>>(downloadManagerProvider, (
       prev,
-      res,
+      next,
     ) {
-      if (res.isRunning) {
+      final result = next.value?.lastEvent;
+      if (result == null ||
+          result == prev?.value?.lastEvent ||
+          result.status == DownloadStatus.inProgress) {
+        return;
+      }
+      context.toast(
+        Text(switch (result) {
+          final PodcastDownload r when r.status == DownloadStatus.completed =>
+            context.l10n.downloadFinished(r.audio.title ?? ''),
+          final PodcastDownload r when r.status == DownloadStatus.removed =>
+            context.l10n.downloadRemoved(r.audio.title ?? ''),
+          final PodcastDownload r when r.status == DownloadStatus.cancelled =>
+            context.l10n.downloadCancelled(r.audio.title ?? ''),
+          _ => '',
+        }),
+      );
+    });
+
+    ref.listen<PodcastUpdatesState>(podcastUpdatesManagerProvider, (prev, res) {
+      if (prev?.isRunning != true || res.isRunning) {
         return;
       } else if (res.error != null) {
         context.toast(Text(res.error.toString()));
       } else if (res.lastCapsule?.type == PodcastUpdateType.remove) {
         return;
       } else {
-        final feedsWithUpdates = res.updates;
+        final feedsWithUpdates = Map.fromEntries(
+          res.updates.entries.where((e) => e.value.isNotEmpty),
+        );
         if (feedsWithUpdates.isNotEmpty) {
           if (feedsWithUpdates.length == 1) {
             di<PodcastService>()
                 .getPodcastShortInfo(feedsWithUpdates.entries.first.key)
-                .then(
-                  (info) => di<NotificationsService>().notify(
+                .then((info) {
+                  if (!context.mounted) return;
+                  di<NotificationsService>().notify(
                     message:
                         '${context.l10n.newEpisodeAvailable} ${info?.name ?? ''}',
-                  ),
-                );
+                  );
+                });
           } else {
             di<NotificationsService>().notify(
               message: context.l10n.newEpisodesAvailableFor(
@@ -123,9 +124,9 @@ mixin CommonHandlersAndCommandsMixin {
       }
     });
 
-    container.listen<AsyncValue<String>>(playerMessageProvider, (prev, next) {
+    ref.listen<AsyncValue<String>>(playerMessageProvider, (prev, next) {
       if (next.hasError) {
-        final audio = container.read(currentAudioManagerProvider);
+        final audio = ref.read(currentAudioManagerProvider);
         final error = next.error;
 
         context.toast(
@@ -142,42 +143,42 @@ mixin CommonHandlersAndCommandsMixin {
       }
     });
 
-    container.listen<AsyncValue<PlayAnywhereResult?>>(
-      playAnywhereManagerProvider,
-      (prev, next) {
-        if (next.isLoading) {
-          context.toast(
-            Row(
-              spacing: kMediumSpace,
-              children: [
-                const SizedBox.square(
-                  dimension: 16,
-                  child: Progress(adaptive: false, strokeWidth: 2),
-                ),
-                Text(context.l10n.loadingPleaseWait),
-              ],
-            ),
-            duration: const Duration(seconds: 99),
-          );
-        } else if (next.hasError) {
-          context.toast(Text(next.error.localizedErrorMessage(context.l10n)));
-        } else if (next.hasValue && next.value != null) {
-          context.clearToasts();
-          switch (next.value!.param.audioPageType) {
-            case AudioPageType.radio:
-              next.value!.audios.singleOrNull?.uuid != null
-                  ? container
-                        .read(clickStationManagerProvider.notifier)
-                        .clickStation(next.value!.audios.singleOrNull!.uuid)
-                  : context.toast(Text(context.l10n.noStationFound));
-            default:
-              break;
-          }
+    ref.listen<AsyncValue<PlayAnywhereResult?>>(playAnywhereManagerProvider, (
+      prev,
+      next,
+    ) {
+      if (next.isLoading) {
+        context.toast(
+          Row(
+            spacing: kMediumSpace,
+            children: [
+              const SizedBox.square(
+                dimension: 16,
+                child: Progress(adaptive: false, strokeWidth: 2),
+              ),
+              Text(context.l10n.loadingPleaseWait),
+            ],
+          ),
+          duration: const Duration(seconds: 99),
+        );
+      } else if (next.hasError) {
+        context.toast(Text(next.error.localizedErrorMessage(context.l10n)));
+      } else if (next.hasValue && next.value != null) {
+        context.clearToasts();
+        switch (next.value!.param.audioPageType) {
+          case AudioPageType.radio:
+            next.value!.audios.singleOrNull?.uuid != null
+                ? ref
+                      .read(clickStationManagerProvider.notifier)
+                      .clickStation(next.value!.audios.singleOrNull!.uuid)
+                : context.toast(Text(context.l10n.noStationFound));
+          default:
+            break;
         }
-      },
-    );
+      }
+    });
 
-    container.listen<AsyncValue<Set<String>?>>(podcastCleanManagerProvider, (
+    ref.listen<AsyncValue<Set<String>?>>(podcastCleanManagerProvider, (
       prev,
       results,
     ) {

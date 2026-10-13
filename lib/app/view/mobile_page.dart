@@ -34,8 +34,7 @@ class MobilePage extends ConsumerWidget {
   }
 }
 
-class _MobilePageContent extends ConsumerWidget
-    with CommonHandlersAndCommandsMixin {
+class _MobilePageContent extends ConsumerStatefulWidget {
   const _MobilePageContent({
     required this.fullWindowMode,
     required this.onDismissFullWindowMode,
@@ -47,29 +46,41 @@ class _MobilePageContent extends ConsumerWidget
   final Widget page;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    callCommonCommands(context);
-    registerCommonHandlers(context);
+  ConsumerState<_MobilePageContent> createState() => _MobilePageContentState();
+}
+
+class _MobilePageContentState extends ConsumerState<_MobilePageContent>
+    with CommonHandlersAndCommandsMixin {
+  @override
+  void initState() {
+    super.initState();
+    callCommonCommands(context, ref);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    registerCommonHandlers(context, ref);
 
     return PopScope(
-      canPop: !fullWindowMode,
+      canPop: !widget.fullWindowMode,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
-        if (fullWindowMode) {
-          onDismissFullWindowMode();
+        if (widget.fullWindowMode) {
+          widget.onDismissFullWindowMode();
         }
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         extendBody: true,
         extendBodyBehindAppBar: true,
-        bottomNavigationBar: (!context.showMasterPanel && !fullWindowMode)
+        bottomNavigationBar:
+            (!context.showMasterPanel && !widget.fullWindowMode)
             ? const Hero(tag: 'bottomPlayer', child: MobileBottomBar())
             : null,
         body: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (context.showMasterPanel && !fullWindowMode) ...[
+            if (context.showMasterPanel && !widget.fullWindowMode) ...[
               const Hero(tag: 'masterPanel', child: MasterRail()),
               const Hero(
                 tag: 'masterPanelDivider',
@@ -80,8 +91,8 @@ class _MobilePageContent extends ConsumerWidget
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  page,
-                  if (fullWindowMode)
+                  widget.page,
+                  if (widget.fullWindowMode)
                     Material(
                       color: context.theme.scaffoldBackgroundColor,
                       child: GestureDetector(
@@ -101,7 +112,7 @@ class _MobilePageContent extends ConsumerWidget
                         onVerticalDragEnd: (details) {
                           if (details.primaryVelocity != null &&
                               details.primaryVelocity! > 150) {
-                            onDismissFullWindowMode();
+                            widget.onDismissFullWindowMode();
                           }
                         },
                         child: const PlayerView.fullWindow(),
