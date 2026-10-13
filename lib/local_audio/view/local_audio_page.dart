@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/page_ids.dart';
 import '../../app/routing_manager.dart';
 import '../../common/data/audio_type.dart';
-import '../../common/view/clean_up_caches.dart';
 import '../../common/view/confirm.dart';
 import '../../common/view/default_page_body.dart';
 import '../../common/view/header_bar.dart';
@@ -36,10 +35,6 @@ class LocalAudioPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => clearInMemoryImageCache(),
-    );
-
     final l10n = context.l10n;
 
     return Consumer(

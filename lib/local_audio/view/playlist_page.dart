@@ -11,7 +11,6 @@ import '../../common/data/audio_type.dart';
 import '../../common/view/adaptive_multi_layout_body.dart';
 import '../../common/view/audio_page_header.dart';
 import '../../common/view/audio_page_type.dart';
-import '../../common/view/clean_up_caches.dart';
 import '../../common/view/genre_bar.dart';
 import '../../common/view/header_bar.dart';
 import '../../common/view/local_audio_tile.dart';
@@ -43,10 +42,6 @@ class PlaylistPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => clearInMemoryImageCache(),
-    );
-
     final isInitializing = ref.watch(
       localAudioManagerProvider.select((s) => s.isLoading),
     );

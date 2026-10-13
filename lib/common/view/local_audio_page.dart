@@ -13,7 +13,6 @@ import 'adaptive_multi_layout_body.dart';
 import 'audio_page_header.dart';
 import 'audio_page_type.dart';
 import 'avatar_play_button.dart';
-import 'clean_up_caches.dart';
 import 'header_bar.dart';
 import 'no_search_result_page.dart';
 import 'progress.dart';
@@ -61,9 +60,6 @@ class LocalAudioPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => clearInMemoryImageCache(),
-    );
     return Scaffold(
       appBar: HeaderBar(
         title: isMobile ? null : Text(pageTitle ?? ''),
