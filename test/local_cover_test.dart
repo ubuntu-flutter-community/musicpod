@@ -111,9 +111,7 @@ void main() {
       await tester.pumpWidget(
         UncontrolledProviderScope(
           container: scope,
-          child: const MaterialApp(
-            home: Scaffold(body: Text('ARTISTS_VIEW')),
-          ),
+          child: const MaterialApp(home: Scaffold(body: Text('ARTISTS_VIEW'))),
         ),
       );
       await tester.pump();
@@ -145,78 +143,75 @@ void main() {
     },
   );
 
-  testWidgets(
-    'LocalCover disposes and reloads once cache duration expires',
-    (tester) async {
-      final fakeService = FakeLocalCoverService(
-        delay: const Duration(milliseconds: 50),
-        bytesToReturn: Uint8List.fromList([1, 2, 3, 4]),
-      );
+  testWidgets('LocalCover disposes and reloads once cache duration expires', (
+    tester,
+  ) async {
+    final fakeService = FakeLocalCoverService(
+      delay: const Duration(milliseconds: 50),
+      bytesToReturn: Uint8List.fromList([1, 2, 3, 4]),
+    );
 
-      GetIt.I.registerSingleton<LocalCoverService>(fakeService);
+    GetIt.I.registerSingleton<LocalCoverService>(fakeService);
 
-      final scope = ProviderContainer();
-      addTearDown(scope.dispose);
+    final scope = ProviderContainer();
+    addTearDown(scope.dispose);
 
-      await tester.pumpWidget(
-        UncontrolledProviderScope(
-          container: scope,
-          child: const MaterialApp(
-            home: Scaffold(
-              body: LocalCover(
-                albumId: 42,
-                dimension: 100,
-                fallback: Text('FALLBACK'),
-                loadingWidget: Text('LOADING'),
-              ),
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: scope,
+        child: const MaterialApp(
+          home: Scaffold(
+            body: LocalCover(
+              albumId: 42,
+              dimension: 100,
+              fallback: Text('FALLBACK'),
+              loadingWidget: Text('LOADING'),
             ),
           ),
         ),
-      );
+      ),
+    );
 
-      await tester.pump(const Duration(milliseconds: 60));
-      await tester.pumpAndSettle();
-      expect(fakeService.callCount, 1);
+    await tester.pump(const Duration(milliseconds: 60));
+    await tester.pumpAndSettle();
+    expect(fakeService.callCount, 1);
 
-      // Unmount LocalCover
-      await tester.pumpWidget(
-        UncontrolledProviderScope(
-          container: scope,
-          child: const MaterialApp(home: Scaffold(body: SizedBox())),
-        ),
-      );
-      await tester.pump();
+    // Unmount LocalCover
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: scope,
+        child: const MaterialApp(home: Scaffold(body: SizedBox())),
+      ),
+    );
+    await tester.pump();
 
-      // Advance past the 5-minute cache grace period
-      await tester.pump(const Duration(minutes: 5, seconds: 1));
+    // Advance past the 5-minute cache grace period
+    await tester.pump(const Duration(minutes: 5, seconds: 1));
 
-      // Remount: provider was disposed, so it queries again
-      await tester.pumpWidget(
-        UncontrolledProviderScope(
-          container: scope,
-          child: const MaterialApp(
-            home: Scaffold(
-              body: LocalCover(
-                albumId: 42,
-                dimension: 100,
-                fallback: Text('FALLBACK'),
-                loadingWidget: Text('LOADING'),
-              ),
+    // Remount: provider was disposed, so it queries again
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: scope,
+        child: const MaterialApp(
+          home: Scaffold(
+            body: LocalCover(
+              albumId: 42,
+              dimension: 100,
+              fallback: Text('FALLBACK'),
+              loadingWidget: Text('LOADING'),
             ),
           ),
         ),
-      );
+      ),
+    );
 
-      expect(find.text('LOADING'), findsOneWidget);
-      await tester.pump(const Duration(milliseconds: 60));
-      await tester.pumpAndSettle();
+    expect(find.text('LOADING'), findsOneWidget);
+    await tester.pump(const Duration(milliseconds: 60));
+    await tester.pumpAndSettle();
 
-      expect(fakeService.callCount, 2);
-      expect(find.byType(Image), findsOneWidget);
+    expect(fakeService.callCount, 2);
+    expect(find.byType(Image), findsOneWidget);
 
-      scope.dispose();
-    },
-  );
+    scope.dispose();
+  });
 }
-
-

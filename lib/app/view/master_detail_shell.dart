@@ -32,8 +32,7 @@ class MasterDetailShell extends ConsumerWidget {
   }
 }
 
-class _MasterDetailShellContent extends StatelessWidget
-    with CommonHandlersAndCommandsMixin {
+class _MasterDetailShellContent extends ConsumerStatefulWidget {
   const _MasterDetailShellContent({
     required this.isInFullWindowMode,
     required this.onDismissFullWindowMode,
@@ -45,16 +44,29 @@ class _MasterDetailShellContent extends StatelessWidget
   final Widget child;
 
   @override
+  ConsumerState<_MasterDetailShellContent> createState() =>
+      _MasterDetailShellContentState();
+}
+
+class _MasterDetailShellContentState
+    extends ConsumerState<_MasterDetailShellContent>
+    with CommonHandlersAndCommandsMixin {
+  @override
+  void initState() {
+    super.initState();
+    callCommonCommands(context, ref);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    callCommonCommands(context);
-    registerCommonHandlers(context);
+    registerCommonHandlers(context, ref);
 
     return PopScope(
-      canPop: !isInFullWindowMode,
+      canPop: !widget.isInFullWindowMode,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
-        if (isInFullWindowMode) {
-          onDismissFullWindowMode();
+        if (widget.isInFullWindowMode) {
+          widget.onDismissFullWindowMode();
         }
       },
       child: Scaffold(
@@ -80,14 +92,14 @@ class _MasterDetailShellContent extends StatelessWidget
                     const VerticalDivider(width: 1),
                   ],
                 ],
-                Expanded(child: child),
+                Expanded(child: widget.child),
               ],
             ),
-            if (isInFullWindowMode) const PlayerView.fullWindow(),
+            if (widget.isInFullWindowMode) const PlayerView.fullWindow(),
           ],
         ),
         bottomNavigationBar: isMobile
-            ? ((!context.showMasterPanel && !isInFullWindowMode)
+            ? ((!context.showMasterPanel && !widget.isInFullWindowMode)
                   ? const Hero(tag: 'bottomPlayer', child: MobileBottomBar())
                   : null)
             : const PlayerView.bottom(),

@@ -16,4 +16,3 @@ class LocalCoverManager extends _$LocalCoverManager {
     return di<LocalCoverService>().getCover(albumId: albumId);
   }
 }
-

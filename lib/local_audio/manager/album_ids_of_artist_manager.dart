@@ -16,4 +16,3 @@ class AlbumIDsOfArtistManager extends _$AlbumIDsOfArtistManager {
     return di<LocalAudioService>().findAlbumIDsOfArtist(artist);
   }
 }
-

@@ -16,4 +16,3 @@ class FindAlbumNameManager extends _$FindAlbumNameManager {
     return di<LocalAudioService>().findAlbumName(albumId);
   }
 }
-
