@@ -133,20 +133,140 @@ When a new release is made go to https://snapcraft.io/musicpod/releases and prom
 
 ### Windows
 
-Currently inno setup is needed. This hopefully changes some day when https://github.com/ubuntu-flutter-community/musicpod/issues/964 is merged.
+The Windows release installer is created with Inno Setup and built automatically via GitHub Releases.
 
-- fvm flutter build windows --release
-- copy the following files from C:\Program Files (x86)\Microsoft Visual Studio\2022\Community\VC\
-Redist\MSVC\14.34.31931\x64\Microsoft.VC143.CRT\ into your windows build
+#### Building locally
+- `fvm flutter build windows --release` (CMake automatically bundles the required MSVC C++ runtime DLLs into the release directory)
+- Compile `windows/inno.iss` with Inno Setup Compiler. The resulting installer is generated at `windows/Output/musicpod-setup.exe`.
 
-```
-msvcp140.dll
-msvcp140_1.dll
-msvcp140_2.dll
-vcruntime140.dll
-vcruntime140_1.dll
-```
-- run .../musicpod/windows/inno.iss
+#### Code Signing for GitHub Actions Releases
+The release workflow ([.github/workflows/release.yml](.github/workflows/release.yml)) automatically signs both `musicpod.exe` and `musicpod-setup.exe` if the signing secrets are configured in the repository.
+
+To generate a certificate on Windows and configure it in GitHub Secrets:
+
+1. **Generate and export a certificate (PowerShell as Administrator):**
+   ```powershell
+   # 1. Create a Code Signing Certificate (or use an official CA certificate)
+   $cert = New-SelfSignedCertificate -Type Custom `
+     -Subject "CN=Frederik Feichtmeier" `
+     -KeyUsage DigitalSignature `
+     -FriendlyName "MusicPod Signing Certificate" `
+     -CertStoreLocation "Cert:\CurrentUser\My" `
+     -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.3", "2.5.29.19={text}")
+
+   # 2. Export the private key as a .pfx file with a password
+   $password = ConvertTo-SecureString -String "CHOOSE_A_SECURE_PASSWORD" -Force -AsPlainText
+   Export-PfxCertificate -Cert $cert -FilePath "cert.pfx" -Password $password
+
+   # 3. Convert the .pfx file to Base64
+   [Convert]::ToBase64String([System.IO.File]::ReadAllBytes("cert.pfx")) | Out-File -FilePath "cert_base64.txt"
+   ```
+
+2. **Configure secrets in the GitHub repository:**
+   - In GitHub, navigate to **Settings** → **Secrets and variables** → **Actions**.
+   - Create two **Repository secrets**:
+     - `WINDOWS_CERT_BASE64`: The full Base64 string from `cert_base64.txt`.
+     - `WINDOWS_CERT_PASSWORD`: The password chosen during certificate export.
+
+#### Upgrading to a Trusted CA Certificate (Removing SmartScreen Warnings)
+
+Self-signed certificates establish binary integrity, but Windows SmartScreen initially displays an "Unknown publisher" warning until download reputation builds. To eliminate this warning, the binaries can be signed with an officially recognized Certificate Authority (CA).
+
+##### Option A: SignPath Foundation (Free for Open Source) ⭐
+[SignPath Foundation](https://about.signpath.io/) provides free code signing certificates to qualifying open-source projects. MusicPod qualifies as a GPL-3.0 public repository built on GitHub-hosted runners.
+
+**Setup instructions:**
+1. **Apply for open-source signing:**
+   - Submit an application on [SignPath Apply](https://signpath.org/apply.html) with the repository URL (`https://github.com/ubuntu-flutter-community/musicpod`).
+2. **Install the SignPath GitHub App:**
+   - Once approved, install the **SignPath GitHub App** on the repository to verify build provenance.
+3. **Configure the SignPath Dashboard:**
+   - Create a project (e.g., `musicpod`), configure a signing policy (e.g., `release-signing`), and generate an API token under user settings.
+4. **Configure GitHub Secrets:**
+   - `SIGNPATH_API_TOKEN`: The generated SignPath API token.
+   - `SIGNPATH_ORGANIZATION_ID`: The SignPath organization UUID.
+5. **Update [.github/workflows/release.yml](.github/workflows/release.yml):**
+   Replace the local `signtool` step with SignPath's official action:
+   ```yaml
+   # 1. Upload the unsigned installer
+   - name: Upload unsigned installer to workflow storage
+     id: upload-unsigned
+     uses: actions/upload-artifact@v4
+     with:
+       name: unsigned-installer
+       path: windows/Output/musicpod-setup.exe
+
+   # 2. Submit to SignPath for signing
+   - name: Sign installer with SignPath
+     uses: signpath/github-action-submit-signing-request@v3
+     with:
+       api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+       organization-id: ${{ secrets.SIGNPATH_ORGANIZATION_ID }}
+       project-slug: 'musicpod'
+       signing-policy-slug: 'release-signing'
+       github-artifact-id: ${{ steps.upload-unsigned.outputs.artifact-id }}
+       wait-for-completion: true
+       output-artifact-directory: 'windows/Output'
+   ```
+
+##### Option B: Microsoft Trusted Signing (Azure Cloud Service)
+For maintainers using Azure:
+1. In the [Azure Portal](https://portal.azure.com/), create a **Trusted Signing Account**.
+2. Complete identity validation and create a **Certificate Profile**.
+3. Integrate into GitHub Actions using the official [`azure/trusted-signing-action`](https://github.com/azure/trusted-signing-action).
+
+#### Distributing via MSIX and the Microsoft Store
+
+To distribute MusicPod via the **Microsoft Store** (and `winget`), the application can be packaged as an MSIX bundle:
+- **Automatic trusted signing:** Microsoft signs the package automatically with its trusted store certificate upon ingestion.
+- **Native installation:** Users receive 1-click installation, background updates, and zero SmartScreen warnings.
+
+##### 1. Partner Center Setup and Configuration
+1. Register a developer account at [Microsoft Partner Center](https://partner.microsoft.com/dashboard).
+2. Under **Apps & Games**, reserve the application name (`MusicPod`).
+3. In **Product Management > Product Identity**, note the three required identity values:
+   - `Package/Identity/Name` (e.g., `FrederikFeichtmeier.MusicPod`)
+   - `Package/Identity/Publisher` (e.g., `CN=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX`)
+   - `Package/Properties/PublisherDisplayName` (e.g., `Frederik Feichtmeier`)
+4. Add the `msix` dev-dependency to `pubspec.yaml`:
+   ```yaml
+   dev_dependencies:
+     msix: ^3.16.8
+   ```
+5. Add the `msix_config` block at the root of `pubspec.yaml` using the Partner Center identity details:
+   ```yaml
+   msix_config:
+     display_name: MusicPod
+     publisher_display_name: Frederik Feichtmeier # Must match Package/Properties/PublisherDisplayName
+     identity_name: FrederikFeichtmeier.MusicPod   # Must match Package/Identity/Name
+     publisher: CN=XXXXXXXX-XXXX-XXXX-...          # Must match Package/Identity/Publisher
+     logo_path: assets/icon.png
+     capabilities:
+       - internetClient
+     store: true                                   # Marks package for Store submission and skips local signing
+     output_name: musicpod
+     output_path: build/windows/x64/runner/Release
+   ```
+
+##### 2. CI/CD Publishing Options
+
+Two ready-to-use jobs are provided in [.github/workflows/release.yml](.github/workflows/release.yml) (commented out at the bottom of the file):
+
+* **Option 1: Build MSIX and attach to GitHub Release (Semi-automated)**
+  - Uncomment `windows-msix-release` in `release.yml`.
+  - When a release is published, CI builds `musicpod.msix` and attaches it to the GitHub Release.
+  - Maintainers download `musicpod.msix` and upload it manually to Partner Center under **Packages**.
+
+* **Option 2: Direct Automated Publishing via Microsoft Store API (Fully automated)**
+  - Automates uploading and publishing submissions directly to Partner Center using the official `microsoft/microsoft-store-apppublisher` action.
+  - Requires linking an Entra ID (Azure AD) application in Partner Center (**Account settings > User management > Microsoft Entra applications**) with the **Manager** role.
+  - Configure the following repository secrets:
+    - `STORE_TENANT_ID`: Entra ID Directory (Tenant) ID.
+    - `STORE_CLIENT_ID`: Entra ID Application (Client) ID.
+    - `STORE_CLIENT_SECRET`: Entra ID Client Secret value.
+    - `STORE_SELLER_ID`: Partner Center Seller ID.
+    - `STORE_PRODUCT_ID`: Microsoft Store Product ID (e.g., `9N...`).
+  - Uncomment `windows-store-publish` in [.github/workflows/release.yml](.github/workflows/release.yml).
 
 ## Testing
 
