@@ -192,7 +192,7 @@ jobs:
           Write-Host "All $($requested.Count) Inno Setup language files are verified and ready!" -ForegroundColor Green
 
       - name: Build Inno Setup Installer
-        uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
+        uses: Minionguyjpro/Inno-Setup-Action@v1.2.9
         with:
           path: windows/inno.iss
 
