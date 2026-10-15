@@ -7,157 +7,22 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../common/data/audio.dart';
 import '../../common/data/audio_type.dart';
-import '../../common/logging.dart';
 import '../../common/view/languages.dart';
 import '../../dependencies.dart';
 import '../../extensions/platform_x.dart';
+import '../../extensions/ref_x.dart';
 import '../../extensions/string_x.dart';
-import '../../local_audio/data/local_search_result.dart';
 import '../../local_audio/service/local_audio_service.dart';
 import '../../podcasts/data/podcast_genre.dart';
 import '../../podcasts/service/podcast_service.dart';
 import '../../radio/service/radio_service.dart';
 import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/service/settings_service.dart';
+import '../data/search_state.dart';
 import '../data/search_timeout_exception.dart';
 import '../data/search_type.dart';
 
 part 'search_manager.g.dart';
-
-class SearchState {
-  const SearchState({
-    required this.audioType,
-    required this.searchTypes,
-    required this.searchType,
-    this.searchQuery,
-    this.country,
-    this.language,
-    this.tag,
-    this.podcastGenre = PodcastGenre.all,
-    this.podcastSearchAttribute = Attribute.none,
-    this.podcastLimit = SearchManager.podcastDefaultLimit,
-    this.radioLimit = SearchManager.radioDefaultLimit,
-    this.radioSearchResult,
-    this.localSearchResult,
-    this.podcastSearchResult,
-    this.isLoading = false,
-    this.error,
-    this.stackTrace,
-  });
-
-  final AudioType audioType;
-  final Set<SearchType> searchTypes;
-  final SearchType searchType;
-  final String? searchQuery;
-  final Country? country;
-  final SimpleLanguage? language;
-  final Tag? tag;
-  final PodcastGenre podcastGenre;
-  final Attribute podcastSearchAttribute;
-  final int podcastLimit;
-  final int radioLimit;
-  final List<Audio>? radioSearchResult;
-  final LocalSearchResult? localSearchResult;
-  final SearchResult? podcastSearchResult;
-  final bool isLoading;
-  final Object? error;
-  final StackTrace? stackTrace;
-
-  SearchState copyWith({
-    AudioType? audioType,
-    Set<SearchType>? searchTypes,
-    SearchType? searchType,
-    String? Function()? searchQuery,
-    Country? Function()? country,
-    SimpleLanguage? Function()? language,
-    Tag? Function()? tag,
-    PodcastGenre? podcastGenre,
-    Attribute? podcastSearchAttribute,
-    int? podcastLimit,
-    int? radioLimit,
-    List<Audio>? Function()? radioSearchResult,
-    LocalSearchResult? Function()? localSearchResult,
-    SearchResult? Function()? podcastSearchResult,
-    bool? isLoading,
-    Object? Function()? error,
-    StackTrace? Function()? stackTrace,
-  }) {
-    return SearchState(
-      audioType: audioType ?? this.audioType,
-      searchTypes: searchTypes ?? this.searchTypes,
-      searchType: searchType ?? this.searchType,
-      searchQuery: searchQuery != null ? searchQuery() : this.searchQuery,
-      country: country != null ? country() : this.country,
-      language: language != null ? language() : this.language,
-      tag: tag != null ? tag() : this.tag,
-      podcastGenre: podcastGenre ?? this.podcastGenre,
-      podcastSearchAttribute:
-          podcastSearchAttribute ?? this.podcastSearchAttribute,
-      podcastLimit: podcastLimit ?? this.podcastLimit,
-      radioLimit: radioLimit ?? this.radioLimit,
-      radioSearchResult: radioSearchResult != null
-          ? radioSearchResult()
-          : this.radioSearchResult,
-      localSearchResult: localSearchResult != null
-          ? localSearchResult()
-          : this.localSearchResult,
-      podcastSearchResult: podcastSearchResult != null
-          ? podcastSearchResult()
-          : this.podcastSearchResult,
-      isLoading: isLoading ?? this.isLoading,
-      error: error != null ? error() : this.error,
-      stackTrace: stackTrace != null ? stackTrace() : this.stackTrace,
-    );
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is SearchState &&
-        other.audioType == audioType &&
-        const SetEquality().equals(other.searchTypes, searchTypes) &&
-        other.searchType == searchType &&
-        other.searchQuery == searchQuery &&
-        other.country == country &&
-        other.language == language &&
-        other.tag == tag &&
-        other.podcastGenre == podcastGenre &&
-        other.podcastSearchAttribute == podcastSearchAttribute &&
-        other.podcastLimit == podcastLimit &&
-        other.radioLimit == radioLimit &&
-        const ListEquality().equals(
-          other.radioSearchResult,
-          radioSearchResult,
-        ) &&
-        other.localSearchResult == localSearchResult &&
-        other.podcastSearchResult == podcastSearchResult &&
-        other.isLoading == isLoading &&
-        other.error == error &&
-        other.stackTrace == stackTrace;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([
-    audioType,
-    Object.hashAll(searchTypes),
-    searchType,
-    searchQuery,
-    country,
-    language,
-    tag,
-    podcastGenre,
-    podcastSearchAttribute,
-    podcastLimit,
-    radioLimit,
-    radioSearchResult == null ? null : Object.hashAll(radioSearchResult!),
-    localSearchResult,
-    podcastSearchResult,
-    isLoading,
-    error,
-    stackTrace,
-  ]);
-}
 
 @riverpod
 class SearchManager extends _$SearchManager {
@@ -191,8 +56,7 @@ class SearchManager extends _$SearchManager {
 
   @override
   SearchState build() {
-    Logger.o(tag: '$SearchManager');
-
+    ref.cacheFor(const Duration(seconds: 10));
     final country = Country.values.firstWhereOrNull(
       (c) =>
           c.code ==
@@ -227,24 +91,7 @@ class SearchManager extends _$SearchManager {
     );
   }
 
-  // Getters for convenient access
   AudioType get audioType => state.audioType;
-  SearchType get searchType => state.searchType;
-  Set<SearchType> get searchTypes => state.searchTypes;
-  String? get searchQuery => state.searchQuery;
-  Country? get country => state.country;
-  SimpleLanguage? get language => state.language;
-  Tag? get tag => state.tag;
-  PodcastGenre get podcastGenre => state.podcastGenre;
-  Attribute get podcastSearchAttribute => state.podcastSearchAttribute;
-  int get podcastLimit => state.podcastLimit;
-  int get radioLimit => state.radioLimit;
-  List<Audio>? get radioSearchResult => state.radioSearchResult;
-  LocalSearchResult? get localSearchResult => state.localSearchResult;
-  SearchResult? get podcastSearchResult => state.podcastSearchResult;
-  bool get isLoading => state.isLoading;
-  Object? get error => state.error;
-  StackTrace? get stackTrace => state.stackTrace;
 
   void setAudioType(AudioType? value) {
     if (value == null || value == state.audioType) return;
