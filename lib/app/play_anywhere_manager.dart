@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../common/data/app_exceptions.dart';
-import '../common/logging.dart';
 import '../common/view/audio_page_type.dart';
 import '../dependencies.dart';
 import '../local_audio/service/local_audio_service.dart';
@@ -24,10 +23,7 @@ class PlayAnywhereManager extends _$PlayAnywhereManager {
   PlayAnywhereParam? get activeParam => _activeParam;
 
   @override
-  AsyncValue<PlayAnywhereResult?> build() {
-    Logger.o(tag: '$PlayAnywhereManager');
-    return const AsyncData(null);
-  }
+  AsyncValue<PlayAnywhereResult?> build() => const AsyncData(null);
 
   Future<PlayAnywhereResult?> play(PlayAnywhereParam param) async {
     _activeParam = param;

@@ -14,18 +14,16 @@ class OpenRadioSearchButton extends ConsumerWidget {
   final SearchType searchType;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return ElevatedButton(
-      onPressed: () {
-        ref
-            .read(routingManagerProvider.notifier)
-            .push(pageId: PageIDs.searchPage);
-        ref.read(searchManagerProvider.notifier)
-          ..setAudioType(AudioType.radio)
-          ..setSearchType(searchType)
-          ..search(clear: true);
-      },
-      child: Text(context.l10n.discover),
-    );
-  }
+  Widget build(BuildContext context, WidgetRef ref) => ElevatedButton(
+    onPressed: () {
+      ref.read(searchManagerProvider.notifier)
+        ..setAudioType(AudioType.radio)
+        ..setSearchType(searchType)
+        ..search(clear: true);
+      ref
+          .read(routingManagerProvider.notifier)
+          .push(pageId: PageIDs.searchPage);
+    },
+    child: Text(context.l10n.discover),
+  );
 }

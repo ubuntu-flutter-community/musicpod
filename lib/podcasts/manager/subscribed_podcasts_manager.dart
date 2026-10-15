@@ -1,6 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../common/logging.dart';
 import '../../dependencies.dart';
 import '../data/podcast_toggle_capsule.dart';
 import '../service/podcast_service.dart';
@@ -13,10 +12,7 @@ part 'subscribed_podcasts_manager.g.dart';
 @Riverpod(keepAlive: true)
 class SubscribedPodcastsManager extends _$SubscribedPodcastsManager {
   @override
-  Future<Set<String>> build() async {
-    Logger.o(tag: '$SubscribedPodcastsManager');
-    return di<PodcastService>().getSubscribedPodcasts();
-  }
+  Future<Set<String>> build() => di<PodcastService>().getSubscribedPodcasts();
 
   Future<void> togglePodcastSubscription({
     required String feedUrl,

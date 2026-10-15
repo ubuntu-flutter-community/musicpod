@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../common/data/audio.dart';
-import '../../common/logging.dart';
 import '../../dependencies.dart';
 import '../data/download_manager_state.dart';
 import '../data/podcast_download.dart';
@@ -20,7 +19,6 @@ class DownloadManager extends _$DownloadManager {
 
   @override
   Future<DownloadManagerState> build() async {
-    Logger.o(tag: '$DownloadManager');
     final dir = await _downloadService.setDownloadsDirectory(getDefault: true);
     return DownloadManagerState(downloadsDirectory: dir);
   }

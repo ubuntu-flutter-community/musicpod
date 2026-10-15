@@ -1,3 +1,4 @@
+import 'package:fake_async/fake_async.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -180,24 +181,36 @@ void main() {
     expect(state.error, isNotNull);
   });
 
-  test('SearchManager autoDisposes when no listeners remain', () async {
-    final container = ProviderContainer();
-    addTearDown(container.dispose);
+  test('SearchManager autoDisposes when no listeners remain', () {
+    fakeAsync((async) {
+      final container = ProviderContainer();
+      try {
+        final sub = container.listen(searchManagerProvider, (_, __) {});
+        final notifier = container.read(searchManagerProvider.notifier);
+        notifier.setSearchQuery('query to be disposed');
+        expect(
+          container.read(searchManagerProvider).searchQuery,
+          'query to be disposed',
+        );
 
-    final sub = container.listen(searchManagerProvider, (_, __) {});
-    final notifier = container.read(searchManagerProvider.notifier);
-    notifier.setSearchQuery('query to be disposed');
-    expect(
-      container.read(searchManagerProvider).searchQuery,
-      'query to be disposed',
-    );
+        // Close subscription: auto-dispose triggers timer
+        sub.close();
 
-    // Close subscription: auto-dispose triggers
-    sub.close();
-    await Future<void>.delayed(Duration.zero);
+        // Reading again immediately: still cached
+        expect(
+          container.read(searchManagerProvider).searchQuery,
+          'query to be disposed',
+        );
 
-    // Reading again should instantiate a brand new state (query is null)
-    expect(container.read(searchManagerProvider).searchQuery, isNull);
+        // Advance 10 seconds to expire the cache
+        async.elapse(const Duration(seconds: 10));
+
+        // Reading again should instantiate a brand new state (query is null)
+        expect(container.read(searchManagerProvider).searchQuery, isNull);
+      } finally {
+        container.dispose();
+      }
+    });
   });
 
   testWidgets('SliverRadioSearchResults builds without assertion error', (

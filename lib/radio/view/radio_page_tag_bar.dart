@@ -86,14 +86,15 @@ class RadioPageTagBar extends ConsumerWidget {
                 style: style,
                 wrapInFlexible: false,
                 onTap: () {
-                  ref
-                      .read(routingManagerProvider.notifier)
-                      .push(pageId: PageIDs.searchPage);
                   ref.read(searchManagerProvider.notifier)
                     ..setTag(Tag(name: e, stationCount: 1))
                     ..setAudioType(AudioType.radio)
                     ..setSearchType(SearchType.radioTag)
-                    ..search();
+                    ..search(clear: true);
+
+                  ref
+                      .read(routingManagerProvider.notifier)
+                      .push(pageId: PageIDs.searchPage);
                 },
                 text: e.length > 20 ? e.substring(0, 19) : e,
               ),

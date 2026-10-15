@@ -48,7 +48,7 @@ final class PlayAnywhereManagerProvider
 }
 
 String _$playAnywhereManagerHash() =>
-    r'a34e4bfbd6ae40941a08adf20c656df19b066ec3';
+    r'fbadf44d0cb4a345e52e7c35f3eb125f8399acae';
 
 abstract class _$PlayAnywhereManager
     extends $Notifier<AsyncValue<PlayAnywhereResult?>> {

@@ -11,17 +11,18 @@ import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i14;
 import 'package:musicpod/app/routing_manager.dart' as _i13;
 import 'package:musicpod/common/data/audio.dart' as _i10;
-import 'package:musicpod/common/data/audio_type.dart' as _i17;
+import 'package:musicpod/common/data/audio_type.dart' as _i18;
 import 'package:musicpod/common/view/audio_filter.dart' as _i11;
 import 'package:musicpod/common/view/languages.dart' as _i9;
 import 'package:musicpod/podcasts/data/podcast_genre.dart' as _i8;
 import 'package:musicpod/podcasts/data/podcast_short_info.dart' as _i12;
 import 'package:musicpod/podcasts/service/podcast_service.dart' as _i5;
-import 'package:musicpod/search/data/search_type.dart' as _i18;
-import 'package:musicpod/search/manager/search_manager.dart' as _i4;
-import 'package:musicpod/settings/service/settings_service.dart' as _i20;
+import 'package:musicpod/search/data/search_state.dart' as _i4;
+import 'package:musicpod/search/data/search_type.dart' as _i19;
+import 'package:musicpod/search/manager/search_manager.dart' as _i17;
+import 'package:musicpod/settings/service/settings_service.dart' as _i21;
 import 'package:podcast_search/podcast_search.dart' as _i7;
-import 'package:radio_browser_api/radio_browser_api.dart' as _i19;
+import 'package:radio_browser_api/radio_browser_api.dart' as _i20;
 import 'package:riverpod_annotation/riverpod_annotation.dart' as _i15;
 import 'package:state_notifier/state_notifier.dart' as _i16;
 
@@ -550,65 +551,18 @@ class MockRoutingManager extends _i1.Mock implements _i13.RoutingManager {
 /// A class which mocks [SearchManager].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSearchManager extends _i1.Mock implements _i4.SearchManager {
+class MockSearchManager extends _i1.Mock implements _i17.SearchManager {
   MockSearchManager() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i17.AudioType get audioType =>
+  _i18.AudioType get audioType =>
       (super.noSuchMethod(
             Invocation.getter(#audioType),
-            returnValue: _i17.AudioType.local,
+            returnValue: _i18.AudioType.local,
           )
-          as _i17.AudioType);
-
-  @override
-  _i18.SearchType get searchType =>
-      (super.noSuchMethod(
-            Invocation.getter(#searchType),
-            returnValue: _i18.SearchType.localTitle,
-          )
-          as _i18.SearchType);
-
-  @override
-  Set<_i18.SearchType> get searchTypes =>
-      (super.noSuchMethod(
-            Invocation.getter(#searchTypes),
-            returnValue: <_i18.SearchType>{},
-          )
-          as Set<_i18.SearchType>);
-
-  @override
-  _i8.PodcastGenre get podcastGenre =>
-      (super.noSuchMethod(
-            Invocation.getter(#podcastGenre),
-            returnValue: _i8.PodcastGenre.all,
-          )
-          as _i8.PodcastGenre);
-
-  @override
-  _i7.Attribute get podcastSearchAttribute =>
-      (super.noSuchMethod(
-            Invocation.getter(#podcastSearchAttribute),
-            returnValue: _i7.Attribute.none,
-          )
-          as _i7.Attribute);
-
-  @override
-  int get podcastLimit =>
-      (super.noSuchMethod(Invocation.getter(#podcastLimit), returnValue: 0)
-          as int);
-
-  @override
-  int get radioLimit =>
-      (super.noSuchMethod(Invocation.getter(#radioLimit), returnValue: 0)
-          as int);
-
-  @override
-  bool get isLoading =>
-      (super.noSuchMethod(Invocation.getter(#isLoading), returnValue: false)
-          as bool);
+          as _i18.AudioType);
 
   @override
   _i15.Ref get ref =>
@@ -647,13 +601,13 @@ class MockSearchManager extends _i1.Mock implements _i4.SearchManager {
           as _i4.SearchState);
 
   @override
-  void setAudioType(_i17.AudioType? value) => super.noSuchMethod(
+  void setAudioType(_i18.AudioType? value) => super.noSuchMethod(
     Invocation.method(#setAudioType, [value]),
     returnValueForMissingStub: null,
   );
 
   @override
-  void setSearchType(_i18.SearchType? value) => super.noSuchMethod(
+  void setSearchType(_i19.SearchType? value) => super.noSuchMethod(
     Invocation.method(#setSearchType, [value]),
     returnValueForMissingStub: null,
   );
@@ -677,7 +631,7 @@ class MockSearchManager extends _i1.Mock implements _i4.SearchManager {
   );
 
   @override
-  void setTag(_i19.Tag? value) => super.noSuchMethod(
+  void setTag(_i20.Tag? value) => super.noSuchMethod(
     Invocation.method(#setTag, [value]),
     returnValueForMissingStub: null,
   );
@@ -762,7 +716,7 @@ class MockSearchManager extends _i1.Mock implements _i4.SearchManager {
 /// A class which mocks [SettingsService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSettingsService extends _i1.Mock implements _i20.SettingsService {
+class MockSettingsService extends _i1.Mock implements _i21.SettingsService {
   MockSettingsService() {
     _i1.throwOnMissingStub(this);
   }
