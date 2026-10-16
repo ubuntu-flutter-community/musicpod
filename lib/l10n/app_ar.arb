@@ -916,5 +916,21 @@
     "podcastEpisodesNotFound": "",
     "tryToFetchLyricsOnlineTitle": "",
     "onlineLyricsSourceLrcLib": "",
-    "onlineLyricsSourceDescription": ""
+    "onlineLyricsSourceDescription": "",
+    "playOnlyLoadedEpisodes": "",
+    "@playOnlyLoadedEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    },
+    "playAllEpisodes": "",
+    "@playAllEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    }
 }

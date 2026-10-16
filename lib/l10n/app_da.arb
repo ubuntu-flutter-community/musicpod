@@ -933,5 +933,21 @@
     },
     "podcastEpisodesNotFound": "Der blev ikke fundet nogen episoder til denne podcast. De er muligvis blevet fjernet, eller podcasten er muligvis ikke længere tilgængelig med denne feed-URL.",
     "fetchingLyricsOnlineFailed": "",
-    "fetchingLyricsOnlineTimeoutMessage": ""
+    "fetchingLyricsOnlineTimeoutMessage": "",
+    "playOnlyLoadedEpisodes": "",
+    "@playOnlyLoadedEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    },
+    "playAllEpisodes": "",
+    "@playAllEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    }
 }

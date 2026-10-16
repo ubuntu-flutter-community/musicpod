@@ -919,5 +919,21 @@
             }
         }
     },
-    "podcastEpisodesNotFound": "Es wurden keine Episodes für diesen Podcast gefunden. Vielleicht sind sie aus der Quelle entfernt worden oder sie sind nicht länger unter dieser Adresse verfügbar."
+    "podcastEpisodesNotFound": "Es wurden keine Episodes für diesen Podcast gefunden. Vielleicht sind sie aus der Quelle entfernt worden oder sie sind nicht länger unter dieser Adresse verfügbar.",
+    "playOnlyLoadedEpisodes": "",
+    "@playOnlyLoadedEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    },
+    "playAllEpisodes": "",
+    "@playAllEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    }
 }

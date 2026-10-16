@@ -932,5 +932,21 @@
             }
         }
     },
-    "podcastEpisodesNotFound": "Tidak ada episode yang ditemukan untuk podcast ini. Episode mungkin telah dihapus atau podcast mungkin tidak tersedia lagi dengan URL umpan ini."
+    "podcastEpisodesNotFound": "Tidak ada episode yang ditemukan untuk podcast ini. Episode mungkin telah dihapus atau podcast mungkin tidak tersedia lagi dengan URL umpan ini.",
+    "playOnlyLoadedEpisodes": "",
+    "@playOnlyLoadedEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    },
+    "playAllEpisodes": "",
+    "@playAllEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    }
 }

@@ -933,5 +933,21 @@
     "mathematicsXXXPodcastIndexOnly": "",
     "regionNigeria": "",
     "societyXXXPodcastIndexOnly": "",
-    "showArtistPage": ""
+    "showArtistPage": "",
+    "playOnlyLoadedEpisodes": "",
+    "@playOnlyLoadedEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    },
+    "playAllEpisodes": "",
+    "@playAllEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    }
 }
