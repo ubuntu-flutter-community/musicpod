@@ -915,5 +915,21 @@
         }
     },
     "lookUpRadioBrowserHostsTimouted": "Η εύρεση διακομιστών του Περιηγητή (Browser) Ραδιοφώνου διαρκεί περισσότερο από το συνηθισμένο. Είστε συνδεδεμένοι στο internet; Αν ναι, ενδέχεται να είναι σφάλμα εξυπηρετητή.",
-    "geniusAlsoProvidesArt": "Το Genius παρέχει επίσης εξώφυλλα για τα περισσότερα τραγούδια. Αν ενεργοποιήσετε την ανάκτηση στίχων από το Genius, η online εικόνα στο πρόγραμμα αναπαραγωγής θα προέρχεται επίσης από το Genius αντί για το MusicBrainz."
+    "geniusAlsoProvidesArt": "Το Genius παρέχει επίσης εξώφυλλα για τα περισσότερα τραγούδια. Αν ενεργοποιήσετε την ανάκτηση στίχων από το Genius, η online εικόνα στο πρόγραμμα αναπαραγωγής θα προέρχεται επίσης από το Genius αντί για το MusicBrainz.",
+    "playOnlyLoadedEpisodes": "",
+    "@playOnlyLoadedEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    },
+    "playAllEpisodes": "",
+    "@playAllEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    }
 }
