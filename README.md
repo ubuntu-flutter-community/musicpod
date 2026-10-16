@@ -55,7 +55,7 @@ Thank you [@tomassasovsky](https://github.com/tomassasovsky) for the [dart imple
 
 Thank you [@ClementBeal](https://github.com/ClementBeal) for the super fast, pure dart [Audio Metadata Reader](https://github.com/ClementBeal/audio_metadata_reader)!
 
-Thank you [@escamoteur](https://github.com/escamoteur) for creating [get_it](https://pub.dev/packages/get_it), which made my application faster and the source code cleaner!
+Thank you [@rrousselGit](https://github.com/rrousselGit) for creating [riverpod](https://github.com/rrousselGit/riverpod)! It makes state management and auto disposing memory so much easier!
 
 ## Contributing
 

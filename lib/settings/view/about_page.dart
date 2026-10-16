@@ -201,7 +201,5 @@ const _sponsor = <String, String?>{
   'Stuart Jaggers (App Icon)': 'https://github.com/ubuntujaggers',
   'Hitesh Kumar Saini (MediaKit Dart MPV)':
       'https://github.com/sponsors/alexmercerind',
-  'ThomasBurkhart (watch_it state management and get_it)':
-      'https://github.com/sponsors/escamoteur',
   'Ken VanDine (snap packaging)': 'https://github.com/kenvandine',
 };

@@ -9,6 +9,8 @@ import 'package:musicpod/common/data/audio_type.dart';
 import 'package:musicpod/player/data/player_change.dart';
 import 'package:musicpod/player/manager/audio_progress_manager.dart';
 
+import 'package:musicpod/player/service/player_service.dart';
+
 import 'mpv_metadata_manager_test.mocks.dart';
 
 void main() {
@@ -17,8 +19,8 @@ void main() {
     late StreamController<PlayerChange> changesController;
     late ProviderContainer container;
 
-    setUp(() async {
-      await GetIt.I.reset();
+    setUp(() {
+      GetIt.I.pushNewScope();
       mockPlayerService = MockPlayerService();
       changesController = StreamController<PlayerChange>.broadcast();
 
@@ -27,19 +29,15 @@ void main() {
       ).thenAnswer((_) => changesController.stream);
       when(mockPlayerService.lastPositions).thenReturn({});
 
-      container = ProviderContainer(
-        overrides: [
-          audioProgressManagerProvider.overrideWith(
-            () => AudioProgressManager(playerService: mockPlayerService),
-          ),
-        ],
-      );
+      GetIt.I.registerSingleton<PlayerService>(mockPlayerService);
+
+      container = ProviderContainer();
     });
 
     tearDown(() async {
       container.dispose();
       await changesController.close();
-      await GetIt.I.reset();
+      await GetIt.I.popScope();
     });
 
     test('initial state reads lastPositions from PlayerService', () {
@@ -47,13 +45,7 @@ void main() {
         mockPlayerService.lastPositions,
       ).thenReturn({'url1': const Duration(seconds: 10)});
 
-      final customContainer = ProviderContainer(
-        overrides: [
-          audioProgressManagerProvider.overrideWith(
-            () => AudioProgressManager(playerService: mockPlayerService),
-          ),
-        ],
-      );
+      final customContainer = ProviderContainer();
 
       final state = customContainer.read(audioProgressManagerProvider);
       expect(state.lastPositions, {'url1': const Duration(seconds: 10)});
@@ -175,17 +167,5 @@ void main() {
       final state = container.read(audioProgressManagerProvider);
       expect(state.lastPositions, {'url2': const Duration(seconds: 45)});
     });
-
-    test(
-      'gracefully defaults to empty state when PlayerService is not registered',
-      () {
-        final emptyContainer = ProviderContainer();
-        final state = emptyContainer.read(audioProgressManagerProvider);
-        expect(state.lastPositions, isEmpty);
-        expect(state.isToggling, isFalse);
-        expect(state.hasMissingDuration, isFalse);
-        emptyContainer.dispose();
-      },
-    );
   });
 }

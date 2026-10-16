@@ -7,6 +7,8 @@ import 'package:mockito/mockito.dart';
 import 'package:musicpod/player/data/player_change.dart';
 import 'package:musicpod/player/manager/rate_manager.dart';
 
+import 'package:musicpod/player/service/player_service.dart';
+
 import 'mpv_metadata_manager_test.mocks.dart';
 
 void main() {
@@ -15,8 +17,8 @@ void main() {
     late StreamController<PlayerChange> changesController;
     late ProviderContainer container;
 
-    setUp(() async {
-      await GetIt.I.reset();
+    setUp(() {
+      GetIt.I.pushNewScope();
       mockPlayerService = MockPlayerService();
       changesController = StreamController<PlayerChange>.broadcast();
 
@@ -25,19 +27,15 @@ void main() {
       ).thenAnswer((_) => changesController.stream);
       when(mockPlayerService.rate).thenReturn(1.0);
 
-      container = ProviderContainer(
-        overrides: [
-          rateManagerProvider.overrideWith(
-            () => RateManager(playerService: mockPlayerService),
-          ),
-        ],
-      );
+      GetIt.I.registerSingleton<PlayerService>(mockPlayerService);
+
+      container = ProviderContainer();
     });
 
     tearDown(() async {
       container.dispose();
       await changesController.close();
-      await GetIt.I.reset();
+      await GetIt.I.popScope();
     });
 
     test('initial state reads rate from PlayerService', () {
@@ -67,12 +65,6 @@ void main() {
       await pumpEventQueue();
 
       expect(container.read(rateManagerProvider), 1.0);
-    });
-
-    test('gracefully defaults to 1.0 when PlayerService is not registered', () {
-      final emptyContainer = ProviderContainer();
-      expect(emptyContainer.read(rateManagerProvider), 1.0);
-      emptyContainer.dispose();
     });
   });
 }

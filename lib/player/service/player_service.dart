@@ -109,6 +109,10 @@ class PlayerService {
       }
     });
 
+    try {
+      _volume = player.state.volume;
+    } catch (_) {}
+
     _volumeSub ??= player.stream.volume.listen((value) {
       _volume = value;
       _changesController.add(VolumeChange(_volume));
@@ -315,10 +319,11 @@ class PlayerService {
     _changesController.add(ShuffleChange(_shuffle));
   }
 
-  double? _volume;
+  double? _volume = 100.0;
   double? get volume => _volume;
   Future<void> setVolume(double value) async {
     if (value == _volume) return;
+    _volume = value;
     await player.setVolume(value);
   }
 
@@ -741,6 +746,18 @@ class PlayerService {
     try {
       final state = await _dao.getPlayerState();
 
+      if (state.volume != null) {
+        final savedVolume = double.tryParse(state.volume!);
+        if (savedVolume != null) {
+          _volume = savedVolume;
+          await setVolume(savedVolume);
+        }
+      }
+
+      if (state.rate != null) {
+        await setRate(double.tryParse(state.rate!) ?? 1.0);
+      }
+
       Audio? audio;
       if (state.audioJson != null) {
         audio = Audio.fromMap(json.decode(state.audioJson!));
@@ -755,14 +772,6 @@ class PlayerService {
       }
       if (state.position != null) {
         setPosition(state.position!.parsedDuration);
-      }
-
-      if (state.volume != null) {
-        await setVolume(double.tryParse(state.volume!) ?? 100.0);
-      }
-
-      if (state.rate != null) {
-        await setRate(double.tryParse(state.rate!) ?? 1.0);
       }
 
       await _estimateNext();

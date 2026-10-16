@@ -11,66 +11,34 @@ part 'play_pause_manager.g.dart';
 
 @Riverpod(keepAlive: true)
 class PlayPauseManager extends _$PlayPauseManager {
-  PlayPauseManager({PlayerService? playerService})
-    : _playerServiceOverride = playerService;
-
-  final PlayerService? _playerServiceOverride;
-  PlayerService? get _playerService {
-    if (_playerServiceOverride != null) return _playerServiceOverride;
-    if (di.isRegistered<PlayerService>()) return di<PlayerService>();
-    return null;
-  }
+  PlayerService get _service => di<PlayerService>();
 
   StreamSubscription<PlayerChange>? _sub;
 
   @override
   bool build() {
     _sub?.cancel();
-    final service = _playerService;
-    if (service == null) return false;
 
-    _sub = service.changes.whereType<IsPlayingChange>().listen((change) {
+    _sub = _service.changes.whereType<IsPlayingChange>().listen((change) {
       state = change.isPlaying;
     });
 
-    ref.onDispose(() {
-      _sub?.cancel();
-    });
+    ref.onDispose(() => _sub?.cancel());
 
-    return service.isPlaying;
+    return _service.isPlaying;
   }
 
-  Future<void> playOrPause() async {
-    final service = _playerService;
-    if (service == null) return;
-    await service.playOrPause();
-  }
+  Future<void> playOrPause() => _service.playOrPause();
 
-  Future<void> pause() async {
-    final service = _playerService;
-    if (service == null) return;
-    await service.pause();
-  }
+  Future<void> pause() => _service.pause();
 
-  Future<void> resume() async {
-    final service = _playerService;
-    if (service == null) return;
-    await service.resume();
-  }
+  Future<void> resume() => _service.resume();
 
-  Future<void> stop() async {
-    final service = _playerService;
-    if (service == null) return;
-    await service.stop();
-  }
+  Future<void> stop() => _service.stop();
 
   Future<void> play({
     required List<Audio> audios,
     required String listName,
     int? index,
-  }) async {
-    final service = _playerService;
-    if (service == null) return;
-    await service.play(audios: audios, listName: listName, index: index);
-  }
+  }) => _service.play(audios: audios, listName: listName, index: index);
 }
