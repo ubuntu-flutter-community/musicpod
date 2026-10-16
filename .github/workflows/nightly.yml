@@ -28,6 +28,9 @@ jobs:
       - name: Generate Localization Files
         run: flutter gen-l10n
 
+      - name: format
+        run: dart format .
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v8
         with:
