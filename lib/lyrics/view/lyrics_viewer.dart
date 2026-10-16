@@ -162,7 +162,7 @@ class _PlayerLyricsState extends ConsumerState<_PlayerLyrics> {
                           ),
                         ) ??
                         true;
-                    return YaruTile(
+                    return ListTile(
                       title: Text(l10n.tryToFetchLyricsOnlineTitle),
                       trailing: CommonSwitch(
                         value: tryToFetch,
@@ -177,7 +177,7 @@ class _PlayerLyricsState extends ConsumerState<_PlayerLyrics> {
                     );
                   },
                 ),
-                YaruTile(
+                ListTile(
                   trailing: CommonSwitch(
                     value: _autoScroll,
                     onChanged: (v) => setState(() => _autoScroll = v),
