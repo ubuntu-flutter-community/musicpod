@@ -915,5 +915,21 @@
         }
     },
     "searchTimeoutMessage": "",
-    "playbackWasPausedByTimer": ""
+    "playbackWasPausedByTimer": "",
+    "playOnlyLoadedEpisodes": "",
+    "@playOnlyLoadedEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    },
+    "playAllEpisodes": "",
+    "@playAllEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    }
 }
