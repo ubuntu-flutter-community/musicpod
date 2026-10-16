@@ -933,5 +933,21 @@
     "regionGuyana": "",
     "removeAllStarredStations": "",
     "regionNigeria": "",
-    "showArtistPage": ""
+    "showArtistPage": "",
+    "playOnlyLoadedEpisodes": "",
+    "@playOnlyLoadedEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    },
+    "playAllEpisodes": "",
+    "@playAllEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    }
 }
