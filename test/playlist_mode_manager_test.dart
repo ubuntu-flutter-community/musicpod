@@ -8,6 +8,8 @@ import 'package:mockito/mockito.dart';
 import 'package:musicpod/player/data/player_change.dart';
 import 'package:musicpod/player/manager/playlist_mode_manager.dart';
 
+import 'package:musicpod/player/service/player_service.dart';
+
 import 'mpv_metadata_manager_test.mocks.dart';
 
 void main() {
@@ -16,8 +18,8 @@ void main() {
     late StreamController<PlayerChange> changesController;
     late ProviderContainer container;
 
-    setUp(() async {
-      await GetIt.I.reset();
+    setUp(() {
+      GetIt.I.pushNewScope();
       mockPlayerService = MockPlayerService();
       changesController = StreamController<PlayerChange>.broadcast();
 
@@ -26,19 +28,15 @@ void main() {
       ).thenAnswer((_) => changesController.stream);
       when(mockPlayerService.playlistMode).thenReturn(PlaylistMode.none);
 
-      container = ProviderContainer(
-        overrides: [
-          playlistModeManagerProvider.overrideWith(
-            () => PlaylistModeManager(playerService: mockPlayerService),
-          ),
-        ],
-      );
+      GetIt.I.registerSingleton<PlayerService>(mockPlayerService);
+
+      container = ProviderContainer();
     });
 
     tearDown(() async {
       container.dispose();
       await changesController.close();
-      await GetIt.I.reset();
+      await GetIt.I.popScope();
     });
 
     test('initial state reads playlistMode from PlayerService', () {
@@ -70,17 +68,5 @@ void main() {
 
       expect(container.read(playlistModeManagerProvider), PlaylistMode.none);
     });
-
-    test(
-      'gracefully defaults to PlaylistMode.none when PlayerService is not registered',
-      () {
-        final emptyContainer = ProviderContainer();
-        expect(
-          emptyContainer.read(playlistModeManagerProvider),
-          PlaylistMode.none,
-        );
-        emptyContainer.dispose();
-      },
-    );
   });
 }

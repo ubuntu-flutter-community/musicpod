@@ -10,38 +10,25 @@ part 'volume_manager.g.dart';
 
 @Riverpod(keepAlive: true)
 class VolumeManager extends _$VolumeManager {
-  VolumeManager({PlayerService? playerService})
-    : _playerServiceOverride = playerService;
-
-  final PlayerService? _playerServiceOverride;
-  PlayerService? get _playerService {
-    if (_playerServiceOverride != null) return _playerServiceOverride;
-    if (di.isRegistered<PlayerService>()) return di<PlayerService>();
-    return null;
-  }
+  PlayerService get _service => di<PlayerService>();
 
   StreamSubscription<PlayerChange>? _sub;
 
   @override
   double? build() {
     _sub?.cancel();
-    final service = _playerService;
-    if (service == null) return null;
 
-    _sub = service.changes.whereType<VolumeChange>().listen((change) {
-      state = change.volume;
-    });
+    _sub = _service.changes.whereType<VolumeChange>().listen(
+      (change) => state = change.volume,
+    );
 
-    ref.onDispose(() {
-      _sub?.cancel();
-    });
+    ref.onDispose(() => _sub?.cancel());
 
-    return service.volume;
+    return _service.volume ?? 100.0;
   }
 
-  Future<void> setVolume(double value) async {
-    final service = _playerService;
-    if (service == null) return;
-    await service.setVolume(value);
+  Future<void> setVolume(double value) {
+    state = value;
+    return _service.setVolume(value);
   }
 }

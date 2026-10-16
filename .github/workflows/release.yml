@@ -12,9 +12,10 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    runs-on: macos-latest
-    env:
-      MACOS_APP_RELEASE_PATH: build/macos/Build/Products/Release
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
       - uses: googleapis/release-please-action@v5
         id: release
@@ -93,3 +94,210 @@ jobs:
   #         recipe: "./appimage/AppImageBuilder.yml"
   #       env:
   #         UPDATE_INFO: gh-releases-zsync|ubuntu-flutter-community|musicpod|latest|*x86_64.AppImage.zsync
+
+  windows-release:
+    needs: release
+    if: ${{ needs.release.outputs.release_created == 'true' }}
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Flutter
+        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Windows executable
+        run: flutter build windows --release
+
+      - name: Ensure MSVC CRT DLLs are present
+        shell: pwsh
+        run: |
+          $crtDir = (Get-ChildItem -Path "C:\Program Files*\Microsoft Visual Studio\*\*\VC\Redist\MSVC\*\x64\Microsoft.VC*.CRT" | Select-Object -First 1).FullName
+          if ($crtDir) {
+            Copy-Item "$crtDir\*.dll" "build\windows\x64\runner\Release\" -Force -ErrorAction SilentlyContinue
+          }
+
+      - name: Decode signing certificate
+        shell: pwsh
+        env:
+          CERT_BASE64: ${{ secrets.WINDOWS_CERT_BASE64 }}
+        run: |
+          if ($env:CERT_BASE64) {
+            $certBytes = [Convert]::FromBase64String("$env:CERT_BASE64")
+            [IO.File]::WriteAllBytes("$env:TEMP\cert.pfx", $certBytes)
+            echo "Certificate decoded to $env:TEMP\cert.pfx"
+          } else {
+            echo "No WINDOWS_CERT_BASE64 secret found; skipping certificate decoding."
+          }
+
+      - name: Sign Main Executable
+        shell: pwsh
+        env:
+          CERT_PASSWORD: ${{ secrets.WINDOWS_CERT_PASSWORD }}
+        run: |
+          if (Test-Path "$env:TEMP\cert.pfx") {
+            $signtool = (Get-ChildItem -Path "C:\Program Files (x86)\Windows Kits\10\bin\*\x64\signtool.exe" | Select-Object -Last 1).FullName
+            & $signtool sign `
+              /f "$env:TEMP\cert.pfx" `
+              /p "$env:CERT_PASSWORD" `
+              /tr "http://timestamp.digicert.com" `
+              /td sha256 `
+              /fd sha256 `
+              "build\windows\x64\runner\Release\musicpod.exe"
+          } else {
+            echo "No certificate available; skipping executable signing."
+          }
+
+      - name: Verify and Download Inno Setup Languages
+        shell: pwsh
+        run: |
+          $innoLangDir = "${env:ProgramFiles(x86)}\Inno Setup 6\Languages"
+          if (-not (Test-Path $innoLangDir)) {
+            New-Item -ItemType Directory -Path $innoLangDir -Force | Out-Null
+          }
+
+          $requested = Select-String -Path "windows/inno.iss" -Pattern 'MessagesFile:\s*"compiler:Languages\\([^"]+)"' | 
+                       ForEach-Object { $_.Matches.Groups[1].Value }
+
+          foreach ($file in $requested) {
+            $targetPath = "$innoLangDir\$file"
+            if (-not (Test-Path $targetPath)) {
+              Write-Host "Language file missing on runner: $file. Downloading..."
+              $urls = @(
+                "https://raw.githubusercontent.com/jrsoftware/issrc/main/Files/Languages/$file",
+                "https://raw.githubusercontent.com/jrsoftware/issrc/main/Files/Languages/Unofficial/$file"
+              )
+              $downloaded = $false
+              foreach ($url in $urls) {
+                try {
+                  Invoke-WebRequest -Uri $url -OutFile $targetPath -UseBasicParsing -ErrorAction Stop
+                  Write-Host "Successfully downloaded $file from $url" -ForegroundColor Green
+                  $downloaded = $true
+                  break
+                } catch {
+                  # Try next URL
+                }
+              }
+              if (-not $downloaded) {
+                Write-Error "Could not find or download language file: $file"
+                exit 1
+              }
+            }
+          }
+          Write-Host "All $($requested.Count) Inno Setup language files are verified and ready!" -ForegroundColor Green
+
+      - name: Build Inno Setup Installer
+        uses: Minionguyjpro/Inno-Setup-Action@v1.2.9
+        with:
+          path: windows/inno.iss
+
+      - name: Sign Inno Setup Installer
+        shell: pwsh
+        env:
+          CERT_PASSWORD: ${{ secrets.WINDOWS_CERT_PASSWORD }}
+        run: |
+          if (Test-Path "$env:TEMP\cert.pfx") {
+            $signtool = (Get-ChildItem -Path "C:\Program Files (x86)\Windows Kits\10\bin\*\x64\signtool.exe" | Select-Object -Last 1).FullName
+            & $signtool sign `
+              /f "$env:TEMP\cert.pfx" `
+              /p "$env:CERT_PASSWORD" `
+              /tr "http://timestamp.digicert.com" `
+              /td sha256 `
+              /fd sha256 `
+              "windows\Output\musicpod-setup.exe"
+          } else {
+            echo "No certificate available; skipping installer signing."
+          }
+
+      - name: Upload Windows Installer to Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload ${{ needs.release.outputs.tag_name }} windows/Output/musicpod-setup.exe --clobber
+
+  # ---------------------------------------------------------------------------
+  # Microsoft Store Option 1: Build MSIX and attach to GitHub Release
+  # (Download the .msix and manually upload to Partner Center)
+  # See README.md ("Distributing via MSIX and the Microsoft Store")
+  # ---------------------------------------------------------------------------
+  # windows-msix-release:
+  #   needs: release
+  #   if: ${{ needs.release.outputs.release_created == 'true' }}
+  #   runs-on: windows-latest
+  #   permissions:
+  #     contents: write
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Set up Flutter
+  #       uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+  #
+  #     - name: Install dependencies
+  #       run: flutter pub get
+  #
+  #     - name: Build Windows executable
+  #       run: flutter build windows --release
+  #
+  #     - name: Create MSIX for Microsoft Store
+  #       # Note: When store: true is set in pubspec or --store is passed,
+  #       # msix does not sign locally; Microsoft signs upon Store submission.
+  #       run: dart run msix:create --store
+  #
+  #     - name: Upload MSIX to Release
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       run: gh release upload ${{ needs.release.outputs.tag_name }} build/windows/x64/runner/Release/musicpod.msix --clobber
+
+  # ---------------------------------------------------------------------------
+  # Microsoft Store Option 2: Direct Automated Publishing via Store API
+  # (Requires Microsoft Entra ID / Azure AD app linked in Partner Center)
+  # See README.md ("Distributing via MSIX and the Microsoft Store")
+  # ---------------------------------------------------------------------------
+  # windows-store-publish:
+  #   needs: release
+  #   if: ${{ needs.release.outputs.release_created == 'true' }}
+  #   runs-on: windows-latest
+  #   permissions:
+  #     contents: read
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Set up Flutter
+  #       uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+  #
+  #     - name: Install dependencies
+  #       run: flutter pub get
+  #
+  #     - name: Build Windows executable
+  #       run: flutter build windows --release
+  #
+  #     - name: Create MSIX for Microsoft Store
+  #       run: dart run msix:create --store
+  #
+  #     - name: Setup MSStore CLI
+  #       uses: microsoft/microsoft-store-apppublisher@v1
+  #
+  #     - name: Upload and Publish to Microsoft Store
+  #       shell: pwsh
+  #       env:
+  #         STORE_TENANT_ID: ${{ secrets.STORE_TENANT_ID }}
+  #         STORE_SELLER_ID: ${{ secrets.STORE_SELLER_ID }}
+  #         STORE_CLIENT_ID: ${{ secrets.STORE_CLIENT_ID }}
+  #         STORE_CLIENT_SECRET: ${{ secrets.STORE_CLIENT_SECRET }}
+  #         STORE_PRODUCT_ID: ${{ secrets.STORE_PRODUCT_ID }}
+  #       run: |
+  #         msstore reconfigure `
+  #           --tenantId "$env:STORE_TENANT_ID" `
+  #           --sellerId "$env:STORE_SELLER_ID" `
+  #           --clientId "$env:STORE_CLIENT_ID" `
+  #           --clientSecret "$env:STORE_CLIENT_SECRET"
+  #
+  #         msstore publish `
+  #           --productId "$env:STORE_PRODUCT_ID" `
+  #           --packagePath "build/windows/x64/runner/Release/musicpod.msix"

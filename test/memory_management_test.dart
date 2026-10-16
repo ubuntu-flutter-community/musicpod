@@ -12,12 +12,14 @@ import 'package:musicpod/local_audio/manager/liked_audio_paths_manager.dart';
 import 'package:musicpod/local_audio/manager/liked_audios_manager.dart';
 import 'package:musicpod/local_audio/manager/local_audio_manager.dart';
 import 'package:musicpod/local_audio/service/local_audio_service.dart';
+import 'package:musicpod/player/service/player_service.dart';
 import 'package:musicpod/podcasts/manager/download_manager.dart';
 import 'package:musicpod/podcasts/manager/episodes_manager.dart';
 import 'package:musicpod/podcasts/service/download_service.dart';
 import 'package:musicpod/podcasts/service/podcast_service.dart';
 
 import 'memory_management_test.mocks.dart';
+import 'mpv_metadata_manager_test.mocks.dart' show MockPlayerService;
 
 @GenerateMocks([LocalAudioService, DownloadService, PodcastService])
 class FakeLocalAudioManager extends LocalAudioManager {
@@ -290,6 +292,13 @@ void main() {
 
       GetIt.I.registerSingleton<PodcastService>(mockPodcastService);
       GetIt.I.registerSingleton<DownloadService>(mockDownloadService);
+
+      final mockPlayerService = MockPlayerService();
+      when(mockPlayerService.changes).thenAnswer((_) => const Stream.empty());
+      when(mockPlayerService.audio).thenReturn(null);
+      when(mockPlayerService.isPlaying).thenReturn(false);
+      when(mockPlayerService.lastPositions).thenReturn({});
+      GetIt.I.registerSingleton<PlayerService>(mockPlayerService);
     });
 
     test('initially loads only pageSize episodes into state', () async {

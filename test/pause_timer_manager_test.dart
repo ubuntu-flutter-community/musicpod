@@ -7,6 +7,8 @@ import 'package:mockito/mockito.dart';
 import 'package:musicpod/player/data/player_change.dart';
 import 'package:musicpod/player/manager/pause_timer_manager.dart';
 
+import 'package:musicpod/player/service/player_service.dart';
+
 import 'mpv_metadata_manager_test.mocks.dart';
 
 void main() {
@@ -15,8 +17,8 @@ void main() {
     late StreamController<PlayerChange> changesController;
     late ProviderContainer container;
 
-    setUp(() async {
-      await GetIt.I.reset();
+    setUp(() {
+      GetIt.I.pushNewScope();
       mockPlayerService = MockPlayerService();
       changesController = StreamController<PlayerChange>.broadcast();
 
@@ -25,19 +27,15 @@ void main() {
       ).thenAnswer((_) => changesController.stream);
       when(mockPlayerService.timer).thenReturn(null);
 
-      container = ProviderContainer(
-        overrides: [
-          pauseTimerManagerProvider.overrideWith(
-            () => PauseTimerManager(playerService: mockPlayerService),
-          ),
-        ],
-      );
+      GetIt.I.registerSingleton<PlayerService>(mockPlayerService);
+
+      container = ProviderContainer();
     });
 
     tearDown(() async {
       container.dispose();
       await changesController.close();
-      await GetIt.I.reset();
+      await GetIt.I.popScope();
     });
 
     test('initial state is false when timer is null', () {
@@ -50,13 +48,7 @@ void main() {
       addTearDown(timer.cancel);
       when(mockPlayerService.timer).thenReturn(timer);
 
-      final customContainer = ProviderContainer(
-        overrides: [
-          pauseTimerManagerProvider.overrideWith(
-            () => PauseTimerManager(playerService: mockPlayerService),
-          ),
-        ],
-      );
+      final customContainer = ProviderContainer();
 
       final state = customContainer.read(pauseTimerManagerProvider);
       expect(state, isTrue);
@@ -115,15 +107,5 @@ void main() {
 
       expect(container.read(pauseTimerManagerProvider), isTrue);
     });
-
-    test(
-      'gracefully defaults to false when PlayerService is not registered',
-      () {
-        final emptyContainer = ProviderContainer();
-        final state = emptyContainer.read(pauseTimerManagerProvider);
-        expect(state, isFalse);
-        emptyContainer.dispose();
-      },
-    );
   });
 }

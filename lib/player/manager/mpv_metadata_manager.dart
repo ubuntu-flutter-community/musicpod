@@ -10,7 +10,6 @@ import '../../dependencies.dart';
 import '../../expose/service/expose_service.dart';
 import '../../extensions/string_x.dart';
 import '../../radio/manager/online_art_manager.dart';
-import '../../radio/service/online_art_service.dart';
 import '../../settings/data/shared_preferences_keys.dart';
 import '../../settings/manager/settings_manager.dart';
 import '../data/mpv_meta_data.dart';
@@ -23,24 +22,8 @@ part 'mpv_metadata_manager.g.dart';
 
 @Riverpod(keepAlive: true)
 class MpvMetadataManager extends _$MpvMetadataManager {
-  MpvMetadataManager({
-    PlayerService? playerService,
-    ExposeService? exposeService,
-    OnlineArtService? onlineArtService,
-  }) : _playerServiceOverride = playerService,
-       _exposeServiceOverride = exposeService,
-       _onlineArtServiceOverride = onlineArtService;
-
-  final PlayerService? _playerServiceOverride;
-  final ExposeService? _exposeServiceOverride;
-  final OnlineArtService? _onlineArtServiceOverride;
-
-  PlayerService get _playerService =>
-      _playerServiceOverride ?? di<PlayerService>();
-  ExposeService get _exposeService =>
-      _exposeServiceOverride ?? di<ExposeService>();
-  OnlineArtService get _onlineArtService =>
-      _onlineArtServiceOverride ?? di<OnlineArtService>();
+  PlayerService get _playerService => di<PlayerService>();
+  ExposeService get _exposeService => di<ExposeService>();
 
   StreamSubscription<bool>? _playingSub;
   StreamSubscription<Audio?>? _audioSub;
@@ -178,9 +161,9 @@ class MpvMetadataManager extends _$MpvMetadataManager {
         ref.read(settingsBoolManagerProvider(SPKeys.dataSafeMode)) ?? false;
     String? albumArt;
     if (!isDataSafeMode) {
-      albumArt = await (_onlineArtServiceOverride != null
-          ? _onlineArtService.fetchAlbumArt(icyTitle: parsedIcyTitle)
-          : ref.read(onlineArtManagerProvider(parsedIcyTitle).future));
+      albumArt = await ref.read(
+        onlineArtManagerProvider(parsedIcyTitle).future,
+      );
     }
 
     if (_playerService.audio?.audioType != AudioType.radio) return;

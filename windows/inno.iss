@@ -4,7 +4,9 @@
 #define MyAppName      "MusicPod"
 #define SourceFolder    "..\build\windows\x64\runner\Release"
 #define MyAppExeName   "musicpod.exe"
-#define MyAppVersion    GetStringFileInfo(SourceFolder + '\' + MyAppExeName,"FileVersion")
+#ifndef MyAppVersion
+#define MyAppVersion    GetFileVersion(SourceFolder + '\' + MyAppExeName)
+#endif
 #define MyAppPublisher "feichtmeier.org"
 #define MyAppURL       "https://www.feichtmeier.org"
 #define CurrentYear     GetDateTimeString('yyyy','','')
@@ -42,7 +44,7 @@ DisableProgramGroupPage=yes
 LicenseFile="..\LICENSE"
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
-OutputBaseFilename=musicpod
+OutputBaseFilename=musicpod-setup
 SetupIconFile=runner\resources\app_icon.ico
 Compression=lzma
 SolidCompression=yes

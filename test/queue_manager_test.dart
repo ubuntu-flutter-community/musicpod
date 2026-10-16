@@ -10,6 +10,8 @@ import 'package:musicpod/player/data/player_change.dart';
 import 'package:musicpod/player/data/queue.dart';
 import 'package:musicpod/player/manager/queue_manager.dart';
 
+import 'package:musicpod/player/service/player_service.dart';
+
 import 'mpv_metadata_manager_test.mocks.dart';
 
 void main() {
@@ -33,8 +35,8 @@ void main() {
       audios: [testAudio1, testAudio2],
     );
 
-    setUp(() async {
-      await GetIt.I.reset();
+    setUp(() {
+      GetIt.I.pushNewScope();
       mockPlayerService = MockPlayerService();
       changesController = StreamController<PlayerChange>.broadcast();
 
@@ -43,19 +45,15 @@ void main() {
       ).thenAnswer((_) => changesController.stream);
       when(mockPlayerService.queue).thenReturn(initialQueue);
 
-      container = ProviderContainer(
-        overrides: [
-          queueManagerProvider.overrideWith(
-            () => QueueManager(playerService: mockPlayerService),
-          ),
-        ],
-      );
+      GetIt.I.registerSingleton<PlayerService>(mockPlayerService);
+
+      container = ProviderContainer();
     });
 
     tearDown(() async {
       container.dispose();
       await changesController.close();
-      await GetIt.I.reset();
+      await GetIt.I.popScope();
     });
 
     test('initial state reads queue from PlayerService', () {
@@ -125,12 +123,6 @@ void main() {
       await pumpEventQueue();
 
       expect(container.read(queueManagerProvider), initialQueue);
-    });
-
-    test('defaults to Queue.empty when PlayerService is not registered', () {
-      final emptyContainer = ProviderContainer();
-      expect(emptyContainer.read(queueManagerProvider), const Queue.empty());
-      emptyContainer.dispose();
     });
   });
 }
