@@ -2475,11 +2475,11 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String playAllEpisodes(String length) {
-    return 'Play all $length';
+    return '';
   }
 
   @override
   String playOnlyLoadedEpisodes(String length) {
-    return 'Play only $length';
+    return '';
   }
 }
