@@ -923,5 +923,21 @@
             }
         }
     },
-    "podcastEpisodesNotFound": "No se encontraron episodios para este pódcast. Es posible que hayan sido eliminados o que el pódcast ya no esté disponible con esta URL de feed."
+    "podcastEpisodesNotFound": "No se encontraron episodios para este pódcast. Es posible que hayan sido eliminados o que el pódcast ya no esté disponible con esta URL de feed.",
+    "playOnlyLoadedEpisodes": "",
+    "@playOnlyLoadedEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    },
+    "playAllEpisodes": "",
+    "@playAllEpisodes": {
+        "placeholders": {
+            "length": {
+                "type": "String"
+            }
+        }
+    }
 }
