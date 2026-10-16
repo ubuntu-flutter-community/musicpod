@@ -75,7 +75,8 @@ class AppLocalizationsEl extends AppLocalizations {
   String get localAudio => 'Τοπική μουσική συλλογή';
 
   @override
-  String get localAudioDescription => 'Η μουσική σου συλλογή, αποθηκευμένη στον υπολογιστή σου.';
+  String get localAudioDescription =>
+      'Η μουσική σου συλλογή, αποθηκευμένη στον υπολογιστή σου.';
 
   @override
   String get localAudioSubtitle => 'Δεν χρειάζεται σύνδεση στο διαδίκτυο';
@@ -96,10 +97,12 @@ class AppLocalizationsEl extends AppLocalizations {
   String get likedSongs => 'Αγαπημένα τραγούδια';
 
   @override
-  String get likedSongsDescription => 'Όλα τα τραγούδια που σου άρεσαν. Τοπικά ή από το διαδίκτυο.';
+  String get likedSongsDescription =>
+      'Όλα τα τραγούδια που σου άρεσαν. Τοπικά ή από το διαδίκτυο.';
 
   @override
-  String get likedSongsSubtitle => 'Πάτα την καρδιά για να προσθέσεις περισσότερους τίτλους.';
+  String get likedSongsSubtitle =>
+      'Πάτα την καρδιά για να προσθέσεις περισσότερους τίτλους.';
 
   @override
   String get cancel => 'Ακύρωση';
@@ -207,13 +210,16 @@ class AppLocalizationsEl extends AppLocalizations {
   String get search => 'Αναζήτηση';
 
   @override
-  String get noPodcastFound => 'Λυπάμαι, δεν βρέθηκε κανένα podcast με αυτή την αναζήτηση.';
+  String get noPodcastFound =>
+      'Λυπάμαι, δεν βρέθηκε κανένα podcast με αυτή την αναζήτηση.';
 
   @override
-  String get noPodcastChartsFound => 'Λυπάμαι, δεν υπάρχουν διαθέσιμα charts για αυτή τη χώρα ή κατηγορία.';
+  String get noPodcastChartsFound =>
+      'Λυπάμαι, δεν υπάρχουν διαθέσιμα charts για αυτή τη χώρα ή κατηγορία.';
 
   @override
-  String get noPodcastSubsFound => 'Δεν έχεις εγγραφεί σε κανένα podcast ακόμα.';
+  String get noPodcastSubsFound =>
+      'Δεν έχεις εγγραφεί σε κανένα podcast ακόμα.';
 
   @override
   String get charts => 'Charts';
@@ -282,19 +288,22 @@ class AppLocalizationsEl extends AppLocalizations {
   String get offline => 'εκτός σύνδεσης';
 
   @override
-  String get offlineDescription => 'Φαίνεται ότι ο υπολογιστής σου δεν είναι συνδεδεμένος στο διαδίκτυο.';
+  String get offlineDescription =>
+      'Φαίνεται ότι ο υπολογιστής σου δεν είναι συνδεδεμένος στο διαδίκτυο.';
 
   @override
   String get newEpisodeAvailable => 'Νέο επεισόδιο διαθέσιμο:';
 
   @override
-  String get noStationFound => 'Λυπάμαι, δεν βρέθηκε κανένας σταθμός με αυτή την αναζήτηση';
+  String get noStationFound =>
+      'Λυπάμαι, δεν βρέθηκε κανένας σταθμός με αυτή την αναζήτηση';
 
   @override
   String get nothingFound => 'Δεν βρεθήκε τίποτα';
 
   @override
-  String get noStarredStations => 'Δεν έχεις προσθέσει κανένα σταθμό στα αγαπημένα σου ακόμα.';
+  String get noStarredStations =>
+      'Δεν έχεις προσθέσει κανένα σταθμό στα αγαπημένα σου ακόμα.';
 
   @override
   String get tags => 'Tags';
@@ -336,7 +345,8 @@ class AppLocalizationsEl extends AppLocalizations {
   String get decreaseSearchLimit => 'Παρακαλώ μείωσε το όριο αναζήτησης για';
 
   @override
-  String get podcastFeedIsEmpty => 'Λυπάμαι, η ροή αυτού του podcast είναι άδεια.';
+  String get podcastFeedIsEmpty =>
+      'Λυπάμαι, η ροή αυτού του podcast είναι άδεια.';
 
   @override
   String get video => 'Βίντεο';
@@ -345,13 +355,16 @@ class AppLocalizationsEl extends AppLocalizations {
   String get ok => 'OK';
 
   @override
-  String get noLocalTitlesFound => 'Φαίνεται ότι η τοπική συλλογή μουσικής σου είναι άδεια. Έλεγξε την τοποθεσία της βιβλιοθήκης σου στις ρυθμίσεις.';
+  String get noLocalTitlesFound =>
+      'Φαίνεται ότι η τοπική συλλογή μουσικής σου είναι άδεια. Έλεγξε την τοποθεσία της βιβλιοθήκης σου στις ρυθμίσεις.';
 
   @override
-  String get noLocalSearchFound => 'Λυπάμαι, δεν βρέθηκε τοπική μουσική για αυτή την αναζήτηση.';
+  String get noLocalSearchFound =>
+      'Λυπάμαι, δεν βρέθηκε τοπική μουσική για αυτή την αναζήτηση.';
 
   @override
-  String get buyMusicOnline => 'Εδώ ίσως βρεις μουσική που θα θες να αγοράσεις:';
+  String get buyMusicOnline =>
+      'Εδώ ίσως βρεις μουσική που θα θες να αγοράσεις:';
 
   @override
   String get settings => 'Ρυθμίσεις';
@@ -446,7 +459,8 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
-  String get markAllEpisodesAsDone => 'Μάρκαρε όλα τα επεισόδια ως ολοκληρωμένα';
+  String get markAllEpisodesAsDone =>
+      'Μάρκαρε όλα τα επεισόδια ως ολοκληρωμένα';
 
   @override
   String get markEpisodeAsDone => 'Μάρκαρε το επεισόδιο ως ολοκληρωμένο';
@@ -464,7 +478,8 @@ class AppLocalizationsEl extends AppLocalizations {
   String get resetAllSettings => 'Επαναφορά όλων των ρυθμίσεων';
 
   @override
-  String get resetAllSettingsConfirm => 'Είσαι απόλυτα σίγουρος ότι θέλεις να επαναφέρεις όλες τις ρυθμίσεις, τις συνδρομές στα podcast, την πρόοδο στα podcast, τους αγαπημένους ραδιοφωνικούς σταθμούς και τα καρφιτσωμένα άλμπουμς;  Η εφαρμογή θα κλείσει μετά και θα χρειαστεί να την ανοίξεις ξανά.';
+  String get resetAllSettingsConfirm =>
+      'Είσαι απόλυτα σίγουρος ότι θέλεις να επαναφέρεις όλες τις ρυθμίσεις, τις συνδρομές στα podcast, την πρόοδο στα podcast, τους αγαπημένους ραδιοφωνικούς σταθμούς και τα καρφιτσωμένα άλμπουμς;  Η εφαρμογή θα κλείσει μετά και θα χρειαστεί να την ανοίξεις ξανά.';
 
   @override
   String get confirm => 'Επιβεβαιώνω';
@@ -473,37 +488,46 @@ class AppLocalizationsEl extends AppLocalizations {
   String get confirmation => 'Επιβεβαίωση';
 
   @override
-  String get isMaybeLowBandwidthDialogTitle => 'Δεν υπάρχει σύνδεση WIFI/Ethernet';
+  String get isMaybeLowBandwidthDialogTitle =>
+      'Δεν υπάρχει σύνδεση WIFI/Ethernet';
 
   @override
-  String get isMaybeLowBandwidthDialogBody => 'Δεν είσαι συνδεδεμένος σε WIFI ή Ethernet. Θέλεις να ενεργοποιήσεις τη λειτουργία εξοικονόμησης δεδομένων;';
+  String get isMaybeLowBandwidthDialogBody =>
+      'Δεν είσαι συνδεδεμένος σε WIFI ή Ethernet. Θέλεις να ενεργοποιήσεις τη λειτουργία εξοικονόμησης δεδομένων;';
 
   @override
   String get isBackInWifiDialogTitle => 'Πίσω σε WIFI/Ethernet';
 
   @override
-  String get isBackInWifiDialogBody => 'Είσαι συνδεδεμένος σε WIFI ή Ethernet. Θέλεις να απενεργοποιήσεις τη λειτουργία εξοικονόμησης δεδομένων;';
+  String get isBackInWifiDialogBody =>
+      'Είσαι συνδεδεμένος σε WIFI ή Ethernet. Θέλεις να απενεργοποιήσεις τη λειτουργία εξοικονόμησης δεδομένων;';
 
   @override
-  String get enableDataSafeModeSettingTitle => 'Λετουργία εξοικονόμησης δεδομένων';
+  String get enableDataSafeModeSettingTitle =>
+      'Λετουργία εξοικονόμησης δεδομένων';
 
   @override
-  String get dataSafeModeEnabled => 'Σύνδεση μέσω κινητού: Λειτουργία εξοικονόμησης δεδομένων ενεργοποιημένη.';
+  String get dataSafeModeEnabled =>
+      'Σύνδεση μέσω κινητού: Λειτουργία εξοικονόμησης δεδομένων ενεργοποιημένη.';
 
   @override
-  String get dataSafeModeDisabled => 'Wifi/Ethernet: Λειτουργία εξοικονόμησης δεδομένων απενεργοποιημένη.';
+  String get dataSafeModeDisabled =>
+      'Wifi/Ethernet: Λειτουργία εξοικονόμησης δεδομένων απενεργοποιημένη.';
 
   @override
-  String get enableDataSafeModeSettingDescription => 'Όταν είναι ενεργοποιημένη, η εφαρμογή δεν θα προσπαθήσει να κατεβάσει εξώφυλλα από σταθμούς που στέλνουν εξώφυλλα μέσω ραδιοφωνικών σταθμών.';
+  String get enableDataSafeModeSettingDescription =>
+      'Όταν είναι ενεργοποιημένη, η εφαρμογή δεν θα προσπαθήσει να κατεβάσει εξώφυλλα από σταθμούς που στέλνουν εξώφυλλα μέσω ραδιοφωνικών σταθμών.';
 
   @override
   String get stopToNotifyAboutDataSafeMode => 'Σταμάτα να με ειδοποιείς';
 
   @override
-  String get notifyMeAboutDataSafeModeTitle => 'Ειδοποιήσεις λειτουργίας εξοικονόμησης δεδομένων';
+  String get notifyMeAboutDataSafeModeTitle =>
+      'Ειδοποιήσεις λειτουργίας εξοικονόμησης δεδομένων';
 
   @override
-  String get notifyMeAboutDataSafeModeDescription => 'Ειδοποιήσε με σχετικά με την κατάσταση της λειτουργίας εξοικονόμησης δεδομένων';
+  String get notifyMeAboutDataSafeModeDescription =>
+      'Ειδοποιήσε με σχετικά με την κατάσταση της λειτουργίας εξοικονόμησης δεδομένων';
 
   @override
   String get resourceSectionTitle => 'Πόροι συσκευής';
@@ -515,10 +539,12 @@ class AppLocalizationsEl extends AppLocalizations {
   String get downloadsDirectory => 'Τοποθεσία των λήψεών σου';
 
   @override
-  String get downloadsDirectoryDescription => 'Βεβαιώσου ότι το MusicPod έχει πρόσβαση σε αυτόν τον φάκελο!';
+  String get downloadsDirectoryDescription =>
+      'Βεβαιώσου ότι το MusicPod έχει πρόσβαση σε αυτόν τον φάκελο!';
 
   @override
-  String get downloadsChangeWarning => 'Αλλάζοντας τον φάκελο των λήψεων θα διαγράψεις όλες τις τρέχουσες λήψεις. Θέλεις να συνεχίσεις;';
+  String get downloadsChangeWarning =>
+      'Αλλάζοντας τον φάκελο των λήψεων θα διαγράψεις όλες τις τρέχουσες λήψεις. Θέλεις να συνεχίσεις;';
 
   @override
   String get moreOptions => 'Περισσότερες επιλογές';
@@ -554,7 +580,8 @@ class AppLocalizationsEl extends AppLocalizations {
   String get removeFrom => 'Αφαίρεση από';
 
   @override
-  String get noCountryFound => 'Δεν μπορεί να βρεθεί κάποια χώρα με αυτό το όνομα. Μπορείς επίσης να χρησιμοποιήσεις προθέματα τηλεφώνου όπως +49';
+  String get noCountryFound =>
+      'Δεν μπορεί να βρεθεί κάποια χώρα με αυτό το όνομα. Μπορείς επίσης να χρησιμοποιήσεις προθέματα τηλεφώνου όπως +49';
 
   @override
   String get noStarredTags => 'Δεν είχες κανένα αγαπημένο tag ακόμα';
@@ -581,13 +608,16 @@ class AppLocalizationsEl extends AppLocalizations {
   String get useMoreAnimationsTitle => 'Χρησιμοποιήσε περισσότερες κινήσεις';
 
   @override
-  String get useMoreAnimationsDescription => 'Αυτό θα αυξήσει ελαφρώς τη χρήση του CPU, κάτι που μπορεί να μην είναι επιθυμητό σε παλαιότερο υλικό.';
+  String get useMoreAnimationsDescription =>
+      'Αυτό θα αυξήσει ελαφρώς τη χρήση του CPU, κάτι που μπορεί να μην είναι επιθυμητό σε παλαιότερο υλικό.';
 
   @override
-  String get showPositionDurationTitle => 'Δείξε τη θέση / διάρκεια στο κάτω μέρος του αναπαραγωγέα';
+  String get showPositionDurationTitle =>
+      'Δείξε τη θέση / διάρκεια στο κάτω μέρος του αναπαραγωγέα';
 
   @override
-  String get showPositionDurationDescription => 'Διαφορετικά, εμφανίζεται πάντα όταν περνάς το ποντίκι πάνω στο κομμάτι και στην λειτουργία πλήρους οθόνης.';
+  String get showPositionDurationDescription =>
+      'Διαφορετικά, εμφανίζεται πάντα όταν περνάς το ποντίκι πάνω στο κομμάτι και στην λειτουργία πλήρους οθόνης.';
 
   @override
   String get license => 'Άδεια';
@@ -938,13 +968,16 @@ class AppLocalizationsEl extends AppLocalizations {
   String get hearingHistory => 'Ιστορικό ακρόασης';
 
   @override
-  String get emptyHearingHistory => 'Δεν έχεις ακούσει ακόμα ράδιο σε αυτή τη συνεδρία της εφαρμογής';
+  String get emptyHearingHistory =>
+      'Δεν έχεις ακούσει ακόμα ράδιο σε αυτή τη συνεδρία της εφαρμογής';
 
   @override
-  String get searchForRadioStationsWithGenreName => 'Αναζήτηση ραδιοφωνικών σταθμών με αυτό το είδος μουσικής';
+  String get searchForRadioStationsWithGenreName =>
+      'Αναζήτηση ραδιοφωνικών σταθμών με αυτό το είδος μουσικής';
 
   @override
-  String get clearPlaylist => 'Διαγραφή όλων των μέσων από την λίστα αναπαραγωγής';
+  String get clearPlaylist =>
+      'Διαγραφή όλων των μέσων από την λίστα αναπαραγωγής';
 
   @override
   String get editPlaylist => 'Επεξεργασία λίστας αναπαραγωγής';
@@ -968,16 +1001,20 @@ class AppLocalizationsEl extends AppLocalizations {
   String get loadFromFileOptional => 'Φόρτωση από αρχείο (προαιρετικό)';
 
   @override
-  String get exportPinnedAlbumsToM3UFiles => 'Εξαγωγή καρφιτσωμένων άλμπουμ σε αρχεία M3U';
+  String get exportPinnedAlbumsToM3UFiles =>
+      'Εξαγωγή καρφιτσωμένων άλμπουμ σε αρχεία M3U';
 
   @override
-  String get exportPinnedAlbumToM3UFile => 'Εξαγωγή καρφιτσωμένου άλμπουμ σε αρχείο M3U';
+  String get exportPinnedAlbumToM3UFile =>
+      'Εξαγωγή καρφιτσωμένου άλμπουμ σε αρχείο M3U';
 
   @override
-  String get exportPlaylistToM3UFile => 'Εξαγωγή λίστας αναπαραγωγής σε αρχείο M3U';
+  String get exportPlaylistToM3UFile =>
+      'Εξαγωγή λίστας αναπαραγωγής σε αρχείο M3U';
 
   @override
-  String get exportPlaylistsAndAlbumsToM3UFiles => 'Εξαγωγή λιστών αναπαραγωγής και καρφιτσωμένων άλμπουμ σε αρχεία M3U';
+  String get exportPlaylistsAndAlbumsToM3UFiles =>
+      'Εξαγωγή λιστών αναπαραγωγής και καρφιτσωμένων άλμπουμ σε αρχεία M3U';
 
   @override
   String get exportPodcastsToOpmlFile => 'Εξαγωγή podcast σε αρχείο OPML';
@@ -986,37 +1023,45 @@ class AppLocalizationsEl extends AppLocalizations {
   String get importPodcastsFromOpmlFile => 'Εισαγωγή podcast από αρχείο OPML';
 
   @override
-  String get exportStarredStationsToOpmlFile => 'Εξαγωγή αγαπημένων σταθμών σε αρχείο OPML';
+  String get exportStarredStationsToOpmlFile =>
+      'Εξαγωγή αγαπημένων σταθμών σε αρχείο OPML';
 
   @override
-  String get importStarredStationsFromOpmlFile => 'Εισαγωγή αγαπημένων σταθμών από αρχείο OPML';
+  String get importStarredStationsFromOpmlFile =>
+      'Εισαγωγή αγαπημένων σταθμών από αρχείο OPML';
 
   @override
   String get removeAllStarredStations => 'Αφαίρεση όλων των αγαπημένων σταθμών';
 
   @override
-  String get removeAllStarredStationsConfirm => 'Είσαι σίγουρος ότι θέλεις να αφαιρέσεις όλους τους αγαπημένους σταθμούς;';
+  String get removeAllStarredStationsConfirm =>
+      'Είσαι σίγουρος ότι θέλεις να αφαιρέσεις όλους τους αγαπημένους σταθμούς;';
 
   @override
-  String get removeAllStarredStationsDescription => 'Αυτό θα αφαιρέσει όλους τους αγαπημένους σταθμούς σου.';
+  String get removeAllStarredStationsDescription =>
+      'Αυτό θα αφαιρέσει όλους τους αγαπημένους σταθμούς σου.';
 
   @override
   String get removeAllPodcasts => 'Αφαίρεση όλων των podcast';
 
   @override
-  String get removeAllPodcastsConfirm => 'Είσαι σίγουρος ότι θέλεις να αφαιρέσεις όλα τα podcast;';
+  String get removeAllPodcastsConfirm =>
+      'Είσαι σίγουρος ότι θέλεις να αφαιρέσεις όλα τα podcast;';
 
   @override
-  String get removeAllPodcastsDescription => 'Αυτό θα αφαιρέσει όλες τις συνδρομές και τις προόδους των podcast σου.';
+  String get removeAllPodcastsDescription =>
+      'Αυτό θα αφαιρέσει όλες τις συνδρομές και τις προόδους των podcast σου.';
 
   @override
   String get customContentTitle => 'Πρόσθεσε εξατομικευμένο περιεχόμενο';
 
   @override
-  String get customContentDescription => 'Αν δεν θέλεις να χρησιμοποιήσεις τη λειτουργία αναζήτησης radiobrowser ή podcast, μπορείς να προσθέσεις το δικό σου περιεχόμενο εδώ, ή μπορείς να προσθέσεις κενές λίστες αναπαραγωγής ή να εισαγεις λίστες αναπαραγωγής από αρχεία M3U και PLS.';
+  String get customContentDescription =>
+      'Αν δεν θέλεις να χρησιμοποιήσεις τη λειτουργία αναζήτησης radiobrowser ή podcast, μπορείς να προσθέσεις το δικό σου περιεχόμενο εδώ, ή μπορείς να προσθέσεις κενές λίστες αναπαραγωγής ή να εισαγεις λίστες αναπαραγωγής από αρχεία M3U και PLS.';
 
   @override
-  String get setPlaylistNameAndAddMoreLater => 'Όρισε το όνομα της λίστας αναπαραγωγής και πρόσθεσε περισσότερους τίτλους αργότερα';
+  String get setPlaylistNameAndAddMoreLater =>
+      'Όρισε το όνομα της λίστας αναπαραγωγής και πρόσθεσε περισσότερους τίτλους αργότερα';
 
   @override
   String get or => 'ή';
@@ -1046,13 +1091,16 @@ class AppLocalizationsEl extends AppLocalizations {
   String get radioTagDisclaimerTitle => 'Αυτός ο σταθμός στέλνει πολλά tags.';
 
   @override
-  String get radioTagDisclaimerSubTitle => 'Κάποιες φορές οι σταθμοί στέλνουν tags που δεν ταιριάζουν με τα είδη μουσικής. Το MusicPod δεν είναι υπεύθυνο για το περιεχόμενο!';
+  String get radioTagDisclaimerSubTitle =>
+      'Κάποιες φορές οι σταθμοί στέλνουν tags που δεν ταιριάζουν με τα είδη μουσικής. Το MusicPod δεν είναι υπεύθυνο για το περιεχόμενο!';
 
   @override
-  String get podcastFeedLoadingTimeout => 'Η φόρτωση της ροής του podcast διαρκεί περισσότερο από το συνηθισμένο...';
+  String get podcastFeedLoadingTimeout =>
+      'Η φόρτωση της ροής του podcast διαρκεί περισσότερο από το συνηθισμένο...';
 
   @override
-  String get gitHubClientConnectError => 'Αδυναμία φόρτωσης της online έκδοσης από το GitHub.';
+  String get gitHubClientConnectError =>
+      'Αδυναμία φόρτωσης της online έκδοσης από το GitHub.';
 
   @override
   String get replayEpisode => 'Επανάληψη επεισοδίου';
@@ -1074,7 +1122,8 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
-  String get schedulePlaybackStopTimer => 'Προγραμματισμός χρονοδιακόπτη για διακοπή αναπαραγωγής';
+  String get schedulePlaybackStopTimer =>
+      'Προγραμματισμός χρονοδιακόπτη για διακοπή αναπαραγωγής';
 
   @override
   String get alwaysAsk => 'Ρώτα κάθε φορά';
@@ -1095,7 +1144,8 @@ class AppLocalizationsEl extends AppLocalizations {
   String get closeMusicPod => 'Κλείσιμο MusicPod;';
 
   @override
-  String get confirmCloseOrHideTip => 'Παρακαλώ επιβεβαίωσε αν θέλεις να κλείσεις την εφαρμογή ή να την αποκρύψεις';
+  String get confirmCloseOrHideTip =>
+      'Παρακαλώ επιβεβαίωσε αν θέλεις να κλείσεις την εφαρμογή ή να την αποκρύψεις';
 
   @override
   String get doNotAskAgain => 'Μην ξαναρωτήσεις';
@@ -1107,7 +1157,8 @@ class AppLocalizationsEl extends AppLocalizations {
   String get searchSimilarStation => 'Αναζήτηση παρόμοιου σταθμού';
 
   @override
-  String get onlineArtError => 'Η διαδικτυακή αναζήτηση εξωφύλλων δεν είναι διαθέσιμη αυτή τη στιγμή';
+  String get onlineArtError =>
+      'Η διαδικτυακή αναζήτηση εξωφύλλων δεν είναι διαθέσιμη αυτή τη στιγμή';
 
   @override
   String get clicks => 'κλικς';
@@ -1119,19 +1170,22 @@ class AppLocalizationsEl extends AppLocalizations {
   String get toClick => 'κλικ';
 
   @override
-  String get exposeOnlineHeadline => 'Κοινοποίησε διαδικτυακά τη δραστηριότητα ακρόασης σας';
+  String get exposeOnlineHeadline =>
+      'Κοινοποίησε διαδικτυακά τη δραστηριότητα ακρόασης σας';
 
   @override
   String get exposeToDiscordTitle => 'Discord';
 
   @override
-  String get exposeToDiscordSubTitle => 'Καλλιτέχνης και τίτλος του τραγουδιού/σταθμού/podcast που ακούς αυτή τη στιγμή κοινοποιούνται.';
+  String get exposeToDiscordSubTitle =>
+      'Καλλιτέχνης και τίτλος του τραγουδιού/σταθμού/podcast που ακούς αυτή τη στιγμή κοινοποιούνται.';
 
   @override
   String get exposeToLastfmTitle => 'Last.fm';
 
   @override
-  String get exposeToLastfmSubTitle => 'Καλλιτέχνης και τίτλος του τραγουδιού/σταθμού/podcast που ακούς αυτή τη στιγμή κοινοποιούνται.';
+  String get exposeToLastfmSubTitle =>
+      'Καλλιτέχνης και τίτλος του τραγουδιού/σταθμού/podcast που ακούς αυτή τη στιγμή κοινοποιούνται.';
 
   @override
   String get lastfmApiKey => 'Last.fm κλειδί API';
@@ -1149,7 +1203,8 @@ class AppLocalizationsEl extends AppLocalizations {
   String get exposeToListenBrainzTitle => 'ListenBrainz';
 
   @override
-  String get exposeToListenBrainzSubTitle => 'Καλλιτέχνης και τίτλος του τραγουδιού/σταθμού/podcast που ακούς αυτή τη στιγμή κοινοποιούνται.';
+  String get exposeToListenBrainzSubTitle =>
+      'Καλλιτέχνης και τίτλος του τραγουδιού/σταθμού/podcast που ακούς αυτή τη στιγμή κοινοποιούνται.';
 
   @override
   String get listenBrainzApiKey => 'ListenBrainz κλειδί API';
@@ -1158,7 +1213,8 @@ class AppLocalizationsEl extends AppLocalizations {
   String get listenBrainzApiKeyEmpty => 'Παρακαλώ εισάγετε ένα API κλειδί';
 
   @override
-  String get featureDisabledOnPlatform => 'Αυτή η λειτουργία είναι απενεργοποιημένη στο λειτουργικό σύστημά σου.';
+  String get featureDisabledOnPlatform =>
+      'Αυτή η λειτουργία είναι απενεργοποιημένη στο λειτουργικό σύστημά σου.';
 
   @override
   String get regionNone => 'Καμία';
@@ -1260,7 +1316,8 @@ class AppLocalizationsEl extends AppLocalizations {
   String get regionBrazil => 'Brazil';
 
   @override
-  String get regionBritishindianoceanterrirory => 'British Indian Ocean Territory';
+  String get regionBritishindianoceanterrirory =>
+      'British Indian Ocean Territory';
 
   @override
   String get regionBritishvirginislands => 'British Virgin Islands';
@@ -1320,7 +1377,8 @@ class AppLocalizationsEl extends AppLocalizations {
   String get regionCongo => 'Congo';
 
   @override
-  String get regionCongodemocraticrepublicof => 'Democratic Republic of the Congo';
+  String get regionCongodemocraticrepublicof =>
+      'Democratic Republic of the Congo';
 
   @override
   String get regionCookislands => 'Cook Islands';
@@ -1455,7 +1513,8 @@ class AppLocalizationsEl extends AppLocalizations {
   String get regionHaiti => 'Hait';
 
   @override
-  String get regionHeardislandandmcdonaldislands => 'Heard Island and McDonald Islands';
+  String get regionHeardislandandmcdonaldislands =>
+      'Heard Island and McDonald Islands';
 
   @override
   String get regionHonduras => 'Honduras';
@@ -1731,7 +1790,8 @@ class AppLocalizationsEl extends AppLocalizations {
   String get regionSaintpierreandmiquelon => 'Saint Pierre and Miquelon';
 
   @override
-  String get regionSaintvincentandthegrenadines => 'Saint Vincent and the Grenadines';
+  String get regionSaintvincentandthegrenadines =>
+      'Saint Vincent and the Grenadines';
 
   @override
   String get regionSamoa => 'Samoa';
@@ -1779,7 +1839,8 @@ class AppLocalizationsEl extends AppLocalizations {
   String get regionSouthafrica => 'South Africa';
 
   @override
-  String get regionSouthgeorgiaandthesouthsandwichislands => 'South Georgia and the South Sandwich Islands';
+  String get regionSouthgeorgiaandthesouthsandwichislands =>
+      'South Georgia and the South Sandwich Islands';
 
   @override
   String get regionSouthkorea => 'Southen Korea';
@@ -1872,7 +1933,8 @@ class AppLocalizationsEl extends AppLocalizations {
   String get regionUnitedstates => 'United States';
 
   @override
-  String get regionUnitedstatesminoroutlyingislands => 'United States Minor Outlying Islands';
+  String get regionUnitedstatesminoroutlyingislands =>
+      'United States Minor Outlying Islands';
 
   @override
   String get regionUruguay => 'Uruguay';
@@ -1911,22 +1973,28 @@ class AppLocalizationsEl extends AppLocalizations {
   String get regionZimbabwe => 'Zimbabwe';
 
   @override
-  String get failedToReadMetadata => 'Η ανάγνωση των μεταδεδομένων απέτυχε για τα ακόλουθα αρχεία πολυμέσων:';
+  String get failedToReadMetadata =>
+      'Η ανάγνωση των μεταδεδομένων απέτυχε για τα ακόλουθα αρχεία πολυμέσων:';
 
   @override
-  String get failedToReadMetadataDescription => 'Δεν ήταν δυνατή η ανάγνωση των μεταδεδομένων αυτού του αρχείου. Αυτό συνήθως οφείλεται σε έλλειψη κωδικοποιητή (codec) ή σε κατεστραμμένο αρχείο.';
+  String get failedToReadMetadataDescription =>
+      'Δεν ήταν δυνατή η ανάγνωση των μεταδεδομένων αυτού του αρχείου. Αυτό συνήθως οφείλεται σε έλλειψη κωδικοποιητή (codec) ή σε κατεστραμμένο αρχείο.';
 
   @override
-  String get breakingChangesPleaseBackupTitle => 'Αλλαγές που σπάνε τη συμβατότητα: Παρακαλώ κάνε backup!';
+  String get breakingChangesPleaseBackupTitle =>
+      'Αλλαγές που σπάνε τη συμβατότητα: Παρακαλώ κάνε backup!';
 
   @override
-  String get breakingChangesPleaseBackupDescription => 'Η επόμενη έκδοση του MusicPod θα έχει αλλαγές που σπάνε τη συμβατότητα. Παρακαλώ κάνε αντίγραφο (backup) τις λίστες αναπαραγωγής σου, τις συνδρομές podcast και τα καρφιτσωμένα άλμπουμ πριν την ενημέρωση.';
+  String get breakingChangesPleaseBackupDescription =>
+      'Η επόμενη έκδοση του MusicPod θα έχει αλλαγές που σπάνε τη συμβατότητα. Παρακαλώ κάνε αντίγραφο (backup) τις λίστες αναπαραγωγής σου, τις συνδρομές podcast και τα καρφιτσωμένα άλμπουμ πριν την ενημέρωση.';
 
   @override
-  String get breakingChangesPleaseBackupConfirmation => 'Επιβεβαιώνω ότι έχω κάνει αντίγραφο (backup) των:';
+  String get breakingChangesPleaseBackupConfirmation =>
+      'Επιβεβαιώνω ότι έχω κάνει αντίγραφο (backup) των:';
 
   @override
-  String get pinnedAlbumsAndPlaylists => 'Καρφιτσωμένα άλμπουμ και λίστες αναπαραγωγής';
+  String get pinnedAlbumsAndPlaylists =>
+      'Καρφιτσωμένα άλμπουμ και λίστες αναπαραγωγής';
 
   @override
   String get starredStations => 'Αγαπημένοι σταθμοί';
@@ -1947,13 +2015,16 @@ class AppLocalizationsEl extends AppLocalizations {
   String get exportYourData => 'Εξαγωγή των δεδομένων σου';
 
   @override
-  String get exportYourDataDescription => 'Να εξάγεις τις συνδρομές podcast, τους αγαπημένους σταθμούς και τα καρφιτσωμένα άλμπουμ σου.';
+  String get exportYourDataDescription =>
+      'Να εξάγεις τις συνδρομές podcast, τους αγαπημένους σταθμούς και τα καρφιτσωμένα άλμπουμ σου.';
 
   @override
-  String get localAudioWatchDialogTitle => 'Ο τοπικός φάκελος ήχου τροποποιήθηκε';
+  String get localAudioWatchDialogTitle =>
+      'Ο τοπικός φάκελος ήχου τροποποιήθηκε';
 
   @override
-  String get localAudioWatchDialogDescription => 'Θες να ξαναφορτώσεις τον τοπικό φάκελο ήχου;';
+  String get localAudioWatchDialogDescription =>
+      'Θες να ξαναφορτώσεις τον τοπικό φάκελο ήχου;';
 
   @override
   String get external => 'εξωτερικό';
@@ -2001,19 +2072,23 @@ class AppLocalizationsEl extends AppLocalizations {
   String get localPictureTypeComposer => 'Συνθέτης';
 
   @override
-  String get localPictureTypeLyricistTextWriter => 'Στιχουργός/Συγγραφέας κειμένου';
+  String get localPictureTypeLyricistTextWriter =>
+      'Στιχουργός/Συγγραφέας κειμένου';
 
   @override
   String get localPictureTypeRecordingLocation => 'Τοποθεσία ηχογράφησης';
 
   @override
-  String get localPictureTypeDuringRecording => 'Κατά τη διάρκεια της ηχογράφησης';
+  String get localPictureTypeDuringRecording =>
+      'Κατά τη διάρκεια της ηχογράφησης';
 
   @override
-  String get localPictureTypeDuringPerformance => 'Κατά τη διάρκεια της παράστασης';
+  String get localPictureTypeDuringPerformance =>
+      'Κατά τη διάρκεια της παράστασης';
 
   @override
-  String get localPictureTypeMovieVideoScreenCapture => 'Στιγμιότυπο οθόνης ταινίας/βίντεο';
+  String get localPictureTypeMovieVideoScreenCapture =>
+      'Στιγμιότυπο οθόνης ταινίας/βίντεο';
 
   @override
   String get localPictureTypeBrightColouredFish => 'Φωτεινόχρωμο ψάρι';
@@ -2022,61 +2097,75 @@ class AppLocalizationsEl extends AppLocalizations {
   String get localPictureTypeIllustration => 'Εικονογράφηση';
 
   @override
-  String get localPictureTypebandArtistLogotype => 'Λογότυπο συγκροτήματος/καλλιτέχνη';
+  String get localPictureTypebandArtistLogotype =>
+      'Λογότυπο συγκροτήματος/καλλιτέχνη';
 
   @override
-  String get localPictureTypepublisherStudioLogotype => 'Λογότυπο εκδότη/στούντιο';
+  String get localPictureTypepublisherStudioLogotype =>
+      'Λογότυπο εκδότη/στούντιο';
 
   @override
-  String get cantPinEmptyAlbum => 'Δεν μπορείς να καρφιτσώσεις άλμπουμ χωρίς μεταδεδομένα άλμπουμ!';
+  String get cantPinEmptyAlbum =>
+      'Δεν μπορείς να καρφιτσώσεις άλμπουμ χωρίς μεταδεδομένα άλμπουμ!';
 
   @override
-  String get cantUnpinEmptyAlbum => 'Δεν μπορείς να ξεκαρφιτσώσεις άλμπουμ χωρίς μεταδεδομένα άλμπουμ!';
+  String get cantUnpinEmptyAlbum =>
+      'Δεν μπορείς να ξεκαρφιτσώσεις άλμπουμ χωρίς μεταδεδομένα άλμπουμ!';
 
   @override
   String get path => 'Μονοπάτι';
 
   @override
-  String get albumNotFound => 'Αυτό το άλμπουμ δεν υπάρχει ή έχεις αφαιρέσει την εξωτερική λίστα αναπαραγωγής (αρχείο M3U/PLS) από την οποία έχει φορτωθεί.';
+  String get albumNotFound =>
+      'Αυτό το άλμπουμ δεν υπάρχει ή έχεις αφαιρέσει την εξωτερική λίστα αναπαραγωγής (αρχείο M3U/PLS) από την οποία έχει φορτωθεί.';
 
   @override
-  String get stationNotFound => 'Αυτός ο σταθμός δεν υπάρχει ή έχει αφαιρεθεί από τον διακομιστή radiobrowser.';
+  String get stationNotFound =>
+      'Αυτός ο σταθμός δεν υπάρχει ή έχει αφαιρεθεί από τον διακομιστή radiobrowser.';
 
   @override
-  String get onlyLocalAudioForPlaylists => 'Μόνο τοπικός ήχος υποστηρίζεται για εισαγωγές λιστών αναπαραγωγής! Παρακαλώ αναζήτησε τους στη λειτουργία ραδιοφώνου και πρόσθεσε τους με το κουμπί Αστέρι στη βιβλιοθήκη σας!';
+  String get onlyLocalAudioForPlaylists =>
+      'Μόνο τοπικός ήχος υποστηρίζεται για εισαγωγές λιστών αναπαραγωγής! Παρακαλώ αναζήτησε τους στη λειτουργία ραδιοφώνου και πρόσθεσε τους με το κουμπί Αστέρι στη βιβλιοθήκη σας!';
 
   @override
-  String get customStationWarning => 'Το παραχωρημένο URL πρέπει να υπάρχει στον διακομιστή radiobrowser, διαφορετικά δεν θα προστεθεί στη βιβλιοθήκη σου! Ιδανικά αναζήτησε τους στη λειτουργία ραδιοφώνου και πρόσθεσε τους με το κουμπί Αστέρι στη βιβλιοθήκη σου!';
+  String get customStationWarning =>
+      'Το παραχωρημένο URL πρέπει να υπάρχει στον διακομιστή radiobrowser, διαφορετικά δεν θα προστεθεί στη βιβλιοθήκη σου! Ιδανικά αναζήτησε τους στη λειτουργία ραδιοφώνου και πρόσθεσε τους με το κουμπί Αστέρι στη βιβλιοθήκη σου!';
 
   @override
   String get disc => 'Δίσκος';
 
   @override
-  String get groupAlbumsOnlyByAlbumName => 'Ομαδοποιήσε τα άλμπουμ μόνο κατά όνομα άλμπουμ';
+  String get groupAlbumsOnlyByAlbumName =>
+      'Ομαδοποιήσε τα άλμπουμ μόνο κατά όνομα άλμπουμ';
 
   @override
-  String get groupAlbumsOnlyByAlbumNameDescription => 'Αυτό θα ομαδοποιήσει τα άλμπουμ μόνο κατά όνομα άλμπουμ και όχι κατά όνομα καλλιτέχνη + όνομα άλμπουμ, το οποίο υποθέτει ότι το όνομα του άλμπουμ είναι μοναδικό μέσα στη βιβλιοθήκη σου!';
+  String get groupAlbumsOnlyByAlbumNameDescription =>
+      'Αυτό θα ομαδοποιήσει τα άλμπουμ μόνο κατά όνομα άλμπουμ και όχι κατά όνομα καλλιτέχνη + όνομα άλμπουμ, το οποίο υποθέτει ότι το όνομα του άλμπουμ είναι μοναδικό μέσα στη βιβλιοθήκη σου!';
 
   @override
   String get useYaruThemeTitle => 'Χρήση θέματος Yaru';
 
   @override
-  String get useYaruThemeDescription => 'Αυτό θα χρησιμοποιήσει το θέμα Yaru για την εφαρμογή. Αυτό είναι το προεπιλεγμένο θέμα για τα Ubuntu.';
+  String get useYaruThemeDescription =>
+      'Αυτό θα χρησιμοποιήσει το θέμα Yaru για την εφαρμογή. Αυτό είναι το προεπιλεγμένο θέμα για τα Ubuntu.';
 
   @override
   String get customThemeColor => 'Παραμετροποιήσιμο χρώμα θέματος';
 
   @override
-  String get useCustomThemeColorTitle => 'Χρησιμοποίησε παραμετροποιήσιμο χρώμα θέματος';
+  String get useCustomThemeColorTitle =>
+      'Χρησιμοποίησε παραμετροποιήσιμο χρώμα θέματος';
 
   @override
-  String get useCustomThemeColorDescription => 'Αυτό θα σου επιτρέψει να επιλέξεις ένα παραμετροποιήσιμο χρώμα για το τρέχον θέμα.';
+  String get useCustomThemeColorDescription =>
+      'Αυτό θα σου επιτρέψει να επιλέξεις ένα παραμετροποιήσιμο χρώμα για το τρέχον θέμα.';
 
   @override
   String get usePlayerColorTitle => 'Χρησιμοποίησε το χρώμα του αναπαραγωγέα';
 
   @override
-  String get usePlayerColorDescription => 'Αυτό θα χρησιμοποιήσει το κυρίαρχο χρώμα που έχει εξαχθεί από το τρέχον εξώφυλλο (αν είναι διαθέσιμο) για τον αναπαραγωγέα.';
+  String get usePlayerColorDescription =>
+      'Αυτό θα χρησιμοποιήσει το κυρίαρχο χρώμα που έχει εξαχθεί από το τρέχον εξώφυλλο (αν είναι διαθέσιμο) για τον αναπαραγωγέα.';
 
   @override
   String get selectColor => 'Επέλεξε χρώμα';
@@ -2085,19 +2174,22 @@ class AppLocalizationsEl extends AppLocalizations {
   String get selectColorShade => 'Επέλεξε απόχρωση χρώματος';
 
   @override
-  String get selectColorAndItsShades => 'Επέλεξε ένα χρώμα και τις αποχρώσεις του';
+  String get selectColorAndItsShades =>
+      'Επέλεξε ένα χρώμα και τις αποχρώσεις του';
 
   @override
   String get selectIconThemeTitle => 'Επέλεξε θέμα εικονιδίων';
 
   @override
-  String get selectIconThemeDescription => 'Επέλεξε ένα θέμα εικονιδίων για την εφαρμογή. Το προεπιλεγμένο θέμα εξαρτάται από το λειτουργικό σου σύστημα. Αυτό θα επαναφορτώσει την εφαρμογή!';
+  String get selectIconThemeDescription =>
+      'Επέλεξε ένα θέμα εικονιδίων για την εφαρμογή. Το προεπιλεγμένο θέμα εξαρτάται από το λειτουργικό σου σύστημα. Αυτό θα επαναφορτώσει την εφαρμογή!';
 
   @override
   String get saveWindowSizeTitle => 'Αποθήκευση μεγέθους παραθύρου';
 
   @override
-  String get saveWindowSizeDescription => 'Αυτό θα αποθηκεύσει το μέγεθος και τη θέση του παραθύρου της εφαρμογής.';
+  String get saveWindowSizeDescription =>
+      'Αυτό θα αποθηκεύσει το μέγεθος και τη θέση του παραθύρου της εφαρμογής.';
 
   @override
   String downloadsOfLatestRelease(String latestRelease) {
@@ -2105,40 +2197,51 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
-  String get useBlurredPlayerBackgroundTitle => 'Χρήση θολωμένου φόντου αναπαραγωγέα';
+  String get useBlurredPlayerBackgroundTitle =>
+      'Χρήση θολωμένου φόντου αναπαραγωγέα';
 
   @override
-  String get useBlurredPlayerBackgroundDescription => 'Αυτό θα χρησιμοποιήσει μια θολωμένη έκδοση του εξώφυλλου ως φόντο για τον αναπαραγωγέα. Μπορεί να οδηγήσει σε χαμηλότερη απόδοση σε ορισμένες συσκευές.';
+  String get useBlurredPlayerBackgroundDescription =>
+      'Αυτό θα χρησιμοποιήσει μια θολωμένη έκδοση του εξώφυλλου ως φόντο για τον αναπαραγωγέα. Μπορεί να οδηγήσει σε χαμηλότερη απόδοση σε ορισμένες συσκευές.';
 
   @override
   String get loadingPleaseWait => 'Φόρτωση, παρακαλώ περιμένετε ...';
 
   @override
-  String get parsingLocalAudioFilesMetadataPleaseWait => 'Ανάλυση μεταδεδομένων τοπικών αρχείων ήχου, παρακαλώ περιμένετε...';
+  String get parsingLocalAudioFilesMetadataPleaseWait =>
+      'Ανάλυση μεταδεδομένων τοπικών αρχείων ήχου, παρακαλώ περιμένετε...';
 
   @override
-  String get persistingLocalAudioFilesMetadataPleaseWait => 'Αποθήκευση μεταδεδομένων τοπικών αρχείων ήχου, παρακαλώ περιμένετε ...';
+  String get persistingLocalAudioFilesMetadataPleaseWait =>
+      'Αποθήκευση μεταδεδομένων τοπικών αρχείων ήχου, παρακαλώ περιμένετε ...';
 
   @override
-  String get buildingLocalAudioLibraryPleaseWait => 'Δημιουγία τοπικής βιβλιοθήκης ήχου, παρακαλώ περιμένετε ...';
+  String get buildingLocalAudioLibraryPleaseWait =>
+      'Δημιουγία τοπικής βιβλιοθήκης ήχου, παρακαλώ περιμένετε ...';
 
   @override
-  String get importingPodcastsPleaseWait => 'Γίνεται εισαγωγή των podcast σου, παρακαλώ περίμενε ...';
+  String get importingPodcastsPleaseWait =>
+      'Γίνεται εισαγωγή των podcast σου, παρακαλώ περίμενε ...';
 
   @override
-  String get exportingPodcastsPleaseWait => 'Γίνεται εξαγωγή των podcast σου, παρακαλώ περίμενε ...';
+  String get exportingPodcastsPleaseWait =>
+      'Γίνεται εξαγωγή των podcast σου, παρακαλώ περίμενε ...';
 
   @override
-  String get importingStationsPleaseWait => 'Γίνεται εισαγωγή των σταθμών σου, παρακαλώ περίμενε ...';
+  String get importingStationsPleaseWait =>
+      'Γίνεται εισαγωγή των σταθμών σου, παρακαλώ περίμενε ...';
 
   @override
-  String get exportingStationsPleaseWait => 'Γίνεται εξαγωγή των σταθμών σου, παρακαλώ περίμενε ...';
+  String get exportingStationsPleaseWait =>
+      'Γίνεται εξαγωγή των σταθμών σου, παρακαλώ περίμενε ...';
 
   @override
-  String get importingPlaylistsPleaseWait => 'Γίνεται εισαγωγή των λιστών αναπαραγωγής σου, παρακαλώ περίμενε ...';
+  String get importingPlaylistsPleaseWait =>
+      'Γίνεται εισαγωγή των λιστών αναπαραγωγής σου, παρακαλώ περίμενε ...';
 
   @override
-  String get exportingPlaylistsPleaseWait => 'Γίνεται εξαγωγή των λιστών αναπαραγωγής σου, παρακαλώ περίμενε ...';
+  String get exportingPlaylistsPleaseWait =>
+      'Γίνεται εξαγωγή των λιστών αναπαραγωγής σου, παρακαλώ περίμενε ...';
 
   @override
   String checkingForUpdatesPleaseWait(int progress) {
@@ -2172,7 +2275,8 @@ class AppLocalizationsEl extends AppLocalizations {
   String get genericErrorTitle => 'Προέκυψε ένα σφάλμα';
 
   @override
-  String get genericErrorDescription => 'Συγγνώμη, αλλά κάτι πήγε στραβά. Παρακαλώ δοκίμασε ξανά αργότερα.';
+  String get genericErrorDescription =>
+      'Συγγνώμη, αλλά κάτι πήγε στραβά. Παρακαλώ δοκίμασε ξανά αργότερα.';
 
   @override
   String errorDetails(String details) {
@@ -2210,22 +2314,28 @@ class AppLocalizationsEl extends AppLocalizations {
   String get autoMovePlayerTitle => 'Αυτόματη μετακίνηση του αναπαραγωγέα';
 
   @override
-  String get autoMovePlayerDescription => 'Μετακίνησε τον αναπαραγωγέα προς τα δεξιά αν υπάρχει αρκετός οριζόντιος χώρος';
+  String get autoMovePlayerDescription =>
+      'Μετακίνησε τον αναπαραγωγέα προς τα δεξιά αν υπάρχει αρκετός οριζόντιος χώρος';
 
   @override
-  String get onlineLyricsNotSetup => 'Αν θέλεις να φορτώσεις στίχους από το Genius, παρακαλώ να παραχωρήσεις ένα API κλειδί στις ρυθμίσεις.';
+  String get onlineLyricsNotSetup =>
+      'Αν θέλεις να φορτώσεις στίχους από το Genius, παρακαλώ να παραχωρήσεις ένα API κλειδί στις ρυθμίσεις.';
 
   @override
-  String get settingsGeniusDisclaimer => 'Το MusicPod, οι συνεισφέροντες του και το Genius API δεν είναι υπεύθυνοι για οποιαδήποτε κακή χρήση του API κλειδιού. Παρέχοντας το API κλειδί σου, συμφωνείς να το χρησιμοποιήσεις υπεύθυνα και σύμφωνα με τους όρους υπηρεσίας του Genius.\n\n';
+  String get settingsGeniusDisclaimer =>
+      'Το MusicPod, οι συνεισφέροντες του και το Genius API δεν είναι υπεύθυνοι για οποιαδήποτε κακή χρήση του API κλειδιού. Παρέχοντας το API κλειδί σου, συμφωνείς να το χρησιμοποιήσεις υπεύθυνα και σύμφωνα με τους όρους υπηρεσίας του Genius.\n\n';
 
   @override
-  String get settingsGeniusDescription => 'Για να φορτώσεις στίχους από το Genius, πρέπει να παρέχεις ένα Genius API Key. Μπορείς να αποκτήσεις ένα κλειδί API δημιουργώντας έναν λογαριασμό στο Genius και καταχωρώντας μια εφαρμογή για να πάρεις το token πρόσβασής σου.';
+  String get settingsGeniusDescription =>
+      'Για να φορτώσεις στίχους από το Genius, πρέπει να παρέχεις ένα Genius API Key. Μπορείς να αποκτήσεις ένα κλειδί API δημιουργώντας έναν λογαριασμό στο Genius και καταχωρώντας μια εφαρμογή για να πάρεις το token πρόσβασής σου.';
 
   @override
-  String get settingsDoNotAskForGeniusTitle => 'Μην χρησιμοποιησείς το Genius ή μην ξαναζητήσεις το κλειδί του Genius API';
+  String get settingsDoNotAskForGeniusTitle =>
+      'Μην χρησιμοποιησείς το Genius ή μην ξαναζητήσεις το κλειδί του Genius API';
 
   @override
-  String get settingsDoNotAskForGeniusDescription => 'Αυτό εμποδίζει την εφαρμογή από το να ζητά το κλειδί API του Genius στο μέλλον και κάνει τη λειτουργία στίχων να βασίζεται αποκλειστικά σε τοπικά αρχεία LRC ή σε συμβολοσειρές LRC ενσωματωμένες στα μεταδεδομένα του ήχου.';
+  String get settingsDoNotAskForGeniusDescription =>
+      'Αυτό εμποδίζει την εφαρμογή από το να ζητά το κλειδί API του Genius στο μέλλον και κάνει τη λειτουργία στίχων να βασίζεται αποκλειστικά σε τοπικά αρχεία LRC ή σε συμβολοσειρές LRC ενσωματωμένες στα μεταδεδομένα του ήχου.';
 
   @override
   String get tosLink => 'https://genius.com/static/terms';
@@ -2243,19 +2353,23 @@ class AppLocalizationsEl extends AppLocalizations {
   String get reportIssue => 'Αναφορά σφάλματος';
 
   @override
-  String get ignoreThisTitleInHearingHistory => 'Παράλειψη τίτλου από το ιστορικό ακρόασης';
+  String get ignoreThisTitleInHearingHistory =>
+      'Παράλειψη τίτλου από το ιστορικό ακρόασης';
 
   @override
-  String get removeFromIgnoredHearyHistoryTitles => 'Αφαίρεση από παραλειπόμενους τίτλους';
+  String get removeFromIgnoredHearyHistoryTitles =>
+      'Αφαίρεση από παραλειπόμενους τίτλους';
 
   @override
   String get ignoredHearyHistoryTitlesTitle => 'Παραλειμμένοι τίτλοι';
 
   @override
-  String get ignoredHearyHistoryTitlesDescription => 'Αυτοί οι τίτλοι θα παραληφθούν από το ιστορικό ακρόασης και δεν θα εμφανιστούν στη λίστα \"Αναπαράχθηκε Πρόσφατα\".';
+  String get ignoredHearyHistoryTitlesDescription =>
+      'Αυτοί οι τίτλοι θα παραληφθούν από το ιστορικό ακρόασης και δεν θα εμφανιστούν στη λίστα \"Αναπαράχθηκε Πρόσφατα\".';
 
   @override
-  String get playingMediaTimedOut => 'Η αναπαραγωγή δεν ολοκληρώθηκε εντός του χρονικού ορίου. Αυτό μπορεί να προκληθεί από βλάβη στη δικτύωση ή σφαλματα εξυπηρετητή.';
+  String get playingMediaTimedOut =>
+      'Η αναπαραγωγή δεν ολοκληρώθηκε εντός του χρονικού ορίου. Αυτό μπορεί να προκληθεί από βλάβη στη δικτύωση ή σφαλματα εξυπηρετητή.';
 
   @override
   String get playbackWasPausedByTimer => 'Παύση αναπαραγωγής από το χρονόμετρο';
@@ -2264,7 +2378,8 @@ class AppLocalizationsEl extends AppLocalizations {
   String get playbackTimerCancelled => 'Το χρονόμετρο αναπαραγωγής ακυρώθηκε';
 
   @override
-  String get podcastDoesNotSendEpisodeDuration => 'Αυτό το podcast δεν αναφέρει διάρκεια επισοδείου. Η λειτουργία \"μάρκαρε ως ολοκληρωμένο\" μπορεί να μην έχει το αναμενόμενο αποτέλεσμα.';
+  String get podcastDoesNotSendEpisodeDuration =>
+      'Αυτό το podcast δεν αναφέρει διάρκεια επισοδείου. Η λειτουργία \"μάρκαρε ως ολοκληρωμένο\" μπορεί να μην έχει το αναμενόμενο αποτέλεσμα.';
 
   @override
   String cleanedUpEpisodesOfUnsubscribedPodcast(String podcastName) {
@@ -2277,10 +2392,12 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
-  String get radioBrowserServerUnavailable => 'Ο εξυπηρετητής του περιηγητή (browser) ραδιοφωνικών σταθμών δεν είναι διαθέσιμος αυτή τη στιγμή. Το σφάλμα αυτό μπορεί να έιναι προσωρινό. Παρακαλώ προσπαθήστε ξανά αργοτέρα.';
+  String get radioBrowserServerUnavailable =>
+      'Ο εξυπηρετητής του περιηγητή (browser) ραδιοφωνικών σταθμών δεν είναι διαθέσιμος αυτή τη στιγμή. Το σφάλμα αυτό μπορεί να έιναι προσωρινό. Παρακαλώ προσπαθήστε ξανά αργοτέρα.';
 
   @override
-  String get findStationsTimeoutMessage => 'Η εύρεση του σταθμού παίρνει παραπάνω χρόνο απο το συνηθισμένο. Είστε συνδεδεμένοι στο internet? Αν ναι, μπορεί να είναι σφάλμα εξυπηρετητή.';
+  String get findStationsTimeoutMessage =>
+      'Η εύρεση του σταθμού παίρνει παραπάνω χρόνο απο το συνηθισμένο. Είστε συνδεδεμένοι στο internet? Αν ναι, μπορεί να είναι σφάλμα εξυπηρετητή.';
 
   @override
   String retryInSeconds(String seconds) {
@@ -2298,13 +2415,16 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
-  String get searchTimeoutMessage => 'Η αναζήτηση παίρνει παραπάνω χρόνο από το συνηθισμένο. Είστε συνδεδεένοι στο internet? Αν ναι, αυτό μπορεί να είναι σφάλμα εξυπηρετητή.';
+  String get searchTimeoutMessage =>
+      'Η αναζήτηση παίρνει παραπάνω χρόνο από το συνηθισμένο. Είστε συνδεδεένοι στο internet? Αν ναι, αυτό μπορεί να είναι σφάλμα εξυπηρετητή.';
 
   @override
-  String get youCanEditTheNameLater => 'Μπορείτε να αλλάξετε το όνομα αργότερα.';
+  String get youCanEditTheNameLater =>
+      'Μπορείτε να αλλάξετε το όνομα αργότερα.';
 
   @override
-  String get geniusAlsoProvidesArt => 'Το Genius παρέχει επίσης εξώφυλλα για τα περισσότερα τραγούδια. Αν ενεργοποιήσετε την ανάκτηση στίχων από το Genius, η online εικόνα στο πρόγραμμα αναπαραγωγής θα προέρχεται επίσης από το Genius αντί για το MusicBrainz.';
+  String get geniusAlsoProvidesArt =>
+      'Το Genius παρέχει επίσης εξώφυλλα για τα περισσότερα τραγούδια. Αν ενεργοποιήσετε την ανάκτηση στίχων από το Genius, η online εικόνα στο πρόγραμμα αναπαραγωγής θα προέρχεται επίσης από το Genius αντί για το MusicBrainz.';
 
   @override
   String get enterYourGeniusApiKey => 'Εισάγετε το κλειδί API του Genius';
@@ -2313,40 +2433,51 @@ class AppLocalizationsEl extends AppLocalizations {
   String get saveYourApiKey => 'Αποθήκευση κλειδιού API';
 
   @override
-  String get lookUpRadioBrowserHostsFailed => 'Αποτυχία εύρεσης εξυπηρετητών περιηγητών (browser) ραδιοφώνου. Είστε συνδεδεμένοι στο internet? Αν ναι, αυτό μπορεί να είναι σφάλμα εξυπηρετητή.';
+  String get lookUpRadioBrowserHostsFailed =>
+      'Αποτυχία εύρεσης εξυπηρετητών περιηγητών (browser) ραδιοφώνου. Είστε συνδεδεμένοι στο internet? Αν ναι, αυτό μπορεί να είναι σφάλμα εξυπηρετητή.';
 
   @override
-  String get lookUpRadioBrowserHostsTimouted => 'Η εύρεση διακομιστών του Περιηγητή (Browser) Ραδιοφώνου διαρκεί περισσότερο από το συνηθισμένο. Είστε συνδεδεμένοι στο internet; Αν ναι, ενδέχεται να είναι σφάλμα εξυπηρετητή.';
+  String get lookUpRadioBrowserHostsTimouted =>
+      'Η εύρεση διακομιστών του Περιηγητή (Browser) Ραδιοφώνου διαρκεί περισσότερο από το συνηθισμένο. Είστε συνδεδεμένοι στο internet; Αν ναι, ενδέχεται να είναι σφάλμα εξυπηρετητή.';
 
   @override
-  String get radioBrowserServerNotConnected => 'Δεν είστε συνδεδεμένοι σε κανέναν εξυπηρετητή περιηγητή (browser) ραδιοφώνων';
+  String get radioBrowserServerNotConnected =>
+      'Δεν είστε συνδεδεμένοι σε κανέναν εξυπηρετητή περιηγητή (browser) ραδιοφώνων';
 
   @override
-  String get radioBrowserLoadingTagsFailed => 'Προέκυψε σφάλμα κάτα τη φόρτωση ετικετών (tags) ραδιοφώνου, ο εξυπηρετητής μπορεί να μην είναι διαθέσιμος.';
+  String get radioBrowserLoadingTagsFailed =>
+      'Προέκυψε σφάλμα κάτα τη φόρτωση ετικετών (tags) ραδιοφώνου, ο εξυπηρετητής μπορεί να μην είναι διαθέσιμος.';
 
   @override
-  String get radioBrowserLoadingTagsTimeouted => 'Η φόρτωση ετικετών (tags) παίρνει παραπάνω χρόνο από το συνηθισμένο, είστε συνδεδεμένοι στο internet? Αν ναι, αυτό μπορεί να είναι σφάλμα εξυπηρετητή';
+  String get radioBrowserLoadingTagsTimeouted =>
+      'Η φόρτωση ετικετών (tags) παίρνει παραπάνω χρόνο από το συνηθισμένο, είστε συνδεδεμένοι στο internet? Αν ναι, αυτό μπορεί να είναι σφάλμα εξυπηρετητή';
 
   @override
-  String get podcastSearchNotSuccessfull => 'Η αναζήτηση podcast δεν ήταν επιτυχής, είστε συνδεδεμένοι στο internet? Αν ναι, αυτό μπορεί να είναι σφάλμα εξυπηρετητή.';
+  String get podcastSearchNotSuccessfull =>
+      'Η αναζήτηση podcast δεν ήταν επιτυχής, είστε συνδεδεμένοι στο internet? Αν ναι, αυτό μπορεί να είναι σφάλμα εξυπηρετητή.';
 
   @override
-  String get podcastFailedHostLookup => 'Αποτυχία εύρεσης επισοδείων - η σύνδεση με τον εξυπηρετητή απέτυχε. Eίστε συνδεδεμένοι στο internet? Αν ναι, αυτό μπορεί να είναι σφάλμα εξυπηρετητή.';
+  String get podcastFailedHostLookup =>
+      'Αποτυχία εύρεσης επισοδείων - η σύνδεση με τον εξυπηρετητή απέτυχε. Eίστε συνδεδεμένοι στο internet? Αν ναι, αυτό μπορεί να είναι σφάλμα εξυπηρετητή.';
 
   @override
   String get tryToFetchLyricsOnlineTitle => 'Εύρεση στίχων online';
 
   @override
-  String get tryToFetchLyricsOnlineDescription => 'Θα θέλατε να γίνει προσπάθεια εύρεσης των στίχων online;';
+  String get tryToFetchLyricsOnlineDescription =>
+      'Θα θέλατε να γίνει προσπάθεια εύρεσης των στίχων online;';
 
   @override
-  String get fetchingLyricsOnline => 'Εύρεση στίχων online, παρακαλώ περιμένετε ...';
+  String get fetchingLyricsOnline =>
+      'Εύρεση στίχων online, παρακαλώ περιμένετε ...';
 
   @override
-  String get fetchingLyricsOnlineTimeoutMessage => 'Η online εύρεση στίχων παίρνει παραπάνω χρόνο από το συνηθισμένο. Είστε συνδεδεμένοι στο internet? Αν ναι, αυτό μπορεί να είναι σφάλμα εξυπηρετητή ή το κομμάτι μπορεί να μην είναι διαθέσιμο';
+  String get fetchingLyricsOnlineTimeoutMessage =>
+      'Η online εύρεση στίχων παίρνει παραπάνω χρόνο από το συνηθισμένο. Είστε συνδεδεμένοι στο internet? Αν ναι, αυτό μπορεί να είναι σφάλμα εξυπηρετητή ή το κομμάτι μπορεί να μην είναι διαθέσιμο';
 
   @override
-  String get fetchingLyricsOnlineFailed => 'Η online εύρεση στίχων απέτυχε. Αυτό μπορεί να είναι σφάλμα εξυπηρετητή ή το κομμάτι μπορεί να μην είναι διαθέσιμο';
+  String get fetchingLyricsOnlineFailed =>
+      'Η online εύρεση στίχων απέτυχε. Αυτό μπορεί να είναι σφάλμα εξυπηρετητή ή το κομμάτι μπορεί να μην είναι διαθέσιμο';
 
   @override
   String get onlineLyricsSourceTitle => 'Online πηγή στίχων';
@@ -2363,7 +2494,8 @@ class AppLocalizationsEl extends AppLocalizations {
   }
 
   @override
-  String get podcastEpisodesNotFound => 'Δεν βρέθηκαν επισόδεια αυτού του podcast. Μπορεί να έχουν αφαιρεθεί ή το podcast μπορεί να μην είναι πλέον διαθέσιμο από αυτό το URL τροφοδοσίας.';
+  String get podcastEpisodesNotFound =>
+      'Δεν βρέθηκαν επισόδεια αυτού του podcast. Μπορεί να έχουν αφαιρεθεί ή το podcast μπορεί να μην είναι πλέον διαθέσιμο από αυτό το URL τροφοδοσίας.';
 
   @override
   String playAllEpisodes(String length) {
