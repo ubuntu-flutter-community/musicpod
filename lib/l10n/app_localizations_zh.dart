@@ -2395,12 +2395,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String playAllEpisodes(String length) {
-    return 'Play all $length';
+    return '';
   }
 
   @override
   String playOnlyLoadedEpisodes(String length) {
-    return 'Play only $length';
+    return '';
   }
 }
 
@@ -4765,6 +4765,16 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
 
   @override
   String get podcastEpisodesNotFound => '';
+
+  @override
+  String playAllEpisodes(String length) {
+    return '';
+  }
+
+  @override
+  String playOnlyLoadedEpisodes(String length) {
+    return '';
+  }
 }
 
 /// The translations for Chinese, as used in Taiwan (`zh_TW`).
@@ -7127,4 +7137,14 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get podcastEpisodesNotFound => '';
+
+  @override
+  String playAllEpisodes(String length) {
+    return '';
+  }
+
+  @override
+  String playOnlyLoadedEpisodes(String length) {
+    return '';
+  }
 }

@@ -2432,12 +2432,12 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String playAllEpisodes(String length) {
-    return 'Play all $length';
+    return '';
   }
 
   @override
   String playOnlyLoadedEpisodes(String length) {
-    return 'Play only $length';
+    return '';
   }
 }
 
@@ -4867,4 +4867,14 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get podcastEpisodesNotFound => '';
+
+  @override
+  String playAllEpisodes(String length) {
+    return '';
+  }
+
+  @override
+  String playOnlyLoadedEpisodes(String length) {
+    return '';
+  }
 }
