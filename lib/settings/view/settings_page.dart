@@ -48,20 +48,27 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: HeaderBar(
-      title: Text(context.l10n.settings),
-      actions: [
-        Padding(
-          padding: appBarSingleActionSpacing,
-          child: const SearchButton(),
-        ),
-      ],
-    ),
-    body: Center(
-      child: SizedBox(
-        width: 700,
+  Widget build(BuildContext context) {
+    const maxListViewWidth = 900;
+    final width = MediaQuery.sizeOf(context).width;
+    final horizontalPaddinValue = width > maxListViewWidth
+        ? (width - maxListViewWidth) / 2
+        : 0;
+    return Scaffold(
+      appBar: HeaderBar(
+        title: Text(context.l10n.settings),
+        actions: [
+          Padding(
+            padding: appBarSingleActionSpacing,
+            child: const SearchButton(),
+          ),
+        ],
+      ),
+      body: Center(
         child: ListView(
+          padding: EdgeInsets.symmetric(
+            horizontal: horizontalPaddinValue.toDouble(),
+          ),
           controller: _scrollController,
           children:
               const [
@@ -93,6 +100,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                   .toList(),
         ),
       ),
-    ),
-  );
+    );
+  }
 }

@@ -22,6 +22,9 @@ import 'package:radio_browser_api/radio_browser_api.dart' hide Country;
 import 'package:musicpod/l10n/app_localizations.dart';
 import 'package:musicpod/search/view/sliver_radio_search_results.dart';
 
+import 'package:musicpod/player/service/player_service.dart';
+
+import 'mpv_metadata_manager_test.mocks.dart' show MockPlayerService;
 import 'search_manager_test.mocks.dart';
 
 @GenerateMocks([
@@ -35,6 +38,7 @@ void main() {
   late MockPodcastService mockPodcastService;
   late MockLocalAudioService mockLocalAudioService;
   late MockSettingsService mockSettingsService;
+  late MockPlayerService mockPlayerService;
 
   setUp(() async {
     await GetIt.I.reset();
@@ -42,6 +46,11 @@ void main() {
     mockPodcastService = MockPodcastService();
     mockLocalAudioService = MockLocalAudioService();
     mockSettingsService = MockSettingsService();
+    mockPlayerService = MockPlayerService();
+
+    when(mockPlayerService.changes).thenAnswer((_) => const Stream.empty());
+    when(mockPlayerService.audio).thenReturn(null);
+    when(mockPlayerService.isPlaying).thenReturn(false);
 
     when(
       mockSettingsService.getString(SPKeys.lastCountryCode),
@@ -58,6 +67,7 @@ void main() {
     GetIt.I.registerSingleton<PodcastService>(mockPodcastService);
     GetIt.I.registerSingleton<LocalAudioService>(mockLocalAudioService);
     GetIt.I.registerSingleton<SettingsService>(mockSettingsService);
+    GetIt.I.registerSingleton<PlayerService>(mockPlayerService);
   });
 
   tearDown(() async {

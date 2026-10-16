@@ -7,6 +7,8 @@ import 'package:mockito/mockito.dart';
 import 'package:musicpod/player/data/player_change.dart';
 import 'package:musicpod/player/manager/duration_manager.dart';
 
+import 'package:musicpod/player/service/player_service.dart';
+
 import 'mpv_metadata_manager_test.mocks.dart';
 
 void main() {
@@ -15,8 +17,8 @@ void main() {
     late StreamController<PlayerChange> changesController;
     late ProviderContainer container;
 
-    setUp(() async {
-      await GetIt.I.reset();
+    setUp(() {
+      GetIt.I.pushNewScope();
       mockPlayerService = MockPlayerService();
       changesController = StreamController<PlayerChange>.broadcast();
 
@@ -25,19 +27,15 @@ void main() {
       ).thenAnswer((_) => changesController.stream);
       when(mockPlayerService.duration).thenReturn(const Duration(minutes: 3));
 
-      container = ProviderContainer(
-        overrides: [
-          durationManagerProvider.overrideWith(
-            () => DurationManager(playerService: mockPlayerService),
-          ),
-        ],
-      );
+      GetIt.I.registerSingleton<PlayerService>(mockPlayerService);
+
+      container = ProviderContainer();
     });
 
     tearDown(() async {
       container.dispose();
       await changesController.close();
-      await GetIt.I.reset();
+      await GetIt.I.popScope();
     });
 
     test('initial state reads duration from PlayerService', () {
@@ -75,12 +73,6 @@ void main() {
         container.read(durationManagerProvider),
         const Duration(minutes: 3),
       );
-    });
-
-    test('defaults to null when PlayerService is not registered', () {
-      final emptyContainer = ProviderContainer();
-      expect(emptyContainer.read(durationManagerProvider), isNull);
-      emptyContainer.dispose();
     });
   });
 }

@@ -5,6 +5,7 @@ import '../../app/full_window_mode_manager.dart';
 import '../../common/view/icons.dart';
 import '../../extensions/build_context_x.dart';
 import '../manager/play_pause_manager.dart';
+import '../manager/queue_manager.dart';
 
 class StopButton extends ConsumerWidget {
   const StopButton({super.key, required this.active});
@@ -20,6 +21,7 @@ class StopButton extends ConsumerWidget {
                 .read(fullWindowModeManagerProvider.notifier)
                 .setFullWindowMode(false);
             ref.read(playPauseManagerProvider.notifier).stop();
+            ref.read(queueManagerProvider.notifier).clearQueue();
           }
         : null,
     icon: Icon(Iconz.stopFilled),

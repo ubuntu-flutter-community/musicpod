@@ -10,40 +10,24 @@ part 'position_manager.g.dart';
 
 @Riverpod(keepAlive: true)
 class PositionManager extends _$PositionManager {
-  PositionManager({PlayerService? playerService})
-    : _playerServiceOverride = playerService;
-
-  final PlayerService? _playerServiceOverride;
-  PlayerService? get _playerService {
-    if (_playerServiceOverride != null) return _playerServiceOverride;
-    if (di.isRegistered<PlayerService>()) return di<PlayerService>();
-    return null;
-  }
+  PlayerService get _service => di<PlayerService>();
 
   StreamSubscription<PlayerChange>? _sub;
 
   @override
   Duration? build() {
     _sub?.cancel();
-    final service = _playerService;
-    if (service == null) return Duration.zero;
 
-    _sub = service.changes.whereType<PositionChange>().listen((change) {
+    _sub = _service.changes.whereType<PositionChange>().listen((change) {
       state = change.position;
     });
 
-    ref.onDispose(() {
-      _sub?.cancel();
-    });
+    ref.onDispose(() => _sub?.cancel());
 
-    return service.position;
+    return _service.position;
   }
 
-  Future<void> seek(Duration position) async {
-    final service = _playerService;
-    if (service == null) return;
-    await service.seek(position);
-  }
+  Future<void> seek(Duration position) => _service.seek(position);
 
   Future<void> seekInSeconds(int seconds) async {
     final current = state;

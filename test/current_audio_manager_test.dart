@@ -8,6 +8,7 @@ import 'package:musicpod/common/data/audio.dart';
 import 'package:musicpod/common/data/audio_type.dart';
 import 'package:musicpod/player/data/player_change.dart';
 import 'package:musicpod/player/manager/current_audio_manager.dart';
+import 'package:musicpod/player/service/player_service.dart';
 
 import 'mpv_metadata_manager_test.mocks.dart';
 
@@ -24,8 +25,8 @@ void main() {
       audioType: AudioType.local,
     );
 
-    setUp(() async {
-      await GetIt.I.reset();
+    setUp(() {
+      GetIt.I.pushNewScope();
       mockPlayerService = MockPlayerService();
       changesController = StreamController<PlayerChange>.broadcast();
 
@@ -34,19 +35,15 @@ void main() {
       ).thenAnswer((_) => changesController.stream);
       when(mockPlayerService.audio).thenReturn(testAudio);
 
-      container = ProviderContainer(
-        overrides: [
-          currentAudioManagerProvider.overrideWith(
-            () => CurrentAudioManager(playerService: mockPlayerService),
-          ),
-        ],
-      );
+      GetIt.I.registerSingleton<PlayerService>(mockPlayerService);
+
+      container = ProviderContainer();
     });
 
     tearDown(() async {
       container.dispose();
       await changesController.close();
-      await GetIt.I.reset();
+      await GetIt.I.popScope();
     });
 
     test('initial state reads audio from PlayerService', () {
@@ -110,12 +107,6 @@ void main() {
       await pumpEventQueue();
 
       expect(container.read(currentAudioManagerProvider), testAudio);
-    });
-
-    test('defaults to null when PlayerService is not registered', () {
-      final emptyContainer = ProviderContainer();
-      expect(emptyContainer.read(currentAudioManagerProvider), isNull);
-      emptyContainer.dispose();
     });
   });
 }

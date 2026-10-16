@@ -15,23 +15,33 @@ import 'package:musicpod/podcasts/manager/podcast_feeds_with_downloads_manager.d
 import 'package:musicpod/podcasts/manager/podcast_genre_manager.dart';
 import 'package:musicpod/podcasts/manager/podcast_load_genres_manager.dart';
 import 'package:musicpod/podcasts/manager/podcast_short_info_manager.dart';
+import 'package:musicpod/player/service/player_service.dart';
 import 'package:musicpod/podcasts/service/download_service.dart';
 import 'package:musicpod/podcasts/service/podcast_service.dart';
 
+import 'mpv_metadata_manager_test.mocks.dart' show MockPlayerService;
 import 'podcast_riverpod_managers_test.mocks.dart';
 
 @GenerateMocks([PodcastService, DownloadService])
 void main() {
   late MockPodcastService mockPodcastService;
   late MockDownloadService mockDownloadService;
+  late MockPlayerService mockPlayerService;
 
   setUp(() async {
     await GetIt.I.reset();
     mockPodcastService = MockPodcastService();
     mockDownloadService = MockDownloadService();
+    mockPlayerService = MockPlayerService();
+
+    when(mockPlayerService.changes).thenAnswer((_) => const Stream.empty());
+    when(mockPlayerService.audio).thenReturn(null);
+    when(mockPlayerService.isPlaying).thenReturn(false);
+    when(mockPlayerService.lastPositions).thenReturn({});
 
     GetIt.I.registerSingleton<PodcastService>(mockPodcastService);
     GetIt.I.registerSingleton<DownloadService>(mockDownloadService);
+    GetIt.I.registerSingleton<PlayerService>(mockPlayerService);
   });
 
   tearDown(() async {

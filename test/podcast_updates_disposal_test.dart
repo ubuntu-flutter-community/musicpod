@@ -14,8 +14,10 @@ import 'package:musicpod/podcasts/manager/podcast_updates_manager.dart';
 import 'package:musicpod/podcasts/service/podcast_service.dart';
 import 'package:musicpod/podcasts/view/podcast_page_title.dart';
 import 'package:musicpod/podcasts/view/podcasts_collection_body.dart';
+import 'package:musicpod/player/service/player_service.dart';
 import 'package:musicpod/settings/service/settings_service.dart';
 
+import 'mpv_metadata_manager_test.mocks.dart' show MockPlayerService;
 import 'podcast_updates_disposal_test.mocks.dart';
 
 @GenerateMocks([PodcastService, SettingsService])
@@ -38,11 +40,19 @@ void main() {
 
   late MockPodcastService mockPodcastService;
   late MockSettingsService mockSettingsService;
+  late MockPlayerService mockPlayerService;
 
   setUp(() async {
-    await GetIt.I.reset();
+    GetIt.I.pushNewScope();
     mockPodcastService = MockPodcastService();
     mockSettingsService = MockSettingsService();
+    mockPlayerService = MockPlayerService();
+
+    when(mockPlayerService.changes).thenAnswer((_) => const Stream.empty());
+    when(mockPlayerService.audio).thenReturn(null);
+    when(mockPlayerService.isPlaying).thenReturn(false);
+    when(mockPlayerService.lastPositions).thenReturn({});
+
     when(mockSettingsService.getInt(any)).thenReturn(0);
     when(mockSettingsService.getBool(any)).thenReturn(false);
     when(mockSettingsService.getString(any)).thenReturn(null);
@@ -52,10 +62,11 @@ void main() {
 
     GetIt.I.registerSingleton<PodcastService>(mockPodcastService);
     GetIt.I.registerSingleton<SettingsService>(mockSettingsService);
+    GetIt.I.registerSingleton<PlayerService>(mockPlayerService);
   });
 
   tearDown(() async {
-    await GetIt.I.reset();
+    await GetIt.I.popScope();
   });
 
   group('PodcastUpdatesManager & PodcastUpdatedFeedsManager', () {
