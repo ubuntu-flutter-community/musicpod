@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.1](https://github.com/ubuntu-flutter-community/musicpod/compare/v3.1.0...v3.1.1) (2026-10-17)
+
+
+### Bug Fixes
+
+* windows release ([#1739](https://github.com/ubuntu-flutter-community/musicpod/issues/1739)) ([1b2707f](https://github.com/ubuntu-flutter-community/musicpod/commit/1b2707fbbf58c7e6adc6423f10304ff1fd37ffb9))
+
 ## [3.1.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v3.0.3...v3.1.0) (2026-10-16)
 
 
