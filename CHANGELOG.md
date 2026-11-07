@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.0](https://github.com/ubuntu-flutter-community/musicpod/compare/v3.1.1...v3.2.0) (2026-11-07)
+
+
+### Features
+
+* Translated using Weblate (Basque) ([#1742](https://github.com/ubuntu-flutter-community/musicpod/issues/1742)) ([d54fc32](https://github.com/ubuntu-flutter-community/musicpod/commit/d54fc32a0a544b288619cf2a11737ab1bb469019))
+
 ## [3.1.1](https://github.com/ubuntu-flutter-community/musicpod/compare/v3.1.0...v3.1.1) (2026-10-17)
 
 
