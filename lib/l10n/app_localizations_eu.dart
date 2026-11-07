@@ -9,7 +9,7 @@ class AppLocalizationsEu extends AppLocalizations {
   AppLocalizationsEu([String locale = 'eu']) : super(locale);
 
   @override
-  String get home => 'Etxea';
+  String get home => 'Hasiera';
 
   @override
   String get play => 'Jo';
@@ -114,16 +114,16 @@ class AppLocalizationsEu extends AppLocalizations {
   String get addTo => 'Gehitu hemen:';
 
   @override
-  String get deletePlaylist => 'Ezabatu erreprodukzio zerrenda';
+  String get deletePlaylist => 'Ezabatu erreprodukzio-zerrenda';
 
   @override
-  String get createNewPlaylist => 'Sortu erreprodukzio zerrenda berria';
+  String get createNewPlaylist => 'Sortu erreprodukzio-zerrenda berria';
 
   @override
-  String get playlistDialogTitleNew => 'Erreprodukzio zerrenda gehitu';
+  String get playlistDialogTitleNew => 'Erreprodukzio-zerrenda gehitu';
 
   @override
-  String get playlistDialogTitleEdit => 'Erreprodukzio zerrenda editatu';
+  String get playlistDialogTitleEdit => 'Erreprodukzio-zerrenda editatu';
 
   @override
   String get save => 'Gorde';
@@ -195,10 +195,10 @@ class AppLocalizationsEu extends AppLocalizations {
   String get library => 'Liburutegia';
 
   @override
-  String get playlists => 'Erreprodukzio zerrendak';
+  String get playlists => 'Erreprodukzio-zerrendak';
 
   @override
-  String get playlist => 'Erreprodukzio zerrenda';
+  String get playlist => 'Erreprodukzio-zerrenda';
 
   @override
   String get discover => 'Deskubritu';
@@ -222,7 +222,7 @@ class AppLocalizationsEu extends AppLocalizations {
       'Oraindik ez zara inongo podcastetara harpidetu.';
 
   @override
-  String get charts => 'Grafikoak';
+  String get charts => 'Sailkapenak';
 
   @override
   String get upNext => 'Jarraian';
@@ -246,13 +246,13 @@ class AppLocalizationsEu extends AppLocalizations {
   String get fiction => 'Fikzioa';
 
   @override
-  String get government => 'Gobernu mailakoa';
+  String get government => 'Gobernua';
 
   @override
   String get healthAndFitness => 'Osasuna eta Fitness';
 
   @override
-  String get history => 'Historikoa';
+  String get history => 'Historia';
 
   @override
   String get kidsAndFamily => 'Haurrak eta familia';
@@ -351,7 +351,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get video => 'Bideoa';
 
   @override
-  String get ok => 'Ongi';
+  String get ok => 'Ados';
 
   @override
   String get noLocalTitlesFound =>
@@ -368,7 +368,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get settings => 'Ezarpenak';
 
   @override
-  String get findUsOnGitHub => 'Github-en aurki gaitzazu';
+  String get findUsOnGitHub => 'GitHub-en aurki gaitzazu';
 
   @override
   String get musicPodSubTitle =>
@@ -385,11 +385,11 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String queueConfirmMessage(String length) {
-    return 'Benetan nahi duzu $length multimedia ilaran jarri?';
+    return 'Benetan $length elementu ilaran jarri nahi dituzu?';
   }
 
   @override
-  String get emptyPlaylist => 'Honako erreprodukzio zerrenda hutsik dago.';
+  String get emptyPlaylist => 'Erreprodukzio-zerrenda hau hutsik dago.';
 
   @override
   String get copiedToClipBoard => 'Arbelera kopiatuta:';
@@ -454,7 +454,7 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String downloadRemoved(String name) {
-    return '';
+    return 'Deskarga ezabatu da: $name';
   }
 
   @override
@@ -470,7 +470,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get showCompletedEpisodes => 'Erakutsi amaitutako atalak';
 
   @override
-  String get reset => 'Berrasieratu';
+  String get reset => 'Berrezarri';
 
   @override
   String get resetAllSettings => 'Ezarpen guztiak berrezarri';
@@ -562,13 +562,13 @@ class AppLocalizationsEu extends AppLocalizations {
   String get disconnectedFromDiscord => 'Discord-etik deskonektatuta';
 
   @override
-  String get tryReconnect => 'Saiatu berkonektatzen';
+  String get tryReconnect => 'Saiatu berriz konektatzen';
 
   @override
   String get addedTo => 'Hona gehituta';
 
   @override
-  String get addToPlaylist => 'Erreprodukzio zerrendara gehitu';
+  String get addToPlaylist => 'Erreprodukzio-zerrendara gehitu';
 
   @override
   String get open => 'Ireki';
@@ -620,7 +620,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get license => 'Lizentzia';
 
   @override
-  String get dependencies => 'Menpekotasunak';
+  String get dependencies => 'Mendekotasunak';
 
   @override
   String get light => 'Argia';
@@ -693,7 +693,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get commentaryXXXPodcastIndexOnly => 'Iruzkina';
 
   @override
-  String get coursesXXXPodcastIndexOnly => 'Lasterketak';
+  String get coursesXXXPodcastIndexOnly => 'Ikastaroak';
 
   @override
   String get craftsXXXPodcastIndexOnly => 'Eskulanak';
@@ -738,7 +738,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get fashionXXXPodcastIndexOnly => 'Moda';
 
   @override
-  String get filmXXXPodcastIndexOnly => 'Pelikula';
+  String get filmXXXPodcastIndexOnly => 'Zinema';
 
   @override
   String get fitnessXXXPodcastIndexOnly => 'Fitness';
@@ -777,7 +777,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get howToXXXPodcastIndexOnly => 'Nola';
 
   @override
-  String get improvXXXPodcastIndexOnly => 'Hobekuntza';
+  String get improvXXXPodcastIndexOnly => 'Inprobisazioa';
 
   @override
   String get interviewsXXXPodcastIndexOnly => 'Elkarrizketak';
@@ -867,10 +867,10 @@ class AppLocalizationsEu extends AppLocalizations {
   String get religionXXXPodcastIndexOnly => 'Erlijioa';
 
   @override
-  String get reviewsXXXPodcastIndexOnly => 'Azterketak';
+  String get reviewsXXXPodcastIndexOnly => 'Kritikak';
 
   @override
-  String get rolePlayingXXXPodcastIndexOnly => 'Antzezlanak';
+  String get rolePlayingXXXPodcastIndexOnly => 'Rol-jokoak';
 
   @override
   String get rugbyXXXPodcastIndexOnly => 'Errugbia';
@@ -909,7 +909,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get tVXXXPodcastIndexOnly => 'Telebista';
 
   @override
-  String get tabletopXXXPodcastIndexOnly => 'Mahaigaina';
+  String get tabletopXXXPodcastIndexOnly => 'Mahai-jokoak';
 
   @override
   String get tennisXXXPodcastIndexOnly => 'Tenisa';
@@ -930,7 +930,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get weatherXXXPodcastIndexOnly => 'Eguraldia';
 
   @override
-  String get wildernessXXXPodcastIndexOnly => 'Oihana';
+  String get wildernessXXXPodcastIndexOnly => 'Basa-natura';
 
   @override
   String get wrestlingXXXPodcastIndexOnly => 'Borroka librea';
@@ -963,7 +963,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get playAll => 'Guztiak erreproduzitu';
 
   @override
-  String get hearingHistory => 'Entzundakoaren historikoa';
+  String get hearingHistory => 'Entzundakoen historia';
 
   @override
   String get emptyHearingHistory =>
@@ -975,10 +975,10 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get clearPlaylist =>
-      'Ezabatu multimedia guztiak erreprodukzio zerrendatik';
+      'Ezabatu multimedia guztiak erreprodukzio-zerrendatik';
 
   @override
-  String get editPlaylist => 'Erreprodukzio zerrenda editatu';
+  String get editPlaylist => 'Erreprodukzio-zerrenda editatu';
 
   @override
   String get stationUrl => 'Irratiaren URL helbidea';
@@ -1008,11 +1008,11 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get exportPlaylistToM3UFile =>
-      'Esportatu erreprodukzio zerrenda M3Ura';
+      'Esportatu erreprodukzio-zerrenda M3Ura';
 
   @override
   String get exportPlaylistsAndAlbumsToM3UFiles =>
-      'Esportatu erreprodukzio zerrendak eta albumak M3U fitxategietara';
+      'Esportatu erreprodukzio-zerrendak eta albumak M3U fitxategietara';
 
   @override
   String get exportPodcastsToOpmlFile => 'Esportatu podcastak OPML fitxategira';
@@ -1049,7 +1049,7 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get removeAllPodcastsDescription =>
-      'Honek podcast-en harpidetzak eta historikoak kenduko ditu.';
+      'Honek zure podcast-harpidetza guztiak eta aurrerapena kenduko ditu.';
 
   @override
   String get customContentTitle => 'Gehitu eduki pertsonalizatua';
@@ -1060,7 +1060,7 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get setPlaylistNameAndAddMoreLater =>
-      'Ezarri erreprodukzio zerrendaren izena eta gehitu izenburu gehiago geroago';
+      'Ezarri erreprodukzio-zerrendaren izena eta gehitu izenburu gehiago geroago';
 
   @override
   String get or => 'edo';
@@ -1078,7 +1078,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get downloadEpisode => 'Atala deskargatu';
 
   @override
-  String get removeDownloadEpisode => 'Deskargatutako atalak ezabatu';
+  String get removeDownloadEpisode => 'Ezabatu atalaren deskarga';
 
   @override
   String get language => 'Hizkuntza';
@@ -1161,7 +1161,7 @@ class AppLocalizationsEu extends AppLocalizations {
       'Lineako artearen bilaketa ez dago erabilgarri une honetan';
 
   @override
-  String get clicks => 'klikatzeak';
+  String get clicks => 'klik';
 
   @override
   String get theClick => 'klik';
@@ -1187,13 +1187,13 @@ class AppLocalizationsEu extends AppLocalizations {
       'Unean entzuten ari zaren abestiaren/katearen/podcastaren artista eta izenburua partekatzen dira.';
 
   @override
-  String get lastfmApiKey => 'Last.fm-ren API giltza';
+  String get lastfmApiKey => 'Last.fm-ren API gakoa';
 
   @override
   String get lastfmSecret => 'Last.fm sekretua';
 
   @override
-  String get lastfmApiKeyEmpty => 'Sar ezazu API giltza bat mesedez';
+  String get lastfmApiKeyEmpty => 'Sar ezazu API gakoa bat mesedez';
 
   @override
   String get lastfmSecretEmpty => 'Sar ezazu partekatutako sekretua';
@@ -1206,10 +1206,10 @@ class AppLocalizationsEu extends AppLocalizations {
       'Unean entzuten ari zaren abestiaren/katearen/podcastaren artista eta izenburua partekatzen dira.';
 
   @override
-  String get listenBrainzApiKey => 'ListenBrainz-en API giltza';
+  String get listenBrainzApiKey => 'ListenBrainz-en API gakoa';
 
   @override
-  String get listenBrainzApiKeyEmpty => 'Sar ezazu API giltza bat mesedez';
+  String get listenBrainzApiKeyEmpty => 'Sar ezazu API gakoa bat mesedez';
 
   @override
   String get featureDisabledOnPlatform =>
@@ -1316,7 +1316,7 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get regionBritishindianoceanterrirory =>
-      'Britainia Handiko Indiako Ozeanoko Lurraldea';
+      'Indiako Ozeanoko Lurralde Britainiarra';
 
   @override
   String get regionBritishvirginislands => 'Britainiar Birjina Uharteak';
@@ -1486,7 +1486,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get regionGreenland => 'Groenlandia';
 
   @override
-  String get regionGrenada => 'Granada';
+  String get regionGrenada => 'Grenada';
 
   @override
   String get regionGuadeloupe => 'Guadalupe';
@@ -1778,7 +1778,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get regionSainthelena => 'Santa Helena';
 
   @override
-  String get regionSaintkittsandnevis => 'Saintkittsandnevis';
+  String get regionSaintkittsandnevis => 'Saint Kitts eta Nevis';
 
   @override
   String get regionSaintlucia => 'Santa Luzia';
@@ -1860,7 +1860,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get regionSuriname => 'Surinam';
 
   @override
-  String get regionSvalbardandjanmayen => 'Svalbar eta Jan Mayen';
+  String get regionSvalbardandjanmayen => 'Svalbard eta Jan Mayen';
 
   @override
   String get regionSwaziland => 'Swazilandia';
@@ -1869,7 +1869,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get regionSweden => 'Suedia';
 
   @override
-  String get regionSwitzerland => 'Switerlandia';
+  String get regionSwitzerland => 'Suitza';
 
   @override
   String get regionSyrianarabrepublic => 'Siria Errepublika Arabiarra';
@@ -1981,11 +1981,11 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get breakingChangesPleaseBackupTitle =>
-      'Azken aldaketak: mesedez babeskopia bat egin!';
+      'Aldaketa garrantzitsuak: egin babeskopia!';
 
   @override
   String get breakingChangesPleaseBackupDescription =>
-      'MusicPod-en hurrengo bertsioak aldaketa handiak izango ditu. Mesedez, egin babeskopiak zure erreprodukzio-zerrenden, podcast-harpidetzen eta ainguratutako albumen babeskopiak eguneratu aurretik.';
+      'MusicPod-en hurrengo bertsioak aldaketa garrantzitsuak izango ditu. Mesedez, egin zure erreprodukzio-zerrenden, podcast-harpidetzen eta ainguratutako albumen babeskopia eguneratu aurretik.';
 
   @override
   String get breakingChangesPleaseBackupConfirmation =>
@@ -2002,7 +2002,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get podcastSubscriptions => 'Podcast-en harpidetzak';
 
   @override
-  String get pinnedAlbums => 'Iltzatutako albumak';
+  String get pinnedAlbums => 'Ainguratutako albumak';
 
   @override
   String get export => 'Esportatu';
@@ -2067,7 +2067,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get localPictureTypeBandOrchestra => 'Banda/Orkestra';
 
   @override
-  String get localPictureTypeComposer => 'Konpositore';
+  String get localPictureTypeComposer => 'Konpositorea';
 
   @override
   String get localPictureTypeLyricistTextWriter =>
@@ -2102,11 +2102,11 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get cantPinEmptyAlbum =>
-      'Ezin dituzu albumak finkatu albumaren metadatu hutsik gabe!';
+      'Ezin dituzu ainguratu albumaren metadaturik ez duten albumak!';
 
   @override
   String get cantUnpinEmptyAlbum =>
-      'Ezin dituzu albumak deskonektatu albumaren metadatu hutsak ez badituzu!';
+      'Ezin diezu aingura kendu albumaren metadaturik ez duten albumei!';
 
   @override
   String get path => 'Bidea';
@@ -2157,10 +2157,11 @@ class AppLocalizationsEu extends AppLocalizations {
       'Horri esker, uneko gaiarentzako azentu-kolore pertsonalizatu bat aukeratu ahal izango duzu.';
 
   @override
-  String get usePlayerColorTitle => '';
+  String get usePlayerColorTitle => 'Erabili erreproduzitzailearen kolorea';
 
   @override
-  String get usePlayerColorDescription => '';
+  String get usePlayerColorDescription =>
+      'Uneko azaletik ateratako kolore nagusia erabiliko da aplikazio osoan (eskuragarri badago).';
 
   @override
   String get selectColor => 'Hautatu kolorea';
@@ -2202,13 +2203,16 @@ class AppLocalizationsEu extends AppLocalizations {
   String get loadingPleaseWait => 'Kargatzen, itxaron mesedez ...';
 
   @override
-  String get parsingLocalAudioFilesMetadataPleaseWait => '';
+  String get parsingLocalAudioFilesMetadataPleaseWait =>
+      'Audio lokaleko fitxategien metadatuak aztertzen, itxaron mesedez ...';
 
   @override
-  String get persistingLocalAudioFilesMetadataPleaseWait => '';
+  String get persistingLocalAudioFilesMetadataPleaseWait =>
+      'Audio lokaleko fitxategien metadatuak gordetzen, itxaron mesedez ...';
 
   @override
-  String get buildingLocalAudioLibraryPleaseWait => '';
+  String get buildingLocalAudioLibraryPleaseWait =>
+      'Audio lokaleko liburutegia sortzen, itxaron mesedez ...';
 
   @override
   String get importingPodcastsPleaseWait =>
@@ -2236,7 +2240,7 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String checkingForUpdatesPleaseWait(int progress) {
-    return '';
+    return 'Eguneraketak bilatzen: %$progress';
   }
 
   @override
@@ -2254,218 +2258,248 @@ class AppLocalizationsEu extends AppLocalizations {
   }
 
   @override
-  String get lyrics => '';
+  String get lyrics => 'Letrak';
 
   @override
-  String get noLyricsFound => '';
+  String get noLyricsFound => 'Ez da letrarik aurkitu';
 
   @override
-  String get autoScrolling => '';
+  String get autoScrolling => 'Korritze automatikoa';
 
   @override
-  String get genericErrorTitle => '';
+  String get genericErrorTitle => 'Errore bat gertatu da';
 
   @override
-  String get genericErrorDescription => '';
+  String get genericErrorDescription =>
+      'Ustekabeko errore bat gertatu da. Saiatu berriz geroago.';
 
   @override
   String errorDetails(String details) {
-    return '';
+    return 'Errorearen xehetasunak: $details';
   }
 
   @override
-  String get appendToQueue => '';
+  String get appendToQueue => 'Gehitu ilararen amaieran';
 
   @override
   String appendedToQueue(String title) {
-    return '';
+    return 'Ilararen amaieran gehituta: $title';
   }
 
   @override
   String appendMediaToQueueDescription(String title) {
-    return '';
+    return '$title ilaran dago jada. Ilararen amaieran gehitu nahi duzu?';
   }
 
   @override
-  String get appendMediaToQueueTitle => '';
+  String get appendMediaToQueueTitle => 'Gehitu elementua ilararen amaieran';
 
   @override
   String appendMediaToQueue(String title) {
-    return '';
+    return 'Gehitu elementua ilararen amaieran: $title';
   }
 
   @override
-  String get explore => '';
+  String get explore => 'Arakatu';
 
   @override
-  String get favorites => '';
+  String get favorites => 'Gogokoak';
 
   @override
-  String get autoMovePlayerTitle => '';
+  String get autoMovePlayerTitle => 'Mugitu erreproduzitzailea automatikoki';
 
   @override
-  String get autoMovePlayerDescription => '';
+  String get autoMovePlayerDescription =>
+      'Mugitu erreproduzitzailea eskuinera, leku horizontal nahikoa badago';
 
   @override
-  String get onlineLyricsNotSetup => '';
+  String get onlineLyricsNotSetup =>
+      'Geniusetik letrak eskuratu nahi badituzu, idatzi API gako bat ezarpenetan.';
 
   @override
-  String get settingsGeniusDisclaimer => '';
+  String get settingsGeniusDisclaimer =>
+      'MusicPod, bere laguntzaileak eta Genius APIa ez dira API gakoaren erabilera okerraren erantzule. Zure API gakoa ematean, arduraz eta Geniusen zerbitzu-baldintzen arabera erabiltzea onartzen duzu.\n\n';
 
   @override
-  String get settingsGeniusDescription => '';
+  String get settingsGeniusDescription =>
+      'Geniusetik letrak eskuratzeko, Genius API gako bat eman behar duzu. API gakoa lortzeko, sortu kontu bat Geniusen eta erregistratu aplikazio bat zure sarbide-tokena jasotzeko.';
 
   @override
-  String get settingsDoNotAskForGeniusTitle => '';
+  String get settingsDoNotAskForGeniusTitle =>
+      'Ez erabili Genius eta ez eskatu berriz Genius API gakoa';
 
   @override
-  String get settingsDoNotAskForGeniusDescription => '';
+  String get settingsDoNotAskForGeniusDescription =>
+      'Honela, aplikazioak ez du etorkizunean Genius API gakoa eskatuko, eta letren funtzioa LRC fitxategi lokaletan edo audio-metadatuetan txertatutako LRC kateetan soilik oinarrituko da.';
 
   @override
-  String get tosLink => '';
+  String get tosLink => 'https://genius.com/static/terms';
 
   @override
-  String get tosLinkText => '';
+  String get tosLinkText => 'Irakurri Geniusen zerbitzu-baldintzak';
 
   @override
-  String get oopsSomethingWentWrong => '';
+  String get oopsSomethingWentWrong => 'Ene, zerbait gaizki atera da!';
 
   @override
-  String get retry => '';
+  String get retry => 'Saiatu berriz';
 
   @override
-  String get reportIssue => '';
+  String get reportIssue => 'Jakinarazi arazo hau';
 
   @override
-  String get ignoreThisTitleInHearingHistory => '';
+  String get ignoreThisTitleInHearingHistory =>
+      'Baztertu izenburu hau entzundakoen historian';
 
   @override
-  String get removeFromIgnoredHearyHistoryTitles => '';
+  String get removeFromIgnoredHearyHistoryTitles =>
+      'Kendu baztertutako izenburuetatik';
 
   @override
-  String get ignoredHearyHistoryTitlesTitle => '';
+  String get ignoredHearyHistoryTitlesTitle => 'Baztertutako izenburuak';
 
   @override
-  String get ignoredHearyHistoryTitlesDescription => '';
+  String get ignoredHearyHistoryTitlesDescription =>
+      'Izenburu hauek ez dira kontuan hartuko entzundakoen historian, eta ez dira azken aldiz erreproduzitutakoen zerrendan agertuko.';
 
   @override
-  String get playingMediaTimedOut => '';
+  String get playingMediaTimedOut =>
+      'Elementua erreproduzitzeko denbora-muga gainditu da. Sareko errore batek edo zerbitzariaren arazoek eragin dezakete.';
 
   @override
-  String get playbackWasPausedByTimer => '';
+  String get playbackWasPausedByTimer =>
+      'Tenporizadoreak erreprodukzioa pausatu du';
 
   @override
-  String get playbackTimerCancelled => '';
+  String get playbackTimerCancelled =>
+      'Erreprodukzio-tenporizadorea bertan behera utzi da';
 
   @override
-  String get podcastDoesNotSendEpisodeDuration => '';
+  String get podcastDoesNotSendEpisodeDuration =>
+      'Podcast honek ez du atalen iraupena bidaltzen. Baliteke amaitutzat markatzeko funtzioak espero bezala ez funtzionatzea.';
 
   @override
   String cleanedUpEpisodesOfUnsubscribedPodcast(String podcastName) {
-    return '';
+    return 'Harpidetza kendutako podcastaren atalak garbitu dira: $podcastName';
   }
 
   @override
   String findEpisodesTimeoutMessage(String podcastName) {
-    return '';
+    return 'Atalak bilatzeak ohi baino denbora gehiago behar du. Internetera konektatuta zaude? Hala bada, zerbitzariaren arazo bat izan daiteke.';
   }
 
   @override
-  String get radioBrowserServerUnavailable => '';
+  String get radioBrowserServerUnavailable =>
+      'Radio Browser zerbitzaria ez dago erabilgarri une honetan. Aldi baterako arazoa izan daiteke. Saiatu berriz geroago.';
 
   @override
-  String get findStationsTimeoutMessage => '';
+  String get findStationsTimeoutMessage =>
+      'Irratia(k) bilatzeak ohi baino denbora gehiago behar du. Internetera konektatuta zaude? Hala bada, zerbitzariaren arazo bat izan daiteke.';
 
   @override
   String retryInSeconds(String seconds) {
-    return '';
+    return 'Saiatu berriz $seconds segundo barru';
   }
 
   @override
   String retryngInSeconds(String seconds) {
-    return '';
+    return 'Berriz saiatzen $seconds segundo barru';
   }
 
   @override
   String playerCouldNotOpenRemoteMedia(String media) {
-    return '';
+    return 'Erreproduzitzaileak ezin izan du urruneko \'$media\' elementua ireki edo erreproduzitzen jarraitu. Internetera konektatuta zaude? Hala bada, zerbitzariaren arazo bat izan daiteke.';
   }
 
   @override
-  String get searchTimeoutMessage => '';
+  String get searchTimeoutMessage =>
+      'Bilaketak ohi baino denbora gehiago behar du. Internetera konektatuta zaude? Hala bada, zerbitzariaren arazo bat izan daiteke.';
 
   @override
-  String get youCanEditTheNameLater => '';
+  String get youCanEditTheNameLater => 'Izena geroago edita dezakezu.';
 
   @override
-  String get geniusAlsoProvidesArt => '';
+  String get geniusAlsoProvidesArt =>
+      'Geniusek abesti gehienen azalak ere eskaintzen ditu. Genius letrak eskuratzeko gaitzen baduzu, erreproduzitzaileko sareko irudiek ere Genius erabiliko dute, MusicBrainz-en ordez.';
 
   @override
-  String get enterYourGeniusApiKey => '';
+  String get enterYourGeniusApiKey => 'Idatzi zure Genius API gakoa';
 
   @override
-  String get saveYourApiKey => '';
+  String get saveYourApiKey => 'Gorde API gakoa';
 
   @override
-  String get lookUpRadioBrowserHostsFailed => '';
+  String get lookUpRadioBrowserHostsFailed =>
+      'Ezin izan dira Radio Browser ostalariak bilatu. Internetera konektatuta zaude? Hala bada, zerbitzariaren arazo bat izan daiteke.';
 
   @override
-  String get lookUpRadioBrowserHostsTimouted => '';
+  String get lookUpRadioBrowserHostsTimouted =>
+      'Radio Browser ostalariak bilatzeak ohi baino denbora gehiago behar du. Internetera konektatuta zaude? Hala bada, zerbitzariaren arazo bat izan daiteke.';
 
   @override
-  String get radioBrowserServerNotConnected => '';
+  String get radioBrowserServerNotConnected =>
+      'Ez zaude inongo Radio Browser zerbitzarira konektatuta';
 
   @override
-  String get radioBrowserLoadingTagsFailed => '';
+  String get radioBrowserLoadingTagsFailed =>
+      'Errore bat gertatu da irratien etiketak kargatzean; baliteke zerbitzaria erabilgarri ez egotea.';
 
   @override
-  String get radioBrowserLoadingTagsTimeouted => '';
+  String get radioBrowserLoadingTagsTimeouted =>
+      'Etiketak kargatzeak espero baino denbora gehiago behar izan du. Internetera konektatuta zaude? Hala bada, zerbitzariaren arazo bat izan daiteke';
 
   @override
-  String get podcastSearchNotSuccessfull => '';
+  String get podcastSearchNotSuccessfull =>
+      'Podcast-bilaketak huts egin du. Internetera konektatuta zaude? Hala bada, zerbitzariaren arazo bat izan daiteke.';
 
   @override
-  String get podcastFailedHostLookup => '';
+  String get podcastFailedHostLookup =>
+      'Ezin izan dira atalak aurkitu: ezin izan da zerbitzarira konektatu. Internetera konektatuta zaude? Hala bada, zerbitzariaren arazo bat izan daiteke.';
 
   @override
-  String get tryToFetchLyricsOnlineTitle => '';
+  String get tryToFetchLyricsOnlineTitle => 'Saiatu letrak sarean eskuratzen';
 
   @override
-  String get tryToFetchLyricsOnlineDescription => '';
+  String get tryToFetchLyricsOnlineDescription =>
+      'Letrak sarean eskuratzen saiatu nahi duzu?';
 
   @override
-  String get fetchingLyricsOnline => '';
+  String get fetchingLyricsOnline =>
+      'Letrak sarean eskuratzen, itxaron mesedez ...';
 
   @override
-  String get fetchingLyricsOnlineTimeoutMessage => '';
+  String get fetchingLyricsOnlineTimeoutMessage =>
+      'Letrak sarean eskuratzeak ohi baino denbora gehiago behar du. Internetera konektatuta zaude? Hala bada, zerbitzariaren arazo bat izan daiteke, edo abestia ez dago erabilgarri';
 
   @override
-  String get fetchingLyricsOnlineFailed => '';
+  String get fetchingLyricsOnlineFailed =>
+      'Ezin izan dira letrak sarean eskuratu. Zerbitzariaren arazo bat izan daiteke, edo abestia ez dago erabilgarri';
 
   @override
-  String get onlineLyricsSourceTitle => '';
+  String get onlineLyricsSourceTitle => 'Sareko letren iturria';
 
   @override
-  String get onlineLyricsSourceDescription => '';
+  String get onlineLyricsSourceDescription => 'Hautatu sareko letren iturria.';
 
   @override
-  String get onlineLyricsSourceLrcLib => '';
+  String get onlineLyricsSourceLrcLib => 'LrcLib';
 
   @override
   String appCanNotConnectToHost(String appName, String host) {
-    return '';
+    return '$appName ezin da $host ostalarira konektatu. Internetera konektatuta zaude?';
   }
 
   @override
-  String get podcastEpisodesNotFound => '';
+  String get podcastEpisodesNotFound =>
+      'Ez da atalik aurkitu podcast honetan. Baliteke atalak ezabatu izana, edo podcasta jada erabilgarri ez egotea jario-URL honekin.';
 
   @override
   String playAllEpisodes(String length) {
-    return '';
+    return 'Erreproduzitu guztiak ($length)';
   }
 
   @override
   String playOnlyLoadedEpisodes(String length) {
-    return '';
+    return 'Erreproduzitu $length bakarrik';
   }
 }
