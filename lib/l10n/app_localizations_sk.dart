@@ -998,7 +998,7 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get exportPinnedAlbumsToM3UFiles =>
-      'Exportovať pripnuté albumy do súborov M3U';
+      'Exportovať pripnuté albumy do súboru M3U';
 
   @override
   String get exportPinnedAlbumToM3UFile =>
@@ -1045,7 +1045,7 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get removeAllPodcastsDescription =>
-      'Toto odstráni všetky vaše predplatné podcastov a aktuálny stav počúvania.';
+      'Toto odstráni všetky vaše odbery podcastov a aktuálny stav počúvania.';
 
   @override
   String get customContentTitle => 'Pridať vlastný obsah';
@@ -1113,7 +1113,7 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String playbackWillStopIn(String duration, String timeOfDay) {
-    return 'Prehrávanie sa zastaví o: $duration ($timeOfDay)';
+    return 'Prehrávanie sa zastaví za: $duration ($timeOfDay)';
   }
 
   @override
@@ -1979,7 +1979,7 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get breakingChangesPleaseBackupDescription =>
-      'Nasledujúca verzia MusicPod bude mať zásadné zmeny. Pred aktualizáciou prosím zálohujte svoje playlisty, predplatné podcastov a pripnuté albumy.';
+      'Nasledujúca verzia MusicPod bude mať zásadné zmeny. Pred aktualizáciou prosím zálohujte svoje playlisty, odbery podcastov a pripnuté albumy.';
 
   @override
   String get breakingChangesPleaseBackupConfirmation =>
@@ -1992,7 +1992,7 @@ class AppLocalizationsSk extends AppLocalizations {
   String get starredStations => 'Označené stanice';
 
   @override
-  String get podcastSubscriptions => 'Predplatné podcastov';
+  String get podcastSubscriptions => 'Odbery podcastov';
 
   @override
   String get pinnedAlbums => 'Pripnuté albumy';
@@ -2008,7 +2008,7 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get exportYourDataDescription =>
-      'Exportujte svoje predplatné podcastov, označené stanice a pripnuté albumy.';
+      'Exportujte svoje odbery podcastov, označené stanice a pripnuté albumy.';
 
   @override
   String get localAudioWatchDialogTitle =>
@@ -2077,7 +2077,7 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get localPictureTypeMovieVideoScreenCapture =>
-      'Snímka obrazovky filmu/ videa';
+      'Snímka obrazovky filmu/videa';
 
   @override
   String get localPictureTypeBrightColouredFish => 'Jasne sfarbená ryba';
@@ -2090,7 +2090,7 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get localPictureTypepublisherStudioLogotype =>
-      'Logo vydavateľa/stúdia';
+      'Logo vydavateľa/štúdia';
 
   @override
   String get cantPinEmptyAlbum => 'Albumy bez metadát nemožno pripnúť!';
@@ -2111,7 +2111,7 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get onlyLocalAudioForPlaylists =>
-      'Import playlistov podporuje iba lokálnu hudbu! Hľadajte ich v funkcii rádio a pridajte ich do knižnice pomocou tlačidla hviezdičky!';
+      'Import playlistov podporuje iba lokálnu hudbu! Hľadajte ich vo funkcii rádio a pridajte ich do knižnice pomocou tlačidla hviezdičky!';
 
   @override
   String get customStationWarning =>
@@ -2177,7 +2177,7 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String downloadsOfLatestRelease(String latestRelease) {
-    return 'Stiahnuté $latestRelease krát mimo obchodu snapstore a flathub';
+    return 'Stiahnuté $latestRelease-krát mimo obchodu snapstore a flathub';
   }
 
   @override
@@ -2186,50 +2186,50 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get useBlurredPlayerBackgroundDescription =>
-      'Toto rozmaže pozadie prehrávača. Môže to viesť k nižšiemu výkonu na niektorých zariadeniach.';
+      'Toto rozmaže pozadie prehrávača. Môže to spôsobiť nižší výkon na niektorých zariadeniach.';
 
   @override
-  String get loadingPleaseWait => 'Načítava sa, prosím čakajte ...';
+  String get loadingPleaseWait => 'Načítava sa, prosím čakajte…';
 
   @override
   String get parsingLocalAudioFilesMetadataPleaseWait =>
-      'Analyzujú sa metadáta lokálnych audio súborov, prosím čakajte ...';
+      'Analyzujú sa metadáta lokálnych audio súborov, prosím čakajte…';
 
   @override
   String get persistingLocalAudioFilesMetadataPleaseWait =>
-      'Ukladajú sa metadáta lokálnych audio súborov, prosím čakajte ...';
+      'Ukladajú sa metadáta lokálnych audio súborov, prosím čakajte…';
 
   @override
   String get buildingLocalAudioLibraryPleaseWait =>
-      'Vytvára sa lokálna hudobná knižnica, prosím čakajte ...';
+      'Vytvára sa lokálna hudobná knižnica, prosím čakajte…';
 
   @override
   String get importingPodcastsPleaseWait =>
-      'Importujú sa vaše podcasty, prosím čakajte ...';
+      'Importujú sa vaše podcasty, prosím čakajte…';
 
   @override
   String get exportingPodcastsPleaseWait =>
-      'Exportujú sa vaše podcasty, prosím čakajte ...';
+      'Exportujú sa vaše podcasty, prosím čakajte…';
 
   @override
   String get importingStationsPleaseWait =>
-      'Importujú sa vaše stanice, prosím čakajte ...';
+      'Importujú sa vaše stanice, prosím čakajte…';
 
   @override
   String get exportingStationsPleaseWait =>
-      'Exportujú sa vaše stanice, prosím čakajte ...';
+      'Exportujú sa vaše stanice, prosím čakajte…';
 
   @override
   String get importingPlaylistsPleaseWait =>
-      'Importujú sa vaše playlisty, prosím čakajte ...';
+      'Importujú sa vaše playlisty, prosím čakajte…';
 
   @override
   String get exportingPlaylistsPleaseWait =>
-      'Exportujú sa vaše playlisty, prosím čakajte ...';
+      'Exportujú sa vaše playlisty, prosím čakajte…';
 
   @override
   String checkingForUpdatesPleaseWait(int progress) {
-    return 'Kontrolujú sa aktualizácie $progress%';
+    return 'Kontrolujú sa aktualizácie $progress %';
   }
 
   @override
@@ -2319,7 +2319,7 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get settingsDoNotAskForGeniusDescription =>
-      'Toto zabráni aplikácii v budúcnosti pýtať sa na API kľúč Genius a úplne spoliehať funkciu textov na lokálne súbory LRC alebo reťazce LRC vložené do metadát audia.';
+      'Toto zabráni aplikácii v budúcnosti pýtať sa na API kľúč Genius a funkcia textov sa bude úplne spoliehať na lokálne súbory LRC alebo reťazce LRC vložené do metadát audia.';
 
   @override
   String get tosLink => 'https://genius.com/static/terms';
@@ -2396,7 +2396,7 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String playerCouldNotOpenRemoteMedia(String media) {
-    return 'Prehrávač sa nepodarilo otvoriť alebo udržať prehrávanie vzdialeného média \'$media\'. Ste pripojení na internet? Ak áno, môže ísť o problém so serverom.';
+    return 'Prehrávaču sa nepodarilo otvoriť alebo udržať prehrávanie vzdialeného média \'$media\'. Ste pripojení na internet? Ak áno, môže ísť o problém so serverom.';
   }
 
   @override
@@ -2454,11 +2454,11 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get fetchingLyricsOnline =>
-      'Získavam text piesne online, čakajte prosím ...';
+      'Získavam text piesne online, čakajte prosím…';
 
   @override
   String get fetchingLyricsOnlineTimeoutMessage =>
-      'Získavanie textu piesne online trvá dlhšie než obvykle. Ste pripojený na internet. Ak áno, môže ísť o problém servera alebo text piesne nemusí byť dostupný';
+      'Získavanie textu piesne online trvá dlhšie než obvykle. Ste pripojení na internet? Ak áno, môže ísť o problém servera alebo text piesne nemusí byť dostupný';
 
   @override
   String get fetchingLyricsOnlineFailed =>
@@ -2476,7 +2476,7 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String appCanNotConnectToHost(String appName, String host) {
-    return '$appName sa nemôže pripojiť k $host. Ste pripojený na internet?';
+    return '$appName sa nemôže pripojiť k $host. Ste pripojení na internet?';
   }
 
   @override
