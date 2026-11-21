@@ -18,11 +18,7 @@ class PodcastPageImage extends ConsumerWidget {
 
   Widget _fallback(BuildContext context) => showFallBackOrErrorIcon
       ? Center(
-          child: Icon(
-            Iconz.podcast,
-            size: 80,
-            color: context.theme.hintColor,
-          ),
+          child: Icon(Iconz.podcast, size: 80, color: context.theme.hintColor),
         )
       : const SizedBox.shrink();
 
