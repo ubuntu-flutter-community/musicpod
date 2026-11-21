@@ -37,7 +37,7 @@ class PodcastPageHeader extends ConsumerWidget {
 
     return AudioPageHeader(
       image: PodcastPageImage(
-        imageUrl: shortInfo?.imageUrl,
+        feedUrl: feedUrl,
         showFallBackOrErrorIcon: showFallBackOrErrorIcon,
       ),
       label: genre ?? l10n.podcast,

@@ -17,7 +17,6 @@ import '../data/podcast_update_capsule.dart';
 import '../manager/episodes_manager.dart';
 import '../manager/podcast_clean_manager.dart';
 import '../manager/podcast_genre_manager.dart';
-import '../manager/podcast_short_info_manager.dart';
 import '../manager/podcast_updates_manager.dart';
 import '../manager/subscribed_podcasts_manager.dart';
 import 'podcast_error_page.dart';
@@ -117,12 +116,6 @@ class _PodcastPage extends ConsumerWidget {
     final isSubscribed =
         ref.watch(subscribedPodcastsManagerProvider).value?.contains(feedUrl) ??
         false;
-    final shortInfo = ref.watch(podcastShortInfoManagerProvider(feedUrl)).value;
-    if (shortInfo == null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.invalidate(podcastShortInfoManagerProvider(feedUrl));
-      });
-    }
 
     return Scaffold(
       appBar: HeaderBar(

@@ -28,10 +28,11 @@ class AudioTileImage extends StatelessWidget {
         fallback: fallbackIcon,
       );
     } else {
-      image = audio?.imageUrl == null
+      final url = audio?.imageUrl ?? audio?.albumArtUrl;
+      image = url == null
           ? fallbackIcon
           : SafeNetworkImage(
-              url: audio!.imageUrl!,
+              url: url,
               height: size,
               width: size,
               cacheHeight: (size * 2).toInt(),

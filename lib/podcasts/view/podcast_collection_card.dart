@@ -27,11 +27,12 @@ class PodcastCollectionCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = context.theme;
     final shortInfo = ref.watch(podcastShortInfoManagerProvider(feedUrl)).value;
+    final trimmedUrl = shortInfo?.imageUrl?.trim();
     return AudioCard(
-      image: shortInfo?.imageUrl == null
+      image: trimmedUrl == null || trimmedUrl.isEmpty
           ? Center(child: Icon(Iconz.podcast, size: audioCardDimension * 0.7))
           : SafeNetworkImage(
-              url: shortInfo!.imageUrl!,
+              url: trimmedUrl,
               fit: BoxFit.cover,
               height: audioCardDimension,
               width: audioCardDimension,
