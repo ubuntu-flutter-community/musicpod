@@ -13,32 +13,39 @@ class PodcastPageSideBarIcon extends ConsumerWidget {
   final String feedUrl;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final imageUrl = ref
-        .watch(podcastShortInfoManagerProvider(feedUrl))
-        .value
-        ?.imageUrl;
-    if (imageUrl == null) {
-      return SideBarFallBackImage(child: Icon(Iconz.podcast));
-    }
+  Widget build(BuildContext context, WidgetRef ref) => ref
+      .watch(
+        podcastShortInfoManagerProvider(
+          feedUrl,
+        ).select((s) => s.whenData((info) => info?.imageUrl)),
+      )
+      .when(
+        data: (imageUrl) {
+          final trimmed = imageUrl?.trim();
+          if (trimmed == null || trimmed.isEmpty) {
+            return SideBarFallBackImage(child: Icon(Iconz.podcast));
+          }
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(5),
-      child: SizedBox(
-        width: sideBarImageSize,
-        height: sideBarImageSize,
-        child: SafeNetworkImage(
-          url: imageUrl,
-          height: sideBarImageSize,
-          width: sideBarImageSize,
-          cacheHeight: (sideBarImageSize * 2).toInt(),
-          cacheWidth: (sideBarImageSize * 2).toInt(),
-          fit: BoxFit.fitHeight,
-          filterQuality: FilterQuality.medium,
-          loadingWidget: Icon(Iconz.podcast),
-          errorWidget: Icon(Iconz.podcast),
-        ),
-      ),
-    );
-  }
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(5),
+            child: SizedBox(
+              width: sideBarImageSize,
+              height: sideBarImageSize,
+              child: SafeNetworkImage(
+                url: trimmed,
+                height: sideBarImageSize,
+                width: sideBarImageSize,
+                cacheHeight: (sideBarImageSize * 2).toInt(),
+                cacheWidth: (sideBarImageSize * 2).toInt(),
+                fit: BoxFit.fitHeight,
+                filterQuality: FilterQuality.medium,
+                loadingWidget: Icon(Iconz.podcast),
+                errorWidget: Icon(Iconz.podcast),
+              ),
+            ),
+          );
+        },
+        loading: () => SideBarFallBackImage(child: Icon(Iconz.podcast)),
+        error: (_, __) => SideBarFallBackImage(child: Icon(Iconz.podcast)),
+      );
 }

@@ -45,6 +45,7 @@ class ConfirmationDialog<T> extends StatefulWidget {
     this.destructiveActionStyle = DestructiveActionStyle.outlined,
     this.cancelButtonStyle = CancelButtonStyle.outlined,
     this.barrierDismissible = true,
+    this.popOnDone = true,
   });
 
   final dynamic Function()? onConfirm;
@@ -81,6 +82,7 @@ class ConfirmationDialog<T> extends StatefulWidget {
 
   final bool presentAsBottomSheet;
   final bool barrierDismissible;
+  final bool popOnDone;
 
   /// Shows the confirmation as a modal.
   ///
@@ -128,6 +130,7 @@ class ConfirmationDialog<T> extends StatefulWidget {
     EdgeInsetsGeometry? subtitlePadding,
     EdgeInsetsGeometry? actionsPadding,
     Widget Function(BuildContext context, bool asBottomSheet)? builder,
+    bool popOnDone = true,
   }) async {
     final asBottomSheet = context.isPortrait;
 
@@ -167,6 +170,7 @@ class ConfirmationDialog<T> extends StatefulWidget {
           headerPadding: headerPadding,
           subtitlePadding: subtitlePadding,
           actionsPadding: actionsPadding,
+          popOnDone: popOnDone,
         );
 
     // The route is typed `Result<dynamic, Exception>` on purpose: when an
@@ -217,7 +221,7 @@ class _ConfirmationDialogState<T> extends State<ConfirmationDialog<T>> {
   Object? _errorObject;
 
   void _popResult(Result<T, Exception> result) {
-    if (mounted && Navigator.of(context).canPop()) {
+    if (mounted && Navigator.of(context).canPop() && widget.popOnDone) {
       Navigator.of(context).pop<Result<T, Exception>>(result);
     }
   }

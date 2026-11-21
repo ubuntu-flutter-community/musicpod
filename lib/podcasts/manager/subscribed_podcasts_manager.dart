@@ -21,14 +21,9 @@ class SubscribedPodcastsManager extends _$SubscribedPodcastsManager {
     String? artist,
   }) async {
     await di<PodcastService>().togglePodcastSubscription(feedUrl: feedUrl);
-    final isSubscribed = await di<PodcastService>().isPodcastSubscribed(
-      feedUrl,
-    );
-    if (!isSubscribed) {
-      ref.invalidate(episodesManagerProvider(feedUrl));
-      ref.invalidate(podcastShortInfoManagerProvider(feedUrl));
-      ref.invalidate(podcastGenreManagerProvider(feedUrl));
-    }
+    ref.invalidate(episodesManagerProvider(feedUrl));
+    ref.invalidate(podcastShortInfoManagerProvider(feedUrl));
+    ref.invalidate(podcastGenreManagerProvider(feedUrl));
     state = AsyncData(await di<PodcastService>().getSubscribedPodcasts());
   }
 

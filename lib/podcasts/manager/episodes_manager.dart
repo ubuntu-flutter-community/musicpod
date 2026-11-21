@@ -11,6 +11,7 @@ import '../data/podcast_episode_filter.dart';
 import '../service/podcast_service.dart';
 import 'download_manager.dart';
 import 'podcast_collection_filter_manager.dart';
+import 'podcast_short_info_manager.dart';
 
 part 'episodes_manager.g.dart';
 
@@ -40,6 +41,7 @@ class EpisodesManager extends _$EpisodesManager {
         tryFromDbOnly: true,
         order: _order,
       );
+      ref.invalidate(podcastShortInfoManagerProvider(feedUrl));
     }
 
     if (_order == null) {
@@ -189,6 +191,7 @@ class EpisodesManager extends _$EpisodesManager {
         tryFromDbOnly: false,
         order: _order,
       );
+      ref.invalidate(podcastShortInfoManagerProvider(feedUrl));
       final hideCompleted = ref.read(podcastUpdatesOnlyManagerProvider);
       final showDownloadsOnly = ref.read(podcastDownloadsOnlyManagerProvider);
       return _computeState(
